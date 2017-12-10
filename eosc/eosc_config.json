@@ -1,0 +1,12 @@
+{
+   "logging":{
+      "severity":2,
+      "logDir":"/mnt/hgfs/Workspaces/EOS/Pentagon",
+      "logFile":"log.log",
+      "format":"[%TimeStamp%]: %Message%"
+   },
+   "eosc":{
+      "server":"localhost",
+      "port":"8888"
+   }
+}
