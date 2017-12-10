@@ -1,0 +1,9 @@
+#!/bin/bash -e
+cd $(locate --limit 1 Pentagon/pentagon/build)
+rm -r *
+
+cd $(locate --limit 1 Pentagon/eoscLib/build)
+rm -r *
+
+cd $(locate --limit 1 Pentagon/target)
+rm -r *
