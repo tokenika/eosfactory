@@ -1,0 +1,66 @@
+\hypertarget{classtokenika_1_1eosc_1_1_get_info}{}\section{tokenika\+:\+:eosc\+:\+:Get\+Info Class Reference}
+\label{classtokenika_1_1eosc_1_1_get_info}\index{tokenika\+::eosc\+::\+Get\+Info@{tokenika\+::eosc\+::\+Get\+Info}}
+
+
+Get current blockchain information.  
+
+
+
+
+{\ttfamily \#include $<$eosc\+\_\+get\+\_\+commands.\+hpp$>$}
+
+
+
+Inheritance diagram for tokenika\+:\+:eosc\+:\+:Get\+Info\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{classtokenika_1_1eosc_1_1_get_info__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for tokenika\+:\+:eosc\+:\+:Get\+Info\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{classtokenika_1_1eosc_1_1_get_info__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1_get_info_a3b219ff2f0036acbecf97922e28c3793}\label{classtokenika_1_1eosc_1_1_get_info_a3b219ff2f0036acbecf97922e28c3793}} 
+{\bfseries Get\+Info} (boost\+::property\+\_\+tree\+::ptree post\+Json, bool raw=false)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Get current blockchain information. 
+
+Example\+:
+
+\begin{DoxyVerb}* #include <stdio.h>
+* #include <stdlib.h>
+* #include <iostream>
+* #include <string>
+* #include <boost/property_tree/ptree.hpp>
+* #include "EoscCommands/eosc_get_commands.hpp"
+* 
+* int main(int argc, char *argv[])
+* {
+* boost::property_tree::ptree postJson;
+* tokenika::eosc::GetInfo GetInfo(getInfoPostJson);
+* std::cout << GetInfo.get<int>("last_irreversible_block_num")) << std::endl;
+* boost::property_tree::ptree rcv_json = GetInfo.getRcvJson();
+* std::cout << GetBlock.toStringRcv() << std::endl; // Print the response json.
+* 
+* return 0;
+* }
+* \end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{eosc__get__commands_8hpp}{eosc\+\_\+get\+\_\+commands.\+hpp}\end{DoxyCompactItemize}

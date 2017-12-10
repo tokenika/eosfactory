@@ -1,0 +1,66 @@
+\hypertarget{classtokenika_1_1eosc_1_1get__info}{}\section{tokenika\+:\+:eosc\+:\+:get\+\_\+info Class Reference}
+\label{classtokenika_1_1eosc_1_1get__info}\index{tokenika\+::eosc\+::get\+\_\+info@{tokenika\+::eosc\+::get\+\_\+info}}
+
+
+Get current blockchain information.  
+
+
+
+
+{\ttfamily \#include $<$eosc\+\_\+get\+\_\+commands.\+hpp$>$}
+
+
+
+Inheritance diagram for tokenika\+:\+:eosc\+:\+:get\+\_\+info\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{classtokenika_1_1eosc_1_1get__info__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for tokenika\+:\+:eosc\+:\+:get\+\_\+info\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{classtokenika_1_1eosc_1_1get__info__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1get__info_a19fc7b68763a4dca69ac63d8f859f9fd}\label{classtokenika_1_1eosc_1_1get__info_a19fc7b68763a4dca69ac63d8f859f9fd}} 
+{\bfseries get\+\_\+info} (boost\+::property\+\_\+tree\+::ptree post\+Json, bool raw=false)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Get current blockchain information. 
+
+Example\+:
+
+\begin{DoxyVerb}* #include <stdio.h>
+* #include <stdlib.h>
+* #include <iostream>
+* #include <string>
+* #include <boost/property_tree/ptree.hpp>
+* #include "EoscCommands/eosc_get_commands.hpp"
+* 
+* int main(int argc, char *argv[])
+* {
+* boost::property_tree::ptree postJson;
+* tokenika::eosc::get_info get_info(getInfoPostJson);
+* std::cout << get_info.get<int>("last_irreversible_block_num")) << std::endl;
+* boost::property_tree::ptree rcv_json = get_info.getRcvJson();
+* std::cout << get_block.toStringRcv() << std::endl; // Print the response json.
+* 
+* return 0;
+* }
+* \end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+eosc\+\_\+get\+\_\+commands.\+hpp\end{DoxyCompactItemize}

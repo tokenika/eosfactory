@@ -1,0 +1,101 @@
+\hypertarget{classtokenika_1_1eosc_1_1_get_block}{}\section{tokenika\+:\+:eosc\+:\+:Get\+Block Class Reference}
+\label{classtokenika_1_1eosc_1_1_get_block}\index{tokenika\+::eosc\+::\+Get\+Block@{tokenika\+::eosc\+::\+Get\+Block}}
+
+
+Retrieve a full block from a blockchain.  
+
+
+
+
+{\ttfamily \#include $<$eosc\+\_\+get\+\_\+commands.\+hpp$>$}
+
+
+
+Inheritance diagram for tokenika\+:\+:eosc\+:\+:Get\+Block\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{classtokenika_1_1eosc_1_1_get_block__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for tokenika\+:\+:eosc\+:\+:Get\+Block\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{classtokenika_1_1eosc_1_1_get_block__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1_get_block_a67c1536e676f26b9e9dac915092f9627}\label{classtokenika_1_1eosc_1_1_get_block_a67c1536e676f26b9e9dac915092f9627}} 
+{\bfseries Get\+Block} (boost\+::property\+\_\+tree\+::ptree post\+Json, bool raw=false)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Retrieve a full block from a blockchain. 
+
+Given a {\ttfamily boost\+::property\+\_\+tree\+::ptree json}, conforms (\href{#https://github.com/EOSIO/eosjs-json/blob/master/api/v1/chain.json}{\tt after eosjs-\/json}) this pattern\+: \begin{DoxyVerb}* {"block_num_or_id":"uint32 | string"}.
+* \end{DoxyVerb}
+
+
+the constructor posts it to an E\+OS block socket, specified in the {\ttfamily eosc\+\_\+config.\+json} file. The responce of the blockchain is, again, a {\ttfamily boost\+::property\+\_\+tree\+::ptree json}. On error, the reaponce json is {\ttfamily \{\char`\"{}error\char`\"{}\+:\char`\"{}error message\char`\"{}\}}, otherwise it conforms (\href{#https://github.com/EOSIO/eosjs-json/blob/master/api/v1/chain.json}{\tt after eosjs-\/json}) this pattern\+: \begin{DoxyVerb}* {
+* "previous":"uint32",
+* "timestamp":"2017-07-18T20:16:36",
+* "transaction_merkle_root":"uint32",
+* "producer":"uint16",
+* "producer_changes":"map<account_name, account_name>[]",
+* "producer_signature":"signature",
+* "cycles":"thread[]",
+* "id":"fixed_bytes33",
+* "block_num":"uint32",
+* "refBlockPrefix":"uint32"
+* }
+* \end{DoxyVerb}
+
+
+It is available with the \hyperlink{classtokenika_1_1eosc_1_1_eosc_command_a2b451aefc95258d481cff16747fa1888}{tokenika\+::eosc\+::\+Eosc\+Command\+::get\+Rcv\+Json()} method.
+
+Note that time is a string. For processing, it has to be expressed as a structure and afterwords back to a string. Helper functions, namely \+::str\+To\+Time(const std\+::string)
+
+Example\+:
+
+\begin{DoxyVerb}* #include <stdio.h>
+* #include <stdlib.h>
+* #include <iostream>
+* #include <string>
+* 
+* #include <boost/property_tree/ptree.hpp>
+* #include "boost/date_time/posix_time/posix_time.hpp"
+* 
+* #include "EoscCommands/eosc_get_commands.hpp"  
+* 
+* int main(int argc, char *argv[])
+* {
+* boost::property_tree::ptree postJson;
+* postJson.put("block_num_or_id", 25);
+* tokenika::eosc::GetBlock getBlock(getInfoPostJson);
+* if(!getBlock.isError())
+* {
+*    std::cout << getBlock.get<int>("last_irreversible_block_num")) << std::endl;
+*    boost::posix_time::ptime time = GetInfo.get<boost::posix_time::ptime>("timestamp");
+*    std::cout << time << std::endl;
+*    boost::posix_time::ptime t1 = time + boost::posix_time::seconds(900);
+*    cout << (boost::posix_time::to_iso_extended_string)(t1) << endl;
+* } else
+* {
+*    std::cerr << getBlock.get<string>("error")) << std::endl;
+* }
+* 
+* return 0;
+* }
+* \end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{eosc__get__commands_8hpp}{eosc\+\_\+get\+\_\+commands.\+hpp}\end{DoxyCompactItemize}

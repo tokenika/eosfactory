@@ -1,0 +1,4 @@
+<map id="tokenika::eosc::EoscCommand" name="tokenika::eosc::EoscCommand">
+<area shape="rect" id="node2" href="$classtokenika_1_1eosc_1_1_get_block.html" title="Retrieve a full block from a blockchain. " alt="" coords="5,80,175,107"/>
+<area shape="rect" id="node3" href="$classtokenika_1_1eosc_1_1_get_info.html" title="Get current blockchain information. " alt="" coords="199,80,357,107"/>
+</map>

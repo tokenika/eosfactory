@@ -1,0 +1,133 @@
+\hypertarget{classtokenika_1_1eosc_1_1get__info_options}{}\section{tokenika\+:\+:eosc\+:\+:get\+\_\+info\+Options Class Reference}
+\label{classtokenika_1_1eosc_1_1get__info_options}\index{tokenika\+::eosc\+::get\+\_\+info\+Options@{tokenika\+::eosc\+::get\+\_\+info\+Options}}
+
+
+Inheritance diagram for tokenika\+:\+:eosc\+:\+:get\+\_\+info\+Options\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=245pt]{classtokenika_1_1eosc_1_1get__info_options__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for tokenika\+:\+:eosc\+:\+:get\+\_\+info\+Options\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=245pt]{classtokenika_1_1eosc_1_1get__info_options__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1get__info_options_a687420e26c273a029ddb83c292b5bda6}\label{classtokenika_1_1eosc_1_1get__info_options_a687420e26c273a029ddb83c292b5bda6}} 
+{\bfseries get\+\_\+info\+Options} (int argc, const char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+const char $\ast$ \hyperlink{classtokenika_1_1eosc_1_1get__info_options_a67f3f76293b998c120559d6af5bf6c6f}{get\+\_\+usage} ()
+\begin{DoxyCompactList}\small\item\em Command \textquotesingle{}usage\textquotesingle{} instruction. \end{DoxyCompactList}\item 
+virtual bool \hyperlink{classtokenika_1_1eosc_1_1get__info_options_a8731c87cc2429a975e87ce36dd7fcf68}{set\+Json} (boost\+::program\+\_\+options\+::variables\+\_\+map \&vm)
+\begin{DoxyCompactList}\small\item\em Fills the post json tree according to options. \end{DoxyCompactList}\item 
+virtual \hyperlink{classtokenika_1_1eosc_1_1_eosc_command}{Eosc\+Command} \hyperlink{classtokenika_1_1eosc_1_1get__info_options_aafb814a03f00d5700e3fa66f17be43d2}{get\+Command} (bool is\+\_\+raw)
+\begin{DoxyCompactList}\small\item\em Returns command object, containing a responce from the blockchain. \end{DoxyCompactList}\item 
+virtual void \hyperlink{classtokenika_1_1eosc_1_1get__info_options_aedbefe0b0c3a7efca9429066588492db}{get\+Output} (\hyperlink{classtokenika_1_1eosc_1_1_eosc_command}{tokenika\+::eosc\+::\+Eosc\+Command} command)
+\begin{DoxyCompactList}\small\item\em Placeholder for printout instructions. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1get__info_options_aeaa2596236e215617b19f4e6af5f943d}\label{classtokenika_1_1eosc_1_1get__info_options_aeaa2596236e215617b19f4e6af5f943d}} 
+virtual void \hyperlink{classtokenika_1_1eosc_1_1get__info_options_aeaa2596236e215617b19f4e6af5f943d}{get\+Example} ()
+\begin{DoxyCompactList}\small\item\em Placeholder for any exemplary code snippet. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1get__info_options_a67f3f76293b998c120559d6af5bf6c6f}\label{classtokenika_1_1eosc_1_1get__info_options_a67f3f76293b998c120559d6af5bf6c6f}} 
+\index{tokenika\+::eosc\+::get\+\_\+info\+Options@{tokenika\+::eosc\+::get\+\_\+info\+Options}!get\+\_\+usage@{get\+\_\+usage}}
+\index{get\+\_\+usage@{get\+\_\+usage}!tokenika\+::eosc\+::get\+\_\+info\+Options@{tokenika\+::eosc\+::get\+\_\+info\+Options}}
+\subsubsection{\texorpdfstring{get\+\_\+usage()}{get\_usage()}}
+{\footnotesize\ttfamily const char$\ast$ tokenika\+::eosc\+::get\+\_\+info\+Options\+::get\+\_\+usage (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Command \textquotesingle{}usage\textquotesingle{} instruction. 
+
+\begin{DoxyReturn}{Returns}
+const char$\ast$ usage text 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classtokenika_1_1eosc_1_1_command_options_a28fb680d7477e19e523367d2585655fb}{tokenika\+::eosc\+::\+Command\+Options}.
+
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1get__info_options_aafb814a03f00d5700e3fa66f17be43d2}\label{classtokenika_1_1eosc_1_1get__info_options_aafb814a03f00d5700e3fa66f17be43d2}} 
+\index{tokenika\+::eosc\+::get\+\_\+info\+Options@{tokenika\+::eosc\+::get\+\_\+info\+Options}!get\+Command@{get\+Command}}
+\index{get\+Command@{get\+Command}!tokenika\+::eosc\+::get\+\_\+info\+Options@{tokenika\+::eosc\+::get\+\_\+info\+Options}}
+\subsubsection{\texorpdfstring{get\+Command()}{getCommand()}}
+{\footnotesize\ttfamily virtual \hyperlink{classtokenika_1_1eosc_1_1_eosc_command}{Eosc\+Command} tokenika\+::eosc\+::get\+\_\+info\+Options\+::get\+Command (\begin{DoxyParamCaption}\item[{bool}]{is\+Raw }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Returns command object, containing a responce from the blockchain. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em is\+Raw} & raw or pretty printout flag \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{classtokenika_1_1eosc_1_1_eosc_command}{Eosc\+Command} command object 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classtokenika_1_1eosc_1_1_command_options_a787f15164e2055394d9d948c07bf201c}{tokenika\+::eosc\+::\+Command\+Options}.
+
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1get__info_options_aedbefe0b0c3a7efca9429066588492db}\label{classtokenika_1_1eosc_1_1get__info_options_aedbefe0b0c3a7efca9429066588492db}} 
+\index{tokenika\+::eosc\+::get\+\_\+info\+Options@{tokenika\+::eosc\+::get\+\_\+info\+Options}!get\+Output@{get\+Output}}
+\index{get\+Output@{get\+Output}!tokenika\+::eosc\+::get\+\_\+info\+Options@{tokenika\+::eosc\+::get\+\_\+info\+Options}}
+\subsubsection{\texorpdfstring{get\+Output()}{getOutput()}}
+{\footnotesize\ttfamily virtual void tokenika\+::eosc\+::get\+\_\+info\+Options\+::get\+Output (\begin{DoxyParamCaption}\item[{\hyperlink{classtokenika_1_1eosc_1_1_eosc_command}{tokenika\+::eosc\+::\+Eosc\+Command}}]{command }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Placeholder for printout instructions. 
+
+Placeholder for printout instructions. Printout should be composed with the \+::output(const char$\ast$, const char$\ast$, ...) function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & command object, containing a responce from the blockchain. \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classtokenika_1_1eosc_1_1_command_options_a346dcfb00b8ac522169714544bfa7be0}{tokenika\+::eosc\+::\+Command\+Options}.
+
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1get__info_options_a8731c87cc2429a975e87ce36dd7fcf68}\label{classtokenika_1_1eosc_1_1get__info_options_a8731c87cc2429a975e87ce36dd7fcf68}} 
+\index{tokenika\+::eosc\+::get\+\_\+info\+Options@{tokenika\+::eosc\+::get\+\_\+info\+Options}!set\+Json@{set\+Json}}
+\index{set\+Json@{set\+Json}!tokenika\+::eosc\+::get\+\_\+info\+Options@{tokenika\+::eosc\+::get\+\_\+info\+Options}}
+\subsubsection{\texorpdfstring{set\+Json()}{setJson()}}
+{\footnotesize\ttfamily virtual bool tokenika\+::eosc\+::get\+\_\+info\+Options\+::set\+Json (\begin{DoxyParamCaption}\item[{boost\+::program\+\_\+options\+::variables\+\_\+map \&}]{vm }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Fills the post json tree according to options. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vm} & boost program options variable map \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if post json is set completely 
+
+false if post json cannot be set completely 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classtokenika_1_1eosc_1_1_command_options_a7aecc9aa79ca65f6abbd568ff8ff77a7}{tokenika\+::eosc\+::\+Command\+Options}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+eosc\+\_\+get\+\_\+commands.\+hpp\end{DoxyCompactItemize}

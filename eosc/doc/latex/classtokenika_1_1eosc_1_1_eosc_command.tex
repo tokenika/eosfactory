@@ -1,0 +1,163 @@
+\hypertarget{classtokenika_1_1eosc_1_1_eosc_command}{}\section{tokenika\+:\+:eosc\+:\+:Eosc\+Command Class Reference}
+\label{classtokenika_1_1eosc_1_1_eosc_command}\index{tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}}
+
+
+Basic connection to the blockchain.  
+
+
+
+
+{\ttfamily \#include $<$eosc\+\_\+command.\+hpp$>$}
+
+
+
+Inheritance diagram for tokenika\+:\+:eosc\+:\+:Eosc\+Command\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=344pt]{classtokenika_1_1eosc_1_1_eosc_command__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classtokenika_1_1eosc_1_1_eosc_command_ab736f0dcd8ca14eb0daf9b2244218397}{Eosc\+Command} (std\+::string path, boost\+::property\+\_\+tree\+::ptree post\+Json, bool is\+Raw=false)
+\begin{DoxyCompactList}\small\item\em Just initiates members, and calls the blockchain. \end{DoxyCompactList}\item 
+bool \hyperlink{classtokenika_1_1eosc_1_1_eosc_command_a63f3adace3f84b59f64c5a54ca0c18dc}{is\+Error} () const
+\begin{DoxyCompactList}\small\item\em Error flag. \end{DoxyCompactList}\item 
+boost\+::property\+\_\+tree\+::ptree \hyperlink{classtokenika_1_1eosc_1_1_eosc_command_a2b451aefc95258d481cff16747fa1888}{get\+Rcv\+Json} () const
+\begin{DoxyCompactList}\small\item\em Blockchain responce. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classtokenika_1_1eosc_1_1_eosc_command_a1cb0362dceb5999e7e06078223b20d91}{to\+String\+Post} () const
+\begin{DoxyCompactList}\small\item\em Post json string representation. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classtokenika_1_1eosc_1_1_eosc_command_ad01ef46444d9d8bc708b5d18605c3903}{to\+String\+Rcv} () const
+\begin{DoxyCompactList}\small\item\em Received json string representation. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Type $>$ }\\Type \hyperlink{classtokenika_1_1eosc_1_1_eosc_command_aa1da6eb23f52159afa4a15e767cd7d6f}{get} (const boost\+::property\+\_\+tree\+::ptree\+::path\+\_\+type \&path) const
+\begin{DoxyCompactList}\small\item\em Returns a value of a path of the received json. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1_eosc_command_a1642782c91f4877a8fba395324fb7337}\label{classtokenika_1_1eosc_1_1_eosc_command_a1642782c91f4877a8fba395324fb7337}} 
+boost\+::property\+\_\+tree\+::ptree {\bfseries post\+Json}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Basic connection to the blockchain. 
+
+Given a command path (for example {\ttfamily /v1/chain/\+Get\+Block}), and a json tree (for example \{\char`\"{}block\+\_\+num\+\_\+or\+\_\+id\char`\"{}=\char`\"{}25\char`\"{}\}), connects to the blockchain and receives a json reflacting an aspect of the blockchain state.
+
+{\ttfamily \hyperlink{classtokenika_1_1eosc_1_1_eosc_command}{Eosc\+Command}} is the superclass for any specific command class in this library.
+
+Parameters of the connection used are specified in file {\ttfamily eosc\+\_\+config.\+json}, in the root directory of the project. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1_eosc_command_ab736f0dcd8ca14eb0daf9b2244218397}\label{classtokenika_1_1eosc_1_1_eosc_command_ab736f0dcd8ca14eb0daf9b2244218397}} 
+\index{tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}!Eosc\+Command@{Eosc\+Command}}
+\index{Eosc\+Command@{Eosc\+Command}!tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}}
+\subsubsection{\texorpdfstring{Eosc\+Command()}{EoscCommand()}}
+{\footnotesize\ttfamily tokenika\+::eosc\+::\+Eosc\+Command\+::\+Eosc\+Command (\begin{DoxyParamCaption}\item[{std\+::string}]{path,  }\item[{boost\+::property\+\_\+tree\+::ptree}]{post\+Json,  }\item[{bool}]{is\+Raw = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Just initiates members, and calls the blockchain. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & command path, for example {\ttfamily /v1/chain/\+Get\+Block} \\
+\hline
+{\em post\+Json} & json tree, for example \{\char`\"{}block\+\_\+num\+\_\+or\+\_\+id\char`\"{}=\char`\"{}25\char`\"{}\} \\
+\hline
+{\em is\+Raw} & boolean, determines printout of the to-\/string methods \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1_eosc_command_aa1da6eb23f52159afa4a15e767cd7d6f}\label{classtokenika_1_1eosc_1_1_eosc_command_aa1da6eb23f52159afa4a15e767cd7d6f}} 
+\index{tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}!get@{get}}
+\index{get@{get}!tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}}
+\subsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily template$<$typename Type $>$ \\
+Type tokenika\+::eosc\+::\+Eosc\+Command\+::get (\begin{DoxyParamCaption}\item[{const boost\+::property\+\_\+tree\+::ptree\+::path\+\_\+type \&}]{path }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns a value of a path of the received json. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Type} & type of the value \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em path} & json tree path to the value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Type the value of the given path 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1_eosc_command_a2b451aefc95258d481cff16747fa1888}\label{classtokenika_1_1eosc_1_1_eosc_command_a2b451aefc95258d481cff16747fa1888}} 
+\index{tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}!get\+Rcv\+Json@{get\+Rcv\+Json}}
+\index{get\+Rcv\+Json@{get\+Rcv\+Json}!tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}}
+\subsubsection{\texorpdfstring{get\+Rcv\+Json()}{getRcvJson()}}
+{\footnotesize\ttfamily boost\+::property\+\_\+tree\+::ptree tokenika\+::eosc\+::\+Eosc\+Command\+::get\+Rcv\+Json (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Blockchain responce. 
+
+\begin{DoxyReturn}{Returns}
+boost\+::property\+\_\+tree\+::ptree blockchain responce 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1_eosc_command_a63f3adace3f84b59f64c5a54ca0c18dc}\label{classtokenika_1_1eosc_1_1_eosc_command_a63f3adace3f84b59f64c5a54ca0c18dc}} 
+\index{tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}!is\+Error@{is\+Error}}
+\index{is\+Error@{is\+Error}!tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}}
+\subsubsection{\texorpdfstring{is\+Error()}{isError()}}
+{\footnotesize\ttfamily bool tokenika\+::eosc\+::\+Eosc\+Command\+::is\+Error (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Error flag. 
+
+\begin{DoxyReturn}{Returns}
+true if E\+OS blockchain responce is normal 
+
+false if E\+OS blockchain responce is not normal 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1_eosc_command_a1cb0362dceb5999e7e06078223b20d91}\label{classtokenika_1_1eosc_1_1_eosc_command_a1cb0362dceb5999e7e06078223b20d91}} 
+\index{tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}!to\+String\+Post@{to\+String\+Post}}
+\index{to\+String\+Post@{to\+String\+Post}!tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}}
+\subsubsection{\texorpdfstring{to\+String\+Post()}{toStringPost()}}
+{\footnotesize\ttfamily std\+::string tokenika\+::eosc\+::\+Eosc\+Command\+::to\+String\+Post (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Post json string representation. 
+
+Returns post json string representation. I can be pretty or raw, depending ib the {\ttfamily is\+Raw} flag.
+
+\begin{DoxyReturn}{Returns}
+std\+::string post json string representation 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classtokenika_1_1eosc_1_1_eosc_command_ad01ef46444d9d8bc708b5d18605c3903}\label{classtokenika_1_1eosc_1_1_eosc_command_ad01ef46444d9d8bc708b5d18605c3903}} 
+\index{tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}!to\+String\+Rcv@{to\+String\+Rcv}}
+\index{to\+String\+Rcv@{to\+String\+Rcv}!tokenika\+::eosc\+::\+Eosc\+Command@{tokenika\+::eosc\+::\+Eosc\+Command}}
+\subsubsection{\texorpdfstring{to\+String\+Rcv()}{toStringRcv()}}
+{\footnotesize\ttfamily std\+::string tokenika\+::eosc\+::\+Eosc\+Command\+::to\+String\+Rcv (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Received json string representation. 
+
+Returns received json string representation. I can be pretty or raw, depending ib the {\ttfamily is\+Raw} flag.
+
+\begin{DoxyReturn}{Returns}
+std\+::string received json string representation 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{eosc__command_8hpp}{eosc\+\_\+command.\+hpp}\item 
+eosc\+\_\+command.\+cpp\end{DoxyCompactItemize}
