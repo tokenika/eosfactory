@@ -1,0 +1,7 @@
+target
+*.exe
+build
+**/Debug
+**/x64
+**/.vs
+**/*.wast

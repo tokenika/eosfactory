@@ -2,3 +2,4 @@ build
 **/Debug
 **/x64
 **/.vs
+**/*.wast
