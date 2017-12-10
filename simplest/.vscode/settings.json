@@ -1,0 +1,13 @@
+{
+   "files.associations": {
+      "*.ipp": "cpp",
+      "string_view": "cpp",
+      "system_error": "cpp"
+   },
+   "cSpell.words": [
+      "CRNL",
+      "Eosd",
+      "ptree"
+   ],
+   "C_Cpp.intelliSenseEngineFallback": "Enabled"
+}

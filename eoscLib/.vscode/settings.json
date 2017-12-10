@@ -1,0 +1,16 @@
+{
+   "files.associations": {
+      "*.ipp": "cpp",
+      "ratio": "cpp",
+      "system_error": "cpp",
+      "type_traits": "cpp"
+   },
+   "cSpell.words": [
+      "Esod",
+      "constexpr",
+      "eosio",
+      "eoslib",
+      "ptree",
+      "uint"
+   ]
+}

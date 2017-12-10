@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+#include "config.h"
+#include "eosContract/contract.hpp"
+#include <boost/program_options.hpp>
+
+
+
+#include <iostream>
+
+using namespace boost::program_options;
+
+void on_age(int age)
+{
+  std::cout << "On age: " << age << '\n';
+}
+
+void on_value(double inputValue)
+{
+  double outputValue = sqrt(inputValue);
+  fprintf(stdout,"The square root of %g is %g\n",
+          inputValue, outputValue);
+}
+
+int main (int argc, char *argv[])
+{
+   try
+   {
+      options_description desc{"Options"};
+      desc.add_options()
+      ("help,h", "Help screen")
+      ("version,v", "Version")
+      ("pi", value<float>()->default_value(3.14f), "Pi")
+      ("age,a", value<int>()->notifier(on_age), "Age")
+      ("value,v", value<double>()->notifier(on_value), "Age");
+
+      variables_map vm;
+      store(parse_command_line(argc, argv, desc), vm);
+      notify(vm);
+
+      if (vm.count("help"))
+         std::cout << desc << '\n';
+      else if (vm.count("version"))
+         fprintf(stdout,"%s Version %d.%d\n",
+            argv[0],
+            VERSION_MAJOR,
+            VERSION_MINOR);
+      else if (vm.count("age"))
+         std::cout << "Age: " << vm["age"].as<int>() << '\n';
+      else if (vm.count("pi"))
+         std::cout << "Pi: " << vm["pi"].as<float>() << '\n';
+      else fprintf(stdout,"Usage: %s number\n", argv[0]);
+   }
+   catch (const error &ex) 
+   {
+      std::cerr << ex.what() << '\n';
+   }
+ 
+  init();
+
+  return 0;
+}
+
+/////////////////////////////////////////////////////////////////
