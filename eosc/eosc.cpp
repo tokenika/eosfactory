@@ -8,6 +8,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include <boost/algorithm/string/join.hpp>
+#include <boost/program_options.hpp>
 
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
@@ -16,120 +17,193 @@
 #include "eosc.hpp"
 
 using namespace std;
+using namespace tokenika::eosc;
 
 void test()
 {
   vector<string>
 
-      args = {"tokenika::eosc::command_options", "--xxx"};
+      args = {"--xxx"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  tokenika::eosc::setOptions<tokenika::eosc::GetInfoOptions>(args);
+  setOptions<tokenika::eosc::GetInfoOptions>(args);
 
-  args = {"tokenika::eosc::command_options", "--help", "--raw"};
+  args = {"--help", "--raw"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  tokenika::eosc::setOptions<tokenika::eosc::GetInfoOptions>(args);
+  setOptions<tokenika::eosc::GetInfoOptions>(args);
 
-  args = {"tokenika::eosc::command_options", "--example"};
+  args = {"--example"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  tokenika::eosc::setOptions<tokenika::eosc::GetInfoOptions>(args);
+  setOptions<tokenika::eosc::GetInfoOptions>(args);
 
-  args = {"tokenika::eosc::command_options", "--block_num", "25"};
+  args = {"--block_num", "25"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  tokenika::eosc::setOptions<tokenika::eosc::GetInfoOptions>(args);
+  setOptions<tokenika::eosc::GetInfoOptions>(args);
 
-  args = {"tokenika::eosc::command_options", "--help", "--raw"};
+  args = {"--help", "--raw"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  tokenika::eosc::setOptions<tokenika::eosc::GetBlockOptions>(args);
+  setOptions<tokenika::eosc::GetBlockOptions>(args);
 
-  args = {"tokenika::eosc::command_options", "--example"};
+  args = {"--example"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  tokenika::eosc::setOptions<tokenika::eosc::GetBlockOptions>(args);
+  setOptions<tokenika::eosc::GetBlockOptions>(args);
 
-  args = {"tokenika::eosc::command_options", "--block_num", "25"};
+  args = {"--block_num", "25"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  tokenika::eosc::setOptions<tokenika::eosc::GetBlockOptions>(args);
+  setOptions<tokenika::eosc::GetBlockOptions>(args);
 
-  args = {"tokenika::eosc::command_options", "--json",
+  args = {"--json",
           R"EOF({"block_num_or_id":"25"})EOF"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  tokenika::eosc::setOptions<tokenika::eosc::GetBlockOptions>(args);
+  setOptions<tokenika::eosc::GetBlockOptions>(args);
 }
 
-#define IF_ELSE(commandName_, classPrefix)                 \
-  if (command_name == #commandName_)                       \
-  {                                                        \
-    tokenika::eosc::classPrefix##Options(argc, argv).go(); \
-  }                                                        \
+#define IF_ELSE(commandName_, classPrefix)                                      \
+  if (commandName == #commandName_)                                             \
+  {                                                                             \
+    tokenika::eosc::classPrefix##Options(argvArray.size(), &argvArray[0]).go(); \
+  }                                                                             \
   else
+
+#define HELP                  \
+  std::cout << usage << endl; \
+  std::cout << desc << endl;  \
+  std::cout << subcommands << endl;
+
+  string usage = R"EOF(
+Command Line Interface to Eos Daemon
+Usage: ./eosc [HOST:PORT] [OPTIONS] SUBCOMMAND
+for example:
+192.168.229.140:8888 get block 255
+)EOF";
+
+  string subcommands = R"EOF(
+Subcommands:
+  create                      Create various items, on and off the blockchain
+  get                         Retrieve various items and information from the blockchain
+  set                         Set or update blockchain state
+  transfer                    Transfer EOS from account to account
+  wallet                      Interact with local wallet
+  benchmark                   Configure and execute benchmarks
+  push                        Push arbitrary transactions to the blockchain
+)EOF";
+
+using namespace boost::program_options;
 
 int main(int argc, const char *argv[])
 {
+  vector<const char *> argvArray;
+  argvArray.push_back(argv[0]);
+  options_description desc{"Options"};
+
+
+
   if (argc > 1)
   {
     string ipAddress(argv[1]);
     size_t colon = ipAddress.find(":");
     if (colon != std::string::npos)
     {
-      tokenika::eosc::EoscCommand::host = string(ipAddress.substr(0, colon));
-      tokenika::eosc::EoscCommand::port = string(ipAddress.substr(colon + 1, 
+      EoscCommand::host = string(ipAddress.substr(0, colon));
+      EoscCommand::port = string(ipAddress.substr(colon + 1,
         ipAddress.size()));
       argv++;
       argc--;
     }
   }
 
-  string command_name;
-  if (argc > 1)
+  string first;
+  string second;
+
+  try
   {
-    command_name = argv[1];
-    if (command_name.compare("test") == 0)
+    options_description desc{"Options"};
+    desc.add_options()
+    ("help,h", "Help screen")
+    ("host,H", value<string>()->default_value(HOST_DEFAULT),
+      "The host where eosd is running")
+    ("port,p", value<string>()->default_value(PORT_DEFAULT),
+      "The port where eosd is running")
+    ("wallet-host", value<string>()->default_value(HOST_DEFAULT),
+      "The host where eos-wallet is running")
+    ("wallet-port", value<string>()->default_value(PORT_DEFAULT),
+      "The port where eos-wallet is running")
+    ("verbose,v", "Output verbose messages on error");
+
+    command_line_parser parser{argc, argv};
+    parser.options(desc).allow_unregistered();
+    parsed_options parsed_options = parser.run();
+
+    vector<string> to_pass_further = collect_unrecognized(
+        parsed_options.options, include_positional);
+
+    variables_map vm;
+    store(parsed_options, vm);
+    notify(vm);
+
+    if (vm.count("help"))
+    {
+      HELP
+      return 0;
+    }
+    if (vm.count("host"))
+      EoscCommand::host = string(vm["host"].as<string>());
+    if (vm.count("port"))
+      EoscCommand::port = string(vm["port"].as<string>());
+
+    if (to_pass_further.size() > 0)
+      first = to_pass_further[0];
+    if (to_pass_further.size() > 1)
+    {
+      second = to_pass_further[1];
+      argvArray.reserve(to_pass_further.size() - 2 + 1);
+      for (int i = 2; i < to_pass_further.size(); i++)
+      {
+        argvArray.push_back(to_pass_further[i].c_str());
+      }
+    }
+
+    argvArray.push_back("--wallet-host");
+    argvArray.push_back(vm["wallet-host"].as<string>().c_str());
+    argvArray.push_back("--wallet-port");
+    argvArray.push_back(vm["wallet-port"].as<string>().c_str());
+    if (vm.count("verbose"))
+      argvArray.push_back("--verbose");
+  }
+  catch (const boost::program_options::error &ex)
+  {
+    std::cerr << ex.what() << '\n';
+  }
+
+  if (first == "")
+  {
+    HELP
+    return 0;
+  }
+  else
+  {
+    if (first.compare("test") == 0)
     {
       test();
       return 0;
     }
-    argv++;
-    argc--;
-    if (argc > 1)
+    else if (second != "")
     {
-      command_name += "_";
-      command_name += argv[1];
-      argv++;
-      argc--;
+      string commandName = first;
+      commandName += "_";
+      commandName += second;
 
       IF_ELSE(get_info, GetInfo)
       IF_ELSE(get_block, GetBlock)
       {
-        cerr << "unknown command!";
+        cerr << "unknown command!" << endl;
       }
+    }
+    else
+    {
+      HELP
+      return 0;
     }
   }
   return 0;
 }
-/*
-Testing with VMware Ubuntu:
-Virtual Machine Settings > Network Adapter :
-  Bridget, Replicate physical network connection state
 
-ifconfig
-
-ens33: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-inet 192.168.1.100  netmask 255.255.255.0  broadcast 192.168.1.255
-inet6 fe80::e6a5:d11:3cab:ec93  prefixlen 64  scopeid 0x20<link>
-ether 00:0c:29:e3:76:b8  txqueuelen 1000  (Ethernet)
-RX packets 183  bytes 16810 (16.8 KB)
-RX errors 0  dropped 0  overruns 0  frame 0
-TX packets 191  bytes 22942 (22.9 KB)
-TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
-
-SSH session, 
-Remote host: 192.168.1.100
-User name: cartman
-Port: 22
-
-OK
-
-The same works with 
-Virtual Machine Settings > Network Adapter :
-Host-only: A provate network shared with the host
-
-*/

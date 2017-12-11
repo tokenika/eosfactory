@@ -2,12 +2,29 @@
 
 ```
 EOSIO_INSTALL_DIR="/mnt/hgfs/Workspaces/EOS/eos"
+```
+Using a local eos installation
+```
 source /mnt/hgfs/Workspaces/EOS/eoscBash/eoscBash $EOSIO_INSTALL_DIR
 eosc clean
 source /mnt/hgfs/Workspaces/EOS/eoscBash/eoscBash $EOSIO_INSTALL_DIR
-
+```
+Using Tokenika server `198.100.148.136:8888`
+```
+source /mnt/hgfs/Workspaces/EOS/eoscBash/eoscBash 198.100.148.136:8888 $EOSIO_INSTALL_DIR
+```
+```
 eosc wallet create
+eosc wallet unlock # with Tokenika server
+##
+## eosc wallet unlock default:
+## password: Failed to connect to eosd at 198.100.148.136:8888; is eosd running?
+
 eosc wallet import ${initaPrivKey}
+```
+./eosc -H 198.100.148.136 -p 8888 wallet import 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3 -n default
+## Failed to connect to eosd at 198.100.148.136:8888; is eosd running?
+```
 eosc create key owner
 eosc create key active
 eosc wallet import $activePrivKey

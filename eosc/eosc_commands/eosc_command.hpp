@@ -18,6 +18,8 @@
 #include <boost/program_options.hpp>
 
 #define EOSC_ERROR "error" // Error json key
+#define HOST_DEFAULT "localhost"
+#define PORT_DEFAULT "8888"
 
 namespace tokenika 
 {
