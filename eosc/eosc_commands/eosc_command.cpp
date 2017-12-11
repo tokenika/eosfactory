@@ -90,39 +90,6 @@ namespace tokenika
       return ptree;
     }
 
-    bool eoscCommandJson(
-      std::string path,
-      boost::property_tree::ptree &postJson,
-      boost::property_tree::ptree &rcv_json)
-    {
-
-      boost::property_tree::ptree config;
-      try {
-        boost::property_tree::read_json(CONFIG_JSON, config);
-      }
-      catch (...) {
-        boost::filesystem::path full_path(boost::filesystem::current_path());
-        printf("ERROR: Cannot read config file %s!\n", CONFIG_JSON);
-        printf("Current path is: %s\n", full_path.string().c_str());
-        printf("The config json file is expected there!.");
-        return false;
-      }
-
-      callEosd(
-        config.get("eosc.server", "localhost"),
-        config.get("eosc.port", "8888"),
-        path,
-        postJson,
-        rcv_json);
-      try {
-        rcv_json.get<std::string>(EOSC_ERROR);
-        return false;
-      }
-      catch (...) {
-        return true;
-      }
-    }
-
     void callEosd(
       std::string server,
       std::string port,
@@ -144,7 +111,6 @@ namespace tokenika
         ip::tcp::socket socket(io_service);
         boost::asio::connect(socket, iterator);
 
- 
         std::stringstream ss;
         boost::property_tree::json_parser::write_json(ss, postJson, false);
         std::string post_msg = ss.str();
@@ -218,6 +184,39 @@ namespace tokenika
     /***************************************************************************
       Definitions for class EoscCommand.
     ****************************************************************************/
+    EoscCommand::EoscCommand(
+      std::string path,
+      boost::property_tree::ptree postJson,
+      bool isRaw) : path(path), postJson(postJson), isRaw(isRaw)
+    {
+      std::string host_(host);
+      std::string port_(port);
+      if(host.size() == 0 || port.size() == 0){
+        boost::property_tree::ptree config;
+        try {
+          boost::property_tree::read_json(CONFIG_JSON, config);
+        }
+        catch (...) {
+          boost::filesystem::path full_path(boost::filesystem::current_path());
+          printf("ERROR: Cannot read config file %s!\n", CONFIG_JSON);
+          printf("Current path is: %s\n", full_path.string().c_str());
+          printf("The config json file is expected there!");
+          isErrorSet = true;
+          return;
+        }
+        host_ = config.get("eosc.server", "localhost");
+        port_ = config.get("eosc.port", "8888");
+      }
+
+      callEosd(host_, port_, path, postJson, jsonRcv);
+      try {
+        jsonRcv.get<std::string>(EOSC_ERROR);
+        isErrorSet = true;
+        return;
+      }
+      catch (...) {}
+    }
+
     std::string EoscCommand::toStringPost() const {
       std::stringstream ss;
       boost::property_tree::json_parser::
@@ -231,6 +230,9 @@ namespace tokenika
         write_json(ss, jsonRcv, !isRaw);
       return ss.str();
     }
+    
+    std::string EoscCommand::host = "";
+    std::string EoscCommand::port = "";
 
     /******************************************************************************
       Definitions for class 'command_options'

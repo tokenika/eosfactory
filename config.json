@@ -6,7 +6,7 @@
       "format":"[%TimeStamp%]: %Message%"
    },
    "eosc":{
-      "server":"localhost",
+      "server":"192.168.229.140",
       "port":"8888"
    }
 }

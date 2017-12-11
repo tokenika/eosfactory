@@ -47,7 +47,7 @@ Example\+:
 * #include <string>
 * #include <boost/property_tree/ptree.hpp>
 * #include "EoscCommands/eosc_get_commands.hpp"
-* 
+*
 * int main(int argc, char *argv[])
 * {
 * boost::property_tree::ptree postJson;
@@ -55,7 +55,7 @@ Example\+:
 * std::cout << GetInfo.get<int>("last_irreversible_block_num")) << std::endl;
 * boost::property_tree::ptree rcv_json = GetInfo.getRcvJson();
 * std::cout << GetBlock.toStringRcv() << std::endl; // Print the response json.
-* 
+*
 * return 0;
 * }
 * \end{DoxyVerb}

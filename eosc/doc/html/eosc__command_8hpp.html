@@ -66,7 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -99,7 +99,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <p><a href="eosc__command_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Data Structures</h2></td></tr>
+Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">tokenika::eosc::EoscCommand</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic connection to the blockchain.  <a href="classtokenika_1_1eosc_1_1_eosc_command.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -109,9 +109,9 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a8fe83ac76edc595f6b98cd4a4127aed5"><td class="memItemLeft" align="right" valign="top"><a id="a8fe83ac76edc595f6b98cd4a4127aed5"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>ERROR</b>&#160;&#160;&#160;&quot;error&quot;</td></tr>
-<tr class="separator:a8fe83ac76edc595f6b98cd4a4127aed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a857e89f5c53727699c25d8b17b9c10ed"><td class="memItemLeft" align="right" valign="top"><a id="a857e89f5c53727699c25d8b17b9c10ed"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>EOSC_ERROR</b>&#160;&#160;&#160;&quot;error&quot;</td></tr>
+<tr class="separator:a857e89f5c53727699c25d8b17b9c10ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -121,15 +121,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a03be7086d7980dc8c27b7aaaf8973771"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><b>tokenika::eosc::output</b> (const char *label, const char *format,...)</td></tr>
 <tr class="memdesc:a03be7086d7980dc8c27b7aaaf8973771"><td class="mdescLeft">&#160;</td><td class="mdescRight">Printout formater.  <a href="eosc__command_8cpp.html#a03be7086d7980dc8c27b7aaaf8973771">More...</a><br /></td></tr>
 <tr class="separator:a03be7086d7980dc8c27b7aaaf8973771"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c991d7e20076d61c60f1157357eaa9b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><b>tokenika::eosc::eoscCommandJson</b> (std::string path, boost::property_tree::ptree &amp;postJson, boost::property_tree::ptree &amp;jsonRcv)</td></tr>
-<tr class="memdesc:a1c991d7e20076d61c60f1157357eaa9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a json, gets EOS blockchain responce.  <a href="eosc__command_8cpp.html#a1c991d7e20076d61c60f1157357eaa9b">More...</a><br /></td></tr>
-<tr class="separator:a1c991d7e20076d61c60f1157357eaa9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a522ae193d4a10cba97e59df169dd1da5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><b>tokenika::eosc::callEosd</b> (std::string server, std::string port, std::string path, boost::property_tree::ptree &amp;postJson, boost::property_tree::ptree &amp;jsonRcv)</td></tr>
-<tr class="memdesc:a522ae193d4a10cba97e59df169dd1da5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a json, gets EOS blockchain responce.  <a href="eosc__command_8cpp.html#a522ae193d4a10cba97e59df169dd1da5">More...</a><br /></td></tr>
+<tr class="memitem:a522ae193d4a10cba97e59df169dd1da5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><b>tokenika::eosc::callEosd</b> (std::string <a class="el" href="classserver.html">server</a>, std::string port, std::string path, boost::property_tree::ptree &amp;postJson, boost::property_tree::ptree &amp;jsonRcv)</td></tr>
+<tr class="memdesc:a522ae193d4a10cba97e59df169dd1da5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a json, eoscCommandJsongets EOS blockchain responce.  <a href="eosc__command_8cpp.html#a522ae193d4a10cba97e59df169dd1da5">More...</a><br /></td></tr>
 <tr class="separator:a522ae193d4a10cba97e59df169dd1da5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d300c178b2b0dd2e1762fc6c14ee6e1"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
 <tr class="memitem:a2d300c178b2b0dd2e1762fc6c14ee6e1"><td class="memTemplItemLeft" align="right" valign="top">Type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tokenika::eosc::getJsonPath</b> (boost::property_tree::ptree json, const boost::property_tree::ptree::path_type &amp;path)</td></tr>
-<tr class="memdesc:a2d300c178b2b0dd2e1762fc6c14ee6e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a json tree, returns the &lt;Type&gt;value of a given path.  <a href="eosc__command_8cpp.html#a2d300c178b2b0dd2e1762fc6c14ee6e1">More...</a><br /></td></tr>
+<tr class="memdesc:a2d300c178b2b0dd2e1762fc6c14ee6e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a json teoscCommandJsonree, returns the &lt;Type&gt;value of a given path.  <a href="eosc__command_8cpp.html#a2d300c178b2b0dd2e1762fc6c14ee6e1">More...</a><br /></td></tr>
 <tr class="separator:a2d300c178b2b0dd2e1762fc6c14ee6e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ce29794654e913a1069e28530f4fe46"><td class="memItemLeft" align="right" valign="top">boost::property_tree::ptree&#160;</td><td class="memItemRight" valign="bottom"><b>tokenika::eosc::stringToPtree</b> (std::string json)</td></tr>
 <tr class="memdesc:a0ce29794654e913a1069e28530f4fe46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a text json tree, returns the equivalent <code>boost ptree</code>.  <a href="eosc__command_8cpp.html#a0ce29794654e913a1069e28530f4fe46">More...</a><br /></td></tr>
@@ -184,66 +181,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Given a json, gets EOS blockchain responce. </p>
+<p>Given a json, eoscCommandJsongets EOS blockchain responce. </p>
 <p>Given a json tree and a command path (for example <code>/v1/chain/GetInfo</code>), and EOS blockchain communication port (for example <code>8888</code>), and EOS blockchain server name (for example <code>localhost</code>), gets EOS blockchain responce.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">server</td><td>EOS blockchain server name </td></tr>
     <tr><td class="paramname">port</td><td>EOS blockchain communication port </td></tr>
     <tr><td class="paramname">path</td><td>command path </td></tr>
-    <tr><td class="paramname">postJson</td><td>json to be posted </td></tr>
+    <tr><td class="paramname">postJson</td><td>json eoscCommandJsonto be posted </td></tr>
     <tr><td class="paramname">jsonRcv</td><td>json to be filled with received data </td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="file_a1c991d7e20076d61c60f1157357eaa9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_a1c991d7e20076d61c60f1157357eaa9b">&#9670;&nbsp;</a></span>eoscCommandJson()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tokenika::eosc::eoscCommandJson </td>
-          <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>path</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">boost::property_tree::ptree &amp;&#160;</td>
-          <td class="paramname"><em>postJson</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">boost::property_tree::ptree &amp;&#160;</td>
-          <td class="paramname"><em>jsonRcv</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Given a json, gets EOS blockchain responce. </p>
-<p>Given a json and a command path, for example <code>/v1/chain/GetInfo</code>, gets EOS blockchain responce.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">path</td><td>command path </td></tr>
-    <tr><td class="paramname">postJson</td><td>json posted </td></tr>
-    <tr><td class="paramname">jsonRcv</td><td>json received </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if EOS blockchain responce is normal </dd>
-<dd>
-false if EOS blockchain responce is not normal </dd></dl>
 
 </div>
 </div>
@@ -275,7 +224,7 @@ template&lt;typename Type &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Given a json tree, returns the &lt;Type&gt;value of a given path. </p>
+<p>Given a json teoscCommandJsonree, returns the &lt;Type&gt;value of a given path. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Type</td><td>type of the called value </td></tr>

@@ -48,24 +48,7 @@ namespace tokenika
     extern void output(const char* label, const char* format, ...);
 
     /**
-     * @brief Given a json, gets EOS blockchain responce.
-     *
-     * Given a json and a command path, for example `/v1/chain/GetInfo`,
-     * gets EOS blockchain responce.
-     *
-     * @param path command path
-     * @param postJson json posted
-     * @param jsonRcv json received
-     * @return true if EOS blockchain responce is normal
-     * @return false if EOS blockchain responce is not normal
-     */
-    extern bool eoscCommandJson(
-      std::string path,
-      boost::property_tree::ptree &postJson,
-      boost::property_tree::ptree &jsonRcv);
-
-    /**
-     * @brief Given a json, gets EOS blockchain responce.
+     * @brief Given a json, eoscCommandJsongets EOS blockchain responce.
      *
      * Given a json tree and a command path (for example `/v1/chain/GetInfo`),
      * and EOS blockchain communication port (for example `8888`),
@@ -75,7 +58,7 @@ namespace tokenika
      * @param server EOS blockchain server name
      * @param port EOS blockchain communication port
      * @param path command path
-     * @param postJson json to be posted
+     * @param postJson json eoscCommandJsonto be posted
      * @param jsonRcv json to be filled with received data
      */
     extern void callEosd(
@@ -86,7 +69,7 @@ namespace tokenika
       boost::property_tree::ptree &jsonRcv);
 
     /**
-     * @brief Given a json tree, returns the <Type>value of a given path.
+     * @brief Given a json teoscCommandJsonree, returns the <Type>value of a given path.
      *
      * @tparam Type type of the called value
      * @param json json tree
@@ -145,13 +128,7 @@ namespace tokenika
       EoscCommand(
         std::string path,
         boost::property_tree::ptree postJson,
-        bool isRaw = false)
-        : path(path), postJson(postJson), isRaw(isRaw)
-      {
-        if (!eoscCommandJson(path, postJson, jsonRcv)) {
-          isErrorSet = true;
-        }
-      }
+        bool isRaw = false);
 
       /**
        * @brief Error flag.
@@ -204,7 +181,6 @@ namespace tokenika
         return getJsonPath<Type>(jsonRcv, path);
       }
     };
-
 
     //http://boost.cowic.de/rc/pdf/program_options.pdf
     /**

@@ -156,8 +156,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\eosc.cpp" />
     <ClCompile Include="..\..\eosc_commands\eosc_command.cpp" />
-    <ClCompile Include="..\..\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="eosc_config.json" />

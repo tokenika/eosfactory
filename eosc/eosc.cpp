@@ -13,6 +13,7 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
 #include "eosc_commands/eosc_get_commands.hpp"
+#include "eosc.hpp"
 
 using namespace std;
 
@@ -63,11 +64,10 @@ void test()
 
 int main(int argc, const char *argv[])
 {
-  string command_name;
   if (argc > 1)
   {
     string ipAddress(argv[1]);
-    int colon = ipAddress.find(":");
+    size_t colon = ipAddress.find(":");
     if (colon != std::string::npos)
     {
       tokenika::eosc::EoscCommand::host = string(ipAddress.substr(0, colon));
@@ -78,6 +78,7 @@ int main(int argc, const char *argv[])
     }
   }
 
+  string command_name;
   if (argc > 1)
   {
     command_name = argv[1];

@@ -9,7 +9,7 @@
          "type": "cppdbg",
          "request": "launch",
          "program": "${workspaceFolder}/build/eosc",
-         "args": ["localhost:8888", "get","info"],
+         "args": ["get","info"],
          "stopAtEntry": false,
          "cwd": "${workspaceFolder}/build",
          "environment": [],

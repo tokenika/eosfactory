@@ -26,10 +26,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\main.cpp">
+    <ClCompile Include="..\..\eosc_commands\eosc_command.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\eosc_commands\eosc_command.cpp">
+    <ClCompile Include="..\..\eosc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

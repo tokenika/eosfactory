@@ -18,8 +18,7 @@ Include dependency graph for eosc\+\_\+command.\+hpp\+:\nopagebreak
 \includegraphics[width=350pt]{eosc__command_8hpp__incl}
 \end{center}
 \end{figure}
-This graph shows which files directly or indirectly include this file\+:
-\nopagebreak
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -36,8 +35,8 @@ class \hyperlink{classtokenika_1_1eosc_1_1_command_options}{tokenika\+::eosc\+::
 \subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{eosc__command_8hpp_a8fe83ac76edc595f6b98cd4a4127aed5}\label{eosc__command_8hpp_a8fe83ac76edc595f6b98cd4a4127aed5}} 
-\#define {\bfseries E\+R\+R\+OR}~\char`\"{}error\char`\"{}
+\mbox{\Hypertarget{eosc__command_8hpp_a857e89f5c53727699c25d8b17b9c10ed}\label{eosc__command_8hpp_a857e89f5c53727699c25d8b17b9c10ed}} 
+\#define {\bfseries E\+O\+S\+C\+\_\+\+E\+R\+R\+OR}~\char`\"{}error\char`\"{}
 \end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -46,12 +45,10 @@ boost\+::posix\+\_\+time\+::ptime {\bfseries tokenika\+::eosc\+::str\+To\+Time} 
 \begin{DoxyCompactList}\small\item\em Converts E\+OS time string to \textquotesingle{}boost\+::posix\+\_\+time\textquotesingle{}. \end{DoxyCompactList}\item 
 void {\bfseries tokenika\+::eosc\+::output} (const char $\ast$label, const char $\ast$format,...)
 \begin{DoxyCompactList}\small\item\em Printout formater. \end{DoxyCompactList}\item 
-bool {\bfseries tokenika\+::eosc\+::eosc\+Command\+Json} (std\+::string path, boost\+::property\+\_\+tree\+::ptree \&post\+Json, boost\+::property\+\_\+tree\+::ptree \&json\+Rcv)
-\begin{DoxyCompactList}\small\item\em Given a json, gets E\+OS blockchain responce. \end{DoxyCompactList}\item 
-void {\bfseries tokenika\+::eosc\+::call\+Eosd} (std\+::string server, std\+::string port, std\+::string path, boost\+::property\+\_\+tree\+::ptree \&post\+Json, boost\+::property\+\_\+tree\+::ptree \&json\+Rcv)
-\begin{DoxyCompactList}\small\item\em Given a json, gets E\+OS blockchain responce. \end{DoxyCompactList}\item 
+void {\bfseries tokenika\+::eosc\+::call\+Eosd} (std\+::string \hyperlink{classserver}{server}, std\+::string port, std\+::string path, boost\+::property\+\_\+tree\+::ptree \&post\+Json, boost\+::property\+\_\+tree\+::ptree \&json\+Rcv)
+\begin{DoxyCompactList}\small\item\em Given a json, eosc\+Command\+Jsongets E\+OS blockchain responce. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename Type $>$ }\\Type {\bfseries tokenika\+::eosc\+::get\+Json\+Path} (boost\+::property\+\_\+tree\+::ptree json, const boost\+::property\+\_\+tree\+::ptree\+::path\+\_\+type \&path)
-\begin{DoxyCompactList}\small\item\em Given a json tree, returns the $<$\+Type$>$value of a given path. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Given a json teosc\+Command\+Jsonree, returns the $<$\+Type$>$value of a given path. \end{DoxyCompactList}\item 
 boost\+::property\+\_\+tree\+::ptree {\bfseries tokenika\+::eosc\+::string\+To\+Ptree} (std\+::string json)
 \begin{DoxyCompactList}\small\item\em Given a text json tree, returns the equivalent {\ttfamily boost ptree}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -73,7 +70,7 @@ Defines base classes of the project, and helper methods.
 
 
 
-Given a json, gets E\+OS blockchain responce. 
+Given a json, eosc\+Command\+Jsongets E\+OS blockchain responce. 
 
 Given a json tree and a command path (for example {\ttfamily /v1/chain/\+Get\+Info}), and E\+OS blockchain communication port (for example {\ttfamily 8888}), and E\+OS blockchain server name (for example {\ttfamily localhost}), gets E\+OS blockchain responce.
 
@@ -85,37 +82,11 @@ Given a json tree and a command path (for example {\ttfamily /v1/chain/\+Get\+In
 \hline
 {\em path} & command path \\
 \hline
-{\em post\+Json} & json to be posted \\
+{\em post\+Json} & json eosc\+Command\+Jsonto be posted \\
 \hline
 {\em json\+Rcv} & json to be filled with received data \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{eosc__command_8cpp_file_a1c991d7e20076d61c60f1157357eaa9b}\label{eosc__command_8cpp_file_a1c991d7e20076d61c60f1157357eaa9b}} 
-\index{eosc\+\_\+command.\+hpp@{eosc\+\_\+command.\+hpp}!eosc\+Command\+Json@{eosc\+Command\+Json}}
-\index{eosc\+Command\+Json@{eosc\+Command\+Json}!eosc\+\_\+command.\+hpp@{eosc\+\_\+command.\+hpp}}
-\subsubsection{\texorpdfstring{eosc\+Command\+Json()}{eoscCommandJson()}}
-{\footnotesize\ttfamily bool tokenika\+::eosc\+::eosc\+Command\+Json (\begin{DoxyParamCaption}\item[{std\+::string}]{path,  }\item[{boost\+::property\+\_\+tree\+::ptree \&}]{post\+Json,  }\item[{boost\+::property\+\_\+tree\+::ptree \&}]{json\+Rcv }\end{DoxyParamCaption})}
-
-
-
-Given a json, gets E\+OS blockchain responce. 
-
-Given a json and a command path, for example {\ttfamily /v1/chain/\+Get\+Info}, gets E\+OS blockchain responce.
-
-
-\begin{DoxyParams}{Parameters}
-{\em path} & command path \\
-\hline
-{\em post\+Json} & json posted \\
-\hline
-{\em json\+Rcv} & json received \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-true if E\+OS blockchain responce is normal 
-
-false if E\+OS blockchain responce is not normal 
-\end{DoxyReturn}
 \mbox{\Hypertarget{eosc__command_8cpp_file_a2d300c178b2b0dd2e1762fc6c14ee6e1}\label{eosc__command_8cpp_file_a2d300c178b2b0dd2e1762fc6c14ee6e1}} 
 \index{eosc\+\_\+command.\+hpp@{eosc\+\_\+command.\+hpp}!get\+Json\+Path@{get\+Json\+Path}}
 \index{get\+Json\+Path@{get\+Json\+Path}!eosc\+\_\+command.\+hpp@{eosc\+\_\+command.\+hpp}}
@@ -125,7 +96,7 @@ Type tokenika\+::eosc\+::get\+Json\+Path (\begin{DoxyParamCaption}\item[{boost\+
 
 
 
-Given a json tree, returns the $<$\+Type$>$value of a given path. 
+Given a json teosc\+Command\+Jsonree, returns the $<$\+Type$>$value of a given path. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}

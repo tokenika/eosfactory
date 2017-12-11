@@ -67,7 +67,9 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a>  </div>
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="classtokenika_1_1eosc_1_1_eosc_command-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">tokenika::eosc::EoscCommand Class Reference</div>  </div>
 </div><!--header-->
@@ -90,7 +92,7 @@ Inheritance diagram for tokenika::eosc::EoscCommand:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ab736f0dcd8ca14eb0daf9b2244218397"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html#ab736f0dcd8ca14eb0daf9b2244218397">EoscCommand</a> (std::string path, boost::property_tree::ptree postJson, bool isRaw=false)</td></tr>
-<tr class="memdesc:ab736f0dcd8ca14eb0daf9b2244218397"><td class="mdescLeft">&#160;</td><td class="mdescRight">Just initiates members, and calls the blockchain.  <a href="#ab736f0dcd8ca14eb0daf9b2244218397">More...</a><br /></td></tr>
+<tr class="memdesc:ab736f0dcd8ca14eb0daf9b2244218397"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initiates members, and calls the blockchain.  <a href="#ab736f0dcd8ca14eb0daf9b2244218397">More...</a><br /></td></tr>
 <tr class="separator:ab736f0dcd8ca14eb0daf9b2244218397"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63f3adace3f84b59f64c5a54ca0c18dc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html#a63f3adace3f84b59f64c5a54ca0c18dc">isError</a> () const</td></tr>
 <tr class="memdesc:a63f3adace3f84b59f64c5a54ca0c18dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error flag.  <a href="#a63f3adace3f84b59f64c5a54ca0c18dc">More...</a><br /></td></tr>
@@ -109,6 +111,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa1da6eb23f52159afa4a15e767cd7d6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a value of a path of the received json.  <a href="#aa1da6eb23f52159afa4a15e767cd7d6f">More...</a><br /></td></tr>
 <tr class="separator:aa1da6eb23f52159afa4a15e767cd7d6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a82163846139ac5fd47ffe3cb68251d4e"><td class="memItemLeft" align="right" valign="top"><a id="a82163846139ac5fd47ffe3cb68251d4e"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>host</b> = &quot;&quot;</td></tr>
+<tr class="separator:a82163846139ac5fd47ffe3cb68251d4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a10e9cc90a957a70f40a63c37581452"><td class="memItemLeft" align="right" valign="top"><a id="a8a10e9cc90a957a70f40a63c37581452"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>port</b> = &quot;&quot;</td></tr>
+<tr class="separator:a8a10e9cc90a957a70f40a63c37581452"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a1642782c91f4877a8fba395324fb7337"><td class="memItemLeft" align="right" valign="top"><a id="a1642782c91f4877a8fba395324fb7337"></a>
@@ -126,9 +137,6 @@ boost::property_tree::ptree&#160;</td><td class="memItemRight" valign="bottom"><
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">tokenika::eosc::EoscCommand::EoscCommand </td>
@@ -154,14 +162,9 @@ boost::property_tree::ptree&#160;</td><td class="memItemRight" valign="bottom"><
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>Just initiates members, and calls the blockchain. </p>
+<p>Initiates members, and calls the blockchain. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>command path, for example <code>/v1/chain/GetBlock</code> </td></tr>

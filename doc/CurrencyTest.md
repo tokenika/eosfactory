@@ -13,7 +13,7 @@ eosc create key active
 eosc wallet import $activePrivKey
 eosc create account inita currency $ownerPublKey $activePublKey
 
-contractSrc=/mnt/hgfs/Workspaces/EOS/EosContracts/currency/currency.cpp
+contractSrc=/mnt/hgfs/Workspaces/EOS/Pentagon/contracts/currency/currency.cpp
 ```
 In types.hpp, (tokenika-lab) `static eosio::uint64_t string_to_name(` does not compile. 
 
