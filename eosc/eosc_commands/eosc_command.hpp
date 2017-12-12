@@ -21,9 +21,9 @@
 #define HOST_DEFAULT "localhost"
 #define PORT_DEFAULT "8888"
 
-namespace tokenika 
+namespace tokenika
 {
-  namespace eosc 
+  namespace eosc
   {
 
     /**
@@ -112,7 +112,7 @@ namespace tokenika
       boost::property_tree::ptree jsonRcv;
       bool isErrorSet = false;
       bool isRaw;
-      
+
     protected:
       boost::property_tree::ptree postJson;
 
@@ -208,7 +208,7 @@ namespace tokenika
        *
        * @param common boost program options description object.
        */
-      void commonOptions(boost::program_options::options_description& common) 
+      void commonOptions(boost::program_options::options_description& common)
       {
         using namespace std;
         using namespace boost::program_options;
@@ -217,9 +217,9 @@ namespace tokenika
           ("help,h", "Help screen")
           ("wallet-host", value<string>()->default_value(HOST_DEFAULT),
             "The host where eos-wallet is running")
-          ("wallet-port", value<string>()->default_value(PORT_DEFAULT),
-            "The port where eos-wallet is running")
-          ("verbose,v", "Output verbose messages on error")
+            ("wallet-port", value<string>()->default_value(PORT_DEFAULT),
+              "The port where eos-wallet is running")
+              ("verbose,v", "Output verbose messages on error")
           ("json,j",
             value<string>(&json_),
             "Json argument")
@@ -316,11 +316,18 @@ namespace tokenika
      * @param strVector
      */
     template<class T> static void setOptions(std::vector<std::string> strVector) {
-      
+
       int argc = (int)strVector.size();
       char** argv = new char*[argc];
       for (int i = 0; i < argc; i++) {
         argv[i] = new char[strVector[i].size() + 1];
+
+#ifdef WIN32
+        strcpy_s(argv[i], strVector[i].size() + 1,
+          strVector[i].c_str());
+#else
+        strcpy(argv[i], strVector[i].c_str());
+#endif
         strcpy_s(argv[i], strVector[i].size() + 1,
           strVector[i].c_str());
       }

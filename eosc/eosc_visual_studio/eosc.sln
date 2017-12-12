@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "asyn_tcp_echo_server", "asy
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "blocking_tcp_echo_client", "blocking_tcp_echo_client\blocking_tcp_echo_client.vcxproj", "{112B7E91-2CDC-4AAF-9971-6626D2FE70D7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "firewall_tunnel", "firewall_tunnel\firewall_tunnel.vcxproj", "{26BC3608-BD4D-488C-B193-14074BDAA6BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,18 @@ Global
 		{112B7E91-2CDC-4AAF-9971-6626D2FE70D7}.Release|x64.Build.0 = Release|x64
 		{112B7E91-2CDC-4AAF-9971-6626D2FE70D7}.Release|x86.ActiveCfg = Release|Win32
 		{112B7E91-2CDC-4AAF-9971-6626D2FE70D7}.Release|x86.Build.0 = Release|Win32
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Debug|x64.ActiveCfg = Debug|x64
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Debug|x64.Build.0 = Debug|x64
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Debug|x64.Deploy.0 = Debug|x64
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Debug|x86.ActiveCfg = Debug|Win32
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Debug|x86.Build.0 = Debug|Win32
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Debug|x86.Deploy.0 = Debug|Win32
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Release|x64.ActiveCfg = Release|x64
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Release|x64.Build.0 = Release|x64
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Release|x64.Deploy.0 = Release|x64
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Release|x86.ActiveCfg = Release|Win32
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Release|x86.Build.0 = Release|Win32
+		{26BC3608-BD4D-488C-B193-14074BDAA6BC}.Release|x86.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -26,9 +26,9 @@ public:
   }
 
   void start()
-  {
+  {// Client got connection, see if there is any message:
     socket_.async_read_some(boost::asio::buffer(data_, max_length),
-      boost::bind(&session::handle_read, this,
+      boost::bind(&session::handle_read, this, //A message from a client comes:
         boost::asio::placeholders::error,
         boost::asio::placeholders::bytes_transferred));
   }
@@ -36,7 +36,7 @@ public:
 private:
   void handle_read(const boost::system::error_code& error,
     size_t bytes_transferred)
-  {
+  {// A new message data_ read, answere it:
     if (!error)
     { // write to the client:
       boost::asio::async_write(socket_,
@@ -53,7 +53,7 @@ private:
   void handle_write(const boost::system::error_code& error)
   {
     if (!error)
-    {
+    {// A responce was send, see whether there is any responce to the responce.
       socket_.async_read_some(boost::asio::buffer(data_, max_length),
         boost::bind(&session::handle_read, this,
           boost::asio::placeholders::error,
