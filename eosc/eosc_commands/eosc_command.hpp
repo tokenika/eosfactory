@@ -119,6 +119,9 @@ namespace tokenika
     public:
       static std::string host;
       static std::string port;
+      static std::string walletHost;
+      static std::string walletPort;
+      static bool verbose;
 
       /**
        * @brief Initiates members, and calls the blockchain
@@ -196,20 +199,29 @@ namespace tokenika
      */
     class CommandOptions
     {
-      int argc;
-      const char **argv;
-      std::string json;
+      int argc_;
+      const char **argv_;
+      std::string json_;
 
       /**
        * @brief List of options common to all commands.
        *
        * @param common boost program options description object.
        */
-      void commonOptions(boost::program_options::options_description& common) {
+      void commonOptions(boost::program_options::options_description& common) 
+      {
+        using namespace std;
+        using namespace boost::program_options;
+
         common.add_options()
           ("help,h", "Help screen")
+          ("wallet-host", value<string>()->default_value(HOST_DEFAULT),
+            "The host where eos-wallet is running")
+          ("wallet-port", value<string>()->default_value(PORT_DEFAULT),
+            "The port where eos-wallet is running")
+          ("verbose,v", "Output verbose messages on error")
           ("json,j",
-            boost::program_options::value<std::string>(&json),
+            value<string>(&json_),
             "Json argument")
             ("received,v", "Print received json")
           ("raw,r", "Not pretty print")
@@ -289,7 +301,7 @@ namespace tokenika
       }
 
     public:
-      CommandOptions(int argc, const char **argv) : argc(argc), argv(argv) {}
+      CommandOptions(int argc, const char *argv[]) : argc_(argc), argv_(argv) {}
       void go();
     };
 
@@ -304,13 +316,17 @@ namespace tokenika
      * @param strVector
      */
     template<class T> static void setOptions(std::vector<std::string> strVector) {
-      std::vector<const char*> cStrArray;
-      cStrArray.reserve(strVector.size());
-      for (int index = 0; index < strVector.size(); ++index)
-      {
-        cStrArray.push_back(strVector[index].c_str());
+      
+      int argc = (int)strVector.size();
+      char** argv = new char*[argc];
+      for (int i = 0; i < argc; i++) {
+        argv[i] = new char[strVector[i].size() + 1];
+        strcpy_s(argv[i], strVector[i].size() + 1,
+          strVector[i].c_str());
       }
-      T((int)cStrArray.size(), &cStrArray[0]).go();
+
+      T(argc, (const char**)argv).go();
+      delete[] argv;
     }
   }
 }

@@ -236,7 +236,7 @@ Usage: ./eosc get block [-j '{"block_num_or_id":"int | string"}'] [OPTIONS]
       virtual void getOutput(EoscCommand command) {
         output("block number", "%d", command.get<int>("block_num"));
         output("timestamp", "%s", command.get<std::string>("timestamp").c_str());
-        output("ref block prefix", "%s", command.get<std::string>("refBlockPrefix").c_str());
+        output("ref block prefix", "%s", command.get<std::string>("ref_block_prefix").c_str());
       }
 
       virtual void getExample() {

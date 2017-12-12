@@ -16,42 +16,47 @@
 #include "eosc_commands/eosc_get_commands.hpp"
 #include "eosc.hpp"
 
-using namespace std;
-using namespace tokenika::eosc;
-
 void test()
 {
+  using namespace std;
+  using namespace tokenika::eosc;
+
   vector<string>
+  
+  // args = {"", "--xxx"};
+  // cout << boost::algorithm::join(args, ", ") << endl;
+  // setOptions<tokenika::eosc::GetInfoOptions>(args);
 
-      args = {"--xxx"};
-  cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetInfoOptions>(args);
+  // args = {"", "--help", "--raw"};
+  // cout << boost::algorithm::join(args, ", ") << endl;
+  // setOptions<tokenika::eosc::GetInfoOptions>(args);
 
-  args = {"--help", "--raw"};
-  cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetInfoOptions>(args);
+  // args = {"", "--example"};
+  // cout << boost::algorithm::join(args, ", ") << endl;
+  // setOptions<tokenika::eosc::GetInfoOptions>(args);
 
-  args = {"--example"};
-  cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetInfoOptions>(args);
+  // args = {"", "--block_num", "25"};
+  // cout << boost::algorithm::join(args, ", ") << endl;
+  // setOptions<tokenika::eosc::GetInfoOptions>(args);
 
-  args = {"--block_num", "25"};
-  cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetInfoOptions>(args);
 
-  args = {"--help", "--raw"};
-  cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
-
-  args = {"--example"};
+  args = {"", "--block_num", "25"};
   cout << boost::algorithm::join(args, ", ") << endl;
   setOptions<tokenika::eosc::GetBlockOptions>(args);
 
-  args = {"--block_num", "25"};
+  args = {"", "25"};
   cout << boost::algorithm::join(args, ", ") << endl;
   setOptions<tokenika::eosc::GetBlockOptions>(args);
 
-  args = {"--json",
+  args = {"", "--help", "--raw"};
+  cout << boost::algorithm::join(args, ", ") << endl;
+  setOptions<tokenika::eosc::GetBlockOptions>(args);
+
+  args = {"", "--example"};
+  cout << boost::algorithm::join(args, ", ") << endl;
+  setOptions<tokenika::eosc::GetBlockOptions>(args);
+
+  args = {"", "--json",
           R"EOF({"block_num_or_id":"25"})EOF"};
   cout << boost::algorithm::join(args, ", ") << endl;
   setOptions<tokenika::eosc::GetBlockOptions>(args);
@@ -60,7 +65,7 @@ void test()
 #define IF_ELSE(commandName_, classPrefix)                                      \
   if (commandName == #commandName_)                                             \
   {                                                                             \
-    tokenika::eosc::classPrefix##Options(argvArray.size(), &argvArray[0]).go(); \
+    tokenika::eosc::classPrefix##Options(argcLeft, argvLeft).go(); \
   }                                                                             \
   else
 
@@ -69,33 +74,37 @@ void test()
   std::cout << desc << endl;  \
   std::cout << subcommands << endl;
 
-  string usage = R"EOF(
+  const char* usage = R"EOF(
 Command Line Interface to Eos Daemon
-Usage: ./eosc [HOST:PORT] [OPTIONS] SUBCOMMAND
+Usage: ./eosc [HOST:PORT] [OPTIONS] SUBCOMMAND [SUBCOMAND OPTIONS]
 for example:
 192.168.229.140:8888 get block 255
 )EOF";
 
-  string subcommands = R"EOF(
+  const char* subcommands = R"EOF(
 Subcommands:
   create                      Create various items, on and off the blockchain
   get                         Retrieve various items and information from the blockchain
-  set                         Set or update blockchain state
+  set                         Set or update blockchain state = new char*[argcLeft]
   transfer                    Transfer EOS from account to account
   wallet                      Interact with local wallet
   benchmark                   Configure and execute benchmarks
   push                        Push arbitrary transactions to the blockchain
 )EOF";
 
-using namespace boost::program_options;
-
 int main(int argc, const char *argv[])
 {
-  vector<const char *> argvArray;
-  argvArray.push_back(argv[0]);
+  using namespace std;
+  using namespace tokenika::eosc;
+  using namespace boost::program_options;
+
+  const char* argv0 = argv[0];
+  int argcLeft;
+  const char** argvLeft;
+
   options_description desc{"Options"};
-
-
+  string first;
+  string second;
 
   if (argc > 1)
   {
@@ -111,17 +120,16 @@ int main(int argc, const char *argv[])
     }
   }
 
-  string first;
-  string second;
-
   try
   {
     options_description desc{"Options"};
     desc.add_options()
     ("help,h", "Help screen")
-    ("host,H", value<string>()->default_value(HOST_DEFAULT),
+    ("host,H", value<string>()->default_value(
+      EoscCommand::host == "" ? HOST_DEFAULT : EoscCommand::host),
       "The host where eosd is running")
-    ("port,p", value<string>()->default_value(PORT_DEFAULT),
+    ("port,p", value<string>()->default_value(
+      EoscCommand::port == "" ? PORT_DEFAULT : EoscCommand::port),
       "The port where eosd is running")
     ("wallet-host", value<string>()->default_value(HOST_DEFAULT),
       "The host where eos-wallet is running")
@@ -140,39 +148,51 @@ int main(int argc, const char *argv[])
     store(parsed_options, vm);
     notify(vm);
 
-    if (vm.count("help"))
-    {
-      HELP
-      return 0;
-    }
     if (vm.count("host"))
       EoscCommand::host = string(vm["host"].as<string>());
     if (vm.count("port"))
       EoscCommand::port = string(vm["port"].as<string>());
 
+    if (vm.count("wallet-host"))
+      EoscCommand::walletHost = string(vm["wallet-host"].as<string>());
+    if (vm.count("wallet-port"))
+      EoscCommand::walletPort = string(vm["wallet-port"].as<string>());
+    if (vm.count("verbose")) 
+      EoscCommand::verbose = true;     
+
     if (to_pass_further.size() > 0)
       first = to_pass_further[0];
-    if (to_pass_further.size() > 1)
-    {
-      second = to_pass_further[1];
-      argvArray.reserve(to_pass_further.size() - 2 + 1);
-      for (int i = 2; i < to_pass_further.size(); i++)
-      {
-        argvArray.push_back(to_pass_further[i].c_str());
-      }
-    }
 
-    argvArray.push_back("--wallet-host");
-    argvArray.push_back(vm["wallet-host"].as<string>().c_str());
-    argvArray.push_back("--wallet-port");
-    argvArray.push_back(vm["wallet-port"].as<string>().c_str());
-    if (vm.count("verbose"))
-      argvArray.push_back("--verbose");
+    if (vm.count("help"))
+      to_pass_further.push_back("-h");
+
+    argcLeft = max((int)to_pass_further.size() - 2 + 1, 1);
+
+    char** arr = new char*[argcLeft];
+    arr[0] = new char[strlen(argv0) + 1];
+    strcpy_s(arr[0], strlen(argv0) + 1, argv0);
+
+    for(size_t i = 2; i < to_pass_further.size(); i++){
+      arr[i - 1] = new char[to_pass_further[i].size() + 1];
+      strcpy_s(arr[i - 1], to_pass_further[i].size() + 1, 
+        to_pass_further[i].c_str());
+    }
+    argvLeft = (const char**)arr;
+
+    if (to_pass_further.size() > 1)
+      second = to_pass_further[1];
+
+    if (vm.count("help") && second == "")
+    {
+      HELP
+      return 0;
+    }
   }
   catch (const boost::program_options::error &ex)
   {
     std::cerr << ex.what() << '\n';
-  }
+    exit(-1);
+  }        
 
   if (first == "")
   {
@@ -184,7 +204,9 @@ int main(int argc, const char *argv[])
     if (first.compare("test") == 0)
     {
       test();
-      return 0;
+      return 0;  string first;
+  string second;
+
     }
     else if (second != "")
     {
@@ -197,6 +219,7 @@ int main(int argc, const char *argv[])
       {
         cerr << "unknown command!" << endl;
       }
+      delete[] argvLeft;
     }
     else
     {

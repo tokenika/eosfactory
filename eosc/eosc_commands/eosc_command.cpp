@@ -184,6 +184,7 @@ namespace tokenika
     /***************************************************************************
       Definitions for class EoscCommand.
     ****************************************************************************/
+
     EoscCommand::EoscCommand(
       std::string path,
       boost::property_tree::ptree postJson,
@@ -191,22 +192,30 @@ namespace tokenika
     {
       std::string host_(host);
       std::string port_(port);
-      if(host.size() == 0 || port.size() == 0){
-        boost::property_tree::ptree config;
-        try {
-          boost::property_tree::read_json(CONFIG_JSON, config);
-        }
-        catch (...) {
-          boost::filesystem::path full_path(boost::filesystem::current_path());
-          printf("ERROR: Cannot read config file %s!\n", CONFIG_JSON);
-          printf("Current path is: %s\n", full_path.string().c_str());
-          printf("The config json file is expected there!");
-          isErrorSet = true;
-          return;
-        }
-        host_ = config.get("eosc.server", "localhost");
-        port_ = config.get("eosc.port", "8888");
+
+      boost::property_tree::ptree config;
+      try 
+      {
+        boost::property_tree::read_json(CONFIG_JSON, config);
       }
+      catch (...) {
+        boost::filesystem::path full_path(boost::filesystem::current_path());
+        printf("ERROR: Cannot read config file %s!\n", CONFIG_JSON);
+        printf("Current path is: %s\n", full_path.string().c_str());
+        printf("The config json file is expected there!");
+        exit(-1);
+      }    
+      
+      if(host == "")
+        host_ = config.get("eosc.server", HOST_DEFAULT);
+      if(port == "")
+        port_ = config.get("eosc.port", PORT_DEFAULT);
+      if(EoscCommand::walletHost == "")
+        EoscCommand::walletHost = config.get("eosc.walletServer", HOST_DEFAULT);
+      if(EoscCommand::walletPort == "")
+        EoscCommand::walletPort = config.get("eosc.walletPort", PORT_DEFAULT);
+      if(!EoscCommand::verbose)
+        EoscCommand::verbose = config.get("eosc.verbose", false);
 
       callEosd(host_, port_, path, postJson, jsonRcv);
       try {
@@ -233,42 +242,48 @@ namespace tokenika
     
     std::string EoscCommand::host = "";
     std::string EoscCommand::port = "";
+    std::string EoscCommand::walletHost = "";
+    std::string EoscCommand::walletPort = "";
+    bool EoscCommand::verbose = false;
 
     /******************************************************************************
       Definitions for class 'command_options'
     ******************************************************************************/
 
-    void CommandOptions::go() {
+    void CommandOptions::go() 
+    {
+      using namespace boost::program_options;
+
       try {
         bool isRaw = false;
 
-        boost::program_options::options_description desc{ "Options" };
-        boost::program_options::options_description common("");
+        options_description desc{ "Options" };
+        options_description common("");
         commonOptions(common);
         desc.add(options()).add(common);
-
-        boost::program_options::positional_options_description pos_desc;
+        positional_options_description pos_desc;
         setPosDesc(pos_desc);
-
-        boost::program_options::command_line_parser parser{ argc, argv };
+        command_line_parser parser{ argc_, argv_ };
         parser.options(desc).positional(pos_desc);//.allow_unregistered();
-        boost::program_options::parsed_options parsed_options = parser.run();
+        parsed_options parsed_options = parser.run();
 
-        boost::program_options::variables_map vm;
+        variables_map vm;
         store(parsed_options, vm);
         notify(vm);
-
-        bool is_arg = setJson(vm) || vm.count("json");
-        if (vm.count("json")) {
-          postJson = stringToPtree(json);
-        }
-        isRaw = vm.count("raw") ? true : false;
 
         if (vm.count("help")) {
           std::cout << getUsage() << std::endl;
           std::cout << desc << std::endl;
+          return;
+        }        
+        
+        bool is_arg = setJson(vm) || vm.count("json");
+        if (vm.count("json")) {
+          postJson = stringToPtree(json_);
         }
-        else if (vm.count("example")) {
+        isRaw = vm.count("raw") ? true : false;
+
+        if (vm.count("example")) {
           getExample();
         }
         else if (is_arg) {
@@ -292,7 +307,7 @@ namespace tokenika
           std::cout << desc << std::endl;
         }
       }
-      catch (const boost::program_options::error &ex) {
+      catch (const error &ex) {
         std::cerr << ex.what() << std::endl;
       }
     }
