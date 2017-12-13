@@ -7,7 +7,6 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include "boost/date_time/posix_time/posix_time.hpp"
-#include <boost/algorithm/string/join.hpp>
 #include <boost/program_options.hpp>
 
 #include <boost/preprocessor/repetition/repeat.hpp>
@@ -15,52 +14,7 @@
 
 #include "eosc_commands/eosc_get_commands.hpp"
 #include "eosc.hpp"
-
-void test()
-{
-  using namespace std;
-  using namespace tokenika::eosc;
-
-  vector<string>
-
-    // args = {"", "--xxx"};
-    // cout << boost::algorithm::join(args, ", ") << endl;
-    // setOptions<tokenika::eosc::GetInfoOptions>(args);
-
-    // args = {"", "--help", "--raw"};
-    // cout << boost::algorithm::join(args, ", ") << endl;
-    // setOptions<tokenika::eosc::GetInfoOptions>(args);
-
-    // args = {"", "--example"};
-    // cout << boost::algorithm::join(args, ", ") << endl;
-    // setOptions<tokenika::eosc::GetInfoOptions>(args);
-
-    // args = {"", "--block_num", "25"};
-    // cout << boost::algorithm::join(args, ", ") << endl;
-    // setOptions<tokenika::eosc::GetInfoOptions>(args);
-
-
-    args = { "", "--block_num", "25" };
-  cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
-
-  args = { "", "25" };
-  cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
-
-  args = { "", "--help", "--raw" };
-  cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
-
-  args = { "", "--example" };
-  cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
-
-  args = { "", "--json",
-          R"EOF({"block_num_or_id":"25"})EOF" };
-  cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
-}
+#include "eosc_test.hpp"
 
 #define IF_ELSE(commandName_, classPrefix)                                      \
   if (commandName == #commandName_)                                             \
@@ -76,20 +30,21 @@ void test()
 
 const char* usage = R"EOF(
 Command Line Interface to Eos Daemon
-Usage: ./eosc [HOST:PORT] [OPTIONS] SUBCOMMAND [SUBCOMAND OPTIONS]
+Usage: ./eosc [HOST:PORT] [OPTIONS] [COMMAND] [SUBCOMMAND] [OPTIONS]
 for example:
 192.168.229.140:8888 get block 255
 )EOF";
 
 const char* subcommands = R"EOF(
-Subcommands:
-  create                      Create various items, on and off the blockchain
-  get                         Retrieve various items and information from the blockchain
-  set                         Set or update blockchain state
-  transfer                    Transfer EOS from account to account
-  wallet                      Interact with local wallet
-  benchmark                   Configure and execute benchmarks
-  push                        Push arbitrary transactions to the blockchain
+Commands:
+  create <subcomnd>    Create various items, on and off the blockchain
+  get <subcomnd>       Retrieve various items and information from the blockchain
+  set <subcomnd>       Set or update blockchain state
+  transfer <subcomnd>  Transfer EOS from account to account
+  wallet <subcomnd>    Interact with local wallet
+  benchmark <subcomnd> Configure and execute benchmarks
+  push <subcomnd>      Push arbitrary transactions to the blockchain
+  test                 Basic test of the application
 )EOF";
 
 int main(int argc, const char *argv[])
@@ -103,8 +58,8 @@ int main(int argc, const char *argv[])
   const char** argvLeft;
 
   options_description desc{ "Options" };
-  string first;
-  string second;
+  string command;
+  string subcommand;
 
   if (argc > 1)
   {
@@ -161,34 +116,34 @@ int main(int argc, const char *argv[])
       EoscCommand::verbose = true;
 
     if (to_pass_further.size() > 0)
-      first = to_pass_further[0];
+      command = to_pass_further[0];
 
+    if (to_pass_further.size() > 1)
+    {
+      subcommand = to_pass_further[1];
+      to_pass_further.erase(to_pass_further.begin(), to_pass_further.begin() + 2);
+    }
+    to_pass_further.insert(to_pass_further.begin(), argv0);    
     if (vm.count("help"))
       to_pass_further.push_back("-h");
 
-    argcLeft = max((int)to_pass_further.size() - 2 + 1, 1);
-
-    char** arr = new char*[argcLeft];
-    arr[0] = new char[strlen(argv0) + 1];
-    strcpy_s(arr[0], strlen(argv0) + 1, argv0);
-
-    for (size_t i = 2; i < to_pass_further.size(); i++) {
-      arr[i - 1] = new char[to_pass_further[i].size() + 1];
+    { // Convert to_pass_further std::vector to char** arr:
+      argcLeft = (int)to_pass_further.size();
+      char** arr = new char*[argcLeft];
+      for (size_t i = 0; i < to_pass_further.size(); i++) {
+        arr[i] = new char[to_pass_further[i].size() + 1];
 
 #ifdef WIN32
-      strcpy_s(arr[i - 1], to_pass_further[i].size() + 1,
-        to_pass_further[i].c_str());
+        strcpy_s(arr[i], to_pass_further[i].size() + 1,
+          to_pass_further[i].c_str()); 
 #else
-      strcpy(arr[i - 1], to_pass_further[i].c_str());
+        strcpy(arr[i], to_pass_further[i].c_str());
 #endif
-
+      }
+      argvLeft = (const char**)arr;
     }
-    argvLeft = (const char**)arr;
 
-    if (to_pass_further.size() > 1)
-      second = to_pass_further[1];
-
-    if (vm.count("help") && second == "")
+    if (vm.count("help") && command == "")
     {
       HELP
         return 0;
@@ -200,25 +155,23 @@ int main(int argc, const char *argv[])
     exit(-1);
   }
 
-  if (first == "")
+  if (command == "")
   {
     HELP
       return 0;
   }
   else
   {
-    if (first.compare("test") == 0)
+    if (command.compare("test") == 0)
     {
       test();
-      return 0;  string first;
-      string second;
-
+      return 0;
     }
-    else if (second != "")
+    else if (subcommand != "")
     {
-      string commandName = first;
+      string commandName = command;
       commandName += "_";
-      commandName += second;
+      commandName += subcommand;
 
       IF_ELSE(get_info, GetInfo)
         IF_ELSE(get_block, GetBlock)

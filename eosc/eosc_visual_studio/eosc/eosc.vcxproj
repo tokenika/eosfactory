@@ -151,13 +151,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\eosc.hpp" />
     <ClInclude Include="..\..\eosc_commands\eosc_command.hpp" />
     <ClInclude Include="..\..\eosc_commands\eosc_get_commands.hpp" />
+    <ClInclude Include="..\..\eosc_test.hpp" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\eosc.cpp" />
     <ClCompile Include="..\..\eosc_commands\eosc_command.cpp" />
+    <ClCompile Include="..\..\eosc_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="eosc_config.json" />

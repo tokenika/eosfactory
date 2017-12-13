@@ -203,7 +203,7 @@ QT_AUTOBRIEF           = NO
 # to treat a multi-line C++ comment block as a detailed description. Set this
 # tag to YES if you prefer the old behavior instead.
 #
-# Note that setting this tag to YES also mhttps://github.com/EOSIO/eos/blob/master/docs/eosc_8dox.htmleans that rational rose comments are
+# Note that setting this tag to YES also means that rational rose comments are
 # not recognized any more.
 # The default value is: NO.
 
@@ -790,7 +790,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = eosc_commands
+INPUT                  = .
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

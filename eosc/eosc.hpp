@@ -1,12 +1,13 @@
 #pragma once
 
 /**
-* @file eosc_command.hpp
+* @file eosc.hpp
 * @copyright defined in resources/LICENSE.txt
 * @brief Tool for sending transactions and querying state from EOS blockchain
 *
-* Defines base classes of the project, and helper methods.
-*
+*/
+
+/**
 * `eosc` is a command line tool that interfaces with the REST api exposed by @ref eosd. In order to use `eosc` you will need to
 * have a local copy of `eosd` running and configured to load the 'eosio::chain_api_plugin'.
 * 
@@ -58,3 +59,4 @@
 * -s,--skip-signature         Specify that unlocked wallet keys should not be used to sign transaction
 *
 */
+extern int main(int argc, const char *argv[]);
