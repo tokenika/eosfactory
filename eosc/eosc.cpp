@@ -83,14 +83,14 @@ int main(int argc, const char *argv[])
       ("host,H", value<string>()->default_value(
         EoscCommand::host == "" ? HOST_DEFAULT : EoscCommand::host),
         "The host where eosd is running")
-        ("port,p", value<string>()->default_value(
-          EoscCommand::port == "" ? PORT_DEFAULT : EoscCommand::port),
-          "The port where eosd is running")
-          ("wallet-host", value<string>()->default_value(HOST_DEFAULT),
-            "The host where eos-wallet is running")
-            ("wallet-port", value<string>()->default_value(PORT_DEFAULT),
-              "The port where eos-wallet is running")
-              ("verbose,v", "Output verbose messages on error");
+      ("port,p", value<string>()->default_value(
+        EoscCommand::port == "" ? PORT_DEFAULT : EoscCommand::port),
+        "The port where eosd is running")
+      ("wallet-host", value<string>()->default_value(HOST_DEFAULT),
+        "The host where eos-wallet is running")
+      ("wallet-port", value<string>()->default_value(PORT_DEFAULT),
+        "The port where eos-wallet is running")
+      ("verbose,V", "Output verbose messages on error");
 
     command_line_parser parser{ argc, argv };
     parser.options(desc).allow_unregistered();

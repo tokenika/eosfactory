@@ -219,7 +219,7 @@ namespace tokenika
             "The host where eos-wallet is running")
             ("wallet-port", value<string>()->default_value(PORT_DEFAULT),
               "The port where eos-wallet is running")
-              ("verbose,v", "Output verbose messages on error")
+              ("verbose,V", "Output verbose messages on error")
           ("json,j",
             value<string>(&json_),
             "Json argument")

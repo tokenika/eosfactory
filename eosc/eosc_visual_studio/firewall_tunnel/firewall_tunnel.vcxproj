@@ -157,8 +157,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="firewall_tunnel.cpp" />
-    <ClCompile Include="server.cpp" />
+    <ClCompile Include="tunnel.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

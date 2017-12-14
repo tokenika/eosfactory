@@ -2,8 +2,8 @@
 #include <iostream>
 #include <cstdarg>
 
-#include "boost/property_tree/json_parser.hpp"
-#include "boost/date_time/posix_time/posix_time.hpp"
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/asio.hpp>
@@ -98,6 +98,7 @@ namespace tokenika
       boost::property_tree::ptree &rcv_json)
     {
 
+      using namespace std;
       namespace ip = boost::asio::ip;
       namespace pt = boost::property_tree;
 
@@ -111,23 +112,23 @@ namespace tokenika
         ip::tcp::socket socket(io_service);
         boost::asio::connect(socket, iterator);
 
-        std::stringstream ss;
+       stringstream ss;
         boost::property_tree::json_parser::write_json(ss, postJson, false);
-        std::string post_msg = ss.str();
+       string post_msg = ss.str();
         boost::trim(post_msg);
 
-        std::string CRNL = "\r\n";
-        std::string request =
+       string CRNL = "\r\n";
+       string request =
           "POST " + path + " HTTP/1.0" + CRNL +
           "Host: " + server + CRNL +
-          "content-length: " + std::to_string(post_msg.size()) + CRNL +
+          "content-length: " +to_string(post_msg.size()) + CRNL +
           "Accept: */*" + CRNL +
           "Connection: close" + CRNL + CRNL +
           post_msg;
         boost::system::error_code error;
 
         boost::asio::streambuf request_buffer;
-        std::ostream request_stream(&request_buffer);
+       ostream request_stream(&request_buffer);
         request_stream << request;
         boost::asio::write(socket, request_buffer, error);
 
@@ -146,25 +147,30 @@ namespace tokenika
           return;
         }
 
-        std::istream response_stream(&response_buffer);
-        std::string http_version;
+       istream response_stream(&response_buffer);
+       string http_version;
         response_stream >> http_version;
         unsigned int status_code;
         response_stream >> status_code;
-        std::string status_message;
+       string status_message;
 
         getline(response_stream, status_message);
         if (status_code != 200) {
-          rcv_json.put(EOSC_ERROR, status_message);
+          string msg =
+            string("status code is ") + to_string(status_code);
+          msg += string("\n eosd response is ") +
+            string(boost::asio::buffer_cast<const char*>(
+              response_buffer.data()));
+          rcv_json.put(EOSC_ERROR, msg);
           return;
         }
 
-        std::string message(boost::asio::buffer_cast<const char*>(response_buffer.data()));
-        std::string mark = CRNL + CRNL; // header end mark
-        std::size_t found = message.find(mark);
+       string message(boost::asio::buffer_cast<const char*>(response_buffer.data()));
+       string mark = CRNL + CRNL; // header end mark
+       size_t found = message.find(mark);
         message = message.substr(found + mark.length(), message.length());
 
-        std::stringstream s_in;
+       stringstream s_in;
         s_in << message;
         try {
           boost::property_tree::read_json(s_in, rcv_json);
@@ -288,18 +294,17 @@ namespace tokenika
         }
         else if (is_arg) {
           EoscCommand command = getCommand(isRaw);
+          if (command.isError())
+          {
+            std::cerr << "ERROR!"  << std::endl
+              << command.get<std::string>(EOSC_ERROR) << std::endl;
+            return;
+          }
           if (vm.count("received")) {
             std::cout << command.toStringRcv() << std::endl;
           }
           else {
-            if (command.isError())
-            {
-              std::cerr << command.get<std::string>(EOSC_ERROR) << std::endl;
-            }
-            else
-            {
-              getOutput(command);
-            }
+             getOutput(command);
           }
         }
         else if (vm.count("unreg")) {

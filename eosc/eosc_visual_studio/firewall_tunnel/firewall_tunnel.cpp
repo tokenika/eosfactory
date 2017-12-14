@@ -15,10 +15,10 @@
 
 #define EOSC_ERROR "error" // Error json key
 
-std::string serverLocal = "localhost";
-std::string portLocal = "8888";
-std::string serwerRemote = "localhost";
-std::string portRemote = "8899";
+std::string serverEosd = "198.100.148.136";
+std::string portEosd = "8888";
+std::string serverEosc = "localhost";
+std::string portEosc = "8899";
 
 void callEosd(
   std::string server,
