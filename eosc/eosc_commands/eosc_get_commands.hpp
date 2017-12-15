@@ -14,6 +14,8 @@
 #include "../eosc_config.h"
 #include "eosc_command.hpp"
 
+extern const char* get;
+
 namespace tokenika
 {
   namespace eosc

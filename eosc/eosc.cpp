@@ -13,6 +13,8 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
 #include "eosc_commands/eosc_get_commands.hpp"
+#include "eosc_commands/eosc_wallet_commands.hpp"
+
 #include "eosc.hpp"
 #include "eosc_test.hpp"
 #include "subcommands.hpp"
@@ -27,7 +29,7 @@
 #define HELP                  \
   std::cout << usage << endl; \
   std::cout << desc << endl;  \
-  std::cout << subcommands << endl;
+  std::cout << commands << endl;
 
 const char* usage = R"EOF(
 Command Line Interface to Eos Daemon
@@ -36,17 +38,26 @@ for example:
 192.168.229.140:8888 get block 255
 )EOF";
 
-const char* subcommands = R"EOF(
+const char* commands = R"EOF(
 Commands:
-  create <subcomnd>    Create various items, on and off the blockchain
-  get <subcomnd>       Retrieve various items and information from the blockchain
-  set <subcomnd>       Set or update blockchain state
-  transfer <subcomnd>  Transfer EOS from account to account
-  wallet <subcomnd>    Interact with local wallet
-  benchmark <subcomnd> Configure and execute benchmarks
-  push <subcomnd>      Push arbitrary transactions to the blockchain
-  test                 Basic test of the application
+  create      Create various items, on and off the blockchain
+  get         Retrieve various items and information from the blockchain
+  set         Set or update blockchain state
+  transfer    Transfer EOS from account to account
+  wallet      Interact with local wallet
+  benchmark   Configure and execute benchmarks
+  push        Push arbitrary transactions to the blockchain
+  test        Basic test of the application
 )EOF";
+
+std::map<const std::string, const std::string> subcommandMap = {
+  { "create", create },
+  { "get", get },
+  { "set", set },
+  { "wallet", wallet },
+  { "benchmark", benchmark },
+  { "push", push }
+};
 
 int main(int argc, const char *argv[])
 {
@@ -118,17 +129,20 @@ int main(int argc, const char *argv[])
 
     if (to_pass_further.size() > 0)
       command = to_pass_further[0];
-    else
-    {
-      cout << "Subcommand required:"<< endl;
-      const char*
-    }
 
     if (to_pass_further.size() > 1)
     {
       subcommand = to_pass_further[1];
       to_pass_further.erase(to_pass_further.begin(), to_pass_further.begin() + 2);
+    } else
+    {
+      if (subcommandMap.find(command) != subcommandMap.end())
+      {
+        cout << subcommandMap.at(command) << endl;
+        return(0);
+      }
     }
+
     to_pass_further.insert(to_pass_further.begin(), argv0);    
     if (vm.count("help"))
       to_pass_further.push_back("-h");
