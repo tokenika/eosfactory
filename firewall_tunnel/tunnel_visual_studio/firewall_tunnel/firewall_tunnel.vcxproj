@@ -159,9 +159,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="tunnel.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="tunnel.cpp" />
+    <ClCompile Include="..\..\tunnel.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

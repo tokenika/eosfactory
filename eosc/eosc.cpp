@@ -15,6 +15,7 @@
 #include "eosc_commands/eosc_get_commands.hpp"
 #include "eosc.hpp"
 #include "eosc_test.hpp"
+#include "subcommands.hpp"
 
 #define IF_ELSE(commandName_, classPrefix)                                      \
   if (commandName == #commandName_)                                             \
@@ -117,6 +118,11 @@ int main(int argc, const char *argv[])
 
     if (to_pass_further.size() > 0)
       command = to_pass_further[0];
+    else
+    {
+      cout << "Subcommand required:"<< endl;
+      const char*
+    }
 
     if (to_pass_further.size() > 1)
     {
@@ -126,6 +132,8 @@ int main(int argc, const char *argv[])
     to_pass_further.insert(to_pass_further.begin(), argv0);    
     if (vm.count("help"))
       to_pass_further.push_back("-h");
+    if (vm.count("verbose"))
+      to_pass_further.push_back("-V");
 
     { // Convert to_pass_further std::vector to char** arr:
       argcLeft = (int)to_pass_further.size();

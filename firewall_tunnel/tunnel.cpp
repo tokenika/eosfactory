@@ -4,6 +4,8 @@
 #include <boost/asio.hpp>
 #include <boost/program_options.hpp>
 
+#include "tunnel.hpp"
+
 namespace asio = boost::asio;
 
 std::string serverEosc = "127.0.0.1";
@@ -59,7 +61,7 @@ void firewallTunnel()
 
     string request = readEosc(socketEosc);
     if (isVerbose) {
-      cout << request << endl;
+      cout << "request to eosd is:" << endl << request << endl;
     }
 
     {
@@ -71,7 +73,9 @@ void firewallTunnel()
       boost::asio::write(socketEosd, request_buffer, error);
 
       if (error) {
-        eosdResp = error.message();
+        string msg = "writing request to eosd: ";
+        msg += error.message();
+        eosdResp = msg;
       }
       else {
         // request sent, responce expected.
@@ -93,7 +97,7 @@ void firewallTunnel()
 
     writeEosc(socketEosc, eosdResp);
     if (isVerbose) {
-      cout << eosdResp << endl;
+      cout << "response from eosd is:" << endl << eosdResp << endl;
     }
   }
 }
@@ -111,13 +115,13 @@ int main(int argc, const char *argv[])
       ("help,h", "Help screen")
       ("eosc-host,S", value<string>()->default_value("127.0.0.1"),
         "The host where eosC is running")
-        ("eosc-port,P", value<string>()->default_value("127.0.0.1"),
+        ("eosc-port,P", value<string>()->default_value("8899"),
           "The port where eosC is running")
           ("eosd-host,s", value<string>()->default_value("127.0.0.1"),
             "The host where eosD is running")
-            ("eosd-port,p", value<string>()->default_value("127.0.0.1"),
+            ("eosd-port,p", value<string>()->default_value("8888"),
               "The port where eosD is running")
-              ("verbose,v", "Print trafic");
+              ("verbose,V", "Print trafic");
 
     variables_map vm;
     store(parse_command_line(argc, argv, desc), vm);

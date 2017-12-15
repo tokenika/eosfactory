@@ -218,3 +218,19 @@ Visual Studio with file `eosc.sln` there, and you compile both the command libra
 The VS solution has set both boost includes and libraries in relation to the `BOOST_ROOT` environmental variable: Configuration Properties > VC++ Directories. Perhaps, you will have to adjust settings.
 
 Now, the blockchain may be accessed from a Windows Command Prompt, if the `eosd` blockchain program is configured to be called from 
+
+
+Edit > Virtual Network Editor: Host-only
+Virtual Machine Settings > Network Adapter: Host-only
+```
+ifconfig
+## inet 192.168.229.141  netmask 255.255.255.0  broadcast 192.168.229.255
+```
+eosd config.ini: http-server-endpoint = 192.168.229.141:8888 # Host-only
+
+* Wallet NOT on localhost  -- *
+* - Password and/or Private Keys - *
+* - are transferred unencrypted.
+
+OK, now trying the tunnel.
+

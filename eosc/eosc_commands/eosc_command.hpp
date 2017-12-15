@@ -328,8 +328,6 @@ namespace tokenika
 #else
         strcpy(argv[i], strVector[i].c_str());
 #endif
-        strcpy_s(argv[i], strVector[i].size() + 1,
-          strVector[i].c_str());
       }
 
       T(argc, (const char**)argv).go();
