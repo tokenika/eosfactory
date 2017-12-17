@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['options',['options',['../classtokenika_1_1eosc_1_1_command_options.html#aa55960f380250eb7065cb6489b67196f',1,'tokenika::eosc::CommandOptions::options()'],['../classtokenika_1_1eosc_1_1_get_block_options.html#a6e8c1a240e5a529c093e0053f12e9ee5',1,'tokenika::eosc::GetBlockOptions::options()']]]
+  ['options',['options',['../classtokenika_1_1eosc_1_1_command_options.html#a6882b37226d251e4c8367425b687b683',1,'tokenika::eosc::CommandOptions::options()'],['../classtokenika_1_1eosc_1_1_get_block_options.html#a54aa8bb34767a103b5d3514d42b6655c',1,'tokenika::eosc::GetBlockOptions::options()'],['../classtokenika_1_1eosc_1_1_get_account_options.html#a3770490de0467ce62f98416cf72e5136',1,'tokenika::eosc::GetAccountOptions::options()']]]
 ];

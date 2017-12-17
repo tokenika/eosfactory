@@ -1,5 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classtokenika_1_1eosc_1_1_command_options.html" title="Command&#45;line wrapper for eosc commands. " alt="" coords="5,42,225,69"/>
-<area shape="rect" id="node2" href="$classtokenika_1_1eosc_1_1_get_block_options.html" title="tokenika::eosc::GetBlock\lOptions" alt="" coords="290,5,459,47"/>
-<area shape="rect" id="node3" href="$classtokenika_1_1eosc_1_1_get_info_options.html" title="tokenika::eosc::GetInfoOptions" alt="" coords="273,71,476,98"/>
+<area shape="rect" id="node1" href="$classtokenika_1_1eosc_1_1_command_options.html" title="Command&#45;line wrapper for eosc commands. " alt="" coords="5,78,225,105"/>
+<area shape="rect" id="node2" href="$classtokenika_1_1eosc_1_1_get_account_options.html" title="tokenika::eosc::GetAccount\lOptions" alt="" coords="283,5,467,47"/>
+<area shape="rect" id="node3" href="$classtokenika_1_1eosc_1_1_get_block_options.html" title="tokenika::eosc::GetBlock\lOptions" alt="" coords="290,71,459,112"/>
+<area shape="rect" id="node4" href="$classtokenika_1_1eosc_1_1_get_info_options.html" title="tokenika::eosc::GetInfoOptions" alt="" coords="273,137,476,163"/>
 </map>

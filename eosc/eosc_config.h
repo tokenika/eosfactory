@@ -1,3 +1,10 @@
+/**
+* @file eosc_config.h
+* @copyright defined in resources/LICENSE.txt
+* @brief Tool for sending transactions and querying state from EOS blockchain
+*
+*/
+
 #pragma once
 
 #define VERSION_MAJOR 1

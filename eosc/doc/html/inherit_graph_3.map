@@ -1,5 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classtokenika_1_1eosc_1_1_eosc_command.html" title="Basic connection to the blockchain. " alt="" coords="5,31,211,57"/>
-<area shape="rect" id="node2" href="$classtokenika_1_1eosc_1_1_get_block.html" title="Retrieve a full block from a blockchain. " alt="" coords="259,5,428,32"/>
-<area shape="rect" id="node3" href="$classtokenika_1_1eosc_1_1_get_info.html" title="Get current blockchain information. " alt="" coords="264,56,423,83"/>
+<area shape="rect" id="node1" href="$classtokenika_1_1eosc_1_1_eosc_command.html" title="Basic connection to the blockchain. " alt="" coords="5,56,211,83"/>
+<area shape="rect" id="node2" href="$classtokenika_1_1eosc_1_1_get_account.html" title="tokenika::eosc::GetAccount" alt="" coords="259,5,443,32"/>
+<area shape="rect" id="node3" href="$classtokenika_1_1eosc_1_1_get_block.html" title="Retrieve a full block from a blockchain. " alt="" coords="266,56,435,83"/>
+<area shape="rect" id="node4" href="$classtokenika_1_1eosc_1_1_get_info.html" title="Get current blockchain information. " alt="" coords="271,107,430,133"/>
 </map>

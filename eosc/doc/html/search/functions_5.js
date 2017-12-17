@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['tostringpost',['toStringPost',['../classtokenika_1_1eosc_1_1_eosc_command.html#a1cb0362dceb5999e7e06078223b20d91',1,'tokenika::eosc::EoscCommand']]],
-  ['tostringrcv',['toStringRcv',['../classtokenika_1_1eosc_1_1_eosc_command.html#ad01ef46444d9d8bc708b5d18605c3903',1,'tokenika::eosc::EoscCommand']]]
+  ['tostringpost',['toStringPost',['../classtokenika_1_1eosc_1_1_eosc_command.html#a4cd0f7d51311730f6fee8670a097750e',1,'tokenika::eosc::EoscCommand']]],
+  ['tostringrcv',['toStringRcv',['../classtokenika_1_1eosc_1_1_eosc_command.html#a61ccaaec7992936f8b91ea91d9bf4a4a',1,'tokenika::eosc::EoscCommand']]]
 ];
