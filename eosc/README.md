@@ -214,6 +214,10 @@ make
 There is an MS Visual Studio 17 solution in `eos_visual_studio` folder. You can start
 Visual Studio with file `eosc.sln` there, and you compile both the command library and 
 `eosc' executable.
+```
+msbuild.exe ALL_BUILD.vcxproj
+msbuild.exe INSTALL.vcxproj
+...
 
 The VS solution has set both boost includes and libraries in relation to the `BOOST_ROOT` environmental variable: Configuration Properties > VC++ Directories. Perhaps, you will have to adjust settings.
 

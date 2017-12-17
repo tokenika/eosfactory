@@ -21,6 +21,10 @@
 #define HOST_DEFAULT "localhost"
 #define PORT_DEFAULT "8888"
 
+using namespace std;
+using namespace boost::program_options;
+using namespace boost::property_tree;
+
 namespace tokenika
 {
   namespace eosc
@@ -35,7 +39,7 @@ namespace tokenika
      * @param str EOS time string.
      * @return boost::posix_time::ptime
      */
-    extern boost::posix_time::ptime strToTime(const std::string str);
+    extern boost::posix_time::ptime strToTime(const string str);
 
     /**
      * @brief Printout formater.
@@ -64,11 +68,11 @@ namespace tokenika
      * @param jsonRcv json to be filled with received data
      */
     extern void callEosd(
-      std::string server,
-      std::string port,
-      std::string path,
-      boost::property_tree::ptree &postJson,
-      boost::property_tree::ptree &jsonRcv);
+      string server,
+      string port,
+      string path,
+      ptree &postJson,
+      ptree &jsonRcv);
 
     /**
      * @brief Given a json teoscCommandJsonree, returns the <Type>value of a given path.
@@ -79,8 +83,8 @@ namespace tokenika
      * @return Type
      */
     template<typename Type>
-    Type getJsonPath(boost::property_tree::ptree json,
-      const boost::property_tree::ptree::path_type & path);
+    Type getJsonPath(ptree json,
+      const ptree::path_type & path);
 
     /**
      * @brief Given a text json tree, returns the equivalent `boost ptree`.
@@ -88,8 +92,8 @@ namespace tokenika
      * @param json
      * @return boost::property_tree::ptree
      */
-    extern boost::property_tree::ptree stringToPtree(
-      std::string json);
+    extern ptree stringToPtree(
+      string json);
 
     /**
      * @brief Basic connection to the blockchain.
@@ -108,19 +112,19 @@ namespace tokenika
      */
     class EoscCommand
     {
-      std::string path;
-      boost::property_tree::ptree jsonRcv;
+      string path;
+      ptree jsonRcv;
       bool isErrorSet = false;
       bool isRaw;
 
     protected:
-      boost::property_tree::ptree postJson;
+      ptree postJson;
 
     public:
-      static std::string host;
-      static std::string port;
-      static std::string walletHost;
-      static std::string walletPort;
+      static string host;
+      static string port;
+      static string walletHost;
+      static string walletPort;
       static bool verbose;
 
       /**
@@ -131,8 +135,8 @@ namespace tokenika
        * @param isRaw boolean, determines printout of the to-string methods
        */
       EoscCommand(
-        std::string path,
-        boost::property_tree::ptree postJson,
+        string path,
+        ptree postJson,
         bool isRaw = false);
 
       /**
@@ -150,7 +154,7 @@ namespace tokenika
        *
        * @return boost::property_tree::ptree blockchain responce
        */
-      boost::property_tree::ptree getRcvJson() const {
+      ptree getRcvJson() const {
         return jsonRcv;
       }
 
@@ -162,7 +166,7 @@ namespace tokenika
        *
        * @return std::string post json string representation
        */
-      std::string toStringPost() const;
+      string toStringPost() const;
 
       /**
        * @brief Received json string representation
@@ -172,7 +176,7 @@ namespace tokenika
        *
        * @return std::string received json string representation
        */
-      std::string toStringRcv() const;
+      string toStringRcv() const;
 
       /**
        * @brief Returns a value of a path of the received json.
@@ -182,7 +186,7 @@ namespace tokenika
        * @return Type the value of the given path
        */
       template<typename Type>
-      Type get(const boost::property_tree::ptree::path_type & path) const {
+      Type get(const ptree::path_type & path) const {
         return getJsonPath<Type>(jsonRcv, path);
       }
     };
@@ -201,14 +205,14 @@ namespace tokenika
     {
       int argc_;
       const char **argv_;
-      std::string json_;
+      string json_;
 
       /**
        * @brief List of options common to all commands.
        *
        * @param common boost program options description object.
        */
-      void commonOptions(boost::program_options::options_description& common)
+      void commonOptions(options_description& common)
       {
         using namespace std;
         using namespace boost::program_options;
@@ -233,7 +237,7 @@ namespace tokenika
       /**
        * @brief json tree to be filled with blockchain responce.
        */
-      boost::property_tree::ptree postJson;
+      ptree postJson;
 
       /**
        * @brief Command 'usage' instruction.
@@ -247,8 +251,8 @@ namespace tokenika
        *
        * @return boost::program_options::options_description command options
        */
-      virtual boost::program_options::options_description options() {
-        boost::program_options::options_description special("");
+      virtual options_description options() {
+        options_description special("");
         return special;
       }
 
@@ -258,7 +262,7 @@ namespace tokenika
        * @param pos_descr positional options
        */
       virtual void
-        setPosDesc(boost::program_options::positional_options_description&
+        setPosDesc(positional_options_description&
           pos_descr) {}
 
       /**
@@ -268,12 +272,12 @@ namespace tokenika
        * @return true if post json is set completely
        * @return false if post json cannot be set completely
        */
-      virtual bool setJson(boost::program_options::variables_map &vm) {
+      virtual bool setJson(variables_map &vm) {
         return false;
       }
 
       /**
-       * @brief Returns command object, containing a responce frosource /mnt/hgfs/Workspaces/EOS/eoscBash/eoscBash $EOSIO_INSTALL_DIR m the blockchain.
+       * @brief Returns command object, containing a responce from the blockchain.
        *
        * @param isRaw raw or pretty printout flag
        * @return EoscCommand command object
@@ -297,7 +301,7 @@ namespace tokenika
        * @param command command object, containing a responce from the blockchain.
        */
       virtual void getOutput(EoscCommand command) {
-        std::cout << command.toStringRcv() << std::endl;
+        cout << command.toStringRcv() << endl;
       }
 
     public:
@@ -315,7 +319,7 @@ namespace tokenika
      * @tparam T
      * @param strVector
      */
-    template<class T> static void setOptions(std::vector<std::string> strVector) {
+    template<class T> static void setOptions(vector<string> strVector) {
 
       int argc = (int)strVector.size();
       char** argv = new char*[argc];

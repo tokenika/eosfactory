@@ -6,6 +6,11 @@
  * Defines command line options.
  */
 
+ // test PS E:\Workspaces\EOS\Pentagon\eosc\eosc_visual_studio\x64\Debug> ./eosc 198.100.148.136:8888 geet block 234
+ //  htpc.cpp
+ // 63       std::string request = request_stream.str();
+ // 64       std::cout << request << std::endln;
+ // 
 #pragma once
 
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -14,7 +19,79 @@
 #include "../eosc_config.h"
 #include "eosc_command.hpp"
 
-extern const char* get;
+using namespace std;
+using namespace boost::program_options;
+using namespace boost::property_tree;
+
+extern const char* getSubcommands;
+extern const string getCommandPath;
+
+/* EXAMPLARY TEMPLATE
+
+    class GetBlockOptions : public CommandOptions
+    {
+    public:
+      GetBlockOptions(int argc, const char **argv)
+      : CommandOptions(argc, argv) {}
+
+    protected:
+      const char* getUsage() {
+        return R"EOF(
+Retrieve a full block from the blockchain
+Usage: ./eosc get block [block_num] [Options]
+Usage: ./eosc get block [-j '{"block_num_or_id":"int | string"}'] [OPTIONS]
+        )EOF";
+      }
+
+      int n;
+      string id;
+
+      virtual options_description options() {
+        options_description special("");
+        special.add_options()
+          ("block_num,n", value<int>(&n), "Block number")
+          ("block_id,i", value<string>(&id), "Block id");
+        return special;
+      }
+
+      virtual void setPosDesc(positional_options_description& pos_desc) {
+        pos_desc.add("block_num", 1);
+      }
+
+      virtual bool setJson(variables_map &vm) {
+        bool ok = false;
+        if (vm.count("block_num")) {
+          postJson.put("block_num_or_id", n);
+          ok = true;
+        } else if (vm.count("block_id")) {
+          postJson.put("block_num_or_id", id);
+          ok = true;
+        }
+        return ok;
+      }
+
+      virtual EoscCommand getCommand(bool is_raw) {
+        return XXXX(postJson, is_raw);
+      }
+
+      virtual void getOutput(EoscCommand command) {
+        output("block number", "%d", command.get<int>("block_num"));
+        output("timestamp", "%s", command.get<string>("timestamp").c_str());
+        output("ref block prefix", "%s", command.get<string>("ref_block_prefix").c_str());
+      }
+
+      virtual void getExample() {
+        boost::property_tree::ptree postJson;
+        GetInfo GetInfo(postJson);
+        cout << R"EOF(
+Invoke 'GetInfo' command:
+GetInfo GetInfo;
+        )EOF" << endl;
+        cout << GetInfo.toStringRcv() << endl;
+      }
+    };
+
+*/
 
 namespace tokenika
 {
@@ -50,31 +127,35 @@ namespace tokenika
     {
     public:
 
-      GetInfo(
-        boost::property_tree::ptree postJson,
-        bool raw = false)
-        : EoscCommand(
-          "/v1/chain/get_info",
-          postJson,
-          raw) {}
+      GetInfo(ptree postJson, bool raw = false) : EoscCommand(
+        string(getCommandPath + "get_info").c_str(), postJson, raw) {}
     };
 
     class GetInfoOptions : public CommandOptions
     {
     public:
-      GetInfoOptions(int argc, const char **argv)
-        : CommandOptions(argc, argv) {}
+      GetInfoOptions(int argc, const char **argv) : CommandOptions(argc, argv) {}
 
     protected:
       const char* getUsage() {
+#ifdef WIN32
+        return R"EOF(
+Get current blockchain information
+Usage: ./eosc get info [Options]
+Usage: ./eosc get info [-j "{}"] [OPTIONS]
+)EOF";
+#else
         return R"EOF(
 Get current blockchain information
 Usage: ./eosc get info [Options]
 Usage: ./eosc get info [-j '{}'] [OPTIONS]
 )EOF";
+#endif
+
+
       }
 
-      virtual bool setJson(boost::program_options::variables_map &vm) {
+      virtual bool setJson(variables_map &vm) {
         return true;
       }
 
@@ -91,11 +172,11 @@ Usage: ./eosc get info [-j '{}'] [OPTIONS]
       virtual void getExample() {
         boost::property_tree::ptree postJson;
         GetInfo GetInfo(postJson);
-        std::cout << R"EOF(
+        cout << R"EOF(
 Invoke 'GetInfo' command:
 GetInfo GetInfo;
 )EOF" << std::endl;
-        std::cout << GetInfo.toStringRcv() << std::endl;
+        cout << GetInfo.toStringRcv() << endl;
       }
     };
 
@@ -135,7 +216,7 @@ GetInfo GetInfo;
      *
      * Note that time is a string. For processing, it has to be expressed as a
      * structure and afterwords back to a string. Helper functions, namely
-     * ::strToTime(const std::string)
+     * ::strToTime(const string)
      *
      * Example:
      *
@@ -175,50 +256,57 @@ GetInfo GetInfo;
     {
     public:
 
-      GetBlock(boost::property_tree::ptree postJson, bool raw = false)
-        : EoscCommand(
-          "/v1/chain/get_block",
-          postJson,
-          raw) {}
+      GetBlock(ptree postJson, bool raw = false) : EoscCommand(
+        string(getCommandPath + "get_block").c_str(),
+        postJson,
+        raw) {}
     };
 
     class GetBlockOptions : public CommandOptions
     {
     public:
-      GetBlockOptions(int argc, const char **argv)
-        : CommandOptions(argc, argv) {}
+      GetBlockOptions(int argc, const char **argv) : CommandOptions(argc, argv) {}
 
     protected:
       const char* getUsage() {
+#ifdef WIN32
+        return R"EOF(
+Retrieve a full block from the blockchain
+Usage: ./eosc get block [block_num] [Options]
+Usage: ./eosc get block [-j "{"""block_num_or_id""":"""int | string"""}"] [OPTIONS]
+)EOF";
+#else
         return R"EOF(
 Retrieve a full block from the blockchain
 Usage: ./eosc get block [block_num] [Options]
 Usage: ./eosc get block [-j '{"block_num_or_id":"int | string"}'] [OPTIONS]
 )EOF";
+#endif
+
       }
 
       int n;
-      std::string id;
+      string id;
 
-      virtual boost::program_options::options_description options() {
-        boost::program_options::options_description special("");
+      virtual options_description options() {
+        options_description special("");
         special.add_options()
           ("block_num,n",
-            boost::program_options::value<int>(&n),
+            value<int>(&n),
             "Block number")
             ("block_id,i",
-              boost::program_options::value<std::string>(&id),
+              value<string>(&id),
               "Block id");
         return special;
       }
 
       virtual void
-        setPosDesc(boost::program_options::positional_options_description&
+        setPosDesc(positional_options_description&
           pos_desc) {
         pos_desc.add("block_num", 1);
       }
 
-      virtual bool setJson(boost::program_options::variables_map &vm) {
+      virtual bool setJson(variables_map &vm) {
         bool ok = false;
         if (vm.count("block_num")) {
           postJson.put("block_num_or_id", n);
@@ -237,28 +325,115 @@ Usage: ./eosc get block [-j '{"block_num_or_id":"int | string"}'] [OPTIONS]
 
       virtual void getOutput(EoscCommand command) {
         output("block number", "%d", command.get<int>("block_num"));
-        output("timestamp", "%s", command.get<std::string>("timestamp").c_str());
-        output("ref block prefix", "%s", command.get<std::string>("ref_block_prefix").c_str());
+        output("timestamp", "%s", command.get<string>("timestamp").c_str());
+        output("ref block prefix", "%s", command.get<string>("ref_block_prefix").c_str());
       }
 
       virtual void getExample() {
-        boost::property_tree::ptree getInfoPostJson;
+        ptree getInfoPostJson;
         GetInfo GetInfo(getInfoPostJson);
-        std::cout << R"EOF(
+        cout << R"EOF(
 Invoke 'GetInfo' command:
 GetInfo getInfo;
-)EOF" << std::endl;
+)EOF" << endl;
 
-        std::cout << GetInfo.toStringRcv() << std::endl;
-        boost::property_tree::ptree GetBlock_post_json;
+        cout << GetInfo.toStringRcv() << endl;
+        ptree GetBlock_post_json;
         GetBlock_post_json.put("block_num_or_id", 25);
         GetBlock GetBlock(GetBlock_post_json);
-        std::cout << R"EOF(
+        cout << R"EOF(
 Use reference to the last block:
 GetBlock GetBlock(
   GetInfo.get<int>("last_irreversible_block_num"));
-)EOF" << std::endl;
-        std::cout << GetBlock.toStringRcv() << std::endl;
+)EOF" << endl;
+        cout << GetBlock.toStringRcv() << endl;
+      }
+    };
+
+    /**
+    */
+    class GetAccount : public EoscCommand
+    {
+    public:
+
+      GetAccount(ptree postJson, bool raw = false) : EoscCommand(
+        string(getCommandPath + "get_account").c_str(),
+        postJson,
+        raw) {}
+    };
+
+    class GetAccountOptions : public CommandOptions
+    {
+    public:
+      GetAccountOptions(int argc, const char **argv)
+        : CommandOptions(argc, argv) {}
+
+    protected:
+      const char* getUsage() {
+#ifdef WIN32
+        return R"EOF(
+Fetch a blockchain account
+Usage: ./eosc get block [account_name] [Options]
+Usage: ./eosc get block [-j "{"""account_name""":"""string"""}"] [OPTIONS]
+)EOF";
+#else
+        return R"EOF(
+Fetch a blockchain account
+Usage: ./eosc get block [account_name] [Options]
+Usage: ./eosc get block [-j '{"account_name":"string"}'] [OPTIONS]
+)EOF";
+#endif
+
+      }
+
+      string name;
+
+      virtual options_description options() {
+        options_description special("");
+        special.add_options()
+          ("name,n",
+            value<string>(&name), "Account name");
+        return special;
+      }
+
+      virtual void
+        setPosDesc(positional_options_description&
+          pos_desc) {
+        pos_desc.add("name", 1);
+      }
+
+      virtual bool setJson(variables_map &vm) {
+        bool ok = false;
+        if (vm.count("name")) {
+          postJson.put("account_name", name);
+          ok = true;
+        }
+        return ok;
+      }
+
+      virtual EoscCommand getCommand(bool is_raw) {
+        return GetBlock(postJson, is_raw);
+      }
+
+      virtual void getOutput(EoscCommand command) {
+        output("account name", "%s", command.get<string>("account_name").c_str());
+        output("eos balance", "%d", command.get<int>("eos_balance"));
+        output("staked balance", "%d", command.get<int>("staked_balance"));
+        output("unstaking balance", "%d", command.get<int>("unstaking_balance"));
+        output("last unstaking time", "%s", command.get<string>("last_unstaking_time").c_str());
+      }
+
+      virtual void getExample() {
+        cout << R"EOF(
+boost::property_tree::ptree postJson;
+postJson.put("account_name", "int");
+GetAccount getAccount(postJson);
+)EOF" << endl;
+        ptree postJson;
+        postJson.put("name", "inita");
+        GetAccount getAccount(postJson);
+        cout << endl;
+        cout << getAccount.toStringRcv() << endl;
       }
     };
   }

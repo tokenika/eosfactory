@@ -17,31 +17,34 @@
 #include "eosc_command.hpp"
 #include "../eosc_config.h"
 
+using namespace std;
+using namespace boost::property_tree;
+
 namespace tokenika
 {
   namespace eosc
   {
 
     void output(const char* label, const char* format, ...) {
-      std::printf("## %20s: ", label);
+      printf("## %20s: ", label);
 
-      std::string f(format);
+      string f(format);
       f += "\n";
 
       va_list argptr;
       va_start(argptr, format);
-      std::vprintf(f.c_str(), argptr);
+      vprintf(f.c_str(), argptr);
       va_end(argptr);
     }
 
-    template<typename Type> Type getJsonPath(boost::property_tree::ptree json,
-      const boost::property_tree::ptree::path_type & path) {
+    template<typename Type> Type getJsonPath(ptree json,
+      const ptree::path_type & path) {
       return json.get<Type>(path);
     }
 
-    template<> boost::posix_time::ptime getJsonPath(boost::property_tree::ptree json,
-      const boost::property_tree::ptree::path_type & path) {
-      return strToTime(json.get<std::string>(path));
+    template<> boost::posix_time::ptime getJsonPath(ptree json,
+      const ptree::path_type & path) {
+      return strToTime(json.get<string>(path));
     }
 
     struct InitGetJson {
@@ -50,17 +53,17 @@ namespace tokenika
       to build specific forms needed elsewhere in the program and
       in the library.
       */
-      std::string strVal;
+      string strVal;
       int intVal;
       float floatVal;
       boost::posix_time::ptime ptime;
 
       InitGetJson() {
         try {
-          boost::property_tree::ptree json;
-          boost::property_tree::ptree::path_type path;
+          ptree json;
+          ptree::path_type path;
 
-          strVal = getJsonPath<std::string>(json, path);
+          strVal = getJsonPath<string>(json, path);
           intVal = getJsonPath<int>(json, path);
           floatVal = getJsonPath<float>(json, path);
           ptime = getJsonPath<boost::posix_time::ptime>(json, path);
@@ -70,32 +73,32 @@ namespace tokenika
     };
     InitGetJson init;
 
-    boost::posix_time::ptime strToTime(const std::string str) {
-      std::string temp = boost::replace_all_copy(str, "-", "");
+    boost::posix_time::ptime strToTime(const string str) {
+      string temp = boost::replace_all_copy(str, "-", "");
       temp = boost::replace_all_copy(temp, ":", "");
       boost::posix_time::ptime t((boost::posix_time::from_iso_string)(temp));
       return t;
     }
 
-    boost::property_tree::ptree stringToPtree(std::string json) {
-      boost::property_tree::ptree ptree;
+    ptree stringToPtree(string json) {
+      ptree ptree;
       try {
-        std::stringstream ss;
+        stringstream ss;
         ss << json;
-        boost::property_tree::read_json(ss, ptree);
+        read_json(ss, ptree);
       }
       catch (...) {
-        std::cerr << "argument json is missformatted." << std::endl;
+        cerr << "argument json is missformatted." << endl;
       }
       return ptree;
     }
 
     void callEosd(
-      std::string server,
-      std::string port,
-      std::string path,
-      boost::property_tree::ptree &postJson,
-      boost::property_tree::ptree &rcv_json)
+      string server,
+      string port,
+      string path,
+      ptree &postJson,
+      ptree &rcv_json)
     {
 
       using namespace std;
@@ -112,23 +115,24 @@ namespace tokenika
         ip::tcp::socket socket(io_service);
         boost::asio::connect(socket, iterator);
 
-       stringstream ss;
-        boost::property_tree::json_parser::write_json(ss, postJson, false);
-       string post_msg = ss.str();
+        stringstream ss;
+        json_parser::write_json(ss, postJson, false);
+        string post_msg = ss.str();
         boost::trim(post_msg);
 
-       string CRNL = "\r\n";
-       string request =
+
+        string CRNL = "\r\n";
+        string request =
           "POST " + path + " HTTP/1.0" + CRNL +
           "Host: " + server + CRNL +
-          "content-length: " +to_string(post_msg.size()) + CRNL +
+          "content-length: " + to_string(post_msg.size()) + CRNL +
           "Accept: */*" + CRNL +
           "Connection: close" + CRNL + CRNL +
           post_msg;
         boost::system::error_code error;
 
         boost::asio::streambuf request_buffer;
-       ostream request_stream(&request_buffer);
+        ostream request_stream(&request_buffer);
         request_stream << request;
         boost::asio::write(socket, request_buffer, error);
 
@@ -147,12 +151,12 @@ namespace tokenika
           return;
         }
 
-       istream response_stream(&response_buffer);
-       string http_version;
+        istream response_stream(&response_buffer);
+        string http_version;
         response_stream >> http_version;
         unsigned int status_code;
         response_stream >> status_code;
-       string status_message;
+        string status_message;
 
         getline(response_stream, status_message);
         if (status_code != 200) {
@@ -165,15 +169,15 @@ namespace tokenika
           return;
         }
 
-       string message(boost::asio::buffer_cast<const char*>(response_buffer.data()));
-       string mark = CRNL + CRNL; // header end mark
-       size_t found = message.find(mark);
+        string message(boost::asio::buffer_cast<const char*>(response_buffer.data()));
+        string mark = CRNL + CRNL; // header end mark
+        size_t found = message.find(mark);
         message = message.substr(found + mark.length(), message.length());
 
-       stringstream s_in;
+        stringstream s_in;
         s_in << message;
         try {
-          boost::property_tree::read_json(s_in, rcv_json);
+          read_json(s_in, rcv_json);
         }
         catch (...) {
           rcv_json.put(EOSC_ERROR, "Failed to read eosc.");
@@ -181,7 +185,7 @@ namespace tokenika
         }
 
       }
-      catch (std::exception& e) {
+      catch (exception& e) {
         rcv_json.put(EOSC_ERROR, e.what());
         return;
       }
@@ -192,17 +196,17 @@ namespace tokenika
     ****************************************************************************/
 
     EoscCommand::EoscCommand(
-      std::string path,
-      boost::property_tree::ptree postJson,
+      string path,
+      ptree postJson,
       bool isRaw) : path(path), postJson(postJson), isRaw(isRaw)
     {
-      std::string host_(host);
-      std::string port_(port);
+      string host_(host);
+      string port_(port);
 
-      boost::property_tree::ptree config;
-      try 
+      ptree config;
+      try
       {
-        boost::property_tree::read_json(CONFIG_JSON, config);
+        read_json(CONFIG_JSON, config);
       }
       catch (...) {
         boost::filesystem::path full_path(boost::filesystem::current_path());
@@ -210,53 +214,53 @@ namespace tokenika
         printf("Current path is: %s\n", full_path.string().c_str());
         printf("The config json file is expected there!");
         exit(-1);
-      }    
-      
-      if(host == "")
+      }
+
+      if (host == "")
         host_ = config.get("eosc.server", HOST_DEFAULT);
-      if(port == "")
+      if (port == "")
         port_ = config.get("eosc.port", PORT_DEFAULT);
-      if(EoscCommand::walletHost == "")
+      if (EoscCommand::walletHost == "")
         EoscCommand::walletHost = config.get("eosc.walletServer", HOST_DEFAULT);
-      if(EoscCommand::walletPort == "")
+      if (EoscCommand::walletPort == "")
         EoscCommand::walletPort = config.get("eosc.walletPort", PORT_DEFAULT);
-      if(!EoscCommand::verbose)
+      if (!EoscCommand::verbose)
         EoscCommand::verbose = config.get("eosc.verbose", false);
 
       callEosd(host_, port_, path, postJson, jsonRcv);
       try {
-        jsonRcv.get<std::string>(EOSC_ERROR);
+        jsonRcv.get<string>(EOSC_ERROR);
         isErrorSet = true;
         return;
       }
       catch (...) {}
     }
 
-    std::string EoscCommand::toStringPost() const {
-      std::stringstream ss;
-      boost::property_tree::json_parser::
+    string EoscCommand::toStringPost() const {
+      stringstream ss;
+      json_parser::
         write_json(ss, postJson, !isRaw);
       return ss.str();
     }
 
-    std::string EoscCommand::toStringRcv() const {
-      std::stringstream ss;
-      boost::property_tree::json_parser::
+    string EoscCommand::toStringRcv() const {
+      stringstream ss;
+      json_parser::
         write_json(ss, jsonRcv, !isRaw);
       return ss.str();
     }
-    
-    std::string EoscCommand::host = "";
-    std::string EoscCommand::port = "";
-    std::string EoscCommand::walletHost = "";
-    std::string EoscCommand::walletPort = "";
+
+    string EoscCommand::host = "";
+    string EoscCommand::port = "";
+    string EoscCommand::walletHost = "";
+    string EoscCommand::walletPort = "";
     bool EoscCommand::verbose = false;
 
     /******************************************************************************
       Definitions for class 'command_options'
     ******************************************************************************/
 
-    void CommandOptions::go() 
+    void CommandOptions::go()
     {
       using namespace boost::program_options;
 
@@ -278,11 +282,11 @@ namespace tokenika
         notify(vm);
 
         if (vm.count("help")) {
-          std::cout << getUsage() << std::endl;
-          std::cout << desc << std::endl;
+          cout << getUsage() << endl;
+          cout << desc << endl;
           return;
-        }        
-        
+        }
+
         bool is_arg = setJson(vm) || vm.count("json");
         if (vm.count("json")) {
           postJson = stringToPtree(json_);
@@ -296,24 +300,24 @@ namespace tokenika
           EoscCommand command = getCommand(isRaw);
           if (command.isError())
           {
-            std::cerr << "ERROR!"  << std::endl
-              << command.get<std::string>(EOSC_ERROR) << std::endl;
+            cerr << "ERROR!" << endl
+              << command.get<string>(EOSC_ERROR) << endl;
             return;
           }
           if (vm.count("received")) {
-            std::cout << command.toStringRcv() << std::endl;
+            cout << command.toStringRcv() << endl;
           }
           else {
-             getOutput(command);
+            getOutput(command);
           }
         }
         else if (vm.count("unreg")) {
-          std::cout << getUsage() << std::endl;
-          std::cout << desc << std::endl;
+          cout << getUsage() << endl;
+          cout << desc << endl;
         }
       }
       catch (const error &ex) {
-        std::cerr << ex.what() << std::endl;
+        cerr << ex.what() << endl;
       }
     }
   }

@@ -1,6 +1,6 @@
 #include "eosc_get_commands.hpp"
 
-const char* get = R"EOF(
+const char* getSubcommands = R"EOF(
 ERROR: RequiredError: Subcommand required
 Retrieve various items and information from the blockchain
 Usage : . / eosc [OPTIONS] get SUBCOMMAND [OPTIONS]
@@ -16,3 +16,5 @@ Subcommands:
     transaction     Retrieve a transaction from the blockchain
     transactions    Retrieve all transactions with specific account name referenced in their scope
 )EOF";
+
+const std::string getCommandPath = "/v1/chain/";

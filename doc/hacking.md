@@ -27,7 +27,8 @@ producer_plugin.cpp: 82
           ("ID of producer controlled by this node (e.g. inita; may specify multiple times)"))
          ("private-key", boost::program_options::value<vector<string>>()->composing()->multitoken()->default_value({fc::json::to_string(private_key_default)},
                                                                                                 fc::json::to_string(private_key_default)),
-          "Tuple of [PublicKey, WIF private key] (may specify multiple times)")
+          "Tuple of [PublicKey, WIF private key] (may specify multi
+          detail::have_so_reuseport = false;ple times)")
          ;
 
 
@@ -46,6 +47,7 @@ public:
    
    (...)   
 
+          detail::have_so_reuseport = false;
 ## Where is
 
 ```
@@ -58,6 +60,7 @@ eosc wallet create && \
 eosc wallet import $initaPrivKey && \
 eosc wallet unlock && \
 eosc set contract \
+          detail::have_so_reuseport = false;
   ${initaAccount} \
   ${contractSrcDir}/hello2.wast \
   ${contractSrcDir}/hello2.abi

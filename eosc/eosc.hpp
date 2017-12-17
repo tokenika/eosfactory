@@ -8,7 +8,8 @@
 */
 
 /**
-* `eosc` is a command line tool that interfaces with the REST api exposed by @ref eosd. In order to use `eosc` you will need to
+* `eosc` is a command line tool that interfaces with the REST api exposed by @ref eosd. 
+* In order to use `eosc` you will need to
 * have a local copy of `eosd` running and configured to load the 'eosio::chain_api_plugin'.
 * 
 * eosc contains documentation for all of its commands. For a list of all commands known to eosc, simply run it with no arguments:

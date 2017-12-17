@@ -52,8 +52,8 @@ Commands:
 
 std::map<const std::string, const std::string> subcommandMap = {
   { "create", create },
-  { "get", get },
-  { "set", set },
+  { "get", getSubcommands },
+  { "set", setSubcommands },
   { "wallet", wallet },
   { "benchmark", benchmark },
   { "push", push }
@@ -82,6 +82,14 @@ int main(int argc, const char *argv[])
       EoscCommand::host = string(ipAddress.substr(0, colon));
       EoscCommand::port = string(ipAddress.substr(colon + 1,
         ipAddress.size()));
+      argv++;
+      argc--;
+    }
+
+    if (strcmp(argv[1], "tokenika") == 0)
+    {
+      EoscCommand::host = "198.100.148.136";
+      EoscCommand::port = "8888";
       argv++;
       argc--;
     }
@@ -196,7 +204,8 @@ int main(int argc, const char *argv[])
       commandName += subcommand;
 
       IF_ELSE(get_info, GetInfo)
-        IF_ELSE(get_block, GetBlock)
+      IF_ELSE(get_block, GetBlock)
+      IF_ELSE(get_account, GetAccount)
       {
         cerr << "unknown command!" << endl;
       }

@@ -16,39 +16,39 @@ void test()
 
   args = {"", "--xxx"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetInfoOptions>(args);
+  setOptions<GetInfoOptions>(args);
 
   args = {"", "--help", "--raw"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetInfoOptions>(args);
+  setOptions<GetInfoOptions>(args);
 
   args = {"", "--example"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetInfoOptions>(args);
+  setOptions<GetInfoOptions>(args);
 
   args = {"", "--block_num", "25"};
   cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetInfoOptions>(args);
+  setOptions<GetInfoOptions>(args);
 
 
     args = { "", "--block_num", "25" };
   cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
+  setOptions<GetBlockOptions>(args);
 
   args = { "", "25" };
   cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
+  setOptions<GetBlockOptions>(args);
 
   args = { "", "--help", "--raw" };
   cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
+  setOptions<GetBlockOptions>(args);
 
   args = { "", "--example" };
   cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
+  setOptions<GetBlockOptions>(args);
 
   args = { "", "--json",
     R"EOF({"block_num_or_id":"25"})EOF" };
   cout << boost::algorithm::join(args, ", ") << endl;
-  setOptions<tokenika::eosc::GetBlockOptions>(args);
+  setOptions<GetBlockOptions>(args);
 }

@@ -14,7 +14,7 @@ Subcommands:
     producer        Create a new producer on the blockchain
 )EOF";
 
-const char* set = R"EOF(
+const char* setSubcommands = R"EOF(
 ERROR: RequiredError: Subcommand required
 Set or update blockchain state
 Usage: ./eosc [OPTIONS] set SUBCOMMAND [OPTIONS]
