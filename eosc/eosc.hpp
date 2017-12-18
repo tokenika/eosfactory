@@ -17,7 +17,7 @@
 * $ ./eosc
 * Command Line Interface to Eos Daemon
 * Usage: ./eosc [OPTIONS] SUBCOMMAND
-
+*
 * Options:
 * -h,--help                   Print this help message and exit
 * -H,--host TEXT=localhost    the host where eosd is running
@@ -25,7 +25,7 @@
 * --wallet-host TEXT=localhost
 *                             the host where eos-walletd is running
 * --wallet-port UINT=8888     the port where eos-walletd is running
-
+*
 * Subcommands:
 * create                      Create various items, on and off the blockchain
 * get                         Retrieve various items and information from the blockchain
