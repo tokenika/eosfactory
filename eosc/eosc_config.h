@@ -1,7 +1,7 @@
 /**
 * @file eosc_config.h
 * @copyright defined in resources/LICENSE.txt
-* @brief Tool for sending transactions and querying state from EOS blockchain
+* @brief Automatic CMake configuration file for the eosc project.
 *
 */
 

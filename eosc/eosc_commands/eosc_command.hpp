@@ -326,7 +326,7 @@ namespace tokenika
       for (int i = 0; i < argc; i++) {
         argv[i] = new char[strVector[i].size() + 1];
 
-#ifdef WIN32
+#ifdef _MSC_VER
         strcpy_s(argv[i], strVector[i].size() + 1,
           strVector[i].c_str());
 #else

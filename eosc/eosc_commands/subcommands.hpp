@@ -6,7 +6,7 @@
 const char* create = R"EOF(
 ERROR: RequiredError: Subcommand required
 Create various items, on and off the blockchain
-Usage : . / eosc [OPTIONS] create SUBCOMMAND [OPTIONS]
+Usage : ./ eosc [OPTIONS] create SUBCOMMAND [OPTIONS]
 
 Subcommands:
     key             Create a new keypair and print the public and private keys

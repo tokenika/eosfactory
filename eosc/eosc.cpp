@@ -163,7 +163,7 @@ int main(int argc, const char *argv[])
       for (size_t i = 0; i < to_pass_further.size(); i++) {
         arr[i] = new char[to_pass_further[i].size() + 1];
 
-#ifdef WIN32
+#ifdef _MSC_VER
         strcpy_s(arr[i], to_pass_further[i].size() + 1,
           to_pass_further[i].c_str()); 
 #else

@@ -1,7 +1,7 @@
 var indexSectionsWithContent =
 {
   0: "cegiopst",
-  1: "cegis",
+  1: "cegi",
   2: "e",
   3: "egiost",
   4: "p",

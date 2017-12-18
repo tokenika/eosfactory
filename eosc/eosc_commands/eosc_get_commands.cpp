@@ -3,7 +3,7 @@
 const char* getSubcommands = R"EOF(
 ERROR: RequiredError: Subcommand required
 Retrieve various items and information from the blockchain
-Usage : . / eosc [OPTIONS] get SUBCOMMAND [OPTIONS]
+Usage : ./ eosc [OPTIONS] get SUBCOMMAND [OPTIONS]
 
 Subcommands:
     info            Get current blockchain information
