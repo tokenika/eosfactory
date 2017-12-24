@@ -30,10 +30,13 @@
     <ClInclude Include="..\..\eosc_test.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\subcommands.hpp">
+    <ClInclude Include="..\..\eosc_commands\eosc_wallet_commands.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\eosc_commands\eosc_wallet_commands.hpp">
+    <ClInclude Include="..\..\eosc_commands\subcommands.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eosc_commands\eosc_other_commands.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -51,6 +54,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\eosc_commands\eosc_wallet_commands.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\eosc_commands\subcommands.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="temp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

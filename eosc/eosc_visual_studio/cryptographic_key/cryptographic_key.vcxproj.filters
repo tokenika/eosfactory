@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\libraries">
+      <UniqueIdentifier>{a7691b8d-c7a7-4492-83ab-21782c67fa39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\libraries\fc">
+      <UniqueIdentifier>{c7b8e33a-c222-443d-aa07-2a5f438fd06e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\libraries\fc\include">
+      <UniqueIdentifier>{89811adb-b4ee-42bf-b649-dadb5e0076ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\libraries\fc\include\fc">
+      <UniqueIdentifier>{94f9542e-2a9f-4c24-b1f3-435d1fc9efec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\libraries\fc\include\fc\crypto">
+      <UniqueIdentifier>{00e06f9b-4f42-4998-bd2d-869fd3c20428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\libraries\types">
+      <UniqueIdentifier>{8132555a-1cb7-4e12-b2ef-dc78123fed90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\libraries\types\include">
+      <UniqueIdentifier>{d55da780-0d71-454e-aa8f-8d2399d18157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\libraries\types\include\eos">
+      <UniqueIdentifier>{cf56d438-9353-4f89-a728-5a718d431c43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libraries">
+      <UniqueIdentifier>{effd5980-77ff-4a15-a662-bb6c07a7182c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libraries\fc">
+      <UniqueIdentifier>{d2199f3f-e499-4f73-b512-91cb96ff95e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libraries\fc\src">
+      <UniqueIdentifier>{0813dfb9-9ceb-4dfa-9bc5-2b68d7c99a31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libraries\fc\src\crypto">
+      <UniqueIdentifier>{63c40dee-26f6-4509-8e89-da604f4c2dee}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eos\libraries\fc\include\fc\crypto\sha256.hpp">
+      <Filter>Header Files\libraries\fc\include\fc\crypto</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cryptographic_key.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\eos\libraries\fc\src\crypto\sha256.cpp">
+      <Filter>Source Files\libraries\fc\src\crypto</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -92,7 +92,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="eosc__command_8hpp__dep__incl.png" border="0" usemap="#eosc__command_8hppdep" alt=""/></div>
 <map name="eosc__command_8hppdep" id="eosc__command_8hppdep">
-<area shape="rect" id="node2" href="eosc__get__commands_8hpp.html" title="eosc_get_commands.hpp" alt="" coords="5,80,176,107"/>
+<area shape="rect" id="node2" href="eosc__commands_2eosc__get__commands_8hpp_source.html" title="eosc_get_commands.hpp" alt="" coords="5,80,176,107"/>
+<area shape="rect" id="node3" href="eosc__wallet__commands_8hpp_source.html" title="eosc_wallet_commands.hpp" alt="" coords="200,80,387,107"/>
+<area shape="rect" id="node4" href="eosc__other__commands_8hpp_source.html" title="eosc_other_commands.hpp" alt="" coords="411,80,594,107"/>
+<area shape="rect" id="node5" href="eosc__visual__studio_2enc__temp__folder_2928c1eec4ecdda1f6a7fec36a501b50_2eosc__get__commands_8hpp_source.html" title="eosc_get_commands.hpp" alt="" coords="619,80,789,107"/>
 </map>
 </div>
 </div>
@@ -118,6 +121,12 @@ Macros</h2></td></tr>
 <tr class="memitem:aebaae3989ccb20febb9e80449c19f8d3"><td class="memItemLeft" align="right" valign="top"><a id="aebaae3989ccb20febb9e80449c19f8d3"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>PORT_DEFAULT</b>&#160;&#160;&#160;&quot;8888&quot;</td></tr>
 <tr class="separator:aebaae3989ccb20febb9e80449c19f8d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba176152ccdd4a378174a5de6dfd28c3"><td class="memItemLeft" align="right" valign="top"><a id="aba176152ccdd4a378174a5de6dfd28c3"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>TOKENIKA_WALLET</b>&#160;&#160;&#160;&quot;tokenikaWallet&quot;</td></tr>
+<tr class="separator:aba176152ccdd4a378174a5de6dfd28c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33dfe00ed2ad677be272cd0295b2dc52"><td class="memItemLeft" align="right" valign="top"><a id="a33dfe00ed2ad677be272cd0295b2dc52"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>GET_STRING</b>(command,  key)&#160;&#160;&#160;command.get&lt;string&gt;(key).c_str()</td></tr>
+<tr class="separator:a33dfe00ed2ad677be272cd0295b2dc52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -127,9 +136,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a03be7086d7980dc8c27b7aaaf8973771"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><b>tokenika::eosc::output</b> (const char *label, const char *format,...)</td></tr>
 <tr class="memdesc:a03be7086d7980dc8c27b7aaaf8973771"><td class="mdescLeft">&#160;</td><td class="mdescRight">Printout formater.  <a href="eosc__command_8cpp.html#a03be7086d7980dc8c27b7aaaf8973771">More...</a><br /></td></tr>
 <tr class="separator:a03be7086d7980dc8c27b7aaaf8973771"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a8c5f1375f0710229b3d0493c399175"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><b>tokenika::eosc::callEosd</b> (string server, string port, string path, ptree &amp;postJson, ptree &amp;jsonRcv)</td></tr>
-<tr class="memdesc:a4a8c5f1375f0710229b3d0493c399175"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a json, eoscCommandJsongets EOS blockchain responce.  <a href="eosc__command_8cpp.html#a4a8c5f1375f0710229b3d0493c399175">More...</a><br /></td></tr>
-<tr class="separator:a4a8c5f1375f0710229b3d0493c399175"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff974d995cacad0800b5e99cb5c0dbc3"><td class="memItemLeft" align="right" valign="top"><a id="aff974d995cacad0800b5e99cb5c0dbc3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>tokenika::eosc::output</b> (const char *text,...)</td></tr>
+<tr class="separator:aff974d995cacad0800b5e99cb5c0dbc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab040d79d930695213717c91797314b6e"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
 <tr class="memitem:ab040d79d930695213717c91797314b6e"><td class="memTemplItemLeft" align="right" valign="top">Type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tokenika::eosc::getJsonPath</b> (ptree json, const ptree::path_type &amp;path)</td></tr>
 <tr class="memdesc:ab040d79d930695213717c91797314b6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a json teoscCommandJsonree, returns the &lt;Type&gt;value of a given path.  <a href="eosc__command_8cpp.html#ab040d79d930695213717c91797314b6e">More...</a><br /></td></tr>
@@ -143,65 +152,6 @@ Functions</h2></td></tr>
 <dl class="section copyright"><dt>Copyright</dt><dd>defined in resources/LICENSE.txt Base definitions.</dd></dl>
 <p>Defines base classes of the project, and helper methods. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="file_a4a8c5f1375f0710229b3d0493c399175"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_a4a8c5f1375f0710229b3d0493c399175">&#9670;&nbsp;</a></span>callEosd()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tokenika::eosc::callEosd </td>
-          <td>(</td>
-          <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>server</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>port</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>path</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ptree &amp;&#160;</td>
-          <td class="paramname"><em>postJson</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ptree &amp;&#160;</td>
-          <td class="paramname"><em>jsonRcv</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Given a json, eoscCommandJsongets EOS blockchain responce. </p>
-<p>Given a json tree and a command path (for example <code>/v1/chain/GetInfo</code>), and EOS blockchain communication port (for example <code>8888</code>), and EOS blockchain server name (for example <code>localhost</code>), gets EOS blockchain responce.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">server</td><td>EOS blockchain server name </td></tr>
-    <tr><td class="paramname">port</td><td>EOS blockchain communication port </td></tr>
-    <tr><td class="paramname">path</td><td>command path </td></tr>
-    <tr><td class="paramname">postJson</td><td>json eoscCommandJsonto be posted </td></tr>
-    <tr><td class="paramname">jsonRcv</td><td>json to be filled with received data </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="file_ab040d79d930695213717c91797314b6e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#file_ab040d79d930695213717c91797314b6e">&#9670;&nbsp;</a></span>getJsonPath()</h2>
 

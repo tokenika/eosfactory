@@ -13,7 +13,6 @@
 #include <pthread.h>
 #endif
 
-
 #include "eosc_command.hpp"
 #include "../eosc_config.h"
 
@@ -35,6 +34,10 @@ namespace tokenika
       va_start(argptr, format);
       vprintf(f.c_str(), argptr);
       va_end(argptr);
+    }
+
+    void output(const char* text, ...) {
+      printf("## %s\n", text);
     }
 
     template<typename Type> Type getJsonPath(ptree json,
@@ -93,116 +96,32 @@ namespace tokenika
       return ptree;
     }
 
-    void callEosd(
-      string server,
-      string port,
-      string path,
-      ptree &postJson,
-      ptree &rcv_json)
-    {
+/***************************************************************************
+Definitions for class EoscCommand.
+****************************************************************************/
 
-      using namespace std;
-      namespace ip = boost::asio::ip;
-      namespace pt = boost::property_tree;
+    string EoscCommand::normRequest(ptree& reqJson) {
+      stringstream ss;
+      json_parser::write_json(ss, reqJson, false);
+      string postMsg = ss.str();
+      boost::trim(postMsg);
+      return postMsg;
+    }
 
+    void EoscCommand::normResponse(string response, ptree &respJson) {
+      stringstream ss;
+      ss << response;
       try {
-        boost::asio::io_service io_service;
-
-        ip::tcp::resolver resolver(io_service);
-        ip::tcp::resolver::query query(server, port);
-        ip::tcp::resolver::iterator iterator = resolver.resolve(query);
-
-        ip::tcp::socket socket(io_service);
-        boost::asio::connect(socket, iterator);
-
-        stringstream ss;
-        json_parser::write_json(ss, postJson, false);
-        string post_msg = ss.str();
-        boost::trim(post_msg);
-
-
-        string CRNL = "\r\n";
-        string request =
-          "POST " + path + " HTTP/1.0" + CRNL +
-          "Host: " + server + CRNL +
-          "content-length: " + to_string(post_msg.size()) + CRNL +
-          "Accept: */*" + CRNL +
-          "Connection: close" + CRNL + CRNL +
-          post_msg;
-        boost::system::error_code error;
-
-        boost::asio::streambuf request_buffer;
-        ostream request_stream(&request_buffer);
-        request_stream << request;
-        boost::asio::write(socket, request_buffer, error);
-
-        if (error) {
-          rcv_json.put(EOSC_ERROR, error.message());
-          return;
-        }
-
-        // request sent, responce expected.
-
-        boost::asio::streambuf response_buffer;
-        boost::asio::read(socket, response_buffer, boost::asio::transfer_all(),
-          error);
-        if (error && error != boost::asio::error::eof) {
-          rcv_json.put(EOSC_ERROR, error.message());
-          return;
-        }
-
-        istream response_stream(&response_buffer);
-        string http_version;
-        response_stream >> http_version;
-        unsigned int status_code;
-        response_stream >> status_code;
-        string status_message;
-
-        getline(response_stream, status_message);
-        if (status_code != 200) {
-          string msg =
-            string("status code is ") + to_string(status_code);
-          msg += string("\n eosd response is ") +
-            string(boost::asio::buffer_cast<const char*>(
-              response_buffer.data()));
-          rcv_json.put(EOSC_ERROR, msg);
-          return;
-        }
-
-        string message(boost::asio::buffer_cast<const char*>(response_buffer.data()));
-        string mark = CRNL + CRNL; // header end mark
-        size_t found = message.find(mark);
-        message = message.substr(found + mark.length(), message.length());
-
-        stringstream s_in;
-        s_in << message;
-        try {
-          read_json(s_in, rcv_json);
-        }
-        catch (...) {
-          rcv_json.put(EOSC_ERROR, "Failed to read eosc.");
-          return;
-        }
-
+        read_json(ss, respJson);
+        stringstream ss1;
+        json_parser::write_json(ss1, respJson, false);
       }
       catch (exception& e) {
-        rcv_json.put(EOSC_ERROR, e.what());
-        return;
+        respJson.put(EOSC_ERROR, e.what());
       }
     }
 
-    /***************************************************************************
-      Definitions for class EoscCommand.
-    ****************************************************************************/
-
-    EoscCommand::EoscCommand(
-      string path,
-      ptree postJson,
-      bool isRaw) : path(path), postJson(postJson), isRaw(isRaw)
-    {
-      string host_(host);
-      string port_(port);
-
+    ptree EoscCommand::getConfig(bool verbose) {
       ptree config;
       try
       {
@@ -210,11 +129,25 @@ namespace tokenika
       }
       catch (...) {
         boost::filesystem::path full_path(boost::filesystem::current_path());
-        printf("ERROR: Cannot read config file %s!\n", CONFIG_JSON);
-        printf("Current path is: %s\n", full_path.string().c_str());
-        printf("The config json file is expected there!");
-        exit(-1);
+        if (verbose) {
+          printf("ERROR: Cannot read config file %s!\n", CONFIG_JSON);
+          printf("Current path is: %s\n", full_path.string().c_str());
+          printf("The config json file is expected there!");
+        }
       }
+      return config;
+    }
+
+    void EoscCommand::callEosd()
+    {
+      using namespace std;
+      namespace ip = boost::asio::ip;
+      namespace pt = boost::property_tree;
+
+      string host_(host);
+      string port_(port);
+
+      ptree config = getConfig();
 
       if (host == "")
         host_ = config.get("eosc.server", HOST_DEFAULT);
@@ -227,26 +160,97 @@ namespace tokenika
       if (!EoscCommand::verbose)
         EoscCommand::verbose = config.get("eosc.verbose", false);
 
-      callEosd(host_, port_, path, postJson, jsonRcv);
       try {
-        jsonRcv.get<string>(EOSC_ERROR);
-        isErrorSet = true;
-        return;
+        boost::asio::io_service io_service;
+
+        ip::tcp::resolver resolver(io_service);
+        ip::tcp::resolver::query query(host_, port_);
+        ip::tcp::resolver::iterator iterator = resolver.resolve(query);
+
+        ip::tcp::socket socket(io_service);
+        boost::asio::connect(socket, iterator);
+
+        string postMsg = normRequest(reqJson);
+        string CRNL = "\r\n";
+        string request =
+          "POST " + path + " HTTP/1.0" + CRNL +
+          "Host: " + host_ + CRNL +
+          "content-length: " + to_string(postMsg.size()) + CRNL +
+          "Accept: */*" + CRNL +
+          "Connection: close" + CRNL + CRNL +
+          postMsg;
+
+        cout << request << endl;
+
+        boost::system::error_code error;
+
+        boost::asio::streambuf request_buffer;
+        ostream request_stream(&request_buffer);
+        request_stream << request;
+        boost::asio::write(socket, request_buffer, error);
+
+        if (error) {
+          respJson.put(EOSC_ERROR, error.message());
+          isErrorSet = true;
+          return;
+        }
+
+        // request sent, responce expected.
+
+        boost::asio::streambuf response_buffer;
+        boost::asio::read(socket, response_buffer, boost::asio::transfer_all(),
+          error);
+        if (error && error != boost::asio::error::eof) {
+          respJson.put(EOSC_ERROR, error.message());
+          isErrorSet = true;
+          return;
+        }
+
+        istream response_stream(&response_buffer);
+        string http_version;
+        response_stream >> http_version;
+        unsigned int status_code;
+        response_stream >> status_code;
+        string status_message;
+
+        getline(response_stream, status_message);
+        if (!(status_code == 200 || status_code == 201 || status_code == 202)) {
+          string msg = string("status code is ") + to_string(status_code);
+          msg += string("\n eosd response is ") +
+            string(boost::asio::buffer_cast<const char*>(
+              response_buffer.data()));
+          respJson.put(EOSC_ERROR, msg);
+          isErrorSet = true;
+          return;
+        }
+
+        string message(boost::asio::buffer_cast<const char*>(response_buffer.data()));
+        string mark = CRNL + CRNL; // header end mark
+        size_t found = message.find(mark);
+        message = message.substr(found + mark.length(), message.length());
+        normResponse(message, respJson);
       }
-      catch (...) {}
+      catch (exception& e) {
+        respJson.put(EOSC_ERROR, e.what());
+        isErrorSet = true;
+      }
+    }
+
+    EoscCommand::EoscCommand( string path, ptree reqJson, bool isRaw) : 
+      path(path), reqJson(reqJson), isRaw(isRaw){
     }
 
     string EoscCommand::toStringPost() const {
       stringstream ss;
       json_parser::
-        write_json(ss, postJson, !isRaw);
+        write_json(ss, reqJson, !isRaw);
       return ss.str();
     }
 
     string EoscCommand::toStringRcv() const {
       stringstream ss;
       json_parser::
-        write_json(ss, jsonRcv, !isRaw);
+        write_json(ss, respJson, !isRaw);
       return ss.str();
     }
 
@@ -259,6 +263,10 @@ namespace tokenika
     /******************************************************************************
       Definitions for class 'command_options'
     ******************************************************************************/
+
+    void CommandOptions::onError(EoscCommand command) {
+      std::cerr << "ERROR!" << endl << command.get<string>(EOSC_ERROR) << endl;
+    }
 
     void CommandOptions::go()
     {
@@ -289,7 +297,7 @@ namespace tokenika
 
         bool is_arg = setJson(vm) || vm.count("json");
         if (vm.count("json")) {
-          postJson = stringToPtree(json_);
+          reqJson = stringToPtree(json_);
         }
         isRaw = vm.count("raw") ? true : false;
 
@@ -298,12 +306,11 @@ namespace tokenika
         }
         else if (is_arg) {
           EoscCommand command = getCommand(isRaw);
-          if (command.isError())
-          {
-            cerr << "ERROR!" << endl
-              << command.get<string>(EOSC_ERROR) << endl;
+          if (command.isError()) {
+            onError(command);
             return;
           }
+           
           if (vm.count("received")) {
             cout << command.toStringRcv() << endl;
           }

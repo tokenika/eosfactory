@@ -20,6 +20,7 @@
 #define EOSC_ERROR "error" // Error json key
 #define HOST_DEFAULT "localhost"
 #define PORT_DEFAULT "8888"
+#define TOKENIKA_WALLET "tokenikaWallet"
 
 using namespace std;
 using namespace boost::program_options;
@@ -52,27 +53,7 @@ namespace tokenika
      * @param ...
      */
     extern void output(const char* label, const char* format, ...);
-
-    /**
-     * @brief Given a json, eoscCommandJsongets EOS blockchain responce.
-     *
-     * Given a json tree and a command path (for example `/v1/chain/GetInfo`),
-     * and EOS blockchain communication port (for example `8888`),
-     * and EOS blockchain server name (for example `localhost`),
-     * gets EOS blockchain responce.
-     *
-     * @param server EOS blockchain server name
-     * @param port EOS blockchain communication port
-     * @param path command path
-     * @param postJson json eoscCommandJsonto be posted
-     * @param jsonRcv json to be filled with received data
-     */
-    extern void callEosd(
-      string server,
-      string port,
-      string path,
-      ptree &postJson,
-      ptree &jsonRcv);
+    extern void output(const char* text, ...);
 
     /**
      * @brief Given a json teoscCommandJsonree, returns the <Type>value of a given path.
@@ -110,15 +91,33 @@ namespace tokenika
      * in the root directory of the project.
      *
      */
-    class EoscCommand
-    {
+    class EoscCommand {
+
       string path;
-      ptree jsonRcv;
       bool isErrorSet = false;
       bool isRaw;
 
     protected:
-      ptree postJson;
+      ptree reqJson;
+      ptree respJson;
+
+      /**
+      * @brief Given a json, eoscCommandJsongets EOS blockchain responce.
+      *
+      * Given a json tree and a command path (for example `/v1/chain/GetInfo`),
+      * and EOS blockchain communication port (for example `8888`),
+      * and EOS blockchain server name (for example `localhost`),
+      * gets EOS blockchain responce.
+      *
+      * @param server EOS blockchain server name
+      * @param port EOS blockchain communication port
+      * @param path command path
+      * @param reqJson json eoscCommandJsonto be posted
+      * @param respJson json to be filled with received data
+      */
+      void callEosd();
+      virtual string normRequest(ptree& reqJson);
+      virtual void normResponse(string response, ptree &respJson);
 
     public:
       static string host;
@@ -126,17 +125,18 @@ namespace tokenika
       static string walletHost;
       static string walletPort;
       static bool verbose;
+      static ptree getConfig(bool verbose = false);
 
       /**
        * @brief Initiates members, and calls the blockchain
        *
        * @param path command path, for example `/v1/chain/GetBlock`
-       * @param postJson json tree, for example {"block_num_or_id"="25"}
+       * @param reqJson json tree, for example {"block_num_or_id"="25"}
        * @param isRaw boolean, determines printout of the to-string methods
        */
       EoscCommand(
         string path,
-        ptree postJson,
+        ptree reqJson,
         bool isRaw = false);
 
       /**
@@ -149,13 +149,21 @@ namespace tokenika
         return isErrorSet;
       }
 
-      /**
+      /**    protected:
+      ptree reqJson;
+
+    public:
+      static string host;
+      static string port;
+      static string walletHost;
+      static string walletPort;
+      static bool verbose;
        * @brief Blockchain responce
        *
        * @return boost::property_tree::ptree blockchain responce
        */
       ptree getRcvJson() const {
-        return jsonRcv;
+        return respJson;
       }
 
       /**
@@ -187,9 +195,11 @@ namespace tokenika
        */
       template<typename Type>
       Type get(const ptree::path_type & path) const {
-        return getJsonPath<Type>(jsonRcv, path);
+        return getJsonPath<Type>(respJson, path);
       }
+      
     };
+    #define GET_STRING(command, key) command.get<string>(key).c_str()
 
     //http://boost.cowic.de/rc/pdf/program_options.pdf
     /**
@@ -237,7 +247,7 @@ namespace tokenika
       /**
        * @brief json tree to be filled with blockchain responce.
        */
-      ptree postJson;
+      ptree reqJson;
 
       /**
        * @brief Command 'usage' instruction.
@@ -283,7 +293,7 @@ namespace tokenika
        * @return EoscCommand command object
        */
       virtual EoscCommand getCommand(bool isRaw) {
-        return EoscCommand("", postJson);
+        return EoscCommand("", reqJson);
       }
 
       /**source /mnt/hgfs/Workspaces/EOS/eoscBash/eoscBash $EOSIO_INSTALL_DIR
@@ -303,6 +313,8 @@ namespace tokenika
       virtual void getOutput(EoscCommand command) {
         cout << command.toStringRcv() << endl;
       }
+
+      virtual void onError(EoscCommand command);
 
     public:
       CommandOptions(int argc, const char *argv[]) : argc_(argc), argv_(argv) {}

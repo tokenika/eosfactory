@@ -6,7 +6,9 @@
       "format":"[%TimeStamp%]: %Message%"
    },
   "eosc": {
-    "server": "localhost",
-    "port": "9999"
+    "server":"localhost",
+    "port":"9999",
+    "tokenikaWallet":"tokenikaWallet1",
+    "safeFolder":""
   }
 }

@@ -223,10 +223,11 @@ The VS solution has set both boost includes and libraries in relation to the `BO
 
 Now, the blockchain may be accessed from a Windows Command Prompt, if the `eosd` blockchain program is configured to be called from 
 
-
+```
+```
 Edit > Virtual Network Editor: Host-only
 Virtual Machine Settings > Network Adapter: Host-only
-```
+
 ifconfig
 ## inet 192.168.229.141  netmask 255.255.255.0  broadcast 192.168.229.255
 ```

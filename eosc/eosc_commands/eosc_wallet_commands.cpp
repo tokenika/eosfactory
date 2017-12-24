@@ -1,6 +1,6 @@
-#pragma once
+#include "eosc_wallet_commands.hpp"
 
-const char* wallet = R"EOF(
+const char* walletSubcommands = R"EOF(
 ERROR: RequiredError: Subcommand required
 Interact with local wallet
 Usage : . / eosc [OPTIONS] wallet SUBCOMMAND [OPTIONS]
@@ -15,3 +15,5 @@ Subcommands:
     list            List opened wallets, *= unlocked
     keys            List of private keys from all unlocked wallets in wif format.
 )EOF";
+
+const std::string walletCommandPath = "/v1/wallet/";

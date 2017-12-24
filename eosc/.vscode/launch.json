@@ -9,7 +9,7 @@
          "type": "cppdbg",
          "request": "launch",
          "program": "${workspaceFolder}/build/eosc",
-         "args": ["198.100.148.136:8888","get", "block", "34"],
+         "args": ["wallet", "create", "wallet4"],
          "stopAtEntry": false,
          "cwd": "${workspaceFolder}/build",
          "environment": [],

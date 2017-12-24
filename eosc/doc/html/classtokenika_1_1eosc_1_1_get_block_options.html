@@ -73,6 +73,11 @@ $(function() {
 <div class="title">tokenika::eosc::GetBlockOptions Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Command-line driver for the <a class="el" href="classtokenika_1_1eosc_1_1_get_block.html" title="Retrieve a full block from a blockchain. ">GetBlock</a> class. Extends the <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html" title="Command-line wrapper for eosc commands. ">CommandOptions</a> class adding features specific to the 'wallet open_all' eosc command.  
+ <a href="classtokenika_1_1eosc_1_1_get_block_options.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="eosc__commands_2eosc__get__commands_8hpp_source.html">eosc_get_commands.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for tokenika::eosc::GetBlockOptions:</div>
 <div class="dyncontent">
@@ -95,6 +100,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab031795a5bd5cf681307cc9ea07659a3"><td class="memItemLeft" align="right" valign="top"><a id="ab031795a5bd5cf681307cc9ea07659a3"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>GetBlockOptions</b> (int argc, const char **argv)</td></tr>
 <tr class="separator:ab031795a5bd5cf681307cc9ea07659a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab031795a5bd5cf681307cc9ea07659a3"><td class="memItemLeft" align="right" valign="top"><a id="ab031795a5bd5cf681307cc9ea07659a3"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>GetBlockOptions</b> (int argc, const char **argv)</td></tr>
+<tr class="separator:ab031795a5bd5cf681307cc9ea07659a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtokenika_1_1eosc_1_1_command_options"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtokenika_1_1eosc_1_1_command_options')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html">tokenika::eosc::CommandOptions</a></td></tr>
 <tr class="memitem:a61d20e4e3a9564c242eecfe814e96783 inherit pub_methods_classtokenika_1_1eosc_1_1_command_options"><td class="memItemLeft" align="right" valign="top"><a id="a61d20e4e3a9564c242eecfe814e96783"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>CommandOptions</b> (int argc, const char *argv[])</td></tr>
@@ -108,24 +116,49 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ab0b7572223d35a3232630b9eef51b9cb"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#ab0b7572223d35a3232630b9eef51b9cb">getUsage</a> ()</td></tr>
 <tr class="memdesc:ab0b7572223d35a3232630b9eef51b9cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command 'usage' instruction.  <a href="#ab0b7572223d35a3232630b9eef51b9cb">More...</a><br /></td></tr>
 <tr class="separator:ab0b7572223d35a3232630b9eef51b9cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54aa8bb34767a103b5d3514d42b6655c"><td class="memItemLeft" align="right" valign="top">virtual options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#a54aa8bb34767a103b5d3514d42b6655c">options</a> ()</td></tr>
-<tr class="memdesc:a54aa8bb34767a103b5d3514d42b6655c"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of the command options.  <a href="#a54aa8bb34767a103b5d3514d42b6655c">More...</a><br /></td></tr>
-<tr class="separator:a54aa8bb34767a103b5d3514d42b6655c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a141b09134fee40e806eaf2e1b0ad93c9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#a141b09134fee40e806eaf2e1b0ad93c9">setPosDesc</a> (positional_options_description &amp;pos_desc)</td></tr>
-<tr class="memdesc:a141b09134fee40e806eaf2e1b0ad93c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Positional options.  <a href="#a141b09134fee40e806eaf2e1b0ad93c9">More...</a><br /></td></tr>
-<tr class="separator:a141b09134fee40e806eaf2e1b0ad93c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb8815674408df39ed8f7d4e04367492"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#adb8815674408df39ed8f7d4e04367492">setJson</a> (variables_map &amp;vm)</td></tr>
-<tr class="memdesc:adb8815674408df39ed8f7d4e04367492"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills the post json tree according to options.  <a href="#adb8815674408df39ed8f7d4e04367492">More...</a><br /></td></tr>
-<tr class="separator:adb8815674408df39ed8f7d4e04367492"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1c5b62f162c4253cab8de5a93fe5cf9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#ac1c5b62f162c4253cab8de5a93fe5cf9">getCommand</a> (bool is_raw)</td></tr>
-<tr class="memdesc:ac1c5b62f162c4253cab8de5a93fe5cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns command object, containing a responce from the blockchain.  <a href="#ac1c5b62f162c4253cab8de5a93fe5cf9">More...</a><br /></td></tr>
-<tr class="separator:ac1c5b62f162c4253cab8de5a93fe5cf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d45be43c2a93468910db4533db832cc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#a8d45be43c2a93468910db4533db832cc">getOutput</a> (<a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a> command)</td></tr>
-<tr class="memdesc:a8d45be43c2a93468910db4533db832cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for printout instructions.  <a href="#a8d45be43c2a93468910db4533db832cc">More...</a><br /></td></tr>
-<tr class="separator:a8d45be43c2a93468910db4533db832cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace1d886b5fb260150df8d291339fbd03"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#ace1d886b5fb260150df8d291339fbd03">getExample</a> ()</td></tr>
-<tr class="memdesc:ace1d886b5fb260150df8d291339fbd03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for any exemplary code snippet.  <a href="#ace1d886b5fb260150df8d291339fbd03">More...</a><br /></td></tr>
-<tr class="separator:ace1d886b5fb260150df8d291339fbd03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d2f9ee8a0de03b21062f65c7313e062"><td class="memItemLeft" align="right" valign="top">options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#a6d2f9ee8a0de03b21062f65c7313e062">options</a> ()</td></tr>
+<tr class="memdesc:a6d2f9ee8a0de03b21062f65c7313e062"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of the command options.  <a href="#a6d2f9ee8a0de03b21062f65c7313e062">More...</a><br /></td></tr>
+<tr class="separator:a6d2f9ee8a0de03b21062f65c7313e062"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c86f1a16f7b72048a0f27df71061c48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#a8c86f1a16f7b72048a0f27df71061c48">setPosDesc</a> (positional_options_description &amp;pos_desc)</td></tr>
+<tr class="memdesc:a8c86f1a16f7b72048a0f27df71061c48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Positional options.  <a href="#a8c86f1a16f7b72048a0f27df71061c48">More...</a><br /></td></tr>
+<tr class="separator:a8c86f1a16f7b72048a0f27df71061c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb52e2bb4a4c3f75ae84c2e4ce7651b9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#aeb52e2bb4a4c3f75ae84c2e4ce7651b9">setJson</a> (variables_map &amp;vm)</td></tr>
+<tr class="memdesc:aeb52e2bb4a4c3f75ae84c2e4ce7651b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills the post json tree according to options.  <a href="#aeb52e2bb4a4c3f75ae84c2e4ce7651b9">More...</a><br /></td></tr>
+<tr class="separator:aeb52e2bb4a4c3f75ae84c2e4ce7651b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad382e5aadb0ad7bd99a6b89856c991b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#ad382e5aadb0ad7bd99a6b89856c991b1">getCommand</a> (bool is_raw)</td></tr>
+<tr class="memdesc:ad382e5aadb0ad7bd99a6b89856c991b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns command object, containing a responce from the blockchain.  <a href="#ad382e5aadb0ad7bd99a6b89856c991b1">More...</a><br /></td></tr>
+<tr class="separator:ad382e5aadb0ad7bd99a6b89856c991b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4af729b6bcc221cedd911e078927f7d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#a4af729b6bcc221cedd911e078927f7d6">getOutput</a> (<a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a> command)</td></tr>
+<tr class="memdesc:a4af729b6bcc221cedd911e078927f7d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for printout instructions.  <a href="#a4af729b6bcc221cedd911e078927f7d6">More...</a><br /></td></tr>
+<tr class="separator:a4af729b6bcc221cedd911e078927f7d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa65d2fd30006383bf39323e5e994310"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#afa65d2fd30006383bf39323e5e994310">getExample</a> ()</td></tr>
+<tr class="memdesc:afa65d2fd30006383bf39323e5e994310"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for any exemplary code snippet.  <a href="#afa65d2fd30006383bf39323e5e994310">More...</a><br /></td></tr>
+<tr class="separator:afa65d2fd30006383bf39323e5e994310"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0b7572223d35a3232630b9eef51b9cb"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#ab0b7572223d35a3232630b9eef51b9cb">getUsage</a> ()</td></tr>
+<tr class="memdesc:ab0b7572223d35a3232630b9eef51b9cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command 'usage' instruction.  <a href="#ab0b7572223d35a3232630b9eef51b9cb">More...</a><br /></td></tr>
+<tr class="separator:ab0b7572223d35a3232630b9eef51b9cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d2f9ee8a0de03b21062f65c7313e062"><td class="memItemLeft" align="right" valign="top">options_description&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#a6d2f9ee8a0de03b21062f65c7313e062">options</a> ()</td></tr>
+<tr class="memdesc:a6d2f9ee8a0de03b21062f65c7313e062"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of the command options.  <a href="#a6d2f9ee8a0de03b21062f65c7313e062">More...</a><br /></td></tr>
+<tr class="separator:a6d2f9ee8a0de03b21062f65c7313e062"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c86f1a16f7b72048a0f27df71061c48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#a8c86f1a16f7b72048a0f27df71061c48">setPosDesc</a> (positional_options_description &amp;pos_desc)</td></tr>
+<tr class="memdesc:a8c86f1a16f7b72048a0f27df71061c48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Positional options.  <a href="#a8c86f1a16f7b72048a0f27df71061c48">More...</a><br /></td></tr>
+<tr class="separator:a8c86f1a16f7b72048a0f27df71061c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb52e2bb4a4c3f75ae84c2e4ce7651b9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#aeb52e2bb4a4c3f75ae84c2e4ce7651b9">setJson</a> (variables_map &amp;vm)</td></tr>
+<tr class="memdesc:aeb52e2bb4a4c3f75ae84c2e4ce7651b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills the post json tree according to options.  <a href="#aeb52e2bb4a4c3f75ae84c2e4ce7651b9">More...</a><br /></td></tr>
+<tr class="separator:aeb52e2bb4a4c3f75ae84c2e4ce7651b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad382e5aadb0ad7bd99a6b89856c991b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#ad382e5aadb0ad7bd99a6b89856c991b1">getCommand</a> (bool is_raw)</td></tr>
+<tr class="memdesc:ad382e5aadb0ad7bd99a6b89856c991b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns command object, containing a responce from the blockchain.  <a href="#ad382e5aadb0ad7bd99a6b89856c991b1">More...</a><br /></td></tr>
+<tr class="separator:ad382e5aadb0ad7bd99a6b89856c991b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4af729b6bcc221cedd911e078927f7d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#a4af729b6bcc221cedd911e078927f7d6">getOutput</a> (<a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a> command)</td></tr>
+<tr class="memdesc:a4af729b6bcc221cedd911e078927f7d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for printout instructions.  <a href="#a4af729b6bcc221cedd911e078927f7d6">More...</a><br /></td></tr>
+<tr class="separator:a4af729b6bcc221cedd911e078927f7d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa65d2fd30006383bf39323e5e994310"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html#afa65d2fd30006383bf39323e5e994310">getExample</a> ()</td></tr>
+<tr class="memdesc:afa65d2fd30006383bf39323e5e994310"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for any exemplary code snippet.  <a href="#afa65d2fd30006383bf39323e5e994310">More...</a><br /></td></tr>
+<tr class="separator:afa65d2fd30006383bf39323e5e994310"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classtokenika_1_1eosc_1_1_command_options"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtokenika_1_1eosc_1_1_command_options')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html">tokenika::eosc::CommandOptions</a></td></tr>
+<tr class="memitem:a912e84dee005b17a4e22731e5d7b806a inherit pro_methods_classtokenika_1_1eosc_1_1_command_options"><td class="memItemLeft" align="right" valign="top"><a id="a912e84dee005b17a4e22731e5d7b806a"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onError</b> (<a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a> command)</td></tr>
+<tr class="separator:a912e84dee005b17a4e22731e5d7b806a inherit pro_methods_classtokenika_1_1eosc_1_1_command_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -136,14 +169,16 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>n</b></td></tr>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
 <tr class="separator:a6e7ba3fa6ad051eace176f481ec83f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classtokenika_1_1eosc_1_1_command_options"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classtokenika_1_1eosc_1_1_command_options')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html">tokenika::eosc::CommandOptions</a></td></tr>
-<tr class="memitem:af77d843b79f0c44976a3b15d8e3dfdb9 inherit pro_attribs_classtokenika_1_1eosc_1_1_command_options"><td class="memItemLeft" align="right" valign="top"><a id="af77d843b79f0c44976a3b15d8e3dfdb9"></a>
-ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_command_options.html#af77d843b79f0c44976a3b15d8e3dfdb9">postJson</a></td></tr>
-<tr class="memdesc:af77d843b79f0c44976a3b15d8e3dfdb9 inherit pro_attribs_classtokenika_1_1eosc_1_1_command_options"><td class="mdescLeft">&#160;</td><td class="mdescRight">json tree to be filled with blockchain responce. <br /></td></tr>
-<tr class="separator:af77d843b79f0c44976a3b15d8e3dfdb9 inherit pro_attribs_classtokenika_1_1eosc_1_1_command_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adab5b6079b622b55a419a84b65c90123 inherit pro_attribs_classtokenika_1_1eosc_1_1_command_options"><td class="memItemLeft" align="right" valign="top"><a id="adab5b6079b622b55a419a84b65c90123"></a>
+ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_command_options.html#adab5b6079b622b55a419a84b65c90123">reqJson</a></td></tr>
+<tr class="memdesc:adab5b6079b622b55a419a84b65c90123 inherit pro_attribs_classtokenika_1_1eosc_1_1_command_options"><td class="mdescLeft">&#160;</td><td class="mdescRight">json tree to be filled with blockchain responce. <br /></td></tr>
+<tr class="separator:adab5b6079b622b55a419a84b65c90123 inherit pro_attribs_classtokenika_1_1eosc_1_1_command_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac1c5b62f162c4253cab8de5a93fe5cf9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1c5b62f162c4253cab8de5a93fe5cf9">&#9670;&nbsp;</a></span>getCommand()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Command-line driver for the <a class="el" href="classtokenika_1_1eosc_1_1_get_block.html" title="Retrieve a full block from a blockchain. ">GetBlock</a> class. Extends the <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html" title="Command-line wrapper for eosc commands. ">CommandOptions</a> class adding features specific to the 'wallet open_all' eosc command. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad382e5aadb0ad7bd99a6b89856c991b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad382e5aadb0ad7bd99a6b89856c991b1">&#9670;&nbsp;</a></span>getCommand() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -152,7 +187,7 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a> tokenika::eosc::GetBlockOptions::getCommand </td>
+          <td class="memname"><a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a> tokenika::eosc::GetBlockOptions::getCommand </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>isRaw</em></td><td>)</td>
@@ -179,8 +214,8 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 </div>
 </div>
-<a id="ace1d886b5fb260150df8d291339fbd03"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace1d886b5fb260150df8d291339fbd03">&#9670;&nbsp;</a></span>getExample()</h2>
+<a id="ad382e5aadb0ad7bd99a6b89856c991b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad382e5aadb0ad7bd99a6b89856c991b1">&#9670;&nbsp;</a></span>getCommand() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -189,7 +224,44 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tokenika::eosc::GetBlockOptions::getExample </td>
+          <td class="memname"><a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a> tokenika::eosc::GetBlockOptions::getCommand </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isRaw</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns command object, containing a responce from the blockchain. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">isRaw</td><td>raw or pretty printout flag </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html" title="Basic connection to the blockchain. ">EoscCommand</a> command object </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html#a787f15164e2055394d9d948c07bf201c">tokenika::eosc::CommandOptions</a>.</p>
+
+</div>
+</div>
+<a id="afa65d2fd30006383bf39323e5e994310"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa65d2fd30006383bf39323e5e994310">&#9670;&nbsp;</a></span>getExample() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tokenika::eosc::GetBlockOptions::getExample </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -209,8 +281,8 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 </div>
 </div>
-<a id="a8d45be43c2a93468910db4533db832cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d45be43c2a93468910db4533db832cc">&#9670;&nbsp;</a></span>getOutput()</h2>
+<a id="afa65d2fd30006383bf39323e5e994310"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa65d2fd30006383bf39323e5e994310">&#9670;&nbsp;</a></span>getExample() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,7 +291,74 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tokenika::eosc::GetBlockOptions::getOutput </td>
+          <td class="memname">void tokenika::eosc::GetBlockOptions::getExample </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Placeholder for any exemplary code snippet. </p>
+<p>source /mnt/hgfs/Workspaces/EOS/eoscBash/eoscBash $EOSIO_INSTALL_DIR </p>
+
+<p>Reimplemented from <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html#ab1fe134b6c2230257a5c07b021812986">tokenika::eosc::CommandOptions</a>.</p>
+
+</div>
+</div>
+<a id="a4af729b6bcc221cedd911e078927f7d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4af729b6bcc221cedd911e078927f7d6">&#9670;&nbsp;</a></span>getOutput() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tokenika::eosc::GetBlockOptions::getOutput </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a>&#160;</td>
+          <td class="paramname"><em>command</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Placeholder for printout instructions. </p>
+<p>Placeholder for printout instructions. Printout should be composed with the ::output(const char*, const char*, ...) function.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>command object, containing a responce from the blockchain. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented from <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html#a346dcfb00b8ac522169714544bfa7be0">tokenika::eosc::CommandOptions</a>.</p>
+
+</div>
+</div>
+<a id="a4af729b6bcc221cedd911e078927f7d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4af729b6bcc221cedd911e078927f7d6">&#9670;&nbsp;</a></span>getOutput() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tokenika::eosc::GetBlockOptions::getOutput </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtokenika_1_1eosc_1_1_eosc_command.html">EoscCommand</a>&#160;</td>
           <td class="paramname"><em>command</em></td><td>)</td>
@@ -247,7 +386,7 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 </div>
 </div>
 <a id="ab0b7572223d35a3232630b9eef51b9cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0b7572223d35a3232630b9eef51b9cb">&#9670;&nbsp;</a></span>getUsage()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0b7572223d35a3232630b9eef51b9cb">&#9670;&nbsp;</a></span>getUsage() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -276,8 +415,8 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 </div>
 </div>
-<a id="a54aa8bb34767a103b5d3514d42b6655c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54aa8bb34767a103b5d3514d42b6655c">&#9670;&nbsp;</a></span>options()</h2>
+<a id="ab0b7572223d35a3232630b9eef51b9cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0b7572223d35a3232630b9eef51b9cb">&#9670;&nbsp;</a></span>getUsage() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -286,7 +425,37 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual options_description tokenika::eosc::GetBlockOptions::options </td>
+          <td class="memname">const char* tokenika::eosc::GetBlockOptions::getUsage </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Command 'usage' instruction. </p>
+<dl class="section return"><dt>Returns</dt><dd>const char* usage text </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html#a18ada0ba1163f7a41c9990ae2756012b">tokenika::eosc::CommandOptions</a>.</p>
+
+</div>
+</div>
+<a id="a6d2f9ee8a0de03b21062f65c7313e062"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d2f9ee8a0de03b21062f65c7313e062">&#9670;&nbsp;</a></span>options() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">options_description tokenika::eosc::GetBlockOptions::options </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -306,8 +475,8 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 
 </div>
 </div>
-<a id="adb8815674408df39ed8f7d4e04367492"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb8815674408df39ed8f7d4e04367492">&#9670;&nbsp;</a></span>setJson()</h2>
+<a id="a6d2f9ee8a0de03b21062f65c7313e062"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d2f9ee8a0de03b21062f65c7313e062">&#9670;&nbsp;</a></span>options() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -316,7 +485,37 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool tokenika::eosc::GetBlockOptions::setJson </td>
+          <td class="memname">options_description tokenika::eosc::GetBlockOptions::options </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>List of the command options. </p>
+<dl class="section return"><dt>Returns</dt><dd>boost::program_options::options_description command options </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html#a6882b37226d251e4c8367425b687b683">tokenika::eosc::CommandOptions</a>.</p>
+
+</div>
+</div>
+<a id="aeb52e2bb4a4c3f75ae84c2e4ce7651b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb52e2bb4a4c3f75ae84c2e4ce7651b9">&#9670;&nbsp;</a></span>setJson() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tokenika::eosc::GetBlockOptions::setJson </td>
           <td>(</td>
           <td class="paramtype">variables_map &amp;&#160;</td>
           <td class="paramname"><em>vm</em></td><td>)</td>
@@ -345,8 +544,8 @@ false if post json cannot be set completely </dd></dl>
 
 </div>
 </div>
-<a id="a141b09134fee40e806eaf2e1b0ad93c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a141b09134fee40e806eaf2e1b0ad93c9">&#9670;&nbsp;</a></span>setPosDesc()</h2>
+<a id="aeb52e2bb4a4c3f75ae84c2e4ce7651b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb52e2bb4a4c3f75ae84c2e4ce7651b9">&#9670;&nbsp;</a></span>setJson() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -355,7 +554,82 @@ false if post json cannot be set completely </dd></dl>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tokenika::eosc::GetBlockOptions::setPosDesc </td>
+          <td class="memname">bool tokenika::eosc::GetBlockOptions::setJson </td>
+          <td>(</td>
+          <td class="paramtype">variables_map &amp;&#160;</td>
+          <td class="paramname"><em>vm</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Fills the post json tree according to options. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vm</td><td>boost program options variable map </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if post json is set completely </dd>
+<dd>
+false if post json cannot be set completely </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html#af6fe1da6312198a3287b22096925f62d">tokenika::eosc::CommandOptions</a>.</p>
+
+</div>
+</div>
+<a id="a8c86f1a16f7b72048a0f27df71061c48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c86f1a16f7b72048a0f27df71061c48">&#9670;&nbsp;</a></span>setPosDesc() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tokenika::eosc::GetBlockOptions::setPosDesc </td>
+          <td>(</td>
+          <td class="paramtype">positional_options_description &amp;&#160;</td>
+          <td class="paramname"><em>pos_descr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Positional options. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pos_descr</td><td>positional options </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented from <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html#a1bd0630f43bee825b0d06ffeff35fbcd">tokenika::eosc::CommandOptions</a>.</p>
+
+</div>
+</div>
+<a id="a8c86f1a16f7b72048a0f27df71061c48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c86f1a16f7b72048a0f27df71061c48">&#9670;&nbsp;</a></span>setPosDesc() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tokenika::eosc::GetBlockOptions::setPosDesc </td>
           <td>(</td>
           <td class="paramtype">positional_options_description &amp;&#160;</td>
           <td class="paramname"><em>pos_descr</em></td><td>)</td>
@@ -382,7 +656,7 @@ false if post json cannot be set completely </dd></dl>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="eosc__get__commands_8hpp_source.html">eosc_get_commands.hpp</a></li>
+<li><a class="el" href="eosc__commands_2eosc__get__commands_8hpp_source.html">eosc_commands/eosc_get_commands.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

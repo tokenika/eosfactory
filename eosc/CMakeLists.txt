@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.8)
-project (eosc)
+project ("Tokenika_Eosc")
 set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake")
 include(cotire)
 include("${PROJECT_SOURCE_DIR}/CMake/config.cmake")
@@ -37,7 +37,13 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 add_subdirectory(eosc_commands)
 
-add_executable(${PROJECT_NAME} eosc_commands/eosc_command.cpp eosc.cpp )
+add_executable(${PROJECT_NAME} 
+  eosc_commands/eosc_command.cpp 
+  eosc_commands/eosc_get_commands.cpp
+  eosc_commands/eosc_wallet_commands.cpp
+  eosc_commands/subcommands.cpp
+  eosc_test
+  eosc.cpp )
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} eosc_commands)

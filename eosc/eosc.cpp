@@ -14,10 +14,11 @@
 
 #include "eosc_commands/eosc_get_commands.hpp"
 #include "eosc_commands/eosc_wallet_commands.hpp"
+#include "eosc_commands/eosc_other_commands.hpp"
 
 #include "eosc.hpp"
 #include "eosc_test.hpp"
-#include "subcommands.hpp"
+#include "eosc_commands/subcommands.hpp"
 
 #define IF_ELSE(commandName_, classPrefix)                                      \
   if (commandName == #commandName_)                                             \
@@ -51,12 +52,12 @@ Commands:
 )EOF";
 
 std::map<const std::string, const std::string> subcommandMap = {
-  { "create", create },
+  { "create", createSubcommands },
   { "get", getSubcommands },
   { "set", setSubcommands },
-  { "wallet", wallet },
-  { "benchmark", benchmark },
-  { "push", push }
+  { "wallet", walletSubcommands },
+  { "benchmark", benchmarkSubcommands },
+  { "push", pushSubcommands }
 };
 
 int main(int argc, const char *argv[])
@@ -203,9 +204,20 @@ int main(int argc, const char *argv[])
       commandName += "_";
       commandName += subcommand;
 
+      IF_ELSE(version_client, VersionClient)
       IF_ELSE(get_info, GetInfo)
       IF_ELSE(get_block, GetBlock)
       IF_ELSE(get_account, GetAccount)
+      IF_ELSE(get_code, GetCode)
+      IF_ELSE(get_table, GetTable)
+      IF_ELSE(wallet_create, WalletCreate)
+      IF_ELSE(wallet_list, WalletList)
+      IF_ELSE(wallet_keys, WalletKeys)
+      IF_ELSE(wallet_import, WalletImport)
+      IF_ELSE(wallet_open, WalletOpen)
+      IF_ELSE(wallet_lock, WalletLock)
+      IF_ELSE(wallet_lock_all, WalletLockAll)
+      IF_ELSE(wallet_unlock, WalletUnlock)
       {
         cerr << "unknown command!" << endl;
       }

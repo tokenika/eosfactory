@@ -74,21 +74,25 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(BOOST_ROOT)\lib64-msvc-14.0;$(LibraryPath);</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(BOOST_ROOT);$(SolutionDir)..\;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(BOOST_ROOT)\lib64-msvc-14.0;$(LibraryPath);</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(BOOST_ROOT);$(SolutionDir)..\;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(BOOST_ROOT)\lib64-msvc-14.0;$(LibraryPath);</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(BOOST_ROOT);$(SolutionDir)..\;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(BOOST_ROOT)\lib64-msvc-14.0;$(LibraryPath);</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(BOOST_ROOT);$(SolutionDir)..\;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -154,9 +158,10 @@
     <ClInclude Include="..\..\eosc.hpp" />
     <ClInclude Include="..\..\eosc_commands\eosc_command.hpp" />
     <ClInclude Include="..\..\eosc_commands\eosc_get_commands.hpp" />
+    <ClInclude Include="..\..\eosc_commands\eosc_other_commands.hpp" />
     <ClInclude Include="..\..\eosc_commands\eosc_wallet_commands.hpp" />
+    <ClInclude Include="..\..\eosc_commands\subcommands.hpp" />
     <ClInclude Include="..\..\eosc_test.hpp" />
-    <ClInclude Include="..\..\subcommands.hpp" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -164,7 +169,9 @@
     <ClCompile Include="..\..\eosc_commands\eosc_command.cpp" />
     <ClCompile Include="..\..\eosc_commands\eosc_get_commands.cpp" />
     <ClCompile Include="..\..\eosc_commands\eosc_wallet_commands.cpp" />
+    <ClCompile Include="..\..\eosc_commands\subcommands.cpp" />
     <ClCompile Include="..\..\eosc_test.cpp" />
+    <ClCompile Include="temp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="eosc_config.json" />

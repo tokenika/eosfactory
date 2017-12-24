@@ -74,14 +74,14 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;boost/date_time/posix_time/posix_time.hpp&gt;</code><br />
 <code>#include &lt;boost/property_tree/ptree.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="eosc__config_8h_source.html">../eosc_config.h</a>&quot;</code><br />
+<code>#include &quot;../eosc_config.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="eosc__command_8hpp_source.html">eosc_command.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for eosc_get_commands.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="eosc__get__commands_8hpp__incl.png" border="0" usemap="#eosc__get__commands_8hpp" alt=""/></div>
 <map name="eosc__get__commands_8hpp" id="eosc__get__commands_8hpp">
-<area shape="rect" id="node4" href="eosc__config_8h.html" title="Automatic CMake configuration file for the eosc project. " alt="" coords="463,80,578,107"/>
+<area shape="rect" id="node4" href="eosc__config_8h_source.html" title="../eosc_config.h" alt="" coords="463,80,578,107"/>
 <area shape="rect" id="node5" href="eosc__command_8hpp.html" title="Tool for sending transactions and querying state from EOS blockchain. " alt="" coords="301,80,439,107"/>
 </map>
 </div>
@@ -94,15 +94,30 @@ Data Structures</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current blockchain information.  <a href="classtokenika_1_1eosc_1_1_get_info.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_info_options.html">tokenika::eosc::GetInfoOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command-line driver for the <a class="el" href="classtokenika_1_1eosc_1_1_get_info.html" title="Get current blockchain information. ">GetInfo</a> class Extends the <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html" title="Command-line wrapper for eosc commands. ">CommandOptions</a> class adding features specific to the 'wallet open_all' eosc command.  <a href="classtokenika_1_1eosc_1_1_get_info_options.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block.html">tokenika::eosc::GetBlock</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a full block from a blockchain.  <a href="classtokenika_1_1eosc_1_1_get_block.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_block_options.html">tokenika::eosc::GetBlockOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command-line driver for the <a class="el" href="classtokenika_1_1eosc_1_1_get_block.html" title="Retrieve a full block from a blockchain. ">GetBlock</a> class. Extends the <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html" title="Command-line wrapper for eosc commands. ">CommandOptions</a> class adding features specific to the 'wallet open_all' eosc command.  <a href="classtokenika_1_1eosc_1_1_get_block_options.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_account.html">tokenika::eosc::GetAccount</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fetch a blockchain account.  <a href="classtokenika_1_1eosc_1_1_get_account.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_account_options.html">tokenika::eosc::GetAccountOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command-line driver for the <a class="el" href="classtokenika_1_1eosc_1_1_get_account.html" title="Fetch a blockchain account. ">GetAccount</a> class Extends the <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html" title="Command-line wrapper for eosc commands. ">CommandOptions</a> class adding features specific to the 'wallet open_all' eosc command.  <a href="classtokenika_1_1eosc_1_1_get_account_options.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_code.html">tokenika::eosc::GetCode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the code and ABI for an account.  <a href="classtokenika_1_1eosc_1_1_get_code.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_code_options.html">tokenika::eosc::GetCodeOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command-line driver for the <a class="el" href="classtokenika_1_1eosc_1_1_get_code.html" title="Retrieve the code and ABI for an account. ">GetCode</a> class Extends the <a class="el" href="classtokenika_1_1eosc_1_1_command_options.html" title="Command-line wrapper for eosc commands. ">CommandOptions</a> class adding features specific to the 'wallet open_all' eosc command.  <a href="classtokenika_1_1eosc_1_1_get_code_options.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_table.html">tokenika::eosc::GetTable</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the contents of a database table.  <a href="classtokenika_1_1eosc_1_1_get_table.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1eosc_1_1_get_table_options.html">tokenika::eosc::GetTableOptions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>

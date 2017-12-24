@@ -1,11 +1,11 @@
 var indexSectionsWithContent =
 {
-  0: "cegiopst",
-  1: "cegi",
+  0: "bcegiorstvw",
+  1: "cegisvw",
   2: "e",
-  3: "egiost",
-  4: "p",
-  5: "t"
+  3: "cegiost",
+  4: "r",
+  5: "btw"
 };
 
 var indexSectionNames =
