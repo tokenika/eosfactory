@@ -151,12 +151,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\eosc_commands\eosc_command.hpp" />
-    <ClInclude Include="..\..\eosc_commands\eosc_get_commands.hpp" />
+    <ClInclude Include="..\..\eosclib\eosc_command.hpp" />
+    <ClInclude Include="..\..\eosclib\eosc_get_commands.hpp" />
+    <ClInclude Include="..\..\eosclib\eosc_other_commands.hpp" />
+    <ClInclude Include="..\..\eosclib\eosc_wallet_commands.hpp" />
+    <ClInclude Include="..\..\eosclib\subcommands.hpp" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\eosc_commands\eosc_command.cpp" />
+    <ClCompile Include="..\..\eosclib\eosc_command.cpp" />
+    <ClCompile Include="..\..\eosclib\eosc_get_commands.cpp" />
+    <ClCompile Include="..\..\eosclib\eosc_wallet_commands.cpp" />
+    <ClCompile Include="..\..\eosclib\subcommands.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

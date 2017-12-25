@@ -156,20 +156,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\eosc.hpp" />
-    <ClInclude Include="..\..\eosc_commands\eosc_command.hpp" />
-    <ClInclude Include="..\..\eosc_commands\eosc_get_commands.hpp" />
-    <ClInclude Include="..\..\eosc_commands\eosc_other_commands.hpp" />
-    <ClInclude Include="..\..\eosc_commands\eosc_wallet_commands.hpp" />
-    <ClInclude Include="..\..\eosc_commands\subcommands.hpp" />
+    <ClInclude Include="..\..\eosclib\eosc_command.hpp" />
+    <ClInclude Include="..\..\eosclib\eosc_get_commands.hpp" />
+    <ClInclude Include="..\..\eosclib\eosc_other_commands.hpp" />
+    <ClInclude Include="..\..\eosclib\eosc_wallet_commands.hpp" />
+    <ClInclude Include="..\..\eosclib\subcommands.hpp" />
     <ClInclude Include="..\..\eosc_test.hpp" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\eosc.cpp" />
-    <ClCompile Include="..\..\eosc_commands\eosc_command.cpp" />
-    <ClCompile Include="..\..\eosc_commands\eosc_get_commands.cpp" />
-    <ClCompile Include="..\..\eosc_commands\eosc_wallet_commands.cpp" />
-    <ClCompile Include="..\..\eosc_commands\subcommands.cpp" />
+    <ClCompile Include="..\..\eosclib\eosc_command.cpp" />
+    <ClCompile Include="..\..\eosclib\eosc_get_commands.cpp" />
+    <ClCompile Include="..\..\eosclib\eosc_wallet_commands.cpp" />
+    <ClCompile Include="..\..\eosclib\subcommands.cpp" />
     <ClCompile Include="..\..\eosc_test.cpp" />
     <ClCompile Include="temp.cpp" />
   </ItemGroup>

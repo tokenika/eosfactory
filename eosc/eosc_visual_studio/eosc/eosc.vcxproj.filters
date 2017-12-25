@@ -13,15 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\eosclib">
+      <UniqueIdentifier>{0a7c69a1-6248-4a23-807c-775ef909d32d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\eosc_commands\eosc_command.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\eosc_commands\eosc_get_commands.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\eosc.hpp">
@@ -30,37 +27,43 @@
     <ClInclude Include="..\..\eosc_test.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\eosc_commands\eosc_wallet_commands.hpp">
+    <ClInclude Include="..\..\eosclib\eosc_command.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\eosc_commands\subcommands.hpp">
+    <ClInclude Include="..\..\eosclib\eosc_get_commands.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\eosc_commands\eosc_other_commands.hpp">
+    <ClInclude Include="..\..\eosclib\eosc_other_commands.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eosclib\eosc_wallet_commands.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eosclib\subcommands.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\eosc_commands\eosc_command.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\eosc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\eosc_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\eosc_commands\eosc_get_commands.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\eosc_commands\eosc_wallet_commands.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\eosc_commands\subcommands.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="temp.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\eosclib\eosc_command.cpp">
+      <Filter>Source Files\eosclib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\eosclib\eosc_get_commands.cpp">
+      <Filter>Source Files\eosclib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\eosclib\eosc_wallet_commands.cpp">
+      <Filter>Source Files\eosclib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\eosclib\subcommands.cpp">
+      <Filter>Source Files\eosclib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,15 +18,33 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\eosc_commands\eosc_command.hpp">
+    <ClInclude Include="..\..\eosclib\eosc_command.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\eosc_commands\eosc_get_commands.hpp">
+    <ClInclude Include="..\..\eosclib\eosc_get_commands.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eosclib\eosc_other_commands.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eosclib\eosc_wallet_commands.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eosclib\subcommands.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\eosc_commands\eosc_command.cpp">
+    <ClCompile Include="..\..\eosclib\eosc_command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\eosclib\eosc_get_commands.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\eosclib\eosc_wallet_commands.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\eosclib\subcommands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

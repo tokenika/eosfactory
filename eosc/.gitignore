@@ -1,4 +1,5 @@
 build
+build_linux
 **/Debug
 **/x64
 **/.vs

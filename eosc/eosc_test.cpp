@@ -5,7 +5,7 @@
 
 #include <boost/algorithm/string/join.hpp>
 
-#include "eosc_commands/eosc_get_commands.hpp"
+#include "eosclib/eosc_get_commands.hpp"
 
 void test()
 {

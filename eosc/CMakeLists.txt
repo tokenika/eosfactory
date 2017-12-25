@@ -29,25 +29,17 @@ program_options
 filesystem
 )
 
-set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+#set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+#set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
 
-include_directories(${Boost_INCLUDE_DIRS})
+#include_directories(${Boost_INCLUDE_DIRS})
 
-add_subdirectory(eosc_commands)
+add_subdirectory(eosclib)
 
-add_executable(${PROJECT_NAME} 
-  eosc_commands/eosc_command.cpp 
-  eosc_commands/eosc_get_commands.cpp
-  eosc_commands/eosc_wallet_commands.cpp
-  eosc_commands/subcommands.cpp
-  eosc_test
-  eosc.cpp )
-target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} eosc_commands)
+set(APPL_NAME "eosc")
+add_executable(${APPL_NAME} eosc.cpp )
+target_link_libraries(${APPL_NAME} eosclib)
+cotire(${APPL_NAME})
 
-cotire(${PROJECT_NAME})
-
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+install(TARGETS ${APPL_NAME} RUNTIME DESTINATION bin)

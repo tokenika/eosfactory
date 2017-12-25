@@ -205,10 +205,19 @@ mkdir build
 cd build
 cmake ..
 make
+```
+### Linux for Windows
 
 ```
+sudo apt-get install mingw-w64
 
-<a name="windows"></a>
+mkdir build
+cd build
+cmake -DCMAKE_CXX_COMPILER=/usr/bin/x86_64-w64-mingw32-g++  -DCMAKE_C_COMPILER=/usr/bin/x86_64-w64-mingw32-gcc -DCMAKE_STATIC_LIBRARY_SUFFIX=lib ..
+make VERBOSE=1
+```
+
+<a name="windows"></a>l
 ### [Windows](#toc)
 
 There is an MS Visual Studio 17 solution in `eos_visual_studio` folder. You can start

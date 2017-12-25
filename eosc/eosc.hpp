@@ -60,4 +60,4 @@
 * -s,--skip-signature         Specify that unlocked wallet keys should not be used to sign transaction
 *
 */
-extern int main(int argc, const char *argv[]);
+extern int eosc(int argc, const char *argv[]);

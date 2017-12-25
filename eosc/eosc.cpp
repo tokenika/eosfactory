@@ -12,13 +12,13 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
-#include "eosc_commands/eosc_get_commands.hpp"
-#include "eosc_commands/eosc_wallet_commands.hpp"
-#include "eosc_commands/eosc_other_commands.hpp"
+#include "eosclib/eosc_get_commands.hpp"
+#include "eosclib/eosc_wallet_commands.hpp"
+#include "eosclib/eosc_other_commands.hpp"
 
 #include "eosc.hpp"
 #include "eosc_test.hpp"
-#include "eosc_commands/subcommands.hpp"
+#include "eosclib/subcommands.hpp"
 
 #define IF_ELSE(commandName_, classPrefix)                                      \
   if (commandName == #commandName_)                                             \
