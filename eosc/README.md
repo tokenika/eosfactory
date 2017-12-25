@@ -118,36 +118,51 @@ Options:
 ./eosc get block --example
 ```
 ```
-Invoke 'get_info' command:
-get_info get_info;
+// Invoke 'GetInfo' command:
+    ptree getInfoJson;
+    GetInfo getInfo(getInfoPostJson);
+    cout << getInfo.toStringRcv() << endl;
+
+/*
+printout:
 
 {
-    "head_block_num": "9939",
-    "last_irreversible_block_num": "9924",
-    "head_block_id": "000026d378f90b5d25dcf962fc44d637872218e5f826420a342f05a534d50bfc",
-    "head_block_time": "2017-12-01T18:57:42",
-    "head_block_producer": "initr",
-    "recent_slots": "0000000000000000000000000000000000000000000000000011111111111111",
-    "participation_rate": "0.21875000000000000"
+    "server_version": "9703495c",
+    "head_block_num": "1707240",
+    "last_irreversible_block_num": "1707225",
+    "head_block_id": "001a0ce87ca6e2d0fc19b8a02e9241c658bea0365f4e6f035ce6602db04611bd",
+    "head_block_time": "2017-12-25T14:11:31",
+    "head_block_producer": "inito",
+    "recent_slots": "1111111111111111111111111111111111111111111111111111111111111111",
+    "participation_rate": "1.00000000000000000"
 }
 
+*/
 
-Use reference to the last block:
-GetBlock GetBlock(
-  get_info.get<int>("last_irreversible_block_num"));
+// Use reference to the last block:
+    ptree GetBlockJson;
+    GetBlock_poGetBlockJsont_json.put("block_num_or_id",
+      getInfo.get<int>("last_irreversible_block_num"));
+    GetBlock GetBlock(GetBlock_post_json);
+    cout << GetBlock.toStringRcv() << endl;
+
+/*
+printout:
 
 {
-    "previous": "000026c35fb5d442be6d4e81a1347cce2c0184c4c2047d9e6dfc78b3bb325ac2",
-    "timestamp": "2017-12-01T17:01:09",
+    "previous": "001a0cd8422216f2828ef5056e9371439f80665cee99d72a5f3162ae7c0495fd",
+    "timestamp": "2017-12-25T14:11:16",
     "transaction_merkle_root": "0000000000000000000000000000000000000000000000000000000000000000",
     "producer": "initn",
     "producer_changes": "",
-    "producer_signature": "1f6984d14ee40ed9806ae14aa96531d874fc3417bf3f1b66c4b1d9c9402f3f90ef07c4523eb9a639ad632c181580aeb051385d718dc59ecc54d0f0e5de012b540f",
+    "producer_signature": "1f382b4fe716f683c8a7ebd15fe5f5266c75a24f75b9b212fc3cc3f7db11f5258b08e5aebc7680784c240e0f8d0ea7540dfb4ab8dcbe5cd8b492876e8f59bb4ea8",
     "cycles": "",
-    "id": "000026c44a2e8075a5b92813869bfb67b72b79ccb3f2e40ad815603c04d2fafd",
-    "block_num": "9924",
-    "refBlockPrefix": "321436069"
+    "id": "001a0cd98eb6f7e0f8e7803b098082b35f1348672561af193ead3d1b1a281bcf",
+    "block_num": "1707225",
+    "ref_block_prefix": "998303736"
 }
+
+*/
 ```
 ## Library
 For us, real value is the library that runs the `tokenika eosc`, as we see the original eos library as not practical for our work. We need a light-weight thing, a cross-platform (good for windows) one.
@@ -163,27 +178,49 @@ Let you see a code snippet:
 
 int main(int argc, char *argv[])
 {
-  tokenika::eosc::get_info get_info; /* Call 'eosd' for 'get info'. */
-  tokenika::eosc::GetBlock GetBlock( /* Call 'eosd' for 'get block', the last one. */
-    get_info.get<int>("last_irreversible_block_num"));
+  using namespace tokenika::eosc;
 
-  std::cout << GetBlock.toStringRcv() << std::endl;/* Print the response. */
+  ptree getInfoJson;
+
+// Invoke 'GetInfo' command:
+  GetInfo getInfo(getInfoPostJson);
+  cout << getInfo.toStringRcv() << endl;
+
+  ptree GetBlockJson;
+
+// Use reference to the last block:
+  GetBlockJson.put("block_num_or_id",
+    getInfo.get<int>("last_irreversible_block_num"));
+  GetBlock GetBlock(GetBlock_post_json);
+  cout << GetBlock.toStringRcv() << endl;
 
   return 0;
 }
 ```
-Here is the print-out:
-```{
-    "previous": "000028716589219b442afe9d140bc28eff4335aecd37d519b0105fca4c8e4a3f",
-    "timestamp": "2017-12-01T19:18:27",
+The printout is:
+```
+{
+    "server_version": "9703495c",
+    "head_block_num": "1707240",
+    "last_irreversible_block_num": "1707225",
+    "head_block_id": "001a0ce87ca6e2d0fc19b8a02e9241c658bea0365f4e6f035ce6602db04611bd",
+    "head_block_time": "2017-12-25T14:11:31",
+    "head_block_producer": "inito",
+    "recent_slots": "1111111111111111111111111111111111111111111111111111111111111111",
+    "participation_rate": "1.00000000000000000"
+}
+
+{
+    "previous": "001a0cd8422216f2828ef5056e9371439f80665cee99d72a5f3162ae7c0495fd",
+    "timestamp": "2017-12-25T14:11:16",
     "transaction_merkle_root": "0000000000000000000000000000000000000000000000000000000000000000",
-    "producer": "inith",
+    "producer": "initn",
     "producer_changes": "",
-    "producer_signature": "1f510dec0bcd85847b7bead61f6deee7a5fb4108745e6ceaaa81804fe4700b561f7ca3f3f26f56fbfaf1e10fd3ba2999f8cbe165fd391b023334badcf894ba54dc",
+    "producer_signature": "1f382b4fe716f683c8a7ebd15fe5f5266c75a24f75b9b212fc3cc3f7db11f5258b08e5aebc7680784c240e0f8d0ea7540dfb4ab8dcbe5cd8b492876e8f59bb4ea8",
     "cycles": "",
-    "id": "00002872be99d0133ea104b42b771f3c7c2ea3736263dc9db3719728a2776976",
-    "block_num": "10354",
-    "refBlockPrefix": "3020202302"
+    "id": "001a0cd98eb6f7e0f8e7803b098082b35f1348672561af193ead3d1b1a281bcf",
+    "block_num": "1707225",
+    "ref_block_prefix": "998303736"
 }
 
 ```
@@ -206,45 +243,18 @@ cd build
 cmake ..
 make
 ```
-### Linux for Windows
-
-```
-sudo apt-get install mingw-w64
-
-mkdir build
-cd build
-cmake -DCMAKE_CXX_COMPILER=/usr/bin/x86_64-w64-mingw32-g++  -DCMAKE_C_COMPILER=/usr/bin/x86_64-w64-mingw32-gcc -DCMAKE_STATIC_LIBRARY_SUFFIX=lib ..
-make VERBOSE=1
-```
-
 <a name="windows"></a>l
 ### [Windows](#toc)
 
 There is an MS Visual Studio 17 solution in `eos_visual_studio` folder. You can start
-Visual Studio with file `eosc.sln` there, and you compile both the command library and 
+Visual Studio with file `eosc.sln` there, and you can compile both the command library and 
 `eosc' executable.
 ```
-msbuild.exe ALL_BUILD.vcxproj
-msbuild.exe INSTALL.vcxproj
 ...
 
 The VS solution has set both boost includes and libraries in relation to the `BOOST_ROOT` environmental variable: Configuration Properties > VC++ Directories. Perhaps, you will have to adjust settings.
 
-Now, the blockchain may be accessed from a Windows Command Prompt, if the `eosd` blockchain program is configured to be called from 
+Now, the blockchain may be accessed from a Windows Command Prompt.
 
 ```
-```
-Edit > Virtual Network Editor: Host-only
-Virtual Machine Settings > Network Adapter: Host-only
-
-ifconfig
-## inet 192.168.229.141  netmask 255.255.255.0  broadcast 192.168.229.255
-```
-eosd config.ini: http-server-endpoint = 192.168.229.141:8888 # Host-only
-
-* Wallet NOT on localhost  -- *
-* - Password and/or Private Keys - *
-* - are transferred unencrypted.
-
-OK, now trying the tunnel.
 

@@ -180,7 +180,7 @@ Definitions for class EoscCommand.
           "Connection: close" + CRNL + CRNL +
           postMsg;
 
-        cout << request << endl;
+        // cout << request << endl;
 
         boost::system::error_code error;
 

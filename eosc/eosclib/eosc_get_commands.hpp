@@ -193,12 +193,16 @@ Usage: ./eosc get info [-j '{}'] [OPTIONS]
       }
 
       void getExample() {
+        cout << R"EOF(
+// Invoke 'GetInfo' command:
+    boost::property_tree::ptree reqJson;
+    GetInfo GetInfo(reqJson);
+    cout << GetInfo.toStringRcv() << endl;
+// printout:
+)EOF" << endl;        
+        
         boost::property_tree::ptree reqJson;
         GetInfo GetInfo(reqJson);
-        cout << R"EOF(
-Invoke 'GetInfo' command:
-GetInfo GetInfo;
-)EOF" << std::endl;
         cout << GetInfo.toStringRcv() << endl;
       }
     };
@@ -357,23 +361,43 @@ Usage: ./eosc get block [-j '{"block_num_or_id":"int | string"}'] [OPTIONS]
       }
 
       void getExample() {
-        ptree getInfoPostJson;
-        GetInfo GetInfo(getInfoPostJson);
         cout << R"EOF(
-Invoke 'GetInfo' command:
-GetInfo getInfo;
+// Invoke 'GetInfo' command:
+    ptree getInfoJson;
+    GetInfo getInfo(getInfoJson);
+    cout << getInfo.toStringRcv() << endl;
+
+/*
+printout:
+)EOF" << endl;        
+        
+        ptree getInfoJson;
+        GetInfo getInfo(getInfoJson);
+        cout << getInfo.toStringRcv() << endl;
+
+        cout << R"EOF(
+*/
+
+// Use the reference to the last block:
+    ptree GetBlockJson;
+    GetBlockJson.put("block_num_or_id", 
+      getInfo.get<int>("last_irreversible_block_num"));
+    GetBlock GetBlock(GetBlock_post_json);
+    cout << GetBlock.toStringRcv() << endl;
+
+/* 
+printout:
 )EOF" << endl;
 
-        cout << GetInfo.toStringRcv() << endl;
-        ptree GetBlock_post_json;
-        GetBlock_post_json.put("block_num_or_id", 25);
-        GetBlock GetBlock(GetBlock_post_json);
-        cout << R"EOF(
-Use reference to the last block:
-GetBlock GetBlock(
-  GetInfo.get<int>("last_irreversible_block_num"));
-)EOF" << endl;
+        ptree GetBlockJson;
+        GetBlockJson.put("block_num_or_id",
+          getInfo.get<int>("last_irreversible_block_num"));
+        GetBlock GetBlock(GetBlockJson);
         cout << GetBlock.toStringRcv() << endl;
+
+cout << R"EOF(
+*/
+)EOF" << endl;
       }
     };
 

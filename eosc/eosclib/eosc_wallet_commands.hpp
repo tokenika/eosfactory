@@ -64,7 +64,7 @@ Usage: ./eosc wallet create [-j "{"""NSON""":"""wallet_name"""}"] [OPTIONS]
 )EOF";
 #else
         return R"EOF(
-
+Create a new wallet locally
 Usage: ./eosc wallet create [wallet name] [Options]
 Usage: ./eosc wallet create [-j '{"NSON":"wallet_name"}'] [OPTIONS]
 )EOF";
