@@ -4,3 +4,5 @@ build_linux
 **/x64
 **/.vs
 **/*.wast
+eosc.ilk
+eosc.pdb
