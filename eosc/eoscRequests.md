@@ -1,20 +1,20 @@
 ## benchmark
 
-## wallet
-
 ### setup
 
 ### transfer
 
 ## version
 
-## client
+### client
 
 ```
 ./eosc version client
 Build version: 70fd94c3
 
 ```
+
+## wallet
 
 ### create: Create a new wallet locally
 ```
