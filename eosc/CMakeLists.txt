@@ -22,11 +22,11 @@ include_directories(${CMAKE_BINARY_DIR})
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.64.0 REQUIRED COMPONENTS 
-system 
-date_time 
-program_options 
-filesystem
+find_package(Boost 1.62.0 REQUIRED COMPONENTS 
+  system 
+  date_time 
+  program_options 
+  filesystem
 )
 
 find_package(Threads REQUIRED)

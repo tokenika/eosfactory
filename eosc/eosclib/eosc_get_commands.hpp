@@ -379,7 +379,7 @@ printout:
 */
 
 // Use the reference to the last block:
-    ptree GetBlockJson;
+    ptree getBlockJson;
     GetBlockJson.put("block_num_or_id", 
       getInfo.get<int>("last_irreversible_block_num"));
     GetBlock GetBlock(GetBlock_post_json);
@@ -389,10 +389,10 @@ printout:
 printout:
 )EOF" << endl;
 
-        ptree GetBlockJson;
-        GetBlockJson.put("block_num_or_id",
+        ptree getBlockJson;
+        getBlockJson.put("block_num_or_id",
           getInfo.get<int>("last_irreversible_block_num"));
-        GetBlock GetBlock(GetBlockJson);
+        GetBlock GetBlock(getBlockJson);
         cout << GetBlock.toStringRcv() << endl;
 
 cout << R"EOF(

@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
   GetInfo getInfo(getInfoPostJson);
   cout << getInfo.toStringRcv() << endl;
 
-  ptree GetBlockJson;
+  ptree getBlockJson;
 
 // Use reference to the last block:
   GetBlockJson.put("block_num_or_id",
@@ -249,12 +249,9 @@ make
 There is an MS Visual Studio 17 solution in `eos_visual_studio` folder. You can start
 Visual Studio with file `eosc.sln` there, and you can compile both the command library and 
 `eosc' executable.
-```
-...
 
 The VS solution has set both boost includes and libraries in relation to the `BOOST_ROOT` environmental variable: Configuration Properties > VC++ Directories. Perhaps, you will have to adjust settings.
 
 Now, the blockchain may be accessed from a Windows Command Prompt.
 
-```
 
