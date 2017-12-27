@@ -4,8 +4,8 @@ set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake")
 include(cotire)
 include("${PROJECT_SOURCE_DIR}/CMake/config.cmake")
 
-set(VERSION_MAJOR 1)
-set(VERSION_MINOR 0)
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 5)
 set(CONFIG_JSON_FILE "eosc_config.json")
 set(CONFIG_JSON_PATH "${CONFIG_JSON_FILE}")
 

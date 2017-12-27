@@ -59,11 +59,17 @@ Usage: ./eosc version client [-j '{}'] [OPTIONS]
 boost::property_tree::ptree reqJson;
 VersionClient versionClient(reqJson);
 cout << versionClient.toStringRcv() << endl;
+/*
+printout:
 )EOF" << endl;
 
         boost::property_tree::ptree reqJson;
         VersionClient versionClient(reqJson);
         cout << versionClient.toStringRcv() << endl;
+
+      cout << R"EOF(
+*/
+)EOF" << endl;
       }
     };
 

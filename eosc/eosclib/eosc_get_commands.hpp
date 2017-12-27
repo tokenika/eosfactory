@@ -101,12 +101,18 @@ Usage: ./eosc xxx yyy [-j '{"argName":"argType"}'] [OPTIONS]
         cout << R"EOF(
 Invoke 'GetInfo' command:
 GetInfo GetInfo;
+
+
+printout:
 )EOF" << endl;        
 
         boost::property_tree::ptree reqJson;
         GetInfo GetInfo(reqJson);
         cout << GetInfo.toStringRcv() << endl;
-      }
+
+        cout << R"EOF(      
+ 
+        }
     };
 
 */
@@ -198,12 +204,17 @@ Usage: ./eosc get info [-j '{}'] [OPTIONS]
     boost::property_tree::ptree reqJson;
     GetInfo GetInfo(reqJson);
     cout << GetInfo.toStringRcv() << endl;
-// printout:
+
+/* printout:
 )EOF" << endl;        
         
         boost::property_tree::ptree reqJson;
         GetInfo GetInfo(reqJson);
         cout << GetInfo.toStringRcv() << endl;
+
+        cout << R"EOF(
+*/
+)EOF" << endl; 
       }
     };
 
@@ -488,11 +499,18 @@ boost::property_tree::ptree reqJson;
 reqJson.put("account_name", "int");
 GetAccount getAccount(reqJson);
 cout << getAccount.toStringRcv() << endl;
+
+/*
+printout:
 )EOF" << endl;
         ptree reqJson;
         reqJson.put("account_name", "inita");
         GetAccount getAccount(reqJson);
         cout << getAccount.toStringRcv() << endl;
+
+        cout << R"EOF(
+*/
+)EOF" << endl;
       }
     };
       /**
@@ -576,13 +594,20 @@ Usage: ./eosc get code [-j '{"account_name":"string"}'] [OPTIONS]
 boost::property_tree::ptree reqJson;
 reqJson.put("account_name", "inita");
 GetCode getCode(reqJson);
-cout << getCode.toStringRcv() << endl; 
+cout << getCode.toStringRcv() << endl;
+
+/*
+printout: 
 )EOF" << endl;
 
           boost::property_tree::ptree reqJson;
           reqJson.put("account_name", "inita");
           GetCode getCode(reqJson);
           cout << getCode.toStringRcv() << endl;
+
+          cout << R"EOF(
+*/
+)EOF" << endl;
         }
       };
 
@@ -680,6 +705,9 @@ reqJson.put("code", "currency");
 reqJson.put("table", "account");
 GetInfo GetInfo(reqJson);
 cout << GetInfo.toStringRcv() << endl;
+
+/*
+printout:
 )EOF" << endl;
 
           boost::property_tree::ptree reqJson;
@@ -688,6 +716,10 @@ cout << GetInfo.toStringRcv() << endl;
           reqJson.put("table", "account");
           GetTable getTable(reqJson);
           cout << getTable.toStringRcv() << endl;
+
+          cout << R"EOF(
+*/
+)EOF" << endl;
         }
       };
 
@@ -769,11 +801,16 @@ cout << GetInfo.toStringRcv() << endl;
 //          cout << R"EOF(
 //Invoke 'GetInfo' command:
 //GetInfo GetInfo;
-//)EOF" << endl;
+///*
+//printout:
+
 //
 //          boost::property_tree::ptree reqJson;
 //          GetInfo GetInfo(reqJson);
 //          cout << GetInfo.toStringRcv() << endl;
+//          cout << R"EOF(
+// */
+//)EOF" << endl;
 //        }
 //      };
   }

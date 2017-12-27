@@ -110,6 +110,9 @@ ptree config = EoscCommand::getConfig();
 reqJson.put("name", config.get("eosc.tokenikaWallet", TOKENIKA_WALLET));
 WalletCreate walletCreate(reqJson);
 cout << walletCreate.toStringRcv() << endl;
+
+/*
+printout:
 )EOF" << endl;
 
         boost::property_tree::ptree reqJson;
@@ -117,6 +120,10 @@ cout << walletCreate.toStringRcv() << endl;
         reqJson.put("name", config.get("eosc.tokenikaWallet", TOKENIKA_WALLET));
         WalletCreate walletCreate(reqJson);
         cout << walletCreate.toStringRcv() << endl;
+
+        cout << R"EOF(
+*/
+)EOF" << endl;
       }
     };
 
@@ -276,12 +283,20 @@ Usage: ./eosc wallet list [-j '{}'] [OPTIONS]
 boost::property_tree::ptree reqJson;
 WalletList walletList(reqJson);
 cout << walletList.toStringRcv() << endl;
+
+/*
+printout:
 )EOF" << endl;
 
         boost::property_tree::ptree reqJson;
         WalletList walletList(reqJson);
         cout << walletList.toStringRcv() << endl;
-      }
+
+        cout << R"EOF(
+*/      
+)EOF" << endl;
+}
+
     };
 
     /**
@@ -370,6 +385,9 @@ ptree config = EoscCommand::getConfig();
 reqJson.put("name", config.get("eosc.tokenikaWallet", TOKENIKA_WALLET));
 WalletOpen walletOpen(reqJson);
 cout << walletOpen.toStringRcv() << endl;
+
+/*
+printout:
 )EOF" << endl;
 
         boost::property_tree::ptree reqJson;
@@ -377,6 +395,10 @@ cout << walletOpen.toStringRcv() << endl;
         reqJson.put("name", config.get("eosc.tokenikaWallet", TOKENIKA_WALLET));
         WalletOpen walletOpen(reqJson);
         cout << walletOpen.toStringRcv() << endl;
+
+        cout << R"EOF(
+*/
+)EOF" << endl;
       }
     };
 
@@ -466,6 +488,9 @@ ptree config = EoscCommand::getConfig();
 reqJson.put("name", config.get("eosc.tokenikaWallet", TOKENIKA_WALLET));
 WalletLock walletLock(reqJson);
 cout << walletLock.toStringRcv() << endl;
+
+/*
+printout:
 )EOF" << endl;
 
         boost::property_tree::ptree reqJson;
@@ -473,6 +498,10 @@ cout << walletLock.toStringRcv() << endl;
         reqJson.put("name", config.get("eosc.tokenikaWallet", TOKENIKA_WALLET));
         WalletLock walletLock(reqJson);
         cout << walletLock.toStringRcv() << endl;
+
+        cout << R"EOF(
+*/
+)EOF" << endl;
       }
     };
 
@@ -541,11 +570,18 @@ Usage: ./eosc wallet lock_all [-j '{}'] [OPTIONS]
 boost::property_tree::ptree reqJson;
 WalletLockAll walletLock(reqJson);
 cout << walletLock.toStringRcv() << endl;
+
+/*
+printout:
 )EOF" << endl;
 
         boost::property_tree::ptree reqJson;
         WalletLockAll walletLock(reqJson);
         cout << walletLock.toStringRcv() << endl;
+
+        cout << R"EOF(
+*/
+)EOF" << endl;
       }
     };
 
@@ -703,11 +739,18 @@ Usage: ./eosc wallet list [-j '{}'] [OPTIONS]
 boost::property_tree::ptree reqJson;
 WalletKeys walletKeys(reqJson);
 cout << walletKeys.toStringRcv() << endl;
+
+/*
+printout:
 )EOF" << endl;
 
         boost::property_tree::ptree reqJson;
         WalletKeys walletKeys(reqJson);
         cout << walletKeys.toStringRcv() << endl;
+
+        cout << R"EOF(
+*/
+)EOF" << endl;
       }
     };
   }
