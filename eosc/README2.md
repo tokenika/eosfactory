@@ -141,9 +141,12 @@ GetBlock GetBlock(
 }
 ```
 
-## Build
+# Build
 
-### Ubuntu
+## Ubuntu
+
+#### Dependencies
+
 First, make sure you have Boost 1.62 (or higher) installed:
 ```
 dpkg -s libboost-dev | grep 'Version'
@@ -152,11 +155,17 @@ In case you need to install it, run this command:
 ```
 sudo apt-get install libboost-all-dev
 ```
+#### Source code
+
 Navigate to a location of your choice on your machine and clone the repository:
+
 ```
 git clone https://github.com/tokenika/eosc.git
 ```
+#### Compilation
+
 Navigate to the `eosc/eosc` folder and create a new folder named `build`:
+
 ```
 cd eosc/eosc/
 mkdir build
@@ -174,9 +183,31 @@ As the result of the compilation, you should have those two files in the `build`
 * `eosc` is the CLI executable
 * `eosclib\libeosclib.a` is the underlying library acting as an EOS API
 
+#### Testing on remote sever
+
+Open a terminal window, navigate to the `build` folder and run `eosc`:
+```
+./eosc 198.100.148.136:8888 get info
+```
+The above command will connect to one of our test-net servers. Alternatively, you can use the placeholder `tokenika` instead of  `198.100.148.136:8888`:
+```
+./eosc tokenika get info
+```
+
+#### Testing on localhost
+
+If you have complied the entire EOS codebase and have `eosd` running on your machine, you can also test our `eosc` locally:
+```
+./eosc localhost get info
+```
+
 ### Windows
 
-On Windows we recommend using MS Visual Studio 2017. The Community edition is [available for free](https://www.visualstudio.com/).
+#### Visual Studio IDE
+
+On Windows we recommend using MS Visual Studio 2017. The *Community* edition is fully functional and is [available for free](https://www.visualstudio.com/).
+
+#### Dependencies
 
 Make sure you have Boost 1.66 available on your machine. If not, you can download the source code from [the official webpage](http://www.boost.org/users/download/) or use the [pre-built Windows binaries](https://sourceforge.net/projects/boost/files/boost-binaries/) (make sure to use the [boost_1_66_0-msvc-14.1-64]( https://sourceforge.net/projects/boost/files/boost-binaries/1.66.0/boost_1_66_0-msvc-14.1-64.exe/download) version).
 
@@ -184,15 +215,29 @@ Set up a system variable named  `BOOST_ROOT` pointing at your Boost directory. I
 
 ![](img01.png)
 
+#### Source code
+
 Navigate to a location of your choice on your machine and clone the repository:
 
 ```
 git clone https://github.com/tokenika/eosc.git
 ```
 
+#### Compilation
+
 We've created a dedicated MS Visual Studio 2017 solution project - it's located in the  `eos_visual_studio` folder. Open the `eosc.sln` file in Visual Studio, and then build both the `eoscLib` (the library for EOS API) and the `eosc` executable.
 
-Now, the blockchain may be accessed from a Windows Command Prompt, if the `eosd` blockchain program is configured to be called from.
+#### Testing on remote sever
+
+Open the command prompt, navigate to the `eosc_visual_studio` folder and run `eosc`:
+```
+eosc 198.100.148.136:8888 get info
+```
+The above command will connect to one of our test-net servers. Alternatively, you can use the placeholder `tokenika` instead of  `198.100.148.136:8888`:
+```
+eosc tokenika get info
+```
+
 ## Library
 
 In our view, the real value is the library that's behind our version of `eosc`.
