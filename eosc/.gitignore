@@ -4,5 +4,8 @@ build_linux
 **/x64
 **/.vs
 **/*.wast
-eosc.ilk
-eosc.pdb
+eosc_visual_studio/eosc.exe
+eosc_visual_studio/eosc.ilk
+eosc_visual_studio/eosc.pdb
+eosc_visual_studio/eoscLib.lib
+eosc_visual_studio/eoscLib.pdp
