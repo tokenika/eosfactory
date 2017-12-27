@@ -35,6 +35,10 @@ add_subdirectory(eosclib)
 set(APPL_NAME "eosc")
 add_executable(${APPL_NAME} eosc.cpp )
 target_link_libraries(${APPL_NAME} eosclib)
+
+add_executable("eosc_lib_test" eoec_lib_test.cpp)
+target_link_libraries("eosc_lib_test" eosclib)
+
 cotire(${APPL_NAME})
 
 install(TARGETS ${APPL_NAME} RUNTIME DESTINATION bin)

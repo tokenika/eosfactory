@@ -174,25 +174,28 @@ Let you see a code snippet:
 #include <iostream>
 #include <string>
 
-#include "EoscCommands/eosc_get_commands.hpp"
+#include "eosclib/eosc_get_commands.hpp"
 
 int main(int argc, char *argv[])
 {
   using namespace tokenika::eosc;
 
+  EoscCommand::host = "198.100.148.136";
+  EoscCommand::port = "8888";
+
   ptree getInfoJson;
 
-// Invoke 'GetInfo' command:
-  GetInfo getInfo(getInfoPostJson);
+  // Invoke 'GetInfo' command:
+  GetInfo getInfo(getInfoJson);
   cout << getInfo.toStringRcv() << endl;
 
   ptree getBlockJson;
 
-// Use reference to the last block:
-  GetBlockJson.put("block_num_or_id",
+  // Use reference to the last block:
+  getBlockJson.put("block_num_or_id",
     getInfo.get<int>("last_irreversible_block_num"));
-  GetBlock GetBlock(GetBlock_post_json);
-  cout << GetBlock.toStringRcv() << endl;
+  GetBlock getBlock(getBlockJson);
+  cout << getBlock.toStringRcv() << endl;
 
   return 0;
 }
