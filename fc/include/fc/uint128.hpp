@@ -14,8 +14,13 @@
 
 
 
+
 namespace fc
 {
+
+  typedef boost::multiprecision::int128_t  boost_int128;
+  typedef boost::multiprecision::uint128_t  boost_uint128;
+
   class bigint;
   /**
    *  @brief an implementation of 128 bit unsigned integer
@@ -23,10 +28,9 @@ namespace fc
    */
   class uint128
   {
-     public:
-      //boost::multiprecision::int128_t f;
-      //boost::multiprecision::uint128_t f;
 
+
+     public:
       uint128():hi(0),lo(0){}
       uint128( uint32_t l ):hi(0),lo(l){}
       uint128( int32_t l ):hi( -(l<0) ),lo(l){}
@@ -37,16 +41,16 @@ namespace fc
       :hi(_h),lo(_l){}
       uint128( const fc::bigint& bi );
       //explicit uint128( unsigned __int128 i ):hi( i >> 64 ), lo(i){ }
-      explicit uint128(boost::multiprecision::uint128_t i ):hi( i >> 64 ), lo(i){ }
+      explicit uint128( boost_uint128 i ):hi( i >> 64 ), lo(i){ }
 
       operator std::string()const;
       operator fc::bigint()const;
 
       //explicit operator unsigned __int128()const {
-      explicit operator boost::multiprecision::uint128_t()const {
+      explicit operator boost_uint128()const {         
         //unsigned __int128 result(hi);
-        boost::multiprecision::uint128_t result(hi);
-        result <<= 64;
+        boost_uint128 result(hi);
+         result <<= 64;
          return result | lo;
       }
 
@@ -128,9 +132,7 @@ namespace fc
       uint64_t hi;
       uint64_t lo;
   };
-  //static_assert( sizeof(uint128) == 2*sizeof(uint64_t), "validate packing assumptions" );
-  static_assert( 128 == 2*64, "validate packing assumptions" );
-
+  static_assert( sizeof(uint128) == 2*sizeof(uint64_t), "validate packing assumptions" );
 
   typedef uint128 uint128_t;
 
@@ -139,9 +141,9 @@ namespace fc
   void to_variant( const uint128& var,  variant& vo );
   void from_variant( const variant& var,  uint128& vo );
   //void to_variant( const unsigned __int128& var,  variant& vo );
-  void to_variant( const boost::multiprecision::uint128_t& var,  variant& vo );
+  void to_variant( const boost_uint128& var,  variant& vo );
   //void from_variant( const variant& var,  unsigned __int128& vo );
-  void from_variant( const variant& var, boost::multiprecision::uint128_t& vo );
+  void from_variant( const variant& var,  boost_uint128& vo );
 
   namespace raw
   {

@@ -3,7 +3,7 @@
 #include <fc/string.hpp>
 #include <fc/variant.hpp>
 #include <fc/reflect/variant.hpp>
-#ifndef WIN32
+#ifndef _MSC_VER
 #include <unistd.h>
 #endif
 #include <boost/thread/mutex.hpp>
@@ -20,7 +20,7 @@ namespace fc {
    public:
      config                      cfg;
      color::type                 lc[log_level::off+1];
-#ifdef WIN32
+#ifdef _MSC_VER
      HANDLE                      console_handle;
 #endif
    };
@@ -42,7 +42,7 @@ namespace fc {
 
    void console_appender::configure( const config& console_appender_config )
    { try {
-#ifdef WIN32
+#ifdef _MSC_VER
       my->console_handle = INVALID_HANDLE_VALUE;
 #endif
       my->cfg = console_appender_config;

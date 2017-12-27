@@ -47,10 +47,10 @@ namespace fc
               _host = fc::move(host_port);
            }
            std::getline( ss, _lpath, '?' );
-#ifdef WIN32
+#ifdef _MSC_VER
            // On windows, a URL like file:///c:/autoexec.bat would result in _lpath = c:/autoexec.bat
            // which is what we really want (it's already an absolute path)
-           if (!stricmp(_proto.c_str(), "file"))
+           if (!_stricmp(_proto.c_str(), "file"))
               _path = _lpath;
            else
               _path = fc::path( "/" ) / _lpath; // let other schemes behave like unix

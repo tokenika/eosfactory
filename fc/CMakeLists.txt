@@ -82,27 +82,30 @@ add_library(fc STATIC
   src/string.cpp
   src/shared_ptr.cpp
   src/time.cpp
+  src/filesystem.cpp 
   #src/utf8.cpp
+
   src/io/datastream.cpp
   src/io/json.cpp
   src/io/varint.cpp
   src/io/fstream.cpp
   src/io/console.cpp
-  src/filesystem.cpp
+
   src/interprocess/file_mapping.cpp
   src/interprocess/mmap_struct.cpp
+
   src/log/log_message.cpp
   src/log/logger.cpp
   src/log/appender.cpp
   src/log/console_appender.cpp
   src/log/gelf_appender.cpp
   src/log/logger_config.cpp
+
   src/crypto/_digest_common.cpp
   src/crypto/openssl.cpp
   src/crypto/aes.cpp
   src/crypto/crc.cpp
   src/crypto/city.cpp
-  #src/crypto/base32.cpp
   src/crypto/base36.cpp
   src/crypto/base58.cpp
   src/crypto/base64.cpp
@@ -116,13 +119,14 @@ add_library(fc STATIC
   src/crypto/dh.cpp
   src/crypto/blowfish.cpp
   src/crypto/elliptic_common.cpp
-  ${ECC_REST}
-  src/crypto/elliptic_${ECC_IMPL}.cpp
   src/crypto/rand.cpp
+ #src/crypto/base32.cpp
+
   src/network/ip.cpp
   src/network/resolve.cpp
   src/network/udp_socket.cpp
   src/network/url.cpp
+
   src/compress/smaz.cpp
   src/compress/zlib.cpp
 )

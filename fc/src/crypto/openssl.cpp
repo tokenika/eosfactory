@@ -23,7 +23,7 @@ namespace  fc
           {
             std::string varSetting("OPENSSL_CONF=");
             varSetting += _configurationFilePath.to_native_ansi_path();
-#if defined(WIN32)
+#if defined(_MSC_VER)
             _putenv((char*)varSetting.c_str());
 #else
             putenv((char*)varSetting.c_str());

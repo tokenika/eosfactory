@@ -7,7 +7,7 @@
 
 namespace fc 
 {
-    typedef boost::multiprecision::uint128_t  m128;
+    typedef boost::multiprecision::uint128_t  boost_uint128;
 
     template <typename T>
     static void divide(const T &numerator, const T &denominator, T &quotient, T &remainder) 
@@ -222,8 +222,8 @@ namespace fc
 
     uint128& uint128::operator/=(const uint128 &b) 
     {
-        auto self = (m128(hi) << 64) + m128(lo);
-        auto other = (m128(b.hi) << 64) + m128(b.lo);
+        auto self = (boost_uint128(hi) << 64) + boost_uint128(lo);
+        auto other = (boost_uint128(b.hi) << 64) + boost_uint128(b.lo);
         self /= other;
         hi = static_cast<uint64_t>(self >> 64);
         lo = static_cast<uint64_t>((self << 64 ) >> 64);
@@ -239,7 +239,7 @@ namespace fc
         */
        
         /*
-        const auto&  b128 = std::reinterpret_cast<const m128&>(b);
+        const auto&  b128 = std::reinterpret_cast<const boost_uint128&>(b);
         auto&     this128 = std::reinterpret_cast<m128&>(*this);
         this128 /= b128;
         */
@@ -375,8 +375,8 @@ namespace fc
 
    void to_variant( const uint128& var,  variant& vo )  { vo = std::string(var);         }
    void from_variant( const variant& var,  uint128& vo ){ vo = uint128(var.as_string()); }
-   void to_variant( const m128& var,  variant& vo ) { to_variant( *((uint128*)var), vo); }
-   void from_variant( const variant& var,  m128& vo ) { from_variant( var, *((uint128*)&vo)); }
+   //void to_variant( const boost_uint128& var,  variant& vo ) { to_variant( *((uint128*)var), vo); }
+   void from_variant( const variant& var,  boost_uint128& vo ) { from_variant( var, *((uint128*)&vo)); }
 
 } // namespace fc
 
