@@ -163,6 +163,7 @@
     <ClCompile Include="..\..\eosclib\eosc_get_commands.cpp" />
     <ClCompile Include="..\..\eosclib\eosc_wallet_commands.cpp" />
     <ClCompile Include="..\..\eosclib\subcommands.cpp" />
+    <ClCompile Include="..\..\eosc_test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

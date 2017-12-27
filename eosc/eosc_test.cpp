@@ -30,8 +30,7 @@ void test()
   cout << boost::algorithm::join(args, ", ") << endl;
   setOptions<GetInfoOptions>(args);
 
-
-    args = { "", "--block_num", "25" };
+  args = { "", "--block_num", "25" };
   cout << boost::algorithm::join(args, ", ") << endl;
   setOptions<GetBlockOptions>(args);
 
