@@ -5,3 +5,4 @@ build
 **/x64
 **/.vs
 **/*.wast
+eosc/eosc_visual_studio/eoscLib.pdb
