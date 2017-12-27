@@ -143,10 +143,7 @@ GetBlock GetBlock(
 
 ## Build
 
-#### Dependencies
-The only external dependency is the standard library [Boost](http://boost.org), version 1.62 or higher.
-
-#### Ubuntu
+### Ubuntu
 First, make sure you have Boost 1.62 (or higher) installed:
 ```
 dpkg -s libboost-dev | grep 'Version'
@@ -177,23 +174,25 @@ As the result of the compilation, you should have those two files in the `build`
 * `eosc` is the CLI executable
 * `eosclib\libeosclib.a` is the underlying library acting as an EOS API
 
-#### Windows
-We've created a dedicated MS Visual Studio 2017 solution project - it's located in the  `eos_visual_studio` folder. All you need to do is launch Visual Studio by double-clicking the `eosc.sln` file, and then compile both the command library and the `eosc` executable.
+### Windows
 
-http://www.boost.org/users/download/
+On Windows we recommend using MS Visual Studio 2017. The Community edition is [available for free](https://www.visualstudio.com/).
+
+Make sure you have Boost 1.66 available on your machine. If not, you can download the source code from [the official webpage](http://www.boost.org/users/download/) or use the [pre-built Windows binaries](https://sourceforge.net/projects/boost/files/boost-binaries/) (make sure to use the [boost_1_66_0-msvc-14.1-64]( https://sourceforge.net/projects/boost/files/boost-binaries/1.66.0/boost_1_66_0-msvc-14.1-64.exe/download) version).
+
+Set up a system variable named  `BOOST_ROOT` pointing at your Boost directory. In our case it looks like this, but yours will most probably be different, depending on your Boost library location:
+
+![](img01.png)
+
+Navigate to a location of your choice on your machine and clone the repository:
 
 ```
-msbuild.exe ALL_BUILD.vcxproj
-msbuild.exe INSTALL.vcxproj
-```
-The VS solution has set both boost includes and libraries in relation to the `BOOST_ROOT` environmental variable: Configuration Properties > VC++ Directories. Perhaps, you will have to adjust settings.
-
-Now, the blockchain may be accessed from a Windows Command Prompt, if the `eosd` blockchain program is configured to be called from 
-```
-Edit > Virtual Network Editor: Host-only
-Virtual Machine Settings > Network Adapter: Host-only
+git clone https://github.com/tokenika/eosc.git
 ```
 
+We've created a dedicated MS Visual Studio 2017 solution project - it's located in the  `eos_visual_studio` folder. Open the `eosc.sln` file in Visual Studio, and then build both the `eoscLib` (the library for EOS API) and the `eosc` executable.
+
+Now, the blockchain may be accessed from a Windows Command Prompt, if the `eosd` blockchain program is configured to be called from.
 ## Library
 
 In our view, the real value is the library that's behind our version of `eosc`.
