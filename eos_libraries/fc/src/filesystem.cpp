@@ -452,10 +452,10 @@ namespace fc {
             FC_ASSERT(false, "Unable to open an access token for the current process");
           wchar_t user_profile_dir[MAX_PATH];
           DWORD user_profile_dir_len = sizeof(user_profile_dir);
-          BOOL success = GetUserProfileDirectoryW(access_token, user_profile_dir, &user_profile_dir_len);
+          //BOOL success = GetUserProfileDirectoryW(access_token, user_profile_dir, &user_profile_dir_len);
           CloseHandle(access_token);
-          if (!success)
-            FC_ASSERT(false, "Unable to get the user profile directory");
+          //if (!success)
+          //  FC_ASSERT(false, "Unable to get the user profile directory");
           return fc::path(std::wstring(user_profile_dir));
 #else
           char* home = getenv( "HOME" );

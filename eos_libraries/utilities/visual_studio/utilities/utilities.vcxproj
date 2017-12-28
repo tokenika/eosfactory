@@ -74,25 +74,25 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>E:\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include;$(BOOST_ROOT);$(SolutionDir)../fc/include;$(ProjectDir)../../include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\lib;$(BOOST_LIBRARYDIR);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)/lib</OutDir>
+    <OutDir>$(SolutionDir)/lib/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>E:\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include;$(BOOST_ROOT);$(SolutionDir)../fc/include;$(ProjectDir)../../include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\lib;$(BOOST_LIBRARYDIR);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)/lib</OutDir>
+    <OutDir>$(SolutionDir)/lib/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>E:\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include;$(BOOST_ROOT);$(SolutionDir)../fc/include;$(ProjectDir)../../include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\lib;$(BOOST_LIBRARYDIR);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)/lib</OutDir>
+    <OutDir>$(SolutionDir)/lib/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>E:\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include;$(BOOST_ROOT);$(SolutionDir)../fc/include;$(ProjectDir)../../include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\lib;$(BOOST_LIBRARYDIR);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)/lib</OutDir>
+    <OutDir>$(SolutionDir)/lib/</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -74,25 +74,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)</OutDir>
     <IncludePath>$(BOOST_ROOT);$(OPENSSL_ROOT_DIR)/include;$(C_INCLUDE)/secp256k1/include;$(C_INCLUDE)/gmp/include;$(SolutionDir)../fc/include/;$(SolutionDir)../utilities/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(BOOST_LIBRARYDIR);$(OPENSSL_ROOT_DIR)/lib;$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(BOOST_LIBRARYDIR);$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)</OutDir>
     <IncludePath>$(BOOST_ROOT);$(OPENSSL_ROOT_DIR)/include;$(C_INCLUDE)/secp256k1/include;$(C_INCLUDE)/gmp/include;$(SolutionDir)../fc/include/;$(SolutionDir)../utilities/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(BOOST_LIBRARYDIR);$(OPENSSL_ROOT_DIR)/lib;$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(BOOST_LIBRARYDIR);$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)</OutDir>
     <IncludePath>$(BOOST_ROOT);$(OPENSSL_ROOT_DIR)/include;$(C_INCLUDE)/secp256k1/include;$(C_INCLUDE)/gmp/include;$(SolutionDir)../fc/include/;$(SolutionDir)../utilities/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(BOOST_LIBRARYDIR);$(OPENSSL_ROOT_DIR)/lib;$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(BOOST_LIBRARYDIR);$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)</OutDir>
     <IncludePath>$(BOOST_ROOT);$(OPENSSL_ROOT_DIR)/include;$(C_INCLUDE)/secp256k1/include;$(C_INCLUDE)/gmp/include;$(SolutionDir)../fc/include/;$(SolutionDir)../utilities/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(BOOST_LIBRARYDIR);$(OPENSSL_ROOT_DIR)/lib;$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(BOOST_LIBRARYDIR);$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -100,12 +100,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(SolutionDir)lib/fc.lib;$(SolutionDir)lib/utilities.lib;$(C_INCLUDE)\secp256k1\lib\secp256k1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OPENSSL_ROOT_DIR)/lib/VC/static/libeay32MT.lib;$(SolutionDir)lib/fc.lib;$(SolutionDir)lib/utilities.lib;$(C_INCLUDE)\secp256k1\lib\secp256k1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -114,12 +114,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(SolutionDir)lib/fc.lib;$(SolutionDir)lib/utilities.lib;$(C_INCLUDE)\secp256k1\lib\secp256k1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OPENSSL_ROOT_DIR)/lib/VC/static/libeay32MT.lib;$(SolutionDir)lib/fc.lib;$(SolutionDir)lib/utilities.lib;$(C_INCLUDE)\secp256k1\lib\secp256k1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -130,14 +130,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(SolutionDir)lib/fc.lib;$(SolutionDir)lib/utilities.lib;$(C_INCLUDE)\secp256k1\lib\secp256k1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OPENSSL_ROOT_DIR)/lib/VC/static/libeay32MT.lib;$(SolutionDir)lib/fc.lib;$(SolutionDir)lib/utilities.lib;$(C_INCLUDE)\secp256k1\lib\secp256k1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,21 +148,97 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(SolutionDir)lib/fc.lib;$(SolutionDir)lib/utilities.lib;$(C_INCLUDE)\secp256k1\lib\secp256k1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OPENSSL_ROOT_DIR)/lib/VC/static/libeay32MT.lib;$(SolutionDir)lib/fc.lib;$(SolutionDir)lib/utilities.lib;$(C_INCLUDE)\secp256k1\lib\secp256k1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\aes.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\asn1.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\asn1t.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\asn1_mac.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\bio.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\blowfish.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\bn.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\buffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\camellia.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\cast.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\cmac.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\cms.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\comp.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\conf.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\conf_api.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\crypto.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\des.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\des_old.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\dh.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\dsa.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\dso.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\dtls1.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ebcdic.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ec.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ecdh.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ecdsa.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\engine.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\err.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\evp.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\e_os2.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\hmac.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\idea.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\krb5_asn.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\kssl.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\lhash.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\md4.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\md5.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\mdc2.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\modes.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\objects.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\obj_mac.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ocsp.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\opensslconf.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\opensslv.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ossl_typ.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\pem.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\pem2.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\pkcs12.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\pkcs7.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\pqueue.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\rand.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\rc2.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\rc4.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ripemd.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\rsa.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\safestack.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\seed.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\sha.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\srp.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\srtp.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ssl.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ssl2.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ssl23.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ssl3.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\stack.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\symhacks.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\tls1.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ts.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\txt_db.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ui.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\ui_compat.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\whrlpool.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\x509.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\x509v3.h" />
+    <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\x509_vfy.h" />
     <ClInclude Include="..\..\..\..\..\..\C_INCLUDE\secp256k1\include\secp256k1.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\C_INCLUDE\OpenSSL\Win64OpenSSL-1_0_2L\include\openssl\applink.c" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
