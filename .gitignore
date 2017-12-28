@@ -6,3 +6,4 @@ build
 **/.vs
 **/*.wast
 eosc/eosc_visual_studio/eoscLib.pdb
+*.lib
