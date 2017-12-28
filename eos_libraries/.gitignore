@@ -1,0 +1,9 @@
+build
+*/Debug
+*/x64
+*/.vs
+*.exe
+*.pdb
+*.lib
+
+
