@@ -1,0 +1,546 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\interprocess">
+      <UniqueIdentifier>{314ce7c1-f688-46a0-afb9-932b34dd0ab6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\crypto">
+      <UniqueIdentifier>{5fc8d52b-7ce3-4883-bfae-f0e13c67fbb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\network">
+      <UniqueIdentifier>{b4ddfe49-376d-4fcd-b4df-caa2f2f3c6f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\compress">
+      <UniqueIdentifier>{0c92c6b9-a584-4bfc-b7d9-e5993dec32dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\log">
+      <UniqueIdentifier>{d66614db-9f58-47a2-9d72-ab64cd08b04a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\io">
+      <UniqueIdentifier>{23a397e9-8ac1-4b50-b6fc-40c4ce3cd037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc">
+      <UniqueIdentifier>{3c0e7b38-b912-4b43-b53e-fc0a7b5f37b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc\compress">
+      <UniqueIdentifier>{092a6c53-d77f-44b7-a181-c307dcdfffd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc\container">
+      <UniqueIdentifier>{5ac10212-26c8-4872-9eec-cb0a90420412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc\crypto">
+      <UniqueIdentifier>{b88d0acc-22fd-4b90-adae-0d8063bf8aa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc\exception">
+      <UniqueIdentifier>{1e62a9d0-20a4-43f2-a33b-68df4a34531d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc\interprocess">
+      <UniqueIdentifier>{132f983f-f921-47f7-a4e1-ba64ea328269}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc\io">
+      <UniqueIdentifier>{9edcedf7-0398-4f4c-8b1c-882ebb27f582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc\log">
+      <UniqueIdentifier>{49367f40-e33c-44c4-bd70-6f2ed7516bdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc\network">
+      <UniqueIdentifier>{1e08de28-702e-45f4-b39d-0bfdd7638e6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc\reflect">
+      <UniqueIdentifier>{7a394d97-dedc-4b62-a39a-8d1ca6109360}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\fc\rpc">
+      <UniqueIdentifier>{5a17f3a2-1ec2-4b5f-a595-a6fa5d9a71c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\secp256k1">
+      <UniqueIdentifier>{7432f798-fecf-497d-ab70-9a3dfdb06ecd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\crypto\_digest_common.hpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\actor.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\aligned.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\any.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\api.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\array.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\bitutil.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\bloom_filter.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\filesystem.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\fixed_string.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\fwd.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\fwd_impl.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\git_revision.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\make_fused.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\noncopyable.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\optional.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\platform_independence.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\real128.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\safe.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\scoped_exit.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\shared_ptr.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\smart_ref_fwd.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\smart_ref_impl.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\static_variant.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\string.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\time.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\tuple.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\uint128.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\unique_ptr.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\utf8.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\utility.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\variant.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\variant_object.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\vector.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\vector_fwd.hpp">
+      <Filter>Header Files\fc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\compress\smaz.hpp">
+      <Filter>Header Files\fc\compress</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\compress\zlib.hpp">
+      <Filter>Header Files\fc\compress</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\container\deque.hpp">
+      <Filter>Header Files\fc\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\container\deque_fwd.hpp">
+      <Filter>Header Files\fc\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\container\flat.hpp">
+      <Filter>Header Files\fc\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\container\flat_fwd.hpp">
+      <Filter>Header Files\fc\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\aes.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\base32.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\base36.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\base58.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\base64.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\bigint.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\blowfish.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\city.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\dh.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\digest.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\elliptic.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\equihash.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\hex.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\hmac.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\openssl.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\pke.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\rand.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\ripemd160.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\sha1.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\sha224.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\sha256.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\crypto\sha512.hpp">
+      <Filter>Header Files\fc\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\exception\exception.hpp">
+      <Filter>Header Files\fc\exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\interprocess\container.hpp">
+      <Filter>Header Files\fc\interprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\interprocess\file_mapping.hpp">
+      <Filter>Header Files\fc\interprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\interprocess\iprocess.hpp">
+      <Filter>Header Files\fc\interprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\interprocess\mmap_struct.hpp">
+      <Filter>Header Files\fc\interprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\interprocess\process.hpp">
+      <Filter>Header Files\fc\interprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\buffered_iostream.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\console.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\datastream.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\enum_type.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\fstream.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\iobuffer.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\json.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\json_relaxed.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\raw.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\raw_fwd.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\raw_unpack_file.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\raw_variant.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\sstream.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\io\varint.hpp">
+      <Filter>Header Files\fc\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\log\appender.hpp">
+      <Filter>Header Files\fc\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\log\console_appender.hpp">
+      <Filter>Header Files\fc\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\log\file_appender.hpp">
+      <Filter>Header Files\fc\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\log\gelf_appender.hpp">
+      <Filter>Header Files\fc\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\log\log_message.hpp">
+      <Filter>Header Files\fc\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\log\logger.hpp">
+      <Filter>Header Files\fc\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\log\logger_config.hpp">
+      <Filter>Header Files\fc\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\network\ip.hpp">
+      <Filter>Header Files\fc\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\network\resolve.hpp">
+      <Filter>Header Files\fc\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\network\udp_socket.hpp">
+      <Filter>Header Files\fc\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\network\url.hpp">
+      <Filter>Header Files\fc\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\reflect\reflect.hpp">
+      <Filter>Header Files\fc\reflect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\reflect\typename.hpp">
+      <Filter>Header Files\fc\reflect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\reflect\variant.hpp">
+      <Filter>Header Files\fc\reflect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\rpc\api_connection.hpp">
+      <Filter>Header Files\fc\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\rpc\binary_api_connection.hpp">
+      <Filter>Header Files\fc\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\rpc\cli.hpp">
+      <Filter>Header Files\fc\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\rpc\http_api.hpp">
+      <Filter>Header Files\fc\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\rpc\json_connection.hpp">
+      <Filter>Header Files\fc\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\rpc\variant_connection.hpp">
+      <Filter>Header Files\fc\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\rpc\variant_stream.hpp">
+      <Filter>Header Files\fc\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fc\rpc\websocket_api.hpp">
+      <Filter>Header Files\fc\rpc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\exception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\filesystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\real128.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\shared_ptr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\time.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\uint128.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\variant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\variant_object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\interprocess\file_mapping.cpp">
+      <Filter>Source Files\interprocess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\interprocess\mmap_struct.cpp">
+      <Filter>Source Files\interprocess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\_digest_common.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\aes.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\base36.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\base58.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\base64.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\bigint.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\blowfish.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\city.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\crc.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\dh.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\elliptic_common.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\hex.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\openssl.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\rand.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\ripemd160.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\sha1.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\sha224.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\sha256.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\sha512.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\network\ip.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\network\resolve.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\network\udp_socket.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\network\url.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\compress\smaz.cpp">
+      <Filter>Source Files\compress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\compress\zlib.cpp">
+      <Filter>Source Files\compress</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\elliptic_impl_priv.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\elliptic_impl_pub.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\elliptic_mixed.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\crypto\elliptic_secp256k1.cpp">
+      <Filter>Source Files\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\io\console.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\io\datastream.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\io\fstream.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\io\json.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\io\varint.cpp">
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\log\appender.cpp">
+      <Filter>Source Files\log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\log\console_appender.cpp">
+      <Filter>Source Files\log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\log\gelf_appender.cpp">
+      <Filter>Source Files\log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\log\log_message.cpp">
+      <Filter>Source Files\log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\log\logger.cpp">
+      <Filter>Source Files\log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\log\logger_config.cpp">
+      <Filter>Source Files\log</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

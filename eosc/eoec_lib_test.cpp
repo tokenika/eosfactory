@@ -18,6 +18,10 @@ int main()
   GetInfo getInfo(getInfoJson);
   cout << getInfo.toStringRcv() << endl;
 
+  if (getInfo.isError()) {
+    return -1;
+  }
+
   ptree getBlockJson;
 
   // Use reference to the last block:
@@ -25,6 +29,10 @@ int main()
     getInfo.get<int>("last_irreversible_block_num"));
   GetBlock getBlock(getBlockJson);
   cout << getBlock.toStringRcv() << endl;
+
+  if (getBlock.isError()) {
+    return -1;
+  }
 
   return 0;
 }

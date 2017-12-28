@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{0B71DF86-5328-48D3-B130-A5990F17F6B1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>fclib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(BOOST_ROOT);$(OPENSSL_ROOT_DIR)/include;$(C_INCLUDE)/secp256k1/include;$(C_INCLUDE)/gmp/include;$(ProjectDir)../../include/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_LIBRARYDIR);$(OPENSSL_ROOT_DIR)/lib;$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)/lib</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(BOOST_ROOT);$(OPENSSL_ROOT_DIR)/include;$(C_INCLUDE)/secp256k1/include;$(C_INCLUDE)/gmp/include;$(ProjectDir)../../include/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_LIBRARYDIR);$(OPENSSL_ROOT_DIR)/lib;$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)/lib</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(BOOST_ROOT);$(OPENSSL_ROOT_DIR)/include;$(C_INCLUDE)/secp256k1/include;$(C_INCLUDE)/gmp/include;$(ProjectDir)../../include/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_LIBRARYDIR);$(OPENSSL_ROOT_DIR)/lib;$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)/lib</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(BOOST_ROOT);$(OPENSSL_ROOT_DIR)/include;$(C_INCLUDE)/secp256k1/include;$(C_INCLUDE)/gmp/include;$(ProjectDir)../../include/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_LIBRARYDIR);$(OPENSSL_ROOT_DIR)/lib;$(C_INCLUDE)/secp256k1/lib;$(C_INCLUDE)/gmp/lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)/lib</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);_WIN32_WINNT=0x0501</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);_WIN32_WINNT=0x0501</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);_WIN32_WINNT=0x0501</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions);_WIN32_WINNT=0x0501</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\fc\actor.hpp" />
+    <ClInclude Include="..\..\include\fc\aligned.hpp" />
+    <ClInclude Include="..\..\include\fc\any.hpp" />
+    <ClInclude Include="..\..\include\fc\api.hpp" />
+    <ClInclude Include="..\..\include\fc\array.hpp" />
+    <ClInclude Include="..\..\include\fc\bitutil.hpp" />
+    <ClInclude Include="..\..\include\fc\bloom_filter.hpp" />
+    <ClInclude Include="..\..\include\fc\compress\smaz.hpp" />
+    <ClInclude Include="..\..\include\fc\compress\zlib.hpp" />
+    <ClInclude Include="..\..\include\fc\container\deque.hpp" />
+    <ClInclude Include="..\..\include\fc\container\deque_fwd.hpp" />
+    <ClInclude Include="..\..\include\fc\container\flat.hpp" />
+    <ClInclude Include="..\..\include\fc\container\flat_fwd.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\aes.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\base32.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\base36.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\base58.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\base64.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\bigint.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\blowfish.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\city.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\dh.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\digest.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\elliptic.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\equihash.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\hex.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\hmac.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\openssl.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\pke.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\rand.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\ripemd160.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\sha1.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\sha224.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\sha256.hpp" />
+    <ClInclude Include="..\..\include\fc\crypto\sha512.hpp" />
+    <ClInclude Include="..\..\include\fc\exception\exception.hpp" />
+    <ClInclude Include="..\..\include\fc\filesystem.hpp" />
+    <ClInclude Include="..\..\include\fc\fixed_string.hpp" />
+    <ClInclude Include="..\..\include\fc\fwd.hpp" />
+    <ClInclude Include="..\..\include\fc\fwd_impl.hpp" />
+    <ClInclude Include="..\..\include\fc\git_revision.hpp" />
+    <ClInclude Include="..\..\include\fc\interprocess\container.hpp" />
+    <ClInclude Include="..\..\include\fc\interprocess\file_mapping.hpp" />
+    <ClInclude Include="..\..\include\fc\interprocess\iprocess.hpp" />
+    <ClInclude Include="..\..\include\fc\interprocess\mmap_struct.hpp" />
+    <ClInclude Include="..\..\include\fc\interprocess\process.hpp" />
+    <ClInclude Include="..\..\include\fc\io\buffered_iostream.hpp" />
+    <ClInclude Include="..\..\include\fc\io\console.hpp" />
+    <ClInclude Include="..\..\include\fc\io\datastream.hpp" />
+    <ClInclude Include="..\..\include\fc\io\enum_type.hpp" />
+    <ClInclude Include="..\..\include\fc\io\fstream.hpp" />
+    <ClInclude Include="..\..\include\fc\io\iobuffer.hpp" />
+    <ClInclude Include="..\..\include\fc\io\json.hpp" />
+    <ClInclude Include="..\..\include\fc\io\json_relaxed.hpp" />
+    <ClInclude Include="..\..\include\fc\io\raw.hpp" />
+    <ClInclude Include="..\..\include\fc\io\raw_fwd.hpp" />
+    <ClInclude Include="..\..\include\fc\io\raw_unpack_file.hpp" />
+    <ClInclude Include="..\..\include\fc\io\raw_variant.hpp" />
+    <ClInclude Include="..\..\include\fc\io\sstream.hpp" />
+    <ClInclude Include="..\..\include\fc\io\varint.hpp" />
+    <ClInclude Include="..\..\include\fc\log\appender.hpp" />
+    <ClInclude Include="..\..\include\fc\log\console_appender.hpp" />
+    <ClInclude Include="..\..\include\fc\log\file_appender.hpp" />
+    <ClInclude Include="..\..\include\fc\log\gelf_appender.hpp" />
+    <ClInclude Include="..\..\include\fc\log\logger.hpp" />
+    <ClInclude Include="..\..\include\fc\log\logger_config.hpp" />
+    <ClInclude Include="..\..\include\fc\log\log_message.hpp" />
+    <ClInclude Include="..\..\include\fc\make_fused.hpp" />
+    <ClInclude Include="..\..\include\fc\network\ip.hpp" />
+    <ClInclude Include="..\..\include\fc\network\resolve.hpp" />
+    <ClInclude Include="..\..\include\fc\network\udp_socket.hpp" />
+    <ClInclude Include="..\..\include\fc\network\url.hpp" />
+    <ClInclude Include="..\..\include\fc\noncopyable.hpp" />
+    <ClInclude Include="..\..\include\fc\optional.hpp" />
+    <ClInclude Include="..\..\include\fc\platform_independence.hpp" />
+    <ClInclude Include="..\..\include\fc\real128.hpp" />
+    <ClInclude Include="..\..\include\fc\reflect\reflect.hpp" />
+    <ClInclude Include="..\..\include\fc\reflect\typename.hpp" />
+    <ClInclude Include="..\..\include\fc\reflect\variant.hpp" />
+    <ClInclude Include="..\..\include\fc\rpc\api_connection.hpp" />
+    <ClInclude Include="..\..\include\fc\rpc\binary_api_connection.hpp" />
+    <ClInclude Include="..\..\include\fc\rpc\cli.hpp" />
+    <ClInclude Include="..\..\include\fc\rpc\http_api.hpp" />
+    <ClInclude Include="..\..\include\fc\rpc\json_connection.hpp" />
+    <ClInclude Include="..\..\include\fc\rpc\variant_connection.hpp" />
+    <ClInclude Include="..\..\include\fc\rpc\variant_stream.hpp" />
+    <ClInclude Include="..\..\include\fc\rpc\websocket_api.hpp" />
+    <ClInclude Include="..\..\include\fc\safe.hpp" />
+    <ClInclude Include="..\..\include\fc\scoped_exit.hpp" />
+    <ClInclude Include="..\..\include\fc\shared_ptr.hpp" />
+    <ClInclude Include="..\..\include\fc\smart_ref_fwd.hpp" />
+    <ClInclude Include="..\..\include\fc\smart_ref_impl.hpp" />
+    <ClInclude Include="..\..\include\fc\static_variant.hpp" />
+    <ClInclude Include="..\..\include\fc\string.hpp" />
+    <ClInclude Include="..\..\include\fc\time.hpp" />
+    <ClInclude Include="..\..\include\fc\tuple.hpp" />
+    <ClInclude Include="..\..\include\fc\uint128.hpp" />
+    <ClInclude Include="..\..\include\fc\unique_ptr.hpp" />
+    <ClInclude Include="..\..\include\fc\utf8.hpp" />
+    <ClInclude Include="..\..\include\fc\utility.hpp" />
+    <ClInclude Include="..\..\include\fc\variant.hpp" />
+    <ClInclude Include="..\..\include\fc\variant_object.hpp" />
+    <ClInclude Include="..\..\include\fc\vector.hpp" />
+    <ClInclude Include="..\..\include\fc\vector_fwd.hpp" />
+    <ClInclude Include="..\..\src\crypto\_digest_common.hpp" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\compress\smaz.cpp" />
+    <ClCompile Include="..\..\src\compress\zlib.cpp" />
+    <ClCompile Include="..\..\src\crypto\aes.cpp" />
+    <ClCompile Include="..\..\src\crypto\base36.cpp" />
+    <ClCompile Include="..\..\src\crypto\base58.cpp" />
+    <ClCompile Include="..\..\src\crypto\base64.cpp" />
+    <ClCompile Include="..\..\src\crypto\bigint.cpp" />
+    <ClCompile Include="..\..\src\crypto\blowfish.cpp" />
+    <ClCompile Include="..\..\src\crypto\city.cpp" />
+    <ClCompile Include="..\..\src\crypto\crc.cpp" />
+    <ClCompile Include="..\..\src\crypto\dh.cpp" />
+    <ClCompile Include="..\..\src\crypto\elliptic_common.cpp" />
+    <ClCompile Include="..\..\src\crypto\elliptic_impl_priv.cpp" />
+    <ClCompile Include="..\..\src\crypto\elliptic_impl_pub.cpp" />
+    <ClCompile Include="..\..\src\crypto\elliptic_mixed.cpp" />
+    <ClCompile Include="..\..\src\crypto\elliptic_secp256k1.cpp" />
+    <ClCompile Include="..\..\src\crypto\hex.cpp" />
+    <ClCompile Include="..\..\src\crypto\openssl.cpp" />
+    <ClCompile Include="..\..\src\crypto\rand.cpp" />
+    <ClCompile Include="..\..\src\crypto\ripemd160.cpp" />
+    <ClCompile Include="..\..\src\crypto\sha1.cpp" />
+    <ClCompile Include="..\..\src\crypto\sha224.cpp" />
+    <ClCompile Include="..\..\src\crypto\sha256.cpp" />
+    <ClCompile Include="..\..\src\crypto\sha512.cpp" />
+    <ClCompile Include="..\..\src\crypto\_digest_common.cpp" />
+    <ClCompile Include="..\..\src\exception.cpp" />
+    <ClCompile Include="..\..\src\filesystem.cpp" />
+    <ClCompile Include="..\..\src\interprocess\file_mapping.cpp" />
+    <ClCompile Include="..\..\src\interprocess\mmap_struct.cpp" />
+    <ClCompile Include="..\..\src\io\console.cpp" />
+    <ClCompile Include="..\..\src\io\datastream.cpp" />
+    <ClCompile Include="..\..\src\io\fstream.cpp" />
+    <ClCompile Include="..\..\src\io\json.cpp" />
+    <ClCompile Include="..\..\src\io\varint.cpp" />
+    <ClCompile Include="..\..\src\log\appender.cpp" />
+    <ClCompile Include="..\..\src\log\console_appender.cpp" />
+    <ClCompile Include="..\..\src\log\gelf_appender.cpp" />
+    <ClCompile Include="..\..\src\log\logger.cpp" />
+    <ClCompile Include="..\..\src\log\logger_config.cpp" />
+    <ClCompile Include="..\..\src\log\log_message.cpp" />
+    <ClCompile Include="..\..\src\network\ip.cpp" />
+    <ClCompile Include="..\..\src\network\resolve.cpp" />
+    <ClCompile Include="..\..\src\network\udp_socket.cpp" />
+    <ClCompile Include="..\..\src\network\url.cpp" />
+    <ClCompile Include="..\..\src\real128.cpp" />
+    <ClCompile Include="..\..\src\shared_ptr.cpp" />
+    <ClCompile Include="..\..\src\string.cpp" />
+    <ClCompile Include="..\..\src\time.cpp" />
+    <ClCompile Include="..\..\src\uint128.cpp" />
+    <ClCompile Include="..\..\src\variant.cpp" />
+    <ClCompile Include="..\..\src\variant_object.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
