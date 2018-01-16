@@ -60,13 +60,13 @@ namespace tokenika
         return R"EOF(
 Create a new wallet locally
 Usage: ./eosc wallet create [walet name] [Options]
-Usage: ./eosc wallet create [-j "{"""NSON""":"""wallet_name"""}"] [OPTIONS]
+Usage: ./eosc wallet create [-j "{"""name""":"""wallet_name"""}"] [OPTIONS]
 )EOF";
 #else
         return R"EOF(
 Create a new wallet locally
 Usage: ./eosc wallet create [wallet name] [Options]
-Usage: ./eosc wallet create [-j '{"NSON":"wallet_name"}'] [OPTIONS]
+Usage: ./eosc wallet create [-j '{"name":"wallet_name"}'] [OPTIONS]
 )EOF";
 #endif
       }

@@ -14,6 +14,7 @@
 
 #include "eosclib/eosc_get_commands.hpp"
 #include "eosclib/eosc_wallet_commands.hpp"
+#include "eosclib/eosc_create_commands.hpp"
 #include "eosclib/eosc_other_commands.hpp"
 
 #include "eosc.hpp"
@@ -52,7 +53,7 @@ Commands:
 )EOF";
 
 std::map<const std::string, const std::string> subcommandMap = {
-  { "create", createSubcommands },
+  //{ "create", createSubcommands },
   { "get", getSubcommands },
   { "set", setSubcommands },
   { "wallet", walletSubcommands },
@@ -218,6 +219,7 @@ int main(int argc, const char *argv[])
       IF_ELSE(wallet_lock, WalletLock)
       IF_ELSE(wallet_lock_all, WalletLockAll)
       IF_ELSE(wallet_unlock, WalletUnlock)
+      IF_ELSE(wallet_unlock, CreateKey)
       {
         cerr << "unknown command!" << endl;
       }

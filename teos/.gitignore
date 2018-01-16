@@ -1,0 +1,10 @@
+build
+buildWindows
+install
+**/x64
+**/Debug
+*.ilk
+*.exe
+*.a
+*.lib
+**/.vs

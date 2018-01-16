@@ -33,6 +33,9 @@
     <ClInclude Include="..\..\eosclib\subcommands.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\eosclib\eosc_create_commands.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\eosclib\eosc_command.cpp">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\eosc_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\eosclib\eosc_create_commands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

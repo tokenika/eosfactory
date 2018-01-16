@@ -1,1 +1,0 @@
-* precompiler macro: _CRT_SECURE_NO_WARNINGS

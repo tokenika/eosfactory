@@ -78,7 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(BOOST_ROOT);$(SolutionDir)..\;$(IncludePath)</IncludePath>
+    <IncludePath>$(BOOST_ROOT);$(SolutionDir)../../eos/install/include;$(SolutionDir)..\;$(IncludePath)</IncludePath>
     <LibraryPath>$(BOOST_ROOT)\lib64-msvc-14.0;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)</OutDir>
   </PropertyGroup>
@@ -119,6 +119,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>$(SolutionDir)../../eos/install/lib/eosc_helper.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -156,6 +159,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\eosclib\eosc_command.hpp" />
+    <ClInclude Include="..\..\eosclib\eosc_create_commands.hpp" />
     <ClInclude Include="..\..\eosclib\eosc_get_commands.hpp" />
     <ClInclude Include="..\..\eosclib\eosc_other_commands.hpp" />
     <ClInclude Include="..\..\eosclib\eosc_wallet_commands.hpp" />
@@ -164,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\eosclib\eosc_command.cpp" />
+    <ClCompile Include="..\..\eosclib\eosc_create_commands.cpp" />
     <ClCompile Include="..\..\eosclib\eosc_get_commands.cpp" />
     <ClCompile Include="..\..\eosclib\eosc_wallet_commands.cpp" />
     <ClCompile Include="..\..\eosclib\subcommands.cpp" />

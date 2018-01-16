@@ -19,17 +19,6 @@ Subcommands:
 
 const std::string getCommandPath = "/v1/chain/";
 
-const char* createSubcommands = R"EOF(
-ERROR: RequiredError: Subcommand required
-Create various items, on and off the blockchain
-Usage : ./ eosc [OPTIONS] create SUBCOMMAND [OPTIONS]
-
-Subcommands:
-    key             Create a new keypair and print the public and private keys
-    account         Create a new account on the blockchain
-    producer        Create a new producer on the blockchain
-)EOF";
-
 const char* setSubcommands = R"EOF(
 ERROR: RequiredError: Subcommand required
 Set or update blockchain state
