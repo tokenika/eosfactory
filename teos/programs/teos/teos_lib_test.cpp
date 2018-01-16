@@ -5,8 +5,17 @@
 
 #include "teoslib/teos_get_commands.hpp"
 
-int main()
-{
+#ifdef _MSC_VER
+static FILE arr[3];
+extern "C" FILE*  __cdecl __iob_func(void) {
+  throw std::runtime_error(
+    "See https://stackoverflow.com/questions/30412951/unresolved-external-symbol-imp-fprintf-and-imp-iob-func-sdl2");
+  return arr;
+}
+#endif // _MSC_VER
+
+int main() {
+
   using namespace tokenika::teos;
 
   TeosCommand::host = "198.100.148.136";

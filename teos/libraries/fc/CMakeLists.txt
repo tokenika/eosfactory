@@ -126,27 +126,6 @@ if( NOT EOS_ECC_IMPL STREQUAL openssl )
   )
 endif( NOT EOS_ECC_IMPL STREQUAL openssl )
 
-if( WIN32 )
-  target_include_directories( ${LIB_NAME}
-    PUBLIC
-      ${OPENSSL_INCLUDE_DIR}
-  )
-
-  if( NOT EOS_ECC_IMPL STREQUAL openssl )
-    target_link_libraries( ${LIB_NAME}
-      PUBLIC
-        ${SECP256K1_LIBRARIES_DIR}/gcc.lib  
-    )
-  endif()
-
-  target_link_libraries( ${LIB_NAME}
-    PUBLIC
-      "$(WindowsSDK_LibraryPath)/x64/crypt32.lib"
-      "$(VC_ReferencesPath_VC_x64)/legacy_stdio_definitions.lib"
-      "Userenv.lib"
-  )
-endif( WIN32 )
-
 install( DIRECTORY include DESTINATION . )
 install(
   TARGETS ${LIB_NAME} 

@@ -16,61 +16,40 @@ endif( EOS_BUILD_RANGE STREQUAL all )
 
 target_include_directories( ${LIB_NAME}
   PUBLIC
-  ${Boost_INCLUDE_DIR}
-  ${OPENSSL_INCLUDE_DIR}
-  ../fc/include
-  ../utilities/include
+    ${Boost_INCLUDE_DIR}
+    ${OPENSSL_INCLUDE_DIR}
+    ../fc/include
+    ../utilities/include
 
   PUBLIC 
-  include
+    include
 )
 
 if( NOT EOS_ECC_IMPL STREQUAL openssl )
   target_include_directories( ${LIB_NAME}
     PUBLIC
-    ${SECP256K1_INCLUDE_DIR}
-    ${GMP_INCLUDE_DIR}
+      ${SECP256K1_INCLUDE_DIR}
+      ${GMP_INCLUDE_DIR}
   )
 endif()
 
 target_link_libraries( ${LIB_NAME} 
   PUBLIC
-  ${Boost_LIBRARIES} 
-  ${OPENSSL_LIBRARIES}
+    ${Boost_LIBRARIES} 
+    ${OPENSSL_LIBRARIES}
   
   PUBLIC
-  eos_utilities 
-  fc 
+    eos_utilities 
+    fc 
 )
 
 if( NOT EOS_ECC_IMPL STREQUAL openssl )
   target_link_libraries( ${LIB_NAME}
     PUBLIC
-    ${SECP256K1_LIBRARIES}
-    ${GMP_LIBRARIES}
+      ${SECP256K1_LIBRARIES}
+      ${GMP_LIBRARIES}
   )
 endif()
-
-if( WIN32 )
-  target_include_directories( ${LIB_NAME}
-    PUBLIC
-    ${OPENSSL_INCLUDE_DIR}
-  )
-
-  if( NOT EOS_ECC_IMPL STREQUAL openssl )
-    target_link_libraries( ${LIB_NAME}
-      PUBLIC
-      ${SECP256K1_LIBRARIES_DIR}/gcc.lib    
-    )
-  endif()
-
-  target_link_libraries( ${LIB_NAME}
-    PUBLIC
-    "$(WindowsSDK_LibraryPath)/x64/crypt32.lib"
-    "$(VC_ReferencesPath_VC_x64)/legacy_stdio_definitions.lib"
-    "Userenv.lib"
-  )
-endif( WIN32 )
 
 install( DIRECTORY include DESTINATION . )
 install(

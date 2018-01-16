@@ -4,7 +4,7 @@ project( teos )
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 5)
 set( EOS_ECC_IMPL secp256k1 ) ## secp256k1 or openssl or mixed
-set( EOS_BUILD_RANGE teos) ## teos or all
+set( EOS_BUILD_RANGE teos ) ## teos or all
 set(cmake_build_type debug)
 set( CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install)
 

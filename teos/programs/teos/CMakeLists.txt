@@ -79,13 +79,6 @@ target_link_libraries( ${APPL_NAME}
   teos_helper
 )
 
-add_executable( "teos_lib_test" teos_lib_test.cpp )
-target_link_libraries( "teos_lib_test" 
-  PRIVATE
-  teoslib
-  teos_helper
-)
-
 #cotire(${APPL_NAME})
 
 install( TARGETS ${APPL_NAME} RUNTIME DESTINATION bin)
