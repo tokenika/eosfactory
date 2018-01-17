@@ -101,8 +101,8 @@ int main(int argc, const char *argv[])
 
     if (strcmp(argv[1], "tokenika") == 0)
     {
-      TeosCommand::host = "198.100.148.136";
-      TeosCommand::port = "8888";
+      TeosCommand::host = TEST_HOST;
+      TeosCommand::port = TEST_PORT;
       argv++;
       argc--;
     }

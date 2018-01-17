@@ -32,7 +32,7 @@ add_library( ${LIB_NAME} STATIC
   src/time.cpp
   src/filesystem.cpp 
   src/utf8.cpp
-
+  
   src/io/datastream.cpp
   src/io/json.cpp
   

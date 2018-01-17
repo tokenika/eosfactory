@@ -1,23 +1,24 @@
 cmake_minimum_required (VERSION 3.8)
 project ("teos")
 
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 5)
-set(cmake_build_type debug)
-set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake")
+set( VERSION_MAJOR 0 )
+set( VERSION_MINOR 5 )
+set( cmake_build_type debug )
+set ( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake" )
 #include(cotire)
-include("${PROJECT_SOURCE_DIR}/CMake/config.cmake")
+include( "${PROJECT_SOURCE_DIR}/CMake/config.cmake" )
 
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 5)
-set(CONFIG_JSON_FILE "teos_config.json")
-set(CONFIG_JSON_PATH "${CONFIG_JSON_FILE}")
-set(teos_HELPER_INSTALL_PATH "${CMAKE_SOURCE_DIR}/../eos/install" )
+set( TEST_ADDRESS "\"tokenika\"")
+set( TEST_HOST "\"eos-testapi.tokenika.io\"" )
+set( TEST_PORT "\"8888\"" )
+set( CONFIG_JSON_FILE "teos_config.json" )
+set( CONFIG_JSON_PATH "${CONFIG_JSON_FILE}" )
+set( teos_HELPER_INSTALL_PATH "${CMAKE_SOURCE_DIR}/../eos/install" )
 
-set(CONFIG_JSON "\"${CONFIG_JSON_PATH}\"")
-file(COPY ${CONFIG_JSON_PATH} DESTINATION "${CMAKE_BINARY_DIR}")
+set( CONFIG_JSON "\"${CONFIG_JSON_PATH}\"" )
+file( COPY ${CONFIG_JSON_PATH} DESTINATION "${CMAKE_BINARY_DIR}" )
 
-set(LOGGING_DIR "\"log\"")
+set( LOGGING_DIR "\"log\"" )
 configure_file (
    "${PROJECT_SOURCE_DIR}/teos_config.h.in"
    "${PROJECT_SOURCE_DIR}/teos_config.h"

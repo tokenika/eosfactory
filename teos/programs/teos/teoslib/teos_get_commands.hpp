@@ -6,11 +6,6 @@
  * Defines command line options.
  */
 
- // test PS E:\Workspaces\EOS\Pentagon\teos\teos_visual_studio\x64\Debug> ./teos 198.100.148.136:8888 geet block 234
- //  htpc.cpp
- // 63       std::string request = request_stream.str();
- // 64       std::cout << request << std::endln;
- // 
 #pragma once
 
 #include <boost/date_time/posix_time/posix_time.hpp>

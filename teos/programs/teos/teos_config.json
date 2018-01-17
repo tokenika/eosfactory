@@ -6,7 +6,7 @@
       "format":"[%TimeStamp%]: %Message%"
    },
    "teos":{
-      "server":"192.168.229.140",
+      "server":"eos-testapi.tokenika.io",
       "port":"8888"
    }
 }
