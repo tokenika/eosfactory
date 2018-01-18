@@ -15,7 +15,7 @@ if( EOS_BUILD_RANGE STREQUAL all )
 endif( EOS_BUILD_RANGE STREQUAL all )    
 
 target_include_directories( ${LIB_NAME}
-  PUBLIC
+  PRIVATE
     ${Boost_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
     ../fc/include
@@ -27,27 +27,9 @@ target_include_directories( ${LIB_NAME}
 
 if( NOT EOS_ECC_IMPL STREQUAL openssl )
   target_include_directories( ${LIB_NAME}
-    PUBLIC
+    PRIVATE
       ${SECP256K1_INCLUDE_DIR}
       ${GMP_INCLUDE_DIR}
-  )
-endif()
-
-target_link_libraries( ${LIB_NAME} 
-  PUBLIC
-    ${Boost_LIBRARIES} 
-    ${OPENSSL_LIBRARIES}
-  
-  PUBLIC
-    eos_utilities 
-    fc 
-)
-
-if( NOT EOS_ECC_IMPL STREQUAL openssl )
-  target_link_libraries( ${LIB_NAME}
-    PUBLIC
-      ${SECP256K1_LIBRARIES}
-      ${GMP_LIBRARIES}
   )
 endif()
 

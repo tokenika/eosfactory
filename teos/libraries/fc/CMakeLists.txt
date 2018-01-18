@@ -5,10 +5,6 @@ if( NOT EOS_ECC_IMPL )
   set( EOS_ECC_IMPL openssl)
 endif( NOT EOS_ECC_IMPL )
 
-if( EOS_ECC_IMPL STREQUAL secp256k1 )
-  message( STATUS "EOS_ECC_IMPL is secp256k1" )
-endif()
-
 if( EOS_ECC_IMPL STREQUAL openssl )
   message( STATUS "EOS_ECC_IMPL is openssl" )
   set( ECC_REST src/crypto/elliptic_impl_pub.cpp )
@@ -89,7 +85,7 @@ if( EOS_BUILD_RANGE STREQUAL all )
 endif( EOS_BUILD_RANGE STREQUAL all )
 
 target_include_directories(${LIB_NAME} 
-  PUBLIC 
+  PRIVATE 
     ${Boost_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
   
@@ -97,34 +93,6 @@ target_include_directories(${LIB_NAME}
     include
     vendor/websocketpp
 )
-
-if( NOT EOS_ECC_IMPL STREQUAL openssl )
-  target_include_directories( ${LIB_NAME}
-    PUBLIC
-      ${SECP256K1_INCLUDE_DIR}
-      ${GMP_INCLUDE_DIR}
-  )
-endif()
-
-target_link_libraries( ${LIB_NAME} 
-  PUBLIC
-    ${Boost_LIBRARIES} 
-    ${OPENSSL_LIBRARIES}
-    ${CMAKE_DL_LIBS}
-)
-
-if( NOT (APPLE OR WIN32) )
-  set( pthread_library pthread )
-  target_link_libraries( ${LIB_NAME} PUBLIC rt )
-endif( NOT (APPLE OR WIN32) )
-
-if( NOT EOS_ECC_IMPL STREQUAL openssl )
-  target_link_libraries( ${LIB_NAME} 
-    PUBLIC 
-      ${SECP256K1_LIBRARIES}
-      ${GMP_LIBRARIES}
-  )
-endif( NOT EOS_ECC_IMPL STREQUAL openssl )
 
 install( DIRECTORY include DESTINATION . )
 install(

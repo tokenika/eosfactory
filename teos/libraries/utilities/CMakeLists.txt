@@ -14,32 +14,12 @@ if( EOS_BUILD_RANGE STREQUAL all )
     endif( EOS_BUILD_RANGE STREQUAL all )    
 
 target_include_directories( ${LIB_NAME} 
-  PUBLIC
-    ${Boost_INCLUDE_DIR}
-    ${OPENSSL_INCLUDE_DIR}
+  PRIVATE
     ../fc/include
-  
+    
   PUBLIC  
     include
 )
-
-target_link_libraries( ${LIB_NAME}
-  PUBLIC
-    ${Boost_LIBRARIES} 
-    ${OPENSSL_LIBRARIES}
-  
-  PUBLIC
-    eos_types 
-    fc 
-)
-
-if( NOT EOS_ECC_IMPL STREQUAL openssl )
-  target_link_libraries( ${LIB_NAME}
-    PUBLIC
-      ${SECP256K1_LIBRARIES}
-      ${GMP_LIBRARIES}
-  )
-endif()
 
 install( DIRECTORY include DESTINATION . )
 install(

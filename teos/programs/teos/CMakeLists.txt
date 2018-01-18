@@ -48,6 +48,7 @@ find_package(Boost 1.62 REQUIRED COMPONENTS
   date_time 
   program_options 
   filesystem
+  chrono
   regex
 )
 if( Boost_FOUND )
@@ -68,18 +69,67 @@ endif()
 
 add_subdirectory(teoslib)
 
-set(APPL_NAME "teos")
-add_executable(${APPL_NAME} teos.cpp )
-target_include_directories( ${APPL_NAME} 
-  PRIVATE
-  ${BOOST_INCLUDEDIR}
-)
-target_link_libraries( ${APPL_NAME}
-  PRIVATE
-  teoslib
-  teos_helper
-)
+####################################### executables
+
+macro( applLinkLibraries applName )
+
+  target_link_libraries( ${applName}
+    PRIVATE
+      teoslib
+      teos_helper
+      eos_types
+      fc
+      eos_utilities
+  )
+
+  if( NOT EOS_ECC_IMPL STREQUAL openssl )
+    target_link_libraries( ${applName}
+      PRIVATE
+        ${SECP256K1_LIBRARIES}
+        ${GMP_LIBRARIES}
+    )
+  endif()
+
+  if( NOT (APPLE OR WIN32) )
+    set( pthread_library pthread )
+    target_link_libraries( ${applName} PUBLIC rt )
+  endif()
+
+  if( WIN32 )
+    if( NOT EOS_ECC_IMPL STREQUAL openssl )
+      target_link_libraries( ${applName}
+        PRIVATE
+          ${SECP256K1_LIBRARIES_DIR}/gcc.lib
+      )
+    endif()
+
+    target_link_libraries( ${applName}
+      PRIVATE
+        "$(WindowsSDK_LibraryPath)/x64/crypt32.lib"
+        "$(VC_ReferencesPath_VC_x64)/legacy_stdio_definitions.lib"
+        "Userenv.lib"
+    )
+  endif( WIN32 )
+
+  target_link_libraries( ${applName}
+    PRIVATE
+      ${OPENSSL_LIBRARIES}
+      ${Boost_LIBRARIES}
+      ${CMAKE_DL_LIBS}
+      ${CMAKE_THREAD_LIBS_INIT}
+  )
+
+endmacro( applLinkLibraries )
+
+add_executable(teos teos.cpp )
+applLinkLibraries( teos )
+install( TARGETS teos RUNTIME DESTINATION bin)
+
+add_executable(teos_lib_test teos_lib_test.cpp )
+applLinkLibraries( teos_lib_test )
+install( TARGETS teos_lib_test RUNTIME DESTINATION bin)
+
+####################################### /executables
 
 #cotire(${APPL_NAME})
 
-install( TARGETS ${APPL_NAME} RUNTIME DESTINATION bin)
