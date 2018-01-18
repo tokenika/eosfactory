@@ -16,7 +16,9 @@ if( EOS_BUILD_RANGE STREQUAL all )
 target_include_directories( ${LIB_NAME} 
   PRIVATE
     ../fc/include
-    
+    ${Boost_INCLUDE_DIR}
+    ${OPENSSL_INCLUDE_DIR}
+    ${SECP256K1_INCLUDE_DIR}
   PUBLIC  
     include
 )

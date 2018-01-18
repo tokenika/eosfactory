@@ -73,6 +73,11 @@ add_subdirectory(teoslib)
 
 macro( applLinkLibraries applName )
 
+  target_include_directories( ${applName} 
+    PRIVATE
+     ${Boost_INCLUDE_DIR}
+  )
+
   target_link_libraries( ${applName}
     PRIVATE
       teoslib

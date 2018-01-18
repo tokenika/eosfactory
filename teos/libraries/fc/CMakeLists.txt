@@ -88,7 +88,7 @@ target_include_directories(${LIB_NAME}
   PRIVATE 
     ${Boost_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
-  
+    ${SECP256K1_INCLUDE_DIR}
   PUBLIC
     include
     vendor/websocketpp
