@@ -73,6 +73,16 @@ add_subdirectory(teoslib)
 
 macro( applLinkLibraries applName )
 
+  target_sources( ${applName} 
+    PRIVATE
+      ${CMAKE_CURRENT_LIST_DIR}/teoslib/subcommands.hpp
+      ${CMAKE_CURRENT_LIST_DIR}/teoslib/teos_command.hpp
+      ${CMAKE_CURRENT_LIST_DIR}/teoslib/teos_get_commands.hpp
+      ${CMAKE_CURRENT_LIST_DIR}/teoslib/teos_create_commands.hpp
+      ${CMAKE_CURRENT_LIST_DIR}/teoslib/teos_wallet_commands.hpp
+      ${CMAKE_CURRENT_LIST_DIR}/teoslib/teos_other_commands.hpp
+  )
+
   target_include_directories( ${applName} 
     PRIVATE
      ${Boost_INCLUDE_DIR}
@@ -126,13 +136,19 @@ macro( applLinkLibraries applName )
 
 endmacro( applLinkLibraries )
 
-add_executable(teos teos.cpp )
+add_executable( teos teos.cpp )
 applLinkLibraries( teos )
 install( TARGETS teos RUNTIME DESTINATION bin)
 
-add_executable(teos_lib_test teos_lib_test.cpp )
+add_executable( teos_lib_test teos_lib_test.cpp )
 applLinkLibraries( teos_lib_test )
 install( TARGETS teos_lib_test RUNTIME DESTINATION bin)
+
+add_executable( teos_create_account 
+  teos_create_account.cpp 
+)
+applLinkLibraries( teos_create_account )
+install( TARGETS teos_create_account RUNTIME DESTINATION bin)
 
 ####################################### /executables
 

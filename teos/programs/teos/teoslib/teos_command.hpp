@@ -238,7 +238,7 @@ namespace tokenika
             value<string>(&json_),
             "Json argument")
             ("received,v", "Print received json")
-          ("raw,r", "Not pretty print")
+          ("raw,r", "Raw print")
           ("example,e", "Usage example");
       }
 

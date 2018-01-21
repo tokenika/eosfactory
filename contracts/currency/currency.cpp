@@ -54,7 +54,7 @@ void init()
    store_account(N(currency), account(currency_tokens(1000ll * 1000ll * 1000ll)));
 }
 
-void apply(eosio::uint64_t code, eosio::uint64_t action)
+void apply(uint64_t code, uint64_t action)
 {
    eosio::print(
        "code: ", code, "; name(code): ", name(code),
@@ -84,7 +84,7 @@ void apply(eosio::uint64_t code, eosio::uint64_t action)
    }
 }
 
-void applyOrig(eosio::uint64_t code, eosio::uint64_t action)
+void applyOrig(uint64_t code, uint64_t action)
 {
    eosio::print(
        "code: ", code, "; name(code): ", name(code),

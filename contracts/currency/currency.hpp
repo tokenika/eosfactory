@@ -19,7 +19,7 @@
 
 extern "C" {
     void init();
-    void apply(eosio::uint64_t code, eosio::uint64_t action );
+    void apply(uint64_t code, uint64_t action );
 }
 
 namespace currency {
@@ -35,7 +35,7 @@ namespace currency {
    /**
    * Defines a currency token
    */
-   typedef eosio::token<eosio::uint64_t,N(currency)> currency_tokens;
+   typedef eosio::token<uint64_t, N(currency)> currency_tokens;
 
    /**
     *  transfer requires that the sender and receiver be the first two
@@ -68,7 +68,7 @@ namespace currency {
       /**
        *  The key is constant because there is only one record per scope/currency/accounts
        */
-      const eosio::uint64_t     key = N(account);
+      const uint64_t     key = N(account);
 
       /**
       * Balance number of tokens in account
@@ -85,12 +85,12 @@ namespace currency {
    /**
    Assert statement to verify structure packing for account
    **/
-   static_assert( sizeof(account) == sizeof(eosio::uint64_t)+sizeof(currency_tokens), "unexpected packing" );
+   static_assert( sizeof(account) == sizeof(uint64_t)+sizeof(currency_tokens), "unexpected packing" );
 
    /**
    Defines the database table for account information
    **/
-   using accounts = table<N(currency),N(currency),N(account),account,eosio::uint64_t>;
+   using accounts = eosio::table<N(currency),N(currency),N(account),account,uint64_t>;
 
    /**
     *  accounts information for owner is stored:
