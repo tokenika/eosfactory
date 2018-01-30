@@ -1,22 +1,22 @@
 cmake_minimum_required( VERSION 3.8 )
 project( teos )
 
-set( VERSION_MAJOR 0 )
-set( VERSION_MINOR 5 )
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 5)
 set( EOS_ECC_IMPL secp256k1 ) ## secp256k1 or openssl or mixed
 set( EOS_BUILD_RANGE teos ) ## teos or all
-set( cmake_build_type debug )
-set( CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install )
+set(cmake_build_type debug)
+set( CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install)
 
 set( CMAKE_CXX_STANDARD 14 )
 set( BUILD_SHARED_LIBS NO )
 set( BUILD_DOXYGEN TRUE )
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules" )
 
-message( STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}" )
+message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 
 if( WIN32 )
-  add_definitions( -D_WIN32_WINNT=0x0501 -D_CRT_SECURE_NO_WARNINGS )
+  add_definitions( -D_WIN32_WINNT=0x0501 -D_CRT_SECURE_NO_WARNINGS)
   add_compile_options( /std:c++14 )
 endif( WIN32 )
 
@@ -28,12 +28,12 @@ set( Boost_USE_STATIC_RUNTIME OFF )
 set( BOOST_ROOT $ENV{HOME}/opt/boost_1_64_0 )
 if( WIN32 )
   set( Boost_NO_SYSTEM_PATHS ON )
-  set( BOOST_INCLUDEDIR $ENV{BOOST_INCLUDEDIR} )
-  message( STATUS "BOOST_INCLUDEDIR: $ENV{BOOST_INCLUDEDIR}" )
+  set( BOOST_INCLUDEDIR $ENV{BOOST_INCLUDEDIR})
+  message( STATUS "BOOST_INCLUDEDIR: $ENV{BOOST_INCLUDEDIR}")
   set( BOOST_LIBRARYDIR $ENV{BOOST_LIBRARYDIR} )
-  message( STATUS "BOOST_LIBRARYDIR: $ENV{BOOST_LIBRARYDIR}" )
+  message( STATUS "BOOST_LIBRARYDIR: $ENV{BOOST_LIBRARYDIR}")
 endif( WIN32 )
-find_package( Boost 1.62 REQUIRED COMPONENTS 
+find_package(Boost 1.62 REQUIRED COMPONENTS 
   system
   chrono
   date_time 
