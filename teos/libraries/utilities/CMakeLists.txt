@@ -6,7 +6,7 @@ add_library(${LIB_NAME} STATIC
 
 if( EOS_BUILD_RANGE STREQUAL all )
   target_sources( ${LIB_NAME} 
-    PUBLIC
+    PRIVATE
       ${CMAKE_CURRENT_LIST_DIR}/string_escape.cpp
       ${CMAKE_CURRENT_LIST_DIR}/tempdir.cpp
       ${CMAKE_CURRENT_LIST_DIR}/words.cpp

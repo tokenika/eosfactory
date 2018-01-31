@@ -6,7 +6,7 @@ add_library( ${LIB_NAME} STATIC
 
 if( EOS_BUILD_RANGE STREQUAL all )
   target_sources( ${LIB_NAME} 
-    PUBLIC
+    PRIVATE
       ${CMAKE_CURRENT_LIST_DIR}/asset.cpp
       ${CMAKE_CURRENT_LIST_DIR}/type_parser.cpp
       ${CMAKE_CURRENT_LIST_DIR}/abi_serializer.cpp

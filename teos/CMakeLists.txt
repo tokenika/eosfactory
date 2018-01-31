@@ -4,7 +4,7 @@ project( teos )
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 5)
 set( EOS_ECC_IMPL secp256k1 ) ## secp256k1 or openssl or mixed
-set( EOS_BUILD_RANGE teos ) ## teos or all
+set( EOS_BUILD_RANGE all ) ## teos or all
 set(cmake_build_type debug)
 set( CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install)
 
@@ -18,6 +18,7 @@ message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 if( WIN32 )
   add_definitions( -D_WIN32_WINNT=0x0501 -D_CRT_SECURE_NO_WARNINGS)
   add_compile_options( /std:c++14 )
+  add_compile_options( /bigobj )
 endif( WIN32 )
 
 ####################################### DEPENDENCIES
@@ -89,5 +90,6 @@ endif( NOT EOS_ECC_IMPL STREQUAL openssl )
 ####################################### /DEPENDENCIES
 
 add_subdirectory( libraries )
+add_subdirectory( plugins )
 add_subdirectory( teos_helper )
 add_subdirectory( programs/teos )

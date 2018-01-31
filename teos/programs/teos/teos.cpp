@@ -61,10 +61,12 @@ std::map<const std::string, const std::string> subcommandMap = {
   { "push", pushSubcommands }
 };
 
-
+extern "C" FILE*  __cdecl __iob_func(void);
 
 int main(int argc, const char *argv[])
 {
+  __iob_func();
+
   using namespace std;
   using namespace tokenika::teos;
   using namespace boost::program_options;

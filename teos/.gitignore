@@ -8,3 +8,4 @@ install
 *.a
 *.lib
 **/.vs
+programs/eosc

@@ -44,6 +44,7 @@ if( WIN32 )
   message( STATUS "BOOST_LIBRARYDIR: $ENV{BOOST_LIBRARYDIR}")
 endif( WIN32 )
 find_package(Boost 1.62 REQUIRED COMPONENTS 
+  thread
   system 
   date_time 
   program_options 
@@ -86,6 +87,7 @@ macro( applLinkLibraries applName )
   target_include_directories( ${applName} 
     PRIVATE
      ${Boost_INCLUDE_DIR}
+     ${OPENSSL_INCLUDE_DIR}
   )
 
   target_link_libraries( ${applName}
@@ -105,7 +107,7 @@ macro( applLinkLibraries applName )
     )
   endif()
 
-  if( NOT (APPLE OR WIN32) )
+  if( UNIX )
     set( pthread_library pthread )
     target_link_libraries( ${applName} PUBLIC rt )
   endif()
@@ -123,6 +125,7 @@ macro( applLinkLibraries applName )
         "$(WindowsSDK_LibraryPath)/x64/crypt32.lib"
         "$(VC_ReferencesPath_VC_x64)/legacy_stdio_definitions.lib"
         "Userenv.lib"
+        __iob_func
     )
   endif( WIN32 )
 

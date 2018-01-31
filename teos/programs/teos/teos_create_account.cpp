@@ -5,7 +5,11 @@
 
 #include "teoslib/teos_get_commands.hpp"
 
+extern "C" FILE*  __cdecl __iob_func(void);
+
 int main() {
+
+  __iob_func();
 
   using namespace tokenika::teos;
 

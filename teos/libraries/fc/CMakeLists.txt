@@ -57,7 +57,7 @@ add_library( ${LIB_NAME} STATIC
 
 if( EOS_BUILD_RANGE STREQUAL all )
   target_sources( ${LIB_NAME} 
-    PUBLIC
+    PRIVATE
       ${CMAKE_CURRENT_LIST_DIR}/src/io/varint.cpp
       ${CMAKE_CURRENT_LIST_DIR}/src/io/fstream.cpp
       ${CMAKE_CURRENT_LIST_DIR}/src/io/console.cpp
