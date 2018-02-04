@@ -12,14 +12,13 @@ target_include_directories( ${LIB_NAME}
   PRIVATE 
     ${Boost_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/appbase/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/chainbase/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/fc/include"
+    "${CMAKE_SOURCE_DIR}/libraries/appbase/include"
+    "${CMAKE_SOURCE_DIR}/libraries/chainbase/include"
+    "${CMAKE_SOURCE_DIR}/libraries/fc/include"
+		"${CMAKE_SOURCE_DIR}/plugins/database_plugin/include"
 )
 
-install( TARGETS
-   ${LIB_NAME}
-
+install( TARGETS ${LIB_NAME}
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib

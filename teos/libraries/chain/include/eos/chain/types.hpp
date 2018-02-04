@@ -44,18 +44,18 @@
     : id(0) BOOST_PP_SEQ_FOR_EACH(OBJECT_CTOR2_MACRO, _, FIELDS) \
     { c(*this); }
 /*
-///blockone:
+<BlockOne>
 #define OBJECT_CTOR(...) BOOST_PP_OVERLOAD(OBJECT_CTOR, __VA_ARGS__)(__VA_ARGS__)
-///blockone
+</BlockOne>
 */
-///tokenika:
+//<Tokenika>
 #if !BOOST_PP_VARIADICS_MSVC
 #define OBJECT_CTOR(...) BOOST_PP_OVERLOAD(OBJECT_CTOR, __VA_ARGS__)(__VA_ARGS__)
 #else
 #define OBJECT_CTOR(...) \
   BOOST_PP_CAT( BOOST_PP_OVERLOAD(OBJECT_CTOR, __VA_ARGS__)(__VA_ARGS__), BOOST_PP_EMPTY() )
 #endif
-///tokenika
+//</Tokenika>
 
 namespace eosio { namespace chain {
    using                               std::map;

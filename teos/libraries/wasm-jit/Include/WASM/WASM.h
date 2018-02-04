@@ -2,13 +2,13 @@
 
 #ifndef WEBASSEMBLY_API
 /*
-///blockone:
+<BlockOne>
 	#define WEBASSEMBLY_API DLL_IMPORT
-///blockone
+</BlockOne>
 */
-///tokenika:
+//<Tokenika>
 #define WEBASSEMBLY_API
-///tokenika
+//</Tokenika>
 #endif
 
 #include "Inline/BasicTypes.h"

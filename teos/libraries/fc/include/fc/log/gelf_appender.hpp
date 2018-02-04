@@ -5,7 +5,14 @@
 #include <fc/time.hpp>
 #include <boost/asio.hpp>
 
+/*
+<BlockOne>
+namespace boost { namespace asio { class io_service; } }
+</BlockOne>
+*/
+//<Tokenika>
 //namespace boost { namespace asio { class io_service; } }
+//</Tokenika>
 
 namespace fc 
 {

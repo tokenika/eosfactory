@@ -20,7 +20,6 @@ target_include_directories( ${LIB_NAME}
     ${OPENSSL_INCLUDE_DIR}
     ../fc/include
     ../utilities/include
-
   PUBLIC 
     include
 )

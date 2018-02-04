@@ -37,13 +37,13 @@ target_include_directories(${LIB_NAME}
 		${Boost_INCLUDE_DIR}
 		${OPENSSL_INCLUDE_DIR}
     ${SECP256K1_INCLUDE_DIR}
-	PUBLIC
-		include
 		../wasm-jit/Include
 		../fc/include
 		../types/include
 		../chainbase/include
-		../utilities/include
+		../utilities/include    
+	PUBLIC
+		include
 )
 
 if( WIN32 )

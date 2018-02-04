@@ -692,14 +692,14 @@ void chain_controller::check_transaction_authorization(const signed_transaction&
    }
 
    auto getPermission = make_get_permission(_db);
-   /*
-   ///blockone:
-#warning TODO: Use a real chain_id here (where is this stored? Do we still need it?)
-   ///blockone
-   */
-   ///tokenika:
+/*
+<BlockOne>
+    #warning TODO: Use a real chain_id here (where is this stored? Do we still need it?)
+</BlockOne>
+*/
+//<Tokenika>
     //warning TODO: Use a real chain_id here (where is this stored? Do we still need it?)
-   ///tokenika
+//</Tokenika>  
 
    auto checker = make_auth_checker(_db, trx.get_signature_keys(chain_id_type{}));
 

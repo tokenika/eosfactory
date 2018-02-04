@@ -4,13 +4,13 @@
 
 #ifndef IR_API
 /*
-///blockone:
+<BlockOne>
 	#define IR_API DLL_IMPORT
-///blockone
+</BlockOne>
 */
-///tokenika:
+//<Tokenika>
   #define IR_API
-///tokenika
+//</Tokenika>
 #endif
 
 namespace IR

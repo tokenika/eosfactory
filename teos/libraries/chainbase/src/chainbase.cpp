@@ -1,9 +1,10 @@
 #include <chainbase/chainbase.hpp>
 #include <boost/array.hpp>
-///tokenika:
+
+//<Tokenika>
 #include <boost/lexical_cast.hpp>
 #include <string>
-///tokenika
+//</Tokenika>
 
 #include <iostream>
 
@@ -12,11 +13,12 @@ namespace chainbase {
    struct environment_check {
       environment_check() {
          memset( &compiler_version, 0, sizeof( compiler_version ) );
-/*///blockone:
+/*
+<BlockOne>
          memcpy( &compiler_version, __VERSION__, std::min<size_t>( strlen(__VERSION__), 256 ) ); 
-//blockone
+</BlockOne>
 */
-///tokenika:  
+//<Tokenika>
 #ifdef __VERSION__
          memcpy(&compiler_version, __VERSION__, std::min<size_t>(strlen(__VERSION__), 256));
          #endif //__VERSION__
@@ -24,7 +26,8 @@ namespace chainbase {
          std::string mscVersion = boost::lexical_cast<std::string>(_MSC_VER);
          memcpy(&compiler_version, mscVersion.c_str(), std::min<size_t>(mscVersion.length(), 256));
          #endif //_MSC_VER
-///tokenika
+//</Tokenika>
+
 #ifndef NDEBUG
          debug = true;
 #endif
@@ -50,10 +53,15 @@ namespace chainbase {
       bool write = flags & database::read_write;
 
       if (!bfs::exists(dir)) {
-///tokenika: 
-         //if (!write) BOOST_THROW_EXCEPTION(std::runtime_error("database file not found at " + dir.native()));
+/*
+<BlockOne>
+        if (!write) BOOST_THROW_EXCEPTION(std::runtime_error("database file not found at " + dir.native()));
+</BlockOne>
+*/
+//<Tokenika>
         if (!write) BOOST_THROW_EXCEPTION(std::runtime_error("database file not found at " + dir.string()));
-//tokenika
+//</Tokenika>
+
       }
 
       bfs::create_directories(dir);

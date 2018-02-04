@@ -12,7 +12,6 @@ target_include_directories( ${LIB_NAME}
     ../libraries/fc/include
     ../libraries/types/include
     ../libraries/utilities/include
-
   PUBLIC
     include
 )

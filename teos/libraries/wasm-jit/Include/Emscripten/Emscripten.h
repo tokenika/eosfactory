@@ -2,13 +2,13 @@
 
 #ifndef EMSCRIPTEN_API
 /*
-///bloclone:
+<BlockOne>
 	#define EMSCRIPTEN_API DLL_IMPORT
-///blockone
+</BlockOne>
 */
-///tokenika:
+//<Tokenika>
 	#define EMSCRIPTEN_API
-///tokenika
+//</Tokenika>
 #endif
 
 #include <vector>

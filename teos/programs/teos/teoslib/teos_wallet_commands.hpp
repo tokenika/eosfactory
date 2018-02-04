@@ -29,7 +29,7 @@ namespace tokenika
     public:
 
       WalletCreate(ptree reqJson, bool raw = false) : TeosCommand(
-        string(walletCommandPath + "create").c_str(), reqJson, raw) {
+        string(walletCommandPath + "create"), reqJson, raw) {
         callEosd();
       }
 
@@ -136,7 +136,7 @@ printout:
     public:
 
       WalletImport(ptree reqJson, bool raw = false) : TeosCommand(
-        string(walletCommandPath + "import_key").c_str(), reqJson, raw) {
+        string(walletCommandPath + "import_key"), reqJson, raw) {
         callEosd();
       }
 
@@ -226,7 +226,7 @@ Usage: ./teos wallet import [-j '{"name":"string", "key":"string"}'] [OPTIONS]
     public:
 
       WalletList(ptree reqJson, bool raw = false) : TeosCommand(
-        string(walletCommandPath + "list_wallets").c_str(), reqJson, raw) {
+        string(walletCommandPath + "list_wallets"), reqJson, raw) {
         callEosd();
       }
     };
@@ -307,7 +307,7 @@ printout:
     public:
 
       WalletOpen(ptree reqJson, bool raw = false) : TeosCommand(
-        string(walletCommandPath + "open").c_str(), reqJson, raw) {
+        string(walletCommandPath + "open"), reqJson, raw) {
         callEosd();
       }
 
@@ -410,7 +410,7 @@ printout:
     public:
 
       WalletLock(ptree reqJson, bool raw = false) : TeosCommand(
-        string(walletCommandPath + "lock").c_str(), reqJson, raw) {
+        string(walletCommandPath + "lock"), reqJson, raw) {
         callEosd();
       }
 
@@ -513,7 +513,7 @@ printout:
     public:
 
       WalletLockAll(ptree reqJson, bool raw = false) : TeosCommand(
-        string(walletCommandPath + "lock_all").c_str(), reqJson, raw) {
+        string(walletCommandPath + "lock_all"), reqJson, raw) {
         callEosd();
       }
 
@@ -594,7 +594,7 @@ printout:
     public:
 
       WalletUnlock(ptree reqJson, bool raw = false) : TeosCommand(
-        string(walletCommandPath + "unlock").c_str(), reqJson, raw) {
+        string(walletCommandPath + "unlock"), reqJson, raw) {
         callEosd();
       }
 
@@ -682,7 +682,7 @@ Usage: ./teos wallet import [-j '{"NSON":"string"}'] [OPTIONS]
     public:
 
       WalletKeys(ptree reqJson, bool raw = false) : TeosCommand(
-        string(walletCommandPath + "list_keys").c_str(), reqJson, raw) {
+        string(walletCommandPath + "list_keys"), reqJson, raw) {
         callEosd();
       }
     };

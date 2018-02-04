@@ -92,11 +92,14 @@ macro( applLinkLibraries applName )
 
   target_link_libraries( ${applName}
     PRIVATE
-      teoslib
-      teos_helper
+      teoslib      
+      teos_helper      
+      chainbase
       eos_types
-      fc
+      eos_chain
       eos_utilities
+      appbase
+      fc
   )
 
   if( NOT EOS_ECC_IMPL STREQUAL openssl )
@@ -149,6 +152,11 @@ install( TARGETS teos_lib_test RUNTIME DESTINATION bin)
 
 add_executable( teos_create_account 
   teos_create_account.cpp 
+)
+target_include_directories( teos_create_account  
+  PRIVATE
+    "${CMAKE_SOURCE_DIR}/plugins/chain_plugin/include"
+		"${CMAKE_SOURCE_DIR}/plugins/database_plugin/include"
 )
 applLinkLibraries( teos_create_account )
 install( TARGETS teos_create_account RUNTIME DESTINATION bin)

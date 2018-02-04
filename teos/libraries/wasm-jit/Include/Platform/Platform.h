@@ -9,15 +9,15 @@
 #ifdef _WIN32
 	#define THREAD_LOCAL thread_local
 /*
-//blockone: 
+<BlockOne>
 	#define DLL_EXPORT __declspec(dllexport)
 	#define DLL_IMPORT __declspec(dllimport)
-///blockone
+</BlockOne>
 */
-///tokenika:
+//<Tokenika>
 	#define DLL_EXPORT
 	#define DLL_IMPORT
-///tokenika
+//</Tokenika>
 	#define FORCEINLINE __forceinline
 	#define SUPPRESS_UNUSED(variable) (void)(variable);
 	#include <intrin.h>
@@ -34,13 +34,13 @@
 
 #ifndef PLATFORM_API
 /*
-///blockone:
+<BlockOne>
 	#define PLATFORM_API DLL_IMPORT
-///blockone
+</BlockOne>
 */
-///tokenika:
+//<Tokenika>
 	#define PLATFORM_API
-///tokenika
+//</Tokenika>
 #endif
 
 namespace Platform

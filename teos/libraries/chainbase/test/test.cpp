@@ -42,10 +42,14 @@ CHAINBASE_SET_INDEX_TYPE( book, book_index )
 BOOST_AUTO_TEST_CASE( open_and_create ) {
    boost::filesystem::path temp = boost::filesystem::unique_path();
    try {
-///tokenika:
-     //std::cerr << temp.native() << " \n";
+/*
+<BlockOne>
+     std::cerr << temp.native() << " \n";
+</BlockOne>
+*/
+//<Tokenika>
       std::cerr << temp.string() << " \n";
-///tokenika
+//</Tokenika>
       chainbase::database db(temp, database::read_write, 1024*1024*8);
       chainbase::database db2(temp); /// open an already created db
       BOOST_CHECK_THROW( db2.add_index< book_index >(), std::runtime_error ); /// index does not exist in read only database

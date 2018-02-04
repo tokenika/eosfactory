@@ -204,14 +204,16 @@ void apply_eos_setcode(apply_context& context) {
 //   wlog( "set code: ${size}", ("size",msg.code.size()));
    db.modify( account, [&]( auto& a ) {
       /** TODO: consider whether a microsecond level local timestamp is sufficient to detect code version changes*/
+
 /*
-///blockone:
+<BlockOne>
 #warning TODO: update setcode message to include the hash, then validate it in validate 
-///blockone
+</BlockOne>
 */
-///tokenika:
+//<Tokenika>
 //#warning TODO: update setcode message to include the hash, then validate it in validate 
-///tokenika
+//</Tokenika>
+
       a.code_version = fc::sha256::hash( msg.code.data(), msg.code.size() );
       a.code.resize( msg.code.size() );
       memcpy( a.code.data(), msg.code.data(), msg.code.size() );

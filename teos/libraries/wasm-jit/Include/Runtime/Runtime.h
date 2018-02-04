@@ -6,14 +6,13 @@
 
 #ifndef RUNTIME_API
 /*
-///blockone:
+<BlockOne>
 	#define RUNTIME_API DLL_IMPORT
-///blockone
+</BlockOne>
 */
-///tokenika
+//<Tokenika>
 	#define RUNTIME_API
-///tokenika
-
+//</Tokenika>
 #endif
 
 // Declare IR::Module to avoid including the definition.

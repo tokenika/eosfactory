@@ -113,7 +113,7 @@ Definitions for class TeosCommand.
       ss << response;
       try {
         read_json(ss, respJson);
-        stringstream ss1;
+        stringstream ss1; // Try to write respJson, in order to check it.
         json_parser::write_json(ss1, respJson, false);
       }
       catch (exception& e) {
@@ -144,21 +144,22 @@ Definitions for class TeosCommand.
       namespace ip = boost::asio::ip;
       namespace pt = boost::property_tree;
 
-      string host_(host);
-      string port_(port);
-
       ptree config = getConfig();
 
-      if (host == "")
-        host_ = config.get("teos.server", HOST_DEFAULT);
-      if (port == "")
-        port_ = config.get("teos.port", PORT_DEFAULT);
-      if (TeosCommand::walletHost == "")
-        TeosCommand::walletHost = config.get("teos.walletServer", HOST_DEFAULT);
-      if (TeosCommand::walletPort == "")
-        TeosCommand::walletPort = config.get("teos.walletPort", PORT_DEFAULT);
-      if (!TeosCommand::verbose)
-        TeosCommand::verbose = config.get("teos.verbose", false);
+      string host_;
+      string port_;
+
+      if (isWalletCommand()) {
+        host_ = (walletHost == "") ? config.get("teos.walletServer", HOST_DEFAULT) : walletHost;
+        port_ = (walletPort == "") ? config.get("teos.walletPort", PORT_DEFAULT) : walletPort;
+      }
+      else {
+        host_ = (host == "") ? config.get("teos.server", HOST_DEFAULT) : host;
+        port_ = (port == "") ? config.get("teos.port", PORT_DEFAULT) : port;
+      }
+      
+      TeosCommand::verbose = (!TeosCommand::verbose) ? config.get("teos.verbose", false) :
+        TeosCommand::verbose;
 
       try {
         boost::asio::io_service io_service;
@@ -171,6 +172,7 @@ Definitions for class TeosCommand.
         boost::asio::connect(socket, iterator);
 
         string postMsg = normRequest(reqJson);
+
         string CRNL = "\r\n";
         string request =
           "POST " + path + " HTTP/1.0" + CRNL +
@@ -236,22 +238,34 @@ Definitions for class TeosCommand.
       }
     }
 
-    TeosCommand::TeosCommand( string path, ptree reqJson, bool isRaw) : 
-      path(path), reqJson(reqJson), isRaw(isRaw){
+    TeosCommand::TeosCommand( string path, ptree reqJson, bool isRaw ) : 
+      path(path), reqJson(reqJson), isRaw(isRaw) {
     }
 
-    string TeosCommand::toStringPost() const {
+    TeosCommand::TeosCommand( string path, bool isRaw ) : 
+      path(path), isRaw(isRaw) {
+    }    
+    
+    string TeosCommand::toStringPost(bool isRaw) const {
       stringstream ss;
       json_parser::
         write_json(ss, reqJson, !isRaw);
       return ss.str();
     }
 
-    string TeosCommand::toStringRcv() const {
+    string TeosCommand::toStringPost() const {
+      return toStringPost(isRaw);
+    }
+
+    string TeosCommand::toStringRcv(bool isRaw) const {
       stringstream ss;
       json_parser::
         write_json(ss, respJson, !isRaw);
       return ss.str();
+    }
+
+    string TeosCommand::toStringRcv() const {
+      return toStringRcv(isRaw);
     }
 
     string TeosCommand::host = "";

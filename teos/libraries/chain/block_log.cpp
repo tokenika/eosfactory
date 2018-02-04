@@ -159,15 +159,15 @@ namespace eosio { namespace chain {
          my->check_block_write();
          my->check_index_write();
 
-         uint64_t pos = my->block_stream.tellp();        
-         /*
-         ///blockone:
+         uint64_t pos = my->block_stream.tellp();
+/*
+<BlockOne>
         FC_ASSERT(my->index_stream.tellp() == sizeof(uint64_t) * (b.block_num() - 1),
-         ///blockone
-         */
-         ///tokenika:
+</BlockOne>
+*/
+//<Tokenika>
         FC_ASSERT((unsigned long long) my->index_stream.tellp() == sizeof(uint64_t) * (b.block_num() - 1),
-         ///tokenika
+//</Tokenika>
                    "Append to index file occuring at wrong position.",
                    ("position", (uint64_t) my->index_stream.tellp())
                    ("expected", (b.block_num() - 1) * sizeof(uint64_t)));

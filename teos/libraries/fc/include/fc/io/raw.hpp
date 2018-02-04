@@ -687,12 +687,28 @@ namespace fc {
     }
 
     template<typename Stream, typename T> void pack( Stream& s, const boost::multiprecision::number<T>& n ) {
-//      static_assert( sizeof( n ) == (std::numeric_limits<boost::multiprecision::number<T>>::digits+1)/8, "unexpected padding" );
+/*
+<BlockOne>
+      static_assert( sizeof( n ) == (std::numeric_limits<boost::multiprecision::number<T>>::digits+1)/8, "unexpected padding" );
+</BlockOne>
+*/
+//<Tokenika>
+      //static_assert( sizeof( n ) == (std::numeric_limits<boost::multiprecision::number<T>>::digits+1)/8, "unexpected padding" );
+//</Tokenika>
       s.write( (const char*)&n, sizeof(n) );
     }
 
+
+
     template<typename Stream, typename T> void unpack( Stream& s,  boost::multiprecision::number<T>& n ) {
+/*
+<BlockOne>
+      static_assert( sizeof( n ) == (std::numeric_limits<boost::multiprecision::number<T>>::digits+1)/8, "unexpected padding" );
+</BlockOne>
+*/
+//<Tokenika>
 //      static_assert( sizeof( n ) == (std::numeric_limits<boost::multiprecision::number<T>>::digits+1)/8, "unexpected padding" );
+//</Tokenika>
       s.read( (char*)&n, sizeof(n) );
     }
 

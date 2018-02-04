@@ -5,11 +5,11 @@
 #include <eos/chain/block_schedule.hpp>
 #include <eos/chain/block.hpp>
 
-///tokenika:
+//<Tokenika>
 #ifdef WIN32
 typedef unsigned int uint;
 #endif
-///tokenika
+//</Tokenika>
 
 namespace eosio { namespace chain {
 

@@ -61,11 +61,14 @@ std::map<const std::string, const std::string> subcommandMap = {
   { "push", pushSubcommands }
 };
 
+#ifdef WIN32
 extern "C" FILE*  __cdecl __iob_func(void);
+#endif // WIN32
 
-int main(int argc, const char *argv[])
-{
+int main(int argc, const char *argv[]) {
+#ifdef WIN32
   __iob_func();
+#endif // WIN32
 
   using namespace std;
   using namespace tokenika::teos;

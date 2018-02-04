@@ -5,11 +5,14 @@
 
 #include "teoslib/teos_get_commands.hpp"
 
+#ifdef WIN32
 extern "C" FILE*  __cdecl __iob_func(void);
+#endif // WIN32
 
-int main() {
-
+int main(int argc, const char *argv[]) {
+#ifdef WIN32
   __iob_func();
+#endif // WIN32
 
   using namespace tokenika::teos;
 

@@ -62,8 +62,12 @@ target_include_directories(${LIB_NAME}
     ${LIBBSONCXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
-    "${CMAKE_CURRENT_SOURCE_DIR}/../database_plugin/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/native_contract/include"
+    "${CMAKE_SOURCE_DIR}/plugins/database_plugin/include"
+    "${CMAKE_SOURCE_DIR}/libraries/native_contract/include"
+    "${CMAKE_SOURCE_DIR}/libraries/fc/include"
+    "${CMAKE_SOURCE_DIR}/libraries/types/include"
+    "${CMAKE_SOURCE_DIR}/libraries/chainbase/include"
+    "${CMAKE_SOURCE_DIR}/libraries/utilities/include"
   PUBLIC 
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
 )

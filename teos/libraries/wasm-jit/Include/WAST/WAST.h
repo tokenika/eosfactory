@@ -2,14 +2,13 @@
 
 #ifndef WAST_API
 /*
-///blockone:
+<BlockOne>
 	#define WAST_API DLL_IMPORT
-///blockone
+</BlockOne>
 */
-///tokenika:
+//<Tokenika>
 	#define WAST_API
-///tokenika
-
+//</Tokenika>
 #endif
 
 #include "Inline/BasicTypes.h"

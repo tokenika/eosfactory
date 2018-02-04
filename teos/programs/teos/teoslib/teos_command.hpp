@@ -26,6 +26,8 @@ using namespace std;
 using namespace boost::program_options;
 using namespace boost::property_tree;
 
+extern const string walletCommandPath;
+
 namespace tokenika
 {
   namespace teos
@@ -91,13 +93,13 @@ namespace tokenika
      * in the root directory of the project.
      *
      */
-    class TeosCommand {
-
-      string path;
+    class TeosCommand 
+    {
       bool isErrorSet = false;
       bool isRaw;
 
     protected:
+      string path;
       ptree reqJson;
       ptree respJson;
 
@@ -118,6 +120,7 @@ namespace tokenika
       void callEosd();
       virtual string normRequest(ptree& reqJson);
       virtual void normResponse(string response, ptree &respJson);
+      virtual bool isWalletCommand() { return path.find(walletCommandPath) != std::string::npos; };
 
     public:
       static string host;
@@ -137,7 +140,13 @@ namespace tokenika
       TeosCommand(
         string path,
         ptree reqJson,
-        bool isRaw = false);
+        bool isRaw = false
+      );
+
+      TeosCommand(
+        string path,
+        bool isRaw = false
+      );
 
       /**
        * @brief Error flag.
@@ -176,6 +185,8 @@ namespace tokenika
        */
       string toStringPost() const;
 
+      string toStringPost(bool isRaw) const;
+
       /**
        * @brief Received json string representation
        *
@@ -185,6 +196,8 @@ namespace tokenika
        * @return std::string received json string representation
        */
       string toStringRcv() const;
+
+      string toStringRcv(bool isRaw) const;
 
       /**
        * @brief Returns a value of a path of the received json.

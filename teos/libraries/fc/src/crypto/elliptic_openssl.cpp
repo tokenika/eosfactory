@@ -186,7 +186,14 @@ namespace fc { namespace ecc {
       return buf;
     }
 
+/*
+<BlockOne>
+    compact_signature private_key::sign_compact( const fc::sha256& digest )const
+</BlockOne>
+*/
+//<Tokenika>
     compact_signature private_key::sign_compact( const fc::sha256& digest, bool require_canonical)const
+//</Tokenika>
     {
         try {
             FC_ASSERT( my->_key != nullptr );

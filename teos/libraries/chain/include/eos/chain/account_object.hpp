@@ -9,14 +9,14 @@
 #include "multi_index_includes.hpp"
 
 namespace eosio { namespace chain {
-  /*
-  ///blockone:
+/*
+<BlockOne>
    class account_object : public chainbase::object<account_object_type, account_object> {
-  ///blockone
-  */
-  ///tokenika:
+</BlockOne>
+*/
+//<Tokenika>
    class account_object : public ::chainbase::object<account_object_type, account_object> {
-  ///tokenika
+//</Tokenika>
       OBJECT_CTOR(account_object,(code)(abi))
 
       id_type             id;

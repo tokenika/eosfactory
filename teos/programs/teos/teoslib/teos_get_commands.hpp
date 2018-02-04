@@ -21,97 +21,6 @@ using namespace boost::property_tree;
 extern const char* getSubcommands;
 extern const string getCommandPath;
 
-/* EXAMPLARY TEMPLATE
-
-    class XxxYyy : public TeosCommand
-    {
-    public:
-
-      XxxYyy(ptree reqJson, bool raw = false) : TeosCommand(
-        string(xxxCommandPath + "get_info").c_str(), reqJson, raw) {
-          callEosd();
-        }
-    };
-
-    class XxxYyyOptions : public CommandOptions
-    {
-    public:
-      XxxYyyOptions(int argc, const char **argv)
-      : CommandOptions(argc, argv) {}
-
-    protected:
-      const char* getUsage() {
-      #ifdef WIN32
-      return R"EOF(
-Lorem ipsum dolor sit amet, consectetur
-Usage: ./teos xxx yyy [positional] [Options]
-Usage: ./teos xxx yyy [-j "{"""argName""":"""argType"""}"] [OPTIONS]
-)EOF"; 
-#else
-return R"EOF(
-Create a new wallet locally
-Usage: ./teos xxx yyy [wallet name] [Options]
-Usage: ./teos xxx yyy [-j '{"argName":"argType"}'] [OPTIONS]
-)EOF";
-#endif
-      }
-
-      type1 option1Value;
-      type2 option2Value;
-
-      options_description options() {
-        options_description special("");
-        special.add_options()
-          ("option,o", value<type>(&option), "Lorem ipsum dolor sit");
-        return special;
-      }
-
-      void setPosDesc(positional_options_description& pos_desc) {
-        pos_desc.add("positional", 1);
-      }
-
-      bool setJson(variables_map &vm) {
-        bool ok = false;
-        if (vm.count("option1")) {
-          reqJson.put("option1Name", option1Value);
-          if (vm.count("option2Name")) {
-            reqJson.put("option2Name", option2Value);
-            ok = true;
-          }
-        }
-        return ok;
-      }
-
-      TeosCommand getCommand(bool is_raw) {
-        return XxxYyy(reqJson, is_raw);
-      }
-
-      void getOutput(TeosCommand command) {
-        output("block number", "%d", command.get<int>("block_num"));
-        output("timestamp", "%s", command.get<string>("timestamp").c_str());
-        output("ref block prefix", "%s", command.get<string>("ref_block_prefix").c_str());
-      }
-
-      void getExample() {
-        cout << R"EOF(
-Invoke 'GetInfo' command:
-GetInfo GetInfo;
-
-
-printout:
-)EOF" << endl;        
-
-        boost::property_tree::ptree reqJson;
-        GetInfo GetInfo(reqJson);
-        cout << GetInfo.toStringRcv() << endl;
-
-        cout << R"EOF(      
- 
-        }
-    };
-
-*/
-
 namespace tokenika
 {
   namespace teos
@@ -147,7 +56,7 @@ namespace tokenika
     public:
 
       GetInfo(ptree reqJson, bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_info").c_str(), reqJson, raw) {
+        string(getCommandPath + "get_info"), reqJson, raw) {
         callEosd();
       }
     };
@@ -290,7 +199,7 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
     public:
 
       GetBlock(ptree reqJson, bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_block").c_str(), reqJson, raw) {
+        string(getCommandPath + "get_block"), reqJson, raw) {
         callEosd();
       }
     };
@@ -418,7 +327,7 @@ cout << R"EOF(
     public:
 
       GetAccount(ptree reqJson, bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_account").c_str(), reqJson, raw) {
+        string(getCommandPath + "get_account"), reqJson, raw) {
         callEosd();
       }
     };
@@ -519,7 +428,7 @@ printout:
       public:
 
         GetCode(ptree reqJson, bool raw = false) : TeosCommand(
-          string(getCommandPath + "get_code").c_str(), reqJson, raw) {
+          string(getCommandPath + "get_code"), reqJson, raw) {
           callEosd();
         }
       };
@@ -617,7 +526,7 @@ printout:
       public:
 
         GetTable(ptree reqJson, bool raw = false) : TeosCommand(
-          string(getCommandPath + "get_table").c_str(), reqJson, raw) {
+          string(getCommandPath + "get_table"), reqJson, raw) {
           callEosd();
         }
 
@@ -723,7 +632,7 @@ printout:
 //      public:
 //
 //        XxxYyy(ptree reqJson, bool raw = false) : TeosCommand(
-//          string(xxxCommandPath + "get_info").c_str(), reqJson, raw) {
+//          string(xxxCommandPath + "get_info"), reqJson, raw) {
 //          callEosd();
 //        }
 //      };

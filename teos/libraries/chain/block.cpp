@@ -66,28 +66,27 @@ namespace eosio { namespace chain {
 /**
  *  Suggest moving thread::merkle_digest code to return vector of ids which get added to ids above and then calculating root over all
  */
-
- /*
- ///blockone:
+/*
+<BlockOne>
  warning TODO  The merkle root needs to be over all transactions, but this is currently hashing all threads merkle roots which will make proofs O(N) rather than O( LOG(N) )
- ///blockone
- */
- ///tokenika:
- //warning TODO  The merkle root needs to be over all transactions, but this is currently hashing all threads merkle roots which will make proofs O(N) rather than O( LOG(N) )
- ///tokenika
+</BlockOne>
+*/
+//<Tokenika>
+//warning TODO  The merkle root needs to be over all transactions, but this is currently hashing all threads merkle roots which will make proofs O(N) rather than O( LOG(N) )
+//</Tokenika>
 
       /**
        *  This may require passing 
        */
 
- /*
- ///blockone:
+/*
+<BlockOne>
  #warning TODO  Add global incremental block header merkle   https://github.com/EOSIO/eos/issues/8
- ///blockone
- */
- ///tokenika:
+</BlockOne>
+*/
+//<Tokenika>
  //#warning TODO  Add global incremental block header merkle   https://github.com/EOSIO/eos/issues/8
- ///tokenika
+//</Tokenika>
 
       return checksum_type::hash(merkle(ids));
    }

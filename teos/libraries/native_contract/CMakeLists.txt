@@ -15,6 +15,10 @@ target_include_directories( eos_native_contract
   PRIVATE
     ${Boost_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
+    "${CMAKE_CURRENT_SOURCE_DIR}/../types/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../chainbase/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../utilities/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../wasm-jit/include"
   PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/include" 
     "${CMAKE_CURRENT_BINARY_DIR}/include" 

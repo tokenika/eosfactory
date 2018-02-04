@@ -26,14 +26,14 @@
 #include <fc/io/json.hpp>
 #include <fc/variant.hpp>
 
-///tokenika:
+//<Tokenika>
 #ifdef _MSC_VER 
 #include <bitset>
 
 #define strncasecmp _strnicmp
 #define strcasecmp _stricmp
 #endif
-///tokenika
+//</Tokenika>
 
 namespace eosio {
 

@@ -2,13 +2,13 @@
 
 #ifndef LOGGING_API
 /*
-///blockone:
+<BlockOne>
 	#define LOGGING_API DLL_IMPORT
-///blockone
+</BlockOne>
 */
-///tokenika:
+//<Tokenika>
   #define LOGGING_API 
-///tokenika
+//</Tokenika>
 #endif
 
 #include "Inline/BasicTypes.h"

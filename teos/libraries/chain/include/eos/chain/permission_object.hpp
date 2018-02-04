@@ -8,14 +8,14 @@
 #include "multi_index_includes.hpp"
 
 namespace eosio { namespace chain {
-      /*
-      ///blockone:
+/*
+<BlockOne>
       class permission_object : public chainbase::object<permission_object_type, permission_object> {
-      ///blockone
-      */
-      ///tokenika:
+</BlockOne>
+*/
+//<Tokenika>
       class permission_object : public ::chainbase::object<permission_object_type, permission_object> {
-      ///tokenika
+//</Tokenika>
       OBJECT_CTOR(permission_object, (auth) )
 
       id_type           id;
@@ -59,14 +59,14 @@ namespace eosio { namespace chain {
    struct by_parent;
    struct by_owner;
    struct by_name;
-   /*
-   ///blockone:
+/*
+<BlockOne>
    using permission_index = chainbase::shared_multi_index_container<
-   ///blockone
-   */
-   ///tokenika:
+</BlockOne>
+*/
+//<Tokenika>
    using permission_index = ::chainbase::shared_multi_index_container<
-   ///tolenika
+//</Tokenika>
       permission_object,
       indexed_by<
          ordered_unique<tag<by_id>, member<permission_object, permission_object::id_type, &permission_object::id>>,

@@ -2,7 +2,9 @@
 #include <limits>
 #include <stdint.h>
 #include <string>
+//<Tokenika>
 #include <boost/multiprecision/cpp_int.hpp>
+//</Tokenika>
 
 #include <fc/exception/exception.hpp>
 #include <fc/crypto/city.hpp>
@@ -12,14 +14,13 @@
   #pragma warning (disable : 4244)
 #endif //// _MSC_VER
 
-
-
-
 namespace fc
 {
 
+//<Tokenika>
   typedef boost::multiprecision::int128_t  boost_int128;
   typedef boost::multiprecision::uint128_t  boost_uint128;
+//</Tokenika>
 
   class bigint;
   /**
@@ -40,16 +41,33 @@ namespace fc
       uint128( uint64_t _h, uint64_t _l )
       :hi(_h),lo(_l){}
       uint128( const fc::bigint& bi );
-      //explicit uint128( unsigned __int128 i ):hi( i >> 64 ), lo(i){ }
+/*
+<BlockOne>
+      explicit uint128( unsigned __int128 i ):hi( i >> 64 ), lo(i){ }
+</BlockOne>
+*/
+//<Tokenika>
       explicit uint128( boost_uint128 i ):hi( i >> 64 ), lo(i){ }
-
+//</Tokenika>
       operator std::string()const;
       operator fc::bigint()const;
+/*
+<BlockOne>
+      explicit operator unsigned __int128()const {
+</BlockOne>
+*/
+//<Tokenika>
+      explicit operator boost_uint128()const {  
+//</Tokenika>
 
-      //explicit operator unsigned __int128()const {
-      explicit operator boost_uint128()const {         
-        //unsigned __int128 result(hi);
+/*
+<BlockOne>
+        unsigned __int128 result(hi);
+</BlockOne>
+*/
+//<Tokenika>
         boost_uint128 result(hi);
+//</Tokenika>      
          result <<= 64;
          return result | lo;
       }
@@ -140,10 +158,23 @@ namespace fc
 
   void to_variant( const uint128& var,  variant& vo );
   void from_variant( const variant& var,  uint128& vo );
-  //void to_variant( const unsigned __int128& var,  variant& vo );
+/*
+<BlockOne>
+  void to_variant( const unsigned __int128& var,  variant& vo );
+</BlockOne>
+*/
+//<Tokenika>
   void to_variant( const boost_uint128& var,  variant& vo );
-  //void from_variant( const variant& var,  unsigned __int128& vo );
+//</Tokenika>
+
+/*
+<BlockOne>
+  void from_variant( const variant& var,  unsigned __int128& vo );
+</BlockOne>
+*/
+//<Tokenika>
   void from_variant( const variant& var,  boost_uint128& vo );
+//</Tokenika>
 
   namespace raw
   {
