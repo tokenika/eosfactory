@@ -6,8 +6,8 @@
 
 #include <boost/property_tree/json_parser.hpp>
 
-#include "../teos_config.h"
-#include "teos_command.hpp"
+#include <teos_config.h>
+#include <teos_command.hpp>
 
 using namespace std;
 using namespace boost::program_options;
@@ -56,19 +56,11 @@ namespace tokenika
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
-        return R"EOF(
-Create a new wallet locally
-Usage: ./teos wallet create [walet name] [Options]
-Usage: ./teos wallet create [-j "{"""name""":"""wallet_name"""}"] [OPTIONS]
-)EOF";
-#else
         return R"EOF(
 Create a new wallet locally
 Usage: ./teos wallet create [wallet name] [Options]
-Usage: ./teos wallet create [-j '{"name":"wallet_name"}'] [OPTIONS]
+Usage: ./teos wallet create [-j '{"name":"<wallet name>"}'] [OPTIONS]
 )EOF";
-#endif
       }
 
       string walletName;
@@ -160,19 +152,11 @@ printout:
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
         return R"EOF(
 Import private key into wallet
 Usage: ./teos wallet import [walet name] [key] [Options]
-Usage: ./teos wallet import [-j "{"""name""":"""string""", """key""":"""string"""}"] [OPTIONS]
+Usage: ./teos wallet import [-j '{"name":"<name>", "key":"private key"}'] [OPTIONS]
 )EOF";
-#else
-        return R"EOF(
-Import private key into wallet
-Usage: ./teos wallet import [walet name] [key] [Options]
-Usage: ./teos wallet import [-j '{"name":"string", "key":"string"}'] [OPTIONS]
-)EOF";
-#endif
       }
 
       string walletName;
@@ -245,19 +229,11 @@ Usage: ./teos wallet import [-j '{"name":"string", "key":"string"}'] [OPTIONS]
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
-        return R"EOF(
-List opened wallets, *= unlocked
-Usage: ./teos wallet list [Options]
-Usage: ./teos wallet list [-j "{}"] [OPTIONS]
-)EOF";
-#else
         return R"EOF(
 List opened wallets, *= unlocked
 Usage: ./teos wallet list [Options]
 Usage: ./teos wallet list [-j '{}'] [OPTIONS]
 )EOF";
-#endif
       }
 
       bool setJson(variables_map &vm) {
@@ -333,19 +309,11 @@ printout:
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
         return R"EOF(
 Open an existing wallet
 Usage: ./teos wallet open [wallet name] [Options]
-Usage: ./teos wallet open [-j "{"""name""":"""string"""}"] [OPTIONS]
+Usage: ./teos wallet open [-j '{"name":"<name>"}'] [OPTIONS]
 )EOF";
-#else
-        return R"EOF(
-Open an existing wallet
-Usage: ./teos wallet open [wallet name] [Options]
-Usage: ./teos wallet open [-j '{"name":"string"}'] [OPTIONS]
-)EOF";
-#endif
       }
 
       string walletName;
@@ -436,19 +404,11 @@ printout:
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
         return R"EOF(
 Lock wallet
 Usage: ./teos wallet lock [wallet name] [Options]
-Usage: ./teos wallet lock [-j "{"""name""":"""string"""}"] [OPTIONS]
+Usage: ./teos wallet lock [-j '{"name":"<name>"}'] [OPTIONS]
 )EOF";
-#else
-        return R"EOF(
-Lock wallet
-Usage: ./teos wallet lock [wallet name] [Options]
-Usage: ./teos wallet lock [-j '{"name":"string"}'] [OPTIONS]
-)EOF";
-#endif
       }
 
       string walletName;
@@ -538,19 +498,11 @@ printout:
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
-        return R"EOF(
-Lock all unlocked wallets
-Usage: ./teos wallet lock_all [Options]
-Usage: ./teos wallet lock_all [-j "{}"] [OPTIONS]
-)EOF";
-#else
         return R"EOF(
 Lock all unlocked wallets
 Usage: ./teos wallet lock_all [wallet name] [Options]
 Usage: ./teos wallet lock_all [-j '{}'] [OPTIONS]
 )EOF";
-#endif
       }
 
       bool setJson(variables_map &vm) {
@@ -618,19 +570,11 @@ printout:
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
         return R"EOF(
 Unlock wallet
 Usage: ./teos wallet import [walet name] [password] [Options]
-Usage: ./teos wallet import [-j "{"""NSON""":"""wallet_name""", """NSON""":"""key"""}"] [OPTIONS]
+Usage: ./teos wallet import [-j '{"name":"<wallet name>"}'] [OPTIONS]
 )EOF";
-#else
-        return R"EOF(
-Unlock wallet
-Usage: ./teos wallet import [walet name] [password] [Options]
-Usage: ./teos wallet import [-j '{"NSON":"string"}'] [OPTIONS]
-)EOF";
-#endif
       }
 
       string walletName;
@@ -701,19 +645,11 @@ Usage: ./teos wallet import [-j '{"NSON":"string"}'] [OPTIONS]
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
-        return R"EOF(
-List opened wallets, *= unlocked
-Usage: ./teos wallet list [Options]
-Usage: ./teos wallet list [-j "{}"] [OPTIONS]
-)EOF";
-#else
         return R"EOF(
 List opened wallets, *= unlocked
 Usage: ./teos wallet list [Options]
 Usage: ./teos wallet list [-j '{}'] [OPTIONS]
 )EOF";
-#endif
       }
 
       bool setJson(variables_map &vm) {

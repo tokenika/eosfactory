@@ -1,4 +1,4 @@
-#include "teos_get_commands.hpp"
+#include <teos_get_commands.hpp>
 
 const char* getSubcommands = R"EOF(
 ERROR: RequiredError: Subcommand required

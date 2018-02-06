@@ -11,8 +11,8 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include "../teos_config.h"
-#include "teos_command.hpp"
+#include <teos_config.h>
+#include <teos_command.hpp>
 
 using namespace std;
 using namespace boost::program_options;
@@ -73,19 +73,11 @@ namespace tokenika
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
-        return R"EOF(
-Get current blockchain information
-Usage: ./teos get info [Options]
-Usage: ./teos get info [-j "{}"] [OPTIONS]
-)EOF";
-#else
         return R"EOF(
 Get current blockchain information
 Usage: ./teos get info [Options]
 Usage: ./teos get info [-j '{}'] [OPTIONS]
 )EOF";
-#endif
       }
 
       bool setJson(variables_map &vm) {
@@ -115,85 +107,15 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
         boost::property_tree::ptree reqJson;
         GetInfo GetInfo(reqJson);
         cout << GetInfo.toStringRcv() << endl;
-
         cout << R"EOF(
 */
 )EOF" << endl; 
       }
     };
 
-/**
- * @brief Retrieve a full block from a blockchain.
- *
- * Given a `boost::property_tree::ptree json`, conforms ([after eosjs-json]
- * (#https://github.com/EOSIO/eosjs-json/blob/master/api/v1/chain.json)) this
- * pattern:
- * @verbatim
- * {"block_num_or_id":"uint32 | string"}.
- * @endverbatim
- *
- * the constructor posts it to
- * an EOS block socket, specified in the `teos_config.json` file. The responce
- * of the blockchain is, again, a `boost::property_tree::ptree json`. On error,
- * the reaponce json is `{"error":"error message"}`, otherwise it conforms
- * ([after eosjs-json]
- * (#https://github.com/EOSIO/eosjs-json/blob/master/api/v1/chain.json)) this
- * pattern:
- * @verbatim
- * {
- * "previous":"uint32",
- * "timestamp":"2017-07-18T20:16:36",
- * "transaction_merkle_root":"uint32",
- * "producer":"uint16",
- * "producer_changes":"map<account_name, account_name>[]",
- * "producer_signature":"signature",
- * "cycles":"thread[]",
- * "id":"fixed_bytes33",
- * "block_num":"uint32",
- * "refBlockPrefix":"uint32"
- * }
- * @endverbatim
- *account
- * It is available with the \ref tokenika::teos::TeosCommand::getRcvJson() method.
- *
- * Note that time is a string. For processing, it has to be expressed as a
- * structure and afterwords back to a string. Helper functions, namely
- * ::strToTime(const string)
- *
- * Example:
- *
- * @verbatim
- * #include <stdio.h>
- * #include <stdlib.h>
- * #include <iostream>
- * #include <string>
- *
- * #include <boost/property_tree/ptree.hpp>
- * #include "boost/date_time/posix_time/posix_time.hpp"
- *
- * #include "teosCommands/teos_get_commands.hpp"
- *
- * int main(int argc, char *argv[])
- * {
- * boost::property_tree::ptree reqJson;
- * reqJson.put("block_num_or_id", 25);
- * tokenika::teos::GetBlock getBlock(getInfoPostJson);
- * if(!getBlock.isError())
- * {
- *    std::cout << getBlock.get<int>("last_irreversible_block_num")) << std::endl;
- *    boost::posix_time::ptime time = GetInfo.get<boost::posix_time::ptime>("timestamp");
- *    std::cout << time << std::endl;
- *    boost::posix_time::ptime t1 = time + boost::posix_time::seconds(900);
- *    cout << (boost::posix_time::to_iso_extended_string)(t1) << endl;
- * } else
- * {
- *    std::cerr << getBlock.get<string>("error")) << std::endl;
- * }
- *
- * return 0;
- * }
- * @endverbatim
- */
+  /**
+   * @brief Retrieve a full block from a blockchain.
+   */
     class GetBlock : public TeosCommand
     {
     public:
@@ -206,8 +128,6 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
     
     /**
     * @brief Command-line driver for the GetBlock class.
-    * Extends the CommandOptions class adding features specific to the
-    * 'wallet open_all' teos command.
     */
     class GetBlockOptions : public CommandOptions
     {
@@ -216,20 +136,11 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
         return R"EOF(
 Retrieve a full block from the blockchain
 Usage: ./teos get block [block_num | block_id] [Options]
-Usage: ./teos get block [-j "{"""block_num_or_id""":"""int | string"""}"] [OPTIONS]
+Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
 )EOF";
-#else
-        return R"EOF(
-Retrieve a full block from the blockchain
-Usage: ./teos get block [block_num | block_id] [Options]
-Usage: ./teos get block [-j '{"block_num_or_id":"int | string"}'] [OPTIONS]
-)EOF";
-#endif
-
       }
 
       int n;
@@ -317,10 +228,7 @@ cout << R"EOF(
     };
 
     /**
-     * @brief Fetch a blockchain account
-     * 
-     * Extends the TeosCommand class so that it addresses the 'get account' command
-     * to the blockchain.
+     * @brief Fetch a blockchain account.
     */
     class GetAccount : public TeosCommand
     {
@@ -333,9 +241,7 @@ cout << R"EOF(
     };
 
     /**
-    * @brief Command-line driver for the GetAccount class
-    * Extends the CommandOptions class adding features specific to the
-    * 'wallet open_all' teos command.
+    * @brief Command-line driver for the GetAccount class.
     */
     class GetAccountOptions : public CommandOptions
     {
@@ -345,20 +251,11 @@ cout << R"EOF(
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
         return R"EOF(
 Fetch a blockchain account
 Usage: ./teos get account [account_name] [Options]
-Usage: ./teos get account [-j "{"""account_name""":"""string"""}"] [OPTIONS]
+Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
 )EOF";
-#else
-        return R"EOF(
-Fetch a blockchain account
-Usage: ./teos get account [account_name] [Options]
-Usage: ./teos get account [-j '{"account_name":"string"}'] [OPTIONS]
-)EOF";
-#endif
-
       }
 
       string name;
@@ -411,17 +308,13 @@ printout:
         reqJson.put("account_name", "inita");
         GetAccount getAccount(reqJson);
         cout << getAccount.toStringRcv() << endl;
-
         cout << R"EOF(
 */
 )EOF" << endl;
       }
     };
       /**
-      * @brief Retrieve the code and ABI for an account
-      *
-      * Extends the TeosCommand class so that it addresses the 'get account' command
-      * to the blockchain.
+      * @brief Retrieves the code and ABI for an account.
       */
       class GetCode : public TeosCommand
       {
@@ -434,9 +327,7 @@ printout:
       };
 
       /**
-      * @brief Command-line driver for the GetCode class
-      * Extends the CommandOptions class adding features specific to the
-      * 'wallet open_all' teos command.
+      * @brief Command-line driver for the GetCode class.
       */
       class GetCodeOptions : public CommandOptions
       {
@@ -446,19 +337,11 @@ printout:
 
       protected:
         const char* getUsage() {
-#ifdef WIN32
           return R"EOF(
 Retrieve the code and ABI for an account
 Usage: ./teos get code [account_name] [Options]
-Usage: ./teos get code [-j "{"""account_name""":"""string"""}"] [OPTIONS]
+Usage: ./teos get code [-j '{"account_name":"<account name>"}'] [OPTIONS]
 )EOF";
-#else
-          return R"EOF(
-Retrieve the code and ABI for an account
-Usage: ./teos get code [account_name] [Options]
-Usage: ./teos get code [-j '{"account_name":"string"}'] [OPTIONS]
-)EOF";
-#endif
         }
 
         string accountName;
@@ -516,10 +399,8 @@ printout:
       };
 
       /**
-      * @brief Retrieve the contents of a database table.
-      *
-      * Extends the TeosCommand class so that it addresses the 'get account' command
-      * to the blockchain.
+      * @brief Retrieves the contents of a database table.
+      * 
       */
       class GetTable : public TeosCommand
       {
@@ -545,20 +426,11 @@ printout:
 
       protected:
         const char* getUsage() {
-#ifdef WIN32
           return R"EOF(
 Retrieve the contents of a database table
 Usage: ./teos get table [scope] [contract] [table] [Options]
-Usage: ./teos get table [-j "{"""scope""":"""string""","""code""":"""string""","""table""":"""table"""}"] [OPTIONS]
+Usage: ./teos get table [-j '{"scope":"<scope>","code":"<code>","table":"<table>"}'] [OPTIONS]
 )EOF";
-#else
-          return R"EOF(
-Retrieve the contents of a database table
-Usage: ./teos get table [scope] [contract] [table] [Options]
-Usage: ./teos xxx yyy [-j '{"argName":"argType"}'] [OPTIONS]
-Usage: ./teos get table [-j '{"scope""":"string","code":"string","table":"table"}'] [OPTIONS]
-)EOF";
-#endif
         }
 
         string scope;
@@ -627,95 +499,5 @@ printout:
         }
       };
 
-//      class XxxYyy : public TeosCommand
-//      {
-//      public:
-//
-//        XxxYyy(ptree reqJson, bool raw = false) : TeosCommand(
-//          string(xxxCommandPath + "get_info"), reqJson, raw) {
-//          callEosd();
-//        }
-//      };
-//
-//      /**
-//      * @brief Command-line driver for the GetInfo class
-//      * Extends the CommandOptions class adding features specific to the
-//      * 'wallet open_all' teos command.
-//      */
-//      class XxxYyyOptions : public CommandOptions
-//      {
-//      public:
-//        XxxYyyOptions(int argc, const char **argv)
-//          : CommandOptions(argc, argv) {}
-//
-//      protected:
-//        const char* getUsage() {
-//#ifdef WIN32
-//          return R"EOF(
-//Lorem ipsum dolor sit amet, consectetur
-//Usage: ./teos xxx yyy [positional] [Options]
-//Usage: ./teos xxx yyy [-j "{"""argName""":"""argType"""}"] [OPTIONS]
-//)EOF";
-//#else
-//          return R"EOF(
-//Create a new wallet locally
-//Usage: ./teos xxx yyy [wallet name] [Options]
-//Usage: ./teos xxx yyy [-j '{"argName":"argType"}'] [OPTIONS]
-//)EOF";
-//#endif
-//        }
-//
-//        type1 option1Value;
-//        type2 option2Value;
-//
-//        options_description options() {
-//          options_description special("");
-//          special.add_options()
-//            ("option,o", value<type>(&option), "Lorem ipsum dolor sit");
-//          return special;
-//        }
-//
-//        void setPosDesc(positional_options_description& pos_desc) {
-//          pos_desc.add("positional", 1);
-//        }
-//
-//        bool setJson(variables_map &vm) {
-//          bool ok = false;
-//          if (vm.count("option1")) {
-//            reqJson.put("option1Name", option1Value);
-//            if (vm.count("option2Name")) {
-//              reqJson.put("option2Name", option2Value);
-//              ok = true;
-//            }
-//          }
-//          return ok;
-//        }
-//
-//        TeosCommand getCommand(bool is_raw) {
-//          return XxxYyy(reqJson, is_raw);
-//        }
-//
-//        void getOutput(TeosCommand command) {
-//          output("block number", "%d", command.get<int>("block_num"));
-//          output("timestamp", "%s", command.get<string>("timestamp").c_str());
-//          output("ref block prefix", "%s", command.get<string>("ref_block_prefix").c_str());
-//        }
-//
-//        void getExample() {
-//          cout << R"EOF(
-//Invoke 'GetInfo' command:
-//GetInfo GetInfo;
-///*
-//printout:
-
-//
-//          boost::property_tree::ptree reqJson;
-//          GetInfo GetInfo(reqJson);
-//          cout << GetInfo.toStringRcv() << endl;
-//          cout << R"EOF(
-// */
-//)EOF" << endl;
-//        }
-//      };
   }
 }

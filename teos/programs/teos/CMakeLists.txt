@@ -13,7 +13,6 @@ set( TEST_HOST "\"eos-testapi.tokenika.io\"" )
 set( TEST_PORT "\"8888\"" )
 set( CONFIG_JSON_FILE "teos_config.json" )
 set( CONFIG_JSON_PATH "${CONFIG_JSON_FILE}" )
-set( teos_HELPER_INSTALL_PATH "${CMAKE_SOURCE_DIR}/../eos/install" )
 
 set( CONFIG_JSON "\"${CONFIG_JSON_PATH}\"" )
 file( COPY ${CONFIG_JSON_PATH} DESTINATION "${CMAKE_BINARY_DIR}" )
@@ -23,7 +22,7 @@ configure_file (
    "${PROJECT_SOURCE_DIR}/teos_config.h.in"
    "${PROJECT_SOURCE_DIR}/teos_config.h"
    )
-include_directories(${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 
 if( WIN32 )
   add_definitions( -D_WIN32_WINNT=0x0501 )
@@ -74,26 +73,24 @@ add_subdirectory(teoslib)
 
 macro( applLinkLibraries applName )
 
+  file(GLOB HEADERS "teoslib/include/*.hpp")
   target_sources( ${applName} 
     PRIVATE
-      ${CMAKE_CURRENT_LIST_DIR}/teoslib/subcommands.hpp
-      ${CMAKE_CURRENT_LIST_DIR}/teoslib/teos_command.hpp
-      ${CMAKE_CURRENT_LIST_DIR}/teoslib/teos_get_commands.hpp
-      ${CMAKE_CURRENT_LIST_DIR}/teoslib/teos_create_commands.hpp
-      ${CMAKE_CURRENT_LIST_DIR}/teoslib/teos_wallet_commands.hpp
-      ${CMAKE_CURRENT_LIST_DIR}/teoslib/teos_other_commands.hpp
+      ${HEADERS}
   )
 
   target_include_directories( ${applName} 
     PRIVATE
      ${Boost_INCLUDE_DIR}
      ${OPENSSL_INCLUDE_DIR}
+     teoslib/include
   )
 
   target_link_libraries( ${applName}
     PRIVATE
-      teoslib      
-      teos_helper      
+      teoslib
+			chain_plugin
+			database_plugin
       chainbase
       eos_types
       eos_chain
@@ -142,7 +139,7 @@ macro( applLinkLibraries applName )
 
 endmacro( applLinkLibraries )
 
-add_executable( teos teos.cpp )
+add_executable( teos teos.cpp teoslib/src/teos_test.cpp )
 applLinkLibraries( teos )
 install( TARGETS teos RUNTIME DESTINATION bin)
 

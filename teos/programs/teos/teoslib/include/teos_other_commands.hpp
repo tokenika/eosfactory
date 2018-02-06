@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../teos_config.h"
-#include "teos_command.hpp"
+#include <teos_config.h>
+#include <teos_command.hpp>
 
 namespace tokenika
 {
@@ -27,19 +27,11 @@ namespace tokenika
 
     protected:
       const char* getUsage() {
-#ifdef WIN32
-        return R"EOF(
-Retrieve version information of the client
-Usage: ./teos version client [Options]
-Usage: ./teos version client [-j "{}"] [OPTIONS]
-)EOF";
-#else
         return R"EOF(
 Retrieve version information of the client
 Usage: ./teos version client [Options]
 Usage: ./teos version client [-j '{}'] [OPTIONS]
 )EOF";
-#endif
       }
 
       bool setJson(variables_map &vm) {

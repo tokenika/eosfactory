@@ -5,7 +5,7 @@
 
 #include <boost/algorithm/string/join.hpp>
 
-#include "teoslib/teos_get_commands.hpp"
+#include <teos_get_commands.hpp>
 
 void test()
 {

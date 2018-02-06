@@ -4,6 +4,7 @@
 
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/asio.hpp>
@@ -13,8 +14,8 @@
 #include <pthread.h>
 #endif
 
-#include "teos_command.hpp"
-#include "../teos_config.h"
+#include <teos_command.hpp>
+#include <teos_config.h>
 
 using namespace std;
 using namespace boost::property_tree;
@@ -282,6 +283,17 @@ Definitions for class TeosCommand.
       std::cerr << "ERROR!" << endl << command.get<string>(teos_ERROR) << endl;
     }
 
+    const string formatUsage(string unixUsage) {
+#ifdef WIN32
+      string windowsCmndUsage = unixUsage;
+      boost::replace_all(windowsCmndUsage, "\"", "\"\"\"");
+      boost::replace_all(windowsCmndUsage, "'", "\"");
+      return windowsCmndUsage;
+#else
+      return unixUsage;
+#endif
+    }
+
     void CommandOptions::go()
     {
       using namespace boost::program_options;
@@ -304,7 +316,7 @@ Definitions for class TeosCommand.
         notify(vm);
 
         if (vm.count("help")) {
-          cout << getUsage() << endl;
+          cout << formatUsage(getUsage()) << endl;
           cout << desc << endl;
           return;
         }
@@ -333,7 +345,7 @@ Definitions for class TeosCommand.
           }
         }
         else if (vm.count("unreg")) {
-          cout << getUsage() << endl;
+          cout << formatUsage(getUsage()) << endl;
           cout << desc << endl;
         }
       }

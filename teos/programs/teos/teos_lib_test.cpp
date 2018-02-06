@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "teoslib/teos_get_commands.hpp"
+#include <teos_get_commands.hpp>
 
 #ifdef WIN32
 extern "C" FILE*  __cdecl __iob_func(void);

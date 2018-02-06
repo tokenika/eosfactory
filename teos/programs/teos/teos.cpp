@@ -12,14 +12,14 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
-#include "teoslib/teos_get_commands.hpp"
-#include "teoslib/teos_wallet_commands.hpp"
-#include "teoslib/teos_create_commands.hpp"
-#include "teoslib/teos_other_commands.hpp"
+#include <teos_get_commands.hpp>
+#include <teos_wallet_commands.hpp>
+#include <teos_create_commands.hpp>
+#include <teos_other_commands.hpp>
+#include <subcommands.hpp>
 
-#include "teos.hpp"
-#include "teos_test.hpp"
-#include "teoslib/subcommands.hpp"
+#include <teos.hpp>
+#include <teos_test.hpp>
 
 #define IF_ELSE(commandName_, classPrefix)                          \
   if (commandName == #commandName_)                                 \
@@ -208,9 +208,7 @@ int main(int argc, const char *argv[]) {
     }
     else if (subcommand != "")
     {
-      string commandName = command;
-      commandName += "_";
-      commandName += subcommand;
+      string commandName = command + "_" + subcommand;
 
       IF_ELSE(version_client, VersionClient)
       IF_ELSE(get_info, GetInfo)
@@ -227,6 +225,7 @@ int main(int argc, const char *argv[]) {
       IF_ELSE(wallet_lock_all, WalletLockAll)
       IF_ELSE(wallet_unlock, WalletUnlock)
       IF_ELSE(create_key, CreateKey)
+      IF_ELSE(create_account, CreateAccount)
       {
         cerr << "unknown command!" << endl;
       }

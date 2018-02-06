@@ -9,9 +9,9 @@
 #include <fc/io/json.hpp>
 #include <eos/chain_plugin/chain_plugin.hpp>
 
-#include "teoslib/teos_command.hpp"
-#include "teoslib/teos_get_commands.hpp"
-#include "teoslib/teos_wallet_commands.hpp"
+#include <teos_command.hpp>
+#include <teos_get_commands.hpp>
+#include <teos_wallet_commands.hpp>
 
 namespace tokenika
 {
