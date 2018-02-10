@@ -20,15 +20,48 @@ namespace tokenika
     class CreateAccount : public TeosCommand
     {
     public:
-      CreateAccount(ptree reqJson, bool raw = false) : TeosCommand(
-        "", reqJson, raw) {
+      /**
+       * @brief A constructor.
+       * @param creator authorising account name.
+       * @param accountName new account name.
+       * @param ownerKeyPubl 'owner' public key.
+       * @param activeKeyPubl 'active' public key.
+       * @param skip if true, unlocked wallet keys should not be used to sign transaction.
+       * @param expirationSec time in seconds before a transaction expires.
+       * @param depositEos initial deposit.
+       * @param raw if true, resulting json is not formated.
+       * @param getRcvJson() returns a push-transaction json.
+      */
+      CreateAccount(string creator, string accountName,
+        string ownerKeyPubl, string activeKeyPubl,
+        bool skip = false, int expirationSec = 30, int depositEos = 1,
+        bool raw = false) : TeosCommand("", raw)
+      {
+        TeosCommand tc = createAccount(
+          creator, accountName,
+          ownerKeyPubl, activeKeyPubl,
+          skip, expirationSec, depositEos);
+        isError = tc.isError;
+        respJson = tc.getRcvJson();
+      }
 
-        CallChain create = createAccount(
+      /**
+       * @brief A constructor.
+       * @param reqJson json tree argument: {"creator":"<creator name>" "name":"<account name>"
+       * "ownerKey":"<owner public key>" "activeKey":"<active public key>"
+       * "skip":<false|true> "expiration":<int> "deposit":<int>}.
+       * @param raw if true, resulting json is not formated.
+       * @param getRcvJson() returns a push-transaction json.
+      */
+      CreateAccount(ptree reqJson, bool raw = false) : TeosCommand("", reqJson, raw)
+      {
+        TeosCommand tc = createAccount(
           reqJson.get<string>("creator"), reqJson.get<string>("name"),
           reqJson.get<string>("ownerKey"), reqJson.get<string>("activeKey"),
-          reqJson.get<bool>("skip"), reqJson.get<int>("expiration"), 
+          reqJson.get<bool>("skip"), reqJson.get<int>("expiration"),
           reqJson.get<int>("deposit"));
-        respJson = create.getRcvJson();
+        isError = tc.isError;
+        respJson = tc.getRcvJson();
       }
     };
 
@@ -74,7 +107,7 @@ Usage: ./teos create key [-j '{
           ("name,n", value<string>(&name), "The name of the new account")
           ("ownerKey,o", value<string>(&ownerKey), "The owner public key for the account")
           ("activeKey,o", value<string>(&activeKey), "The active public key for the account")
-          ("skip,s", value<bool>(&skip)->default_value(false),"Specify that unlocked wallet keys should not be used to sign transaction, defaults to false")
+          ("skip,s", value<bool>(&skip)->default_value(false), "Specify that unlocked wallet keys should not be used to sign transaction, defaults to false")
           ("expiration,x", value<int>(&expiration)->default_value(30), "The time in seconds before a transaction expires")
           ("deposit,d", value<int>(&deposit)->default_value(1), "The initial deposit");
         return special;
@@ -91,7 +124,7 @@ Usage: ./teos create key [-j '{
         bool ok = false;
         if (vm.count("creator")) {
           reqJson.put("creator", creator);
-          if(vm.count("name")){
+          if (vm.count("name")) {
             reqJson.put("name", name);
             if (vm.count("ownerKey")) {
               reqJson.put("ownerKey", ownerKey);
@@ -118,9 +151,35 @@ Usage: ./teos create key [-j '{
       }
     };
 
+    /**
+     * @brief Create a new keypair and print the public and private keys.
+     */
     class CreateKey : public TeosCommand
     {
     public:
+      /**
+       * @brief A constructor.
+       * @param keyName key-pair id.
+       * @param raw a boolean argument:
+       * if true, resulting json is not formated.
+       * @param getRcvJson() returns {"keyName":"<key name"
+       * "privateKey":"<private key>" "publicKey":"<public key>"}.
+       */
+      CreateKey(string keyName, bool raw = false) : TeosCommand("", raw) {
+        KeyPair kp;
+        respJson.put("name", keyName);
+        respJson.put("privateKey", kp.privateKey);
+        respJson.put("publicKey", kp.publicKey);
+      }
+
+      /**
+       * @brief A constructor.
+       * @param reqJson a boost json tree argument: {"keyName":"<key name>"}.
+       * @param raw a boolean argument:
+       * if true, resulting json is not formated.
+       * @param getRcvJson() returns {"keyName":"<key name"
+       * "privateKey":"<private key>" "publicKey":"<public key>"}.
+       */
       CreateKey(ptree reqJson, bool raw = false) : TeosCommand(
         "", reqJson, raw) {
         KeyPair kp;
@@ -128,13 +187,10 @@ Usage: ./teos create key [-j '{
         respJson.put("privateKey", kp.privateKey);
         respJson.put("publicKey", kp.publicKey);
       }
-
     };
 
     /**
     * @brief Command-line driver for the CreateKey class
-    * Extends the CommandOptions class adding features specific to the
-    * 'create key' teos command.
     */
     class CreateKeyOptions : public CommandOptions
     {

@@ -95,7 +95,6 @@ namespace tokenika
      */
     class TeosCommand 
     {
-      bool isErrorSet = false;
       bool isRaw;
 
     protected:
@@ -118,6 +117,7 @@ namespace tokenika
       * @param respJson json to be filled with received data
       */
       void callEosd();
+      void putError(string msg);
       virtual string normRequest(ptree& reqJson);
       virtual void normResponse(string response, ptree &respJson);
       virtual bool isWalletCommand() { return path.find(walletCommandPath) != std::string::npos; };
@@ -129,6 +129,7 @@ namespace tokenika
       static string walletPort;
       static bool verbose;
       static ptree getConfig(bool verbose = false);
+      static ptree errorRespJson(string message);
 
       /**
        * @brief Initiates members, and calls the blockchain
@@ -144,8 +145,14 @@ namespace tokenika
       );
 
       TeosCommand(
-        string path,
+        string path,  
         bool isRaw = false
+      );
+
+      TeosCommand(
+        string path,
+        bool isError,
+        ptree respJson
       );
 
       /**
@@ -154,9 +161,7 @@ namespace tokenika
        * @return true if EOS blockchain responce is normal
        * @return false if EOS blockchain responce is not normal
        */
-      bool isError() const {
-        return isErrorSet;
-      }
+      bool isError = false;
 
       /**    protected:
       ptree reqJson;
@@ -208,7 +213,14 @@ namespace tokenika
        */
       template<typename Type>
       Type get(const ptree::path_type & path) const {
-        return getJsonPath<Type>(respJson, path);
+        Type value;
+        try {
+          value = getJsonPath<Type>(respJson, path);
+        }
+        catch (exception& e) {
+          cerr << "ERROR: " << e.what() << endl;
+        }
+        return value;
       }
       
     };

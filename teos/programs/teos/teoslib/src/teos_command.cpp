@@ -101,6 +101,17 @@ namespace tokenika
 Definitions for class TeosCommand.
 ****************************************************************************/
 
+    ptree TeosCommand::errorRespJson(string message) {
+      ptree respJson;
+      respJson.put(teos_ERROR, "{" + message + "}");
+      return respJson;
+    }
+
+    void TeosCommand::putError(string message) {
+      respJson = errorRespJson(message);
+      isError = true;
+    }
+
     string TeosCommand::normRequest(ptree& reqJson) {
       stringstream ss;
       json_parser::write_json(ss, reqJson, false);
@@ -118,7 +129,7 @@ Definitions for class TeosCommand.
         json_parser::write_json(ss1, respJson, false);
       }
       catch (exception& e) {
-        respJson.put(teos_ERROR, e.what());
+        putError(e.what());
       }
     }
 
@@ -183,7 +194,7 @@ Definitions for class TeosCommand.
           "Connection: close" + CRNL + CRNL +
           postMsg;
 
-        // cout << request << endl;
+        //cout << request << endl;
 
         boost::system::error_code error;
 
@@ -193,8 +204,7 @@ Definitions for class TeosCommand.
         boost::asio::write(socket, request_buffer, error);
 
         if (error) {
-          respJson.put(teos_ERROR, error.message());
-          isErrorSet = true;
+          putError(error.message());
           return;
         }
 
@@ -204,8 +214,7 @@ Definitions for class TeosCommand.
         boost::asio::read(socket, response_buffer, boost::asio::transfer_all(),
           error);
         if (error && error != boost::asio::error::eof) {
-          respJson.put(teos_ERROR, error.message());
-          isErrorSet = true;
+          putError(error.message());
           return;
         }
 
@@ -222,8 +231,7 @@ Definitions for class TeosCommand.
           msg += string("\n eosd response is ") +
             string(boost::asio::buffer_cast<const char*>(
               response_buffer.data()));
-          respJson.put(teos_ERROR, msg);
-          isErrorSet = true;
+          putError(msg);
           return;
         }
 
@@ -234,18 +242,21 @@ Definitions for class TeosCommand.
         normResponse(message, respJson);
       }
       catch (exception& e) {
-        respJson.put(teos_ERROR, e.what());
-        isErrorSet = true;
+        putError(e.what());
       }
     }
 
-    TeosCommand::TeosCommand( string path, ptree reqJson, bool isRaw ) : 
-      path(path), reqJson(reqJson), isRaw(isRaw) {
+    TeosCommand::TeosCommand( string path, ptree reqJson, bool isRaw ) 
+      : path(path), reqJson(reqJson), isRaw(isRaw) {
     }
 
-    TeosCommand::TeosCommand( string path, bool isRaw ) : 
-      path(path), isRaw(isRaw) {
-    }    
+    TeosCommand::TeosCommand( string path, bool isRaw ) 
+      : path(path), isRaw(isRaw) {
+    }
+
+    TeosCommand::TeosCommand(string path, bool isError, ptree respJson)
+      : path(path), isRaw(true), respJson(respJson) {
+    }
     
     string TeosCommand::toStringPost(bool isRaw) const {
       stringstream ss;
@@ -332,7 +343,7 @@ Definitions for class TeosCommand.
         }
         else if (is_arg) {
           TeosCommand command = getCommand(isRaw);
-          if (command.isError()) {
+          if (command.isError) {
             onError(command);
             return;
           }

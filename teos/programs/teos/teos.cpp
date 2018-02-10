@@ -15,6 +15,7 @@
 #include <teos_get_commands.hpp>
 #include <teos_wallet_commands.hpp>
 #include <teos_create_commands.hpp>
+#include <teos_set_commands.hpp>
 #include <teos_other_commands.hpp>
 #include <subcommands.hpp>
 
@@ -226,6 +227,7 @@ int main(int argc, const char *argv[]) {
       IF_ELSE(wallet_unlock, WalletUnlock)
       IF_ELSE(create_key, CreateKey)
       IF_ELSE(create_account, CreateAccount)
+      IF_ELSE(set_contract, SetContract)
       {
         cerr << "unknown command!" << endl;
       }

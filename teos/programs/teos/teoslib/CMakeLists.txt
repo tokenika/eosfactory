@@ -17,7 +17,8 @@ target_include_directories( ${LIB_NAME}
     ${CMAKE_SOURCE_DIR}/libraries/utilities/include
     ${CMAKE_SOURCE_DIR}/libraries/appbase/include
     ${CMAKE_SOURCE_DIR}/libraries/chainbase/include
-		${CMAKE_SOURCE_DIR}/libraries/chain/include
+    ${CMAKE_SOURCE_DIR}/libraries/chain/include
+    ${CMAKE_SOURCE_DIR}/libraries/wasm-jit/include
 		${CMAKE_SOURCE_DIR}/plugins/chain_plugin/include
 		${CMAKE_SOURCE_DIR}/plugins/database_plugin/include
     include

@@ -84,6 +84,7 @@ macro( applLinkLibraries applName )
      ${Boost_INCLUDE_DIR}
      ${OPENSSL_INCLUDE_DIR}
      teoslib/include
+     ${CMAKE_SOURCE_DIR}/libraries/wasm-jit/include
   )
 
   target_link_libraries( ${applName}
@@ -97,6 +98,10 @@ macro( applLinkLibraries applName )
       eos_utilities
       appbase
       fc
+			IR
+			WAST
+			WASM
+			Runtime
   )
 
   if( NOT EOS_ECC_IMPL STREQUAL openssl )
@@ -147,16 +152,16 @@ add_executable( teos_lib_test teos_lib_test.cpp )
 applLinkLibraries( teos_lib_test )
 install( TARGETS teos_lib_test RUNTIME DESTINATION bin)
 
-add_executable( teos_create_account 
-  teos_create_account.cpp 
+add_executable( prototype 
+  prototype.cpp 
 )
-target_include_directories( teos_create_account  
+target_include_directories( prototype  
   PRIVATE
     "${CMAKE_SOURCE_DIR}/plugins/chain_plugin/include"
 		"${CMAKE_SOURCE_DIR}/plugins/database_plugin/include"
 )
-applLinkLibraries( teos_create_account )
-install( TARGETS teos_create_account RUNTIME DESTINATION bin)
+applLinkLibraries( prototype )
+install( TARGETS prototype RUNTIME DESTINATION bin)
 
 ####################################### /executables
 

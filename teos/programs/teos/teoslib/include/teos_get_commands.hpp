@@ -233,6 +233,11 @@ cout << R"EOF(
     class GetAccount : public TeosCommand
     {
     public:
+      GetAccount(string accountName, bool raw = false) : TeosCommand(
+        string(getCommandPath + "get_account"), raw) {
+        reqJson.put("account_name", accountName);
+        callEosd();
+      }
 
       GetAccount(ptree reqJson, bool raw = false) : TeosCommand(
         string(getCommandPath + "get_account"), reqJson, raw) {
@@ -313,71 +318,93 @@ printout:
 )EOF" << endl;
       }
     };
-      /**
-      * @brief Retrieves the code and ABI for an account.
-      */
-      class GetCode : public TeosCommand
-      {
-      public:
 
-        GetCode(ptree reqJson, bool raw = false) : TeosCommand(
-          string(getCommandPath + "get_code"), reqJson, raw) {
-          callEosd();
-        }
-      };
+    /**
+    * @brief Retrieves the code and ABI for an account.
+    */
+    class GetCode : public TeosCommand
+    {
+    public:
+    /**
+     * @brief 
+     * 
+     */
+      GetCode(string accountName, string codeFile = "", string abiFile = "", 
+        bool raw = false) : TeosCommand(string(getCommandPath + "get_code"), raw) {
+        callEosd();
+      }
 
-      /**
-      * @brief Command-line driver for the GetCode class.
-      */
-      class GetCodeOptions : public CommandOptions
-      {
-      public:
-        GetCodeOptions(int argc, const char **argv)
-          : CommandOptions(argc, argv) {}
+    /**
+     * @brief 
+     * 
+     */
+      GetCode(ptree reqJson, bool raw = false) : TeosCommand(
+        string(getCommandPath + "get_code"), reqJson, raw) {
+        callEosd();
+      }
+    };
 
-      protected:
-        const char* getUsage() {
-          return R"EOF(
+    /**
+    * @brief Command-line driver for the GetCode class.
+    */
+    class GetCodeOptions : public CommandOptions
+    {
+    public:
+      GetCodeOptions(int argc, const char **argv)
+        : CommandOptions(argc, argv) {}
+
+    protected:
+      const char* getUsage() {
+        return R"EOF(
 Retrieve the code and ABI for an account
 Usage: ./teos get code [account_name] [Options]
-Usage: ./teos get code [-j '{"account_name":"<account name>"}'] [OPTIONS]
+Usage: ./teos get code [-j '{"account_name":"<account name>" "code":"<code file>" "abi":"""<abi file>"}'] [OPTIONS]
 )EOF";
+      }
+
+      string accountName;
+      string wastFile;
+      string abiFile;
+
+      options_description options() {
+        options_description special("");
+        special.add_options()
+          ("name,n", value<string>(&accountName), 
+            "The name of the account whose code should be retrieved")
+          ("code,c", value<string>(&wastFile)->default_value(""), 
+            "The name of the file to save the contract .wast to")
+          ("abi,a", value<string>(&abiFile)->default_value(""),
+            "The name of the file to save the contract .abi to");
+        return special;
+      }
+
+      void setPosDesc(positional_options_description& pos_desc) {
+        pos_desc.add("name", 1);
+      }
+
+      bool setJson(variables_map &vm) {
+        bool ok = false;
+        if (vm.count("name")) {
+          reqJson.put("account_name", accountName);
+            ok = true;
         }
+        reqJson.put("code", wastFile);
+        reqJson.put("abi", abiFile);
+        return ok;
+      }
 
-        string accountName;
+      TeosCommand getCommand(bool is_raw) {
+        return GetCode(reqJson, is_raw);
+      }
 
-        options_description options() {
-          options_description special("");
-          special.add_options()
-            ("name,n", value<string>(&accountName), "The name of the account whose code should be retrieved");
-          return special;
-        }
+      void getOutput(TeosCommand command) {
+        output("account name", "%s", GET_STRING(command, "account_name"));
+        output("code hash", "%s", GET_STRING(command, "code_hash"));
+        output("wast", "%s", GET_STRING(command, "wast"));
+      }
 
-        void setPosDesc(positional_options_description& pos_desc) {
-          pos_desc.add("name", 1);
-        }
-
-        bool setJson(variables_map &vm) {
-          bool ok = false;
-          if (vm.count("name")) {
-            reqJson.put("account_name", accountName);
-              ok = true;
-          }
-          return ok;
-        }
-
-        TeosCommand getCommand(bool is_raw) {
-          return GetCode(reqJson, is_raw);
-        }
-
-        void getOutput(TeosCommand command) {
-          output("account name", "%s", GET_STRING(command, "account_name"));
-          output("code hash", "%s", GET_STRING(command, "code_hash"));
-          output("wast", "%s", GET_STRING(command, "wast"));
-        }
-
-        void getExample() {
-          cout << R"EOF(
+      void getExample() {
+        cout << R"EOF(
 boost::property_tree::ptree reqJson;
 reqJson.put("account_name", "inita");
 GetCode getCode(reqJson);
@@ -387,94 +414,94 @@ cout << getCode.toStringRcv() << endl;
 printout: 
 )EOF" << endl;
 
-          boost::property_tree::ptree reqJson;
-          reqJson.put("account_name", "inita");
-          GetCode getCode(reqJson);
-          cout << getCode.toStringRcv() << endl;
+        boost::property_tree::ptree reqJson;
+        reqJson.put("account_name", "inita");
+        GetCode getCode(reqJson);
+        cout << getCode.toStringRcv() << endl;
 
-          cout << R"EOF(
+        cout << R"EOF(
 */
 )EOF" << endl;
-        }
-      };
+      }
+    };
 
-      /**
-      * @brief Retrieves the contents of a database table.
-      * 
-      */
-      class GetTable : public TeosCommand
-      {
-      public:
+    /**
+    * @brief Retrieves the contents of a database table.
+    * 
+    */
+    class GetTable : public TeosCommand
+    {
+    public:
 
-        GetTable(ptree reqJson, bool raw = false) : TeosCommand(
-          string(getCommandPath + "get_table"), reqJson, raw) {
-          callEosd();
-        }
+      GetTable(ptree reqJson, bool raw = false) : TeosCommand(
+        string(getCommandPath + "get_table"), reqJson, raw) {
+        callEosd();
+      }
 
-        string normRequest(ptree& reqJson) {
-          reqJson.put("json", true);          
-          return TeosCommand::normRequest(reqJson);
-        }
+      string normRequest(ptree& reqJson) {
+        reqJson.put("json", true);          
+        return TeosCommand::normRequest(reqJson);
+      }
 
-      };
+    };
 
-      class GetTableOptions : public CommandOptions
-      {
-      public:
-        GetTableOptions(int argc, const char **argv)
-          : CommandOptions(argc, argv) {}
+    class GetTableOptions : public CommandOptions
+    {
+    public:
+      GetTableOptions(int argc, const char **argv)
+        : CommandOptions(argc, argv) {}
 
-      protected:
-        const char* getUsage() {
-          return R"EOF(
+    protected:
+      const char* getUsage() {
+        return R"EOF(
 Retrieve the contents of a database table
 Usage: ./teos get table [scope] [contract] [table] [Options]
 Usage: ./teos get table [-j '{"scope":"<scope>","code":"<code>","table":"<table>"}'] [OPTIONS]
 )EOF";
-        }
+      }
 
-        string scope;
-        string contract;
-        string table;
+      string scope;
+      string contract;
+      string table;
 
-        options_description options() {
-          options_description special("");
-          special.add_options()
-            ("scope,e", value<string>(&scope), "The account scope where the table is found")
-            ("contract,c", value<string>(&contract), "The contract within scope who owns the table")
-            ("table,t", value<string>(&table), "The name of the table as specified by the contract abi");
-          return special;
-        }
+      options_description options() {
+        options_description special("");
+        special.add_options()
+          ("scope,e", value<string>(&scope), "The account scope where the table is found")
+          ("contract,c", value<string>(&contract), "The contract within scope who owns the table")
+          ("table,t", value<string>(&table), "The name of the table as specified by the contract abi");
+        return special;
+      }
 
-        void setPosDesc(positional_options_description& pos_desc) {
-          pos_desc.add("scope", 1).add("contract", 1).add("table", 1);
-        }
+      void setPosDesc(positional_options_description& pos_desc) {
+        pos_desc.add("scope", 1).add("contract", 1).add("table", 1);
+      }
 
-        bool setJson(variables_map &vm) {
-          bool ok = false;
-          if (vm.count("scope")) {
-            reqJson.put("scope", scope);
-            if (vm.count("contract")) {
-              reqJson.put("code", contract);
-              if (vm.count("table")) {
-                reqJson.put("table", table);
-                ok = true;
-              }
+      bool setJson(variables_map &vm) {
+        bool ok = false;
+        if (vm.count("scope")) {
+          reqJson.put("scope", scope);
+          if (vm.count("contract")) {
+            reqJson.put("code", contract);
+            if (vm.count("table")) {
+              reqJson.put("table", table);
+              ok = true;
             }
           }
-          return ok;
         }
+        return ok;
+      }
 
-        TeosCommand getCommand(bool is_raw) {
-          return GetTable(reqJson, is_raw);
-        }
+      TeosCommand getCommand(bool is_raw) {
+        return GetTable(reqJson, is_raw);
+      }
 
-        void getOutput(TeosCommand command) {
-          output("TO_DO");
-        }
+      void getOutput(TeosCommand command) {
+        output("TO_DO");
+      }
 
-        void getExample() {
-          cout << R"EOF(
+      void getExample() {
+        cout << R"EOF(
 boost::property_tree::ptree reqJson;
 reqJson.put("scope", "inita");
 reqJson.put("code", "currency");
@@ -486,18 +513,18 @@ cout << GetInfo.toStringRcv() << endl;
 printout:
 )EOF" << endl;
 
-          boost::property_tree::ptree reqJson;
-          reqJson.put("scope", "inita");
-          reqJson.put("code", "currency");
-          reqJson.put("table", "account");
-          GetTable getTable(reqJson);
-          cout << getTable.toStringRcv() << endl;
+        boost::property_tree::ptree reqJson;
+        reqJson.put("scope", "inita");
+        reqJson.put("code", "currency");
+        reqJson.put("table", "account");
+        GetTable getTable(reqJson);
+        cout << getTable.toStringRcv() << endl;
 
-          cout << R"EOF(
+        cout << R"EOF(
 */
 )EOF" << endl;
-        }
-      };
+      }
+    };
 
   }
 }
