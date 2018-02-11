@@ -25,20 +25,16 @@ namespace tokenika
         bool skip = false, int expiration = 30, bool raw = false)
         : TeosCommand("", raw)
       {
-        TeosCommand tc = setContract(accountName, wastFile, abiFile, skip, expiration);
-        isError = tc.isError;
-        respJson = tc.getRcvJson();
+        copy(setContract(accountName, wastFile, abiFile, skip, expiration));
       }
 
       SetContract(ptree reqJson, bool raw = false) : TeosCommand(
         "", reqJson, raw)
       {
-        TeosCommand tc = setContract(
+        copy(setContract(
             reqJson.get<string>("account"),
             reqJson.get<string>("wast"), reqJson.get<string>("abi"),
-            reqJson.get<bool>("skip"), reqJson.get<int>("expiration"));
-        respJson = tc.getRcvJson();
-        isError = tc.isError;
+            reqJson.get<bool>("skip"), reqJson.get<int>("expiration")));
       }
     };
 

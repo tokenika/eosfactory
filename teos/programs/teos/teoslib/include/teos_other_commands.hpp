@@ -15,7 +15,7 @@ namespace tokenika
         "", reqJson, raw) {
         stringstream ss;
         ss << PROJECT_NAME << " " <<VERSION_MAJOR << "." << VERSION_MINOR;
-        respJson.put("version", ss.str());
+        respJson_.put("version", ss.str());
       }
     };
 
@@ -50,14 +50,14 @@ Usage: ./teos version client [-j '{}'] [OPTIONS]
         cout << R"EOF(
 boost::property_tree::ptree reqJson;
 VersionClient versionClient(reqJson);
-cout << versionClient.toStringRcv() << endl;
+cout << versionClient.responseToString() << endl;
 /*
 printout:
 )EOF" << endl;
 
         boost::property_tree::ptree reqJson;
         VersionClient versionClient(reqJson);
-        cout << versionClient.toStringRcv() << endl;
+        cout << versionClient.responseToString() << endl;
 
       cout << R"EOF(
 */

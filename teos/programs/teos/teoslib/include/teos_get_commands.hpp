@@ -13,6 +13,7 @@
 
 #include <teos_config.h>
 #include <teos_command.hpp>
+#include <eos_interface.hpp>
 
 using namespace std;
 using namespace boost::program_options;
@@ -44,8 +45,8 @@ namespace tokenika
      * boost::property_tree::ptree reqJson;
      * tokenika::teos::GetInfo GetInfo(getInfoPostJson);
      * std::cout << GetInfo.get<int>("last_irreversible_block_num")) << std::endl;
-     * boost::property_tree::ptree rcv_json = GetInfo.getRcvJson();
-     * std::cout << GetBlock.toStringRcv() << std::endl; // Print the response json.
+     * boost::property_tree::ptree rcv_json = GetInfo.getResponse();
+     * std::cout << GetBlock.responseToString() << std::endl; // Print the response json.
      *
      * return 0;
      * }
@@ -99,23 +100,23 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
 // Invoke 'GetInfo' command:
     boost::property_tree::ptree reqJson;
     GetInfo GetInfo(reqJson);
-    cout << GetInfo.toStringRcv() << endl;
+    cout << GetInfo.responseToString() << endl;
 
 /* printout:
-)EOF" << endl;        
-        
+)EOF" << endl;
+
         boost::property_tree::ptree reqJson;
         GetInfo GetInfo(reqJson);
-        cout << GetInfo.toStringRcv() << endl;
+        cout << GetInfo.responseToString() << endl;
         cout << R"EOF(
 */
-)EOF" << endl; 
+)EOF" << endl;
       }
     };
 
-  /**
-   * @brief Retrieve a full block from a blockchain.
-   */
+    /**
+     * @brief Retrieve a full block from a blockchain.
+     */
     class GetBlock : public TeosCommand
     {
     public:
@@ -125,7 +126,7 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
         callEosd();
       }
     };
-    
+
     /**
     * @brief Command-line driver for the GetBlock class.
     */
@@ -191,15 +192,15 @@ Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
 // Invoke 'GetInfo' command:
     ptree getInfoJson;
     GetInfo getInfo(getInfoJson);
-    cout << getInfo.toStringRcv() << endl;
+    cout << getInfo.responseToString() << endl;
 
 /*
 printout:
-)EOF" << endl;        
-        
+)EOF" << endl;
+
         ptree getInfoJson;
         GetInfo getInfo(getInfoJson);
-        cout << getInfo.toStringRcv() << endl;
+        cout << getInfo.responseToString() << endl;
 
         cout << R"EOF(
 */
@@ -209,7 +210,7 @@ printout:
     GetBlockJson.put("block_num_or_id", 
       getInfo.get<int>("last_irreversible_block_num"));
     GetBlock GetBlock(GetBlock_post_json);
-    cout << GetBlock.toStringRcv() << endl;
+    cout << GetBlock.responseToString() << endl;
 
 /* 
 printout:
@@ -219,9 +220,9 @@ printout:
         getBlockJson.put("block_num_or_id",
           getInfo.get<int>("last_irreversible_block_num"));
         GetBlock GetBlock(getBlockJson);
-        cout << GetBlock.toStringRcv() << endl;
+        cout << GetBlock.responseToString() << endl;
 
-cout << R"EOF(
+        cout << R"EOF(
 */
 )EOF" << endl;
       }
@@ -235,7 +236,7 @@ cout << R"EOF(
     public:
       GetAccount(string accountName, bool raw = false) : TeosCommand(
         string(getCommandPath + "get_account"), raw) {
-        reqJson.put("account_name", accountName);
+        reqJson_.put("account_name", accountName);
         callEosd();
       }
 
@@ -277,7 +278,7 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
         setPosDesc(positional_options_description&pos_desc) {
         pos_desc.add("name", 1);
       }
-      
+
       bool setJson(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
@@ -304,7 +305,7 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
 boost::property_tree::ptree reqJson;
 reqJson.put("account_name", "int");
 GetAccount getAccount(reqJson);
-cout << getAccount.toStringRcv() << endl;
+cout << getAccount.responseToString() << endl;
 
 /*
 printout:
@@ -312,35 +313,50 @@ printout:
         ptree reqJson;
         reqJson.put("account_name", "inita");
         GetAccount getAccount(reqJson);
-        cout << getAccount.toStringRcv() << endl;
+        cout << getAccount.responseToString() << endl;
         cout << R"EOF(
 */
 )EOF" << endl;
       }
     };
 
+#define WRITE_TO_STDOUT "_"
     /**
     * @brief Retrieves the code and ABI for an account.
     */
     class GetCode : public TeosCommand
     {
     public:
-    /**
-     * @brief 
-     * 
-     */
-      GetCode(string accountName, string codeFile = "", string abiFile = "", 
-        bool raw = false) : TeosCommand(string(getCommandPath + "get_code"), raw) {
-        callEosd();
+      /**
+      * @brief A constructor.
+      * @param wastFile where write the wast code to. If "_", print to stdout.
+      * @param abiFile where write the abi code to. If "_", print to stdout.
+      * @param raw if true, resulting json is not formated.
+      * @param getResponse() returns {"account_name":"<account name>", "code_hash":"<code hash>",
+      * "wast":"<WAST code>", "abi":"<abi structure>"}.
+      */
+      GetCode(string accountName, 
+        string wastFile = "", string abiFile = "", bool raw = false) 
+        : TeosCommand(string(getCommandPath + "get_code"), raw) 
+      {
+        copy(getCode(accountName, 
+          wastFile == WRITE_TO_STDOUT ? "" : wastFile, 
+          abiFile == WRITE_TO_STDOUT ? "" : abiFile));
       }
 
-    /**
-     * @brief 
-     * 
-     */
+      /**
+       * @brief A constructor.
+       * @param reqJson json tree argument: {"account_name":"<account name>", 
+       * "wast":"<wast file>", "abi":"<abi file>"}
+       * @param raw if true, resulting json is not formated.
+       */
       GetCode(ptree reqJson, bool raw = false) : TeosCommand(
         string(getCommandPath + "get_code"), reqJson, raw) {
-        callEosd();
+        string wastFile = reqJson.get<string>("code");
+        wastFile = wastFile == WRITE_TO_STDOUT ? "" : wastFile;
+        string abiFile = reqJson.get<string>("abi");
+        abiFile = abiFile == WRITE_TO_STDOUT ? "" : abiFile;
+        copy(getCode(reqJson.get<string>("account_name"), wastFile, abiFile));
       }
     };
 
@@ -358,7 +374,8 @@ printout:
         return R"EOF(
 Retrieve the code and ABI for an account
 Usage: ./teos get code [account_name] [Options]
-Usage: ./teos get code [-j '{"account_name":"<account name>" "code":"<code file>" "abi":"""<abi file>"}'] [OPTIONS]
+Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file>", 
+"abi":"<abi file>"}'] [OPTIONS]
 )EOF";
       }
 
@@ -369,12 +386,12 @@ Usage: ./teos get code [-j '{"account_name":"<account name>" "code":"<code file>
       options_description options() {
         options_description special("");
         special.add_options()
-          ("name,n", value<string>(&accountName), 
+          ("name,n", value<string>(&accountName),
             "The name of the account whose code should be retrieved")
-          ("code,c", value<string>(&wastFile)->default_value(""), 
-            "The name of the file to save the contract .wast to")
-          ("abi,a", value<string>(&abiFile)->default_value(""),
-            "The name of the file to save the contract .abi to");
+            ("wast,c", value<string>(&wastFile)->default_value(""),
+              "The name of the file to save the contract .wast to")
+              ("abi,a", value<string>(&abiFile)->default_value(""),
+                "The name of the file to save the contract .abi to");
         return special;
       }
 
@@ -386,9 +403,9 @@ Usage: ./teos get code [-j '{"account_name":"<account name>" "code":"<code file>
         bool ok = false;
         if (vm.count("name")) {
           reqJson.put("account_name", accountName);
-            ok = true;
+          ok = true;
         }
-        reqJson.put("code", wastFile);
+        reqJson.put("wast", wastFile);
         reqJson.put("abi", abiFile);
         return ok;
       }
@@ -400,7 +417,12 @@ Usage: ./teos get code [-j '{"account_name":"<account name>" "code":"<code file>
       void getOutput(TeosCommand command) {
         output("account name", "%s", GET_STRING(command, "account_name"));
         output("code hash", "%s", GET_STRING(command, "code_hash"));
-        output("wast", "%s", GET_STRING(command, "wast"));
+        if (wastFile == WRITE_TO_STDOUT) {
+          output("wast", "%s", GET_STRING(command, "wast"));
+        }
+        if (abiFile == WRITE_TO_STDOUT) {
+          output("abi", "%s", GET_STRING(command, "abi"));
+        }
       }
 
       void getExample() {
@@ -408,7 +430,7 @@ Usage: ./teos get code [-j '{"account_name":"<account name>" "code":"<code file>
 boost::property_tree::ptree reqJson;
 reqJson.put("account_name", "inita");
 GetCode getCode(reqJson);
-cout << getCode.toStringRcv() << endl;
+cout << getCode.responseToString() << endl;
 
 /*
 printout: 
@@ -417,7 +439,7 @@ printout:
         boost::property_tree::ptree reqJson;
         reqJson.put("account_name", "inita");
         GetCode getCode(reqJson);
-        cout << getCode.toStringRcv() << endl;
+        cout << getCode.responseToString() << endl;
 
         cout << R"EOF(
 */
@@ -427,11 +449,20 @@ printout:
 
     /**
     * @brief Retrieves the contents of a database table.
-    * 
+    *
     */
     class GetTable : public TeosCommand
     {
     public:
+      GetTable(string scope, string contract, string table,
+        bool raw = false) : TeosCommand(
+        string(getCommandPath + "get_table_rows"), raw) {
+        reqJson_.put("json", true);
+        reqJson_.put("scope", scope);
+        reqJson_.put("code", contract);
+        reqJson_.put("table", table);
+        callEosd();
+      }
 
       GetTable(ptree reqJson, bool raw = false) : TeosCommand(
         string(getCommandPath + "get_table"), reqJson, raw) {
@@ -439,7 +470,7 @@ printout:
       }
 
       string normRequest(ptree& reqJson) {
-        reqJson.put("json", true);          
+        reqJson.put("json", true);
         return TeosCommand::normRequest(reqJson);
       }
 
@@ -507,7 +538,7 @@ reqJson.put("scope", "inita");
 reqJson.put("code", "currency");
 reqJson.put("table", "account");
 GetInfo GetInfo(reqJson);
-cout << GetInfo.toStringRcv() << endl;
+cout << GetInfo.responseToString() << endl;
 
 /*
 printout:
@@ -518,7 +549,7 @@ printout:
         reqJson.put("code", "currency");
         reqJson.put("table", "account");
         GetTable getTable(reqJson);
-        cout << getTable.toStringRcv() << endl;
+        cout << getTable.responseToString() << endl;
 
         cout << R"EOF(
 */

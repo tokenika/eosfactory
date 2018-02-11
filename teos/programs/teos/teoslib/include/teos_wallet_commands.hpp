@@ -28,21 +28,21 @@ namespace tokenika
     public:
       /**
       * @brief A constructor.
-      * @param walletName wallet ID.
+      * @param name wallet ID.
       * @param raw if true, the resulting json is not formated.
-      * @param getRcvJson() returns {"password":"<password>"}.
+      * @param getResponse() returns {"password":"<password>"}.
       */
-      WalletCreate(string walletName = DEFAULT_WALLET_NAME, bool raw = false) : TeosCommand(
+      WalletCreate(string name = DEFAULT_WALLET_NAME, bool raw = false) : TeosCommand(
         string(walletCommandPath + "create"), raw) {
-        reqJson.put("walletName", walletName);
+        reqJson_.put("name", name);
         callEosd();
       }
 
       /**
        * @brief A constructor.
-       * @param reqJson json tree argument: {"walletName":"<wallet name>"}.
+       * @param reqJson json tree argument: {"name":"<wallet name>"}.
        * @param raw if true, the resulting json is not formated.
-       * @param getRcvJson() returns {"password":"<password>"}.
+       * @param getResponse() returns {"password":"<password>"}.
        */
       WalletCreate(ptree reqJson, bool raw = false) : TeosCommand(
         string(walletCommandPath + "create"), reqJson, raw) {
@@ -50,7 +50,7 @@ namespace tokenika
       }
 
       string normRequest(ptree& reqJson) {
-        return string("\"") + reqJson.get<string>("walletName") + "\"";
+        return string("\"") + reqJson.get<string>("name") + "\"";
       }
 
       void normResponse(string response, ptree &respJson) {
@@ -73,16 +73,16 @@ namespace tokenika
         return R"EOF(
 Create a new wallet locally
 Usage: ./teos wallet create [wallet name] [Options]
-Usage: ./teos wallet create [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
+Usage: ./teos wallet create [-j '{"name":"<wallet name>"}'] [OPTIONS]
 )EOF";
       }
 
-      string walletName;
+      string name;
 
       options_description options() {
         options_description special("");
         special.add_options()
-          ("name,n", value<string>(&walletName)->default_value(DEFAULT_WALLET_NAME),
+          ("name,n", value<string>(&name)->default_value(DEFAULT_WALLET_NAME),
             "The name of the new wallet");
         return special;
       }
@@ -94,7 +94,7 @@ Usage: ./teos wallet create [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
       bool setJson(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("walletName", walletName);
+          reqJson.put("name", name);
           ok = true;
         }
         return ok;
@@ -113,9 +113,9 @@ Usage: ./teos wallet create [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
         cout << R"EOF(
 boost::property_tree::ptree reqJson;
 ptree config = TeosCommand::getConfig();
-reqJson.put("walletName", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
+reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
 WalletCreate walletCreate(reqJson);
-cout << walletCreate.toStringRcv() << endl;
+cout << walletCreate.responseToString() << endl;
 
 /*
 printout:
@@ -123,9 +123,9 @@ printout:
 
         boost::property_tree::ptree reqJson;
         ptree config = TeosCommand::getConfig();
-        reqJson.put("walletName", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
+        reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
         WalletCreate walletCreate(reqJson);
-        cout << walletCreate.toStringRcv() << endl;
+        cout << walletCreate.responseToString() << endl;
 
         cout << R"EOF(
 */
@@ -142,23 +142,23 @@ printout:
     public:
       /**
        * @brief A constructor.
-       * @param walletName wallet ID.
+       * @param name wallet ID.
        * @param keyPrivate private key, proving authorities.
        * @param raw if true, resulting json is not formated.
-       * @param getRcvJson() returns {}.
+       * @param getResponse() returns {}.
        */
-      WalletImport(string walletName, string keyPrivate, bool raw = false) : TeosCommand(
+      WalletImport(string name, string keyPrivate, bool raw = false) : TeosCommand(
           string(walletCommandPath + "import_key"), raw) {
-        reqJson.put("walletName", walletName);
-        reqJson.put("key", keyPrivate);
+        reqJson_.put("name", name);
+        reqJson_.put("key", keyPrivate);
         callEosd();
       }
 
       /**
        * @brief A constructor.
-       * @param reqJson json tree argument: {"walletName":"<wallet name>", "key":"<private key>"}.
+       * @param reqJson json tree argument: {"name":"<wallet name>", "key":"<private key>"}.
        * @param raw if true, resulting json is not formated.
-       * @param getRcvJson() returns {}.
+       * @param getResponse() returns {}.
        */
       WalletImport(ptree reqJson, bool raw = false) : TeosCommand(
         string(walletCommandPath + "import_key"), reqJson, raw) {
@@ -166,7 +166,7 @@ printout:
       }
 
       string normRequest(ptree& reqJson) {
-        return string("[\"") + reqJson.get<string>("walletName") + "\",\"" + reqJson.get<string>("key") + "\"]";
+        return string("[\"") + reqJson.get<string>("name") + "\",\"" + reqJson.get<string>("key") + "\"]";
       }
 
       void normResponse(string response, ptree &respJson) {}
@@ -186,17 +186,17 @@ printout:
         return R"EOF(
 Import private key into wallet
 Usage: ./teos wallet import [name] [key] [Options]
-Usage: ./teos wallet import [-j '{"walletName":"<wallet name>", "key":"<private key>"}'] [OPTIONS]
+Usage: ./teos wallet import [-j '{"name":"<wallet name>", "key":"<private key>"}'] [OPTIONS]
 )EOF";
       }
 
-      string walletName;
+      string name;
       string key;
 
       options_description options() {
         options_description special("");
         special.add_options()
-          ("name,n", value<string>(&walletName), 
+          ("name,n", value<string>(&name), 
             "The name of the wallet to import key into")
           ("key,k", value<string>(&key), "Private key in WIF format to import");
         return special;
@@ -209,7 +209,7 @@ Usage: ./teos wallet import [-j '{"walletName":"<wallet name>", "key":"<private 
       bool setJson(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("walletName", walletName);
+          reqJson.put("name", name);
           if (vm.count("key")) {
             reqJson.put("key", key);
             ok = true;
@@ -223,7 +223,7 @@ Usage: ./teos wallet import [-j '{"walletName":"<wallet name>", "key":"<private 
       }
 
       void getOutput(TeosCommand command) {
-        output("wallet", "%s", walletName.c_str());
+        output("wallet", "%s", name.c_str());
         output("key imported", "%s", key.c_str());
       }
 
@@ -242,7 +242,7 @@ Usage: ./teos wallet import [-j '{"walletName":"<wallet name>", "key":"<private 
       /**
       * @brief A constructor.
       * @param raw if true, resulting json is not formated.
-      * @param getRcvJson() returns {"":"<wallet1 name>" "":"<wallet2 name>" ...}.
+      * @param getResponse() returns {"":"<wallet1 name>" "":"<wallet2 name>" ...}.
       */
       WalletList(bool raw = false) : TeosCommand(
         string(walletCommandPath + "list_wallets"), raw) {
@@ -253,7 +253,7 @@ Usage: ./teos wallet import [-j '{"walletName":"<wallet name>", "key":"<private 
        * @brief A constructor.
        * @param reqJson json tree argument: {}.
        * @param raw if true, resulting json is not formated.
-       * @param getRcvJson() returns {"":"<wallet1 name>" "":"<wallet2 name>" ...}.
+       * @param getResponse() returns {"":"<wallet1 name>" "":"<wallet2 name>" ...}.
        */
       WalletList(ptree reqJson, bool raw = false) : TeosCommand(
         string(walletCommandPath + "list_wallets"), reqJson, raw) {
@@ -288,7 +288,7 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
       }
 
       void getOutput(TeosCommand command) {
-        ptree rcvJson = command.getRcvJson();
+        ptree rcvJson = command.getResponse();
         BOOST_FOREACH(ptree::value_type &v, rcvJson)
         {
           assert(v.first.empty()); // array elements have no names
@@ -300,7 +300,7 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
         cout << R"EOF(
 boost::property_tree::ptree reqJson;
 WalletList walletList(reqJson);
-cout << walletList.toStringRcv() << endl;
+cout << walletList.responseToString() << endl;
 
 /*
 printout:
@@ -308,7 +308,7 @@ printout:
 
         boost::property_tree::ptree reqJson;
         WalletList walletList(reqJson);
-        cout << walletList.toStringRcv() << endl;
+        cout << walletList.responseToString() << endl;
 
         cout << R"EOF(
 */      
@@ -325,21 +325,21 @@ printout:
     public:
       /**
       * @brief A constructor.
-      * @param walletName wallet ID.
+      * @param name wallet ID.
       * @param raw if true, resulting json is not formated.
-      * @param getRcvJson() returns {}.
+      * @param getResponse() returns {}.
       */
-      WalletOpen(string walletName = DEFAULT_WALLET_NAME, bool raw = false) : TeosCommand(
+      WalletOpen(string name = DEFAULT_WALLET_NAME, bool raw = false) : TeosCommand(
         string(walletCommandPath + "open"), raw) {
-        reqJson.put("walletName", walletName);
+        reqJson_.put("name", name);
         callEosd();
       }
 
       /**
        * @brief A constructor.
-       * @param reqJson json tree argument: {"walletName":"<wallet name>"}.
+       * @param reqJson json tree argument: {"name":"<wallet name>"}.
        * @param raw if true, resulting json is not formated.
-       * @param getRcvJson() returns {}.
+       * @param getResponse() returns {}.
        */
       WalletOpen(ptree reqJson, bool raw = false) : TeosCommand(
         string(walletCommandPath + "open"), reqJson, raw) {
@@ -347,7 +347,7 @@ printout:
       }
 
       string normRequest(ptree& reqJson) {
-        return string("\"") + reqJson.get<string>("walletName") + "\"";
+        return string("\"") + reqJson.get<string>("name") + "\"";
       }
 
       void normResponse(string response, ptree &respJson) {}
@@ -371,16 +371,16 @@ printout:
         return R"EOF(
 Open an existing wallet
 Usage: ./teos wallet open [name] [Options]
-Usage: ./teos wallet open [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
+Usage: ./teos wallet open [-j '{"name":"<wallet name>"}'] [OPTIONS]
 )EOF";
       }
 
-      string walletName;
+      string name;
 
       options_description options() {
         options_description special("");
         special.add_options()
-          ("name,n", value<string>(&walletName), "The name of the wallet to open");
+          ("name,n", value<string>(&name), "The name of the wallet to open");
         return special;
       }
 
@@ -391,7 +391,7 @@ Usage: ./teos wallet open [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
       bool setJson(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("walletName", walletName);
+          reqJson.put("name", name);
             ok = true;
         }
         return ok;
@@ -402,16 +402,16 @@ Usage: ./teos wallet open [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
       }
 
       void getOutput(TeosCommand command) {
-        output("wallet opened", "%s", walletName.c_str());
+        output("wallet opened", "%s", name.c_str());
       }
 
       void getExample() {
         cout << R"EOF(
 boost::property_tree::ptree reqJson;
 ptree config = TeosCommand::getConfig();
-reqJson.put("walletName", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
+reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
 WalletOpen walletOpen(reqJson);
-cout << walletOpen.toStringRcv() << endl;
+cout << walletOpen.responseToString() << endl;
 
 /*
 printout:
@@ -419,9 +419,9 @@ printout:
 
         boost::property_tree::ptree reqJson;
         ptree config = TeosCommand::getConfig();
-        reqJson.put("walletName", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
+        reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
         WalletOpen walletOpen(reqJson);
-        cout << walletOpen.toStringRcv() << endl;
+        cout << walletOpen.responseToString() << endl;
 
         cout << R"EOF(
 */
@@ -437,21 +437,21 @@ printout:
     public:
       /**
       * @brief A constructor.
-      * @param walletName wallet ID.
+      * @param name wallet ID.
       * @param raw a boolean argument:
       * if true, resulting json is not formated.
-      * @param getRcvJson() returns {}.
+      * @param getResponse() returns {}.
       */
-      WalletLock(string walletName = DEFAULT_WALLET_NAME, bool raw = false) : TeosCommand(
+      WalletLock(string name = DEFAULT_WALLET_NAME, bool raw = false) : TeosCommand(
         string(walletCommandPath + "lock"), raw) {
         callEosd();
       }
 
       /**
        * @brief A constructor.
-       * @param reqJson json tree argument: {"walletName":"<wallet name>"}.
+       * @param reqJson json tree argument: {"name":"<wallet name>"}.
        * @param raw if true, resulting json is not formated.
-       * @param getRcvJson() returns {}.
+       * @param getResponse() returns {}.
        */
       WalletLock(ptree reqJson, bool raw = false) : TeosCommand(
         string(walletCommandPath + "lock"), reqJson, raw) {
@@ -459,7 +459,7 @@ printout:
       }
 
       string normRequest(ptree& reqJson) {
-        return string("\"") + reqJson.get<string>("walletName") + "\"";
+        return string("\"") + reqJson.get<string>("name") + "\"";
       }
 
       void normResponse(string response, ptree &respJson) {}
@@ -480,16 +480,16 @@ printout:
         return R"EOF(
 Lock wallet
 Usage: ./teos wallet lock [name] [Options]
-Usage: ./teos wallet lock [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
+Usage: ./teos wallet lock [-j '{"name":"<wallet name>"}'] [OPTIONS]
 )EOF";
       }
 
-      string walletName;
+      string name;
 
       options_description options() {
         options_description special("");
         special.add_options()
-          ("name,n", value<string>(&walletName), "The name of the wallet to lock");
+          ("name,n", value<string>(&name), "The name of the wallet to lock");
         return special;
       }
 
@@ -500,7 +500,7 @@ Usage: ./teos wallet lock [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
       bool setJson(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("walletName", walletName);
+          reqJson.put("name", name);
           ok = true;
         }
         return ok;
@@ -511,16 +511,16 @@ Usage: ./teos wallet lock [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
       }
 
       void getOutput(TeosCommand command) {
-        output("wallet lock", "%s", walletName.c_str());
+        output("wallet lock", "%s", name.c_str());
       }
 
       void getExample() {
         cout << R"EOF(
 boost::property_tree::ptree reqJson;
 ptree config = TeosCommand::getConfig();
-reqJson.put("walletName", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
+reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
 WalletLock walletLock(reqJson);
-cout << walletLock.toStringRcv() << endl;
+cout << walletLock.responseToString() << endl;
 
 /*
 printout:
@@ -528,9 +528,9 @@ printout:
 
         boost::property_tree::ptree reqJson;
         ptree config = TeosCommand::getConfig();
-        reqJson.put("walletName", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
+        reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
         WalletLock walletLock(reqJson);
-        cout << walletLock.toStringRcv() << endl;
+        cout << walletLock.responseToString() << endl;
 
         cout << R"EOF(
 */
@@ -547,7 +547,7 @@ printout:
       /**
       * @brief A constructor.
       * @param raw if true, resulting json is not formated.
-      * @param getRcvJson() returns {}.
+      * @param getResponse() returns {}.
       */
       WalletLockAll(bool raw = false) : TeosCommand(
         string(walletCommandPath + "lock_all"), raw) {
@@ -558,7 +558,7 @@ printout:
        * @brief A constructor.
        * @param reqJson json tree argument: {}.
        * @param raw if true, resulting json is not formated.
-       * @param getRcvJson() returns {}.
+       * @param getResponse() returns {}.
        */
       WalletLockAll(ptree reqJson, bool raw = false) : TeosCommand(
         string(walletCommandPath + "lock_all"), reqJson, raw) {
@@ -607,7 +607,7 @@ Usage: ./teos wallet lock_all [-j '{}'] [OPTIONS]
         cout << R"EOF(
 boost::property_tree::ptree reqJson;
 WalletLockAll walletLock(reqJson);
-cout << walletLock.toStringRcv() << endl;
+cout << walletLock.responseToString() << endl;
 
 /*
 printout:
@@ -615,7 +615,7 @@ printout:
 
         boost::property_tree::ptree reqJson;
         WalletLockAll walletLock(reqJson);
-        cout << walletLock.toStringRcv() << endl;
+        cout << walletLock.responseToString() << endl;
 
         cout << R"EOF(
 */
@@ -632,21 +632,24 @@ printout:
     public:
       /**
       * @brief A constructor.
-      * @param walletName wallet ID.
+      * @param password the password returned by wallet create.
+      * @param name the name of the wallet to unlock.
       * @param raw if true, resulting json is not formated.
-      * @param getRcvJson() returns {}.
+      * @param getResponse() returns {}.
       */
-      WalletUnlock(string walletName = DEFAULT_WALLET_NAME, bool raw = false) : TeosCommand(
-        string(walletCommandPath + "unlock"), raw) {
-        reqJson.put("walletName", walletName);
+      WalletUnlock(string password, string name = DEFAULT_WALLET_NAME, bool raw = false) 
+        : TeosCommand(string(walletCommandPath + "unlock"), raw) 
+      {
+        reqJson_.put("password", password);
+        reqJson_.put("name", name);
         callEosd();
       }
 
       /**
        * @brief A constructor.
-       * @param reqJson json tree argument: {"walletName":"<wallet name>"}.
+       * @param reqJson json tree argument: {"name":"<wallet name>"}.
        * @param raw if true, resulting json is not formated.
-       * @param getRcvJson() returns {}.
+       * @param getResponse() returns {}.
        */
       WalletUnlock(ptree reqJson, bool raw = false) : TeosCommand(
         string(walletCommandPath + "unlock"), reqJson, raw) {
@@ -654,7 +657,7 @@ printout:
       }
 
       string normRequest(ptree& reqJson) {
-        return string("[\"") + reqJson.get<string>("walletName") + "\",\"" + reqJson.get<string>("password") + "\"]";
+        return string("[\"") + reqJson.get<string>("name") + "\",\"" + reqJson.get<string>("password") + "\"]";
       }
 
       void normResponse(string response, ptree &respJson) {}
@@ -673,30 +676,31 @@ printout:
       const char* getUsage() {
         return R"EOF(
 Unlock wallet
-Usage: ./teos wallet import [name] [password] [Options]
-Usage: ./teos wallet import [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
+Usage: ./teos wallet import [password] [name] [Options]
+Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"}'] [OPTIONS]
 )EOF";
       }
 
-      string walletName;
+      string name;
       string password;
 
       options_description options() {
         options_description special("");
         special.add_options()
-          ("name,n", value<string>(&walletName), "The name of the wallet to import key into")
-          ("password", value<string>(&password), "Private key in WIF format to import");
+          ("password", value<string>(&password), "The password returned by wallet create");        
+          ("name,n", value<string>(&name), "The name of the wallet to unlock");
         return special;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
-        pos_desc.add("name", 1).add("password", 1);
+        pos_desc.add("password", 1);
+        pos_desc.add("name", 1);
       }
 
       bool setJson(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("walletName", walletName);
+          reqJson.put("name", name);
           if (vm.count("password")) {
             reqJson.put("password", password);
             ok = true;
@@ -710,7 +714,7 @@ Usage: ./teos wallet import [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
       }
 
       void getOutput(TeosCommand command) {
-        output("wallet unlocked", "%s", walletName.c_str());
+        output("wallet unlocked", "%s", name.c_str());
       }
 
       void getExample() {
@@ -728,10 +732,10 @@ Usage: ./teos wallet import [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
       /**
       * @brief A constructor.
       * @param raw if true, resulting json is not formated.
-      * @param getRcvJson() returns {"":"<key1>" "":"<key2>" ...}.
+      * @param getResponse() returns {"":"<key1>" "":"<key2>" ...}.
       */
       WalletKeys(bool raw = false) : TeosCommand(
-        string(walletCommandPath + "list_keys"), reqJson, raw) {
+        string(walletCommandPath + "list_keys"), reqJson_, raw) {
         callEosd();
       }
 
@@ -739,7 +743,7 @@ Usage: ./teos wallet import [-j '{"walletName":"<wallet name>"}'] [OPTIONS]
        * @brief A constructor.
        * @param reqJson json tree argument: {}.
        * @param raw if true, resulting json is not formated.
-       * @param getRcvJson() returns {"":"<key1>" "":"<key2>" ...}.
+       * @param getResponse() returns {"":"<key1>" "":"<key2>" ...}.
        */
       WalletKeys(ptree reqJson, bool raw = false) : TeosCommand(
         string(walletCommandPath + "list_keys"), reqJson, raw) {
@@ -774,7 +778,7 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
       }
 
       void getOutput(TeosCommand command) {
-        ptree rcvJson = command.getRcvJson();
+        ptree rcvJson = command.getResponse();
         BOOST_FOREACH(ptree::value_type &v, rcvJson)
         {
           assert(v.first.empty()); // array elements have no names
@@ -786,7 +790,7 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
         cout << R"EOF(
 boost::property_tree::ptree reqJson;
 WalletKeys walletKeys(reqJson);
-cout << walletKeys.toStringRcv() << endl;
+cout << walletKeys.responseToString() << endl;
 
 /*
 printout:
@@ -794,7 +798,7 @@ printout:
 
         boost::property_tree::ptree reqJson;
         WalletKeys walletKeys(reqJson);
-        cout << walletKeys.toStringRcv() << endl;
+        cout << walletKeys.responseToString() << endl;
 
         cout << R"EOF(
 */

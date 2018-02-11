@@ -101,15 +101,21 @@ namespace tokenika
 Definitions for class TeosCommand.
 ****************************************************************************/
 
-    ptree TeosCommand::errorRespJson(string message) {
+    ptree TeosCommand::errorRespJson(string sender, string message) {
       ptree respJson;
-      respJson.put(teos_ERROR, "{" + message + "}");
+      string senderEntry = "\"sender\":\"" + sender + "\"";
+      string msgEntry = "\"message\":{" + message + "}";
+      respJson.put(teos_ERROR, "{" + senderEntry + ", " + msgEntry + "}");
       return respJson;
     }
 
-    void TeosCommand::putError(string message) {
-      respJson = errorRespJson(message);
-      isError = true;
+    void TeosCommand::putError(string sender, string message) {
+      respJson_ = errorRespJson(sender, message);
+      isError_ = true;
+    }
+
+    void TeosCommand::putError(string msg) {
+      putError(path_, msg);
     }
 
     string TeosCommand::normRequest(ptree& reqJson) {
@@ -183,11 +189,11 @@ Definitions for class TeosCommand.
         ip::tcp::socket socket(io_service);
         boost::asio::connect(socket, iterator);
 
-        string postMsg = normRequest(reqJson);
+        string postMsg = normRequest(reqJson_);
 
         string CRNL = "\r\n";
         string request =
-          "POST " + path + " HTTP/1.0" + CRNL +
+          "POST " + path_ + " HTTP/1.0" + CRNL +
           "Host: " + host_ + CRNL +
           "content-length: " + to_string(postMsg.size()) + CRNL +
           "Accept: */*" + CRNL +
@@ -239,7 +245,7 @@ Definitions for class TeosCommand.
         string mark = CRNL + CRNL; // header end mark
         size_t found = message.find(mark);
         message = message.substr(found + mark.length(), message.length());
-        normResponse(message, respJson);
+        normResponse(message, respJson_);
       }
       catch (exception& e) {
         putError(e.what());
@@ -247,37 +253,37 @@ Definitions for class TeosCommand.
     }
 
     TeosCommand::TeosCommand( string path, ptree reqJson, bool isRaw ) 
-      : path(path), reqJson(reqJson), isRaw(isRaw) {
+      : path_(path), reqJson_(reqJson), isRaw_(isRaw) {
     }
 
     TeosCommand::TeosCommand( string path, bool isRaw ) 
-      : path(path), isRaw(isRaw) {
+      : path_(path), isRaw_(isRaw) {
     }
 
-    TeosCommand::TeosCommand(string path, bool isError, ptree respJson)
-      : path(path), isRaw(true), respJson(respJson) {
+    TeosCommand::TeosCommand(bool isError, ptree respJson)
+      : isRaw_(true), respJson_(respJson) {
     }
     
-    string TeosCommand::toStringPost(bool isRaw) const {
+    string TeosCommand::requestToString(bool isRaw) const {
       stringstream ss;
       json_parser::
-        write_json(ss, reqJson, !isRaw);
+        write_json(ss, reqJson_, !isRaw);
       return ss.str();
     }
 
-    string TeosCommand::toStringPost() const {
-      return toStringPost(isRaw);
+    string TeosCommand::requestToString() const {
+      return requestToString(isRaw_);
     }
 
-    string TeosCommand::toStringRcv(bool isRaw) const {
+    string TeosCommand::responseToString(bool isRaw) const {
       stringstream ss;
       json_parser::
-        write_json(ss, respJson, !isRaw);
+        write_json(ss, respJson_, !isRaw);
       return ss.str();
     }
 
-    string TeosCommand::toStringRcv() const {
-      return toStringRcv(isRaw);
+    string TeosCommand::responseToString() const {
+      return responseToString(isRaw_);
     }
 
     string TeosCommand::host = "";
@@ -343,13 +349,13 @@ Definitions for class TeosCommand.
         }
         else if (is_arg) {
           TeosCommand command = getCommand(isRaw);
-          if (command.isError) {
+          if (command.isError()) {
             onError(command);
             return;
           }
            
           if (vm.count("received")) {
-            cout << command.toStringRcv() << endl;
+            cout << command.responseToString() << endl;
           }
           else {
             getOutput(command);

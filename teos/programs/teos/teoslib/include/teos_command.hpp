@@ -95,12 +95,13 @@ namespace tokenika
      */
     class TeosCommand 
     {
-      bool isRaw;
+      bool isRaw_ = false;
+      bool isError_ = false;
 
     protected:
-      string path;
-      ptree reqJson;
-      ptree respJson;
+      string path_;
+      ptree reqJson_;
+      ptree respJson_;
 
       /**
       * @brief Given a json, teosCommandJsongets EOS blockchain responce.
@@ -117,10 +118,11 @@ namespace tokenika
       * @param respJson json to be filled with received data
       */
       void callEosd();
+      void putError(string sender, string msg);
       void putError(string msg);
       virtual string normRequest(ptree& reqJson);
       virtual void normResponse(string response, ptree &respJson);
-      virtual bool isWalletCommand() { return path.find(walletCommandPath) != std::string::npos; };
+      virtual bool isWalletCommand() { return path_.find(walletCommandPath) != std::string::npos; };
 
     public:
       static string host;
@@ -129,14 +131,13 @@ namespace tokenika
       static string walletPort;
       static bool verbose;
       static ptree getConfig(bool verbose = false);
-      static ptree errorRespJson(string message);
+      static ptree errorRespJson(string sender, string message);
 
       /**
-       * @brief Initiates members, and calls the blockchain
-       *
+       * @brief A constructor.
        * @param path command path, for example `/v1/chain/GetBlock`
        * @param reqJson json tree, for example {"block_num_or_id"="25"}
-       * @param isRaw boolean, determines printout of the to-string methods
+       * @param isRaw if true, the resulting json is not formated.
        */
       TeosCommand(
         string path,
@@ -150,59 +151,47 @@ namespace tokenika
       );
 
       TeosCommand(
-        string path,
         bool isError,
         ptree respJson
       );
 
+      void copy(TeosCommand teosCommand) {
+        path_ = teosCommand.path_;
+        reqJson_ = teosCommand.reqJson_;
+        respJson_ = teosCommand.respJson_;
+        isError_ = teosCommand.isError_;
+        isRaw_ = teosCommand.isRaw_;
+      }
+
       /**
        * @brief Error flag.
        *
-       * @return true if EOS blockchain responce is normal
-       * @return false if EOS blockchain responce is not normal
+       * @return true if EOS blockchain response is normal
+       * @return false if EOS blockchain response is not normal
        */
-      bool isError = false;
+      bool isError() {
+        return isError_;
+      }
 
-      /**    protected:
-      ptree reqJson;
-
-    public:
-      static string host;
-      static string port;
-      static string walletHost;
-      static string walletPort;
-      static bool verbose;
-       * @brief Blockchain responce
-       *
-       * @return boost::property_tree::ptree blockchain responce
-       */
-      ptree getRcvJson() const {
-        return respJson;
+      ptree getResponse() const {
+        return respJson_;
       }
 
       /**
        * @brief Post json string representation
-       *
-       * Returns post json string representation. I can be pretty or raw,
-       * depending ib the `isRaw` flag.
-       *
-       * @return std::string post json string representation
+       * I can be pretty or raw, depending ib the `isRaw` flag.
        */
-      string toStringPost() const;
+      string requestToString() const;
 
-      string toStringPost(bool isRaw) const;
+      string requestToString(bool isRaw) const;
 
       /**
        * @brief Received json string representation
-       *
-       * Returns received json string representation. I can be pretty or raw,
-       * depending ib the `isRaw` flag.
-       *
-       * @return std::string received json string representation
+       * I can be pretty or raw, depending ib the `isRaw` flag.
        */
-      string toStringRcv() const;
+      string responseToString() const;
 
-      string toStringRcv(bool isRaw) const;
+      string responseToString(bool isRaw) const;
 
       /**
        * @brief Returns a value of a path of the received json.
@@ -215,7 +204,7 @@ namespace tokenika
       Type get(const ptree::path_type & path) const {
         Type value;
         try {
-          value = getJsonPath<Type>(respJson, path);
+          value = getJsonPath<Type>(respJson_, path);
         }
         catch (exception& e) {
           cerr << "ERROR: " << e.what() << endl;
@@ -336,7 +325,7 @@ namespace tokenika
        * @param command command object, containing a responce from the blockchain.
        */
       virtual void getOutput(TeosCommand command) {
-        cout << command.toStringRcv() << endl;
+        cout << command.responseToString() << endl;
       }
 
       virtual void onError(TeosCommand command);

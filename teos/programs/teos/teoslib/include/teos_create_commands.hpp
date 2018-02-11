@@ -30,19 +30,17 @@ namespace tokenika
        * @param expirationSec time in seconds before a transaction expires.
        * @param depositEos initial deposit.
        * @param raw if true, resulting json is not formated.
-       * @param getRcvJson() returns a push-transaction json.
+       * @param getResponse() returns a push-transaction json.
       */
       CreateAccount(string creator, string accountName,
         string ownerKeyPubl, string activeKeyPubl,
         bool skip = false, int expirationSec = 30, int depositEos = 1,
         bool raw = false) : TeosCommand("", raw)
       {
-        TeosCommand tc = createAccount(
+        copy(createAccount(
           creator, accountName,
           ownerKeyPubl, activeKeyPubl,
-          skip, expirationSec, depositEos);
-        isError = tc.isError;
-        respJson = tc.getRcvJson();
+          skip, expirationSec, depositEos));
       }
 
       /**
@@ -51,17 +49,15 @@ namespace tokenika
        * "ownerKey":"<owner public key>" "activeKey":"<active public key>"
        * "skip":<false|true> "expiration":<int> "deposit":<int>}.
        * @param raw if true, resulting json is not formated.
-       * @param getRcvJson() returns a push-transaction json.
+       * @param getResponse() returns a push-transaction json.
       */
       CreateAccount(ptree reqJson, bool raw = false) : TeosCommand("", reqJson, raw)
       {
-        TeosCommand tc = createAccount(
+        copy(createAccount(
           reqJson.get<string>("creator"), reqJson.get<string>("name"),
           reqJson.get<string>("ownerKey"), reqJson.get<string>("activeKey"),
           reqJson.get<bool>("skip"), reqJson.get<int>("expiration"),
-          reqJson.get<int>("deposit"));
-        isError = tc.isError;
-        respJson = tc.getRcvJson();
+          reqJson.get<int>("deposit")));
       }
     };
 
@@ -162,14 +158,14 @@ Usage: ./teos create key [-j '{
        * @param keyName key-pair id.
        * @param raw a boolean argument:
        * if true, resulting json is not formated.
-       * @param getRcvJson() returns {"keyName":"<key name"
+       * @param getResponse() returns {"keyName":"<key name"
        * "privateKey":"<private key>" "publicKey":"<public key>"}.
        */
       CreateKey(string keyName, bool raw = false) : TeosCommand("", raw) {
         KeyPair kp;
-        respJson.put("name", keyName);
-        respJson.put("privateKey", kp.privateKey);
-        respJson.put("publicKey", kp.publicKey);
+        respJson_.put("name", keyName);
+        respJson_.put("privateKey", kp.privateKey);
+        respJson_.put("publicKey", kp.publicKey);
       }
 
       /**
@@ -177,15 +173,15 @@ Usage: ./teos create key [-j '{
        * @param reqJson a boost json tree argument: {"keyName":"<key name>"}.
        * @param raw a boolean argument:
        * if true, resulting json is not formated.
-       * @param getRcvJson() returns {"keyName":"<key name"
+       * @param getResponse() returns {"keyName":"<key name"
        * "privateKey":"<private key>" "publicKey":"<public key>"}.
        */
       CreateKey(ptree reqJson, bool raw = false) : TeosCommand(
         "", reqJson, raw) {
         KeyPair kp;
-        respJson.put("name", reqJson.get<string>("name"));
-        respJson.put("privateKey", kp.privateKey);
-        respJson.put("publicKey", kp.publicKey);
+        respJson_.put("name", reqJson.get<string>("name"));
+        respJson_.put("privateKey", kp.privateKey);
+        respJson_.put("publicKey", kp.publicKey);
       }
     };
 
@@ -245,7 +241,7 @@ Usage: ./teos create key [-j '{"name":"<key name>"}'] [OPTIONS]
 boost::property_tree::ptree reqJson;
 reqJson.put("name", "example_key");
 CreateKey createKey(reqJson);
-cout << createKey.toStringRcv() << endl;
+cout << createKey.responseToString() << endl;
 
 /*
 printout:
@@ -254,7 +250,7 @@ printout:
         boost::property_tree::ptree reqJson;
         reqJson.put("name", "example_key");
         CreateKey createKey(reqJson);
-        cout << createKey.toStringRcv() << endl;
+        cout << createKey.responseToString() << endl;
 
         cout << R"EOF(
 */

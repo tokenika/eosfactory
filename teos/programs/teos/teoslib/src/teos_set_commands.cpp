@@ -14,4 +14,3 @@ Subcommands:
     action          set or update blockchain action state
 )EOF";
 
-const std::string setCommandPath = "";
