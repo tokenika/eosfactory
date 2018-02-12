@@ -33,8 +33,8 @@ namespace tokenika
        * @param getResponse() returns a push-transaction json.
       */
       CreateAccount(string creator, string accountName,
-        string ownerKeyPubl, string activeKeyPubl,
-        bool skip = false, int expirationSec = 30, int depositEos = 1,
+        string ownerKeyPubl, string activeKeyPubl, long long depositEos = 1,
+        bool skip = false, int expirationSec = 30,
         bool raw = false) : TeosCommand("", raw)
       {
         copy(createAccount(
@@ -56,8 +56,8 @@ namespace tokenika
         copy(createAccount(
           reqJson.get<string>("creator"), reqJson.get<string>("name"),
           reqJson.get<string>("ownerKey"), reqJson.get<string>("activeKey"),
-          reqJson.get<bool>("skip"), reqJson.get<int>("expiration"),
-          reqJson.get<int>("deposit")));
+          reqJson.get<long long>("deposit"),
+          reqJson.get<bool>("skip"), reqJson.get<int>("expiration")));
       }
     };
 

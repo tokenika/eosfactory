@@ -238,8 +238,8 @@ namespace tokenika {
     }
 
     TeosCommand createAccount(string creatorStr, string nameStr,
-      string ownerKey, string activeKey,
-      bool skipSignature, int expiration, int deposit)
+      string ownerKey, string activeKey, long long deposit,
+      bool skipSignature, int expiration)
     {
       try {
         types::name creator = creatorStr;

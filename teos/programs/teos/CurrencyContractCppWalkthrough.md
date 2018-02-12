@@ -1,3 +1,24 @@
+# Example "Currency" Contract Walkthrough with Teos C++ library
+
+## Rationale
+
+Our aim is to provide methods and tools for development of EOS contracts. The construction part of an EOS contract development is currently done with a C++ environment. Therefore we want to have all the contract testing possibilities available within the same C++ IDE.
+
+More, we want to have this all on the MS Visual Studio platform, in order to limit the scope of skills needed for working on smart contracts.          
+
+Now, we already have our plan advanced:
+* We heve a trans-system version of a substantial part of the EOS code, corrected to be compatible with Windows;
+* C++ library for both Windows and Unix systems;
+* Command line drivers for this library classes that implement a CLI for EOS.
+
+In this article, we present, in action, our library. It is developed enough to implement an EOS contract testing routine with the Boost Unit Test Framework.
+
+## Walkthrough
+
+We present the library with the *Example Currency Contract Walkthrough* from the EOS README, however we rephrase it, a little bit. It follows the code of a testing program source file, chunked for better readability.
+
+### C++ overhead, skip it
+```
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -12,14 +33,16 @@
 #include <teos_wallet_commands.hpp>
 #include <teos_push_commands.hpp>
 
-#ifdef WIN32
-extern "C" FILE*  __cdecl __iob_func(void); //A temporary fix for a bug.
+#ifdef WIN32 // A temporary fix for a bug
+extern "C" FILE*  __cdecl __iob_func(void);
 #endif // WIN32
 
 int main(int argc, const char *argv[]) {
 
   using namespace tokenika::teos;
+```
 
+```
   TeosCommand::host = "localhost";
   TeosCommand::port = "8888";
   string walletName = "default";
@@ -29,31 +52,43 @@ int main(int argc, const char *argv[]) {
     = "/mnt/hgfs/Workspaces/EOS/eos/build/contracts/currency/currency.wast";
   string abiFile 
     = "/mnt/hgfs/Workspaces/EOS/eos/build/contracts/currency/currency.abi";
-
+```
+### Walkthrough
+```
   // Alice owns account named 'inita' as she possess its private key, which is 
   // 'initaKeyPriv'. She keeps this key in an EOS wallet, in order to prove 
   // (to the blockchain) her rights. 
   // She creates a wallet if she does not have any ...
+```
+```
   WalletCreate walletCreate(walletName);
   if (walletCreate.isError()) {
    cerr << walletCreate.responseToString() << endl;
   } else {
     cout << "wallet password: " << walletCreate.get<string>("password") << endl;
   }
+```
+```
   // OUTPUT:
   // wallet password: "PW5HtaVuqrcupUCoAkrbFhU5tpnujoVse5Fo8Jm3AQjFDi1jG9Wmo"
-  
+```
+```
   WalletUnlock walletUnlock(password, walletName);
   if(walletUnlock.isError()){
     cerr << walletUnlock.responseToString() << endl;
   } else {
     cout << walletUnlock.responseToString(false) << endl;
   }
+```
+```
   // OUTPUT (empty output means OK here):
   // {
   // }
-
+```
+```
   // ... and puts the private key into it:
+```
+```
   WalletImport walletImportInita(walletName, initaKeyPriv);
   if (walletImportInita.isError()) {
    cerr << walletImportInita.responseToString() << endl;
@@ -78,9 +113,11 @@ int main(int argc, const char *argv[]) {
   //   "publicKey": "EOS6iHkQJQyhDd5PWJNSTXcGqWxBWLuyPYPxswPvWXVYMwa16VbN7"
   // }
 
-  // The keys will prove the access permission for Alicia and, perhaps, for 
-  // somebody else. The private key of the 'active' pair has to be imported to 
-  // the Alicia's wallet:
+  /*
+  The keys will prove the access permission for Alicia and, perhaps, for 
+  somebody else. The private key of the 'active' pair has to be imported to 
+  the Alicia's wallet:
+  */
   WalletImport walletImportActive(walletName, 
    createKeyActive.get<string>("privateKey"));
   if (walletImportActive.isError()) {
@@ -110,7 +147,6 @@ int main(int argc, const char *argv[]) {
     << endl;
   // OUTPUT:
   // {
-
   // }
   
   // Alice can inspect her account. For test purposes, 'currency' account has got 
@@ -166,10 +202,14 @@ int main(int argc, const char *argv[]) {
     GetTable getTable("currency", "currency", "account");
     cout << getTable.responseToString() << endl;
   }
-
+```
+###  C++ final overhead, skip it
+```
 #ifdef WIN32
-  __iob_func(); //A temporary fix for a bug.
+  __iob_func(); //A temporary patch for a bug.
 #endif // WIN32
 
   return 1;
 }
+
+```
