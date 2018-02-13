@@ -3,9 +3,6 @@
 #include <iostream>
 #include <string>
 
-#include <boost/format.hpp>
-#include <boost/property_tree/ptree.hpp>
-
 #include <teos_get_commands.hpp>
 #include <teos_create_commands.hpp>
 #include <teos_set_commands.hpp>

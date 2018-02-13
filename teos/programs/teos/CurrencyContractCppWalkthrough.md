@@ -6,7 +6,7 @@ Our aim is to provide methods and tools for development of EOS contracts. The co
 
 More, we want to have this all on the MS Visual Studio platform, in order to limit the scope of skills needed for working on smart contracts.          
 
-Now, we already have our plan advanced:
+Now, we have our plan advanced:
 * We heve a trans-system version of a substantial part of the EOS code, corrected to be compatible with Windows;
 * C++ library for both Windows and Unix systems;
 * Command line drivers for this library classes that implement a CLI for EOS.
@@ -18,14 +18,11 @@ In this article, we present, in action, our library. It is developed enough to i
 We present the library with the *Example Currency Contract Walkthrough* from the EOS README, however we rephrase it, a little bit. It follows the code of a testing program source file, chunked for better readability.
 
 ### C++ overhead, skip it
-```cpp
+```
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <string>
-
-#include <boost/format.hpp>
-#include <boost/property_tree/ptree.hpp>
 
 #include <teos_get_commands.hpp>
 #include <teos_create_commands.hpp>
@@ -33,16 +30,15 @@ We present the library with the *Example Currency Contract Walkthrough* from the
 #include <teos_wallet_commands.hpp>
 #include <teos_push_commands.hpp>
 
-#ifdef WIN32 // A temporary fix for a bug
+#ifdef WIN32 // A temporary fix for a bug.
 extern "C" FILE*  __cdecl __iob_func(void);
 #endif // WIN32
 
 int main(int argc, const char *argv[]) {
 
   using namespace tokenika::teos;
+```  
 ```
-
-```cpp
   TeosCommand::host = "localhost";
   TeosCommand::port = "8888";
   string walletName = "default";
@@ -69,7 +65,7 @@ int main(int argc, const char *argv[]) {
     cout << "wallet password: " << walletCreate.get<string>("password") << endl;
   }
 ```
-```
+```cpp
 // OUTPUT:
 // wallet password: "PW5J48ERsPeusMRyEBLLworWTY2LFnB6yR6Fi6nvFhQvRy3BUAcsE"
 ```
@@ -84,7 +80,7 @@ int main(int argc, const char *argv[]) {
     cout << walletImportInita.responseToString(false) << endl;
   }
 ```
-```
+```cpp
 // OUTPUT (empty output means OK here):
 // {
 // }
@@ -163,66 +159,7 @@ int main(int argc, const char *argv[]) {
 //   "processed": {
 //     "ref_block_num": 1423,
 //     "ref_block_prefix": 2244224674,
-//     "expiration": "2018-02-13T08:58:13",
-//     "scope": [
-//       "eos",
-//       "inita"
-//     ],
-//     "signatures": [
-//       "1f55c4944ec805e48a6433bbe341b2be8ea279a3641b3512adc21e0a4cb372e0e044058950a60cd177d3134dabea7276436b5f09aa58d51a042dd1e6a7ac1e0f37"
-//     ],
-//     "messages": [{
-//         "code": "eos",
-//         "type": "newaccount",
-//         "authorization": [{
-//             "account": "inita",
-//             "permission": "active"
-//           }
-//         ],
-//         "data": {
-//           "creator": "inita",
-//           "name": "currency",
-//           "owner": {
-//             "threshold": 1,
-//             "keys": [{
-//                 "key": "EOS7g7Jcnse742LHD96bm34EE8n7CoP19io3uruQv7osobnh7FY1J",
-//                 "weight": 1
-//               }
-//             ],
-//             "accounts": []
-//           },
-//           "active": {
-//             "threshold": 1,
-//             "keys": [{
-//                 "key": "EOS7jMz68MxycP6fGmXbrtJv8ZMDti2NW3X9MEkLczPuEjm271mcV",
-//                 "weight": 1
-//               }
-//             ],
-//             "accounts": []
-//           },
-//           "recovery": {
-//             "threshold": 1,
-//             "keys": [],
-//             "accounts": [{
-//                 "permission": {
-//                   "account": "inita",
-//                   "permission": "active"
-//                 },
-//                 "weight": 1
-//               }
-//             ]
-//           },
-//           "deposit": "0.0050 EOS"
-//         },
-//         "hex_data": "000000000093dd740000001e4d75af460100000001036efa45b22f85406567a9661837c43fbf7c1906abb7575d6c19c92834ffa16882010000010000000103765d3d4a17589d17536a157b867666844b661665ee4655722941f8f2e2b26166010000010000000001000000000093dd7400000000a8ed32320100010000000000000004454f5300000000"
-//       }
-//     ],
-//     "output": [{
-//         "notify": [],
-//         "deferred_trxs": []
-//       }
-//     ]
-//   }
+
 // }
 
   // If the previous creation step was successful, account 'currency' is 
