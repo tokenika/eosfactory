@@ -39,8 +39,8 @@ namespace tokenika
       {
         copy(createAccount(
           creator, accountName,
-          ownerKeyPubl, activeKeyPubl,
-          skip, expirationSec, depositEos));
+          ownerKeyPubl, activeKeyPubl, depositEos,
+          skip, expirationSec));
       }
 
       /**

@@ -159,11 +159,11 @@ namespace fc
   void to_variant( const uint128& var,  variant& vo );
   void from_variant( const variant& var,  uint128& vo );
 /*
-<BlockOne>
+<BlockOne>  
   void to_variant( const unsigned __int128& var,  variant& vo );
 </BlockOne>
 */
-//<Tokenika>
+//<Tokenika> 
   void to_variant( const boost_uint128& var,  variant& vo );
 //</Tokenika>
 
@@ -172,7 +172,7 @@ namespace fc
   void from_variant( const variant& var,  unsigned __int128& vo );
 </BlockOne>
 */
-//<Tokenika>
+//<Tokenika> ERROR eos/libraries/fc/include/fc/reflect/variant.hpp:74:33: error: ‘visit’ is not a member of ‘fc::reflector<__int128 unsigned>’
   void from_variant( const variant& var,  boost_uint128& vo );
 //</Tokenika>
 
