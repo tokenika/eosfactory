@@ -1,6 +1,7 @@
 target
 *.exe
 build
+buildWindows
 **/Debug
 **/x64
 **/.vs

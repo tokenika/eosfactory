@@ -3,7 +3,7 @@ project ("teos")
 
 set( VERSION_MAJOR 0 )
 set( VERSION_MINOR 5 )
-set( cmake_build_type debug )
+set( CMAKE_BUILD_TYPE "Debug" )
 set ( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake" )
 #include(cotire)
 include( "${PROJECT_SOURCE_DIR}/CMake/config.cmake" )
@@ -113,8 +113,11 @@ macro( applLinkLibraries applName )
   endif()
 
   if( UNIX )
-    set( pthread_library pthread )
-    target_link_libraries( ${applName} PUBLIC rt )
+    target_link_libraries( ${applName} 
+      PRIVATE 
+        rt 
+        pthread
+    )
   endif()
 
   if( WIN32 )

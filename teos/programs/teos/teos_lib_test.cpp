@@ -17,8 +17,10 @@ int main(int argc, const char *argv[]) {
 
   using namespace tokenika::teos;
 
-  TeosCommand::host = "localhost";
+  TeosCommand::host = "192.168.1.100";
   TeosCommand::port = "8888";
+  //TeosCommand::walletHost = TeosCommand::host;
+  //TeosCommand::walletPort = TeosCommand::port;
   string walletName = "default";
   string password = "PW5JbTXTxszm9RU2Kh29MfDuPw7x1FLPHasE9Pz7whJWp71hzPLQ5";
   string initaKeyPriv = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
@@ -32,6 +34,7 @@ int main(int argc, const char *argv[]) {
   // (to the blockchain) her rights. 
   
   // She creates a wallet if she does not have any ...
+
   WalletCreate walletCreate(walletName);
   if (walletCreate.isError()) {
    cerr << walletCreate.responseToString() << endl;
@@ -111,71 +114,14 @@ int main(int argc, const char *argv[]) {
     cout << createAccount.responseToString(false) << endl;
   }
 //  OUTPUT:
-//   {
-//   "transaction_id": "c2a59485fe795f2d6d7a0c44614188a3bdbb0f81ca4945e0cf3c766fdd8e96e3",
-//   "processed": {
-//     "ref_block_num": 1423,
-//     "ref_block_prefix": 2244224674,
-//     "expiration": "2018-02-13T08:58:13",
-//     "scope": [
-//       "eos",
-//       "inita"
-//     ],
-//     "signatures": [
-//       "1f55c4944ec805e48a6433bbe341b2be8ea279a3641b3512adc21e0a4cb372e0e044058950a60cd177d3134dabea7276436b5f09aa58d51a042dd1e6a7ac1e0f37"
-//     ],
-//     "messages": [{
-//         "code": "eos",
-//         "type": "newaccount",
-//         "authorization": [{
-//             "account": "inita",
-//             "permission": "active"
-//           }
-//         ],
-//         "data": {
-//           "creator": "inita",
-//           "name": "currency",
-//           "owner": {
-//             "threshold": 1,
-//             "keys": [{
-//                 "key": "EOS7g7Jcnse742LHD96bm34EE8n7CoP19io3uruQv7osobnh7FY1J",
-//                 "weight": 1
-//               }
-//             ],
-//             "accounts": []
-//           },
-//           "active": {
-//             "threshold": 1,
-//             "keys": [{
-//                 "key": "EOS7jMz68MxycP6fGmXbrtJv8ZMDti2NW3X9MEkLczPuEjm271mcV",
-//                 "weight": 1
-//               }
-//             ],
-//             "accounts": []
-//           },
-//           "recovery": {
-//             "threshold": 1,
-//             "keys": [],
-//             "accounts": [{
-//                 "permission": {
-//                   "account": "inita",
-//                   "permission": "active"
-//                 },
-//                 "weight": 1
-//               }
-//             ]
-//           },
-//           "deposit": "0.0050 EOS"
-//         },
-//         "hex_data": "000000000093dd740000001e4d75af460100000001036efa45b22f85406567a9661837c43fbf7c1906abb7575d6c19c92834ffa16882010000010000000103765d3d4a17589d17536a157b867666844b661665ee4655722941f8f2e2b26166010000010000000001000000000093dd7400000000a8ed32320100010000000000000004454f5300000000"
-//       }
-//     ],
-//     "output": [{
-//         "notify": [],
-//         "deferred_trxs": []
-//       }
-//     ]
-//   }
+// {
+//  "transaction_id": "703d16aa135583d2e96bcf5f9c35ce88375312fd40946899ffd8899404fc4183",
+//    "processed" : {
+//    "status": "executed",
+//      "id" : "703d16aa135583d2e96bcf5f9c35ce88375312fd40946899ffd8899404fc4183",
+//      "action_traces" : "",
+//      "deferred_transactions" : ""
+//  }
 // }
 
   // If the previous creation step was successful, account 'currency' is 
@@ -185,21 +131,6 @@ int main(int argc, const char *argv[]) {
 // OUTPUT:
 // {
 // transaction id: "b0f42ee1a50604ce2d1d1b4b3e069912952906014a2bdbe4107d7c8d4ab8b87b"
-// }
-  
-  // Alice can inspect her account:
-  {
-    GetAccount getAccount("currency");
-    cout << "eos balance: " << getAccount.get<string>("eos_balance") << endl;
-    cout << "staked balance: " << getAccount.get<string>("staked_balance") << endl;
-    cout << "unstaking balance: " << getAccount.get<string>("unstaking_balance") 
-      << endl;
-  }
-// OUTPUT:
-// {
-// eos balance: 0.0000 EOS
-// staked balance: 0.0001 EOS
-// eos balance: 0.0000 EOS
 // }
 
   // Alicia needs means to transfer her money from 'currency' account to 'inita' 

@@ -168,8 +168,10 @@ Definitions for class TeosCommand.
       string port_;
 
       if (isWalletCommand()) {
-        host_ = (walletHost == "") ? config.get("teos.walletServer", HOST_DEFAULT) : walletHost;
-        port_ = (walletPort == "") ? config.get("teos.walletPort", PORT_DEFAULT) : walletPort;
+        host_ = (walletHost != "") ? walletHost : 
+          ((host != "") ? host : config.get("teos.walletServer", HOST_DEFAULT));
+        port_ = (walletPort != "") ? walletPort : 
+          ((port != "") ? port : config.get("teos.walletPort", PORT_DEFAULT));
       }
       else {
         host_ = (host == "") ? config.get("teos.server", HOST_DEFAULT) : host;

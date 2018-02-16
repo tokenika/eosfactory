@@ -16,6 +16,7 @@
 #include <teos_wallet_commands.hpp>
 #include <teos_create_commands.hpp>
 #include <teos_set_commands.hpp>
+#include <teos_push_commands.hpp>
 #include <teos_other_commands.hpp>
 #include <subcommands.hpp>
 
@@ -92,6 +93,8 @@ int main(int argc, const char *argv[]) {
       TeosCommand::host = string(ipAddress.substr(0, colon));
       TeosCommand::port = string(ipAddress.substr(colon + 1,
         ipAddress.size()));
+      TeosCommand::walletHost = TeosCommand::host;
+      TeosCommand::walletPort = TeosCommand::port;
       argv++;
       argc--;
     }
@@ -100,6 +103,8 @@ int main(int argc, const char *argv[]) {
     {
       TeosCommand::host = TEST_HOST;
       TeosCommand::port = TEST_PORT;
+      TeosCommand::walletHost = TeosCommand::host;
+      TeosCommand::walletPort = TeosCommand::port;
       argv++;
       argc--;
     }
@@ -116,9 +121,11 @@ int main(int argc, const char *argv[]) {
       ("port,p", value<string>()->default_value(
         TeosCommand::port == "" ? PORT_DEFAULT : TeosCommand::port),
         "The port where eosd is running")
-      ("wallet-host", value<string>()->default_value(HOST_DEFAULT),
+      ("wallet-host", value<string>()->default_value
+        ((TeosCommand::walletHost != "") ? TeosCommand::walletHost: HOST_DEFAULT),
         "The host where eos-wallet is running")
-      ("wallet-port", value<string>()->default_value(PORT_DEFAULT),
+      ("wallet-port", value<string>()->default_value
+        ((TeosCommand::walletPort != "") ? TeosCommand::walletPort : PORT_DEFAULT),
         "The port where eos-wallet is running")
       ("verbose,V", "Output verbose messages on error");
 
@@ -228,6 +235,7 @@ int main(int argc, const char *argv[]) {
       IF_ELSE(create_key, CreateKey)
       IF_ELSE(create_account, CreateAccount)
       IF_ELSE(set_contract, SetContract)
+      IF_ELSE(push_message, PushMessage)
       {
         cerr << "unknown command!" << endl;
       }

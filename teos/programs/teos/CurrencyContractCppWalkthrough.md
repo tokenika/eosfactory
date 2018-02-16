@@ -6,8 +6,8 @@ Our aim is to provide methods and tools for development of EOS contracts. The co
 
 More, we want to have this all on the MS Visual Studio platform, in order to limit the scope of skills needed for working on smart contracts.          
 
-Now, we have our plan advanced:
-* We heve a trans-system version of a substantial part of the EOS code, corrected to be compatible with Windows;
+We have advanced since the previous post:
+* We have a trans-system version of a substantial part of the EOS code, corrected to be compatible with Windows;
 * C++ library for both Windows and Unix systems;
 * Command line drivers for this library classes that implement a CLI for EOS.
 
