@@ -5,7 +5,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <config.h>
-#include <pentagon/config.hpp>
+#include <control/config.hpp>
 
 #define _CRT_SECURE_NO_WARNINGS
 

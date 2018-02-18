@@ -39,8 +39,6 @@ namespace pentagon {
         std::cout << boost::format("Failed to kill %1%.\n") % CHAIN_NODE;
       }
     }
-
-
   }
 }
 

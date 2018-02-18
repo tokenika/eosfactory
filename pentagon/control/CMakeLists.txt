@@ -1,3 +1,17 @@
+cmake_minimum_required (VERSION 3.8)
+set( projectName pentagonConfig )
+project( ${projectName} )
+
+set( VERSION_MAJOR 0 )
+set( VERSION_MINOR 1 )
+set( CONFIG_JSON "\"config.json\"" )
+set( LOGGING_DIR "\"\"" )
+configure_file(
+  "${PROJECT_SOURCE_DIR}/config.h.in"
+  "${CMAKE_SOURCE_DIR}/include/config.h"
+)
+set( CMAKE_BUILD_TYPE "Debug" )
+
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
 set( Boost_USE_STATIC_RUNTIME OFF )
@@ -33,12 +47,13 @@ macro( appDependencies applName )
   target_sources( ${applName} 
     PRIVATE
       ${HEADERS}
-      ${CMAKE_SOURCE_DIR}/config.cpp
+      config.cpp
   )
   target_include_directories( ${applName}
     PRIVATE
       ${Boost_INCLUDE_DIR}
       include
+      ${CMAKE_SOURCE_DIR}/../include
   )
   target_link_libraries( ${applName}
     PRIVATE
@@ -53,17 +68,8 @@ macro( appDependencies applName )
   endif()
 endmacro()
 
-add_executable( echo_server
-  async_tcp_echo_server.cpp
-)
-appDependencies( echo_server )
-
-add_executable( echo_client
-  blocking_tcp_echo_client.cpp
-)
-appDependencies( echo_client )
-
 add_executable( boost_process
+  control.cpp
   boostProcess.cpp;
 )
 appDependencies( boost_process )
