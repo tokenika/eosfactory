@@ -29,10 +29,11 @@ else( Boost_FOUND )
 endif( Boost_FOUND )
 
 macro( appDependencies applName )
-  file(GLOB HEADERS "include/pentagon/control/*.hpp")
+  file(GLOB HEADERS "include/control/*.hpp")
   target_sources( ${applName} 
     PRIVATE
       ${HEADERS}
+      ${CMAKE_SOURCE_DIR}/config.cpp
   )
   target_include_directories( ${applName}
     PRIVATE

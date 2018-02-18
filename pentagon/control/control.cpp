@@ -10,26 +10,7 @@
 
 #include <control/config.hpp>
 
-using namespace boost::process;
-using namespace std;
-
-int processEcho(string cmdLine, string& echo)
-{
-  ipstream pipe_stream;
-  child c(cmdLine, std_out > pipe_stream);
-
-  string line;
-  stringstream ss;
-  string endln;
-  while (pipe_stream && getline(pipe_stream, line) && !line.empty()){
-      ss << endln;
-      ss << line;
-      endln = "\n";
-  }
-  c.wait();
-  echo = ss.str();    
-  return c.exit_code();
-}
+#include <control/control.hpp>
 
 void stopChainNode() 
 {
@@ -227,15 +208,4 @@ void buildContract(
   */
 }
 
-int main()
-{
-  generateAbi(
-    "/mnt/hgfs/Workspaces/EOS/eos/contracts/currency/currency.hpp",
-    "/tmp/xxx.abi"   
-  );
-  buildContract(
-    {"/mnt/hgfs/Workspaces/EOS/eos/contracts/currency/currency.cpp"},
-    "/tmp/xxx.wast"   
-  );
-  stopChainNode();
-}
+
