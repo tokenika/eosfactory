@@ -9,9 +9,9 @@ using namespace std;
 extern const char* setSubcommands;
 extern const string setCommandPath;
 
-namespace tokenika
+namespace teos
 {
-  namespace teos
+  namespace command
   {
     /**
     Create or update the contract on an account.

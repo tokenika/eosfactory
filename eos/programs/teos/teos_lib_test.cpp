@@ -15,7 +15,7 @@ extern "C" FILE*  __cdecl __iob_func(void); //A temporary fix for a bug.
 
 int main(int argc, const char *argv[]) {
 
-  using namespace tokenika::teos;
+  using namespace teos::command;
 
   TeosCommand::host = "192.168.1.100";
   TeosCommand::port = "8888";

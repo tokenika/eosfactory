@@ -3,9 +3,9 @@
 #include <teoslib/config.h>
 #include <teos/command/command.hpp>
 
-namespace tokenika
+namespace teos
 {
-  namespace teos
+  namespace command
   {
     class VersionClient : public TeosCommand
     {

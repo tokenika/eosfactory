@@ -10,7 +10,7 @@
 void test()
 {
   using namespace std;
-  using namespace tokenika::teos;
+  using namespace teos::command;
 
   vector<string>
 

@@ -20,9 +20,9 @@
 using namespace std;
 using namespace boost::property_tree;
 
-namespace tokenika
+namespace teos
 {
-  namespace teos
+  namespace command
   {
 
     void output(const char* label, const char* format, ...) {

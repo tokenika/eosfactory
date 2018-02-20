@@ -15,9 +15,9 @@ using namespace boost::property_tree;
 extern const char* walletSubcommands;
 extern const string walletCommandPath;
 
-namespace tokenika
+namespace teos
 {
-  namespace teos
+  namespace command
   {
 #define DEFAULT_WALLET_NAME "default"
     /**

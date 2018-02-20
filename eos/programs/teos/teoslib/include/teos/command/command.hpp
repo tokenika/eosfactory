@@ -28,9 +28,9 @@ using namespace boost::property_tree;
 
 extern const string walletCommandPath;
 
-namespace tokenika
+namespace teos
 {
-  namespace teos
+  namespace command
   {
 
     /**

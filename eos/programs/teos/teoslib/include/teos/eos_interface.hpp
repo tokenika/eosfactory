@@ -7,8 +7,8 @@
 
 using namespace std;
 
-namespace tokenika{ 
-  namespace teos{
+namespace teos{ 
+  namespace command{
 
     class KeyPair {
 

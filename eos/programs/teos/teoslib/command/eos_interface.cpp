@@ -33,8 +33,8 @@
 
 using namespace std;
 
-namespace tokenika {
-  namespace teos {
+namespace teos {
+  namespace command {
 
     KeyPair::KeyPair() {
       fc::ecc::private_key pk = fc::ecc::private_key::generate();
@@ -54,7 +54,7 @@ namespace tokenika {
 #define TEOS_ERROR true
 #define CODE_PATH boost::str(boost::format("%1% (%2% [%3%]) ") % __func__ % __FILE__ % __LINE__)
 
-    class CallChain : public tokenika::teos::TeosCommand
+    class CallChain : public teos::command::TeosCommand
     {
       std::string requestStr;
     public:
@@ -110,7 +110,7 @@ namespace tokenika {
       }
     }
 
-    using namespace tokenika::teos;
+    using namespace teos::command;
     using namespace eosio;
     //using namespace eosio::chain;
     //using namespace eosio::utilities;

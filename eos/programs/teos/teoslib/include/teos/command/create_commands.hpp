@@ -9,9 +9,9 @@ using namespace std;
 extern const char* createSubcommands;
 extern const string createCommandPath;
 
-namespace tokenika
+namespace teos
 {
-  namespace teos
+  namespace command
   {
     /**
     Creates a new account on the blockchain.

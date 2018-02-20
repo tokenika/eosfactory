@@ -26,7 +26,7 @@
 #define IF_ELSE(commandName_, classPrefix)                          \
   if (commandName == #commandName_)                                 \
   {                                                                 \
-    tokenika::teos::classPrefix##Options(argcLeft, argvLeft).go();  \
+    teos::command::classPrefix##Options(argcLeft, argvLeft).go();  \
   }                                                                 \
   else
 
@@ -73,7 +73,7 @@ int main(int argc, const char *argv[]) {
 #endif // WIN32
 
   using namespace std;
-  using namespace tokenika::teos;
+  using namespace teos::command;
   using namespace boost::program_options;
 
   const char* argv0 = argv[0];

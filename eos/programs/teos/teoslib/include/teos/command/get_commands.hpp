@@ -22,9 +22,9 @@ using namespace boost::property_tree;
 extern const char* getSubcommands;
 extern const string getCommandPath;
 
-namespace tokenika
+namespace teos
 {
-  namespace teos
+  namespace command
   {
 
     /**
@@ -43,7 +43,7 @@ namespace tokenika
      * int main(int argc, char *argv[])
      * {
      * boost::property_tree::ptree reqJson;
-     * tokenika::teos::GetInfo GetInfo(getInfoPostJson);
+     * teos::command::GetInfo GetInfo(getInfoPostJson);
      * std::cout << GetInfo.get<int>("last_irreversible_block_num")) << std::endl;
      * boost::property_tree::ptree rcv_json = GetInfo.getResponse();
      * std::cout << GetBlock.responseToString() << std::endl; // Print the response json.
@@ -89,7 +89,7 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
         return GetInfo(reqJson, is_raw);
       }
 
-      void getOutput(tokenika::teos::TeosCommand command) {
+      void getOutput(teos::command::TeosCommand command) {
         output("head block", "%d", command.get<int>("head_block_num"));
         output("head block time", "%s", GET_STRING(command, "head_block_time"));
         output("last irreversible block", "%d", command.get<int>("last_irreversible_block_num"));

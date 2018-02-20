@@ -11,9 +11,9 @@ using namespace std;
 
 extern const char* pushSubcommands;
 
-namespace tokenika
+namespace teos
 {
-  namespace teos
+  namespace command
   {
     /**
     Push a transaction with a single message

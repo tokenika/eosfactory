@@ -36,7 +36,7 @@ extern "C" FILE*  __cdecl __iob_func(void);
 
 int main(int argc, const char *argv[]) {
 
-  using namespace tokenika::teos;
+  using namespace teos::command;
 ```  
 ```
   TeosCommand::host = "localhost";
