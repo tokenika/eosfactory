@@ -1,7 +1,7 @@
 #pragma once
 
 #include <teoslib/config.h>
-#include <teos/command/teos_command.hpp>
+#include <teos/command/command.hpp>
 
 namespace tokenika
 {

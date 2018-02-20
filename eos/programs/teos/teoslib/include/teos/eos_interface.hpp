@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string>
 
-#include <teos/command/teos_command.hpp>
+#include <teos/command/command.hpp>
 
 using namespace std;
 

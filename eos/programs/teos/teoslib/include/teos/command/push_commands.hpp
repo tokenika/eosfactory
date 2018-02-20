@@ -5,7 +5,7 @@
 
 #include <teoslib/config.h>
 #include <teos/eos_interface.hpp>
-#include <teos/command/teos_command.hpp>
+#include <teos/command/command.hpp>
 
 using namespace std;
 

@@ -6,7 +6,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <teoslib/config.h>
-#include <teos/command/teos_command.hpp>
+#include <teos/command/command.hpp>
 
 using namespace std;
 using namespace boost::program_options;

@@ -12,12 +12,12 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
-#include <teos/command/teos_get_commands.hpp>
-#include <teos/command/teos_wallet_commands.hpp>
-#include <teos/command/teos_create_commands.hpp>
-#include <teos/command/teos_set_commands.hpp>
-#include <teos/command/teos_push_commands.hpp>
-#include <teos/command/teos_other_commands.hpp>
+#include <teos/command/get_commands.hpp>
+#include <teos/command/wallet_commands.hpp>
+#include <teos/command/create_commands.hpp>
+#include <teos/command/set_commands.hpp>
+#include <teos/command/push_commands.hpp>
+#include <teos/command/other_commands.hpp>
 #include <teos/command/subcommands.hpp>
 
 #include <teos/teos.hpp>

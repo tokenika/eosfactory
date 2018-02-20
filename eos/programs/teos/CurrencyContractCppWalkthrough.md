@@ -24,11 +24,11 @@ We present the library with the *Example Currency Contract Walkthrough* from the
 #include <iostream>
 #include <string>
 
-#include <teos_get_commands.hpp>
-#include <teos_create_commands.hpp>
-#include <teos_set_commands.hpp>
-#include <teos_wallet_commands.hpp>
-#include <teos_push_commands.hpp>
+#include <get_commands.hpp>
+#include <create_commands.hpp>
+#include <set_commands.hpp>
+#include <wallet_commands.hpp>
+#include <push_commands.hpp>
 
 #ifdef WIN32 // A temporary fix for a bug.
 extern "C" FILE*  __cdecl __iob_func(void);

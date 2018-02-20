@@ -1,4 +1,4 @@
-#include <teos/command/teos_push_commands.hpp>
+#include <teos/command/push_commands.hpp>
 
 const char* pushSubcommands = R"EOF(
 ERROR: RequiredError: Subcommand required

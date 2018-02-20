@@ -119,6 +119,7 @@ macro( applLinkLibraries applName )
       PRIVATE 
         rt 
         pthread
+        asan
     )
   endif()
 
@@ -159,9 +160,7 @@ add_executable( teos_lib_test teos_lib_test.cpp )
 applLinkLibraries( teos_lib_test )
 install( TARGETS teos_lib_test RUNTIME DESTINATION bin)
 
-add_executable( prototype 
-  prototype.cpp 
-)
+add_executable( prototype  prototype.cpp )
 target_include_directories( prototype  
   PRIVATE
     "${CMAKE_SOURCE_DIR}/plugins/chain_plugin/include"

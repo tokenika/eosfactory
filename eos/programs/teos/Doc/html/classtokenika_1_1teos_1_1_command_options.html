@@ -77,7 +77,7 @@ $(function() {
 <p>Command-line wrapper for teos commands.  
  <a href="classtokenika_1_1teos_1_1_command_options.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="teos__command_8hpp_source.html">teos_command.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="teos__command_8hpp_source.html">command.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for tokenika::teos::CommandOptions:</div>
 <div class="dyncontent">
@@ -126,17 +126,17 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ac6eb5f5a136b45e715982c1320cb1140"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1teos_1_1_command_options.html#ac6eb5f5a136b45e715982c1320cb1140">setJson</a> (variables_map &amp;vm)</td></tr>
 <tr class="memdesc:ac6eb5f5a136b45e715982c1320cb1140"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills the post json tree according to options.  <a href="#ac6eb5f5a136b45e715982c1320cb1140">More...</a><br /></td></tr>
 <tr class="separator:ac6eb5f5a136b45e715982c1320cb1140"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03be93557a6db62514ad5600540fc7b8"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtokenika_1_1teos_1_1_teos_command.html">TeosCommand</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1teos_1_1_command_options.html#a03be93557a6db62514ad5600540fc7b8">getCommand</a> (bool isRaw)</td></tr>
+<tr class="memitem:a03be93557a6db62514ad5600540fc7b8"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtokenika_1_1teos_1_1_command.html">TeosCommand</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1teos_1_1_command_options.html#a03be93557a6db62514ad5600540fc7b8">getCommand</a> (bool isRaw)</td></tr>
 <tr class="memdesc:a03be93557a6db62514ad5600540fc7b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns command object, containing a responce from the blockchain.  <a href="#a03be93557a6db62514ad5600540fc7b8">More...</a><br /></td></tr>
 <tr class="separator:a03be93557a6db62514ad5600540fc7b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ce569ba8960975e3015109a255bbb47"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1teos_1_1_command_options.html#a3ce569ba8960975e3015109a255bbb47">getExample</a> ()</td></tr>
 <tr class="memdesc:a3ce569ba8960975e3015109a255bbb47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for any exemplary code snippet.  <a href="#a3ce569ba8960975e3015109a255bbb47">More...</a><br /></td></tr>
 <tr class="separator:a3ce569ba8960975e3015109a255bbb47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0deec5404ef9718e5532c6201f4ee6d5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1teos_1_1_command_options.html#a0deec5404ef9718e5532c6201f4ee6d5">getOutput</a> (<a class="el" href="classtokenika_1_1teos_1_1_teos_command.html">TeosCommand</a> command)</td></tr>
+<tr class="memitem:a0deec5404ef9718e5532c6201f4ee6d5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtokenika_1_1teos_1_1_command_options.html#a0deec5404ef9718e5532c6201f4ee6d5">getOutput</a> (<a class="el" href="classtokenika_1_1teos_1_1_command.html">TeosCommand</a> command)</td></tr>
 <tr class="memdesc:a0deec5404ef9718e5532c6201f4ee6d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for printout instructions.  <a href="#a0deec5404ef9718e5532c6201f4ee6d5">More...</a><br /></td></tr>
 <tr class="separator:a0deec5404ef9718e5532c6201f4ee6d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace84ba181e7a12f79784399d62017abd"><td class="memItemLeft" align="right" valign="top"><a id="ace84ba181e7a12f79784399d62017abd"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onError</b> (<a class="el" href="classtokenika_1_1teos_1_1_teos_command.html">TeosCommand</a> command)</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>onError</b> (<a class="el" href="classtokenika_1_1teos_1_1_command.html">TeosCommand</a> command)</td></tr>
 <tr class="separator:ace84ba181e7a12f79784399d62017abd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
@@ -161,7 +161,7 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classtokenika_1_1teos_1_1_teos_command.html">TeosCommand</a> tokenika::teos::CommandOptions::getCommand </td>
+          <td class="memname">virtual <a class="el" href="classtokenika_1_1teos_1_1_command.html">TeosCommand</a> tokenika::teos::CommandOptions::getCommand </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>isRaw</em></td><td>)</td>
@@ -182,7 +182,7 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classtokenika_1_1teos_1_1_teos_command.html" title="Basic connection to the blockchain. ">TeosCommand</a> command object </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classtokenika_1_1teos_1_1_command.html" title="Basic connection to the blockchain. ">TeosCommand</a> command object </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classtokenika_1_1teos_1_1_wallet_keys_options.html#a9db8cf380f083a270db4485c50306f64">tokenika::teos::WalletKeysOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_wallet_unlock_options.html#ad763e59a7af46636d073714b05a68889">tokenika::teos::WalletUnlockOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_wallet_lock_all_options.html#aad169fe9a2ca0c5bb1b108120ce5a0e9">tokenika::teos::WalletLockAllOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_wallet_lock_options.html#af25096220445839651731a418a310567">tokenika::teos::WalletLockOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_get_table_options.html#a315365f2e2b1e7acc27dae3bccefbaab">tokenika::teos::GetTableOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_wallet_open_options.html#a638ce91fe4588dba11c44e5feed4bd55">tokenika::teos::WalletOpenOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_get_code_options.html#ab47a1a5fbf2a5478949820a784a54cd4">tokenika::teos::GetCodeOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_wallet_list_options.html#a7eb607a3114a2258c190670c6a883f95">tokenika::teos::WalletListOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_get_account_options.html#a9ba829e7c5b8e7aa102a9e8c0d632ceb">tokenika::teos::GetAccountOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_wallet_import_options.html#af3cab86291aec5ff6db1d8a83f8a4812">tokenika::teos::WalletImportOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_get_block_options.html#ac37a405c15e3467769cd250e74319292">tokenika::teos::GetBlockOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_create_key_options.html#a2055ef53a74fb00127c3b73b9282a00a">tokenika::teos::CreateKeyOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_create_account_options.html#a931802598fdf5e64e14eb42805f459fd">tokenika::teos::CreateAccountOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_wallet_create_options.html#aee8f0f30e29e1ab1eab27a29640381a1">tokenika::teos::WalletCreateOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_set_contract_options.html#a98837fec894c9ef74d3543f86c24ae09">tokenika::teos::SetContractOptions</a>, <a class="el" href="classtokenika_1_1teos_1_1_get_info_options.html#ab0b280cca697d66f4732a106928f8b56">tokenika::teos::GetInfoOptions</a>, and <a class="el" href="classtokenika_1_1teos_1_1_version_client_options.html#a3c636d26843b5c28bb9e8de94d738e9a">tokenika::teos::VersionClientOptions</a>.</p>
 
@@ -230,7 +230,7 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
         <tr>
           <td class="memname">virtual void tokenika::teos::CommandOptions::getOutput </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtokenika_1_1teos_1_1_teos_command.html">TeosCommand</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classtokenika_1_1teos_1_1_command.html">TeosCommand</a>&#160;</td>
           <td class="paramname"><em>command</em></td><td>)</td>
           <td></td>
         </tr>
@@ -391,8 +391,8 @@ false if post json cannot be set completely </dd></dl>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="teos__command_8hpp_source.html">teos_command.hpp</a></li>
-<li>teos_command.cpp</li>
+<li><a class="el" href="teos__command_8hpp_source.html">command.hpp</a></li>
+<li>command.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -1,4 +1,4 @@
-#include <teos/command/teos_set_commands.hpp>
+#include <teos/command/set_commands.hpp>
 
 
 const char* setSubcommands = R"EOF(

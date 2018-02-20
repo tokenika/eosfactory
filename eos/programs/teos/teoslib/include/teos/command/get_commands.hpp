@@ -1,5 +1,5 @@
 /**
- * @file teos_get_commands.hpp
+ * @file get_commands.hpp
  *
  * Definitions for get-type commands.
  *
@@ -11,8 +11,8 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <teos/config.h>
-#include <teos/command/teos_command.hpp>
+#include <teoslib/config.h>
+#include <teos/command/command.hpp>
 #include <teos/eos_interface.hpp>
 
 using namespace std;
@@ -38,7 +38,7 @@ namespace tokenika
      * #include <iostream>
      * #include <string>
      * #include <boost/property_tree/ptree.hpp>
-     * #include "teosCommands/teos_get_commands.hpp"
+     * #include "teosCommands/get_commands.hpp"
      *
      * int main(int argc, char *argv[])
      * {

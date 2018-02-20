@@ -3,11 +3,11 @@
 #include <iostream>
 #include <string>
 
-#include <teos/command/teos_get_commands.hpp>
-#include <teos/command/teos_create_commands.hpp>
-#include <teos/command/teos_set_commands.hpp>
-#include <teos/command/teos_wallet_commands.hpp>
-#include <teos/command/teos_push_commands.hpp>
+#include <teos/command/get_commands.hpp>
+#include <teos/command/create_commands.hpp>
+#include <teos/command/set_commands.hpp>
+#include <teos/command/wallet_commands.hpp>
+#include <teos/command/push_commands.hpp>
 
 #ifdef WIN32
 extern "C" FILE*  __cdecl __iob_func(void); //A temporary fix for a bug.

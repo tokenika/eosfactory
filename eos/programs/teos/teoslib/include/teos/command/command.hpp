@@ -1,5 +1,5 @@
 /**
- * @file teos_command.hpp
+ * @file command.hpp
  * @copyright defined in resources/LICENSE.txt
  * @brief Tool for sending transactions and querying state from EOS blockchain
  *

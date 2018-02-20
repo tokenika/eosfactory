@@ -15,7 +15,7 @@
 #endif
 
 #include <teoslib/config.h>
-#include <teos/command/teos_command.hpp>
+#include <teos/command/command.hpp>
 
 using namespace std;
 using namespace boost::property_tree;

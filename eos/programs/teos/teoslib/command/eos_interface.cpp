@@ -29,7 +29,7 @@
 #include <Runtime/Runtime.h>
 
 #include <teos/eos_interface.hpp>
-#include <teos/command/teos_get_commands.hpp>
+#include <teos/command/get_commands.hpp>
 
 using namespace std;
 
