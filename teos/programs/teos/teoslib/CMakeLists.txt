@@ -1,8 +1,8 @@
 
 set(LIB_NAME "teoslib")
 
-file(GLOB HEADERS "include/*.hpp")
-file(GLOB SRC LIST_DIRECTORIES false "command/*.cpp")
+file(GLOB HEADERS "include/teos/*.hpp" "include/teos/command/*.hpp" "include/teos/control/*hpp")
+file(GLOB SRC LIST_DIRECTORIES false "teos/*cpp" "teos/command/*.cpp" "teos/control/*.cpp")
 add_library(${LIB_NAME} STATIC
   ${HEADERS}
   ${SRC}
