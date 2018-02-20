@@ -1,4 +1,5 @@
-target
+install
+workdir
 *.exe
 build
 buildWindows

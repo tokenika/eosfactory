@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.8)
-set( projectName pentagonConfig )
+set( projectName pentagonControl )
 project( ${projectName} )
 
 set( VERSION_MAJOR 0 )
@@ -7,8 +7,8 @@ set( VERSION_MINOR 1 )
 set( CONFIG_JSON "\"config.json\"" )
 set( LOGGING_DIR "\"\"" )
 configure_file(
-  "${PROJECT_SOURCE_DIR}/config.h.in"
-  "${CMAKE_SOURCE_DIR}/include/config.h"
+  "config.h.in"
+  "include/config.h"
 )
 set( CMAKE_BUILD_TYPE "Debug" )
 
@@ -25,9 +25,7 @@ if( WIN32 )
 endif( WIN32 )
 find_package( Boost 1.62 REQUIRED COMPONENTS 
   system
-  #chrono
   date_time 
-  #program_options
   filesystem
   regex
   thread
@@ -68,11 +66,11 @@ macro( appDependencies applName )
   endif()
 endmacro()
 
-add_executable( boost_process
+add_executable( testControl
   control.cpp
-  boostProcess.cpp;
+  test.cpp;
 )
-appDependencies( boost_process )
+appDependencies( testControl )
 
 add_executable( eosiodServer
   eosiodServer.cpp

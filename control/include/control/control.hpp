@@ -8,7 +8,8 @@ using namespace std;
 namespace pentagon{
   namespace control{
 
-    void stopChainNode();
+    void startChainNode();
+    void killChainNode();
 
     void buildContract(
       vector<string> src, // list of source c/cpp files

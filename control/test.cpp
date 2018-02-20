@@ -1,0 +1,15 @@
+#include <control/control.hpp>
+
+int main()
+{
+  // pentagon::control::generateAbi(
+  //   "/mnt/hgfs/Workspaces/EOS/eos/contracts/currency/currency.hpp",
+  //   "/tmp/xxx.abi"   
+  // );
+  // pentagon::control::buildContract(
+  //   {"/mnt/hgfs/Workspaces/EOS/eos/contracts/currency/currency.cpp"},
+  //   "/tmp/xxx.wast"   
+  // );
+  pentagon::control::startChainNode();
+  pentagon::control::killChainNode();
+}

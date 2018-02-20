@@ -9,6 +9,8 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
+using namespace std;
+
 const char* configJsonDefault = R"EOF(
 "EOSIO_GIT_DIR":"",
 "EOSIO_INSTALL_DIR":"",
@@ -43,40 +45,67 @@ string getFromConfigOrFromEnv(string name, string defaultValue = "")
   return defaultValue == "" ? name + "_is_not_defined." : defaultValue;
 }
 
-using namespace std;
 namespace pentagon {
   namespace config {
 
-    boost::filesystem::path get_EOSIO_INSTALL_DIR()
-    {
-      boost::filesystem::path retval(getFromConfigOrFromEnv("EOSIO_INSTALL_DIR"));
+    using namespace std;
+    using namespace boost::filesystem; 
+
+    string CHAIN_NODE(){ 
+      return getFromConfigOrFromEnv("CHAIN_NODE", "eosiod");
+    }
+
+    path GENESIS_JSON(){
+      path retval(getFromConfigOrFromEnv("GENESIS_JSON", 
+        (PENTAGON_DIR() / "resources/genesis.json").string()));
+      return retval;
+    }
+
+    string HTTP_SERVER_ADDRESS(){
+      return getFromConfigOrFromEnv("HTTP_SERVER_ADDRESS", "127.0.0.1:8888");
+    }
+
+    path DATA_DIR(){
+      path retval(getFromConfigOrFromEnv("DATA_DIR", 
+        (PENTAGON_DIR() / "workdir/data-dir").string()));
+      return retval;
+    }    
+
+    path EOSIO_GIT_DIR(){
+      path retval(getFromConfigOrFromEnv("EOSIO_GIT_DIR"));
+      return retval;
+    }
+
+    path EOSIO_INSTALL_DIR(){
+      path retval(getFromConfigOrFromEnv("EOSIO_INSTALL_DIR"));
       return retval;
     }
     
-    boost::filesystem::path get_WASM_CLANG()
-    {
-      boost::filesystem::path retval(getFromConfigOrFromEnv("WASM_CLANG"
+    path PENTAGON_DIR(){
+      path retval(getFromConfigOrFromEnv("PENTAGON_DIR"));
+      return retval;
+    }        
+    
+    path WASM_CLANG(){
+      path retval(getFromConfigOrFromEnv("WASM_CLANG"
         , "/home/cartman/opt/wasm/bin/clang"));
       return retval;
     }
 
-    boost::filesystem::path get_WASM_LLVM_LINK()
-    {
-      boost::filesystem::path retval(getFromConfigOrFromEnv("WASM_LLVM_LINK"
+    path WASM_LLVM_LINK(){
+      path retval(getFromConfigOrFromEnv("WASM_LLVM_LINK"
         , "/home/cartman/opt/wasm/bin/llvm-link"));
       return retval;  
     } 
 
-    boost::filesystem::path get_WASM_LLC()
-    {
-      boost::filesystem::path retval(getFromConfigOrFromEnv("WASM_LLC"
+    path WASM_LLC(){
+      path retval(getFromConfigOrFromEnv("WASM_LLC"
         , "/home/cartman/opt/wasm/bin/llc"));
       return retval;      
     }
     
-    boost::filesystem::path get_BINARYEN_BIN()
-    {
-      boost::filesystem::path retval(getFromConfigOrFromEnv("BINARYEN_BIN"
+    path BINARYEN_BIN(){
+      path retval(getFromConfigOrFromEnv("BINARYEN_BIN"
         , "/home/cartman/opt/binaryen/bin/"));
       return retval;
     } 
