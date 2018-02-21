@@ -346,10 +346,7 @@ Definitions for class TeosCommand.
         }
         isRaw = vm.count("raw") ? true : false;
 
-        if (vm.count("example")) {
-          getExample();
-        }
-        else if (is_arg) {
+        if (is_arg) {
           TeosCommand command = getCommand(isRaw);
           if (command.isError()) {
             onError(command);

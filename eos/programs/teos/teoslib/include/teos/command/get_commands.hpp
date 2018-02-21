@@ -56,6 +56,11 @@ namespace teos
     {
     public:
 
+      GetInfo(bool raw = false) : TeosCommand(
+        string(getCommandPath + "get_info"), raw) {
+        callEosd();
+      }
+
       GetInfo(ptree reqJson, bool raw = false) : TeosCommand(
         string(getCommandPath + "get_info"), reqJson, raw) {
         callEosd();
@@ -95,23 +100,6 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
         output("last irreversible block", "%d", command.get<int>("last_irreversible_block_num"));
       }
 
-      void getExample() {
-        cout << R"EOF(
-// Invoke 'GetInfo' command:
-    boost::property_tree::ptree reqJson;
-    GetInfo GetInfo(reqJson);
-    cout << GetInfo.responseToString() << endl;
-
-/* printout:
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        GetInfo GetInfo(reqJson);
-        cout << GetInfo.responseToString() << endl;
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
 
     /**
@@ -187,45 +175,6 @@ Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
         output("ref block prefix", "%s", GET_STRING(command, "ref_block_prefix"));
       }
 
-      void getExample() {
-        cout << R"EOF(
-// Invoke 'GetInfo' command:
-    ptree getInfoJson;
-    GetInfo getInfo(getInfoJson);
-    cout << getInfo.responseToString() << endl;
-
-/*
-printout:
-)EOF" << endl;
-
-        ptree getInfoJson;
-        GetInfo getInfo(getInfoJson);
-        cout << getInfo.responseToString() << endl;
-
-        cout << R"EOF(
-*/
-
-// Use the reference to the last block:
-    ptree getBlockJson;
-    GetBlockJson.put("block_num_or_id", 
-      getInfo.get<int>("last_irreversible_block_num"));
-    GetBlock GetBlock(GetBlock_post_json);
-    cout << GetBlock.responseToString() << endl;
-
-/* 
-printout:
-)EOF" << endl;
-
-        ptree getBlockJson;
-        getBlockJson.put("block_num_or_id",
-          getInfo.get<int>("last_irreversible_block_num"));
-        GetBlock GetBlock(getBlockJson);
-        cout << GetBlock.responseToString() << endl;
-
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
 
     /**
@@ -300,24 +249,6 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
         output("last unstaking time", "%s", GET_STRING(command, "last_unstaking_time"));
       }
 
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-reqJson.put("account_name", "int");
-GetAccount getAccount(reqJson);
-cout << getAccount.responseToString() << endl;
-
-/*
-printout:
-)EOF" << endl;
-        ptree reqJson;
-        reqJson.put("account_name", "inita");
-        GetAccount getAccount(reqJson);
-        cout << getAccount.responseToString() << endl;
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
 
 #define WRITE_TO_STDOUT "_"
@@ -425,26 +356,6 @@ Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file
         }
       }
 
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-reqJson.put("account_name", "inita");
-GetCode getCode(reqJson);
-cout << getCode.responseToString() << endl;
-
-/*
-printout: 
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        reqJson.put("account_name", "inita");
-        GetCode getCode(reqJson);
-        cout << getCode.responseToString() << endl;
-
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
 
     /**
@@ -531,30 +442,6 @@ Usage: ./teos get table [-j '{"scope":"<scope>","code":"<code>","table":"<table>
         output("TO_DO");
       }
 
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-reqJson.put("scope", "inita");
-reqJson.put("code", "currency");
-reqJson.put("table", "account");
-GetInfo GetInfo(reqJson);
-cout << GetInfo.responseToString() << endl;
-
-/*
-printout:
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        reqJson.put("scope", "inita");
-        reqJson.put("code", "currency");
-        reqJson.put("table", "account");
-        GetTable getTable(reqJson);
-        cout << getTable.responseToString() << endl;
-
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
 
   }

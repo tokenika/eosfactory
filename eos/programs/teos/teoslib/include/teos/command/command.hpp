@@ -155,6 +155,8 @@ namespace teos
         ptree respJson
       );
 
+      TeosCommand() {}
+
       void copy(TeosCommand teosCommand) {
         path_ = teosCommand.path_;
         reqJson_ = teosCommand.reqJson_;
@@ -252,8 +254,7 @@ namespace teos
             value<string>(&json_),
             "Json argument")
             ("received,v", "Print received json")
-          ("raw,r", "Raw print")
-          ("example,e", "Usage example");
+          ("raw,r", "Raw print");
       }
 
     protected:
@@ -309,12 +310,6 @@ namespace teos
       virtual TeosCommand getCommand(bool isRaw) {
         return TeosCommand("", reqJson);
       }
-
-      /**source /mnt/hgfs/Workspaces/EOS/teosBash/teosBash $EOSIO_INSTALL_DIR
-       * @brief Placeholder for any exemplary code snippet.
-       *
-       */
-      virtual void getExample() {}
 
       /**
        * @brief Placeholder for printout instructions.

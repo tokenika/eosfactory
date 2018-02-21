@@ -157,10 +157,6 @@ Usage: ./teos create key [-j '{
         return PushMessage(reqJson, is_raw);
       }
 
-      void getExample() {
-        cout << R"EOF(
-)EOF" << endl;
-      }
     };
   }
 }

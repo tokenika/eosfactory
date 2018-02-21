@@ -102,10 +102,6 @@ Usage: ./teos create key [-j '{
         return SetContract(reqJson, is_raw);
       }
 
-      void getExample() {
-        cout << R"EOF(
-)EOF" << endl;
-      }
     };
   }
 }

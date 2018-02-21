@@ -235,26 +235,6 @@ Usage: ./teos create key [-j '{"name":"<key name>"}'] [OPTIONS]
         output("public key", "%s", GET_STRING(command, "publicKey"));
       }
 
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-reqJson.put("name", "example_key");
-CreateKey createKey(reqJson);
-cout << createKey.responseToString() << endl;
-
-/*
-printout:
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        reqJson.put("name", "example_key");
-        CreateKey createKey(reqJson);
-        cout << createKey.responseToString() << endl;
-
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
 
   }

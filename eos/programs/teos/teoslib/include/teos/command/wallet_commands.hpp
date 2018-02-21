@@ -109,28 +109,6 @@ Usage: ./teos wallet create [-j '{"name":"<wallet name>"}'] [OPTIONS]
         output("You need to save this password to be able to lock/unlock the wallet!");
       }
 
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-ptree config = TeosCommand::getConfig();
-reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
-WalletCreate walletCreate(reqJson);
-cout << walletCreate.responseToString() << endl;
-
-/*
-printout:
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        ptree config = TeosCommand::getConfig();
-        reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
-        WalletCreate walletCreate(reqJson);
-        cout << walletCreate.responseToString() << endl;
-
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
 
     /**
@@ -227,9 +205,6 @@ Usage: ./teos wallet import [-j '{"name":"<wallet name>", "key":"<private key>"}
         output("key imported", "%s", key.c_str());
       }
 
-      void getExample() {
-        output("Not available yet.");
-      }
     };
 
     /**
@@ -295,25 +270,6 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
           output("wallet", "%s", v.second.data().c_str());
         }
       }
-
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-WalletList walletList(reqJson);
-cout << walletList.responseToString() << endl;
-
-/*
-printout:
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        WalletList walletList(reqJson);
-        cout << walletList.responseToString() << endl;
-
-        cout << R"EOF(
-*/      
-)EOF" << endl;
-}
 
     };
 
@@ -405,28 +361,6 @@ Usage: ./teos wallet open [-j '{"name":"<wallet name>"}'] [OPTIONS]
         output("wallet opened", "%s", name.c_str());
       }
 
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-ptree config = TeosCommand::getConfig();
-reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
-WalletOpen walletOpen(reqJson);
-cout << walletOpen.responseToString() << endl;
-
-/*
-printout:
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        ptree config = TeosCommand::getConfig();
-        reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
-        WalletOpen walletOpen(reqJson);
-        cout << walletOpen.responseToString() << endl;
-
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
 
     /**
@@ -514,28 +448,6 @@ Usage: ./teos wallet lock [-j '{"name":"<wallet name>"}'] [OPTIONS]
         output("wallet lock", "%s", name.c_str());
       }
 
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-ptree config = TeosCommand::getConfig();
-reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
-WalletLock walletLock(reqJson);
-cout << walletLock.responseToString() << endl;
-
-/*
-printout:
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        ptree config = TeosCommand::getConfig();
-        reqJson.put("name", config.get("teos.tokenikaWallet", TOKENIKA_WALLET));
-        WalletLock walletLock(reqJson);
-        cout << walletLock.responseToString() << endl;
-
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
 
     /**
@@ -603,24 +515,6 @@ Usage: ./teos wallet lock_all [-j '{}'] [OPTIONS]
         output("wallets lock", "%s", "all");
       }
 
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-WalletLockAll walletLock(reqJson);
-cout << walletLock.responseToString() << endl;
-
-/*
-printout:
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        WalletLockAll walletLock(reqJson);
-        cout << walletLock.responseToString() << endl;
-
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
 
     /**
@@ -717,9 +611,6 @@ Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"
         output("wallet unlocked", "%s", name.c_str());
       }
 
-      void getExample() {
-        output("Not available yet.");
-      }
     };
 
     /**
@@ -786,24 +677,6 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
         }
       }
 
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-WalletKeys walletKeys(reqJson);
-cout << walletKeys.responseToString() << endl;
-
-/*
-printout:
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        WalletKeys walletKeys(reqJson);
-        cout << walletKeys.responseToString() << endl;
-
-        cout << R"EOF(
-*/
-)EOF" << endl;
-      }
     };
   }
 }

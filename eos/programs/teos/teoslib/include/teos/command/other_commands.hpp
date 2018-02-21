@@ -46,24 +46,5 @@ Usage: ./teos version client [-j '{}'] [OPTIONS]
         output("Version", "%s", GET_STRING(command, "version"));
       }
 
-      void getExample() {
-        cout << R"EOF(
-boost::property_tree::ptree reqJson;
-VersionClient versionClient(reqJson);
-cout << versionClient.responseToString() << endl;
-/*
-printout:
-)EOF" << endl;
-
-        boost::property_tree::ptree reqJson;
-        VersionClient versionClient(reqJson);
-        cout << versionClient.responseToString() << endl;
-
-      cout << R"EOF(
-*/
-)EOF" << endl;
-      }
-    };
-
   }
 }
