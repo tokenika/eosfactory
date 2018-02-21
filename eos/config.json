@@ -1,7 +1,7 @@
 {
    "logging":{
       "severity":2,
-      "logDir":"/mnt/hgfs/Workspaces/EOS/Pentagon",
+      "logDir":"./log",
       "logFile":"log.log",
       "format":"[%TimeStamp%]: %Message%"
    },

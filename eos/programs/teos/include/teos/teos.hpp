@@ -60,4 +60,4 @@
 * -s,--skip-signature         Specify that unlocked wallet keys should not be used to sign transaction
 *
 */
-//extern int teosMain(int argc, const char *argv[]);
+extern int main(int argc, const char *argv[]);

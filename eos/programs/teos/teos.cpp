@@ -27,6 +27,10 @@
   if (commandName == #commandName_)                                 \
   {                                                                 \
     teos::command::classPrefix##Options(argcLeft, argvLeft).go();  \
+    for( int i = 0; i < argcLeft; i++ ){                            \
+      delete[] argvLeft[i];                                         \
+    }                                                               \
+    delete[] argvLeft;                                              \
   }                                                                 \
   else
 
@@ -239,7 +243,6 @@ int main(int argc, const char *argv[]) {
       {
         cerr << "unknown command!" << endl;
       }
-      delete[] argvLeft;
     }
     else
     {

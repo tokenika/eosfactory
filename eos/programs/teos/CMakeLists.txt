@@ -89,6 +89,15 @@ macro( applLinkLibraries applName )
      ${CMAKE_SOURCE_DIR}/libraries/wasm-jit/include
   )
 
+  if( UNIX )
+  target_link_libraries( ${applName} 
+    PRIVATE 
+      asan        # static-libasan ?
+      rt 
+      pthread
+  )
+  endif()
+
   target_link_libraries( ${applName}
     PRIVATE
       teoslib
@@ -111,15 +120,6 @@ macro( applLinkLibraries applName )
       PRIVATE
         ${SECP256K1_LIBRARIES}
         ${GMP_LIBRARIES}
-    )
-  endif()
-
-  if( UNIX )
-    target_link_libraries( ${applName} 
-      PRIVATE 
-        rt 
-        pthread
-        asan
     )
   endif()
 
@@ -159,15 +159,6 @@ install( TARGETS teos RUNTIME DESTINATION bin)
 add_executable( teos_lib_test teos_lib_test.cpp )
 applLinkLibraries( teos_lib_test )
 install( TARGETS teos_lib_test RUNTIME DESTINATION bin)
-
-add_executable( prototype  prototype.cpp )
-target_include_directories( prototype  
-  PRIVATE
-    "${CMAKE_SOURCE_DIR}/plugins/chain_plugin/include"
-		"${CMAKE_SOURCE_DIR}/plugins/database_plugin/include"
-)
-applLinkLibraries( prototype )
-install( TARGETS prototype RUNTIME DESTINATION bin)
 
 ####################################### /executables
 
