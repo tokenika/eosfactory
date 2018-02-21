@@ -46,5 +46,7 @@ Usage: ./teos version client [-j '{}'] [OPTIONS]
         output("Version", "%s", GET_STRING(command, "version"));
       }
 
+    };
+
   }
 }
