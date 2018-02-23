@@ -79,7 +79,7 @@ namespace teos {
       }
 
       CallChain(std::string path, const fc::variant& postData = fc::variant())
-        : TeosCommand(path, true)
+        : TeosCommand(path)
       {
         if (fcaVariant2ptree(postData)) {
           callEosd();
@@ -87,7 +87,7 @@ namespace teos {
         //std::cout << path << std::endl;
         //std::cout << requestStr << std::endl;
         //std::cout << fc::json::to_pretty_string(fcVariant) << std::endl;
-        if (isError()) {
+        if (isError_) {
           //std::cout << responseToString() << std::endl;
         }
       }
@@ -121,7 +121,7 @@ namespace teos {
     TeosCommand sign_transaction(chain::signed_transaction& trx)
     {
       CallChain callPublicKeys(std::string(walletCommandPath + "get_public_keys"));
-      if (callPublicKeys.isError()) {
+      if (callPublicKeys.isError_) {
         return callPublicKeys;
       }
       const auto& public_keys = callPublicKeys.fcVariant;
@@ -130,7 +130,7 @@ namespace teos {
         ("available_keys", public_keys);
 
       CallChain callRequiredKeys(string(getChainPath + "get_required_keys"), get_arg);
-      if (callRequiredKeys.isError()) {
+      if (callRequiredKeys.isError_) {
         return callRequiredKeys;
       }
 
@@ -143,7 +143,7 @@ namespace teos {
 
       CallChain callSignTransaction(std::string(walletCommandPath + "sign_transaction"),
         sign_args);
-      if (callSignTransaction.isError()) {
+      if (callSignTransaction.isError_) {
         return callSignTransaction;
       }
 
@@ -158,7 +158,7 @@ namespace teos {
     {
       //callGetInfo == call(host, port, get_info_func)  
       CallChain callGetInfo(string(getCommandPath + "get_info"));
-      if (callGetInfo.isError()) {
+      if (callGetInfo.isError_) {
         return callGetInfo;
       }
 
@@ -170,7 +170,7 @@ namespace teos {
 
       if (sign) {
         TeosCommand respJson = sign_transaction(trx);
-        if (respJson.isError()) {
+        if (respJson.isError_) {
           return respJson;
         }
       }
@@ -275,7 +275,7 @@ namespace teos {
         fc::read_file_contents(wastFile, wast);
         vector<uint8_t> wasm;
         TeosCommand status = assemble_wast(wast, wasm);
-        if (status.isError()) {
+        if (status.isError_) {
           return status;
         }
 

@@ -30,13 +30,12 @@ namespace teos
       * @param skip specifies that unlocked wallet keys should not be used to sign transaction.
       * @expiration sets the time in seconds before a transaction expires.
       * @param forceUnique forces the transaction to be unique.
-      * @param raw if true, the resulting json is not formated.
       * @param getResponse() returns {"password":"<password>"}.
       */
       PushMessage(string contractName, string action, string data,
         string scope, string permission, bool forceUnique = false,
         bool skip = false, int expiration = 30, bool raw = false)
-        : TeosCommand("", raw)
+        : TeosCommand("")
       {
         vector<string> scopes;
         boost::split(scopes, scope, boost::is_any_of(","));
@@ -53,11 +52,10 @@ namespace teos
       * "action":"<action on contract>", "data":"<json tree>", "scope":"<account list>",
       * "permission":"<accountName@permitionLevel>", "skip":<true|false>, "expiration":<int>,
       * "force-unique":<true|false>}.
-      * @param raw if true, the resulting json is not formated.
       * @param getResponse() returns {?????????????????????????}.
       */
       PushMessage(ptree reqJson, bool raw = false) : TeosCommand(
-        "", reqJson, raw)
+        "", reqJson)
       {
         vector<string> scopes;
         string scope = reqJson.get<string>("scope");
@@ -109,9 +107,9 @@ Usage: ./teos create key [-j '{
       int expiration;
       bool forceUnique;
 
-      options_description options() {
-        options_description special("");
-        special.add_options()
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
           ("contract,c", value<string>(&contract), "The account providing the contract to execute")
           ("action,a", value<string>(&action), "The action to execute on the contract")
           ("data,d", value<string>(&data), "The arguments to the contract")
@@ -121,7 +119,7 @@ Usage: ./teos create key [-j '{
           ("expiration,x", value<int>(&expiration)->default_value(30), "The time in seconds before a transaction expires")
           ("force-unique,f", value<bool>(&forceUnique)->default_value(false), 
             "force the transaction to be unique. this will consume extra bandwidth and remove any protections against accidentally issuing the same transaction multiple times");
-        return special;
+        return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
@@ -153,8 +151,8 @@ Usage: ./teos create key [-j '{
         return ok;
       }
 
-      TeosCommand getCommand(bool is_raw) {
-        return PushMessage(reqJson, is_raw);
+      TeosCommand getCommand() {
+        return PushMessage(reqJson);
       }
 
     };

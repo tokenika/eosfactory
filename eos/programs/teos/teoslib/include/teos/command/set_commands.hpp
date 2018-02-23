@@ -21,14 +21,14 @@ namespace teos
     public:
       SetContract(string accountName,
         string wastFile, string abiFile = "",
-        bool skip = false, int expiration = 30, bool raw = false)
-        : TeosCommand("", raw)
+        bool skip = false, int expiration = 30)
+        : TeosCommand("")
       {
         copy(setContract(accountName, wastFile, abiFile, skip, expiration));
       }
 
-      SetContract(ptree reqJson, bool raw = false) : TeosCommand(
-        "", reqJson, raw)
+      SetContract(ptree reqJson) : TeosCommand(
+        "", reqJson)
       {
         copy(setContract(
             reqJson.get<string>("account"),
@@ -68,16 +68,16 @@ Usage: ./teos create key [-j '{
       int deposit;
 
 
-      options_description options() {
-        options_description special("");
-        special.add_options()
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
           ("account,n", value<string>(&account), "The name of account to publish a contract for")
           ("wast,o", value<string>(&wast), "The WAST file for the contract")
           ("abi,a", value<string>(&abi)->default_value(""), "The ABI file for the contract")
           ("skip,s", value<bool>(&skip)->default_value(false), "Specify that unlocked wallet keys should not be used to sign transaction, defaults to false")
           ("expiration,x", value<int>(&expiration)->default_value(30), "The time in seconds before a transaction expires")
           ("deposit,d", value<int>(&deposit)->default_value(1), "The initial deposit");
-        return special;
+        return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
@@ -98,8 +98,8 @@ Usage: ./teos create key [-j '{
         return ok;
       }
 
-      TeosCommand getCommand(bool is_raw) {
-        return SetContract(reqJson, is_raw);
+      TeosCommand getCommand() {
+        return SetContract(reqJson);
       }
 
     };

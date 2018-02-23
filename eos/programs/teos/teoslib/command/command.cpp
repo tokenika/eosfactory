@@ -17,13 +17,11 @@
 #include <teoslib/config.h>
 #include <teos/command/command.hpp>
 
-using namespace std;
-using namespace boost::property_tree;
-
-namespace teos
-{
+namespace teos{
   namespace command
   {
+    using namespace std;
+    using namespace boost::property_tree;
 
     void output(const char* label, const char* format, ...) {
       printf("## %20s: ", label);
@@ -139,23 +137,6 @@ Definitions for class TeosCommand.
       }
     }
 
-    ptree TeosCommand::getConfig(bool verbose) {
-      ptree config;
-      try
-      {
-        read_json(CONFIG_JSON, config);
-      }
-      catch (...) {
-        boost::filesystem::path full_path(boost::filesystem::current_path());
-        if (verbose) {
-          printf("ERROR: Cannot read config file %s!\n", CONFIG_JSON);
-          printf("Current path is: %s\n", full_path.string().c_str());
-          printf("The config json file is expected there!");
-        }
-      }
-      return config;
-    }
-
     void TeosCommand::callEosd()
     {
       using namespace std;
@@ -254,16 +235,16 @@ Definitions for class TeosCommand.
       }
     }
 
-    TeosCommand::TeosCommand( string path, ptree reqJson, bool isRaw ) 
-      : path_(path), reqJson_(reqJson), isRaw_(isRaw) {
+    TeosCommand::TeosCommand( string path, ptree reqJson ) 
+      : path_(path), reqJson_(reqJson) {
     }
 
-    TeosCommand::TeosCommand( string path, bool isRaw ) 
-      : path_(path), isRaw_(isRaw) {
+    TeosCommand::TeosCommand( string path) 
+      : path_(path) {
     }
 
     TeosCommand::TeosCommand(bool isError, ptree respJson)
-      : isRaw_(true), respJson_(respJson) {
+      : respJson_(respJson) {
     }
     
     string TeosCommand::requestToString(bool isRaw) const {
@@ -273,10 +254,6 @@ Definitions for class TeosCommand.
       return ss.str();
     }
 
-    string TeosCommand::requestToString() const {
-      return requestToString(isRaw_);
-    }
-
     string TeosCommand::responseToString(bool isRaw) const {
       stringstream ss;
       json_parser::
@@ -284,36 +261,28 @@ Definitions for class TeosCommand.
       return ss.str();
     }
 
-    string TeosCommand::responseToString() const {
-      return responseToString(isRaw_);
-    }
-
     string TeosCommand::host = "";
     string TeosCommand::port = "";
     string TeosCommand::walletHost = "";
     string TeosCommand::walletPort = "";
-    bool TeosCommand::verbose = false;
 
     /******************************************************************************
       Definitions for class 'command_options'
     ******************************************************************************/
 
-    void CommandOptions::onError(TeosCommand command) {
-      std::cerr << "ERROR!" << endl << command.get<string>(teos_ERROR) << endl;
-    }
+//    string formatUsage(string unixUsage) {
+//#ifdef WIN32
+//      string windowsCmndUsage = unixUsage;
+//      boost::replace_all(windowsCmndUsage, "\"", "\"\"\"");
+//      boost::replace_all(windowsCmndUsage, "'", "\"");
+//      return windowsCmndUsage;
+//#else
+//      return unixUsage;
+//#endif
+//    }
 
-    const string formatUsage(string unixUsage) {
-#ifdef WIN32
-      string windowsCmndUsage = unixUsage;
-      boost::replace_all(windowsCmndUsage, "\"", "\"\"\"");
-      boost::replace_all(windowsCmndUsage, "'", "\"");
-      return windowsCmndUsage;
-#else
-      return unixUsage;
-#endif
-    }
-
-    void CommandOptions::go()
+    /*
+    template<class T> void CommandOptions::go()
     {
       using namespace boost::program_options;
 
@@ -322,7 +291,7 @@ Definitions for class TeosCommand.
 
         options_description desc{ "Options" };
         options_description common("");
-        commonOptions(common);
+        basicOptionDescription(common);
         desc.add(options()).add(common);
         positional_options_description pos_desc;
         setPosDesc(pos_desc);
@@ -340,6 +309,12 @@ Definitions for class TeosCommand.
           return;
         }
 
+        if (vm.count("unreg")) {
+          cout << formatUsage(getUsage()) << endl;
+          cout << desc << endl;
+          return;
+        }
+
         bool is_arg = setJson(vm) || vm.count("json");
         if (vm.count("json")) {
           reqJson = stringToPtree(json_);
@@ -347,27 +322,24 @@ Definitions for class TeosCommand.
         isRaw = vm.count("raw") ? true : false;
 
         if (is_arg) {
-          TeosCommand command = getCommand(isRaw);
-          if (command.isError()) {
+          Item command = getCommand();
+          if (command.isError_) {
             onError(command);
             return;
           }
            
           if (vm.count("received")) {
-            cout << command.responseToString() << endl;
+            cout << command.responseToString( ) << endl;
           }
           else {
-            getOutput(command);
+            getOutput(command, vm);
           }
         }
-        else if (vm.count("unreg")) {
-          cout << formatUsage(getUsage()) << endl;
-          cout << desc << endl;
-        }
-      }
+      }  
       catch (const error &ex) {
         cerr << ex.what() << endl;
       }
     }
+    */
   }
 }

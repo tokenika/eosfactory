@@ -58,7 +58,7 @@ namespace teos {
       do {
         boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
         tc = teos::command::GetInfo();
-      } while (tc.isError());
+      } while (tc.isError_);
     }
 
     void killChainNode()

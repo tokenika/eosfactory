@@ -16,6 +16,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/program_options.hpp>
+#include <teos/item.hpp>
 
 #define teos_ERROR "error" // Error json key
 #define HOST_DEFAULT "localhost"
@@ -28,10 +29,8 @@ using namespace boost::property_tree;
 
 extern const string walletCommandPath;
 
-namespace teos
-{
-  namespace command
-  {
+namespace teos {
+  namespace command {
 
     /**
      * @brief Converts EOS time string to 'boost::posix_time'.
@@ -93,11 +92,8 @@ namespace teos
      * in the root directory of the project.
      *
      */
-    class TeosCommand 
+    class TeosCommand : public Item
     {
-      bool isRaw_ = false;
-      bool isError_ = false;
-
     protected:
       string path_;
       ptree reqJson_;
@@ -129,8 +125,6 @@ namespace teos
       static string port;
       static string walletHost;
       static string walletPort;
-      static bool verbose;
-      static ptree getConfig(bool verbose = false);
       static ptree errorRespJson(string sender, string message);
 
       /**
@@ -139,21 +133,11 @@ namespace teos
        * @param reqJson json tree, for example {"block_num_or_id"="25"}
        * @param isRaw if true, the resulting json is not formated.
        */
-      TeosCommand(
-        string path,
-        ptree reqJson,
-        bool isRaw = false
-      );
+      TeosCommand(string path, ptree reqJson);
 
-      TeosCommand(
-        string path,  
-        bool isRaw = false
-      );
+      TeosCommand(string path);
 
-      TeosCommand(
-        bool isError,
-        ptree respJson
-      );
+      TeosCommand(bool isError, ptree respJson);
 
       TeosCommand() {}
 
@@ -162,21 +146,14 @@ namespace teos
         reqJson_ = teosCommand.reqJson_;
         respJson_ = teosCommand.respJson_;
         isError_ = teosCommand.isError_;
-        isRaw_ = teosCommand.isRaw_;
-      }
-
-      /**
-       * @brief Error flag.
-       *
-       * @return true if EOS blockchain response is normal
-       * @return false if EOS blockchain response is not normal
-       */
-      bool isError() {
-        return isError_;
       }
 
       ptree getResponse() const {
         return respJson_;
+      }
+
+      string errorMsg() {
+        return get<string>(teos_ERROR);
       }
 
       /**
@@ -191,8 +168,6 @@ namespace teos
        * @brief Received json string representation
        * I can be pretty or raw, depending ib the `isRaw` flag.
        */
-      string responseToString() const;
-
       string responseToString(bool isRaw) const;
 
       /**
@@ -213,9 +188,9 @@ namespace teos
         }
         return value;
       }
-      
+
     };
-    #define GET_STRING(command, key) command.get<string>(key).c_str()
+#define GET_STRING(command, key) command.get<string>(key).c_str()
 
     //http://boost.cowic.de/rc/pdf/program_options.pdf
     /**
@@ -227,69 +202,82 @@ namespace teos
      * Also, the class defines virtual methods that are placeholders for
      * specific definitions of the command that is wrapped.
      */
-    class CommandOptions
+    class CommandOptions : public ItemOptions<TeosCommand>
     {
       int argc_;
       const char **argv_;
       string json_;
 
-      /**
-       * @brief List of options common to all commands.
-       *
-       * @param common boost program options description object.
-       */
-      void commonOptions(options_description& common)
-      {
-        using namespace std;
-        using namespace boost::program_options;
+    protected:
 
-        common.add_options()
-          ("help,h", "Help screen")
+      options_description groupOptionDescription() {
+        options_description od("");
+        od.add_options()
           ("wallet-host", value<string>()->default_value(HOST_DEFAULT),
             "The host where eos-wallet is running")
             ("wallet-port", value<string>()->default_value(PORT_DEFAULT),
               "The port where eos-wallet is running")
-              ("verbose,V", "Output verbose messages on error")
-          ("json,j",
-            value<string>(&json_),
-            "Json argument")
-            ("received,v", "Print received json")
+              ("json,j", value<string>(&json_), "Json argument")
+          ("received,v", "Print received json")
           ("raw,r", "Raw print");
-      }
-
-    protected:
-
-      /**
-       * @brief json tree to be filled with blockchain responce.
-       */
-      ptree reqJson;
-
-      /**
-       * @brief Command 'usage' instruction.
-       *
-       * @return const char* usage text
-       */
-      virtual const char* getUsage() { return ""; }
-
-      /**
-       * @brief List of the command options.
-       *
-       * @return boost::program_options::options_description command options
-       */
-      virtual options_description options() {
-        options_description special("");
-        return special;
+        return od;
       }
 
       /**
-       * @brief Positional options.
-       *
-       * @param pos_descr positional options
-       */
+      * @brief Positional options.
+      *
+      * @param pos_descr positional options
+      */
       virtual void
         setPosDesc(positional_options_description&
           pos_descr) {}
 
+      /**
+      * @brief Placeholder for printout instructions.
+      *
+      * Placeholder for printout instructions. Printout should be composed
+      * with the ::output(const char*, const char*, ...) function.
+      *
+      * @param command command object, containing a responce from the blockchain.
+      */
+      virtual void getOutput(TeosCommand command) {
+        cout << command.responseToString(false) << endl;
+      }
+
+      virtual void parseGroupVariablesMap(variables_map& vm) 
+      {
+        bool is_arg = setJson(vm) || vm.count("json");
+        if (vm.count("json")) {
+          reqJson = stringToPtree(json_);
+        }
+        bool isRaw = vm.count("raw") ? true : false;
+
+        if (is_arg) {
+          TeosCommand command = getCommand();
+          if (command.isError_) {
+            std::cerr << "ERROR!" << endl << command.errorMsg() << endl;
+            return;
+          }
+
+          if (vm.count("received")) {
+            cout << command.responseToString(isRaw) << endl;
+          }
+          else {
+            getOutput(command);
+          }
+        }
+      }
+
+      /**
+      * @brief Returns command object, containing a responce from the blockchain.
+      *
+      * @param isRaw raw or pretty printout flag
+      * @return TeosCommand command object
+      */
+
+      virtual TeosCommand getCommand() {
+        return TeosCommand("", reqJson);
+      }
       /**
        * @brief Fills the post json tree according to options.
        *
@@ -302,32 +290,13 @@ namespace teos
       }
 
       /**
-       * @brief Returns command object, containing a responce from the blockchain.
-       *
-       * @param isRaw raw or pretty printout flag
-       * @return TeosCommand command object
+       * @brief json tree to be filled with blockchain responce.
        */
-      virtual TeosCommand getCommand(bool isRaw) {
-        return TeosCommand("", reqJson);
-      }
+      ptree reqJson;
 
-      /**
-       * @brief Placeholder for printout instructions.
-       *
-       * Placeholder for printout instructions. Printout should be composed
-       * with the ::output(const char*, const char*, ...) function.
-       *
-       * @param command command object, containing a responce from the blockchain.
-       */
-      virtual void getOutput(TeosCommand command) {
-        cout << command.responseToString() << endl;
-      }
-
-      virtual void onError(TeosCommand command);
 
     public:
-      CommandOptions(int argc, const char *argv[]) : argc_(argc), argv_(argv) {}
-      void go();
+      CommandOptions(int argc, const char *argv[]) : ItemOptions(argc, argv) {}
     };
 
     /**

@@ -36,8 +36,8 @@ int main(int argc, const char *argv[]) {
   // She creates a wallet if she does not have any ...
 
   WalletCreate walletCreate(walletName);
-  if (walletCreate.isError()) {
-   cerr << walletCreate.responseToString() << endl;
+  if (walletCreate.isError_) {
+   cerr << walletCreate.responseToString(false) << endl;
   } else {
     cout << "wallet password: " << walletCreate.get<string>("password") << endl;
   }
@@ -46,8 +46,8 @@ int main(int argc, const char *argv[]) {
 
   // ... and puts the private key into it:
   WalletImport walletImportInita(walletName, initaKeyPriv);
-  if (walletImportInita.isError()) {
-   cerr << walletImportInita.responseToString() << endl;
+  if (walletImportInita.isError_) {
+   cerr << walletImportInita.responseToString(false) << endl;
   } else {
     cout << walletImportInita.responseToString(false) << endl;
   }
@@ -58,8 +58,8 @@ int main(int argc, const char *argv[]) {
   // The wallet can lock themself later on. Alice can unlock it with the 
   // password:
   WalletUnlock walletUnlock(password, walletName);
-  if(walletUnlock.isError()){
-    cerr << walletUnlock.responseToString() << endl;
+  if(walletUnlock.isError_){
+    cerr << walletUnlock.responseToString(false) << endl;
   } else {
     cout << walletUnlock.responseToString(false) << endl;
   }
@@ -93,8 +93,8 @@ int main(int argc, const char *argv[]) {
   // pair has to be imported to the owner's wallet:
   WalletImport walletImportActive(walletName, 
    createKeyActive.get<string>("privateKey"));
-  if (walletImportActive.isError()) {
-   cerr << walletImportActive.responseToString() << endl;
+  if (walletImportActive.isError_) {
+   cerr << walletImportActive.responseToString(false) << endl;
   } else {
     cout << walletImportActive.responseToString(false) << endl;
   }
@@ -108,8 +108,8 @@ int main(int argc, const char *argv[]) {
   CreateAccount createAccount("inita", "currency", 
    createKeyOwner.get<string>("publicKey"), 
    createKeyActive.get<string>("publicKey"), deposit);
-  if (createAccount.isError()) {
-   cerr << createAccount.responseToString() << endl;
+  if (createAccount.isError_) {
+   cerr << createAccount.responseToString(false) << endl;
   } else {
     cout << createAccount.responseToString(false) << endl;
   }
@@ -145,8 +145,8 @@ int main(int argc, const char *argv[]) {
 
   // Alicia uploads the contract:
   SetContract setContract("currency", wastFile, abiFile);
-  if (setContract.isError()) {
-    cerr << setContract.responseToString() << endl;
+  if (setContract.isError_) {
+    cerr << setContract.responseToString(false) << endl;
   }
 
   // The contract is registered with the blockchain now. This is the ID of the 
@@ -166,7 +166,7 @@ int main(int argc, const char *argv[]) {
   // Alice can inspect her account, as well:
   {
     GetTable getTable("currency", "currency", "account");
-    cout << getTable.responseToString() << endl;
+    cout << getTable.responseToString(false) << endl;
   }
 // OUTPUT:
 // {
@@ -183,8 +183,8 @@ int main(int argc, const char *argv[]) {
   PushMessage pushMessage("currency", "transfer", 
     "{\"from\":\"currency\",\"to\":\"inita\",\"quantity\":50}", 
     "currency,inita", "currency@active");
-  if(pushMessage.isError()){
-    cout << pushMessage.responseToString() << endl;
+  if(pushMessage.isError_){
+    cout << pushMessage.responseToString(false) << endl;
   } else {
     cout << pushMessage.responseToString(false) << endl;
   }
@@ -240,7 +240,7 @@ int main(int argc, const char *argv[]) {
   // ... and see the result:
   {
     GetTable getTable("inita", "currency", "account");
-    cout << getTable.responseToString() << endl;
+    cout << getTable.responseToString(false) << endl;
   }
 // OUTPUT:
 // {
@@ -255,7 +255,7 @@ int main(int argc, const char *argv[]) {
 
   {
     GetTable getTable("currency", "currency", "account");
-    cout << getTable.responseToString() << endl;
+    cout << getTable.responseToString(false) << endl;
   }
 // OUTPUT:
 // {

@@ -29,48 +29,24 @@ namespace teos
 
     /**
      * @brief Get current blockchain information.
-     *
-     * Example:
-     *
-     * @verbatim
-     * #include <stdio.h>
-     * #include <stdlib.h>
-     * #include <iostream>
-     * #include <string>
-     * #include <boost/property_tree/ptree.hpp>
-     * #include "teosCommands/get_commands.hpp"
-     *
-     * int main(int argc, char *argv[])
-     * {
-     * boost::property_tree::ptree reqJson;
-     * teos::command::GetInfo GetInfo(getInfoPostJson);
-     * std::cout << GetInfo.get<int>("last_irreversible_block_num")) << std::endl;
-     * boost::property_tree::ptree rcv_json = GetInfo.getResponse();
-     * std::cout << GetBlock.responseToString() << std::endl; // Print the response json.
-     *
-     * return 0;
-     * }
-     * @endverbatim
      */
     class GetInfo : public TeosCommand
     {
     public:
 
       GetInfo(bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_info"), raw) {
+        string(getCommandPath + "get_info")) {
         callEosd();
       }
 
       GetInfo(ptree reqJson, bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_info"), reqJson, raw) {
+        string(getCommandPath + "get_info"), reqJson) {
         callEosd();
       }
     };
 
     /**
-    * @brief Command-line driver for the GetInfo class
-    * Extends the CommandOptions class adding features specific to the
-    * 'wallet open_all' teos command.
+    * @brief Command-line driver for the GetInfo class.
     */
     class GetInfoOptions : public CommandOptions
     {
@@ -90,8 +66,8 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
         return true;
       }
 
-      TeosCommand getCommand(bool is_raw) {
-        return GetInfo(reqJson, is_raw);
+      TeosCommand getCommand() {
+        return GetInfo(reqJson);
       }
 
       void getOutput(teos::command::TeosCommand command) {
@@ -110,7 +86,7 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
     public:
 
       GetBlock(ptree reqJson, bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_block"), reqJson, raw) {
+        string(getCommandPath + "get_block"), reqJson) {
         callEosd();
       }
     };
@@ -135,16 +111,16 @@ Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
       int n;
       string id;
 
-      options_description options() {
-        options_description special("");
-        special.add_options()
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
           ("block_num,n",
             value<int>(&n),
             "Block number")
             ("block_id,i",
               value<string>(&id),
               "Block id");
-        return special;
+        return od;
       }
 
       void
@@ -165,8 +141,8 @@ Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand getCommand(bool is_raw) {
-        return GetBlock(reqJson, is_raw);
+      TeosCommand getCommand() {
+        return GetBlock(reqJson);
       }
 
       void getOutput(TeosCommand command) {
@@ -184,13 +160,13 @@ Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
     {
     public:
       GetAccount(string accountName, bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_account"), raw) {
+        string(getCommandPath + "get_account")) {
         reqJson_.put("account_name", accountName);
         callEosd();
       }
 
       GetAccount(ptree reqJson, bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_account"), reqJson, raw) {
+        string(getCommandPath + "get_account"), reqJson) {
         callEosd();
       }
     };
@@ -215,16 +191,15 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
 
       string name;
 
-      options_description options() {
-        options_description special("");
-        special.add_options()
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
           ("name,n",
             value<string>(&name), "Account name");
-        return special;
+        return od;
       }
 
-      void
-        setPosDesc(positional_options_description&pos_desc) {
+      void setPosDesc(positional_options_description&pos_desc) {
         pos_desc.add("name", 1);
       }
 
@@ -237,8 +212,8 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand getCommand(bool is_raw) {
-        return GetAccount(reqJson, is_raw);
+      TeosCommand getCommand() {
+        return GetAccount(reqJson);
       }
 
       void getOutput(TeosCommand command) {
@@ -262,13 +237,12 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
       * @brief A constructor.
       * @param wastFile where write the wast code to. If "_", print to stdout.
       * @param abiFile where write the abi code to. If "_", print to stdout.
-      * @param raw if true, resulting json is not formated.
       * @param getResponse() returns {"account_name":"<account name>", "code_hash":"<code hash>",
       * "wast":"<WAST code>", "abi":"<abi structure>"}.
       */
       GetCode(string accountName, 
-        string wastFile = "", string abiFile = "", bool raw = false) 
-        : TeosCommand(string(getCommandPath + "get_code"), raw) 
+        string wastFile = "", string abiFile = "") 
+        : TeosCommand(string(getCommandPath + "get_code")) 
       {
         copy(getCode(accountName, 
           wastFile == WRITE_TO_STDOUT ? "" : wastFile, 
@@ -282,7 +256,7 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
        * @param raw if true, resulting json is not formated.
        */
       GetCode(ptree reqJson, bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_code"), reqJson, raw) {
+        string(getCommandPath + "get_code"), reqJson) {
         string wastFile = reqJson.get<string>("code");
         wastFile = wastFile == WRITE_TO_STDOUT ? "" : wastFile;
         string abiFile = reqJson.get<string>("abi");
@@ -314,16 +288,16 @@ Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file
       string wastFile;
       string abiFile;
 
-      options_description options() {
-        options_description special("");
-        special.add_options()
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
           ("name,n", value<string>(&accountName),
             "The name of the account whose code should be retrieved")
             ("wast,c", value<string>(&wastFile)->default_value(""),
               "The name of the file to save the contract .wast to")
               ("abi,a", value<string>(&abiFile)->default_value(""),
                 "The name of the file to save the contract .abi to");
-        return special;
+        return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
@@ -341,8 +315,8 @@ Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file
         return ok;
       }
 
-      TeosCommand getCommand(bool is_raw) {
-        return GetCode(reqJson, is_raw);
+      TeosCommand getCommand() {
+        return GetCode(reqJson);
       }
 
       void getOutput(TeosCommand command) {
@@ -367,7 +341,7 @@ Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file
     public:
       GetTable(string scope, string contract, string table,
         bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_table_rows"), raw) {
+        string(getCommandPath + "get_table_rows")) {
         reqJson_.put("json", true);
         reqJson_.put("scope", scope);
         reqJson_.put("code", contract);
@@ -376,7 +350,7 @@ Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file
       }
 
       GetTable(ptree reqJson, bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_table"), reqJson, raw) {
+        string(getCommandPath + "get_table"), reqJson) {
         callEosd();
       }
 
@@ -406,13 +380,13 @@ Usage: ./teos get table [-j '{"scope":"<scope>","code":"<code>","table":"<table>
       string contract;
       string table;
 
-      options_description options() {
-        options_description special("");
-        special.add_options()
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
           ("scope,e", value<string>(&scope), "The account scope where the table is found")
           ("contract,c", value<string>(&contract), "The contract within scope who owns the table")
           ("table,t", value<string>(&table), "The name of the table as specified by the contract abi");
-        return special;
+        return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
@@ -434,8 +408,8 @@ Usage: ./teos get table [-j '{"scope":"<scope>","code":"<code>","table":"<table>
         return ok;
       }
 
-      TeosCommand getCommand(bool is_raw) {
-        return GetTable(reqJson, is_raw);
+      TeosCommand getCommand() {
+        return GetTable(reqJson);
       }
 
       void getOutput(TeosCommand command) {

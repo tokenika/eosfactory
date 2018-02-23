@@ -11,8 +11,8 @@ namespace teos
     {
     public:
 
-      VersionClient(ptree reqJson, bool raw = false) : TeosCommand(
-        "", reqJson, raw) {
+      VersionClient(ptree reqJson) : TeosCommand(
+        "", reqJson) {
         stringstream ss;
         ss << PROJECT_NAME << " " <<VERSION_MAJOR << "." << VERSION_MINOR;
         respJson_.put("version", ss.str());
@@ -38,8 +38,8 @@ Usage: ./teos version client [-j '{}'] [OPTIONS]
         return true;
       }
 
-      TeosCommand getCommand(bool is_raw) {
-        return VersionClient(reqJson, is_raw);
+      TeosCommand getCommand() {
+        return VersionClient(reqJson);
       }
 
       void getOutput(TeosCommand command) {

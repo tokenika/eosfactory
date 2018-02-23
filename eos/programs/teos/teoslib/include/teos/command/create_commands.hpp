@@ -34,7 +34,7 @@ namespace teos
       CreateAccount(string creator, string accountName,
         string ownerKeyPubl, string activeKeyPubl, long long depositEos = 1,
         bool skip = false, int expirationSec = 30,
-        bool raw = false) : TeosCommand("", raw)
+        bool raw = false) : TeosCommand("")
       {
         copy(createAccount(
           creator, accountName,
@@ -47,10 +47,9 @@ namespace teos
        * @param reqJson json tree argument: {"creator":"<creator name>" "name":"<account name>"
        * "ownerKey":"<owner public key>" "activeKey":"<active public key>"
        * "skip":<false|true> "expiration":<int> "deposit":<int>}.
-       * @param raw if true, resulting json is not formated.
        * @param getResponse() returns a push-transaction json.
       */
-      CreateAccount(ptree reqJson, bool raw = false) : TeosCommand("", reqJson, raw)
+      CreateAccount(ptree reqJson) : TeosCommand("", reqJson)
       {
         copy(createAccount(
           reqJson.get<string>("creator"), reqJson.get<string>("name"),
@@ -95,9 +94,9 @@ Usage: ./teos create key [-j '{
       int deposit;
 
 
-      options_description options() {
-        options_description special("");
-        special.add_options()
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
           ("creator,c", value<string>(&creator), "The name of the account creating the new account")
           ("name,n", value<string>(&name), "The name of the new account")
           ("ownerKey,o", value<string>(&ownerKey), "The owner public key for the account")
@@ -105,7 +104,7 @@ Usage: ./teos create key [-j '{
           ("skip,s", value<bool>(&skip)->default_value(false), "Specify that unlocked wallet keys should not be used to sign transaction, defaults to false")
           ("expiration,x", value<int>(&expiration)->default_value(30), "The time in seconds before a transaction expires")
           ("deposit,d", value<int>(&deposit)->default_value(1), "The initial deposit");
-        return special;
+        return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
@@ -136,8 +135,8 @@ Usage: ./teos create key [-j '{
         return ok;
       }
 
-      TeosCommand getCommand(bool is_raw) {
-        return CreateAccount(reqJson, is_raw);
+      TeosCommand getCommand() {
+        return CreateAccount(reqJson);
       }
 
       void getExample() {
@@ -155,12 +154,10 @@ Usage: ./teos create key [-j '{
       /**
        * @brief A constructor.
        * @param keyName key-pair id.
-       * @param raw a boolean argument:
-       * if true, resulting json is not formated.
        * @param getResponse() returns {"keyName":"<key name"
        * "privateKey":"<private key>" "publicKey":"<public key>"}.
        */
-      CreateKey(string keyName, bool raw = false) : TeosCommand("", raw) {
+      CreateKey(string keyName, bool raw = false) : TeosCommand("") {
         KeyPair kp;
         respJson_.put("name", keyName);
         respJson_.put("privateKey", kp.privateKey);
@@ -170,13 +167,11 @@ Usage: ./teos create key [-j '{
       /**
        * @brief A constructor.
        * @param reqJson a boost json tree argument: {"keyName":"<key name>"}.
-       * @param raw a boolean argument:
-       * if true, resulting json is not formated.
        * @param getResponse() returns {"keyName":"<key name"
        * "privateKey":"<private key>" "publicKey":"<public key>"}.
        */
       CreateKey(ptree reqJson, bool raw = false) : TeosCommand(
-        "", reqJson, raw) {
+        "", reqJson) {
         KeyPair kp;
         respJson_.put("name", reqJson.get<string>("name"));
         respJson_.put("privateKey", kp.privateKey);
@@ -204,12 +199,12 @@ Usage: ./teos create key [-j '{"name":"<key name>"}'] [OPTIONS]
 
       string keyName;
 
-      options_description options() {
-        options_description special("");
-        special.add_options()
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
           ("name,n", value<string>(&keyName)->default_value("default"),
             "The name of the new key");
-        return special;
+        return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
@@ -225,8 +220,8 @@ Usage: ./teos create key [-j '{"name":"<key name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand getCommand(bool is_raw) {
-        return CreateKey(reqJson, is_raw);
+      TeosCommand getCommand() {
+        return CreateKey(reqJson);
       }
 
       void getOutput(TeosCommand command) {
