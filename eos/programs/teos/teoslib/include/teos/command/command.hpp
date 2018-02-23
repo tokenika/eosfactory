@@ -44,19 +44,6 @@ namespace teos {
     extern boost::posix_time::ptime strToTime(const string str);
 
     /**
-     * @brief Printout formater.
-     *
-     * For example, `output("timestamp", "%s", "2017-07-18T20:16:36")` produces
-     * `##           timestamp: 2017-07-18T20:16:36`
-     *
-     * @param label
-     * @param format
-     * @param ...
-     */
-    extern void output(const char* label, const char* format, ...);
-    extern void output(const char* text, ...);
-
-    /**
      * @brief Given a json tteosCommandJsonree, returns the <Type>value of a given path.
      *
      * @tparam Type type of the called value
@@ -240,20 +227,20 @@ namespace teos {
       *
       * @param command command object, containing a responce from the blockchain.
       */
-      virtual void getOutput(TeosCommand command) {
+      virtual void printout(TeosCommand command, variables_map &vm) {
         cout << command.responseToString(false) << endl;
       }
 
       virtual void parseGroupVariablesMap(variables_map& vm) 
       {
-        bool is_arg = setJson(vm) || vm.count("json");
+        bool is_arg = checkArguments(vm) || vm.count("json");
         if (vm.count("json")) {
           reqJson = stringToPtree(json_);
         }
         bool isRaw = vm.count("raw") ? true : false;
 
         if (is_arg) {
-          TeosCommand command = getCommand();
+          TeosCommand command = executeCommand();
           if (command.isError_) {
             std::cerr << "ERROR!" << endl << command.errorMsg() << endl;
             return;
@@ -263,7 +250,7 @@ namespace teos {
             cout << command.responseToString(isRaw) << endl;
           }
           else {
-            getOutput(command);
+            printout(command, vm);
           }
         }
       }
@@ -275,7 +262,7 @@ namespace teos {
       * @return TeosCommand command object
       */
 
-      virtual TeosCommand getCommand() {
+      virtual TeosCommand executeCommand() {
         return TeosCommand("", reqJson);
       }
       /**
@@ -285,7 +272,7 @@ namespace teos {
        * @return true if post json is set completely
        * @return false if post json cannot be set completely
        */
-      virtual bool setJson(variables_map &vm) {
+      virtual bool checkArguments(variables_map &vm) {
         return false;
       }
 

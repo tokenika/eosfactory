@@ -70,7 +70,7 @@ namespace teos
     ******************************************************************************/
 
     template<class T>
-    T ItemOptions<T>::getCommand() {
+    T ItemOptions<T>::executeCommand() {
       return T();
     };
 

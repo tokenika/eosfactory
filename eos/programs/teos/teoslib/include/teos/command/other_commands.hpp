@@ -34,15 +34,15 @@ Usage: ./teos version client [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         return true;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return VersionClient(reqJson);
       }
 
-      void getOutput(TeosCommand command) {
+      void printout(TeosCommand command, variables_map &vm) {
         output("Version", "%s", GET_STRING(command, "version"));
       }
 

@@ -2,122 +2,20 @@
 
 #include <string>
 #include <vector>
+#include <teos/control/config.hpp>
+#include <teos/item.hpp>
 
 using namespace std;
 
 namespace teos {
   namespace control {
 
-    class CyberCommand {
-    public:
-      CyberCommand() {}
-      string responseToString() const;
-    };
-
-//    class CyberOptions {
-//
-//      /**
-//      * @brief List of options common to all commands.
-//      *
-//      * @param common boost program options description object.
-//      */
-//      void basicOptionDescription(options_description& common)
-//      {
-//        using namespace std;
-//        using namespace boost::program_options;
-//
-//        common.add_options()
-//          ("help,h", "Help screen")
-//          ("verbose,V", "Output verbose messages on error");
-//      }
-//
-//    protected:
-//
-//      /**
-//      * @brief Command 'usage' instruction.
-//      *
-//      * @return const char* usage text
-//      */
-//      virtual const char* getUsage() { return ""; }
-//
-//      /**
-//      * @brief List of the command options.
-//      *
-//      * @return boost::program_options::options_description command options
-//      */
-//      virtual options_description  argumentDescription() {
-//        options_description od("");
-//        return od;
-//      }
-//
-//      /**
-//      * @brief Positional options.
-//      *
-//      * @param pos_descr positional options
-//      */
-//      virtual void
-//        setPosDesc(positional_options_description&
-//          pos_descr) {}
-//
-//      /**
-//      * @brief Placeholder for printout instructions.
-//      *
-//      * Placeholder for printout instructions. Printout should be composed
-//      * with the ::output(const char*, const char*, ...) function.
-//      *
-//      * @param command command object, containing a responce from the blockchain.
-//      */
-//      virtual void getOutput(CyberCommand command) {
-//        cout << command.responseToString() << endl;
-//      }
-//
-//      virtual void onError(CyberCommand command);
-//
-//      /**
-//      * @brief Returns command object, containing a responce from the blockchain.
-//      *
-//      * @param isRaw raw or pretty printout flag
-//      * @return TeosCommand command object
-//      */
-//      virtual CyberCommand getCommand(bool isRaw) {
-//        return CyberCommand();
-//      }
-//
-//    public:
-//      CyberOptions(int argc, const char *argv[]) : argc_(argc), argv_(argv) {}
-//      void go();
-//    };
-//
-//    /**
-//    * @brief Wrapper for CommandOptions descendants, for tests.
-//    *
-//    * Descendants of the CommandOptions class take arguments of the `main` function.
-//    * The setOptions() template wrapper takes `std::vector<std::string>` argument
-//    * and converts it to its client standard.
-//    *
-//    * @tparam T
-//    * @param strVector
-//    */
-//    template<class T> static void setOptions(vector<string> strVector) {
-//
-//      int argc = (int)strVector.size();
-//      char** argv = new char*[argc];
-//      for (int i = 0; i < argc; i++) {
-//        argv[i] = new char[strVector[i].size() + 1];
-//
-//#ifdef _MSC_VER
-//        strcpy_s(argv[i], strVector[i].size() + 1,
-//          strVector[i].c_str());
-//#else
-//        strcpy(argv[i], strVector[i].c_str());
-//#endif
-//      }
-//
-//      T(argc, (const char**)argv).go();
-//      delete[] argv;
-//    }
-
-    void startChainNode();
+    void startChainNode(
+      string genesis_json = "",
+      string http_server_address = "",
+      string data_dir = "",
+      bool resync_blockchain = true
+    );
     void killChainNode();
 
     void buildContract(
@@ -133,6 +31,99 @@ namespace teos {
     );
 
     void wasmClangHelp();
+
+    class NodeStart : public Item
+    {
+    public:
+      NodeStart(
+        string genesis_json = "",
+        string http_server_address = "",
+        string data_dir = "",
+        bool resync_blockchain = true
+      ) {
+        try {
+          startChainNode(
+            genesis_json,
+            http_server_address,
+            data_dir,
+            resync_blockchain
+          );
+        }
+        catch (std::exception& e) {
+          isError_ = true;
+          errorMsg_ = e.what();
+        }
+      }
+    };
+
+    class NodeStartOptions : public ItemOptions<Item> {
+    public:
+      NodeStartOptions(int argc, const char **argv) : ItemOptions(argc, argv) {}
+
+    protected:
+      const char* getUsage() {
+        return R"EOF(
+Start test EOS node
+Usage: ./teos node start [Options]
+)EOF";
+      }
+        
+      string genesis_json;
+      string http_server_address;
+      string data_dir;
+      bool resync_blockchain;
+
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
+          ("genesis-json", value<string>(&genesis_json)
+            ->default_value(teos::config::GENESIS_JSON().string())
+            , "File to read Genesis State from.")
+          ("http-server-address", value<string>(&http_server_address)
+            ->default_value(teos::config::HTTP_SERVER_ADDRESS())
+            , "The local IP and port to listen for incoming http connections.")
+          ("data-dir", value<string>(&data_dir)
+            ->default_value(teos::config::DATA_DIR().string())
+            , "Directory containing configuration file config.ini.")
+          ("resync-blockchain", value<bool>(&resync_blockchain)
+            ->default_value(true)
+            , "Clear chain database and block log.");
+        return od;
+      }
+
+      bool checkArguments(variables_map &vm) {
+        return true;
+      }
+
+      Item executeCommand() {
+        return NodeStart(
+            genesis_json,
+            http_server_address,
+            data_dir,
+            resync_blockchain
+          );
+      }
+
+      void printout(Item command, variables_map &vm) {
+        if (vm.count("verbose") > 0) {
+          output("genesis state file", "%s", genesis_json);
+          output("server address", "%s", http_server_address);
+          output("config directory", "%s", data_dir);
+        }
+      }
+
+      virtual void parseGroupVariablesMap(variables_map& vm) {
+        if (checkArguments(vm)) {
+          Item command = executeCommand();
+          if (command.isError_) {
+            std::cerr << "ERROR!" << endl << command.errorMsg() << endl;
+            return;
+          }
+        printout(command, vm);
+        }
+      }
+
+    };
 
   }
 }

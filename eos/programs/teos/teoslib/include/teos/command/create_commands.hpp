@@ -114,7 +114,7 @@ Usage: ./teos create key [-j '{
         pos_desc.add("activeKey", 1);
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("creator")) {
           reqJson.put("creator", creator);
@@ -135,7 +135,7 @@ Usage: ./teos create key [-j '{
         return ok;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return CreateAccount(reqJson);
       }
 
@@ -211,7 +211,7 @@ Usage: ./teos create key [-j '{"name":"<key name>"}'] [OPTIONS]
         pos_desc.add("name", 1);
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
           reqJson.put("name", keyName);
@@ -220,11 +220,11 @@ Usage: ./teos create key [-j '{"name":"<key name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return CreateKey(reqJson);
       }
 
-      void getOutput(TeosCommand command) {
+      void printout(TeosCommand command, variables_map &vm) {
         output("key name", "%s", GET_STRING(command, "name"));
         output("private key", "%s", GET_STRING(command, "privateKey"));
         output("public key", "%s", GET_STRING(command, "publicKey"));

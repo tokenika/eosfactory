@@ -20,13 +20,15 @@
 #include <teos/command/other_commands.hpp>
 #include <teos/command/subcommands.hpp>
 
+#include <teos/control/control.hpp>
+
 #include <teos/teos.hpp>
 #include <teos/teos_test.hpp>
 
 #define IF_ELSE(commandName_, classPrefix)                          \
   if (commandName == #commandName_)                                 \
   {                                                                 \
-    teos::command::classPrefix##Options(argcLeft, argvLeft).go();  \
+    classPrefix##Options(argcLeft, argvLeft).go();  \
     for( int i = 0; i < argcLeft; i++ ){                            \
       delete[] argvLeft[i];                                         \
     }                                                               \
@@ -56,6 +58,7 @@ Commands:
   benchmark   Configure and execute benchmarks
   push        Push arbitrary transactions to the blockchain
   test        Basic test of the application
+  node        Test EOS chain node procedures
 )EOF";
 
 std::map<const std::string, const std::string> subcommandMap = {
@@ -78,6 +81,7 @@ int main(int argc, const char *argv[]) {
 
   using namespace std;
   using namespace teos::command;
+  using namespace teos::control;
   using namespace boost::program_options;
 
   const char* argv0 = argv[0];
@@ -240,6 +244,7 @@ int main(int argc, const char *argv[]) {
       IF_ELSE(create_account, CreateAccount)
       IF_ELSE(set_contract, SetContract)
       IF_ELSE(push_message, PushMessage)
+      IF_ELSE(node_start, NodeStart)
       {
         cerr << "unknown command!" << endl;
       }

@@ -40,16 +40,33 @@ namespace teos {
 
     using namespace teos::config;
 
-    void startChainNode()
+    void setEnvironmetVariable(string name, string value)
+    {
+      string commandLine = "export " + name + "=" + value;
+      boost::process::spawn(commandLine);
+    }
+
+    void startChainNode(
+      string genesis_json,
+      string http_server_address,
+      string data_dir,
+      bool resync_blockchain
+    )
     {
       killChainNode();
 
       string commandLine = (teos::config::EOSIO_INSTALL_DIR() / "bin"
-        / teos::config::CHAIN_NODE()).string()
-        + " --genesis-json " + GENESIS_JSON().string()
-        + " --http-server-address " + HTTP_SERVER_ADDRESS()
-        + " --data-dir " + DATA_DIR().string()
-        + " --resync-blockchain";
+        / CHAIN_NODE()).string()
+        + " --genesis-json "
+        + genesis_json == "" ? GENESIS_JSON().string() : genesis_json
+        + " --http-server-address "
+        + http_server_address == "" ? HTTP_SERVER_ADDRESS() : http_server_address
+        + " --data-dir "
+        + data_dir == "" ? DATA_DIR().string() : data_dir;
+      if (resync_blockchain) {
+        commandLine +=" --resync-blockchain";
+      }
+
       //cout << commandLine << endl;
       boost::process::spawn(commandLine);
 

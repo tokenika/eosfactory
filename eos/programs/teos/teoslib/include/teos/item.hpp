@@ -14,14 +14,28 @@ namespace teos {
   using namespace boost::property_tree;
   using namespace boost::program_options;
 
+  /**
+  * @brief Printout formater.
+  *
+  * For example, `output("timestamp", "%s", "2017-07-18T20:16:36")` produces
+  * `##           timestamp: 2017-07-18T20:16:36`
+  *
+  * @param label
+  * @param format
+  * @param ...
+  */
+  extern void output(const char* label, const char* format, ...);
+  extern void output(const char* text, ...);
+
   class Item
   {
   public:
     static bool verbose;
     static ptree getConfig(bool verbose = false);
     bool isError_ = false;
+    string errorMsg_ = "";
     virtual string errorMsg() {
-      return "";
+      return errorMsg_;
     }
   };
 
@@ -91,20 +105,20 @@ namespace teos {
     * with the ::output(const char*, const char*, ...) function.
     * @param command Item object, containing a command response.
     */
-    virtual void getOutput(Item command) {};
+    virtual void printout(Item command, variables_map &vm) {};
 
     /**
     * @brief Returns Item object, containing a command response.
     * @return Item object.
     */
-    T getCommand();
+    T executeCommand();
 
     /**
     * @brief Sets arguments if the command according to options.
     * @param option-variable map.
     * @return true if all the arguments are set.
     */
-    virtual bool setJson(variables_map &vm) {
+    virtual bool checkArguments(variables_map &vm) {
       return false;
     }
 
@@ -116,16 +130,14 @@ namespace teos {
     {
       using namespace boost::program_options;
 
+      options_description desc{"Options"};      
       try {
-        bool isRaw = false;
-
-        options_description desc{ "Options" };
         desc.add(argumentDescription()).add(groupOptionDescription())
           .add(basicOptionDescription());
         positional_options_description pos_desc;
         setPosDesc(pos_desc);
-        command_line_parser parser{ argc_, argv_ };
-        parser.options(desc).positional(pos_desc);//.allow_unregistered();
+        command_line_parser parser{argc_, argv_};
+        parser.options(desc).positional(pos_desc);
         parsed_options parsed_options = parser.run();
 
         variables_map vm;
@@ -138,18 +150,12 @@ namespace teos {
           return;
         }
 
-        isRaw = vm.count("raw") ? true : false;
-
-        if (vm.count("unreg")) {
-          cout << formatUsage(getUsage()) << endl;
-          cout << desc << endl;
-          return;
-        }
-
         parseGroupVariablesMap(vm);
       }
       catch (const error &ex) {
-        cerr << ex.what() << endl;
+        cout << "ERROR: " << ex.what() << endl;
+        cout << formatUsage(getUsage()) << endl;
+        cout << desc << endl;        
       }
     }
   };

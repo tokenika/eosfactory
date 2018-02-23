@@ -89,7 +89,7 @@ Usage: ./teos wallet create [-j '{"name":"<wallet name>"}'] [OPTIONS]
         pos_desc.add("name", 1);
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
           reqJson.put("name", name);
@@ -98,11 +98,11 @@ Usage: ./teos wallet create [-j '{"name":"<wallet name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return WalletCreate(reqJson);
       }
 
-      void getOutput(TeosCommand command) {
+      void printout(TeosCommand command, variables_map &vm) {
         output("password", "%s", GET_STRING(command, "password"));
         output("You need to save this password to be able to lock/unlock the wallet!");
       }
@@ -180,7 +180,7 @@ Usage: ./teos wallet import [-j '{"name":"<wallet name>", "key":"<private key>"}
         pos_desc.add("name", 1).add("key", 1);
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
           reqJson.put("name", name);
@@ -192,11 +192,11 @@ Usage: ./teos wallet import [-j '{"name":"<wallet name>", "key":"<private key>"}
         return ok;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return WalletImport(reqJson);
       }
 
-      void getOutput(TeosCommand command) {
+      void printout(TeosCommand command, variables_map &vm) {
         output("wallet", "%s", name.c_str());
         output("key imported", "%s", key.c_str());
       }
@@ -249,15 +249,15 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         return true;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return WalletList(reqJson);
       }
 
-      void getOutput(TeosCommand command) {
+      void printout(TeosCommand command, variables_map &vm) {
         ptree rcvJson = command.getResponse();
         BOOST_FOREACH(ptree::value_type &v, rcvJson)
         {
@@ -338,7 +338,7 @@ Usage: ./teos wallet open [-j '{"name":"<wallet name>"}'] [OPTIONS]
         pos_desc.add("name", 1);
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
           reqJson.put("name", name);
@@ -347,11 +347,11 @@ Usage: ./teos wallet open [-j '{"name":"<wallet name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return WalletOpen(reqJson);
       }
 
-      void getOutput(TeosCommand command) {
+      void printout(TeosCommand command, variables_map &vm) {
         output("wallet opened", "%s", name.c_str());
       }
 
@@ -424,7 +424,7 @@ Usage: ./teos wallet lock [-j '{"name":"<wallet name>"}'] [OPTIONS]
         pos_desc.add("name", 1);
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
           reqJson.put("name", name);
@@ -433,11 +433,11 @@ Usage: ./teos wallet lock [-j '{"name":"<wallet name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return WalletLock(reqJson);
       }
 
-      void getOutput(TeosCommand command) {
+      void printout(TeosCommand command, variables_map &vm) {
         output("wallet lock", "%s", name.c_str());
       }
 
@@ -496,15 +496,15 @@ Usage: ./teos wallet lock_all [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         return true;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return WalletLockAll(reqJson);
       }
 
-      void getOutput(TeosCommand command) {
+      void printout(TeosCommand command, variables_map &vm) {
         output("wallets lock", "%s", "all");
       }
 
@@ -583,7 +583,7 @@ Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"
         pos_desc.add("name", 1);
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
           reqJson.put("name", name);
@@ -595,11 +595,11 @@ Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"
         return ok;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return WalletUnlock(reqJson);
       }
 
-      void getOutput(TeosCommand command) {
+      void printout(TeosCommand command, variables_map &vm) {
         output("wallet unlocked", "%s", name.c_str());
       }
 
@@ -651,15 +651,15 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         return true;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return WalletKeys(reqJson);
       }
 
-      void getOutput(TeosCommand command) {
+      void printout(TeosCommand command, variables_map &vm) {
         ptree rcvJson = command.getResponse();
         BOOST_FOREACH(ptree::value_type &v, rcvJson)
         {

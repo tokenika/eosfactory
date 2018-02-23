@@ -86,7 +86,7 @@ Usage: ./teos create key [-j '{
         pos_desc.add("abi", 1);
       }
 
-      bool setJson(variables_map &vm) {
+      bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("account")) {
           reqJson.put("account", account);
@@ -98,7 +98,7 @@ Usage: ./teos create key [-j '{
         return ok;
       }
 
-      TeosCommand getCommand() {
+      TeosCommand executeCommand() {
         return SetContract(reqJson);
       }
 
