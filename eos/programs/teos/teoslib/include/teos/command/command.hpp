@@ -113,6 +113,7 @@ namespace teos {
       static string walletHost;
       static string walletPort;
       static ptree errorRespJson(string sender, string message);
+      static bool ipAddress(string ipAddress);
 
       /**
        * @brief A constructor.
@@ -121,11 +122,8 @@ namespace teos {
        * @param isRaw if true, the resulting json is not formated.
        */
       TeosCommand(string path, ptree reqJson);
-
       TeosCommand(string path);
-
       TeosCommand(bool isError, ptree respJson);
-
       TeosCommand() {}
 
       void copy(TeosCommand teosCommand) {

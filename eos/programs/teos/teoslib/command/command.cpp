@@ -99,6 +99,20 @@ namespace teos{
 Definitions for class TeosCommand.
 ****************************************************************************/
 
+    bool TeosCommand::ipAddress(string ipAddress) {
+      size_t colon = ipAddress.find(":");
+      if (colon != std::string::npos)
+      {
+        host = string(ipAddress.substr(0, colon));
+        port = string(ipAddress.substr(colon + 1,
+          ipAddress.size()));
+        walletHost = TeosCommand::host;
+        walletPort = TeosCommand::port;
+        return true;
+      }
+      return false;
+    }
+
     ptree TeosCommand::errorRespJson(string sender, string message) {
       ptree respJson;
       string senderEntry = "\"sender\":\"" + sender + "\"";

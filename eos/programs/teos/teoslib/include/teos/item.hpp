@@ -29,11 +29,15 @@ namespace teos {
 
   class Item
   {
+    string errorMsg_ = "";
   public:
     static bool verbose;
     static ptree getConfig(bool verbose = false);
     bool isError_ = false;
-    string errorMsg_ = "";
+
+    void errorMsg(string errorMsg) {
+      errorMsg_ += "\n" + errorMsg;
+    }
     virtual string errorMsg() {
       return errorMsg_;
     }
@@ -122,7 +126,8 @@ namespace teos {
       return false;
     }
 
-    virtual void parseGroupVariablesMap(variables_map& vm) {}
+    virtual void parseGroupVariablesMap(variables_map& vm) {
+    }
 
   public:
     ItemOptions(int argc, const char *argv[]) : argc_(argc), argv_(argv) {}

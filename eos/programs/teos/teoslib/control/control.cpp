@@ -58,16 +58,16 @@ namespace teos {
       string commandLine = (teos::config::EOSIO_INSTALL_DIR() / "bin"
         / CHAIN_NODE()).string()
         + " --genesis-json "
-        + genesis_json == "" ? GENESIS_JSON().string() : genesis_json
+        + (genesis_json.empty() ? GENESIS_JSON().string() : genesis_json)
         + " --http-server-address "
-        + http_server_address == "" ? HTTP_SERVER_ADDRESS() : http_server_address
+        + (http_server_address.empty() ? HTTP_SERVER_ADDRESS() : http_server_address)
         + " --data-dir "
-        + data_dir == "" ? DATA_DIR().string() : data_dir;
+        + (data_dir.empty() ? DATA_DIR().string() : data_dir);
       if (resync_blockchain) {
         commandLine +=" --resync-blockchain";
       }
 
-      //cout << commandLine << endl;
+      cout << commandLine << endl;
       boost::process::spawn(commandLine);
 
       // Wait until the node is operational:
@@ -271,6 +271,57 @@ namespace teos {
       /mnt/hgfs/Workspaces/EOS/eos/build/tools/eoscpp -o /tmp/hello.wast \
       /mnt/hgfs/Workspaces/EOS/eos/contracts/skeleton/skeleton.cpp
       */
+    }
+
+
+    NodeStart::NodeStart(
+      string eosiod_exe,
+      string genesis_json,
+      string http_server_address,
+      string data_dir,
+      bool resync_blockchain
+    ) : eosiod_exe_(eosiod_exe.empty()
+        ? (EOSIO_INSTALL_DIR() / "bin" / CHAIN_NODE()).string()
+        : eosiod_exe)
+      , genesis_json_(genesis_json.empty() ? GENESIS_JSON().string() 
+        : genesis_json)
+      , http_server_address_(http_server_address.empty() 
+        ? HTTP_SERVER_ADDRESS() : http_server_address)
+      , data_dir_(data_dir.empty() ? DATA_DIR().string() : data_dir)
+      , resync_blockchain_(resync_blockchain)
+
+    {
+      try{
+        killChainNode();
+
+        string commandLine = eosiod_exe_
+          + " --genesis-json " + genesis_json_
+          + " --http-server-address " + http_server_address_
+          + " --data-dir " + data_dir_;
+        if (resync_blockchain_) {
+          commandLine += " --resync-blockchain";
+        }
+
+        //cout << commandLine <<endl;
+        boost::process::system("gnome-terminal -- " + commandLine);
+
+        // Wait until the node is operational:
+        teos::command::TeosCommand tc;
+        teos::command::TeosCommand::ipAddress(http_server_address_);
+        int count = 10;
+        do {
+          boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
+          tc = teos::command::GetInfo();
+          if(count-- == 0){
+            isError_ = true;
+            errorMsg(tc.errorMsg());
+          }
+        } while (tc.isError_ && count > 0);
+      }
+      catch (std::exception& e) {
+        isError_ = true;
+        errorMsg(e.what());
+      }
     }
 
   }
