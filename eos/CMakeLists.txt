@@ -6,12 +6,12 @@ set(VERSION_MINOR 5)
 set( EOS_ECC_IMPL secp256k1 ) ## secp256k1 or openssl or mixed
 set( EOS_BUILD_RANGE all ) ## teos or all
 set( CMAKE_BUILD_TYPE "Debug" )
-set( CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install)
+set( CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
 
 set( CMAKE_CXX_STANDARD 14 )
 set( BUILD_SHARED_LIBS NO )
 set( BUILD_DOXYGEN TRUE )
-list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules" )
+list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules" )
 
 message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 
@@ -91,4 +91,4 @@ endif( NOT EOS_ECC_IMPL STREQUAL openssl )
 
 add_subdirectory( libraries )
 add_subdirectory( plugins )
-add_subdirectory( programs/teos )
+#add_subdirectory( programs/teos )

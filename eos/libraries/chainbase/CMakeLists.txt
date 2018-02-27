@@ -68,9 +68,9 @@ target_include_directories( chainbase PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/includ
 
 add_subdirectory( test )
 
+#install( DIRECTORY include DESTINATION . )
 install( TARGETS
    chainbase
-
    RUNTIME DESTINATION bin
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib

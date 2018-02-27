@@ -1,0 +1,12 @@
+{
+   "logging":{
+      "severity":2,
+      "logDir":"./log",
+      "logFile":"log.log",
+      "format":"[%TimeStamp%]: %Message%"
+   },
+   "teos":{
+      "server":"eos-testapi.tokenika.io",
+      "port":"8888"
+   }
+}

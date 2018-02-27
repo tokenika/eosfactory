@@ -134,3 +134,7 @@ add_subdirectory(Source/WASM)
 add_subdirectory(Source/WAST)
 
 add_subdirectory(Test/spec)  
+
+#<Tokenika>
+install( DIRECTORY "include" DESTINATION "./" )
+#</Tokenika>

@@ -7,3 +7,11 @@ add_library(WASM STATIC ${Sources} ${PublicHeaders})
 #add_definitions(-DWEBASSEMBLY_API=DLL_EXPORT)
 ### tokenika
 target_link_libraries(WASM Logging IR)
+
+#<Tokenika>
+install(
+  TARGETS WASM 
+  LIBRARY DESTINATION lib 
+  ARCHIVE DESTINATION lib
+)
+#</Tokenika>

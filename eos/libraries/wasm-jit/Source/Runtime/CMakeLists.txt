@@ -29,10 +29,18 @@ find_package(LLVM 4.0 REQUIRED CONFIG)
 include_directories(${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 
-### tokenika:
+#<Tokenika>
 #add_definitions(-DRUNTIME_API=DLL_EXPORT)
-### tokenika
+#</Tokenika>
 
 # Link against the LLVM libraries
 llvm_map_components_to_libnames(LLVM_LIBS support core passes mcjit native DebugInfoDWARF)
 target_link_libraries(Runtime Platform Logging IR ${LLVM_LIBS})
+
+#<Tokenika>
+install(
+  TARGETS Runtime 
+  LIBRARY DESTINATION lib 
+  ARCHIVE DESTINATION lib
+)
+#</Tokenika>

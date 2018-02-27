@@ -14,7 +14,15 @@ set(PublicHeaders
 include_directories(${WAVM_INCLUDE_DIR}/IR)
 
 add_library(IR STATIC ${Sources} ${PublicHeaders})
-### tokenika:
+#<Tokenika>
 #add_definitions(-DIR_API=DLL_EXPORT)
-### tokenika
+#</Tokenika>
 target_link_libraries(IR Logging)
+
+#<Tokenika>
+install(
+  TARGETS IR 
+  LIBRARY DESTINATION lib 
+  ARCHIVE DESTINATION lib
+)
+#</Tokenika>

@@ -15,3 +15,12 @@ add_library(Platform STATIC ${Sources} ${PublicHeaders})
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	target_link_libraries(Platform dl pthread rt)
 endif()
+
+#<Tokenika>
+install(
+  TARGETS Platform 
+  LIBRARY DESTINATION lib 
+  ARCHIVE DESTINATION lib
+)
+#</Tokenika>
+

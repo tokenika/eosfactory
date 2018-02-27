@@ -22,3 +22,11 @@ add_library(WAST STATIC ${Sources} ${PublicHeaders})
 #add_definitions(-DWAST_API=DLL_EXPORT)
 ### tokenika
 target_link_libraries(WAST Logging IR WASM)
+
+#<Tokenika>
+install(
+	TARGETS WAST 
+  LIBRARY DESTINATION lib 
+  ARCHIVE DESTINATION lib
+)
+#</Tokenika>
