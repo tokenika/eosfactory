@@ -91,4 +91,3 @@ endif( NOT EOS_ECC_IMPL STREQUAL openssl )
 
 add_subdirectory( libraries )
 add_subdirectory( plugins )
-#add_subdirectory( programs/teos )

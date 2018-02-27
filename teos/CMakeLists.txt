@@ -185,24 +185,32 @@ macro( applLinkLibraries applName )
   )
   endif()
 
+  if( MSVC )
+    set( PREP "")
+    set( EXT "lib")
+  else( MSVC ) 
+    set( PREP "lib") 
+    set( EXT "a")    
+  endif ( MSVC )
+
   target_link_libraries( ${applName}
     PRIVATE
       teoslib
-			${EOSIO_INSTALL_DIR}/lib/libchain_plugin.a
-			${EOSIO_INSTALL_DIR}/lib/libdatabase_plugin.a
-      ${EOSIO_INSTALL_DIR}/lib/libchainbase.a
-      ${EOSIO_INSTALL_DIR}/lib/libeos_types.a
-      ${EOSIO_INSTALL_DIR}/lib/libeos_chain.a
-      ${EOSIO_INSTALL_DIR}/lib/libeos_utilities.a
-      ${EOSIO_INSTALL_DIR}/lib/libappbase.a
-      ${EOSIO_INSTALL_DIR}/lib/libfc.a
-			${EOSIO_INSTALL_DIR}/lib/libWAST.a
-			${EOSIO_INSTALL_DIR}/lib/libWASM.a
-			${EOSIO_INSTALL_DIR}/lib/libRuntime.a
-      ${EOSIO_INSTALL_DIR}/lib/libIR.a  
-      ${EOSIO_INSTALL_DIR}/lib/libLogging.a 
-      ${EOSIO_INSTALL_DIR}/lib/libPlatform.a 
-    )
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}chain_plugin.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}database_plugin.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}chainbase.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}eos_types.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}eos_chain.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}eos_utilities.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}appbase.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}fc.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}WAST.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}WASM.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}Runtime.${EXT}
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}IR.${EXT}  
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}Logging.${EXT} 
+      ${EOSIO_INSTALL_DIR}/lib/${PREP}Platform.${EXT} 
+  )
 
   if( NOT EOS_ECC_IMPL STREQUAL openssl )
     target_link_libraries( ${applName}
@@ -233,7 +241,7 @@ macro( applLinkLibraries applName )
         "$(WindowsSDK_LibraryPath)/x64/crypt32.lib"
         "$(VC_ReferencesPath_VC_x64)/legacy_stdio_definitions.lib"
         "Userenv.lib"
-        __iob_func
+        ${EOSIO_INSTALL_DIR}/lib/${PREP}__iob_func.${EXT} 
     )
   endif( WIN32 )
 

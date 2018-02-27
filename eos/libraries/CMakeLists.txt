@@ -16,4 +16,12 @@ endif()
 
 if( WIN32 )
   add_library(__iob_func __iob_func.cpp )
+  
+  install( TARGETS
+    __iob_func
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+  )
+
 endif()
