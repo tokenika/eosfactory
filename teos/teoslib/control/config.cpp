@@ -27,20 +27,6 @@ boost::property_tree::ptree getConfigJson()
   return json;
 }
 
-string getFromConfigOrFromEnv(string name, string defaultValue = "")
-{
-  boost::property_tree::ptree config = getConfigJson();
-  string temp;
-  temp = config.get(name, "");
-  temp = temp != ""
-    ? temp
-    : getenv(name.c_str()) == 0 ? "" : getenv(name.c_str());
-  if (temp != "") {
-    return temp;
-  }
-  return defaultValue == "" ? name + "_is_not_defined." : defaultValue;
-}
-
 namespace teos {
   namespace config {
 
