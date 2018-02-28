@@ -27,8 +27,17 @@ target_include_directories( ${LIB_NAME}
   PRIVATE
     ${Boost_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
-    ${EOSIO_INSTALL_DIR}/include
-    include
+
+    ${EOSIO_SOURCE_DIR}/libraries/wasm-jit/include
+    ${EOSIO_SOURCE_DIR}/libraries/fc/include
+    ${EOSIO_SOURCE_DIR}/libraries/appbase/include
+    ${EOSIO_SOURCE_DIR}/libraries/utilities/include
+    ${EOSIO_SOURCE_DIR}/libraries/chain/include
+    ${EOSIO_SOURCE_DIR}/libraries/types/include
+    ${EOSIO_SOURCE_DIR}/libraries/chainbase/include
+    ${EOSIO_SOURCE_DIR}/plugins/database_plugin/include
+    ${EOSIO_SOURCE_DIR}/plugins/chain_plugin/include
+
   PUBLIC
     include
 )

@@ -5,11 +5,33 @@ set( VERSION_MAJOR 0 )
 set( VERSION_MINOR 6 )
 set( CMAKE_BUILD_TYPE "Debug" )
 
-# Set
-# -- CMAKE_INSTALL_PREFIX
-# -- EOSIO_GIT_DIR
-# -- EOSIO_INSTALL_DIR
-include( "${PROJECT_SOURCE_DIR}/../CMake/config.cmake" )
+message(STATUS 
+"//////////////////////////////////////////////////////////////////////////////" )
+
+set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/../install")
+message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+
+if( WIN32 )
+  set(EOSIO_SOURCE_DIR "E:/Workspaces/EOS/Logos/eos")
+  set(EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/buildWindows")
+  set(EOSIO_INSTALL_DIR "E:/Workspaces/EOS/Logos/eos/buildWindows/install" )
+else( WIN32 )
+  set(EOSIO_SOURCE_DIR "/mnt/hgfs/Workspaces/EOS/Logos/eos")
+  set(EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/build")
+  set( EOSIO_INSTALL_DIR "/mnt/hgfs/Workspaces/EOS/Logos/eos/build/install" )
+endif( WIN32 )
+
+message(STATUS "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR}")
+message( STATUS "EOSIO_INSTALL_DIR: ${EOSIO_INSTALL_DIR}" )
+
+set( CMAKE_CXX_STANDARD 14 ) 
+set( CMAKE_CXX_STANDARD_REQUIRED ON )
+set( CMAKE_BUILD_TYPE Debug ) 
+
+include_directories( "${CMAKE_INSTALL_PREFIX}/include" )
+message( STATUS 
+"//////////////////////////////////////////////////////////////////////////////" )
+
 
 set( CMAKE_CXX_STANDARD 14 )
 set( BUILD_SHARED_LIBS NO )
@@ -155,6 +177,10 @@ if( NOT EOS_ECC_IMPL STREQUAL openssl )
   endif( SECP256K1_FOUND )
 endif( NOT EOS_ECC_IMPL STREQUAL openssl )
 
+if( WIN32 )
+  add_library(__iob_func __iob_func.cpp )
+endif()
+
 ####################################### DEPENDENCIES
 
 add_subdirectory(teoslib)
@@ -175,7 +201,6 @@ macro( applLinkLibraries applName )
      ${OPENSSL_INCLUDE_DIR}
      include
      teoslib/include
-     ${EOSIO_INSTALL_DIR}/include
   )
 
   if( UNIX )
@@ -186,30 +211,28 @@ macro( applLinkLibraries applName )
   endif()
 
   if( MSVC )
-    set( PREP "")
-    set( EXT "lib")
-  else( MSVC ) 
-    set( PREP "lib") 
-    set( EXT "a")    
-  endif ( MSVC )
+    set( TARGET_DIR ${CMAKE_BUILD_TYPE} )
+  else()
+    set( TARGET_DIR "" )
+  endif()
 
   target_link_libraries( ${applName}
     PRIVATE
       teoslib
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}chain_plugin.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}database_plugin.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}chainbase.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}eos_types.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}eos_chain.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}eos_utilities.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}appbase.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}fc.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}WAST.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}WASM.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}Runtime.${EXT}
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}IR.${EXT}  
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}Logging.${EXT} 
-      ${EOSIO_INSTALL_DIR}/lib/${PREP}Platform.${EXT} 
+      ${EOSIO_BINARY_DIR}/plugins/chain_plugin/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chain_plugin${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/plugins/database_plugin/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}database_plugin${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/chainbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chainbase${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/types/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_types${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/chain/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_chain${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/utilities/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_utilities${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/appbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}appbase${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WAST${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WASM${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Runtime${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}IR${CMAKE_STATIC_LIBRARY_SUFFIX}  
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Logging${CMAKE_STATIC_LIBRARY_SUFFIX} 
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Platform${CMAKE_STATIC_LIBRARY_SUFFIX} 
   )
 
   if( NOT EOS_ECC_IMPL STREQUAL openssl )
@@ -241,7 +264,7 @@ macro( applLinkLibraries applName )
         "$(WindowsSDK_LibraryPath)/x64/crypt32.lib"
         "$(VC_ReferencesPath_VC_x64)/legacy_stdio_definitions.lib"
         "Userenv.lib"
-        ${EOSIO_INSTALL_DIR}/lib/${PREP}__iob_func.${EXT} 
+        __iob_func
     )
   endif( WIN32 )
 

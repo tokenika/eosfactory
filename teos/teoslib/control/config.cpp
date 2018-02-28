@@ -37,7 +37,7 @@ namespace teos {
       { HTTP_SERVER_ADDRESS,{ "http-server-address", "127.0.0.1:8888" } },
       { DATA_DIR,{ "data-dir", "workdir/data-dir" } },
       { EOSIO_INSTALL_DIR,{ "EOSIO_INSTALL_DIR" } },
-      { EOSIO_GIT_DIR,{ "EOSIO_GIT_DIR" } },
+      { EOSIO_SOURCE_DIR,{ "EOSIO_SOURCE_DIR" } },
       { CHAIN_NODE,{ "CHAIN_NODE", "eosiod" } },
       { PENTAGON_DIR,{ "PENTAGON_DIR" } },
       { WASM_CLANG,{ "WASM_CLANG", "/home/cartman/opt/wasm/bin/clang" } },

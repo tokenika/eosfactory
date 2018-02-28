@@ -26,15 +26,15 @@
 #include <teos/teos.hpp>
 #include <teos/teos_test.hpp>
 
-#define IF_ELSE(commandName_, classPrefix)                          \
-  if (commandName == #commandName_)                                 \
-  {                                                                 \
-    classPrefix##Options(argcLeft, argvLeft).go();  \
-    for( int i = 0; i < argcLeft; i++ ){                            \
-      delete[] argvLeft[i];                                         \
-    }                                                               \
-    delete[] argvLeft;                                              \
-  }                                                                 \
+#define IF_ELSE(commandName_, classPrefix) \
+  if (commandName == #commandName_) \
+  { \
+    classPrefix##Options(argcLeft, argvLeft).go(); \
+    for( int i = 0; i < argcLeft; i++ ){ \
+      delete[] argvLeft[i]; \
+    } \
+    delete[] argvLeft; \
+  } \
   else
 
 #define HELP                  \
