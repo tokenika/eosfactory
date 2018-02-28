@@ -39,7 +39,7 @@ namespace teos {
       { EOSIO_INSTALL_DIR,{ "EOSIO_INSTALL_DIR" } },
       { EOSIO_SOURCE_DIR,{ "EOSIO_SOURCE_DIR" } },
       { CHAIN_NODE,{ "CHAIN_NODE", "eosiod" } },
-      { PENTAGON_DIR,{ "PENTAGON_DIR" } },
+      { LOGOS_DIR,{ "LOGOS_DIR" } },
       { WASM_CLANG,{ "WASM_CLANG", "/home/cartman/opt/wasm/bin/clang" } },
       { WASM_LLVM_LINK,{ "WASM_LLVM_LINK", "/home/cartman/opt/wasm/bin/llvm-link" } },
       { WASM_LLC,{ "WASM_LLC", "/home/cartman/opt/wasm/bin/llc" } },

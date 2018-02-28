@@ -8,21 +8,22 @@ set( CMAKE_BUILD_TYPE "Debug" )
 message(STATUS 
 "//////////////////////////////////////////////////////////////////////////////" )
 
-set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/../install")
-message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+set ( LOGOS_DIR "${CMAKE_SOURCE_DIR}/.." )
+set( EOSIO_SOURCE_DIR "${LOGOS_DIR}/eos" )
 
 if( WIN32 )
-  set(EOSIO_SOURCE_DIR "E:/Workspaces/EOS/Logos/eos")
-  set(EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/buildWindows")
-  set(EOSIO_INSTALL_DIR "E:/Workspaces/EOS/Logos/eos/buildWindows/install" )
+  set( EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/buildWindows")
+  set( EOSIO_INSTALL_DIR "${LOGOS_DIR}/eos/buildWindows/install" )
+  set( CMAKE_INSTALL_PREFIX "${LOGOS_DIR}/install/windows" )
 else( WIN32 )
-  set(EOSIO_SOURCE_DIR "/mnt/hgfs/Workspaces/EOS/Logos/eos")
-  set(EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/build")
-  set( EOSIO_INSTALL_DIR "/mnt/hgfs/Workspaces/EOS/Logos/eos/build/install" )
+  set( EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/build" )
+  set( EOSIO_INSTALL_DIR "${LOGOS_DIR}/eos/build/install" )
+  set( CMAKE_INSTALL_PREFIX "${LOGOS_DIR}/install/ubuntu" )
 endif( WIN32 )
 
 message(STATUS "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR}")
 message( STATUS "EOSIO_INSTALL_DIR: ${EOSIO_INSTALL_DIR}" )
+message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
 set( CMAKE_CXX_STANDARD 14 ) 
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
@@ -47,12 +48,6 @@ set( CONFIG_JSON_FILE "config.json" )
 set( CONFIG_JSON_PATH "${CONFIG_JSON_FILE}" )
 set( CONFIG_JSON "\"${CONFIG_JSON_PATH}\"" )
 set( LOGGING_DIR "\"log\"" )
-
-configure_file (
-  "config.h.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/teoslib/include/teoslib/config.h"
-)
 
 if( MSVC )
 	# Taken out of the VC projects to avoid the compiler complaining about POSIX code
@@ -183,6 +178,28 @@ endif()
 
 ####################################### DEPENDENCIES
 
+if( MSVC )
+  set( WASM_CLANG "" )
+  set( WASM_LLVM_LINK "" )
+  set( WASM_LLC "" )
+  set( BINARYEN_BIN "" )
+else()
+  set( WASM_CLANG "${HOME}/opt/wasm/bin/clang" )
+  set( WASM_LLVM_LINK "${HOME}/opt/wasm/bin/llvm-link" )
+  set( WASM_LLC "${HOME}/opt/wasm/bin/llc" )
+  set( BINARYEN_BIN "/usr/local/binaryen/bin/" )
+endif()
+
+configure_file (
+  "config.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.h"
+)
+
+configure_file (
+  "config.json.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json"
+)
+
 add_subdirectory(teoslib)
 
 ####################################### executables
@@ -276,8 +293,6 @@ macro( applLinkLibraries applName )
   )
   endif()
 
-  install( FILES ${CONFIG_JSON_PATH} DESTINATION bin )
-
 endmacro( applLinkLibraries )
 
 add_executable( teos teos.cpp teos_test.cpp )
@@ -287,6 +302,8 @@ install( TARGETS teos RUNTIME DESTINATION bin)
 add_executable( teos_lib_test teos_lib_test.cpp )
 applLinkLibraries( teos_lib_test )
 install( TARGETS teos_lib_test RUNTIME DESTINATION bin)
+
+install( FILES ${CONFIG_JSON_PATH} DESTINATION bin )
 
 ####################################### /executables
 
