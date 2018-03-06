@@ -2,7 +2,7 @@
  *  @file
  *  @copyright defined in eos/LICENSE.txt
  */
-#include <eos/chain/block_log.hpp>
+#include <eosio/chain/block_log.hpp>
 #include <fstream>
 #include <fc/io/raw.hpp>
 
@@ -160,14 +160,7 @@ namespace eosio { namespace chain {
          my->check_index_write();
 
          uint64_t pos = my->block_stream.tellp();
-/*
-<BlockOne>
-        FC_ASSERT(my->index_stream.tellp() == sizeof(uint64_t) * (b.block_num() - 1),
-</BlockOne>
-*/
-//<Tokenika>
-        FC_ASSERT((unsigned long long) my->index_stream.tellp() == sizeof(uint64_t) * (b.block_num() - 1),
-//</Tokenika>
+         FC_ASSERT(my->index_stream.tellp() == sizeof(uint64_t) * (b.block_num() - 1),
                    "Append to index file occuring at wrong position.",
                    ("position", (uint64_t) my->index_stream.tellp())
                    ("expected", (b.block_num() - 1) * sizeof(uint64_t)));

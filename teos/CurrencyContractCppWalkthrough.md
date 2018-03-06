@@ -233,13 +233,13 @@ int main(int argc, const char *argv[]) {
 // }
 
   // Let Alice do a money transfer ...
-  PushMessage pushMessage("currency", "transfer", 
+  PushAction pushAction("currency", "transfer", 
     "{\"from\":\"currency\",\"to\":\"inita\",\"quantity\":50}", 
     "currency,inita", "currency@active");
-  if(pushMessage.isError()){
-    cout << pushMessage.responseToString() << endl;
+  if(pushAction.isError()){
+    cout << pushAction.responseToString() << endl;
   } else {
-    cout << pushMessage.responseToString(false) << endl;
+    cout << pushAction.responseToString(false) << endl;
   }
 // OUTPUT:
 // {

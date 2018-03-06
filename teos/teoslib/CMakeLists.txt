@@ -1,14 +1,6 @@
 
 set( LIB_NAME "teoslib" )
 
-set( TEST_ADDRESS "\"tokenika\"")
-set( TEST_HOST "\"eos-testapi.tokenika.io\"" )
-set( TEST_PORT "\"8888\"" )
-set( CONFIG_JSON_FILE "config.json" )
-set( CONFIG_JSON_PATH "${CONFIG_JSON_FILE}" )
-set( CONFIG_JSON "\"${CONFIG_JSON_PATH}\"" )
-set( LOGGING_DIR "\"log\"" )
-
 configure_file (
   "config.h.in"
   "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.h"

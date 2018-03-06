@@ -1,14 +1,7 @@
 #pragma once
 
 #ifndef WEBASSEMBLY_API
-/*
-<BlockOne>
 	#define WEBASSEMBLY_API DLL_IMPORT
-</BlockOne>
-*/
-//<Tokenika>
-#define WEBASSEMBLY_API
-//</Tokenika>
 #endif
 
 #include "Inline/BasicTypes.h"

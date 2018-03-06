@@ -1,58 +1,50 @@
-set( LIB_NAME eos_chain)
+file(GLOB HEADERS "include/eosio/chain/*.hpp" "include/eosio/chain/contracts/*.hpp")
 
-add_library( ${LIB_NAME} 
-  wast_to_wasm.cpp
-  chain_controller.cpp
-  wasm_interface.cpp
-  block_schedule.cpp
-  fork_database.cpp
-  transaction.cpp
-  block.cpp
-  get_config.cpp
-  block_log.cpp
-  blockchain_configuration.cpp
-  types.cpp
-  chain_administration_interface.cpp
-  message_handling_contexts.cpp
-  producer_objects.cpp
-  staked_balance_objects.cpp  wast_to_wasm.cpp
-  chain_controller.cpp
-  wasm_interface.cpp
-  block_schedule.cpp
-  fork_database.cpp
-  transaction.cpp
-  block.cpp
-  get_config.cpp
-  block_log.cpp  
-  blockchain_configuration.cpp
-  types.cpp
-  chain_administration_interface.cpp
-  message_handling_contexts.cpp
-  producer_objects.cpp
-  staked_balance_objects.cpp
+add_library( eosio_chain
+             chain_config.cpp
+             merkle.cpp
+             name.cpp
+             transaction.cpp
+             block.cpp
+             wast_to_wasm.cpp
+             wasm_interface.cpp
+             apply_context.cpp
+             rate_limiting.cpp
+
+             fork_database.cpp
+             get_config.cpp
+             block_log.cpp
+             asset.cpp
+
+
+             global_property_object.cpp
+             chain_controller.cpp
+
+             contracts/eosio_contract.cpp
+             contracts/producer_objects.cpp
+             contracts/staked_balance_objects.cpp
+             contracts/chain_initializer.cpp
+             contracts/genesis_state.cpp
+             contracts/abi_serializer.cpp
+
+             ${HEADERS}
+        )
+
+target_include_directories( eosio_chain
+  PUBLIC 
+    include 
+  PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/libraries/wasm-jit/Include"    
 )
 
-target_include_directories(${LIB_NAME} 
-	PRIVATE
-		${Boost_INCLUDE_DIR}
-		${OPENSSL_INCLUDE_DIR}
-    ${SECP256K1_INCLUDE_DIR}
-		../wasm-jit/Include
-		../fc/include
-		../types/include
-		../chainbase/include
-		../utilities/include    
-	PUBLIC
-		include
-)
+INSTALL( TARGETS
+   eosio_chain
 
-if( WIN32 )
-  add_compile_options( /bigobj )
-endif( WIN32 )
-
-install( DIRECTORY include DESTINATION . )
-install(
-  TARGETS ${LIB_NAME} 
-  LIBRARY DESTINATION lib 
-  ARCHIVE DESTINATION lib
+   RUNTIME DESTINATION bin
+   LIBRARY DESTINATION lib
+   ARCHIVE DESTINATION lib
 )
+INSTALL( FILES ${HEADERS} DESTINATION "include/eosio/chain" )
+
+

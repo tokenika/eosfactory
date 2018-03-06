@@ -1,31 +1,27 @@
-set( LIB_NAME eos_utilities)
 
-add_library(${LIB_NAME} STATIC 
+file(GLOB HEADERS "include/eos/utilities/*.hpp")
+
+add_library( eos_utilities
   key_conversion.cpp
+  string_escape.cpp
+  tempdir.cpp
+  words.cpp
+  ${HEADERS} 
 )
 
-if( EOS_BUILD_RANGE STREQUAL all )
-  target_sources( ${LIB_NAME} 
-    PRIVATE
-      ${CMAKE_CURRENT_LIST_DIR}/string_escape.cpp
-      ${CMAKE_CURRENT_LIST_DIR}/tempdir.cpp
-      ${CMAKE_CURRENT_LIST_DIR}/words.cpp
-    )
-    endif( EOS_BUILD_RANGE STREQUAL all )    
-
-target_include_directories( ${LIB_NAME} 
-  PRIVATE
-    ../fc/include
-    ${Boost_INCLUDE_DIR}
-    ${OPENSSL_INCLUDE_DIR}
-    ${SECP256K1_INCLUDE_DIR}
-  PUBLIC  
+target_include_directories( eos_utilities
+  PUBLIC 
     include
+  PRIVATE
+    ${CMAKE_SOURCE_DIR}/libraries/fc/include
+    ${CMAKE_SOURCE_DIR}/libraries/wasm-jit/Include
 )
 
-install( DIRECTORY include DESTINATION . )
-install(
-  TARGETS ${LIB_NAME} 
-  LIBRARY DESTINATION lib 
-  ARCHIVE DESTINATION lib
+install( TARGETS
+   eos_utilities
+
+   RUNTIME DESTINATION bin
+   LIBRARY DESTINATION lib
+   ARCHIVE DESTINATION lib
 )
+install( FILES ${HEADERS} DESTINATION "include/eos/utilities" )

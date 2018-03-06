@@ -245,7 +245,7 @@ int main(int argc, const char *argv[]) {
       IF_ELSE(create_key, CreateKey)
       IF_ELSE(create_account, CreateAccount)
       IF_ELSE(set_contract, SetContract)
-      IF_ELSE(push_message, PushMessage)
+      IF_ELSE(push_action, PushAction)
       IF_ELSE(node_start, NodeStart)
       IF_ELSE(node_kill, NodeKill)
       IF_ELSE(node_delete_wallets_all, NodeDeleteAllWallets)
@@ -258,7 +258,7 @@ int main(int argc, const char *argv[]) {
     {
       HELP
         return 0;
-    }
+    }  
   }
   return 0;
 }

@@ -3,7 +3,7 @@
 
 namespace fc {
 
-#ifdef _MSC_VER
+#ifdef WIN32
 #include <windows.h>
 
 void set_console_echo( bool enable_echo )
@@ -21,7 +21,7 @@ void set_console_echo( bool enable_echo )
    }
 }
 
-#else // NOT _MSC_VER
+#else // NOT WIN32
 #include <termios.h>
 #include <unistd.h>
 
@@ -41,6 +41,6 @@ void set_console_echo( bool enable_echo )
    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 }
 
-#endif // _MSC_VER
+#endif // WIN32
 
 } // namespace fc

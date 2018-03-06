@@ -32,7 +32,7 @@ namespace teos
        * @param getResponse() returns a push-transaction json.
       */
       CreateAccount(string creator, string accountName,
-        string ownerKeyPubl, string activeKeyPubl, long long depositEos = 1,
+        string ownerKeyPubl, string activeKeyPubl, uint64_t depositEos = 1,
         bool skip = false, int expirationSec = 30,
         bool raw = false) : TeosCommand("")
       {
@@ -54,7 +54,7 @@ namespace teos
         copy(createAccount(
           reqJson.get<string>("creator"), reqJson.get<string>("name"),
           reqJson.get<string>("ownerKey"), reqJson.get<string>("activeKey"),
-          reqJson.get<long long>("deposit"),
+          reqJson.get<uint64_t>("deposit"),
           reqJson.get<bool>("skip"), reqJson.get<int>("expiration")));
       }
     };
@@ -91,7 +91,7 @@ Usage: ./teos create key [-j '{
       string activeKey;
       bool skip;
       int expiration;
-      int deposit;
+      uint64_t deposit;
 
 
       options_description  argumentDescription() {
@@ -103,7 +103,7 @@ Usage: ./teos create key [-j '{
           ("activeKey,o", value<string>(&activeKey), "The active public key for the account")
           ("skip,s", value<bool>(&skip)->default_value(false), "Specify that unlocked wallet keys should not be used to sign transaction, defaults to false")
           ("expiration,x", value<int>(&expiration)->default_value(30), "The time in seconds before a transaction expires")
-          ("deposit,d", value<int>(&deposit)->default_value(1), "The initial deposit");
+          ("deposit,d", value<uint64_t>(&deposit)->default_value(1), "The initial deposit");
         return od;
       }
 

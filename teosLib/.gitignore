@@ -1,0 +1,16 @@
+build
+build_linux
+buildLinux
+build_windows
+buildWindows
+**/Debug
+**/x64
+**/.vs
+**/*.wast
+**/teos.exe
+**/teos.ilk
+**/teos.pdb
+**/teosLib.lib
+**/teosLib.pdp
+teos_visual_studio
+

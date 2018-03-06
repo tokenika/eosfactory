@@ -1,14 +1,7 @@
 #pragma once
 
 #ifndef WAST_API
-/*
-<BlockOne>
 	#define WAST_API DLL_IMPORT
-</BlockOne>
-*/
-//<Tokenika>
-	#define WAST_API
-//</Tokenika>
 #endif
 
 #include "Inline/BasicTypes.h"

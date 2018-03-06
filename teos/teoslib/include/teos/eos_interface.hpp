@@ -23,7 +23,7 @@ namespace teos{
 
 
   TeosCommand createAccount(string creator, string name,
-    string ownerKey, string activeKey, long long deposit,
+    string ownerKey, string activeKey, uint64_t deposit,
     bool skipSignature, int expiration);
 
   TeosCommand setContract(std::string wastFile, std::string abiFile,
@@ -31,7 +31,7 @@ namespace teos{
 
   TeosCommand getCode(string accountName, string wastFile, string abiFile);
   
-  TeosCommand pushMessage(string contract, string action, string data,
+  TeosCommand pushAction(string contract, string action, string data,
     const vector<string> scopes, const vector<string> permissions,
     bool skipSignature, int expiration,
     bool tx_force_unique);

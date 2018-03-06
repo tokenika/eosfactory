@@ -20,7 +20,7 @@ set(PublicHeaders
 	${WAVM_INCLUDE_DIR}/Runtime/TaggedValue.h)
 include_directories(${WAVM_INCLUDE_DIR}/Runtime)
 
-add_library(Runtime STATIC ${Sources} ${PublicHeaders})
+add_library(Runtime ${SHARED_OR_STATIC} ${Sources} ${PublicHeaders})
 
 # Find an installed build of LLVM
 find_package(LLVM 4.0 REQUIRED CONFIG)
@@ -29,18 +29,14 @@ find_package(LLVM 4.0 REQUIRED CONFIG)
 include_directories(${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 
-#<Tokenika>
-#add_definitions(-DRUNTIME_API=DLL_EXPORT)
-#</Tokenika>
+add_definitions(-DRUNTIME_API=DLL_EXPORT)
 
 # Link against the LLVM libraries
 llvm_map_components_to_libnames(LLVM_LIBS support core passes mcjit native DebugInfoDWARF)
 target_link_libraries(Runtime Platform Logging IR ${LLVM_LIBS})
 
-#<Tokenika>
-install(
-  TARGETS Runtime 
-  LIBRARY DESTINATION lib 
-  ARCHIVE DESTINATION lib
+INSTALL( TARGETS Runtime
+   RUNTIME DESTINATION bin
+   LIBRARY DESTINATION lib
+   ARCHIVE DESTINATION lib
 )
-#</Tokenika>

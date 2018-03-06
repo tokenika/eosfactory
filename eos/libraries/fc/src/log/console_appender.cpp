@@ -3,7 +3,7 @@
 #include <fc/string.hpp>
 #include <fc/variant.hpp>
 #include <fc/reflect/variant.hpp>
-#ifndef _MSC_VER
+#ifndef WIN32
 #include <unistd.h>
 #endif
 #include <boost/thread/mutex.hpp>
@@ -11,6 +11,7 @@
 #include "console_defines.h"
 #include <fc/exception/exception.hpp>
 #include <iomanip>
+#include <mutex>
 #include <sstream>
 
 
@@ -20,7 +21,7 @@ namespace fc {
    public:
      config                      cfg;
      color::type                 lc[log_level::off+1];
-#ifdef _MSC_VER
+#ifdef WIN32
      HANDLE                      console_handle;
 #endif
    };
@@ -42,7 +43,7 @@ namespace fc {
 
    void console_appender::configure( const config& console_appender_config )
    { try {
-#ifdef _MSC_VER
+#ifdef WIN32
       my->console_handle = INVALID_HANDLE_VALUE;
 #endif
       my->cfg = console_appender_config;
@@ -116,6 +117,8 @@ namespace fc {
       line << "] ";
       fc::string message = fc::format_string( m.get_format(), m.get_data() );
       line << message;//.c_str();
+
+      std::unique_lock<boost::mutex> lock(log_mutex());
 
       print( line.str(), my->lc[m.get_context().get_log_level()] );
 

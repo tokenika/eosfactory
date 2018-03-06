@@ -13,6 +13,9 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(WAVM_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/Include)
 include_directories(${WAVM_INCLUDE_DIR})
 
+set(SHARED_OR_STATIC "SHARED")
+set( CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/../../../install/wasm-jit )
+
 if(MSVC)
 	# Taken out of the VC projects to avoid the compiler complaining about POSIX code
 	add_definitions(-D_SCL_SECURE_NO_WARNINGS)
@@ -133,7 +136,7 @@ add_subdirectory(Source/Runtime)
 add_subdirectory(Source/WASM)
 add_subdirectory(Source/WAST)
 
-add_subdirectory(Test/spec)  
+#add_subdirectory(Test/spec)  
 
 #<Tokenika>
 install( DIRECTORY "include" DESTINATION "./" )

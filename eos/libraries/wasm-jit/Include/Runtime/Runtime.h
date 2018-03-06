@@ -5,14 +5,7 @@
 #include "IR/Types.h"
 
 #ifndef RUNTIME_API
-/*
-<BlockOne>
 	#define RUNTIME_API DLL_IMPORT
-</BlockOne>
-*/
-//<Tokenika>
-	#define RUNTIME_API
-//</Tokenika>
 #endif
 
 // Declare IR::Module to avoid including the definition.
@@ -219,8 +212,11 @@ namespace Runtime
 
 	// Gets the default table/memory for a ModuleInstance.
 	RUNTIME_API MemoryInstance* getDefaultMemory(ModuleInstance* moduleInstance);
-   RUNTIME_API uint64_t getDefaultMemorySize(ModuleInstance* moduleInstance);
+	RUNTIME_API uint64_t getDefaultMemorySize(ModuleInstance* moduleInstance);
 	RUNTIME_API TableInstance* getDefaultTable(ModuleInstance* moduleInstance);
+
+	RUNTIME_API void runInstanceStartFunc(ModuleInstance* moduleInstance);
+	RUNTIME_API void resetGlobalInstances(ModuleInstance* moduleInstance);
 
 	// Gets an object exported by a ModuleInstance by name.
 	RUNTIME_API ObjectInstance* getInstanceExport(ModuleInstance* moduleInstance,const std::string& name);

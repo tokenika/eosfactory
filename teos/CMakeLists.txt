@@ -8,9 +8,13 @@ set( CMAKE_BUILD_TYPE "Debug" )
 message(STATUS 
 "//////////////////////////////////////////////////////////////////////////////" )
 
-set ( LOGOS_DIR "${CMAKE_SOURCE_DIR}/.." )
-set( EOSIO_SOURCE_DIR "${LOGOS_DIR}/eos" )
+if( NOT DEFINED ENV{EOSIO_SOURCE_DIR} )
+  message( FATAL_ERROR "
+EOSIO_SOURCE_DIR environment variable has to be set, for example: EOSIO_SOURCE_DIR=E:/Workspaces/EOS/eos/" )
+endif()
+set( EOSIO_SOURCE_DIR "$ENV{EOSIO_SOURCE_DIR}" )
 
+set ( LOGOS_DIR "${CMAKE_SOURCE_DIR}/.." )
 if( WIN32 )
   set( EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/buildWindows")
   set( EOSIO_INSTALL_DIR "${LOGOS_DIR}/eos/buildWindows/install" )
@@ -44,17 +48,15 @@ message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 set( TEST_ADDRESS "\"tokenika\"")
 set( TEST_HOST "\"eos-testapi.tokenika.io\"" )
 set( TEST_PORT "\"8888\"" )
-set( CONFIG_JSON_FILE "config.json" )
-set( CONFIG_JSON_PATH "${CONFIG_JSON_FILE}" )
-set( CONFIG_JSON "\"${CONFIG_JSON_PATH}\"" )
-set( LOGGING_DIR "\"log\"" )
+set( CONFIG_JSON_FILE "config.jsonconfig.json" )
+set( CONFIG_JSON "\"${CONFIG_JSON_FILE}\"" )
 
 if( MSVC )
 	# Taken out of the VC projects to avoid the compiler complaining about POSIX code
 	add_definitions( -D_SCL_SECURE_NO_WARNINGS )
 	add_definitions( -D_SCL_SECURE_NO_DEPRECATE )
 	add_definitions( -D_CRT_SECURE_NO_WARNINGS )
-	add_definitions( -D_CRT_SECURE_NO_DEPRECATE )
+	add_definitions( -D_CRT_SECURE_N_DEPRECATE )
 	add_definitions( -D_CRT_NONSTDC_NO_DEPRECATE )
 	add_definitions( -D_CRT_NONSTDC_NO_WARNINGS )
 	add_definitions( -D__STDC_CONSTANT_MACROS )
@@ -149,32 +151,43 @@ else( OpenSSL_FOUND)
   OPENSSL_ROOT_DIR (for example, %C_INCLUDE%/OpenSSL/Win64OpenSSL-1_0_2L)" )
 endif( OpenSSL_FOUND )
 
-if( NOT EOS_ECC_IMPL STREQUAL openssl )
-  find_package(GMP REQUIRED)
-  if( GMP_FOUND )
-    message( STATUS "gmp found.
-    GMP_INCLUDE_DIR: ${GMP_INCLUDE_DIR}
-    GMP_LIBRARIES: ${GMP_LIBRARIES}    
-    " )
-  else( GMP_FOUND )
-    message( STATUS "gmp not found. set environment variables:
-    GMP_DIR (for example, E:/C_INCLUDE/gmp)" )
-  endif( GMP_FOUND )
+# if( NOT EOS_ECC_IMPL STREQUAL openssl )
+#   find_package(GMP REQUIRED)
+#   if( GMP_FOUND )
+#     message( STATUS "gmp found.
+#     GMP_INCLUDE_DIR: ${GMP_INCLUDE_DIR}
+#     GMP_LIBRARIES: ${GMP_LIBRARIES}    
+#     " )
+#   else( GMP_FOUND )
+#     message( STATUS "gmp not found. set environment variables:
+#     GMP_DIR (for example, E:/C_INCLUDE/gmp)" )
+#   endif( GMP_FOUND )
 
-  find_package(Secp256k1 REQUIRED)
-  if( SECP256K1_FOUND )
-    message( STATUS "Secp256k1 found.
-    SECP256K1_INCLUDE_DIR: ${SECP256K1_INCLUDE_DIR}
-    SECP256K1_LIBRARIES: ${SECP256K1_LIBRARIES}" )
-  else( SECP256K1_FOUND )
-    message( STATUS "Secp256k1 not found. set environment variables:
-    SECP256K1_DIR (for example, E:/C_INCLUDE/secp256k1)" )
-  endif( SECP256K1_FOUND )
-endif( NOT EOS_ECC_IMPL STREQUAL openssl )
+#   find_package(Secp256k1 REQUIRED)
+#   if( SECP256K1_FOUND )
+#     message( STATUS "Secp256k1 found.
+#     SECP256K1_INCLUDE_DIR: ${SECP256K1_INCLUDE_DIR}
+#     SECP256K1_LIBRARIES: ${SECP256K1_LIBRARIES}" )
+#   else( SECP256K1_FOUND )
+#     message( STATUS "Secp256k1 not found. set environment variables:
+#     SECP256K1_DIR (for example, E:/C_INCLUDE/secp256k1)" )
+#   endif( SECP256K1_FOUND )
+# endif( NOT EOS_ECC_IMPL STREQUAL openssl )
 
 if( WIN32 )
   add_library(__iob_func __iob_func.cpp )
 endif()
+
+find_package(LLVM 4.0 REQUIRED CONFIG)
+if( LLVM_FOUND )
+  message( STATUS "LLVM found.
+  LLVM_INCLUDE_DIR: ${LLVM_INCLUDE_DIR}
+  LLVM_LIBRARY_DIR: ${LLVM_LIBRARY_DIR}")
+else( LLVM_FOUND )
+  message ( STATUS "LLVM not found. set environment variable:
+  LLVM_ROOT_DIR (for example, %C_INCLUDE%/LLVM_4_0_1")
+endif( LLVM_FOUND )
+llvm_map_components_to_libnames(LLVM_LIBS support core passes mcjit native DebugInfoDWARF)
 
 ####################################### DEPENDENCIES
 
@@ -190,15 +203,19 @@ else()
   set( BINARYEN_BIN "/usr/local/binaryen/bin/" )
 endif()
 
+set( CONFIG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include/teos" )
 configure_file (
   "config.h.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.h"
+  "${CONFIG_PATH}/config.h"
 )
 
 configure_file (
   "config.json.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json"
+  "${CONFIG_PATH}/config.json"
 )
+
+install( FILES "${CONFIG_PATH}/config.json" 
+  DESTINATION "bin" )
 
 add_subdirectory(teoslib)
 
@@ -233,48 +250,51 @@ macro( applLinkLibraries applName )
     set( TARGET_DIR "" )
   endif()
 
-  target_link_libraries( ${applName}
+  target_link_libraries( ${applName} 
     PRIVATE
       teoslib
       ${EOSIO_BINARY_DIR}/plugins/chain_plugin/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chain_plugin${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/plugins/database_plugin/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}database_plugin${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/chainbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chainbase${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/types/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_types${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/chain/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_chain${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/utilities/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_utilities${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/appbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}appbase${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WAST${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WASM${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/chain/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eosio_chain${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/chainbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chainbase${CMAKE_STATIC_LIBRARY_SUFFIX}  
+      ${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc_debug${CMAKE_STATIC_LIBRARY_SUFFIX}        
+      ${EOSIO_BINARY_DIR}/libraries/utilities/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_utilities${CMAKE_STATIC_LIBRARY_SUFFIX}      
+      ${EOSIO_BINARY_DIR}/libraries/appbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}appbase${CMAKE_STATIC_LIBRARY_SUFFIX} 
+      
+
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Emscripten${CMAKE_STATIC_LIBRARY_SUFFIX}
       ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Runtime${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}IR${CMAKE_STATIC_LIBRARY_SUFFIX}  
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WAST${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WASM${CMAKE_STATIC_LIBRARY_SUFFIX}      
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}IR${CMAKE_STATIC_LIBRARY_SUFFIX}       
       ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Logging${CMAKE_STATIC_LIBRARY_SUFFIX} 
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Platform${CMAKE_STATIC_LIBRARY_SUFFIX} 
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Platform${CMAKE_STATIC_LIBRARY_SUFFIX}
   )
 
-  if( NOT EOS_ECC_IMPL STREQUAL openssl )
-    target_link_libraries( ${applName}
-      PRIVATE
-        ${SECP256K1_LIBRARIES}
-        ${GMP_LIBRARIES}
-    )
+  # if( NOT EOS_ECC_IMPL STREQUAL openssl )
+  #   target_link_libraries( ${applName}
+  #     PRIVATE
+  #       ${SECP256K1_LIBRARIES}
+  #       ${GMP_LIBRARIES}
+  #   )
+  # endif()   
   
   target_link_libraries( ${applName}
     PRIVATE
       ${OPENSSL_LIBRARIES}
       ${Boost_LIBRARIES}
+      ${LLVM_LIBS}
       ${CMAKE_DL_LIBS}
       ${CMAKE_THREAD_LIBS_INIT}
   )
-  endif()
+
 
   if( WIN32 )
-    if( NOT EOS_ECC_IMPL STREQUAL openssl )
-      target_link_libraries( ${applName}
-        PRIVATE
-          ${SECP256K1_LIBRARIES_DIR}/gcc.lib
-      )
-    endif()
+    # if( NOT EOS_ECC_IMPL STREQUAL openssl )
+    #   target_link_libraries( ${applName}
+    #     PRIVATE
+    #       ${SECP256K1_LIBRARIES_DIR}/gcc.lib
+    #   )
+    # endif()
 
     target_link_libraries( ${applName}
       PRIVATE
@@ -302,8 +322,6 @@ install( TARGETS teos RUNTIME DESTINATION bin)
 add_executable( teos_lib_test teos_lib_test.cpp )
 applLinkLibraries( teos_lib_test )
 install( TARGETS teos_lib_test RUNTIME DESTINATION bin)
-
-install( FILES ${CONFIG_JSON_PATH} DESTINATION bin )
 
 ####################################### /executables
 

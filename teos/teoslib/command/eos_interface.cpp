@@ -1,26 +1,21 @@
-#include <boost/range/algorithm/sort.hpp>
 #include <boost/property_tree/ptree.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/range/algorithm/find_if.hpp>
+#include <boost/range/algorithm/sort.hpp>
 #include <boost/range/adaptor/transformed.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/range/algorithm/copy.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
-#include <fc/crypto/base58.hpp>
-#include <fc/io/raw.hpp>
-#include <fc/crypto/hmac.hpp>
-#include <fc/crypto/openssl.hpp>
-#include <fc/crypto/ripemd160.hpp>
-#include <fc/variant.hpp>
+#include <fc/crypto/private_key.hpp>
 #include <fc/io/json.hpp>
-#include <fc/crypto/base58.hpp>
+
 #include <fc/variant.hpp>
 #include <fc/io/fstream.hpp>
-
-#include <eos/types/types.hpp>
-#include <eos/types/public_key.hpp>
 #include <eos/utilities/key_conversion.hpp>
-#include <eos/chain_plugin/chain_plugin.hpp>
+#include <eosio/chain/authority.hpp>
+#include <eosio/chain_plugin/chain_plugin.hpp>
 
 #include <IR/Module.h>
 #include <IR/Validate.h>
@@ -37,9 +32,9 @@ namespace teos {
   namespace command {
 
     KeyPair::KeyPair() {
-      fc::ecc::private_key pk = fc::ecc::private_key::generate();
-      publicKey = string(eosio::types::public_key(pk.get_public_key()));
-      privateKey = eosio::utilities::key_to_wif(pk.get_secret());
+      auto pk = fc::crypto::private_key::generate();
+      publicKey = string(pk.get_public_key());
+      privateKey = string(pk);
     }
 
     string KeyPair::privateK() {
@@ -163,10 +158,8 @@ namespace teos {
       }
 
       auto info = callGetInfo.fcVariant.as<chain_apis::read_only::get_info_results>();
-
       trx.expiration = info.head_block_time + fc::seconds(expirationSec);
-      transaction_set_reference_block(trx, info.head_block_id);
-      boost::sort(trx.scope);
+      trx.set_reference_block(info.head_block_id);
 
       if (sign) {
         TeosCommand respJson = sign_transaction(trx);
@@ -180,21 +173,14 @@ namespace teos {
       return callPushTransaction;
     }
 
-    vector<types::name> sort_names(std::vector<types::name>&& names) {
-      std::sort(names.begin(), names.end());
-      auto itr = std::unique(names.begin(), names.end());
-      names.erase(itr, names.end());
-      return names;
-    }
-
-    vector<types::account_permission> get_account_permissions(const vector<string>& permissions) {
+    vector<chain::permission_level> get_account_permissions(const vector<string>& permissions) {
       auto fixedPermissions = permissions | boost::adaptors::transformed([](const string& p) {
         vector<string> pieces;
         split(pieces, p, boost::algorithm::is_any_of("@"));
         //EOSC_ASSERT(pieces.size() == 2, "Invalid permission: ${p}", ("p", p));
-        return types::account_permission(pieces[0], pieces[1]);
+        return chain::permission_level{ .actor = pieces[0], .permission = pieces[1] };
       });
-      vector<types::account_permission> accountPermissions;
+      vector<chain::permission_level> accountPermissions;
       boost::range::copy(fixedPermissions, back_inserter(accountPermissions));
       return accountPermissions;
     }
@@ -237,23 +223,22 @@ namespace teos {
     }
 
     TeosCommand createAccount(string creatorStr, string nameStr,
-      string ownerKey, string activeKey, long long deposit,
+      string ownerKey, string activeKey,  uint64_t staked_deposit,
       bool skipSignature, int expiration)
     {
       try {
-        types::name creator = creatorStr;
-        types::name newaccount = nameStr;
+        chain::name creator = creatorStr;
+        chain::name newaccount = nameStr;
 
-        auto owner_auth = chain::authority{ 1,{ { types::public_key(ownerKey), 1 } },{} };
-        auto active_auth = chain::authority{ 1,{ { types::public_key(activeKey), 1 } },{} };
+        auto owner_auth = chain::authority{ 1,{ { chain::public_key_type(ownerKey), 1 } },{} };
+        auto active_auth = chain::authority{ 1,{ { chain::public_key_type(activeKey), 1 } },{} };
         auto recovery_auth = chain::authority{ 1,{},{ { { creator, "active" }, 1 } } };
 
         chain::signed_transaction trx;
-        trx.scope = sort_names({ creator, config::eos_contract_name });
-        transaction_emplace_message(trx, config::eos_contract_name,
-          vector<types::account_permission>{ {creator, "active"}}, "newaccount",
-          types::newaccount{ creator, newaccount, owner_auth,
-          active_auth, recovery_auth,  deposit });
+        trx.actions.emplace_back( vector<chain::permission_level>{{creator,"active"}},
+          chain::contracts::newaccount{creator, newaccount, owner_auth, active_auth, recovery_auth, 
+          staked_deposit });
+
         return push_transaction(trx, !skipSignature, expiration);
       }
       catch (const std::exception& e) {
@@ -261,41 +246,49 @@ namespace teos {
       }
     }
 
-    TeosCommand setContract(string account, string wastFile, string abiFile,
+    TeosCommand setContract(string account, string wastPath, string abiPath,
       bool skipSignature, int expiration)
     {
       try {
-        if (!boost::filesystem::exists(wastFile)) {
+        if (!boost::filesystem::exists(wastPath)) {
           return TeosCommand(TEOS_ERROR,
             TeosCommand::errorRespJson(CODE_PATH, boost::str(boost::format(
-              "Cannot find the wast file:\n %1%\n does not exist!\n") % wastFile)));
+              "Cannot find the wast file:\n %1%\n does not exist!\n") % wastPath)));
         }
 
-        string wast;
-        fc::read_file_contents(wastFile, wast);
+        std::string wast;
+        fc::read_file_contents(wastPath, wast);
         vector<uint8_t> wasm;
-        TeosCommand status = assemble_wast(wast, wasm);
-        if (status.isError_) {
-          return status;
+
+        const string binary_wasm_header = "\x00\x61\x73\x6d";
+        if(wast.compare(0, 4, binary_wasm_header) == 0) {
+          wasm = vector<uint8_t>(wast.begin(), wast.end());
+        }
+        else {
+          TeosCommand status = assemble_wast(wast, wasm);
+          if (status.isError_) {
+            return status;
+          }          
         }
 
-        eosio::types::setcode handler;
+        chain::contracts::setcode handler;
         handler.account = account;
         handler.code.assign(wasm.begin(), wasm.end());
-        if (abiFile.length() > 0) {
-          if (!boost::filesystem::exists(abiFile)) {
+
+        chain::signed_transaction trx;
+        trx.actions.emplace_back( vector<chain::permission_level>{{account,"active"}}, handler);
+
+        if (abiPath.length() > 0) {
+          if (!boost::filesystem::exists(abiPath)) {
             return TeosCommand(TEOS_ERROR,
               TeosCommand::errorRespJson(CODE_PATH, boost::str(boost::format(
-                "Cannot find the abi file:\n %1%\n does not exist!\n") % abiFile)));
+                "Cannot find the abi file:\n %1%\n does not exist!\n") % abiPath)));
           }
-          handler.code_abi = fc::json::from_file(abiFile).as<eosio::types::abi>();
+          chain::contracts::setabi handler;
+          handler.account = account;
+          handler.abi = fc::json::from_file(abiPath).as<chain::contracts::abi_def>();
+          trx.actions.emplace_back( vector<chain::permission_level>{{account,"active"}}, handler);
         }
-
-        eosio::chain::signed_transaction trx;
-        trx.scope = sort_names({ config::eos_contract_name, account });
-        transaction_emplace_message(trx, config::eos_contract_name, vector<types::account_permission>{ {account, "active"}},
-          "setcode", handler);
-
         //std::cout << "Publishing contract..." << std::endl;
         return push_transaction(trx, !skipSignature, expiration);
       }
@@ -305,49 +298,49 @@ namespace teos {
       }
     }
 
-    TeosCommand getCode(string accountName, string wastFile, string abiFile) {
+    TeosCommand getCode(string accountName, string wastPath, string abiPath) {
       //auto result = call(get_code_func, fc::mutable_variant_object("account_name", accountName));
       CallChain callGetCode(string(getCommandPath + "get_code"), 
         fc::mutable_variant_object("account_name", accountName));
       auto result = callGetCode.fcVariant;
 
-      if (wastFile.size()) {
+      if (wastPath.size()) {
         auto code = result["wast"].as_string();
-        std::ofstream out(wastFile.c_str());
+        std::ofstream out(wastPath.c_str());
         if (out.is_open()) {
           out << code;
         }
         else {
           return TeosCommand(TEOS_ERROR,
             TeosCommand::errorRespJson(CODE_PATH, boost::str(boost::format(
-              "Cannot open the wast file:\n %1%\n") % wastFile)));
+              "Cannot open the wast file:\n %1%\n") % wastPath)));
         }
       }
 
-      if (abiFile.size()) {
+      if (abiPath.size()) {
         auto abi = fc::json::to_pretty_string(result["abi"]);
-        std::ofstream out(abiFile.c_str());
+        std::ofstream out(abiPath.c_str());
         if (out.is_open()) {
           out << abi;
         }
         else {
           return TeosCommand(TEOS_ERROR,
             TeosCommand::errorRespJson(CODE_PATH, boost::str(boost::format(
-              "Cannot open the abi file:\n %1%\n") % abiFile)));
+              "Cannot open the abi file:\n %1%\n") % abiPath)));
         } 
       }
       return callGetCode;
     }
 
-    std::string generate_nonce_string() {
-      return std::to_string(fc::time_point::now().time_since_epoch().count() % 1000000);
+    uint64_t generate_nonce_value() {
+      return fc::time_point::now().time_since_epoch().count();
     }
 
-    types::message generate_nonce() {
-      return chain::message(N(eos), {}, N(nonce), types::nonce{ generate_nonce_string() });
+    chain::action generate_nonce() {
+      return chain::action( {}, chain::contracts::nonce{.value = generate_nonce_value()} ); 
     }
 
-    TeosCommand pushMessage(string contract, string action, string data, 
+    TeosCommand pushAction(string contract, string action, string data, 
       const vector<string> scopes, const vector<string> permissions, 
       bool skipSignature, int expiration, 
       bool tx_force_unique)
@@ -360,23 +353,16 @@ namespace teos {
         CallChain call("/v1/chain/abi_json_to_bin", arg);
         auto result = call.fcVariant;
 
-        vector<types::account_permission> accountPermissions;
-        accountPermissions = get_account_permissions(permissions);
+        auto accountPermissions = get_account_permissions(permissions);
 
-        eosio::chain::signed_transaction trx;
-        transaction_emplace_serialized_message(trx, contract, action, accountPermissions,
-          result.get_object()["binargs"].as<chain::bytes>());
+        chain::signed_transaction trx;
+        trx.actions.emplace_back(accountPermissions, contract, action, result.get_object()["binargs"]
+          .as<chain::bytes>());
 
         if (tx_force_unique) {
-          transaction_emplace_message(trx, generate_nonce());
+          trx.actions.emplace_back( generate_nonce() );
         }
 
-        for (const auto& scope : scopes) {
-          vector<string> subscopes;
-          boost::split(subscopes, scope, boost::is_any_of(", :"));
-          for (const auto& s : subscopes)
-            trx.scope.emplace_back(s);
-        }
         return push_transaction(trx, !skipSignature, expiration);
       }
       catch (const std::exception& e) {

@@ -17,16 +17,12 @@ set(PublicHeaders
 	${WAVM_INCLUDE_DIR}/WAST/TestScript.h)
 include_directories(${WAVM_INCLUDE_DIR}/WAST)
 
-add_library(WAST STATIC ${Sources} ${PublicHeaders})
-### tokenika:
-#add_definitions(-DWAST_API=DLL_EXPORT)
-### tokenika
+add_library(WAST ${SHARED_OR_STATIC} ${Sources} ${PublicHeaders})
+add_definitions(-DWAST_API=DLL_EXPORT)
 target_link_libraries(WAST Logging IR WASM)
 
-#<Tokenika>
-install(
-	TARGETS WAST 
-  LIBRARY DESTINATION lib 
-  ARCHIVE DESTINATION lib
+INSTALL( TARGETS WAST
+   RUNTIME DESTINATION bin
+   LIBRARY DESTINATION lib
+   ARCHIVE DESTINATION lib
 )
-#</Tokenika>

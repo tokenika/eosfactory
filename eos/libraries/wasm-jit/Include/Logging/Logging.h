@@ -1,14 +1,7 @@
 #pragma once
 
 #ifndef LOGGING_API
-/*
-<BlockOne>
 	#define LOGGING_API DLL_IMPORT
-</BlockOne>
-*/
-//<Tokenika>
-  #define LOGGING_API 
-//</Tokenika>
 #endif
 
 #include "Inline/BasicTypes.h"

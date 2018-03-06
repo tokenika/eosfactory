@@ -4,7 +4,6 @@
  */
 
 #include <eos/utilities/tempdir.hpp>
-
 #include <cstdlib>
 
 namespace eosio { namespace utilities {

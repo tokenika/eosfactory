@@ -2,16 +2,12 @@
 #include <fc/any.hpp>
 #include <fc/shared_ptr.hpp>
 #include <fc/string.hpp>
-#include <boost/asio.hpp>
 
-/*
-<BlockOne>
+#if BOOST_VERSION >= 106600
+namespace boost { namespace asio { class io_context; typedef io_context io_service; } }
+#else
 namespace boost { namespace asio { class io_service; } }
-</BlockOne>
-*/
-//<Tokenika>
-//namespace boost { namespace asio { class io_service; } }
-//</Tokenika>
+#endif
 
 namespace fc {
    class appender;

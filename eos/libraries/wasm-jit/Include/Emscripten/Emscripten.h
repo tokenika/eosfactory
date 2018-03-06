@@ -1,14 +1,7 @@
 #pragma once
 
 #ifndef EMSCRIPTEN_API
-/*
-<BlockOne>
 	#define EMSCRIPTEN_API DLL_IMPORT
-</BlockOne>
-*/
-//<Tokenika>
-	#define EMSCRIPTEN_API
-//</Tokenika>
 #endif
 
 #include <vector>

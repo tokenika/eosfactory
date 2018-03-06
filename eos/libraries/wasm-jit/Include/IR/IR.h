@@ -3,14 +3,7 @@
 #include "Platform/Platform.h"
 
 #ifndef IR_API
-/*
-<BlockOne>
 	#define IR_API DLL_IMPORT
-</BlockOne>
-*/
-//<Tokenika>
-  #define IR_API
-//</Tokenika>
 #endif
 
 namespace IR

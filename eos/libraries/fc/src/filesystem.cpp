@@ -124,7 +124,7 @@ namespace fc {
     {
     std::wstring path = generic_wstring();
 
-#ifdef _MSC_VER
+#ifdef WIN32
     const size_t maxPath = 32*1024;
     std::vector<wchar_t> short_path;
     short_path.resize(maxPath + 1);
@@ -275,7 +275,7 @@ namespace fc {
   // no-op on Windows.
   void chmod( const path& p, int perm )
   {
-#ifndef _MSC_VER
+#ifndef WIN32
     mode_t actual_perm = 
       ((perm & 0400) ? S_IRUSR : 0)
     | ((perm & 0200) ? S_IWUSR : 0)
@@ -446,7 +446,7 @@ namespace fc {
    {
       static fc::path p = []()
       {
-#ifdef _MSC_VER
+#ifdef WIN32
           HANDLE access_token;
           if (!OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &access_token))
             FC_ASSERT(false, "Unable to open an access token for the current process");
@@ -478,7 +478,7 @@ namespace fc {
    {
 #ifdef __APPLE__
          static fc::path appdir = [](){  return home_path() / "Library" / "Application Support"; }();  
-#elif defined( _MSC_VER )
+#elif defined( WIN32 )
          static fc::path appdir = [](){
            wchar_t app_data_dir[MAX_PATH];
 
@@ -562,7 +562,7 @@ namespace fc {
 
   void simple_lock_file::impl::unlock()
   {
-#ifdef _MSC_VER
+#ifdef WIN32
     CloseHandle(file_handle);
     file_handle = INVALID_HANDLE_VALUE;
     is_locked = false;
