@@ -6,11 +6,11 @@
 #pragma warning(disable : 4073)
 #pragma init_seg(lib)
 
-const _int128  _I128_MIN( 0x8000000000000000, 0x0000000000000000);
-const _int128  _I128_MAX( 0x7fffffffffffffff, 0xffffffffffffffff);
-const _uint128 _UI128_MAX(0xffffffffffffffff, 0xffffffffffffffff);
+const int_128  _I128_MIN( 0x8000000000000000, 0x0000000000000000);
+const int_128  _I128_MAX( 0x7fffffffffffffff, 0xffffffffffffffff);
+const uint_128 _UI128_MAX(0xffffffffffffffff, 0xffffffffffffffff);
 
-// Conversion from _int128/_uint128 to string
+// Conversion from int_128/uint_128 to string
 
 // Number of digits that should be appended to the string for each loop.
 // Also used as maximal number of digits to scan, that fits in 32 bit UINT
@@ -28,7 +28,7 @@ static const BYTE digitCount[37] = {
 // For radix 2,4,8,16,32 special code is used which doesn't use this table.
 // For all other values the element is used to get as many digits as possible
 // by modulus and division. (powRadix[r] == pow(r,digitCount[r])
-static const _uint128 powRadix[] = {
+static const uint_128 powRadix[] = {
   0          //  not used
  ,0          //  not used
  ,0          //  not used
@@ -121,7 +121,7 @@ template<class Int128Type, class Ctype> Ctype *int128toStr(Int128Type value, Cty
     { const UINT shft = (radix==32)?5:3;
       const UINT mask = (1 << shft) - 1;
       const UINT dpl  = 30 / shft;
-      _uint128   v    = value;
+      uint_128   v    = value;
       for(;;) {
         UINT v30 = v.s4.i[0] & ((1<<30) - 1);
         v >>= 30;
@@ -142,8 +142,8 @@ template<class Int128Type, class Ctype> Ctype *int128toStr(Int128Type value, Cty
     // NB continue case
   default:
     const UINT      dc      = digitCount[radix];
-    const _uint128 &divisor = powRadix[radix];
-    _uint128        v       = value;
+    const uint_128 &divisor = powRadix[radix];
+    uint_128        v       = value;
     for(;;) {
       const UINT c = v % divisor;
       Ctype tmpStr[40];
@@ -165,23 +165,23 @@ template<class Int128Type, class Ctype> Ctype *int128toStr(Int128Type value, Cty
   return STRREV(str);
 }
 
-char *_i128toa(_int128 value, char *str, int radix) {
-  return int128toStr<_int128, char>(value, str, radix);
+char *_i128toa(int_128 value, char *str, int radix) {
+  return int128toStr<int_128, char>(value, str, radix);
 }
 
-wchar_t *_i128tow(_int128 value, wchar_t *str, int radix) {
-  return int128toStr<_int128, wchar_t>(value, str, radix);
+wchar_t *_i128tow(int_128 value, wchar_t *str, int radix) {
+  return int128toStr<int_128, wchar_t>(value, str, radix);
 }
 
-char*_ui128toa(_uint128 value, char *str, int radix) {
-  return int128toStr<_uint128, char>(value, str, radix);
+char*_ui128toa(uint_128 value, char *str, int radix) {
+  return int128toStr<uint_128, char>(value, str, radix);
 }
 
-wchar_t *_ui128tow(_uint128 value, wchar_t *str, int radix) {
-  return int128toStr<_uint128, wchar_t>(value, str, radix);
+wchar_t *_ui128tow(uint_128 value, wchar_t *str, int radix) {
+  return int128toStr<uint_128, wchar_t>(value, str, radix);
 }
 
-// Conversion from string to _int128/_uint128
+// Conversion from string to int_128/uint_128
 
 static inline bool isRadixDigit(wchar_t ch, UINT radix, UINT &value) {
   if(!iswalnum(ch)) return false;
@@ -192,7 +192,7 @@ static inline bool isRadixDigit(wchar_t ch, UINT radix, UINT &value) {
 }
 
 template<class Int128Type> Int128Type maxValue() {
-  return typeid(Int128Type) == typeid(_int128) ? (_uint128)_I128_MAX : (_uint128)_UI128_MAX;
+  return typeid(Int128Type) == typeid(int_128) ? (uint_128)_I128_MAX : (uint_128)_UI128_MAX;
 }
 
 template<class Int128Type, class Ctype, bool withSign> Int128Type strtoint128(const Ctype *s, Ctype **end, UINT radix) {
@@ -310,18 +310,18 @@ template<class Int128Type, class Ctype, bool withSign> Int128Type strtoint128(co
   return negative ? -result128 : result128;
 }
 
-_int128 _strtoi128(const char *str, char **end, int radix) {
-  return strtoint128<_int128 ,char   ,true >(str, end, radix);
+int_128 _strtoi128(const char *str, char **end, int radix) {
+  return strtoint128<int_128 ,char   ,true >(str, end, radix);
 }
 
-_uint128 _strtoui128(const char *str, char **end, int radix) {
-  return strtoint128<_uint128,char   ,false>(str, end, radix);
+uint_128 _strtoui128(const char *str, char **end, int radix) {
+  return strtoint128<uint_128,char   ,false>(str, end, radix);
 }
 
-_int128 _wcstoi128(const wchar_t *str, wchar_t **end, int radix) {
-  return strtoint128<_int128 ,wchar_t,true >(str, end, radix);
+int_128 _wcstoi128(const wchar_t *str, wchar_t **end, int radix) {
+  return strtoint128<int_128 ,wchar_t,true >(str, end, radix);
 }
 
-_uint128 _wcstoui128(const wchar_t *str, wchar_t **end, int radix) {
-  return strtoint128<_uint128,wchar_t,false>(str, end, radix);
+uint_128 _wcstoui128(const wchar_t *str, wchar_t **end, int radix) {
+  return strtoint128<uint_128,wchar_t,false>(str, end, radix);
 }

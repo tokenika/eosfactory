@@ -1,6 +1,6 @@
 ; from https://github.com/JesperMikkelsen/Big-Numbers/blob/master/Lib/Src/Math/Int128x64.asm
 
-; These functions implements the basic operations for _int128 type
+; These functions implements the basic operations for int_128 type
 ; running on 64 - bit intel CPU.
 ; They are (almost) identical to MS's workhorse-functions that do
 ; __int64 - math using 32 - bit registers. Every memory reference that uses
@@ -13,7 +13,7 @@
 
 .CODE
 
-;void int128add(_int128 &dst, const _int128 &x); do assignop dst += x;
+;void int128add(int_128 &dst, const int_128 &x); do assignop dst += x;
 int128add PROC
     mov         rax, qword ptr[rdx]
     add         qword ptr[rcx], rax
@@ -22,7 +22,7 @@ int128add PROC
     ret
 int128add ENDP
 
-;void int128sub(_int128 &dst, const _int128 &x); do assignop dst -= x;
+;void int128sub(int_128 &dst, const int_128 &x); do assignop dst -= x;
 int128sub PROC
     mov         rax, qword ptr[rdx]
     sub         qword ptr[rcx], rax
@@ -31,7 +31,7 @@ int128sub PROC
     ret
 int128sub ENDP
 
-;void int128mul(_int128 &dst, const _int128 &x); do assignop dst *= x;
+;void int128mul(int_128 &dst, const int_128 &x); do assignop dst *= x;
 int128mul PROC
     push        rbx
     mov         rax, qword ptr[rdx+8]          ; rax  = x.hi
@@ -64,7 +64,7 @@ Hard:                                          ; assume rax = x.hi, rbx = dst.lo
     ret
 int128mul ENDP
 
-;void int128div(_int128 &dst, _int128 &x); do assignop dst /= x; if (x < 0) x = -x; !!
+;void int128div(int_128 &dst, int_128 &x); do assignop dst /= x; if (x < 0) x = -x; !!
 int128div PROC
     push        rbx                            ;
     push        rdi                            ;
@@ -150,7 +150,7 @@ L8:                                            ;
     ret                                        ;
 int128div ENDP
 
-;void int128rem(_int128 &dst, _int128 &x); do assignop dst %= x; if (x < 0) x = -x; !!
+;void int128rem(int_128 &dst, int_128 &x); do assignop dst %= x; if (x < 0) x = -x; !!
 int128rem PROC
     push        rbx                            ;
     push        rdi                            ;
@@ -235,7 +235,7 @@ L8:                                            ;
     ret                                        ;
 int128rem ENDP
 
-;void int128neg(_int128 &x); set x = -x;
+;void int128neg(int_128 &x); set x = -x;
 int128neg PROC
     mov         rax, qword ptr[rcx]
     neg         rax
@@ -247,21 +247,21 @@ int128neg PROC
     ret
 int128neg ENDP
 
-;void int128inc(_int128 &x); set x = x + 1;
+;void int128inc(int_128 &x); set x = x + 1;
 int128inc PROC
     add         qword ptr[rcx], 1
     adc         qword ptr[rcx+8], 0
     ret
 int128inc ENDP
 
-;void int128dec(_int128 &x); set x = x - 1;
+;void int128dec(int_128 &x); set x = x - 1;
 int128dec PROC
     sub         qword ptr[rcx], 1
     sbb         qword ptr[rcx+8], 0
     ret
 int128dec ENDP
 
-;void int128shr(_int128 &x, int shft); do assignop x >>= shft; (if(x<0) shift 1-bits in from left, else 0-bits)
+;void int128shr(int_128 &x, int shft); do assignop x >>= shft; (if(x<0) shift 1-bits in from left, else 0-bits)
 int128shr PROC
     mov         rax, rcx                       ; rax = &x; need cl to the shift instruction
     mov         rcx, rdx                       ; rcx = shift amount
@@ -286,7 +286,7 @@ RetSign:
     ret
 int128shr ENDP
 
-;void int128shl(_int128 &x, int shft); do assignop x <<= shft;
+;void int128shl(int_128 &x, int shft); do assignop x <<= shft;
 int128shl PROC
     mov         rax, rcx                       ; rax = &x; need cl to the shift instruction
     mov         rcx, rdx                       ; rcx = shift amount
@@ -312,7 +312,7 @@ RetZero:
     ret
 int128shl ENDP
 
-;int int128cmp(const _int128 &x1, const _int128 &x2); return sign(x1 - x2);
+;int int128cmp(const int_128 &x1, const int_128 &x2); return sign(x1 - x2);
 int128cmp PROC
     mov         rax, qword ptr[rcx+8]          ; x1.hi
     cmp         rax, qword ptr[rdx+8]          ; x2.hi
@@ -332,7 +332,7 @@ lessthan:
     ret
 int128cmp ENDP
 
-;void uint128div(_uint128 &dst, const _uint128 &x); do assignop dst /= x;
+;void uint128div(uint_128 &dst, const uint_128 &x); do assignop dst /= x;
 uint128div PROC
      push       rbx                            ; same as signed division
      push       rsi                            ; but without sign check on arguments
@@ -389,7 +389,7 @@ L2:
 uint128div ENDP
 
 ; calculates unsigned remainder
-;void uint128rem(_uint128 &dst, const _uint128 &x); do assignop dst %= x;
+;void uint128rem(uint_128 &dst, const uint_128 &x); do assignop dst %= x;
 uint128rem PROC
      push       rbx
      mov        r8, rcx
@@ -472,7 +472,7 @@ RetZero:
     ret
 uint128shr ENDP
 
-;int uint128cmp(const _uint128 &x1, const _uint128 &x2); return sign(x1 - x2);
+;int uint128cmp(const uint_128 &x1, const uint_128 &x2); return sign(x1 - x2);
 uint128cmp PROC
      mov        rax, qword ptr[rcx+8]          ; x1.hi
      cmp        rax, qword ptr[rdx+8]          ; x2.hi
