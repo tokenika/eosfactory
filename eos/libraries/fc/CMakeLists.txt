@@ -86,7 +86,14 @@ target_include_directories(fc
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/boost_1.51/include
     ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cyoencode-1.0.2/src
     ${CMAKE_SOURCE_DIR}/libraries/utilities/include
+)
+
+if( WIN32 )
+  target_include_directories(fc
+    PRIVATE
+       ${CMAKE_SOURCE_DIR}/libraries/int128/include
   )
+endif()
 
 INSTALL( TARGETS fc
    RUNTIME DESTINATION bin

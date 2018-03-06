@@ -250,6 +250,7 @@ macro( applLinkLibraries applName )
     set( TARGET_DIR "" )
   endif()
 
+  message( STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/} ///////////////////////" )
   target_link_libraries( ${applName} 
     PRIVATE
       teoslib
@@ -261,13 +262,13 @@ macro( applLinkLibraries applName )
       ${EOSIO_BINARY_DIR}/libraries/appbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}appbase${CMAKE_STATIC_LIBRARY_SUFFIX} 
       
 
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Emscripten${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Runtime${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WAST${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WASM${CMAKE_STATIC_LIBRARY_SUFFIX}      
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}IR${CMAKE_STATIC_LIBRARY_SUFFIX}       
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Logging${CMAKE_STATIC_LIBRARY_SUFFIX} 
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Platform${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Emscripten${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Runtime${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WAST${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WASM${CMAKE_STATIC_LIBRARY_SUFFIX}      
+      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}IR${CMAKE_STATIC_LIBRARY_SUFFIX}       
+      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Logging${CMAKE_STATIC_LIBRARY_SUFFIX} 
+      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Platform${CMAKE_STATIC_LIBRARY_SUFFIX}
   )
 
   # if( NOT EOS_ECC_IMPL STREQUAL openssl )

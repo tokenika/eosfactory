@@ -1,6 +1,6 @@
 {
   "EOSIO_INSTALL_DIR":"/mnt/hgfs/Workspaces/EOS/Logos/teos/../eos/build/install",
-  "EOSIO_SOURCE_DIR":"/mnt/hgfs/Workspaces/EOS/Logos/teos/../eos",
+  "EOSIO_SOURCE_DIR":"/mnt/hgfs/Workspaces/EOS/eos/",
   "LOGOS_DIR":"/mnt/hgfs/Workspaces/EOS/Logos/teos/..",
   "CHAIN_NODE":"eosio",
   "WASM_CLANG":"/opt/wasm/bin/clang",

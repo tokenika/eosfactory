@@ -35,8 +35,18 @@ target_include_directories( eosio_chain
     include 
   PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/libraries/wasm-jit/Include"    
+    "${CMAKE_SOURCE_DIR}/libraries/utilities/include"
+    "${CMAKE_SOURCE_DIR}/libraries/fc/include"
+    "${CMAKE_SOURCE_DIR}/libraries/chainbase/include"    
+    "${CMAKE_SOURCE_DIR}/libraries/wasm-jit/Include"    
 )
+
+if( WIN32 )
+  target_include_directories( eosio_chain
+    PRIVATE
+       ${CMAKE_SOURCE_DIR}/libraries/int128/include
+  )
+endif()
 
 INSTALL( TARGETS
    eosio_chain
