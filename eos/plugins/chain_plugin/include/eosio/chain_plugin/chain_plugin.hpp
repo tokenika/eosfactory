@@ -15,6 +15,11 @@
 
 #include <boost/container/flat_set.hpp>
 
+#ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+#endif
+
 namespace fc { class variant; }
 
 namespace eosio {

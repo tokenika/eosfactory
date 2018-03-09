@@ -13,6 +13,7 @@ target_include_directories( eos_utilities
   PUBLIC 
     include
   PRIVATE
+    ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libraries/fc/include
     ${CMAKE_SOURCE_DIR}/libraries/wasm-jit/Include
 )

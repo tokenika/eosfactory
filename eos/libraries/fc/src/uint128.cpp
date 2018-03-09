@@ -6,6 +6,11 @@
 #include <stdexcept>
 #include "byteswap.hpp"
 
+#ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+#endif
+
 namespace fc 
 {
     typedef boost::multiprecision::uint128_t  m128;
@@ -376,8 +381,8 @@ namespace fc
 
    void to_variant( const uint128& var,  variant& vo )  { vo = std::string(var);         }
    void from_variant( const variant& var,  uint128& vo ){ vo = uint128(var.as_string()); }
-   void to_variant( const unsigned __int128& var,  variant& vo ) { to_variant( *((uint128*)var), vo); }
-   void from_variant( const variant& var,  unsigned __int128& vo ) { from_variant( var, *((uint128*)&vo)); }
+   //void to_variant( const uint_128& var,  variant& vo ) { to_variant( *((uint128*)var), vo); }
+   void from_variant( const variant& var,  uint_128& vo ) { from_variant( var, *((uint128*)&vo)); }
 
 } // namespace fc
 

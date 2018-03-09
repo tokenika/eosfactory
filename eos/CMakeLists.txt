@@ -3,38 +3,23 @@ project( eos )
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 5)
-set( CMAKE_BUILD_TYPE "Debug" )
 
-message(STATUS 
-"//////////////////////////////////////////////////////////////////////////////" )
+set( LOGOS_DIR "NOT DEFINED !!" )
+set( EOSIO_SOURCE_DIR "NOT DEFINED !!" )
+set( EOSIO_BINARY_DIR "NOT DEFINED !!" )
 
-if( NOT DEFINED ENV{EOSIO_SOURCE_DIR} )
-  message( FATAL_ERROR "
-EOSIO_SOURCE_DIR environment variable has to be set, for example: EOSIO_SOURCE_DIR=E:/Workspaces/EOS/eos/" )
+set( CMAKE_INSTALL_PREFIX "NOT DEFINED !!" )
+set( CMAKE_INSTALL_LIB "NOT DEFINED !!" )
+set( CMAKE_INSTALL_LIB_PREFIX "NOT DEFINED !!" )
+
+option( ENABLE_ASAN "enable ASAN" OFF )
+# LOGOS_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
+# CMAKE_INSTALL_PREFIX,
+# CMAKE_CXX_STANDARD, CMAKE_BUILD_TYPE, 
+include( ../common.cmake ) 
+if( NOT DEFINED EOSIO_SOURCE_DIR )
+	message( FATAL_ERROR "Something is wrong with the 'commom.cmake' definition file"	)
 endif()
-#set( EOSIO_SOURCE_DIR "$ENV{EOSIO_SOURCE_DIR}" )
-set( EOSIO_SOURCE_DIR "E:/Workspaces/EOS/eos" )
-
-set ( LOGOS_DIR "${CMAKE_SOURCE_DIR}/.." )
-if( WIN32 )
-  set( EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/buildWindows")
-  set( CMAKE_INSTALL_PREFIX "${LOGOS_DIR}/install/windows" )
-else( WIN32 )
-  set( EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/build" )
-  set( CMAKE_INSTALL_PREFIX "${LOGOS_DIR}/install/ubuntu" )
-endif( WIN32 )
-
-message(STATUS "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR}")
-message( STATUS "EOSIO_INSTALL_DIR: ${EOSIO_INSTALL_DIR}" )
-message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
-
-set( CMAKE_CXX_STANDARD 14 ) 
-set( CMAKE_CXX_STANDARD_REQUIRED ON )
-set( CMAKE_BUILD_TYPE Debug ) 
-
-include_directories( "${CMAKE_INSTALL_PREFIX}/include" )
-message( STATUS 
-"//////////////////////////////////////////////////////////////////////////////" )
 
 # if openssl, Secp256k1 and gmp not needed:
 set( EOS_ECC_IMPL openssl ) ## secp256k1 or openssl or mixed
@@ -101,87 +86,10 @@ else( MSVC )
 	# Ensure that even static libraries are relocatable so they can be linked into a .so
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
   
-	# Enable asan in debug builds.
-	if( CMAKE_BUILD_TYPE MATCHES "Debug" )
-		option( ENABLE_ASAN "enable ASAN" ON )
-		add_definitions( "-D_DEBUG" )
-	else()
-		option( ENABLE_ASAN "enable ASAN" OFF )
-	endif()
 	if( ENABLE_ASAN )
 		set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address" )
 	endif()
 endif( MSVC )
 
-
-####################################### DEPENDENCIES
-
-# set( Boost_USE_STATIC_LIBS ON )
-# set( Boost_USE_MULTITHREADED ON )
-# set( Boost_USE_STATIC_RUNTIME OFF )
-# set( BOOST_ROOT $ENV{HOME}/opt/boost_1_64_0 )
-# if( WIN32 )
-#   set( Boost_NO_SYSTEM_PATHS ON )
-#   set( BOOST_INCLUDEDIR $ENV{BOOST_INCLUDEDIR})
-#   message( STATUS "BOOST_INCLUDEDIR: $ENV{BOOST_INCLUDEDIR}")
-#   set( BOOST_LIBRARYDIR $ENV{BOOST_LIBRARYDIR} )
-#   message( STATUS "BOOST_LIBRARYDIR: $ENV{BOOST_LIBRARYDIR}")
-# endif( WIN32 )
-# find_package(Boost 1.62 REQUIRED COMPONENTS 
-#   system
-#   chrono
-#   date_time 
-#   program_options
-#   filesystem
-#   regex
-#   thread
-# )
-# if( Boost_FOUND )
-#   message( STATUS "Boost found.
-#   Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}
-#   Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}" )
-# else( Boost_FOUND )
-#   message ( STATUS "Boost not found. set environment variables:
-#   BOOST_LIBRARYDIR (for example, %BOOST_ROOT%/lib64-msvc-14.1)
-#   BOOST_INCLUDEDIR (where is boost directory, usualy %BOOST_ROOT%)" )
-# endif( Boost_FOUND )
-
-# set( OPENSSL_USE_STATIC_LIBS TRUE)
-# find_package( OpenSSL REQUIRED )
-# if( OpenSSL_FOUND )
-#   message( STATUS "OpenSSL found.
-#   OPENSSL_INCLUDE_DIR: ${OPENSSL_INCLUDE_DIR}
-#   OPENSSL_LIBRARIES: ${OPENSSL_LIBRARIES}" )
-# else( OpenSSL_FOUND)
-#   message( STATUS "OpenSSL not found. set environment variables:
-#   OPENSSL_ROOT_DIR (for example, %C_INCLUDE%/OpenSSL/Win64OpenSSL-1_0_2L)" )
-# endif( OpenSSL_FOUND )
-
-# if openssl, Secp256k1 and gmp not needed:
-# if( NOT EOS_ECC_IMPL STREQUAL openssl )
-#   find_package(GMP REQUIRED)
-#   if( GMP_FOUND )
-#     message( STATUS "gmp found.
-#     GMP_INCLUDE_DIR: ${GMP_INCLUDE_DIR}
-#     GMP_LIBRARIES: ${GMP_LIBRARIES}    
-#     " )
-#   else( GMP_FOUND )
-#     message( STATUS "gmp not found. set environment variables:
-#     GMP_DIR (for example, E:/C_INCLUDE/gmp)" )
-#   endif( GMP_FOUND )
-
-#   find_package(Secp256k1 REQUIRED)
-#   if( SECP256K1_FOUND )
-#     message( STATUS "Secp256k1 found.
-#     SECP256K1_INCLUDE_DIR: ${SECP256K1_INCLUDE_DIR}
-#     SECP256K1_LIBRARIES: ${SECP256K1_LIBRARIES}" )
-#   else( SECP256K1_FOUND )
-#     message( STATUS "Secp256k1 not found. set environment variables:
-#     SECP256K1_DIR (for example, E:/C_INCLUDE/secp256k1)" )
-#   endif( SECP256K1_FOUND )
-# endif( NOT EOS_ECC_IMPL STREQUAL openssl )
-
-####################################### /DEPENDENCIES
-
 add_subdirectory( libraries )
-#add_subdirectory( plugins )
+add_subdirectory( plugins )

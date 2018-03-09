@@ -13,13 +13,6 @@ set(PublicHeaders
 	${WAVM_INCLUDE_DIR}/IR/Validate.h)
 include_directories(${WAVM_INCLUDE_DIR}/IR)
 
-add_library(IR ${SHARED_OR_STATIC} ${Sources} ${PublicHeaders})
-
+add_library(IR STATIC ${Sources} ${PublicHeaders})
 add_definitions(-DIR_API=DLL_EXPORT)
 target_link_libraries(IR Logging)
-
-INSTALL( TARGETS IR
-   RUNTIME DESTINATION bin
-   LIBRARY DESTINATION lib
-   ARCHIVE DESTINATION lib
-)

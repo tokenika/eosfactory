@@ -5,40 +5,26 @@ set( VERSION_MAJOR 0 )
 set( VERSION_MINOR 6 )
 set( CMAKE_BUILD_TYPE "Debug" )
 
-message(STATUS 
-"//////////////////////////////////////////////////////////////////////////////" )
 
-if( NOT DEFINED ENV{EOSIO_SOURCE_DIR} )
-  message( FATAL_ERROR "
-EOSIO_SOURCE_DIR environment variable has to be set, for example: EOSIO_SOURCE_DIR=E:/Workspaces/EOS/eos/" )
+set( LOGOS_DIR "NOT DEFINED !!" )
+set( EOSIO_SOURCE_DIR "NOT DEFINED !!" )
+set( EOSIO_BINARY_DIR "NOT DEFINED !!" )
+
+set( CMAKE_INSTALL_PREFIX "NOT DEFINED !!" )
+set( CMAKE_INSTALL_LIB "NOT DEFINED !!" )
+set( CMAKE_INSTALL_LIB_PREFIX "NOT DEFINED !!" )
+
+option( ENABLE_ASAN "enable ASAN" OFF )
+# 'common.cmake' sets Lgos common values:
+# LOGOS_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
+# CMAKE_INSTALL_PREFIX, 
+# CMAKE_CXX_STANDARD, CMAKE_BUILD_TYPE, 
+include( ../common.cmake ) 
+if( NOT DEFINED EOSIO_SOURCE_DIR )
+	message( FATAL_ERROR "Something is wrong with the 'commom.cmake' definition file"	)
 endif()
-set( EOSIO_SOURCE_DIR "$ENV{EOSIO_SOURCE_DIR}" )
-
-set ( LOGOS_DIR "${CMAKE_SOURCE_DIR}/.." )
-if( WIN32 )
-  set( EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/buildWindows")
-  set( EOSIO_INSTALL_DIR "${LOGOS_DIR}/eos/buildWindows/install" )
-  set( CMAKE_INSTALL_PREFIX "${LOGOS_DIR}/install/windows" )
-else( WIN32 )
-  set( EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/build" )
-  set( EOSIO_INSTALL_DIR "${LOGOS_DIR}/eos/build/install" )
-  set( CMAKE_INSTALL_PREFIX "${LOGOS_DIR}/install/ubuntu" )
-endif( WIN32 )
-
-message(STATUS "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR}")
-message( STATUS "EOSIO_INSTALL_DIR: ${EOSIO_INSTALL_DIR}" )
-message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
-
-set( CMAKE_CXX_STANDARD 14 ) 
-set( CMAKE_CXX_STANDARD_REQUIRED ON )
-set( CMAKE_BUILD_TYPE Debug ) 
-
-include_directories( "${CMAKE_INSTALL_PREFIX}/include" )
-message( STATUS 
-"//////////////////////////////////////////////////////////////////////////////" )
 
 
-set( CMAKE_CXX_STANDARD 14 )
 set( BUILD_SHARED_LIBS NO )
 set( BUILD_DOXYGEN TRUE )
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules" )
@@ -51,7 +37,7 @@ set( TEST_PORT "\"8888\"" )
 set( CONFIG_JSON_FILE "config.jsonconfig.json" )
 set( CONFIG_JSON "\"${CONFIG_JSON_FILE}\"" )
 
-if( MSVC )
+if( WIN32 )
 	# Taken out of the VC projects to avoid the compiler complaining about POSIX code
 	add_definitions( -D_SCL_SECURE_NO_WARNINGS )
 	add_definitions( -D_SCL_SECURE_NO_DEPRECATE )
@@ -92,21 +78,16 @@ if( MSVC )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4702" )
 	# disable warning: The result of the unary '&' operator may be unaligned
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4366" )
-else( MSVC )
+else( WIN32 )
 	# Ensure that even static libraries are relocatable so they can be linked into a .so
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-  
-	# Enable asan in debug builds.
-	if( CMAKE_BUILD_TYPE MATCHES "Debug" )
-		option( ENABLE_ASAN "enable ASAN" ON )
-		add_definitions( "-D_DEBUG" )
-	else()
-		option( ENABLE_ASAN "enable ASAN" OFF )
+
+  if( ENABLE_ASAN )
+    # TODO: hard codding, make it better! //////////////////////  
+		#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address" )
 	endif()
-	if( ENABLE_ASAN )
-		set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address" )
-	endif()
-endif( MSVC )
+
+endif( WIN32 )
 
 ####################################### DEPENDENCIES
 
@@ -136,7 +117,7 @@ if( Boost_FOUND )
   Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}" )
 else( Boost_FOUND )
   message ( STATUS "Boost not found. set environment variables:
-  BOOST_LIBRARYDIR (for example, %BOOST_ROOT%/lib64-msvc-14.1)
+  BOOST_LIBRARYDIR (for example, %BOOST_ROOT%/lib64-WIN32-14.1)
   BOOST_INCLUDEDIR (where is boost directory, usualy %BOOST_ROOT%)" )
 endif( Boost_FOUND )
 
@@ -150,29 +131,6 @@ else( OpenSSL_FOUND)
   message( STATUS "OpenSSL not found. set environment variables:
   OPENSSL_ROOT_DIR (for example, %C_INCLUDE%/OpenSSL/Win64OpenSSL-1_0_2L)" )
 endif( OpenSSL_FOUND )
-
-# if( NOT EOS_ECC_IMPL STREQUAL openssl )
-#   find_package(GMP REQUIRED)
-#   if( GMP_FOUND )
-#     message( STATUS "gmp found.
-#     GMP_INCLUDE_DIR: ${GMP_INCLUDE_DIR}
-#     GMP_LIBRARIES: ${GMP_LIBRARIES}    
-#     " )
-#   else( GMP_FOUND )
-#     message( STATUS "gmp not found. set environment variables:
-#     GMP_DIR (for example, E:/C_INCLUDE/gmp)" )
-#   endif( GMP_FOUND )
-
-#   find_package(Secp256k1 REQUIRED)
-#   if( SECP256K1_FOUND )
-#     message( STATUS "Secp256k1 found.
-#     SECP256K1_INCLUDE_DIR: ${SECP256K1_INCLUDE_DIR}
-#     SECP256K1_LIBRARIES: ${SECP256K1_LIBRARIES}" )
-#   else( SECP256K1_FOUND )
-#     message( STATUS "Secp256k1 not found. set environment variables:
-#     SECP256K1_DIR (for example, E:/C_INCLUDE/secp256k1)" )
-#   endif( SECP256K1_FOUND )
-# endif( NOT EOS_ECC_IMPL STREQUAL openssl )
 
 if( WIN32 )
   add_library(__iob_func __iob_func.cpp )
@@ -191,7 +149,7 @@ llvm_map_components_to_libnames(LLVM_LIBS support core passes mcjit native Debug
 
 ####################################### DEPENDENCIES
 
-if( MSVC )
+if( WIN32 )
   set( WASM_CLANG "" )
   set( WASM_LLVM_LINK "" )
   set( WASM_LLC "" )
@@ -237,48 +195,39 @@ macro( applLinkLibraries applName )
      teoslib/include
   )
 
-  if( UNIX )
-  target_link_libraries( ${applName} 
-    PRIVATE 
-      asan        # static-libasan ?
-  )
-  endif()
+  # if( UNIX )
+  # target_link_libraries( ${applName} 
+  #   PRIVATE 
+  #     asan        # static-libasan ?
+  # )
+  # endif()
 
-  if( MSVC )
+  if( WIN32 )
     set( TARGET_DIR ${CMAKE_BUILD_TYPE} )
   else()
     set( TARGET_DIR "" )
   endif()
 
-  message( STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/} ///////////////////////" )
   target_link_libraries( ${applName} 
     PRIVATE
       teoslib
       ${EOSIO_BINARY_DIR}/plugins/chain_plugin/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chain_plugin${CMAKE_STATIC_LIBRARY_SUFFIX}
       ${EOSIO_BINARY_DIR}/libraries/chain/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eosio_chain${CMAKE_STATIC_LIBRARY_SUFFIX}
       ${EOSIO_BINARY_DIR}/libraries/chainbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chainbase${CMAKE_STATIC_LIBRARY_SUFFIX}  
-      ${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc_debug${CMAKE_STATIC_LIBRARY_SUFFIX}        
+      ${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc${CMAKE_STATIC_LIBRARY_SUFFIX}        
       ${EOSIO_BINARY_DIR}/libraries/utilities/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_utilities${CMAKE_STATIC_LIBRARY_SUFFIX}      
       ${EOSIO_BINARY_DIR}/libraries/appbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}appbase${CMAKE_STATIC_LIBRARY_SUFFIX} 
       
 
-      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Emscripten${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Runtime${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WAST${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WASM${CMAKE_STATIC_LIBRARY_SUFFIX}      
-      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}IR${CMAKE_STATIC_LIBRARY_SUFFIX}       
-      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Logging${CMAKE_STATIC_LIBRARY_SUFFIX} 
-      ${CMAKE_SOURCE_DIR}/../install/wasm-jit/lib/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Platform${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Emscripten/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Emscripten${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Runtime/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Runtime${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/WAST/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WAST${CMAKE_STATIC_LIBRARY_SUFFIX}
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/WASM/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WASM${CMAKE_STATIC_LIBRARY_SUFFIX}      
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/IR/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}IR${CMAKE_STATIC_LIBRARY_SUFFIX}       
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Logging/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Logging${CMAKE_STATIC_LIBRARY_SUFFIX} 
+      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Platform/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Platform${CMAKE_STATIC_LIBRARY_SUFFIX}
   )
 
-  # if( NOT EOS_ECC_IMPL STREQUAL openssl )
-  #   target_link_libraries( ${applName}
-  #     PRIVATE
-  #       ${SECP256K1_LIBRARIES}
-  #       ${GMP_LIBRARIES}
-  #   )
-  # endif()   
-  
   target_link_libraries( ${applName}
     PRIVATE
       ${OPENSSL_LIBRARIES}
@@ -290,13 +239,6 @@ macro( applLinkLibraries applName )
 
 
   if( WIN32 )
-    # if( NOT EOS_ECC_IMPL STREQUAL openssl )
-    #   target_link_libraries( ${applName}
-    #     PRIVATE
-    #       ${SECP256K1_LIBRARIES_DIR}/gcc.lib
-    #   )
-    # endif()
-
     target_link_libraries( ${applName}
       PRIVATE
         "$(WindowsSDK_LibraryPath)/x64/crypt32.lib"
