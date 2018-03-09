@@ -38,7 +38,7 @@ namespace fc { namespace crypto {
       {
          using data_type = typename KeyType::data_type;
          using wrapper = checksummed_data<data_type>;
-         constexpr auto prefix = Prefixes[Position];
+         auto prefix = Prefixes[Position];
 
          if (prefix_matches(prefix, base58str)) {
             auto str = base58str.substr(const_strlen(prefix));

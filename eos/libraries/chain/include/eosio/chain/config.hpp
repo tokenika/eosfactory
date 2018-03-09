@@ -6,9 +6,17 @@
 #include <eosio/chain/asset.hpp>
 #include <fc/time.hpp>
 
+#ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+  typedef uint_128 gcc__uint128_t;
+#else
+  typedef __uint128_t gcc__uint128_t;
+#endif
+
 namespace eosio { namespace chain { namespace config {
 
-typedef __uint128_t uint128_t;
+typedef gcc__uint128_t uint128_t;
 
 const static auto default_block_log_dir     = "block_log";
 const static auto default_shared_memory_dir = "shared_mem";

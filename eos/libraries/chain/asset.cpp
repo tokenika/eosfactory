@@ -7,6 +7,11 @@
 #include <boost/multiprecision/cpp_int.hpp>
 #include <fc/reflect/variant.hpp>
 
+#ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+#endif
+
 namespace eosio { namespace chain {
 typedef boost::multiprecision::int128_t  int128_t;
 

@@ -7,9 +7,22 @@
 #include <fc/crypto/city.hpp>
 
 #ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+#endif
+
+#ifdef _MSC_VER
   #pragma warning (push)
   #pragma warning (disable : 4244)
 #endif //// _MSC_VER
+
+#ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+#else
+  typedef __int128 int_128;
+  typedef unsigned __int128 uint_128;
+#endif
 
 namespace fc
 {
@@ -32,13 +45,13 @@ namespace fc
       uint128( uint64_t _h, uint64_t _l )
       :hi(_h),lo(_l){}
       uint128( const fc::bigint& bi );
-      explicit uint128( unsigned __int128 i ):hi( i >> 64 ), lo(i){ }
+      explicit uint128( uint_128 i ):hi( i >> 64 ), lo(i){ }
 
       operator std::string()const;
       operator fc::bigint()const;
 
-      explicit operator unsigned __int128()const {
-         unsigned __int128 result(hi);
+      explicit operator uint_128()const {
+         uint_128 result(hi);
          result <<= 64;
          return result | lo;
       }
@@ -129,8 +142,8 @@ namespace fc
 
   void to_variant( const uint128& var,  variant& vo );
   void from_variant( const variant& var,  uint128& vo );
-  void to_variant( const unsigned __int128& var,  variant& vo );
-  void from_variant( const variant& var,  unsigned __int128& vo );
+  void to_variant( const uint_128& var,  variant& vo );
+  void from_variant( const variant& var,  uint_128& vo );
 
   namespace raw
   {

@@ -26,7 +26,7 @@ namespace fc { namespace crypto {
 
    static public_key::storage_type parse_base58(const std::string& base58str)
    {
-      constexpr auto prefix = config::public_key_base_prefix;
+      auto prefix = config::public_key_base_prefix;
       FC_ASSERT(prefix_matches(prefix, base58str), "Public Key has invalid prefix: ${str}", ("str", base58str));
 
       auto sub_str = base58str.substr(const_strlen(prefix));

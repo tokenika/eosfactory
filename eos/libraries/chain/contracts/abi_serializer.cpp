@@ -12,6 +12,11 @@
 #include <boost/multiprecision/cpp_int.hpp>
 #include <fc/io/varint.hpp>
 
+#ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+#endif
+
 using namespace boost;
 
 namespace eosio { namespace chain { namespace contracts {

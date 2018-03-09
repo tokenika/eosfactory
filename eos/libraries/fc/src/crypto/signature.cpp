@@ -14,10 +14,10 @@ namespace fc { namespace crypto {
 
    static signature::storage_type parse_base58(const std::string& base58str)
    {
-      constexpr auto prefix = config::signature_base_prefix;
+      auto prefix = config::signature_base_prefix;
       FC_ASSERT(prefix_matches(prefix, base58str), "Signature has invalid prefix: ${str}", ("str", base58str));
 
-      auto sub_str = base58str.substr(const_strlen(prefix));
+      std::string sub_str = base58str.substr(const_strlen(prefix));
       try {
          using default_type = signature::storage_type::template type_at<0>;
          using data_type = default_type::data_type;
@@ -41,7 +41,7 @@ namespace fc { namespace crypto {
 
    signature::operator std::string() const
    {
-      auto data_str = _storage.visit(base58str_visitor<storage_type, config::signature_prefix, 0>());
+      std::string data_str = _storage.visit(base58str_visitor<storage_type, config::signature_prefix, 0>());
       return std::string(config::signature_base_prefix) + data_str;
    }
 

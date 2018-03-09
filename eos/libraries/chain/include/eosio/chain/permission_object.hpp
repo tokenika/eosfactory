@@ -111,4 +111,4 @@ FC_REFLECT(chainbase::oid<eosio::chain::permission_object>, (_id))
 FC_REFLECT(eosio::chain::permission_object, (id)(owner)(parent)(name)(auth))
 
 FC_REFLECT(chainbase::oid<eosio::chain::permission_usage_object>, (_id))
-FC_REFLECT(eosio::chain::permission_usage_object, (id)(account)(permission)(last_used))
+FC_REFLECT(::eosio::chain::permission_usage_object, (id)(account)(permission)(last_used))

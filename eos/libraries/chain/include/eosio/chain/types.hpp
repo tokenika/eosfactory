@@ -28,6 +28,14 @@
 #include <deque>
 #include <cstdint>
 
+#ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+  typedef uint_128 gcc__uint128_t;
+#else
+  typedef __uint128_t gcc__uint128_t;
+#endif
+
 #define OBJECT_CTOR1(NAME) \
     NAME() = delete; \
     public: \
@@ -154,7 +162,7 @@ namespace eosio { namespace chain {
    using weight_type         = uint16_t;
    using block_num_type      = uint32_t;
    using share_type          = int64_t;
-   using uint128_t           = __uint128_t;
+   using uint128_t           = gcc__uint128_t;
    using bytes               = vector<char>;
 
    

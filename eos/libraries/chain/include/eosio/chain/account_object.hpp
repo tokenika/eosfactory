@@ -25,7 +25,7 @@ namespace eosio { namespace chain {
       shared_vector<char>  code;
       shared_vector<char>  abi;
 
-      void set_abi( const eosio::chain::contracts::abi_def& a ) {
+      void set_abi( const ::eosio::chain::contracts::abi_def& a ) {
          // Added resize(0) here to avoid bug in boost vector container
          abi.resize( 0 );
          abi.resize( fc::raw::pack_size( a ) );

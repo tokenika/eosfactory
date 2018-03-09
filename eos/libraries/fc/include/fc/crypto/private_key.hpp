@@ -9,8 +9,8 @@
 namespace fc { namespace crypto {
 
    namespace config {
-      constexpr const char* private_key_base_prefix = "EOS";
-      constexpr const char* private_key_prefix[] = {
+      static const char* private_key_base_prefix = "EOS";
+      static const char* private_key_prefix[] = {
          "K1",
          "R1"
       };

@@ -39,6 +39,11 @@
 #include <iostream>
 #include <chrono>
 
+#ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+#endif
+
 namespace eosio { namespace chain {
 
 bool is_start_of_round( block_num_type block_num ) {

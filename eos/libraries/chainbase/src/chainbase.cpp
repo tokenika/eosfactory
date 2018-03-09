@@ -5,10 +5,16 @@
 
 namespace chainbase {
 
+
    struct environment_check {
       environment_check() {
          memset( &compiler_version, 0, sizeof( compiler_version ) );
+#ifdef WIN32
+         std::string version = std::to_string(_MSC_VER);
+         memcpy( &compiler_version, version.c_str(), std::min<size_t>( version.size() , 256 ) );
+#else
          memcpy( &compiler_version, __VERSION__, std::min<size_t>( strlen(__VERSION__), 256 ) );
+#endif
 #ifndef NDEBUG
          debug = true;
 #endif
@@ -34,7 +40,7 @@ namespace chainbase {
       bool write = flags & database::read_write;
 
       if (!bfs::exists(dir)) {
-         if(!write) BOOST_THROW_EXCEPTION( std::runtime_error( "database file not found at " + dir.native() ) );
+         if(!write) BOOST_THROW_EXCEPTION( std::runtime_error( "database file not found at " + dir.string() ) );
       }
 
       bfs::create_directories(dir);

@@ -12,6 +12,11 @@
 
 #include <fc/static_variant.hpp>
 
+#ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+#endif
+
 namespace eosio { namespace chain { namespace contracts {
 
 /**

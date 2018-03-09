@@ -25,7 +25,10 @@
 #include <thread>
 #include <condition_variable>
 
-
+#ifdef _MSC_VER
+  #include <int128/int128.h>
+  typedef uint_128 uint128_t;
+#endif
 
 using namespace IR;
 using namespace Runtime;
@@ -544,7 +547,7 @@ class console_api : public context_aware_api {
          context.console_append(val);
       }
 
-      void printi128(const unsigned __int128& val) {
+      void printi128(const uint_128& val) {
          fc::uint128_t v(val>>64, uint64_t(val) );
          context.console_append(fc::variant(v).get_string());
       }

@@ -26,7 +26,7 @@ using fixed_string16 = fc::fixed_string<>;
 using type_name      = fixed_string32;
 using field_name     = fixed_string16;
 using table_name     = name;
-using action_name    = eosio::chain::action_name;
+using action_name    = ::eosio::chain::action_name;
 
 
 struct type_def {
