@@ -199,11 +199,12 @@ namespace teos {
         options_description od("");
         od.add_options()
           ("wallet-host", value<string>()->default_value(HOST_DEFAULT),
-            "The host where eos-wallet is running")
+            "The host where eos-wallet is running.")
             ("wallet-port", value<string>()->default_value(PORT_DEFAULT),
-              "The port where eos-wallet is running")
-              ("json,j", value<string>(&json_), "Json argument")
-          ("received,v", "Print received json")
+              "The port where eos-wallet is running.")
+              ("json,j", value<string>(&json_), "Json argument.")
+          ("received,v", "Print received json.")
+          ("both,b", "For system use.")
           ("raw,r", "Raw print");
         return od;
       }
@@ -244,12 +245,18 @@ namespace teos {
             return;
           }
 
-          if (vm.count("received")) {
-            cout << command.responseToString(isRaw) << endl;
-          }
-          else {
+          if(vm.count("both")) {
+            cerr << command.responseToString(isRaw) << endl;
             printout(command, vm);
+          } else {
+            if (vm.count("received")) {
+              cout << command.responseToString(isRaw) << endl;
+            }
+            else {
+              printout(command, vm);
+            }
           }
+
         }
       }
 
