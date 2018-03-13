@@ -10,37 +10,16 @@ using namespace std;
 namespace teos {
   namespace control {
 
-    void killChainNode();
-
-    void buildContract(
-      vector<string> src, // list of source c/cpp files
-      string targetWastFile,
-      vector<string> includeDir = {}
-    );
-
-    void generateAbi(
-      string typesHpp,
-      string targetAbiFile,
-      vector<string> includeDir = {} // list of header files  
-    );
-
-    void wasmClangHelp();
-
-
-
-
-
-
-    class NodeDeleteAllWallets : public Item
+    class DaemonDeleteWallets : public Item
     {
     public:
-      NodeDeleteAllWallets();
+      DaemonDeleteWallets();
     };
 
-    class NodeDeleteAllWalletsOptions : public ItemOptions<NodeDeleteAllWallets>
+    class DaemonDeleteWalletsOptions : public ItemOptions<DaemonDeleteWallets>
     {
     public:
-      NodeDeleteAllWalletsOptions(int argc, const char **argv) : ItemOptions(argc, argv) {}
+      DaemonDeleteWalletsOptions(int argc, const char **argv) : ItemOptions(argc, argv) {}
 
     protected:
       const char* getUsage() {
@@ -56,7 +35,7 @@ Usage: ./teos node deleteAllWallets
 
       void parseGroupVariablesMap(variables_map& vm) {
         if (checkArguments(vm)) {
-          NodeDeleteAllWallets command = NodeDeleteAllWallets();
+          DaemonDeleteWallets command = DaemonDeleteWallets();
           if (command.isError_) {
             std::cerr << "ERROR!" << endl << command.errorMsg() << endl;
             return;
@@ -65,16 +44,16 @@ Usage: ./teos node deleteAllWallets
       }
     };
 
-    class NodeKill : public Item
+    class DaemonKill : public Item
     {
     public:
-      NodeKill();
+      DaemonKill();
     };
 
-    class NodeKillOptions : public ItemOptions<NodeKill>
+    class DaemonKillOptions : public ItemOptions<DaemonKill>
     {
     public:
-      NodeKillOptions(int argc, const char **argv) : ItemOptions(argc, argv) {}
+      DaemonKillOptions(int argc, const char **argv) : ItemOptions(argc, argv) {}
 
     protected:
       const char* getUsage() {
@@ -90,7 +69,7 @@ Usage: ./teos node kill
 
       void parseGroupVariablesMap(variables_map& vm) {
         if (checkArguments(vm)) {
-          NodeKill command = NodeKill();
+          DaemonKill command = DaemonKill();
           if (command.isError_) {
             std::cerr << "ERROR!" << endl << command.errorMsg() << endl;
             return;
@@ -100,7 +79,7 @@ Usage: ./teos node kill
     };
 
 
-    class NodeStart : public Item
+    class DaemonStart : public Item
     {
 
     public:
@@ -110,7 +89,7 @@ Usage: ./teos node kill
       string http_server_address_;
       string data_dir_;
 
-      NodeStart(
+      DaemonStart(
         bool resync_blockchain = false,
         string eosiod_exe = "",
         string genesis_json = "",
@@ -119,10 +98,10 @@ Usage: ./teos node kill
       );
     };
 
-    class NodeStartOptions : public ItemOptions<NodeStart> 
+    class DaemonStartOptions : public ItemOptions<DaemonStart> 
     {
     public:
-      NodeStartOptions(int argc, const char **argv) : ItemOptions(argc, argv) {}
+      DaemonStartOptions(int argc, const char **argv) : ItemOptions(argc, argv) {}
 
     protected:
       const char* getUsage() {
@@ -147,14 +126,14 @@ Usage: ./teos node start [Options]
         return true;
       }  
 
-      void printout(NodeStart command) {
+      void printout(DaemonStart command) {
         output("eosiod exe file", "%s", command.eosiod_exe_.c_str());
         output("genesis state file", "%s", command.genesis_json_.c_str());
         output("server address", "%s", command.http_server_address_.c_str());
         output("config directory", "%s", command.data_dir_.c_str());
       }
 
-      void printout(NodeStart command, variables_map &vm) {
+      void printout(DaemonStart command, variables_map &vm) {
         if (vm.count("verbose") > 0) {
           printout(command);
         }
@@ -162,7 +141,7 @@ Usage: ./teos node start [Options]
 
       void parseGroupVariablesMap(variables_map& vm) {
         if (checkArguments(vm)) {
-          NodeStart command = NodeStart(resync_blockchain);
+          DaemonStart command = DaemonStart(resync_blockchain);
 
           if (command.isError_) {
             std::cerr << "ERROR!" << endl << command.errorMsg() << endl;

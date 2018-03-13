@@ -20,7 +20,7 @@
 using boost::asio::ip::tcp;
 #define CLEAR_CHAIN_DATABASE_AND_BLOCK_LOG "--resync-blockchain"
 #define MAX_LENGTH  1024
-#define CHAIN_NODE "eosiod"
+#define DAEMON_NAME "eosiod"
 
 namespace pentagon {
   namespace control {
@@ -33,10 +33,10 @@ namespace pentagon {
         count--;
       }
       if (count > 0) {
-        std::cout << boost::format("%1% killed.\n") % CHAIN_NODE;
+        std::cout << boost::format("%1% killed.\n") % DAEMON_NAME;
       }
       else {
-        std::cout << boost::format("Failed to kill %1%.\n") % CHAIN_NODE;
+        std::cout << boost::format("Failed to kill %1%.\n") % DAEMON_NAME;
       }
     }
   }

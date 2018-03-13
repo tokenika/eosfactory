@@ -16,16 +16,30 @@
 
 using namespace std;
 
+boost::filesystem::path getConfigFilePath(){
+  return boost::filesystem::canonical(
+    boost::filesystem::path(CONFIG_JSON));
+}
+
 boost::property_tree::ptree getConfigJson()
 {
   boost::property_tree::ptree json;
   try {
-    read_json(CONFIG_JSON, json);
+    read_json(getConfigFilePath().string(), json);
   }
   catch (exception& e) {
     //cout << e.what() << endl;
   }
   return json;
+}
+
+void saveConfigJson(boost::property_tree::ptree json){
+  try {
+    write_json(getConfigFilePath().string(), json);
+  }
+  catch (exception& e) {
+    cerr << e.what() << endl;
+  }
 }
 
 namespace teos {
@@ -39,7 +53,7 @@ namespace teos {
       { DATA_DIR,{ "data-dir", "workdir/data-dir" } },
       { EOSIO_INSTALL_DIR,{ "EOSIO_INSTALL_DIR" } },
       { EOSIO_SOURCE_DIR,{ "EOSIO_SOURCE_DIR" } },
-      { CHAIN_NODE,{ "CHAIN_NODE", "eosiod" } },
+      { DAEMON_NAME,{ "DAEMON_NAME", "eosiod" } },
       { LOGOS_DIR,{ "LOGOS_DIR" } },
       { WASM_CLANG,{ "WASM_CLANG", "/home/cartman/opt/wasm/bin/clang" } },
       { WASM_LLVM_LINK,{ "WASM_LLVM_LINK", "/home/cartman/opt/wasm/bin/llvm-link" } },
@@ -65,8 +79,8 @@ namespace teos {
 
     string getJson(ConfigKeys configKey) {
       vector<string> temp = configMapValue(configKey);
-      boost::property_tree::ptree configJson = getConfigJson();
-      return configJson.get(temp[0], temp.size() > 1 
+      boost::property_tree::ptree ConfigTeos = getConfigJson();
+      return ConfigTeos.get(temp[0], temp.size() > 1 
         ? temp[1]
         : configMapValue(ConfigKeys::NOT_DEFINED)[0]);
     }
@@ -84,7 +98,40 @@ namespace teos {
       return cout;
     }
 
-    void ConfigJsonOptions::printout(ConfigJson command, variables_map &vm)
+    ConfigTeos::ConfigTeos(){
+      boost::property_tree::ptree config = getConfigJson();
+
+      for(map<ConfigKeys, vector<string>>::iterator 
+        entry = configMap.begin(); entry != configMap.end(); ++entry) 
+        {
+          string value = configValue(entry->first);
+          while(true)
+          {
+            if(entry->first == ConfigKeys::NOT_DEFINED){
+              break;
+            }
+            cout << entry->second[0] << ": " << value  << endl;
+            cout << "Enter a new value, or 'y' to confirm, 'yy' to escape."
+              << endl;
+            string newValue;
+            cin >> newValue;
+            if(newValue == "yy"){
+              entry = configMap.end();
+              break;
+            }
+            if(newValue == "y") {
+              break;
+            } else {
+              value = newValue;
+            }
+          }
+          config.put(entry->second[0], value);
+        }
+        saveConfigJson(config);
+        cout << "Config file is:\n" << getConfigFilePath().string() << endl;
+    }
+
+    void ConfigTeosOptions::printout(ConfigTeos command, variables_map &vm)
     {
       string header = "#  ";
       boost::filesystem::path configJsonPath

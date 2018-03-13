@@ -19,24 +19,6 @@
 using namespace boost::process;
 using namespace std;
 
-int processEcho(string cmdLine, string& echo)
-{
-  ipstream pipe_stream;
-  child c(cmdLine, std_out > pipe_stream);
-
-  string line;
-  stringstream ss;
-  string endln;
-  while (pipe_stream && getline(pipe_stream, line) && !line.empty()) {
-    ss << endln;
-    ss << line;
-    endln = "\n";
-  }
-  c.wait();
-  echo = ss.str();
-  return c.exit_code();
-}
-
 namespace teos {
   namespace control {
 
@@ -48,61 +30,18 @@ namespace teos {
       boost::process::spawn(commandLine);
     }
 
-    void startChainNode(
-      string genesis_json,
-      string http_server_address,
-      string data_dir,
-      bool resync_blockchain
-    )
+    string getPid()
     {
-      killChainNode();
+      ipstream pipe_stream;
+      child c(string("pidof ") + configValue(ConfigKeys::DAEMON_NAME), std_out > pipe_stream);
 
-      string commandLine = configValue(ConfigKeys::EOSIO_INSTALL_DIR) 
-        + "/bin" + configValue(ConfigKeys::CHAIN_NODE)
-        + " --genesis-json "
-        + (genesis_json.empty() ? configValue(ConfigKeys::GENESIS_JSON) : genesis_json)
-        + " --http-server-address "
-        + (http_server_address.empty() ? configValue(ConfigKeys::HTTP_SERVER_ADDRESS) 
-          : http_server_address)
-        + " --data-dir "
-        + (data_dir.empty() ? configValue(ConfigKeys::DATA_DIR) : data_dir);
-      if (resync_blockchain) {
-        commandLine +=" --resync-blockchain";
+      string line;
+      stringstream ss;
+      while (pipe_stream && getline(pipe_stream, line) && !line.empty()) {
+        ss << line;
       }
-
-      cout << commandLine << endl;
-      boost::process::spawn(commandLine);
-
-      // Wait until the node is operational:
-      teos::command::TeosCommand tc;
-      do {
-        boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
-        tc = teos::command::GetInfo();
-      } while (tc.isError_);
-    }
-
-    void killChainNode()
-    {
-      string pid;
-      string processName = configValue(ConfigKeys::CHAIN_NODE);
-      processEcho(string("pidof ") + processName, pid);
-      int count = 10;
-      if (!pid.empty()) {
-        cout << "killing " << processName << endl;
-        boost::process::system(string("kill ") + pid);
-
-        while (!pid.empty() && count > 0) {
-          boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
-          processEcho(string("pidof ") + processName, pid);
-          count--;
-        }
-      }
-      if (count > 0) {
-        cout << processName << " stoped.\n";
-      }
-      else {
-        cout << "Failed to kill " << processName << endl;
-      }
+      c.wait();
+      return ss.str();
     }
 
     void boostProcessSystem(string commandLine) {
@@ -275,25 +214,23 @@ namespace teos {
       */
     }
 
-    NodeKill::NodeKill()
+    DaemonKill::DaemonKill()
     {
       try {
-        string pid;
-        string processName = configValue(ConfigKeys::CHAIN_NODE);
-        processEcho(string("pidof ") + processName, pid);
+        string pid = getPid();
         int count = 10;
         if (!pid.empty()) {
           boost::process::system(string("kill ") + pid);
 
           while (!pid.empty() && count > 0) {
             boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
-            processEcho(string("pidof ") + processName, pid);
+            pid = getPid();
             count--;
           }
         }
         if (count < 0) {
           isError_ = true;
-          errorMsg("Failed to kill " + processName);
+          errorMsg("Failed to kill " + configValue(ConfigKeys::DAEMON_NAME));
         }
       }
       catch (std::exception& e) {
@@ -302,7 +239,7 @@ namespace teos {
       }
     }
 
-    NodeStart::NodeStart(
+    DaemonStart::DaemonStart(
       bool resync_blockchain,
       string eosiod_exe,
       string genesis_json,
@@ -310,7 +247,7 @@ namespace teos {
       string data_dir
 
     ) : eosiod_exe_(eosiod_exe.empty()
-        ? configValue(ConfigKeys::EOSIO_INSTALL_DIR) + "/bin/" + configValue(ConfigKeys::CHAIN_NODE)
+        ? configValue(ConfigKeys::EOSIO_INSTALL_DIR) + "/bin/" + configValue(ConfigKeys::DAEMON_NAME)
         : eosiod_exe)
       , genesis_json_(genesis_json.empty() ? configValue(ConfigKeys::GENESIS_JSON) 
         : genesis_json)
@@ -321,7 +258,7 @@ namespace teos {
 
     {
       try{
-        NodeKill();
+        DaemonKill();
 
         string commandLine = eosiod_exe_
           + " --" + configValue(ConfigKeys::GENESIS_JSON) + " " + genesis_json_
@@ -353,7 +290,7 @@ namespace teos {
       }
     }
 
-    NodeDeleteAllWallets::NodeDeleteAllWallets()
+    DaemonDeleteWallets::DaemonDeleteWallets()
     {
       namespace bfs = boost::filesystem;
 

@@ -11,25 +11,28 @@ namespace teos {
 
     enum ConfigKeys {
       NOT_DEFINED, GENESIS_JSON, HTTP_SERVER_ADDRESS, DATA_DIR
-      , EOSIO_INSTALL_DIR, EOSIO_SOURCE_DIR, CHAIN_NODE, LOGOS_DIR
+      , EOSIO_INSTALL_DIR, EOSIO_SOURCE_DIR, DAEMON_NAME, LOGOS_DIR
       , WASM_CLANG, WASM_LLVM_LINK, WASM_LLC, BINARYEN_BIN
     };
     string configValue(ConfigKeys configKey);
 
     /**
     */
-    class ConfigJson : public Item {};
+    class ConfigTeos : public Item {
+      public:
+        ConfigTeos();
+    };
 
-    class ConfigJsonOptions : public ItemOptions<ConfigJson>
+    class ConfigTeosOptions : public ItemOptions<ConfigTeos>
     {
     public:
-      ConfigJsonOptions(int argc, const char **argv) : ItemOptions(argc, argv) {}
+      ConfigTeosOptions(int argc, const char **argv) : ItemOptions(argc, argv) {}
 
     protected:
       const char* getUsage() {
         return R"EOF(
-Show the configure json tree.
-Usage: ./teos config json
+Review the configure json tree.
+Usage: ./teos config teos
 )EOF";
       }
 
@@ -37,11 +40,11 @@ Usage: ./teos config json
         return true;
       }
 
-      void printout(ConfigJson command, variables_map &vm);
+      void printout(ConfigTeos command, variables_map &vm);
 
       void parseGroupVariablesMap(variables_map& vm) {
         if (checkArguments(vm)) {
-          ConfigJson command = ConfigJson();
+          ConfigTeos command = ConfigTeos();
           if (command.isError_) {
             std::cerr << "ERROR!" << endl << command.errorMsg() << endl;
             return;

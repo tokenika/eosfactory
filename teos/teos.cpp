@@ -246,10 +246,10 @@ int main(int argc, const char *argv[]) {
       IF_ELSE(create_account, CreateAccount)
       IF_ELSE(set_contract, SetContract)
       IF_ELSE(push_action, PushAction)
-      IF_ELSE(node_start, NodeStart)
-      IF_ELSE(node_kill, NodeKill)
-      IF_ELSE(node_delete_wallets_all, NodeDeleteAllWallets)
-      IF_ELSE(config_json, ConfigJson)
+      IF_ELSE(daemon_start, DaemonStart)
+      IF_ELSE(daemon_kill, DaemonKill)
+      IF_ELSE(daemon_delete_wallets, DaemonDeleteWallets)
+      IF_ELSE(config_teos, ConfigTeos)
       {
         cerr << "unknown command!" << endl;
       }

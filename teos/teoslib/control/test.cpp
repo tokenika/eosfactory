@@ -10,6 +10,4 @@ int main()
   //   {"/mnt/hgfs/Workspaces/EOS/eos/contracts/currency/currency.cpp"},
   //   "/tmp/xxx.wast"   
   // );
-  //teos::control::startChainNode();
-  //teos::control::killChainNode();
 }

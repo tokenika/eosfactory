@@ -258,7 +258,7 @@ int main(int argc, const char *argv[]) {
       IF_ELSE(create_account, CreateAccount)
       IF_ELSE(set_contract, SetContract)
       IF_ELSE(push_message, PushAction)
-      IF_ELSE(node_start, NodeStart)
+      IF_ELSE(daemon_start, DaemonStart)
       {
         cerr << "unknown command!" << endl;
       }
