@@ -12,16 +12,17 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
-#include <teos/command/get_commands.hpp>
-#include <teos/command/wallet_commands.hpp>
-#include <teos/command/create_commands.hpp>
-#include <teos/command/set_commands.hpp>
-#include <teos/command/push_commands.hpp>
-#include <teos/command/other_commands.hpp>
-#include <teos/command/subcommands.hpp>
+#include <teoslib/item.hpp>
+#include <teoslib/command/get_commands.hpp>
+#include <teoslib/command/wallet_commands.hpp>
+#include <teoslib/command/create_commands.hpp>
+#include <teoslib/command/set_commands.hpp>
+#include <teoslib/command/push_commands.hpp>
+#include <teoslib/command/other_commands.hpp>
+#include <teoslib/command/subcommands.hpp>
 
-#include <teos/control/control.hpp>
-#include <teos/control/config.hpp>
+#include <teoslib/control/daemon_controls.hpp>
+#include <teoslib/control/config.hpp>
 
 #include <teos/teos.hpp>
 #include <teos/teos_test.hpp>
@@ -81,9 +82,9 @@ int main(int argc, const char *argv[]) {
 #endif // WIN32
 
   using namespace std;
+  using namespace teos;
   using namespace teos::command;
   using namespace teos::control;
-  using namespace teos::config;
   using namespace boost::program_options;
 
   const char* argv0 = argv[0];
@@ -100,43 +101,33 @@ int main(int argc, const char *argv[]) {
     size_t colon = ipAddress.find(":");
     if (colon != std::string::npos)
     {
-      TeosCommand::host = string(ipAddress.substr(0, colon));
-      TeosCommand::port = string(ipAddress.substr(colon + 1,
-        ipAddress.size()));
-      TeosCommand::walletHost = TeosCommand::host;
-      TeosCommand::walletPort = TeosCommand::port;
+      TeosCommand::httpAddress = ipAddress;
+      TeosCommand::httpWalletAddress = TeosCommand::httpAddress;
       argv++;
       argc--;
     }
 
     if (strcmp(argv[1], "tokenika") == 0)
     {
-      TeosCommand::host = TEST_HOST;
-      TeosCommand::port = TEST_PORT;
-      TeosCommand::walletHost = TeosCommand::host;
-      TeosCommand::walletPort = TeosCommand::port;
+      TeosCommand::httpAddress = TEST_HOST ":" TEST_PORT;
+      TeosCommand::httpWalletAddress = TeosCommand::httpAddress;
       argv++;
       argc--;
     }
   }
 
+#define HTTP_SERVER_ADDRESS_DEFAULT "127.0.0.1:8888"
+#define HTTP_SERVER_WALLET_ADDRESS_DEFAULT "127.0.0.1:8888"
   try
   {
     options_description desc{ "Options" };
     desc.add_options()
+      ("address,a", value<string>()->default_value(HTTP_SERVER_ADDRESS_DEFAULT),
+        "The http address (host:port) of the EOSIO daemon.")
+      ("wallet,w", value<string>()->default_value(HTTP_SERVER_WALLET_ADDRESS_DEFAULT),
+        "The http address (host:port) where eos-wallet is running.")
+
       ("help,h", "Help screen")
-      ("host,H", value<string>()->default_value(
-        TeosCommand::host == "" ? HOST_DEFAULT : TeosCommand::host),
-        "The host where eosd is running")
-      ("port,p", value<string>()->default_value(
-        TeosCommand::port == "" ? PORT_DEFAULT : TeosCommand::port),
-        "The port where eosd is running")
-      ("wallet-host", value<string>()->default_value
-        ((TeosCommand::walletHost != "") ? TeosCommand::walletHost: HOST_DEFAULT),
-        "The host where eos-wallet is running")
-      ("wallet-port", value<string>()->default_value
-        ((TeosCommand::walletPort != "") ? TeosCommand::walletPort : PORT_DEFAULT),
-        "The port where eos-wallet is running")
       ("verbose,V", "Output verbose messages on error");
 
     command_line_parser parser{ argc, argv };
@@ -150,15 +141,11 @@ int main(int argc, const char *argv[]) {
     store(parsed_options, vm);
     notify(vm);
 
-    if (vm.count("host"))
-      TeosCommand::host = string(vm["host"].as<string>());
-    if (vm.count("port"))
-      TeosCommand::port = string(vm["port"].as<string>());
+    if (vm.count("address"))
+      TeosCommand::httpAddress = string(vm["address"].as<string>());
+    if (vm.count("wallet"))
+      TeosCommand::httpWalletAddress = string(vm["wallet"].as<string>());
 
-    if (vm.count("wallet-host"))
-      TeosCommand::walletHost = string(vm["wallet-host"].as<string>());
-    if (vm.count("wallet-port"))
-      TeosCommand::walletPort = string(vm["wallet-port"].as<string>());
     if (vm.count("verbose"))
       TeosCommand::verbose = true;
 
@@ -247,7 +234,7 @@ int main(int argc, const char *argv[]) {
       IF_ELSE(set_contract, SetContract)
       IF_ELSE(push_action, PushAction)
       IF_ELSE(daemon_start, DaemonStart)
-      IF_ELSE(daemon_kill, DaemonKill)
+      IF_ELSE(daemon_stop, DaemonStop)
       IF_ELSE(daemon_delete_wallets, DaemonDeleteWallets)
       IF_ELSE(config_teos, ConfigTeos)
       {

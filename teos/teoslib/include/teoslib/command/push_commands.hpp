@@ -4,8 +4,8 @@
 #include <boost/algorithm/string.hpp>
 
 #include <teoslib/config.h>
-#include <teos/eos_interface.hpp>
-#include <teos/command/command.hpp>
+#include <teoslib/eos_interface.hpp>
+#include <teoslib/command.hpp>
 
 using namespace std;
 
@@ -133,15 +133,15 @@ Usage: ./teos create key [-j '{
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("contract")) {
-          reqJson.put("contract", contract);
+          reqJson_.put("contract", contract);
           if (vm.count("action")) {
-            reqJson.put("action", action);
+            reqJson_.put("action", action);
             if (vm.count("data")){
-              reqJson.put("data", data);
+              reqJson_.put("data", data);
               if (vm.count("scope")){
-                reqJson.put("scope", scope);
+                reqJson_.put("scope", scope);
                 if (vm.count("permission")){
-                  reqJson.put("permission", scope);
+                  reqJson_.put("permission", scope);
                   ok = true;
                 }
               }
@@ -152,7 +152,7 @@ Usage: ./teos create key [-j '{
       }
 
       TeosCommand executeCommand() {
-        return PushAction(reqJson);
+        return PushAction(reqJson_);
       }
 
     };

@@ -8,7 +8,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/format.hpp>
 
-#include <teos/item.hpp>
+#include <teoslib/item.hpp>
 #include <teoslib/config.h>
 
 
@@ -28,13 +28,14 @@ namespace teos
     using namespace std;
     using namespace boost::property_tree;
 
+#define SHARP "#  "
     boost::format output(string label, string format) {
-      string header = (boost::format("# %1$20s: ") % label).str();
+      string header = (boost::format(SHARP "%1$20s: ") % label).str();
       return boost::format(header + format);
     }
 
     void output(const char* label, const char* format, ...) {
-      printf("## %20s: ", label);
+      printf(SHARP "%20s: ", label);
 
       string f(format);
       f += "\n";
@@ -46,7 +47,18 @@ namespace teos
     }
 
     void output(const char* text, ...) {
-      printf("## %s\n", text);
+      printf(SHARP "%s\n", text);
+    }
+
+    ostream& sharp() {
+      cout << SHARP;
+      return cout;
+    }
+
+    void output(string text){
+      text = SHARP + text;
+      boost::replace_all<string>(text, "\n", "\n" SHARP);
+      cout << text << endl;
     }
 
     /***************************************************************************

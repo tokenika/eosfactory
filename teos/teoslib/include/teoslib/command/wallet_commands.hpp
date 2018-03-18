@@ -6,7 +6,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <teoslib/config.h>
-#include <teos/command/command.hpp>
+#include <teoslib/command.hpp>
 
 using namespace std;
 using namespace boost::program_options;
@@ -92,14 +92,14 @@ Usage: ./teos wallet create [-j '{"name":"<wallet name>"}'] [OPTIONS]
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("name", name);
+          reqJson_.put("name", name);
           ok = true;
         }
         return ok;
       }
 
       TeosCommand executeCommand() {
-        return WalletCreate(reqJson);
+        return WalletCreate(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {
@@ -183,9 +183,9 @@ Usage: ./teos wallet import [-j '{"name":"<wallet name>", "key":"<private key>"}
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("name", name);
+          reqJson_.put("name", name);
           if (vm.count("key")) {
-            reqJson.put("key", key);
+            reqJson_.put("key", key);
             ok = true;
           }
         }
@@ -193,7 +193,7 @@ Usage: ./teos wallet import [-j '{"name":"<wallet name>", "key":"<private key>"}
       }
 
       TeosCommand executeCommand() {
-        return WalletImport(reqJson);
+        return WalletImport(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {
@@ -249,12 +249,8 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      bool checkArguments(variables_map &vm) {
-        return true;
-      }
-
       TeosCommand executeCommand() {
-        return WalletList(reqJson);
+        return WalletList(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {
@@ -341,14 +337,14 @@ Usage: ./teos wallet open [-j '{"name":"<wallet name>"}'] [OPTIONS]
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("name", name);
+          reqJson_.put("name", name);
             ok = true;
         }
         return ok;
       }
 
       TeosCommand executeCommand() {
-        return WalletOpen(reqJson);
+        return WalletOpen(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {
@@ -427,14 +423,14 @@ Usage: ./teos wallet lock [-j '{"name":"<wallet name>"}'] [OPTIONS]
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("name", name);
+          reqJson_.put("name", name);
           ok = true;
         }
         return ok;
       }
 
       TeosCommand executeCommand() {
-        return WalletLock(reqJson);
+        return WalletLock(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {
@@ -496,12 +492,8 @@ Usage: ./teos wallet lock_all [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      bool checkArguments(variables_map &vm) {
-        return true;
-      }
-
       TeosCommand executeCommand() {
-        return WalletLockAll(reqJson);
+        return WalletLockAll(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {
@@ -586,9 +578,9 @@ Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("name", name);
+          reqJson_.put("name", name);
           if (vm.count("password")) {
-            reqJson.put("password", password);
+            reqJson_.put("password", password);
             ok = true;
           }
         }
@@ -596,7 +588,7 @@ Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"
       }
 
       TeosCommand executeCommand() {
-        return WalletUnlock(reqJson);
+        return WalletUnlock(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {
@@ -651,12 +643,8 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      bool checkArguments(variables_map &vm) {
-        return true;
-      }
-
       TeosCommand executeCommand() {
-        return WalletKeys(reqJson);
+        return WalletKeys(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {

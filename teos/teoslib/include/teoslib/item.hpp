@@ -7,6 +7,8 @@
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 
+#define teos_ERROR "ERROR!" // Error json key
+
 extern std::string formatUsage(std::string unixUsage);
 
 namespace teos {
@@ -27,8 +29,10 @@ namespace teos {
   */
   extern void output(const char* label, const char* format, ...);
   extern void output(const char* text, ...); 
+  extern void output(string text);
   extern boost::format output(string label, string format);
-
+  extern ostream& sharp();
+  
   class Item
   {
     string errorMsg_ = "";
@@ -37,9 +41,14 @@ namespace teos {
     static ptree getConfig(bool verbose = false);
     bool isError_ = false;
 
-    void errorMsg(string errorMsg) {
-      errorMsg_ += "\n" + errorMsg;
+    void setErrorMsg(string msg) {
+      errorMsg_ += "\n" + msg;
     }
+
+    void setErrorMsg(const char* msg) {
+      setErrorMsg(string(msg));
+    }
+
     virtual string errorMsg() {
       return errorMsg_;
     }
@@ -125,7 +134,7 @@ namespace teos {
     * @return true if all the arguments are set.
     */
     virtual bool checkArguments(variables_map &vm) {
-      return false;
+      return true;
     }
 
     virtual void parseGroupVariablesMap(variables_map& vm) {

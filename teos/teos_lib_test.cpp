@@ -3,11 +3,11 @@
 #include <iostream>
 #include <string>
 
-#include <teos/command/get_commands.hpp>
-#include <teos/command/create_commands.hpp>
-#include <teos/command/set_commands.hpp>
-#include <teos/command/wallet_commands.hpp>
-#include <teos/command/push_commands.hpp>
+#include <teoslib/command/get_commands.hpp>
+#include <teoslib/command/create_commands.hpp>
+#include <teoslib/command/set_commands.hpp>
+#include <teoslib/command/wallet_commands.hpp>
+#include <teoslib/command/push_commands.hpp>
 
 #ifdef WIN32
 extern "C" FILE*  __cdecl __iob_func(void); //A temporary fix for a bug.
@@ -15,12 +15,11 @@ extern "C" FILE*  __cdecl __iob_func(void); //A temporary fix for a bug.
 
 int main(int argc, const char *argv[]) {
 
+  using namespace teos;
   using namespace teos::command;
 
-  TeosCommand::host = "192.168.1.100";
-  TeosCommand::port = "8888";
-  //TeosCommand::walletHost = TeosCommand::host;
-  //TeosCommand::walletPort = TeosCommand::port;
+  TeosCommand::httpAddress = "192.168.1.100:8888";
+  TeosCommand::httpWalletAddress = TeosCommand::httpAddress;
   string walletName = "default";
   string password = "PW5JbTXTxszm9RU2Kh29MfDuPw7x1FLPHasE9Pz7whJWp71hzPLQ5";
   string initaKeyPriv = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";

@@ -1,4 +1,4 @@
-#include <teos/command/wallet_commands.hpp>
+#include <teoslib/command/wallet_commands.hpp>
 
 const char* walletSubcommands = R"EOF(
 ERROR: RequiredError: Subcommand required

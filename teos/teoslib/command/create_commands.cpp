@@ -1,4 +1,4 @@
-#include <teos/command/create_commands.hpp>
+#include <teoslib/command/create_commands.hpp>
 
 const char* createSubcommands = R"EOF(
 ERROR: RequiredError: Subcommand required

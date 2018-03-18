@@ -7,35 +7,19 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 
 #include <teoslib/config.h>
-#include <teos/control/config.hpp>
-#include <teos/item.hpp>
+#include <teoslib/control/config.hpp>
+#include <teoslib/item.hpp>
 
 #define _CRT_SECURE_NO_WARNINGS
 
 using namespace std;
 
-boost::filesystem::path getConfigFilePath(){
-  return boost::filesystem::canonical(
-    boost::filesystem::path(CONFIG_JSON));
-}
-
-boost::property_tree::ptree getConfigJson()
-{
-  boost::property_tree::ptree json;
-  try {
-    read_json(getConfigFilePath().string(), json);
-  }
-  catch (exception& e) {
-    //cout << e.what() << endl;
-  }
-  return json;
-}
-
 void saveConfigJson(boost::property_tree::ptree json){
   try {
-    write_json(getConfigFilePath().string(), json);
+    write_json(CONFIG_JSON, json);
   }
   catch (exception& e) {
     cerr << e.what() << endl;
@@ -43,13 +27,14 @@ void saveConfigJson(boost::property_tree::ptree json){
 }
 
 namespace teos {
-  namespace config {
+  namespace control {
 
     map<ConfigKeys, vector<string>> configMap =
     {
       { NOT_DEFINED,{ "not_defined", "not_defined" } },
       { GENESIS_JSON,{ "genesis-json", "resources/genesis.json" } },
       { HTTP_SERVER_ADDRESS,{ "http-server-address", "127.0.0.1:8888" } },
+      { HTTP_SERVER_WALLET_ADDRESS,{ "http-server-wallet-address", "127.0.0.1:8888" } },
       { DATA_DIR,{ "data-dir", "workdir/data-dir" } },
       { EOSIO_INSTALL_DIR,{ "EOSIO_INSTALL_DIR" } },
       { EOSIO_SOURCE_DIR,{ "EOSIO_SOURCE_DIR" } },
@@ -62,7 +47,7 @@ namespace teos {
     };
 
     namespace bfs = boost::filesystem;
-
+    
     vector<string> configMapValue(ConfigKeys configKey) {
       auto it = configMap.find(configKey);
       return (it != configMap.end()) 
@@ -79,7 +64,7 @@ namespace teos {
 
     string getJson(ConfigKeys configKey) {
       vector<string> temp = configMapValue(configKey);
-      boost::property_tree::ptree ConfigTeos = getConfigJson();
+      boost::property_tree::ptree ConfigTeos = Item::getConfig();
       return ConfigTeos.get(temp[0], temp.size() > 1 
         ? temp[1]
         : configMapValue(ConfigKeys::NOT_DEFINED)[0]);
@@ -93,58 +78,95 @@ namespace teos {
       return getEnv(configKey);
     }
 
-    ostream& sharp() {
-      cout << "#  ";
-      return cout;
-    }
+    //////////////////////////////////////////////////////////////////////////
 
-    ConfigTeos::ConfigTeos(){
-      boost::property_tree::ptree config = getConfigJson();
+    void ConfigTeos::action() 
+    {
+      boost::property_tree::ptree config = Item::getConfig();
 
-      for(map<ConfigKeys, vector<string>>::iterator 
-        entry = configMap.begin(); entry != configMap.end(); ++entry) 
+      if(reqJson_.count(CONFIG_TEOS_ACTION) != 0)
+      {
+        if(reqJson_.get<string>(CONFIG_TEOS_ACTION) == CONFIG_TEOS_PATH_ACTION)
         {
-          string value = configValue(entry->first);
-          while(true)
-          {
-            if(entry->first == ConfigKeys::NOT_DEFINED){
-              break;
-            }
-            cout << entry->second[0] << ": " << value  << endl;
-            cout << "Enter a new value, or 'y' to confirm, 'yy' to escape."
-              << endl;
-            string newValue;
-            cin >> newValue;
-            if(newValue == "yy"){
-              entry = configMap.end();
-              break;
-            }
-            if(newValue == "y") {
-              break;
-            } else {
-              value = newValue;
-            }
+          respJson_.put("config json file", 
+            boost::filesystem::current_path() / CONFIG_JSON);
+        } else if(reqJson_.get<string>(CONFIG_TEOS_ACTION) 
+            == CONFIG_TEOS_RESET_ACTION)
+        {
+          config.clear();
+          for(map<ConfigKeys, vector<string>>::iterator 
+          entry = configMap.begin(); entry != configMap.end(); ++entry) {
+            config.put(entry->second[0], configValue(entry->first));
           }
-          config.put(entry->second[0], value);
+          saveConfigJson(config);
+          respJson_ = config;
+        } else if(reqJson_.get<string>(CONFIG_TEOS_ACTION) 
+            == CONFIG_TEOS_REVIEW_ACTION)
+        {
+          for(map<ConfigKeys, vector<string>>::iterator 
+            entry = configMap.begin(); entry != configMap.end(); ++entry) 
+            {
+              string value = configValue(entry->first);
+              string newValue;
+              while(true)
+              {
+                if(entry->first == ConfigKeys::NOT_DEFINED){
+                  break;
+                }
+                cout << entry->second[0] << ": " << value  << endl;
+                cout << "Enter a new value, or 'y' to confirm, 'yy' to escape."
+                  << endl;
+                cin >> newValue;
+                if(newValue == "y" || newValue == "yy") {
+                  break;
+                } else {
+                  value = newValue;
+                }
+              }
+              if(newValue == "yy"){
+                break;
+              }
+              config.put(entry->second[0], value);
+            }
+            saveConfigJson(config);
+            respJson_ = config;
+          }
+      } else 
+      {
+        BOOST_FOREACH(auto& update, reqJson_) {
+          config.put_child(update.first, update.second);
         }
         saveConfigJson(config);
-        cout << "Config file is:\n" << getConfigFilePath().string() << endl;
+        respJson_ = config;
+      }
+
+        
     }
 
-    void ConfigTeosOptions::printout(ConfigTeos command, variables_map &vm)
+    void ConfigTeosOptions::printout(TeosControl command, variables_map &vm  )
     {
-      string header = "#  ";
+      if(reqJson_.count(CONFIG_TEOS_ACTION) != 0)
+      {
+        if(reqJson_.get<string>(CONFIG_TEOS_ACTION) == CONFIG_TEOS_PATH_ACTION)
+        {
+          sharp() << "Config file is: " 
+            << (boost::filesystem::current_path() / CONFIG_JSON).string() << endl;
+          return;
+        }
+        return;
+      }
+
       boost::filesystem::path configJsonPath
         = boost::filesystem::current_path() / CONFIG_JSON;
-
-      boost::property_tree::ptree config = getConfigJson();
+      ptree config = Item::getConfig();
+      
       if (config.empty()) {
         sharp() << "A config file is expected to be:" << endl;
         sharp() << configJsonPath.string() << endl;
         sharp() << "None is there." << endl;
       }
 
-      sharp() << "Environmental variables:" << endl;
+      sharp() << "## Environmental variables:" << endl;
       for (const auto &entry : configMap) {
         string value = getEnv(entry.first);
         if(value != configMapValue(ConfigKeys::NOT_DEFINED)[0])
@@ -152,19 +174,20 @@ namespace teos {
       }
       sharp() <<  endl;
 
-      sharp() << "Definitions in the config json file, which is expected to be " << endl;
-      sharp() << configJsonPath.string() << endl;
-      sharp() << "beat the environmental ones." << endl;
+      sharp() << "## Definitions in the config json file, "
+        "which is expected to be " << endl;
+      sharp() << "   " << configJsonPath.string() << endl;
+      sharp() << "overcome the environmental ones." << endl;
 
       sharp() <<  endl;
-      sharp() << "Resulting configuration is:" << endl;
+      sharp() << "## Resulting configuration is:" << endl;
       for (const auto &entry : configMap) {
-        sharp() << entry.second[0] << ": " << configValue(entry.first)  << endl;
+        sharp() << entry.second[0] << ": " << configValue(entry.first)  
+          << endl;
       }
     }
-
   }
-}//namespace pentagon
+}
 
 
 

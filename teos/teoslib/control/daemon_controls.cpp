@@ -12,17 +12,15 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/iterator.hpp>
 
-#include <teos/control/config.hpp>
-#include <teos/control/control.hpp>
-#include <teos/command/get_commands.hpp>
+#include <teoslib/control/config.hpp>
+#include <teoslib/control/daemon_controls.hpp>
+#include <teoslib/command/get_commands.hpp>
 
 using namespace boost::process;
 using namespace std;
 
 namespace teos {
   namespace control {
-
-    using namespace teos::config;
 
     void setEnvironmetVariable(string name, string value)
     {
@@ -214,7 +212,7 @@ namespace teos {
       */
     }
 
-    DaemonKill::DaemonKill()
+    DaemonStop::DaemonStop()
     {
       try {
         string pid = getPid();
@@ -230,63 +228,114 @@ namespace teos {
         }
         if (count < 0) {
           isError_ = true;
-          errorMsg("Failed to kill " + configValue(ConfigKeys::DAEMON_NAME));
+          setErrorMsg(string("Failed to kill ") + configValue(ConfigKeys::DAEMON_NAME));
         }
       }
       catch (std::exception& e) {
         isError_ = true;
-        errorMsg(e.what());
+        setErrorMsg(e.what());
       }
     }
 
-    DaemonStart::DaemonStart(
-      bool resync_blockchain,
-      string eosiod_exe,
-      string genesis_json,
-      string http_server_address,
-      string data_dir
-
-    ) : eosiod_exe_(eosiod_exe.empty()
-        ? configValue(ConfigKeys::EOSIO_INSTALL_DIR) + "/bin/" + configValue(ConfigKeys::DAEMON_NAME)
-        : eosiod_exe)
-      , genesis_json_(genesis_json.empty() ? configValue(ConfigKeys::GENESIS_JSON) 
-        : genesis_json)
-      , http_server_address_(http_server_address.empty() 
-        ? configValue(ConfigKeys::HTTP_SERVER_ADDRESS) : http_server_address)
-      , data_dir_(data_dir.empty() ? configValue(ConfigKeys::DATA_DIR) : data_dir)
-      , resync_blockchain_(resync_blockchain)
-
+    void DaemonStart::action()
     {
-      try{
-        DaemonKill();
 
-        string commandLine = eosiod_exe_
-          + " --" + configValue(ConfigKeys::GENESIS_JSON) + " " + genesis_json_
-          + " --" + configValue(ConfigKeys::HTTP_SERVER_ADDRESS) + " " + http_server_address_
-          + " --" + configValue(ConfigKeys::DATA_DIR) + " " + data_dir_;
-        if (resync_blockchain_) {
+      if(reqJson_.get("http-server-address", "").empty())
+      {
+        reqJson_.put("http-server-address"
+          , configValue(ConfigKeys::HTTP_SERVER_ADDRESS));
+      }
+      if(reqJson_.get("eosiod_exe", "").empty())
+      {
+        boost::filesystem::path path 
+          = boost::filesystem::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
+            / "/bin/" / configValue(ConfigKeys::DAEMON_NAME);
+
+        if(!boost::filesystem::exists(path)){
+          path = boost::filesystem::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+          / "build/programs" / configValue(ConfigKeys::DAEMON_NAME)
+          / configValue(ConfigKeys::DAEMON_NAME);
+        }
+        if(!boost::filesystem::exists(path)){
+          setErrorMsg("Cannot deduce the path to the daemon executable.");
+        } else {
+          reqJson_.put("eosiod_exe", path.string());
+        }
+      }
+
+      if(reqJson_.get("genesis-json", "").empty()){
+        boost::filesystem::path path(configValue(ConfigKeys::GENESIS_JSON));
+        if(!boost::filesystem::exists(path)){
+          path = boost::filesystem::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
+            / "genesis.json";
+        }
+        if(!boost::filesystem::exists(path)){
+          path = boost::filesystem::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+            / "genesis.json";
+        }
+        if(!boost::filesystem::exists(path)){
+          setErrorMsg("Cannot deduce the path to the genesis.json file.");
+        } else {
+          reqJson_.put("genesis-json", path.string());
+        }
+      }
+
+      if(reqJson_.get("data-dir", "").empty()){
+        boost::filesystem::path path(configValue(ConfigKeys::DATA_DIR));
+        if(!boost::filesystem::exists(path)){
+          path = boost::filesystem::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
+            / "data-dir";
+        }
+        if(!boost::filesystem::exists(path)){
+          path = boost::filesystem::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+            / "build/programs" / configValue(ConfigKeys::DAEMON_NAME) 
+            / "data-dir";
+        }
+        if(!boost::filesystem::exists(path)){
+          setErrorMsg("Cannot deduce the path to the data-dir directory.");
+        } else {
+          reqJson_.put("data-dir", path.string());
+        }
+      }
+
+      try{
+        if(reqJson_.get<bool>("resync-blockchain")){
+          DaemonStop();          
+        } else if(!getPid().empty()){
+          return;
+        }
+
+        string commandLine = reqJson_.get<string>("eosiod_exe")
+          + " --genesis-json " + reqJson_.get<string>("genesis-json")
+          + " --http-server-address " + reqJson_.get<string>("http-server-address")
+          + " --data-dir " + reqJson_.get<string>("data-dir");
+        if(reqJson_.get<bool>("resync-blockchain")) {
           commandLine += " --resync-blockchain";
         }
 
         cout << commandLine <<endl;
         boost::process::system("gnome-terminal -- " + commandLine);
 
-        // Wait until the node is operational:
-        teos::command::TeosCommand tc;
-        teos::command::TeosCommand::ipAddress(http_server_address_);
-        int count = 10;
-        do {
-          boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
-          tc = teos::command::GetInfo();
-          if(count-- == 0){
-            isError_ = true;
-            errorMsg(tc.errorMsg());
-          }
-        } while (tc.isError_ && count > 0);
+        if(reqJson_.get<bool>("wait"))
+        {
+          // Wait until the node is operational:
+          teos::TeosCommand tc;
+          teos::TeosCommand::httpAddress = reqJson_.get<string>("http-server-address");
+          int count = 10;
+          do {
+            tc = teos::command::GetInfo(); 
+            respJson_=tc.respJson_;                   
+            boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
+            if(count-- == 0){
+              isError_ = true;
+              setErrorMsg(tc.errorMsg());
+            }
+          } while (tc.isError_ && count > 0);
+        }
       }
       catch (std::exception& e) {
         isError_ = true;
-        errorMsg(e.what());
+        setErrorMsg(e.what());
       }
     }
 
@@ -295,21 +344,28 @@ namespace teos {
       namespace bfs = boost::filesystem;
 
       bfs::path p(configValue(ConfigKeys::DATA_DIR));
-
+      int count = 0;
       try {
-        for (bfs::directory_entry& entry : boost::make_iterator_range(bfs::directory_iterator(p), {})) {
+        for (bfs::directory_entry& entry 
+            : boost::make_iterator_range(bfs::directory_iterator(p), {})) 
+          {
           if (bfs::is_regular_file(entry.path()) 
             && entry.path().extension() == ".wallet") {
             bfs::remove(entry.path());
+            count++;
           }
         }
+        respJson_.put("count", count);
       }
       catch (std::exception& e) {
         isError_ = true;
-        errorMsg(e.what());
+        setErrorMsg(e.what());
       }
     }
 
+    void DaemonDeleteWalletsOptions::printout(TeosControl command, variables_map &vm) {
+      output("deleted wallet count", "%d", command.get<int>("count"));
+    }
   }
 }
 

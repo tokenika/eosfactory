@@ -1,8 +1,8 @@
 #pragma once
 
 #include <teoslib/config.h>
-#include <teos/eos_interface.hpp>
-#include <teos/command/command.hpp>
+#include <teoslib/eos_interface.hpp>
+#include <teoslib/command.hpp>
 
 using namespace std;
 
@@ -50,8 +50,8 @@ namespace teos
       const char* getUsage() {
         return R"EOF(
 Create or update the contract on an account.
-Usage: ./teos set contract [account] [wast] [abi] [Options]
-Usage: ./teos create key [-j '{
+Usage: ./teos [http address] set contract [account] [wast] [abi] [Options]
+Usage: ./teos [http address] create key [-j '{
   "account":"<account name>"
   "wast":"<wast file>"
   "abi":"<abi file>"
@@ -71,12 +71,18 @@ Usage: ./teos create key [-j '{
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("account,n", value<string>(&account), "The name of account to publish a contract for")
+          ("account,n", value<string>(&account)
+            , "The name of account to publish a contract for")
           ("wast,o", value<string>(&wast), "The WAST file for the contract")
-          ("abi,a", value<string>(&abi)->default_value(""), "The ABI file for the contract")
-          ("skip,s", value<bool>(&skip)->default_value(false), "Specify that unlocked wallet keys should not be used to sign transaction, defaults to false")
-          ("expiration,x", value<int>(&expiration)->default_value(30), "The time in seconds before a transaction expires")
-          ("deposit,d", value<int>(&deposit)->default_value(1), "The initial deposit");
+          ("abi,a", value<string>(&abi)->default_value("")
+            , "The ABI file for the contract")
+          ("skip,s", value<bool>(&skip)->default_value(false)
+            , "Specify that unlocked wallet keys should not be used to "
+              "sign transaction, defaults to false")
+          ("expiration,x", value<int>(&expiration)->default_value(30)
+            , "The time in seconds before a transaction expires")
+          ("deposit,d", value<int>(&deposit)->default_value(1)
+            , "The initial deposit");
         return od;
       }
 
@@ -89,9 +95,9 @@ Usage: ./teos create key [-j '{
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("account")) {
-          reqJson.put("account", account);
+          reqJson_.put("account", account);
           if (vm.count("wast")) {
-            reqJson.put("wast", wast);
+            reqJson_.put("wast", wast);
             ok = true;
           }
         }
@@ -99,7 +105,7 @@ Usage: ./teos create key [-j '{
       }
 
       TeosCommand executeCommand() {
-        return SetContract(reqJson);
+        return SetContract(reqJson_);
       }
 
     };

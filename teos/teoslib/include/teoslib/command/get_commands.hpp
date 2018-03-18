@@ -12,8 +12,8 @@
 #include <boost/property_tree/ptree.hpp>
 
 #include <teoslib/config.h>
-#include <teos/command/command.hpp>
-#include <teos/eos_interface.hpp>
+#include <teoslib/command.hpp>
+#include <teoslib/eos_interface.hpp>
 
 using namespace std;
 using namespace boost::program_options;
@@ -62,15 +62,11 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      bool checkArguments(variables_map &vm) {
-        return true;
-      }
-
       TeosCommand executeCommand() {
-        return GetInfo(reqJson);
+        return GetInfo(reqJson_);
       }
 
-      void printout(teos::command::TeosCommand command, variables_map &vm) {
+      void printout(TeosCommand command, variables_map &vm) {
         output("head block", "%d", command.get<int>("head_block_num"));
         output("head block time", "%s", GET_STRING(command, "head_block_time"));
         output("last irreversible block", "%d", command.get<int>("last_irreversible_block_num"));
@@ -131,18 +127,18 @@ Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("block_num")) {
-          reqJson.put("block_num_or_id", n);
+          reqJson_.put("block_num_or_id", n);
           ok = true;
         }
         else if (vm.count("block_id")) {
-          reqJson.put("block_num_or_id", id);
+          reqJson_.put("block_num_or_id", id);
           ok = true;
         }
         return ok;
       }
 
       TeosCommand executeCommand() {
-        return GetBlock(reqJson);
+        return GetBlock(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {
@@ -206,14 +202,14 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("account_name", name);
+          reqJson_.put("account_name", name);
           ok = true;
         }
         return ok;
       }
 
       TeosCommand executeCommand() {
-        return GetAccount(reqJson);
+        return GetAccount(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {
@@ -307,16 +303,16 @@ Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("account_name", accountName);
+          reqJson_.put("account_name", accountName);
           ok = true;
         }
-        reqJson.put("wast", wastFile);
-        reqJson.put("abi", abiFile);
+        reqJson_.put("wast", wastFile);
+        reqJson_.put("abi", abiFile);
         return ok;
       }
 
       TeosCommand executeCommand() {
-        return GetCode(reqJson);
+        return GetCode(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {
@@ -396,11 +392,11 @@ Usage: ./teos get table [-j '{"scope":"<scope>","code":"<code>","table":"<table>
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("scope")) {
-          reqJson.put("scope", scope);
+          reqJson_.put("scope", scope);
           if (vm.count("contract")) {
-            reqJson.put("code", contract);
+            reqJson_.put("code", contract);
             if (vm.count("table")) {
-              reqJson.put("table", table);
+              reqJson_.put("table", table);
               ok = true;
             }
           }
@@ -409,7 +405,7 @@ Usage: ./teos get table [-j '{"scope":"<scope>","code":"<code>","table":"<table>
       }
 
       TeosCommand executeCommand() {
-        return GetTable(reqJson);
+        return GetTable(reqJson_);
       }
 
       void getOutput(TeosCommand command) {

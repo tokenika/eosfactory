@@ -5,11 +5,12 @@
 
 #include <boost/algorithm/string/join.hpp>
 
-#include <teos/command/get_commands.hpp>
+#include <teoslib/command/get_commands.hpp>
 
 void test()
 {
   using namespace std;
+  using namespace teos;
   using namespace teos::command;
 
   vector<string>

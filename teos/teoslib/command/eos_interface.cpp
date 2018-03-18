@@ -23,8 +23,8 @@
 #include <WASM/WASM.h>
 #include <Runtime/Runtime.h>
 
-#include <teos/eos_interface.hpp>
-#include <teos/command/get_commands.hpp>
+#include <teoslib/eos_interface.hpp>
+#include <teoslib/command/get_commands.hpp>
 
 using namespace std;
 
@@ -49,7 +49,7 @@ namespace teos {
 #define TEOS_ERROR true
 #define CODE_PATH boost::str(boost::format("%1% (%2% [%3%]) ") % __func__ % __FILE__ % __LINE__)
 
-    class CallChain : public teos::command::TeosCommand
+    class CallChain : public TeosCommand
     {
       std::string requestStr;
     public:

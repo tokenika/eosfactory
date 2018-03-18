@@ -1,8 +1,8 @@
 #pragma once
 
 #include <teoslib/config.h>
-#include <teos/eos_interface.hpp>
-#include <teos/command/command.hpp>
+#include <teoslib/eos_interface.hpp>
+#include <teoslib/command.hpp>
 
 using namespace std;
 
@@ -117,16 +117,16 @@ Usage: ./teos create key [-j '{
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("creator")) {
-          reqJson.put("creator", creator);
+          reqJson_.put("creator", creator);
           if (vm.count("name")) {
-            reqJson.put("name", name);
+            reqJson_.put("name", name);
             if (vm.count("ownerKey")) {
-              reqJson.put("ownerKey", ownerKey);
+              reqJson_.put("ownerKey", ownerKey);
               if (vm.count("activeKey")) {
-                reqJson.put("activeKey", activeKey);
-                reqJson.put("skip", skip);
-                reqJson.put("expiration", expiration);
-                reqJson.put("deposit", deposit);
+                reqJson_.put("activeKey", activeKey);
+                reqJson_.put("skip", skip);
+                reqJson_.put("expiration", expiration);
+                reqJson_.put("deposit", deposit);
                 ok = true;
               }
             }
@@ -136,7 +136,7 @@ Usage: ./teos create key [-j '{
       }
 
       TeosCommand executeCommand() {
-        return CreateAccount(reqJson);
+        return CreateAccount(reqJson_);
       }
 
       void getExample() {
@@ -214,14 +214,14 @@ Usage: ./teos create key [-j '{"name":"<key name>"}'] [OPTIONS]
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("name")) {
-          reqJson.put("name", keyName);
+          reqJson_.put("name", keyName);
           ok = true;
         }
         return ok;
       }
 
       TeosCommand executeCommand() {
-        return CreateKey(reqJson);
+        return CreateKey(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {

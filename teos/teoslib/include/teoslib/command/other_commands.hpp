@@ -1,7 +1,7 @@
 #pragma once
 
 #include <teoslib/config.h>
-#include <teos/command/command.hpp>
+#include <teoslib/command.hpp>
 
 namespace teos
 {
@@ -34,12 +34,8 @@ Usage: ./teos version client [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      bool checkArguments(variables_map &vm) {
-        return true;
-      }
-
       TeosCommand executeCommand() {
-        return VersionClient(reqJson);
+        return VersionClient(reqJson_);
       }
 
       void printout(TeosCommand command, variables_map &vm) {

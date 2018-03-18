@@ -3,11 +3,11 @@ set( LIB_NAME "teoslib" )
 
 configure_file (
   "config.h.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/teoslib/config.h"
 )
 
-file( GLOB HEADERS "include/teos/*.hpp" 
-  "include/teos/command/*.hpp" "include/teos/control/*hpp" )
+file( GLOB HEADERS "include/teoslib/*.hpp" 
+  "include/teoslib/command/*.hpp" "include/teoslib/control/*hpp" )
 file( GLOB SRC "*cpp" "command/*.cpp" "control/*.cpp" )
 
 add_library(${LIB_NAME} STATIC
