@@ -12,7 +12,6 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 
-#include <teoslib/item.hpp>
 #include <teoslib/command/get_commands.hpp>
 #include <teoslib/command/wallet_commands.hpp>
 #include <teoslib/command/create_commands.hpp>
@@ -25,7 +24,6 @@
 #include <teoslib/control/config.hpp>
 
 #include <teos/teos.hpp>
-#include <teos/teos_test.hpp>
 
 #define IF_ELSE(commandName_, classPrefix) \
   if (commandName == #commandName_) \
@@ -59,7 +57,6 @@ Commands:
   wallet      Interact with local wallet
   benchmark   Configure and execute benchmarks
   push        Push arbitrary transactions to the blockchain
-  test        Basic test of the application
   node        Test EOS chain node procedures
 )EOF";
 
@@ -109,24 +106,18 @@ int main(int argc, const char *argv[]) {
 
     if (strcmp(argv[1], "tokenika") == 0)
     {
-      TeosCommand::httpAddress = TEST_HOST ":" TEST_PORT;
+      TeosCommand::httpAddress = TEST_HTTP_ADDRESS;
       TeosCommand::httpWalletAddress = TeosCommand::httpAddress;
       argv++;
       argc--;
     }
   }
 
-#define HTTP_SERVER_ADDRESS_DEFAULT "127.0.0.1:8888"
-#define HTTP_SERVER_WALLET_ADDRESS_DEFAULT "127.0.0.1:8888"
   try
   {
     options_description desc{ "Options" };
+    desc.add(CommandOptions::httpOptions());
     desc.add_options()
-      ("address,a", value<string>()->default_value(HTTP_SERVER_ADDRESS_DEFAULT),
-        "The http address (host:port) of the EOSIO daemon.")
-      ("wallet,w", value<string>()->default_value(HTTP_SERVER_WALLET_ADDRESS_DEFAULT),
-        "The http address (host:port) where eos-wallet is running.")
-
       ("help,h", "Help screen")
       ("verbose,V", "Output verbose messages on error");
 
@@ -145,9 +136,6 @@ int main(int argc, const char *argv[]) {
       TeosCommand::httpAddress = string(vm["address"].as<string>());
     if (vm.count("wallet"))
       TeosCommand::httpWalletAddress = string(vm["wallet"].as<string>());
-
-    if (vm.count("verbose"))
-      TeosCommand::verbose = true;
 
     if (to_pass_further.size() > 0)
       command = to_pass_further[0];
@@ -206,12 +194,7 @@ int main(int argc, const char *argv[]) {
   }
   else
   {
-    if (command.compare("test") == 0)
-    {
-      test();
-      return 0;
-    }
-    else if (subcommand != "")
+    if (subcommand != "")
     {
       string commandName = command + "_" + subcommand;
 

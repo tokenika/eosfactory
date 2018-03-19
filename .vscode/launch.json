@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
-      "args": ["get", "info"],
+      "args": ["tokenika", "get", "info", "-h"],
       "stopAtEntry": false,
       "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
       "environment": [],

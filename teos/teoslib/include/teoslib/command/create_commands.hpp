@@ -135,7 +135,7 @@ Usage: ./teos create key [-j '{
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return CreateAccount(reqJson_);
       }
 
@@ -220,7 +220,7 @@ Usage: ./teos create key [-j '{"name":"<key name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return CreateKey(reqJson_);
       }
 

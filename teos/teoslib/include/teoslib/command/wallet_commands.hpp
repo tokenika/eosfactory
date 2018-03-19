@@ -98,7 +98,7 @@ Usage: ./teos wallet create [-j '{"name":"<wallet name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return WalletCreate(reqJson_);
       }
 
@@ -192,7 +192,7 @@ Usage: ./teos wallet import [-j '{"name":"<wallet name>", "key":"<private key>"}
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return WalletImport(reqJson_);
       }
 
@@ -249,7 +249,7 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return WalletList(reqJson_);
       }
 
@@ -343,7 +343,7 @@ Usage: ./teos wallet open [-j '{"name":"<wallet name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return WalletOpen(reqJson_);
       }
 
@@ -429,7 +429,7 @@ Usage: ./teos wallet lock [-j '{"name":"<wallet name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return WalletLock(reqJson_);
       }
 
@@ -492,7 +492,7 @@ Usage: ./teos wallet lock_all [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return WalletLockAll(reqJson_);
       }
 
@@ -587,7 +587,7 @@ Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return WalletUnlock(reqJson_);
       }
 
@@ -643,7 +643,7 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return WalletKeys(reqJson_);
       }
 

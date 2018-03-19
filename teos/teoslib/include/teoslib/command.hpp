@@ -66,23 +66,14 @@ namespace teos
 #define HTTP_SERVER_ADDRESS_DEFAULT "127.0.0.1:8888"
 #define HTTP_SERVER_WALLET_ADDRESS_DEFAULT "127.0.0.1:8888"
 
-  class CommandOptions : public ItemOptions<TeosCommand>
+  class CommandOptions : public ControlOptions
   {
-    int argc_;
-    const char **argv_;
-    string json_;
-
   protected:
-
-    ptree reqJson_;
 
     options_description groupOptionDescription() {
       options_description od("");
+      od.add(httpOptions());
       od.add_options()
-        ("address,a", value<string>()->default_value(HTTP_SERVER_ADDRESS_DEFAULT),
-          "The http address (host:port) of the EOSIO daemon.")
-        ("wallet,w", value<string>()->default_value(HTTP_SERVER_WALLET_ADDRESS_DEFAULT),
-          "The http address (host:port) where eos-wallet is running.")
         ("json,j", value<string>(&json_), "Json argument.")      
         ("received,v", "Print received json.")
         ("both,b", "For system use.")
@@ -90,50 +81,8 @@ namespace teos
       return od;
     }
 
-    virtual void
-      setPosDesc(positional_options_description&
-        pos_descr) {}
-
-    virtual void printout(TeosCommand command, variables_map &vm) {
-      output(command.responseToString(false));
-    }
-
-   virtual void parseGroupVariablesMap(variables_map& vm) 
-    {
-      if(!checkArguments(vm)) {
-        std::cerr << teos_ERROR << "! " << endl << "Wrong argument!" << endl;
-        return;
-      }
-
-      if (vm.count("json")) {
-        reqJson_ = stringToPtree(json_);
-      }
-
-      TeosCommand command = executeCommand();
-      if (command.isError_) {
-        std::cerr << teos_ERROR << "! " << endl << command.errorMsg() << endl;
-        return;
-      }
-
-      bool isRaw = vm.count("raw") ? true : false;
-      if(vm.count("both")) {
-        cerr << command.responseToString(isRaw) << endl;
-        printout(command, vm);
-      } else {
-        if (vm.count("received")) {
-          cout << command.responseToString(isRaw) << endl;
-        }
-        else {
-          printout(command, vm);
-        }
-      }
-    }
-
-    virtual TeosCommand executeCommand() {
-      return TeosCommand("", reqJson_);
-    }
-
   public:
-    CommandOptions(int argc, const char *argv[]) : ItemOptions(argc, argv) {}
+    CommandOptions(int argc, const char *argv[]) : ControlOptions(argc, argv) {}
+    static options_description httpOptions();
   };
 }

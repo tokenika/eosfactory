@@ -16,8 +16,12 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/program_options.hpp>
+#include <boost/format.hpp>
 #include <teoslib/utilities.hpp>
-#include <teoslib/item.hpp>
+
+#define teos_ERROR "ERROR!" // Error json key
+
+extern std::string formatUsage(std::string unixUsage);
 
 using namespace std;
 using namespace boost::program_options;
@@ -25,17 +29,47 @@ using namespace boost::property_tree;
 
 namespace teos 
 {
-  class TeosControl : public Item
+  /**
+  * @brief Printout formater.
+  *
+  * For example, `output("timestamp", "%s", "2017-07-18T20:16:36")` produces
+  * `##           timestamp: 2017-07-18T20:16:36`
+  *
+  * @param label
+  * @param format
+  * @param ...
+  */
+  extern void output(const char* label, const char* format, ...);
+  extern void output(const char* text, ...); 
+  extern void output(string text);
+  extern boost::format output(string label, string format);
+  extern ostream& sharp();
+
+  class TeosControl
   {
+    string errorMsg_ = "";
 
   public:
     static ptree errorRespJson(string sender, string message);
+    static ptree getConfig(bool verbose = false);
+    bool isError_ = false;
     ptree reqJson_;
     ptree respJson_;    
 
     TeosControl() {}
     TeosControl(ptree reqJson) : reqJson_(reqJson) {}
 
+    void setErrorMsg(string msg) {
+      errorMsg_ += "\n" + msg;
+    }
+
+    void setErrorMsg(const char* msg) {
+      setErrorMsg(string(msg));
+    }
+
+    virtual string errorMsg() {
+      return get<string>(teos_ERROR);
+    }
     string requestToString(bool isRaw) const;
     string responseToString(bool isRaw) const;
 
@@ -51,32 +85,46 @@ namespace teos
       return value;
     }
 
-    string errorMsg() {
-      return get<string>(teos_ERROR);
-    }
-
   };
 #define GET_STRING(command, key) command.get<string>(key).c_str()
 
-  class ControlOptions : public ItemOptions<TeosControl>
+  class ControlOptions
   {
     int argc_;
     const char **argv_;
-    string json_;
-
+    
   protected:
-
+    string json_;
     ptree reqJson_;
 
-    options_description groupOptionDescription() {
+    options_description basicOptionDescription()
+    {
       options_description od("");
       od.add_options()
+        ("help,h", "Help screen")
+        ("verbose,V", "Output verbose messages");
+      return od;
+    }
+
+    virtual options_description  argumentDescription() {
+      options_description od("");
+      return od;
+    }
+
+    virtual options_description groupOptionDescription() {
+      options_description od("");
+      od.add_options()      
         ("json,j", value<string>(&json_), "Json argument.")
         ("received,v", "Print received json.")
         ("both,b", "For system use.")
         ("raw,r", "Raw print");
       return od;
     }
+    /**
+    * @brief Command 'usage' instruction.
+    * @return usage text
+    */
+    virtual const char* getUsage() { return ""; }
 
     virtual void
       setPosDesc(positional_options_description&
@@ -84,6 +132,10 @@ namespace teos
 
     virtual void printout(TeosControl command, variables_map &vm) {
       output(command.responseToString(false));
+    }
+
+    virtual bool checkArguments(variables_map &vm) {
+      return true;
     }
 
     virtual void parseGroupVariablesMap(variables_map& vm) 
@@ -121,7 +173,69 @@ namespace teos
       return TeosControl(reqJson_);
     }
 
-  public:
-    ControlOptions(int argc, const char *argv[]) : ItemOptions(argc, argv) {}
+  public:    
+    ControlOptions(int argc, const char *argv[]) : argc_(argc), argv_(argv) {}
+
+    void go()
+    {
+      using namespace boost::program_options;
+
+      options_description desc{"Options"};      
+      try {
+        desc.add(argumentDescription()).add(groupOptionDescription())
+          .add(basicOptionDescription());
+        positional_options_description pos_desc;
+        setPosDesc(pos_desc);
+        command_line_parser parser{argc_, argv_};
+        parser.options(desc).positional(pos_desc);
+        parsed_options parsed_options = parser.run();
+
+        variables_map vm;
+        store(parsed_options, vm);
+        notify(vm);
+
+        if (vm.count("help")) {
+          cout << formatUsage(getUsage()) << endl;
+          cout << desc << endl;
+          return;
+        }
+
+        parseGroupVariablesMap(vm);
+      }
+      catch (const error &ex) {
+        cout << "ERROR: " << ex.what() << endl;
+        cout << formatUsage(getUsage()) << endl;
+        cout << desc << endl;        
+      }
+    }
   };
+
+    /**
+  * @brief Wrapper for CommandOptions descendants, for tests.
+  *
+  * Descendants of the CommandOptions class take arguments of the `main` function.
+  * The setOptions() template wrapper takes `std::vector<std::string>` argument
+  * and converts it to its client standard.
+  *
+  * @tparam T
+  * @param strVector
+  */
+  template<class T> static void setOptions(vector<string> strVector) {
+
+    int argc = (int)strVector.size();
+    char** argv = new char*[argc];
+    for (int i = 0; i < argc; i++) {
+      argv[i] = new char[strVector[i].size() + 1];
+
+#ifdef _MSC_VER
+      strcpy_s(argv[i], strVector[i].size() + 1,
+        strVector[i].c_str());
+#else
+      strcpy(argv[i], strVector[i].c_str());
+#endif
+    }
+
+    T(argc, (const char**)argv).go();
+    delete[] argv;
+  }
 }

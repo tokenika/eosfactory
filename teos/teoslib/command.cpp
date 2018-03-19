@@ -167,4 +167,20 @@ namespace teos
   TeosCommand::TeosCommand(bool isError, ptree respJson){
     respJson_ = respJson;
   }
+
+  options_description CommandOptions::httpOptions(){
+      options_description od("");
+      od.add_options()
+      ("address,a", value<string>(&(TeosCommand::httpAddress))
+          ->default_value(TeosCommand::httpAddress.empty() 
+        ? HTTP_SERVER_ADDRESS_DEFAULT
+        : TeosCommand::httpAddress),
+        "The http address (host:port) of the EOSIO daemon.")
+      ("wallet,w", value<string>(&(TeosCommand::httpWalletAddress))
+          ->default_value(TeosCommand::httpWalletAddress.empty()
+        ? HTTP_SERVER_WALLET_ADDRESS_DEFAULT
+        : TeosCommand::httpWalletAddress),
+        "The http address (host:port) where eos-wallet is running.");
+      return od;
+    }
 }

@@ -62,7 +62,7 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return GetInfo(reqJson_);
       }
 
@@ -137,7 +137,7 @@ Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return GetBlock(reqJson_);
       }
 
@@ -208,7 +208,7 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return GetAccount(reqJson_);
       }
 
@@ -311,7 +311,7 @@ Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return GetCode(reqJson_);
       }
 
@@ -404,7 +404,7 @@ Usage: ./teos get table [-j '{"scope":"<scope>","code":"<code>","table":"<table>
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return GetTable(reqJson_);
       }
 

@@ -11,7 +11,6 @@
 
 #include <teoslib/config.h>
 #include <teoslib/control/config.hpp>
-#include <teoslib/item.hpp>
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -64,7 +63,7 @@ namespace teos {
 
     string getJson(ConfigKeys configKey) {
       vector<string> temp = configMapValue(configKey);
-      boost::property_tree::ptree ConfigTeos = Item::getConfig();
+      boost::property_tree::ptree ConfigTeos = TeosControl::getConfig();
       return ConfigTeos.get(temp[0], temp.size() > 1 
         ? temp[1]
         : configMapValue(ConfigKeys::NOT_DEFINED)[0]);
@@ -82,7 +81,7 @@ namespace teos {
 
     void ConfigTeos::action() 
     {
-      boost::property_tree::ptree config = Item::getConfig();
+      boost::property_tree::ptree config = TeosControl::getConfig();
 
       if(reqJson_.count(CONFIG_TEOS_ACTION) != 0)
       {
@@ -158,7 +157,7 @@ namespace teos {
 
       boost::filesystem::path configJsonPath
         = boost::filesystem::current_path() / CONFIG_JSON;
-      ptree config = Item::getConfig();
+      ptree config = TeosControl::getConfig();
       
       if (config.empty()) {
         sharp() << "A config file is expected to be:" << endl;

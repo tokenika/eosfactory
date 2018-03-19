@@ -313,7 +313,7 @@ namespace teos {
           commandLine += " --resync-blockchain";
         }
 
-        cout << commandLine <<endl;
+        //cout << commandLine <<endl;
         boost::process::system("gnome-terminal -- " + commandLine);
 
         if(reqJson_.get<bool>("wait"))

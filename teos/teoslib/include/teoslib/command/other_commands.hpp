@@ -34,7 +34,7 @@ Usage: ./teos version client [-j '{}'] [OPTIONS]
 )EOF";
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return VersionClient(reqJson_);
       }
 

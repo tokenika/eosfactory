@@ -32,9 +32,8 @@ list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules" )
 message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 
 set( TEST_ADDRESS "\"tokenika\"")
-set( TEST_HOST "\"eos-testapi.tokenika.io\"" )
-set( TEST_PORT "\"8888\"" )
-set( CONFIG_JSON_FILE "config.jsonconfig.json" )
+set( TEST_HTTP_ADDRESS "\"eos-testapi.tokenika.io:8888\"" )
+set( CONFIG_JSON_FILE "config.json" )
 set( CONFIG_JSON "\"${CONFIG_JSON_FILE}\"" )
 
 if( WIN32 )
@@ -258,7 +257,7 @@ macro( applLinkLibraries applName )
 
 endmacro( applLinkLibraries )
 
-add_executable( teos teos.cpp teos_test.cpp )
+add_executable( teos teos.cpp )
 applLinkLibraries( teos )
 install( TARGETS teos RUNTIME DESTINATION bin)
 

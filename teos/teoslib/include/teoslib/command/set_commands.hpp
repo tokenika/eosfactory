@@ -104,7 +104,7 @@ Usage: ./teos [http address] create key [-j '{
         return ok;
       }
 
-      TeosCommand executeCommand() {
+      TeosControl executeCommand() {
         return SetContract(reqJson_);
       }
 
