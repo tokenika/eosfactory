@@ -209,33 +209,4 @@ namespace teos
       }
     }
   };
-
-    /**
-  * @brief Wrapper for CommandOptions descendants, for tests.
-  *
-  * Descendants of the CommandOptions class take arguments of the `main` function.
-  * The setOptions() template wrapper takes `std::vector<std::string>` argument
-  * and converts it to its client standard.
-  *
-  * @tparam T
-  * @param strVector
-  */
-  template<class T> static void setOptions(vector<string> strVector) {
-
-    int argc = (int)strVector.size();
-    char** argv = new char*[argc];
-    for (int i = 0; i < argc; i++) {
-      argv[i] = new char[strVector[i].size() + 1];
-
-#ifdef _MSC_VER
-      strcpy_s(argv[i], strVector[i].size() + 1,
-        strVector[i].c_str());
-#else
-      strcpy(argv[i], strVector[i].c_str());
-#endif
-    }
-
-    T(argc, (const char**)argv).go();
-    delete[] argv;
-  }
 }

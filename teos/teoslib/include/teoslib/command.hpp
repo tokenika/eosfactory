@@ -18,6 +18,7 @@
 #include <boost/program_options.hpp>
 #include <teoslib/utilities.hpp>
 #include <teoslib/control.hpp>
+#include <teoslib/control/config.hpp>
 
 #define TOKENIKA_WALLET "tokenikaWallet"
 
@@ -63,17 +64,25 @@ namespace teos
 
   };
 
-#define HTTP_SERVER_ADDRESS_DEFAULT "127.0.0.1:8888"
-#define HTTP_SERVER_WALLET_ADDRESS_DEFAULT "127.0.0.1:8888"
-
   class CommandOptions : public ControlOptions
   {
   protected:
 
     options_description groupOptionDescription() {
+      namespace control = teos::control;
+      
       options_description od("");
-      od.add(httpOptions());
       od.add_options()
+        ("address,a", value<string>(&(TeosCommand::httpAddress))
+            ->default_value(TeosCommand::httpAddress.empty() 
+          ? control::configValue(control::ConfigKeys::HTTP_SERVER_ADDRESS)
+          : TeosCommand::httpAddress),
+          "The http address (host:port) of the EOSIO daemon.")
+        ("wallet,w", value<string>(&(TeosCommand::httpWalletAddress))
+            ->default_value(TeosCommand::httpWalletAddress.empty()
+          ? control::configValue(control::ConfigKeys::HTTP_SERVER_WALLET_ADDRESS)
+          : TeosCommand::httpWalletAddress),
+        "The http address (host:port) where eos-wallet is running.")
         ("json,j", value<string>(&json_), "Json argument.")      
         ("received,v", "Print received json.")
         ("both,b", "For system use.")

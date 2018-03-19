@@ -16,7 +16,6 @@
 
 #include <teoslib/config.h>
 #include <teoslib/command.hpp>
-#include <teoslib/control/config.hpp>
 
 namespace teos
 {
@@ -68,8 +67,8 @@ namespace teos
     namespace pt = boost::property_tree;  
     namespace control = teos::control;
 
-    string host_;
-    string port_;
+    string host;
+    string port;
     string address = isWalletCommand() 
         ? TeosCommand::httpWalletAddress.empty() 
           ? control::configValue(control::ConfigKeys::HTTP_SERVER_WALLET_ADDRESS)
@@ -78,14 +77,14 @@ namespace teos
           ? control::configValue(control::ConfigKeys::HTTP_SERVER_ADDRESS)
           : TeosCommand::httpAddress;
     size_t colon = address.find(":");
-    host_ = string(address.substr(0, colon));
-    port_ = string(address.substr(colon + 1, address.size()));
+    host = string(address.substr(0, colon));
+    port = string(address.substr(colon + 1, address.size()));
 
     try {
       boost::asio::io_service io_service;
 
       ip::tcp::resolver resolver(io_service);
-      ip::tcp::resolver::query query(host_, port_);
+      ip::tcp::resolver::query query(host, port);
       ip::tcp::resolver::iterator iterator = resolver.resolve(query);
 
       ip::tcp::socket socket(io_service);
@@ -96,7 +95,7 @@ namespace teos
       string CRNL = "\r\n";
       string request =
         "POST " + path_ + " HTTP/1.0" + CRNL +
-        "Host: " + host_ + CRNL +
+        "Host: " + host + CRNL +
         "content-length: " + to_string(postMsg.size()) + CRNL +
         "Accept: */*" + CRNL +
         "Connection: close" + CRNL + CRNL +
@@ -167,20 +166,4 @@ namespace teos
   TeosCommand::TeosCommand(bool isError, ptree respJson){
     respJson_ = respJson;
   }
-
-  options_description CommandOptions::httpOptions(){
-      options_description od("");
-      od.add_options()
-      ("address,a", value<string>(&(TeosCommand::httpAddress))
-          ->default_value(TeosCommand::httpAddress.empty() 
-        ? HTTP_SERVER_ADDRESS_DEFAULT
-        : TeosCommand::httpAddress),
-        "The http address (host:port) of the EOSIO daemon.")
-      ("wallet,w", value<string>(&(TeosCommand::httpWalletAddress))
-          ->default_value(TeosCommand::httpWalletAddress.empty()
-        ? HTTP_SERVER_WALLET_ADDRESS_DEFAULT
-        : TeosCommand::httpWalletAddress),
-        "The http address (host:port) where eos-wallet is running.");
-      return od;
-    }
 }
