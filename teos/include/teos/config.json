@@ -2,9 +2,9 @@
   "EOSIO_INSTALL_DIR":"",
   "EOSIO_SOURCE_DIR":"/mnt/hgfs/Workspaces/EOS/eos/",
   "LOGOS_DIR":"/mnt/hgfs/Workspaces/EOS/Logos",
-  "DAEMON_NAME":"eosio",
+  "DAEMON_NAME":"eosiod",
   "WASM_CLANG":"/opt/wasm/bin/clang",
   "WASM_LLVM_LINK":"/opt/wasm/bin/llvm-link",
   "WASM_LLC":"/opt/wasm/bin/llc",
-  "BINARYEN_BIN":"/usr/local/binaryen/bin/"
+  "BINARYEN_BIN":"/usr/local/binaryen/bin/",
 }

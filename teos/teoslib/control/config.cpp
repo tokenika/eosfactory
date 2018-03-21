@@ -28,19 +28,23 @@ void saveConfigJson(boost::property_tree::ptree json){
 namespace teos {
   namespace control {
 
+#define NOT_DEFINED_VALUE ""
+#define EMPTY ""
+
     map<ConfigKeys, vector<string>> configMap =
     {
-      { NOT_DEFINED,{ "not_defined", "not_defined" } },
+      { EOSIO_DAEMON_ADDRESS,{ "EOSIO_DAEMON_ADDRESS"
+        , LOCALHOST_HTTP_ADDRESS} },
+      { EOSIO_WALLET_ADDRESS,{ "EOSIO_WALLET_ADDRESS", EMPTY } },
       { GENESIS_JSON,{ "genesis-json", "resources/genesis.json" } },
-      { HTTP_SERVER_ADDRESS,{ "http-server-address", "127.0.0.1:8888" } },
-      { HTTP_SERVER_WALLET_ADDRESS,{ "http-server-wallet-address", "127.0.0.1:8888" } },
-      { DATA_DIR,{ "data-dir", "workdir/data-dir" } },
+      { DATA_DIR,{ "data-dir" } },
       { EOSIO_INSTALL_DIR,{ "EOSIO_INSTALL_DIR" } },
       { EOSIO_SOURCE_DIR,{ "EOSIO_SOURCE_DIR" } },
       { DAEMON_NAME,{ "DAEMON_NAME", "eosiod" } },
       { LOGOS_DIR,{ "LOGOS_DIR" } },
       { WASM_CLANG,{ "WASM_CLANG", "/home/cartman/opt/wasm/bin/clang" } },
-      { WASM_LLVM_LINK,{ "WASM_LLVM_LINK", "/home/cartman/opt/wasm/bin/llvm-link" } },
+      { WASM_LLVM_LINK,{ "WASM_LLVM_LINK"
+        , "/home/cartman/opt/wasm/bin/llvm-link" } },
       { WASM_LLC,{ "WASM_LLC", "/home/cartman/opt/wasm/bin/llc" } },
       { BINARYEN_BIN,{ "BINARYEN_BIN", "/home/cartman/opt/binaryen/bin/" } },
     };
@@ -51,30 +55,24 @@ namespace teos {
       auto it = configMap.find(configKey);
       return (it != configMap.end()) 
         ? configMap.at(configKey)
-        : configMapValue(ConfigKeys::NOT_DEFINED);
+        : vector<string>({NOT_DEFINED_VALUE});
     }
 
-    string getEnv(ConfigKeys configKey) {
-      vector<string> temp = configMapValue(configKey);
-      return getenv(temp[0].c_str()) == 0 
-        ? configMapValue(ConfigKeys::NOT_DEFINED)[0]
-        : getenv(temp[0].c_str());
-    }
+    string configValue(ConfigKeys configKey, bool verbose) 
+    {
+      vector<string> entry = configMapValue(configKey);
+      boost::property_tree::ptree json = TeosControl::getConfig(verbose);
+      string value = json.get(entry[0], NOT_DEFINED_VALUE);
 
-    string getJson(ConfigKeys configKey) {
-      vector<string> temp = configMapValue(configKey);
-      boost::property_tree::ptree ConfigTeos = TeosControl::getConfig();
-      return ConfigTeos.get(temp[0], temp.size() > 1 
-        ? temp[1]
-        : configMapValue(ConfigKeys::NOT_DEFINED)[0]);
-    }
-
-    string configValue(ConfigKeys configKey) {
-      string temp = getJson(configKey);
-      if (temp != configMapValue(ConfigKeys::NOT_DEFINED)[0]) {
-        return temp;
-      }
-      return getEnv(configKey);
+      if(value != NOT_DEFINED_VALUE) {
+        return value;
+      } else {
+        char* env = getenv(entry[0].c_str());
+        if(env == nullptr){
+          return entry.size() > 1 ? entry[1] : NOT_DEFINED_VALUE;          
+        }
+        return string(env);
+      } 
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -86,52 +84,49 @@ namespace teos {
       if(reqJson_.count(CONFIG_TEOS_ACTION) != 0)
       {
         if(reqJson_.get<string>(CONFIG_TEOS_ACTION) == CONFIG_TEOS_PATH_ACTION)
-        {
+        {// Output path to the config.json:
           respJson_.put("config json file", 
             boost::filesystem::current_path() / CONFIG_JSON);
         } else if(reqJson_.get<string>(CONFIG_TEOS_ACTION) 
             == CONFIG_TEOS_RESET_ACTION)
-        {
+        {// Fill the config.json with the configValue(...) data:
           config.clear();
-          for(map<ConfigKeys, vector<string>>::iterator 
-          entry = configMap.begin(); entry != configMap.end(); ++entry) {
-            config.put(entry->second[0], configValue(entry->first));
+          BOOST_FOREACH(auto &entry, configMap) 
+          {
+            config.put(entry.second[0], configValue(entry.first));
           }
           saveConfigJson(config);
           respJson_ = config;
         } else if(reqJson_.get<string>(CONFIG_TEOS_ACTION) 
             == CONFIG_TEOS_REVIEW_ACTION)
-        {
-          for(map<ConfigKeys, vector<string>>::iterator 
-            entry = configMap.begin(); entry != configMap.end(); ++entry) 
+        {// Iterate over the configMap entries, propose changes, and save
+         // everything in the config.json:
+          BOOST_FOREACH(auto &entry, configMap) 
+          {
+            string value = configValue(entry.first);
+            string newValue;
+            while(true)
             {
-              string value = configValue(entry->first);
-              string newValue;
-              while(true)
-              {
-                if(entry->first == ConfigKeys::NOT_DEFINED){
-                  break;
-                }
-                cout << entry->second[0] << ": " << value  << endl;
-                cout << "Enter a new value, or 'y' to confirm, 'yy' to escape."
-                  << endl;
-                cin >> newValue;
-                if(newValue == "y" || newValue == "yy") {
-                  break;
-                } else {
-                  value = newValue;
-                }
-              }
-              if(newValue == "yy"){
+              cout << entry.second[0] << ": " << value  << endl;
+              cout << "Enter a new value, or 'y' to confirm, 'yy' to escape."
+                << endl;
+              cin >> newValue;
+              if(newValue == "y" || newValue == "yy") {
                 break;
+              } else {
+                value = newValue;
               }
-              config.put(entry->second[0], value);
             }
-            saveConfigJson(config);
-            respJson_ = config;
+            if(newValue == "yy"){
+              break;
+            }
+            config.put(entry.second[0], value);
           }
-      } else 
-      {
+          saveConfigJson(config);
+          respJson_ = config;
+        }
+      } else if(!reqJson_.empty())
+      {//Merge the config.json with json argument.
         BOOST_FOREACH(auto& update, reqJson_) {
           config.put_child(update.first, update.second);
         }
@@ -167,8 +162,8 @@ namespace teos {
 
       sharp() << "## Environmental variables:" << endl;
       for (const auto &entry : configMap) {
-        string value = getEnv(entry.first);
-        if(value != configMapValue(ConfigKeys::NOT_DEFINED)[0])
+        char* value = getenv(entry.second[0].c_str());
+        if(value != nullptr)
         sharp() << entry.second[0] << ": " << value << endl;
       }
       sharp() <<  endl;

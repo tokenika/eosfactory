@@ -50,22 +50,16 @@ namespace teos
     string errorMsg_ = "";
 
   public:
-    static ptree errorRespJson(string sender, string message);
     static ptree getConfig(bool verbose = false);
+
     bool isError_ = false;
     ptree reqJson_;
-    ptree respJson_;    
+    ptree respJson_;
+    ptree errorRespJson(string sender, string message);
+    void putError(string msg, string sender = "");   
 
     TeosControl() {}
     TeosControl(ptree reqJson) : reqJson_(reqJson) {}
-
-    void setErrorMsg(string msg) {
-      errorMsg_ += "\n" + msg;
-    }
-
-    void setErrorMsg(const char* msg) {
-      setErrorMsg(string(msg));
-    }
 
     virtual string errorMsg() {
       return get<string>(teos_ERROR);
@@ -80,7 +74,8 @@ namespace teos
         value = getJsonPath<Type>(respJson_, path);
       }
       catch (exception& e) {
-        cerr << teos_ERROR << "! " << e.what() << endl;
+        cerr << teos_ERROR << endl << e.what() << endl;
+        exit(-1);
       }
       return value;
     }

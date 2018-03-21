@@ -46,7 +46,6 @@ namespace teos {
 
     ////////////////////////////////////////
 
-#define TEOS_ERROR true
 #define CODE_PATH boost::str(boost::format("%1% (%2% [%3%]) ") % __func__ % __FILE__ % __LINE__)
 
     class CallChain : public TeosCommand
@@ -67,7 +66,7 @@ namespace teos {
             return true;
           }
           catch (exception& e) {
-            putError(CODE_PATH, e.what());
+            putError(e.what(), CODE_PATH);
           }
         }
         return true;
@@ -101,7 +100,7 @@ namespace teos {
         json_parser::write_json(ss1, respJson, false);
       }
       catch (exception& e) {
-        putError(CODE_PATH, e.what());
+        putError(e.what(), CODE_PATH);
       }
     }
 
@@ -201,7 +200,7 @@ namespace teos {
           msg << error.locus.sourceLine << std::endl;
           msg << std::setw(error.locus.column(8)) << "^" << std::endl;
         }
-        return TeosCommand(TEOS_ERROR, TeosCommand::errorRespJson(CODE_PATH, msg.str()));
+        return TeosCommand(msg.str(), CODE_PATH);
       }
 
       try
@@ -217,7 +216,7 @@ namespace teos {
         msg << "Error serializing WebAssembly binary file:" << std::endl;
         msg << exception.message << std::endl;
 
-        return TeosCommand(TEOS_ERROR, TeosCommand::errorRespJson(CODE_PATH,msg.str()));
+        return TeosCommand(msg.str(), CODE_PATH);
       }
       return TeosCommand(CODE_PATH);
     }
@@ -242,7 +241,7 @@ namespace teos {
         return push_transaction(trx, !skipSignature, expiration);
       }
       catch (const std::exception& e) {
-        return TeosCommand(TEOS_ERROR, TeosCommand::errorRespJson(CODE_PATH, e.what()));
+        return TeosCommand(e.what(), CODE_PATH);
       }
     }
 
@@ -251,9 +250,9 @@ namespace teos {
     {
       try {
         if (!boost::filesystem::exists(wastPath)) {
-          return TeosCommand(TEOS_ERROR,
-            TeosCommand::errorRespJson(CODE_PATH, boost::str(boost::format(
-              "Cannot find the wast file:\n %1%\n does not exist!\n") % wastPath)));
+          return TeosCommand(boost::str(boost::format(
+              "Cannot find the wast file:\n %1%\n does not exist!\n") % wastPath)
+              , CODE_PATH);
         }
 
         std::string wast;
@@ -280,9 +279,9 @@ namespace teos {
 
         if (abiPath.length() > 0) {
           if (!boost::filesystem::exists(abiPath)) {
-            return TeosCommand(TEOS_ERROR,
-              TeosCommand::errorRespJson(CODE_PATH, boost::str(boost::format(
-                "Cannot find the abi file:\n %1%\n does not exist!\n") % abiPath)));
+            return TeosCommand(boost::str(boost::format(
+                "Cannot find the abi file:\n %1%\n does not exist!\n") % abiPath)
+                , CODE_PATH);
           }
           chain::contracts::setabi handler;
           handler.account = account;
@@ -293,8 +292,7 @@ namespace teos {
         return push_transaction(trx, !skipSignature, expiration);
       }
       catch (const std::exception& e) {
-        return TeosCommand(TEOS_ERROR,
-          TeosCommand::errorRespJson(CODE_PATH, e.what()));
+        return TeosCommand(e.what(), CODE_PATH);
       }
     }
 
@@ -311,9 +309,8 @@ namespace teos {
           out << code;
         }
         else {
-          return TeosCommand(TEOS_ERROR,
-            TeosCommand::errorRespJson(CODE_PATH, boost::str(boost::format(
-              "Cannot open the wast file:\n %1%\n") % wastPath)));
+          return TeosCommand(boost::str(boost::format(
+              "Cannot open the wast file:\n %1%\n") % wastPath), CODE_PATH);
         }
       }
 
@@ -324,9 +321,8 @@ namespace teos {
           out << abi;
         }
         else {
-          return TeosCommand(TEOS_ERROR,
-            TeosCommand::errorRespJson(CODE_PATH, boost::str(boost::format(
-              "Cannot open the abi file:\n %1%\n") % abiPath)));
+          return TeosCommand(boost::str(boost::format(
+              "Cannot open the abi file:\n %1%\n") % abiPath), CODE_PATH);
         } 
       }
       return callGetCode;
@@ -366,7 +362,7 @@ namespace teos {
         return push_transaction(trx, !skipSignature, expiration);
       }
       catch (const std::exception& e) {
-        return TeosCommand(TEOS_ERROR, TeosCommand::errorRespJson(CODE_PATH, e.what()));
+        return TeosCommand(e.what(), CODE_PATH);
       }
     }
 

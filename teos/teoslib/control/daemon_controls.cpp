@@ -227,13 +227,11 @@ namespace teos {
           }
         }
         if (count < 0) {
-          isError_ = true;
-          setErrorMsg(string("Failed to kill ") + configValue(ConfigKeys::DAEMON_NAME));
+          putError(string("Failed to kill ") + configValue(ConfigKeys::DAEMON_NAME));
         }
       }
       catch (std::exception& e) {
-        isError_ = true;
-        setErrorMsg(e.what());
+        putError(e.what());
       }
     }
 
@@ -243,7 +241,7 @@ namespace teos {
       if(reqJson_.get("http-server-address", "").empty())
       {
         reqJson_.put("http-server-address"
-          , configValue(ConfigKeys::HTTP_SERVER_ADDRESS));
+          , configValue(ConfigKeys::EOSIO_DAEMON_ADDRESS));
       }
       if(reqJson_.get("eosiod_exe", "").empty())
       {
@@ -257,7 +255,7 @@ namespace teos {
           / configValue(ConfigKeys::DAEMON_NAME);
         }
         if(!boost::filesystem::exists(path)){
-          setErrorMsg("Cannot deduce the path to the daemon executable.");
+          putError("Cannot deduce the path to the daemon executable.");
         } else {
           reqJson_.put("eosiod_exe", path.string());
         }
@@ -274,7 +272,7 @@ namespace teos {
             / "genesis.json";
         }
         if(!boost::filesystem::exists(path)){
-          setErrorMsg("Cannot deduce the path to the genesis.json file.");
+          putError("Cannot deduce the path to the genesis.json file.");
         } else {
           reqJson_.put("genesis-json", path.string());
         }
@@ -292,14 +290,14 @@ namespace teos {
             / "data-dir";
         }
         if(!boost::filesystem::exists(path)){
-          setErrorMsg("Cannot deduce the path to the data-dir directory.");
+          putError("Cannot deduce the path to the data-dir directory.");
         } else {
           reqJson_.put("data-dir", path.string());
         }
       }
 
       try{
-        if(reqJson_.get<bool>("resync-blockchain")){
+        if(reqJson_.get("resync-blockchain", false)){
           DaemonStop();          
         } else if(!getPid().empty()){
           return;
@@ -309,7 +307,7 @@ namespace teos {
           + " --genesis-json " + reqJson_.get<string>("genesis-json")
           + " --http-server-address " + reqJson_.get<string>("http-server-address")
           + " --data-dir " + reqJson_.get<string>("data-dir");
-        if(reqJson_.get<bool>("resync-blockchain")) {
+        if(reqJson_.get("resync-blockchain", false)) {
           commandLine += " --resync-blockchain";
         }
 
@@ -327,15 +325,13 @@ namespace teos {
             respJson_=tc.respJson_;                   
             boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
             if(count-- == 0){
-              isError_ = true;
-              setErrorMsg(tc.errorMsg());
+              putError(tc.errorMsg());
             }
           } while (tc.isError_ && count > 0);
         }
       }
       catch (std::exception& e) {
-        isError_ = true;
-        setErrorMsg(e.what());
+        putError(e.what());
       }
     }
 
@@ -358,8 +354,7 @@ namespace teos {
         respJson_.put("count", count);
       }
       catch (std::exception& e) {
-        isError_ = true;
-        setErrorMsg(e.what());
+        putError(e.what());
       }
     }
 

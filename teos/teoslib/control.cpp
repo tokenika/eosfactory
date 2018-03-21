@@ -91,9 +91,22 @@ namespace teos
       if (verbose) {
         printf("ERROR: Cannot read config file %s!\n", CONFIG_JSON);
         printf("Current path is: %s\n", full_path.string().c_str());
-        printf("The config json file is expected there!");
+        printf("The config json file is expected there!\n");
       }
     }
     return config;
+  }
+
+  ptree TeosControl::errorRespJson(string sender, string message) {
+    ptree respJson;
+    string senderEntry = "\"sender\":\"" + sender + "\"";
+    string msgEntry = "\"message\":{" + message + "}";
+    respJson.put(teos_ERROR, "{" + senderEntry + ", " + msgEntry + "}");
+    isError_ = true;    
+    return respJson;
+  }
+
+  void TeosControl::putError(string message, string sender) {
+    respJson_ = errorRespJson(sender, message);
   }
 }

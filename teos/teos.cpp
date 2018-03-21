@@ -74,7 +74,7 @@ int main(int argc, const char *argv[]) {
   string command;
   string subcommand;
 
-  TeosCommand::httpAddress = "127.0.0.1:8888";
+  TeosCommand::httpAddress = LOCALHOST_HTTP_ADDRESS;
   TeosCommand::httpWalletAddress = TeosCommand::httpAddress;
 
   if (argc > 1)
@@ -90,7 +90,7 @@ int main(int argc, const char *argv[]) {
       argc--;
     }
 
-    if (strcmp(argv[1], "config") == 0)
+    if (strcmp(argv[1], USE_CONFIG_JSON) == 0)
     {
       TeosCommand::httpAddress = "";
       TeosCommand::httpWalletAddress = TeosCommand::httpAddress;
@@ -98,13 +98,13 @@ int main(int argc, const char *argv[]) {
       argc--;
     }    
 
-    if (strcmp(argv[1], "localhost") == 0)
+    if (strcmp(argv[1], LOCALHOST_ADDRESS) == 0)
     {
       argv++;
       argc--;
     }
     
-    if (strcmp(argv[1], "tokenika") == 0)
+    if (strcmp(argv[1], TEST_ADDRESS) == 0)
     {
       TeosCommand::httpAddress = TEST_HTTP_ADDRESS;
       TeosCommand::httpWalletAddress = TeosCommand::httpAddress;
@@ -158,5 +158,6 @@ int main(int argc, const char *argv[]) {
     HELP
     return 0;
   }
+  return 0;
 }
 

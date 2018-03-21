@@ -34,21 +34,21 @@ namespace teos
   {
   protected:
     string path_;
-    void putError(string msg);
-    void putError(string sender, string msg);
     void callEosd();
     virtual string normRequest(ptree& reqJson);
     virtual void normResponse(string response, ptree &respJson);
     virtual bool isWalletCommand() { return path_.find(walletCommandPath) != std::string::npos; };
 
   public:
-    static ptree errorRespJson(string sender, string message);
     static string httpAddress;
     static string httpWalletAddress;
 
     TeosCommand(string path, ptree reqJson);
     TeosCommand(string path);
-    TeosCommand(bool isError, ptree respJson);
+    TeosCommand(string errorMsg, string errorSender){
+      respJson_ = errorRespJson(errorSender, errorMsg);
+    }
+
     TeosCommand() {}
 
     void copy(TeosCommand teosCommand) {
@@ -75,12 +75,12 @@ namespace teos
       od.add_options()
         ("address,a", value<string>(&(TeosCommand::httpAddress))
             ->default_value(TeosCommand::httpAddress.empty() 
-          ? control::configValue(control::ConfigKeys::HTTP_SERVER_ADDRESS)
+          ? control::configValue(control::ConfigKeys::EOSIO_DAEMON_ADDRESS, true)
           : TeosCommand::httpAddress),
           "The http address (host:port) of the EOSIO daemon.")
         ("wallet,w", value<string>(&(TeosCommand::httpWalletAddress))
             ->default_value(TeosCommand::httpWalletAddress.empty()
-          ? control::configValue(control::ConfigKeys::HTTP_SERVER_WALLET_ADDRESS)
+          ? control::configValue(control::ConfigKeys::EOSIO_WALLET_ADDRESS)
           : TeosCommand::httpWalletAddress),
         "The http address (host:port) where eos-wallet is running.")
         ("json,j", value<string>(&json_), "Json argument.")      

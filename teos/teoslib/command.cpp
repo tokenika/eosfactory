@@ -22,23 +22,6 @@ namespace teos
   using namespace std;
   using namespace boost::property_tree;
 
-  ptree TeosCommand::errorRespJson(string sender, string message) {
-    ptree respJson;
-    string senderEntry = "\"sender\":\"" + sender + "\"";
-    string msgEntry = "\"message\":{" + message + "}";
-    respJson.put(teos_ERROR, "{" + senderEntry + ", " + msgEntry + "}");
-    return respJson;
-  }
-
-  void TeosCommand::putError(string msg) {
-    putError(path_, msg);
-  }
-
-  void TeosCommand::putError(string sender, string message) {
-    respJson_ = errorRespJson(sender, message);
-    isError_ = true;
-  }
-
   string TeosCommand::normRequest(ptree& reqJson) {
     stringstream ss;
     json_parser::write_json(ss, reqJson, false);
@@ -67,18 +50,25 @@ namespace teos
     namespace pt = boost::property_tree;  
     namespace control = teos::control;
 
-    string host;
-    string port;
-    string address = isWalletCommand() 
-        ? TeosCommand::httpWalletAddress.empty() 
-          ? control::configValue(control::ConfigKeys::HTTP_SERVER_WALLET_ADDRESS)
-          : TeosCommand::httpWalletAddress
-        : TeosCommand::httpAddress.empty()
-          ? control::configValue(control::ConfigKeys::HTTP_SERVER_ADDRESS)
-          : TeosCommand::httpAddress;
+    string address;
+    
+    if(isWalletCommand()){
+      address = TeosCommand::httpWalletAddress.empty()
+        ? control::configValue(control::ConfigKeys::EOSIO_WALLET_ADDRESS)
+        : TeosCommand::httpWalletAddress;
+      if(address.empty()) {
+      address = TeosCommand::httpAddress.empty()
+        ? control::configValue(control::ConfigKeys::EOSIO_DAEMON_ADDRESS)
+        : TeosCommand::httpAddress;        
+      }
+    } else {
+      address = TeosCommand::httpAddress.empty()
+        ? control::configValue(control::ConfigKeys::EOSIO_DAEMON_ADDRESS)
+        : TeosCommand::httpAddress;
+    }
     size_t colon = address.find(":");
-    host = string(address.substr(0, colon));
-    port = string(address.substr(colon + 1, address.size()));
+    string host = string(address.substr(0, colon));
+    string port = string(address.substr(colon + 1, address.size()));
 
     try {
       boost::asio::io_service io_service;
@@ -163,7 +153,4 @@ namespace teos
   TeosCommand::TeosCommand( string path) : path_(path) {
   }
 
-  TeosCommand::TeosCommand(bool isError, ptree respJson){
-    respJson_ = respJson;
-  }
 }

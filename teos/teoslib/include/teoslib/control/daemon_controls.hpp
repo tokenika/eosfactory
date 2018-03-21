@@ -123,7 +123,7 @@ Usage: ./teos node start [Options]
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("resync-blockchain,c", "Clear chain database and block log.")
+          ("clear,c", "Clear chain database and block log.")
           ("skip,s", "Skip waiting for a block.");
             
         return od;
@@ -131,7 +131,7 @@ Usage: ./teos node start [Options]
 
       bool checkArguments(variables_map &vm) {
         bool ok = true;
-        if(vm.count("resync-blockchain")){
+        if(vm.count("clear")){
           reqJson_.put("resync-blockchain", true);
         } else {
           reqJson_.put("resync-blockchain", false);

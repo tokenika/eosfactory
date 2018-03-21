@@ -5,6 +5,8 @@
     "slist": "cpp",
     "initializer_list": "cpp",
     "string_view": "cpp",
-    "future": "cpp"
+    "future": "cpp",
+    "utility": "cpp",
+    "tuple": "cpp"
   }
 }

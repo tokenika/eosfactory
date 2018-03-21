@@ -5,11 +5,30 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "(gdb) teos config teos",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "args": ["config", "teos"],
+      "stopAtEntry": false,
+      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          }
+      ]
+    },
+    {
       "name": "(gdb) teos get info",
       "type": "cppdbg",
       "request": "launch",
       "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
-      "args": ["config", "get", "info"],
+      "args": ["config.json", "get", "info"],
       "stopAtEntry": false,
       "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
       "environment": [],
@@ -28,7 +47,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
-      "args": ["daemon", "start", "-V", "-b", "--resync-blockchain", "1"],
+      "args": ["daemon", "start"],
       "stopAtEntry": false,
       "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
       "environment": [],

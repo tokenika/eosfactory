@@ -14,6 +14,8 @@ import re
 import tempfile
 import pathlib
 
+print("Hello")
+
 __setupFile__ = "teos.json"
 _is_verbose = True
 
@@ -44,7 +46,7 @@ class Setup:
             "TEOS executable", os.environ['LOGOS_DIR'] \
                                 + "/teos/build/teos")
         self.http_server_address = self.setParam(
-            "EOS node http address", os.environ['HTTP_SERVER_ADDRESS'])
+            "EOS node http address", os.environ['EOSIO_DAEMON_ADDRESS'])
 
         self.daemon_name = "eosiod"
         self.daemon_exe = self.EOSIO_SOURCE_DIR \

@@ -31,10 +31,10 @@ list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules" )
 
 message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 
-set( TEST_ADDRESS "\"tokenika\"")
-set( TEST_HTTP_ADDRESS "\"eos-testapi.tokenika.io:8888\"" )
+set( TEST_ADDRESS "tokenika")
+set( TEST_HTTP_ADDRESS "eos-testapi.tokenika.io:8888" )
 set( CONFIG_JSON_FILE "config.json" )
-set( CONFIG_JSON "\"${CONFIG_JSON_FILE}\"" )
+set( CONFIG_JSON "${CONFIG_JSON_FILE}" )
 
 if( WIN32 )
 	# Taken out of the VC projects to avoid the compiler complaining about POSIX code
@@ -53,7 +53,7 @@ if( WIN32 )
   
   add_compile_options( /bigobj )
 
-  	# Compile with all warnings and fatal warnings
+  # Compile with all warnings and fatal warnings
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX" )
 	if( CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
 		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
@@ -88,7 +88,7 @@ else( WIN32 )
 
 endif( WIN32 )
 
-####################################### DEPENDENCIES
+## BEGIN DEPENDENCIES ########################################################
 
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
@@ -146,7 +146,7 @@ else( LLVM_FOUND )
 endif( LLVM_FOUND )
 llvm_map_components_to_libnames(LLVM_LIBS support core passes mcjit native DebugInfoDWARF)
 
-####################################### DEPENDENCIES
+## END DEPENDENCIES ##########################################################
 
 if( WIN32 )
   set( WASM_CLANG "" )
@@ -160,23 +160,29 @@ else()
   set( BINARYEN_BIN "/usr/local/binaryen/bin/" )
 endif()
 
-set( CONFIG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include/teos" )
+## BEGIN CONFIG FILES ########################################################
+
 configure_file (
   "config.h.in"
-  "${CONFIG_PATH}/config.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/teoslib/include/teoslib/config.h"
 )
+
+install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
+  DESTINATION "bin" )
+
+install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
+  DESTINATION "bin" )
 
 configure_file (
   "config.json.in"
-  "${CONFIG_PATH}/config.json"
+  "${CMAKE_BINARY_DIR}/config.json"
 )
 
-install( FILES "${CONFIG_PATH}/config.json" 
-  DESTINATION "bin" )
+## END CONFIG FILES ##########################################################
 
 add_subdirectory(teoslib)
 
-####################################### executables
+## BEGIN executables #########################################################
 
 macro( applLinkLibraries applName )
 
@@ -194,12 +200,14 @@ macro( applLinkLibraries applName )
      teoslib/include
   )
 
-  # if( UNIX )
-  # target_link_libraries( ${applName} 
-  #   PRIVATE 
-  #     asan        # static-libasan ?
-  # )
-  # endif()
+  if( ENABLE_ASAN )
+    if( UNIX )
+    target_link_libraries( ${applName} 
+      PRIVATE 
+        asan        # static-libasan ?
+    )
+    endif()
+  endif()
 
   if( WIN32 )
     set( TARGET_DIR ${CMAKE_BUILD_TYPE} )
@@ -265,6 +273,6 @@ add_executable( teos_lib_test teos_lib_test.cpp )
 applLinkLibraries( teos_lib_test )
 install( TARGETS teos_lib_test RUNTIME DESTINATION bin)
 
-####################################### /executables
+## END executables ###########################################################
 
 

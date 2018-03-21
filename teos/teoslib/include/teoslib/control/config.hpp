@@ -10,12 +10,12 @@ namespace teos {
     using namespace std;
 
     enum ConfigKeys { NOT_DEFINED
-        , GENESIS_JSON, HTTP_SERVER_ADDRESS
-        , HTTP_SERVER_WALLET_ADDRESS, DATA_DIR
+        , GENESIS_JSON, EOSIO_DAEMON_ADDRESS
+        , EOSIO_WALLET_ADDRESS, DATA_DIR
         , EOSIO_INSTALL_DIR, EOSIO_SOURCE_DIR, DAEMON_NAME, LOGOS_DIR
         , WASM_CLANG, WASM_LLVM_LINK, WASM_LLC, BINARYEN_BIN
     };
-    extern string configValue(ConfigKeys configKey);
+    extern string configValue(ConfigKeys configKey, bool verbose = false);
 
 #define CONFIG_TEOS_ACTION "action"
 #define CONFIG_TEOS_RESET_ACTION "reset"
@@ -85,6 +85,8 @@ Usage: ./teos [http address] [-j '{
             reqJson_.put(CONFIG_TEOS_ACTION, action);
             ok = true;
           }
+        } else {
+          return true;
         }
         return ok;
       }      
