@@ -82,7 +82,7 @@ namespace teos {
         //std::cout << requestStr << std::endl;
         //std::cout << fc::json::to_pretty_string(fcVariant) << std::endl;
         if (isError_) {
-          //std::cout << responseToString() << std::endl;
+          //std::cout << responseToString(false) << std::endl;
         }
       }
 

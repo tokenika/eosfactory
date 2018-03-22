@@ -11,10 +11,7 @@ import textwrap
 import time
 import glob
 import re
-import tempfile
 import pathlib
-
-print("Hello")
 
 __setupFile__ = "teos.json"
 _is_verbose = True
@@ -46,14 +43,7 @@ class Setup:
             "TEOS executable", os.environ['LOGOS_DIR'] \
                                 + "/teos/build/teos")
         self.http_server_address = self.setParam(
-            "EOS node http address", os.environ['EOSIO_DAEMON_ADDRESS'])
-
-        self.daemon_name = "eosiod"
-        self.daemon_exe = self.EOSIO_SOURCE_DIR \
-                            + "/build/programs/eosiod/eosiod"
-        self.genesis_json = self.EOSIO_SOURCE_DIR + "genesis.json"
-        self.data_dir = self.EOSIO_SOURCE_DIR \
-                            + "/build/programs/eosiod/data-dir"        
+            "EOS node http address", os.environ['EOSIO_DAEMON_ADDRESS'])       
 
     def __init__(self):
 
@@ -105,23 +95,25 @@ setup = Setup()
 ##############################################################################
 
 class _Command:
-    __args = json.loads("{}")
     global _is_verbose 
+    global setup    
+   
+    _args = json.loads("{}")
+    _error = False      
 
-    def __init__(self, first, second, is_verbose=True):
-        self._error = False
-        global setup
-        if not setup.http_server_address:
-            process = subprocess.run([setup.teos_exe, first, second
-                , "--json", args.replace("'", '"'), "--both"]
-                , stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        else:
-            process = subprocess.run([
-                setup.teos_exe, setup.http_server_address, first, second,
-                "--json", str(self.__args).replace("'", '"'), "--both"],
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+    def __init__(self, first, second, options = []):
+        V = ""
+        if _is_verbose:
+            V = "-V"         
+        command_line = [
+            setup.teos_exe, first, second, V,
+            "--json", str(self._args).replace("'", '"'), "--both"]
+        command_line.extend(options)
 
-        if _is_verbose and is_verbose:
+        process = subprocess.run(command_line,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)  
+
+        if _is_verbose:
             print(process.stdout.decode("utf-8"))
         
         rcv = process.stderr.decode("utf-8")
@@ -136,7 +128,7 @@ class _Command:
 """
 class GetAccount(_Command):
     def __init__(self, accountName):
-        self.__args["account_name"] = accountName
+        self._args["account_name"] = accountName
         _Command.__init__(self, "get", "account")
         if not self._error:
             self.account_name = self._json["account_name"]
@@ -151,7 +143,7 @@ class GetAccount(_Command):
 """
 class WalletCreate(_Command):
     def __init__(self, walletName="default"):
-        self.__args["name"] = walletName
+        self._args["name"] = walletName
         _Command.__init__(self, "wallet", "create")
         if not self._error:       
             self.password = self._json["password"]
@@ -160,8 +152,8 @@ class WalletCreate(_Command):
 """ Get current blockchain information.
 """
 class GetInfo(_Command):
-    def __init__(self, is_verbose=True):
-        _Command.__init__(self, "get", "info", is_verbose=is_verbose)
+    def __init__(self):
+        _Command.__init__(self, "get", "info")
         if not self._error:    
             self.head_block = self._json["head_block_num"]
             self.head_block_time = self._json["head_block_time"]
@@ -173,7 +165,7 @@ class GetInfo(_Command):
 """
 class GetBlock(_Command):
     def __init__(self, blockNumber):
-        self.__args["block_num_or_id"] = blockNumber
+        self._args["block_num_or_id"] = blockNumber
         _Command.__init__(self, "get", "block")
         if not self._error:   
             self.block_num = self._json["block_num"]
@@ -181,107 +173,42 @@ class GetBlock(_Command):
             self.timestamp = self._json["timestamp"]
 
 
-""" Create a new pair of cryptographic keys.
+""" Create a pair of cryptographic keys.
 """
 class CreateKey(_Command):
     def __init__(self, keyPairName):
-        self.__args["name"] = keyPairName
+        self._args["name"] = keyPairName
         _Command.__init__(self, "create", "key")
         if not self._error:  
             self.private_key = self._json["privateKey"]
             self.public_key = self._json["publicKey"]
 
 
-
-""" Operates a test EOSIO daemon
+""" Start test EOSIO Daemon.
 """
-class EosDaemon:
+class DaemonStart(_Command):
     def __init__(self):
-        global setup
-        self.genesis_json = setup.genesis_json
-        self.http_server_address = setup.http_server_address
-        self.data_dir = setup.data_dir
-        self.daemon_exe = setup.daemon_exe
-
-    def pid(self):
-        global setup
-        pidof = subprocess.run(["pidof", setup.daemon_name] \
-            , stdout=subprocess.PIPE)
-        pid = str(pidof.stdout.decode("utf-8")).strip()
-        return pid
-
-    def kill(self, is_verbose=True):
-        pid = self.pid()
-        if not pid:
-            if is_verbose:
-                output__("Is EOSIO chain node running?")
-            return
-        kill = subprocess.run(["kill", pid], stdout=subprocess.PIPE)
-
-        count = 10
-        while True:
-            time.sleep(0.5)
-            pid = self.pid()
-            if not pid or count:
-                if not pid:
-                    if is_verbose:
-                        output__("EOSIO chain node has been killed.")
-                return
-            count -= 1
-        eprint("Running EOSIO daemon process id is {}. "
-            "Do not know why cannot kill it!".format(pid))
-
-    def _start(self, clean=False):
-        command_line = ["gnome-terminal"
-            , "--"
-            , self.daemon_exe
-            , "--genesis-json", self.genesis_json
-            , "--http-server-address", self.http_server_address
-            , "--data-dir", self.data_dir]
-
-        if clean:
-            command_line.append("--resync-blockchain")
-        subprocess.Popen(command_line)
-
-        count = 10
-        while True: 
-            time.sleep(1)
-            getInfo = GetInfo(is_verbose=False)
-            if not getInfo._error or count < 0:
-                if count < 0:
-                    eprint("Cannot start any EOSIO daemon!")
-                break
-            count -= 1           
-
-    def clean(self):
-        self.kill(is_verbose=False)
-        self._start(clean=True)         
-
-    def start(self):
-        if not self.pid():
-            self._start()
-
-    def delete_wallets(self):
-        global setup
-        for f in glob.glob(self.data_dir + "/*.wallet"):
-            os.remove(f)
+        _Command.__init__(self, "daemon", "start")
 
 
-class BuildContract:
-    def __init__(self, target_wast_file, 
-            src_files=[
-                "/mnt/hgfs/Workspaces/EOS/Logos/teos/teoslib/control/config.cpp",
-                "/mnt/hgfs/Workspaces/EOS/Logos/teos/teoslib/control/xonfig.cpp"
-            ], 
-            include_dir=[]):
-        workdir = tempfile.mkdtemp()
-        build = workdir + "/build/"
-        pathlib.Path(build)
+""" Start clean test EOSIO Daemon.
+"""
+class DaemonClear(_Command):
+    def __init__(self):
+        _Command.__init__(self, "daemon", "start", ["-c"])        
 
-        object_file_list = ""
-        for file in src_files:
-            object_file_list += build + pathlib.Path(file).resolve().stem + ".o "
-        
-        print(object_file_list)
 
-        # "/mnt/hgfs/Workspaces/EOS/Logos/teos/teoslib/control/config.cpp", 
+""" Stop test EOSIO Daemon.
+"""
+class DaemonStop(_Command):
+    def __init__(self):
+        _Command.__init__(self, "daemon", "stop")
+
+
+""" Delete local wallets.
+"""
+class DaemonDeleteWallets(_Command):
+    def __init__(self):
+        _Command.__init__(self, "daemon", "delete_wallets")
+
+

@@ -135,15 +135,15 @@ namespace teos
 
     virtual void parseGroupVariablesMap(variables_map& vm) 
     {
-      if(!checkArguments(vm)) {
-        std::cerr << teos_ERROR << endl << "Wrong argument." << endl;
-        return;
-      }
-
       if (vm.count("json")) {
         reqJson_ = stringToPtree(json_);
+      } else {
+        if(!checkArguments(vm)) {
+          std::cerr << teos_ERROR << endl << "Wrong argument." << endl;
+          return;
+        }        
       }
-
+      
       TeosControl command = executeCommand();
       if (command.isError_) {
         std::cerr << teos_ERROR << endl << command.errorMsg() << endl;

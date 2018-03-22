@@ -47,7 +47,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
-      "args": ["daemon", "start"],
+      "args": ["daemon", "start", "--json", "--clear"],
       "stopAtEntry": false,
       "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
       "environment": [],

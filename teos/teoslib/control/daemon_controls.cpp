@@ -237,7 +237,7 @@ namespace teos {
 
     void DaemonStart::action()
     {
-
+      namespace bfs = boost::filesystem;
       if(reqJson_.get("http-server-address", "").empty())
       {
         reqJson_.put("http-server-address"
@@ -245,16 +245,16 @@ namespace teos {
       }
       if(reqJson_.get("eosiod_exe", "").empty())
       {
-        boost::filesystem::path path 
-          = boost::filesystem::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
+        bfs::path path 
+          = bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
             / "/bin/" / configValue(ConfigKeys::DAEMON_NAME);
 
-        if(!boost::filesystem::exists(path)){
-          path = boost::filesystem::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+        if(!bfs::exists(path)){
+          path = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
           / "build/programs" / configValue(ConfigKeys::DAEMON_NAME)
           / configValue(ConfigKeys::DAEMON_NAME);
         }
-        if(!boost::filesystem::exists(path)){
+        if(!bfs::exists(path)){
           putError("Cannot deduce the path to the daemon executable.");
         } else {
           reqJson_.put("eosiod_exe", path.string());
@@ -262,16 +262,16 @@ namespace teos {
       }
 
       if(reqJson_.get("genesis-json", "").empty()){
-        boost::filesystem::path path(configValue(ConfigKeys::GENESIS_JSON));
-        if(!boost::filesystem::exists(path)){
-          path = boost::filesystem::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
+        bfs::path path(configValue(ConfigKeys::GENESIS_JSON));
+        if(!bfs::exists(path)){
+          path = bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
             / "genesis.json";
         }
-        if(!boost::filesystem::exists(path)){
-          path = boost::filesystem::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+        if(!bfs::exists(path)){
+          path = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
             / "genesis.json";
         }
-        if(!boost::filesystem::exists(path)){
+        if(!bfs::exists(path)){
           putError("Cannot deduce the path to the genesis.json file.");
         } else {
           reqJson_.put("genesis-json", path.string());
@@ -279,17 +279,17 @@ namespace teos {
       }
 
       if(reqJson_.get("data-dir", "").empty()){
-        boost::filesystem::path path(configValue(ConfigKeys::DATA_DIR));
-        if(!boost::filesystem::exists(path)){
-          path = boost::filesystem::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
+        bfs::path path(configValue(ConfigKeys::DATA_DIR));
+        if(!bfs::exists(path)){
+          path = bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
             / "data-dir";
         }
-        if(!boost::filesystem::exists(path)){
-          path = boost::filesystem::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+        if(!bfs::exists(path)){
+          path = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
             / "build/programs" / configValue(ConfigKeys::DAEMON_NAME) 
             / "data-dir";
         }
-        if(!boost::filesystem::exists(path)){
+        if(!bfs::exists(path)){
           putError("Cannot deduce the path to the data-dir directory.");
         } else {
           reqJson_.put("data-dir", path.string());
@@ -314,7 +314,7 @@ namespace teos {
         //cout << commandLine <<endl;
         boost::process::system("gnome-terminal -- " + commandLine);
 
-        if(reqJson_.get<bool>("wait"))
+        if(reqJson_.get("wait", true))
         {
           // Wait until the node is operational:
           teos::TeosCommand tc;
@@ -338,12 +338,29 @@ namespace teos {
     DaemonDeleteWallets::DaemonDeleteWallets()
     {
       namespace bfs = boost::filesystem;
+      bfs::path path;
+      if(reqJson_.get("data-dir", "").empty()){
+        path = bfs::path(configValue(ConfigKeys::DATA_DIR));
+        if(!bfs::exists(path)){
+          path = bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
+            / "data-dir";
+        }
+        if(!bfs::exists(path)){
+          path = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+            / "build/programs" / configValue(ConfigKeys::DAEMON_NAME) 
+            / "data-dir";
+        }
+        if(!bfs::exists(path)){
+          putError("Cannot deduce the path to the data-dir directory.");
+        } else {
+          reqJson_.put("data-dir", path.string());
+        }
+      }
 
-      bfs::path p(configValue(ConfigKeys::DATA_DIR));
       int count = 0;
       try {
         for (bfs::directory_entry& entry 
-            : boost::make_iterator_range(bfs::directory_iterator(p), {})) 
+            : boost::make_iterator_range(bfs::directory_iterator(path), {})) 
           {
           if (bfs::is_regular_file(entry.path()) 
             && entry.path().extension() == ".wallet") {

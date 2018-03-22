@@ -98,6 +98,7 @@ Usage: ./teos node kill
         reqJson_.put("genesis-json", genesis_json);
         reqJson_.put("http_server_address_", http_server_address);
         reqJson_.put("data-dir", data_dir);
+        reqJson_.put("wait", true);
         action();
       }
 
@@ -149,6 +150,7 @@ Usage: ./teos node start [Options]
       } 
 
       void printout(TeosControl command, variables_map &vm) {
+        sharp() << "Daemon is running." << endl;
         if (vm.count("verbose") > 0) {
           output("eosiod exe file", "%s", command.reqJson_.get<string>("eosiod_exe").c_str());
           output("genesis state file", "%s", command.reqJson_.get<string>("genesis-json").c_str());
@@ -157,6 +159,6 @@ Usage: ./teos node start [Options]
         }
       }
     };
-
+  
   }
 }
