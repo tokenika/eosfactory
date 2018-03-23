@@ -5,6 +5,63 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "(gdb) wallet create",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "args": ["wallet", "create", "asdfg"],
+      "stopAtEntry": false,
+      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          }
+      ]
+    },
+    {
+      "name": "(gdb) wallet list",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "args": ["wallet", "list"],
+      "stopAtEntry": false,
+      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          }
+      ]
+    },
+    {
+      "name": "(gdb) daemon delete wallets",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "args": ["daemon", "delete_wallets", "lllk"],
+      "stopAtEntry": false,
+      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          }
+      ]
+    },
+    {
       "name": "(gdb) teos config teos",
       "type": "cppdbg",
       "request": "launch",
@@ -39,7 +96,7 @@
               "description": "Enable pretty-printing for gdb",
               "text": "-enable-pretty-printing",
               "ignoreFailures": true
-          }
+          }password
       ]
     },
     {
@@ -47,7 +104,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
-      "args": ["daemon", "start", "--json", "--clear"],
+      "args": ["daemon", "start", "-V", "--json", "{}", "--both", "--clear"],
       "stopAtEntry": false,
       "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
       "environment": [],

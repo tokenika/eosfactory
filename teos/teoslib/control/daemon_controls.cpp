@@ -335,44 +335,55 @@ namespace teos {
       }
     }
 
-    DaemonDeleteWallets::DaemonDeleteWallets()
+    void DaemonDeleteWallets::action()
     {
       namespace bfs = boost::filesystem;
-      bfs::path path;
-      if(reqJson_.get("data-dir", "").empty()){
-        path = bfs::path(configValue(ConfigKeys::DATA_DIR));
-        if(!bfs::exists(path)){
-          path = bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
+      bfs::path dataDir;
+      if(reqJson_.get("data-dir", "").empty())
+      {
+        dataDir = bfs::path(configValue(ConfigKeys::DATA_DIR));
+        if(!bfs::exists(dataDir)){
+          dataDir = bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
             / "data-dir";
         }
-        if(!bfs::exists(path)){
-          path = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+        if(!bfs::exists(dataDir)){
+          dataDir = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
             / "build/programs" / configValue(ConfigKeys::DAEMON_NAME) 
             / "data-dir";
         }
-        if(!bfs::exists(path)){
-          putError("Cannot deduce the path to the data-dir directory.");
-        } else {
-          reqJson_.put("data-dir", path.string());
-        }
+      } else
+      {
+        dataDir = bfs::path(reqJson_.get("data-dir", ""));
       }
+      if(!bfs::exists(dataDir)){
+        putError("Cannot find the path to the data-dir directory.");
+        return;
+      } 
 
-      int count = 0;
-      try {
-        for (bfs::directory_entry& entry 
-            : boost::make_iterator_range(bfs::directory_iterator(path), {})) 
-          {
-          if (bfs::is_regular_file(entry.path()) 
-            && entry.path().extension() == ".wallet") {
-            bfs::remove(entry.path());
-            count++;
+      int count = 0; 
+      try{
+        if(!reqJson_.get("name", "").empty()){
+          bfs::path walletFile = dataDir / (reqJson_.get("name", "") + ".wallet");
+          if(bfs::exists(walletFile)){
+            bfs::remove(walletFile);
+            count++;            
           }
+        } else
+        {
+          for (bfs::directory_entry& entry 
+              : boost::make_iterator_range(bfs::directory_iterator(dataDir), {})) 
+            {
+            if (bfs::is_regular_file(entry.path()) 
+              && entry.path().extension() == ".wallet") {
+              bfs::remove(entry.path());
+              count++;
+            }
+          }       
         }
-        respJson_.put("count", count);
-      }
-      catch (std::exception& e) {
+      } catch (std::exception& e) {
         putError(e.what());
       }
+      respJson_.put("count", count);      
     }
 
     void DaemonDeleteWalletsOptions::printout(TeosControl command, variables_map &vm) {

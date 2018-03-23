@@ -57,11 +57,6 @@ namespace teos
       respJson_ = teosCommand.respJson_;
       isError_ = teosCommand.isError_;
     }
-
-    ptree getResponse() const {
-      return respJson_;
-    }
-
   };
 
   class CommandOptions : public ControlOptions

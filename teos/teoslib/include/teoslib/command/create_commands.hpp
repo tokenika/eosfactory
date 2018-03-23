@@ -19,18 +19,7 @@ namespace teos
     class CreateAccount : public TeosCommand
     {
     public:
-      /**
-       * @brief A constructor.
-       * @param creator authorising account name.
-       * @param accountName new account name.
-       * @param ownerKeyPubl 'owner' public key.
-       * @param activeKeyPubl 'active' public key.
-       * @param skip if true, unlocked wallet keys should not be used to sign transaction.
-       * @param expirationSec time in seconds before a transaction expires.
-       * @param depositEos initial deposit.
-       * @param raw if true, resulting json is not formated.
-       * @param getResponse() returns a push-transaction json.
-      */
+
       CreateAccount(string creator, string accountName,
         string ownerKeyPubl, string activeKeyPubl, uint64_t depositEos = 1,
         bool skip = false, int expirationSec = 30,
@@ -42,13 +31,6 @@ namespace teos
           skip, expirationSec));
       }
 
-      /**
-       * @brief A constructor.
-       * @param reqJson json tree argument: {"creator":"<creator name>" "name":"<account name>"
-       * "ownerKey":"<owner public key>" "activeKey":"<active public key>"
-       * "skip":<false|true> "expiration":<int> "deposit":<int>}.
-       * @param getResponse() returns a push-transaction json.
-      */
       CreateAccount(ptree reqJson) : TeosCommand("", reqJson)
       {
         copy(createAccount(
@@ -154,7 +136,6 @@ Usage: ./teos create key [-j '{
       /**
        * @brief A constructor.
        * @param keyName key-pair id.
-       * @param getResponse() returns {"keyName":"<key name"
        * "privateKey":"<private key>" "publicKey":"<public key>"}.
        */
       CreateKey(string keyName, bool raw = false) : TeosCommand("") {
@@ -167,7 +148,6 @@ Usage: ./teos create key [-j '{
       /**
        * @brief A constructor.
        * @param reqJson a boost json tree argument: {"keyName":"<key name>"}.
-       * @param getResponse() returns {"keyName":"<key name"
        * "privateKey":"<private key>" "publicKey":"<public key>"}.
        */
       CreateKey(ptree reqJson, bool raw = false) : TeosCommand(
@@ -224,7 +204,7 @@ Usage: ./teos create key [-j '{"name":"<key name>"}'] [OPTIONS]
         return CreateKey(reqJson_);
       }
 
-      void printout(TeosCommand command, variables_map &vm) {
+      void printout(TeosControl command, variables_map &vm) {
         output("key name", "%s", GET_STRING(command, "name"));
         output("private key", "%s", GET_STRING(command, "privateKey"));
         output("public key", "%s", GET_STRING(command, "publicKey"));

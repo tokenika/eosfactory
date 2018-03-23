@@ -66,7 +66,7 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
         return GetInfo(reqJson_);
       }
 
-      void printout(TeosCommand command, variables_map &vm) {
+      void printout(TeosControl command, variables_map &vm) {
         output("head block", "%d", command.get<int>("head_block_num"));
         output("head block time", "%s", GET_STRING(command, "head_block_time"));
         output("last irreversible block", "%d", command.get<int>("last_irreversible_block_num"));
@@ -141,7 +141,7 @@ Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
         return GetBlock(reqJson_);
       }
 
-      void printout(TeosCommand command, variables_map &vm) {
+      void printout(TeosControl command, variables_map &vm) {
         output("block number", "%d", command.get<int>("block_num"));
         output("timestamp", "%s", GET_STRING(command, "timestamp"));
         output("ref block prefix", "%s", GET_STRING(command, "ref_block_prefix"));
@@ -212,7 +212,7 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
         return GetAccount(reqJson_);
       }
 
-      void printout(TeosCommand command, variables_map &vm) {
+      void printout(TeosControl command, variables_map &vm) {
         output("account name", "%s", GET_STRING(command, "account_name"));
         output("eos balance", "%s", GET_STRING(command, "eos_balance"));
         output("staked balance", "%s", GET_STRING(command, "staked_balance"));
@@ -233,7 +233,6 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
       * @brief A constructor.
       * @param wastFile where write the wast code to. If "_", print to stdout.
       * @param abiFile where write the abi code to. If "_", print to stdout.
-      * @param getResponse() returns {"account_name":"<account name>", "code_hash":"<code hash>",
       * "wast":"<WAST code>", "abi":"<abi structure>"}.
       */
       GetCode(string accountName, 
@@ -315,7 +314,7 @@ Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file
         return GetCode(reqJson_);
       }
 
-      void printout(TeosCommand command, variables_map &vm) {
+      void printout(TeosControl command, variables_map &vm) {
         output("account name", "%s", GET_STRING(command, "account_name"));
         output("code hash", "%s", GET_STRING(command, "code_hash"));
         if (wastFile == WRITE_TO_STDOUT) {

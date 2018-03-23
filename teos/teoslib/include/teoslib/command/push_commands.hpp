@@ -21,17 +21,6 @@ namespace teos
     class PushAction : public TeosCommand
     {
     public:
-      /**
-      * @brief A constructor.
-      * @param contract  the account providing the contract to execute.
-      * @param action the account providing the contract to execute.
-      * @param data the arguments to the contract.
-      * @param scope a comma separated list of accounts in scope for this operation.
-      * @param skip specifies that unlocked wallet keys should not be used to sign transaction.
-      * @expiration sets the time in seconds before a transaction expires.
-      * @param forceUnique forces the transaction to be unique.
-      * @param getResponse() returns {"password":"<password>"}.
-      */
       PushAction(string contractName, string action, string data,
         string scope, string permission, bool forceUnique = false,
         bool skip = false, int expiration = 30, bool raw = false)
@@ -46,14 +35,6 @@ namespace teos
           skip, expiration, forceUnique));
       }
 
-      /**
-      * @brief A constructor.
-      * @param reqJson json tree argument: {"contract":"<contract name>", 
-      * "action":"<action on contract>", "data":"<json tree>", "scope":"<account list>",
-      * "permission":"<accountName@permitionLevel>", "skip":<true|false>, "expiration":<int>,
-      * "force-unique":<true|false>}.
-      * @param getResponse() returns {?????????????????????????}.
-      */
       PushAction(ptree reqJson, bool raw = false) : TeosCommand(
         "", reqJson)
       {

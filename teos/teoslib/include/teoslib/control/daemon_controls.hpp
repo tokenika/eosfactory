@@ -15,8 +15,18 @@ namespace teos {
      */
     class DaemonDeleteWallets : public  TeosControl
     {
+      void action();
       public:
-        DaemonDeleteWallets();
+        DaemonDeleteWallets(string name = "", string dataDir = "")
+        {
+          reqJson_.put("name", name);
+          reqJson_.put("data-dir", dataDir);
+          action();
+        }
+
+        DaemonDeleteWallets(ptree reqJson) : TeosControl(reqJson){
+          action();
+        }
     };
 
     /**
@@ -33,12 +43,42 @@ namespace teos {
       const char* getUsage() {
         return R"EOF(
 Delete locally opened walets.
-Usage: ./teos daemon delete_wallets
+Usage: ./teos [] daemon delete_wallets 
 )EOF";
       }
 
+      string name;
+      string dataDir;
+
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
+          ("name,n"
+            , value<string>(&dataDir)->default_value("")
+            ,"The name of the new wallet")          
+          ("data-dir,d"
+            , value<string>(&name)->default_value("")
+            ,"Where EOSIO daemon has its config.ini file.");
+
+        return od;
+      }
+
+      void setPosDesc(positional_options_description& pos_desc) {
+        pos_desc.add("name", 1);
+      }
+
+      bool checkArguments(variables_map &vm) {
+        if (vm.count("name")) {
+          reqJson_.put("name", name);
+        }
+        if (vm.count("data-dir")) {
+          reqJson_.put("data-dir", dataDir);
+        }        
+        return true;
+      }
+
       TeosControl executeCommand() {
-        return DaemonDeleteWallets();
+        return DaemonDeleteWallets(reqJson_);
       }  
 
       void printout(TeosControl command, variables_map &vm); 

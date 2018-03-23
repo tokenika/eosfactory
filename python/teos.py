@@ -101,16 +101,13 @@ class _Command:
     _args = json.loads("{}")
     _error = False      
 
-    def __init__(self, first, second, options = []):
+    def __init__(self, first, second):
         V = ""
         if _is_verbose:
-            V = "-V"         
-        command_line = [
-            setup.teos_exe, first, second, V,
-            "--json", str(self._args).replace("'", '"'), "--both"]
-        command_line.extend(options)
+            V = "-V"       
 
-        process = subprocess.run(command_line,
+        process = subprocess.run([setup.teos_exe, first, second, V,
+            "--json", str(self._args).replace("'", '"'), "--both"],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)  
 
         if _is_verbose:
@@ -142,11 +139,44 @@ class GetAccount(_Command):
 """ Create a new wallet locally.
 """
 class WalletCreate(_Command):
-    def __init__(self, walletName="default"):
-        self._args["name"] = walletName
+    def __init__(self, wallet_name="default"):
+        self._args["name"] = wallet_name
         _Command.__init__(self, "wallet", "create")
         if not self._error:       
             self.password = self._json["password"]
+
+
+class WalletList(_Command):
+    def __init__(self):
+        _Command.__init__(self, "wallet", "list")
+
+
+class WalletImport(_Command):
+    def __init__(self, wallet_name, key_private):
+        self._args["name"] = wallet_name
+        self._args["key"] = key_private
+        _Command.__init__(self, "wallet", "import")
+        if not self._error:       
+            self.key_private = key_private
+
+
+class WalletOpen(_Command):
+    def __init__(self, wallet_name):
+        self._args["name"] = wallet_name
+        _Command.__init__(self, "wallet", "open")
+
+
+class WalletLock(_Command):
+    def __init__(self, wallet_name):
+        self._args["name"] = wallet_name
+        _Command.__init__(self, "wallet", "lock")
+
+
+class WalletUnlock(_Command):
+    def __init__(self, wallet_name, pswd):
+        self._args["name"] = wallet_name
+        self._args["password"] = pswd
+        _Command.__init__(self, "wallet", "unlock")
 
 
 """ Get current blockchain information.
@@ -182,12 +212,14 @@ class CreateKey(_Command):
         if not self._error:  
             self.private_key = self._json["privateKey"]
             self.public_key = self._json["publicKey"]
+            self.name = keyPairName
 
 
 """ Start test EOSIO Daemon.
 """
 class DaemonStart(_Command):
     def __init__(self):
+        self._args["resync-blockchain"] = 0
         _Command.__init__(self, "daemon", "start")
 
 
@@ -195,7 +227,9 @@ class DaemonStart(_Command):
 """
 class DaemonClear(_Command):
     def __init__(self):
-        _Command.__init__(self, "daemon", "start", ["-c"])        
+        self._args["resync-blockchain"] = 1
+        print(self._args)
+        _Command.__init__(self, "daemon", "start")        
 
 
 """ Stop test EOSIO Daemon.
@@ -205,10 +239,56 @@ class DaemonStop(_Command):
         _Command.__init__(self, "daemon", "stop")
 
 
+
 """ Delete local wallets.
 """
 class DaemonDeleteWallets(_Command):
-    def __init__(self):
+    def __init__(self, name="", data_dir=""):
+        self._args["name"] = name
+        self._args["data-dir"] = data_dir
         _Command.__init__(self, "daemon", "delete_wallets")
+
+
+class Wallet:
+
+    def __init__(self, name="default"):
+        wallet = WalletCreate(name)
+        self.pswd = wallet.password
+        self.name = name
+        self.key_list = []
+
+    def list(self):
+        WalletList()
+
+    def lock(self):
+        WalletLock(self.name)
+
+    def unlock(self):
+        WalletUnlock(self.name, self.pswd)
+
+    def import_key(self, key_pair):
+        WalletImport(self.name, key_pair.private_key)
+        self.key_list.append([key_pair.name, key_pair.private_key])
+        
+    def delete(self):
+        DaemonDeleteWallets(self.name)
+
+    def open(self):
+        WalletOpen(self.name)
+
+
+class Daemon:
+    def start(self):
+        DaemonStart()
+
+    def clear(self):
+        DaemonClear()
+
+    def stop(self):
+        DaemonStop()
+    
+    def delete_wallets(self):
+       DaemonDeleteWallets()
+
 
 

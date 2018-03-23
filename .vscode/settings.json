@@ -7,6 +7,8 @@
     "string_view": "cpp",
     "future": "cpp",
     "utility": "cpp",
-    "tuple": "cpp"
+    "tuple": "cpp",
+    "chrono": "cpp",
+    "algorithm": "cpp"
   }
 }

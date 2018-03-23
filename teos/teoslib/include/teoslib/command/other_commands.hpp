@@ -38,7 +38,7 @@ Usage: ./teos version client [-j '{}'] [OPTIONS]
         return VersionClient(reqJson_);
       }
 
-      void printout(TeosCommand command, variables_map &vm) {
+      void printout(TeosControl command, variables_map &vm) {
         output("Version", "%s", GET_STRING(command, "version"));
       }
 
