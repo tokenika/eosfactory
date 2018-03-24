@@ -217,16 +217,7 @@ Usage: ./teos wallet import [-j '{"name":"<wallet name>", "key":"<private key>"}
       {
         boost::replace_all(response, "[", "{\"wallets\":[");
         boost::replace_all(response, "]", "]}");
-        stringstream ss;
-        ss << response;
-        try {
-          read_json(ss, respJson);
-          stringstream ss1; // Try to write respJson, in order to check it.
-          json_parser::write_json(ss1, respJson, false);
-        }
-        catch (exception& e) {
-          putError(e.what());
-        }
+        TeosCommand::normResponse(response, respJson);
       }
 
     };
@@ -254,9 +245,9 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
       }
 
       void printout(TeosControl command, variables_map &vm) {
-        BOOST_FOREACH(ptree::value_type &v, command.respJson_)
+        BOOST_FOREACH(ptree::value_type &v
+          , command.respJson_.get_child("wallets"))
         {
-          assert(v.first.empty()); // array elements have no names
           output("wallet", "%s", v.second.data().c_str());
         }
       }
@@ -564,6 +555,13 @@ Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"
         string(walletCommandPath + "list_keys"), reqJson) {
         callEosd();
       }
+
+      void normResponse(string response, ptree &respJson) 
+      {
+        boost::replace_all(response, "[", "{\"keys\":[");
+        boost::replace_all(response, "]", "]}");
+        TeosCommand::normResponse(response, respJson);
+      }      
     };
 
     /**
@@ -589,10 +587,10 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
       }
 
       void printout(TeosControl command, variables_map &vm) {
-        BOOST_FOREACH(ptree::value_type &v, command.respJson_)
+        BOOST_FOREACH(ptree::value_type &v
+        , command.respJson_.get_child("keys"))
         {
-          assert(v.first.empty()); // array elements have no names
-          output("wallet", "%s", v.second.data().c_str());
+          output("key", "%s", v.second.data().c_str());
         }
       }
 

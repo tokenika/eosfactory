@@ -298,8 +298,11 @@ namespace teos {
 
       try{
         if(reqJson_.get("resync-blockchain", false)){
-          DaemonStop();          
+          DaemonStop();
+          DaemonDeleteWallets();          
         } else if(!getPid().empty()){
+          teos::TeosCommand tc = teos::command::GetInfo(); 
+          respJson_ = tc.respJson_; 
           return;
         }
 
@@ -322,7 +325,7 @@ namespace teos {
           int count = 10;
           do {
             tc = teos::command::GetInfo(); 
-            respJson_=tc.respJson_;                   
+            respJson_ = tc.respJson_;                   
             boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
             if(count-- == 0){
               putError(tc.errorMsg());

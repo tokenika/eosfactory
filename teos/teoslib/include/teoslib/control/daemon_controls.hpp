@@ -190,13 +190,12 @@ Usage: ./teos node start [Options]
       } 
 
       void printout(TeosControl command, variables_map &vm) {
-        sharp() << "Daemon is running." << endl;
-        if (vm.count("verbose") > 0) {
-          output("eosiod exe file", "%s", command.reqJson_.get<string>("eosiod_exe").c_str());
-          output("genesis state file", "%s", command.reqJson_.get<string>("genesis-json").c_str());
-          output("server address", "%s", command.reqJson_.get<string>("http-server-address").c_str());
-          output("config directory", "%s", command.reqJson_.get<string>("data-dir").c_str());
-        }
+        output("eosiod exe file", "%s", command.reqJson_.get<string>("eosiod_exe").c_str());
+        output("genesis state file", "%s", command.reqJson_.get<string>("genesis-json").c_str());
+        output("server address", "%s", command.reqJson_.get<string>("http-server-address").c_str());
+        output("config directory", "%s", command.reqJson_.get<string>("data-dir").c_str());
+        output("head block number", "%s", command.get<string>("head_block_num").c_str());
+        output("head block time", "%s", command.get<string>("head_block_time").c_str());
       }
     };
   
