@@ -5,7 +5,6 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 
@@ -42,6 +41,7 @@ namespace teos {
       { EOSIO_SOURCE_DIR,{ "EOSIO_SOURCE_DIR" } },
       { DAEMON_NAME,{ "DAEMON_NAME", "eosiod" } },
       { LOGOS_DIR,{ "LOGOS_DIR" } },
+      { CONTRACT_PATH,{ "CONTRACT_PATH" }},
       { WASM_CLANG,{ "WASM_CLANG", "/home/cartman/opt/wasm/bin/clang" } },
       { WASM_LLVM_LINK,{ "WASM_LLVM_LINK"
         , "/home/cartman/opt/wasm/bin/llvm-link" } },
@@ -74,6 +74,86 @@ namespace teos {
         return string(env);
       } 
     }
+
+    boost::filesystem::path getContractFile(
+        string contractFile, TeosControl& teosControl)
+    {
+      namespace bfs = boost::filesystem;
+
+      bfs::path contractFilePath(contractFile);
+      if(bfs::exists(contractFilePath)){
+        return contractFilePath;
+      }
+
+      string name = contractFilePath.stem().string();
+      contractFilePath = 
+        bfs::path(configValue(ConfigKeys::CONTRACT_PATH)) 
+        / name / contractFile;
+      if(bfs::exists(contractFilePath)){
+        return contractFilePath;
+      }
+      
+      contractFilePath = 
+        bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+        / "contracts" / name / contractFile;
+      if(bfs::exists(contractFilePath)){
+        return contractFilePath;
+      }
+
+      contractFilePath = 
+        bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+        / "build/contracts" / name / contractFile;
+      if(bfs::exists(contractFilePath)){
+        return contractFilePath;
+      }      
+
+      teosControl. putError("Cannot find the path to the contract file.");
+      return bfs::path("");
+    }
+
+    boost::filesystem::path getDataDir(
+      string dataDir, TeosControl& teosControl)
+    {
+      namespace bfs = boost::filesystem;
+
+      if(!dataDir.empty()){
+        bfs::path dataDirPath = bfs::path(dataDir);
+        if(!bfs::exists(dataDirPath))
+        {
+          try{
+            bfs::create_directories(bfs::path(dataDir));
+          } catch(exception& e){
+            teosControl.putError(e.what());
+            return bfs::path("");
+          }            
+        }
+        return dataDirPath;
+      }
+      
+      bfs::path dataDirPath = bfs::path(configValue(ConfigKeys::DATA_DIR));
+      if(bfs::exists(dataDirPath)){
+        return dataDirPath;
+      }
+
+      dataDirPath = 
+        bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) / "data-dir";
+      if(bfs::exists(dataDirPath)){
+        return dataDirPath;
+      }      
+
+      dataDirPath  = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+          / "build/programs" / configValue(ConfigKeys::DAEMON_NAME) 
+          / "data-dir";
+      if(bfs::exists(dataDirPath)){
+        return dataDirPath;
+      } 
+
+      if(!bfs::exists(dataDirPath)){
+        teosControl.putError("Cannot find the path to the data-dir directory.");
+        return bfs::path("");
+      } 
+    }
+
 
     //////////////////////////////////////////////////////////////////////////
 

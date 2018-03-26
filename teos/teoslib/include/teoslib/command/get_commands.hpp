@@ -252,7 +252,7 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
        */
       GetCode(ptree reqJson, bool raw = false) : TeosCommand(
         string(getCommandPath + "get_code"), reqJson) {
-        string wastFile = reqJson.get<string>("code");
+        string wastFile = reqJson.get<string>("wast");
         wastFile = wastFile == WRITE_TO_STDOUT ? "" : wastFile;
         string abiFile = reqJson.get<string>("abi");
         abiFile = abiFile == WRITE_TO_STDOUT ? "" : abiFile;

@@ -278,23 +278,10 @@ namespace teos {
         }
       }
 
-      if(reqJson_.get("data-dir", "").empty()){
-        bfs::path path(configValue(ConfigKeys::DATA_DIR));
-        if(!bfs::exists(path)){
-          path = bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
-            / "data-dir";
-        }
-        if(!bfs::exists(path)){
-          path = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
-            / "build/programs" / configValue(ConfigKeys::DAEMON_NAME) 
-            / "data-dir";
-        }
-        if(!bfs::exists(path)){
-          putError("Cannot deduce the path to the data-dir directory.");
-        } else {
-          reqJson_.put("data-dir", path.string());
-        }
-      }
+      reqJson_.put(
+        "data-dir"
+        , getDataDir(reqJson_.get("data-dir", ""), *this).string())
+        ;
 
       try{
         if(reqJson_.get("resync-blockchain", false)){
@@ -341,28 +328,8 @@ namespace teos {
     void DaemonDeleteWallets::action()
     {
       namespace bfs = boost::filesystem;
-      bfs::path dataDir;
-      if(reqJson_.get("data-dir", "").empty())
-      {
-        dataDir = bfs::path(configValue(ConfigKeys::DATA_DIR));
-        if(!bfs::exists(dataDir)){
-          dataDir = bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
-            / "data-dir";
-        }
-        if(!bfs::exists(dataDir)){
-          dataDir = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
-            / "build/programs" / configValue(ConfigKeys::DAEMON_NAME) 
-            / "data-dir";
-        }
-      } else
-      {
-        dataDir = bfs::path(reqJson_.get("data-dir", ""));
-      }
-      if(!bfs::exists(dataDir)){
-        putError("Cannot find the path to the data-dir directory.");
-        return;
-      } 
-
+      bfs::path dataDir = getDataDir(reqJson_.get("data-dir", ""), *this);
+      
       int count = 0; 
       try{
         if(!reqJson_.get("name", "").empty()){

@@ -23,6 +23,7 @@
 #include <WASM/WASM.h>
 #include <Runtime/Runtime.h>
 
+#include <teoslib/control/config.hpp>
 #include <teoslib/eos_interface.hpp>
 #include <teoslib/command/get_commands.hpp>
 
@@ -245,18 +246,24 @@ namespace teos {
       }
     }
 
-    TeosCommand setContract(string account, string wastPath, string abiPath,
-      bool skipSignature, int expiration)
+    TeosCommand setContract(
+      string account, string wastFile, string abiFile,
+      bool skipSignature, int expiration
+      )
     {
-      try {
-        if (!boost::filesystem::exists(wastPath)) {
-          return TeosCommand(boost::str(boost::format(
-              "Cannot find the wast file:\n %1%\n does not exist!\n") % wastPath)
-              , CODE_PATH);
-        }
+      namespace bfs = boost::filesystem;
+
+      try 
+      {
+        TeosCommand status;
+        bfs::path wastFilePath 
+          = teos::control::getContractFile(wastFile, status); 
+        if (status.isError_) {
+          return status;
+        }    
 
         std::string wast;
-        fc::read_file_contents(wastPath, wast);
+        fc::read_file_contents(wastFilePath, wast);
         vector<uint8_t> wasm;
 
         const string binary_wasm_header = "\x00\x61\x73\x6d";
@@ -264,7 +271,7 @@ namespace teos {
           wasm = vector<uint8_t>(wast.begin(), wast.end());
         }
         else {
-          TeosCommand status = assemble_wast(wast, wasm);
+          status = assemble_wast(wast, wasm);
           if (status.isError_) {
             return status;
           }          
@@ -277,15 +284,18 @@ namespace teos {
         chain::signed_transaction trx;
         trx.actions.emplace_back( vector<chain::permission_level>{{account,"active"}}, handler);
 
-        if (abiPath.length() > 0) {
-          if (!boost::filesystem::exists(abiPath)) {
-            return TeosCommand(boost::str(boost::format(
-                "Cannot find the abi file:\n %1%\n does not exist!\n") % abiPath)
-                , CODE_PATH);
-          }
+        if (!abiFile.empty()) 
+        {
+          TeosCommand status;
+          bfs::path abiFilePath 
+            = teos::control::getContractFile(abiFile, status); 
+          if (status.isError_) {
+            return status;
+          }         
+          
           chain::contracts::setabi handler;
           handler.account = account;
-          handler.abi = fc::json::from_file(abiPath).as<chain::contracts::abi_def>();
+          handler.abi = fc::json::from_file(abiFilePath).as<chain::contracts::abi_def>();
           trx.actions.emplace_back( vector<chain::permission_level>{{account,"active"}}, handler);
         }
         //std::cout << "Publishing contract..." << std::endl;
@@ -296,33 +306,35 @@ namespace teos {
       }
     }
 
-    TeosCommand getCode(string accountName, string wastPath, string abiPath) {
+    TeosCommand getCode(string accountName, string wastFile, string abiFile) 
+    {
       //auto result = call(get_code_func, fc::mutable_variant_object("account_name", accountName));
       CallChain callGetCode(string(getCommandPath + "get_code"), 
         fc::mutable_variant_object("account_name", accountName));
       auto result = callGetCode.fcVariant;
 
-      if (wastPath.size()) {
+      if (!wastFile.empty()) {
         auto code = result["wast"].as_string();
-        std::ofstream out(wastPath.c_str());
+
+        std::ofstream out(wastFile.c_str());
         if (out.is_open()) {
           out << code;
         }
         else {
           return TeosCommand(boost::str(boost::format(
-              "Cannot open the wast file:\n %1%\n") % wastPath), CODE_PATH);
+              "Cannot open the wast file:\n %1%\n") % wastFile), CODE_PATH);
         }
       }
 
-      if (abiPath.size()) {
+      if (abiFile.size()) {
         auto abi = fc::json::to_pretty_string(result["abi"]);
-        std::ofstream out(abiPath.c_str());
+        std::ofstream out(abiFile.c_str());
         if (out.is_open()) {
           out << abi;
         }
         else {
           return TeosCommand(boost::str(boost::format(
-              "Cannot open the abi file:\n %1%\n") % abiPath), CODE_PATH);
+              "Cannot open the abi file:\n %1%\n") % abiFile), CODE_PATH);
         } 
       }
       return callGetCode;

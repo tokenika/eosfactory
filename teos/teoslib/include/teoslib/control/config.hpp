@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <string>
+#include <boost/filesystem.hpp>
 
 #include <teoslib/control.hpp>
 
@@ -13,9 +14,15 @@ namespace teos {
         , GENESIS_JSON, EOSIO_DAEMON_ADDRESS
         , EOSIO_WALLET_ADDRESS, DATA_DIR
         , EOSIO_INSTALL_DIR, EOSIO_SOURCE_DIR, DAEMON_NAME, LOGOS_DIR
+        , CONTRACT_PATH
         , WASM_CLANG, WASM_LLVM_LINK, WASM_LLC, BINARYEN_BIN
     };
-    extern string configValue(ConfigKeys configKey, bool verbose = false);
+    string configValue(ConfigKeys configKey, bool verbose = false);
+    boost::filesystem::path getContractFile(
+        string contractFile, TeosControl& teosControl);
+    boost::filesystem::path getDataDir(
+      string dataDir, TeosControl& teosControl);
+
 
 #define CONFIG_TEOS_ACTION "action"
 #define CONFIG_TEOS_RESET_ACTION "reset"

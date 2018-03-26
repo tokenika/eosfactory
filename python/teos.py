@@ -220,8 +220,9 @@ class GetCode(_Command):
         _Command.__init__(self, "get", "code", is_verbose)
         if not self.error:
             self.code_hash = self._this["code_hash"]
-            self.wast = self._this["wast"]            
-            self.abi = self._this["abi"]
+            self.wast = self._this["wast"] 
+            if "abi" in self._this:          
+                self.abi = self._this["abi"]
 
 
 """ Create a pair of cryptographic keys.

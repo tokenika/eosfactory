@@ -62,11 +62,8 @@ Usage: ./teos [http address] create key [-j '{
       string account;
       string wast;
       string abi;
-      string activeKey;
       bool skip;
       int expiration;
-      int deposit;
-
 
       options_description  argumentDescription() {
         options_description od("");
@@ -80,9 +77,7 @@ Usage: ./teos [http address] create key [-j '{
             , "Specify that unlocked wallet keys should not be used to "
               "sign transaction, defaults to false")
           ("expiration,x", value<int>(&expiration)->default_value(30)
-            , "The time in seconds before a transaction expires")
-          ("deposit,d", value<int>(&deposit)->default_value(1)
-            , "The initial deposit");
+            , "The time in seconds before a transaction expires");
         return od;
       }
 
@@ -101,6 +96,9 @@ Usage: ./teos [http address] create key [-j '{
             ok = true;
           }
         }
+        reqJson_.put("abi", abi);
+        reqJson_.put("skip", skip);
+        reqJson_.put("expiration", expiration);
         return ok;
       }
 
