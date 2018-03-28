@@ -28,63 +28,71 @@ void saveConfigJson(boost::property_tree::ptree json){
 namespace teos {
   namespace control {
 
-vector<string> XXX = {"","fffa"};
-
 #define NOT_DEFINED_VALUE ""
-#define EMPTY ""
+  #define EMPTY ""
+    typedef vector<string> arg;
 
-    enum ConfigKeys { NOT_DEFINED
-        , GENESIS_JSON, EOSIO_DAEMON_ADDRESS
-        , EOSIO_WALLET_ADDRESS, CONFIG_DIR, WALLET_DIR
-        , EOSIO_SOURCE_DIR, DAEMON_NAME, LOGOS_DIR
-        , CONTRACT_PATH
-        , WASM_CLANG, WASM_LLVM_LINK, WASM_LLC, BINARYEN_BIN
-    };
+/*
+  --genesis-json arg (="genesis.json")  File to read Genesis State from
+  --resync-blockchain                   clear chain database and block log
+  --http-server-address arg (=127.0.0.1:8888)
+                                        The local IP and port to listen for
+                                        incoming http connections.
+  --wallet-dir arg (=".")               The path of the wallet files (absolute
+                                        path or relative to application data
+                                        dir)
 
-    
+  -d [ --data-dir ] arg                 Directory containing program runtime
+                                        data
+  --config-dir arg                      Directory containing configuration
+                                        files such as config.ini
+  -c [ --config ] arg (="config.ini")   Configuration file name relative to
+                                        config-dir
 
-    map<ConfigKeys, vector<string>> configMap =
-    {
-      { EOSIO_DAEMON_ADDRESS,{ "EOSIO_DAEMON_ADDRESS"
-        , LOCALHOST_HTTP_ADDRESS} },
-      { EOSIO_WALLET_ADDRESS,{ "EOSIO_WALLET_ADDRESS", EMPTY } },
-      { GENESIS_JSON,{ "genesis-json", "resources/genesis.json" } },
-      { CONFIG_DIR,{ "config-dir" } },
-      { WALLET_DIR,{ "wallet-dir" } },
-      { EOSIO_SOURCE_DIR,{ "EOSIO_SOURCE_DIR" } },
-      { DAEMON_NAME,{ "DAEMON_NAME", "nodeos" } },
-      { LOGOS_DIR,{ "LOGOS_DIR" } },
-      { CONTRACT_PATH,{ "CONTRACT_PATH" }},
-      { WASM_CLANG,{ "WASM_CLANG", "/home/cartman/opt/wasm/bin/clang" } },
-      { WASM_LLVM_LINK,{ "WASM_LLVM_LINK"
-        , "/home/cartman/opt/wasm/bin/llvm-link" } },
-      { WASM_LLC,{ "WASM_LLC", "/home/cartman/opt/wasm/bin/llc" } },
-      { BINARYEN_BIN,{ "BINARYEN_BIN", "/home/cartman/opt/binaryen/bin/" } },
-    };
+daemon_exe: 
 
-    string configValue(ConfigKeys configKey, bool verbose = false);
+config-dir: E:\Workspaces\EOS\eos\build\etc\eosio\node_00/
+E:\Workspaces\EOS\eos\build\etc\eosio\node_00/config.ini
+E:\Workspaces\EOS\eos\build\etc\eosio\node_00/genesis.json
+
+data-dir: E:\Workspaces\EOS\eos\build\var\lib\eosio\node_00/
+E:\Workspaces\EOS\eos\build\var\lib\eosio\node_00\blocks
+E:\Workspaces\EOS\eos\build\var\lib\eosio\node_00\shared_mem
+
+wallet-dir: .
+E:\Workspaces\EOS\eos\build\var\lib\eosio\node_00/default.wallet
+
+*/   
+
+    arg EOSIO_SOURCE_DIR = { "EOSIO_SOURCE_DIR" };
+    arg EOSIO_DAEMON_ADDRESS = { "EOSIO_DAEMON_ADDRESS"
+        , LOCALHOST_HTTP_ADDRESS };
+    arg EOSIO_WALLET_ADDRESS = { "EOSIO_WALLET_ADDRESS", EMPTY };
+    arg GENESIS_JSON = { "genesis-json", "resources/genesis.json" };
+    arg CONFIG_DIR = { "config-dir" };
+    arg WALLET_DIR = { "wallet-dir" };
+    arg DAEMON_NAME = { "DAEMON_NAME", "nodeos" };
+    arg LOGOS_DIR = { "LOGOS_DIR" };
+    arg CONTRACT_PATH = { "CONTRACT_PATH" };
+    arg WASM_CLANG = { "WASM_CLANG", "/home/cartman/opt/wasm/bin/clang" };
+    arg WASM_LLVM_LINK = { "WASM_LLVM_LINK"
+        , "/home/cartman/opt/wasm/bin/llvm-link" };
+    arg WASM_LLC = { "WASM_LLC", "/home/cartman/opt/wasm/bin/llc" };
+    arg BINARYEN_BIN = { "BINARYEN_BIN", "/home/cartman/opt/binaryen/bin/" };
 
     namespace bfs = boost::filesystem;
-    
-    vector<string> configMapValue(ConfigKeys configKey) {
-      auto it = configMap.find(configKey);
-      return (it != configMap.end()) 
-        ? configMap.at(configKey)
-        : vector<string>({NOT_DEFINED_VALUE});
-    }
 
-    string configValue(ConfigKeys configKey, bool verbose) 
+    string configValue(arg configKey, bool verbose = false) 
     {
-      vector<string> entry = configMapValue(configKey);
       boost::property_tree::ptree json = TeosControl::getConfig(verbose);
-      string value = json.get(entry[0], NOT_DEFINED_VALUE);
+      string value = json.get(configKey[0], NOT_DEFINED_VALUE);
 
       if(value != NOT_DEFINED_VALUE) {
         return value;
       } else {
-        char* env = getenv(entry[0].c_str());
+        char* env = getenv(configKey[0].c_str());
         if(env == nullptr){
-          return entry.size() > 1 ? entry[1] : NOT_DEFINED_VALUE;          
+          return configKey.size() > 1 ? configKey[1] : NOT_DEFINED_VALUE;          
         }
         return string(env);
       } 
@@ -102,21 +110,21 @@ vector<string> XXX = {"","fffa"};
 
       string name = contractFilePath.stem().string();
       contractFilePath = 
-        bfs::path(configValue(ConfigKeys::CONTRACT_PATH)) 
+        bfs::path(configValue(CONTRACT_PATH)) 
         / name / contractFile;
       if(bfs::exists(contractFilePath)){
         return contractFilePath;
       }
       
       contractFilePath = 
-        bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+        bfs::path(configValue(EOSIO_SOURCE_DIR))
         / "contracts" / name / contractFile;
       if(bfs::exists(contractFilePath)){
         return contractFilePath;
       }
 
       contractFilePath = 
-        bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+        bfs::path(configValue(EOSIO_SOURCE_DIR))
         / "build/contracts" / name / contractFile;
       if(bfs::exists(contractFilePath)){
         return contractFilePath;
@@ -132,7 +140,7 @@ vector<string> XXX = {"","fffa"};
         return address;
       }
 
-      return configValue(ConfigKeys::EOSIO_DAEMON_ADDRESS);
+      return configValue(EOSIO_DAEMON_ADDRESS);
     }
 
     string getHttpWalletAddress(string address)
@@ -140,9 +148,9 @@ vector<string> XXX = {"","fffa"};
       if(!address.empty()) {
         return address;
       }
-      string walletAddress = configValue(ConfigKeys::EOSIO_WALLET_ADDRESS);
+      string walletAddress = configValue(EOSIO_WALLET_ADDRESS);
       return walletAddress.empty() 
-        ? configValue(ConfigKeys::EOSIO_DAEMON_ADDRESS) : walletAddress;
+        ? configValue(EOSIO_DAEMON_ADDRESS) : walletAddress;
     }
     
 
@@ -166,7 +174,7 @@ vector<string> XXX = {"","fffa"};
         }
 
         {
-          wantedPath = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+          wantedPath = bfs::path(configValue(EOSIO_SOURCE_DIR))
             / "genesis.json";
           if(bfs::exists(wantedPath)) {
             return wantedPath;
@@ -205,9 +213,9 @@ vector<string> XXX = {"","fffa"};
 
         {
           wantedPath 
-            = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+            = bfs::path(configValue(EOSIO_SOURCE_DIR))
               / "build/etc/eosio/node_00" 
-              / configValue(ConfigKeys::DAEMON_NAME);
+              / configValue(DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
             return wantedPath;
           }          
@@ -215,9 +223,9 @@ vector<string> XXX = {"","fffa"};
     
         {
           wantedPath 
-            = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
-              / "build/programs/" / configValue(ConfigKeys::DAEMON_NAME)
-              / configValue(ConfigKeys::DAEMON_NAME);
+            = bfs::path(configValue(EOSIO_SOURCE_DIR))
+              / "build/programs/" / configValue(DAEMON_NAME)
+              / configValue(DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
             return wantedPath;
           }          
@@ -225,7 +233,7 @@ vector<string> XXX = {"","fffa"};
 
         {
           wantedPath = bfs::path("/usr/local/bin")
-              / configValue(ConfigKeys::DAEMON_NAME);
+              / configValue(DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
             return wantedPath;
           }             
@@ -273,14 +281,14 @@ vector<string> XXX = {"","fffa"};
         }
         
         {
-          wantedPath = bfs::path(configValue(ConfigKeys::CONFIG_DIR));
+          wantedPath = bfs::path(configValue(CONFIG_DIR));
           if(bfs::exists(wantedPath) && bfs::is_directory(wantedPath)){
             return wantedPath;
           }            
         }
    
         {
-          wantedPath  = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+          wantedPath  = bfs::path(configValue(EOSIO_SOURCE_DIR))
               / "build/etc/eosio/node_00";
           if(bfs::exists(wantedPath / "config.ini")){
             return wantedPath;
@@ -339,12 +347,12 @@ vector<string> XXX = {"","fffa"};
           }
         }
         
-        wantedPath = bfs::path(configValue(ConfigKeys::WALLET_DIR));
+        wantedPath = bfs::path(configValue(WALLET_DIR));
         if(bfs::exists(wantedPath) && bfs::is_directory(wantedPath)) {
           return wantedPath;
         }     
 
-        wantedPath  = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
+        wantedPath  = bfs::path(configValue(EOSIO_SOURCE_DIR))
             / "build/etc/eosio/node_00/wallet-dir";
         if(bfs::exists(wantedPath) && bfs::is_directory(wantedPath)){
           return wantedPath;
@@ -364,23 +372,23 @@ vector<string> XXX = {"","fffa"};
     }
 
     string getDaemonName(){
-      return configValue(ConfigKeys::DAEMON_NAME);
+      return configValue(DAEMON_NAME);
     }
 
     string getWASM_CLANG(){
-      return configValue(ConfigKeys::WASM_CLANG);
+      return configValue(WASM_CLANG);
     }
 
     string getWASM_LLVM_LINK(){
-      return configValue(ConfigKeys::WASM_LLVM_LINK);
+      return configValue(WASM_LLVM_LINK);
     }
 
     string getBINARYEN_BIN(){
-      return configValue(ConfigKeys::BINARYEN_BIN);
+      return configValue(BINARYEN_BIN);
     }
 
     string getWASM_LLC(){
-      return configValue(ConfigKeys::WASM_LLC);
+      return configValue(WASM_LLC);
     }    
   }
 }

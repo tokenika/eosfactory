@@ -45,6 +45,7 @@
     "cwchar": "cpp",
     "cwctype": "cpp",
     "*.ipp": "cpp",
-    "xstring": "cpp"
+    "xstring": "cpp",
+    "vector": "cpp"
   }
 }
