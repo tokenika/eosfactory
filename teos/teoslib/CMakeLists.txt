@@ -15,10 +15,11 @@ target_include_directories( ${LIB_NAME}
     ${Boost_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
 
-    ${EOSIO_SOURCE_DIR}/libraries/wasm-jit/include
+    ${EOSIO_SOURCE_DIR}/libraries/wasm-jit/Include
     ${EOSIO_SOURCE_DIR}/libraries/fc/include
     ${EOSIO_SOURCE_DIR}/libraries/appbase/include
     ${EOSIO_SOURCE_DIR}/libraries/utilities/include
+    ${EOSIO_SOURCE_DIR}/libraries/softfloat/source/include
     ${EOSIO_SOURCE_DIR}/libraries/chain/include
     ${EOSIO_SOURCE_DIR}/libraries/types/include
     ${EOSIO_SOURCE_DIR}/libraries/chainbase/include

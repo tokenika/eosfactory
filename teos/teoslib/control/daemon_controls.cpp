@@ -22,16 +22,11 @@ using namespace std;
 namespace teos {
   namespace control {
 
-    void setEnvironmetVariable(string name, string value)
-    {
-      string commandLine = "export " + name + "=" + value;
-      boost::process::spawn(commandLine);
-    }
-
     string getPid()
     {
       ipstream pipe_stream;
-      child c(string("pidof ") + configValue(ConfigKeys::DAEMON_NAME), std_out > pipe_stream);
+      child c(string("pidof ") + getDaemonName() 
+        , std_out > pipe_stream);
 
       string line;
       stringstream ss;
@@ -40,6 +35,21 @@ namespace teos {
       }
       c.wait();
       return ss.str();
+    }
+
+    bool isWindowsUbuntu()
+    {
+      ipstream pipe_stream;
+      child c(string("cat /proc/version"), std_out > pipe_stream);
+
+      string line;
+      stringstream ss;
+      while (pipe_stream && getline(pipe_stream, line) && !line.empty()) {
+        ss << line;
+      }
+      c.wait();
+      string resp = ss.str();
+      return resp.find("Microsoft") != string::npos;
     }
 
     void boostProcessSystem(string commandLine) {
@@ -58,28 +68,28 @@ namespace teos {
       boost::filesystem::path typesHppPath(typesHpp);
       string name = typesHppPath.stem().string();
 
-      string commandLine;
-      commandLine += configValue(ConfigKeys::EOSIO_INSTALL_DIR) + "/bin/abi_gen"
-        + " -extra-arg=-c"
-        + " -extra-arg=--std=c++14"
-        + " -extra-arg=--target=wasm32"
-        + " -extra-arg=-I" + configValue(ConfigKeys::EOSIO_INSTALL_DIR) + "/include"
-        + " -extra-arg=-I" + typesHppPath.parent_path().string();
+      // string commandLine;
+      // commandLine += configValue( "/bin/abi_gen" )
+      //   + " -extra-arg=-c"
+      //   + " -extra-arg=--std=c++14"
+      //   + " -extra-arg=--target=wasm32"
+      //   + " -extra-arg=-I" + configValue("/include"
+      //   + " -extra-arg=-I" + typesHppPath.parent_path().string();
 
-      for (string dir : includeDir) {
-        commandLine += "-extra-arg=-I" + dir;
-      }
+      // for (string dir : includeDir) {
+      //   commandLine += "-extra-arg=-I" + dir;
+      // }
 
-      commandLine +=
-        string(" -extra-arg=-fparse-all-comments")
-        + " -destination-file=" + targetAbiFile
-        + " -verbose=0"
-        + " -context=/mnt/hgfs/Workspaces/EOS/eos/contracts/eoslib"
-        + " " + typesHpp
-        + " --";
+      // commandLine +=
+      //   string(" -extra-arg=-fparse-all-comments")
+      //   + " -destination-file=" + targetAbiFile
+      //   + " -verbose=0"
+      //   + " -context=/mnt/hgfs/Workspaces/EOS/eos/contracts/eoslib"
+      //   + " " + typesHpp
+      //   + " --";
 
-      cout << commandLine << endl;
-      boostProcessSystem(commandLine);
+      // cout << commandLine << endl;
+      // boostProcessSystem(commandLine);
 
       /*
       call:
@@ -108,8 +118,7 @@ namespace teos {
     void wasmClangHelp()
     {
       string commandLine;
-      commandLine += configValue(ConfigKeys::WASM_CLANG)
-        + " --help";
+      commandLine += getWASM_CLANG() + " --help";
       boostProcessSystem(commandLine);
     }
 
@@ -140,11 +149,11 @@ namespace teos {
         objectFileList += output.string() + " ";
 
         string commandLine;
-        commandLine += configValue(ConfigKeys::WASM_CLANG)
-          + " -emit-llvm -O3 --std=c++14 --target=wasm32 -ffreestanding -nostdlib"
-          + " -fno-threadsafe-statics -fno-rtti -fno-exceptions"
-          + " -I " + configValue(ConfigKeys::EOSIO_INSTALL_DIR) + "/include"
-          + " -I " + srcFile.parent_path().string();
+        // commandLine += configValue(ConfigKeys::WASM_CLANG)
+        //   + " -emit-llvm -O3 --std=c++14 --target=wasm32 -ffreestanding -nostdlib"
+        //   + " -fno-threadsafe-statics -fno-rtti -fno-exceptions"
+        //   + " -I " + configValue("/include"
+        //   + " -I " + srcFile.parent_path().string();
 
         for (string dir : includeDir) {
           commandLine += " -I " + dir;
@@ -160,7 +169,7 @@ namespace teos {
       string linked = workdir.string() + "/linked.bc";
       {
         string commandLine;
-        commandLine += configValue(ConfigKeys::WASM_LLVM_LINK)
+        commandLine += getWASM_LLVM_LINK()
           + " -o " + linked
           + " " + objectFileList;
         cout << commandLine << endl;
@@ -175,7 +184,7 @@ namespace teos {
       string assembly = workdir.string() + "/assembly.s";
       {
         string commandLine;
-        commandLine += configValue(ConfigKeys::WASM_LLC)
+        commandLine += getWASM_LLC()
           + " --asm-verbose=false"
           + " -o " + assembly
           + " " + linked;
@@ -191,7 +200,7 @@ namespace teos {
 
       {
         string commandLine;
-        commandLine += configValue(ConfigKeys::BINARYEN_BIN) + "/s2wasm"
+        commandLine += getBINARYEN_BIN() + "/s2wasm"
           + " -o " + targetWastFile
           + " -s 16384"
           + " " + assembly;
@@ -227,7 +236,7 @@ namespace teos {
           }
         }
         if (count < 0) {
-          putError(string("Failed to kill ") + configValue(ConfigKeys::DAEMON_NAME));
+          putError(string("Failed to kill ") + getDaemonName());
         }
       }
       catch (std::exception& e) {
@@ -237,50 +246,31 @@ namespace teos {
 
     void DaemonStart::action()
     {
-      namespace bfs = boost::filesystem;
-      if(reqJson_.get("http-server-address", "").empty())
-      {
-        reqJson_.put("http-server-address"
-          , configValue(ConfigKeys::EOSIO_DAEMON_ADDRESS));
-      }
-      if(reqJson_.get("eosiod_exe", "").empty())
-      {
-        bfs::path path 
-          = bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
-            / "/bin/" / configValue(ConfigKeys::DAEMON_NAME);
-
-        if(!bfs::exists(path)){
-          path = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
-          / "build/programs" / configValue(ConfigKeys::DAEMON_NAME)
-          / configValue(ConfigKeys::DAEMON_NAME);
-        }
-        if(!bfs::exists(path)){
-          putError("Cannot deduce the path to the daemon executable.");
-        } else {
-          reqJson_.put("eosiod_exe", path.string());
-        }
-      }
-
-      if(reqJson_.get("genesis-json", "").empty()){
-        bfs::path path(configValue(ConfigKeys::GENESIS_JSON));
-        if(!bfs::exists(path)){
-          path = bfs::path(configValue(ConfigKeys::EOSIO_INSTALL_DIR)) 
-            / "genesis.json";
-        }
-        if(!bfs::exists(path)){
-          path = bfs::path(configValue(ConfigKeys::EOSIO_SOURCE_DIR))
-            / "genesis.json";
-        }
-        if(!bfs::exists(path)){
-          putError("Cannot deduce the path to the genesis.json file.");
-        } else {
-          reqJson_.put("genesis-json", path.string());
-        }
-      }
+      reqJson_.put(
+        "http-server-address"
+        , getHttpServerAddress(reqJson_.get("http-server-address", ""))) 
+        ;      
 
       reqJson_.put(
-        "data-dir"
-        , getDataDir(reqJson_.get("data-dir", ""), *this).string())
+        "daemon_exe"
+        , getDaemonExe(reqJson_.get("daemon_exe", ""), *this).string())
+        ;
+
+      reqJson_.put(
+        "genesis-json"
+        , getGenesisJson(reqJson_.get("genesis-json", ""), *this).string())
+        ;      
+
+      reqJson_.put(
+        "config-dir"
+        , getConfigDir(reqJson_.get("config-dir", ""), *this).string())
+        ;
+
+      reqJson_.put(
+        "wallet-dir"
+        , getWalletDir(reqJson_.get("wallet-dir", ""), *this
+          , reqJson_.get("config-dir", "")
+          ).string())
         ;
 
       try{
@@ -293,32 +283,38 @@ namespace teos {
           return;
         }
 
-        string commandLine = reqJson_.get<string>("eosiod_exe")
+        string commandLine = reqJson_.get<string>("daemon_exe")
           + " --genesis-json " + reqJson_.get<string>("genesis-json")
-          + " --http-server-address " + reqJson_.get<string>("http-server-address")
-          + " --data-dir " + reqJson_.get<string>("data-dir");
+          + " --http-server-address " 
+          + reqJson_.get<string>("http-server-address")
+          + " --config-dir " + reqJson_.get<string>("config-dir")
+          + " --wallet-dir " + reqJson_.get<string>("wallet-dir")
+          ;
         if(reqJson_.get("resync-blockchain", false)) {
           commandLine += " --resync-blockchain";
         }
 
-        //cout << commandLine <<endl;
-        boost::process::system("gnome-terminal -- " + commandLine);
-
-        if(reqJson_.get("wait", true))
-        {
-          // Wait until the node is operational:
-          teos::TeosCommand tc;
-          teos::TeosCommand::httpAddress = reqJson_.get<string>("http-server-address");
-          int count = 10;
-          do {
-            tc = teos::command::GetInfo(); 
-            respJson_ = tc.respJson_;                   
-            boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
-            if(count-- == 0){
-              putError(tc.errorMsg());
-            }
-          } while (tc.isError_ && count > 0);
+        cout << commandLine <<endl;
+        if(isWindowsUbuntu()) {
+          boost::process::system("cmd.exe /c start bash.exe -c " 
+            + commandLine);
+        } else {
+          boost::process::system("gnome-terminal -- " + commandLine);
         }
+        
+        // Wait until the node is operational:
+        teos::TeosCommand tc;
+        teos::TeosCommand::httpAddress 
+          = reqJson_.get<string>("http-server-address");
+        int count = 10;
+        do {
+          tc = teos::command::GetInfo(); 
+          respJson_ = tc.respJson_;                   
+          boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
+          if(count-- == 0){
+            putError(tc.errorMsg());
+          }
+        } while (tc.isError_ && count > 0);
       }
       catch (std::exception& e) {
         putError(e.what());
@@ -328,7 +324,7 @@ namespace teos {
     void DaemonDeleteWallets::action()
     {
       namespace bfs = boost::filesystem;
-      bfs::path dataDir = getDataDir(reqJson_.get("data-dir", ""), *this);
+      bfs::path dataDir = getConfigDir(reqJson_.get("config-dir", ""), *this);
       
       int count = 0; 
       try{

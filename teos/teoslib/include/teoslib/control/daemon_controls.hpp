@@ -17,10 +17,13 @@ namespace teos {
     {
       void action();
       public:
-        DaemonDeleteWallets(string name = "", string dataDir = "")
+        DaemonDeleteWallets(
+          string name = "", string configDir = "", string walletDir = ""
+          )
         {
           reqJson_.put("name", name);
-          reqJson_.put("data-dir", dataDir);
+          reqJson_.put("config-dir", configDir);
+          reqJson_.put("wallet-dir", walletDir);
           action();
         }
 
@@ -48,17 +51,22 @@ Usage: ./teos [] daemon delete_wallets
       }
 
       string name;
-      string dataDir;
+      string configDir;
+      string walletDir;
 
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
           ("name,n"
-            , value<string>(&dataDir)->default_value("")
+            , value<string>(&configDir)->default_value("")
             ,"The name of the new wallet")          
-          ("data-dir,d"
+          ("config-dir,d"
             , value<string>(&name)->default_value("")
-            ,"Where EOSIO daemon has its config.ini file.");
+            ,"Where EOSIO daemon has its config.ini file.")
+          ("wallet-dir,d"
+            , value<string>(&name)->default_value("")
+            ,"The path of the wallet files (absolute path or "
+              "relative to application config dir).");
 
         return od;
       }
@@ -71,8 +79,8 @@ Usage: ./teos [] daemon delete_wallets
         if (vm.count("name")) {
           reqJson_.put("name", name);
         }
-        if (vm.count("data-dir")) {
-          reqJson_.put("data-dir", dataDir);
+        if (vm.count("config-dir")) {
+          reqJson_.put("config-dir", configDir);
         }        
         return true;
       }
@@ -128,17 +136,16 @@ Usage: ./teos node kill
     public:
       DaemonStart(
         bool resync_blockchain = false,
-        string eosiod_exe = "",
+        string daemon_exe = "",
         string genesis_json = "",
         string http_server_address = "",
-        string data_dir = "")
+        string CONFIG_DIR = "")
       {
         reqJson_.put("resync-blockchain", resync_blockchain);
-        reqJson_.put("eosiod_exe", eosiod_exe);
+        reqJson_.put("daemon_exe", daemon_exe);
         reqJson_.put("genesis-json", genesis_json);
         reqJson_.put("http_server_address_", http_server_address);
-        reqJson_.put("data-dir", data_dir);
-        reqJson_.put("wait", true);
+        reqJson_.put("config-dir", CONFIG_DIR);
         action();
       }
 
@@ -164,8 +171,7 @@ Usage: ./teos node start [Options]
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("clear,c", "Clear chain database and block log.")
-          ("skip,s", "Skip waiting for a block.");
+          ("clear,c", "Clear chain database and block log.");
             
         return od;
       }
@@ -177,11 +183,6 @@ Usage: ./teos node start [Options]
         } else {
           reqJson_.put("resync-blockchain", false);
         }
-        if(vm.count("skip")){
-          reqJson_.put("wait", false);
-        } else {
-          reqJson_.put("wait", true);
-        }
         return ok;
       }
 
@@ -190,10 +191,10 @@ Usage: ./teos node start [Options]
       } 
 
       void printout(TeosControl command, variables_map &vm) {
-        output("eosiod exe file", "%s", command.reqJson_.get<string>("eosiod_exe").c_str());
+        output("nodeos exe file", "%s", command.reqJson_.get<string>("daemon_exe").c_str());
         output("genesis state file", "%s", command.reqJson_.get<string>("genesis-json").c_str());
         output("server address", "%s", command.reqJson_.get<string>("http-server-address").c_str());
-        output("config directory", "%s", command.reqJson_.get<string>("data-dir").c_str());
+        output("config directory", "%s", command.reqJson_.get<string>("config-dir").c_str());
         output("head block number", "%s", command.get<string>("head_block_num").c_str());
         output("head block time", "%s", command.get<string>("head_block_time").c_str());
       }

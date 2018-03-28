@@ -20,16 +20,16 @@
 using boost::asio::ip::tcp;
 #define CLEAR_CHAIN_DATABASE_AND_BLOCK_LOG "--resync-blockchain"
 #define MAX_LENGTH  1024
-#define DAEMON_NAME "eosiod"
+#define DAEMON_NAME "nodeos"
 
 namespace pentagon {
   namespace control {
     void stopChain() {
-      auto pid = boost::process::system("echo", "$(pidof eosiod)");
+      auto pid = boost::process::system("echo", "$(pidof nodeos)");
       int count = 10;
       while (pid > 0 && count > 0) {
         boost::this_thread::sleep( boost::posix_time::milliseconds(1000) );
-        pid = boost::process::system("echo", "$(pidof eosiod)");
+        pid = boost::process::system("echo", "$(pidof nodeos)");
         count--;
       }
       if (count > 0) {

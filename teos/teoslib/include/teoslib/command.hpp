@@ -70,12 +70,12 @@ namespace teos
       od.add_options()
         ("address,a", value<string>(&(TeosCommand::httpAddress))
             ->default_value(TeosCommand::httpAddress.empty() 
-          ? control::configValue(control::ConfigKeys::EOSIO_DAEMON_ADDRESS, true)
+          ? teos::control::getHttpWalletAddress()
           : TeosCommand::httpAddress),
           "The http address (host:port) of the EOSIO daemon.")
         ("wallet,w", value<string>(&(TeosCommand::httpWalletAddress))
             ->default_value(TeosCommand::httpWalletAddress.empty()
-          ? control::configValue(control::ConfigKeys::EOSIO_WALLET_ADDRESS)
+          ? teos::control::getHttpWalletAddress()
           : TeosCommand::httpWalletAddress),
         "The http address (host:port) where eos-wallet is running.")
         ("json,j", value<string>(&json_), "Json argument.")      

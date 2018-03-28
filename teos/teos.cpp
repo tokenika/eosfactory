@@ -150,7 +150,6 @@ int main(int argc, const char *argv[]) {
     IF_ELSE(daemon_start, DaemonStart)
     IF_ELSE(daemon_stop, DaemonStop)
     IF_ELSE(daemon_delete_wallets, DaemonDeleteWallets)
-    IF_ELSE(config_teos, ConfigTeos)
     {
       cerr << "unknown command!" << endl;
     }    

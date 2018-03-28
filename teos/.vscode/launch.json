@@ -5,23 +5,35 @@
    "version": "0.2.0",
    "configurations": [
       {
-         "name": "(gdb) Launch",
+         "name": "(gdb) daemon start",
          "type": "cppdbg",
          "request": "launch",
-         "program": "${workspaceFolder}/../../build/programs/teos/teos",
-         "args": ["tokenika", "get", "block", "2345"],
+         "program": "/mnt/e/Workspaces/EOS/Logos/teos/build/teos",
+         "args": ["daemon", "start"],
          "stopAtEntry": false,
-         "cwd": "${workspaceFolder}/../../build/programs/teos",
+         "cwd": "/mnt/e/Workspaces/EOS/Logos/teos/build",
          "environment": [],
          "externalConsole": true,
-         "MIMode": "gdb",
-         "setupCommands": [
+         "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "C:/Windows/sysnative/bash.exe",  
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+         },  
+         "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
             {
-               "description": "Enable pretty-printing for gdb",
-               "text": "-enable-pretty-printing",
-               "ignoreFailures": true
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
             }
-         ]
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/e": "e:\\"
+        }         
       }
    ]
 }

@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.5)
 project ("teos")
 
 set( VERSION_MAJOR 1 )
@@ -13,6 +13,8 @@ set( EOSIO_BINARY_DIR "NOT DEFINED !!" )
 set( CMAKE_INSTALL_PREFIX "NOT DEFINED !!" )
 set( CMAKE_INSTALL_LIB "NOT DEFINED !!" )
 set( CMAKE_INSTALL_LIB_PREFIX "NOT DEFINED !!" )
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
 option( ENABLE_ASAN "enable ASAN" OFF )
 # 'common.cmake' sets Lgos common values:
@@ -93,7 +95,8 @@ endif( WIN32 )
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
 set( Boost_USE_STATIC_RUNTIME OFF )
-set( BOOST_ROOT $ENV{HOME}/opt/boost_1_64_0 )
+set( BOOST_ROOT "$ENV{HOME}/opt/boost_1_66_0" )
+
 if( WIN32 )
   set( Boost_NO_SYSTEM_PATHS ON )
   set( BOOST_INCLUDEDIR $ENV{BOOST_INCLUDEDIR})
@@ -101,7 +104,7 @@ if( WIN32 )
   set( BOOST_LIBRARYDIR $ENV{BOOST_LIBRARYDIR} )
   message( STATUS "BOOST_LIBRARYDIR: $ENV{BOOST_LIBRARYDIR}")
 endif( WIN32 )
-find_package(Boost 1.62 REQUIRED COMPONENTS 
+find_package(Boost 1.66 REQUIRED COMPONENTS 
   system
   chrono
   date_time 

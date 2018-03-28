@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
       {
-          "name": "(gdb) set currency",
+          "name": "(gdb) set contract",
           "type": "cppdbg",
           "request": "launch",
           "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",

@@ -3,6 +3,7 @@ message(STATUS
 
 set( LOGOS_EOS eos )
 
+message( STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}" )
 if( NOT DEFINED ENV{EOSIO_SOURCE_DIR} )
   message( FATAL_ERROR "
 EOSIO_SOURCE_DIR environment variable has to be set, e.g. \
@@ -20,7 +21,7 @@ if( WIN32 )
 else( WIN32 )
   set( CMAKE_INSTALL_PREFIX "${LOGOS_DIR}/install/ubuntu" )
   #set( EOSIO_BINARY_DIR "${LOGOS_DIR}/${LOGOS_EOS}/build" )
-  set( EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}build" )
+  set( EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/build" )
 endif( WIN32 )
 message( STATUS "EOSIO_BINARY_DIR: ${EOSIO_BINARY_DIR}" )
 message( STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}" )

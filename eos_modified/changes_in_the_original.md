@@ -1,10 +1,11 @@
 ##build.sh 
+
 @@ -74,7 +74,7 @@ COMPILE_EOS=1
 COMPILE_CONTRACTS=1
 
 # Define default arguments.
--CMAKE_BUILD_TYPE=RelWithDebugInfo
-+CMAKE_BUILD_TYPE=Debug
+- CMAKE_BUILD_TYPE=RelWithDebugInfo
++ CMAKE_BUILD_TYPE=Debug
 
 # Install dependencies
 if [ ${INSTALL_DEPS} == "1" ]; then
@@ -58,7 +59,7 @@ ELSE( ECC_IMPL STREQUAL openssl )
         try {
             FC_ASSERT( my->_key != nullptr );
 
-libraries/wasm-jit/include/Platform/Platform.h ///////////////////////////////
+## libraries/wasm-jit/include/Platform/Platform.h 
 @@ -8,8 +8,18 @@
 
 #ifdef _WIN32
