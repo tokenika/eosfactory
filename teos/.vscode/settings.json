@@ -46,6 +46,7 @@
     "cwctype": "cpp",
     "*.ipp": "cpp",
     "xstring": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "ostream": "cpp"
   }
 }

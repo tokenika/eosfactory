@@ -80,18 +80,23 @@ namespace teos
     return ss.str();
   }
 
+  string TeosControl::getConfigJson(){
+    string configJson 
+      = (boost::filesystem::path(boost::filesystem::current_path()) 
+      / CONFIG_JSON).string();
+    return configJson;
+  }
+
   ptree TeosControl::getConfig(bool verbose) {
     ptree config;
     try
     {
-      read_json(CONFIG_JSON, config);
+      read_json(getConfigJson(), config);
     }
     catch (...) {
-      boost::filesystem::path full_path(boost::filesystem::current_path());
       if (verbose) {
-        printf("ERROR: Cannot read config file %s!\n", CONFIG_JSON);
-        printf("Current path is: %s\n", full_path.string().c_str());
-        printf("The config json file is expected there!\n");
+        printf("ERROR: Cannot read the config file: %s!\n"
+          , getConfigJson().c_str());
       }
     }
     return config;

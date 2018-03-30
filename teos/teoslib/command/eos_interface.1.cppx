@@ -259,7 +259,7 @@ namespace teos {
       {
         TeosCommand status;
         bfs::path wastFilePath 
-          = teos::control::getContractFile(wastFile, status); 
+          = teos::control::getContractFile(&status, wastFile); 
         if (status.isError_) {
           return status;
         }    
@@ -290,7 +290,7 @@ namespace teos {
         {
           TeosCommand status;
           bfs::path abiFilePath 
-            = teos::control::getContractFile(abiFile, status); 
+            = teos::control::getContractFile(&status, abiFile); 
           if (status.isError_) {
             return status;
           }         

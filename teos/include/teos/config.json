@@ -6,4 +6,5 @@
   "WASM_LLVM_LINK":"/opt/wasm/bin/llvm-link",
   "WASM_LLC":"/opt/wasm/bin/llc",
   "BINARYEN_BIN":"/usr/local/binaryen/bin/",
+  "genesis-json":"geneis.json"
 }

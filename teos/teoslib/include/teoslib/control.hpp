@@ -50,6 +50,7 @@ namespace teos
     string errorMsg_ = "";
 
   public:
+    static string getConfigJson();
     static ptree getConfig(bool verbose = false);
 
     bool isError_ = false;

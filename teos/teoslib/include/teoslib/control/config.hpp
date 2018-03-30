@@ -9,17 +9,19 @@
 namespace teos {
   namespace control {
     using namespace std;
-
+    /*
+     * All the links with the environmen are defined here:
+     */
     boost::filesystem::path getContractFile(
-        string contractFile, TeosControl& teosControl);
+        TeosControl* teosControl, string contractFile = "");
     boost::filesystem::path getConfigDir(
-      string dataDir, TeosControl& teosControl);
+      TeosControl* teosControl, string dataDir = "");
     boost::filesystem::path getWalletDir(
-      string walletDir, TeosControl& teosControl, string configDir = "");
+      TeosControl* teosControl, string walletDir = "", string configDir = "");
     boost::filesystem::path getDaemonExe(
-      string daemonExe, TeosControl& teosControl);
+      TeosControl* teosControl, string daemonExe = "");
     boost::filesystem::path getGenesisJson(
-      string genesisJson, TeosControl& teosControl);
+      TeosControl* teosControl, string genesisJson = "");
     string getHttpServerAddress(string address = "");
     string getHttpWalletAddress(string address = "");
     string getDaemonName();

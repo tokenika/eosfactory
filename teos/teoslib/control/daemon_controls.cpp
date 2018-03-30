@@ -253,24 +253,24 @@ namespace teos {
 
       reqJson_.put(
         "daemon_exe"
-        , getDaemonExe(reqJson_.get("daemon_exe", ""), *this).string())
+        , getDaemonExe(this, reqJson_.get("daemon_exe", "")).string())
         ;
 
       reqJson_.put(
         "genesis-json"
-        , getGenesisJson(reqJson_.get("genesis-json", ""), *this).string())
+        , getGenesisJson(this, reqJson_.get("genesis-json", "")).string())
         ;      
 
+      cout << reqJson_.get<string>("genesis-json") << endl;
+      
       reqJson_.put(
         "config-dir"
-        , getConfigDir(reqJson_.get("config-dir", ""), *this).string())
+        , getConfigDir(this, reqJson_.get("config-dir", "")).string())
         ;
 
       reqJson_.put(
         "wallet-dir"
-        , getWalletDir(reqJson_.get("wallet-dir", ""), *this
-          , reqJson_.get("config-dir", "")
-          ).string())
+        , getWalletDir(this, reqJson_.get("wallet-dir", "")).string())
         ;
 
       try{
@@ -324,7 +324,7 @@ namespace teos {
     void DaemonDeleteWallets::action()
     {
       namespace bfs = boost::filesystem;
-      bfs::path dataDir = getConfigDir(reqJson_.get("config-dir", ""), *this);
+      bfs::path dataDir = getConfigDir(this, reqJson_.get("config-dir", ""));
       
       int count = 0; 
       try{
