@@ -248,30 +248,45 @@ namespace teos {
     {
       reqJson_.put(
         "http-server-address"
-        , getHttpServerAddress(reqJson_.get("http-server-address", ""))) 
-        ;      
-
+        , getHttpServerAddress(reqJson_.get("http-server-address", ""))) ;      
+      if(isError_){
+        return;
+      }
+      
       reqJson_.put(
         "daemon_exe"
-        , getDaemonExe(this, reqJson_.get("daemon_exe", "")).string())
-        ;
-
+        , getDaemonExe(this, reqJson_.get("daemon_exe", "")));
+      if(isError_){
+        return;
+      }
+      
       reqJson_.put(
         "genesis-json"
-        , getGenesisJson(this, reqJson_.get("genesis-json", "")).string())
-        ;      
-
-      cout << reqJson_.get<string>("genesis-json") << endl;
+        , getGenesisJson(this, reqJson_.get("genesis-json", "")));             
+      if(isError_){
+        return;
+      }
       
       reqJson_.put(
         "config-dir"
-        , getConfigDir(this, reqJson_.get("config-dir", "")).string())
-        ;
+        , getConfigDir(this, reqJson_.get("config-dir", "")));
+      if(isError_){
+        return;
+      }
+
+      reqJson_.put(
+        "data-dir"
+        , getDataDir(this, reqJson_.get("data-dir", "")));
+      if(isError_){
+        return;
+      }      
 
       reqJson_.put(
         "wallet-dir"
-        , getWalletDir(this, reqJson_.get("wallet-dir", "")).string())
-        ;
+        , getWalletDir(this, reqJson_.get("wallet-dir", "")));
+      if(isError_){
+        return;
+      }
 
       try{
         if(reqJson_.get("resync-blockchain", false)){
@@ -287,6 +302,7 @@ namespace teos {
           + " --genesis-json " + reqJson_.get<string>("genesis-json")
           + " --http-server-address " 
           + reqJson_.get<string>("http-server-address")
+          + " --data-dir " + reqJson_.get<string>("data-dir")
           + " --config-dir " + reqJson_.get<string>("config-dir")
           + " --wallet-dir " + reqJson_.get<string>("wallet-dir")
           ;
@@ -295,9 +311,10 @@ namespace teos {
         }
 
         cout << commandLine <<endl;
+
         if(isWindowsUbuntu()) {
           boost::process::system("cmd.exe /c start bash.exe -c " 
-            + commandLine);
+            "'" + commandLine + "'");
         } else {
           boost::process::system("gnome-terminal -- " + commandLine);
         }

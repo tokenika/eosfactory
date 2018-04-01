@@ -104,11 +104,16 @@ namespace teos
 
   ptree TeosControl::errorRespJson(string sender, string message) {
     ptree respJson;
-    string senderEntry = "\"sender\":\"" + sender + "\"";
-    string msgEntry = "\"message\":{" + message + "}";
-    respJson.put(teos_ERROR, "{" + senderEntry + ", " + msgEntry + "}");
-    isError_ = true;    
-    return respJson;
+
+    if(!sender.empty()) {
+      string senderEntry = "\"sender\":\"" + sender + "\"";
+      string msgEntry = "\"message\":{" + message + "}";
+      respJson.put(teos_ERROR, "{" + senderEntry + ", " + msgEntry + "}");
+    } else {
+      respJson.put(teos_ERROR, message);
+    }
+    isError_ = true;  
+    return respJson; 
   }
 
   void TeosControl::putError(string message, string sender) {

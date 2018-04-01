@@ -57,7 +57,7 @@ namespace teos
       read_json(ss, ptree);
     }
     catch (...) {
-      cerr << "argument json is missformatted." << endl;
+      cout << "argument json is missformatted." << endl;
     }
     return ptree;
   }

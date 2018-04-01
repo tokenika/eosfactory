@@ -47,6 +47,8 @@
     "*.ipp": "cpp",
     "xstring": "cpp",
     "vector": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "xtree": "cpp",
+    "xutility": "cpp"
   }
 }

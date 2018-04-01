@@ -9,10 +9,6 @@
 #include <teoslib/command/wallet_commands.hpp>
 #include <teoslib/command/push_commands.hpp>
 
-#ifdef WIN32
-extern "C" FILE*  __cdecl __iob_func(void); //A temporary fix for a bug.
-#endif // WIN32
-
 int main(int argc, const char *argv[]) {
 
   using namespace teos;
@@ -36,7 +32,7 @@ int main(int argc, const char *argv[]) {
 
   WalletCreate walletCreate(walletName);
   if (walletCreate.isError_) {
-   cerr << walletCreate.responseToString(false) << endl;
+   cout << walletCreate.responseToString(false) << endl;
   } else {
     cout << "wallet password: " << walletCreate.get<string>("password") << endl;
   }
@@ -46,7 +42,7 @@ int main(int argc, const char *argv[]) {
   // ... and puts the private key into it:
   WalletImport walletImportInita(walletName, initaKeyPriv);
   if (walletImportInita.isError_) {
-   cerr << walletImportInita.responseToString(false) << endl;
+   cout << walletImportInita.responseToString(false) << endl;
   } else {
     cout << walletImportInita.responseToString(false) << endl;
   }
@@ -58,7 +54,7 @@ int main(int argc, const char *argv[]) {
   // password:
   WalletUnlock walletUnlock(password, walletName);
   if(walletUnlock.isError_){
-    cerr << walletUnlock.responseToString(false) << endl;
+    cout << walletUnlock.responseToString(false) << endl;
   } else {
     cout << walletUnlock.responseToString(false) << endl;
   }
@@ -93,7 +89,7 @@ int main(int argc, const char *argv[]) {
   WalletImport walletImportActive(walletName, 
    createKeyActive.get<string>("privateKey"));
   if (walletImportActive.isError_) {
-   cerr << walletImportActive.responseToString(false) << endl;
+   cout << walletImportActive.responseToString(false) << endl;
   } else {
     cout << walletImportActive.responseToString(false) << endl;
   }
@@ -108,7 +104,7 @@ int main(int argc, const char *argv[]) {
    createKeyOwner.get<string>("publicKey"), 
    createKeyActive.get<string>("publicKey"), deposit);
   if (createAccount.isError_) {
-   cerr << createAccount.responseToString(false) << endl;
+   cout << createAccount.responseToString(false) << endl;
   } else {
     cout << createAccount.responseToString(false) << endl;
   }
@@ -145,7 +141,7 @@ int main(int argc, const char *argv[]) {
   // Alicia uploads the contract:
   SetContract setContract("currency", wastFile, abiFile);
   if (setContract.isError_) {
-    cerr << setContract.responseToString(false) << endl;
+    cout << setContract.responseToString(false) << endl;
   }
 
   // The contract is registered with the blockchain now. This is the ID of the 
@@ -266,10 +262,6 @@ int main(int argc, const char *argv[]) {
 //     ],
 //     "more": "true"
 // }
-
-#ifdef WIN32
-  __iob_func(); //A temporary fix for a bug.
-#endif // WIN32
 
   return 1;
 }

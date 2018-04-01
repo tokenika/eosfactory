@@ -72,7 +72,7 @@ void parse()
     std::string line;
 
     while (pipe_stream && std::getline(pipe_stream, line) && !line.empty()) {
-        std::cerr << line << std::endl;
+        std::cout << line << std::endl;
     }
 
     c.detach();
@@ -160,7 +160,7 @@ int runServer(int argc, char* argv[])
   {
     if (argc != 2)
     {
-      std::cerr << "Usage: async_tcp_echo_server <port>\n";
+      std::cout << "Usage: async_tcp_echo_server <port>\n";
       return 1;
     }
 
@@ -173,7 +173,7 @@ int runServer(int argc, char* argv[])
   }
   catch (std::exception& e)
   {
-    std::cerr << "Exception: " << e.what() << "\n";
+    std::cout << "Exception: " << e.what() << "\n";
   }
 
   return 0;
@@ -185,7 +185,7 @@ int runClient(int argc, char* argv[])
   {
     if (argc != 3)
     {
-      std::cerr << "Usage: blocking_tcp_echo_client <host> <port>\n";
+      std::cout << "Usage: blocking_tcp_echo_client <host> <port>\n";
       return 1;
     }
 
@@ -210,7 +210,7 @@ int runClient(int argc, char* argv[])
   }
   catch (std::exception& e)
   {
-    std::cerr << "Exception: " << e.what() << "\n";
+    std::cout << "Exception: " << e.what() << "\n";
   }
 
   return 0;

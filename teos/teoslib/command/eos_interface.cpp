@@ -9,15 +9,12 @@
 #include <boost/algorithm/string/classification.hpp>
 
 #include <fc/variant.hpp>
-#include <fc/crypto/private_key.hpp>
 #include <fc/io/json.hpp>
-
-#include <fc/variant.hpp>
-#include <fc/io/fstream.hpp>
-
+#include <fc/exception/exception.hpp>
 #include <eosio/utilities/key_conversion.hpp>
-#include <eosio/chain/authority.hpp>
+#include <fc/io/fstream.hpp>
 #include <eosio/chain_plugin/chain_plugin.hpp>
+
 
 #include <IR/Module.h>
 #include <IR/Validate.h>
@@ -30,14 +27,18 @@
 #include <teoslib/command/get_commands.hpp>
 
 using namespace std;
+using namespace eosio;
+using namespace eosio::chain;
+using namespace eosio::utilities;
+using namespace boost::filesystem;
 
 namespace teos {
   namespace command {
 
     KeyPair::KeyPair() {
-      // auto pk = fc::crypto::private_key::generate();
-      // publicKey = string(pk.get_public_key());
-      // privateKey = string(pk);
+      auto pk = private_key_type::generate();
+      publicKey = string(pk.get_public_key());
+      privateKey = string(pk);
     }
 
     string KeyPair::privateK() {

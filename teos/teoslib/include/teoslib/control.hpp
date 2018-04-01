@@ -47,8 +47,6 @@ namespace teos
 
   class TeosControl
   {
-    string errorMsg_ = "";
-
   public:
     static string getConfigJson();
     static ptree getConfig(bool verbose = false);
@@ -62,7 +60,7 @@ namespace teos
     TeosControl() {}
     TeosControl(ptree reqJson) : reqJson_(reqJson) {}
 
-    virtual string errorMsg() {
+    string errorMsg() {
       return get<string>(teos_ERROR);
     }
     string requestToString(bool isRaw) const;
@@ -75,7 +73,7 @@ namespace teos
         value = getJsonPath<Type>(respJson_, path);
       }
       catch (exception& e) {
-        cerr << teos_ERROR << endl << e.what() << endl;
+        cout << teos_ERROR << endl << e.what() << endl;
         exit(-1);
       }
       return value;
@@ -140,14 +138,14 @@ namespace teos
         reqJson_ = stringToPtree(json_);
       } else {
         if(!checkArguments(vm)) {
-          std::cerr << teos_ERROR << endl << "Wrong argument." << endl;
+          std::cout << teos_ERROR << endl << "Wrong argument." << endl;
           return;
         }        
       }
       
       TeosControl command = executeCommand();
-      if (command.isError_) {
-        std::cerr << teos_ERROR << endl << command.errorMsg() << endl;
+      if (command.isError_) {       
+        cout << teos_ERROR << endl << command.errorMsg() << endl;
         return;
       }
 

@@ -31,7 +31,6 @@ We present the library with the *Example Currency Contract Walkthrough* from the
 #include <push_commands.hpp>
 
 #ifdef WIN32 // A temporary fix for a bug.
-extern "C" FILE*  __cdecl __iob_func(void);
 #endif // WIN32
 
 int main(int argc, const char *argv[]) {
@@ -60,7 +59,7 @@ int main(int argc, const char *argv[]) {
 ```cpp
   WalletCreate walletCreate(walletName);
   if (walletCreate.isError()) {
-   cerr << walletCreate.responseToString() << endl;
+   cout << walletCreate.responseToString() << endl;
   } else {
     cout << "wallet password: " << walletCreate.get<string>("password") << endl;
   }
@@ -75,7 +74,7 @@ int main(int argc, const char *argv[]) {
 ```cpp
   WalletImport walletImportInita(walletName, initaKeyPriv);
   if (walletImportInita.isError()) {
-   cerr << walletImportInita.responseToString() << endl;
+   cout << walletImportInita.responseToString() << endl;
   } else {
     cout << walletImportInita.responseToString(false) << endl;
   }
@@ -92,7 +91,7 @@ int main(int argc, const char *argv[]) {
 ```cpp
   WalletUnlock walletUnlock(password, walletName);
   if(walletUnlock.isError()){
-    cerr << walletUnlock.responseToString() << endl;
+    cout << walletUnlock.responseToString() << endl;
   } else {
     cout << walletUnlock.responseToString(false) << endl;
   }
@@ -134,7 +133,7 @@ int main(int argc, const char *argv[]) {
   WalletImport walletImportActive(walletName, 
    createKeyActive.get<string>("privateKey"));
   if (walletImportActive.isError()) {
-   cerr << walletImportActive.responseToString() << endl;
+   cout << walletImportActive.responseToString() << endl;
   } else {
     cout << walletImportActive.responseToString(false) << endl;
   }
@@ -149,7 +148,7 @@ int main(int argc, const char *argv[]) {
    createKeyOwner.get<string>("publicKey"), 
    createKeyActive.get<string>("publicKey"), deposit);
   if (createAccount.isError()) {
-   cerr << createAccount.responseToString() << endl;
+   cout << createAccount.responseToString() << endl;
   } else {
     cout << createAccount.responseToString(false) << endl;
   }
@@ -199,7 +198,7 @@ int main(int argc, const char *argv[]) {
   // Alicia uploads the contract:
   SetContract setContract("currency", wastFile, abiFile);
   if (setContract.isError()) {
-    cerr << setContract.responseToString() << endl;
+    cout << setContract.responseToString() << endl;
   }
 
   // The contract is registered with the blockchain now. This is the ID of the 
@@ -324,10 +323,6 @@ int main(int argc, const char *argv[]) {
 ```
 ###  C++ final overhead, skip it
 ```
-#ifdef WIN32
-  __iob_func(); //A temporary patch for a bug.
-#endif // WIN32
-
   return 1;
 }
 

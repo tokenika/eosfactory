@@ -506,7 +506,7 @@ Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("password", value<string>(&password), "The password returned by wallet create");        
+          ("password", value<string>(&password), "The password returned by wallet create")        
           ("name,n", value<string>(&name), "The name of the wallet to unlock");
         return od;
       }

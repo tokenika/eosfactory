@@ -1,4 +1,7 @@
 cmake_minimum_required (VERSION 3.5)
+# set(CMAKE_C_COMPILER "clang-4.0")
+# set(CMAKE_CXX_COMPILER "clang++-4.0")
+
 project ("teos")
 
 set( VERSION_MAJOR 1 )
@@ -134,10 +137,6 @@ else( OpenSSL_FOUND)
   OPENSSL_ROOT_DIR (for example, %C_INCLUDE%/OpenSSL/Win64OpenSSL-1_0_2L)" )
 endif( OpenSSL_FOUND )
 
-if( WIN32 )
-  add_library(__iob_func __iob_func.cpp )
-endif()
-
 find_package(LLVM 4.0 REQUIRED CONFIG)
 if( LLVM_FOUND )
   message( STATUS "LLVM found.
@@ -223,11 +222,10 @@ macro( applLinkLibraries applName )
       teoslib
       ${EOSIO_BINARY_DIR}/plugins/chain_plugin/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chain_plugin${CMAKE_STATIC_LIBRARY_SUFFIX}
       ${EOSIO_BINARY_DIR}/libraries/chain/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eosio_chain${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/chainbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chainbase${CMAKE_STATIC_LIBRARY_SUFFIX}  
-      ${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc_debug${CMAKE_STATIC_LIBRARY_SUFFIX}        
+      ${EOSIO_BINARY_DIR}/libraries/chainbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chainbase${CMAKE_STATIC_LIBRARY_SUFFIX}        
       ${EOSIO_BINARY_DIR}/libraries/utilities/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_utilities${CMAKE_STATIC_LIBRARY_SUFFIX}      
       ${EOSIO_BINARY_DIR}/libraries/appbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}appbase${CMAKE_STATIC_LIBRARY_SUFFIX} 
-      
+      ${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc_debug${CMAKE_STATIC_LIBRARY_SUFFIX}       
 
       ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Emscripten/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Emscripten${CMAKE_STATIC_LIBRARY_SUFFIX}
       ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Runtime/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Runtime${CMAKE_STATIC_LIBRARY_SUFFIX}
@@ -254,7 +252,6 @@ macro( applLinkLibraries applName )
         "$(WindowsSDK_LibraryPath)/x64/crypt32.lib"
         "$(VC_ReferencesPath_VC_x64)/legacy_stdio_definitions.lib"
         "Userenv.lib"
-        __iob_func
     )
   endif( WIN32 )
 

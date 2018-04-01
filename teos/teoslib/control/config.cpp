@@ -21,7 +21,7 @@ void saveConfigJson(boost::property_tree::ptree json){
     write_json(CONFIG_JSON, json);
   }
   catch (exception& e) {
-    cerr << e.what() << endl;
+    cout << e.what() << endl;
   }
 }
 
@@ -110,115 +110,112 @@ wallet-dir: .
     void onError(TeosControl* teosControl, string message)
     {
       string help = boost::str(boost::format(
-        "%1 is not a directory.") % TeosControl::getConfigJson()
+        "First, the getter argument is tried,\n"
+        "next, the environmental variable, if any,\n"
+        "next, the 'config.json' file that is:\n"
+        "\t%1%\n"
+        "Finally, the default value in the 'config.cpp' file."
+        ) % TeosControl::getConfigJson()
       );
       if(teosControl){
-        teosControl->putError(message);
+        teosControl->putError(message + "\n" + help);
       } else {
-        cerr << "ERROR!" << endl << message << endl;
+        cout << "ERROR!" << endl << message << endl;
+        cout << help << endl;
       }
     }
 
-    boost::filesystem::path getContractFile(
-        TeosControl* teosControl, string contractFile)
+    string getSourceDir(TeosControl* teosControl)
     {
-      namespace bfs = boost::filesystem;
-
-      string name;
-      {// Is it passed as 'contractFile' argument?
-        bfs::path wantedPath(contractFile);
-        if(bfs::exists(wantedPath)){
-          return wantedPath;
-        }
-        name = wantedPath.stem().string();
+      string sourceDir = configValue(EOSIO_SOURCE_DIR);
+      if(sourceDir.empty()){
+        onError(teosControl, "Cannot determine the EOSIO source directory.");
       }
-
-      {// Is it defined with the 'configValue' function?
-        bfs::path contractDir = bfs::path(configValue(CONTRACT_BUILD_PATH));
-
-        bfs::path wantedPath = contractDir.is_absolute()
-          ? contractDir / name / contractFile
-          : bfs::path(configValue(EOSIO_SOURCE_DIR))
-            / contractDir / name / contractFile;
-        if(bfs::exists(wantedPath)) {
-          return wantedPath;
-        }
-      }
-
-      onError(teosControl, "Cannot find the path to the contract file.");
-      return bfs::path("");
-    }    
-
-
-    string getHttpServerAddress(string address)
-    {
-      if(address != EMPTY) {
-        return address;
-      }
-      return configValue(EOSIO_DAEMON_ADDRESS);
+      return sourceDir;
     }
 
-    string getHttpWalletAddress(string address)
-    {
-      if(address != EMPTY) {
-        return address;
-      }
-      string walletAddress = configValue(EOSIO_WALLET_ADDRESS);
-      return walletAddress.empty() 
-        ? configValue(EOSIO_DAEMON_ADDRESS) : walletAddress;
-    }
-    
-
-    boost::filesystem::path getGenesisJson(
+    ///////////////////////////////////////////////////////////////////////////
+    // getGenesisJson
+    ///////////////////////////////////////////////////////////////////////////
+    string getGenesisJson(
       TeosControl* teosControl, string genesisJson)
     {
-      namespace bfs = boost::filesystem;
-
       try{
-        bfs::path wantedPath;
-        
-        if(!genesisJson.empty())
-        {
-          wantedPath = bfs::path(genesisJson);
-          if(bfs::exists(wantedPath) && bfs::is_regular_file(wantedPath)) {
-            return wantedPath;
+        if(genesisJson.empty()) genesisJson = configValue(GENESIS_JSON);
+
+        bfs::path wantedPath(genesisJson);
+        if(!wantedPath.is_absolute()) {
+          string sourceDir = getSourceDir(teosControl);
+          if(sourceDir.empty()){
+            return "";
           }
-          wantedPath = bfs::path(configValue(EOSIO_SOURCE_DIR)) / wantedPath;
-            if(bfs::exists(wantedPath) && bfs::is_regular_file(wantedPath)) {
-            return wantedPath;
-          }
-        } else
-        {
-          wantedPath = bfs::path(configValue(GENESIS_JSON));
-          if(bfs::exists(wantedPath) && bfs::is_regular_file(wantedPath)) {
-            return wantedPath;
-          }
-          wantedPath = bfs::path(configValue(EOSIO_SOURCE_DIR)) 
-            / bfs::path(configValue(GENESIS_JSON));
-          if(bfs::exists(wantedPath) && bfs::is_regular_file(wantedPath)) {
-            return wantedPath;
-          }                    
+          wantedPath = bfs::path(sourceDir) / wantedPath;
         }
 
-        if(!bfs::exists(wantedPath)){
-          teosControl->putError("Cannot determine the genesis file.");
-          return bfs::path("");
-        }         
+        if(bfs::exists(wantedPath) && bfs::is_regular_file(wantedPath)) {
+          return wantedPath.string();
+        }
+        
+        onError(teosControl, "Cannot determine the genesis file.");    
+
+      } catch (std::exception& e) {
+          onError(teosControl, e.what());               
+      }
+      return "";  
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // getContractFile
+    ///////////////////////////////////////////////////////////////////////////
+    string getContractFile(
+        TeosControl* teosControl, string contractFile)
+    {
+      try
+      {
+        bfs::path wantedPath(contractFile);
+        string name = wantedPath.stem().string(); 
+
+        if(!wantedPath.is_absolute()) {
+          wantedPath = bfs::path(configValue(CONTRACT_BUILD_PATH)) 
+            / name / wantedPath;
+        }
+
+        if(bfs::exists(wantedPath) && bfs::is_regular_file(wantedPath)) {
+          return wantedPath.string();
+        }
+        
+        onError(teosControl, "Cannot find the path to the contract file.");
 
       } catch (std::exception& e) {
           onError(teosControl, e.what());
-          return bfs::path("");        
       }
-    }
+      return "";    
+    }    
 
-    /*
-    Determines the EOS test node executable file.
-    */
-    boost::filesystem::path getDaemonExe(
+    ///////////////////////////////////////////////////////////////////////////
+    // getHttpServerAddress
+    ///////////////////////////////////////////////////////////////////////////
+    string getHttpServerAddress(string address)
+    {
+      if(address.empty()) address = configValue(EOSIO_DAEMON_ADDRESS);
+      return address;
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // getHttpWalletAddress
+    ///////////////////////////////////////////////////////////////////////////
+    string getHttpWalletAddress(string address)
+    {
+      if(address.empty()) address = configValue(EOSIO_WALLET_ADDRESS);
+      return address;
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // getDaemonExe
+    ///////////////////////////////////////////////////////////////////////////
+    string getDaemonExe(
       TeosControl* teosControl, string daemonExe)
     {
-      namespace bfs = boost::filesystem;
-
       try{
         bfs::path wantedPath;
         
@@ -226,27 +223,32 @@ wallet-dir: .
         {
           wantedPath = bfs::path(daemonExe);
           if(bfs::exists(wantedPath)) {
-            return wantedPath;
+            return wantedPath.string();
           }
+        }
+
+        string sourceDir = getSourceDir(teosControl);
+        if(sourceDir.empty()){
+          return "";
         }
 
         {
           wantedPath 
-            = bfs::path(configValue(EOSIO_SOURCE_DIR))
+            = bfs::path(sourceDir)
               / "build/etc/eosio/node_00" 
               / configValue(DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
-            return wantedPath;
+            return wantedPath.string();
           }          
         }        
     
         {
           wantedPath 
-            = bfs::path(configValue(EOSIO_SOURCE_DIR))
+            = bfs::path(sourceDir)
               / "build/programs/" / configValue(DAEMON_NAME)
               / configValue(DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
-            return wantedPath;
+            return wantedPath.string();
           }          
         }
 
@@ -254,7 +256,7 @@ wallet-dir: .
           wantedPath = bfs::path("/usr/local/bin")
               / configValue(DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
-            return wantedPath;
+            return wantedPath.string();
           }             
         }
 
@@ -262,146 +264,154 @@ wallet-dir: .
           onError(
             teosControl, 
             "Cannot determine the EOS test node executable file.");
-          return bfs::path(""); 
+          return ""; 
         }
       } catch (std::exception& e) {
           onError(teosControl, e.what());          
-          return bfs::path("");        
+          return "";        
       }
     }
 
-    boost::filesystem::path getConfigDir(
+    ///////////////////////////////////////////////////////////////////////////
+    // getDataDir
+    // Is created if argument 'dataDir' reprasents a directory path.
+    ///////////////////////////////////////////////////////////////////////////
+    string getDataDir(
+      TeosControl* teosControl, string dataDir)
+    {
+      try
+      { 
+        if(dataDir.empty()) dataDir = configValue(DATA_DIR);
+
+        bfs::path wantedPath(dataDir);
+        if(!wantedPath.is_absolute()){
+          string sourceDir = getSourceDir(teosControl);
+          if(sourceDir.empty()){
+            return "";
+          }
+          wantedPath = bfs::path(sourceDir) / wantedPath;
+        }
+
+        if(bfs::is_directory(wantedPath)) {
+          if(!dataDir.empty() && !bfs::exists(wantedPath)){
+            bfs::create_directories(bfs::path(dataDir));
+          }
+          if(bfs::exists(wantedPath)) {
+            return wantedPath.string();
+          }  
+        }
+
+        onError(teosControl, "Cannot determine the 'data-dir' directory.");  
+
+      } catch (std::exception& e){
+        onError(teosControl, e.what());          
+      }
+      return "";      
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // getConfigDir
+    // Cannot be created.
+    ///////////////////////////////////////////////////////////////////////////
+    string getConfigDir(
       TeosControl* teosControl, string configDir)
     {
-      namespace bfs = boost::filesystem;
-
-      try{
-        bfs::path wantedPath;
-
-        if(!configDir.empty())
-        {
-          wantedPath = bfs::path(configDir);
-          if(bfs::is_directory(wantedPath))
-          {
-            if(!bfs::exists(wantedPath)) {
-              bfs::create_directories(bfs::path(configDir));           
-            }
-            return wantedPath;            
-          } else
-          {
-            onError(teosControl, boost::str(boost
-                ::format("%1 is not a directory.") % configDir));
-            return bfs::path("");
-          }
-        }
-        
-        {
-          wantedPath = bfs::path(configValue(CONFIG_DIR));
-          if(bfs::exists(wantedPath) && bfs::is_directory(wantedPath)){
-            return wantedPath;
-          }            
-        }
-   
-        {
-          wantedPath  = bfs::path(configValue(EOSIO_SOURCE_DIR))
-              / "build/etc/eosio/node_00";
-          if(bfs::exists(wantedPath / "config.ini")){
-            return wantedPath;
-          }           
-        }
-
-        if(!bfs::exists(wantedPath) && teosControl){
-          onError(
-            teosControl,
-            "Cannot determine the path to 'config-dir' directory.");
-          return bfs::path("");
-        }         
-      } catch (std::exception& e)
+      try
       {
-        onError(teosControl, e.what());          
-        return bfs::path("");
-      }
-    }
-
-    boost::filesystem::path getWalletDir(
-      TeosControl* teosControl, string walletDir, string configDir)
-    {
-      namespace bfs = boost::filesystem;
-
-      try{
-        bfs::path configDirPath = getConfigDir(teosControl, configDir);
-        bfs::path wantedPath;
-        
-        if(!walletDir.empty()){
-          wantedPath = configDirPath / walletDir;
-          boost::system::error_code ec;
-          if(bfs::is_directory(wantedPath, ec))
-          {
-            if(!bfs::exists(wantedPath)) {
-              bfs::create_directories(bfs::path(walletDir));           
-            }
-            return wantedPath;            
-          } else
-          {
-            wantedPath = bfs::path(walletDir);
-            if(bfs::is_directory(wantedPath, ec))
-              {
-                if(!bfs::exists(wantedPath)) {
-                  bfs::create_directories(bfs::path(walletDir));           
-                }
-                return wantedPath;            
-              } else
-            {
-              teosControl->putError(boost::str(boost
-                ::format("%1 is not a directory.") % walletDir));
-              return bfs::path("");              
-            }
+        if(configDir.empty()) configDir = configValue(CONFIG_DIR);
+        bfs::path wantedPath(configDir);
+        if(!wantedPath.is_absolute()){
+          string sourceDir = getSourceDir(teosControl);
+          if(sourceDir.empty()){
+            return "";
           }
-        }
-        
-        wantedPath = bfs::path(configValue(WALLET_DIR));
-        if(bfs::exists(wantedPath) && bfs::is_directory(wantedPath)) {
-          return wantedPath;
-        }     
-
-        wantedPath  = bfs::path(configValue(EOSIO_SOURCE_DIR))
-            / "build/etc/eosio/node_00/wallet-dir";
-        if(bfs::exists(wantedPath) && bfs::is_directory(wantedPath)){
-          return wantedPath;
+          wantedPath = bfs::path(sourceDir) / wantedPath;
         } 
 
-        if(!bfs::exists(wantedPath)){
-          onError(
-            teosControl, 
-            "Cannot determine the path to 'wallet-dir' directory.");
-          return bfs::path("");
-        }         
-      } catch (std::exception& e)
-      {
-        onError(teosControl, e.what());
-        return bfs::path("");
+        if(bfs::exists(wantedPath) && bfs::is_directory(wantedPath)) {
+          return wantedPath.string();
+        }
+
+        onError(teosControl, 
+          "Cannot determine the path to 'config-dir' directory.");
+
+      } catch (std::exception& e) {
+          onError(teosControl, e.what());
       }
+      return "";  
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // getWalletDir
+    // Is created if argument 'walletDir' represents a path.  
+    ///////////////////////////////////////////////////////////////////////////
+    string getWalletDir(
+      TeosControl* teosControl, string walletDir, string dataDir)
+    {
+      try
+      {
+        if(walletDir.empty()) walletDir = configValue(WALLET_DIR);
+
+        bfs::path wantedPath(walletDir);
+        if(!wantedPath.is_absolute()) {
+            wantedPath = getDataDir(teosControl, dataDir) / wantedPath;
+        }
+
+        if(bfs::is_directory(wantedPath)) {
+          if(!walletDir.empty() && !bfs::exists(wantedPath)){
+            bfs::create_directories(bfs::path(walletDir));
+          }
+          if(bfs::exists(wantedPath)) {
+            return wantedPath.string();
+          }  
+        }
+
+        onError(teosControl, 
+          "Cannot determine the path to 'wallet-dir' directory.");
+
+      } catch (std::exception& e) {
+          onError(teosControl, e.what());
+      }
+          return "";        
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // getDaemonName
+    ///////////////////////////////////////////////////////////////////////////
     string getDaemonName(){
       return configValue(DAEMON_NAME);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // getWASM_CLANG
+    ///////////////////////////////////////////////////////////////////////////
     string getWASM_CLANG(){
-      return configValue(WASM_CLANG);
+      bfs::path home(getenv("HOME"));
+      return (home / configValue(WASM_CLANG)).string();
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // getWASM_LLVM_LINK
+    ///////////////////////////////////////////////////////////////////////////
     string getWASM_LLVM_LINK(){
-      return configValue(WASM_LLVM_LINK);
+      bfs::path home(getenv("HOME"));
+      return (home / configValue(WASM_LLVM_LINK)).string();
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // getBINARYEN_BIN
+    ///////////////////////////////////////////////////////////////////////////
     string getBINARYEN_BIN(){
-      return configValue(BINARYEN_BIN);
+      bfs::path home(getenv("HOME"));
+      return (home / configValue(BINARYEN_BIN)).string();      
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // getWASM_LLC
+    ///////////////////////////////////////////////////////////////////////////
     string getWASM_LLC(){
-      string home = getenv("HOME");
-      return configValue(WASM_LLC);
+      bfs::path home(getenv("HOME"));
+      return (home / configValue(WASM_LLC)).string();
     }    
   }
 }

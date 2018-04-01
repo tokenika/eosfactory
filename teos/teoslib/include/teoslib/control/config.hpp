@@ -12,15 +12,17 @@ namespace teos {
     /*
      * All the links with the environmen are defined here:
      */
-    boost::filesystem::path getContractFile(
+    string getContractFile(
         TeosControl* teosControl, string contractFile = "");
-    boost::filesystem::path getConfigDir(
+    string getDataDir(
+      TeosControl* teosControl, string dataDir = "");        
+    string getConfigDir(
       TeosControl* teosControl, string dataDir = "");
-    boost::filesystem::path getWalletDir(
-      TeosControl* teosControl, string walletDir = "", string configDir = "");
-    boost::filesystem::path getDaemonExe(
+    string getWalletDir(
+      TeosControl* teosControl, string walletDir = "", string dataDir = "");
+    string getDaemonExe(
       TeosControl* teosControl, string daemonExe = "");
-    boost::filesystem::path getGenesisJson(
+    string getGenesisJson(
       TeosControl* teosControl, string genesisJson = "");
     string getHttpServerAddress(string address = "");
     string getHttpWalletAddress(string address = "");

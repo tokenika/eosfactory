@@ -151,7 +151,7 @@ int main(int argc, const char *argv[]) {
     IF_ELSE(daemon_stop, DaemonStop)
     IF_ELSE(daemon_delete_wallets, DaemonDeleteWallets)
     {
-      cerr << "unknown command!" << endl;
+      cout << "unknown command!" << endl;
     }    
   } else {
     HELP
