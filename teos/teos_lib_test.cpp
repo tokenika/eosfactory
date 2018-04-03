@@ -99,10 +99,9 @@ int main(int argc, const char *argv[]) {
 
   // Now, Alicia can create her new 'currency' account. For testing, she can put 
   // any deposit there for free, what is not possible in the reality:
-  long long deposit = 1;
   CreateAccount createAccount("inita", "currency", 
    createKeyOwner.get<string>("publicKey"), 
-   createKeyActive.get<string>("publicKey"), deposit);
+   createKeyActive.get<string>("publicKey"));
   if (createAccount.isError_) {
    cout << createAccount.responseToString(false) << endl;
   } else {

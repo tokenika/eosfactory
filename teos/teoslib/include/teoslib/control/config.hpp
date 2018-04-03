@@ -24,12 +24,12 @@ namespace teos {
       TeosControl* teosControl, string daemonExe = "");
     string getGenesisJson(
       TeosControl* teosControl, string genesisJson = "");
-    string getHttpServerAddress(string address = "");
-    string getHttpWalletAddress(string address = "");
-    string getDaemonName();
-    string getWASM_CLANG();
-    string getWASM_LLVM_LINK();
-    string getBINARYEN_BIN();
-    string getWASM_LLC();
+    string getHttpServerAddress(TeosControl* teosControl, string address = "");
+    string getHttpWalletAddress(TeosControl* teosControl, string address = "");
+    string getDaemonName(TeosControl* teosControl);
+    string getWASM_CLANG(TeosControl* teosControl);
+    string getWASM_LLVM_LINK(TeosControl* teosControl);
+    string getBINARYEN_BIN(TeosControl* teosControl);
+    string getWASM_LLC(TeosControl* teosControl);
   };
 }

@@ -25,7 +25,7 @@ namespace teos {
     string getPid()
     {
       ipstream pipe_stream;
-      child c(string("pidof ") + getDaemonName() 
+      child c(string("pidof ") + getDaemonName(nullptr) 
         , std_out > pipe_stream);
 
       string line;
@@ -118,7 +118,7 @@ namespace teos {
     void wasmClangHelp()
     {
       string commandLine;
-      commandLine += getWASM_CLANG() + " --help";
+      commandLine += getWASM_CLANG(nullptr) + " --help";
       boostProcessSystem(commandLine);
     }
 
@@ -169,7 +169,7 @@ namespace teos {
       string linked = workdir.string() + "/linked.bc";
       {
         string commandLine;
-        commandLine += getWASM_LLVM_LINK()
+        commandLine += getWASM_LLVM_LINK(nullptr)
           + " -o " + linked
           + " " + objectFileList;
         cout << commandLine << endl;
@@ -184,7 +184,7 @@ namespace teos {
       string assembly = workdir.string() + "/assembly.s";
       {
         string commandLine;
-        commandLine += getWASM_LLC()
+        commandLine += getWASM_LLC(nullptr)
           + " --asm-verbose=false"
           + " -o " + assembly
           + " " + linked;
@@ -200,7 +200,7 @@ namespace teos {
 
       {
         string commandLine;
-        commandLine += getBINARYEN_BIN() + "/s2wasm"
+        commandLine += getBINARYEN_BIN(nullptr) + "/s2wasm"
           + " -o " + targetWastFile
           + " -s 16384"
           + " " + assembly;
@@ -236,7 +236,7 @@ namespace teos {
           }
         }
         if (count < 0) {
-          putError(string("Failed to kill ") + getDaemonName());
+          putError(string("Failed to kill ") + getDaemonName(this));
         }
       }
       catch (std::exception& e) {
@@ -248,7 +248,7 @@ namespace teos {
     {
       reqJson_.put(
         "http-server-address"
-        , getHttpServerAddress(reqJson_.get("http-server-address", ""))) ;      
+        , getHttpServerAddress(this, reqJson_.get("http-server-address", "")));      
       if(isError_){
         return;
       }

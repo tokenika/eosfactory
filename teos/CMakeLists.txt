@@ -115,6 +115,7 @@ find_package(Boost 1.66 REQUIRED COMPONENTS
   filesystem
   regex
   thread
+  iostreams
 )
 if( Boost_FOUND )
   message( STATUS "Boost found.

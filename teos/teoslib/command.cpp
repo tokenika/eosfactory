@@ -54,16 +54,16 @@ namespace teos
     
     if(isWalletCommand()){
       address = TeosCommand::httpWalletAddress.empty()
-        ? teos::control::getHttpWalletAddress()
+        ? teos::control::getHttpWalletAddress(this)
         : TeosCommand::httpWalletAddress;
       if(address.empty()) {
       address = TeosCommand::httpAddress.empty()
-        ? teos::control::getHttpServerAddress()
+        ? teos::control::getHttpServerAddress(this)
         : TeosCommand::httpAddress;        
       }
     } else {
       address = TeosCommand::httpAddress.empty()
-        ? teos::control::getHttpServerAddress()
+        ? teos::control::getHttpServerAddress(this)
         : TeosCommand::httpAddress;
     }
     size_t colon = address.find(":");

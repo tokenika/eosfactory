@@ -46,7 +46,7 @@ namespace teos
     TeosCommand(string path, ptree reqJson);
     TeosCommand(string path);
     TeosCommand(string errorMsg, string errorSender){
-      respJson_ = errorRespJson(errorSender, errorMsg);
+      errorRespJson(errorSender, errorMsg);
     }
 
     TeosCommand() {}
@@ -70,12 +70,12 @@ namespace teos
       od.add_options()
         ("address,a", value<string>(&(TeosCommand::httpAddress))
             ->default_value(TeosCommand::httpAddress.empty() 
-          ? teos::control::getHttpWalletAddress()
+          ? teos::control::getHttpWalletAddress(nullptr)
           : TeosCommand::httpAddress),
           "The http address (host:port) of the EOSIO daemon.")
         ("wallet,w", value<string>(&(TeosCommand::httpWalletAddress))
             ->default_value(TeosCommand::httpWalletAddress.empty()
-          ? teos::control::getHttpWalletAddress()
+          ? teos::control::getHttpWalletAddress(nullptr)
           : TeosCommand::httpWalletAddress),
         "The http address (host:port) where eos-wallet is running.")
         ("json,j", value<string>(&json_), "Json argument.")      

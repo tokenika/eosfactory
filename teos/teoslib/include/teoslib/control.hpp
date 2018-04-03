@@ -49,12 +49,12 @@ namespace teos
   {
   public:
     static string getConfigJson();
-    static ptree getConfig(bool verbose = false);
+    static ptree getConfig(TeosControl* teosControl = nullptr);
 
     bool isError_ = false;
     ptree reqJson_;
     ptree respJson_;
-    ptree errorRespJson(string sender, string message);
+    void errorRespJson(string sender, string message);
     void putError(string msg, string sender = "");   
 
     TeosControl() {}

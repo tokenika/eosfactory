@@ -87,36 +87,39 @@ namespace teos
     return configJson;
   }
 
-  ptree TeosControl::getConfig(bool verbose) {
+  ptree TeosControl::getConfig(TeosControl* teosControl) {
     ptree config;
     try
     {
       read_json(getConfigJson(), config);
     }
-    catch (...) {
-      if (verbose) {
-        printf("ERROR: Cannot read the config file: %s!\n"
-          , getConfigJson().c_str());
+    catch (exception& e) {
+      if(teosControl) {
+        teosControl->putError(e.what());
+      } else {
+        cout << teos_ERROR << endl << e.what() << endl;
       }
     }
     return config;
   }
 
-  ptree TeosControl::errorRespJson(string sender, string message) {
-    ptree respJson;
-
+  void TeosControl::errorRespJson(string sender, string message) 
+  {
+    if(respJson_.count(teos_ERROR) != 0) {
+      return;
+    }
+    
     if(!sender.empty()) {
       string senderEntry = "\"sender\":\"" + sender + "\"";
       string msgEntry = "\"message\":{" + message + "}";
-      respJson.put(teos_ERROR, "{" + senderEntry + ", " + msgEntry + "}");
+      respJson_.put(teos_ERROR, "{" + senderEntry + ", " + msgEntry + "}");
     } else {
-      respJson.put(teos_ERROR, message);
+      respJson_.put(teos_ERROR, message);
     }
     isError_ = true;  
-    return respJson; 
   }
 
   void TeosControl::putError(string message, string sender) {
-    respJson_ = errorRespJson(sender, message);
+    errorRespJson(sender, message);
   }
 }

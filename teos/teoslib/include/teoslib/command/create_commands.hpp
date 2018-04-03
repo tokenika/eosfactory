@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <boost/algorithm/string.hpp>
+
 #include <teoslib/config.h>
 #include <teoslib/eos_interface.hpp>
 #include <teoslib/command.hpp>
@@ -20,15 +23,24 @@ namespace teos
     {
     public:
 
-      CreateAccount(string creator, string accountName,
-        string ownerKeyPubl, string activeKeyPubl, uint64_t depositEos = 1,
-        bool skip = false, int expirationSec = 30,
-        bool raw = false) : TeosCommand("")
+      CreateAccount(
+        string creator, string accountName,
+        string ownerKeyPubl, string activeKeyPubl,
+        string permission = "creator@active",
+        int expirationSec = 30, 
+        bool skipSignature = false,
+        bool dontBroadcast = false,
+        bool forceUnique = false )
       {
+        vector<string> permissions;
+        boost::split(permissions, permission, boost::is_any_of(","));
+
         copy(createAccount(
           creator, accountName,
-          ownerKeyPubl, activeKeyPubl, depositEos,
-          skip, expirationSec));
+          ownerKeyPubl, activeKeyPubl, 
+          permissions,          
+          expirationSec,
+          skipSignature, dontBroadcast, forceUnique));
       }
 
       CreateAccount(ptree reqJson) : TeosCommand("", reqJson)
@@ -36,8 +48,12 @@ namespace teos
         copy(createAccount(
           reqJson.get<string>("creator"), reqJson.get<string>("name"),
           reqJson.get<string>("ownerKey"), reqJson.get<string>("activeKey"),
-          reqJson.get<uint64_t>("deposit"),
-          reqJson.get<bool>("skip"), reqJson.get<int>("expiration")));
+          {reqJson.get<string>("permission")}, 
+          reqJson.get<int>("expiration"),          
+          reqJson.get<bool>("skip"),
+          reqJson.get<bool>("dontBroadcast"),
+          reqJson.get<bool>("forceUnique")
+          ));
       }
     };
 
@@ -56,36 +72,53 @@ namespace teos
 Create a new account on the blockchain.
 Usage: ./teos create account [creator] [name] [ownerKey] [activeKey] [Options]
 Usage: ./teos create key [-j '{
-  "creator":"<creator name>"
-  "name":"<account name>"
-  "ownerKey":"<owner public key>"
-  "activeKey":"<active public key>"
-  "skipSignature":<true|false>
-  "expiration":<expiration time sec>
-  "deposit":<initial deposit EOS>
+  "creator":"<creator name>",
+  "name":"<account name>",
+  "ownerKey":"<owner public key>",
+  "activeKey":"<active public key>",
+  "expiration":<expiration time sec>,  
+  "skipSignature":<true|false>,
+  "dontBroadcast":<true|false>,
+  "forceUnique":<true|false>,
   }'] [OPTIONS]
 )EOF";
-      }
+    }
 
       string creator;
       string name;
       string ownerKey;
       string activeKey;
+      string permission;
+      int expiration;      
       bool skip;
-      int expiration;
-      uint64_t deposit;
-
+      bool dontBroadcast;
+      bool forceUnique;
 
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("creator,c", value<string>(&creator), "The name of the account creating the new account")
+          ("creator,c", value<string>(&creator)
+            , "The name of the account creating the new account")
           ("name,n", value<string>(&name), "The name of the new account")
-          ("ownerKey,o", value<string>(&ownerKey), "The owner public key for the account")
-          ("activeKey,o", value<string>(&activeKey), "The active public key for the account")
-          ("skip,s", value<bool>(&skip)->default_value(false), "Specify that unlocked wallet keys should not be used to sign transaction, defaults to false")
-          ("expiration,x", value<int>(&expiration)->default_value(30), "The time in seconds before a transaction expires")
-          ("deposit,d", value<uint64_t>(&deposit)->default_value(1), "The initial deposit");
+          ("ownerKey,o", value<string>(&ownerKey)
+            , "The owner public key for the account")
+          ("activeKey,o", value<string>(&activeKey)
+            , "The active public key for the account")
+          ("permission,p", value<string>(&permission)
+            ->default_value("creator@active")
+            ,"An account and permission level to authorize, as in "
+            "'account@permission'")
+          ("expiration,x", value<int>(&expiration)->default_value(30)
+            , "The time in seconds before a transaction expires")
+          ("skip,s", value<bool>(&skip)->default_value(false)
+            , "Specify that unlocked wallet keys should not be used to sign "
+            "transaction, defaults to false")
+          ("dont-broadcast,d", value<bool>(&dontBroadcast)->default_value(false)
+            , "Don't broadcast transaction to the network (just print to stdout)");
+          ("force-unique,f", value<bool>(&forceUnique)->default_value(false)
+            , "force the transaction to be unique. this will consume extra "
+            "bandwidth and remove any protections against accidently issuing "
+            "the same transaction multiple times");          
         return od;
       }
 
@@ -106,9 +139,11 @@ Usage: ./teos create key [-j '{
               reqJson_.put("ownerKey", ownerKey);
               if (vm.count("activeKey")) {
                 reqJson_.put("activeKey", activeKey);
+                reqJson_.put("permission", permission);
+                reqJson_.put("expiration", expiration);                
                 reqJson_.put("skip", skip);
-                reqJson_.put("expiration", expiration);
-                reqJson_.put("deposit", deposit);
+                reqJson_.put("dontBroadcast", dontBroadcast);
+                reqJson_.put("forceUnique", forceUnique);
                 ok = true;
               }
             }
