@@ -102,22 +102,26 @@ class _Command:
     error = False      
 
     def __init__(self, first, second, is_verbose=True):
-        V = ""
+   
+        cl = [setup.teos_exe, first, second,
+            "--json", str(self._args).replace("'", '"'), "--both"]
         if _is_verbose and is_verbose:
-            V = "-V"       
+            cl.append("-V")
 
-        process = subprocess.run([setup.teos_exe, first, second, V,
-            "--json", str(self._args).replace("'", '"'), "--both"],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)  
+        process = subprocess.run(
+            cl,
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE,
+            cwd=str(pathlib.Path(setup.teos_exe).parent)) 
 
         if _is_verbose and is_verbose:
             print(process.stdout.decode("utf-8"))
-        
+
         working_resp = process.stderr.decode("utf-8")
         if re.match(r'^ERROR', working_resp):
             self.error = True
             print(textwrap.fill(process.stderr.decode("utf-8"), 80))
-            return    
+            return  
         self._this = json.loads(working_resp)
 
     def __str__(self):
@@ -237,7 +241,7 @@ class CreateKey(_Command):
             self.name = keyPairName
 
 
-class InitaKey(_Command):
+class EosioKey(_Command):
     def __init__(self, is_verbose=True):
         self._this = json.loads("{}")
         self._this["privateKey"] = \
@@ -246,8 +250,8 @@ class InitaKey(_Command):
             "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
         self.private_key = self._this["privateKey"]
         self.public_key = self._this["publicKey"]
-        self.account_name = "inita"
-        self.name = "inita_account"        
+        self.account_name = "eosio"
+        self.name = "eosio_account"        
 
 
 class CreateAccount(_Command):
@@ -286,18 +290,34 @@ class SetContract(_Command):
 
 """ Start test EOSIO Daemon.
 """
+class _Daemon(_Command):
+    def __init__(self, clear, is_verbose=True):
+        self._args["resync-blockchain"] = clear
+        self._args["DO_NOT_WAIT"] = 1
+        self._args["DO_NOT_LAUNCH"] = 1
+        _Command.__init__(self, "daemon", "start", False)
+        if not self.error:
+            if(self._this["is_windows_ubuntu"] == "1"):
+                subprocess.call(
+                    ["cmd.exe", "/c", "start", "bash.exe", "-c", 
+                    self._this["command_line"]])
+            else:
+                subprocess.call(
+                    ["gnome-terminal", "--", self._this["command_line"]]) 
+
+            del self._args["DO_NOT_WAIT"]
+            _Command.__init__(self, "daemon", "start", is_verbose)  
+
 class DaemonStart(_Command):
     def __init__(self, is_verbose=True):
-        self._args["resync-blockchain"] = 0
-        _Command.__init__(self, "daemon", "start", is_verbose)
+        _Daemon(0, is_verbose)              
 
 
 """ Start clean test EOSIO Daemon.
 """
 class DaemonClear(_Command):
     def __init__(self, is_verbose=True):
-        self._args["resync-blockchain"] = 1
-        _Command.__init__(self, "daemon", "start", is_verbose)        
+        _Daemon(1, is_verbose)           
 
 
 """ Stop test EOSIO Daemon.
@@ -388,10 +408,10 @@ class Account(_Commands):
 
 class Daemon(_Commands):
     def start(self):
-        DaemonStart()
+        _Daemon(0, True)
 
     def clear(self):
-        DaemonClear()
+        _Daemon(1, True)
 
     def stop(self):
         DaemonStop()

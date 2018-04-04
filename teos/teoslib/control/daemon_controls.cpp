@@ -16,7 +16,7 @@
 #include <teoslib/control/daemon_controls.hpp>
 #include <teoslib/command/get_commands.hpp>
 
-using namespace boost::process;
+namespace  bp = boost::process;
 using namespace std;
 
 namespace teos {
@@ -24,9 +24,9 @@ namespace teos {
 
     string getPid()
     {
-      ipstream pipe_stream;
-      child c(string("pidof ") + getDaemonName(nullptr) 
-        , std_out > pipe_stream);
+      bp::ipstream pipe_stream;
+      string cl = string("pidof ") + getDaemonName(nullptr);
+      bp::child c(cl, bp::std_out > pipe_stream);
 
       string line;
       stringstream ss;
@@ -39,8 +39,8 @@ namespace teos {
 
     bool isWindowsUbuntu()
     {
-      ipstream pipe_stream;
-      child c(string("cat /proc/version"), std_out > pipe_stream);
+      bp::ipstream pipe_stream;
+      bp::child c(string("cat /proc/version"), bp::std_out > pipe_stream);
 
       string line;
       stringstream ss;
@@ -53,10 +53,10 @@ namespace teos {
     }
 
     void boostProcessSystem(string commandLine) {
-      boost::process::system(commandLine,
-        boost::process::std_out > stdout,
-        boost::process::std_err > stderr,
-        boost::process::std_in < stdin);
+      bp::system(commandLine,
+        bp::std_out > stdout,
+        bp::std_err > stderr,
+        bp::std_in < stdin);
     }
 
     void generateAbi(
@@ -227,7 +227,7 @@ namespace teos {
         string pid = getPid();
         int count = 10;
         if (!pid.empty()) {
-          boost::process::system(string("kill ") + pid);
+          bp::system(string("kill ") + pid);
 
           while (!pid.empty() && count > 0) {
             boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
@@ -244,15 +244,23 @@ namespace teos {
       }
     }
 
+    //////////////////////////////////////////////////////////////////////////
+    // class DaemonStart
+    //////////////////////////////////////////////////////////////////////////
+    
+    const string DaemonStart::DO_NOT_WAIT = "DO_NOT_WAIT";
+    const string DaemonStart::DO_NOT_LAUNCH = "DO_NOT_LAUNCH";
+
     void DaemonStart::action()
-    {
+    { 
+
       reqJson_.put(
         "http-server-address"
         , getHttpServerAddress(this, reqJson_.get("http-server-address", "")));      
       if(isError_){
         return;
       }
-      
+     
       reqJson_.put(
         "daemon_exe"
         , getDaemonExe(this, reqJson_.get("daemon_exe", "")));
@@ -310,28 +318,39 @@ namespace teos {
           commandLine += " --resync-blockchain";
         }
 
-        cout << commandLine <<endl;
+        respJson_.put("command_line", commandLine);
+        bool isWU = isWindowsUbuntu();
+        if(isWU) {
+          respJson_.put("is_windows_ubuntu", 1);
+        } else{
+          respJson_.put("is_windows_ubuntu", 0);
+        }
 
-        if(isWindowsUbuntu()) {
-          boost::process::system("cmd.exe /c start bash.exe -c " 
-            "'" + commandLine + "'");
-        } else {
-          boost::process::system("gnome-terminal -- " + commandLine);
+        //cout << commandLine <<endl;
+        if(reqJson_.count(DO_NOT_LAUNCH) == 0) {
+          if(isWU) {
+            bp::spawn("cmd.exe /c start bash.exe -c " 
+              "'" + commandLine + "'");
+          } else {
+            bp::spawn("gnome-terminal -- " + commandLine);
+          }
         }
         
         // Wait until the node is operational:
-        teos::TeosCommand tc;
-        teos::TeosCommand::httpAddress 
-          = reqJson_.get<string>("http-server-address");
-        int count = 10;
-        do {
-          tc = teos::command::GetInfo(); 
-          respJson_ = tc.respJson_;                   
-          boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
-          if(count-- == 0){
-            putError(tc.errorMsg());
-          }
-        } while (tc.isError_ && count > 0);
+        if(reqJson_.count(DO_NOT_WAIT) == 0) {
+          teos::TeosCommand tc;
+          teos::TeosCommand::httpAddress 
+            = reqJson_.get<string>("http-server-address");
+          int count = 10;
+          do {
+            tc = teos::command::GetInfo(); 
+            respJson_ = tc.respJson_;                   
+            boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
+            if(count-- == 0){
+              putError(tc.errorMsg());
+            }
+          } while (tc.isError_ && count > 0);
+        }
       }
       catch (std::exception& e) {
         putError(e.what());

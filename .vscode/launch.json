@@ -3,26 +3,127 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
+
+
   "configurations": [
-      {
-          "name": "(gdb) set contract",
-          "type": "cppdbg",
-          "request": "launch",
-          "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
-          "args": ["set", "contract", "currency", "currency.wast", "currency.abi"],
-          "stopAtEntry": false,
-          "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build",
-          "environment": [],
-          "externalConsole": true,
-          "MIMode": "gdb",
-          "setupCommands": [
-              {
-                  "description": "Enable pretty-printing for gdb",
-                  "text": "-enable-pretty-printing",
-                  "ignoreFailures": true
-              }
-          ]
-      },
+    {
+        "name": "(gdb) wsl cleos create account",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/e/Workspaces/EOS/eos/build/programs/cleos/cleos",
+        "args": ["create", "account", "eosio", "currency", "EOS7AcpiAGeQiwBRc1AmUPYUAz5reXaau4C9QpVcN12keqeWz4pKa", "EOS5c57XUFomrBkA4b3Gox3k4oXUgBSjNPWS1W4z2xwAkbP4j2hnX"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/e/Workspaces/EOS/eos/build/programs/cleos",
+        "environment": [],
+        "externalConsole": true,
+        "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+        },  
+        "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/e": "e:\\",
+            "/mnt/c": "c:\\",
+            "/mnt/f": "e:\\"
+        }         
+    },
+    {
+        "name": "(gdb) wsl create account",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
+        "args": ["create", "account", "eosio", "currency", "EOS4v5jJEvzNRoJH3Te8xTiBr3SxHewU3H14jpBugZZUA2okULwDp", "EOS7bCkCseE6vU3RDNMScSpDfb6aQX3fpo9vqYypkDNRXmMTQXySr"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+        "environment": [],
+        "externalConsole": true,
+        "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+        },  
+        "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/e": "e:\\",
+            "/mnt/c": "c:\\",
+            "/mnt/f": "e:\\"
+        }         
+    },
+    {
+        "name": "(gdb) wsl daemon start",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
+        "args": ["daemon", "start"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+        "environment": [],
+        "externalConsole": true,
+        "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+        },  
+        "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/e": "e:\\",
+            "/mnt/c": "c:\\",
+            "/mnt/f": "e:\\"
+        }         
+    },
+    {
+        "name": "(gdb) set contract",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+        "args": ["set", "contract", "currency", "currency.wast", "currency.abi"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build",
+        "environment": [],
+        "externalConsole": true,
+        "MIMode": "gdb",
+        "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+        ]
+    },
     {
       "name": "(gdb) get code",
       "type": "cppdbg",

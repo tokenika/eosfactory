@@ -219,7 +219,7 @@ namespace teos {
       trx.expiration = info.head_block_time + fc::seconds(expirationSec);
       trx.set_reference_block(info.head_block_id);
 
-      if (tx_skip_sign) {
+      if (!tx_skip_sign) {
         CallChain callSign = sign_transaction(trx);
         if (callSign.isError_) {
           return callSign;
@@ -335,10 +335,20 @@ namespace teos {
     TeosCommand createAccount(
       string creator, string accountName,
       string ownerKeyStr, string activeKeyStr, 
-      vector<string> permissions,
+      string permission,
       int expiration, 
       bool skipSignature, bool dontBroadcast, bool forceUnique)
     {
+      vector<string> permissions = {};
+      if(!permission.empty()){
+        boost::split(permissions, permission, boost::is_any_of(","));
+      }
+      if(permissions.empty()){
+        cout << "is empty" << endl;
+      } else {
+        cout << "is not empty" << endl;
+      }
+
       public_key_type owner_key, active_key;      
       try {
         owner_key = public_key_type(ownerKeyStr);

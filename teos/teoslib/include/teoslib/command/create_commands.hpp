@@ -26,19 +26,16 @@ namespace teos
       CreateAccount(
         string creator, string accountName,
         string ownerKeyPubl, string activeKeyPubl,
-        string permission = "creator@active",
+        string permission = "",
         int expirationSec = 30, 
         bool skipSignature = false,
         bool dontBroadcast = false,
         bool forceUnique = false )
       {
-        vector<string> permissions;
-        boost::split(permissions, permission, boost::is_any_of(","));
-
         copy(createAccount(
           creator, accountName,
           ownerKeyPubl, activeKeyPubl, 
-          permissions,          
+          permission,          
           expirationSec,
           skipSignature, dontBroadcast, forceUnique));
       }
@@ -102,10 +99,10 @@ Usage: ./teos create key [-j '{
           ("name,n", value<string>(&name), "The name of the new account")
           ("ownerKey,o", value<string>(&ownerKey)
             , "The owner public key for the account")
-          ("activeKey,o", value<string>(&activeKey)
+          ("activeKey,a", value<string>(&activeKey)
             , "The active public key for the account")
           ("permission,p", value<string>(&permission)
-            ->default_value("creator@active")
+            ->default_value("")
             ,"An account and permission level to authorize, as in "
             "'account@permission'")
           ("expiration,x", value<int>(&expiration)->default_value(30)

@@ -9,6 +9,16 @@
     "utility": "cpp",
     "tuple": "cpp",
     "chrono": "cpp",
-    "algorithm": "cpp"
+    "algorithm": "cpp",
+    "xmemory0": "cpp",
+    "istream": "cpp",
+    "memory": "cpp",
+    "type_traits": "cpp",
+    "xlocmes": "cpp",
+    "xlocmon": "cpp",
+    "xlocnum": "cpp",
+    "xloctime": "cpp",
+    "queue": "cpp",
+    "ostream": "cpp"
   }
 }

@@ -134,6 +134,9 @@ Usage: ./teos node kill
       void action();
 
     public:
+      static const string DO_NOT_WAIT;
+      static const string DO_NOT_LAUNCH;
+
       DaemonStart(
         bool resync_blockchain = false,
         string daemon_exe = "",
@@ -195,8 +198,10 @@ Usage: ./teos node start [Options]
         output("genesis state file", "%s", command.reqJson_.get<string>("genesis-json").c_str());
         output("server address", "%s", command.reqJson_.get<string>("http-server-address").c_str());
         output("config directory", "%s", command.reqJson_.get<string>("config-dir").c_str());
-        output("head block number", "%s", command.get<string>("head_block_num").c_str());
-        output("head block time", "%s", command.get<string>("head_block_time").c_str());
+        if(command.reqJson_.count(DaemonStart::DO_NOT_WAIT) == 0) {
+          output("head block number", "%s", command.get<string>("head_block_num").c_str());
+          output("head block time", "%s", command.get<string>("head_block_time").c_str());
+        }
       }
     };
   

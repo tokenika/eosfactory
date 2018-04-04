@@ -1,6 +1,4 @@
 {
-  "EOSIO_SOURCE_DIR":"/mnt/hgfs/Workspaces/EOS/eos/",
-  "LOGOS_DIR":"/mnt/hgfs/Workspaces/EOS/Logos",
   "DAEMON_NAME":"nodeos",
   "WASM_CLANG":"/opt/wasm/bin/clang",
   "WASM_LLVM_LINK":"/opt/wasm/bin/llvm-link",

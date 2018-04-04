@@ -25,7 +25,7 @@ namespace teos{
   TeosCommand createAccount(
     string creator, string name,
     string ownerKey, string activeKey, 
-    vector<string> permissions  = {"creator@active"},
+    string permission  = "",
     int expiration = 30, 
     bool skipSignature = false,
     bool dontBroadcast = false,
