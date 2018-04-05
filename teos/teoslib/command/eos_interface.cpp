@@ -167,7 +167,7 @@ namespace teos {
 
     using namespace teos::command;
 
-    CallChain sign_transaction(chain::signed_transaction& trx)
+    CallChain /*void*/ sign_transaction(chain::signed_transaction& trx)
     {
       // TODO better error checking
       /*
@@ -199,6 +199,9 @@ namespace teos {
       trx = signed_trx.as<signed_transaction>();        
       */
       return CallChain(wallet_sign_trx, sign_args);
+      /*
+      trx = signed_trx.as<signed_transaction>();
+      */
     }
 
     string generate_nonce_value() {
@@ -213,21 +216,25 @@ namespace teos {
         {}, config::system_account_name, "nonce", fc::raw::pack(nonce));
     }
 
-    TeosCommand push_transaction(
+    TeosCommand /*fc::variant*/ push_transaction(
       signed_transaction& trx,
       int expirationSec,
       bool tx_skip_sign,
       bool tx_dont_broadcast,
       bool tx_force_unique,
-      packed_transaction::compression_type compression = packed_transaction::none)
+      packed_transaction::compression_type compression 
+        = packed_transaction::none)
     {
-      //callGetInfo == call(host, port, get_info_func)  
+      /*
+      auto info = get_info();
+      */ 
       CallChain callGetInfo(string(getCommandPath + "get_info"));
       if (callGetInfo.isError_) {
         return callGetInfo;
       }
 
-      auto info = callGetInfo.fcVariant_.as<chain_apis::read_only::get_info_results>();
+      auto info 
+        = callGetInfo.fcVariant_.as<chain_apis::read_only::get_info_results>();
       trx.expiration = info.head_block_time + fc::seconds(expirationSec);
       trx.set_reference_block(info.head_block_id);
 
@@ -236,6 +243,9 @@ namespace teos {
       }
 
       if (!tx_skip_sign) {
+        /*
+        sign_transaction(trx);
+        */        
         CallChain callSign = sign_transaction(trx);
         if (callSign.isError_) {
           return callSign;
@@ -244,13 +254,15 @@ namespace teos {
       }
       
       if (!tx_dont_broadcast) {
-        //return call(push_txn_func, packed_transaction(trx, compression));
+        /*
+        return call(push_txn_func, packed_transaction(trx, compression));
+        */
         CallChain callPushTransaction(
           push_txn_func,
-          packed_transaction(trx, compression));
+          fc::variant(packed_transaction(trx, compression)))/*.fcVarisnt_*/;
         return callPushTransaction;        
       } else {
-        return CallChain(fc::variant(trx));
+        return CallChain(fc::variant(trx))/*.fcVarisnt_*/;
       }
     }
 
@@ -469,10 +481,6 @@ namespace teos {
         } 
       }
       return callGetCode;
-    }
-
-    uint64_t generate_nonce_value() {
-      return fc::time_point::now().time_since_epoch().count();
     }
 
     TeosCommand pushAction(string contract, string action, string data, 
