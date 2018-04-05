@@ -19,6 +19,9 @@
     "xlocnum": "cpp",
     "xloctime": "cpp",
     "queue": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "vector": "cpp"
   }
 }

@@ -3,15 +3,44 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-
-
   "configurations": [
+    {
+        "name": "(gdb) wsl teos wallet keys",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
+        "args": ["wallet", "keys"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+        "environment": [],
+        "externalConsole": true,
+        "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+        },  
+        "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/e": "e:\\",
+        }         
+    },   
     {
         "name": "(gdb) wsl cleos create account",
         "type": "cppdbg",
         "request": "launch",
         "program": "/mnt/e/Workspaces/EOS/eos/build/programs/cleos/cleos",
-        "args": ["create", "account", "eosio", "currency", "EOS7AcpiAGeQiwBRc1AmUPYUAz5reXaau4C9QpVcN12keqeWz4pKa", "EOS5c57XUFomrBkA4b3Gox3k4oXUgBSjNPWS1W4z2xwAkbP4j2hnX"],
+        "args": ["create", "account", "eosio", "currency", "EOS8XTEZDTGCVvzo2YZDU7rVQbaBWZEV55KTxFqeK3tbM798svn7X", "EOS8bSnzJjeqWB76h2WoEn9HFBWRFGWfhqzfM6GjkwavtLTqEr5m2"],
         "stopAtEntry": false,
         "cwd": "/mnt/e/Workspaces/EOS/eos/build/programs/cleos",
         "environment": [],
@@ -35,8 +64,6 @@
         "sourceFileMap": 
         {
             "/mnt/e": "e:\\",
-            "/mnt/c": "c:\\",
-            "/mnt/f": "e:\\"
         }         
     },
     {
@@ -44,7 +71,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
-        "args": ["create", "account", "eosio", "currency", "EOS4v5jJEvzNRoJH3Te8xTiBr3SxHewU3H14jpBugZZUA2okULwDp", "EOS7bCkCseE6vU3RDNMScSpDfb6aQX3fpo9vqYypkDNRXmMTQXySr"],
+        "args": ["create", "account", "eosio", "currency", "EOS8XTEZDTGCVvzo2YZDU7rVQbaBWZEV55KTxFqeK3tbM798svn7X", "EOS8bSnzJjeqWB76h2WoEn9HFBWRFGWfhqzfM6GjkwavtLTqEr5m2"],
         "stopAtEntry": false,
         "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
         "environment": [],

@@ -121,8 +121,11 @@ class _Command:
         if re.match(r'^ERROR', working_resp):
             self.error = True
             print(textwrap.fill(process.stderr.decode("utf-8"), 80))
-            return  
-        self._this = json.loads(working_resp)
+            return 
+        try:
+            self._this = json.loads(working_resp)
+        except:
+            self._this = working_resp
 
     def __str__(self):
         return pprint.pformat(self._this)
@@ -170,6 +173,11 @@ class WalletImport(_Command):
         _Command.__init__(self, "wallet", "import", is_verbose)
         if not self.error:       
             self.key_private = key_private
+
+
+class WalletKeys(_Command):
+    def __init__(self, is_verbose=True):
+        _Command.__init__(self, "wallet", "keys", is_verbose)         
 
 
 class WalletOpen(_Command):
@@ -310,14 +318,16 @@ class _Daemon(_Command):
 
 class DaemonStart(_Command):
     def __init__(self, is_verbose=True):
-        _Daemon(0, is_verbose)              
+        daemon = _Daemon(0, is_verbose)
+        self._this = daemon._this              
 
 
 """ Start clean test EOSIO Daemon.
 """
 class DaemonClear(_Command):
     def __init__(self, is_verbose=True):
-        _Daemon(1, is_verbose)           
+        daemon = _Daemon(1, is_verbose)
+        self._this = daemon._this
 
 
 """ Stop test EOSIO Daemon.

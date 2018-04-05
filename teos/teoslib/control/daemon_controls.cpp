@@ -221,6 +221,9 @@ namespace teos {
       */
     }
 
+    //////////////////////////////////////////////////////////////////////////
+    // class DaemonStop
+    //////////////////////////////////////////////////////////////////////////
     DaemonStop::DaemonStop()
     {
       try {
@@ -357,15 +360,19 @@ namespace teos {
       }
     }
 
+    //////////////////////////////////////////////////////////////////////////
+    // class DaemonDeleteWallets
+    //////////////////////////////////////////////////////////////////////////
     void DaemonDeleteWallets::action()
     {
-      namespace bfs = boost::filesystem;
-      bfs::path dataDir = getConfigDir(this, reqJson_.get("config-dir", ""));
-      
+      namespace bfs = boost::filesystem;      
+  
       int count = 0; 
       try{
+        bfs::path walletDir(getWalletDir(this, reqJson_.get("wallet-dir", "")));
         if(!reqJson_.get("name", "").empty()){
-          bfs::path walletFile = dataDir / (reqJson_.get("name", "") + ".wallet");
+          bfs::path walletFile = walletDir / (reqJson_.get("name", "") 
+            + ".wallet");
           if(bfs::exists(walletFile)){
             bfs::remove(walletFile);
             count++;            
@@ -373,7 +380,8 @@ namespace teos {
         } else
         {
           for (bfs::directory_entry& entry 
-              : boost::make_iterator_range(bfs::directory_iterator(dataDir), {})) 
+              : boost::make_iterator_range(
+                bfs::directory_iterator(walletDir), {})) 
             {
             if (bfs::is_regular_file(entry.path()) 
               && entry.path().extension() == ".wallet") {
@@ -388,7 +396,8 @@ namespace teos {
       respJson_.put("count", count);      
     }
 
-    void DaemonDeleteWalletsOptions::printout(TeosControl command, variables_map &vm) {
+    void DaemonDeleteWalletsOptions::printout(
+        TeosControl command, variables_map &vm) {
       output("deleted wallet count", "%d", command.get<int>("count"));
     }
   }

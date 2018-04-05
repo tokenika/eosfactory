@@ -201,6 +201,18 @@ namespace teos {
       return CallChain(wallet_sign_trx, sign_args);
     }
 
+    string generate_nonce_value() {
+      return fc::to_string(fc::time_point::now().time_since_epoch().count());
+    }
+
+    chain::action generate_nonce() {
+      auto v = generate_nonce_value();
+      variant nonce = fc::mutable_variant_object()
+            ("value", v);
+      return chain::action( 
+        {}, config::system_account_name, "nonce", fc::raw::pack(nonce));
+    }
+
     TeosCommand push_transaction(
       signed_transaction& trx,
       int expirationSec,
@@ -219,6 +231,10 @@ namespace teos {
       trx.expiration = info.head_block_time + fc::seconds(expirationSec);
       trx.set_reference_block(info.head_block_id);
 
+      if (tx_force_unique) {
+         trx.context_free_actions.emplace_back( generate_nonce() );
+      }
+
       if (!tx_skip_sign) {
         CallChain callSign = sign_transaction(trx);
         if (callSign.isError_) {
@@ -231,12 +247,11 @@ namespace teos {
         //return call(push_txn_func, packed_transaction(trx, compression));
         CallChain callPushTransaction(
           push_txn_func,
-          fc::variant(trx));
+          packed_transaction(trx, compression));
         return callPushTransaction;        
       } else {
         return CallChain(fc::variant(trx));
       }
-
     }
 
     vector<chain::permission_level> get_account_permissions(const vector<string>& permissions) {
@@ -287,31 +302,32 @@ namespace teos {
       return TeosCommand(CODE_PATH);
     }
 
-    /*
-      // Originally:
-      fc::variant push_actions(...
-    */
-    TeosCommand send_actions(
-      std::vector<chain::action>&& actions,
-      int expirationSec,
-      bool tx_skip_sign,
-      bool tx_dont_broadcast,
-      bool tx_force_unique,       
-      packed_transaction::compression_type compression = packed_transaction::none ) 
-    {
-      /*
-        // Originally:
-        cout << fc::json::to_pretty_string(
-          push_actions(std::forward<decltype(actions)>(actions), compression)
-            ) << endl;
-      */
-      
-      // push_actions(...) body:
+    TeosCommand  /*fc::variant*/ push_actions(
+      vector<chain::action>&& actions,
+      int expirationSec, bool tx_skip_sign, bool tx_dont_broadcast, 
+      bool tx_force_unique,
+      packed_transaction::compression_type compression = packed_transaction::none 
+      ) 
+      {
       signed_transaction trx;
       trx.actions = std::forward<decltype(actions)>(actions);
 
-      return  push_transaction(trx, expirationSec, tx_skip_sign, tx_dont_broadcast, 
-          tx_force_unique, compression)/*.fcVariant_*/;
+      return push_transaction(
+        trx, expirationSec, tx_skip_sign, tx_dont_broadcast, tx_force_unique, 
+        compression)/*.fcVariant_*/;
+    }
+
+    TeosCommand /*void*/ send_actions(
+      std::vector<chain::action>&& actions,
+      int expirationSec, bool tx_skip_sign, bool tx_dont_broadcast,
+      bool tx_force_unique,       
+      packed_transaction::compression_type compression 
+        = packed_transaction::none ) 
+    {
+      return push_actions(
+        forward<decltype(actions)>(actions), 
+        expirationSec, tx_skip_sign, tx_dont_broadcast, tx_force_unique,
+        compression)/*.fcVariant_*/;
     }
 
     chain::action create_newaccount(
@@ -342,11 +358,6 @@ namespace teos {
       vector<string> permissions = {};
       if(!permission.empty()){
         boost::split(permissions, permission, boost::is_any_of(","));
-      }
-      if(permissions.empty()){
-        cout << "is empty" << endl;
-      } else {
-        cout << "is not empty" << endl;
       }
 
       public_key_type owner_key, active_key;      

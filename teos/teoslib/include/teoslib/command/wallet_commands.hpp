@@ -558,8 +558,7 @@ Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"
 
       void normResponse(string response, ptree &respJson) 
       {
-        boost::replace_all(response, "[", "{\"keys\":[");
-        boost::replace_all(response, "]", "]}");
+        response = "{\"wallet keys\":" + response + "}";
         TeosCommand::normResponse(response, respJson);
       }      
     };
@@ -587,11 +586,7 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
       }
 
       void printout(TeosControl command, variables_map &vm) {
-        BOOST_FOREACH(ptree::value_type &v
-        , command.respJson_.get_child("keys"))
-        {
-          output("key", "%s", v.second.data().c_str());
-        }
+        output(command.responseToString(false));
       }
 
     };

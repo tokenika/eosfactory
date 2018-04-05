@@ -18,11 +18,10 @@ namespace teos {
       void action();
       public:
         DaemonDeleteWallets(
-          string name = "", string configDir = "", string walletDir = ""
+          string name = "", string walletDir = ""
           )
         {
           reqJson_.put("name", name);
-          reqJson_.put("config-dir", configDir);
           reqJson_.put("wallet-dir", walletDir);
           action();
         }
@@ -194,10 +193,16 @@ Usage: ./teos node start [Options]
       } 
 
       void printout(TeosControl command, variables_map &vm) {
-        output("nodeos exe file", "%s", command.reqJson_.get<string>("daemon_exe").c_str());
-        output("genesis state file", "%s", command.reqJson_.get<string>("genesis-json").c_str());
-        output("server address", "%s", command.reqJson_.get<string>("http-server-address").c_str());
-        output("config directory", "%s", command.reqJson_.get<string>("config-dir").c_str());
+        output("nodeos exe file", "%s"
+          , command.reqJson_.get<string>("daemon_exe").c_str());
+        output("genesis state file", "%s"
+          , command.reqJson_.get<string>("genesis-json").c_str());
+        output("server address", "%s"
+          , command.reqJson_.get<string>("http-server-address").c_str());
+        output("config directory", "%s"
+          , command.reqJson_.get<string>("config-dir").c_str());
+        output("wallet directory", "%s"
+          , command.reqJson_.get<string>("wallet-dir").c_str());
         if(command.reqJson_.count(DaemonStart::DO_NOT_WAIT) == 0) {
           output("head block number", "%s", command.get<string>("head_block_num").c_str());
           output("head block time", "%s", command.get<string>("head_block_time").c_str());
