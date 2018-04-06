@@ -140,13 +140,12 @@ class GetAccount(_Command):
     def __init__(self, accountName, is_verbose=True):
         self._args["account_name"] = accountName
         _Command.__init__(self, "get", "account", is_verbose)
-        if not self.error:
-            self.account_name = self._this["account_name"]
-            self.eos_balance = self._this["eos_balance"]
-            self.staked_balance = self._this["staked_balance"]
-            self.eos_balance = self._this["eos_balance"]
-            self.unsteostaking_balance = self._this["unstaking_balance"]
-            self.last_unstaking_time = self._this["last_unstaking_time"]
+        # if not self.error:
+        #     self.account_name = self._this["account_name"]
+        #     self.staked_balance = self._this["staked_balance"]
+        #     self.eos_balance = self._this["eos_balance"]
+        #     self.unsteostaking_balance = self._this["unstaking_balance"]
+        #     self.last_unstaking_time = self._this["last_unstaking_time"]
 
 
 """ Create a new wallet locally.
@@ -264,17 +263,24 @@ class EosioKey(_Command):
 
 class CreateAccount(_Command):
     def __init__(
-            self, creator, account_name
-            , owner_key, active_key
-            , deposit_eos=1, skip=0, expirationSec=30, is_verbose=True
+            self, creator, account_name, 
+            owner_key, active_key,
+            permission = "",
+            expirationSec=30, 
+            skipSignature=0, 
+            dontBroadcast=0,
+            forceUnique=0,
+            is_verbose=True
             ):
         self._args["creator"] = creator
         self._args["name"] = account_name
         self._args["ownerKey"] = owner_key.public_key
         self._args["activeKey"] = active_key.public_key
-        self._args["deposit"] = deposit_eos
-        self._args["skip"] = skip
-        self._args["expiration"] = expirationSec
+        self._args["permission"] = permission
+        self._args["expiration"] = expirationSec        
+        self._args["skip"] = skipSignature        
+        self._args["dontBroadcast"] = dontBroadcast
+        self._args["forceUnique"] = forceUnique
         _Command.__init__(self, "create", "account", is_verbose)
         if not self.error:
             self.name = account_name
@@ -307,7 +313,7 @@ class _Daemon(_Command):
         if not self.error:
             if(self._this["is_windows_ubuntu"] == "1"):
                 subprocess.call(
-                    ["cmd.exe", "/c", "start", "bash.exe", "-c", 
+                    ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
                     self._this["command_line"]])
             else:
                 subprocess.call(

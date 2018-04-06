@@ -32,8 +32,11 @@ namespace teos{
     bool forceUnique = false);
 
   TeosCommand setContract(
-    string wastFile, std::string abiFile,
-    string account, bool skipSignature, int expiration);  
+    string account,
+    string wastFile, string abiFile = "",
+    string permission  = "",
+    int expiration = 30,
+    bool skipSignature = false );  
 
   TeosCommand getCode(string accountName, string wastFile, string abiFile);
   

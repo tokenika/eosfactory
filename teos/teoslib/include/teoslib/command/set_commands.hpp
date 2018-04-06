@@ -19,12 +19,16 @@ namespace teos
     class SetContract : public TeosCommand
     {
     public:
-      SetContract(string accountName,
-        string wastFile, string abiFile = "",
-        bool skip = false, int expiration = 30)
+      SetContract(
+          string accountName,
+          string wastFile, string abiFile = "",
+          string permission  = "",
+          int expiration = 30,
+          bool skipSignature = false)
         : TeosCommand("")
       {
-        copy(setContract(accountName, wastFile, abiFile, skip, expiration));
+        copy(setContract(
+          accountName, wastFile, abiFile, permission, expiration, skipSignature));
       }
 
       SetContract(ptree reqJson) : TeosCommand(
@@ -33,7 +37,9 @@ namespace teos
         copy(setContract(
             reqJson.get<string>("account"),
             reqJson.get<string>("wast"), reqJson.get<string>("abi"),
-            reqJson.get<bool>("skip"), reqJson.get<int>("expiration")));
+            reqJson.get<string>("permission"),
+            reqJson.get<int>("expiration"),
+            reqJson.get<bool>("skip")));
       }
     };
 
@@ -62,8 +68,9 @@ Usage: ./teos [http address] create key [-j '{
       string account;
       string wast;
       string abi;
+      string permission;
+      int expiration;      
       bool skip;
-      int expiration;
 
       options_description  argumentDescription() {
         options_description od("");
@@ -73,12 +80,12 @@ Usage: ./teos [http address] create key [-j '{
           ("wast,o", value<string>(&wast), "The WAST file for the contract")
           ("abi,a", value<string>(&abi)->default_value("")
             , "The ABI file for the contract")
+          ("expiration,x", value<int>(&expiration)->default_value(30)
+            , "The time in seconds before a transaction expires")
           ("skip,s", value<bool>(&skip)->default_value(false)
             , "Specify that unlocked wallet keys should not be used to "
-              "sign transaction, defaults to false")
-          ("expiration,x", value<int>(&expiration)->default_value(30)
-            , "The time in seconds before a transaction expires");
-        return od;
+              "sign transaction, defaults to false");        
+          return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
@@ -97,8 +104,9 @@ Usage: ./teos [http address] create key [-j '{
           }
         }
         reqJson_.put("abi", abi);
+        reqJson_.put("permission", permission);
+        reqJson_.put("expiration", expiration);        
         reqJson_.put("skip", skip);
-        reqJson_.put("expiration", expiration);
         return ok;
       }
 

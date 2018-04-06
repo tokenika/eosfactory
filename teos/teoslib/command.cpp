@@ -91,7 +91,7 @@ namespace teos
         "Connection: close" + CRNL + CRNL +
         postMsg;
 
-      cout << request << endl;
+      ////cout << request << endl;
 
       boost::system::error_code error;
 
@@ -136,7 +136,7 @@ namespace teos
       string mark = CRNL + CRNL; // header end mark
       size_t found = message.find(mark);
       message = message.substr(found + mark.length(), message.length());
-      cout << message << endl;
+      ////cout << message << endl;
       normResponse(message, respJson_);
     }
     catch (exception& e) {

@@ -14,7 +14,7 @@
 #include <eosio/utilities/key_conversion.hpp>
 #include <fc/io/fstream.hpp>
 #include <eosio/chain_plugin/chain_plugin.hpp>
-
+#include <eosio/chain/wast_to_wasm.hpp>
 
 #include <IR/Module.h>
 #include <IR/Validate.h>
@@ -385,64 +385,92 @@ namespace teos {
         expiration, skipSignature, dontBroadcast, forceUnique); 
     }
 
+    chain::action create_setcode(
+        const name& account, const bytes& code, vector<string> permissions) 
+      {
+      return action {
+          permissions.empty() 
+            ? vector<chain::permission_level>{{account,config::active_name}} 
+            : get_account_permissions(permissions),
+          contracts::setcode{
+            .account   = account,
+            .vmtype    = 0,
+            .vmversion = 0,
+            .code      = code
+          }
+      };
+    }
+
+    chain::action create_setabi(
+        const name& account, const contracts::abi_def& abi, vector<string> permissions) {
+      return action {
+          permissions.empty() 
+            ? vector<chain::permission_level>{{account,config::active_name}} 
+            : get_account_permissions(permissions),
+          contracts::setabi{
+            .account   = account,
+            .abi       = abi
+          }
+      };
+    }
+
     TeosCommand setContract(
-      string account, string wastFile, string abiFile,
-      bool skipSignature, int expiration
+      string account, 
+      string wastFile, string abiFile,
+      string permission,
+      int expiration,
+      bool skipSignature
       )
     {
-      // namespace bfs = boost::filesystem;
+      vector<string> permissions = {};
+      if(!permission.empty()){
+        boost::split(permissions, permission, boost::is_any_of(","));
+      }
 
-      // try 
-      // {
-      //   TeosCommand status;
-      //   bfs::path wastFilePath 
-      //     = teos::control::getContractFile(&status, wastFile); 
-      //   if (status.isError_) {
-      //     return status;
-      //   }    
+      namespace bfs = boost::filesystem;
 
-      //   std::string wast;
-      //   fc::read_file_contents(wastFilePath, wast);
-      //   vector<uint8_t> wasm;
+      try 
+      {
+        TeosCommand status;
+        bfs::path wastFilePath 
+          = teos::control::getContractFile(&status, wastFile); 
+        if (status.isError_) {
+          return status;
+        }    
+        std::string wast;
+        fc::read_file_contents(wastFilePath, wast);
 
-      //   const string binary_wasm_header = "\x00\x61\x73\x6d";
-      //   if(wast.compare(0, 4, binary_wasm_header) == 0) {
-      //     wasm = vector<uint8_t>(wast.begin(), wast.end());
-      //   }
-      //   else {
-      //     status = assemble_wast(wast, wasm);
-      //     if (status.isError_) {
-      //       return status;
-      //     }          
-      //   }
+        vector<uint8_t> wasm;
+        const string binary_wasm_header = "\x00\x61\x73\x6d";
+        if(wast.compare(0, 4, binary_wasm_header) == 0) {
+          wasm = vector<uint8_t>(wast.begin(), wast.end());
+        } else {
+          wasm = wast_to_wasm(wast);
+        } 
 
-      //   chain::contracts::setcode handler;
-      //   handler.account = account;
-      //   handler.code.assign(wasm.begin(), wasm.end());
+        vector<chain::action> actions;
+        actions.emplace_back( create_setcode(
+          account, bytes(wasm.begin(), wasm.end()), permissions ) );
 
-      //   chain::signed_transaction trx;
-      //   trx.actions.emplace_back( vector<chain::permission_level>{{account,"active"}}, handler);
 
-      //   if (!abiFile.empty()) 
-      //   {
-      //     TeosCommand status;
-      //     bfs::path abiFilePath 
-      //       = teos::control::getContractFile(&status, abiFile); 
-      //     if (status.isError_) {
-      //       return status;
-      //     }         
-          
-      //     chain::contracts::setabi handler;
-      //     handler.account = account;
-      //     handler.abi = fc::json::from_file(abiFilePath).as<chain::contracts::abi_def>();
-      //     trx.actions.emplace_back( vector<chain::permission_level>{{account,"active"}}, handler);
-      //   }
-      //   //std::cout << "Publishing contract..." << std::endl;
-      //   return push_transaction(trx, !skipSignature, expiration);
-      // }
-      // catch (const std::exception& e) {
-      //   return TeosCommand(e.what(), CODE_PATH);
-      // }
+        if (!abiFile.empty()) 
+        {
+          TeosCommand status;
+          abiFile = teos::control::getContractFile(&status, abiFile); 
+          if (status.isError_) {
+            return status;
+          }
+
+          //try {
+          actions.emplace_back( create_setabi(
+              account, fc::json::from_file(abiFile).as<contracts::abi_def>(), 
+              permissions) );
+          //} EOS_CAPTURE_AND_RETHROW(abi_type_exception,  "Fail to parse ABI JSON")      
+        }
+      }
+      catch (const std::exception& e) {
+        return TeosCommand(e.what(), CODE_PATH);
+      }
     }
 
     TeosCommand getCode(string accountName, string wastFile, string abiFile) 
