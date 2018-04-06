@@ -176,7 +176,12 @@ wallet-dir: .
         string name = wantedPath.stem().string(); 
 
         if(!wantedPath.is_absolute()) {
-          wantedPath = bfs::path(configValue(teosControl, CONTRACT_BUILD_PATH)) 
+          string sourceDir = getSourceDir(teosControl);
+          if(sourceDir.empty()){
+            return "";
+          }
+          wantedPath = bfs::path(sourceDir) 
+            / bfs::path(configValue(teosControl, CONTRACT_BUILD_PATH)) 
             / name / wantedPath;
         }
 

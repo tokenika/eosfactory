@@ -422,6 +422,9 @@ namespace teos {
       bool skipSignature
       )
     {
+      bool tx_dont_broadcast = false;
+      bool tx_force_unique = false;       
+
       vector<string> permissions = {};
       if(!permission.empty()){
         boost::split(permissions, permission, boost::is_any_of(","));
@@ -434,6 +437,7 @@ namespace teos {
         TeosCommand status;
         bfs::path wastFilePath 
           = teos::control::getContractFile(&status, wastFile); 
+        cout << wastFilePath.string() << endl;
         if (status.isError_) {
           return status;
         }    
@@ -457,6 +461,7 @@ namespace teos {
         {
           TeosCommand status;
           abiFile = teos::control::getContractFile(&status, abiFile); 
+          cout << abiFile << endl;
           if (status.isError_) {
             return status;
           }
@@ -467,6 +472,14 @@ namespace teos {
               permissions) );
           //} EOS_CAPTURE_AND_RETHROW(abi_type_exception,  "Fail to parse ABI JSON")      
         }
+        /*
+        return send_actions(std::move(actions), packed_transaction::zlib);
+        */
+        return send_actions(
+          move(actions), 
+          expiration, skipSignature, tx_dont_broadcast, 
+          tx_force_unique,
+          packed_transaction::zlib)/*.fcVariant_*/;
       }
       catch (const std::exception& e) {
         return TeosCommand(e.what(), CODE_PATH);
@@ -516,29 +529,11 @@ namespace teos {
       bool skipSignature, int expiration, 
       bool tx_force_unique)
     {
-      // try {
-      //   auto arg = fc::mutable_variant_object ("code", contract) ("action", action)
-      //     ("args", fc::json::from_string(data));
-
-      //   //auto result = call(json_to_bin_func, arg);
-      //   CallChain call("/v1/chain/abi_json_to_bin", arg);
-      //   auto result = call.fcVariant_;
-
-      //   auto accountPermissions = get_account_permissions(permissions);
-
-      //   chain::signed_transaction trx;
-      //   trx.actions.emplace_back(accountPermissions, contract, action, result.get_object()["binargs"]
-      //     .as<chain::bytes>());
-
-      //   if (tx_force_unique) {
-      //     trx.actions.emplace_back( generate_nonce() );
-      //   }
-
-      //   return push_transaction(trx, !skipSignature, expiration);
-      // }
-      // catch (const std::exception& e) {
-      //   return TeosCommand(e.what(), CODE_PATH);
-      // }
+      try {
+      }
+      catch (const std::exception& e) {
+        return TeosCommand(e.what(), CODE_PATH);
+      }
     }
 
   }

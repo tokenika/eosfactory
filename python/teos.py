@@ -263,8 +263,7 @@ class EosioKey(_Command):
 
 class CreateAccount(_Command):
     def __init__(
-            self, creator, account_name, 
-            owner_key, active_key,
+            self, creator, account_name, owner_key, active_key,
             permission = "",
             expirationSec=30, 
             skipSignature=0, 
@@ -288,14 +287,15 @@ class CreateAccount(_Command):
 
 class SetContract(_Command):
     def __init__(
-            self, account_name
-            , wast_file, abi_file
-            , skip=0, expirationSec=30, is_verbose=True
+            self, account_name, wast_file, abi_file, 
+            permission="",
+            expirationSec=30, skipSignature=0, is_verbose=True
             ):
         self._args["account"] = account_name
         self._args["wast"] = wast_file
         self._args["abi"] = abi_file
-        self._args["skip"] = skip
+        self._args["permission"] = permission
+        self._args["skip"] = skipSignature
         self._args["expiration"] = expirationSec
         _Command.__init__(self, "set", "contract", is_verbose)
         if not self.error:
@@ -393,14 +393,19 @@ class Wallet(_Commands):
 
 class Account(_Commands):
     def __init__(
-            self, creator, account_name, owner_key, active_key
-            , deposit_eos=1, skip=0, expirationSec=30
+            self, creator, account_name, owner_key, active_key,
+            permission = "",
+            expirationSec=30, 
+            skipSignature=0, 
+            dontBroadcast=0,
+            forceUnique=0,
+            is_verbose=True
             ):
         self.name = account_name
         create = CreateAccount(
-            creator, self.name
-            , owner_key, active_key, deposit_eos, skip, expirationSec
-            , is_verbose=False
+            creator, self.name, owner_key, active_key, permission, 
+            expirationSec, skipSignature, dontBroadcast, forceUnique,
+            is_verbose
             )
 
         if not create.error:

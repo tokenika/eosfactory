@@ -5,6 +5,37 @@
   "version": "0.2.0",
   "configurations": [
     {
+        "name": "(gdb) wsl teos set contract",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
+        "args": ["set", "contract", "currency", "currency.wast", "currency.abi"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+        "environment": [],
+        "externalConsole": true,
+        "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+        },  
+        "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/e": "e:\\",
+        }         
+    },       
+    {
         "name": "(gdb) wsl teos wallet keys",
         "type": "cppdbg",
         "request": "launch",

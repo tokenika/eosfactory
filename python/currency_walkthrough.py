@@ -77,43 +77,27 @@ You will upload sample "currency" contract to blockchain. Before uploading a
 contract, verify that there is no current contract:
 """
 code = wallet.code()
+print(code)
 
+"""
+Code hash is null, there is no contract.
 
-daemon = teos.Daemon()
-daemon.clear()
-wallet = teos.Wallet("default")
-eosio_key = teos.EosioKey()
-wallet.import_key(eosio_key)
-owner_key = teos.CreateKey("owner_key")
-active_key = teos.CreateKey("active_key")
-
-account = teos.Account(
-    eosio_key.account_name, "currency", owner_key, active_key
-    )
-wallet.import_key(active_key)
-print(wallet)
-code = account.code()
+With an account for a contract created, upload a sample contract:
+"""
 account.set_contract("currency.wast", "currency.abi")
 
 """
-
-./eosioc get code currency
-code hash: 0000000000000000000000000000000000000000000000000000000000000000
-With an account for a contract created, upload a sample contract:
-
-./eosioc set contract currency ../../contracts/currency/currency.wast ../../contracts/currency/currency.abi
-As a response you should get a JSON with a transaction_id field. Your contract was successfully uploaded!
+As a response you should get a JSON with a transaction_id field. Your contract 
+was successfully uploaded!
 
 You can also verify that the code has been set with the following command:
 """
 code = wallet.code()
+print(code)
 
 """
+Now, code hash is not null anymore.
 
-./eosioc get code currency
-It will return something like:
-
-code hash: 9b9db1a7940503a88535517049e64467a6e8f4e9e03af15e9968ec89dd794975
 Before using the currency contract, you must issue the currency.
 
 ./eosioc push action currency issue '{"to":"currency","quantity":"1000.0000 CUR"}' --permission currency@active
@@ -129,6 +113,24 @@ Next verify the currency contract has the proper initial balance:
   "more": false
 
 }
+
+"""
+daemon = teos.Daemon()
+daemon.clear()
+wallet = teos.Wallet("default")
+eosio_key = teos.EosioKey()
+wallet.import_key(eosio_key)
+owner_key = teos.CreateKey("owner_key")
+active_key = teos.CreateKey("active_key")
+
+account = teos.Account(
+    eosio_key.account_name, "currency", owner_key, active_key
+    )
+wallet.import_key(active_key)
+print(wallet)
+code = account.code()
+account.set_contract("currency.wast", "currency.abi")
+"""
 
 Transfering funds with the sample "currency" contract
 

@@ -28,7 +28,8 @@ namespace teos
         : TeosCommand("")
       {
         copy(setContract(
-          accountName, wastFile, abiFile, permission, expiration, skipSignature));
+          accountName, wastFile, abiFile, permission, 
+          expiration, skipSignature));
       }
 
       SetContract(ptree reqJson) : TeosCommand(
@@ -70,7 +71,7 @@ Usage: ./teos [http address] create key [-j '{
       string abi;
       string permission;
       int expiration;      
-      bool skip;
+      bool skipSignature;
 
       options_description  argumentDescription() {
         options_description od("");
@@ -82,7 +83,7 @@ Usage: ./teos [http address] create key [-j '{
             , "The ABI file for the contract")
           ("expiration,x", value<int>(&expiration)->default_value(30)
             , "The time in seconds before a transaction expires")
-          ("skip,s", value<bool>(&skip)->default_value(false)
+          ("skip,s", value<bool>(&skipSignature)->default_value(false)
             , "Specify that unlocked wallet keys should not be used to "
               "sign transaction, defaults to false");        
           return od;
@@ -106,7 +107,7 @@ Usage: ./teos [http address] create key [-j '{
         reqJson_.put("abi", abi);
         reqJson_.put("permission", permission);
         reqJson_.put("expiration", expiration);        
-        reqJson_.put("skip", skip);
+        reqJson_.put("skip", skipSignature);
         return ok;
       }
 
