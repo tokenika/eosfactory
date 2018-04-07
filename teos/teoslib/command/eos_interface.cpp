@@ -361,11 +361,10 @@ namespace teos {
       }
 
     TeosCommand createAccount(
-      string creator, string accountName,
-      string ownerKeyStr, string activeKeyStr, 
-      string permission,
-      int expiration, 
-      bool skipSignature, bool dontBroadcast, bool forceUnique)
+        string creator, string accountName,
+        string ownerKeyStr, string activeKeyStr, 
+        string permission, int expiration, 
+        bool skipSignature, bool dontBroadcast, bool forceUnique)
     {
       vector<string> permissions = {};
       if(!permission.empty()){
@@ -373,15 +372,15 @@ namespace teos {
       }
 
       public_key_type owner_key, active_key;      
-      try {
-        owner_key = public_key_type(ownerKeyStr);
-        active_key = public_key_type(activeKeyStr);
-      }
-      catch (const std::exception& e) {
-        return TeosCommand(e.what(), CODE_PATH);
-      }
+      //try {
+      owner_key = public_key_type(ownerKeyStr);
+      active_key = public_key_type(activeKeyStr);
+      //} EOS_CAPTURE_AND_RETHROW(
+      //    public_key_type_exception, "Invalid Public Key")
+
       return send_actions(
-        {create_newaccount(creator, accountName, owner_key, active_key, permissions)}, 
+        {create_newaccount(
+          creator, accountName, owner_key, active_key, permissions)}, 
         expiration, skipSignature, dontBroadcast, forceUnique); 
     }
 
@@ -417,73 +416,61 @@ namespace teos {
     TeosCommand setContract(
       string account, 
       string wastFile, string abiFile,
-      string permission,
-      int expiration,
-      bool skipSignature
-      )
-    {
-      bool tx_dont_broadcast = false;
-      bool tx_force_unique = false;       
+      string permission, int expiration,
+      bool skipSignature, bool dontBroadcast, bool forceUnique)
+    {    
 
       vector<string> permissions = {};
       if(!permission.empty()){
         boost::split(permissions, permission, boost::is_any_of(","));
       }
 
-      namespace bfs = boost::filesystem;
+      TeosCommand status;
+      boost::filesystem::path wastFilePath 
+        = teos::control::getContractFile(&status, wastFile); 
+      cout << wastFilePath.string() << endl;
+      if (status.isError_) {
+        return status;
+      }    
+      std::string wast;
+      fc::read_file_contents(wastFilePath, wast);
 
-      try 
+      vector<uint8_t> wasm;
+      const string binary_wasm_header = "\x00\x61\x73\x6d";
+      if(wast.compare(0, 4, binary_wasm_header) == 0) {
+        wasm = vector<uint8_t>(wast.begin(), wast.end());
+      } else {
+        wasm = wast_to_wasm(wast);
+      } 
+
+      vector<chain::action> actions;
+      actions.emplace_back( create_setcode(
+        account, bytes(wasm.begin(), wasm.end()), permissions ) );
+
+
+      if (!abiFile.empty()) 
       {
         TeosCommand status;
-        bfs::path wastFilePath 
-          = teos::control::getContractFile(&status, wastFile); 
-        cout << wastFilePath.string() << endl;
+        abiFile = teos::control::getContractFile(&status, abiFile); 
+        cout << abiFile << endl;
         if (status.isError_) {
           return status;
-        }    
-        std::string wast;
-        fc::read_file_contents(wastFilePath, wast);
-
-        vector<uint8_t> wasm;
-        const string binary_wasm_header = "\x00\x61\x73\x6d";
-        if(wast.compare(0, 4, binary_wasm_header) == 0) {
-          wasm = vector<uint8_t>(wast.begin(), wast.end());
-        } else {
-          wasm = wast_to_wasm(wast);
-        } 
-
-        vector<chain::action> actions;
-        actions.emplace_back( create_setcode(
-          account, bytes(wasm.begin(), wasm.end()), permissions ) );
-
-
-        if (!abiFile.empty()) 
-        {
-          TeosCommand status;
-          abiFile = teos::control::getContractFile(&status, abiFile); 
-          cout << abiFile << endl;
-          if (status.isError_) {
-            return status;
-          }
-
-          //try {
-          actions.emplace_back( create_setabi(
-              account, fc::json::from_file(abiFile).as<contracts::abi_def>(), 
-              permissions) );
-          //} EOS_CAPTURE_AND_RETHROW(abi_type_exception,  "Fail to parse ABI JSON")      
         }
-        /*
-        return send_actions(std::move(actions), packed_transaction::zlib);
-        */
-        return send_actions(
-          move(actions), 
-          expiration, skipSignature, tx_dont_broadcast, 
-          tx_force_unique,
-          packed_transaction::zlib)/*.fcVariant_*/;
+
+        //try {
+        actions.emplace_back( create_setabi(
+            account, fc::json::from_file(abiFile).as<contracts::abi_def>(), 
+            permissions) );
+        //} EOS_CAPTURE_AND_RETHROW(abi_type_exception,  "Fail to parse ABI JSON")      
       }
-      catch (const std::exception& e) {
-        return TeosCommand(e.what(), CODE_PATH);
-      }
+      /*
+      return send_actions(std::move(actions), packed_transaction::zlib);
+      */
+      return send_actions(
+        move(actions), 
+        expiration, skipSignature, dontBroadcast, 
+        forceUnique,
+        packed_transaction::zlib)/*.fcVariant_*/;
     }
 
     TeosCommand getCode(string accountName, string wastFile, string abiFile) 
@@ -524,17 +511,37 @@ namespace teos {
       return callGetCode;
     }
 
-    TeosCommand pushAction(string contract, string action, string data, 
-      const vector<string> scopes, const vector<string> permissions, 
-      bool skipSignature, int expiration, 
-      bool tx_force_unique)
+    TeosCommand pushAction(
+        string contract, string action, string data, 
+        string permission, int expiration,
+        bool skipSignature, bool dontBroadcast, bool tx_force_unique)
     {
-      try {
+      vector<string> permissions = {};
+      if(!permission.empty()){
+        boost::split(permissions, permission, boost::is_any_of(","));
       }
-      catch (const std::exception& e) {
-        return TeosCommand(e.what(), CODE_PATH);
-      }
-    }
 
+      fc::variant action_args_var;
+      //try {
+      action_args_var = fc::json::from_string(data);
+      //} EOS_CAPTURE_AND_RETHROW(action_type_exception, "Fail to parse action JSON")
+
+      auto arg= fc::mutable_variant_object
+                ("code", contract)
+                ("action", action)
+                ("args", action_args_var);
+      auto result = call(json_to_bin_func, arg);
+
+      auto accountPermissions = get_account_permissions(permissions);
+
+      /*
+      send_actions({
+          chain::action{ 
+            accountPermissions, 
+            contract, action, result.get_object()["binargs"].as<bytes>()
+            }}
+        );
+      */
+    }
   }
 }

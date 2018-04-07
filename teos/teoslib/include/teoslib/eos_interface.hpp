@@ -35,16 +35,18 @@ namespace teos{
     string account,
     string wastFile, string abiFile = "",
     string permission  = "",
-    int expiration = 30,
-    bool skipSignature = false );  
+    bool skipSignature = false,
+    bool dontBroadcast = false,
+    bool forceUnique = false); 
 
   TeosCommand getCode(string accountName, string wastFile, string abiFile);
   
   TeosCommand pushAction(
     string contract, string action, string data,
-    const vector<string> scopes, const vector<string> permissions,
-    bool skipSignature, int expiration,
-    bool tx_force_unique);
-    
+    string permission = "", 
+    int expiration = 30,
+    bool skipSignature = false,
+    bool dontBroadcast = false,
+    bool forceUnique = false);    
   }
 }
