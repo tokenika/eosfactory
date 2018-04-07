@@ -222,7 +222,7 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
 
     };
 
-#define WRITE_TO_STDOUT "_"
+#define WRITE_TO_STDOUT "stdout"
     /**
     * @brief Retrieves the code and ABI for an account.
     */

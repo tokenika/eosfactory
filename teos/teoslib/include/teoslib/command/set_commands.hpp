@@ -38,14 +38,14 @@ namespace teos
         "", reqJson)
       {
         copy(setContract(
-            reqJson.get<string>("account"),
-            reqJson.get<string>("wast"), reqJson.get<string>("abi"),
-            reqJson.get<string>("permission"),
-            reqJson.get<int>("expiration"),
-            reqJson.get<bool>("skip")
-            reqJson.get<bool>("dontBroadcast")
-            reqJson.get<bool>("forceUnique")
-            ));
+          reqJson.get<string>("account"),
+          reqJson.get<string>("wast"), reqJson.get<string>("abi"),
+          reqJson.get<string>("permission"),
+          reqJson.get<int>("expiration"),
+          reqJson.get<bool>("skip"),
+          reqJson.get<bool>("dontBroadcast"),
+          reqJson.get<bool>("forceUnique")
+          ));
       }
     };
 
@@ -67,10 +67,11 @@ Usage: ./teos [http address] create key [-j '{
   "account":"<account name>"
   "wast":"<wast file>"
   "abi":"<abi file>"
+  "permission":"<accountName@permitionLevel,accountName@permitionLevel>"
   "expiration":<expiration time sec>,  
   "skipSignature":<true|false>,
   "dontBroadcast":<true|false>,
-  "forceUnique":<true|false>,
+  "forceUnique":<true|false>
   }'] [OPTIONS]
 )EOF";
       }
@@ -98,7 +99,7 @@ Usage: ./teos [http address] create key [-j '{
             "'account@permission'")
           ("expiration,x", value<int>(&expiration)->default_value(30)
             , "The time in seconds before a transaction expires")
-          ("skip,s", value<bool>(&skip)->default_value(false)
+          ("skip,s", value<bool>(&skipSignature)->default_value(false)
             , "Specify that unlocked wallet keys should not be used to sign "
             "transaction, defaults to false")
           ("dont-broadcast,d", value<bool>(&dontBroadcast)->default_value(false)
@@ -124,7 +125,7 @@ Usage: ./teos [http address] create key [-j '{
             reqJson_.put("wast", wast);
             reqJson_.put("permission", permission);
             reqJson_.put("expiration", expiration);                
-            reqJson_.put("skip", skip);
+            reqJson_.put("skip", skipSignature);
             reqJson_.put("dontBroadcast", dontBroadcast);
             reqJson_.put("forceUnique", forceUnique);            
             ok = true;

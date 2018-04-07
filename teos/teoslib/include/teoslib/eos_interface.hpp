@@ -17,7 +17,6 @@ namespace teos{
       static string prk;
       string privateKey;
       string publicKey;
-
       KeyPair();
     };
 
@@ -35,11 +34,13 @@ namespace teos{
     string account,
     string wastFile, string abiFile = "",
     string permission  = "",
+    int expiration = 30,
     bool skipSignature = false,
     bool dontBroadcast = false,
     bool forceUnique = false); 
 
-  TeosCommand getCode(string accountName, string wastFile, string abiFile);
+  TeosCommand getCode(
+    string accountName, string wastFile, string abiFile);
   
   TeosCommand pushAction(
     string contract, string action, string data,

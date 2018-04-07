@@ -288,18 +288,41 @@ class CreateAccount(_Command):
 class SetContract(_Command):
     def __init__(
             self, account_name, wast_file, abi_file, 
-            permission="",
-            expirationSec=30, skipSignature=0, is_verbose=True
+            permission="", expirationSec=30, 
+            skipSignature=0, dontBroadcast=0, forceUnique=0,
+            is_verbose=True
             ):
         self._args["account"] = account_name
         self._args["wast"] = wast_file
         self._args["abi"] = abi_file
         self._args["permission"] = permission
-        self._args["skip"] = skipSignature
         self._args["expiration"] = expirationSec
+        self._args["skip"] = skipSignature
+        self._args["dontBroadcast"] = dontBroadcast
+        self._args["forceUnique"] = forceUnique
         _Command.__init__(self, "set", "contract", is_verbose)
         if not self.error:
-            self.name = account_name      
+            self.name = account_name
+
+
+class PushAction(_Command):
+    def __init__(
+            self, contract_name, action, data,
+            permission="", expirationSec=30, 
+            skipSignature=0, dontBroadcast=0, forceUnique=0,
+            is_verbose=True        
+        ):
+        self._args["contract"] = contract_name
+        self._args["action"] = action
+        self._args["data"] = data
+        self._args["permission"] = permission
+        self._args["expiration"] = expirationSec
+        self._args["skip"] = skipSignature
+        self._args["dontBroadcast"] = dontBroadcast
+        self._args["forceUnique"] = forceUnique
+        _Command.__init__(self, "push", "action", is_verbose)
+        if not self.error:
+            self.name = contract_name
 
 
 """ Start test EOSIO Daemon.
@@ -420,10 +443,14 @@ class Account(_Commands):
         code = GetCode(self.name, wast_file, abi_file, is_verbose=False)
         return code
 
-    def set_contract(self, wast_file, abi_file, skip=0, expirationSec=30):
+    def set_contract(
+            self, wast_file, abi_file, 
+            permission="", expirationSec=30, 
+            skipSignature=0, dontBroadcast=0, forceUnique=0):
         set_contract = SetContract(
-            self.name, wast_file, abi_file
-            , skip, expirationSec, is_verbose=False
+            self.name, wast_file, abi_file,
+            permission, expirationSec, forceUnique,
+            is_verbose=False
             )
 
 

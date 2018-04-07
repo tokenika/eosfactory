@@ -92,13 +92,19 @@ was successfully uploaded!
 
 You can also verify that the code has been set with the following command:
 """
-code = wallet.code()
-print(code)
+code = account.code()
+print(code.code_hash)
 
 """
 Now, code hash is not null anymore.
 
 Before using the currency contract, you must issue the currency.
+"""
+teos.PushAction(
+  "currency", "issue", 
+  '{"to":"currency","quantity":"1000.0000 CUR","memo":""}', 
+  permission="currency@active")
+"""
 
 ./eosioc push action currency issue '{"to":"currency","quantity":"1000.0000 CUR"}' --permission currency@active
 Next verify the currency contract has the proper initial balance:
@@ -129,7 +135,10 @@ account = teos.Account(
 wallet.import_key(active_key)
 print(wallet)
 code = account.code()
+print(code.code_hash)
 account.set_contract("currency.wast", "currency.abi")
+code = account.code()
+print(code.code_hash)
 """
 
 Transfering funds with the sample "currency" contract

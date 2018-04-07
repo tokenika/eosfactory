@@ -24,13 +24,13 @@ namespace teos
     public:
 
       CreateAccount(
-        string creator, string accountName,
-        string ownerKeyPubl, string activeKeyPubl,
-        string permission = "",
-        int expirationSec = 30, 
-        bool skipSignature = false,
-        bool dontBroadcast = false,
-        bool forceUnique = false )
+          string creator, string accountName,
+          string ownerKeyPubl, string activeKeyPubl,
+          string permission = "",
+          int expirationSec = 30, 
+          bool skipSignature = false,
+          bool dontBroadcast = false,
+          bool forceUnique = false )
       {
         copy(createAccount(
           creator, accountName,
@@ -45,7 +45,7 @@ namespace teos
         copy(createAccount(
           reqJson.get<string>("creator"), reqJson.get<string>("name"),
           reqJson.get<string>("ownerKey"), reqJson.get<string>("activeKey"),
-          {reqJson.get<string>("permission")}, 
+          reqJson.get<string>("permission"), 
           reqJson.get<int>("expiration"),          
           reqJson.get<bool>("skip"),
           reqJson.get<bool>("dontBroadcast"),
@@ -73,10 +73,11 @@ Usage: ./teos create key [-j '{
   "name":"<account name>",
   "ownerKey":"<owner public key>",
   "activeKey":"<active public key>",
+  "permission":"<accountName@permitionLevel,accountName@permitionLevel>"
   "expiration":<expiration time sec>,  
   "skipSignature":<true|false>,
   "dontBroadcast":<true|false>,
-  "forceUnique":<true|false>,
+  "forceUnique":<true|false>
   }'] [OPTIONS]
 )EOF";
     }

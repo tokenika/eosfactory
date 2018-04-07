@@ -174,14 +174,14 @@ int main(int argc, const char *argv[]) {
 // }
 
   // Let Alice do a money transfer ...
-  PushAction pushAction("currency", "transfer", 
-    "{\"from\":\"currency\",\"to\":\"inita\",\"quantity\":50}", 
-    "currency,inita", "currency@active");
-  if(pushAction.isError_){
-    cout << pushAction.responseToString(false) << endl;
-  } else {
-    cout << pushAction.responseToString(false) << endl;
-  }
+  // PushAction pushAction("currency", "transfer", 
+  //   "{\"from\":\"currency\",\"to\":\"inita\",\"quantity\":50}", 
+  //   "currency,inita", "currency@active");
+  // if(pushAction.isError_){
+  //   cout << pushAction.responseToString(false) << endl;
+  // } else {
+  //   cout << pushAction.responseToString(false) << endl;
+  // }
 // OUTPUT:
 // {
 //     "transaction_id": "2cbb4d211f27500ad63792b61a5d3ce46733f7d90d3bc97b3ef1cb80d876fd28",

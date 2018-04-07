@@ -77,6 +77,8 @@ using namespace boost::filesystem;
 const string chain_func_base = "/v1/chain";
 const string get_required_keys = chain_func_base + "/get_required_keys";
 const string push_txn_func = chain_func_base + "/push_transaction";
+const string json_to_bin_func = chain_func_base + "/abi_json_to_bin";
+
 const string wallet_func_base = "/v1/wallet";
 const string wallet_public_keys = wallet_func_base + "/get_public_keys";
 const string wallet_sign_trx = wallet_func_base + "/sign_transaction";
@@ -361,10 +363,10 @@ namespace teos {
       }
 
     TeosCommand createAccount(
-        string creator, string accountName,
-        string ownerKeyStr, string activeKeyStr, 
-        string permission, int expiration, 
-        bool skipSignature, bool dontBroadcast, bool forceUnique)
+      string creator, string accountName,
+      string ownerKeyStr, string activeKeyStr, 
+      string permission, int expiration, 
+      bool skipSignature, bool dontBroadcast, bool forceUnique)
     {
       vector<string> permissions = {};
       if(!permission.empty()){
@@ -414,10 +416,10 @@ namespace teos {
     }
 
     TeosCommand setContract(
-      string account, 
-      string wastFile, string abiFile,
-      string permission, int expiration,
-      bool skipSignature, bool dontBroadcast, bool forceUnique)
+        string account, 
+        string wastFile, string abiFile,
+        string permission, int expiration,
+        bool skipSignature, bool dontBroadcast, bool forceUnique)
     {    
 
       vector<string> permissions = {};
@@ -446,7 +448,6 @@ namespace teos {
       vector<chain::action> actions;
       actions.emplace_back( create_setcode(
         account, bytes(wasm.begin(), wasm.end()), permissions ) );
-
 
       if (!abiFile.empty()) 
       {
@@ -514,7 +515,7 @@ namespace teos {
     TeosCommand pushAction(
         string contract, string action, string data, 
         string permission, int expiration,
-        bool skipSignature, bool dontBroadcast, bool tx_force_unique)
+        bool skipSignature, bool dontBroadcast, bool forceUnique)
     {
       vector<string> permissions = {};
       if(!permission.empty()){
@@ -530,8 +531,14 @@ namespace teos {
                 ("code", contract)
                 ("action", action)
                 ("args", action_args_var);
+      /*
       auto result = call(json_to_bin_func, arg);
-
+      */
+      CallChain callJson(json_to_bin_func, fc::variant(arg));
+      if(callJson.isError_){
+        return callJson;
+      }
+      auto result = callJson.fcVariant_;
       auto accountPermissions = get_account_permissions(permissions);
 
       /*
@@ -542,6 +549,14 @@ namespace teos {
             }}
         );
       */
+      return send_actions(
+          {
+            chain::action{ 
+              accountPermissions, 
+              contract, action, result.get_object()["binargs"].as<bytes>()
+              }},
+          expiration, skipSignature, dontBroadcast, forceUnique
+      );
     }
   }
 }
