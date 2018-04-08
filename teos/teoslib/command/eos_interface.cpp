@@ -220,12 +220,15 @@ namespace teos {
 
     TeosCommand /*fc::variant*/ push_transaction(
       signed_transaction& trx,
-      int expirationSec,
-      bool tx_skip_sign,
-      bool tx_dont_broadcast,
-      bool tx_force_unique,
+      int32_t extra_kcpu = 1000,       
+      unsigned expirationSec = 30,
+      bool tx_skip_sign = false,
+      bool tx_dont_broadcast = false,
+      bool tx_force_unique = false,
+      uint32_t tx_max_cpu_usage = 0,
+      uint32_t tx_max_net_usage = 0,
       packed_transaction::compression_type compression 
-        = packed_transaction::none)
+        = packed_transaction::none)     
     {
       /*
       auto info = get_info();
@@ -317,24 +320,37 @@ namespace teos {
     }
 
     TeosCommand  /*fc::variant*/ push_actions(
-      vector<chain::action>&& actions,
-      int expirationSec, bool tx_skip_sign, bool tx_dont_broadcast, 
-      bool tx_force_unique,
-      packed_transaction::compression_type compression = packed_transaction::none 
+        vector<chain::action>&& actions,
+        int32_t extra_kcpu = 1000,
+        unsigned expirationSec = 30, 
+        bool tx_skip_sign = false, 
+        bool tx_dont_broadcast = false, 
+        bool tx_force_unique = false,
+        uint32_t tx_max_cpu_usage = 0,
+        uint32_t tx_max_net_usage = 0,      
+        packed_transaction::compression_type compression = packed_transaction::none
       ) 
       {
       signed_transaction trx;
       trx.actions = std::forward<decltype(actions)>(actions);
 
       return push_transaction(
-        trx, expirationSec, tx_skip_sign, tx_dont_broadcast, tx_force_unique, 
-        compression)/*.fcVariant_*/;
+        trx, 
+        extra_kcpu, 
+        expirationSec, tx_skip_sign, tx_dont_broadcast, tx_force_unique,
+        tx_max_cpu_usage, tx_max_net_usage,
+        compression      
+        )/*.fcVariant_*/;
     }
 
     TeosCommand /*void*/ send_actions(
-      std::vector<chain::action>&& actions,
-      int expirationSec, bool tx_skip_sign, bool tx_dont_broadcast,
-      bool tx_force_unique,       
+      vector<chain::action>&& actions,
+      unsigned expirationSec = 30, 
+      bool tx_skip_sign = false,
+      bool tx_dont_broadcast = false,
+      bool tx_force_unique = false,
+      uint32_t tx_max_cpu_usage = 0,
+      uint32_t tx_max_net_usage = 0,       
       packed_transaction::compression_type compression 
         = packed_transaction::none ) 
     {
@@ -365,8 +381,10 @@ namespace teos {
     TeosCommand createAccount(
       string creator, string accountName,
       string ownerKeyStr, string activeKeyStr, 
-      string permission, int expiration, 
-      bool skipSignature, bool dontBroadcast, bool forceUnique)
+      string permission, unsigned expiration, 
+      bool skipSignature, bool dontBroadcast, bool forceUnique,
+      unsigned maxCpuUsage,
+      unsigned maxNetUsage)
     {
       vector<string> permissions = {};
       if(!permission.empty()){
@@ -383,7 +401,8 @@ namespace teos {
       return send_actions(
         {create_newaccount(
           creator, accountName, owner_key, active_key, permissions)}, 
-        expiration, skipSignature, dontBroadcast, forceUnique); 
+        expiration, skipSignature, dontBroadcast, forceUnique,
+        maxCpuUsage, maxNetUsage); 
     }
 
     chain::action create_setcode(
@@ -416,10 +435,12 @@ namespace teos {
     }
 
     TeosCommand setContract(
-        string account, 
+        string account,
+        string contractDir,
         string wastFile, string abiFile,
-        string permission, int expiration,
-        bool skipSignature, bool dontBroadcast, bool forceUnique)
+        string permission, unsigned expiration,
+        bool skipSignature, bool dontBroadcast, bool forceUnique,
+        unsigned maxCpuUsage, unsigned maxNetUsage)
     {    
 
       vector<string> permissions = {};
@@ -471,6 +492,8 @@ namespace teos {
         move(actions), 
         expiration, skipSignature, dontBroadcast, 
         forceUnique,
+        maxCpuUsage,
+        maxNetUsage,
         packed_transaction::zlib)/*.fcVariant_*/;
     }
 
@@ -514,8 +537,11 @@ namespace teos {
 
     TeosCommand pushAction(
         string contract, string action, string data, 
-        string permission, int expiration,
-        bool skipSignature, bool dontBroadcast, bool forceUnique)
+        string permission, unsigned expiration,
+        bool skipSignature, bool dontBroadcast, bool forceUnique,
+        unsigned maxCpuUsage,
+        unsigned maxNetUsage
+        )
     {
       vector<string> permissions = {};
       if(!permission.empty()){
@@ -551,12 +577,14 @@ namespace teos {
       */
       return send_actions(
           {
-            chain::action{ 
+            chain::action
+            { 
               accountPermissions, 
               contract, action, result.get_object()["binargs"].as<bytes>()
-              }},
-          expiration, skipSignature, dontBroadcast, forceUnique
-      );
+            }
+          });
+              // expiration, skipSignature, dontBroadcast, forceUnique,
+              // maxCpuUsage, maxCpuUsage
     }
   }
 }

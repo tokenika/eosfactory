@@ -23,16 +23,19 @@ namespace teos
     public:
       PushAction(string contractName, string action, string data,
           string permission = "",
-          int expirationSec = 30, 
+          unsigned expirationSec = 30, 
           bool skipSignature = false,
           bool dontBroadcast = false,
-          bool forceUnique = false )
+          bool forceUnique = false,
+          unsigned maxCpuUsage = 0,
+          unsigned maxNetUsage = 0)
       {
         copy(pushAction(
           contractName, action, data,
           permission,          
           expirationSec,
-          skipSignature, dontBroadcast, forceUnique));
+          skipSignature, dontBroadcast, forceUnique,
+          maxCpuUsage, maxNetUsage));
       }
 
       PushAction(ptree reqJson, bool raw = false) : TeosCommand(
@@ -45,7 +48,9 @@ namespace teos
           reqJson.get<int>("expiration"),          
           reqJson.get<bool>("skip"),
           reqJson.get<bool>("dontBroadcast"),
-          reqJson.get<bool>("forceUnique")
+          reqJson.get<bool>("forceUnique"),
+          reqJson.get<unsigned>("maxCpuUsage"),
+          reqJson.get<unsigned>("maxNetUsage")
           ));
       }
     };
@@ -69,11 +74,13 @@ Usage: ./teos create key [-j '{
   "action":"<action on contract>",
   "data":"<json tree>",
   "scope":"<account list>",
-  "permission":"<accountName@permitionLevel,accountName@permitionLevel>"
+  "permission":"<permission list>",
   "expiration":<expiration time sec>,  
   "skipSignature":<true|false>,
   "dontBroadcast":<true|false>,
-  "forceUnique":<true|false>
+  "forceUnique":<true|false>,
+  "maxCpuUsage":"<max cpu usage>",
+  "maxNetUsage":"<max net usage>"
   }'] [OPTIONS]
 )EOF";
       }
@@ -82,10 +89,12 @@ Usage: ./teos create key [-j '{
       string action;
       string data;
       string permission;
-      int expiration;      
-      bool skip;
+      unsigned expiration;      
+      bool skipSignature;
       bool dontBroadcast;
       bool forceUnique;
+      unsigned maxCpuUsage;
+      unsigned maxNetUsage;      
 
       options_description  argumentDescription() {
         options_description od("");
@@ -96,18 +105,26 @@ Usage: ./teos create key [-j '{
           ("permission,p", value<string>(&permission)
             ->default_value("")
             ,"An account and permission level to authorize, as in "
-            "'account@permission'")
-          ("expiration,x", value<int>(&expiration)->default_value(30)
-            , "The time in seconds before a transaction expires")
-          ("skip,s", value<bool>(&skip)->default_value(false)
+              "'account@permission' (defaults to 'account@active')")
+          ("expiration,x", value<unsigned>(&expiration)->default_value(30)
+            , "The time in seconds before a transaction expires.")
+          ("skip-sign,s", value<bool>(&skipSignature)->default_value(false)
             , "Specify that unlocked wallet keys should not be used to sign "
-            "transaction, defaults to false")
+            "transaction, defaults to false.")
           ("dont-broadcast,d", value<bool>(&dontBroadcast)->default_value(false)
-            , "Don't broadcast transaction to the network (just print to stdout)");
+            , "Don't broadcast transaction to the network "
+              "(just print to stdout).")
           ("force-unique,f", value<bool>(&forceUnique)->default_value(false)
             , "force the transaction to be unique. this will consume extra "
             "bandwidth and remove any protections against accidently issuing "
-            "the same transaction multiple times"); 
+            "the same transaction multiple times.")
+          ("max-cpu-usage", value<unsigned>(&maxCpuUsage)->default_value(0)
+            , "Upper limit on the cpu usage budget, in instructions-retired, "
+              "for the execution of the transaction (defaults to 0 which "
+              "means no limit).")
+          ("max-net-usage", value<unsigned>(&maxNetUsage)->default_value(0)
+            ,  "Upper limit on the net usage budget, in bytes, for the "
+              "transaction (defaults to 0 which means no limit)");              
         return od;
       }
 
@@ -130,9 +147,11 @@ Usage: ./teos create key [-j '{
               reqJson_.put("data", data);
               reqJson_.put("permission", permission);
               reqJson_.put("expiration", expiration);                
-              reqJson_.put("skip", skip);
+              reqJson_.put("skip", skipSignature);
               reqJson_.put("dontBroadcast", dontBroadcast);
               reqJson_.put("forceUnique", forceUnique);
+              reqJson_.put("maxCpuUsage", maxCpuUsage);            
+              reqJson_.put("maxNetUsage", maxNetUsage);              
             }
           }
         }

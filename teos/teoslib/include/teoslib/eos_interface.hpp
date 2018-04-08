@@ -25,29 +25,37 @@ namespace teos{
     string creator, string name,
     string ownerKey, string activeKey, 
     string permission  = "",
-    int expiration = 30, 
+    unsigned expiration = 30, 
     bool skipSignature = false,
     bool dontBroadcast = false,
-    bool forceUnique = false);
+    bool forceUnique = false,
+    unsigned maxCpuUsage = 0,
+    unsigned maxNetUsage = 0);
 
   TeosCommand setContract(
     string account,
-    string wastFile, string abiFile = "",
+    string contractDir,
+    string wastFile = "", string abiFile = "",
     string permission  = "",
-    int expiration = 30,
+    unsigned expiration = 30,
     bool skipSignature = false,
     bool dontBroadcast = false,
-    bool forceUnique = false); 
-
-  TeosCommand getCode(
-    string accountName, string wastFile, string abiFile);
+    bool forceUnique = false,
+    unsigned maxCpuUsage = 0,
+    unsigned maxNetUsage = 0); 
   
   TeosCommand pushAction(
     string contract, string action, string data,
     string permission = "", 
-    int expiration = 30,
+    unsigned expiration = 30,
     bool skipSignature = false,
     bool dontBroadcast = false,
-    bool forceUnique = false);    
+    bool forceUnique = false,
+    unsigned maxCpuUsage = 0,
+    unsigned maxNetUsage = 0);    
   }
+
+  TeosCommand getCode(
+    string accountName, string wastFile, string abiFile);
+  
 }

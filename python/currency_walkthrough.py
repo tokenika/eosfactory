@@ -132,6 +132,7 @@ active_key = teos.CreateKey("active_key")
 account = teos.Account(
     eosio_key.account_name, "currency", owner_key, active_key
     )
+print(account)
 wallet.import_key(active_key)
 print(wallet)
 code = account.code()

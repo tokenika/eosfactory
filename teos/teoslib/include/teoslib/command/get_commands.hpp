@@ -239,7 +239,8 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
         string wastFile = "", string abiFile = "") 
         : TeosCommand(string(getCommandPath + "get_code")) 
       {
-        copy(getCode(accountName, 
+        copy(getCode(
+          accountName, 
           wastFile == WRITE_TO_STDOUT ? "" : wastFile, 
           abiFile == WRITE_TO_STDOUT ? "" : abiFile));
       }

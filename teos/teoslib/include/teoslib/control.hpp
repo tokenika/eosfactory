@@ -108,9 +108,9 @@ namespace teos
     virtual options_description groupOptionDescription() {
       options_description od("");
       od.add_options()      
-        ("json,j", value<string>(&json_), "Json argument.")
-        ("received,v", "Print received json.")
-        ("both,b", "For system use.")
+        ("jarg", value<string>(&json_), "Json argument.")
+        ("json,j", "Print result as json.")
+        ("both", "For system use.")
         ("raw,r", "Raw print");
       return od;
     }

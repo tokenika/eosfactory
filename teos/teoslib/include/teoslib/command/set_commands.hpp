@@ -21,17 +21,21 @@ namespace teos
     public:
       SetContract(
           string accountName,
+          string contractDir,
           string wastFile, string abiFile = "",
           string permission  = "",
-          int expiration = 30,
+          unsigned expiration = 30,
           bool skipSignature = false,
           bool dontBroadcast = false,
-          bool forceUnique = false)
+          bool forceUnique = false,
+          unsigned maxCpuUsage = 0,
+          unsigned maxNetUsage = 0)
         : TeosCommand("")
       {
         copy(setContract(
-          accountName, wastFile, abiFile, permission, 
-          expiration, skipSignature, dontBroadcast, forceUnique));
+          accountName, contractDir, wastFile, abiFile, permission, 
+          expiration, skipSignature, dontBroadcast, forceUnique,
+          maxCpuUsage, maxNetUsage));
       }
 
       SetContract(ptree reqJson) : TeosCommand(
@@ -39,12 +43,15 @@ namespace teos
       {
         copy(setContract(
           reqJson.get<string>("account"),
+          reqJson.get<string>("contractDir"),
           reqJson.get<string>("wast"), reqJson.get<string>("abi"),
           reqJson.get<string>("permission"),
-          reqJson.get<int>("expiration"),
+          reqJson.get<unsigned>("expiration"),
           reqJson.get<bool>("skip"),
           reqJson.get<bool>("dontBroadcast"),
-          reqJson.get<bool>("forceUnique")
+          reqJson.get<bool>("forceUnique"),
+          reqJson.get<unsigned>("maxCpuUsage"),
+          reqJson.get<unsigned>("maxNetUsage")
           ));
       }
     };
@@ -62,72 +69,92 @@ namespace teos
       const char* getUsage() {
         return R"EOF(
 Create or update the contract on an account.
-Usage: ./teos [http address] set contract [account] [wast] [abi] [Options]
+Usage: ./teos [http address] set contract <account> <contract dir> 
+          [wast] [abi] [Options]
 Usage: ./teos [http address] create key [-j '{
-  "account":"<account name>"
-  "wast":"<wast file>"
-  "abi":"<abi file>"
-  "permission":"<accountName@permitionLevel,accountName@permitionLevel>"
+  "account":"<account name>",
+  "contractDir":"<contract dir>",
+  "wast":"<wast file>",
+  "abi":"<abi file>",
+  "permission":"<permission list>",
   "expiration":<expiration time sec>,  
   "skipSignature":<true|false>,
   "dontBroadcast":<true|false>,
-  "forceUnique":<true|false>
+  "forceUnique":<true|false>,
+  "maxCpuUsage":"<max cpu usage>",
+  "maxNetUsage":"<max net usage>"
   }'] [OPTIONS]
 )EOF";
       }
 
       string account;
+      string contractDir;
       string wast;
       string abi;
       string permission;
-      int expiration;      
+      unsigned expiration;      
       bool skipSignature;
       bool dontBroadcast;
       bool forceUnique;
+      unsigned maxCpuUsage;
+      unsigned maxNetUsage;
 
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
           ("account,n", value<string>(&account)
-            , "The name of account to publish a contract for")
-          ("wast,o", value<string>(&wast), "The WAST file for the contract")
+            , "The name of account to publish a contract for.")
+          ("contract,c", value<string>(&contractDir)
+            , "Contract directory, the the path containing the .wast and .abi")          
+          ("wast,o", value<string>(&wast)
+            , "The WAST for the contract relative to the contract dir.")
           ("abi,a", value<string>(&abi)->default_value("")
-            , "The ABI file for the contract")
+            , "The ABI for the contract relative to the contract dir.")
           ("permission,p", value<string>(&permission)
             ->default_value("")
             ,"An account and permission level to authorize, as in "
-            "'account@permission'")
-          ("expiration,x", value<int>(&expiration)->default_value(30)
-            , "The time in seconds before a transaction expires")
-          ("skip,s", value<bool>(&skipSignature)->default_value(false)
+              "'account@permission' (defaults to 'account@active')")
+          ("expiration,x", value<unsigned>(&expiration)->default_value(30)
+            , "The time in seconds before a transaction expires.")
+          ("skip-sign,s", value<bool>(&skipSignature)->default_value(false)
             , "Specify that unlocked wallet keys should not be used to sign "
-            "transaction, defaults to false")
+            "transaction, defaults to false.")
           ("dont-broadcast,d", value<bool>(&dontBroadcast)->default_value(false)
-            , "Don't broadcast transaction to the network (just print to stdout)");
+            , "Don't broadcast transaction to the network "
+              "(just print to stdout).")
           ("force-unique,f", value<bool>(&forceUnique)->default_value(false)
             , "force the transaction to be unique. this will consume extra "
             "bandwidth and remove any protections against accidently issuing "
-            "the same transaction multiple times");         
+            "the same transaction multiple times.")
+          ("max-cpu-usage", value<unsigned>(&maxCpuUsage)->default_value(0)
+            , "Upper limit on the cpu usage budget, in instructions-retired, "
+              "for the execution of the transaction (defaults to 0 which "
+              "means no limit).")
+          ("max-net-usage", value<unsigned>(&maxNetUsage)->default_value(0)
+            ,  "Upper limit on the net usage budget, in bytes, for the "
+              "transaction (defaults to 0 which means no limit)");       
           return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
         pos_desc.add("account", 1);
-        pos_desc.add("wast", 1);
-        pos_desc.add("abi", 1);
+        pos_desc.add("contractDir", 1);
       }
 
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("account")) {
           reqJson_.put("account", account);
-          if (vm.count("wast")) {
+          if (vm.count("contractDir")) {
+            reqJson_.put("contractDir", contractDir);
             reqJson_.put("wast", wast);
             reqJson_.put("permission", permission);
             reqJson_.put("expiration", expiration);                
             reqJson_.put("skip", skipSignature);
             reqJson_.put("dontBroadcast", dontBroadcast);
-            reqJson_.put("forceUnique", forceUnique);            
+            reqJson_.put("forceUnique", forceUnique);
+            reqJson_.put("maxCpuUsage", maxCpuUsage);            
+            reqJson_.put("maxNetUsage", maxNetUsage);                        
             ok = true;
           }
         }
