@@ -52,10 +52,9 @@ namespace teos{
     bool dontBroadcast = false,
     bool forceUnique = false,
     unsigned maxCpuUsage = 0,
-    unsigned maxNetUsage = 0);    
-  }
+    unsigned maxNetUsage = 0); 
 
   TeosCommand getCode(
-    string accountName, string wastFile, string abiFile);
-  
+    string accountName, string wastFile, string abiFile);    
+  }
 }
