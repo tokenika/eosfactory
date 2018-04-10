@@ -131,7 +131,7 @@ class _Command:
             self._this = json_resp
 
     def __str__(self):
-        return textwrap.fill(self._out, 80)
+        return self._out
     
     def __repr__(self):
         return repr(self._this)

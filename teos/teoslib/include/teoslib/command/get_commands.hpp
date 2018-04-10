@@ -316,14 +316,7 @@ Usage: ./teos get code --jarg '{"account_name":"<account name>", "wast":"<wast f
       }
 
       void printout(TeosControl command, variables_map &vm) {
-        output("account name", "%s", GET_STRING(command, "account_name"));
         output("code hash", "%s", GET_STRING(command, "code_hash"));
-        if (wastFile == WRITE_TO_STDOUT) {
-          output("wast", "%s", GET_STRING(command, "wast"));
-        }
-        if (abiFile == WRITE_TO_STDOUT) {
-          output("abi", "%s", GET_STRING(command, "abi"));
-        }
       }
 
     };

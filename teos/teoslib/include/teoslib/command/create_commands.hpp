@@ -193,6 +193,11 @@ Usage: ./teos create key --jarg '{
       TeosControl executeCommand() {
         return CreateAccount(reqJson_);
       }
+
+      void getExample() {
+        cout << R"EOF(
+)EOF" << endl;
+      }
     };
 
     /**

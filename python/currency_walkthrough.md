@@ -1,4 +1,3 @@
-import teos
 
 """
 ## Example "Currency" Contract Walkthrough
@@ -9,6 +8,8 @@ purposes. We will validate our single node setup using the sample contract
 
 ### Start EOS node
 """
+```
+import teos
 teos.set_verbose(False)
 
 daemon = teos.Daemon()
@@ -26,29 +27,34 @@ print(daemon)
 #            head block: 1047
 #       head block time: 2018-04-10T16:57:27
 #  last irreversible block: 1046
+```
 """
-                      Bay the way, with the object 'daemon', the following methodes work:
-                      """
-                      daemon.info() # An alias for print(daemon)
-                      #            head block: 1047
-                      #       head block time: 2018-04-10T16:57:27
-                      #  last irreversible block: 1046
 
-                      daemon.delete_wallets()
-                      #  deleted wallet count: 1
+Bay the way, with the object 'daemon', the following methods work:
 
-                      daemon.stop()
-                      #  Daemon is stopped.
+"""
+```                 
+daemon.info() # An alias for print(daemon)
+#            head block: 1047
+#       head block time: 2018-04-10T16:57:27
+#  last irreversible block: 1046
 
-                      daemon.start()
-                      #       nodeos exe file: /mnt/e/Workspaces/EOS/eos/build/programs/nodeos/nodeos
-                      #    genesis state file: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/genesis.json
-                      #        server address: 127.0.0.1:8888
-                      #      config directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir
-                      #      wallet directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/wallet
-                      #     head block number: 1046
-                      #       head block time: 2018-04-10T16:57:27
-                      """
+daemon.delete_wallets()
+#  deleted wallet count: 1
+
+daemon.stop()
+#  Daemon is stopped.
+
+daemon.start()
+#       nodeos exe file: /mnt/e/Workspaces/EOS/eos/build/programs/nodeos/nodeos
+#    genesis state file: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/genesis.json
+#        server address: 127.0.0.1:8888
+#      config directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir
+#      wallet directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/wallet
+#     head block number: 1046
+#       head block time: 2018-04-10T16:57:27
+```
+"""
 
 ### Create a wallet
 
@@ -60,29 +66,30 @@ wallet = teos.Wallet()
 """
 The wallet name argument is not set: the default wallet name is 'default'.
 
-                      With the object wallet, the following methodes apply:
-                      """
-                      key_one = teos.CreateKey("key one")
-                      key_two = teos.CreateKey("key two")
-                      wallet.import_key(key_one)
-                      wallet.import_key(key_two)
-                      print(wallet)
-                      {'keys': [['key one', '5Kcf8D12wCVQLK8PLL5Bi6nCLjVzjtfrpQpuvLgjWuPL4s13GfK'],
-                                ['key two', '5J1iEfuvs8biBu7r6gQMvTr21MboXmymZypZd1sxe8vf5MxwHeq']],
-                      'name': 'default',
-                      'password': 'PW5KJrnNjw5gDwM4npTo9qscqxTCokqqfXVuyWkAZEeqiWnYVwwum'}
+With the object wallet, the following methods apply:
+```
+"""
+key_one = teos.CreateKey("key one")
+key_two = teos.CreateKey("key two")
+wallet.import_key(key_one)
+wallet.import_key(key_two)
+print(wallet)
+{'keys': [['key one', '5Kcf8D12wCVQLK8PLL5Bi6nCLjVzjtfrpQpuvLgjWuPL4s13GfK'],
+          ['key two', '5J1iEfuvs8biBu7r6gQMvTr21MboXmymZypZd1sxe8vf5MxwHeq']],
+'name': 'default',
+'password': 'PW5KJrnNjw5gDwM4npTo9qscqxTCokqqfXVuyWkAZEeqiWnYVwwum'}
 
-                      wallet.list()
-                      #                wallet: default *
+wallet.list()
+#                wallet: default *
 
-                      wallet.lock()
-                      wallet.list()
-                      #                wallet: default
-                      wallet.unlock()
-                      wallet.list()
-                      #                wallet: default *
-                      """
-
+wallet.lock()
+wallet.list()
+#                wallet: default
+wallet.unlock()
+wallet.list()
+#                wallet: default *
+"""
+```
 ### Load the Bios Contract
 
 Set eosio.bios as the default system contract. This contract enables you to 
