@@ -46,11 +46,11 @@ namespace teos
           reqJson.get<string>("wast-file"), reqJson.get<string>("abi-file"),
           reqJson.get<string>("permission"),
           reqJson.get<unsigned>("expiration"),
-          reqJson.get<bool>("skip"),
-          reqJson.get<bool>("dontBroadcast"),
-          reqJson.get<bool>("forceUnique"),
-          reqJson.get<unsigned>("maxCpuUsage"),
-          reqJson.get<unsigned>("maxNetUsage")
+          reqJson.get<bool>("skip-sign"),
+          reqJson.get<bool>("dont-broadcast"),
+          reqJson.get<bool>("force-unique"),
+          reqJson.get<unsigned>("max-cpu-usage"),
+          reqJson.get<unsigned>("max-net-usage")
           ));
       }
     };
@@ -70,19 +70,19 @@ namespace teos
 Create or update the contract on an account.
 Usage: ./teos [http address] set contract <account> <contract dir> 
           [wast] [abi] [Options]
-Usage: ./teos [http address] create key [-j '{
+Usage: ./teos [http address] create key --jarg '{
   "account":"<account name>",
   "contract-dir":"<contract dir>",
   "wast-file":"<wast file>",
   "abi-file":"<abi file>",
   "permission":"<permission list>",
   "expiration":<expiration time sec>,  
-  "skipSignature":<true|false>,
-  "dontBroadcast":<true|false>,
-  "forceUnique":<true|false>,
-  "maxCpuUsage":"<max cpu usage>",
-  "maxNetUsage":"<max net usage>"
-  }'] [OPTIONS]
+  "skip-sign":<true|false>,
+  "dont-broadcast":<true|false>,
+  "force-unique":<true|false>,
+  "max-cpu-usage":"<max cpu usage>",
+  "max-net-usage":"<max net usage>"
+  }' [OPTIONS]
 )EOF";
       }
 
@@ -150,11 +150,11 @@ Usage: ./teos [http address] create key [-j '{
             reqJson_.put("abi-file", abiFile);
             reqJson_.put("permission", permission);
             reqJson_.put("expiration", expiration);                
-            reqJson_.put("skip", skipSignature);
-            reqJson_.put("dontBroadcast", dontBroadcast);
-            reqJson_.put("forceUnique", forceUnique);
-            reqJson_.put("maxCpuUsage", maxCpuUsage);            
-            reqJson_.put("maxNetUsage", maxNetUsage);                        
+            reqJson_.put("skip-sign", skipSignature);
+            reqJson_.put("dont-broadcast", dontBroadcast);
+            reqJson_.put("force-unique", forceUnique);
+            reqJson_.put("max-cpu-usage", maxCpuUsage);            
+            reqJson_.put("max-net-usage", maxNetUsage);                        
             ok = true;
           }
         }

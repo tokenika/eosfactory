@@ -38,19 +38,19 @@ namespace teos
           maxCpuUsage, maxNetUsage));
       }
 
-      PushAction(ptree reqJson, bool raw = false) : TeosCommand(
-        "", reqJson)
+      PushAction(ptree reqJson) : TeosCommand("", reqJson)
       {
         copy(pushAction(
-          reqJson.get<string>("contract"), reqJson.get<string>("action"), 
+          reqJson.get<string>("contract"), 
+          reqJson.get<string>("action"), 
           reqJson.get<string>("data"),
           reqJson.get<string>("permission"), 
           reqJson.get<int>("expiration"),          
-          reqJson.get<bool>("skip"),
-          reqJson.get<bool>("dontBroadcast"),
-          reqJson.get<bool>("forceUnique"),
-          reqJson.get<unsigned>("maxCpuUsage"),
-          reqJson.get<unsigned>("maxNetUsage")
+          reqJson.get<bool>("skip-sign"),
+          reqJson.get<bool>("dont-broadcast"),
+          reqJson.get<bool>("force-unique"),
+          reqJson.get<unsigned>("max-cpu-usage"),
+          reqJson.get<unsigned>("max-net-usage")
           ));
       }
     };
@@ -69,19 +69,19 @@ namespace teos
         return R"EOF(
 Push a transaction with a single message.
 Usage: ./teos push message [contract] [action] [data] [scope] [permission] [Options]
-Usage: ./teos create key [-j '{
+Usage: ./teos create key --jarg '{
   "contract":"<contract name>",
   "action":"<action on contract>",
   "data":"<json tree>",
   "scope":"<account list>",
   "permission":"<permission list>",
   "expiration":<expiration time sec>,  
-  "skipSignature":<true|false>,
-  "dontBroadcast":<true|false>,
-  "forceUnique":<true|false>,
-  "maxCpuUsage":"<max cpu usage>",
-  "maxNetUsage":"<max net usage>"
-  }'] [OPTIONS]
+  "skip-sign":<true|false>,
+  "dont-broadcast":<true|false>,
+  "force-unique":<true|false>,
+  "max-cpu-usage":"<max cpu usage>",
+  "max-net-usage":"<max net usage>"
+  }' [OPTIONS]
 )EOF";
       }
 
@@ -147,11 +147,11 @@ Usage: ./teos create key [-j '{
               reqJson_.put("data", data);
               reqJson_.put("permission", permission);
               reqJson_.put("expiration", expiration);                
-              reqJson_.put("skip", skipSignature);
-              reqJson_.put("dontBroadcast", dontBroadcast);
-              reqJson_.put("forceUnique", forceUnique);
-              reqJson_.put("maxCpuUsage", maxCpuUsage);            
-              reqJson_.put("maxNetUsage", maxNetUsage);              
+              reqJson_.put("skip-sign", skipSignature);
+              reqJson_.put("dont-broadcast", dontBroadcast);
+              reqJson_.put("force-unique", forceUnique);
+              reqJson_.put("max-cpu-usage", maxCpuUsage);            
+              reqJson_.put("max-net-usage", maxNetUsage);              
             }
           }
         }

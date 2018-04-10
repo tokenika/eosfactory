@@ -58,7 +58,7 @@ namespace teos
         return R"EOF(
 Get current blockchain information
 Usage: ./teos get info [Options]
-Usage: ./teos get info [-j '{}'] [OPTIONS]
+Usage: ./teos get info --jarg '{}' [OPTIONS]
 )EOF";
       }
 
@@ -100,7 +100,7 @@ Usage: ./teos get info [-j '{}'] [OPTIONS]
         return R"EOF(
 Retrieve a full block from the blockchain
 Usage: ./teos get block [block_num | block_id] [Options]
-Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
+Usage: ./teos get block --jarg '{"block_num_or_id":"<int | string>"}' [OPTIONS]
 )EOF";
       }
 
@@ -181,7 +181,7 @@ Usage: ./teos get block [-j '{"block_num_or_id":"<int | string>"}'] [OPTIONS]
         return R"EOF(
 Fetch a blockchain account
 Usage: ./teos get account [account_name] [Options]
-Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
+Usage: ./teos get account --jarg '{"account_name":"<account name>"}' [OPTIONS]
 )EOF";
       }
 
@@ -275,8 +275,8 @@ Usage: ./teos get account [-j '{"account_name":"<account name>"}'] [OPTIONS]
         return R"EOF(
 Retrieve the code and ABI for an account
 Usage: ./teos get code [account_name] [Options]
-Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file>", 
-"abi":"<abi file>"}'] [OPTIONS]
+Usage: ./teos get code --jarg '{"account_name":"<account name>", "wast":"<wast file>", 
+"abi":"<abi file>"}' [OPTIONS]
 )EOF";
       }
 
@@ -335,18 +335,25 @@ Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file
     class GetTable : public TeosCommand
     {
     public:
-      GetTable(string scope, string contract, string table,
-        bool raw = false) : TeosCommand(
+      GetTable(
+          string contract, string scope, string table,
+          unsigned limit = 10, string key = "", 
+          string lower = "", string upper = ""
+      ) : TeosCommand(
         string(getCommandPath + "get_table_rows")) {
         reqJson_.put("json", true);
+        reqJson_.put("code", contract);        
         reqJson_.put("scope", scope);
-        reqJson_.put("code", contract);
         reqJson_.put("table", table);
+        reqJson_.put("limit", limit);
+        reqJson_.put("table_key", key);
+        reqJson_.put("lower_bound", lower);
+        reqJson_.put("upper_bound", upper);
         callEosd();
       }
 
       GetTable(ptree reqJson, bool raw = false) : TeosCommand(
-        string(getCommandPath + "get_table"), reqJson) {
+        string(getCommandPath + "get_table_rows"), reqJson) {
         callEosd();
       }
 
@@ -368,35 +375,65 @@ Usage: ./teos get code [-j '{"account_name":"<account name>", "wast":"<wast file
         return R"EOF(
 Retrieve the contents of a database table
 Usage: ./teos get table [scope] [contract] [table] [Options]
-Usage: ./teos get table [-j '{"scope":"<scope>","code":"<code>","table":"<table>"}'] [OPTIONS]
+Usage: ./teos get table --jarg '{
+  "code":"<contract>",  
+  "scope":"<scope>",
+  "table":"<table>",
+  "limit":"<row count limit>",
+  "table_key":"<table key>",
+  "lower_bound":"<lower bound>",
+  "upper_bound":"upper bound",      
+  }' [OPTIONS]
 )EOF";
       }
 
+      string contract;      
       string scope;
-      string contract;
       string table;
+      unsigned limit;
+      string key;
+      string lower;
+      string upper;
 
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("scope,e", value<string>(&scope), "The account scope where the table is found")
-          ("contract,c", value<string>(&contract), "The contract within scope who owns the table")
-          ("table,t", value<string>(&table), "The name of the table as specified by the contract abi");
+          ("contract", value<string>(&contract)
+            , "The contract who owns the table.")
+          ("scope", value<string>(&scope)
+            , "The scope within the contract in which the table is found.")
+          ("table", value<string>(&table)
+            , "The name of the table as specified by the contract abi.")         
+          ("limit,l", value<unsigned>(&limit)->default_value(10)
+            , "The maximum number of rows to return.")                
+          ("key,k", value<string>(&key)->default_value("")
+            , "The name of the key to index by as defined by the abi, defaults "
+              "to primary key.")                
+          ("lower,L", value<string>(&lower)->default_value("")
+            , "JSON representation of lower bound value of key, defaults "
+              "to first.")    
+          ("upper,U", value<string>(&upper)->default_value("")
+            , "JSON representation of upper bound value value of key, "
+              "defaults to last.");
         return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
-        pos_desc.add("scope", 1).add("contract", 1).add("table", 1);
+        pos_desc.add("contract", 1).add("scope", 1).add("table", 1);
       }
 
       bool checkArguments(variables_map &vm) {
         bool ok = false;
-        if (vm.count("scope")) {
-          reqJson_.put("scope", scope);
-          if (vm.count("contract")) {
-            reqJson_.put("code", contract);
+        if (vm.count("contract")) {
+          reqJson_.put("code", contract);
+          if (vm.count("scope")) {
+            reqJson_.put("scope", scope);
             if (vm.count("table")) {
               reqJson_.put("table", table);
+              reqJson_.put("limit", limit);
+              reqJson_.put("table_key", key);
+              reqJson_.put("lower_bound", lower);
+              reqJson_.put("upper_bound", upper);
               ok = true;
             }
           }
@@ -407,12 +444,6 @@ Usage: ./teos get table [-j '{"scope":"<scope>","code":"<code>","table":"<table>
       TeosControl executeCommand() {
         return GetTable(reqJson_);
       }
-
-      void getOutput(TeosCommand command) {
-        output("TO_DO");
-      }
-
     };
-
   }
 }

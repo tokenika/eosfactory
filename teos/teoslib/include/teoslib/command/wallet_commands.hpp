@@ -70,7 +70,7 @@ namespace teos
         return R"EOF(
 Create a new wallet locally
 Usage: ./teos wallet create [wallet name] [Options]
-Usage: ./teos wallet create [-j '{"name":"<wallet name>"}'] [OPTIONS]
+Usage: ./teos wallet create --jarg '{"name":"<wallet name>"}' [OPTIONS]
 )EOF";
       }
 
@@ -157,7 +157,7 @@ Usage: ./teos wallet create [-j '{"name":"<wallet name>"}'] [OPTIONS]
         return R"EOF(
 Import private key into wallet
 Usage: ./teos wallet import [name] [key] [Options]
-Usage: ./teos wallet import [-j '{"name":"<wallet name>", "key":"<private key>"}'] [OPTIONS]
+Usage: ./teos wallet import --jarg '{"name":"<wallet name>", "key":"<private key>"}' [OPTIONS]
 )EOF";
       }
 
@@ -236,7 +236,7 @@ Usage: ./teos wallet import [-j '{"name":"<wallet name>", "key":"<private key>"}
         return R"EOF(
 List opened wallets, *= unlocked
 Usage: ./teos wallet list [Options]
-Usage: ./teos wallet list [-j '{}'] [OPTIONS]
+Usage: ./teos wallet list --jarg '{}' [OPTIONS]
 )EOF";
       }
 
@@ -290,7 +290,7 @@ Usage: ./teos wallet list [-j '{}'] [OPTIONS]
         return R"EOF(
 Open an existing wallet
 Usage: ./teos wallet open [name] [Options]
-Usage: ./teos wallet open [-j '{"name":"<wallet name>"}'] [OPTIONS]
+Usage: ./teos wallet open --jarg '{"name":"<wallet name>"}' [OPTIONS]
 )EOF";
       }
 
@@ -365,7 +365,7 @@ Usage: ./teos wallet open [-j '{"name":"<wallet name>"}'] [OPTIONS]
         return R"EOF(
 Lock wallet
 Usage: ./teos wallet lock [name] [Options]
-Usage: ./teos wallet lock [-j '{"name":"<wallet name>"}'] [OPTIONS]
+Usage: ./teos wallet lock --jarg '{"name":"<wallet name>"}' [OPTIONS]
 )EOF";
       }
 
@@ -440,7 +440,7 @@ Usage: ./teos wallet lock [-j '{"name":"<wallet name>"}'] [OPTIONS]
         return R"EOF(
 Lock all unlocked wallets
 Usage: ./teos wallet lock_all [Options]
-Usage: ./teos wallet lock_all [-j '{}'] [OPTIONS]
+Usage: ./teos wallet lock_all --jarg '{}' [OPTIONS]
 )EOF";
       }
 
@@ -496,7 +496,7 @@ Usage: ./teos wallet lock_all [-j '{}'] [OPTIONS]
         return R"EOF(
 Unlock wallet
 Usage: ./teos wallet import [password] [name] [Options]
-Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"}'] [OPTIONS]
+Usage: ./teos wallet import --jarg '{"password":"<password>", name":"<wallet name>"}' [OPTIONS]
 )EOF";
       }
 
@@ -577,7 +577,7 @@ Usage: ./teos wallet import [-j '{"password":"<password>", name":"<wallet name>"
         return R"EOF(
 List opened wallets, *= unlocked
 Usage: ./teos wallet list [Options]
-Usage: ./teos wallet list [-j '{}'] [OPTIONS]
+Usage: ./teos wallet list --jarg '{}' [OPTIONS]
 )EOF";
       }
 

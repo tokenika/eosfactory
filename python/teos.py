@@ -102,7 +102,9 @@ class _Command:
     error = False 
 
     def __init__(self, first, second, is_verbose=True):
-   
+        print("//////////////////////////")
+        print(self._args)
+        print("//////////////////////////")
         cl = [setup.teos_exe, first, second,
             "--jarg", str(self._args).replace("'", '"'), "--both"]
         if _is_verbose and is_verbose:
@@ -125,8 +127,10 @@ class _Command:
             self._this = stdout
             print(textwrap.fill(self._this, 80))
             return 
-
-        self._this = json.loads(json_resp)
+        try:
+            self._this = json.loads(json_resp)
+        except:
+            self._this = json_resp
 
     def __str__(self):
         return pprint.pformat(self._this)
@@ -237,6 +241,22 @@ class GetCode(_Command):
                 self.abi = self._this["abi"]
 
 
+class GetTable(_Command):
+    def __init__(
+        self, contract, scope, table, 
+        limit=10, key="", lower="", upper="",
+        is_verbose=True
+        ):
+        self._args["code"] = contract
+        self._args["scope"] = scope        
+        self._args["table"] = table
+        self._args["limit"] = limit
+        self._args["table_key"] = key        
+        self._args["lower_bound"] = lower
+        self._args["upper_bound"] = upper
+        _Command.__init__(self, "get", "table", is_verbose)
+
+
 """ Create a pair of cryptographic keys.
 """
 class CreateKey(_Command):
@@ -278,9 +298,9 @@ class CreateAccount(_Command):
         self._args["activeKey"] = active_key.public_key
         self._args["permission"] = permission
         self._args["expiration"] = expirationSec        
-        self._args["skip"] = skipSignature        
-        self._args["dontBroadcast"] = dontBroadcast
-        self._args["forceUnique"] = forceUnique
+        self._args["skip-sign"] = skipSignature        
+        self._args["dont-broadcast"] = dontBroadcast
+        self._args["force-unique"] = forceUnique
         _Command.__init__(self, "create", "account", is_verbose)
         if not self.error:
             self.name = account_name
@@ -288,23 +308,24 @@ class CreateAccount(_Command):
 
 class SetContract(_Command):
     def __init__(
-            self, account_name, contractDir, wast_file, abi_file, 
+            self, account_name, contractDir, 
+            wast_file="", abi_file="", 
             permission="", expirationSec=30, 
             skipSignature=0, dontBroadcast=0, forceUnique=0,
             maxCpuUsage=0, maxNetUsage=0,
             is_verbose=True
             ):
         self._args["account"] = account_name
-        self._args["contractDir"] = contractDir
-        self._args["wast"] = wast_file
-        self._args["abi"] = abi_file
+        self._args["contract-dir"] = contractDir
+        self._args["wast-file"] = wast_file
+        self._args["abi-file"] = abi_file
         self._args["permission"] = permission
         self._args["expiration"] = expirationSec
-        self._args["skip"] = skipSignature
-        self._args["dontBroadcast"] = dontBroadcast
-        self._args["forceUnique"] = forceUnique
-        self._args["maxCpuUsage"] = maxCpuUsage
-        self._args["maxNetUsage"] = maxNetUsage        
+        self._args["skip-sign"] = skipSignature
+        self._args["dont-broadcast"] = dontBroadcast
+        self._args["force-unique"] = forceUnique
+        self._args["max-cpu-usage"] = maxCpuUsage
+        self._args["max-net-usage"] = maxNetUsage        
         _Command.__init__(self, "set", "contract", is_verbose)
         if not self.error:
             self.name = account_name
@@ -315,6 +336,7 @@ class PushAction(_Command):
             self, contract_name, action, data,
             permission="", expirationSec=30, 
             skipSignature=0, dontBroadcast=0, forceUnique=0,
+            maxCpuUsage=0, maxNetUsage=0,
             is_verbose=True        
         ):
         self._args["contract"] = contract_name
@@ -322,9 +344,11 @@ class PushAction(_Command):
         self._args["data"] = data
         self._args["permission"] = permission
         self._args["expiration"] = expirationSec
-        self._args["skip"] = skipSignature
-        self._args["dontBroadcast"] = dontBroadcast
-        self._args["forceUnique"] = forceUnique
+        self._args["skip-sign"] = skipSignature
+        self._args["dont-broadcast"] = dontBroadcast
+        self._args["force-unique"] = forceUnique
+        self._args["max-cpu-usage"] = maxCpuUsage
+        self._args["max-net-usage"] = maxNetUsage              
         _Command.__init__(self, "push", "action", is_verbose)
         if not self.error:
             self.name = contract_name
@@ -447,13 +471,15 @@ class Account(_Commands):
         return code
 
     def set_contract(
-            self, wast_file, abi_file, 
+            self, contractDir, wast_file="", abi_file="", 
             permission="", expirationSec=30, 
-            skipSignature=0, dontBroadcast=0, forceUnique=0):
+            skipSignature=0, dontBroadcast=0, forceUnique=0,
+            maxCpuUsage=0, maxNetUsage=0):
         set_contract = SetContract(
-            self.name, wast_file, abi_file,
+            self.name, contractDir, wast_file, abi_file,
             permission, expirationSec, forceUnique,
-            is_verbose=False
+            maxCpuUsage=0, maxNetUsage=0,
+            is_verbose=False 
             )
 
 
@@ -471,7 +497,7 @@ class Daemon(_Commands):
         self._this = daemon._this
     
     def delete_wallets(self, name="*"):
-       daemon = DaemonDeleteWallets(name)
+       daemon = DaemonDeleteWallets(name  )
        self._this = daemon._this
 
 

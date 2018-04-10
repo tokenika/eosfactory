@@ -50,11 +50,11 @@ namespace teos
           reqJson.get<string>("ownerKey"), reqJson.get<string>("activeKey"),
           reqJson.get<string>("permission"), 
           reqJson.get<int>("expiration"),          
-          reqJson.get<bool>("skip"),
-          reqJson.get<bool>("dontBroadcast"),
-          reqJson.get<bool>("forceUnique"),
-          reqJson.get<unsigned>("maxCpuUsage"),
-          reqJson.get<unsigned>("maxNetUsage")
+          reqJson.get<bool>("skip-sign"),
+          reqJson.get<bool>("dont-broadcast"),
+          reqJson.get<bool>("force-unique"),
+          reqJson.get<unsigned>("max-cpu-usage"),
+          reqJson.get<unsigned>("max-net-usage")
           ));
       }
     };
@@ -74,12 +74,12 @@ namespace teos
         return string(R"EOF(
   "permission":"<permission list>",
   "expiration":<expiration time sec>,  
-  "skipSignature":<true|false>,
-  "dontBroadcast":<true|false>,
-  "forceUnique":<true|false>,
-  "maxCpuUsage":"<max cpu usage>",
-  "maxNetUsage":"<max net usage>"
-  }'] [OPTIONS]
+  "skip-sign":<true|false>,
+  "dont-broadcast":<true|false>,
+  "force-unique":<true|false>,
+  "max-cpu-usage":"<max cpu usage>",
+  "max-net-usage":"<max net usage>"
+  }' [OPTIONS]
 )EOF");            
       }
 
@@ -88,7 +88,7 @@ namespace teos
 Create a new account on the blockchain.
 Usage: ./teos create account [creator] [name] [ownerKey] 
           [activeKey] [Options]
-Usage: ./teos create key [-j '{
+Usage: ./teos create key --jarg '{
   "creator":"<creator name>",
   "name":"<account name>",
   "ownerKey":"<owner public key>",
@@ -117,7 +117,7 @@ Usage: ./teos create key [-j '{
         ("permission,p", value<string>(&permission)
             ->default_value("")
             ,"An account and permission level to authorize, as in "
-              "'account@permission' (defaults to 'account@active')")
+              "'account@permission' (defaults to 'account')")
           ("expiration,x", value<unsigned>(&expiration)->default_value(30)
             , "The time in seconds before a transaction expires.")
           ("skip-sign,s", value<bool>(&skipSignature)->default_value(false)
@@ -130,9 +130,14 @@ Usage: ./teos create key [-j '{
             , "force the transaction to be unique. this will consume extra "
             "bandwidth and remove any protections against accidently issuing "
             "the same transaction multiple times.")
+          ("max-cpu-usage", value<unsigned>(&maxCpuUsage)->default_value(0)
+            , "Upper limit on the cpu usage budget, in instructions-retired, "
+              "for the execution of the transaction (defaults to 0 which "
+              "means no limit).")
           ("max-net-usage", value<unsigned>(&maxNetUsage)->default_value(0)
             ,  "Upper limit on the net usage budget, in bytes, for the "
               "transaction (defaults to 0 which means no limit)");
+        return od;
       }       
 
       options_description  argumentDescription() {
@@ -159,11 +164,11 @@ Usage: ./teos create key [-j '{
       void transactionArgs(){
         reqJson_.put("permission", permission);
         reqJson_.put("expiration", expiration);                
-        reqJson_.put("skip", skipSignature);
-        reqJson_.put("dontBroadcast", dontBroadcast);
-        reqJson_.put("forceUnique", forceUnique);
-        reqJson_.put("maxCpuUsage", maxCpuUsage);            
-        reqJson_.put("maxNetUsage", maxNetUsage);
+        reqJson_.put("skip-sign", skipSignature);
+        reqJson_.put("dont-broadcast", dontBroadcast);
+        reqJson_.put("force-unique", forceUnique);
+        reqJson_.put("max-cpu-usage", maxCpuUsage);            
+        reqJson_.put("max-net-usage", maxNetUsage);
       }
 
       bool checkArguments(variables_map &vm) {
@@ -187,11 +192,6 @@ Usage: ./teos create key [-j '{
 
       TeosControl executeCommand() {
         return CreateAccount(reqJson_);
-      }
-
-      void getExample() {
-        cout << R"EOF(
-)EOF" << endl;
       }
     };
 
@@ -241,7 +241,7 @@ Usage: ./teos create key [-j '{
         return R"EOF(
 Create a new keypair and print the public and private keys.
 Usage: ./teos create key [key name] [Options]
-Usage: ./teos create key [-j '{"name":"<key name>"}'] [OPTIONS]
+Usage: ./teos create key --jarg '{"name":"<key name>"}' [OPTIONS]
 )EOF";
       }
 

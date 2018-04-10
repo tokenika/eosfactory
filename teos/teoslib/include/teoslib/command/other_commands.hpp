@@ -30,7 +30,7 @@ namespace teos
         return R"EOF(
 Retrieve version information of the client
 Usage: ./teos version client [Options]
-Usage: ./teos version client [-j '{}'] [OPTIONS]
+Usage: ./teos version client --jarg '{}' [OPTIONS]
 )EOF";
       }
 

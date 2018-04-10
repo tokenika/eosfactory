@@ -399,6 +399,9 @@ namespace teos {
       vector<string> permissions = {};
       if(!permission.empty()){
         boost::split(permissions, permission, boost::is_any_of(","));
+        for(size_t i = 0; i < permissions.size(); i++) {
+          permissions[i] = permissions[i] + "@active";
+        }        
       }
 
       public_key_type owner_key, active_key;      
@@ -456,6 +459,9 @@ namespace teos {
       vector<string> permissions = {};
       if(!permission.empty()){
         boost::split(permissions, permission, boost::is_any_of(","));
+        for(size_t i = 0; i < permissions.size(); i++) {
+          permissions[i] = permissions[i] + "@active";
+        }
       }
 
       string wastPath;
@@ -502,7 +508,7 @@ namespace teos {
 
       //try {
       actions.emplace_back( create_setabi(
-          account, fc::json::from_file(abiFile).as<contracts::abi_def>(), 
+          account, fc::json::from_file(abiPath).as<contracts::abi_def>(), 
           permissions) );
       //} EOS_CAPTURE_AND_RETHROW(abi_type_exception,  "Fail to parse ABI JSON")      
       

@@ -26,8 +26,9 @@ Every contract requires an associated account, so first you need to create
 a wallet. To create a wallet, you need to have the wallet_api_plugin loaded 
 into the nodeos process:
 """
-wallet = teos.Wallet("default")
+wallet = teos.Wallet()
 """
+The wallet name argument is not set: the default wallet name is 'default'.
 
 ### Load the Bios Contract
 
@@ -38,7 +39,94 @@ access other privileged API calls.
 teos.SetContract("eosio", "eosio.bios", permission="eosio")
 """
 
+### Create an account for the "currency" contract
+
+The account named "currency" will be used for the "currency" contract. 
+Generate two public/private key pairs that will be later assigned as the 
+owner_key and the active_key:
 """
+owner_key = teos.CreateKey("owner_key")
+active_key = teos.CreateKey("active_key")
+"""
+
+Import the two private keys into the wallet:
+"""
+wallet.import_key(owner_key)
+wallet.import_key(active_key)
+"""
+
+Create the currency account using the cleos create account command. The 
+create will be authorized by the eosio account. The two public keys generated 
+above will be associated with the account, one as its OwnerKey and the other 
+as its ActiveKey.
+"""
+account = teos.Account("eosio", "currency", owner_key, active_key)
+"""
+
+You can verify that the account was successfully created:
+"""
+print(account)
+"""
+
+### Upload the sample "currency" contract to the blockchain
+
+Before uploading a contract, verify that there is no current contract:
+"""
+code = account.code()
+print(code)
+"""
+
+Upload the sample currency contract using the currency account:
+"""
+account.set_contract("currency")
+"""
+
+You can also verify that the code has been set:
+"""
+account.code()
+"""
+
+Before using the currency contract, you must first create, then issue the 
+currency:
+"""
+teos.PushAction(
+  "currency", "create", 
+  '{"issuer":"currency","maximum_supply":"1000000.0000 CUR", \
+    "can_freeze":"0","can_recall":"0","can_whitelist":"0"}',
+  permission="currency@active")
+
+teos.PushAction(
+  "currency", "issue", 
+  '{"to":"currency","quantity":"1000.0000 CUR","memo":""}',
+  permission="currency@active")
+"""
+
+
+
+
+
+
+
+
+
+
+
+"""
+daemon = teos.Daemon()
+daemon.clear()
+print(daemon)
+wallet = teos.Wallet()
+teos.SetContract("eosio", "eosio.bios", permission="eosio")
+
+owner_key = teos.CreateKey("owner_key")
+active_key = teos.CreateKey("active_key")
+wallet.import_key(owner_key)
+wallet.import_key(active_key)
+
+account = teos.Account("eosio", "currency", owner_key, active_key)
+
+code = account.code()
+print(code)
 
 """
 

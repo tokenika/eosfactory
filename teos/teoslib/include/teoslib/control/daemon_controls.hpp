@@ -19,7 +19,7 @@ namespace teos {
       public:
         static const char* DELETE_ALL;
         static const char* WALLET_EXT;
-        DaemonDeleteWallets(string name = "")
+        DaemonDeleteWallets(string name = DELETE_ALL)
         {
           reqJson_.put("name", name);
           action();
