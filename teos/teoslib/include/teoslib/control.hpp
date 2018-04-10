@@ -134,7 +134,7 @@ namespace teos
 
     virtual void parseGroupVariablesMap(variables_map& vm) 
     {
-      if (vm.count("json")) {
+      if (vm.count("jarg")) {
         reqJson_ = stringToPtree(json_);
       } else {
         if(!checkArguments(vm)) {
@@ -154,7 +154,7 @@ namespace teos
         cerr << command.responseToString(isRaw) << endl;
         printout(command, vm);
       } else {
-        if (vm.count("received")) {
+        if (vm.count("json")) {
           cout << command.responseToString(isRaw) << endl;
         }
         else {

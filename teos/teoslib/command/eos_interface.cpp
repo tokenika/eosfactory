@@ -219,14 +219,14 @@ namespace teos {
     }
 
     TeosCommand /*fc::variant*/ push_transaction(
-      signed_transaction& trx,
-      int32_t extra_kcpu = 1000,       
-      unsigned expirationSec = 30,
-      bool tx_skip_sign = false,
-      bool tx_dont_broadcast = false,
-      bool tx_force_unique = false,
-      uint32_t tx_max_cpu_usage = 0,
-      uint32_t tx_max_net_usage = 0,
+      signed_transaction& trx,       
+        unsigned expirationSec = 30,
+        bool tx_skip_sign = false,
+        bool tx_dont_broadcast = false,
+        bool tx_force_unique = false,
+        uint32_t tx_max_cpu_usage = 0,
+        uint32_t tx_max_net_usage = 0,
+      int32_t extra_kcpu = 1000,
       packed_transaction::compression_type compression 
         = packed_transaction::none)     
     {
@@ -321,13 +321,13 @@ namespace teos {
 
     TeosCommand  /*fc::variant*/ push_actions(
         vector<chain::action>&& actions,
+          unsigned expirationSec = 30, 
+          bool tx_skip_sign = false, 
+          bool tx_dont_broadcast = false, 
+          bool tx_force_unique = false,
+          uint32_t tx_max_cpu_usage = 0,
+          uint32_t tx_max_net_usage = 0,
         int32_t extra_kcpu = 1000,
-        unsigned expirationSec = 30, 
-        bool tx_skip_sign = false, 
-        bool tx_dont_broadcast = false, 
-        bool tx_force_unique = false,
-        uint32_t tx_max_cpu_usage = 0,
-        uint32_t tx_max_net_usage = 0,      
         packed_transaction::compression_type compression = packed_transaction::none
       ) 
       {
@@ -335,28 +335,38 @@ namespace teos {
       trx.actions = std::forward<decltype(actions)>(actions);
 
       return push_transaction(
-        trx, 
-        extra_kcpu, 
-        expirationSec, tx_skip_sign, tx_dont_broadcast, tx_force_unique,
-        tx_max_cpu_usage, tx_max_net_usage,
+        trx,  
+          expirationSec, tx_skip_sign, tx_dont_broadcast, tx_force_unique,
+          tx_max_cpu_usage, tx_max_net_usage,
+        extra_kcpu,
         compression      
         )/*.fcVariant_*/;
     }
 
     TeosCommand /*void*/ send_actions(
       vector<chain::action>&& actions,
-      unsigned expirationSec = 30, 
-      bool tx_skip_sign = false,
-      bool tx_dont_broadcast = false,
-      bool tx_force_unique = false,
-      uint32_t tx_max_cpu_usage = 0,
-      uint32_t tx_max_net_usage = 0,       
+        unsigned expirationSec = 30, 
+        bool tx_skip_sign = false,
+        bool tx_dont_broadcast = false,
+        bool tx_force_unique = false,
+        uint32_t tx_max_cpu_usage = 0,
+        uint32_t tx_max_net_usage = 0,
+      int32_t extra_kcpu = 1000,
       packed_transaction::compression_type compression 
         = packed_transaction::none ) 
     {
+      /*
+      auto result = push_actions( move(actions), extra_kcpu, compression);
+      if( tx_print_json ) {
+        cout << fc::json::to_pretty_string( result );
+      } else {
+        print_result( result );
+      }
+      */
       return push_actions(
-        forward<decltype(actions)>(actions), 
-        expirationSec, tx_skip_sign, tx_dont_broadcast, tx_force_unique,
+        move(actions), 
+          expirationSec, tx_skip_sign, tx_dont_broadcast, tx_force_unique,
+        extra_kcpu,
         compression)/*.fcVariant_*/;
     }
 
@@ -448,52 +458,64 @@ namespace teos {
         boost::split(permissions, permission, boost::is_any_of(","));
       }
 
-      TeosCommand status;
-      boost::filesystem::path wastFilePath 
-        = teos::control::getContractFile(&status, wastFile); 
-      cout << wastFilePath.string() << endl;
-      if (status.isError_) {
-        return status;
-      }    
-      std::string wast;
-      fc::read_file_contents(wastFilePath, wast);
+      string wastPath;
+      {
+        TeosCommand status;
+        wastPath = teos::control::getContractFile(
+              &status, contractDir, 
+              wastFile.empty() ? ".wast" : wastFile); 
 
+        cout << wastPath << endl;
+        if (status.isError_) {
+          return status;
+        } 
+      }
+
+      string abiPath;
+      {
+        TeosCommand status;
+        abiPath = teos::control::getContractFile(
+          &status, contractDir, abiFile.empty() ? ".abi" : abiFile); 
+        cout << abiFile << endl;
+        if (status.isError_) {
+          return status;
+        }
+      }
+
+      string wast;
+      fc::read_file_contents(wastPath, wast);
+      //FC_ASSERT( !wast.empty(), "no wast file found ${f}", ("f", wastPath) );      
       vector<uint8_t> wasm;
       const string binary_wasm_header = "\x00\x61\x73\x6d";
       if(wast.compare(0, 4, binary_wasm_header) == 0) {
+        // Using already assembled WASM
         wasm = vector<uint8_t>(wast.begin(), wast.end());
       } else {
+        // Assembling WASM...
         wasm = wast_to_wasm(wast);
       } 
 
       vector<chain::action> actions;
       actions.emplace_back( create_setcode(
         account, bytes(wasm.begin(), wasm.end()), permissions ) );
+      //FC_ASSERT( fc::exists( abiPath ), "no abi file found ${f}", ("f", abiPath)  );
 
-      if (!abiFile.empty()) 
-      {
-        TeosCommand status;
-        abiFile = teos::control::getContractFile(&status, abiFile); 
-        cout << abiFile << endl;
-        if (status.isError_) {
-          return status;
-        }
-
-        //try {
-        actions.emplace_back( create_setabi(
-            account, fc::json::from_file(abiFile).as<contracts::abi_def>(), 
-            permissions) );
-        //} EOS_CAPTURE_AND_RETHROW(abi_type_exception,  "Fail to parse ABI JSON")      
-      }
+      //try {
+      actions.emplace_back( create_setabi(
+          account, fc::json::from_file(abiFile).as<contracts::abi_def>(), 
+          permissions) );
+      //} EOS_CAPTURE_AND_RETHROW(abi_type_exception,  "Fail to parse ABI JSON")      
+      
       /*
-      return send_actions(std::move(actions), packed_transaction::zlib);
+      send_actions(std::move(actions), 10000, packed_transaction::zlib);
       */
       return send_actions(
         move(actions), 
-        expiration, skipSignature, dontBroadcast, 
-        forceUnique,
-        maxCpuUsage,
-        maxNetUsage,
+          expiration, skipSignature, dontBroadcast, 
+          forceUnique,
+          maxCpuUsage,
+          maxNetUsage,
+        10000,
         packed_transaction::zlib)/*.fcVariant_*/;
     }
 

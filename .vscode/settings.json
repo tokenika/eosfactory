@@ -23,6 +23,14 @@
     "deque": "cpp",
     "list": "cpp",
     "vector": "cpp",
-    "xstring": "cpp"
+    "xstring": "cpp",
+    "regex": "cpp",
+    "xhash": "cpp",
+    "xtree": "cpp",
+    "xutility": "cpp",
+    "system_error": "cpp",
+    "typeindex": "cpp",
+    "xlocale": "cpp",
+    "iostream": "cpp"
   }
 }

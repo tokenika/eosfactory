@@ -77,11 +77,8 @@ namespace teos
             ->default_value(TeosCommand::httpWalletAddress.empty()
           ? teos::control::getHttpWalletAddress(nullptr)
           : TeosCommand::httpWalletAddress),
-        "The http address (host:port) where eos-wallet is running.")
-        ("json,j", value<string>(&json_), "Json argument.")      
-        ("received,v", "Print received json.")
-        ("both,b", "For system use.")
-        ("raw,r", "Raw print");
+        "The http address (host:port) where eos-wallet is running.");
+      od.add(ControlOptions::groupOptionDescription());
       return od;
     }
 

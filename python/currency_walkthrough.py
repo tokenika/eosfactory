@@ -4,12 +4,10 @@ import teos
 ## Example "Currency" Contract Walkthrough
 
 EOS comes with example contracts that can be uploaded and run for testing 
-purposes. Next we demonstrate how to upload and interact with the sample 
-contract "currency".
+purposes. We will validate our single node setup using the sample contract 
+'currency'.
 
-### Example smart contracts
-
-First, run the node:
+### Start EOS node
 """
 teos.set_verbose(False)
 
@@ -18,19 +16,32 @@ teos.set_verbose(False)
 daemon = teos.Daemon()
 daemon.clear()
 
-# See a prove that the daemon is running:
+# See a prove that the daemon is started:
 print(daemon)
+"""
+
+### Create a wallet
+
+Every contract requires an associated account, so first you need to create 
+a wallet. To create a wallet, you need to have the wallet_api_plugin loaded 
+into the nodeos process:
+"""
+wallet = teos.Wallet("default")
+"""
+
+### Load the Bios Contract
+
+Set eosio.bios as the default system contract. This contract enables you to 
+have direct control over the resource allocation of other accounts and to 
+access other privileged API calls.
+"""
+teos.SetContract("eosio", "eosio.bios", permission="eosio")
+"""
 
 """
-#### Setting up a wallet and importing account key
-
-As you've previously added plugin = eosio::wallet_api_plugin into config.ini, 
-EOS wallet will be running as a part of eosiod process. Every contract requires
-an associated account, so first, create a wallet.
-"""
-wallet = teos.Wallet("wallet")
 
 """
+
 For the purpose of this walkthrough, import the private key of the 'eosio' 
 account, a test account included within genesis.json, so that you're able to 
 issue API commands under authority of an existing account. The private key 

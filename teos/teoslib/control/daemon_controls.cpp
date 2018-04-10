@@ -257,44 +257,32 @@ namespace teos {
     void DaemonStart::action()
     { 
 
-      reqJson_.put(
-        "http-server-address"
-        , getHttpServerAddress(this, reqJson_.get("http-server-address", "")));      
+      reqJson_.put( "http-server-address", getHttpServerAddress(this));      
       if(isError_){
         return;
       }
      
-      reqJson_.put(
-        "daemon_exe"
-        , getDaemonExe(this, reqJson_.get("daemon_exe", "")));
+      reqJson_.put("daemon_exe", getDaemonExe(this));
       if(isError_){
         return;
       }
       
-      reqJson_.put(
-        "genesis-json"
-        , getGenesisJson(this, reqJson_.get("genesis-json", "")));             
+      reqJson_.put("genesis-json", getGenesisJson(this));             
       if(isError_){
         return;
       }
       
-      reqJson_.put(
-        "config-dir"
-        , getConfigDir(this, reqJson_.get("config-dir", "")));
+      reqJson_.put("config-dir", getConfigDir(this));
       if(isError_){
         return;
       }
 
-      reqJson_.put(
-        "data-dir"
-        , getDataDir(this, reqJson_.get("data-dir", "")));
+      reqJson_.put("data-dir", getDataDir(this));
       if(isError_){
         return;
       }      
 
-      reqJson_.put(
-        "wallet-dir"
-        , getWalletDir(this, reqJson_.get("wallet-dir", "")));
+      reqJson_.put("wallet-dir", getWalletDir(this));
       if(isError_){
         return;
       }
@@ -305,7 +293,7 @@ namespace teos {
           DaemonDeleteWallets();          
         } else if(!getPid().empty()){
           teos::TeosCommand tc = teos::command::GetInfo(); 
-          respJson_ = tc.respJson_; 
+          respJson_ = tc.respJson_;
           return;
         }
 
@@ -321,18 +309,14 @@ namespace teos {
           commandLine += " --resync-blockchain";
         }
 
+        bool isWU;
         respJson_.put("command_line", commandLine);
-        bool isWU = isWindowsUbuntu();
-        if(isWU) {
-          respJson_.put("is_windows_ubuntu", 1);
-        } else{
-          respJson_.put("is_windows_ubuntu", 0);
-        }
+        respJson_.put("is_windows_ubuntu", isWU = isWindowsUbuntu());
 
-        //cout << commandLine <<endl;
+        // cout << commandLine <<endl;
         if(reqJson_.count(DO_NOT_LAUNCH) == 0) {
           if(isWU) {
-            bp::spawn("cmd.exe /c start bash.exe -c " 
+            bp::spawn("cmd.exe /c start /MIN bash.exe -c " 
               "'" + commandLine + "'");
           } else {
             bp::spawn("gnome-terminal -- " + commandLine);
@@ -363,14 +347,18 @@ namespace teos {
     //////////////////////////////////////////////////////////////////////////
     // class DaemonDeleteWallets
     //////////////////////////////////////////////////////////////////////////
+    const char* DaemonDeleteWallets::DELETE_ALL = "*";
+    const char* DaemonDeleteWallets::WALLET_EXT = ".wallet";
+
     void DaemonDeleteWallets::action()
     {
       namespace bfs = boost::filesystem;      
   
       int count = 0; 
       try{
-        bfs::path walletDir(getWalletDir(this, reqJson_.get("wallet-dir", "")));
-        if(!reqJson_.get("name", "").empty()){
+        bfs::path walletDir(getWalletDir(this));
+
+        if(reqJson_.get("name", "") != DELETE_ALL){
           bfs::path walletFile = walletDir / (reqJson_.get("name", "") 
             + ".wallet");
           if(bfs::exists(walletFile)){
@@ -384,7 +372,7 @@ namespace teos {
                 bfs::directory_iterator(walletDir), {})) 
             {
             if (bfs::is_regular_file(entry.path()) 
-              && entry.path().extension() == ".wallet") {
+              && entry.path().extension() == WALLET_EXT ) {
               bfs::remove(entry.path());
               count++;
             }

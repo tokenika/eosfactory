@@ -22,7 +22,7 @@ namespace teos
       SetContract(
           string accountName,
           string contractDir,
-          string wastFile, string abiFile = "",
+          string wastFile = "", string abiFile = "",
           string permission  = "",
           unsigned expiration = 30,
           bool skipSignature = false,
@@ -30,7 +30,6 @@ namespace teos
           bool forceUnique = false,
           unsigned maxCpuUsage = 0,
           unsigned maxNetUsage = 0)
-        : TeosCommand("")
       {
         copy(setContract(
           accountName, contractDir, wastFile, abiFile, permission, 
@@ -43,8 +42,8 @@ namespace teos
       {
         copy(setContract(
           reqJson.get<string>("account"),
-          reqJson.get<string>("contractDir"),
-          reqJson.get<string>("wast"), reqJson.get<string>("abi"),
+          reqJson.get<string>("contract-dir"),
+          reqJson.get<string>("wast-file"), reqJson.get<string>("abi-file"),
           reqJson.get<string>("permission"),
           reqJson.get<unsigned>("expiration"),
           reqJson.get<bool>("skip"),
@@ -73,9 +72,9 @@ Usage: ./teos [http address] set contract <account> <contract dir>
           [wast] [abi] [Options]
 Usage: ./teos [http address] create key [-j '{
   "account":"<account name>",
-  "contractDir":"<contract dir>",
-  "wast":"<wast file>",
-  "abi":"<abi file>",
+  "contract-dir":"<contract dir>",
+  "wast-file":"<wast file>",
+  "abi-file":"<abi file>",
   "permission":"<permission list>",
   "expiration":<expiration time sec>,  
   "skipSignature":<true|false>,
@@ -89,8 +88,8 @@ Usage: ./teos [http address] create key [-j '{
 
       string account;
       string contractDir;
-      string wast;
-      string abi;
+      string wastFile;
+      string abiFile;
       string permission;
       unsigned expiration;      
       bool skipSignature;
@@ -104,11 +103,11 @@ Usage: ./teos [http address] create key [-j '{
         od.add_options()
           ("account,n", value<string>(&account)
             , "The name of account to publish a contract for.")
-          ("contract,c", value<string>(&contractDir)
+          ("contract-dir,c", value<string>(&contractDir)
             , "Contract directory, the the path containing the .wast and .abi")          
-          ("wast,o", value<string>(&wast)
+          ("wast-file", value<string>(&wastFile)
             , "The WAST for the contract relative to the contract dir.")
-          ("abi,a", value<string>(&abi)->default_value("")
+          ("abi-file", value<string>(&abiFile)->default_value("")
             , "The ABI for the contract relative to the contract dir.")
           ("permission,p", value<string>(&permission)
             ->default_value("")
@@ -138,16 +137,17 @@ Usage: ./teos [http address] create key [-j '{
 
       void setPosDesc(positional_options_description& pos_desc) {
         pos_desc.add("account", 1);
-        pos_desc.add("contractDir", 1);
+        pos_desc.add("contract-dir", 1);
       }
 
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if (vm.count("account")) {
           reqJson_.put("account", account);
-          if (vm.count("contractDir")) {
-            reqJson_.put("contractDir", contractDir);
-            reqJson_.put("wast", wast);
+          if (vm.count("contract-dir")) {
+            reqJson_.put("contract-dir", contractDir);
+            reqJson_.put("wast-file", wastFile);
+            reqJson_.put("abi-file", abiFile);
             reqJson_.put("permission", permission);
             reqJson_.put("expiration", expiration);                
             reqJson_.put("skip", skipSignature);

@@ -99,12 +99,12 @@ class _Command:
     global setup    
    
     _args = json.loads("{}")
-    error = False      
+    error = False 
 
     def __init__(self, first, second, is_verbose=True):
    
         cl = [setup.teos_exe, first, second,
-            "--json", str(self._args).replace("'", '"'), "--both"]
+            "--jarg", str(self._args).replace("'", '"'), "--both"]
         if _is_verbose and is_verbose:
             cl.append("-V")
 
@@ -114,18 +114,19 @@ class _Command:
             stderr=subprocess.PIPE,
             cwd=str(pathlib.Path(setup.teos_exe).parent)) 
 
-        if _is_verbose and is_verbose:
-            print(process.stdout.decode("utf-8"))
+        stdout = process.stdout.decode("utf-8")
+        json_resp = process.stderr.decode("utf-8")
 
-        working_resp = process.stderr.decode("utf-8")
-        if re.match(r'^ERROR', working_resp):
+        if _is_verbose and is_verbose:
+            print(stdout)
+     
+        if re.match(r'^ERROR', stdout):
             self.error = True
-            print(textwrap.fill(process.stderr.decode("utf-8"), 80))
+            self._this = stdout
+            print(textwrap.fill(self._this, 80))
             return 
-        try:
-            self._this = json.loads(working_resp)
-        except:
-            self._this = working_resp
+
+        self._this = json.loads(json_resp)
 
     def __str__(self):
         return pprint.pformat(self._this)
@@ -287,12 +288,14 @@ class CreateAccount(_Command):
 
 class SetContract(_Command):
     def __init__(
-            self, account_name, wast_file, abi_file, 
+            self, account_name, contractDir, wast_file, abi_file, 
             permission="", expirationSec=30, 
             skipSignature=0, dontBroadcast=0, forceUnique=0,
+            maxCpuUsage=0, maxNetUsage=0,
             is_verbose=True
             ):
         self._args["account"] = account_name
+        self._args["contractDir"] = contractDir
         self._args["wast"] = wast_file
         self._args["abi"] = abi_file
         self._args["permission"] = permission
@@ -300,6 +303,8 @@ class SetContract(_Command):
         self._args["skip"] = skipSignature
         self._args["dontBroadcast"] = dontBroadcast
         self._args["forceUnique"] = forceUnique
+        self._args["maxCpuUsage"] = maxCpuUsage
+        self._args["maxNetUsage"] = maxNetUsage        
         _Command.__init__(self, "set", "contract", is_verbose)
         if not self.error:
             self.name = account_name
@@ -333,8 +338,8 @@ class _Daemon(_Command):
         self._args["DO_NOT_WAIT"] = 1
         self._args["DO_NOT_LAUNCH"] = 1
         _Command.__init__(self, "daemon", "start", False)
-        if not self.error:
-            if(self._this["is_windows_ubuntu"] == "1"):
+        if not self.error and not "head_block_num" in self._this:
+            if(self._this["is_windows_ubuntu"] == "true"):
                 subprocess.call(
                     ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
                     self._this["command_line"]])
@@ -366,13 +371,11 @@ class DaemonStop(_Command):
         _Command.__init__(self, "daemon", "stop", is_verbose)
 
 
-
 """ Delete local wallets.
 """
 class DaemonDeleteWallets(_Command):
-    def __init__(self, name="", data_dir="", is_verbose=True):
+    def __init__(self, name="*", is_verbose=True):
         self._args["name"] = name
-        self._args["data-dir"] = data_dir
         _Command.__init__(self, "daemon", "delete_wallets", is_verbose)
 
 
@@ -456,16 +459,20 @@ class Account(_Commands):
 
 class Daemon(_Commands):
     def start(self):
-        _Daemon(0, True)
+        daemon = _Daemon(0, True)
+        self._this = daemon._this
 
     def clear(self):
-        _Daemon(1, True)
+        daemon = _Daemon(1, True)
+        self._this = daemon._this
 
     def stop(self):
-        DaemonStop()
+        daemon = DaemonStop()
+        self._this = daemon._this
     
-    def delete_wallets(self):
-       DaemonDeleteWallets()
+    def delete_wallets(self, name="*"):
+       daemon = DaemonDeleteWallets(name)
+       self._this = daemon._this
 
 
 

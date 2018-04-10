@@ -9,7 +9,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
-        "args": ["set", "contract", "currency", "currency.wast", "currency.abi"],
+        "args": ["set", "contract", "eosio", "eosio.bios", "-p", "eosio@active"],
         "stopAtEntry": false,
         "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
         "environment": [],
@@ -65,7 +65,38 @@
         {
             "/mnt/e": "e:\\",
         }         
-    },   
+    },
+    {
+        "name": "(gdb) wsl cleos set contract",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/e/Workspaces/EOS/eos/build/programs/cleos/cleos",
+        "args": ["set", "contract", "eosio", "../../contracts/eosio.bios", "-p", "eosio"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/e/Workspaces/EOS/eos/build/programs/cleos",
+        "environment": [],
+        "externalConsole": true,
+        "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+        },  
+        "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/e": "e:\\",
+        }         
+    },       
     {
         "name": "(gdb) wsl cleos create account",
         "type": "cppdbg",
@@ -126,8 +157,6 @@
         "sourceFileMap": 
         {
             "/mnt/e": "e:\\",
-            "/mnt/c": "c:\\",
-            "/mnt/f": "e:\\"
         }         
     },
     {
@@ -159,8 +188,37 @@
         "sourceFileMap": 
         {
             "/mnt/e": "e:\\",
-            "/mnt/c": "c:\\",
-            "/mnt/f": "e:\\"
+        }         
+    },    
+    {
+        "name": "(gdb) wsl daemon delete_walets",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
+        "args": ["daemon", "delete_wallets"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+        "environment": [],
+        "externalConsole": true,
+        "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+        },  
+        "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/e": "e:\\",
         }         
     },
     {

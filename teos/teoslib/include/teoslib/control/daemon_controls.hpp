@@ -17,12 +17,11 @@ namespace teos {
     {
       void action();
       public:
-        DaemonDeleteWallets(
-          string name = "", string walletDir = ""
-          )
+        static const char* DELETE_ALL;
+        static const char* WALLET_EXT;
+        DaemonDeleteWallets(string name = "")
         {
           reqJson_.put("name", name);
-          reqJson_.put("wallet-dir", walletDir);
           action();
         }
 
@@ -45,27 +44,18 @@ namespace teos {
       const char* getUsage() {
         return R"EOF(
 Delete locally opened walets.
-Usage: ./teos [] daemon delete_wallets 
+Usage: ./teos [] daemon delete_wallets [name]
 )EOF";
       }
 
       string name;
-      string configDir;
-      string walletDir;
 
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("name,n"
-            , value<string>(&configDir)->default_value("")
-            ,"The name of the new wallet")          
-          ("config-dir,d"
-            , value<string>(&name)->default_value("")
-            ,"Where EOSIO daemon has its config.ini file.")
-          ("wallet-dir,d"
-            , value<string>(&name)->default_value("")
-            ,"The path of the wallet files (absolute path or "
-              "relative to application config dir).");
+          ("name,n", value<string>(&name)
+            ->default_value(DaemonDeleteWallets::DELETE_ALL)
+            ,"The name of the wallet. Default is 'all names'.");
 
         return od;
       }
@@ -77,10 +67,7 @@ Usage: ./teos [] daemon delete_wallets
       bool checkArguments(variables_map &vm) {
         if (vm.count("name")) {
           reqJson_.put("name", name);
-        }
-        if (vm.count("config-dir")) {
-          reqJson_.put("config-dir", configDir);
-        }        
+        }      
         return true;
       }
 
@@ -137,17 +124,9 @@ Usage: ./teos node kill
       static const string DO_NOT_LAUNCH;
 
       DaemonStart(
-        bool resync_blockchain = false,
-        string daemon_exe = "",
-        string genesis_json = "",
-        string http_server_address = "",
-        string CONFIG_DIR = "")
+        bool resync_blockchain = false)
       {
         reqJson_.put("resync-blockchain", resync_blockchain);
-        reqJson_.put("daemon_exe", daemon_exe);
-        reqJson_.put("genesis-json", genesis_json);
-        reqJson_.put("http_server_address_", http_server_address);
-        reqJson_.put("config-dir", CONFIG_DIR);
         action();
       }
 
@@ -209,6 +188,5 @@ Usage: ./teos node start [Options]
         }
       }
     };
-  
   }
 }
