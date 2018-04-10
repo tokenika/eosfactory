@@ -471,7 +471,6 @@ namespace teos {
               &status, contractDir, 
               wastFile.empty() ? ".wast" : wastFile); 
 
-        cout << wastPath << endl;
         if (status.isError_) {
           return status;
         } 
@@ -482,7 +481,7 @@ namespace teos {
         TeosCommand status;
         abiPath = teos::control::getContractFile(
           &status, contractDir, abiFile.empty() ? ".abi" : abiFile); 
-        cout << abiFile << endl;
+
         if (status.isError_) {
           return status;
         }

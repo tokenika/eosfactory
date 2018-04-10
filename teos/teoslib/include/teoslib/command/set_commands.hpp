@@ -37,8 +37,7 @@ namespace teos
           maxCpuUsage, maxNetUsage));
       }
 
-      SetContract(ptree reqJson) : TeosCommand(
-        "", reqJson)
+      SetContract(ptree reqJson) : TeosCommand("", reqJson)
       {
         copy(setContract(
           reqJson.get<string>("account"),
@@ -163,6 +162,10 @@ Usage: ./teos [http address] create key --jarg '{
 
       TeosControl executeCommand() {
         return SetContract(reqJson_);
+      }
+
+      void printout(TeosControl command, variables_map &vm) {
+        output("transaction id", "%s", GET_STRING(command, "transaction_id"));
       }
 
     };

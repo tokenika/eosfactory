@@ -99,12 +99,10 @@ class _Command:
     global setup    
    
     _args = json.loads("{}")
+    _out = ""
     error = False 
 
     def __init__(self, first, second, is_verbose=True):
-        print("//////////////////////////")
-        print(self._args)
-        print("//////////////////////////")
         cl = [setup.teos_exe, first, second,
             "--jarg", str(self._args).replace("'", '"'), "--both"]
         if _is_verbose and is_verbose:
@@ -116,15 +114,15 @@ class _Command:
             stderr=subprocess.PIPE,
             cwd=str(pathlib.Path(setup.teos_exe).parent)) 
 
-        stdout = process.stdout.decode("utf-8")
+        self._out = process.stdout.decode("utf-8")
         json_resp = process.stderr.decode("utf-8")
 
         if _is_verbose and is_verbose:
-            print(stdout)
+            print(self._out)
      
-        if re.match(r'^ERROR', stdout):
+        if re.match(r'^ERROR', self._out):
             self.error = True
-            self._this = stdout
+            self._this = self._out
             print(textwrap.fill(self._this, 80))
             return 
         try:
@@ -133,7 +131,7 @@ class _Command:
             self._this = json_resp
 
     def __str__(self):
-        return pprint.pformat(self._this)
+        return textwrap.fill(self._out, 80)
     
     def __repr__(self):
         return repr(self._this)
@@ -485,20 +483,19 @@ class Account(_Commands):
 
 class Daemon(_Commands):
     def start(self):
-        daemon = _Daemon(0, True)
-        self._this = daemon._this
+        _Daemon(0, True)
 
     def clear(self):
-        daemon = _Daemon(1, True)
-        self._this = daemon._this
+        _Daemon(1, True)
 
     def stop(self):
-        daemon = DaemonStop()
-        self._this = daemon._this
+        DaemonStop()
     
     def delete_wallets(self, name="*"):
-       daemon = DaemonDeleteWallets(name  )
-       self._this = daemon._this
+       DaemonDeleteWallets(name  )
 
+    def info(self):
+        GetInfo(True)
 
-
+    def __str__(self):
+        return str(GetInfo(False))
