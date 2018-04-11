@@ -424,6 +424,9 @@ class Wallet(WalletCreate):
     def open(self):
         WalletOpen(self.name, is_verbose=False)
 
+    def __str__(self):
+        return pprint.pformat(self._this)
+
 
 class Account(CreateAccount):
     def update(self):

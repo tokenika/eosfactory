@@ -93,22 +93,21 @@ key_second = teos.CreateKey("second")
 wallet1.import_key(key_first)
 wallet1.import_key(key_second)
 
-pprint.pprint(repr(wallet1))
-("{'name': '1', 'keys': [['first', "
- "'5KSnHTTdcdeE1bJWeRRguN9NG8fdv2ASphtHQWRb5kU9fXg3utL'], ['first', "
- "'5KSnHTTdcdeE1bJWeRRguN9NG8fdv2ASphtHQWRb5kU9fXg3utL'], ['second', "
- "'5KUg1E7bKucgBNJrfHywvH6YF2LtkaXdo6yKz6qA4nRAfy66Sov']], 'password': "
- "'PW5J9tbUbJTpdKBzCoyDmBb2BMin3wQ86kM7R3DN6i7kEhQfgG9zy'}")
->>>
+print(wallet1)
+{'keys': [['first', '5J5xP2sWs9ZfLB49aW4jxAitEahWGJDcWVbjazQg9Xp7dhA8KZr'],
+          ['second', '5HzbJ9MCyB4AGdti6AtpydwkkTFjHZ6SfyLv35ZENkQ7LMRegTP']],
+ 'name': '1',
+ 'password': 'PW5K7Vririm7iSpnf3TGUWPYixoJKEJr2cZMMxtcqNGcuVi3dYpGg'}
 """
 ```
 #### Account class
-Before any action on any account, a special 'SetContract' object has to be
-defined. See Contract section.
+A special 'SetContract' object has to be defined before any action on an 
+account. See [Contract class] section.
 
 ```
 """
-contract_eosio_bios = teos.SetContract("eosio", "eosio.bios", permission="eosio")
+account_eosio = teos.EosioAccount()
+contract_eosio_bios = teos.Contract(account_eosio, "eosio.bios")
 """
 ```
 
