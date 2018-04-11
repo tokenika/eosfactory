@@ -294,14 +294,14 @@ class CreateAccount(_Command):
 
 class SetContract(_Command):
     def __init__(
-            self, account_name, contractDir, 
+            self, owner_name, contractDir, 
             wast_file="", abi_file="", 
             permission="", expirationSec=30, 
             skipSignature=0, dontBroadcast=0, forceUnique=0,
             maxCpuUsage=0, maxNetUsage=0,
             is_verbose=True
             ):
-        self._args["account"] = account_name
+        self._args["account"] = owner_name
         self._args["contract-dir"] = contractDir
         self._args["wast-file"] = wast_file
         self._args["abi-file"] = abi_file
@@ -314,7 +314,7 @@ class SetContract(_Command):
         self._args["max-net-usage"] = maxNetUsage        
         _Command.__init__(self, "set", "contract", is_verbose)
         if not self.error:
-            self.name = account_name
+            self.owner_name = owner_name
 
 
 class PushAction(_Command):
@@ -446,14 +446,19 @@ class Account(CreateAccount):
             is_verbose=False 
             )
 
-    def accounts(self, contract=""):
-        if contract == "":
-            contract = self.name
-        GetTable(contract, self.name, "accounts") 
+    def accounts(self, account=""):
+        if account == "":
+            account = self.name
+        else:
+            try:
+                account = account.account_name
+            except:
+                account = account                        
+        GetTable(account, self.name, "accounts") 
 
 
 class EosioAccount(Account):
-    def __init__(self, is_verbose=True):
+    def __init__(self, is_verbose=True): 
         self._this = json.loads("{}")
         self._this["privateKey"] = \
             "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
@@ -463,36 +468,33 @@ class EosioAccount(Account):
         self.public_key = self._this["publicKey"]
         self.name = "eosio" 
 
-_
-class Contract(_Commands):
+
+class Contract(SetContract): 
     def __init__(
-            self, account, contractDir, 
+            self, owner, contractDir, 
             wast_file="", abi_file="", 
             permission="", expirationSec=30, 
             skipSignature=0, dontBroadcast=0, forceUnique=0,
             maxCpuUsage=0, maxNetUsage=0,
             is_verbose=True):
         try:
-            self.account_name = account.name
+            self.owner_name = owner.name
         except:
-            self.account_name = account
-        
-        self.contract = SetContract(
-            self.account_name, contractDir, 
-            wast_file="", abi_file="", 
-            permission="", expirationSec=30, 
-            skipSignature=0, dontBroadcast=0, forceUnique=0,
-            maxCpuUsage=0, maxNetUsage=0)
-        self._this = self.contract._this
-        self._out = self.contract._out
+            self.owner_name = owner
+        super(SetContract, self).__init__(
+            self, owner_name, contractDir, 
+            wast_file, abi_file, 
+            permission, expirationSec, 
+            skipSignature, dontBroadcast, forceUnique,
+            maxCpuUsage, maxNetUsage, is_verbose)
 
     def __str__(self):
         return self._out
         
     def action(self, action, data):
         PushAction(
-            self.account_name, action, data,
-            permission=self.account_name+"@active", 
+            self.owner_name, action, data,
+            permission=self.owner_name+"@active", 
             expirationSec=30, 
             skipSignature=0, dontBroadcast=0, forceUnique=0,
             maxCpuUsage=0, maxNetUsage=0
