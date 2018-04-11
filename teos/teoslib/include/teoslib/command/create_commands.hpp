@@ -46,15 +46,15 @@ namespace teos
       CreateAccount(ptree reqJson) : TeosCommand("", reqJson)
       {
         copy(createAccount(
-          reqJson.get<string>("creator"), reqJson.get<string>("name"),
-          reqJson.get<string>("ownerKey"), reqJson.get<string>("activeKey"),
-          reqJson.get<string>("permission"), 
-          reqJson.get<int>("expiration"),          
-          reqJson.get<bool>("skip-sign"),
-          reqJson.get<bool>("dont-broadcast"),
-          reqJson.get<bool>("force-unique"),
-          reqJson.get<unsigned>("max-cpu-usage"),
-          reqJson.get<unsigned>("max-net-usage")
+          reqJson_.get<string>("creator"), reqJson_.get<string>("name"),
+          reqJson_.get<string>("ownerKey"), reqJson_.get<string>("activeKey"),
+          reqJson_.get<string>("permission"), 
+          reqJson_.get<int>("expiration"),          
+          reqJson_.get<bool>("skip-sign"),
+          reqJson_.get<bool>("dont-broadcast"),
+          reqJson_.get<bool>("force-unique"),
+          reqJson_.get<unsigned>("max-cpu-usage"),
+          reqJson_.get<unsigned>("max-net-usage")
           ));
       }
     };
@@ -194,9 +194,8 @@ Usage: ./teos create key --jarg '{
         return CreateAccount(reqJson_);
       }
 
-      void getExample() {
-        cout << R"EOF(
-)EOF" << endl;
+      void printout(TeosControl command, variables_map &vm) {
+        output("transaction id", "%s", GET_STRING(command, "transaction_id"));
       }
     };
 

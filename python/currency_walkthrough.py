@@ -1,5 +1,3 @@
-import teos
-
 """
 ## Example "Currency" Contract Walkthrough
 
@@ -8,7 +6,9 @@ purposes. We will validate our single node setup using the sample contract
 'currency'.
 
 ### Start EOS node
+```
 """
+import teos
 teos.set_verbose(False)
 
 daemon = teos.Daemon()
@@ -27,77 +27,87 @@ print(daemon)
 #       head block time: 2018-04-10T16:57:27
 #  last irreversible block: 1046
 """
-                      Bay the way, with the object 'daemon', the following methodes work:
-                      """
-                      daemon.info() # An alias for print(daemon)
-                      #            head block: 1047
-                      #       head block time: 2018-04-10T16:57:27
-                      #  last irreversible block: 1046
+```
+Bay the way, with the object 'daemon', the following methodes work:
+```
+"""
+daemon.info() # An alias for print(daemon)
+#            head block: 1047
+#       head block time: 2018-04-10T16:57:27
+#  last irreversible block: 1046
 
-                      daemon.delete_wallets()
-                      #  deleted wallet count: 1
+daemon.delete_wallets()
+#  deleted wallet count: 1
 
-                      daemon.stop()
-                      #  Daemon is stopped.
+daemon.stop()
+#  Daemon is stopped.
 
-                      daemon.start()
-                      #       nodeos exe file: /mnt/e/Workspaces/EOS/eos/build/programs/nodeos/nodeos
-                      #    genesis state file: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/genesis.json
-                      #        server address: 127.0.0.1:8888
-                      #      config directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir
-                      #      wallet directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/wallet
-                      #     head block number: 1046
-                      #       head block time: 2018-04-10T16:57:27
-                      """
-
+daemon.start()
+#       nodeos exe file: /mnt/e/Workspaces/EOS/eos/build/programs/nodeos/nodeos
+#    genesis state file: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/genesis.json
+#        server address: 127.0.0.1:8888
+#      config directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir
+#      wallet directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/wallet
+#     head block number: 1046
+#       head block time: 2018-04-10T16:57:27
+"""
+```
 ### Create a wallet
 
 Every contract requires an associated account, so first you need to create 
 a wallet. To create a wallet, you need to have the wallet_api_plugin loaded 
 into the nodeos process:
+```
 """
 wallet = teos.Wallet()
 """
+```
 The wallet name argument is not set: the default wallet name is 'default'.
 
-                      With the object wallet, the following methodes apply:
-                      """
-                      key_one = teos.CreateKey("key one")
-                      key_two = teos.CreateKey("key two")
-                      wallet.import_key(key_one)
-                      wallet.import_key(key_two)
-                      print(wallet)
-                      {'keys': [['key one', '5Kcf8D12wCVQLK8PLL5Bi6nCLjVzjtfrpQpuvLgjWuPL4s13GfK'],
-                                ['key two', '5J1iEfuvs8biBu7r6gQMvTr21MboXmymZypZd1sxe8vf5MxwHeq']],
-                      'name': 'default',
-                      'password': 'PW5KJrnNjw5gDwM4npTo9qscqxTCokqqfXVuyWkAZEeqiWnYVwwum'}
+With the object wallet, the following methodes apply:
+```                      
+"""
+key_one = teos.CreateKey("key one")
+key_two = teos.CreateKey("key two")
+wallet.import_key(key_one)
+wallet.import_key(key_two)
+print(wallet)
+{'keys': [['key one', '5Kcf8D12wCVQLK8PLL5Bi6nCLjVzjtfrpQpuvLgjWuPL4s13GfK'],
+          ['key two', '5J1iEfuvs8biBu7r6gQMvTr21MboXmymZypZd1sxe8vf5MxwHeq']],
+'name': 'default',  
+'password': 'PW5KJrnNjw5gDwM4npTo9qscqxTCokqqfXVuyWkAZEeqiWnYVwwum'}
 
-                      wallet.list()
-                      #                wallet: default *
+wallet.list()
+#                wallet: default *
 
-                      wallet.lock()
-                      wallet.list()
-                      #                wallet: default
-                      wallet.unlock()
-                      wallet.list()
-                      #                wallet: default *
-                      """
-
+wallet.lock()
+wallet.list()
+#                wallet: default
+wallet.unlock()
+wallet.list()
+#                wallet: default *
+"""
+```
 ### Load the Bios Contract
 
 Set eosio.bios as the default system contract. This contract enables you to 
 have direct control over the resource allocation of other accounts and to 
 access other privileged API calls.
+```
 """
 eosio_bios_contract = teos.SetContract("eosio", "eosio.bios", permission="eosio")
 #        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d087737ada0cba5b82f26962c3
 """
+```
+As the set contract command call has produced the transaction id, the default 
+contract is operational.
 
 ### Create an account for the "currency" contract
 
 The account named "currency" will be used for the "currency" contract. 
 Generate two public/private key pairs that will be later assigned as the 
 owner_key and the active_key:
+```
 """
 owner_key = teos.CreateKey("owner_key")
 #              key name: owner_key
@@ -108,14 +118,15 @@ active_key = teos.CreateKey("active_key")
 #           private key: 5KRHeQ1S7pEtCw6TMeW6WKvupuR8cVGJjpNbAN5uviXTAtvhmDW
 #            public key: EOS6FfNuYYKoSa7pjhoqqeymi6iwe6j9ukVHiQxPbMeAcHmcoxRwj
 """
-
+```
 Import the two private keys into the wallet:
 """
 wallet.import_key(owner_key)
 wallet.import_key(active_key)
 """
 
-You can see the contents of the wallet:  
+You can see the contents of the wallet:
+```  
 """
 print(wallet)
 {'keys': [['owner_key', '5J4bSiNprJzPYVHqoZdSDGTTd454LiDc89AVvKT4Miv2SyzZTDF'],
@@ -124,19 +135,22 @@ print(wallet)
  'name': 'default',
  'password': 'PW5Kih88UxyFeVeYfWiuhbBRVhxmzr4nVvyTjsuNLgP6Ropxb9SJY'}
 """
-
+```
 Create the currency account using the cleos create account command. The 
 create will be authorized by the eosio account. The two public keys generated 
-above will be associated with the account, one as its OwnerKey and the other 
-as its ActiveKey.
+above will be associated with the account, one as its owner key and the other 
+as its active key.
+```
 """
-account = teos.Account("eosio", "currency", owner_key, active_key)
+currency_account = teos.Account("eosio", "currency", owner_key, active_key)
 #        transaction id: 0c4e0fb1163562909a83947b77aa3ee293b880cd61d4c6610fdcd3198e2d0eb7
 """
-
-You can verify that the account was successfully created:
+```
+As the account command call has produced the transaction id, the account is 
+walid. You can see its description:
+```
 """
-print(account)
+print(currency_account)
 {'account_name': 'currency',
  'permissions': [{'parent': 'owner',
                   'perm_name': 'active',
@@ -151,48 +165,48 @@ print(account)
                                               'weight': '1'}],
                                     'threshold': '1'}}]}
 """
-
+```
 ### Upload the sample "currency" contract to the blockchain
 
 Before uploading a contract, verify that there is no current contract:
+```
 """
-code = account.code()
-print(code)
+print(currency_account.code())
+#             code hash: 0000000000000000000000000000000000000000000000000000000000000000
 """
-
-Upload the sample currency contract using the currency account:
+```
+Upload the sample currency contract using the currency account.
+```
 """
-account.set_contract("currency")
+currency_contract = teos.Contract(currency_account, "currency")
+print(currency_contract)
+#        transaction id: 9c1b663cafcbe7ffbb18527fecfa7aa58237d00e02af125eed19b7021388238e
 """
+```
+Printout has a valid transaction id.
 
 You can also verify that the code has been set:
+```
 """
-account.code()
+print(currency_account.code())
+#             code hash: d6c891fbdfcff597d82e17c81354574399b01d533e53d412093f03e1950fb9d4
 """
-
+```
 Before using the currency contract, you must first create, then issue the 
 currency:
+```
 """
-teos.PushAction(
-  "currency", "create", 
+currency_contract.action(
+  "create", 
   '{"issuer":"currency","maximum_supply":"1000000.0000 CUR", \
-    "can_freeze":"0","can_recall":"0","can_whitelist":"0"}',
-  permission="currency@active")
+  "can_freeze":"0","can_recall":"0","can_whitelist":"0"}')
+#        transaction id: afe3ed99759c637b39244556bbf14d3d49260efd37c165fb8bd1ec3c6faf6fbf
 
-teos.PushAction(
-  "currency", "issue", 
-  '{"to":"currency","quantity":"1000.0000 CUR","memo":""}',
-  permission="currency@active")
+currency_contract.action(
+  "issue", 
+  '{"to":"currency","quantity":"1000.0000 CUR","memo":""}')
+#        transaction id: 5cfc673345bedd94977eb7924e8c40a366dd4e15261b61f2742de9eec4478b42
 """
-
-
-
-
-
-
-
-
-
 
 
 """
@@ -201,16 +215,24 @@ daemon.clear()
 print(daemon)
 wallet = teos.Wallet()
 eosio_bios_contract = teos.SetContract("eosio", "eosio.bios", permission="eosio")
-
 owner_key = teos.CreateKey("owner_key")
 active_key = teos.CreateKey("active_key")
 wallet.import_key(owner_key)
 wallet.import_key(active_key)
+currency_account = teos.Account("eosio", "currency", owner_key, active_key)
+print(currency_account)
+print(currency_account.code())
+currency_contract = teos.Contract(currency_account, "currency")
+print(currency_contract)
+print(currency_account.code())
+currency_contract.action(
+  "create", 
+  '{"issuer":"currency","maximum_supply":"1000000.0000 CUR", \
+  "can_freeze":"0","can_recall":"0","can_whitelist":"0"}')
+currency_contract.action(
+  "issue", 
+  '{"to":"currency","quantity":"1000.0000 CUR","memo":""}')
 
-account = teos.Account("eosio", "currency", owner_key, active_key)
-
-code = account.code()
-print(code)
 
 """
 

@@ -41,16 +41,16 @@ namespace teos
       PushAction(ptree reqJson) : TeosCommand("", reqJson)
       {
         copy(pushAction(
-          reqJson.get<string>("contract"), 
-          reqJson.get<string>("action"), 
-          reqJson.get<string>("data"),
-          reqJson.get<string>("permission"), 
-          reqJson.get<int>("expiration"),          
-          reqJson.get<bool>("skip-sign"),
-          reqJson.get<bool>("dont-broadcast"),
-          reqJson.get<bool>("force-unique"),
-          reqJson.get<unsigned>("max-cpu-usage"),
-          reqJson.get<unsigned>("max-net-usage")
+          reqJson_.get<string>("contract"), 
+          reqJson_.get<string>("action"), 
+          reqJson_.get<string>("data"),
+          reqJson_.get<string>("permission"), 
+          reqJson_.get<int>("expiration"),          
+          reqJson_.get<bool>("skip-sign"),
+          reqJson_.get<bool>("dont-broadcast"),
+          reqJson_.get<bool>("force-unique"),
+          reqJson_.get<unsigned>("max-cpu-usage"),
+          reqJson_.get<unsigned>("max-net-usage")
           ));
       }
     };
@@ -161,6 +161,10 @@ Usage: ./teos create key --jarg '{
       TeosControl executeCommand() {
         return PushAction(reqJson_);
       }
+
+      void printout(TeosControl command, variables_map &vm) {
+        output("transaction id", "%s", GET_STRING(command, "transaction_id"));
+      }      
 
     };
   }

@@ -71,8 +71,10 @@ With the object wallet, the following methods apply:
 """
 key_one = teos.CreateKey("key one")
 key_two = teos.CreateKey("key two")
+
 wallet.import_key(key_one)
 wallet.import_key(key_two)
+
 print(wallet)
 {'keys': [['key one', '5Kcf8D12wCVQLK8PLL5Bi6nCLjVzjtfrpQpuvLgjWuPL4s13GfK'],
           ['key two', '5J1iEfuvs8biBu7r6gQMvTr21MboXmymZypZd1sxe8vf5MxwHeq']],
@@ -85,6 +87,7 @@ wallet.list()
 wallet.lock()
 wallet.list()
 #                wallet: default
+
 wallet.unlock()
 wallet.list()
 #                wallet: default *
@@ -95,10 +98,12 @@ wallet.list()
 Set eosio.bios as the default system contract. This contract enables you to 
 have direct control over the resource allocation of other accounts and to 
 access other privileged API calls.
+```
 """
 eosio_bios_contract = teos.SetContract("eosio", "eosio.bios", permission="eosio")
 #        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d087737ada0cba5b82f26962c3
 """
+```
 
 ### Create an account for the "currency" contract
 

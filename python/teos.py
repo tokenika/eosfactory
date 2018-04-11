@@ -1,6 +1,7 @@
 ## @package teos
 
 # import importlib
+# import teos
 # importlib.reload(teos)
 
 import os
@@ -336,10 +337,10 @@ class PushAction(_Command):
             skipSignature=0, dontBroadcast=0, forceUnique=0,
             maxCpuUsage=0, maxNetUsage=0,
             is_verbose=True        
-        ):
+        ):   
         self._args["contract"] = contract_name
         self._args["action"] = action
-        self._args["data"] = data
+        self._args["data"] = data.replace('"', '\\"')
         self._args["permission"] = permission
         self._args["expiration"] = expirationSec
         self._args["skip-sign"] = skipSignature
@@ -473,11 +474,46 @@ class Account(_Commands):
             permission="", expirationSec=30, 
             skipSignature=0, dontBroadcast=0, forceUnique=0,
             maxCpuUsage=0, maxNetUsage=0):
-        set_contract = SetContract(
+        return SetContract(
             self.name, contractDir, wast_file, abi_file,
             permission, expirationSec, forceUnique,
             maxCpuUsage=0, maxNetUsage=0,
             is_verbose=False 
+            )
+
+
+class Contract(_Commands):
+    def __init__(
+            self, account, contractDir, 
+            wast_file="", abi_file="", 
+            permission="", expirationSec=30, 
+            skipSignature=0, dontBroadcast=0, forceUnique=0,
+            maxCpuUsage=0, maxNetUsage=0,
+            is_verbose=True):
+        try:
+            self.account_name = account.name
+        except:
+            self.account_name = account
+        
+        self.contract = SetContract(
+            self.account_name, contractDir, 
+            wast_file="", abi_file="", 
+            permission="", expirationSec=30, 
+            skipSignature=0, dontBroadcast=0, forceUnique=0,
+            maxCpuUsage=0, maxNetUsage=0)
+        self._this = self.contract._this
+        self._out = self.contract._out
+
+    def __str__(self):
+        return self._out
+        
+    def action(self, action, data):
+        PushAction(
+            self.account_name, action, data,
+            permission=self.account_name+"@active", 
+            expirationSec=30, 
+            skipSignature=0, dontBroadcast=0, forceUnique=0,
+            maxCpuUsage=0, maxNetUsage=0
             )
 
 

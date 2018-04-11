@@ -3,6 +3,7 @@
 #include <teoslib/utilities.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include "c-callstack.h"
 
 
 namespace teos 
@@ -50,6 +51,7 @@ namespace teos
   }
 
   ptree stringToPtree(string json) {
+    boost::replace_all(json, "\\\"", "\"");
     ptree ptree;
     try {
       stringstream ss;
@@ -57,7 +59,9 @@ namespace teos
       read_json(ss, ptree);
     }
     catch (...) {
-      cout << "argument json is missformatted." << endl;
+      cout << "argument json is missformatted:" << endl;
+      cout << json << endl;
+      //NL_RETURN(ptree);
     }
     return ptree;
   }

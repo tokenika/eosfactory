@@ -167,7 +167,6 @@ Usage: ./teos [http address] create key --jarg '{
       void printout(TeosControl command, variables_map &vm) {
         output("transaction id", "%s", GET_STRING(command, "transaction_id"));
       }
-
     };
   }
 }
