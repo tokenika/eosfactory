@@ -265,20 +265,7 @@ class CreateKey(_Command):
         if not self.error:  
             self.private_key = self._this["privateKey"]
             self.public_key = self._this["publicKey"]
-            self.name = keyPairName
-
-
-class EosioKey(_Command):
-    def __init__(self, is_verbose=True):
-        self._this = json.loads("{}")
-        self._this["privateKey"] = \
-            "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-        self._this["publicKey"] = \
-            "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-        self.private_key = self._this["privateKey"]
-        self.public_key = self._this["publicKey"]
-        self.account_name = "eosio"
-        self.name = "eosio_account"        
+            self.name = keyPairName       
 
 
 class CreateAccount(_Command):
@@ -411,56 +398,34 @@ class _Commands:
         return pprint.pformat(self._this) 
 
 
-class Wallet(_Commands):
-
+class Wallet(WalletCreate):
     def __init__(self, name="default"):
-        wallet = WalletCreate(name, is_verbose=False)
-        wallet._this["keys"] = []
-        self._this = wallet._this  
+        super(Wallet, self).__init__(name)
+        self._this["keys"] = []
 
     def list(self):
         WalletList()
 
     def lock(self):
-        WalletLock(self._this["name"], is_verbose=False)
+        WalletLock(self.name, is_verbose=False)
 
     def unlock(self):
-        WalletUnlock(self._this["name"], self._this["password"]
+        WalletUnlock(self.name, self._this["password"]
                     , is_verbose=False)
 
     def import_key(self, key_pair):
-        WalletImport(self._this["name"], key_pair.private_key
+        WalletImport(self.name, key_pair.private_key
                     , is_verbose=False)
         self._this["keys"].append([key_pair.name, key_pair.private_key])
         
     def delete(self):
-        DaemonDeleteWallets(self._this["name"], is_verbose=False)
+        DaemonDeleteWallets(self.name, is_verbose=False)
 
     def open(self):
-        WalletOpen(self._this["name"], is_verbose=False)
+        WalletOpen(self.name, is_verbose=False)
 
 
-class Account(_Commands):
-    def __init__(
-            self, creator, account_name, owner_key, active_key,
-            permission = "",
-            expirationSec=30, 
-            skipSignature=0, 
-            dontBroadcast=0,
-            forceUnique=0,
-            is_verbose=True
-            ):
-        self.name = account_name
-        create = CreateAccount(
-            creator, self.name, owner_key, active_key, permission, 
-            expirationSec, skipSignature, dontBroadcast, forceUnique,
-            is_verbose
-            )
-
-        if not create.error:
-            account = GetAccount(self.name, is_verbose=False)
-            self._this = account._this
-
+class Account(CreateAccount):
     def update(self):
         account = GetAccount(self.name, is_verbose=False)
         self._this = account._this
@@ -481,7 +446,24 @@ class Account(_Commands):
             is_verbose=False 
             )
 
+    def accounts(self, contract=""):
+        if contract == "":
+            contract = self.name
+        GetTable(contract, self.name, "accounts") 
 
+
+class EosioAccount(Account):
+    def __init__(self, is_verbose=True):
+        self._this = json.loads("{}")
+        self._this["privateKey"] = \
+            "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
+        self._this["publicKey"] = \
+            "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
+        self.private_key = self._this["privateKey"]
+        self.public_key = self._this["publicKey"]
+        self.name = "eosio" 
+
+_
 class Contract(_Commands):
     def __init__(
             self, account, contractDir, 
