@@ -100,7 +100,7 @@ above will be associated with the account, one as its owner key and the other
 as its active key.
 ```
 """
-account_currency = teos.Account("eosio", "currency", key_owner, key_active)
+account_currency = teos.Account(account_eosio, "currency", key_owner, key_active)
 #        transaction id: 0c4e0fb1163562909a83947b77aa3ee293b880cd61d4c6610fdcd3198e2d0eb7
 """
 ```
@@ -193,7 +193,7 @@ A successfully submitted transaction has generated a transaction ID.
 Check the state of both accounts involved in the previous transaction:
 ```
 """
-account_currency.accounts(contract_currency)
+account_currency.accounts(account_currency)
 #  {
 #      "rows": [
 #          {
@@ -206,7 +206,7 @@ account_currency.accounts(contract_currency)
 #  }
 #
 
-account_eosio.accounts(contract_currency)
+account_eosio.accounts(account_currency)
 #  {
 #      "rows": [
 #          {
@@ -246,11 +246,14 @@ contract_currency.action(
 contract_currency.action(
   "issue", 
   '{"to":"currency","quantity":"1000.0000 CUR","memo":""}')
+account_currency.accounts()
 contract_currency.action(
   "transfer",
   '{"from":"currency","to":"eosio","quantity":"20.0000 CUR", \
     "memo":"my first transfer"}'
 )
+account_currency.accounts(account_currency)
+account_eosio.accounts(account_currency)
 
 """
 ```

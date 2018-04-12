@@ -278,6 +278,11 @@ class CreateAccount(_Command):
             forceUnique=0,
             is_verbose=True
             ):
+        try:
+            creator = creator.name
+        except:
+            creator = creator
+        
         self._args["creator"] = creator
         self._args["name"] = account_name
         self._args["ownerKey"] = owner_key.public_key
@@ -362,6 +367,8 @@ class _Daemon(_Command):
         self._args["DO_NOT_WAIT"] = 1
         self._args["DO_NOT_LAUNCH"] = 1
         self.start(clear, is_verbose)
+        # if self.error:
+        #     self.start(0, is_verbose)
     
       
 
@@ -459,7 +466,7 @@ class Account(CreateAccount):
             account = self.name
         else:
             try:
-                account = account.account_name
+                account = account.name
             except:
                 account = account                        
         GetTable(account, self.name, "accounts") 
@@ -474,7 +481,8 @@ class EosioAccount(Account):
             "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
         self.private_key = self._this["privateKey"]
         self.public_key = self._this["publicKey"]
-        self.name = "eosio" 
+        self.name = "eosio"
+        self._out = "#       transaction id: eosio"   
 
 
 class Contract(SetContract): 
