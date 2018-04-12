@@ -343,11 +343,8 @@ class PushAction(_Command):
 """ Start test EOSIO Daemon.
 """
 class _Daemon(_Command):
-    def __init__(self, clear, is_verbose=True):
-        self._args["resync-blockchain"] = clear
-        self._args["DO_NOT_WAIT"] = 1
-        self._args["DO_NOT_LAUNCH"] = 1
-        _Command.__init__(self, "daemon", "start", False)
+    def start(self, clear, is_verbose):
+        super().__init__("daemon", "start", False)
         if not self.error and not "head_block_num" in self._this:
             if(self._this["is_windows_ubuntu"] == "true"):
                 subprocess.call(
@@ -358,7 +355,15 @@ class _Daemon(_Command):
                     ["gnome-terminal", "--", self._this["command_line"]]) 
 
             del self._args["DO_NOT_WAIT"]
-            _Command.__init__(self, "daemon", "start", is_verbose)  
+            super().__init__("daemon", "start", is_verbose)      
+            
+    def __init__(self, clear, is_verbose=True):
+        self._args["resync-blockchain"] = clear
+        self._args["DO_NOT_WAIT"] = 1
+        self._args["DO_NOT_LAUNCH"] = 1
+        self.start(clear, is_verbose)
+    
+      
 
 class DaemonStart(_Command):
     def __init__(self, is_verbose=True):
@@ -400,7 +405,7 @@ class _Commands:
 
 class Wallet(WalletCreate):
     def __init__(self, name="default"):
-        super(Wallet, self).__init__(name)
+        super().__init__(name)
         self._this["keys"] = []
 
     def list(self):
@@ -484,12 +489,13 @@ class Contract(SetContract):
             self.owner_name = owner.name
         except:
             self.owner_name = owner
-        super(SetContract, self).__init__(
-            self, owner_name, contractDir, 
-            wast_file, abi_file, 
+        super().__init__(
+            self.owner_name, contractDir, 
+            wast_file, abi_file,
             permission, expirationSec, 
             skipSignature, dontBroadcast, forceUnique,
-            maxCpuUsage, maxNetUsage, is_verbose)
+            maxCpuUsage, maxNetUsage,
+            is_verbose)
 
     def __str__(self):
         return self._out
