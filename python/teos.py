@@ -306,6 +306,11 @@ class SetContract(_Command):
             maxCpuUsage=0, maxNetUsage=0,
             is_verbose=True
             ):
+        try:
+            permission = permission.name
+        except:
+            permission = permission 
+
         self._args["account"] = owner_name
         self._args["contract-dir"] = contractDir
         self._args["wast-file"] = wast_file
@@ -367,8 +372,8 @@ class _Daemon(_Command):
         self._args["DO_NOT_WAIT"] = 1
         self._args["DO_NOT_LAUNCH"] = 1
         self.start(clear, is_verbose)
-        # if self.error:
-        #     self.start(0, is_verbose)
+        if self.error:
+            self.start(1, is_verbose)
     
       
 
@@ -497,6 +502,7 @@ class Contract(SetContract):
             self.owner_name = owner.name
         except:
             self.owner_name = owner
+   
         super().__init__(
             self.owner_name, contractDir, 
             wast_file, abi_file,

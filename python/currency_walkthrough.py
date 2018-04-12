@@ -42,24 +42,30 @@ The wallet name argument is not set: the default wallet name is 'default'.
 
 ### Load the Bios Contract
 
+You have to owe an account to be authorized to interact with EOSIO. For tests,
+you can use the 'eosio' account:
+```
+"""
+account_eosio = teos.EosioAccount()
+"""
+``` 
 Set eosio.bios as the default system contract. This contract enables you to 
 have direct control over the resource allocation of other accounts and to 
 access other privileged API calls.
 ```
 """
-contract_eosio_bios = teos.SetContract("eosio", "eosio.bios", permission="eosio")
+contract_eosio_bios = teos.SetContract(
+  account_eosio, "eosio.bios", permission=account_eosio)
 #        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d087737ada0cba5b82f26962c3
 """
 ```
+The second argument in the constructor indicates a directory that contains
+the contract files. The path to this directory is determined with 
+[setup rules](#setup). An absolute path is an option.
+
 As the set contract command call has produced the transaction id, the default 
 contract is operational.
 
-We will use an representation of the 'eosio' account:
-```
-"""
-account_eosio = teos.EosioAccount()
-"""
-```
 ### Create an account for the "currency" contract
 
 The account named "currency" will be used for the "currency" contract. 
@@ -94,16 +100,18 @@ print(wallet)
  'password': 'PW5Kih88UxyFeVeYfWiuhbBRVhxmzr4nVvyTjsuNLgP6Ropxb9SJY'}
 """
 ```
-Create the currency account using the cleos create account command. The 
-create will be authorized by the eosio account. The two public keys generated 
-above will be associated with the account, one as its owner key and the other 
-as its active key.
+Create the currency account. The creation will be authorized by the eosio 
+account. The two public keys generated above will be associated with the 
+account, one as its owner key and the other as its active key.
 ```
 """
 account_currency = teos.Account(account_eosio, "currency", key_owner, key_active)
 #        transaction id: 0c4e0fb1163562909a83947b77aa3ee293b880cd61d4c6610fdcd3198e2d0eb7
 """
 ```
+As the first argument is the authorizing account (or the name of this acconut),
+the second argument specifies the name of the creation.
+
 As the account command call has produced the transaction id, the account is 
 walid. You can see its description:
 ```
@@ -133,7 +141,7 @@ print(account_currency.code())
 #             code hash: 0000000000000000000000000000000000000000000000000000000000000000
 """
 ```
-Upload the sample currency contract using the currency account.
+Upload the currency contract using an authorization of the currency account:
 ```
 """
 contract_currency = teos.Contract(account_currency, "currency")
@@ -141,7 +149,7 @@ print(contract_currency)
 #        transaction id: 9c1b663cafcbe7ffbb18527fecfa7aa58237d00e02af125eed19b7021388238e
 """
 ```
-Printout has a valid transaction id.
+Printout is a valid transaction id.
 
 You can also verify that the code has been set:
 ```
@@ -150,8 +158,7 @@ print(account_currency.code())
 #             code hash: d6c891fbdfcff597d82e17c81354574399b01d533e53d412093f03e1950fb9d4
 """
 ```
-Before using the currency contract, you must first create, then issue the 
-currency:
+Before using the currency contract, you must first create it: 
 ```
 """
 contract_currency.action(
@@ -159,11 +166,16 @@ contract_currency.action(
   '{"issuer":"currency","maximum_supply":"1000000.0000 CUR", \
   "can_freeze":"0","can_recall":"0","can_whitelist":"0"}')
 #        transaction id: afe3ed99759c637b39244556bbf14d3d49260efd37c165fb8bd1ec3c6faf6fbf
+"""
+```
+Now, you can issue the currency:
 
+```
+"""
 contract_currency.action(
   "issue", 
   '{"to":"currency","quantity":"1000.0000 CUR","memo":""}')
-#        transaction id: 5cfc673345bedd94977eb7924e8c40a366dd4e15261b61f2742de9eec4478b42
+#        transaction id: fd37c165fb8bd1ec3c6faf6fbfafe3ed99759c637b39244556bbf14d3d49260e
 """
 ```
 Verify the currency contract has the proper initial balance:
@@ -227,13 +239,15 @@ daemon = teos.Daemon()
 daemon.clear()
 print(daemon)
 wallet = teos.Wallet()
-contract_eosio_bios = teos.SetContract("eosio", "eosio.bios", permission="eosio")
 account_eosio = teos.EosioAccount()
+contract_eosio_bios = teos.SetContract(
+    account_eosio, "eosio.bios", permission=account_eosio)
 key_owner = teos.CreateKey("key_owner")
 key_active = teos.CreateKey("key_active")
 wallet.import_key(key_owner)
 wallet.import_key(key_active)
-account_currency = teos.Account("eosio", "currency", key_owner, key_active)
+account_currency = teos.Account(
+    account_eosio, "currency", key_owner, key_active)
 print(account_currency)
 print(account_currency.code())
 contract_currency = teos.Contract(account_currency, "currency")
