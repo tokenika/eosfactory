@@ -1,4 +1,7 @@
-## @package teos
+""" @package teos
+This is a Python front-end for the Tokenika 'Teos'. Tokenika Teos is an 
+alternative for the EOSIO 'cleos'.
+"""
 
 # import importlib
 # import teos
@@ -27,6 +30,10 @@ def output__(msg):
     print("#  " + msg.replace("\n", "\n#  "))
 
 class Setup:
+    """ Interface to the json configuration file.
+
+    The configuration file is expected in the same folder as the current file.
+    """
     __setupFile = "teos.json"
     __review = False
 
@@ -80,11 +87,12 @@ class Setup:
     def print(self):
         pprint.pprint(self.__setupJson)
 
-    """ Deletes the setup file.
-    If there is no 'teos.json' file, new setup is proposed upon importing the
-    module, and a new copy of the setup file is created. 
-    """
     def delete(self):
+        """ Deletes the setup file.
+
+        If there is no 'teos.json' file, upon importing the module, a new 
+        setup is proposed and a new copy of the setup file is created. 
+        """
         os.remove(self.__setupFile)
 
 
@@ -96,6 +104,11 @@ setup = Setup()
 ##############################################################################
 
 class _Command:
+    """ A prototype for the command classes.
+
+    Each command class represents a call to a Tokenika 'teos' instance that
+    is launched to responce just this call. 
+    """
     global _is_verbose 
     global setup    
    
@@ -138,8 +151,6 @@ class _Command:
         return repr(self._this)
 
 
-"""Fetch a blockchain account
-"""
 class GetAccount(_Command):
     def __init__(self, accountName, is_verbose=True):
         self._args["account_name"] = accountName
@@ -152,8 +163,6 @@ class GetAccount(_Command):
         #     self.last_unstaking_time = self._this["last_unstaking_time"]
 
 
-""" Create a new wallet locally.
-"""
 class WalletCreate(_Command):
     def __init__(self, wallet_name="default", is_verbose=True):
         self._args["name"] = wallet_name
@@ -201,8 +210,7 @@ class WalletUnlock(_Command):
         self._args["password"] = pswd
         _Command.__init__(self, "wallet", "unlock", is_verbose)
 
-""" Get current blockchain information.
-"""
+
 class GetInfo(_Command):
     def __init__(self, is_verbose=True):
         _Command.__init__(self, "get", "info", is_verbose)
@@ -213,8 +221,6 @@ class GetInfo(_Command):
                 = self._this["last_irreversible_block_num"]
 
 
-""" Retrieve a full block from the blockchain.
-"""
 class GetBlock(_Command):
     def __init__(self, block_number, is_verbose=True):
         self._args["block_num_or_id"] = block_number
@@ -256,8 +262,6 @@ class GetTable(_Command):
         _Command.__init__(self, "get", "table", is_verbose)
 
 
-""" Create a pair of cryptographic keys.
-"""
 class CreateKey(_Command):
     def __init__(self, keyPairName, is_verbose=True):
         self._args["name"] = keyPairName
@@ -350,8 +354,6 @@ class PushAction(_Command):
             self.name = contract_name
 
 
-""" Start test EOSIO Daemon.
-"""
 class _Daemon(_Command):
     def start(self, clear, is_verbose):
         super().__init__("daemon", "start", False)
@@ -376,31 +378,23 @@ class _Daemon(_Command):
             self.start(1, is_verbose)
     
       
-""" DaemonStart
-"""
 class DaemonStart(_Command):
     def __init__(self, is_verbose=True):
         daemon = _Daemon(0, is_verbose)
         self._this = daemon._this              
 
 
-""" Start clean test EOSIO Daemon.
-"""
 class DaemonClear(_Command):
     def __init__(self, is_verbose=True):
         daemon = _Daemon(1, is_verbose)
         self._this = daemon._this
 
 
-""" Stop test EOSIO Daemon.
-"""
 class DaemonStop(_Command):
     def __init__(self, is_verbose=True):
         _Command.__init__(self, "daemon", "stop", is_verbose)
 
 
-""" Delete local wallets.
-"""
 class DaemonDeleteWallets(_Command):
     def __init__(self, name="*", is_verbose=True):
         self._args["name"] = name
@@ -526,19 +520,30 @@ class Contract(SetContract):
 
 
 class Daemon(_Commands):
-    def start(self):
-        _Daemon(0, True)
+    """ A front-end to the EOSIO test node.
+    """
 
     def clear(self):
+        """ Starts the EOSIO test node cleared.
+
+        Stops the node, if running, deletes all wallets, and starts test node
+        resetted. 
+        """
         _Daemon(1, True)
 
+    def start(self):
+        """ Starts the EOSIO test node, if not running.
+        """
+        _Daemon(0, True)
+
     def stop(self):
+        """ Stops the EOSIO test node.
+        """
         DaemonStop()
-    
-    def delete_wallets(self, name="*"):
-       DaemonDeleteWallets(name  )
 
     def info(self):
+        """ Prints the node info.
+        """
         GetInfo(True)
 
     def __str__(self):

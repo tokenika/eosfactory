@@ -1,0 +1,219 @@
+E\+OS comes with example contracts that can be uploaded and run for testing purposes. We will validate our single node setup using the sample contract \textquotesingle{}currency\textquotesingle{}.
+
+\#\#\# Start E\+OS node 
+\begin{DoxyCode}
+import teos
+teos.set\_verbose(False)
+
+daemon = teos.Daemon()
+daemon.clear()
+#       nodeos exe file: /mnt/e/Workspaces/EOS/eos/build/programs/nodeos/nodeos
+#    genesis state file: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/genesis.json
+#        server address: 127.0.0.1:8888
+#      config directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir
+#      wallet directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/wallet
+#     head block number: 2
+#       head block time: 2018-04-10T17:20:54
+
+# See a prove that the daemon is started:
+print(daemon)
+#            head block: 1047
+#       head block time: 2018-04-10T16:57:27
+#  last irreversible block: 1046
+\end{DoxyCode}
+ \subsubsection*{Create a wallet}
+
+Every contract requires an associated account, so first you need to create a wallet. To create a wallet, you need to have the wallet\+\_\+api\+\_\+plugin loaded into the nodeos process\+: 
+\begin{DoxyCode}
+wallet = teos.Wallet()
+\end{DoxyCode}
+ The wallet name argument is not set\+: the default wallet name is \textquotesingle{}default\textquotesingle{}.
+
+\subsubsection*{Load the Bios Contract}
+
+You have to owe an account to be authorized to interact with E\+O\+S\+IO. For tests, you can use the \textquotesingle{}eosio\textquotesingle{} account\+: 
+\begin{DoxyCode}
+account\_eosio = teos.EosioAccount()
+\end{DoxyCode}
+ Set a smart contract defined in folder eos-\/source-\/dir/build/contracts/eosio.\+bios/ as the default system contract. This contract enables you to have direct control over the resource allocation of other accounts and to access other privileged A\+PI calls. 
+\begin{DoxyCode}
+contract\_eosio\_bios = teos.SetContract(
+  account\_eosio, "eosio.bios", permission=account\_eosio)
+#        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d087737ada0cba5b82f26962c3
+\end{DoxyCode}
+ The second argument in the constructor indicates a directory that contains the contract files. The path to this directory is determined with \href{#setup}{\tt setup rules}. An absolute path is an option.
+
+As the set contract command call has produced the transaction id, the default contract is operational.
+
+\subsubsection*{Create an account for the \char`\"{}currency\char`\"{} contract}
+
+The account named \char`\"{}currency\char`\"{} will be used for the \char`\"{}currency\char`\"{} contract. Generate two public/private key pairs that will be later assigned as the key\+\_\+owner and the key\+\_\+active\+: 
+\begin{DoxyCode}
+key\_owner = teos.CreateKey("key\_owner")
+#              key name: key\_owner
+#           private key: 5J4bSiNprJzPYVHqoZdSDGTTd454LiDc89AVvKT4Miv2SyzZTDF
+#            public key: EOS7vDtGf9cVxEChKN7YeDgqMGrgFgvcCdN5qAUEhMMufAnPHddTb
+key\_active = teos.CreateKey("key\_active")
+#              key name: key\_active
+#           private key: 5KRHeQ1S7pEtCw6TMeW6WKvupuR8cVGJjpNbAN5uviXTAtvhmDW
+#            public key: EOS6FfNuYYKoSa7pjhoqqeymi6iwe6j9ukVHiQxPbMeAcHmcoxRwj
+\end{DoxyCode}
+ Import the two private keys into the wallet\+:
+
+wallet.\+import\+\_\+key(key\+\_\+owner) wallet.\+import\+\_\+key(key\+\_\+active)
+
+You can see the contents of the wallet\+: 
+\begin{DoxyCode}
+print(wallet)
+\{'keys': [['key\_owner', '5J4bSiNprJzPYVHqoZdSDGTTd454LiDc89AVvKT4Miv2SyzZTDF'],
+          ['key\_active',
+           '5KRHeQ1S7pEtCw6TMeW6WKvupuR8cVGJjpNbAN5uviXTAtvhmDW']],
+ 'name': 'default',
+ 'password': 'PW5Kih88UxyFeVeYfWiuhbBRVhxmzr4nVvyTjsuNLgP6Ropxb9SJY'\}
+\end{DoxyCode}
+ Create the currency account. The creation will be authorized by the eosio account. The two public keys generated above will be associated with the account, one as its owner key and the other as its active key. 
+\begin{DoxyCode}
+account\_currency = teos.Account(account\_eosio, "currency", key\_owner, key\_active)
+#        transaction id: 0c4e0fb1163562909a83947b77aa3ee293b880cd61d4c6610fdcd3198e2d0eb7
+\end{DoxyCode}
+ As the first argument is the authorizing account (or the name of this acconut), the second argument specifies the name of the creation.
+
+As the account command call has produced the transaction id, the account is walid. You can see its description\+: 
+\begin{DoxyCode}
+print(account\_currency)
+\{'account\_name': 'currency',
+ 'permissions': [\{'parent': 'owner',
+                  'perm\_name': 'active',
+                  'required\_auth': \{'accounts': '',
+                                    'keys': [\{'key':
+       'EOS88rqdDApfzRMcSCTuy3HmS2gBZSW8ZokjC8cQ4aeFL7zEQqmdx',
+                                              'weight': '1'\}],
+                                    'threshold': '1'\}\},
+                 \{'parent': '',
+                  'perm\_name': 'owner',
+                  'required\_auth': \{'accounts': '',
+                                    'keys': [\{'key':
+       'EOS5WULc9uFcaME5xJbHdrrbi5xr3AhCNCogaeMGoxRkPp8PATmtc',
+                                              'weight': '1'\}],
+                                    'threshold': '1'\}\}]\}
+\end{DoxyCode}
+ \subsubsection*{Upload the sample \char`\"{}currency\char`\"{} contract to the blockchain}
+
+Before uploading a contract, verify that there is no current contract\+: 
+\begin{DoxyCode}
+print(account\_currency.code())
+#             code hash: 0000000000000000000000000000000000000000000000000000000000000000
+\end{DoxyCode}
+ Upload the currency contract using an authorization of the currency account\+: 
+\begin{DoxyCode}
+contract\_currency = teos.Contract(account\_currency, "currency")
+print(contract\_currency)
+#        transaction id: 9c1b663cafcbe7ffbb18527fecfa7aa58237d00e02af125eed19b7021388238e
+\end{DoxyCode}
+ Printout is a valid transaction id.
+
+You can also verify that the code has been set\+: 
+\begin{DoxyCode}
+print(account\_currency.code())
+#             code hash: d6c891fbdfcff597d82e17c81354574399b01d533e53d412093f03e1950fb9d4
+\end{DoxyCode}
+ Before using the currency contract, you must first create it\+: 
+\begin{DoxyCode}
+contract\_currency.action(
+  "create", 
+  '\{"issuer":"currency","maximum\_supply":"1000000.0000 CUR", \(\backslash\)
+  "can\_freeze":"0","can\_recall":"0","can\_whitelist":"0"\}')
+#        transaction id: afe3ed99759c637b39244556bbf14d3d49260efd37c165fb8bd1ec3c6faf6fbf
+\end{DoxyCode}
+ Now, you can issue the currency\+: 
+\begin{DoxyCode}
+contract\_currency.action(
+  "issue", 
+  '\{"to":"currency","quantity":"1000.0000 CUR","memo":""\}')
+#        transaction id: fd37c165fb8bd1ec3c6faf6fbfafe3ed99759c637b39244556bbf14d3d49260e
+\end{DoxyCode}
+ Verify the currency contract has the proper initial balance\+: 
+\begin{DoxyCode}
+account\_currency.accounts()
+\end{DoxyCode}
+ \subsubsection*{Transfer funds using the \char`\"{}currency\char`\"{} contract}
+
+The following command shows a \char`\"{}transfer\char`\"{} action being sent to the currency contract, transferring \char`\"{}20.\+0000 C\+U\+R\char`\"{} from the currency account to the \char`\"{}eosio\char`\"{} account. 
+\begin{DoxyCode}
+contract\_currency.action(
+  "transfer",
+  '\{"from":"currency","to":"eosio","quantity":"20.0000 CUR", \(\backslash\)
+    "memo":"my first transfer"\}'
+)
+\end{DoxyCode}
+ A successfully submitted transaction has generated a transaction ID.
+
+\subsubsection*{Check the \char`\"{}currency\char`\"{} contract balances}
+
+Check the state of both accounts involved in the previous transaction\+: 
+\begin{DoxyCode}
+account\_currency.accounts(account\_currency)
+#  \{
+#      "rows": [
+#          \{
+#              "balance": "980.0000 CUR",
+#              "frozen": "0",
+#              "whitelist": "1"
+#          \}
+#      ],
+#      "more": "false"
+#  \}
+#
+
+account\_eosio.accounts(account\_currency)
+#  \{
+#      "rows": [
+#          \{
+#              "balance": "20.0000 CUR",
+#              "frozen": "0",
+#              "whitelist": "1"
+#          \}
+#      ],
+#      "more": "false"
+#  \}
+#
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}
+daemon = teos.Daemon()
+daemon.clear()
+print(daemon)
+wallet = teos.Wallet()
+account\_eosio = teos.EosioAccount()
+contract\_eosio\_bios = teos.SetContract(
+    account\_eosio, "eosio.bios", permission=account\_eosio)
+key\_owner = teos.CreateKey("key\_owner")
+key\_active = teos.CreateKey("key\_active")
+wallet.import\_key(key\_owner)
+wallet.import\_key(key\_active)
+account\_currency = teos.Account(
+    account\_eosio, "currency", key\_owner, key\_active)
+print(account\_currency)
+print(account\_currency.code())
+contract\_currency = teos.Contract(account\_currency, "currency")
+print(contract\_currency)
+print(account\_currency.code())
+contract\_currency.action(
+  "create", 
+  '\{"issuer":"currency","maximum\_supply":"1000000.0000 CUR", \(\backslash\)
+  "can\_freeze":"0","can\_recall":"0","can\_whitelist":"0"\}')
+contract\_currency.action(
+  "issue", 
+  '\{"to":"currency","quantity":"1000.0000 CUR","memo":""\}')
+account\_currency.accounts()
+contract\_currency.action(
+  "transfer",
+  '\{"from":"currency","to":"eosio","quantity":"20.0000 CUR", \(\backslash\)
+    "memo":"my first transfer"\}'
+)
+account\_currency.accounts(account\_currency)
+account\_eosio.accounts(account\_currency)
+\end{DoxyCode}
+ 
