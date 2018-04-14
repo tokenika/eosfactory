@@ -13,3 +13,4 @@ eosc/eosc_visual_studio/eoscLib.pdb
 eos_libraries/visual_studio/test.exp
 __pycache__
 python/Doxy
+teos_python/doscs/Makefile

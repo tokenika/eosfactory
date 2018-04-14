@@ -84,8 +84,8 @@ class Setup:
                     return value
                 value = newValue
 
-    def print(self):
-        pprint.pprint(self.__setupJson)
+    def __str__(self):
+        return pprint.pformat(self.__setupJson)
 
     def delete(self):
         """ Deletes the setup file.
@@ -152,11 +152,16 @@ class _Command:
 
 
 class GetAccount(_Command):
-    def __init__(self, accountName, is_verbose=True):
-        self._args["account_name"] = accountName
+    def __init__(self, account, is_verbose=True):
+        try:
+            account = account.name
+        except:
+            account = account
+        
+        self._args["account_name"] = account
         _Command.__init__(self, "get", "account", is_verbose)
-        # if not self.error:
-        #     self.account_name = self._this["account_name"]
+        if not self.error:
+            self.name = self._this["account_name"]
         #     self.staked_balance = self._this["staked_balance"]
         #     self.eos_balance = self._this["eos_balance"]
         #     self.unsteostaking_balance = self._this["unstaking_balance"]
@@ -244,6 +249,8 @@ class GetCode(_Command):
             self.wast = self._this["wast"] 
             if "abi" in self._this:          
                 self.abi = self._this["abi"]
+            else:
+                self.abi = ""
 
 
 class GetTable(_Command):
@@ -273,12 +280,38 @@ class CreateKey(_Command):
 
 
 class CreateAccount(_Command):
+    """
+    Creates a new account on the blockchain.
+
+        :param creator: an account object or the name of an account that 
+            creates the account.
+        :param name: the name of the new account.
+        :param owner_key: the owner key object for the new account.
+        :param active_key: the active key object for the new account.
+        :param permission: an account object or the name of an account that 
+            authorizes the creation.
+        :param expiration_sec: the time in seconds before a transaction 
+            expires, defaults to 30s.
+        :param skip_signature:  if unlocked wallet keys should be used to 
+            sign transaction, defaults to 0.
+        :param dont_broadcast: whether to broadcast transaction to the network 
+            (or print to stdout), defaults to 0.
+        :param forceUnique: whether to force the transaction to be unique, what 
+            will consume extra bandwidth and remove any protections against 
+            accidently issuing the same transaction multiple times, defaults to 0.
+        :param max_cpu_usage: an upper limit on the cpu usage budget, in 
+            instructions-retired, for the execution of the transaction 
+            (defaults to 0 which means no limit).
+        :param max_net_usage: an upper limit on the net usage budget, in bytes, for the transaction 
+            (defaults to 0 which means no limit).
+    """
+
     def __init__(
-            self, creator, account_name, owner_key, active_key,
+            self, creator, name, owner_key, active_key,
             permission = "",
-            expirationSec=30, 
-            skipSignature=0, 
-            dontBroadcast=0,
+            expiration_sec=30, 
+            skip_signature=0, 
+            dont_broadcast=0,
             forceUnique=0,
             is_verbose=True
             ):
@@ -286,69 +319,112 @@ class CreateAccount(_Command):
             creator = creator.name
         except:
             creator = creator
+
+        try:
+            permission = permission.name
+        except:
+            permission = permission
         
         self._args["creator"] = creator
-        self._args["name"] = account_name
+        self._args["name"] = name
         self._args["ownerKey"] = owner_key.public_key
         self._args["activeKey"] = active_key.public_key
         self._args["permission"] = permission
-        self._args["expiration"] = expirationSec        
-        self._args["skip-sign"] = skipSignature        
-        self._args["dont-broadcast"] = dontBroadcast
+        self._args["expiration"] = expiration_sec        
+        self._args["skip-sign"] = skip_signature        
+        self._args["dont-broadcast"] = dont_broadcast
         self._args["force-unique"] = forceUnique
+        self._args["max-cpu-usage"] = max_cpu_usage
+        self._args["max-net-usage"] = max_net_usage          
         _Command.__init__(self, "create", "account", is_verbose)
         if not self.error:
-            self.name = account_name
+            self.name = name
 
 
 class SetContract(_Command):
+    """ A representation of an EOSIO smart contract.
+    
+    Creates the contract on an account, and provides methodes that modify
+    this contract.
+        Args:
+            :param owner: an account object or the name of an account that 
+                takes this contract.
+            :param contract_dir: a directory containing the WAST and ABI files 
+                of the contract.
+            :param wast_file: the file containing the contract WAST, relative 
+                to contract-dir, defaults to "".
+            :param abi_file: the file containing the contract ABI, relative 
+                to contract-dir, defaults to "".
+            :param permission: an account object or the name of an account that 
+                authorizes the creation.
+            :param expiration_sec: the time in seconds before a transaction 
+                expires, defaults to 30s.
+            :param skip_signature:  if unlocked wallet keys should be used to 
+                sign transaction, defaults to 0.
+            :param dont_broadcast: whether to broadcast transaction to the network 
+                (or print to stdout), defaults to 0.
+            :param forceUnique: whether to force the transaction to be unique, what 
+                will consume extra bandwidth and remove any protections against 
+                accidently issuing the same transaction multiple times, defaults to 0.
+            :param max_cpu_usage: an upper limit on the cpu usage budget, in 
+                instructions-retired, for the execution of the transaction 
+                (defaults to 0 which means no limit).
+            :param max_net_usage: an upper limit on the net usage budget, in bytes, for the transaction 
+                (defaults to 0 which means no limit).
+    """    
     def __init__(
-            self, owner_name, contractDir, 
+            self, owner, contract_dir, 
             wast_file="", abi_file="", 
-            permission="", expirationSec=30, 
-            skipSignature=0, dontBroadcast=0, forceUnique=0,
-            maxCpuUsage=0, maxNetUsage=0,
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
             is_verbose=True
             ):
+
+        try:
+            owner = owner.name
+        except:
+            owner = owner
+               
         try:
             permission = permission.name
         except:
             permission = permission 
 
-        self._args["account"] = owner_name
-        self._args["contract-dir"] = contractDir
+        self._args["account"] = owner
+        self._args["contract-dir"] = contract_dir
         self._args["wast-file"] = wast_file
         self._args["abi-file"] = abi_file
         self._args["permission"] = permission
-        self._args["expiration"] = expirationSec
-        self._args["skip-sign"] = skipSignature
-        self._args["dont-broadcast"] = dontBroadcast
+        self._args["expiration"] = expiration_sec
+        self._args["skip-sign"] = skip_signature
+        self._args["dont-broadcast"] = dont_broadcast
         self._args["force-unique"] = forceUnique
-        self._args["max-cpu-usage"] = maxCpuUsage
-        self._args["max-net-usage"] = maxNetUsage        
+        self._args["max-cpu-usage"] = max_cpu_usage
+        self._args["max-net-usage"] = max_net_usage        
         _Command.__init__(self, "set", "contract", is_verbose)
         if not self.error:
-            self.owner_name = owner_name
+            self.owner = owner
 
 
 class PushAction(_Command):
     def __init__(
             self, contract_name, action, data,
-            permission="", expirationSec=30, 
-            skipSignature=0, dontBroadcast=0, forceUnique=0,
-            maxCpuUsage=0, maxNetUsage=0,
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
             is_verbose=True        
         ):   
         self._args["contract"] = contract_name
         self._args["action"] = action
         self._args["data"] = data.replace('"', '\\"')
         self._args["permission"] = permission
-        self._args["expiration"] = expirationSec
-        self._args["skip-sign"] = skipSignature
-        self._args["dont-broadcast"] = dontBroadcast
+        self._args["expiration"] = expiration_sec
+        self._args["skip-sign"] = skip_signature
+        self._args["dont-broadcast"] = dont_broadcast
         self._args["force-unique"] = forceUnique
-        self._args["max-cpu-usage"] = maxCpuUsage
-        self._args["max-net-usage"] = maxNetUsage              
+        self._args["max-cpu-usage"] = max_cpu_usage
+        self._args["max-net-usage"] = max_net_usage              
         _Command.__init__(self, "push", "action", is_verbose)
         if not self.error:
             self.name = contract_name
@@ -374,8 +450,8 @@ class _Daemon(_Command):
         self._args["DO_NOT_WAIT"] = 1
         self._args["DO_NOT_LAUNCH"] = 1
         self.start(clear, is_verbose)
-        if self.error:
-            self.start(1, is_verbose)
+        # if self.error:
+        #     self.start(1, is_verbose)
     
       
 class DaemonStart(_Command):
@@ -441,27 +517,59 @@ class Wallet(WalletCreate):
 
 
 class Account(CreateAccount):
-    def update(self):
-        account = GetAccount(self.name, is_verbose=False)
-        self._this = account._this
-
+    """ A representation of an EOSIO account.
+    
+    Creates a new account on the blockchain, and provides methodes that modify
+    this account.
+        Args:
+            :param creator: an account object or the name of an account that 
+                creates the account.
+            :param name: the name of the new account.
+            :param owner_key: the owner key object for the new account.
+            :param active_key: the active key object for the new account.
+            :param permission: an account object or the name of an account that 
+                authorizes the creation.
+            :param expiration_sec: the time in seconds before a transaction 
+                expires, defaults to 30s.
+            :param skip_signature:  if unlocked wallet keys should be used to 
+                sign transaction, defaults to 0.
+            :param dont_broadcast: whether to broadcast transaction to the network 
+                (or print to stdout), defaults to 0.
+            :param forceUnique: whether to force the transaction to be unique, what 
+                will consume extra bandwidth and remove any protections against 
+                accidently issuing the same transaction multiple times, defaults to 0.
+            :param max_cpu_usage: an upper limit on the cpu usage budget, in 
+                instructions-retired, for the execution of the transaction 
+                (defaults to 0 which means no limit).
+            :param max_net_usage: an upper limit on the net usage budget, in bytes, for the transaction 
+                (defaults to 0 which means no limit).
+    """
+    
     def code(self, wast_file="", abi_file=""):
+        """ Retrieve the WAST and ABI files for the account.
+        """
         code = GetCode(self.name, wast_file, abi_file, is_verbose=False)
         return code
 
     def set_contract(
-            self, contractDir, wast_file="", abi_file="", 
-            permission="", expirationSec=30, 
-            skipSignature=0, dontBroadcast=0, forceUnique=0,
-            maxCpuUsage=0, maxNetUsage=0):
+            self, contract_dir, wast_file="", abi_file="", 
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0):
+        """ Creates or update the contract on the account
+
+        """
         return SetContract(
-            self.name, contractDir, wast_file, abi_file,
-            permission, expirationSec, forceUnique,
-            maxCpuUsage=0, maxNetUsage=0,
+            self.name, contract_dir, wast_file, abi_file,
+            permission, expiration_sec, forceUnique,
+            max_cpu_usage=0, max_net_usage=0,
             is_verbose=False 
             )
 
     def accounts(self, account=""):
+        """ Prints accounts.
+
+        """
         if account == "":
             account = self.name
         else:
@@ -469,10 +577,27 @@ class Account(CreateAccount):
                 account = account.name
             except:
                 account = account                        
-        GetTable(account, self.name, "accounts") 
+        GetTable(account, self.name, "accounts")
+
+    def __str__(self):
+        return str(GetAccount(self.name, is_verbose=False)) 
+    
+    def __repr__(self):
+        return repr(GetAccount(self.name, is_verbose=False))
 
 
 class EosioAccount(Account):
+    """ A representation of the 'eosio' testing account.
+
+    EOSIO offers an account, called 'eosio', that can be used for tests. 
+    Without any such, it is not possible to execute commands that need 
+    authorizations.
+
+    account_eosio = teos.EosioAccount()
+    contract_eosio_bios = teos.SetContract(
+        account_eosio, "eosio.bios", permission=account_eosio)
+    #        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d0877...
+    """
     def __init__(self, is_verbose=True): 
         self._this = json.loads("{}")
         self._this["privateKey"] = \
@@ -485,37 +610,74 @@ class EosioAccount(Account):
         self._out = "#       transaction id: eosio"   
 
 
-class Contract(SetContract): 
+class Contract(SetContract):
+    """ A representation of an EOSIO smart contract.
+    
+    Creates the contract on an account, and provides methodes that modify
+    this contract.
+        Args:
+            :param owner: an account object or the name of an account that 
+                takes this contract.
+            :param contract_dir: a directory containing the WAST and ABI files 
+                of the contract.
+            :param wast_file: the file containing the contract WAST, relative 
+                to contract-dir, defaults to "".
+            :param abi_file: the file containing the contract ABI, relative 
+                to contract-dir, defaults to "".
+            :param permission: an account object or the name of an account that 
+                authorizes the creation.
+            :param expiration_sec: the time in seconds before a transaction 
+                expires, defaults to 30s.
+            :param skip_signature:  if unlocked wallet keys should be used to 
+                sign transaction, defaults to 0.
+            :param dont_broadcast: whether to broadcast transaction to the network 
+                (or print to stdout), defaults to 0.
+            :param forceUnique: whether to force the transaction to be unique, what 
+                will consume extra bandwidth and remove any protections against 
+                accidently issuing the same transaction multiple times, defaults to 0.
+            :param max_cpu_usage: an upper limit on the cpu usage budget, in 
+                instructions-retired, for the execution of the transaction 
+                (defaults to 0 which means no limit).
+            :param max_net_usage: an upper limit on the net usage budget, in bytes, for the transaction 
+                (defaults to 0 which means no limit).
+    """
     def __init__(
-            self, owner, contractDir, 
+            self, owner, contract_dir, 
             wast_file="", abi_file="", 
-            permission="", expirationSec=30, 
-            skipSignature=0, dontBroadcast=0, forceUnique=0,
-            maxCpuUsage=0, maxNetUsage=0,
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
             is_verbose=True):
         try:
-            self.owner_name = owner.name
+            self.owner = owner.name
         except:
-            self.owner_name = owner
+            self.owner = owner
    
         super().__init__(
-            self.owner_name, contractDir, 
+            self.owner, contract_dir, 
             wast_file, abi_file,
-            permission, expirationSec, 
-            skipSignature, dontBroadcast, forceUnique,
-            maxCpuUsage, maxNetUsage,
+            permission, expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
             is_verbose)
 
     def __str__(self):
         return self._out
         
     def action(self, action, data):
+        """ Implements the 'cloes push action' command. 
+
+        contract_currency.action(
+            "transfer",
+            '{"from":"currency","to":"eosio","quantity":"20.0000 CUR", \
+                "memo":"my first transfer"}')
+        """
         PushAction(
             self.owner_name, action, data,
             permission=self.owner_name+"@active", 
-            expirationSec=30, 
-            skipSignature=0, dontBroadcast=0, forceUnique=0,
-            maxCpuUsage=0, maxNetUsage=0
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0
             )
 
 
