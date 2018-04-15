@@ -35,23 +35,7 @@ class Setup:
     The configuration file is expected in the same folder as the current file.
     """
     __setupFile = "teos.json"
-    __review = False
-
-    def review(self):
-        self.__review = True
-        self.__setup()
-        with open(self.__setupFile, 'w') as outfile:
-            json.dump(self.__setupJson, outfile)
-        self.__review = False        
-    
-    def  __setup(self):
-        self.EOSIO_SOURCE_DIR = self.setParam(
-            "EOSIO_SOURCE_DIR", os.environ['EOSIO_SOURCE_DIR'])
-        self.teos_exe = self.setParam(
-            "TEOS executable", os.environ['LOGOS_DIR'] \
-                                + "/teos/build/teos")
-        self.http_server_address = self.setParam(
-            "EOS node http address", os.environ['EOSIO_DAEMON_ADDRESS'])       
+    __review = False              
 
     def __init__(self):
 
@@ -60,41 +44,20 @@ class Setup:
             with open(self.__setupFile) as json_data:
                 print("Reading setup from file:\n   {}" \
                         .format(self.__setupFile))
-                self.__setupJson = json.load(json_data)
-        
-        self.__setup()
-        with open(self.__setupFile, 'w') as outfile:
-            json.dump(self.__setupJson, outfile)
+                setup_json = json.load(json_data)
+                print(setup_json)               
 
-    __setupJson = json.loads("{}")
-
-    def setParam(self, label, value):
-        if label in self.__setupJson:
-            value = self.__setupJson[label]
-        
-        if label in self.__setupJson and not self.__review:
-            return value
+            try:
+                self.teos_exe = setup_json["TEOS executable"]
+            except:
+                self.teos_exe = os.environ['LOGOS_DIR'] + "/teos/build/teos"
         else:
-            while True:
-                print("{} is \n   {}".format(label, value))
-                newValue \
-                    = input("Enter an empty line to confirm, or a value:\n")
-                if not newValue:
-                    self.__setupJson[label] = value
-                    return value
-                value = newValue
+            self.teos_exe = os.environ['LOGOS_DIR'] + "/teos/build/teos" 
 
-    def __str__(self):
-        return pprint.pformat(self.__setupJson)
-
-    def delete(self):
-        """ Deletes the setup file.
-
-        If there is no 'teos.json' file, upon importing the module, a new 
-        setup is proposed and a new copy of the setup file is created. 
-        """
-        os.remove(self.__setupFile)
-
+        if self.teos_exe:
+            print("teos exe: " + self.teos_exe)
+        else:
+            print("Do not know teos exe!")        
 
 setup = Setup()
 
@@ -136,19 +99,19 @@ class _Command:
      
         if re.match(r'^ERROR', self._out):
             self.error = True
-            self._this = self._out
-            print(textwrap.fill(self._this, 80))
+            self.json = self._out
+            print(textwrap.fill(self.json, 80))
             return 
         try:
-            self._this = json.loads(json_resp)
+            self.json = json.loads(json_resp)
         except:
-            self._this = json_resp
+            self.json = json_resp
 
     def __str__(self):
         return self._out
     
     def __repr__(self):
-        return repr(self._this)
+        return repr(self.json)
 
 
 class GetAccount(_Command):
@@ -178,7 +141,7 @@ class GetAccount(_Command):
         self._jarg["account_name"] = account
         _Command.__init__(self, "get", "account", is_verbose)
         if not self.error:
-            self.name = self._this["account_name"]
+            self.name = self.json["account_name"]
 
 
 class WalletCreate(_Command):
@@ -205,8 +168,8 @@ class WalletCreate(_Command):
         _Command.__init__(self, "wallet", "create", is_verbose)
         if not self.error:
             self.name = name
-            self._this["name"] = name
-            self.password = self._this["password"]
+            self.json["name"] = name
+            self.password = self.json["password"]
 
 
 
@@ -329,10 +292,10 @@ class GetInfo(_Command):
     def __init__(self, is_verbose=True):
         _Command.__init__(self, "get", "info", is_verbose)
         if not self.error:    
-            self.head_block = self._this["head_block_num"]
-            self.head_block_time = self._this["head_block_time"]
+            self.head_block = self.json["head_block_num"]
+            self.head_block_time = self.json["head_block_time"]
             self.last_irreversible_block_num \
-                = self._this["last_irreversible_block_num"]
+                = self.json["last_irreversible_block_num"]
 
 
 class GetBlock(_Command):
@@ -352,9 +315,9 @@ class GetBlock(_Command):
         
         _Command.__init__(self, "get", "block", is_verbose)
         if not self.error:   
-            self.block_num = self._this["block_num"]
-            self.ref_block_prefix = self._this["ref_block_prefix"]
-            self.timestamp = self._this["timestamp"]
+            self.block_num = self.json["block_num"]
+            self.ref_block_prefix = self.json["ref_block_prefix"]
+            self.timestamp = self.json["timestamp"]
 
 
 class GetCode(_Command):
@@ -366,10 +329,10 @@ class GetCode(_Command):
         self._jarg["abi"] = abi_file
         _Command.__init__(self, "get", "code", is_verbose)
         if not self.error:
-            self.code_hash = self._this["code_hash"]
-            self.wast = self._this["wast"] 
-            if "abi" in self._this:          
-                self.abi = self._this["abi"]
+            self.code_hash = self.json["code_hash"]
+            self.wast = self.json["wast"] 
+            if "abi" in self.json:          
+                self.abi = self.json["abi"]
             else:
                 self.abi = ""
 
@@ -395,8 +358,8 @@ class CreateKey(_Command):
         self._jarg["name"] = keyPairName
         _Command.__init__(self, "create", "key", is_verbose)
         if not self.error:  
-            self.private_key = self._this["privateKey"]
-            self.public_key = self._this["publicKey"]
+            self.private_key = self.json["privateKey"]
+            self.public_key = self.json["publicKey"]
             self.name = keyPairName       
 
 
@@ -562,14 +525,14 @@ class PushAction(_Command):
 class _Daemon(_Command):
     def start(self, clear, is_verbose):
         super().__init__("daemon", "start", False)
-        if not self.error and not "head_block_num" in self._this:
-            if(self._this["is_windows_ubuntu"] == "true"):
+        if not self.error and not "head_block_num" in self.json:
+            if(self.json["is_windows_ubuntu"] == "true"):
                 subprocess.call(
                     ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
-                    self._this["command_line"]])
+                    self.json["command_line"]])
             else:
                 subprocess.call(
-                    ["gnome-terminal", "--", self._this["command_line"]]) 
+                    ["gnome-terminal", "--", self.json["command_line"]]) 
 
             del self._jarg["DO_NOT_WAIT"]
             super().__init__("daemon", "start", is_verbose)      
@@ -586,13 +549,13 @@ class _Daemon(_Command):
 class DaemonStart(_Command):
     def __init__(self, is_verbose=True):
         daemon = _Daemon(0, is_verbose)
-        self._this = daemon._this              
+        self.json = daemon.json              
 
 
 class DaemonClear(_Command):
     def __init__(self, is_verbose=True):
         daemon = _Daemon(1, is_verbose)
-        self._this = daemon._this
+        self.json = daemon.json
 
 
 class DaemonStop(_Command):
@@ -607,18 +570,18 @@ class DaemonDeleteWallets(_Command):
 
 
 class _Commands:
-    _this = json.loads("{}")
+    json = json.loads("{}")
     def __repr__(self):
-        return repr(self._this)
+        return repr(self.json)
 
     def __str__(self):
-        return pprint.pformat(self._this) 
+        return pprint.pformat(self.json) 
 
 
 class Wallet(WalletCreate):
     def __init__(self, name="default"):
         super().__init__(name)
-        self._this["keys"] = []
+        self.json["keys"] = []
 
     def list(self):
         WalletList()
@@ -627,13 +590,13 @@ class Wallet(WalletCreate):
         WalletLock(self.name, is_verbose=False)
 
     def unlock(self):
-        WalletUnlock(self.name, self._this["password"]
+        WalletUnlock(self.name, self.json["password"]
                     , is_verbose=False)
 
     def import_key(self, key_pair):
         WalletImport(self.name, key_pair.private_key
                     , is_verbose=False)
-        self._this["keys"].append([key_pair.name, key_pair.private_key])
+        self.json["keys"].append([key_pair.name, key_pair.private_key])
         
     def delete(self):
         DaemonDeleteWallets(self.name, is_verbose=False)
@@ -642,7 +605,7 @@ class Wallet(WalletCreate):
         WalletOpen(self.name, is_verbose=False)
 
     def __str__(self):
-        return pprint.pformat(self._this)
+        return pprint.pformat(self.json)
 
 
 class Account(CreateAccount):
@@ -731,13 +694,13 @@ class EosioAccount(Account):
     #        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d0877...
     """
     def __init__(self, is_verbose=True): 
-        self._this = json.loads("{}")
-        self._this["privateKey"] = \
+        self.json = json.loads("{}")
+        self.json["privateKey"] = \
             "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-        self._this["publicKey"] = \
+        self.json["publicKey"] = \
             "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-        self.private_key = self._this["privateKey"]
-        self.public_key = self._this["publicKey"]
+        self.private_key = self.json["privateKey"]
+        self.public_key = self.json["publicKey"]
         self.name = "eosio"
         self._out = "#       transaction id: eosio"   
 
