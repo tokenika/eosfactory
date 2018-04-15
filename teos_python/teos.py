@@ -292,7 +292,7 @@ class WalletLock(_Command):
         except:
             name = wallet
         
-        self._args["name"] = name
+        self._jarg["name"] = name
         _Command.__init__(self, "wallet", "lock", is_verbose)
 
 
@@ -314,8 +314,8 @@ class WalletUnlock(_Command):
         except:
             name = wallet
 
-        self._args["name"] = name
-        self._args["password"] = password
+        self._jarg["name"] = name
+        self._jarg["password"] = password
         _Command.__init__(self, "wallet", "unlock", is_verbose)
 
 
@@ -346,9 +346,9 @@ class GetBlock(_Command):
     """
     def __init__(self, block_number, block_id="", is_verbose=True):
         if(block_id == ""):
-            self._args["block_num_or_id"] = block_number
+            self._jarg["block_num_or_id"] = block_number
         else:
-            self._args["block_num_or_id"] = block_id
+            self._jarg["block_num_or_id"] = block_id
         
         _Command.__init__(self, "get", "block", is_verbose)
         if not self.error:   
@@ -361,9 +361,9 @@ class GetCode(_Command):
     def __init__(
         self, account_name, wast_file="", abi_file="", is_verbose=True
         ):
-        self._args["account_name"] = account_name
-        self._args["wast"] = wast_file        
-        self._args["abi"] = abi_file
+        self._jarg["account_name"] = account_name
+        self._jarg["wast"] = wast_file        
+        self._jarg["abi"] = abi_file
         _Command.__init__(self, "get", "code", is_verbose)
         if not self.error:
             self.code_hash = self._this["code_hash"]
@@ -380,19 +380,19 @@ class GetTable(_Command):
         limit=10, key="", lower="", upper="",
         is_verbose=True
         ):
-        self._args["code"] = contract
-        self._args["scope"] = scope        
-        self._args["table"] = table
-        self._args["limit"] = limit
-        self._args["table_key"] = key        
-        self._args["lower_bound"] = lower
-        self._args["upper_bound"] = upper
+        self._jarg["code"] = contract
+        self._jarg["scope"] = scope        
+        self._jarg["table"] = table
+        self._jarg["limit"] = limit
+        self._jarg["table_key"] = key        
+        self._jarg["lower_bound"] = lower
+        self._jarg["upper_bound"] = upper
         _Command.__init__(self, "get", "table", is_verbose)
 
 
 class CreateKey(_Command):
     def __init__(self, keyPairName, is_verbose=True):
-        self._args["name"] = keyPairName
+        self._jarg["name"] = keyPairName
         _Command.__init__(self, "create", "key", is_verbose)
         if not self.error:  
             self.private_key = self._this["privateKey"]
@@ -437,6 +437,8 @@ class CreateAccount(_Command):
             skip_signature=0, 
             dont_broadcast=0,
             forceUnique=0,
+            max_cpu_usage=0,
+            max_net_usage=0,
             is_verbose=True
             ):
         try:
@@ -449,17 +451,17 @@ class CreateAccount(_Command):
         except:
             permission = permission
         
-        self._args["creator"] = creator
-        self._args["name"] = name
-        self._args["ownerKey"] = owner_key.public_key
-        self._args["activeKey"] = active_key.public_key
-        self._args["permission"] = permission
-        self._args["expiration"] = expiration_sec        
-        self._args["skip-sign"] = skip_signature        
-        self._args["dont-broadcast"] = dont_broadcast
-        self._args["force-unique"] = forceUnique
-        self._args["max-cpu-usage"] = max_cpu_usage
-        self._args["max-net-usage"] = max_net_usage          
+        self._jarg["creator"] = creator
+        self._jarg["name"] = name
+        self._jarg["ownerKey"] = owner_key.public_key
+        self._jarg["activeKey"] = active_key.public_key
+        self._jarg["permission"] = permission
+        self._jarg["expiration"] = expiration_sec        
+        self._jarg["skip-sign"] = skip_signature        
+        self._jarg["dont-broadcast"] = dont_broadcast
+        self._jarg["force-unique"] = forceUnique
+        self._jarg["max-cpu-usage"] = max_cpu_usage
+        self._jarg["max-net-usage"] = max_net_usage          
         _Command.__init__(self, "create", "account", is_verbose)
         if not self.error:
             self.name = name
@@ -509,29 +511,29 @@ class SetContract(_Command):
             ):
 
         try:
-            owner = owner.name
+            owner_name = owner.name
         except:
-            owner = owner
+            owner_name = owner
                
         try:
             permission = permission.name
         except:
             permission = permission 
 
-        self._args["account"] = owner
-        self._args["contract-dir"] = contract_dir
-        self._args["wast-file"] = wast_file
-        self._args["abi-file"] = abi_file
-        self._args["permission"] = permission
-        self._args["expiration"] = expiration_sec
-        self._args["skip-sign"] = skip_signature
-        self._args["dont-broadcast"] = dont_broadcast
-        self._args["force-unique"] = forceUnique
-        self._args["max-cpu-usage"] = max_cpu_usage
-        self._args["max-net-usage"] = max_net_usage        
+        self._jarg["account"] = owner_name
+        self._jarg["contract-dir"] = contract_dir
+        self._jarg["wast-file"] = wast_file
+        self._jarg["abi-file"] = abi_file
+        self._jarg["permission"] = permission
+        self._jarg["expiration"] = expiration_sec
+        self._jarg["skip-sign"] = skip_signature
+        self._jarg["dont-broadcast"] = dont_broadcast
+        self._jarg["force-unique"] = forceUnique
+        self._jarg["max-cpu-usage"] = max_cpu_usage
+        self._jarg["max-net-usage"] = max_net_usage        
         _Command.__init__(self, "set", "contract", is_verbose)
         if not self.error:
-            self.owner = owner
+            self.owner_name = owner_name
 
 
 class PushAction(_Command):
@@ -542,16 +544,16 @@ class PushAction(_Command):
             max_cpu_usage=0, max_net_usage=0,
             is_verbose=True        
         ):   
-        self._args["contract"] = contract_name
-        self._args["action"] = action
-        self._args["data"] = data.replace('"', '\\"')
-        self._args["permission"] = permission
-        self._args["expiration"] = expiration_sec
-        self._args["skip-sign"] = skip_signature
-        self._args["dont-broadcast"] = dont_broadcast
-        self._args["force-unique"] = forceUnique
-        self._args["max-cpu-usage"] = max_cpu_usage
-        self._args["max-net-usage"] = max_net_usage              
+        self._jarg["contract"] = contract_name
+        self._jarg["action"] = action
+        self._jarg["data"] = data.replace('"', '\\"')
+        self._jarg["permission"] = permission
+        self._jarg["expiration"] = expiration_sec
+        self._jarg["skip-sign"] = skip_signature
+        self._jarg["dont-broadcast"] = dont_broadcast
+        self._jarg["force-unique"] = forceUnique
+        self._jarg["max-cpu-usage"] = max_cpu_usage
+        self._jarg["max-net-usage"] = max_net_usage              
         _Command.__init__(self, "push", "action", is_verbose)
         if not self.error:
             self.name = contract_name
@@ -569,13 +571,13 @@ class _Daemon(_Command):
                 subprocess.call(
                     ["gnome-terminal", "--", self._this["command_line"]]) 
 
-            del self._args["DO_NOT_WAIT"]
+            del self._jarg["DO_NOT_WAIT"]
             super().__init__("daemon", "start", is_verbose)      
             
     def __init__(self, clear, is_verbose=True):
-        self._args["resync-blockchain"] = clear
-        self._args["DO_NOT_WAIT"] = 1
-        self._args["DO_NOT_LAUNCH"] = 1
+        self._jarg["resync-blockchain"] = clear
+        self._jarg["DO_NOT_WAIT"] = 1
+        self._jarg["DO_NOT_LAUNCH"] = 1
         self.start(clear, is_verbose)
         # if self.error:
         #     self.start(1, is_verbose)
@@ -600,7 +602,7 @@ class DaemonStop(_Command):
 
 class DaemonDeleteWallets(_Command):
     def __init__(self, name="*", is_verbose=True):
-        self._args["name"] = name
+        self._jarg["name"] = name
         _Command.__init__(self, "daemon", "delete_wallets", is_verbose)
 
 
@@ -774,25 +776,6 @@ class Contract(SetContract):
         max_net_usage: An upper limit on the net usage budget, in bytes, for 
             the transaction (defaults to 0 which means no limit).
     """
-    def __init__(
-            self, owner, contract_dir, 
-            wast_file="", abi_file="", 
-            permission="", expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            is_verbose=True):
-        try:
-            self.owner = owner.name
-        except:
-            self.owner = owner
-   
-        super().__init__(
-            self.owner, contract_dir, 
-            wast_file, abi_file,
-            permission, expiration_sec, 
-            skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage,
-            is_verbose)
 
     def __str__(self):
         return self._out
