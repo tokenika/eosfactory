@@ -35,19 +35,13 @@ class Setup:
     The configuration file is expected in the same folder as the current file.
     """
     __setupFile = "teos.json"
-    __LOGOS_DIR = "LOGOS_DIR"
     __TEOS_EXE = "TEOS_executable"
     __review = False              
     teos_exe = ""
 
     def __init__(self):
 
-        try:
-            self.teos_exe = os.environ[__LOGOS_DIR] + "/teos/build/teos"
-        except:
-            pass
-        
-        try:
+        try: # First, configure file ...
             if os.path.isfile(self.__setupFile) \
                         and os.path.getsize(__setupFile__) > 0 :
                 with open(self.__setupFile) as json_data:
@@ -58,25 +52,21 @@ class Setup:
                 self.teos_exe = setup_json[self.__TEOS_EXE]
         except:
             pass
-
+        
         if self.teos_exe:
             print("teos exe: " + self.teos_exe)
         else:
             print(
                 'ERROR!'
                 '\nDo not know the teos exe!'
-                '\nIt is expected to be either '
-                '${0}/teos/build/teos,'
-                '\nor specified in the config file named\n'
-                '{1}'
-                '\nas {{"{2}":"absolute-path-to-the-teos.exe"}} '
+                '\nIt is expected to be in the config file named\n'
+                '{0}'
+                '\nas {{"{1}":"absolute-path-to-the-teos.exe"}} '
                 '\n'
-                .format(
-                    self.__LOGOS_DIR,                   
+                .format(                 
                     os.path.realpath(self.__setupFile),
                     self.__TEOS_EXE,
-
-                    ) )        
+                    ))        
 
 setup = Setup()
 
@@ -770,21 +760,28 @@ class Contract(SetContract):
 class Daemon(_Commands):
     """ A representation of the local EOSIO node.
 
-    The following parameters are relevant. Each of them is looked for 
-    in a configuration file of the TEOS executable, at first, 
-    next among environment variables, finally hard-codded in the "config.cpp"
-    file of the "teos library".
+    Any Daemon class object depends on external configuration parameters. They
+    are organized on two levels: this module level and the level of a TEOS 
+    executable that powers methodes of this python module.
 
-    The path to the TEOS executable is either "${LOGOS_DIR}/teos/build/teos"
-    (LOGOS_DIR is an environmet variable), or it is set in the configuration
-    file of this script, which is "teos.json".
+    - **TEOS-python configuration**::
 
-    The configuration file of the TEOS executable is named "config.json". They
-    exist in the same directory.
+        TEOS_executable: Where is the TEOS executable. The parameter is set in 
+            the configuration file of this script, which is "teos.json" in the 
+            directory of this module, for example: 
+            {"TEOS_executable":"absolute-path-to-the-teos.exe"}.
 
-    - **configuration**::
+    Other relevant onfiguration parameters can be defined in a configuration 
+    file of the TEOS executable, and/or as environment variables, and/or are 
+    hard-codded (in the "config.cpp" file of the "teos library"). The first 
+    definition in this sequence prevails.
 
-        EOSIO_SOURCE_DIR: Where is the eos repository.
+    The configuration file of the TEOS executable is named "config.json". It
+    exists in the TEOS executable directory.    
+
+    - **TEOS configuration**::
+
+        EOSIO_SOURCE_DIR: Where is the EOS repository. 
         EOSIO_DAEMON_ADDRESS: The local IP and port to listen for incoming http 
             connections, defaults to "127.0.0.1:8888".
         EOSIO_WALLET_ADDRESS: The local IP and port to listen for incoming http 

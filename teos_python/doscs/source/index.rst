@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
 
    currency_walkthrough
+   currency_walkthrough_org
    teos_python
 
 Indices and tables

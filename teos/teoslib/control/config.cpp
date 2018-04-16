@@ -93,18 +93,20 @@ wallet-dir: .
 
     string configValue(TeosControl* teosControl, arg configKey) 
     {
+      //First, configure file ...
       boost::property_tree::ptree json = TeosControl::getConfig(teosControl);
       string value = json.get(configKey[0], NOT_DEFINED_VALUE);
-
       if(value != NOT_DEFINED_VALUE) {
         return value;
-      } else {
-        char* env = getenv(configKey[0].c_str());
-        if(env == nullptr){
-          return configKey.size() > 1 ? configKey[1] : NOT_DEFINED_VALUE;          
-        }
-        return string(env);
-      } 
+      }
+      
+      // ... next, environmental variable.
+      char* env = getenv(configKey[0].c_str());
+      if(env == nullptr){ // Finally, hard-codded value, if any.
+        return configKey.size() > 1 ? configKey[1] : NOT_DEFINED_VALUE;          
+      }
+      return string(env);
+
     }
 
     void onError(TeosControl* teosControl, string message)
