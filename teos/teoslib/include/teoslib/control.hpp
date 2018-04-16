@@ -61,7 +61,7 @@ namespace teos
     TeosControl(ptree reqJson) : reqJson_(reqJson) {}
 
     string errorMsg() {
-      return get<string>(teos_ERROR);
+      return respJson_.get<string>(teos_ERROR);
     }
     string requestToString(bool isRaw) const;
     string responseToString(bool isRaw) const;

@@ -153,8 +153,8 @@ wallet-dir: .
           return wantedPath.string();
         }
         
-        onError(teosControl, "Cannot determine the genesis file.");      
-
+        onError(teosControl, (boost::format("Cannot determine the genesis file:\n%1%\n")
+              % wantedPath.string()).str()); 
       } catch (exception& e) {
           onError(teosControl, e.what());               
       }
@@ -177,8 +177,9 @@ wallet-dir: .
           return "";
         }
 
+        bfs::path wantedPath;
         {
-          bfs::path wantedPath(contractFile);
+          wantedPath = bfs::path(contractFile);
           if(wantedPath.is_absolute() && bfs::exists(wantedPath) 
             && bfs::is_regular_file(wantedPath))
           {
@@ -187,7 +188,7 @@ wallet-dir: .
         }
 
         {
-          bfs::path wantedPath(contractDir);
+          wantedPath = bfs::path(contractDir);
           bfs::path contractDirPath;
           if(!wantedPath.is_absolute()) 
           {
@@ -222,7 +223,8 @@ wallet-dir: .
           }   
         }
 
-        onError(teosControl, "Cannot find the contract file.");  
+        onError(teosControl, (boost::format("Cannot find the contract file:\n%1%\n")
+              % wantedPath.string()).str()); 
       } catch (std::exception& e) {
           onError(teosControl, e.what());
       }
@@ -289,8 +291,7 @@ wallet-dir: .
         if(!bfs::exists(wantedPath)){
           onError(teosControl,
             (boost::format("Cannot determine the EOS test node "
-              "executable file:\n%1%\n")
-              % wantedPath.string()).str());  
+              "executable file:\n%1%\n") % wantedPath.string()).str());  
           return ""; 
         }
       } catch (std::exception& e) {

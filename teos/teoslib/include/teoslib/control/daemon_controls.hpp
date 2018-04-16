@@ -11,75 +11,6 @@ namespace teos {
   namespace control {
 
     /**
-     * @brief Delete opened locally walets.
-     */
-    class DaemonDeleteWallets : public  TeosControl
-    {
-      void action();
-      public:
-        static const char* DELETE_ALL;
-        static const char* WALLET_EXT;
-        DaemonDeleteWallets(string name = DELETE_ALL)
-        {
-          reqJson_.put("name", name);
-          action();
-        }
-
-        DaemonDeleteWallets(ptree reqJson) : TeosControl(reqJson){
-          action();
-        }
-    };
-
-    /**
-     * @brief Delete locally opened walets,#include <teoslib/control/config.hpp>
-     * Usage: ./teos daemon delete_wallets
-     */
-    class DaemonDeleteWalletsOptions : public ControlOptions
-    {
-    public:
-      DaemonDeleteWalletsOptions(int argc, const char **argv) 
-        : ControlOptions(argc, argv) {}
-
-    protected:
-      const char* getUsage() {
-        return R"EOF(
-Delete locally opened walets.
-Usage: ./teos [] daemon delete_wallets [name]
-)EOF";
-      }
-
-      string name;
-
-      options_description  argumentDescription() {
-        options_description od("");
-        od.add_options()
-          ("name,n", value<string>(&name)
-            ->default_value(DaemonDeleteWallets::DELETE_ALL)
-            ,"The name of the wallet. Default is 'all names'.");
-
-        return od;
-      }
-
-      void setPosDesc(positional_options_description& pos_desc) {
-        pos_desc.add("name", 1);
-      }
-
-      bool checkArguments(variables_map &vm) {
-        if (vm.count("name")) {
-          reqJson_.put("name", name);
-        }      
-        return true;
-      }
-
-      TeosControl executeCommand() {
-        return DaemonDeleteWallets(reqJson_);
-      }  
-
-      void printout(TeosControl command, variables_map &vm); 
-
-    };
-
-    /**
      * @brief Kill a running EOS node process.
      */
     class DaemonStop : public TeosControl
@@ -118,7 +49,8 @@ Usage: ./teos node kill
     class DaemonStart : public TeosControl
     {
       void action();
-
+      void deleteWallets();
+      void deleteDaemonData();
     public:
       static const string DO_NOT_WAIT;
       static const string DO_NOT_LAUNCH;

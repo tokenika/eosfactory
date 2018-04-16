@@ -149,7 +149,6 @@ int main(int argc, const char *argv[]) {
     IF_ELSE(push_action, PushAction)
     IF_ELSE(daemon_start, DaemonStart)
     IF_ELSE(daemon_stop, DaemonStop)
-    IF_ELSE(daemon_delete_wallets, DaemonDeleteWallets)
     {
       cout << "unknown command!" << endl;
     }    

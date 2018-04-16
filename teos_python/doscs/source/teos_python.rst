@@ -28,3 +28,6 @@ Teos python
 
 .. autoclass:: teos.Contract
    :members:
+
+.. autoclass:: teos.Daemon
+   :members:

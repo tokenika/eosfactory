@@ -35,29 +35,48 @@ class Setup:
     The configuration file is expected in the same folder as the current file.
     """
     __setupFile = "teos.json"
+    __LOGOS_DIR = "LOGOS_DIR"
+    __TEOS_EXE = "TEOS_executable"
     __review = False              
+    teos_exe = ""
 
     def __init__(self):
 
-        if os.path.isfile(self.__setupFile) \
-                    and os.path.getsize(__setupFile__) > 0 :
-            with open(self.__setupFile) as json_data:
-                print("Reading setup from file:\n   {}" \
-                        .format(self.__setupFile))
-                setup_json = json.load(json_data)
-                print(setup_json)               
+        try:
+            self.teos_exe = os.environ[__LOGOS_DIR] + "/teos/build/teos"
+        except:
+            pass
+        
+        try:
+            if os.path.isfile(self.__setupFile) \
+                        and os.path.getsize(__setupFile__) > 0 :
+                with open(self.__setupFile) as json_data:
+                    print("Reading setup from file:\n   {}" \
+                            .format(os.path.realpath(self.__setupFile)))
+                    setup_json = json.load(json_data)
 
-            try:
-                self.teos_exe = setup_json["TEOS executable"]
-            except:
-                self.teos_exe = os.environ['LOGOS_DIR'] + "/teos/build/teos"
-        else:
-            self.teos_exe = os.environ['LOGOS_DIR'] + "/teos/build/teos" 
+                self.teos_exe = setup_json[self.__TEOS_EXE]
+        except:
+            pass
 
         if self.teos_exe:
             print("teos exe: " + self.teos_exe)
         else:
-            print("Do not know teos exe!")        
+            print(
+                'ERROR!'
+                '\nDo not know the teos exe!'
+                '\nIt is expected to be either '
+                '${0}/teos/build/teos,'
+                '\nor specified in the config file named\n'
+                '{1}'
+                '\nas {{"{2}":"absolute-path-to-the-teos.exe"}} '
+                '\n'
+                .format(
+                    self.__LOGOS_DIR,                   
+                    os.path.realpath(self.__setupFile),
+                    self.__TEOS_EXE,
+
+                    ) )        
 
 setup = Setup()
 
@@ -563,12 +582,6 @@ class DaemonStop(_Command):
         _Command.__init__(self, "daemon", "stop", is_verbose)
 
 
-class DaemonDeleteWallets(_Command):
-    def __init__(self, name="*", is_verbose=True):
-        self._jarg["name"] = name
-        _Command.__init__(self, "daemon", "delete_wallets", is_verbose)
-
-
 class _Commands:
     json = json.loads("{}")
     def __repr__(self):
@@ -579,6 +592,7 @@ class _Commands:
 
 
 class Wallet(WalletCreate):
+
     def __init__(self, name="default"):
         super().__init__(name)
         self.json["keys"] = []
@@ -597,9 +611,6 @@ class Wallet(WalletCreate):
         WalletImport(self.name, key_pair.private_key
                     , is_verbose=False)
         self.json["keys"].append([key_pair.name, key_pair.private_key])
-        
-    def delete(self):
-        DaemonDeleteWallets(self.name, is_verbose=False)
 
     def open(self):
         WalletOpen(self.name, is_verbose=False)
@@ -757,7 +768,37 @@ class Contract(SetContract):
 
 
 class Daemon(_Commands):
-    """ A front-end to the EOSIO test node.
+    """ A representation of the local EOSIO node.
+
+    The following parameters are relevant. Each of them is looked for 
+    in a configuration file of the TEOS executable, at first, 
+    next among environment variables, finally hard-codded in the "config.cpp"
+    file of the "teos library".
+
+    The path to the TEOS executable is either "${LOGOS_DIR}/teos/build/teos"
+    (LOGOS_DIR is an environmet variable), or it is set in the configuration
+    file of this script, which is "teos.json".
+
+    The configuration file of the TEOS executable is named "config.json". They
+    exist in the same directory.
+
+    - **configuration**::
+
+        EOSIO_SOURCE_DIR: Where is the eos repository.
+        EOSIO_DAEMON_ADDRESS: The local IP and port to listen for incoming http 
+            connections, defaults to "127.0.0.1:8888".
+        EOSIO_WALLET_ADDRESS: The local IP and port to listen for incoming http 
+            connections to the local wallet, defaults to "127.0.0.1:8888".
+        data-dir: Directory containing program runtime data (absolute path or
+            relative to ${EOSIO_SOURCE_DIR}), defaults to 
+            "${EOSIO_SOURCE_DIR}/build/daemon/data-dir".
+        config-dir: Directory containing configuration files such as config.ini
+            (absolute path or relative to ${EOSIO_SOURCE_DIR}),
+            defaults to "${data-dir}"
+        wallet-dir: The path of the wallet files (absolute path or relative 
+            to ${data-dir}, defaults to "${data-dir}/wallet"
+        genesis-json: File to read genesis state from, defaults to "genesis.json"
+            (relative to ${config-dir}).
     """
 
     def clear(self):
