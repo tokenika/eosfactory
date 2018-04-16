@@ -100,7 +100,10 @@ class _Command:
             stderr=subprocess.PIPE,
             cwd=str(pathlib.Path(setup.teos_exe).parent)) 
 
+        # Both, right and error output is passed with stdout:
         self._out = process.stdout.decode("utf-8")
+
+        # With "--both", json output is passed with stderr: 
         json_resp = process.stderr.decode("utf-8")
 
         if _is_verbose and is_verbose:
@@ -108,9 +111,14 @@ class _Command:
      
         if re.match(r'^ERROR', self._out):
             self.error = True
-            self.json = self._out
-            print(textwrap.fill(self.json, 80))
-            return 
+            width = 80
+            longest = max(self._out.split("\n"), key=len)
+            if len(longest) < width:
+                print(self._out)
+            else:
+                wrapper = textwrap.TextWrapper(width=width)
+                print(wrapper.fill(self._out))
+
         try:
             self.json = json.loads(json_resp)
         except:

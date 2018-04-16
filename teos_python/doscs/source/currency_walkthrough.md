@@ -206,6 +206,8 @@ account_eosio.accounts(account_currency)
 #
 ```
 
+### Summary
+
 ```
 daemon = teos.Daemon()
 daemon.clear()
