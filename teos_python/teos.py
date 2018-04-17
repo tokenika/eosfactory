@@ -210,16 +210,16 @@ class WalletImport(_Command):
         key: A key object or a private key in WIF format to import.
         is_verbose: If 'False', do not print stdout, default is 'True'.
     """
-    def __init__(self, wallet, key, is_verbose=True):
+    def __init__(self, key, wallet="default", is_verbose=True):
+        try:
+            key_private = key.key_private
+        except:
+            key_private = key 
+
         try:
             name = wallet.name
         except:
             name = wallet
-
-        try:
-            key_private = key.private_key
-        except:
-            key_private = key
 
         self._jarg["name"] = name
         self._jarg["key"] = key_private
@@ -266,7 +266,7 @@ class WalletLock(_Command):
         wallet: A wallet object or the name of the wallet to import key into.
         is_verbose: If 'False', do not print stdout, default is 'True'.    
     """
-    def __init__(self, name, is_verbose=True):
+    def __init__(self, wallet, is_verbose=True):
         try:
             name = wallet.name
         except:
@@ -375,8 +375,8 @@ class CreateKey(_Command):
         self._jarg["name"] = keyPairName
         _Command.__init__(self, "create", "key", is_verbose)
         if not self.error:  
-            self.private_key = self.json["privateKey"]
-            self.public_key = self.json["publicKey"]
+            self.key_private = self.json["privateKey"]
+            self.key_public = self.json["publicKey"]
             self.name = keyPairName       
 
 
@@ -433,8 +433,8 @@ class CreateAccount(_Command):
         
         self._jarg["creator"] = creator
         self._jarg["name"] = name
-        self._jarg["ownerKey"] = owner_key.public_key
-        self._jarg["activeKey"] = active_key.public_key
+        self._jarg["ownerKey"] = owner_key.key_public
+        self._jarg["activeKey"] = active_key.key_public
         self._jarg["permission"] = permission
         self._jarg["expiration"] = expiration_sec        
         self._jarg["skip-sign"] = skip_signature        
@@ -606,9 +606,13 @@ class Wallet(WalletCreate):
                     , is_verbose=False)
 
     def import_key(self, key_pair):
-        WalletImport(self.name, key_pair.private_key
-                    , is_verbose=False)
-        self.json["keys"].append([key_pair.name, key_pair.private_key])
+        wallet_import = WalletImport(
+            key_pair, self.name, is_verbose=False)
+        if not wallet_import.error:
+            self.json["keys"].append([key_pair.name, key_pair.key_private])
+
+    def keys(self):
+        WalletKeys()
 
     def open(self):
         WalletOpen(self.name, is_verbose=False)
@@ -708,8 +712,8 @@ class EosioAccount(Account):
             "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
         self.json["publicKey"] = \
             "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-        self.private_key = self.json["privateKey"]
-        self.public_key = self.json["publicKey"]
+        self.key_private = self.json["privateKey"]
+        self.key_public = self.json["publicKey"]
         self.name = "eosio"
         self._out = "#       transaction id: eosio"   
 

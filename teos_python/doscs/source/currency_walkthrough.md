@@ -1,11 +1,13 @@
 
-## Example "Currency" Contract Walkthrough
+# Example "Currency" Contract Walkthrough
+
+We rephrase an article from an outdated EOSIO [README}](#https://raw.githubusercontent.com/ekkis/eos/master/README.md)
 
 EOS comes with example contracts that can be uploaded and run for testing 
 purposes. We will validate our single node setup using the sample contract 
 'currency'.
 
-### Start EOS node
+## Start EOS node
 ```
 import teos
 teos.set_verbose(False)
@@ -26,7 +28,7 @@ print(daemon)
 #       head block time: 2018-04-10T16:57:27
 #  last irreversible block: 1046
 ```
-### Create a wallet
+## Create a wallet
 
 Every contract requires an associated account, so first you need to create 
 a wallet. To create a wallet, you need to have the wallet_api_plugin loaded 
@@ -37,7 +39,7 @@ wallet = teos.Wallet()
 ```
 The wallet name argument is not set: the default wallet name is 'default'.
 
-### Load the Bios Contract
+## Load the Bios Contract
 
 You have to owe an account to be authorized to interact with EOSIO. For tests,
 you can use the 'eosio' account:
@@ -57,10 +59,9 @@ The second argument in the constructor indicates a directory that contains
 the contract files. The path to this directory is determined with 
 [setup rules](#setup). An absolute path is an option.
 
-As the set contract command call has produced the transaction id, the default 
-contract is operational.
+As the set contract command call has produced the transaction id, the default contract is operational.
 
-### Create an account for the "currency" contract
+## Create an account for the "currency" contract
 
 The account named "currency" will be used for the "currency" contract. 
 Generate two public/private key pairs that will be later assigned as the 
@@ -121,7 +122,7 @@ print(account_currency)
                                     'threshold': '1'}}]}
 
 ```
-### Upload the sample "currency" contract to the blockchain
+## Upload the sample "currency" contract to the blockchain
 
 Before uploading a contract, verify that there is no current contract:
 ```
@@ -161,7 +162,7 @@ Verify the currency contract has the proper initial balance:
 ```
 account_currency.accounts()
 ```
-### Transfer funds using the "currency" contract
+## Transfer funds using the "currency" contract
 
 The following command shows a "transfer" action being sent to the currency 
 contract, transferring "20.0000 CUR" from the currency account to the "eosio" 
@@ -175,7 +176,7 @@ contract_currency.action(
 ```
 A successfully submitted transaction has generated a transaction ID.
 
-### Check the "currency" contract balances
+## Check the "currency" contract balances
 
 Check the state of both accounts involved in the previous transaction:
 ```
@@ -206,7 +207,7 @@ account_eosio.accounts(account_currency)
 #
 ```
 
-### Summary
+## Summary
 
 ```
 daemon = teos.Daemon()

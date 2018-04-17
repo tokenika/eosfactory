@@ -214,13 +214,27 @@ Usage: ./teos get account --jarg '{"account_name":"<account name>"}' [OPTIONS]
 
       void printout(TeosControl command, variables_map &vm) {
         output("account name", "%s", GET_STRING(command, "account_name"));
-        // output("eos balance", "%s", GET_STRING(command, "eos_balance"));
-        // output("staked balance", "%s", GET_STRING(command, "staked_balance"));
-        // output("unstaking balance", "%s", GET_STRING(command, "unstaking_balance"));
-        // output("last unstaking time", "%s", GET_STRING(command, "last_unstaking_time"));
       }
-
     };
+
+    // /**
+    //  * @brief Retrieve accounts associated with a public key.
+    // */
+    // class GetAccounts : public TeosCommand
+    // {
+
+    // public:
+    //   GetAccounts(string publicKey) : TeosCommand(
+    //     string("/v1/account_history/get_key_accounts")) {
+    //     reqJson_.put("public_key", publicKey);
+    //     callEosd();
+    //   }
+
+    //   GetAccount(ptree reqJson, bool raw = false) : TeosCommand(
+    //     string(getCommandPath + "get_account"), reqJson) {
+    //     callEosd();
+    //   }
+    // };
 
 #define WRITE_TO_STDOUT "stdout"
     /**
