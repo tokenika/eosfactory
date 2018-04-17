@@ -1,8 +1,7 @@
 install
 workdir
 *.exe
-build
-buildWindows
+teos/builds
 
 **/Debug
 **/x64
