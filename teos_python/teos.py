@@ -3,8 +3,9 @@ This is a Python front-end for Tokenika 'Teos'. Tokenika Teos is an
 alternative for EOSIO 'cleos'.
 """
 
-# import importlib
 # import teos
+
+# import importlib
 # importlib.reload(teos)
 
 import os
