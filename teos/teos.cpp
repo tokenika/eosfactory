@@ -133,6 +133,7 @@ int main(int argc, const char *argv[]) {
     IF_ELSE(get_info, GetInfo)
     IF_ELSE(get_block, GetBlock)
     IF_ELSE(get_account, GetAccount)
+    IF_ELSE(get_accounts, GetAccounts)
     IF_ELSE(get_code, GetCode)
     IF_ELSE(get_table, GetTable)
     IF_ELSE(wallet_create, WalletCreate)

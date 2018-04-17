@@ -58,7 +58,10 @@
 <li><a class="reference internal" href="#starting-a-private-blockchain">Starting a Private Blockchain</a></li>
 <li><a class="reference internal" href="#creating-a-wallet">Creating a Wallet</a></li>
 <li><a class="reference internal" href="#the-eosio-account-and-the-bios-contract">The Eosio Account and the Bios Contract</a></li>
-<li><a class="reference internal" href="#creating-accounts">Creating Accounts</a></li>
+<li><a class="reference internal" href="#creating-accounts">Creating Accounts</a><ul>
+<li><a class="reference internal" href="#create-two-user-accounts">Create Two User Accounts</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#summary">Summary</a></li>
 </ul>
 </li>
@@ -210,6 +213,29 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 <span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="section" id="create-two-user-accounts">
+<span id="create-two-user-accounts"></span><h3>Create Two User Accounts<a class="headerlink" href="#create-two-user-accounts" title="Permalink to this headline">¶</a></h3>
+<p>Next we will create two accounts, user and tester, using the key we created and imported above.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">account_user</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span><span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
+<span class="c1">#        transaction id: f94c26662da514fac7027270531e023a6fc8cd4dcd739dc67e...</span>
+
+<span class="n">account_tester</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
+   <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;tester&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
+   <span class="c1">#        transaction id: 6eb3e7a64ac2265de855f9c8b0c5677848e8451b4d6dda8...</span>
+</pre></div>
+</div>
+<p>NOTE: The create account subcommand requires two keys, one for the OwnerKey (which in a production environment should be kept highly secure) and one for the ActiveKey. In this tutorial example, the same key is used for both.</p>
+<p>We can query all accounts that are controlled <code class="docutils literal"><span class="pre">key_accounts</span></code> key:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">teos</span><span class="o">.</span><span class="n">GetAccounts</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
+<span class="c1">#  {</span>
+<span class="c1">#      &quot;account_names&quot;: [</span>
+<span class="c1">#          &quot;tester&quot;,</span>
+<span class="c1">#          &quot;user&quot;</span>
+<span class="c1">#      ]</span>
+<span class="c1">#  }</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="summary">
 <span id="summary"></span><h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
@@ -226,6 +252,11 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 <span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">account_eosio</span><span class="p">)</span>
 <span class="n">key_accounts</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">CreateKey</span><span class="p">(</span><span class="s2">&quot;key_accounts&quot;</span><span class="p">)</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
+<span class="n">account_user</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
+   <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
+<span class="n">account_tester</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
+   <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;tester&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span> 
+<span class="n">teos</span><span class="o">.</span><span class="n">GetAccounts</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

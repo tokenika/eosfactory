@@ -4,20 +4,9 @@ We rephrase an [article](#https://github.com/EOSIO/eos/wiki/Tutorial-Getting-Sta
 
 ## Getting Started with Contracts
 
-The purpose of this tutorial is to demonstrate how to setup a local blockchain that can be used to experiment with smart contracts. The first part of this tutorial will focus on:
+The purpose of this tutorial is to demonstrate primary experiments with smart contracts. This tutorial assumes that you have installed both [*EOSIO*](#https://github.com/EOSIO/eos) and [*Tokenika Logos*](#https://github.com/tokenika/logos). If so, you have installed *python3*, as well.
 
-* Starting a Private Blockchain
-* Creating a Wallet
-* Loading the Bios Contract
-* Creating Accounts
-
-The second part of this tutorial will walk you through creating and deploying your own contracts.
-
-* eosio.token Contract
-* Exchange Contract
-* Hello World Contract
-
-* This tutorial assumes that you have installed both EOSIO and Tokenika TEOS, therefore, at first import the Tokenika teos python module:
+To begin with, open a bash terminal in the `teos_python` directory of the *Logos* repository. Start `python3`:
 ```
 import teos
 teos.set_verbose(True)
@@ -25,10 +14,9 @@ teos.set_verbose(True)
 
 ## Starting a Private Blockchain
 
-Launch an object `teos.Daemon` that implements interaction with the local EOSIO node. Method `clear` starts this node cleared of any past background:
+Launch an object of `teos.DaemonClear()` that starts the local EOSIO node, beginning a new blockchain:
 ```
-daemon = teos.Daemon()
-daemon.clear()
+teos.DaemonClear()
 #       nodeos exe file: /mnt/e/Workspaces/EOS/eos/build/programs/nodeos/nodeos
 #    genesis state file: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/genesis.json
 #        server address: 127.0.0.1:8888
@@ -108,9 +96,9 @@ The contract is set to the node in two parts: `code` and `abi` The code defines 
 
 ## Creating Accounts
 
-Now that we have setup the basic system contract, we can start to create our own accounts. We will create two accounts, user and tester, and we will need to associate a key with each account. In this example, the same key will be used for both accounts.
+Now that you have set the basic system contract, you can start to create our own accounts. You will create two accounts, user and tester, and you will need to associate a key with each account. In this example, the same key will be used for both accounts.
 
-To do this we first generate a key for the accounts and import it to the wallet.
+To do this you first generate a key for the accounts and import it to the wallet.
 ```
 key_accounts = teos.CreateKey("key_accounts")
 #              key name: key_accounts
@@ -121,7 +109,7 @@ wallet.import_key(key_accounts)
 ```
 ### Create Two User Accounts
 
-Next we will create two accounts, user and tester, using the key we created and imported above.
+Next you will create two accounts, user and tester, using the key you created and imported above.
 ```
 account_user = teos.Account(account_eosio, "user", key_accounts, key_accounts)
 #        transaction id: f94c26662da514fac7027270531e023a6fc8cd4dcd739dc67e...
@@ -132,6 +120,25 @@ account_tester = teos.Account(
 ```
 NOTE: The create account subcommand requires two keys, one for the OwnerKey (which in a production environment should be kept highly secure) and one for the ActiveKey. In this tutorial example, the same key is used for both.
 
+You can query all accounts that are controlled `key_accounts` key:
+```
+teos.GetAccounts(key_accounts)
+#  {
+#      "account_names": [
+#          "tester",
+#          "user"
+#      ]
+#  }
+```
+
+## Eosio.token, Exchange, and Eosio.msig Contracts
+
+At this stage the blockchain doesn't do much, so let's deploy the eosio.token contract. This contract enables the creation of many different tokens all running on the same contract but potentially managed by different users.
+
+Before we can deploy the token contract we must create an account to deploy it to.
+```
+account_eosio_token = Account(account_eosio, ")
+```
 
 
 ## Summary
@@ -148,10 +155,13 @@ account_eosio = teos.EosioAccount()
 account_eosio.key_private
 wallet.keys()
 wallet.import_key(account_eosio)
+contract_eosio_bios = teos.SetContract(
+  account_eosio, "eosio.bios", permission=account_eosio)
 key_accounts = teos.CreateKey("key_accounts")
 wallet.import_key(key_accounts)
 account_user = teos.Account(
    account_eosio, "user", key_accounts, key_accounts)
 account_tester = teos.Account(
-   account_eosio, "tester", key_accounts, key_accounts)
+   account_eosio, "tester", key_accounts, key_accounts) 
+teos.GetAccounts(key_accounts)
 ```

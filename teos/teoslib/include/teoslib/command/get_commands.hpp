@@ -217,31 +217,80 @@ Usage: ./teos get account --jarg '{"account_name":"<account name>"}' [OPTIONS]
       }
     };
 
-    // /**
-    //  * @brief Retrieve accounts associated with a public key.
-    // */
-    // class GetAccounts : public TeosCommand
-    // {
+    /**
+     * @brief Retrieve accounts associated with a public key.
+    */
+    class GetAccounts : public TeosCommand
+    {
+      #define GET_ACCOUNTS_PATH "/v1/account_history/get_key_accounts"      
+    public:
+      GetAccounts(string publicKey) 
+        : TeosCommand(GET_ACCOUNTS_PATH) 
+      {
+        reqJson_.put("public_key", publicKey);
+        callEosd();
+      }
+      
+      GetAccounts(ptree reqJson) 
+        : TeosCommand(GET_ACCOUNTS_PATH, reqJson) 
+      {
+        callEosd();
+      }
 
-    // public:
-    //   GetAccounts(string publicKey) : TeosCommand(
-    //     string("/v1/account_history/get_key_accounts")) {
-    //     reqJson_.put("public_key", publicKey);
-    //     callEosd();
-    //   }
+    };
 
-    //   GetAccount(ptree reqJson, bool raw = false) : TeosCommand(
-    //     string(getCommandPath + "get_account"), reqJson) {
-    //     callEosd();
-    //   }
-    // };
+    /**
+    * @brief Command-line driver for the GetAccounts class.
+    */
+    class GetAccountsOptions : public CommandOptions
+    {
+    public:
+      GetAccountsOptions(int argc, const char **argv)
+        : CommandOptions(argc, argv) {}
 
-#define WRITE_TO_STDOUT "stdout"
+    protected:
+      const char* getUsage() {
+        return R"EOF(
+Fetch a blockchain account
+Usage: ./teos get account [public_key] [Options]
+Usage: ./teos get account --jarg '{"public_key":"<public key>"}' [OPTIONS]
+)EOF";
+      }
+
+      string public_key;
+
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
+          ("public_key",
+            value<string>(&public_key), "The public key to retrieve accounts for");
+        return od;
+      }
+
+      void setPosDesc(positional_options_description&pos_desc) {
+        pos_desc.add("public_key", 1);
+      }
+
+      bool checkArguments(variables_map &vm) {
+        bool ok = false;
+        if (vm.count("public_key")) {
+          reqJson_.put("public_key", public_key);
+          ok = true;
+        }
+        return ok;
+      }
+
+      TeosControl executeCommand() {
+        return GetAccounts(reqJson_);
+      }
+    };
+
     /**
     * @brief Retrieves the code and ABI for an account.
     */
     class GetCode : public TeosCommand
     {
+      #define WRITE_TO_STDOUT "stdout"
     public:
       /**
       * @brief A constructor.
@@ -265,7 +314,7 @@ Usage: ./teos get account --jarg '{"account_name":"<account name>"}' [OPTIONS]
        * "wast":"<wast file>", "abi":"<abi file>"}
        * @param raw if true, resulting json is not formated.
        */
-      GetCode(ptree reqJson, bool raw = false) : TeosCommand(
+      GetCode(ptree reqJson) : TeosCommand(
         string(getCommandPath + "get_code"), reqJson) {
         string wastFile = reqJson.get<string>("wast");
         wastFile = wastFile == WRITE_TO_STDOUT ? "" : wastFile;

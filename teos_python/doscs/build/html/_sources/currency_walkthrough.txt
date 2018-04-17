@@ -59,8 +59,7 @@ The second argument in the constructor indicates a directory that contains
 the contract files. The path to this directory is determined with 
 [setup rules](#setup). An absolute path is an option.
 
-As the set contract command call has produced the transaction id, the default 
-contract is operational.
+As the set contract command call has produced the transaction id, the default contract is operational.
 
 ## Create an account for the "currency" contract
 

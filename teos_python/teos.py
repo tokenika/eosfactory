@@ -41,18 +41,24 @@ class Setup:
     teos_exe = ""
 
     def __init__(self):
+        path = "../teos/build/teos"
+        
+        if os.path.isfile(path):
+            self.teos_exe = os.path.realpath(path)
 
-        try: # First, configure file ...
-            if os.path.isfile(self.__setupFile) \
-                        and os.path.getsize(__setupFile__) > 0 :
-                with open(self.__setupFile) as json_data:
-                    print("Reading setup from file:\n   {}" \
-                            .format(os.path.realpath(self.__setupFile)))
-                    setup_json = json.load(json_data)
-
-                self.teos_exe = setup_json[self.__TEOS_EXE]
-        except:
-            pass
+        if not self.teos_exe:         
+            try: 
+                if os.path.isfile(self.__setupFile) \
+                            and os.path.getsize(__setupFile__) > 0 :
+                    with open(self.__setupFile) as json_data:
+                        print("Reading setup from file:\n   {}" \
+                                .format(os.path.realpath(self.__setupFile)))
+                        setup_json = json.load(json_data)
+                    path = setup_json[self.__TEOS_EXE]
+                    if os.path.isfile(path):
+                        self.teos_exe = os.path.realpath(path)
+            except:
+                pass
         
         if self.teos_exe:
             print("teos exe: " + self.teos_exe)
@@ -154,12 +160,23 @@ class GetAccount(_Command):
         try:
             account = account.name
         except:
-            account = account
+            pass
         
         self._jarg["account_name"] = account
         _Command.__init__(self, "get", "account", is_verbose)
         if not self.error:
             self.name = self.json["account_name"]
+
+
+class GetAccounts(_Command):
+    def __init__(self, key, is_verbose=True):
+        try:
+            key = key.key_public
+        except:
+            pass
+
+        self._jarg["public_key"] = key
+        _Command.__init__(self, "get", "accounts", is_verbose)
 
 
 class WalletCreate(_Command):

@@ -119,6 +119,29 @@ key_accounts = teos.CreateKey("key_accounts")
 
 wallet.import_key(key_accounts)
 ```
+### Create Two User Accounts
+
+Next we will create two accounts, user and tester, using the key we created and imported above.
+```
+account_user = teos.Account(account_eosio, "user", key_accounts, key_accounts)
+#        transaction id: f94c26662da514fac7027270531e023a6fc8cd4dcd739dc67e...
+
+account_tester = teos.Account(
+   account_eosio, "tester", key_accounts, key_accounts)
+   #        transaction id: 6eb3e7a64ac2265de855f9c8b0c5677848e8451b4d6dda8...
+```
+NOTE: The create account subcommand requires two keys, one for the OwnerKey (which in a production environment should be kept highly secure) and one for the ActiveKey. In this tutorial example, the same key is used for both.
+
+We can query all accounts that are controlled `key_accounts` key:
+```
+teos.GetAccounts(key_accounts)
+#  {
+#      "account_names": [
+#          "tester",
+#          "user"
+#      ]
+#  }
+```
 
 ## Summary
 
@@ -136,5 +159,9 @@ wallet.keys()
 wallet.import_key(account_eosio)
 key_accounts = teos.CreateKey("key_accounts")
 wallet.import_key(key_accounts)
-
+account_user = teos.Account(
+   account_eosio, "user", key_accounts, key_accounts)
+account_tester = teos.Account(
+   account_eosio, "tester", key_accounts, key_accounts) 
+teos.GetAccounts(key_accounts)
 ```
