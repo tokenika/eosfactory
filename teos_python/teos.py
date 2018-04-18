@@ -473,7 +473,7 @@ class SetContract(_Command):
 
     - **parameters**::
 
-        owner: An account object or the name of an account that 
+        account: An account object or the name of an account that 
             takes this contract.
         contract_dir: A directory containing the WAST and ABI files 
             of the contract.
@@ -500,7 +500,7 @@ class SetContract(_Command):
             the transaction (defaults to 0 which means no limit).
     """    
     def __init__(
-            self, owner, contract_dir, 
+            self, account, contract_dir, 
             wast_file="", abi_file="", 
             permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
@@ -509,16 +509,16 @@ class SetContract(_Command):
             ):
 
         try:
-            owner_name = owner.name
+            account = account.name
         except:
-            owner_name = owner
+            pass
                
         try:
             permission = permission.name
         except:
-            permission = permission 
+            pass 
 
-        self._jarg["account"] = owner_name
+        self._jarg["account"] = account
         self._jarg["contract-dir"] = contract_dir
         self._jarg["wast-file"] = wast_file
         self._jarg["abi-file"] = abi_file
@@ -531,17 +531,28 @@ class SetContract(_Command):
         self._jarg["max-net-usage"] = max_net_usage        
         _Command.__init__(self, "set", "contract", is_verbose)
         if not self.error:
-            self.owner_name = owner_name
+            self.account = account
 
 
 class PushAction(_Command):
     def __init__(
-            self, contract_name, action, data,
+            self, contract, action, data,
             permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             is_verbose=True        
-        ):   
+        ):
+        try:
+            contract_name = contract.name
+        except:
+            contract_name = contract
+
+        if permission:
+            try:
+                permission = permission.name
+            except:
+                pass
+
         self._jarg["contract"] = contract_name
         self._jarg["action"] = action
         self._jarg["data"] = data.replace('"', '\\"')
@@ -785,7 +796,7 @@ class Contract(SetContract):
 
         """
         if not permission:
-            permission=self.owner_name
+            permission=self.account
         else:
             try: # permission is an account:
                 permission=permission.name
@@ -793,7 +804,7 @@ class Contract(SetContract):
                 permission=permission
 
         push_action = PushAction(
-            self.owner_name, action, data,
+            self.account, action, data,
             permission, 
             expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,

@@ -306,7 +306,41 @@ contract_eosio_token.action(
 
 ### Transfer Tokens to Account "Tester"
 
+```
+contract_eosio_token.action(
+  "transfer", 
+  '{"from":"user","to":"tester","quantity":"25.0000 EOS","memo":"m"}',
+  permission="user")
+#        transaction id: ba296986977ff784b4c0bc24a57df6e341828e578760a61c87...
+```
 
+## Deploy Exchange Contract
+
+Similar to the examples shown above, we can deploy the exchange contract. The exchange contract provides capabilities to create and trade currency. It is assumed this is being run from the root of the EOSIO source.
+```
+account_exchange = teos.Account(
+  account_eosio, "exchange", key_accounts, key_accounts)
+#        transaction id: 2cef0a51d770218119a0288b9e7034bf77ac5f9c3600f203c9...
+
+contract_exchange = teos.Contract(
+  account_eosio_token, "exchange", permission=account_eosio_token)
+#        transaction id: 76c280a7e286d1013f07069b74df5f1bcc904441c6e58c025a...
+)
+```
+## Deploy Eosio.msig Contract
+
+The eosio.msig contract allows multiple parties to sign a single transaction asynchronously. EOSIO has multi-signature (multisig) support at a base level, but it requires a synchronous side channel where data is ferried around and signed. Eosio.msig is a more user friendly way of asynchronously proposing, approving and eventually publishing a transaction with multiple parties' consent.
+
+The following steps can be used to deploy the eosio.msig contract.
+```
+account_eosio_msig = teos.Account(
+  account_eosio, "eosio.msig", key_accounts, key_accounts)
+#        transaction id: 75ba5884512b078ccb06d10818b4a1ea1894dc466e0f5d3630...
+
+contract_eosio_msig = teos.Contract(
+  account_eosio_token, "eosio.msig", permission=account_eosio_token)
+#        transaction id: f069fe366ff81478c030eaec7e5b8c9887093a6b22a2f634d9...
+```
 
 ## Summary
 
@@ -324,9 +358,6 @@ wallet.import_key(account_eosio)
 contract_eosio_bios = teos.SetContract(
   account_eosio, "eosio.bios", permission=account_eosio)
 key_accounts = teos.CreateKey("key_accounts")
-
-# break here
-
 wallet.import_key(key_accounts)
 account_user = teos.Account(
    account_eosio, "user", key_accounts, key_accounts)
@@ -334,17 +365,14 @@ account_tester = teos.Account(
    account_eosio, "tester", key_accounts, key_accounts) 
 teos.GetInfo()
 teos.GetAccounts(key_accounts)
-
 account_eosio_token = teos.Account(
   account_eosio, "eosio.token", key_accounts, key_accounts)
 contract_eosio_token = teos.Contract(
   account_eosio_token, "eosio.token", permission=account_eosio_token)
-
 contract_eosio_token.action(
   "create",
   '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
     "can_freeze":0, "can_recall":0, "can_whitelist":0}') 
-
 contract_eosio_token.action(
   "issue",
   '{"to":"user","quantity":"100.0000 EOS","memo":"memo"}',
@@ -354,7 +382,13 @@ contract_eosio_token.action(
   '{"to":"user","quantity":"100.0000 EOS","memo":"memo"}',
   permission=account_eosio,
   dont_broadcast=1)
-
-
+account_exchange = teos.Account(
+  account_eosio, "exchange", key_accounts, key_accounts)
+contract_exchange = teos.Contract(
+  account_eosio_token, "exchange", permission=account_eosio_token)
+account_eosio_msig = teos.Account(
+  account_eosio, "eosio.msig", key_accounts, key_accounts)
+contract_eosio_msig = teos.Contract(
+  account_eosio_token, "eosio.msig", permission=account_eosio_token)
 
 ```

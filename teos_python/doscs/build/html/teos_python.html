@@ -105,13 +105,13 @@ json: The json representation of the account, if &#39;error; is not set.
 
 <dl class="class">
 <dt id="teos.SetContract">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">SetContract</code><span class="sig-paren">(</span><em>owner</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.SetContract" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">SetContract</code><span class="sig-paren">(</span><em>account</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.SetContract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates the contract on an account.</p>
 <p>Creates the contract on an account, and provides methodes that modify
 this contract.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>owner: An account object or the name of an account that 
+<div class="highlight-python"><div class="highlight"><pre>account: An account object or the name of an account that 
     takes this contract.
 contract_dir: A directory containing the WAST and ABI files 
     of the contract.
@@ -341,7 +341,7 @@ max_net_usage: An upper limit on the net usage budget, in bytes, for
 
 <dl class="class">
 <dt id="teos.Contract">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>owner</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Contract" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>account</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Contract" title="Permalink to this definition">¶</a></dt>
 <dd><p>A representation of an EOSIO smart contract.</p>
 <p>Creates the contract on an account, and provides methodes that modify
 this contract.</p>

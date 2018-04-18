@@ -68,6 +68,8 @@
 <li><a class="reference internal" href="#transfer-tokens-to-account-tester">Transfer Tokens to Account &#8220;Tester&#8221;</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#deploy-exchange-contract">Deploy Exchange Contract</a></li>
+<li><a class="reference internal" href="#deploy-eosio-msig-contract">Deploy Eosio.msig Contract</a></li>
 <li><a class="reference internal" href="#summary">Summary</a></li>
 </ul>
 </li>
@@ -398,6 +400,41 @@ we know that the above action takes, in fact, 3 transactions: one issue and thre
 </div>
 <div class="section" id="transfer-tokens-to-account-tester">
 <span id="transfer-tokens-to-account-tester"></span><h3>Transfer Tokens to Account &#8220;Tester&#8221;<a class="headerlink" href="#transfer-tokens-to-account-tester" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract_eosio_token</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;transfer&quot;</span><span class="p">,</span> 
+  <span class="s1">&#39;{&quot;from&quot;:&quot;user&quot;,&quot;to&quot;:&quot;tester&quot;,&quot;quantity&quot;:&quot;25.0000 EOS&quot;,&quot;memo&quot;:&quot;m&quot;}&#39;</span><span class="p">,</span>
+  <span class="n">permission</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+<span class="c1">#        transaction id: ba296986977ff784b4c0bc24a57df6e341828e578760a61c87...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="deploy-exchange-contract">
+<span id="deploy-exchange-contract"></span><h2>Deploy Exchange Contract<a class="headerlink" href="#deploy-exchange-contract" title="Permalink to this headline">¶</a></h2>
+<p>Similar to the examples shown above, we can deploy the exchange contract. The exchange contract provides capabilities to create and trade currency. It is assumed this is being run from the root of the EOSIO source.</p>
+<div class="highlight-python"><div class="highlight"><pre>account_exchange = teos.Account(
+  account_eosio, &quot;exchange&quot;, key_accounts, key_accounts)
+#        transaction id: 2cef0a51d770218119a0288b9e7034bf77ac5f9c3600f203c9...
+
+contract_exchange = teos.Contract(
+  account_eosio_token, &quot;exchange&quot;, permission=account_eosio_token)
+#        transaction id: 76c280a7e286d1013f07069b74df5f1bcc904441c6e58c025a...
+)
+</pre></div>
+</div>
+</div>
+<div class="section" id="deploy-eosio-msig-contract">
+<span id="deploy-eosio-msig-contract"></span><h2>Deploy Eosio.msig Contract<a class="headerlink" href="#deploy-eosio-msig-contract" title="Permalink to this headline">¶</a></h2>
+<p>The eosio.msig contract allows multiple parties to sign a single transaction asynchronously. EOSIO has multi-signature (multisig) support at a base level, but it requires a synchronous side channel where data is ferried around and signed. Eosio.msig is a more user friendly way of asynchronously proposing, approving and eventually publishing a transaction with multiple parties&#8217; consent.</p>
+<p>The following steps can be used to deploy the eosio.msig contract.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">account_eosio_msig</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
+  <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.msig&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
+<span class="c1">#        transaction id: 75ba5884512b078ccb06d10818b4a1ea1894dc466e0f5d3630...</span>
+
+<span class="n">contract_eosio_msig</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span>
+  <span class="n">account_eosio_token</span><span class="p">,</span> <span class="s2">&quot;eosio.msig&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio_token</span><span class="p">)</span>
+<span class="c1">#        transaction id: f069fe366ff81478c030eaec7e5b8c9887093a6b22a2f634d9...</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="summary">
@@ -415,9 +452,6 @@ we know that the above action takes, in fact, 3 transactions: one issue and thre
 <span class="n">contract_eosio_bios</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">SetContract</span><span class="p">(</span>
   <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.bios&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">)</span>
 <span class="n">key_accounts</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">CreateKey</span><span class="p">(</span><span class="s2">&quot;key_accounts&quot;</span><span class="p">)</span>
-
-<span class="c1"># break here</span>
-
 <span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
 <span class="n">account_user</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
    <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
@@ -425,17 +459,14 @@ we know that the above action takes, in fact, 3 transactions: one issue and thre
    <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;tester&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span> 
 <span class="n">teos</span><span class="o">.</span><span class="n">GetInfo</span><span class="p">()</span>
 <span class="n">teos</span><span class="o">.</span><span class="n">GetAccounts</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
-
 <span class="n">account_eosio_token</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
   <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.token&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
 <span class="n">contract_eosio_token</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span>
   <span class="n">account_eosio_token</span><span class="p">,</span> <span class="s2">&quot;eosio.token&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio_token</span><span class="p">)</span>
-
 <span class="n">contract_eosio_token</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
   <span class="s2">&quot;create&quot;</span><span class="p">,</span>
   <span class="s1">&#39;{&quot;issuer&quot;:&quot;eosio&quot;, &quot;maximum_supply&quot;:&quot;1000000000.0000 EOS&quot;, </span><span class="se">\</span>
 <span class="s1">    &quot;can_freeze&quot;:0, &quot;can_recall&quot;:0, &quot;can_whitelist&quot;:0}&#39;</span><span class="p">)</span> 
-
 <span class="n">contract_eosio_token</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
   <span class="s2">&quot;issue&quot;</span><span class="p">,</span>
   <span class="s1">&#39;{&quot;to&quot;:&quot;user&quot;,&quot;quantity&quot;:&quot;100.0000 EOS&quot;,&quot;memo&quot;:&quot;memo&quot;}&#39;</span><span class="p">,</span>
@@ -445,8 +476,14 @@ we know that the above action takes, in fact, 3 transactions: one issue and thre
   <span class="s1">&#39;{&quot;to&quot;:&quot;user&quot;,&quot;quantity&quot;:&quot;100.0000 EOS&quot;,&quot;memo&quot;:&quot;memo&quot;}&#39;</span><span class="p">,</span>
   <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">,</span>
   <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-
+<span class="n">account_exchange</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
+  <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;exchange&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
+<span class="n">contract_exchange</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span>
+  <span class="n">account_eosio_token</span><span class="p">,</span> <span class="s2">&quot;exchange&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio_token</span><span class="p">)</span>
+<span class="n">account_eosio_msig</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
+  <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.msig&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
+<span class="n">contract_eosio_msig</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span>
+  <span class="n">account_eosio_token</span><span class="p">,</span> <span class="s2">&quot;eosio.msig&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio_token</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
