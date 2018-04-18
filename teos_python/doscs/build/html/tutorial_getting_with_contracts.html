@@ -62,6 +62,8 @@
 <li><a class="reference internal" href="#create-two-user-accounts">Create Two User Accounts</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#eosio-token-exchange-and-eosio-msig-contracts">Eosio.token, Exchange, and Eosio.msig Contracts</a></li>
+<li><a class="reference internal" href="#create-the-eos-token">Create the EOS Token</a></li>
 <li><a class="reference internal" href="#summary">Summary</a></li>
 </ul>
 </li>
@@ -106,20 +108,8 @@
 <p>We rephrase an <a class="reference external" href="#https://github.com/EOSIO/eos/wiki/Tutorial-Getting-Started-With-Contracts">article</a> from EOSIO wiki.</p>
 <div class="section" id="getting-started-with-contracts">
 <span id="getting-started-with-contracts"></span><h2>Getting Started with Contracts<a class="headerlink" href="#getting-started-with-contracts" title="Permalink to this headline">¶</a></h2>
-<p>The purpose of this tutorial is to demonstrate how to setup a local blockchain that can be used to experiment with smart contracts. The first part of this tutorial will focus on:</p>
-<ul class="simple">
-<li>Starting a Private Blockchain</li>
-<li>Creating a Wallet</li>
-<li>Loading the Bios Contract</li>
-<li>Creating Accounts</li>
-</ul>
-<p>The second part of this tutorial will walk you through creating and deploying your own contracts.</p>
-<ul class="simple">
-<li>eosio.token Contract</li>
-<li>Exchange Contract</li>
-<li>Hello World Contract</li>
-<li>This tutorial assumes that you have installed both EOSIO and Tokenika TEOS, therefore, at first import the Tokenika teos python module:</li>
-</ul>
+<p>The purpose of this tutorial is to demonstrate primary experiments with smart contracts. This tutorial assumes that you have installed both <a class="reference external" href="#https://github.com/EOSIO/eos"><em>EOSIO</em></a> and <a class="reference external" href="#https://github.com/tokenika/logos"><em>Tokenika Logos</em></a>. If so, you have installed <em>python3</em>, as well.</p>
+<p>To begin with, open a bash terminal in the <code class="docutils literal"><span class="pre">teos_python</span></code> directory of the <em>Logos</em> repository. Start <code class="docutils literal"><span class="pre">python3</span></code>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">teos</span>
 <span class="n">teos</span><span class="o">.</span><span class="n">set_verbose</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
@@ -127,9 +117,8 @@
 </div>
 <div class="section" id="starting-a-private-blockchain">
 <span id="starting-a-private-blockchain"></span><h2>Starting a Private Blockchain<a class="headerlink" href="#starting-a-private-blockchain" title="Permalink to this headline">¶</a></h2>
-<p>Launch an object <code class="docutils literal"><span class="pre">teos.Daemon</span></code> that implements interaction with the local EOSIO node. Method <code class="docutils literal"><span class="pre">clear</span></code> starts this node cleared of any past background:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">daemon</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Daemon</span><span class="p">()</span>
-<span class="n">daemon</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+<p>Launch an object of <code class="docutils literal"><span class="pre">teos.DaemonClear()</span></code> that starts the local EOSIO node, beginning a new blockchain:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">teos</span><span class="o">.</span><span class="n">DaemonClear</span><span class="p">()</span>
 <span class="c1">#       nodeos exe file: /mnt/e/Workspaces/EOS/eos/build/programs/nodeos/nodeos</span>
 <span class="c1">#    genesis state file: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/genesis.json</span>
 <span class="c1">#        server address: 127.0.0.1:8888</span>
@@ -203,8 +192,8 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 </div>
 <div class="section" id="creating-accounts">
 <span id="creating-accounts"></span><h2>Creating Accounts<a class="headerlink" href="#creating-accounts" title="Permalink to this headline">¶</a></h2>
-<p>Now that we have setup the basic system contract, we can start to create our own accounts. We will create two accounts, user and tester, and we will need to associate a key with each account. In this example, the same key will be used for both accounts.</p>
-<p>To do this we first generate a key for the accounts and import it to the wallet.</p>
+<p>Now that you have set the basic system contract, you can start to create our own accounts. You will create two accounts, user and tester, and you will need to associate a key with each account. In this example, the same key will be used for both accounts.</p>
+<p>To do this you first generate a key for the accounts and import it to the wallet.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">key_accounts</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">CreateKey</span><span class="p">(</span><span class="s2">&quot;key_accounts&quot;</span><span class="p">)</span>
 <span class="c1">#              key name: key_accounts</span>
 <span class="c1">#           private key: 5JG3gEsowhnQXEYD1z4Vmh2iJMnNrb8oSg9TBVbLFjV7dSuDTrW</span>
@@ -215,7 +204,7 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 </div>
 <div class="section" id="create-two-user-accounts">
 <span id="create-two-user-accounts"></span><h3>Create Two User Accounts<a class="headerlink" href="#create-two-user-accounts" title="Permalink to this headline">¶</a></h3>
-<p>Next we will create two accounts, user and tester, using the key we created and imported above.</p>
+<p>Next you will create two accounts, user and tester, using the key you created and imported above.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">account_user</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span><span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
 <span class="c1">#        transaction id: f94c26662da514fac7027270531e023a6fc8cd4dcd739dc67e...</span>
 
@@ -225,7 +214,7 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 </pre></div>
 </div>
 <p>NOTE: The create account subcommand requires two keys, one for the OwnerKey (which in a production environment should be kept highly secure) and one for the ActiveKey. In this tutorial example, the same key is used for both.</p>
-<p>We can query all accounts that are controlled <code class="docutils literal"><span class="pre">key_accounts</span></code> key:</p>
+<p>You can query all accounts that are controlled <code class="docutils literal"><span class="pre">key_accounts</span></code> key:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">teos</span><span class="o">.</span><span class="n">GetAccounts</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
 <span class="c1">#  {</span>
 <span class="c1">#      &quot;account_names&quot;: [</span>
@@ -237,10 +226,52 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 </div>
 </div>
 </div>
+<div class="section" id="eosio-token-exchange-and-eosio-msig-contracts">
+<span id="eosio-token-exchange-and-eosio-msig-contracts"></span><h2>Eosio.token, Exchange, and Eosio.msig Contracts<a class="headerlink" href="#eosio-token-exchange-and-eosio-msig-contracts" title="Permalink to this headline">¶</a></h2>
+<p>At this stage the blockchain doesn&#8217;t do much, so let&#8217;s deploy the eosio.token contract. This contract enables the creation of many different tokens all running on the same contract but potentially managed by different users.</p>
+<p>Before we can deploy the token contract we must create an account to deploy it to.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">account_eosio_token</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
+  <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.token&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
+<span class="c1">#        transaction id: 64dcf4a8f522daea9699b48bcacee797273f4ca42ee6cb9de0...</span>
+</pre></div>
+</div>
+<p>Then we can deploy the contract which can be found in ${EOSIO_SOURCE}/build/contracts/eosio.token:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract_eosio_token</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span>
+  <span class="n">account_eosio_token</span><span class="p">,</span> <span class="s2">&quot;eosio.token&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio_token</span><span class="p">)</span>
+<span class="c1">#        transaction id: 286fecdb671fd8e0128acb4f28a1a10cc2a8e195047748ef54...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-the-eos-token">
+<span id="create-the-eos-token"></span><h2>Create the EOS Token<a class="headerlink" href="#create-the-eos-token" title="Permalink to this headline">¶</a></h2>
+<p>You can view the interface to eosio.token as defined by contracts/eosio.token/eosio.token.hpp:</p>
+<div class="highlight-python"><div class="highlight"><pre>   void create( account_name issuer,
+                asset        maximum_supply,
+                uint8_t      can_freeze,
+                uint8_t      can_recall,
+                uint8_t      can_whitelist );
+
+
+   void issue( account_name to, asset quantity, string memo );
+
+   void transfer( account_name from,
+                  account_name to,
+                  asset        quantity,
+                  string       memo );
+</pre></div>
+</div>
+<p>To create a new token we must call the create(...) action with the proper arguments. This command will use the symbol of the maximum supply to uniquely identify this token from other tokens. The issuer will be the one with authority to call issue and or perform other actions such as freezing, recalling, and whitelisting of owners.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract_eosio_token</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;{&quot;issuer&quot;:&quot;eosio&quot;, &quot;maximum_supply&quot;:&quot;1000000000.0000 EOS&quot;, </span><span class="se">\</span>
+<span class="s1">    &quot;can_freeze&quot;:0, &quot;can_recall&quot;:0, &quot;can_whitelist&quot;:0}&#39;</span><span class="p">)</span>
+<span class="c1">#        transaction id: 42df2cca11971b5af6478156d33e2cd8f5869de6a80090efc6...</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="summary">
 <span id="summary"></span><h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">daemon</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Daemon</span><span class="p">()</span>
-<span class="n">daemon</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">daemon</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">DaemonClear</span><span class="p">()</span>
 <span class="n">wallet</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Wallet</span><span class="p">()</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">lock</span><span class="p">()</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
@@ -250,6 +281,9 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 <span class="n">account_eosio</span><span class="o">.</span><span class="n">key_private</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">account_eosio</span><span class="p">)</span>
+<span class="n">contract_eosio_bios</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">SetContract</span><span class="p">(</span>
+  <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.bios&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">)</span>
+
 <span class="n">key_accounts</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">CreateKey</span><span class="p">(</span><span class="s2">&quot;key_accounts&quot;</span><span class="p">)</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
 <span class="n">account_user</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
@@ -257,6 +291,16 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 <span class="n">account_tester</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
    <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;tester&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span> 
 <span class="n">teos</span><span class="o">.</span><span class="n">GetAccounts</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
+
+<span class="n">account_eosio_token</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
+  <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.token&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
+<span class="n">contract_eosio_token</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span>
+  <span class="n">account_eosio_token</span><span class="p">,</span> <span class="s2">&quot;eosio.token&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio_token</span><span class="p">)</span>
+
+<span class="n">contract_eosio_token</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;{&quot;issuer&quot;:&quot;eosio&quot;, &quot;maximum_supply&quot;:&quot;1000000000.0000 EOS&quot;, </span><span class="se">\</span>
+<span class="s1">    &quot;can_freeze&quot;:0, &quot;can_recall&quot;:0, &quot;can_whitelist&quot;:0}&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

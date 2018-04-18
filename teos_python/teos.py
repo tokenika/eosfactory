@@ -774,18 +774,33 @@ class Contract(SetContract):
     def __str__(self):
         return self._out
         
-    def action(self, action, data):
+    def action(
+            self, action, data,
+            permission="",
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0, is_verbose=False
+        ):
         """ Implements the 'cloes push action' command. 
 
         """
-        PushAction(
-            self.owner_name, action, data,
-            permission=self.owner_name+"@active", 
-            expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0
-            )
+        if not permission:
+            permission=self.owner_name
+        else:
+            try: # permission is an account:
+                permission=permission.name
+            except: # permission is the name of an account:
+                permission=permission
 
+        push_action = PushAction(
+            self.owner_name, action, data,
+            permission, 
+            expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage
+            )
+        if is_verbose:
+            print(push_action.json)
 
 class Daemon(_Commands):
     """ A representation of the local EOSIO node.

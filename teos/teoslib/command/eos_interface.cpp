@@ -573,6 +573,9 @@ namespace teos {
       vector<string> permissions = {};
       if(!permission.empty()){
         boost::split(permissions, permission, boost::is_any_of(","));
+        for(size_t i = 0; i < permissions.size(); i++) {
+          permissions[i] = permissions[i] + "@active";
+        }        
       }
 
       fc::variant action_args_var;

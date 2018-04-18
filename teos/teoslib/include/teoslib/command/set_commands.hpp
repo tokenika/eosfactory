@@ -114,13 +114,13 @@ Usage: ./teos [http address] create key --jarg '{
               "'account@permission' (defaults to 'account@active')")
           ("expiration,x", value<unsigned>(&expiration)->default_value(30)
             , "The time in seconds before a transaction expires.")
-          ("skip-sign,s", value<bool>(&skipSignature)->default_value(false)
+          ("skip-sign,s"
             , "Specify that unlocked wallet keys should not be used to sign "
             "transaction, defaults to false.")
-          ("dont-broadcast,d", value<bool>(&dontBroadcast)->default_value(false)
+          ("dont-broadcast,d"
             , "Don't broadcast transaction to the network "
               "(just print to stdout).")
-          ("force-unique,f", value<bool>(&forceUnique)->default_value(false)
+          ("force-unique,f"
             , "force the transaction to be unique. this will consume extra "
             "bandwidth and remove any protections against accidently issuing "
             "the same transaction multiple times.")
@@ -149,9 +149,13 @@ Usage: ./teos [http address] create key --jarg '{
             reqJson_.put("abi-file", abiFile);
             reqJson_.put("permission", permission);
             reqJson_.put("expiration", expiration);                
-            reqJson_.put("skip-sign", skipSignature);
-            reqJson_.put("dont-broadcast", dontBroadcast);
-            reqJson_.put("force-unique", forceUnique);
+            reqJson_.put(
+              "skip-sign", skipSignature = vm.count("skip-sign") ? true : false);
+            reqJson_.put(
+              "dont-broadcast", 
+              dontBroadcast = vm.count("dont-broadcast") ? true : false);
+            reqJson_.put(
+              "force-unique", forceUnique = vm.count("force-unique") ? true : false);
             reqJson_.put("max-cpu-usage", maxCpuUsage);            
             reqJson_.put("max-net-usage", maxNetUsage);                        
             ok = true;
