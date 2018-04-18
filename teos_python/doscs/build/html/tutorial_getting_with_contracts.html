@@ -63,7 +63,11 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#eosio-token-exchange-and-eosio-msig-contracts">Eosio.token, Exchange, and Eosio.msig Contracts</a></li>
-<li><a class="reference internal" href="#create-the-eos-token">Create the EOS Token</a></li>
+<li><a class="reference internal" href="#create-the-eos-token">Create the EOS Token</a><ul>
+<li><a class="reference internal" href="#issue-tokens-to-account-user">Issue Tokens to Account &#8220;User&#8221;</a></li>
+<li><a class="reference internal" href="#transfer-tokens-to-account-tester">Transfer Tokens to Account &#8220;Tester&#8221;</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#summary">Summary</a></li>
 </ul>
 </li>
@@ -268,6 +272,133 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 <span class="c1">#        transaction id: 42df2cca11971b5af6478156d33e2cd8f5869de6a80090efc6...</span>
 </pre></div>
 </div>
+<p>You can read the above:</p>
+<p>Let contract <code class="docutils literal"><span class="pre">contract_eosio_token</span></code> use its <code class="docutils literal"><span class="pre">create</span></code> method with arguments as defined with the second argument. Let this action be explicitly (default setting) signed by its creator, that is <code class="docutils literal"><span class="pre">account_eosio_token</span></code>.</p>
+<p>This command created a new token EOS with a pecision of 4 decimials and a maximum supply of 1000000000.0000 EOS.</p>
+<div class="section" id="issue-tokens-to-account-user">
+<span id="issue-tokens-to-account-user"></span><h3>Issue Tokens to Account &#8220;User&#8221;<a class="headerlink" href="#issue-tokens-to-account-user" title="Permalink to this headline">¶</a></h3>
+<p>Now that we have created the token, the issuer can issue new tokens to the account user we created earlier.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract_eosio_token</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;issue&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;{&quot;to&quot;:&quot;user&quot;,&quot;quantity&quot;:&quot;100.0000 EOS&quot;,&quot;memo&quot;:&quot;memo&quot;}&#39;</span><span class="p">,</span>
+  <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">)</span>
+<span class="c1">#        transaction id: 015a870a42ffd3d9e86776cc36c06b28d9d4246ad585d8566f...</span>
+</pre></div>
+</div>
+<p>From the original <a class="reference external" href="#https://github.com/EOSIO/eos/wiki/Tutorial-eosio-token-Contract#issue-tokens-to-account-user">tutorial</a>,
+we know that the above action takes, in fact, 3 transactions: one issue and three transfers.</p>
+<p>They say: <em>Technically, the eosio.token contract could have skipped the inline transfer and opted to just modify the balances directly. However, in this case, the eosio.token contract is following our token convention that requires that all account balances be derivable by the sum of the transfer actions that reference them. It also requires that the sender and receiver of funds be notified so they can automate handling deposits and withdrawals.</em></p>
+<p>We do not guess that this knowledge could be helpful to you, who orderers this action. Anyhow, you can see the actual transaction that was broadcast:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract_eosio_token</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;issue&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;{&quot;to&quot;:&quot;user&quot;,&quot;quantity&quot;:&quot;100.0000 EOS&quot;,&quot;memo&quot;:&quot;memo&quot;}&#39;</span><span class="p">,</span>
+  <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">,</span>
+  <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>                     <span class="c1"># set dont_broadcast=1</span>
+
+<span class="c1">#        transaction id: 0195bef180de1bbc298e2bd1a086288cfbfbc3f8d5e6e3f0604e21a84687ac05</span>
+
+<span class="p">{</span><span class="s1">&#39;processed&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;_profiling_us&#39;</span><span class="p">:</span> <span class="s1">&#39;4659&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;_setup_profiling_us&#39;</span><span class="p">:</span> <span class="s1">&#39;1633&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;action_traces&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;_profiling_us&#39;</span><span class="p">:</span> <span class="s1">&#39;2510&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;act&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;account&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;actor&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">,</span>
+                                                             <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;active&#39;</span><span class="p">}],</span>
+                                          <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;memo&#39;</span><span class="p">:</span> <span class="s1">&#39;memo&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;quantity&#39;</span><span class="p">:</span> <span class="s1">&#39;100.0000 EOS&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">},</span>
+                                          <span class="s1">&#39;hex_data&#39;</span><span class="p">:</span> <span class="s1">&#39;00000000007015d640420f000000000004454f5300000000046d656d6f&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;issue&#39;</span><span class="p">},</span>
+                                  <span class="s1">&#39;console&#39;</span><span class="p">:</span> <span class="s1">&#39;issue&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;context_free&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;cpu_usage&#39;</span><span class="p">:</span> <span class="s1">&#39;13568&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;data_access&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="s1">&#39;........ehbo5&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;sequence&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;write&#39;</span><span class="p">},</span>
+                                                  <span class="p">{</span><span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;sequence&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;write&#39;</span><span class="p">}],</span>
+                                  <span class="s1">&#39;receiver&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">},</span>
+                                 <span class="p">{</span><span class="s1">&#39;_profiling_us&#39;</span><span class="p">:</span> <span class="s1">&#39;1290&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;act&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;account&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;actor&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">,</span>
+                                                             <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;active&#39;</span><span class="p">}],</span>
+                                          <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;memo&#39;</span><span class="p">:</span> <span class="s1">&#39;memo&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;quantity&#39;</span><span class="p">:</span> <span class="s1">&#39;100.0000 EOS&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">},</span>
+                                          <span class="s1">&#39;hex_data&#39;</span><span class="p">:</span> <span class="s1">&#39;0000000000ea305500000000007015d640420f000000000004454f5300000000046d656d6f&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;transfer&#39;</span><span class="p">},</span>
+                                  <span class="s1">&#39;console&#39;</span><span class="p">:</span> <span class="s1">&#39;transfer&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;context_free&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;cpu_usage&#39;</span><span class="p">:</span> <span class="s1">&#39;6865&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;data_access&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;sequence&#39;</span><span class="p">:</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;write&#39;</span><span class="p">},</span>
+                                                  <span class="p">{</span><span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;sequence&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;write&#39;</span><span class="p">},</span>
+                                                  <span class="p">{</span><span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="s1">&#39;........ehbo5&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;sequence&#39;</span><span class="p">:</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;read&#39;</span><span class="p">}],</span>
+                                  <span class="s1">&#39;receiver&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">},</span>
+                                 <span class="p">{</span><span class="s1">&#39;_profiling_us&#39;</span><span class="p">:</span> <span class="s1">&#39;37&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;act&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;account&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;actor&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">,</span>
+                                                             <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;active&#39;</span><span class="p">}],</span>
+                                          <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;memo&#39;</span><span class="p">:</span> <span class="s1">&#39;memo&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;quantity&#39;</span><span class="p">:</span> <span class="s1">&#39;100.0000 EOS&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">},</span>
+                                          <span class="s1">&#39;hex_data&#39;</span><span class="p">:</span> <span class="s1">&#39;0000000000ea305500000000007015d640420f000000000004454f5300000000046d656d6f&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;transfer&#39;</span><span class="p">},</span>
+                                  <span class="s1">&#39;console&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;context_free&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;cpu_usage&#39;</span><span class="p">:</span> <span class="s1">&#39;21&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;data_access&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;receiver&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">},</span>
+                                 <span class="p">{</span><span class="s1">&#39;_profiling_us&#39;</span><span class="p">:</span> <span class="s1">&#39;8&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;act&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;account&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;actor&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">,</span>
+                                                             <span class="s1">&#39;permission&#39;</span><span class="p">:</span> <span class="s1">&#39;active&#39;</span><span class="p">}],</span>
+                                          <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;memo&#39;</span><span class="p">:</span> <span class="s1">&#39;memo&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;quantity&#39;</span><span class="p">:</span> <span class="s1">&#39;100.0000 EOS&#39;</span><span class="p">,</span>
+                                                   <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">},</span>
+                                          <span class="s1">&#39;hex_data&#39;</span><span class="p">:</span> <span class="s1">&#39;0000000000ea305500000000007015d640420f000000000004454f5300000000046d656d6f&#39;</span><span class="p">,</span>
+                                          <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;transfer&#39;</span><span class="p">},</span>
+                                  <span class="s1">&#39;console&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;context_free&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;cpu_usage&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;data_access&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;receiver&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">}],</span>
+               <span class="s1">&#39;cpu_usage&#39;</span><span class="p">:</span> <span class="s1">&#39;125952&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;cycle_index&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;deferred_transaction_requests&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;0195bef180de1bbc298e2bd1a086288cfbfbc3f8d5e6e3f0604e21a84687ac05&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;kcpu_usage&#39;</span><span class="p">:</span> <span class="s1">&#39;123&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;net_usage&#39;</span><span class="p">:</span> <span class="s1">&#39;256&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;net_usage_words&#39;</span><span class="p">:</span> <span class="s1">&#39;32&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;packed_trx_digest&#39;</span><span class="p">:</span> <span class="s1">&#39;218563a2f4a414c5b69b191e00b6e5b1cf5945f7849a20b519106b096b7af114&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;read_locks&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;shard_index&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;executed&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;write_locks&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;account&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="s1">&#39;........ehbo5&#39;</span><span class="p">},</span>
+                               <span class="p">{</span><span class="s1">&#39;account&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span> <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio&#39;</span><span class="p">},</span>
+                               <span class="p">{</span><span class="s1">&#39;account&#39;</span><span class="p">:</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span> <span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">}]},</span>
+ <span class="s1">&#39;transaction_id&#39;</span><span class="p">:</span> <span class="s1">&#39;0195bef180de1bbc298e2bd1a086288cfbfbc3f8d5e6e3f0604e21a84687ac05&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transfer-tokens-to-account-tester">
+<span id="transfer-tokens-to-account-tester"></span><h3>Transfer Tokens to Account &#8220;Tester&#8221;<a class="headerlink" href="#transfer-tokens-to-account-tester" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 <div class="section" id="summary">
 <span id="summary"></span><h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
@@ -283,13 +414,16 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 <span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">account_eosio</span><span class="p">)</span>
 <span class="n">contract_eosio_bios</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">SetContract</span><span class="p">(</span>
   <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.bios&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">)</span>
-
 <span class="n">key_accounts</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">CreateKey</span><span class="p">(</span><span class="s2">&quot;key_accounts&quot;</span><span class="p">)</span>
+
+<span class="c1"># break here</span>
+
 <span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
 <span class="n">account_user</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
    <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span>
 <span class="n">account_tester</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
    <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;tester&quot;</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">,</span> <span class="n">key_accounts</span><span class="p">)</span> 
+<span class="n">teos</span><span class="o">.</span><span class="n">GetInfo</span><span class="p">()</span>
 <span class="n">teos</span><span class="o">.</span><span class="n">GetAccounts</span><span class="p">(</span><span class="n">key_accounts</span><span class="p">)</span>
 
 <span class="n">account_eosio_token</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
@@ -300,7 +434,19 @@ Exception&quot;,&quot;details&quot;:[{&quot;message&quot;:&quot;!\&quot;Key alre
 <span class="n">contract_eosio_token</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
   <span class="s2">&quot;create&quot;</span><span class="p">,</span>
   <span class="s1">&#39;{&quot;issuer&quot;:&quot;eosio&quot;, &quot;maximum_supply&quot;:&quot;1000000000.0000 EOS&quot;, </span><span class="se">\</span>
-<span class="s1">    &quot;can_freeze&quot;:0, &quot;can_recall&quot;:0, &quot;can_whitelist&quot;:0}&#39;</span><span class="p">)</span>
+<span class="s1">    &quot;can_freeze&quot;:0, &quot;can_recall&quot;:0, &quot;can_whitelist&quot;:0}&#39;</span><span class="p">)</span> 
+
+<span class="n">contract_eosio_token</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;issue&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;{&quot;to&quot;:&quot;user&quot;,&quot;quantity&quot;:&quot;100.0000 EOS&quot;,&quot;memo&quot;:&quot;memo&quot;}&#39;</span><span class="p">,</span>
+  <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">)</span>
+<span class="n">contract_eosio_token</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;issue&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;{&quot;to&quot;:&quot;user&quot;,&quot;quantity&quot;:&quot;100.0000 EOS&quot;,&quot;memo&quot;:&quot;memo&quot;}&#39;</span><span class="p">,</span>
+  <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">,</span>
+  <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
 </pre></div>
 </div>
 </div>

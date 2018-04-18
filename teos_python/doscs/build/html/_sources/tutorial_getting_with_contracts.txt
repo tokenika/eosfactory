@@ -174,6 +174,139 @@ contract_eosio_token.action(
     "can_freeze":0, "can_recall":0, "can_whitelist":0}')
 #        transaction id: 42df2cca11971b5af6478156d33e2cd8f5869de6a80090efc6...
 ```
+You can read the above: 
+
+Let contract `contract_eosio_token` use its `create` method with arguments as defined with the second argument. Let this action be explicitly (default setting) signed by its creator, that is `account_eosio_token`.
+
+This command created a new token EOS with a pecision of 4 decimials and a maximum supply of 1000000000.0000 EOS.
+
+### Issue Tokens to Account "User"
+
+Now that we have created the token, the issuer can issue new tokens to the account user we created earlier.
+```
+contract_eosio_token.action(
+  "issue",
+  '{"to":"user","quantity":"100.0000 EOS","memo":"memo"}',
+  permission=account_eosio)
+#        transaction id: 015a870a42ffd3d9e86776cc36c06b28d9d4246ad585d8566f...
+```
+From the original [tutorial](#https://github.com/EOSIO/eos/wiki/Tutorial-eosio-token-Contract#issue-tokens-to-account-user),
+we know that the above action takes, in fact, 3 transactions: one issue and three transfers.
+
+They say: *Technically, the eosio.token contract could have skipped the inline transfer and opted to just modify the balances directly. However, in this case, the eosio.token contract is following our token convention that requires that all account balances be derivable by the sum of the transfer actions that reference them. It also requires that the sender and receiver of funds be notified so they can automate handling deposits and withdrawals.*
+
+We do not guess that this knowledge could be helpful to you, who orderers this action. Anyhow, you can see the actual transaction that was broadcast:
+
+```
+contract_eosio_token.action(
+  "issue",
+  '{"to":"user","quantity":"100.0000 EOS","memo":"memo"}',
+  permission=account_eosio,
+  dont_broadcast=1)                     # set dont_broadcast=1
+
+#        transaction id: 0195bef180de1bbc298e2bd1a086288cfbfbc3f8d5e6e3f0604e21a84687ac05
+
+{'processed': {'_profiling_us': '4659',
+               '_setup_profiling_us': '1633',
+               'action_traces': [{'_profiling_us': '2510',
+                                  'act': {'account': 'eosio.token',
+                                          'authorization': [{'actor': 'eosio',
+                                                             'permission': 'active'}],
+                                          'data': {'memo': 'memo',
+                                                   'quantity': '100.0000 EOS',
+                                                   'to': 'user'},
+                                          'hex_data': '00000000007015d640420f000000000004454f5300000000046d656d6f',
+                                          'name': 'issue'},
+                                  'console': 'issue',
+                                  'context_free': 'false',
+                                  'cpu_usage': '13568',
+                                  'data_access': [{'code': 'eosio.token',
+                                                   'scope': '........ehbo5',
+                                                   'sequence': '2',
+                                                   'type': 'write'},
+                                                  {'code': 'eosio.token',
+                                                   'scope': 'eosio',
+                                                   'sequence': '2',
+                                                   'type': 'write'}],
+                                  'receiver': 'eosio.token'},
+                                 {'_profiling_us': '1290',
+                                  'act': {'account': 'eosio.token',
+                                          'authorization': [{'actor': 'eosio',
+                                                             'permission': 'active'}],
+                                          'data': {'from': 'eosio',
+                                                   'memo': 'memo',
+                                                   'quantity': '100.0000 EOS',
+                                                   'to': 'user'},
+                                          'hex_data': '0000000000ea305500000000007015d640420f000000000004454f5300000000046d656d6f',
+                                          'name': 'transfer'},
+                                  'console': 'transfer',
+                                  'context_free': 'false',
+                                  'cpu_usage': '6865',
+                                  'data_access': [{'code': 'eosio.token',
+                                                   'scope': 'eosio',
+                                                   'sequence': '3',
+                                                   'type': 'write'},
+                                                  {'code': 'eosio.token',
+                                                   'scope': 'user',
+                                                   'sequence': '1',
+                                                   'type': 'write'},
+                                                  {'code': 'eosio.token',
+                                                   'scope': '........ehbo5',
+                                                   'sequence': '3',
+                                                   'type': 'read'}],
+                                  'receiver': 'eosio.token'},
+                                 {'_profiling_us': '37',
+                                  'act': {'account': 'eosio.token',
+                                          'authorization': [{'actor': 'eosio',
+                                                             'permission': 'active'}],
+                                          'data': {'from': 'eosio',
+                                                   'memo': 'memo',
+                                                   'quantity': '100.0000 EOS',
+                                                   'to': 'user'},
+                                          'hex_data': '0000000000ea305500000000007015d640420f000000000004454f5300000000046d656d6f',
+                                          'name': 'transfer'},
+                                  'console': '',
+                                  'context_free': 'false',
+                                  'cpu_usage': '21',
+                                  'data_access': '',
+                                  'receiver': 'eosio'},
+                                 {'_profiling_us': '8',
+                                  'act': {'account': 'eosio.token',
+                                          'authorization': [{'actor': 'eosio',
+                                                             'permission': 'active'}],
+                                          'data': {'from': 'eosio',
+                                                   'memo': 'memo',
+                                                   'quantity': '100.0000 EOS',
+                                                   'to': 'user'},
+                                          'hex_data': '0000000000ea305500000000007015d640420f000000000004454f5300000000046d656d6f',
+                                          'name': 'transfer'},
+                                  'console': '',
+                                  'context_free': 'false',
+                                  'cpu_usage': '0',
+                                  'data_access': '',
+                                  'receiver': 'user'}],
+               'cpu_usage': '125952',
+               'cycle_index': '1',
+               'deferred_transaction_requests': '',
+               'id': '0195bef180de1bbc298e2bd1a086288cfbfbc3f8d5e6e3f0604e21a84687ac05',
+               'kcpu_usage': '123',
+               'net_usage': '256',
+               'net_usage_words': '32',
+               'packed_trx_digest': '218563a2f4a414c5b69b191e00b6e5b1cf5945f7849a20b519106b096b7af114',
+               'read_locks': '',
+               'region_id': '0',
+               'shard_index': '0',
+               'status': 'executed',
+               'write_locks': [{'account': 'eosio.token',
+                                'scope': '........ehbo5'},
+                               {'account': 'eosio.token', 'scope': 'eosio'},
+                               {'account': 'eosio.token', 'scope': 'user'}]},
+ 'transaction_id': '0195bef180de1bbc298e2bd1a086288cfbfbc3f8d5e6e3f0604e21a84687ac05'}
+```
+
+### Transfer Tokens to Account "Tester"
+
+
 
 ## Summary
 
@@ -190,13 +323,16 @@ wallet.keys()
 wallet.import_key(account_eosio)
 contract_eosio_bios = teos.SetContract(
   account_eosio, "eosio.bios", permission=account_eosio)
-
 key_accounts = teos.CreateKey("key_accounts")
+
+# break here
+
 wallet.import_key(key_accounts)
 account_user = teos.Account(
    account_eosio, "user", key_accounts, key_accounts)
 account_tester = teos.Account(
    account_eosio, "tester", key_accounts, key_accounts) 
+teos.GetInfo()
 teos.GetAccounts(key_accounts)
 
 account_eosio_token = teos.Account(
@@ -207,5 +343,18 @@ contract_eosio_token = teos.Contract(
 contract_eosio_token.action(
   "create",
   '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
-    "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+    "can_freeze":0, "can_recall":0, "can_whitelist":0}') 
+
+contract_eosio_token.action(
+  "issue",
+  '{"to":"user","quantity":"100.0000 EOS","memo":"memo"}',
+  permission=account_eosio)
+contract_eosio_token.action(
+  "issue",
+  '{"to":"user","quantity":"100.0000 EOS","memo":"memo"}',
+  permission=account_eosio,
+  dont_broadcast=1)
+
+
+
 ```

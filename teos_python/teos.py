@@ -799,8 +799,8 @@ class Contract(SetContract):
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage
             )
-        if is_verbose:
-            print(push_action.json)
+        if dont_broadcast and not push_action.error:
+            pprint.pprint(push_action.json)
 
 class Daemon(_Commands):
     """ A representation of the local EOSIO node.
