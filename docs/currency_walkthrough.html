@@ -1,0 +1,371 @@
+
+
+<!doctype html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Example “Currency” Contract Walkthrough &mdash; Teos python 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="static/bizstyle.js"></script>
+    <link rel="top" title="Teos python 1.0 documentation" href="index.html" />
+    <link rel="next" title="Tutorial Getting Started With Contracts" href="tutorial_getting_with_contracts.html" />
+    <link rel="prev" title="Welcome to Teos python’s documentation!" href="index.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial_getting_with_contracts.html" title="Tutorial Getting Started With Contracts"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Teos python’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Teos python 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Example &#8220;Currency&#8221; Contract Walkthrough</a><ul>
+<li><a class="reference internal" href="#start-eos-node">Start EOS node</a></li>
+<li><a class="reference internal" href="#create-a-wallet">Create a wallet</a></li>
+<li><a class="reference internal" href="#load-the-bios-contract">Load the Bios Contract</a></li>
+<li><a class="reference internal" href="#create-an-account-for-the-currency-contract">Create an account for the &#8220;currency&#8221; contract</a></li>
+<li><a class="reference internal" href="#upload-the-sample-currency-contract-to-the-blockchain">Upload the sample &#8220;currency&#8221; contract to the blockchain</a></li>
+<li><a class="reference internal" href="#transfer-funds-using-the-currency-contract">Transfer funds using the &#8220;currency&#8221; contract</a></li>
+<li><a class="reference internal" href="#check-the-currency-contract-balances">Check the &#8220;currency&#8221; contract balances</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Teos python&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial_getting_with_contracts.html"
+                        title="next chapter">Tutorial Getting Started With Contracts</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="sources/currency_walkthrough.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="example-currency-contract-walkthrough">
+<span id="example-currency-contract-walkthrough"></span><h1>Example &#8220;Currency&#8221; Contract Walkthrough<a class="headerlink" href="#example-currency-contract-walkthrough" title="Permalink to this headline">¶</a></h1>
+<p>We rephrase an article from an outdated EOSIO <a class="reference external" href="#https://raw.githubusercontent.com/ekkis/eos/master/README.md">README}</a></p>
+<p>EOS comes with example contracts that can be uploaded and run for testing
+purposes. We will validate our single node setup using the sample contract
+&#8216;currency&#8217;.</p>
+<div class="section" id="start-eos-node">
+<span id="start-eos-node"></span><h2>Start EOS node<a class="headerlink" href="#start-eos-node" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">teos</span>
+<span class="n">teos</span><span class="o">.</span><span class="n">set_verbose</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">daemon</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Daemon</span><span class="p">()</span>
+<span class="n">daemon</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+<span class="c1">#       nodeos exe file: /mnt/e/Workspaces/EOS/eos/build/programs/nodeos/nodeos</span>
+<span class="c1">#    genesis state file: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/genesis.json</span>
+<span class="c1">#        server address: 127.0.0.1:8888</span>
+<span class="c1">#      config directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir</span>
+<span class="c1">#      wallet directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/wallet</span>
+<span class="c1">#     head block number: 2</span>
+<span class="c1">#       head block time: 2018-04-10T17:20:54</span>
+
+<span class="c1"># See a prove that the daemon is started:</span>
+<span class="k">print</span><span class="p">(</span><span class="n">daemon</span><span class="p">)</span>
+<span class="c1">#            head block: 1047</span>
+<span class="c1">#       head block time: 2018-04-10T16:57:27</span>
+<span class="c1">#  last irreversible block: 1046</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-a-wallet">
+<span id="create-a-wallet"></span><h2>Create a wallet<a class="headerlink" href="#create-a-wallet" title="Permalink to this headline">¶</a></h2>
+<p>Every contract requires an associated account, so first you need to create
+a wallet. To create a wallet, you need to have the wallet_api_plugin loaded
+into the nodeos process:</p>
+<div class="highlight-python"><div class="highlight"><pre>
+<span class="n">wallet</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Wallet</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The wallet name argument is not set: the default wallet name is &#8216;default&#8217;.</p>
+</div>
+<div class="section" id="load-the-bios-contract">
+<span id="load-the-bios-contract"></span><h2>Load the Bios Contract<a class="headerlink" href="#load-the-bios-contract" title="Permalink to this headline">¶</a></h2>
+<p>You have to owe an account to be authorized to interact with EOSIO. For tests,
+you can use the &#8216;eosio&#8217; account:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">account_eosio</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">EosioAccount</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Set a smart contract defined in folder
+eos-source-dir/build/contracts/eosio.bios/ as the default system contract.
+This contract enables you to have direct control over the resource allocation
+of other accounts and to access other privileged API calls.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract_eosio_bios</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">SetContract</span><span class="p">(</span>
+  <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.bios&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">)</span>
+<span class="c1">#        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d087737ada0...</span>
+</pre></div>
+</div>
+<p>The second argument in the constructor indicates a directory that contains
+the contract files. The path to this directory is determined with
+<a class="reference external" href="#setup">setup rules</a>. An absolute path is an option.</p>
+<p>As the set contract command call has produced the transaction id, the default contract is operational.</p>
+</div>
+<div class="section" id="create-an-account-for-the-currency-contract">
+<span id="create-an-account-for-the-currency-contract"></span><h2>Create an account for the &#8220;currency&#8221; contract<a class="headerlink" href="#create-an-account-for-the-currency-contract" title="Permalink to this headline">¶</a></h2>
+<p>The account named &#8220;currency&#8221; will be used for the &#8220;currency&#8221; contract.
+Generate two public/private key pairs that will be later assigned as the
+key_owner and the key_active:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">key_owner</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">CreateKey</span><span class="p">(</span><span class="s2">&quot;key_owner&quot;</span><span class="p">)</span>
+<span class="c1">#              key name: key_owner</span>
+<span class="c1">#           private key: 5J4bSiNprJzPYVHqoZdSDGTTd454LiDc89AVvKT4Miv2SyzZTDF</span>
+<span class="c1">#            public key: EOS7vDtGf9cVxEChKN7YeDgqMGrgFgvcCdN5qAUEhMMufAnPHddTb</span>
+<span class="n">key_active</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">CreateKey</span><span class="p">(</span><span class="s2">&quot;key_active&quot;</span><span class="p">)</span>
+<span class="c1">#              key name: key_active</span>
+<span class="c1">#           private key: 5KRHeQ1S7pEtCw6TMeW6WKvupuR8cVGJjpNbAN5uviXTAtvhmDW</span>
+<span class="c1">#            public key: EOS6FfNuYYKoSa7pjhoqqeymi6iwe6j9ukVHiQxPbMeAcHmcoxRwj</span>
+</pre></div>
+</div>
+<p>Import the two private keys into the wallet:</p>
+<p>wallet.import_key(key_owner)
+wallet.import_key(key_active)</p>
+<p>You can see the contents of the wallet:</p>
+<div class="highlight-"><div class="highlight"><pre>print(wallet)
+{&#39;keys&#39;: [[&#39;key_owner&#39;, &#39;5J4bSiNprJzPYVHqoZdSDGTTd454LiDc89AVvKT4Miv2SyzZTDF&#39;],
+          [&#39;key_active&#39;,
+           &#39;5KRHeQ1S7pEtCw6TMeW6WKvupuR8cVGJjpNbAN5uviXTAtvhmDW&#39;]],
+ &#39;name&#39;: &#39;default&#39;,
+ &#39;password&#39;: &#39;PW5Kih88UxyFeVeYfWiuhbBRVhxmzr4nVvyTjsuNLgP6Ropxb9SJY&#39;}
+</pre></div>
+</div>
+<p>Create the currency account. The creation will be authorized by the eosio
+account. The two public keys generated above will be associated with the
+account, one as its owner key and the other as its active key.</p>
+<div class="highlight-python"><div class="highlight"><pre>
+<span class="n">account_currency</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
+  <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;currency&quot;</span><span class="p">,</span> <span class="n">key_owner</span><span class="p">,</span> <span class="n">key_active</span><span class="p">)</span>
+<span class="c1">#        transaction id: 0c4e0fb1163562909a83947b77aa3ee293b880cd61d4c6610f...</span>
+</pre></div>
+</div>
+<p>As the first argument is the authorizing account (or the name of this acconut),
+the second argument specifies the name of the creation.</p>
+<p>As the account command call has produced the transaction id, the account is
+walid. You can see its description:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">account_currency</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;account_name&#39;</span><span class="p">:</span> <span class="s1">&#39;currency&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;permissions&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="s1">&#39;owner&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;perm_name&#39;</span><span class="p">:</span> <span class="s1">&#39;active&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;required_auth&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;accounts&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;keys&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;EOS88rqdDApfzRMcSCTuy3Hm...&#39;</span><span class="p">,</span>
+                                              <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">}],</span>
+                                    <span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">}},</span>
+                 <span class="p">{</span><span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;perm_name&#39;</span><span class="p">:</span> <span class="s1">&#39;owner&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;required_auth&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;accounts&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;keys&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;EOS5WULc9uFcaME5xJbHdrrbi...&#39;</span><span class="p">,</span>
+                                              <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">}],</span>
+                                    <span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">}}]}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="upload-the-sample-currency-contract-to-the-blockchain">
+<span id="upload-the-sample-currency-contract-to-the-blockchain"></span><h2>Upload the sample &#8220;currency&#8221; contract to the blockchain<a class="headerlink" href="#upload-the-sample-currency-contract-to-the-blockchain" title="Permalink to this headline">¶</a></h2>
+<p>Before uploading a contract, verify that there is no current contract:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">account_currency</span><span class="o">.</span><span class="n">code</span><span class="p">())</span>
+<span class="c1">#             code hash: 00000000000000000000000000000000000000000000000000...</span>
+</pre></div>
+</div>
+<p>Upload the currency contract using an authorization of the currency account:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract_currency</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">account_currency</span><span class="p">,</span> <span class="s2">&quot;currency&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">contract_currency</span><span class="p">)</span>
+<span class="c1">#        transaction id: 9c1b663cafcbe7ffbb18527fecfa7aa58237d00e02af125eed...</span>
+</pre></div>
+</div>
+<p>Printout is a valid transaction id.</p>
+<p>You can also verify that the code has been set:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">account_currency</span><span class="o">.</span><span class="n">code</span><span class="p">())</span>
+<span class="c1">#             code hash: d6c891fbdfcff597d82e17c81354574399b01d533e53d41209...</span>
+</pre></div>
+</div>
+<p>Before using the currency contract, you must first create it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract_currency</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;create&quot;</span><span class="p">,</span> 
+  <span class="s1">&#39;{&quot;issuer&quot;:&quot;currency&quot;,&quot;maximum_supply&quot;:&quot;1000000.0000 CUR&quot;, </span><span class="se">\</span>
+<span class="s1">  &quot;can_freeze&quot;:&quot;0&quot;,&quot;can_recall&quot;:&quot;0&quot;,&quot;can_whitelist&quot;:&quot;0&quot;}&#39;</span><span class="p">)</span>
+<span class="c1">#        transaction id: afe3ed99759c637b39244556bbf14d3d49260efd37c165fb8b...</span>
+</pre></div>
+</div>
+<p>Now, you can issue the currency:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract_currency</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;issue&quot;</span><span class="p">,</span> 
+  <span class="s1">&#39;{&quot;to&quot;:&quot;currency&quot;,&quot;quantity&quot;:&quot;1000.0000 CUR&quot;,&quot;memo&quot;:&quot;&quot;}&#39;</span><span class="p">)</span>
+<span class="c1">#        transaction id: fd37c165fb8bd1ec3c6faf6fbfafe3ed99759c637b39244556...</span>
+</pre></div>
+</div>
+<p>Verify the currency contract has the proper initial balance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">account_currency</span><span class="o">.</span><span class="n">accounts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transfer-funds-using-the-currency-contract">
+<span id="transfer-funds-using-the-currency-contract"></span><h2>Transfer funds using the &#8220;currency&#8221; contract<a class="headerlink" href="#transfer-funds-using-the-currency-contract" title="Permalink to this headline">¶</a></h2>
+<p>The following command shows a &#8220;transfer&#8221; action being sent to the currency
+contract, transferring &#8220;20.0000 CUR&#8221; from the currency account to the &#8220;eosio&#8221;
+account.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract_currency</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;transfer&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;{&quot;from&quot;:&quot;currency&quot;,&quot;to&quot;:&quot;eosio&quot;,&quot;quantity&quot;:&quot;20.0000 CUR&quot;, </span><span class="se">\</span>
+<span class="s1">    &quot;memo&quot;:&quot;my first transfer&quot;}&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>A successfully submitted transaction has generated a transaction ID.</p>
+</div>
+<div class="section" id="check-the-currency-contract-balances">
+<span id="check-the-currency-contract-balances"></span><h2>Check the &#8220;currency&#8221; contract balances<a class="headerlink" href="#check-the-currency-contract-balances" title="Permalink to this headline">¶</a></h2>
+<p>Check the state of both accounts involved in the previous transaction:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">account_currency</span><span class="o">.</span><span class="n">accounts</span><span class="p">(</span><span class="n">account_currency</span><span class="p">)</span>
+<span class="c1">#  {</span>
+<span class="c1">#      &quot;rows&quot;: [</span>
+<span class="c1">#          {</span>
+<span class="c1">#              &quot;balance&quot;: &quot;980.0000 CUR&quot;,</span>
+<span class="c1">#              &quot;frozen&quot;: &quot;0&quot;,</span>
+<span class="c1">#              &quot;whitelist&quot;: &quot;1&quot;</span>
+<span class="c1">#          }</span>
+<span class="c1">#      ],</span>
+<span class="c1">#      &quot;more&quot;: &quot;false&quot;</span>
+<span class="c1">#  }</span>
+<span class="c1">#</span>
+
+<span class="n">account_eosio</span><span class="o">.</span><span class="n">accounts</span><span class="p">(</span><span class="n">account_currency</span><span class="p">)</span>
+<span class="c1">#  {</span>
+<span class="c1">#      &quot;rows&quot;: [</span>
+<span class="c1">#          {</span>
+<span class="c1">#              &quot;balance&quot;: &quot;20.0000 CUR&quot;,</span>
+<span class="c1">#              &quot;frozen&quot;: &quot;0&quot;,</span>
+<span class="c1">#              &quot;whitelist&quot;: &quot;1&quot;</span>
+<span class="c1">#          }</span>
+<span class="c1">#      ],</span>
+<span class="c1">#      &quot;more&quot;: &quot;false&quot;</span>
+<span class="c1">#  }</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="summary">
+<span id="summary"></span><h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">daemon</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Daemon</span><span class="p">()</span>
+<span class="n">daemon</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">daemon</span><span class="p">)</span>
+<span class="n">wallet</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Wallet</span><span class="p">()</span>
+<span class="n">account_eosio</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">EosioAccount</span><span class="p">()</span>
+<span class="n">contract_eosio_bios</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">SetContract</span><span class="p">(</span>
+    <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.bios&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">)</span>
+<span class="n">key_owner</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">CreateKey</span><span class="p">(</span><span class="s2">&quot;key_owner&quot;</span><span class="p">)</span>
+<span class="n">key_active</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">CreateKey</span><span class="p">(</span><span class="s2">&quot;key_active&quot;</span><span class="p">)</span>
+<span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">key_owner</span><span class="p">)</span>
+<span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">key_active</span><span class="p">)</span>
+<span class="n">account_currency</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Account</span><span class="p">(</span>
+    <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;currency&quot;</span><span class="p">,</span> <span class="n">key_owner</span><span class="p">,</span> <span class="n">key_active</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">account_currency</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">account_currency</span><span class="o">.</span><span class="n">code</span><span class="p">())</span>
+<span class="n">contract_currency</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">account_currency</span><span class="p">,</span> <span class="s2">&quot;currency&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">contract_currency</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">account_currency</span><span class="o">.</span><span class="n">code</span><span class="p">())</span>
+<span class="n">contract_currency</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;create&quot;</span><span class="p">,</span> 
+  <span class="s1">&#39;{&quot;issuer&quot;:&quot;currency&quot;,&quot;maximum_supply&quot;:&quot;1000000.0000 CUR&quot;, </span><span class="se">\</span>
+<span class="s1">  &quot;can_freeze&quot;:&quot;0&quot;,&quot;can_recall&quot;:&quot;0&quot;,&quot;can_whitelist&quot;:&quot;0&quot;}&#39;</span><span class="p">)</span>
+<span class="n">contract_currency</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;issue&quot;</span><span class="p">,</span> 
+  <span class="s1">&#39;{&quot;to&quot;:&quot;currency&quot;,&quot;quantity&quot;:&quot;1000.0000 CUR&quot;,&quot;memo&quot;:&quot;&quot;}&#39;</span><span class="p">)</span>
+<span class="n">account_currency</span><span class="o">.</span><span class="n">accounts</span><span class="p">()</span>
+<span class="n">contract_currency</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+  <span class="s2">&quot;transfer&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;{&quot;from&quot;:&quot;currency&quot;,&quot;to&quot;:&quot;eosio&quot;,&quot;quantity&quot;:&quot;20.0000 CUR&quot;, </span><span class="se">\</span>
+<span class="s1">    &quot;memo&quot;:&quot;my first transfer&quot;}&#39;</span>
+<span class="p">)</span>
+<span class="n">account_currency</span><span class="o">.</span><span class="n">accounts</span><span class="p">(</span><span class="n">account_currency</span><span class="p">)</span>
+<span class="n">account_eosio</span><span class="o">.</span><span class="n">accounts</span><span class="p">(</span><span class="n">account_currency</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial_getting_with_contracts.html" title="Tutorial Getting Started With Contracts"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Teos python’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Teos python 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>
