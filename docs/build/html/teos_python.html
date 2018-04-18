@@ -1,0 +1,484 @@
+
+
+<!doctype html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Teos python &mdash; Teos python 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="top" title="Teos python 1.0 documentation" href="index.html" />
+    <link rel="prev" title="Tutorial Getting Started With Contracts" href="tutorial_getting_with_contracts.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial_getting_with_contracts.html" title="Tutorial Getting Started With Contracts"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Teos python 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial_getting_with_contracts.html"
+                        title="previous chapter">Tutorial Getting Started With Contracts</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/teos_python.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="teos-python">
+<h1>Teos python<a class="headerlink" href="#teos-python" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="teos.GetAccount">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">GetAccount</code><span class="sig-paren">(</span><em>account</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.GetAccount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve an account from the blockchain.</p>
+<p>Generic &#8216;str&#8217; method returns a formatted output of the EOSIO node.
+Generic &#8216;repr&#8217; method returns the json output of the EOSIO node.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>account: The account object or the name of the account to retrieve.
+is_verbose: If &#39;False&#39;, do not print stdout, default is &#39;True&#39;.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>name: The name of the account.
+error: Whether any error ocurred.
+json: The json representation of the account, if &#39;error; is not set.
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.SetContract">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">SetContract</code><span class="sig-paren">(</span><em>owner</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.SetContract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the contract on an account.</p>
+<p>Creates the contract on an account, and provides methodes that modify
+this contract.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>owner: An account object or the name of an account that 
+    takes this contract.
+contract_dir: A directory containing the WAST and ABI files 
+    of the contract.
+wast_file: The file containing the contract WAST, relative 
+    to contract-dir, defaults to &quot;&quot;.
+abi_file: The file containing the contract ABI, relative 
+    to contract-dir, defaults to &quot;&quot;.
+permission: An account object or the name of an account that 
+    authorizes the creation.
+expiration_sec: The time in seconds before a transaction expires, 
+    defaults to 30s.
+skip_signature:  If unlocked wallet keys should be used to sign 
+    transaction, defaults to 0.
+dont_broadcast: Whether to broadcast transaction to the network (or 
+    print to stdout), defaults to 0.
+forceUnique: Whether to force the transaction to be unique, what will 
+    consume extra bandwidth and remove any protections against 
+    accidently issuing the same transaction multiple times, defaults 
+    to 0.
+max_cpu_usage: An upper limit on the cpu usage budget, in 
+    instructions-retired, for the execution of the transaction 
+    (defaults to 0 which means no limit).
+max_net_usage: An upper limit on the net usage budget, in bytes, for 
+    the transaction (defaults to 0 which means no limit).
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.WalletCreate">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletCreate</code><span class="sig-paren">(</span><em>name='default'</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletCreate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new wallet locally.</p>
+<p>Generic &#8216;str&#8217; method returns a formatted output of the EOSIO node.
+Generic &#8216;repr&#8217; method returns the json output of the EOSIO node.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>name: The name of the new wallet, defaults to &#39;default&#39;.
+is_verbose: If &#39;False&#39;, do not print stdout, default is &#39;True&#39;.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>name: The name of the wallet.
+password: The password returned by wallet create.
+error: Whether any error ocurred.
+json: The json representation of the wallet, if &#39;error; is not set.
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.WalletList">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletList</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletList" title="Permalink to this definition">¶</a></dt>
+<dd><p>List opened wallets, unlocked mark &#8216;*&#8217;.</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>parameters</strong>::</dt>
+<dd><p class="first last">is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.WalletImport">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletImport</code><span class="sig-paren">(</span><em>key</em>, <em>wallet='default'</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletImport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import private key into wallet.</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>parameters</strong>::</dt>
+<dd><p class="first last">wallet: A wallet object or the name of the wallet to import key into.
+key: A key object or a private key in WIF format to import.
+is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.WalletKeys">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletKeys</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletKeys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print list of private keys from all unlocked wallets, in WIF format.</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>parameters</strong>::    </dt>
+<dd><p class="first last">is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.WalletOpen">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletOpen</code><span class="sig-paren">(</span><em>wallet</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletOpen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open an existing wallet.</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>parameters</strong>::</dt>
+<dd><p class="first last">wallet: A wallet object or the name of the wallet to import key into.
+is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.WalletLock">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletLock</code><span class="sig-paren">(</span><em>wallet</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lock wallet.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>wallet: A wallet object or the name of the wallet to import key into.
+is_verbose: If &#39;False&#39;, do not print stdout, default is &#39;True&#39;.    
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.WalletUnlock">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletUnlock</code><span class="sig-paren">(</span><em>wallet</em>, <em>password=''</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletUnlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unlock wallet.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>wallet: A wallet object or the name of the wallet to import key into.
+password: If the wallet argument is not a wallet object, the password 
+    returned by wallet create, else anything, defaults to &quot;&quot;.
+is_verbose: If &#39;False&#39;, do not print stdout, default is &#39;True&#39;.    
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.GetInfo">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">GetInfo</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.GetInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current blockchain information.</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>parameters</strong>::</dt>
+<dd><p class="first last">is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.GetBlock">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">GetBlock</code><span class="sig-paren">(</span><em>block_number</em>, <em>block_id=''</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.GetBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a full block from the blockchain.</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>parameters</strong>::</dt>
+<dd><p class="first last">block_number: The number of the block to retrieve.
+block_id: The ID of the block to retrieve, if set, defaults to &#8220;&#8221;.
+is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.Account">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>creator</em>, <em>name</em>, <em>owner_key</em>, <em>active_key</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Account" title="Permalink to this definition">¶</a></dt>
+<dd><p>A representation of an EOSIO account.</p>
+<p>Creates a new account on the blockchain, and provides methodes that modify
+this account.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>creator: An account object or the name of an account that 
+    creates the account.
+name: The name of the new account.
+owner_key: The owner key object for the new account.
+active_key: The active key object for the new account.
+permission: An account object or the name of an account that 
+    authorizes the creation.
+expiration_sec: The time in seconds before a transaction expires, 
+    defaults to 30s.
+skip_signature:  If unlocked wallet keys should be used to sign 
+    transaction, defaults to 0.
+dont_broadcast: Whether to broadcast transaction to the network (or 
+    print to stdout), defaults to 0.
+forceUnique: Whether to force the transaction to be unique, what will 
+    consume extra bandwidth and remove any protections against 
+    accidently issuing the same transaction multiple times, defaults 
+    to 0.
+max_cpu_usage: An upper limit on the cpu usage budget, in 
+    instructions-retired, for the execution of the transaction 
+    (defaults to 0 which means no limit).
+max_net_usage: An upper limit on the net usage budget, in bytes, for 
+    the transaction (defaults to 0 which means no limit).
+</pre></div>
+</div>
+</li>
+</ul>
+<dl class="method">
+<dt id="teos.Account.accounts">
+<code class="descname">accounts</code><span class="sig-paren">(</span><em>account=''</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Account.accounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints accounts.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="teos.Account.code">
+<code class="descname">code</code><span class="sig-paren">(</span><em>wast_file=''</em>, <em>abi_file=''</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Account.code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the WAST and ABI files for the account.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="teos.Account.set_contract">
+<code class="descname">set_contract</code><span class="sig-paren">(</span><em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Account.set_contract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates or update the contract on the account</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.Contract">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>owner</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Contract" title="Permalink to this definition">¶</a></dt>
+<dd><p>A representation of an EOSIO smart contract.</p>
+<p>Creates the contract on an account, and provides methodes that modify
+this contract.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>owner: An account object or the name of an account that takes this 
+    contract.
+contract_dir: A directory containing the WAST and ABI files of the 
+    contract.
+wast_file: The file containing the contract WAST, relative to 
+    contract-dir, defaults to &quot;&quot;.
+abi_file: The file containing the contract ABI, relative to 
+    contract-dir, defaults to &quot;&quot;.
+permission: An account object or the name of an account that 
+    authorizes the creation.
+expiration_sec: The time in seconds before a transaction expires, 
+    defaults to 30s.
+skip_signature:  If unlocked wallet keys should be used to sign 
+    transaction, defaults to 0.
+dont_broadcast: Whether to broadcast transaction to the network (or 
+    print to stdout), defaults to 0.
+forceUnique: Whether to force the transaction to be unique, what will 
+    consume extra bandwidth and remove any protections against 
+    accidently issuing the same transaction multiple times, defaults 
+    to 0.
+max_cpu_usage: An upper limit on the cpu usage budget, in 
+    instructions-retired, for the execution of the transaction 
+    (defaults to 0 which means no limit).
+max_net_usage: An upper limit on the net usage budget, in bytes, for 
+    the transaction (defaults to 0 which means no limit).
+</pre></div>
+</div>
+</li>
+</ul>
+<dl class="method">
+<dt id="teos.Contract.action">
+<code class="descname">action</code><span class="sig-paren">(</span><em>action</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Contract.action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements the &#8216;cloes push action&#8217; command.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="teos.Daemon">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">Daemon</code><a class="headerlink" href="#teos.Daemon" title="Permalink to this definition">¶</a></dt>
+<dd><p>A representation of the local EOSIO node.</p>
+<p>Any Daemon class object depends on external configuration parameters. They
+are organized on two levels: this module level and the level of a TEOS 
+executable that powers methodes of this python module.</p>
+<ul>
+<li><p class="first"><strong>TEOS-python configuration</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>TEOS_executable: Where is the TEOS executable. The parameter is set in 
+    the configuration file of this script, which is &quot;teos.json&quot; in the 
+    directory of this module, for example: 
+    {&quot;TEOS_executable&quot;:&quot;absolute-path-to-the-teos.exe&quot;}.
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Other relevant onfiguration parameters can be defined in a configuration 
+file of the TEOS executable, and/or as environment variables, and/or are 
+hard-codded (in the &#8220;config.cpp&#8221; file of the &#8220;teos library&#8221;). The first 
+definition in this sequence prevails.</p>
+<p>The configuration file of the TEOS executable is named &#8220;config.json&#8221;. It
+exists in the TEOS executable directory.</p>
+<ul>
+<li><p class="first"><strong>TEOS configuration</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre>EOSIO_SOURCE_DIR: Where is the EOS repository. 
+EOSIO_DAEMON_ADDRESS: The local IP and port to listen for incoming http 
+    connections, defaults to &quot;127.0.0.1:8888&quot;.
+EOSIO_WALLET_ADDRESS: The local IP and port to listen for incoming http 
+    connections to the local wallet, defaults to &quot;127.0.0.1:8888&quot;.
+data-dir: Directory containing program runtime data (absolute path or
+    relative to ${EOSIO_SOURCE_DIR}), defaults to 
+    &quot;${EOSIO_SOURCE_DIR}/build/daemon/data-dir&quot;.
+config-dir: Directory containing configuration files such as config.ini
+    (absolute path or relative to ${EOSIO_SOURCE_DIR}),
+    defaults to &quot;${data-dir}&quot;
+wallet-dir: The path of the wallet files (absolute path or relative 
+    to ${data-dir}, defaults to &quot;${data-dir}/wallet&quot;
+genesis-json: File to read genesis state from, defaults to &quot;genesis.json&quot;
+    (relative to ${config-dir}).
+</pre></div>
+</div>
+</li>
+</ul>
+<dl class="method">
+<dt id="teos.Daemon.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#teos.Daemon.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the EOSIO test node cleared.</p>
+<p>Stops the node, if running, deletes all wallets, and starts test node
+resetted.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="teos.Daemon.info">
+<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#teos.Daemon.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the node info.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="teos.Daemon.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#teos.Daemon.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the EOSIO test node, if not running.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="teos.Daemon.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#teos.Daemon.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the EOSIO test node.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial_getting_with_contracts.html" title="Tutorial Getting Started With Contracts"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Teos python 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>
