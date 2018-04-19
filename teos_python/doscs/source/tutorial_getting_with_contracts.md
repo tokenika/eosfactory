@@ -421,9 +421,11 @@ contract_eosio_token.action(
   dont_broadcast=1)
 account_exchange = teos.Account(
   account_eosio, "exchange", key_common, key_common)
-contract_exchange = teos.Contract(account_exchange, "exchange")
+contract_exchange = teos.Contract(
+  account_eosio_token, "exchange", permission=account_eosio_token)
 account_eosio_msig = teos.Account(
   account_eosio, "eosio.msig", key_common, key_common)
-contract_eosio_msig = teos.Contract(account_eosio_msig, "eosio.msig")
+contract_eosio_msig = teos.Contract(
+  account_eosio_token, "eosio.msig", permission=account_eosio_token)
 
 ```
