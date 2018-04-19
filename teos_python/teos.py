@@ -265,7 +265,7 @@ class WalletOpen(_Command):
         wallet: A wallet object or the name of the wallet to import key into.
         is_verbose: If 'False', do not print stdout, default is 'True'.
     """
-    def __init__(self, wallet, is_verbose=True):
+    def __init__(self, wallet="default", is_verbose=True):      
         try:
             name = wallet.name
         except:
@@ -284,7 +284,7 @@ class WalletLock(_Command):
         wallet: A wallet object or the name of the wallet to import key into.
         is_verbose: If 'False', do not print stdout, default is 'True'.    
     """
-    def __init__(self, wallet, is_verbose=True):
+    def __init__(self, wallet="default", is_verbose=True):
         try:
             name = wallet.name
         except:
@@ -305,7 +305,7 @@ class WalletUnlock(_Command):
             returned by wallet create, else anything, defaults to "".
         is_verbose: If 'False', do not print stdout, default is 'True'.    
     """
-    def __init__(self, wallet, password="", is_verbose=True):
+    def __init__(self, wallet="default", password="", is_verbose=True):
         try:
             name = wallet.name
             password = wallet.password
@@ -627,12 +627,14 @@ class Wallet(WalletCreate):
     def list(self):
         WalletList()
 
+    def open(self):
+        WalletOpen(self.name)
+
     def lock(self):
-        WalletLock(self.name, is_verbose=False)
+        WalletLock(self.name)
 
     def unlock(self):
-        WalletUnlock(self.name, self.json["password"]
-                    , is_verbose=False)
+        WalletUnlock(self.name, self.json["password"])
 
     def import_key(self, key_pair):
         wallet_import = WalletImport(
@@ -644,7 +646,7 @@ class Wallet(WalletCreate):
         WalletKeys()
 
     def open(self):
-        WalletOpen(self.name, is_verbose=False)
+        WalletOpen(self.name)
 
     def __str__(self):
         return pprint.pformat(self.json)

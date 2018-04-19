@@ -79,8 +79,8 @@ Usage: ./teos wallet create --jarg '{"name":"<wallet name>"}' [OPTIONS]
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("name,n", value<string>(&name)->default_value(DEFAULT_WALLET_NAME),
-            "The name of the new wallet");
+          ("name,n", value<string>(&name)->default_value(DEFAULT_WALLET_NAME)
+            , "The name of the new wallet");
         return od;
       }
 
@@ -299,7 +299,8 @@ Usage: ./teos wallet open --jarg '{"name":"<wallet name>"}' [OPTIONS]
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("name,n", value<string>(&name), "The name of the wallet to open");
+          ("name,n", value<string>(&name)->default_value(DEFAULT_WALLET_NAME)
+            , "The name of the wallet to open");
         return od;
       }
 
@@ -374,7 +375,8 @@ Usage: ./teos wallet lock --jarg '{"name":"<wallet name>"}' [OPTIONS]
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("name,n", value<string>(&name), "The name of the wallet to lock");
+          ("name,n", value<string>(&name)->default_value(DEFAULT_WALLET_NAME)
+            , "The name of the wallet to lock");
         return od;
       }
 
@@ -476,7 +478,8 @@ Usage: ./teos wallet lock_all --jarg '{}' [OPTIONS]
       }
 
       string normRequest(ptree& reqJson) {
-        return string("[\"") + reqJson.get<string>("name") + "\",\"" + reqJson.get<string>("password") + "\"]";
+        return string("[\"") + reqJson.get<string>("name") 
+          + "\",\"" + reqJson.get<string>("password") + "\"]";
       }
 
       void normResponse(string response, ptree &respJson) {}
@@ -507,7 +510,8 @@ Usage: ./teos wallet import --jarg '{"password":"<password>", name":"<wallet nam
         options_description od("");
         od.add_options()
           ("password", value<string>(&password), "The password returned by wallet create")        
-          ("name,n", value<string>(&name), "The name of the wallet to unlock");
+          ("name,n", value<string>(&name)->default_value(DEFAULT_WALLET_NAME)
+          , "The name of the wallet to unlock");
         return od;
       }
 

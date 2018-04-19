@@ -11,8 +11,10 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   currency_walkthrough
-   tutorial_getting_with_contracts   
+   tutorial_currency_walkthrough
+   tutorial_getting_with_contracts
+   tutorial_hello_world_contract   
+   
    teos_python
 
 Indices and tables
