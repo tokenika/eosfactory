@@ -149,6 +149,8 @@ else( LLVM_FOUND )
 endif( LLVM_FOUND )
 llvm_map_components_to_libnames(LLVM_LIBS support core passes mcjit native DebugInfoDWARF)
 
+set(teoslib_src ${CMAKE_SOURCE_DIR}/../teos_lib)
+
 ## END DEPENDENCIES ##########################################################
 
 if( WIN32 )
@@ -181,15 +183,13 @@ configure_file (
   "${CMAKE_BINARY_DIR}/config.json"
 )
 
-## END CONFIG FILES ##########################################################
-
-add_subdirectory(teoslib)
+## END CONFIG FILES #########################################################
 
 ## BEGIN executables #########################################################
 
 macro( applLinkLibraries applName )
 
-  file(GLOB HEADERS "teoslib/include/*.hpp")
+  file(GLOB HEADERS "${teoslib_src}/include/teoslib/*.hpp")
   target_sources( ${applName} 
     PRIVATE
       ${HEADERS}
@@ -197,10 +197,10 @@ macro( applLinkLibraries applName )
 
   target_include_directories( ${applName} 
     PRIVATE
-     ${Boost_INCLUDE_DIR}
-     ${OPENSSL_INCLUDE_DIR}
-     include
-     teoslib/include
+      ${Boost_INCLUDE_DIR}
+      ${OPENSSL_INCLUDE_DIR}
+      include
+      "${teoslib_src}/include"
   )
 
   if( ENABLE_ASAN )
@@ -216,11 +216,11 @@ macro( applLinkLibraries applName )
     set( TARGET_DIR ${CMAKE_BUILD_TYPE} )
   else()
     set( TARGET_DIR "" )
-  endif()
+  endif()     
 
   target_link_libraries( ${applName} 
     PRIVATE
-      teoslib
+      ${teoslib_src}/build/libteoslib.a
       ${EOSIO_BINARY_DIR}/plugins/chain_plugin/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chain_plugin${CMAKE_STATIC_LIBRARY_SUFFIX}
       ${EOSIO_BINARY_DIR}/libraries/chain/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eosio_chain${CMAKE_STATIC_LIBRARY_SUFFIX}
       ${EOSIO_BINARY_DIR}/libraries/chainbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chainbase${CMAKE_STATIC_LIBRARY_SUFFIX}        

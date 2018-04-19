@@ -47,6 +47,15 @@ When doing with a real value, the wallet password should be stored in a secure p
 wallet.list()
 #                wallet: default *
 ```
+* you can lock it:
+```
+wallet.lock()
+#       wallet locked: default
+
+wallet.list()
+#                wallet: default
+```
+
 * you have to open the wallet after restarting the node:
 ```
 teos.DaemonStop()
@@ -66,14 +75,15 @@ wallet.open()
 ```
 * you have to unlock the wallet after opening it:
 ```
-wallet.lock()
-#           wallet lock: default
-
 wallet.list()
 #                wallet: default
+
 wallet.unlock()
 #       wallet unlocked: default
->>> 
+
+wallet.list()
+#                wallet: default *
+
 ```
 
 ## The Eosio Account and the Bios Contract

@@ -207,7 +207,6 @@ class WalletCreate(_Command):
             self.password = self.json["password"]
 
 
-
 class WalletList(_Command):
     """
     List opened wallets, unlocked mark '*'. 
