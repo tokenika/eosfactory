@@ -105,9 +105,33 @@ CMakeFiles/teoslib.dir/control.cpp.o.provides: CMakeFiles/teoslib.dir/control.cp
 CMakeFiles/teoslib.dir/control.cpp.o.provides.build: CMakeFiles/teoslib.dir/control.cpp.o
 
 
+CMakeFiles/teoslib.dir/eos_interface.cpp.o: CMakeFiles/teoslib.dir/flags.make
+CMakeFiles/teoslib.dir/eos_interface.cpp.o: ../eos_interface.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/teoslib.dir/eos_interface.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/teoslib.dir/eos_interface.cpp.o -c /mnt/e/Workspaces/EOS/logos/teos_lib/eos_interface.cpp
+
+CMakeFiles/teoslib.dir/eos_interface.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/teoslib.dir/eos_interface.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/e/Workspaces/EOS/logos/teos_lib/eos_interface.cpp > CMakeFiles/teoslib.dir/eos_interface.cpp.i
+
+CMakeFiles/teoslib.dir/eos_interface.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/teoslib.dir/eos_interface.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/e/Workspaces/EOS/logos/teos_lib/eos_interface.cpp -o CMakeFiles/teoslib.dir/eos_interface.cpp.s
+
+CMakeFiles/teoslib.dir/eos_interface.cpp.o.requires:
+
+.PHONY : CMakeFiles/teoslib.dir/eos_interface.cpp.o.requires
+
+CMakeFiles/teoslib.dir/eos_interface.cpp.o.provides: CMakeFiles/teoslib.dir/eos_interface.cpp.o.requires
+	$(MAKE) -f CMakeFiles/teoslib.dir/build.make CMakeFiles/teoslib.dir/eos_interface.cpp.o.provides.build
+.PHONY : CMakeFiles/teoslib.dir/eos_interface.cpp.o.provides
+
+CMakeFiles/teoslib.dir/eos_interface.cpp.o.provides.build: CMakeFiles/teoslib.dir/eos_interface.cpp.o
+
+
 CMakeFiles/teoslib.dir/utilities.cpp.o: CMakeFiles/teoslib.dir/flags.make
 CMakeFiles/teoslib.dir/utilities.cpp.o: ../utilities.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/teoslib.dir/utilities.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/teoslib.dir/utilities.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/teoslib.dir/utilities.cpp.o -c /mnt/e/Workspaces/EOS/logos/teos_lib/utilities.cpp
 
 CMakeFiles/teoslib.dir/utilities.cpp.i: cmake_force
@@ -131,7 +155,7 @@ CMakeFiles/teoslib.dir/utilities.cpp.o.provides.build: CMakeFiles/teoslib.dir/ut
 
 CMakeFiles/teoslib.dir/command/create_commands.cpp.o: CMakeFiles/teoslib.dir/flags.make
 CMakeFiles/teoslib.dir/command/create_commands.cpp.o: ../command/create_commands.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/teoslib.dir/command/create_commands.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/teoslib.dir/command/create_commands.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/teoslib.dir/command/create_commands.cpp.o -c /mnt/e/Workspaces/EOS/logos/teos_lib/command/create_commands.cpp
 
 CMakeFiles/teoslib.dir/command/create_commands.cpp.i: cmake_force
@@ -151,30 +175,6 @@ CMakeFiles/teoslib.dir/command/create_commands.cpp.o.provides: CMakeFiles/teosli
 .PHONY : CMakeFiles/teoslib.dir/command/create_commands.cpp.o.provides
 
 CMakeFiles/teoslib.dir/command/create_commands.cpp.o.provides.build: CMakeFiles/teoslib.dir/command/create_commands.cpp.o
-
-
-CMakeFiles/teoslib.dir/command/eos_interface.cpp.o: CMakeFiles/teoslib.dir/flags.make
-CMakeFiles/teoslib.dir/command/eos_interface.cpp.o: ../command/eos_interface.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/teoslib.dir/command/eos_interface.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/teoslib.dir/command/eos_interface.cpp.o -c /mnt/e/Workspaces/EOS/logos/teos_lib/command/eos_interface.cpp
-
-CMakeFiles/teoslib.dir/command/eos_interface.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/teoslib.dir/command/eos_interface.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/e/Workspaces/EOS/logos/teos_lib/command/eos_interface.cpp > CMakeFiles/teoslib.dir/command/eos_interface.cpp.i
-
-CMakeFiles/teoslib.dir/command/eos_interface.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/teoslib.dir/command/eos_interface.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/e/Workspaces/EOS/logos/teos_lib/command/eos_interface.cpp -o CMakeFiles/teoslib.dir/command/eos_interface.cpp.s
-
-CMakeFiles/teoslib.dir/command/eos_interface.cpp.o.requires:
-
-.PHONY : CMakeFiles/teoslib.dir/command/eos_interface.cpp.o.requires
-
-CMakeFiles/teoslib.dir/command/eos_interface.cpp.o.provides: CMakeFiles/teoslib.dir/command/eos_interface.cpp.o.requires
-	$(MAKE) -f CMakeFiles/teoslib.dir/build.make CMakeFiles/teoslib.dir/command/eos_interface.cpp.o.provides.build
-.PHONY : CMakeFiles/teoslib.dir/command/eos_interface.cpp.o.provides
-
-CMakeFiles/teoslib.dir/command/eos_interface.cpp.o.provides.build: CMakeFiles/teoslib.dir/command/eos_interface.cpp.o
 
 
 CMakeFiles/teoslib.dir/command/get_commands.cpp.o: CMakeFiles/teoslib.dir/flags.make
@@ -373,9 +373,9 @@ CMakeFiles/teoslib.dir/control/eosiodServer.cpp.o.provides.build: CMakeFiles/teo
 teoslib_OBJECTS = \
 "CMakeFiles/teoslib.dir/command.cpp.o" \
 "CMakeFiles/teoslib.dir/control.cpp.o" \
+"CMakeFiles/teoslib.dir/eos_interface.cpp.o" \
 "CMakeFiles/teoslib.dir/utilities.cpp.o" \
 "CMakeFiles/teoslib.dir/command/create_commands.cpp.o" \
-"CMakeFiles/teoslib.dir/command/eos_interface.cpp.o" \
 "CMakeFiles/teoslib.dir/command/get_commands.cpp.o" \
 "CMakeFiles/teoslib.dir/command/push_commands.cpp.o" \
 "CMakeFiles/teoslib.dir/command/set_commands.cpp.o" \
@@ -390,9 +390,9 @@ teoslib_EXTERNAL_OBJECTS =
 
 libteoslib.a: CMakeFiles/teoslib.dir/command.cpp.o
 libteoslib.a: CMakeFiles/teoslib.dir/control.cpp.o
+libteoslib.a: CMakeFiles/teoslib.dir/eos_interface.cpp.o
 libteoslib.a: CMakeFiles/teoslib.dir/utilities.cpp.o
 libteoslib.a: CMakeFiles/teoslib.dir/command/create_commands.cpp.o
-libteoslib.a: CMakeFiles/teoslib.dir/command/eos_interface.cpp.o
 libteoslib.a: CMakeFiles/teoslib.dir/command/get_commands.cpp.o
 libteoslib.a: CMakeFiles/teoslib.dir/command/push_commands.cpp.o
 libteoslib.a: CMakeFiles/teoslib.dir/command/set_commands.cpp.o
@@ -414,9 +414,9 @@ CMakeFiles/teoslib.dir/build: libteoslib.a
 
 CMakeFiles/teoslib.dir/requires: CMakeFiles/teoslib.dir/command.cpp.o.requires
 CMakeFiles/teoslib.dir/requires: CMakeFiles/teoslib.dir/control.cpp.o.requires
+CMakeFiles/teoslib.dir/requires: CMakeFiles/teoslib.dir/eos_interface.cpp.o.requires
 CMakeFiles/teoslib.dir/requires: CMakeFiles/teoslib.dir/utilities.cpp.o.requires
 CMakeFiles/teoslib.dir/requires: CMakeFiles/teoslib.dir/command/create_commands.cpp.o.requires
-CMakeFiles/teoslib.dir/requires: CMakeFiles/teoslib.dir/command/eos_interface.cpp.o.requires
 CMakeFiles/teoslib.dir/requires: CMakeFiles/teoslib.dir/command/get_commands.cpp.o.requires
 CMakeFiles/teoslib.dir/requires: CMakeFiles/teoslib.dir/command/push_commands.cpp.o.requires
 CMakeFiles/teoslib.dir/requires: CMakeFiles/teoslib.dir/command/set_commands.cpp.o.requires

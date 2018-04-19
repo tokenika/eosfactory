@@ -334,8 +334,8 @@ namespace teos {
             tc = teos::command::GetInfo(); 
             respJson_ = tc.respJson_;                   
             boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
-            if(count-- == 0){
-              putError(tc.errorMsg());
+            if(count-- <= 0){
+              putError(string("Failed to get info.\n") + tc.errorMsg());
             }
           } while (tc.isError_ && count > 0);
         }
@@ -358,8 +358,8 @@ namespace teos {
           bfs::remove_all(dataDir / "shared_mem");
           break;
         } catch (std::exception& e) {
-          if(count){
-            putError(e.what());
+          if(count < 0){
+            putError(string("Failed to delete daemon data.\n") + string(e.what()));
             break;
           }
           boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
