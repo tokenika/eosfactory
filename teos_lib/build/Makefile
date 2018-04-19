@@ -221,6 +221,33 @@ command/create_commands.cpp.s:
 	$(MAKE) -f CMakeFiles/teoslib.dir/build.make CMakeFiles/teoslib.dir/command/create_commands.cpp.s
 .PHONY : command/create_commands.cpp.s
 
+command/eos_interface.o: command/eos_interface.cpp.o
+
+.PHONY : command/eos_interface.o
+
+# target to build an object file
+command/eos_interface.cpp.o:
+	$(MAKE) -f CMakeFiles/teoslib.dir/build.make CMakeFiles/teoslib.dir/command/eos_interface.cpp.o
+.PHONY : command/eos_interface.cpp.o
+
+command/eos_interface.i: command/eos_interface.cpp.i
+
+.PHONY : command/eos_interface.i
+
+# target to preprocess a source file
+command/eos_interface.cpp.i:
+	$(MAKE) -f CMakeFiles/teoslib.dir/build.make CMakeFiles/teoslib.dir/command/eos_interface.cpp.i
+.PHONY : command/eos_interface.cpp.i
+
+command/eos_interface.s: command/eos_interface.cpp.s
+
+.PHONY : command/eos_interface.s
+
+# target to generate assembly for a file
+command/eos_interface.cpp.s:
+	$(MAKE) -f CMakeFiles/teoslib.dir/build.make CMakeFiles/teoslib.dir/command/eos_interface.cpp.s
+.PHONY : command/eos_interface.cpp.s
+
 command/get_commands.o: command/get_commands.cpp.o
 
 .PHONY : command/get_commands.o
@@ -464,33 +491,6 @@ control/eosiodServer.cpp.s:
 	$(MAKE) -f CMakeFiles/teoslib.dir/build.make CMakeFiles/teoslib.dir/control/eosiodServer.cpp.s
 .PHONY : control/eosiodServer.cpp.s
 
-eos_interface.o: eos_interface.cpp.o
-
-.PHONY : eos_interface.o
-
-# target to build an object file
-eos_interface.cpp.o:
-	$(MAKE) -f CMakeFiles/teoslib.dir/build.make CMakeFiles/teoslib.dir/eos_interface.cpp.o
-.PHONY : eos_interface.cpp.o
-
-eos_interface.i: eos_interface.cpp.i
-
-.PHONY : eos_interface.i
-
-# target to preprocess a source file
-eos_interface.cpp.i:
-	$(MAKE) -f CMakeFiles/teoslib.dir/build.make CMakeFiles/teoslib.dir/eos_interface.cpp.i
-.PHONY : eos_interface.cpp.i
-
-eos_interface.s: eos_interface.cpp.s
-
-.PHONY : eos_interface.s
-
-# target to generate assembly for a file
-eos_interface.cpp.s:
-	$(MAKE) -f CMakeFiles/teoslib.dir/build.make CMakeFiles/teoslib.dir/eos_interface.cpp.s
-.PHONY : eos_interface.cpp.s
-
 utilities.o: utilities.cpp.o
 
 .PHONY : utilities.o
@@ -537,6 +537,9 @@ help:
 	@echo "... command/create_commands.o"
 	@echo "... command/create_commands.i"
 	@echo "... command/create_commands.s"
+	@echo "... command/eos_interface.o"
+	@echo "... command/eos_interface.i"
+	@echo "... command/eos_interface.s"
 	@echo "... command/get_commands.o"
 	@echo "... command/get_commands.i"
 	@echo "... command/get_commands.s"
@@ -564,9 +567,6 @@ help:
 	@echo "... control/eosiodServer.o"
 	@echo "... control/eosiodServer.i"
 	@echo "... control/eosiodServer.s"
-	@echo "... eos_interface.o"
-	@echo "... eos_interface.i"
-	@echo "... eos_interface.s"
 	@echo "... utilities.o"
 	@echo "... utilities.i"
 	@echo "... utilities.s"

@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/mnt/e/Workspaces/EOS/logos/teos_lib/command.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/command.cpp.o"
   "/mnt/e/Workspaces/EOS/logos/teos_lib/command/create_commands.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/command/create_commands.cpp.o"
+  "/mnt/e/Workspaces/EOS/logos/teos_lib/command/eos_interface.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/command/eos_interface.cpp.o"
   "/mnt/e/Workspaces/EOS/logos/teos_lib/command/get_commands.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/command/get_commands.cpp.o"
   "/mnt/e/Workspaces/EOS/logos/teos_lib/command/push_commands.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/command/push_commands.cpp.o"
   "/mnt/e/Workspaces/EOS/logos/teos_lib/command/set_commands.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/command/set_commands.cpp.o"
@@ -15,7 +16,6 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/mnt/e/Workspaces/EOS/logos/teos_lib/control/config.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/control/config.cpp.o"
   "/mnt/e/Workspaces/EOS/logos/teos_lib/control/daemon_controls.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/control/daemon_controls.cpp.o"
   "/mnt/e/Workspaces/EOS/logos/teos_lib/control/eosiodServer.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/control/eosiodServer.cpp.o"
-  "/mnt/e/Workspaces/EOS/logos/teos_lib/eos_interface.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/eos_interface.cpp.o"
   "/mnt/e/Workspaces/EOS/logos/teos_lib/utilities.cpp" "/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir/utilities.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

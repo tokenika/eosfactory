@@ -1,9 +1,9 @@
 file(REMOVE_RECURSE
   "CMakeFiles/teoslib.dir/command.cpp.o"
   "CMakeFiles/teoslib.dir/control.cpp.o"
-  "CMakeFiles/teoslib.dir/eos_interface.cpp.o"
   "CMakeFiles/teoslib.dir/utilities.cpp.o"
   "CMakeFiles/teoslib.dir/command/create_commands.cpp.o"
+  "CMakeFiles/teoslib.dir/command/eos_interface.cpp.o"
   "CMakeFiles/teoslib.dir/command/get_commands.cpp.o"
   "CMakeFiles/teoslib.dir/command/push_commands.cpp.o"
   "CMakeFiles/teoslib.dir/command/set_commands.cpp.o"
