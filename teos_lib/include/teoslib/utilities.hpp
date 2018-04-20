@@ -40,5 +40,7 @@ namespace teos {
      * @return boost::property_tree::ptree
      */
     extern ptree stringToPtree(
-      string json);      
+      string json);
+      
+    extern void boostProcessSystem(string commandLine);            
 }

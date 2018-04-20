@@ -79,6 +79,11 @@ namespace teos
       return value;
     }
 
+    void copy(TeosControl teosCommand) {
+      reqJson_ = teosCommand.reqJson_;
+      respJson_ = teosCommand.respJson_;
+      isError_ = teosCommand.isError_;
+    }
   };
 #define GET_STRING(command, key) command.get<string>(key).c_str()
 

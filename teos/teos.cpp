@@ -17,6 +17,7 @@
 #include <teoslib/command/other_commands.hpp>
 #include <teoslib/command/subcommands.hpp>
 
+#include <teoslib/control/build_contract.hpp>
 #include <teoslib/control/daemon_controls.hpp>
 #include <teoslib/control/config.hpp>
 
@@ -150,6 +151,7 @@ int main(int argc, const char *argv[]) {
     IF_ELSE(push_action, PushAction)
     IF_ELSE(daemon_start, DaemonStart)
     IF_ELSE(daemon_stop, DaemonStop)
+    IF_ELSE(build_contract, BuildContract)
     {
       cout << "unknown command!" << endl;
     }    

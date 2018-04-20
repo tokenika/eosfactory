@@ -21,7 +21,8 @@ namespace teos
     class PushAction : public TeosCommand
     {
     public:
-      PushAction(string contractName, string action, string data,
+      PushAction(
+          string contractName, string action, string data,
           string permission = "",
           unsigned expirationSec = 30, 
           bool skipSignature = false,

@@ -1,13 +1,27 @@
 
 #include <cstdarg>
-#include <teoslib/utilities.hpp>
+#include <cstdlib>
+#include <iostream>
+
+#include <boost/process.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include "c-callstack.h"
 
+#include "c-callstack.h"
+#include <teoslib/utilities.hpp>
+
+using namespace std;
 
 namespace teos 
 {
+  void boostProcessSystem(string commandLine) {
+    namespace  bp = boost::process;
+    bp::system(commandLine,
+      bp::std_out > stdout,
+      bp::std_err > stderr,
+      bp::std_in < stdin);
+  }  
+
   template<typename Type> Type getJsonPath(ptree json,
     const ptree::path_type & path) {
     return json.get<Type>(path);
