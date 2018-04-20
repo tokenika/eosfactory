@@ -1,7 +1,0 @@
-/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/rebuild_cache.dir
-/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/install/strip.dir
-/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/install.dir
-/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/teoslib.dir
-/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/install/local.dir
-/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/list_install_components.dir
-/mnt/e/Workspaces/EOS/logos/teos_lib/build/CMakeFiles/edit_cache.dir
