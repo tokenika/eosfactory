@@ -23,56 +23,48 @@ namespace teos {
       string includeDir // comma separated list of include dirs
     )
     {
-      boost::filesystem::path typesHppPath(typesHpp);
+      namespace bfs = boost::filesystem;
+
+      bfs::path typesHppPath(typesHpp);
       string name = typesHppPath.stem().string();
+      bfs::path contextFolder = path.parent().string();
+      bfs::path output(targetAbiFile);
+      if(targetAbiFile.empty()){
+        output = contextFolder / (name + ".abi")
+      } else {
+        output = bfs::path(targetAbiFile);
+        if(!output.is_absolute()){
+          output = contextFolder / output;
+        }
+      }
 
-      // string commandLine;
-      // commandLine += configValue( "/bin/abi_gen" )
-      //   + " -extra-arg=-c"
-      //   + " -extra-arg=--std=c++14"
-      //   + " -extra-arg=--target=wasm32"
-      //   + " -extra-arg=-I" + configValue("/include"
-      //   + " -extra-arg=-I" + typesHppPath.parent_path().string();
+      string commandLine = getSourceDir(this) 
+        + "/build/programs/eosio-abigen/eosio-abigen"
+        + " -extra-arg=-c -extra-arg=--std=c++14 -extra-arg=--target=wasm32"
+        + " -extra-arg=-nostdinc -extra-arg=-nostdinc++ -extra-arg=-DABIGEN"
+        + " -extra-arg=-I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
+        + " -extra-arg=-I" + getSourceDir(this) + "/contracts/musl/upstream/include"
+        + " -extra-arg=-I" + getBOOST_INCLUDE_DIR(this)
+        + " -extra-arg=-I" + getSourceDir(this) + "/contracts"
+        + " -extra-arg=-I" + contextFolder.string();
 
-      // vector<string> includeDirs
-      // boost::split(includeDirs, includeDir, boost::is_any_of(","));
-      // for (string dir : includeDirs) {
-      //   commandLine += "-extra-arg=-I" + dir;
-      // }
+      if(!includeDir.empty())
+      {
+        vector<string> includeDirs;
+        boost::split(includeDirs, includeDir, boost::algorithm::is_any_of(","));
+        for (string dir : includeDirs) {
+          commandLine += " -extra-arg=-I" + dir;
+        }
+      }
 
-      // commandLine +=
-      //   string(" -extra-arg=-fparse-all-comments")
-      //   + " -destination-file=" + targetAbiFile
-      //   + " -verbose=0"
-      //   + " -context=/mnt/hgfs/Workspaces/EOS/eos/contracts/eoslib"
-      //   + " " + typesHpp
-      //   + " --";
+      commandLine
+        += " -extra-arg=-fparse-all-comments"
+        + " -destination-file=" + outname.string()
+        + " -verbose=0"
+        + " -context=" + contextFolder
+        + typesHppPath.string() + " --";
 
-      // cout << commandLine << endl;
-      // boostProcessSystem(commandLine);
-
-      /*
-      call:
-      /mnt/hgfs/Workspaces/EOS/eos/build/tools/eoscpp
-      -g /tmp/skeleton.abi
-      /mnt/hgfs/Workspaces/EOS/eos/contracts/skeleton/skeleton.hpp
-
-      context folder:
-      /mnt/hgfs/Workspaces/EOS/eos/contracts/skeleton
-
-      /mnt/hgfs/Workspaces/EOS/eos/build/install//bin/abi_gen
-      -extra-arg=-c
-      -extra-arg=--std=c++14
-      -extra-arg=--target=wasm32
-      -extra-arg=-I/mnt/hgfs/Workspaces/EOS/eos/build/install//include
-      -extra-arg=-I/mnt/hgfs/Workspaces/EOS/eos/contracts/skeleton
-      -extra-arg=-fparse-all-comments
-      -destination-file=/tmp/skeleton.abi
-      -verbose=0
-      -context=/mnt/hgfs/Workspaces/EOS/eos/contracts/skeleton
-      /mnt/hgfs/Workspaces/EOS/eos/contracts/skeleton/skeleton.hpp
-      --
-      */
+      boostProcessSystem(commandLine);
     };
 
     void wasmClangHelp()
@@ -86,36 +78,52 @@ namespace teos {
     /*
     See a basic example of the build procedure: https://gist.github.com/yurydelendik/4eeff8248aeb14ce763e#example.
     */
-    TeosControl BuildContract::buildContract(
+    void BuildContract::buildContract(
       string src, // comma separated list of source c/cpp files
       string targetWastFile,
       string includeDir // comma separated list of include dirs
     )
     {
-      boost::filesystem::path workdir
-        = boost::filesystem::temp_directory_path()
-        / boost::filesystem::unique_path();
-      boost::filesystem::create_directories(workdir);
-      boost::filesystem::path build(workdir / "build");
-      boost::filesystem::create_directory(build);
+      namespace bfs = boost::filesystem;
+
+      bfs::path workdir= bfs::temp_directory_path()
+        / bfs::unique_path();
+      bfs::create_directories(workdir);
+      bfs::path build(workdir / "build");
+      bfs::create_directory(build);
 
       vector<string> srcs;
       boost::split(srcs, src, boost::algorithm::is_any_of(","));
       string objectFileList;
       for (string file : srcs)
       {
-        boost::filesystem::path srcFile(file);
-
+        bfs::path srcFile(file);
         string name = srcFile.stem().string();
-        boost::filesystem::path output(build / (name + ".o"));
+
+        bfs::path outputWast(targetWastFile)
+        if(outputWast.empty()){
+          outputWast = name + "wast";
+        } else {
+          outputWast = bfs::path(targetAbiFile);
+          if(!outputWast.is_absolute()){
+            outputWast = contextFolder / outputWast;
+          }          
+        }
+
+
+        bfs::path output(build / (name + ".o"));
         objectFileList += output.string() + " ";
 
         string commandLine;
-        // commandLine += configValue(ConfigKeys::WASM_CLANG)
-        //   + " -emit-llvm -O3 --std=c++14 --target=wasm32 -ffreestanding -nostdlib"
-        //   + " -fno-threadsafe-statics -fno-rtti -fno-exceptions"
-        //   + " -I " + configValue("/include"
-        //   + " -I " + srcFile.parent_path().string();
+        commandLine += getWASM_CLANG(this)
+          + " -emit-llvm -O3  --std=c++14  --target=wasm32 -nostdinc -nostdlib"
+          + " -nostdlibinc -ffreestanding -nostdlib -fno-threadsafe-statics"
+          + " -fno-rtti -fno-exceptions"
+          + " -I" + getSourceDir(this) + "/contracts"
+          + " -I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
+          + " -I" + getSourceDir(this) + "/contracts/musl/upstream/include"
+          + " -I" + getBOOST_INCLUDE_DIR(this)
+          + " -I " + srcFile.parent_path().string();
 
         vector<string> includeDirs;
         boost::split(includeDirs, includeDir, boost::algorithm::is_any_of(","));
@@ -133,7 +141,7 @@ namespace teos {
       string linked = workdir.string() + "/linked.bc";
       {
         string commandLine;
-        commandLine += getWASM_LLVM_LINK(nullptr)
+        commandLine += getWASM_LLVM_LINK(this)
           + " -o " + linked
           + " " + objectFileList;
         cout << commandLine << endl;
@@ -165,10 +173,10 @@ namespace teos {
       {
         string commandLine;
         commandLine += getBINARYEN_BIN(nullptr) + "/s2wasm"
-          + " -o " + targetWastFile
+          + " -o " + outputWast.string()
           + " -s 16384"
           + " " + assembly;
-        //cout << commandLine << endl;
+        cout << commandLine << endl;
         /*
         /home/cartman/opt/binaryen/bin/s2wasm
         -o /tmp/hello.wast
@@ -178,7 +186,7 @@ namespace teos {
         boostProcessSystem(commandLine);
       }
 
-      boost::filesystem::remove_all(workdir);
+      bfs::remove_all(workdir);
       /*
       /mnt/hgfs/Workspaces/EOS/eos/build/tools/eoscpp -o /tmp/hello.wast \
       /mnt/hgfs/Workspaces/EOS/eos/contracts/skeleton/skeleton.cpp

@@ -16,6 +16,8 @@ namespace teos {
         TeosControl* teosControl, string contractDir, 
         string contractFile = "");
 
+    string getSourceDir(TeosControl* teosControl);    
+
     string getDataDir(TeosControl* teosControl);
 
     string getConfigDir(TeosControl* teosControl);
@@ -33,6 +35,8 @@ namespace teos {
     string getDaemonName(TeosControl* teosControl);
 
     string getWASM_CLANG(TeosControl* teosControl);
+
+    string getBOOST_INCLUDE_DIR(TeosControl* teosControl);
 
     string getWASM_LLVM_LINK(TeosControl* teosControl);
 

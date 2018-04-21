@@ -1,17 +1,17 @@
 #pragma once
 
-#include <string>
-
 #include <teoslib/control.hpp>
 
 using namespace std;
 
 namespace teos {
   namespace control {
-
+    /**
+     * Builds a contract: produces the WAST file.
+     */
     class BuildContract : public TeosControl
     {
-      TeosControl buildContract(
+      void buildContract(
         string src, // comma separated list of source c/cpp files
         string target_wast_file,
         string include_dir = "" // comma separated list of include dirs
@@ -24,19 +24,23 @@ namespace teos {
         string include_dir = ""
       )
       {
-        copy(buildContract(src, target_wast_file, include_dir));
+        buildContract(src, target_wast_file, include_dir);
       }
 
       BuildContract(ptree reqJson) : TeosControl(reqJson)
       {
-        copy(buildContract(
+        buildContract(
           reqJson_.get<string>("src"), 
           reqJson_.get<string>("wast_file"), 
           reqJson_.get<string>("include_dir")
-        ));
+        );
       }
     };
 
+
+    /**
+     * Command-line driver for the BuildContract class.
+     */ 
     class BuildContractOptions : public ControlOptions
     {
     public:
@@ -47,6 +51,11 @@ namespace teos {
         return R"EOF(
 Build smart contract.
 Usage: ./teos build contract src wast_file [Options]
+Usage: ./teos create key --jarg '{
+  "src":"<comma separated list of c/c++ files>",
+  "wast_file":<>,
+  "include_dir":"<comma separated list of include dirs>"
+  }' [OPTIONS]
 )EOF";
       }
 
@@ -62,7 +71,7 @@ Usage: ./teos build contract src wast_file [Options]
           ("wast_file", value<string>(&wast_file)
             , "Target wast file.")
           ("include_dir,d", value<string>(&wast_file)->default_value("")
-            , "Comma separated list of source c/cpp files.");
+            , "Comma separated list of source c/c++ files.");
             
         return od;
       }
@@ -77,9 +86,11 @@ Usage: ./teos build contract src wast_file [Options]
         if(vm.count("src")){
           reqJson_.put("src", src);
           if(vm.count("wast_file")){
+            reqJson_.put("wast_file", wast_file);
             ok = true;
             reqJson_.put("include_dir", include_dir);
           }
+
         }
         return ok;
       }

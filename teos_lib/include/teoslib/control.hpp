@@ -13,11 +13,14 @@
 #include <stdlib.h>
 #include <string>
 #include <iostream>
+
 #include <boost/property_tree/ptree.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
+
 #include <teoslib/utilities.hpp>
+#include <teoslib/config.h>
 
 #define teos_ERROR "ERROR!" // Error json key
 
@@ -63,8 +66,8 @@ namespace teos
     string errorMsg() {
       return respJson_.get<string>(teos_ERROR);
     }
-    string requestToString(bool isRaw) const;
-    string responseToString(bool isRaw) const;
+    string requestToString(bool isRaw = false) const;
+    string responseToString(bool isRaw = false) const;
 
     template<typename Type>
     Type get(const ptree::path_type & path) const {
