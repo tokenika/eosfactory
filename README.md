@@ -1,4 +1,4 @@
-LOGOS is a framework for compiling, testing and deploying EOS smart-contracts, similar to Ethereum's [Truffle Framework](http://truffleframework.com).
+EOS Factory is a framework for compiling, testing and deploying EOS smart-contracts, similar to Ethereum's [Truffle Framework](http://truffleframework.com).
 
 It's composed of two layers:
 
@@ -7,4 +7,4 @@ It's composed of two layers:
 
 Using Python will allow us to build a high quality documentation and tutorials for EOS smart-contracts:
 
-https://tokenika.github.io/logos/index.html
+https://tokenika.github.io/eosfactory/index.html
