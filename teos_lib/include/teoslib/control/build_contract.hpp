@@ -1,17 +1,17 @@
 #pragma once
 
-#include <string>
-
 #include <teoslib/control.hpp>
 
 using namespace std;
 
 namespace teos {
   namespace control {
-
+    /**
+     * Builds a contract: produces the WAST file.
+     */
     class BuildContract : public TeosControl
     {
-      TeosControl buildContract(
+      void buildContract(
         string src, // comma separated list of source c/cpp files
         string target_wast_file,
         string include_dir = "" // comma separated list of include dirs
@@ -24,19 +24,23 @@ namespace teos {
         string include_dir = ""
       )
       {
-        copy(buildContract(src, target_wast_file, include_dir));
+        buildContract(src, target_wast_file, include_dir);
       }
 
       BuildContract(ptree reqJson) : TeosControl(reqJson)
       {
-        copy(buildContract(
+        buildContract(
           reqJson_.get<string>("src"), 
           reqJson_.get<string>("wast_file"), 
           reqJson_.get<string>("include_dir")
-        ));
+        );
       }
     };
 
+
+    /**
+     * Command-line driver for the BuildContract class.
+     */ 
     class BuildContractOptions : public ControlOptions
     {
     public:
@@ -47,6 +51,11 @@ namespace teos {
         return R"EOF(
 Build smart contract.
 Usage: ./teos build contract src wast_file [Options]
+Usage: ./teos create key --jarg '{
+  "src":"<comma separated list of c/c++ files>",
+  "wast_file":<>,
+  "include_dir":"<comma separated list of include dirs>"
+  }' [OPTIONS]
 )EOF";
       }
 
@@ -62,7 +71,7 @@ Usage: ./teos build contract src wast_file [Options]
           ("wast_file", value<string>(&wast_file)
             , "Target wast file.")
           ("include_dir,d", value<string>(&wast_file)->default_value("")
-            , "Comma separated list of source c/cpp files.");
+            , "Comma separated list of source c/c++ files.");
             
         return od;
       }
@@ -77,15 +86,111 @@ Usage: ./teos build contract src wast_file [Options]
         if(vm.count("src")){
           reqJson_.put("src", src);
           if(vm.count("wast_file")){
+            reqJson_.put("wast_file", wast_file);
             ok = true;
             reqJson_.put("include_dir", include_dir);
           }
+
         }
         return ok;
       }
 
       TeosControl executeCommand() {
         return BuildContract(reqJson_);
+      }
+    };
+
+
+    /**
+     * Generates abi: produces the ABI file.
+     */
+    class GenerateAbi : public TeosControl
+    {
+      void generateAbi(
+        string types_hpp, // comma separated list of source c/cpp files
+        string target_abi_file,
+        string include_dir = "" // comma separated list of include dirs
+      );
+
+    public:
+      GenerateAbi(
+        string types_hpp, // comma separated list of source c/cpp files
+        string target_abi_file,
+        string include_dir = ""
+      )
+      {
+        GenerateAbi(types_hpp, target_abi_file, include_dir);
+      }
+
+      GenerateAbi(ptree reqJson) : TeosControl(reqJson)
+      {
+        GenerateAbi(
+          reqJson_.get<string>("typesHpp"), 
+          reqJson_.get<string>("wast_file"), 
+          reqJson_.get<string>("include_dir")
+        );
+      }
+    };
+
+
+    /**
+     * Command-line driver for the GenerateAbi class.
+     */ 
+    class GenerateAbiOptions : public ControlOptions
+    {
+    public:
+      GenerateAbiOptions(int argc, const char **argv) : ControlOptions(argc, argv) {}
+
+    protected:
+      const char* getUsage() {
+        return R"EOF(
+Build smart contract.
+Usage: ./teos build contract typesHpp wast_file [Options]
+Usage: ./teos create key --jarg '{
+  "typesHpp":"<comma separated list of c/c++ files>",
+  "wast_file":<>,
+  "include_dir":"<comma separated list of include dirs>"
+  }' [OPTIONS]
+)EOF";
+      }
+
+      string typesHpp;
+      string wast_file;
+
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
+          ("typesHpp", value<string>(&typesHpp)
+            , "Comma separated list of source c/cpp files.")
+          ("wast_file", value<string>(&wast_file)->default_value("")
+            , "Target wast file. If emmpty, its name is derived from the name of 'typesHpp'")
+          ("include_dir,d", value<string>(&wast_file)->default_value("")
+            , "Comma separated list of source c/c++ files.");
+            
+        return od;
+      }
+
+      void setPosDesc(positional_options_description& pos_desc) {
+        pos_desc.add("typesHpp", 1);
+        pos_desc.add("wast_file", 1);
+      }      
+
+      bool checkArguments(variables_map &vm) {
+        bool ok = false;
+        if(vm.count("typesHpp")){
+          reqJson_.put("typesHpp", typesHpp);
+          if(vm.count("wast_file")){
+            reqJson_.put("wast_file", wast_file);
+            ok = true;
+            reqJson_.put("include_dir", include_dir);
+          }
+
+        }
+        return ok;
+      }
+
+      TeosControl executeCommand() {
+        return GenerateAbi(reqJson_);
       }
     };
   }

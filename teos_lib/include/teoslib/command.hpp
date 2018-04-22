@@ -10,13 +10,6 @@
 
 #pragma once
 
-#include <stdlib.h>
-#include <string>
-#include <iostream>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/program_options.hpp>
-#include <teoslib/utilities.hpp>
 #include <teoslib/control.hpp>
 #include <teoslib/control/config.hpp>
 

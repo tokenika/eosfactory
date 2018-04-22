@@ -80,6 +80,8 @@ wallet-dir: .
     arg LOGOS_DIR = { "LOGOS_DIR" };
     arg CONTRACT_BUILD_PATH = { "CONTRACT_BUILD_PATH", "build/contracts" };
       //CONTRACT_BUILD_PATH: relative to EOSIO_SOURCE_DIR
+
+    arg BOOST_INCLUDE_DIR = { "BOOST_INCLUDE_DIR", "opt/boost_1_66_0/include" };
     arg WASM_CLANG = { "WASM_CLANG", "opt/wasm/bin/clang" };
       // WASM_CLANG: relative to HOME dir
     arg WASM_LLVM_LINK = { "WASM_LLVM_LINK", "opt/wasm/bin/llvm-link" };
@@ -400,6 +402,14 @@ wallet-dir: .
     string getDaemonName(TeosControl* teosControl){
       return configValue(teosControl, DAEMON_NAME);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // getBOOST_INCLUDE_DIR
+    ///////////////////////////////////////////////////////////////////////////
+    string getBOOST_INCLUDE_DIR(TeosControl* teosControl){
+      bfs::path home(getenv("HOME"));
+      return (home / configValue(teosControl, BOOST_INCLUDE_DIR)).string();
+    }    
 
     ///////////////////////////////////////////////////////////////////////////
     // getWASM_CLANG

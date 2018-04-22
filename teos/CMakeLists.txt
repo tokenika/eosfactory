@@ -259,7 +259,7 @@ macro( applLinkLibraries applName )
   if( UNIX )
   target_link_libraries( ${applName} 
     PRIVATE 
-      rt 
+      rt  
       pthread
   )
   endif()
