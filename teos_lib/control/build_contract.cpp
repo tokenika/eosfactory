@@ -168,7 +168,7 @@ namespace teos {
         command_line += " -c " + file
           + " -o " + output.string();
 
-        cout << "command line clang:" << endl << command_line << endl;
+        //cout << "command line clang:" << endl << command_line << endl;
 
         if(!process(command_line, this)){
           return;
@@ -180,15 +180,15 @@ namespace teos {
         command_line += getWASM_LLVM_LINK(this)
           + " -only-needed" 
           + " -o "  + workdir.string() + "/linked.bc"
-          + " " + workdir.string() + "/*"
+          + " " + objectFileList // $workdir/built/* DOES NOT WORK
           + " " + getSourceDir(this) + "/build/contracts/musl/libc.bc"
-          + " " + getSourceDir(this) + "/contracts/libc++/libc++.bc"
+          + " " + getSourceDir(this) + "/build/contracts/libc++/libc++.bc"
           + " " + getSourceDir(this) + "/build/contracts/eosiolib/eosiolib.bc";
 
-        cout << "command line llvm-link:" << endl << command_line << endl;
+        //cout << "command line llvm-link:" << endl << command_line << endl;
 
         if(!process(command_line, this)){
-          //return;
+          return;
         }   
       }
     
@@ -198,10 +198,10 @@ namespace teos {
           + " -thread-model=single --asm-verbose=false"
           + " -o " + workdir.string() + "/assembly.s"
           + " " + workdir.string() + "/linked.bc";
-        cout << "command line llc:" << endl << command_line << endl;
+        //cout << "command line llc:" << endl << command_line << endl;
 
         if(!process(command_line, this)){
-          //return;
+          return;
         } 
       }
 
@@ -212,14 +212,20 @@ namespace teos {
           + " -s 16384"
           + " " + workdir.string() + "/assembly.s";
 
-        cout << "command line eosio-s2wasm:" << endl << command_line << endl;
+        //cout << "command line eosio-s2wasm:" << endl << command_line << endl;
 
         if(!process(command_line, this)){
-          //return;
+          return;
         } 
       }
-
       bfs::remove_all(workdir);
+
+      ifstream ifs(target_path.string());
+      stringstream ss;
+      ss << ifs.rdbuf();
+      respJson_.put("WAST", ss.str());
+      
+      cout << respJson_.get<string>("WAST");
     }
 
   }
