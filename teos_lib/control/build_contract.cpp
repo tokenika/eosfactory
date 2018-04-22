@@ -175,26 +175,29 @@ namespace teos {
         }   
       }
 
-      string linked = workdir.string() + "/linked.bc";
       {
         string command_line;
         command_line += getWASM_LLVM_LINK(this)
-          + " -o " + linked
-          + " " + objectFileList;
+          + " -only-needed" 
+          + " -o "  + workdir.string() + "/linked.bc"
+          + " " + workdir.string() + "/*"
+          + " " + getSourceDir(this) + "/build/contracts/musl/libc.bc"
+          + " " + getSourceDir(this) + "/contracts/libc++/libc++.bc"
+          + " " + getSourceDir(this) + "/build/contracts/eosiolib/eosiolib.bc";
+
         cout << "command line llvm-link:" << endl << command_line << endl;
 
         if(!process(command_line, this)){
           //return;
         }   
       }
-
-      string assembly = workdir.string() + "/assembly.s";
+    
       {
         string command_line;
         command_line += getWASM_LLC(this)
-          + " --asm-verbose=false"
-          + " -o " + assembly
-          + " " + linked;
+          + " -thread-model=single --asm-verbose=false"
+          + " -o " + workdir.string() + "/assembly.s"
+          + " " + workdir.string() + "/linked.bc";
         cout << "command line llc:" << endl << command_line << endl;
 
         if(!process(command_line, this)){
@@ -204,11 +207,11 @@ namespace teos {
 
       {
         string command_line;
-        command_line += getBINARYEN_BIN(this) + "/s2wasm"
+        command_line += getSourceDir(this) + "/build/externals/binaryen/bin/eosio-s2wasm"
           + " -o " + target_path.string()
           + " -s 16384"
-          + " " + assembly;
-          
+          + " " + workdir.string() + "/assembly.s";
+
         cout << "command line eosio-s2wasm:" << endl << command_line << endl;
 
         if(!process(command_line, this)){
