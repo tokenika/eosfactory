@@ -1,4 +1,4 @@
-EOS Factory is a smart-contract development framework, created by [Tokenika](https://tokenika.io).
+[EOS Factory](http://eosfactory.io/) is a smart-contract development framework, created by [Tokenika](https://tokenika.io).
 
 It's going to have a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
 
