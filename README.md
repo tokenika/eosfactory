@@ -2,7 +2,7 @@ EOS Factory is a smart-contract development framework, made by [Tokenika](https:
 
 It's going to have a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
 
-It will be composed of two layers:
+It's composed of two layers:
 * C++ bridge connected to an EOS node running a private testnet
 * Python wrapper acting as a convenient human-oriented interface
 
