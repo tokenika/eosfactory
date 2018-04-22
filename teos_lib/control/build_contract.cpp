@@ -224,8 +224,6 @@ namespace teos {
       stringstream ss;
       ss << ifs.rdbuf();
       respJson_.put("WAST", ss.str());
-      
-      cout << respJson_.get<string>("WAST");
     }
 
   }

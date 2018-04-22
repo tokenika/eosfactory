@@ -108,18 +108,18 @@ Usage: ./teos create key --jarg '{
     {
       void generateAbi(
         string types_hpp, // comma separated list of source c/cpp files
-        string target_abi_file = "",
+        string abi_file = "",
         string include_dir = "" // comma separated list of include dirs
       );
 
     public:
       GenerateAbi(
         string types_hpp, // comma separated list of source c/cpp files
-        string target_abi_file = "",
+        string abi_file = "",
         string include_dir = ""
       )
       {
-        generateAbi(types_hpp, target_abi_file, include_dir);
+        generateAbi(types_hpp, abi_file, include_dir);
       }
 
       GenerateAbi(ptree reqJson) : TeosControl(reqJson)

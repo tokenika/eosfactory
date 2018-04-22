@@ -566,6 +566,33 @@ class PushAction(_Command):
         if not self.error:
             self.name = contract_name
 
+class GenerateAbi(_Command):
+    def __init__(
+            self, types_hpp, abi_file="", 
+            include_dir="", is_verbose=True):
+
+        self._jarg["types_hpp"] = types_hpp
+        self._jarg["abi_file"] = abi_file
+        self._jarg["include_dir"] = include_dir
+
+        _Command.__init__(self, "generate", "abi", is_verbose)
+        if not self.error:
+            self.abi = self.json
+
+
+class BuildContract(_Command):
+    def __init__(
+            self, src, wast_file="", 
+            include_dir="", is_verbose=True):
+
+        self._jarg["src"] = src
+        self._jarg["wast_file"] = wast_file
+        self._jarg["include_dir"] = include_dir
+
+        _Command.__init__(self, "build", "contract", is_verbose)
+        if not self.error:
+            self.wast = self.json["WAST"]
+
 
 class _Daemon(_Command):
     def start(self, clear, is_verbose):
