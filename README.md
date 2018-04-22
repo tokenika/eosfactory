@@ -10,4 +10,6 @@ It's composed of two layers:
 
 Using Python will allow us to build [interactive tutorials](http://eosfactory.io/docs/) for EOS smart-contracts.
 
+Also, we make sure everything we do is fully compatible with Windows - our toolset will enable you to run an EOS node and interact with it on any operating system, including Windows.
+
 EOS Factory is still under development. We plan to release it before June 2018.
