@@ -20,6 +20,27 @@ using namespace std;
 namespace teos {
   namespace control {
 
+    bool process(string command_line, TeosControl* teos_control){
+        namespace bp = boost::process;
+
+        bp::ipstream err;
+        bp::child c(command_line, bp::std_err > err);
+
+        string err_line;
+        string error_msg;
+        while (c.running() && std::getline(err, err_line) && !err_line.empty()){
+            error_msg += err_line + "\n";
+        }
+        c.wait();
+
+        if(!error_msg.empty() && error_msg.find("error") != string::npos){
+          teos_control->putError(error_msg);
+          return false;
+        }
+
+        return true;
+    }
+
     void GenerateAbi::generateAbi(
       string types_hpp,
       string target_abi_file,
@@ -54,9 +75,9 @@ namespace teos {
 
       if(!include_dir.empty())
       {
-        vector<string> includeDirs;
-        boost::split(includeDirs, include_dir, boost::algorithm::is_any_of(","));
-        for (string dir : includeDirs) {
+        vector<string> include_dirs;
+        boost::split(include_dirs, include_dir, boost::algorithm::is_any_of(","));
+        for (string dir : include_dirs) {
           command_line += " -extra-arg=-I" + dir;
         }
       }
@@ -70,26 +91,9 @@ namespace teos {
       
       //cout << command_line << endl;
 
-      {
-        namespace bp = boost::process;
-        namespace pt = boost::property_tree;
-
-        bp::ipstream err;
-        bp::child c(command_line, bp::std_err > err);
-
-        string err_line;
-        string error_msg;
-        while (c.running() && std::getline(err, err_line) && !err_line.empty()){
-            error_msg += err_line + "\n";
-        }
-        c.wait();
-
-        if(!error_msg.empty()){
-          putError(error_msg);
-        } else {
-          pt::read_json(target_path.string(), respJson_);
-          //cout << responseToString();
-        }
+      if(process(command_line, this)){
+        boost::property_tree::read_json(target_path.string(), respJson_);
+          //cout << responseToString();        
       }
     };
 
@@ -138,32 +142,37 @@ namespace teos {
           }          
         }
 
-
         bfs::path output(build / (name + ".o"));
         objectFileList += output.string() + " ";
 
         string command_line;
         command_line += getWASM_CLANG(this)
-          + " -emit-llvm -O3  --std=c++14  --target=wasm32 -nostdinc -nostdlib"
+          + " -emit-llvm -O3 --std=c++14 --target=wasm32 -nostdinc -nostdlib"
           + " -nostdlibinc -ffreestanding -nostdlib -fno-threadsafe-statics"
           + " -fno-rtti -fno-exceptions"
           + " -I" + getSourceDir(this) + "/contracts"
           + " -I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
           + " -I" + getSourceDir(this) + "/contracts/musl/upstream/include"
           + " -I" + getBOOST_INCLUDE_DIR(this)
-          + " -I " + srcFile.parent_path().string();
+          + " -I" + srcFile.parent_path().string();
 
-        vector<string> includeDirs;
-        boost::split(includeDirs, include_dir, boost::algorithm::is_any_of(","));
-        for (string dir : includeDirs) {
-          command_line += " -I " + dir;
-        }
+        if(!include_dir.empty())
+        {
+          vector<string> include_dirs;
+          boost::split(include_dirs, include_dir, boost::algorithm::is_any_of(","));
+          for (string dir : include_dirs) {
+            command_line += " -I " + dir;
+          }
+        }        
 
         command_line += " -c " + file
           + " -o " + output.string();
 
-        cout << command_line << endl;
-        boostProcessSystem(command_line);
+        cout << "command line clang:" << endl << command_line << endl;
+
+        if(!process(command_line, this)){
+          return;
+        }   
       }
 
       string linked = workdir.string() + "/linked.bc";
@@ -172,53 +181,42 @@ namespace teos {
         command_line += getWASM_LLVM_LINK(this)
           + " -o " + linked
           + " " + objectFileList;
-        cout << command_line << endl;
-        /*
-        /home/cartman/opt/wasm/bin/llvm-link
-        -o /tmp/tmp.fXlBIIodY4/linked.bc
-        /tmp/tmp.fXlBIIodY4/built/skeleton.cpp
-        */
-        boostProcessSystem(command_line);
+        cout << "command line llvm-link:" << endl << command_line << endl;
+
+        if(!process(command_line, this)){
+          //return;
+        }   
       }
 
       string assembly = workdir.string() + "/assembly.s";
       {
         string command_line;
-        command_line += getWASM_LLC(nullptr)
+        command_line += getWASM_LLC(this)
           + " --asm-verbose=false"
           + " -o " + assembly
           + " " + linked;
-        cout << command_line << endl;
-        /*
-        /home/cartman/opt/wasm/bin/llc
-        --asm-verbose=false
-        -o /tmp/tmp.fXlBIIodY4/assembly.s
-        /tmp/tmp.fXlBIIodY4/linked.bc
-        */
-        boostProcessSystem(command_line);
+        cout << "command line llc:" << endl << command_line << endl;
+
+        if(!process(command_line, this)){
+          //return;
+        } 
       }
 
       {
         string command_line;
-        command_line += getBINARYEN_BIN(nullptr) + "/s2wasm"
+        command_line += getBINARYEN_BIN(this) + "/s2wasm"
           + " -o " + target_path.string()
           + " -s 16384"
           + " " + assembly;
-        cout << command_line << endl;
-        /*
-        /home/cartman/opt/binaryen/bin/s2wasm
-        -o /tmp/hello.wast
-        -s 16384
-        /tmp/tmp.fXlBIIodY4/assembly.s
-        */
-        boostProcessSystem(command_line);
+          
+        cout << "command line eosio-s2wasm:" << endl << command_line << endl;
+
+        if(!process(command_line, this)){
+          //return;
+        } 
       }
 
       bfs::remove_all(workdir);
-      /*
-      /mnt/hgfs/Workspaces/EOS/eos/build/tools/eoscpp -o /tmp/hello.wast \
-      /mnt/hgfs/Workspaces/EOS/eos/contracts/skeleton/skeleton.cpp
-      */
     }
 
   }

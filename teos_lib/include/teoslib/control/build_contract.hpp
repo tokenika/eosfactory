@@ -83,13 +83,10 @@ Usage: ./teos create key --jarg '{
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if(vm.count("src")){
+          ok = true;
           reqJson_.put("src", src);
-          if(vm.count("wast_file")){
-            reqJson_.put("wast_file", wast_file);
-            ok = true;
-            reqJson_.put("include_dir", include_dir);
-          }
-
+          reqJson_.put("wast_file", wast_file);
+          reqJson_.put("include_dir", include_dir);
         }
         return ok;
       }
@@ -181,13 +178,10 @@ Usage: ./teos create key --jarg '{
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         if(vm.count("types_hpp")){
+          ok = true;
           reqJson_.put("types_hpp", types_hpp);
-          if(vm.count("abi_file")){
-            reqJson_.put("abi_file", abi_file);
-            ok = true;
-            reqJson_.put("include_dir", include_dir);
-          }
-
+          reqJson_.put("abi_file", abi_file);
+          reqJson_.put("include_dir", include_dir);
         }
         return ok;
       }
