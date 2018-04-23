@@ -43,7 +43,7 @@ namespace teos {
 
     void GenerateAbi::generateAbi(
       string types_hpp,
-      string target_abi_file,
+      string target_file,
       string include_dir // comma separated list of include dirs
     )
     {
@@ -53,11 +53,11 @@ namespace teos {
       string name = types_pth.stem().string();
       bfs::path contextFolder = types_pth.parent_path();
 
-      bfs::path target_path(target_abi_file);
-      if(target_abi_file.empty()){
+      bfs::path target_path(target_file);
+      if(target_file.empty()){
         target_path = contextFolder / (name + ".abi");
       } else {
-        target_path = bfs::path(target_abi_file);
+        target_path = bfs::path(target_file);
         if(!target_path.is_absolute()){
           target_path = contextFolder / target_path;
         }
@@ -92,7 +92,10 @@ namespace teos {
       //cout << command_line << endl;
 
       if(process(command_line, this)){
-        boost::property_tree::read_json(target_path.string(), respJson_);
+        boost::property_tree::ptree abi;
+        boost::property_tree::read_json(target_path.string(), abi);
+        respJson_.add_child("ABI", abi);
+        respJson_.put("output", target_path.string());
           //cout << responseToString();        
       }
     };
@@ -111,7 +114,7 @@ namespace teos {
     */
     void BuildContract::buildContract(
       string src, // comma separated list of source c/cpp files
-      string target_wast_file,
+      string target_file,
       string include_dir // comma separated list of include dirs
     )
     {
@@ -126,19 +129,19 @@ namespace teos {
       vector<string> srcs;
       boost::split(srcs, src, boost::algorithm::is_any_of(","));
       string objectFileList;
-      bfs::path target_path(target_wast_file);
+      bfs::path target_path(target_file);
 
       for (string file : srcs)
-      {
-        bfs::path srcFile(file);
-        string name = srcFile.stem().string();
+      {  
+        bfs::path src_file(file);
+        string name = src_file.stem().string();
 
-        if(target_wast_file.empty()){
-          target_path = name + "wast";
+        if(target_file.empty()){
+          target_path = src_file.parent_path() / (name + ".wast");
         } else {
-          target_path = bfs::path(target_wast_file);
+          target_path = bfs::path(target_file);
           if(!target_path.is_absolute()){
-            target_path = srcFile.parent_path() / target_path;
+            target_path = src_file.parent_path() / target_path;
           }          
         }
 
@@ -154,7 +157,7 @@ namespace teos {
           + " -I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
           + " -I" + getSourceDir(this) + "/contracts/musl/upstream/include"
           + " -I" + getBOOST_INCLUDE_DIR(this)
-          + " -I" + srcFile.parent_path().string();
+          + " -I" + src_file.parent_path().string();
 
         if(!include_dir.empty())
         {
@@ -224,6 +227,7 @@ namespace teos {
       stringstream ss;
       ss << ifs.rdbuf();
       respJson_.put("WAST", ss.str());
+      respJson_.put("output", target_path.string());
     }
 
   }

@@ -96,7 +96,7 @@ Usage: ./teos create key --jarg '{
       }
 
       void printout(TeosControl command, variables_map &vm) {
-        output("WAST file is ready.");
+        output("WAST", "%s", GET_STRING(command, "output"));
       }    
     };
 
@@ -191,7 +191,7 @@ Usage: ./teos create key --jarg '{
       }
 
       void printout(TeosControl command, variables_map &vm) {
-        output("ABI file is ready.");
+        output("ABI", "%s", GET_STRING(command, "output"));
       }        
     };
   }

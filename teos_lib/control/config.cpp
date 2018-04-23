@@ -192,25 +192,20 @@ wallet-dir: .
         }
 
         {
-          wantedPath = bfs::path(contractDir);
-          bfs::path contractDirPath;
-          if(!wantedPath.is_absolute()) 
+          bfs::path contractDirPath(contractDir);
+          if(!contractDirPath.is_absolute()) 
           {
-            contractDirPath = configValue(teosControl, CONTRACT_BUILD_PATH);
-            if(!contractDirPath.is_absolute()) 
+            bfs::path configContractDirPath 
+              = configValue(teosControl, CONTRACT_BUILD_PATH);
+            if(!configContractDirPath.is_absolute()) 
             {
               string sourceDir = getSourceDir(teosControl);
               if(sourceDir.empty()){
                 return "";
               }
-              contractDirPath = bfs::path(sourceDir) / contractDirPath;
+              configContractDirPath = bfs::path(sourceDir) / configContractDirPath;
             }
-            contractDirPath = contractDirPath / wantedPath;
-            wantedPath = contractDirPath;
-          } 
-          wantedPath = wantedPath / contractFile;
-          if(bfs::exists(wantedPath) && bfs::is_regular_file(wantedPath)) {
-            return wantedPath.string();
+            contractDirPath = configContractDirPath / contractDirPath;
           }
 
           if(contractFile[0] == '.')
@@ -225,6 +220,13 @@ wallet-dir: .
               }
             } 
           }   
+
+          wantedPath = contractDirPath / contractFile;
+          if(bfs::exists(wantedPath) && bfs::is_regular_file(wantedPath)) {
+            return wantedPath.string();
+          }
+
+
         }
 
         onError(teosControl, (boost::format("Cannot find the contract file:\n%1%\n")

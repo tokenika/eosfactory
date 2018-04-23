@@ -17,7 +17,7 @@ hello_cpp = open(contract_dir + "hello.cpp", "w")
 ```
 Open the `hello.cpp` file in a text editor. We recommend the *Visual Studio Code*. If you are working with the [*Windows Subsystem for Linux*](#https://docs.microsoft.com/en-us/windows/wsl/install-win10), the location file has to be known in terms of the *Windows* file system. It is something like `C:\Users\<username>\AppData\Local\Packages\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\LocalState \rootfs\tmp\hello\hello.cpp`.
 
-Copy there the following text:
+Copy there the following code:
 ```
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/print.hpp>
@@ -42,66 +42,14 @@ print(file.read())
 ``` -->
 You can compile your code to web assembly (.wast) as follows:
 ```
-wast = teos.BuildCotract(contract_dir + "hello.cpp")
-#  WAST file is ready.
-
-pprint.pprint(wast.wast)
+wast = teos.WAST(contract_dir + "hello.cpp")
+#             WAST: /mnt/e/Workspaces/EOS/logos/contracts/hello/hello.wast
+```
+Now generate the abi:
 ```
 
-
-```
-('(module\n'
- ' (type $FUNCSIG$vij (func (param i32 i64)))\n'
- ' (type $FUNCSIG$vjj (func (param i64 i64)))\n'
- ' (type $FUNCSIG$vi (func (param i32)))\n'
- ' (type $FUNCSIG$i (func (result i32)))\n'
- ' (type $FUNCSIG$iii (func (param i32 i32) (result i32)))\n'
- ' (type $FUNCSIG$vii (func (param i32 i32)))\n'
- ' (type $FUNCSIG$iiii (func (param i32 i32 i32) (result i32)))\n'
- ' (type $FUNCSIG$vj (func (param i64)))\n'
- ' (type $FUNCSIG$v (func))\n'
- ' (import "env" "action_data_size" (func $action_data_size (result i32)))\n'
- ' (import "env" "eosio_assert" (func $eosio_assert (param i32 i32)))\n'
- ' (import "env" "eosio_exit" (func $eosio_exit (param i32)))\n'
- ' (import "env" "memcpy" (func $memcpy (param i32 i32 i32) (result i32)))\n'
- ' (import "env" "printn" (func $printn (param i64)))\n'
- ' (import "env" "prints" (func $prints (param i32)))\n'
- ' (import "env" "read_action_data" (func $read_action_data (param i32 i32) '
- '(result i32)))\n'
- ' (import "env" "require_auth2" (func $require_auth2 (param i64 i64)))\n'
- ' (table 2 2 anyfunc)\n'
- ' (elem (i32.const 0) $__wasm_nullptr $_ZN5hello2hiEy)\n'
- ' (memory $0 1)\n'
- ' (data (i32.const 4) "`a\\00\\00")\n'
- ' (data (i32.const 16) "read\\00")\n'
- ' (data (i32.const 32) "Hello, \\00")\n'
- ' (data (i32.const 8448) "malloc_from_freed was designed to only be called '
- 'after _heap was completely allocated\\00")\n'
- ' (export "memory" (memory $0))\n'
- ' (export "_ZeqRK11checksum256S1_" (func $_ZeqRK11checksum256S1_))\n'
- ' (export "_ZN5eosio12require_authERKNS_16permission_levelE" (func '
- '$_ZN5eosio12require_authERKNS_16permission_levelE))\n'
- ' (export "apply" (func $apply))\n'
- ' (export "memcmp" (func $memcmp))\n'
- ' (export "malloc" (func $malloc))\n'
- ' (export "free" (func $free))\n'
- ' (func $_ZeqRK11checksum256S1_ (param $0 i32) (param $1 i32) (result i32)\n'
- '  (i32.eqz\n'
- '   (call $memcmp\n'
- '    (get_local $0)\n'
- '    (get_local $1)\n'
- '    (i32.const 32)\n'
- '   )\n'
- '  )\n'
- ' )\n'
-....................
-```
-
-
-```
-
-abi = teos.GenerateAbi(contract_dir + "hello.cpp")
-#  ABI file is ready.
+abi = teos.ABI(contract_dir + "hello.cpp")
+#              ABI: /mnt/e/Workspaces/EOS/logos/contracts/hello/hello.abi
 
 pprint.pprint(abi.abi)
 
@@ -114,6 +62,29 @@ pprint.pprint(abi.abi)
               'name': 'hi'}],
  'tables': '',
  'types': ''}
+```
+Start the local EOSIO node, create wallet, an account and upload the contract:
+```
+daemon = teos.DaemonClear()
+wallet = teos.Wallet()
+account_eosio = teos.EosioAccount()
+contract_eosio_bios = teos.SetContract(account_eosio, "eosio.bios")
+key_common = teos.CreateKey("key_common")
+wallet.import_key(key_common)
+
+account_hello = teos.Account(
+    account_eosio, "hello.code", key_common, key_common)
+contract_hello = teos.Contract(account_hello, contract_dir)
+
+```
+We can run the contract:
+```
+print(contract_hello.action("hi", '["user"]'))
+#        transaction id: 04538a7d2b115e283bff84113deea8c41fefbaeb96201d2e4e8a7080ef520998
+
+Hello, user
+```
+
 ```
 
 ## Hello World Ricardian Contract

@@ -444,14 +444,24 @@ class CreateAccount(_Command):
             creator = creator
 
         try:
+            owner_key = owner_key.key_public
+        except:
+            pass
+
+        try:
+            active_key = active_key.key_public
+        except:
+            pass
+
+        try:
             permission = permission.name
         except:
             permission = permission
         
         self._jarg["creator"] = creator
         self._jarg["name"] = name
-        self._jarg["ownerKey"] = owner_key.key_public
-        self._jarg["activeKey"] = active_key.key_public
+        self._jarg["ownerKey"] = owner_key
+        self._jarg["activeKey"] = active_key
         self._jarg["permission"] = permission
         self._jarg["expiration"] = expiration_sec        
         self._jarg["skip-sign"] = skip_signature        
@@ -566,7 +576,7 @@ class PushAction(_Command):
         if not self.error:
             self.name = contract_name
 
-class GenerateAbi(_Command):
+class ABI(_Command):
     def __init__(
             self, types_hpp, abi_file="", 
             include_dir="", is_verbose=True):
@@ -577,10 +587,10 @@ class GenerateAbi(_Command):
 
         _Command.__init__(self, "generate", "abi", is_verbose)
         if not self.error:
-            self.abi = self.json
+            self.abi = self.json["ABI"]
 
 
-class BuildContract(_Command):
+class WAST(_Command):
     def __init__(
             self, src, wast_file="", 
             include_dir="", is_verbose=True):
@@ -838,8 +848,17 @@ class Contract(SetContract):
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage
             )
-        if dont_broadcast and not push_action.error:
-            pprint.pprint(push_action.json)
+        if not push_action.error:
+            self.action_json = push_action.json
+            try:
+                self.console = self.action_json["processed"]["action_traces"][0]["console"]
+            except:
+                self.console = ""
+
+        if (dont_broadcast or is_verbose) and not push_action.error:
+            pprint.pprint(self.action_json)
+
+        return self.console
 
 class Daemon(_Commands):
     """ A representation of the local EOSIO node.

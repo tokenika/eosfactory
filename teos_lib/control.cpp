@@ -34,13 +34,14 @@ namespace teos
   using namespace boost::property_tree;
 
 #define SHARP "#  "
+#define INDENT "15"
   boost::format output(string label, string format) {
-    string header = (boost::format(SHARP "%1$20s: ") % label).str();
+    string header = (boost::format(SHARP "%1$"INDENT"s: ") % label).str();
     return boost::format(header + format);
   }
 
   void output(const char* label, const char* format, ...) {
-    printf(SHARP "%20s: ", label);
+    printf(SHARP "%"INDENT"s: ", label);
 
     string f(format);
     f += "\n";
