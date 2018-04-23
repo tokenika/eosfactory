@@ -51,6 +51,7 @@ namespace teos
   class TeosControl
   {
   public:
+    static string executable;
     static string getConfigJson();
     static ptree getConfig(TeosControl* teosControl = nullptr);
 

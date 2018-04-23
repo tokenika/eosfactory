@@ -36,12 +36,12 @@ namespace teos
 #define SHARP "#  "
 #define INDENT "15"
   boost::format output(string label, string format) {
-    string header = (boost::format(SHARP "%1$"INDENT"s: ") % label).str();
+    string header = (boost::format(SHARP "%1$" INDENT "s: ") % label).str();
     return boost::format(header + format);
   }
 
   void output(const char* label, const char* format, ...) {
-    printf(SHARP "%"INDENT"s: ", label);
+    printf(SHARP "%" INDENT "s: ", label);
 
     string f(format);
     f += "\n";
@@ -81,9 +81,10 @@ namespace teos
     return ss.str();
   }
 
+  string TeosControl::executable = "";
   string TeosControl::getConfigJson(){
     string configJson 
-      = (boost::filesystem::path(boost::filesystem::current_path()) 
+      = (boost::filesystem::path(TeosControl::executable).parent_path() 
       / CONFIG_JSON).string();
     return configJson;
   }
