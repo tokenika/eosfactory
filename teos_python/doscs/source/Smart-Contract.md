@@ -138,7 +138,7 @@ By means of confirmation, you should see the transaction in the transaction hist
 It is easy to start with a template. I you have imported `teos.py` module already, if the contract name can be `tokenika_hello_world`, use the creator of the `teos.ContractTemplate` class:
 
 ```python
-teos.ContractTemplate("tokenika_hello_world")
+teos.ContractTemplate("kubus")
 #      context dir: /mnt/c/Workspaces/EOS/eosfactory
 #    contracts dir: /mnt/c/Workspaces/EOS/eosfactory/contracts
 #     contract dir: /mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika_hello_world

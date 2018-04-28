@@ -21,9 +21,9 @@ namespace teos {
 
     static const string contracts_dir = "contracts";
     static const string contract_build_dir = "build";
-    static const string skeleton_dir = "build/share/eosio/skeleton";
+    static const string template_dir = "templates";    
+    static const string skeleton_dir = "skeleton/skeleton.cpp";
     static const string skeleton_name = "skeleton";
-    static const string template_dir = "templates";
     static const string vscode_dir = ".vscode";
     static const string contract_vscode_dir = "contract/.vscode";
 
@@ -88,28 +88,30 @@ namespace teos {
     }
 
     void BootstrapContract::copyTemplate(
-      boost::filesystem::path contract_path, string name, string extension)
+      boost::filesystem::path context_path,
+      boost::filesystem::path contract_path, 
+      string name, string extension)
     {
       namespace bfs = boost::filesystem;
 
       bfs::path template_path = contract_path / (name + extension);
-      respJson_.put("template" + extension, template_path.string());
       if(bfs::exists(template_path)){
         return;
       }      
-
-      bfs::path source_path(getSourceDir(this)); 
-      if(isError_){
-        return;
-      }        
-      bfs::path skeleton = source_path / skeleton_dir 
+       
+      bfs::path skeleton = context_path / template_dir / skeleton_name
         / (skeleton_name + extension);
+
+      if(!bfs::exists(skeleton)){
+        return;
+      }
 
       string contents;        
       try{
         bfs::ifstream in(skeleton);
         stringstream ss;
         ss << in.rdbuf();
+        in.close();
         contents = ss.str();
         boost::replace_all(contents, skeleton_name, name);
       } catch(exception& e){
@@ -148,7 +150,7 @@ namespace teos {
       if(isError_){
         return;
       }
-      respJson_.put("contracts_dir", contracts_path.string());
+      respJson_.put("contracts_dir", contracts_dir);
 
       bfs::path contract_path = contracts_path / name;
       try{
@@ -159,7 +161,7 @@ namespace teos {
       if(isError_){
         return;
       }
-      respJson_.put("contract_dir", contract_path.string());
+      respJson_.put("contract_dir", name);
 
       bfs::path build_path = contract_path / contract_build_dir;
       try{
@@ -170,9 +172,9 @@ namespace teos {
       if(isError_){
         return;
       }
-      respJson_.put("build_dir", build_path.string());
-      copyTemplate(contract_path, name, ".cpp");
-      copyTemplate(contract_path, name, ".hpp");
+      respJson_.put("build_dir", contract_build_dir);
+      copyTemplate(context_path, contract_path, name, ".cpp");
+      copyTemplate(context_path, contract_path, name, ".hpp");
 
       { /* copy and adapt the template .vscode directory 
       to the contract directory:*/
@@ -264,6 +266,7 @@ namespace teos {
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts/musl/upstream/include"
         + " -extra-arg=-I" + getBOOST_INCLUDE_DIR(this)
+        + " -extra-arg=-I" + getSourceDir(this) + "/externals/magic_get/include"
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts"
         + " -extra-arg=-I" + contextFolder.string();
 
@@ -362,6 +365,7 @@ namespace teos {
           + " -I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
           + " -I" + getSourceDir(this) + "/contracts/musl/upstream/include"
           + " -I" + getBOOST_INCLUDE_DIR(this)
+          + " -I" + getSourceDir(this) + "/externals/magic_get/include"
           + " -I" + src_file.parent_path().string();
 
         if(!include_dir.empty())
