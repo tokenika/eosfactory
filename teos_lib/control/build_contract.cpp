@@ -8,9 +8,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/process.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <teoslib/control/config.hpp>
 #include <teoslib/control/build_contract.hpp>
@@ -20,6 +18,14 @@ using namespace std;
 
 namespace teos {
   namespace control {
+
+    static const string contracts_dir = "contracts";
+    static const string contract_build_dir = "build";
+    static const string skeleton_dir = "build/share/eosio/skeleton";
+    static const string skeleton_name = "skeleton";
+    static const string template_dir = "templates";
+    static const string vscode_dir = ".vscode";
+    static const string contract_vscode_dir = "contract/.vscode";
 
     bool process(string command_line, TeosControl* teos_control){
         namespace bp = boost::process;
@@ -81,6 +87,140 @@ namespace teos {
       return srcs;      
     }
 
+    void BootstrapContract::copyTemplate(
+      boost::filesystem::path contract_path, string name, string extension)
+    {
+      namespace bfs = boost::filesystem;
+
+      bfs::path template_path = contract_path / (name + extension);
+      respJson_.put("template" + extension, template_path.string());
+      if(bfs::exists(template_path)){
+        return;
+      }      
+
+      bfs::path source_path(getSourceDir(this)); 
+      if(isError_){
+        return;
+      }        
+      bfs::path skeleton = source_path / skeleton_dir 
+        / (skeleton_name + extension);
+
+      string contents;        
+      try{
+        bfs::ifstream in(skeleton);
+        stringstream ss;
+        ss << in.rdbuf();
+        contents = ss.str();
+        boost::replace_all(contents, skeleton_name, name);
+      } catch(exception& e){
+        putError(e.what());
+      }
+
+      try{
+        bfs::ofstream ofs (template_path);
+        ofs << contents << endl;
+        ofs.flush();
+        ofs.close();          
+      } catch (bfs::filesystem_error &e){
+        putError(e.what());
+      }
+      if(isError_){
+        return;
+      }          
+    }
+
+    void BootstrapContract::bootstrapContract(string name)
+    {
+      namespace bfs = boost::filesystem;
+
+      bfs::path context_path(getContextDir(this));
+      if(isError_){
+        return;
+      }
+      respJson_.put("context_dir", context_path.string());
+
+      bfs::path contracts_path = context_path / contracts_dir;
+      try{
+        bfs::create_directory(contracts_path);
+      } catch (bfs::filesystem_error &e){
+        putError(e.what());
+      }
+      if(isError_){
+        return;
+      }
+      respJson_.put("contracts_dir", contracts_path.string());
+
+      bfs::path contract_path = contracts_path / name;
+      try{
+        bfs::create_directory(contract_path);
+      } catch (bfs::filesystem_error &e){
+        putError(e.what());
+      }
+      if(isError_){
+        return;
+      }
+      respJson_.put("contract_dir", contract_path.string());
+
+      bfs::path build_path = contract_path / contract_build_dir;
+      try{
+        bfs::create_directory(build_path);
+      } catch (bfs::filesystem_error &e){
+        putError(e.what());
+      }
+      if(isError_){
+        return;
+      }
+      respJson_.put("build_dir", build_path.string());
+      copyTemplate(contract_path, name, ".cpp");
+      copyTemplate(contract_path, name, ".hpp");
+
+      { /* copy and adapt the template .vscode directory 
+      to the contract directory:*/
+
+        bfs::path template_vscode_path = (
+          context_path / template_dir / contract_vscode_dir).string();
+        bfs::path contract_vscode_path = (contract_path / vscode_dir);
+
+        try{
+          bfs::create_directory(contract_vscode_path);
+          for (const auto& dirEnt : bfs::recursive_directory_iterator{template_vscode_path})
+          {
+              const auto& path = dirEnt.path();
+              auto relativePathStr = path.string();
+              boost::replace_first(relativePathStr, template_vscode_path.string(), "");
+              bfs::copy(path, contract_vscode_path / relativePathStr);
+          }
+        }catch (exception& e) {
+          putError(e.what());
+        }
+
+        string contents;
+        string tasks_json = "tasks.json";        
+        try{
+          bfs::ifstream in(contract_vscode_path / tasks_json);
+          stringstream ss;
+          ss << in.rdbuf();
+          contents = ss.str();
+          boost::replace_all(contents, "@contract_name@", name);
+        } catch(exception& e){
+          putError(e.what());
+        }
+
+        try{
+          bfs::remove(contract_vscode_path / tasks_json);
+          bfs::ofstream ofs (contract_vscode_path / tasks_json);
+          ofs << contents << endl;
+          ofs.flush();
+          ofs.close();          
+        } catch (bfs::filesystem_error &e){
+          putError(e.what());
+        }
+        if(isError_){
+          return;
+        }          
+      }
+    }
+
     void GenerateAbi::generateAbi(
       string types_hpp,
       string target_file,
@@ -89,7 +229,14 @@ namespace teos {
     {
       namespace bfs = boost::filesystem;
       
-      types_hpp = files(types_hpp, {".cpp", "c"})[0];
+      vector<string> srcs = files(types_hpp, {".cpp", "c"});
+      if(srcs.empty()){
+        putError((boost::format("The source is empty. The imput is:\n%1%\n")
+              % types_hpp).str());
+        return;
+      }
+
+      types_hpp = srcs[0];
       
       bfs::path types_pth(types_hpp);
       string name = types_pth.stem().string();
@@ -97,7 +244,12 @@ namespace teos {
 
       bfs::path target_path(target_file);
       if(target_file.empty()){
-        target_path = contextFolder / (name + ".abi");
+        bfs::path build_path(contextFolder / contract_build_dir);
+        if(bfs::exists(build_path)){
+          target_path = build_path / (name + ".abi");
+        } else {
+          target_path = contextFolder / (name + ".abi");
+        }
       } else {
         target_path = bfs::path(target_file);
         if(!target_path.is_absolute()){
@@ -164,10 +316,15 @@ namespace teos {
       bfs::path workdir= bfs::temp_directory_path()
         / bfs::unique_path();
       bfs::create_directories(workdir);
-      bfs::path build(workdir / "build");
-      bfs::create_directory(build);
+      bfs::path workdir_build(workdir / "build");
+      bfs::create_directory(workdir_build);
 
       vector<string> srcs = files(src, {".cpp", ".c"});
+      if(srcs.empty()){
+        putError((boost::format("The source is empty. The imput is:\n%1%\n")
+              % src).str());
+        return;
+      }
 
       string objectFileList;
       bfs::path target_path(target_file);
@@ -177,16 +334,23 @@ namespace teos {
         bfs::path src_file(file);
         string name = src_file.stem().string();
 
-        if(target_file.empty()){
-          target_path = src_file.parent_path() / (name + ".wast");
-        } else {
+        if(target_file.empty())
+        {
+          bfs::path build_path(src_file.parent_path() / contract_build_dir);
+          if(bfs::exists(build_path)){
+            target_path = build_path / (name + ".wast");
+          } else{
+            target_path = src_file.parent_path() / (name + ".wast");
+          }
+        } else 
+        {
           target_path = bfs::path(target_file);
           if(!target_path.is_absolute()){
             target_path = src_file.parent_path() / target_path;
           }          
         }
 
-        bfs::path output(build / (name + ".o"));
+        bfs::path output(workdir_build / (name + ".o"));
         objectFileList += output.string() + " ";
 
         string command_line;

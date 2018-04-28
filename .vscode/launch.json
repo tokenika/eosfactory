@@ -5,6 +5,37 @@
   "version": "0.2.0",
   "configurations": [  
     {
+        "name": "(gdb) wsl teos bootstrap contract",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
+        "args": ["bootstrap", "contract", "test"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build",
+        "environment": [],
+        "externalConsole": true,
+        "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "c:/Workspaces/EOS/bash.exe", 
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+        },  
+        "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/c": "c:\\"
+        }         
+    },      
+    {
         "name": "(gdb) wsl teos generate abi",
         "type": "cppdbg",
         "request": "launch",

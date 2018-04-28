@@ -1,5 +1,6 @@
 // #pragma once
 
+#include <boost/filesystem.hpp>
 #include <teoslib/control.hpp>
 
 using namespace std;
@@ -192,6 +193,92 @@ Usage: ./teos create key --jarg '{
 
       void printout(TeosControl command, variables_map &vm) {
         output("ABI", "%s", GET_STRING(command, "output"));
+      }        
+    };
+
+
+    /**
+     * BootstrapContract: produces template contract workspace.
+    */
+    class BootstrapContract : public TeosControl
+    {
+      void bootstrapContract(
+        string name // contract name
+      );
+      void copyTemplate(
+      boost::filesystem::path contract_path, string name, string extension);
+
+    public:
+      BootstrapContract(
+        string name // contract name
+      )
+      {
+        bootstrapContract(name);
+      }
+
+      BootstrapContract(ptree reqJson) : TeosControl(reqJson)
+      {
+        bootstrapContract(
+          reqJson_.get<string>("name")
+        );
+      }
+    };
+
+
+    /**
+     * Command-line driver for the BootstrapContract class.
+     */ 
+    class BootstrapContractOptions : public ControlOptions
+    {
+    public:
+      BootstrapContractOptions(int argc, const char **argv) : ControlOptions(argc, argv) {}
+
+    protected:
+      const char* getUsage() {
+        return R"EOF(
+Make a workspace for a contract, with a c++ code template.
+Usage: ./teos bootstrap contract [Options]
+Usage: ./teos create key --jarg '{
+  "name":"<contract name>"
+  }' [OPTIONS]
+)EOF";
+      }
+
+      string name;
+
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
+          ("name", value<string>(&name)
+            , "Contract name.");
+            
+        return od;
+      }
+
+      void setPosDesc(positional_options_description& pos_desc) {
+        pos_desc.add("name", 1);
+      }      
+
+      bool checkArguments(variables_map &vm) {
+        bool ok = false;
+        if(vm.count("name")){
+          ok = true;
+          reqJson_.put("name", name);
+        }
+        return ok;
+      }
+
+      TeosControl executeCommand() {
+        return BootstrapContract(reqJson_);
+      }
+
+      void printout(TeosControl command, variables_map &vm) {
+        output("context dir", "%s", GET_STRING(command, "context_dir"));
+        output("contracts dir", "%s", GET_STRING(command, "contracts_dir"));        
+        output("contract dir", "%s", GET_STRING(command, "contract_dir"));
+        output("build_dir", "%s", GET_STRING(command, "build_dir"));        
+        output("template.cpp", "%s", GET_STRING(command, "template.cpp"));        
+        output("template.hpp", "%s", GET_STRING(command, "template.hpp"));        
       }        
     };
   }

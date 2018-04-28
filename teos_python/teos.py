@@ -576,6 +576,15 @@ class PushAction(_Command):
         if not self.error:
             self.name = contract_name
 
+
+class ContractTemplate(_Command):
+    def __init__(
+            self, name, is_verbose=True):
+
+        self._jarg["name"] = name
+
+        _Command.__init__(self, "bootstrap", "contract", is_verbose)
+
 class ABI(_Command):
     def __init__(
             self, types_hpp, abi_file="", 

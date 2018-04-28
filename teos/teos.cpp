@@ -154,6 +154,7 @@ int main(int argc, const char *argv[]) {
     IF_ELSE(daemon_stop, DaemonStop)
     IF_ELSE(build_contract, BuildContract)
     IF_ELSE(generate_abi, GenerateAbi)
+    IF_ELSE(bootstrap_contract, BootstrapContract)    
     {
       cout << "unknown command!" << endl;
     }    

@@ -1,0 +1,30 @@
+{
+    "configurations": [
+        {
+            "name": "wsl",
+            "includePath": [
+                "${EOSIO_SOURCE_DIR_WINDOWS}/contracts",
+                "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/libc++/upstream/include",
+                "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/musl/upstream/include",
+                "${HOME_WINDOWS}/opt/boost_1_66_0/include",
+                "${workspaceFolder}"
+            ],
+            "defines": [],
+            "intelliSenseMode": "clang-x64",
+            "browse": {
+                "path": [
+                    "${EOSIO_SOURCE_DIR_WINDOWS}/contracts",
+                    "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/libc++/upstream/include",
+                    "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/musl/upstream/include",
+                    "${HOME_WINDOWS}/opt/boost_1_66_0/include",
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 3
+}

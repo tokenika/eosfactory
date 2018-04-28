@@ -86,7 +86,6 @@ Hello, user
 ```
 
 ```
-
 ## Hello World Ricardian Contract
 
 Every smart contract must have a matching [Ricardian contract](#https://en.wikipedia.org/wiki/Ricardian_contract). The Ricardian Contract specifies the legally binding behavior associated with each action of the smart contract.  

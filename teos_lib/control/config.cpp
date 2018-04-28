@@ -79,11 +79,13 @@ wallet-dir: .
     arg CONFIG_DIR = { "config-dir", "build/programs/daemon/data-dir" };
     arg WALLET_DIR = { "wallet-dir", "wallet"}; // relative to data-dir
     arg DAEMON_NAME = { "DAEMON_NAME", "nodeos" };
-    arg EOS_FACTORY_DIR = { "EOS_FACTORY_DIR" };
-    arg CONTRACT_BUILD_PATH = { "CONTRACT_BUILD_PATH", "build/contracts" };
-      //CONTRACT_BUILD_PATH: relative to EOSIO_SOURCE_DIR
+    arg CONTEXT_DIR = { "CONTEXT_DIR" };
+    arg EOSIO_CONTRACT_BUILD_PATH = { 
+      "EOSIO_CONTRACT_BUILD_PATH", "build/contracts" };
+      //EOSIO_CONTRACT_BUILD_PATH: relative to EOSIO_SOURCE_DIR
 
-    arg BOOST_INCLUDE_DIR = { "BOOST_INCLUDE_DIR", "opt/boost_1_66_0/include" };
+    arg BOOST_INCLUDE_DIR = { 
+      "BOOST_INCLUDE_DIR", "opt/boost_1_66_0/include" };
     arg WASM_CLANG = { "WASM_CLANG", "opt/wasm/bin/clang" };
       // WASM_CLANG: relative to HOME dir
     arg WASM_LLVM_LINK = { "WASM_LLVM_LINK", "opt/wasm/bin/llvm-link" };
@@ -130,13 +132,22 @@ wallet-dir: .
       }
     }
 
-    string getSourceDir(TeosControl* teosControl)
+    string getContextDir(TeosControl* teosControl)
     {
-      string sourceDir = configValue(teosControl, EOSIO_SOURCE_DIR);
-      if(sourceDir.empty()){
+      string config_value = configValue(teosControl, CONTEXT_DIR);
+      if(config_value.empty()){
         onError(teosControl, "Cannot determine the EOSIO source directory.");
       }
-      return sourceDir;
+      return config_value;
+    }
+
+    string getSourceDir(TeosControl* teosControl)
+    {
+      string config_value = configValue(teosControl, EOSIO_SOURCE_DIR);
+      if(config_value.empty()){
+        onError(teosControl, "Cannot determine the EOSIO source directory.");
+      }
+      return config_value;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -202,7 +213,7 @@ wallet-dir: .
           if(!contractDirPath.is_absolute()) 
           {
             bfs::path configContractDirPath 
-              = configValue(teosControl, CONTRACT_BUILD_PATH);
+              = configValue(teosControl, EOSIO_CONTRACT_BUILD_PATH);
             if(!configContractDirPath.is_absolute()) 
             {
               string sourceDir = getSourceDir(teosControl);
@@ -306,7 +317,7 @@ wallet-dir: .
               "executable file:\n%1%\n") % wantedPath.string()).str());  
           return ""; 
         }
-      } catch (std::exception& e) {
+      } catch (exception& e) {
           onError(teosControl, e.what());          
           return "";        
       }

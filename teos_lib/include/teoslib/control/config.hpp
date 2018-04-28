@@ -16,6 +16,8 @@ namespace teos {
         TeosControl* teosControl, string contractDir, 
         string contractFile = "");
 
+    string getContextDir(TeosControl* teosControl);
+
     string getSourceDir(TeosControl* teosControl);    
 
     string getDataDir(TeosControl* teosControl);
