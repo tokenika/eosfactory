@@ -9,7 +9,7 @@ set( VERSION_MINOR 0 )
 set( CMAKE_BUILD_TYPE "Debug" )
 
 
-set( LOGOS_DIR "NOT DEFINED !!" )
+set( EOS_FACTORY_DIR "NOT DEFINED !!" )
 set( EOSIO_SOURCE_DIR "NOT DEFINED !!" )
 set( EOSIO_BINARY_DIR "NOT DEFINED !!" )
 
@@ -21,7 +21,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
 option( ENABLE_ASAN "enable ASAN" OFF )
 # 'common.cmake' sets Lgos common values:
-# LOGOS_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
+# EOS_FACTORY_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
 # CMAKE_INSTALL_PREFIX, 
 # CMAKE_CXX_STANDARD, CMAKE_BUILD_TYPE, 
 include( ../common.cmake ) 
@@ -169,7 +169,12 @@ endif()
 
 configure_file (
   "config.h.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/teoslib/include/teoslib/config.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.h"
+)
+
+configure_file (
+  "config.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/../teos_lib/include/teoslib/config.h"
 )
 
 install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 

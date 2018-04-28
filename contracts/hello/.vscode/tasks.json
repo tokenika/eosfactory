@@ -1,17 +1,21 @@
 {
    // See https://go.microsoft.com/fwlink/?LinkId=733558
    // for the documentation about the tasks.json format
-   "version": "2.0.0",
+   "version": "2.0.0",   
    "tasks": [
-      {
-         "label": "echo",
-         "type": "shell",
-         "command": "../../teos/build/teos generate abi /mnt/e/Workspaces/EOS/logos/contracts/hello",
-         "problemMatcher": [],
-         "presentation": {
-                "reveal": "always",
-                "panel": "dedicated"
-         }
-      }
+        {
+            "label": "abi",
+            "type": "shell",
+            "command": "${env:TEOS} generate abi ${env:CONTRACTS_DIR}/hello;${env:TEOS} build contract ${env:CONTRACTS_DIR}/hello",
+            "problemMatcher": [],
+            "presentation": {
+                    "reveal": "always",
+                    "panel": "dedicated"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }            
+        }       
    ]
 }

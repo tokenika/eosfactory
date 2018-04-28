@@ -14,6 +14,7 @@
 
 #include <teoslib/control/config.hpp>
 #include <teoslib/control/build_contract.hpp>
+#include <teoslib/utilities.hpp>
 
 using namespace std;
 
@@ -41,6 +42,45 @@ namespace teos {
         return true;
     }
 
+    vector<string> files(string comma_list, set<string> extensions)
+    {
+      namespace bfs = boost::filesystem;
+            
+      vector<string> srcs;
+      try{
+        bfs::path src_path(wslMapWindowsLinux(comma_list));
+        if(bfs::is_directory(src_path)) {
+          for (bfs::directory_entry& entry 
+            : boost::make_iterator_range(
+              bfs::directory_iterator(src_path), {})) 
+            {
+            if (bfs::exists(entry.path()) 
+              && bfs::is_regular_file(entry.path())) 
+            {
+              bfs::path file = entry.path();
+              if(extensions.count(file.extension().string())){
+                srcs.push_back(file.string());
+              }
+            }
+          } 
+        }
+      } catch(...){}
+
+      if(srcs.empty()) 
+      {
+        vector<string> temp;
+        boost::split(temp, comma_list, boost::algorithm::is_any_of(","));
+
+        for(const string& comp: temp){
+          bfs::path file(comp);
+          if(extensions.count(file.extension().string())){
+            srcs.push_back(wslMapWindowsLinux(comp));
+          }
+        }  
+      }
+      return srcs;      
+    }
+
     void GenerateAbi::generateAbi(
       string types_hpp,
       string target_file,
@@ -48,7 +88,9 @@ namespace teos {
     )
     {
       namespace bfs = boost::filesystem;
-
+      
+      types_hpp = files(types_hpp, {".cpp", "c"})[0];
+      
       bfs::path types_pth(types_hpp);
       string name = types_pth.stem().string();
       bfs::path contextFolder = types_pth.parent_path();
@@ -107,7 +149,6 @@ namespace teos {
       boostProcessSystem(command_line);
     }
 
-
     /*
     See a basic example of the build procedure: 
       https://gist.github.com/yurydelendik/4eeff8248aeb14ce763e#example.
@@ -126,8 +167,8 @@ namespace teos {
       bfs::path build(workdir / "build");
       bfs::create_directory(build);
 
-      vector<string> srcs;
-      boost::split(srcs, src, boost::algorithm::is_any_of(","));
+      vector<string> srcs = files(src, {".cpp", ".c"});
+
       string objectFileList;
       bfs::path target_path(target_file);
 

@@ -9,10 +9,10 @@
             "name": "(gdb) daemon start",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
+            "program": "/mnt/e/Workspaces/EOS/eosfactory/teos/build/teos",
             "args": ["daemon", "start"],
             "stopAtEntry": false,
-            "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+            "cwd": "/mnt/e/Workspaces/EOS/eosfactory/teos/build",
             "environment": [],
             "externalConsole": true,
             "pipeTransport": {

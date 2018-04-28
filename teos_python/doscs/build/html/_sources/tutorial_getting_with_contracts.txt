@@ -6,9 +6,9 @@ We rephrase an [article](#https://github.com/EOSIO/eos/wiki/Tutorial-Getting-Sta
 
 The purpose of this tutorial is to demonstrate basic experiments with smart contracts.
 
-This tutorial assumes that you have installed both [*EOSIO*](#https://github.com/EOSIO/eos) and [*Tokenika Logos*](#https://github.com/tokenika/logos). If so, you have installed *python3*, as well.
+This tutorial assumes that you have installed both [*EOSIO*](#https://github.com/EOSIO/eos) and [*Tokenika eosfactory*](#https://github.com/tokenika/eosfactory). If so, you have installed *python3*, as well.
 
-To begin with, open a bash terminal in the `teos_python` directory of the `Logos` repository. Start *python3*, import `teos` module and make it to be verbose:
+To begin with, open a bash terminal in the `teos_python` directory of the `eosfactory` repository. Start *python3*, import `teos` module and make it to be verbose:
 ```
 import teos
 teos.set_verbose(True)

@@ -42,5 +42,7 @@ namespace teos {
     extern ptree stringToPtree(
       string json);
       
-    extern void boostProcessSystem(string commandLine);            
+    extern void boostProcessSystem(string commandLine);
+
+    extern string wslMapWindowsLinux(string path);
 }

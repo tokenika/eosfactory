@@ -1,7 +1,7 @@
 message(STATUS 
-"common Logos settings: ///////////////////////////////////////////////////////" )
+"common eosfactory settings: ///////////////////////////////////////////////////////" )
 
-set( LOGOS_EOS eos )
+set( EOS_FACTORY_EOS eos )
 
 message( STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}" )
 if( NOT DEFINED ENV{EOSIO_SOURCE_DIR} )
@@ -12,15 +12,15 @@ endif()
 set( EOSIO_SOURCE_DIR "$ENV{EOSIO_SOURCE_DIR}" )
 message( STATUS "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR}" )
 
-set ( LOGOS_DIR "${CMAKE_CURRENT_LIST_DIR}" )
-message( STATUS "LOGOS_DIR: ${LOGOS_DIR}" )
+set ( EOS_FACTORY_DIR "${CMAKE_CURRENT_LIST_DIR}" )
+message( STATUS "EOS_FACTORY_DIR: ${EOS_FACTORY_DIR}" )
 
 if( WIN32 )
-  set( CMAKE_INSTALL_PREFIX "${LOGOS_DIR}/install/windows" )
-  set( EOSIO_BINARY_DIR "${LOGOS_DIR}/${LOGOS_EOS}/buildWindows" )
+  set( CMAKE_INSTALL_PREFIX "${EOS_FACTORY_DIR}/install/windows" )
+  set( EOSIO_BINARY_DIR "${EOS_FACTORY_DIR}/${EOS_FACTORY_EOS}/buildWindows" )
 else( WIN32 )
-  set( CMAKE_INSTALL_PREFIX "${LOGOS_DIR}/install/ubuntu" )
-  #set( EOSIO_BINARY_DIR "${LOGOS_DIR}/${LOGOS_EOS}/build" )
+  set( CMAKE_INSTALL_PREFIX "${EOS_FACTORY_DIR}/install/ubuntu" )
+  #set( EOSIO_BINARY_DIR "${EOS_FACTORY_DIR}/${EOS_FACTORY_EOS}/build" )
   set( EOSIO_BINARY_DIR "${EOSIO_SOURCE_DIR}/build" )
 endif( WIN32 )
 message( STATUS "EOSIO_BINARY_DIR: ${EOSIO_BINARY_DIR}" )

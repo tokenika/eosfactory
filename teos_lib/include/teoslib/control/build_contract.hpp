@@ -1,4 +1,4 @@
-#pragma once
+// #pragma once
 
 #include <teoslib/control.hpp>
 
@@ -13,14 +13,14 @@ namespace teos {
     {
       void buildContract(
         string src, // comma separated list of source c/cpp files
-        string target_wast_file,
+        string target_wast_file = "",
         string include_dir = "" // comma separated list of include dirs
       );
 
     public:
       BuildContract(
         string src, // comma separated list of source c/cpp files
-        string target_wast_file,
+        string target_wast_file = "",
         string include_dir = ""
       )
       {
@@ -68,7 +68,7 @@ Usage: ./teos create key --jarg '{
         od.add_options()
           ("src", value<string>(&src)
             , "Comma separated list of source c/cpp files.")
-          ("wast_file,o", value<string>(&wast_file)
+          ("wast_file,o", value<string>(&wast_file)->default_value("")
             , "Target wast file.")
           ("include_dir,d", value<string>(&include_dir)->default_value("")
             , "Comma separated list of source c/c++ files.");

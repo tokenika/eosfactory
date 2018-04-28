@@ -1,79 +1,23 @@
 {
     "configurations": [
         {
-            "name": "Mac",
+            "name": "wsl",
             "includePath": [
-                "/usr/include",
-                "/usr/local/include",
+                "${EOSIO_SOURCE_DIR_WINDOWS}/contracts",
+                "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/libc++/upstream/include",
+                "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/musl/upstream/include",
+                "${HOME_WINDOWS}/opt/boost_1_66_0/include",
                 "${workspaceFolder}"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
             "browse": {
                 "path": [
-                    "/usr/include",
-                    "/usr/local/include",
+                    "${EOSIO_SOURCE_DIR_WINDOWS}/contracts",
+                    "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/libc++/upstream/include",
+                    "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/musl/upstream/include",
+                    "${HOME_WINDOWS}/opt/boost_1_66_0/include",
                     "${workspaceFolder}"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
-            "macFrameworkPath": [
-                "/System/Library/Frameworks",
-                "/Library/Frameworks"
-            ]
-        },
-        {
-            "name": "Linux",
-            "includePath": [
-                  "${EOSIO_SOURCE_DIR}/contracts",
-                  "${EOSIO_SOURCE_DIR}/contracts/libc++/upstream/include",
-                  "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
-                  "${WSL_HOME}/opt/boost_1_66_0/include",
-                  "${workspaceFolder}"
-            ],
-            "defines": [],
-            "intelliSenseMode": "clang-x64",
-            "browse": {
-                "path": [
-                    "${EOSIO_SOURCE_DIR}/contracts",
-                    "${EOSIO_SOURCE_DIR}/contracts/libc++/upstream/include",
-                    "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
-                    "${WSL_HOME}/opt/boost_1_66_0/include",
-                    "${workspaceFolder}"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
-            "cStandard": "c11",
-            "cppStandard": "c++17"
-        },
-        {
-            "name": "Win32",
-            "includePath": [
-                "${workspaceFolder}",
-                "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.12.25827/include/*",
-                "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.12.25827/atlmfc/include/*",
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.16299.0/um",
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.16299.0/ucrt",
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.16299.0/shared",
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.16299.0/winrt"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
-            "intelliSenseMode": "msvc-x64",
-            "browse": {
-                "path": [
-                    "${workspaceFolder}",
-                    "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.12.25827/include/*",
-                    "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.12.25827/atlmfc/include/*",
-                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.16299.0/um",
-                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.16299.0/ucrt",
-                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.16299.0/shared",
-                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.16299.0/winrt"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

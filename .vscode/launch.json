@@ -5,18 +5,18 @@
   "version": "0.2.0",
   "configurations": [  
     {
-        "name": "(gdb) wsl teos set contract",
+        "name": "(gdb) wsl teos generate abi",
         "type": "cppdbg",
         "request": "launch",
-        "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
-        "args": ["set", "contract", "eosio", "eosio.bios", "-p", "eosio"],
+        "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
+        "args": ["generate", "abi", "C:\\\\Workspaces\\\\EOS\\\\eosfactory\\\\contracts\\\\hello"],
         "stopAtEntry": false,
-        "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+        "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build",
         "environment": [],
         "externalConsole": true,
         "pipeTransport": {
             "debuggerPath": "/usr/bin/gdb",
-            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeProgram": "c:/Workspaces/EOS/bash.exe", 
             "pipeArgs": ["-c"],
             "pipeCwd": ""
         },  
@@ -32,22 +32,84 @@
         },
         "sourceFileMap": 
         {
-            "/mnt/e": "e:\\",
+            "/mnt/c": "c:\\"
+        }         
+    },        
+    {
+        "name": "(gdb) wsl teos build contract",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
+        "args": ["build", "contract", "C:\\\\Workspaces\\\\EOS\\\\eosfactory\\\\contracts\\\\hello"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build",
+        "environment": [],
+        "externalConsole": true,
+        "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "c:/Workspaces/EOS/bash.exe", 
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+        },  
+        "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/c": "c:\\"
+        }         
+    },          
+    {
+        "name": "(gdb) wsl teos set contract",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
+        "args": ["set", "contract", "eosio", "eosio.bios", "-p", "eosio"],
+        "stopAtEntry": false,
+        "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build",
+        "environment": [],
+        "externalConsole": true,
+        "pipeTransport": {
+            "debuggerPath": "/usr/bin/gdb",
+            "pipeProgram": "c:/Workspaces/EOS/bash.exe", 
+            "pipeArgs": ["-c"],
+            "pipeCwd": ""
+        },  
+        "windows": {
+            "MIMode": "gdb",
+            "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            }
+            ]
+        },
+        "sourceFileMap": 
+        {
+            "/mnt/c": "c:\\"
         }         
     },       
     {
         "name": "(gdb) wsl teos wallet keys",
         "type": "cppdbg",
         "request": "launch",
-        "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
+        "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
         "args": ["wallet", "keys"],
         "stopAtEntry": false,
-        "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+        "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build",
         "environment": [],
         "externalConsole": true,
         "pipeTransport": {
             "debuggerPath": "/usr/bin/gdb",
-            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeProgram": "c:/Workspaces/EOS/bash.exe", 
             "pipeArgs": ["-c"],
             "pipeCwd": ""
         },  
@@ -63,22 +125,22 @@
         },
         "sourceFileMap": 
         {
-            "/mnt/e": "e:\\",
+            "/mnt/c": "c:\\"
         }         
     },
     {
         "name": "(gdb) wsl cleos set contract",
         "type": "cppdbg",
         "request": "launch",
-        "program": "/mnt/e/Workspaces/EOS/eos/build/programs/cleos/cleos",
+        "program": "/mnt/c/Workspaces/EOS/eos/build/programs/cleos/cleos",
         "args": ["set", "contract", "eosio", "../../contracts/eosio.bios", "-p", "eosio"],
         "stopAtEntry": false,
-        "cwd": "/mnt/e/Workspaces/EOS/eos/build/programs/cleos",
+        "cwd": "/mnt/c/Workspaces/EOS/eos/build/programs/cleos",
         "environment": [],
         "externalConsole": true,
         "pipeTransport": {
             "debuggerPath": "/usr/bin/gdb",
-            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeProgram": "c:/Workspaces/EOS/bash.exe", 
             "pipeArgs": ["-c"],
             "pipeCwd": ""
         },  
@@ -94,22 +156,22 @@
         },
         "sourceFileMap": 
         {
-            "/mnt/e": "e:\\",
+            "/mnt/c": "c:\\"
         }         
     },       
     {
         "name": "(gdb) wsl cleos create account",
         "type": "cppdbg",
         "request": "launch",
-        "program": "/mnt/e/Workspaces/EOS/eos/build/programs/cleos/cleos",
+        "program": "/mnt/c/Workspaces/EOS/eos/build/programs/cleos/cleos",
         "args": ["create", "account", "eosio", "currency", "EOS8XTEZDTGCVvzo2YZDU7rVQbaBWZEV55KTxFqeK3tbM798svn7X", "EOS8bSnzJjeqWB76h2WoEn9HFBWRFGWfhqzfM6GjkwavtLTqEr5m2"],
         "stopAtEntry": false,
-        "cwd": "/mnt/e/Workspaces/EOS/eos/build/programs/cleos",
+        "cwd": "/mnt/c/Workspaces/EOS/eos/build/programs/cleos",
         "environment": [],
         "externalConsole": true,
         "pipeTransport": {
             "debuggerPath": "/usr/bin/gdb",
-            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeProgram": "c:/Workspaces/EOS/bash.exe", 
             "pipeArgs": ["-c"],
             "pipeCwd": ""
         },  
@@ -125,22 +187,22 @@
         },
         "sourceFileMap": 
         {
-            "/mnt/e": "e:\\",
+            "/mnt/c": "c:\\"
         }         
     },
     {
         "name": "(gdb) wsl create account",
         "type": "cppdbg",
         "request": "launch",
-        "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
+        "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
         "args": ["create", "account", "eosio", "currency", "EOS6piC619kadGT5wgp5YPHPkq6NyCrEGRqmTFx18HpEL4u5xShz5", "EOS7nsJFovJjQFsJKAytVPC1HDYCfHVrhUCp39KTWjPQ8mAjsHLXe"],
         "stopAtEntry": false,
-        "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+        "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build",
         "environment": [],
         "externalConsole": true,
         "pipeTransport": {
             "debuggerPath": "/usr/bin/gdb",
-            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeProgram": "c:/Workspaces/EOS/bash.exe", 
             "pipeArgs": ["-c"],
             "pipeCwd": ""
         },  
@@ -156,22 +218,22 @@
         },
         "sourceFileMap": 
         {
-            "/mnt/e": "e:\\",
+            "/mnt/c": "c:\\"
         }         
     },
     {
         "name": "(gdb) wsl daemon start",
         "type": "cppdbg",
         "request": "launch",
-        "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
+        "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
         "args": ["daemon", "start"],
         "stopAtEntry": false,
-        "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+        "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build",
         "environment": [],
         "externalConsole": true,
         "pipeTransport": {
             "debuggerPath": "/usr/bin/gdb",
-            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeProgram": "c:/Workspaces/EOS/bash.exe", 
             "pipeArgs": ["-c"],
             "pipeCwd": ""
         },  
@@ -187,22 +249,22 @@
         },
         "sourceFileMap": 
         {
-            "/mnt/e": "e:\\",
+            "/mnt/c": "c:\\"
         }         
     },    
     {
         "name": "(gdb) wsl daemon delete_walets",
         "type": "cppdbg",
         "request": "launch",
-        "program": "/mnt/e/Workspaces/EOS/logos/teos/build/teos",
+        "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
         "args": ["daemon", "delete_wallets"],
         "stopAtEntry": false,
-        "cwd": "/mnt/e/Workspaces/EOS/logos/teos/build",
+        "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build",
         "environment": [],
         "externalConsole": true,
         "pipeTransport": {
             "debuggerPath": "/usr/bin/gdb",
-            "pipeProgram": "e:/Workspaces/EOS/bash.exe", 
+            "pipeProgram": "c:/Workspaces/EOS/bash.exe", 
             "pipeArgs": ["-c"],
             "pipeCwd": ""
         },  
@@ -218,17 +280,17 @@
         },
         "sourceFileMap": 
         {
-            "/mnt/e": "e:\\",
+            "/mnt/c": "c:\\"
         }         
     },
     {
         "name": "(gdb) set contract",
         "type": "cppdbg",
         "request": "launch",
-        "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+        "program": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/teos",
         "args": ["set", "contract", "currency", "currency.wast", "currency.abi"],
         "stopAtEntry": false,
-        "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build",
+        "cwd": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build",
         "environment": [],
         "externalConsole": true,
         "MIMode": "gdb",
@@ -244,10 +306,10 @@
       "name": "(gdb) get code",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "program": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/teos",
       "args": ["get", "code", "currency"],
       "stopAtEntry": false,
-      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build",
+      "cwd": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build",
       "externalConsole": true,
       "MIMode": "gdb",
       "setupCommands": [
@@ -262,10 +324,10 @@
       "name": "(gdb) wallet create",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "program": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/teos",
       "args": ["wallet", "create", "asdfg"],
       "stopAtEntry": false,
-      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
+      "cwd": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/",
       "environment": [],
       "externalConsole": true,
       "MIMode": "gdb",
@@ -281,10 +343,10 @@
       "name": "(gdb) wallet list",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "program": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/teos",
       "args": ["wallet", "list"],
       "stopAtEntry": false,
-      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
+      "cwd": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/",
       "environment": [],
       "externalConsole": true,
       "MIMode": "gdb",
@@ -300,10 +362,10 @@
       "name": "(gdb) daemon delete wallets",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "program": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/teos",
       "args": ["daemon", "delete_wallets", "lllk"],
       "stopAtEntry": false,
-      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
+      "cwd": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/",
       "environment": [],
       "externalConsole": true,
       "MIMode": "gdb",
@@ -319,10 +381,10 @@
       "name": "(gdb) teos config teos",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "program": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/teos",
       "args": ["config", "teos"],
       "stopAtEntry": false,
-      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
+      "cwd": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/",
       "environment": [],
       "externalConsole": true,
       "MIMode": "gdb",
@@ -338,10 +400,10 @@
       "name": "(gdb) teos get info",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "program": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/teos",
       "args": ["config.json", "get", "info"],
       "stopAtEntry": false,
-      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
+      "cwd": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/",
       "environment": [],
       "externalConsole": true,
       "MIMode": "gdb",
@@ -357,10 +419,10 @@
       "name": "(gdb) teos daemon start",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/teos",
+      "program": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/teos",
       "args": ["daemon", "start", "-V", "--json", "{}", "--both", "--clear"],
       "stopAtEntry": false,
-      "cwd": "/mnt/hgfs/Workspaces/EOS/Logos/teos/build/",
+      "cwd": "/mnt/hgfs/Workspaces/EOS/eosfactory/teos/build/",
       "environment": [],
       "externalConsole": true,
       "MIMode": "gdb",

@@ -6,7 +6,7 @@ import os
 import pprint
 import teos
 
-contract_dir = "/mnt/e/Workspaces/EOS/logos/contracts/hello/"
+contract_dir = "/mnt/c/Workspaces/EOS/eosfactory/contracts/hello/"
 if not os.path.exists(contract_dir):
     os.makedirs(contract_dir)
 ```
@@ -42,14 +42,14 @@ print(file.read())
 ``` -->
 You can compile your code to web assembly (.wast) as follows:
 ```
-wast = teos.WAST(contract_dir + "hello.cpp")
-#             WAST: /mnt/e/Workspaces/EOS/logos/contracts/hello/hello.wast
+wast = teos.WAST(contract_dir)
+#             WAST: /mnt/e/Workspaces/EOS/eosfactory/contracts/hello/hello.wast
 ```
 Now generate the abi:
 ```
 
-abi = teos.ABI(contract_dir + "hello.cpp")
-#              ABI: /mnt/e/Workspaces/EOS/logos/contracts/hello/hello.abi
+abi = teos.ABI(contract_dir)
+#              ABI: /mnt/e/Workspaces/EOS/eosfactory/contracts/hello/hello.abi
 
 pprint.pprint(abi.abi)
 

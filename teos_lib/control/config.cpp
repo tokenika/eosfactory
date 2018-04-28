@@ -8,9 +8,11 @@
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 #include <teoslib/config.h>
 #include <teoslib/control/config.hpp>
+#include <teoslib/utilities.hpp>
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -77,7 +79,7 @@ wallet-dir: .
     arg CONFIG_DIR = { "config-dir", "build/programs/daemon/data-dir" };
     arg WALLET_DIR = { "wallet-dir", "wallet"}; // relative to data-dir
     arg DAEMON_NAME = { "DAEMON_NAME", "nodeos" };
-    arg LOGOS_DIR = { "LOGOS_DIR" };
+    arg EOS_FACTORY_DIR = { "EOS_FACTORY_DIR" };
     arg CONTRACT_BUILD_PATH = { "CONTRACT_BUILD_PATH", "build/contracts" };
       //CONTRACT_BUILD_PATH: relative to EOSIO_SOURCE_DIR
 
@@ -168,6 +170,9 @@ wallet-dir: .
     ///////////////////////////////////////////////////////////////////////////
     // getContractFile
     ///////////////////////////////////////////////////////////////////////////
+    /**
+     * Contract files: WAST, ABI
+     */
     string getContractFile(
         TeosControl* teosControl, string contractDir, string contractFile)
     {
@@ -192,6 +197,7 @@ wallet-dir: .
         }
 
         {
+          contractDir = wslMapWindowsLinux(contractDir);
           bfs::path contractDirPath(contractDir);
           if(!contractDirPath.is_absolute()) 
           {

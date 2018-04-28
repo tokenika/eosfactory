@@ -6,6 +6,7 @@
 #include <boost/process.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/algorithm/string.hpp> 
 
 #include "c-callstack.h"
 #include <teoslib/utilities.hpp>
@@ -80,4 +81,16 @@ namespace teos
     return ptree;
   }
   
+  string wslMapWindowsLinux(string path) {
+      if( !path.empty() && path.find(":\\") != string::npos)
+        {
+          boost::replace_all(path, "\\", "/");
+          string drive(1, path[0]);
+          boost::replace_all(
+            path, 
+            drive + ":/"
+            , "/mnt/" + boost::algorithm::to_lower_copy(drive) + "/");
+        }
+      return path;
+    }           
 }

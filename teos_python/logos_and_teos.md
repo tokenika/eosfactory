@@ -1,7 +1,7 @@
 """
-## Logos And Teos
+## eosfactory And Teos
 
-### Logos
+### eosfactory
 
 ### Teos
 
