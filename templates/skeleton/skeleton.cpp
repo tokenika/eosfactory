@@ -1,5 +1,6 @@
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/print.hpp>
+#include <skeleton.hpp>
 
 using namespace eosio;
 

@@ -201,7 +201,7 @@
 <div class="section" id="the-eosio-account-and-the-bios-contract">
 <span id="the-eosio-account-and-the-bios-contract"></span><h2>The Eosio Account and the Bios Contract<a class="headerlink" href="#the-eosio-account-and-the-bios-contract" title="Permalink to this headline">¶</a></h2>
 <p>You have to posses a valid EOSIO account to be authorized to modify the blockchain. For tests, you are granted the pre-build <code class="docutils literal"><span class="pre">eosio</span></code> account:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">account_eosio</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">EosioAccount</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">account_eosio</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">AccountEosio</span><span class="p">()</span>
 
 <span class="n">account_eosio</span><span class="o">.</span><span class="n">key_private</span>
 <span class="s1">&#39;5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3&#39;</span>
@@ -486,7 +486,7 @@ contract_exchange = teos.Contract(account_eosio_token, &quot;exchange&quot;)
 <span class="n">wallet</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">unlock</span><span class="p">()</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-<span class="n">account_eosio</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">EosioAccount</span><span class="p">()</span>
+<span class="n">account_eosio</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">AccountEosio</span><span class="p">()</span>
 <span class="n">account_eosio</span><span class="o">.</span><span class="n">key_private</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">account_eosio</span><span class="p">)</span>

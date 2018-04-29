@@ -144,7 +144,7 @@ into the nodeos process:</p>
 <span id="load-the-bios-contract"></span><h2>Load the Bios Contract<a class="headerlink" href="#load-the-bios-contract" title="Permalink to this headline">¶</a></h2>
 <p>You have to owe an account to be authorized to interact with EOSIO. For tests,
 you can use the &#8216;eosio&#8217; account:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">account_eosio</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">EosioAccount</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">account_eosio</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">AccountEosio</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Set a smart contract defined in folder
@@ -308,7 +308,7 @@ account.</p>
 <span class="n">daemon</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">daemon</span><span class="p">)</span>
 <span class="n">wallet</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">Wallet</span><span class="p">()</span>
-<span class="n">account_eosio</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">EosioAccount</span><span class="p">()</span>
+<span class="n">account_eosio</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">AccountEosio</span><span class="p">()</span>
 <span class="n">contract_eosio_bios</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">SetContract</span><span class="p">(</span>
     <span class="n">account_eosio</span><span class="p">,</span> <span class="s2">&quot;eosio.bios&quot;</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="n">account_eosio</span><span class="p">)</span>
 <span class="n">key_owner</span> <span class="o">=</span> <span class="n">teos</span><span class="o">.</span><span class="n">CreateKey</span><span class="p">(</span><span class="s2">&quot;key_owner&quot;</span><span class="p">)</span>

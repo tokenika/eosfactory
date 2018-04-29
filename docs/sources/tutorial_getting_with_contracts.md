@@ -66,7 +66,7 @@ wallet.unlock()
 You have to owe an valid EOSIO account to be authorized to interact with EOSIO. For tests, you can use the ‘eosio’ account:
 
 ```
-account_eosio = teos.EosioAccount()
+account_eosio = teos.AccountEosio()
 account_eosio.key_private
 '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3'
 ```
@@ -153,7 +153,7 @@ wallet.lock()
 wallet.list()
 wallet.unlock()
 wallet.list()
-account_eosio = teos.EosioAccount()
+account_eosio = teos.AccountEosio()
 account_eosio.key_private
 wallet.keys()
 wallet.import_key(account_eosio)

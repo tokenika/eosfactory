@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 """ 
 This is a Python front-end for Tokenika 'Teos'. Tokenika Teos is an 
 alternative for EOSIO 'cleos'.
@@ -18,7 +20,6 @@ import glob
 import re
 import pathlib
 
-__setupFile__ = "teos.json"
 _is_verbose = True
 
 ## If set False, TEOS commands print error messages only. 
@@ -35,21 +36,22 @@ class Setup:
 
     The configuration file is expected in the same folder as the current file.
     """
-    __setupFile = "teos.json"
+    __setupFile = os.path.dirname(os.path.abspath(__file__)) \
+        + "/teos.json"
     __TEOS_EXE = "TEOS_executable"
     __review = False              
     teos_exe = ""
 
     def __init__(self):
-        path = "../teos/build/teos"
+        path = os.path.dirname(os.path.abspath(__file__)) \
+            + "/../teos/build/teos"
         
         if os.path.isfile(path):
             self.teos_exe = os.path.realpath(path)
 
         if not self.teos_exe:         
             try: 
-                if os.path.isfile(self.__setupFile) \
-                            and os.path.getsize(__setupFile__) > 0 :
+                if os.path.isfile(self.__setupFile):
                     with open(self.__setupFile) as json_data:
                         print("Reading setup from file:\n   {}" \
                                 .format(os.path.realpath(self.__setupFile)))
@@ -64,7 +66,7 @@ class Setup:
             print("teos exe: " + self.teos_exe)
         else:
             print(
-                'ERROR!'
+                'ERROR in teos.py!'
                 '\nDo not know the teos exe!'
                 '\nIt is expected to be in the config file named\n'
                 '{0}'
@@ -76,7 +78,6 @@ class Setup:
                     ))        
 
 setup = Setup()
-
 
 ##############################################################################
 # teos commands
@@ -584,6 +585,13 @@ class ContractTemplate(_Command):
         self._jarg["name"] = name
 
         _Command.__init__(self, "bootstrap", "contract", is_verbose)
+        if not self.error:
+            self.contract_dir = self.json["contract_dir"] 
+            self.source_dir = self.json["source_dir"]
+            self.binary_dir = self.json["binary_dir"]
+            self.cpp = self.json["template_cpp"] 
+            self.hpp = self.json["template_hpp"]        
+                   
 
 class ABI(_Command):
     def __init__(
@@ -720,7 +728,7 @@ class Account(CreateAccount):
             print to stdout), defaults to 0.
         forceUnique: Whether to force the transaction to be unique, what will 
             consume extra bandwidth and remove any protections against 
-            accidently issuing the same transaction multiple times, defaults 
+            accidentally issuing the same transaction multiple times, defaults 
             to 0.
         max_cpu_usage: An upper limit on the cpu usage budget, in 
             instructions-retired, for the execution of the transaction 
@@ -770,14 +778,14 @@ class Account(CreateAccount):
         return repr(GetAccount(self.name, is_verbose=False))
 
 
-class EosioAccount(Account):
+class AccountEosio(Account):
     """ A representation of the 'eosio' testing account.
 
     EOSIO offers an account, called 'eosio', that can be used for tests. 
     Without any such, it is not possible to execute commands that need 
     authorizations.
 
-    account_eosio = teos.EosioAccount()
+    account_eosio = teos.AccountEosio()
     contract_eosio_bios = teos.SetContract(
         account_eosio, "eosio.bios", permission=account_eosio)
     #        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d0877...

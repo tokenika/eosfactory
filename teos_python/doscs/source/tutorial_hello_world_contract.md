@@ -1,4 +1,6 @@
-# Tutorial Hello World Contract
+# Tutorial 
+
+We rephrase an [article](#https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract) from the EOSIO wiki.
 
 We will now create our first "hello world" contract. Create a new folder called "hello" somewhere, where read-write rights are not limited:
 ```
@@ -67,7 +69,7 @@ Start the local EOSIO node, create wallet, an account and upload the contract:
 ```
 daemon = teos.DaemonClear()
 wallet = teos.Wallet()
-account_eosio = teos.EosioAccount()
+account_eosio = teos.AccountEosio()
 contract_eosio_bios = teos.SetContract(account_eosio, "eosio.bios")
 key_common = teos.CreateKey("key_common")
 wallet.import_key(key_common)

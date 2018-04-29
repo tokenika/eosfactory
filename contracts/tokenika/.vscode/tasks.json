@@ -6,7 +6,7 @@
         {
             "label": "abi",
             "type": "shell",
-            "command": "${env:TEOS} generate abi ${env:CONTRACTS_DIR}/@contract_name@;${env:TEOS} build contract ${env:CONTRACTS_DIR}/@contract_name@",
+            "command": "${env:TEOS} generate abi ${env:CONTRACTS_DIR}/tokenika;${env:TEOS} build contract ${env:CONTRACTS_DIR}/tokenika",
             "problemMatcher": [],
             "presentation": {
                     "reveal": "always",

@@ -44,7 +44,7 @@ The wallet name argument is not set: the default wallet name is 'default'.
 You have to owe an account to be authorized to interact with EOSIO. For tests,
 you can use the 'eosio' account:
 ```
-account_eosio = teos.EosioAccount()
+account_eosio = teos.AccountEosio()
 ``` 
 Set a smart contract defined in folder 
 eos-source-dir/build/contracts/eosio.bios/ as the default system contract. 
@@ -214,9 +214,10 @@ daemon = teos.Daemon()
 daemon.clear()
 print(daemon)
 wallet = teos.Wallet()
-account_eosio = teos.EosioAccount()
+account_eosio = teos.AccountEosio()
 contract_eosio_bios = teos.SetContract(
     account_eosio, "eosio.bios", permission=account_eosio)
+
 key_owner = teos.CreateKey("key_owner")
 key_active = teos.CreateKey("key_active")
 wallet.import_key(key_owner)

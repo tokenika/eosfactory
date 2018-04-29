@@ -275,12 +275,7 @@ Usage: ./teos create key --jarg '{
       }
 
       void printout(TeosControl command, variables_map &vm) {
-        output("context dir", "%s", GET_STRING(command, "context_dir"));
-        output("contracts dir", "%s", GET_STRING(command, "contracts_dir"));        
-        output("contract dir", "%s", GET_STRING(command, "contract_dir"));
-        output("build_dir", "%s", GET_STRING(command, "build_dir"));        
-        output("template.cpp", "%s", GET_STRING(command, "template.cpp"));        
-        output("template.hpp", "%s", GET_STRING(command, "template.hpp"));        
+        output("template contract", "%s", GET_STRING(command, "contract_dir"));              
       }        
     };
   }

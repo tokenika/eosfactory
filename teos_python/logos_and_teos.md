@@ -134,7 +134,7 @@ There is a build-in ['Account'](#account) object that can be used an
 authorization for test interaction with a EOSIO node:
 ```
 """
-account_eosio = teos.EosioAccount()
+account_eosio = teos.AccountEosio()
 """
 ```
 'Contract' class objects represent EOSIO smart contracts: they register 

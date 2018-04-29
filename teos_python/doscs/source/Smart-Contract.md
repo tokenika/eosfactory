@@ -1,6 +1,6 @@
 # EOSIO Smart Contract
 
-We rephrase an [article](#https://github.com/EOSIO/eos/wiki/Smart%20Contract) from EOSIO wiki.
+We rephrase an [article](#https://github.com/EOSIO/eos/wiki/Smart%20Contract) from the EOSIO wiki.
 
 - [Introduction to EOSIO Smart Contract](#introduction-to-eos-smart-contract)
   * [Required Background Knowledge](#required-background-knowledge)
@@ -30,12 +30,14 @@ Other toolchains in development by 3rd parties include: Rust, Python, and Solidi
 
 **Python Knowledge**
 
-We use Python scripts. Python is renowned for its intuitive simplicity. Let you start Python in the `eosfactory/teos_python` directory (issue `python3` UBUNTU bash command). Then launch the `teos`:
+We use Python scripts for steering the flow of data. Python is renowned for its intuitive simplicity. 
+
+Let you start Python in the `eosfactory/teos_python` directory (issue `python3` UBUNTU bash command). Then launch the `teos`:
 ```python
 import teos
-teos.set_verbose(true)
+teos.set_verbose(True)
 ```
-The response is the path to the `teos` executable, which drives python functions.
+The response is the path to the `teos` executable which drives functions of the `teos.py` module.
 ```
 teos exe: /mnt/c/Workspaces/EOS/eosfactory/teos/build/teos
 ```
@@ -135,181 +137,164 @@ By means of confirmation, you should see the transaction in the transaction hist
 
 ## Smart Contract Files 
 
-It is easy to start with a template. I you have imported `teos.py` module already, if the contract name can be `tokenika_hello_world`, use the creator of the `teos.ContractTemplate` class:
+It is easy to start with a template. I you have [imported](#python-knowledge) `teos.py` module already,and if the contract name can be `tokenika`, use the creator of the `teos.ContractTemplate` class:
 
 ```python
-teos.ContractTemplate("kubus")
-#      context dir: /mnt/c/Workspaces/EOS/eosfactory
-#    contracts dir: /mnt/c/Workspaces/EOS/eosfactory/contracts
-#     contract dir: /mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika_hello_world
-#        build_dir: /mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika_hello_world/build
-#     template.cpp: /mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika_hello_world/tokenika_hello_world.cpp
-#     template.hpp: /mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika_hello_world/tokenika_hello_world.hpp
+template_tokenika = teos.ContractTemplate("tokenika")
+#  template contract: /mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika
 ```
-Now, you have a new folder in the workspace which is `/mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika_hello_world'. If you use the `Visual Studio Code`, you can open it in this folder. You will find there a configured, for EOSIO smart contract development, *InteliSense* space enabling code browsing. There,you can also (Ctrl+Shift+B) build the contract, producing WAST and ABI. We will add more of automatized functionality there: setting contract to the local node, running test, perhaps more.
-
-
-
-The above will create a new empty project in the `./${project}` folder with three files:
-```base
-${contract}.abi ${contract}.hpp ${contract}.cpp
+Now, you have a new folder in the workspace. You can know the path to it...
 ```
+template_tokenika.contract_dir
+# '/mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika'
+```
+If you use the `Visual Studio Code`, you can open it in this contract folder. You will find there a configured, for EOSIO smart contract development, *InteliSense* space enabling code browsing. There you can (Ctrl+Shift+B) build the contract, producing WAST and ABI. We will add more of automatized functionality there: setting contract to the local node, running test, perhaps more.
 
-### hpp
+The contract directory contains the source files of the contract:
+```
+template_tokenika.hpp
+# '/mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika/tokenika.hpp'
 
-`${contract}.hpp` is the header file that contain the variables, constants, and functions referenced by the `.cpp` file.
-
-### cpp
-
-The `${contract}.cpp` file is the source file that contains the functions of the contract. 
-
-If you generate the `.cpp` file using the `eosiocpp` tool, the generated .cpp file would look similar to the following:
-
-```base
-#include <${contract}.hpp>
-
-/**
- *  The init() and apply() methods must have C calling convention so that the blockchain can lookup and
- *  call these methods.
- */
-extern "C" {
-
-    /**
-     *  This method is called once when the contract is published or updated.
-     */
-    void init()  {
-       eosio::print( "Init World!\n" ); // Replace with actual code
-    }
-
-    /// The apply method implements the dispatch of actions to this contract
-    void apply( uint64_t code, uint64_t action ) {
-       eosio::print( "Hello World: ", eosio::name(code), "->", eosio::name(action), "\n" ); 
-    }
-
-} // extern "C"
+template_tokenika.cpp
+# '/mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika/tokenika.cpp'
 ```
 
-In this example you can see there are two functions, `init` and `apply`. All they do are log the actions delivered and makes no other checks. Anyone can deliver any action at any time provided the block producers allow it. Absent any required signatures, the contract will be billed for the bandwidth consumed.
+The `template_tokenika.cpp` file is the source file that contains the functions of the contract.
 
-**init**
+Nota bene:
 
-The `init` function will only be executed once at initial deployment. It is used for initializing contract variables, e.g. the token supply for a currency contract.
+The original example in the EOSIO wiki [tutorial](#https://github.com/EOSIO/eos/wiki/Smart%20Contract) does not compile. We guess that it is outdated. We use an example from [another tutorial](#https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract)
 
-**apply**
+```c++
+#include <eosiolib/print.hpp>
+#include <tokenika.hpp>
 
-`apply` is the action handler, it listens to all incoming actions and reacts according to the specifications within the function. The `apply` function requires two input parameters, `code` and `action`.
+using namespace eosio;
 
-**code filter**
+class hello : public eosio::contract {
+  public:
+      using contract::contract; 
 
-In order to respond to a particular action, structure the `apply` function as follows. You may also construct a response to general actions by omitting the code filter.
+      /// @abi action 
+      void hi( account_name user ) {
+         print( "Hello, ", name{user} );
+      }
+};
 
-```base
-if (code == N(${contract_name}) {
-    // your handler to respond to particular action
-}
-```
-
-You can also define responses to respective actions in the code block.
-
-**action filter**
-
-To respond to a particular action, structure your `apply` function as follows. This is normally used in conjuction with the code filter.
-
-```base
-if (action == N(${action_name}) {
-    //your handler to respond to a particular action
-}
+EOSIO_ABI( hello, (hi) )
 ```
 
 ### wast
 
 Any program to be deployed to the EOSIO blockchain must be compiled into WASM format. This is the only format the blockchain accepts.
 
-Once you have the CPP file ready, you can compile it into a text version of WASM (.wast) using the `eosiocpp` tool.
-
-```base
-$ eosiocpp -o ${contract}.wast ${contract}.cpp
+Once you have the CPP file ready, you can compile it into a text version of WASM:
+```python
+wast = teos.WAST(template_tokenika.contract_dir)
+#             WAST: /mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika/build/tokenika.wast
 ```
+You can inspect the WAST, however, it is not interesting to us:
+```python
+print(wast.wast)
+```
+```
+..............
+     (set_local $4
+      (i32.sub
+       (i32.const 2147483644)
+       (get_local $2)
+      )
+     )
+     (set_local $11
+      (i32.add
+       (get_local $0)
+       (i32.const 8392)
+      )
+     )
+     (set_local $12
+      (i32.add
+       (get_local $0)
+       (i32.const 8384)
+      )
+     )
+     (set_local $13
+      (tee_local $3
+       (i32.load offset=8392
+        (get_local $0)
+       )
+      )
+     )
+     (loop $label$8
+      (call $eosio_assert
+       (i32.eq
+        (i32.load
+         (i32.add
+          (tee_local $1
+           (i32.add
+            (get_local $0)
+            (i32.mul
+             (get_local $13)
+             (i32.const 12)
+            )
+           )
+          )
+          (i32.const 8200)
+         )
+        )
+        (i32.load
+         (tee_local $5
+          (i32.add
+           (get_local $1)
+           (i32.const 8192)
+          )
+         )
+        )
+       )
+       (i32.const 8448)
+      )
+..............
+```
+
 ### abi
 
 The Application Binary Interface (ABI) is a JSON-based description on how to convert user actions between their JSON and Binary representations. The ABI also describes how to convert the database state to/from JSON. Once you have described your contract via an ABI then developers and users will be able to interact with your contract seamlessly via JSON.
 
-The ABI file can be generated from the `.hpp` files using the `eosiocpp` tool:
+The ABI file can be generated from the `.hpp` files:
 
-```base
-$ eosiocpp -g ${contract}.abi ${contract}.hpp
+```python
+abi = teos.ABI(template_tokenika.contract_dir)
+#             WAST: /mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika/build/tokenika.wast
+```
+You can inspect the ABI:
+```python
+import pprint
+pprint.pprint(abi.abi)
+```
+```json
+{'____comment': 'This file was generated by eosio-abigen. DO NOT EDIT - 2018-04-29T09:37:28', 'ricardian_clauses': '', 'types': '', 'actions': [{'name': 'hi', 'type': 'hi', 'ricardian_contract': ''}], 'structs': [{'name': 'hi', 'base': '', 'fields': [{'name': 'user', 'type': 'account_name'}]}], 'tables': ''}
+>>> pprint.pprint(abi.abi)
+{'____comment': 'This file was generated by eosio-abigen. DO NOT EDIT - '
+                '2018-04-29T09:37:28',
+ 'actions': [{'name': 'hi', 'ricardian_contract': '', 'type': 'hi'}],
+ 'ricardian_clauses': '',
+ 'structs': [{'base': '',
+              'fields': [{'name': 'user', 'type': 'account_name'}],
+              'name': 'hi'}],
+ 'tables': '',
+ 'types': ''}
 ```
 
-The following is an example of what the skeleton contract ABI looks like:
-```base
-{
-  "types": [{
-      "new_type_name": "account_name",
-      "type": "name"
-    }
-  ],
-  "structs": [{
-      "name": "transfer",
-      "base": "",
-      "fields": {
-        "from": "account_name",
-        "to": "account_name",
-        "quantity": "uint64"
-      }
-    },{
-      "name": "account",
-      "base": "",
-      "fields": {
-        "account": "name",
-        "balance": "uint64"
-      }
-    }
-  ],
-  "actions": [{
-      "action": "transfer",
-      "type": "transfer"
-    }
-  ],
-  "tables": [{
-      "table": "account",
-      "type": "account",
-      "index_type": "i64",
-      "key_names" : ["account"],
-      "key_types" : ["name"]
-    }
-  ]
-}
+You will notice that this ABI defines an action `hi` of type `hi`. This tells EOSIO that when `${account}->hi` action is seen that the payload is of type `hi`. The type `hi` is defined in the `structs` array in the object with `name` set to `hi`.
+
+```json
+ 'structs': [{'base': '',
+              'fields': [{'name': 'user', 'type': 'account_name'}],
+              'name': 'hi'}],
 ```
 
-You will notice that this ABI defines an action `transfer` of type `transfer`. This tells EOSIO that when `${account}->transfer` action is seen that the payload is of type `transfer`. The type `transfer` is defined in the `structs` array in the object with `name` set to `transfer`.
+The ABI has one field, namely `name`. This fields has the type `account_name`. `account_name` is a built-in type used to represent base32 string as `uint64`. To see more about what built-in types are available, check [here](https://github.com/EOSIO/eos/blob/master/libraries/chain/contracts/abi_serializer.cpp).
 
-```base
-...
-  "structs": [{
-      "name": "transfer",
-      "base": "",
-      "fields": {
-        "from": "account_name",
-        "to": "account_name",
-        "quantity": "uint64"
-      }
-    },{
-...
-```
-
-The ABI has several fields, including `from`, `to` and `quantity`. These fields have the corresponding types `account_name`, and `uint64`. `account_name` is a built-in type used to represent base32 string as `uint64`. To see more about what built-in types are available, check [here](https://github.com/EOSIO/eos/blob/master/libraries/chain/contracts/abi_serializer.cpp).
-
-```base
-{
-  "types": [{
-      "new_type_name": "account_name",
-      "type": "name"
-    }
-  ],
-...
-```
-
-Inside the above `types` array we define a list of aliases for existing types. Here, we define `name` as an alias of `account_name`.
+The entry `types` is empty here. In general it is used to define a list of aliases for existing types. Here, we define `name` as an alias of `account_name`.
 
 ## Debugging Smart Contract
 
@@ -342,7 +327,12 @@ While Print C++ API wraps some of the above C API by overriding the print() func
 - struct that has print() method
 
 ### Example
-Let's write a new contract as example for debugging
+Let's write a new contract as example for debugging, named `debug`:
+```
+template_debug = teos.ContractTemplate("debug")
+#  template contract: /mnt/c/Workspaces/EOS/eosfactory/contracts/debug
+```
+
 - debug.hpp
 ```cpp
 #include <eoslib/eos.hpp>

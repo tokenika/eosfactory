@@ -94,13 +94,14 @@ namespace teos {
     {
       namespace bfs = boost::filesystem;
 
-      bfs::path template_path = contract_path / (name + extension);
+      bfs::path template_path = contract_path / (name + "." + extension);
       if(bfs::exists(template_path)){
         return;
       }      
-       
+
+      respJson_.put("template_" + extension, template_path.string());
       bfs::path skeleton = context_path / template_dir / skeleton_name
-        / (skeleton_name + extension);
+        / (skeleton_name + "." + extension);
 
       if(!bfs::exists(skeleton)){
         return;
@@ -161,7 +162,8 @@ namespace teos {
       if(isError_){
         return;
       }
-      respJson_.put("contract_dir", name);
+      respJson_.put("contract_dir", contract_path.string());
+      respJson_.put("source_dir", contract_path.string());
 
       bfs::path build_path = contract_path / contract_build_dir;
       try{
@@ -172,9 +174,9 @@ namespace teos {
       if(isError_){
         return;
       }
-      respJson_.put("build_dir", contract_build_dir);
-      copyTemplate(context_path, contract_path, name, ".cpp");
-      copyTemplate(context_path, contract_path, name, ".hpp");
+      respJson_.put("binary_dir", build_path.string());
+      copyTemplate(context_path, contract_path, name, "cpp");
+      copyTemplate(context_path, contract_path, name, "hpp");
 
       { /* copy and adapt the template .vscode directory 
       to the contract directory:*/
@@ -182,44 +184,46 @@ namespace teos {
         bfs::path template_vscode_path = (
           context_path / template_dir / contract_vscode_dir).string();
         bfs::path contract_vscode_path = (contract_path / vscode_dir);
-
-        try{
-          bfs::create_directory(contract_vscode_path);
-          for (const auto& dirEnt : bfs::recursive_directory_iterator{template_vscode_path})
-          {
-              const auto& path = dirEnt.path();
-              auto relativePathStr = path.string();
-              boost::replace_first(relativePathStr, template_vscode_path.string(), "");
-              bfs::copy(path, contract_vscode_path / relativePathStr);
+        if(!bfs::exists(contract_vscode_path))
+        {         
+          try{
+            bfs::create_directory(contract_vscode_path);
+            for (const auto& dirEnt : bfs::recursive_directory_iterator{template_vscode_path})
+            {
+                const auto& path = dirEnt.path();
+                auto relativePathStr = path.string();
+                boost::replace_first(relativePathStr, template_vscode_path.string(), "");
+                bfs::copy(path, contract_vscode_path / relativePathStr);
+            }
+          }catch (exception& e) {
+            putError(e.what());
           }
-        }catch (exception& e) {
-          putError(e.what());
-        }
 
-        string contents;
-        string tasks_json = "tasks.json";        
-        try{
-          bfs::ifstream in(contract_vscode_path / tasks_json);
-          stringstream ss;
-          ss << in.rdbuf();
-          contents = ss.str();
-          boost::replace_all(contents, "@contract_name@", name);
-        } catch(exception& e){
-          putError(e.what());
-        }
+          string contents;
+          string tasks_json = "tasks.json";        
+          try{
+            bfs::ifstream in(contract_vscode_path / tasks_json);
+            stringstream ss;
+            ss << in.rdbuf();
+            contents = ss.str();
+            boost::replace_all(contents, "@contract_name@", name);
+          } catch(exception& e){
+            putError(e.what());
+          }
 
-        try{
-          bfs::remove(contract_vscode_path / tasks_json);
-          bfs::ofstream ofs (contract_vscode_path / tasks_json);
-          ofs << contents << endl;
-          ofs.flush();
-          ofs.close();          
-        } catch (bfs::filesystem_error &e){
-          putError(e.what());
-        }
-        if(isError_){
-          return;
-        }          
+          try{
+            bfs::remove(contract_vscode_path / tasks_json);
+            bfs::ofstream ofs (contract_vscode_path / tasks_json);
+            ofs << contents << endl;
+            ofs.flush();
+            ofs.close();          
+          } catch (bfs::filesystem_error &e){
+            putError(e.what());
+          }
+          if(isError_){
+            return;
+          } 
+        }         
       }
     }
 
