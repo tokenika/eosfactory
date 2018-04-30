@@ -69,33 +69,44 @@ repository="https://github.com/tokenika/${eosfactory}"
 wiki="https://github.com/tokenika/${eosfactory}/wiki"
 
 if [ ! -d .git ]; then
-    printf "\n\tThis build script only works with sources cloned from git\n"
-    printf "\tPlease clone a new eos directory with 'git clone ${repository} --recursive'\n"
-    printf "\tSee the wiki for instructions: ${wiki}\n"
+    printf "\n%s\n" "
+This build script only works with sources cloned from git.
+    Please clone a new eos directory with 'git clone ${repository} --recursive'
+    See the wiki for instructions: ${wiki}
+    Exiting now.    
+"
     exit 1
 fi
 
 STALE_SUBMODS=$(( `git submodule status | grep -c "^[+\-]"` ))
 if [ $STALE_SUBMODS -gt 0 ]; then
-    printf "\ngit submodules are not up to date\n"
-    printf "\tPlease run the command 'git submodule update --init --recursive'\n"
+    printf "\n%s\n" "
+git submodules are not up to date.
+    Please run the command 'git submodule update --init --recursive'
+    Exiting now.    
+"
     exit 1
 fi
 
-printf "\n\tBeginning build"
-printf "\t$( date -u )\n"
-printf "\tgit head id: $( cat .git/refs/heads/master )\n"
-printf "\tCurrent branch: $( git branch | grep \* )\n"
-printf "\n\tARCHITECTURE: ${ARCH}\n"
+printf "\n%s\n" "
+Beginning build.
+    $( date -u )
+    git head id: $( cat .git/refs/heads/master )
+    Current branch: $( git branch | grep \* )
+    ARCHITECTURE: ${ARCH}
+"
 
 if [ $ARCH == "Linux" ]; then
     
     if [ ! -e /etc/os-release ]; then
-        printf "\n\t${eosfactory} currently is tested with the Windows Subsystem Linux and Ubuntu.\n"
-        printf "\tPlease install on the latest version of one of these Linux distributions.\n"
-        printf "\thttps://www.microsoft.com/en-us/store/p/ubuntu/9nblggh4msv6\n"
-        printf "\thttps://www.ubuntu.com/\n"
-        printf "\tExiting now.\n"
+        printf "\n%s\n" "
+    ${eosfactory} currently is tested with the Windows Subsystem Linux and Ubuntu.
+    Please install on the latest version of one of these Linux distributions:
+        https://www.microsoft.com/en-us/store/p/ubuntu/9nblggh4msv6
+    or
+        https://www.ubuntu.com/
+    Exiting now.
+"
         exit 1
     fi
 
@@ -108,9 +119,11 @@ if [ $ARCH == "Linux" ]; then
 fi	
 
 if [ x${EOSIO_SOURCE_DIR_ARG} == "x" ]; then
-    printf "\nEOSIO repository not found.\n"
-    printf "Please, set environment variable 'EOSIO_SOURCE_DIR' pointing\n"
-    printf "the path to the EOSIO repository"
+    printf "\n%s\n" "
+EOSIO repository not found.
+    Please, set environment variable 'EOSIO_SOURCE_DIR' pointing
+    the path to the EOSIO repository
+"
     exit 1
 fi
 
