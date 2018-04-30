@@ -1,7 +1,8 @@
 install
 workdir
 *.exe
-teos/builds
+build
+teos/build
 teos_lib/build
 
 **/Debug

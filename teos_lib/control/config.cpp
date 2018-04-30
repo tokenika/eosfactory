@@ -75,8 +75,8 @@ wallet-dir: .
     arg EOSIO_WALLET_ADDRESS = { "EOSIO_WALLET_ADDRESS", EMPTY };
     arg GENESIS_JSON = { "genesis-json", "genesis.json" }; 
       //genesis-json: relative to EOSIO_SOURCE_DIR
-    arg DATA_DIR = { "data-dir", "build/programs/daemon/data-dir" };
-    arg CONFIG_DIR = { "config-dir", "build/programs/daemon/data-dir" };
+    arg DATA_DIR = { "data-dir", "build/daemon/data-dir" };
+    arg CONFIG_DIR = { "config-dir", "build/daemon/data-dir" };
     arg WALLET_DIR = { "wallet-dir", "wallet"}; // relative to data-dir
     arg DAEMON_NAME = { "DAEMON_NAME", "nodeos" };
     arg CONTEXT_DIR = { "CONTEXT_DIR" };
@@ -334,11 +334,11 @@ wallet-dir: .
         bfs::path wantedPath(configValue(teosControl, DATA_DIR));
 
         if(!wantedPath.is_absolute()){
-          string sourceDir = getSourceDir(teosControl);
-          if(sourceDir.empty()){
+          string contextDir = configValue(teosControl, CONTEXT_DIR);
+          if(contextDir.empty()){
             return "";
           }
-          wantedPath = bfs::path(sourceDir) / wantedPath;
+          wantedPath = bfs::path(contextDir) / wantedPath;
         }
 
         if(bfs::is_directory(wantedPath)) {
@@ -367,11 +367,11 @@ wallet-dir: .
       { 
         bfs::path wantedPath(configValue(teosControl, CONFIG_DIR));
         if(!wantedPath.is_absolute()){
-          string sourceDir = getSourceDir(teosControl);
-          if(sourceDir.empty()){
+          string contextDir = configValue(teosControl, CONTEXT_DIR);
+          if(contextDir.empty()){
             return "";
           }
-          wantedPath = bfs::path(sourceDir) / wantedPath;
+          wantedPath = bfs::path(contextDir) / wantedPath;
         } 
 
         if(bfs::exists(wantedPath) && bfs::is_directory(wantedPath)) {
