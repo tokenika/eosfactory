@@ -87,7 +87,7 @@ git submodules are not up to date.
     exit 1
 fi
 
-printf "%s\n" "
+printf "%s" "
 ##########################################################################
 "
 printf "\n%s\n" "
@@ -146,17 +146,17 @@ function wslMapLinux2Windows() {
 ##########################################################################
 # Make the file structure
 ##########################################################################
-printf "%s\n" "
+printf "%s" "
 ##########################################################################
 "
 printf "%s" "
 Makes the file structure:
 
-    ${CONTEXT_DIR_ARG}          #(eosfactory repository)
-        ${BUILD_DIR}        #(binary dir: where compilation results go)
-            daemon          #(the imputs and outputs of the local EOSIO node)
-                data-dir    #(the data-dir from the EOSIO node help)
-                    wallet  #(where local wallets are kept)
+    ${CONTEXT_DIR_ARG}  # eosfactory repository
+        ${BUILD_DIR}    # binary dir
+            daemon          # local EOSIO node documents
+                data-dir    # the EOSIO node data-dir
+                    wallet  # local wallets
                     genesis.json
                     config.in
 "
@@ -173,7 +173,7 @@ cp -u ${CONTEXT_DIR_ARG}/resources/config.ini \
 ##########################################################################
 # Make Linux environment variables
 ##########################################################################
-printf "%s\n" "
+printf "%s" "
 ##########################################################################
 "
 printf "\n%s\n" "Makes environment variables, if not set already:"
@@ -201,8 +201,8 @@ fi
 ##########################################################################
 
 if [ x${IS_WSL} != "x" ]; then
-    printf "%s\n" "
-    ##########################################################################
+    printf "%s" "
+##########################################################################
     "
     printf "\nMakes Windows environment variables:\n"
 
@@ -226,7 +226,7 @@ fi
 ##########################################################################
 # compiling library
 ##########################################################################
-printf "%s\n" "
+printf "%s" "
 ##########################################################################
 "
 cd ${CONTEXT_DIR_ARG}
@@ -257,7 +257,7 @@ fi
 ##########################################################################
 # compiling executable
 ##########################################################################
-printf "%s\n" "
+printf "%s" "
 ##########################################################################
 "
 cd ${CONTEXT_DIR_ARG}
@@ -288,12 +288,12 @@ fi
 ##########################################################################
 # finishing
 ##########################################################################
-printf "%s\n" "
+printf "%s" "
 ##########################################################################
 "
 TIME_END=$(( `date -u +%s` - $TIME_BEGIN ))
-
-printf "\n%s\n%d:%d:%d\n\n" "eosfactory has been successfully built." $(($TIME_END/3600)) $(($TIME_END%3600/60)) $(($TIME_END%60))
+printf "\n%s\n%dmin %dsec\n\n" "eosfactory has been successfully built." \
+    $(($TIME_END/60)) $(($TIME_END%60))
 
 if [ x${IS_WSL} != "x" ]; then
     printf "%s\n" "
