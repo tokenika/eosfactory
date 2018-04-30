@@ -136,7 +136,7 @@ wallet-dir: .
     {
       string config_value = configValue(teosControl, CONTEXT_DIR);
       if(config_value.empty()){
-        onError(teosControl, "Cannot determine the EOSIO source directory.");
+        onError(teosControl, "Cannot determine the context directory.");
       }
       return config_value;
     }

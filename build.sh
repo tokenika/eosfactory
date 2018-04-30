@@ -1,14 +1,21 @@
 #!/bin/bash
 ##########################################################################
-# This script instals tokenika 'eosfactory' both both Linux and Windows
-# (with WSL) computers.
-# This file was downloaded from https://github.com/tokenika/eosfactory
+#   This script instals tokenika 'eosfactory' both Linux and Windows
+#   (with WSL) computers. It has to be executed in the directory of an
+#   'eosfactory' repository.
+#   This file was downloaded from https://github.com/tokenika/eosfactory
 ##########################################################################
 
 EOSIO_SOURCE_DIR_ARG=${EOSIO_SOURCE_DIR}
-CXX_COMPILER=clang++
-C_COMPILER=clang
+CXX_COMPILER=clang++-4.0
+C_COMPILER=clang-4.0
 BUILD_TYPE="Debug"
+ROOT_DIR_WINDOWS="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs"
+teos_python="teos_python"
+library_dir="teos_lib"
+executable_dir="teos"
+build_dir="build"
+
 
 while getopts ":e:c:h" opt; do
   case $opt in
@@ -22,8 +29,13 @@ while getopts ":e:c:h" opt; do
         fi           
         ;;
     h)
-        printf "Usage:\n"
-        printf "./build [-e <eosio repository dir>] [-c {gnu|clang}] [-h]\n"
+        printf "%s\n" "
+Usage: ./build.sh [OPTIONS]
+    -e  EOSIO repository dir. Default is \${EOSIO_SOURCE_DIR}.
+    -c  compiler, 'gnu' or 'clang'. Default is 'gnu'.
+    -h  this message.
+    "
+        exit 0
         ;;
     \?)
         printf "Invalid option: -$OPTARG"
@@ -36,14 +48,15 @@ while getopts ":e:c:h" opt; do
   esac
 done
 
-printf "Arguments:\n"
-printf "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR_ARG}\n"
-printf "CXX_COMPILER=${CXX_COMPILER}\n"
-printf "C_COMPILER=${C_COMPILER}\n"
+printf "%s\n" "
+Arguments:
+    EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR_ARG}
+    CXX_COMPILER=${CXX_COMPILER}
+    C_COMPILER=${C_COMPILER}
+"
 
-WORK_DIR=$PWD
-BUILD_DIR=${WORK_DIR}/build
-TEMP_DIR=/tmp
+CONTEXT_DIR_ARG=$PWD
+BUILD_DIR=${CONTEXT_DIR_ARG}/build
 
 ARCH=$( uname )
 TIME_BEGIN=$( date -u +%s )
@@ -90,45 +103,180 @@ if [ $ARCH == "Linux" ]; then
     PROC_VERSION=$(cat /proc/version)
     if [[ $PROC_VERSION == *"Microsoft"* ]]; then 
         IS_WSL="IS_WSL"
-        printf "\n\tDetected Windows Subsystem Linux\n"
+        printf "\tDetected Windows Subsystem Linux\n"
     fi
 fi	
 
-
-if [ -z ${EOSIO_SOURCE_DIR_ARG+x} ]; then
-    printf "\n\tEOSIO repository not found.\n"
+if [ x${EOSIO_SOURCE_DIR_ARG} == "x" ]; then
+    printf "\nEOSIO repository not found.\n"
     printf "Please, set environment variable 'EOSIO_SOURCE_DIR' pointing\n"
-    pri
-else
-    printf "\n\tEOSIO repository: ${EOSIO_SOURCE_DIR}"
+    printf "the path to the EOSIO repository"
+    exit 1
 fi
 
-cd ${WORK_DIR}
+function wslMapWindows2Linux() {
+    path=$2
+    drive_letter=${path:0:1}
+    drive_letter=${drive_letter,,}
+    path=${path//\\//}
+    eval "$1=mnt/${drive_letter}${path:2}"
+}
+
+function wslMapLinux2Windows() {
+    path=$2
+    drive_letter=${path:5:1}
+    eval "$1=${drive_letter}:${path:6}"
+}
+
+##########################################################################
+# Make the file structure
+##########################################################################
+printf "%s" "
+Makes the file structure:
+
+    ${CONTEXT_DIR_ARG}          #(eosfactory repository)
+        ${BUILD_DIR}        #(binary dir: where compilation results go)
+            daemon          #(the imputs and outputs of the local EOSIO node)
+                data-dir    #(the data-dir from the EOSIO node help)
+                    wallet  #(where local wallets are kept)
+                    genesis.json
+                    config.in
+"
+
+cd ${CONTEXT_DIR_ARG}
 mkdir -p ${BUILD_DIR}
-cd ${BUILD_DIR}
+mkdir -p daemon/data-dir/wallet
+
+cp -u ${EOSIO_SOURCE_DIR}/programs/snapshot/genesis.json \
+    ${BUILD_DIR}/daemon/data-dir/genesis.json
+cp -u ${CONTEXT_DIR_ARG}/resources/config.ini \
+    ${BUILD_DIR}/daemon/data-dir/config.ini
+
+##########################################################################
+# Make Linux environment variables
+##########################################################################
+printf "\n%s\n" "Makes environment variables, if not set already:"
+
+if [ ${CONTEXT_DIR_ARG} != ${CONTEXT_DIR} ]; then
+    echo "export CONTEXT_DIR=${CONTEXT_DIR_ARG}" >> ~/.bashrc
+    printf "\t%s\n" "CONTEXT_DIR: ${CONTEXT_DIR_ARG}"
+fi
+
+if [ ${EOSIO_SOURCE_DIR_ARG} != ${EOSIO_SOURCE_DIR} ]; then
+    echo "export EOSIO_SOURCE_DIR=${EOSIO_SOURCE_DIR_ARG}" >> ~/.bashrc
+    printf "\t%s\n" "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR_ARG}"
+fi
+
+if [ x${PYTHONPATH} != "x" ]; then
+    if [[ ${PYTHONPATH} != *"${CONTEXT_DIR_ARG}/${teos_python}"* ]]; then
+        echo "PYTHONPATH=\
+        /mnt/c/Workspaces/EOS/eosfactory/teos_python:${PYTHONPATH}" >> ~/.bashrc
+        printf "\t%s\n" "PYTHONPATH: ${PYTHONPATH}"
+    fi
+fi
+
+##########################################################################
+# Make Windows environment variables
+##########################################################################
+
+if [ x${IS_WSL} != "x" ]; then
+    printf "\nMakes Windows environment variables:\n"
+
+    setx.exe EOSIO_SOURCE_DIR ${EOSIO_SOURCE_DIR_ARG}
+    printf "\t%s\n" "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR_ARG}"
+
+    EOSIO_SOURCE_DIR_ARG_WINDOWS=""
+    wslMapLinux2Windows EOSIO_SOURCE_DIR_ARG_WINDOWS ${EOSIO_SOURCE_DIR_ARG}
+    setx.exe EOSIO_SOURCE_DIR_WINDOWS ${EOSIO_SOURCE_DIR_ARG_WINDOWS}
+    printf "\t%s\n" "EOSIO_SOURCE_DIR_WINDOWS: ${EOSIO_SOURCE_DIR_ARG_WINDOWS}"
+
+    HOME_WINDOWS=${ROOT_DIR_WINDOWS}\\home\\${USER}
+    setx.exe HOME_WINDOWS ${HOME_WINDOWS}
+    echo -E "    HOME_WINDOWS: ${HOME_WINDOWS}"
+fi
 
 if [ -z $CMAKE ]; then
     CMAKE=$( which cmake )
 fi
 
-# $CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE} 
-#     -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
-#     -DCMAKE_C_COMPILER=${C_COMPILER} \
-# ..
+##########################################################################
+# compiling library
+##########################################################################
+
+cd ${CONTEXT_DIR_ARG}
+cd ${library_dir}
+mkdir build
+cd build
+
+printf "\n%s\n" "Compiling ${library_dir}. Current directory is ${PWD}"
+
+$CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+    -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
+    -DCMAKE_C_COMPILER=${C_COMPILER} ..
 
 if [ $? -ne 0 ]; then
-    printf "\n\t>>>>>>>>>>>>>>>>>>>> CMAKE building EOSIO has exited with the above error.\n\n"
+    printf "\n\t%s\n\n" "
+>>>>>> CMAKE building ${library_dir} has exited with the above error."
     exit -1
 fi
 
-#make -j${CPU_CORE}
+make
 
 if [ $? -ne 0 ]; then
-    printf "\n\t>>>>>>>>>>>>>>>>>>>> MAKE building EOSIO has exited with the above error.\n\n"
+    printf "\n\t%s\n" "
+>>>>>> MAKE building ${library_dir} has exited with the above error."
     exit -1
 fi
+
+##########################################################################
+# compiling executable
+##########################################################################
+
+cd ${CONTEXT_DIR_ARG}
+cd ${executable_dir}
+mkdir build
+cd build
+
+printf "\n%s\n" "Compiling ${executable_dir}. Current directory is ${PWD}"
+
+$CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+    -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
+    -DCMAKE_C_COMPILER=${C_COMPILER} ..
+
+if [ $? -ne 0 ]; then
+    printf "\n\t%s\n\n" "
+>>>>>> CMAKE building ${executable_dir} has exited with the above error."
+    exit -1
+fi
+
+make
+
+if [ $? -ne 0 ]; then
+    printf "\n\t%s\n" "
+>>>>>> MAKE building ${executable_dir} has exited with the above error."
+    exit -1
+fi
+
+##########################################################################
+# finishing
+##########################################################################
+
 
 TIME_END=$(( `date -u +%s` - $TIME_BEGIN ))
 
-printf "\n\tEOS FACTORY has been successfully built. %d:%d:%d\n\n" $(($TIME_END/3600)) $(($TIME_END%3600/60)) $(($TIME_END%60))
-printf "\tTo verify your installation run the following commands:\n"
+printf "\neosfactory has been successfully built. %d:%d:%d\n\n" $(($TIME_END/3600)) $(($TIME_END%3600/60)) $(($TIME_END%60))
+if [ x${IS_WSL} != "x" ]; then
+    printf "%s\n" "
+    If you use the 'Visual Studio Code', restart it in order to access new 
+    environment variables.
+
+    Also check whether ${ROOT_DIR_WINDOWS}
+    is a valid and existing Windows path. If it is not, set a local Windows
+    environment variable 'ROOT_DIR_WINDOWS' to the value of the root of the
+    WSL file system. Note that this value may be similar to the displayed one."
+
+else
+    source ~/.bashrc
+fi
+
+printf "\n%s\n" "\tTo verify your installation run the following commands:"
