@@ -158,7 +158,7 @@ Makes the file structure:
 
 cd ${CONTEXT_DIR_ARG}
 mkdir -p ${BUILD_DIR}
-mkdir -p daemon/data-dir/wallet
+mkdir -p ${BUILD_DIR}/daemon/data-dir/wallet
 
 cp -u ${EOSIO_SOURCE_DIR}/programs/snapshot/genesis.json \
     ${BUILD_DIR}/daemon/data-dir/genesis.json
@@ -182,7 +182,7 @@ fi
 
 if [ x${PYTHONPATH} != "x" ]; then
     if [[ ${PYTHONPATH} != *"${CONTEXT_DIR_ARG}/${teos_python}"* ]]; then
-        echo "PYTHONPATH=\
+        echo "export PYTHONPATH=\
         /mnt/c/Workspaces/EOS/eosfactory/teos_python:${PYTHONPATH}" >> ~/.bashrc
         printf "\t%s\n" "PYTHONPATH: ${PYTHONPATH}"
     fi
@@ -309,5 +309,10 @@ To verify your installation run the following commands:
     #  head block number: 1
     #  head block time: 2018-04-30T13:57:08
 
+    >>> teos.GetInfo()
+    #       head block: 52
+    #  head block time: 2018-04-30T14:33:05
+    #  last irreversible block: 51
+    
 We hope, you will see a minimized window running a local EOSIO node.
 "
