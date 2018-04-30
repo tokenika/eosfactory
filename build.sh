@@ -16,7 +16,6 @@ library_dir="teos_lib"
 executable_dir="teos"
 build_dir="build"
 
-
 while getopts ":e:c:h" opt; do
   case $opt in
     e)
@@ -277,7 +276,8 @@ fi
 
 TIME_END=$(( `date -u +%s` - $TIME_BEGIN ))
 
-printf "\neosfactory has been successfully built. %d:%d:%d\n\n" $(($TIME_END/3600)) $(($TIME_END%3600/60)) $(($TIME_END%60))
+printf "\n%s\n%d:%d:%d\n\n" "eosfactory has been successfully built." $(($TIME_END/3600)) $(($TIME_END%3600/60)) $(($TIME_END%60))
+
 if [ x${IS_WSL} != "x" ]; then
     printf "%s\n" "
     If you use the 'Visual Studio Code', restart it in order to access new 
@@ -300,7 +300,7 @@ To verify your installation run the following commands:
     Type "help", "copyright", "credits" or "license" for more information.
     >>> import teos
     teos exe: /mnt/c/Workspaces/EOS/eosfactory/teos/build/teos
-    >>> teos.DaemonStart()
+    >>> teos.DaemonClear()
     #  nodeos exe file: /mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos
     #  genesis state file: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json
     #   server address: 127.0.0.1:8888
@@ -313,6 +313,6 @@ To verify your installation run the following commands:
     #       head block: 52
     #  head block time: 2018-04-30T14:33:05
     #  last irreversible block: 51
-    
+
 We hope, you will see a minimized window running a local EOSIO node.
 "
