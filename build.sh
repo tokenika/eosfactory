@@ -87,6 +87,9 @@ git submodules are not up to date.
     exit 1
 fi
 
+printf "%s\n" "
+##########################################################################
+"
 printf "\n%s\n" "
 Beginning build.
     $( date -u )
@@ -113,7 +116,7 @@ if [ $ARCH == "Linux" ]; then
     PROC_VERSION=$(cat /proc/version)
     if [[ $PROC_VERSION == *"Microsoft"* ]]; then 
         IS_WSL="IS_WSL"
-        printf "\tDetected Windows Subsystem Linux\n"
+        printf "\t%s\n" "Detected Windows Subsystem Linux"
     fi
 fi	
 
@@ -143,6 +146,9 @@ function wslMapLinux2Windows() {
 ##########################################################################
 # Make the file structure
 ##########################################################################
+printf "%s\n" "
+##########################################################################
+"
 printf "%s" "
 Makes the file structure:
 
@@ -167,6 +173,9 @@ cp -u ${CONTEXT_DIR_ARG}/resources/config.ini \
 ##########################################################################
 # Make Linux environment variables
 ##########################################################################
+printf "%s\n" "
+##########################################################################
+"
 printf "\n%s\n" "Makes environment variables, if not set already:"
 
 if [ ${CONTEXT_DIR_ARG} != ${CONTEXT_DIR} ]; then
@@ -192,6 +201,9 @@ fi
 ##########################################################################
 
 if [ x${IS_WSL} != "x" ]; then
+    printf "%s\n" "
+    ##########################################################################
+    "
     printf "\nMakes Windows environment variables:\n"
 
     setx.exe EOSIO_SOURCE_DIR ${EOSIO_SOURCE_DIR_ARG}
@@ -214,7 +226,9 @@ fi
 ##########################################################################
 # compiling library
 ##########################################################################
-
+printf "%s\n" "
+##########################################################################
+"
 cd ${CONTEXT_DIR_ARG}
 cd ${library_dir}
 mkdir build
@@ -243,7 +257,9 @@ fi
 ##########################################################################
 # compiling executable
 ##########################################################################
-
+printf "%s\n" "
+##########################################################################
+"
 cd ${CONTEXT_DIR_ARG}
 cd ${executable_dir}
 mkdir build
@@ -272,8 +288,9 @@ fi
 ##########################################################################
 # finishing
 ##########################################################################
-
-
+printf "%s\n" "
+##########################################################################
+"
 TIME_END=$(( `date -u +%s` - $TIME_BEGIN ))
 
 printf "\n%s\n%d:%d:%d\n\n" "eosfactory has been successfully built." $(($TIME_END/3600)) $(($TIME_END%3600/60)) $(($TIME_END%60))

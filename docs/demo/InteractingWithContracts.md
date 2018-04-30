@@ -60,7 +60,7 @@ The initialization process does the following things:
 
 * deploys the *Bios* contract
 * creates a wallet and imports the default `eosio` account into it 
-* creates several test accounts `alice`, `bob` &`carol` and imports their keys into the wallet
+* creates several test accounts `alice`, `bob` & `carol` and imports their keys into the wallet
 
 If you need additional test accounts, you can easily create them:
 
