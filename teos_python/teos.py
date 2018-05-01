@@ -785,19 +785,6 @@ class Account(CreateAccount):
             is_verbose=False 
             )
 
-    def accounts(self, account=""):
-        """ Prints accounts.
-
-        """
-        if account == "":
-            account = self.name
-        else:
-            try:
-                account = account.name
-            except:
-                account = account                        
-        GetTable(account, self.name, "accounts")
-
     def __str__(self):
         return str(GetAccount(self.name, is_verbose=False)) 
     
@@ -867,14 +854,14 @@ class Contract(SetContract):
     def __str__(self):
         return self._out
         
-    def action(
+    def push_action(
             self, action, data,
             permission="",
             expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0, is_verbose=False
         ):
-        """ Implements the 'cloes push action' command. 
+        """ Implements the 'cleos push action' command. 
 
         """
         if not permission:
@@ -903,6 +890,19 @@ class Contract(SetContract):
             pprint.pprint(self.action_json)
 
         return self.console
+    
+    def get_table(self, table, scope=""):
+        """ Prints accounts.
+
+        """
+        if not scope:
+            scope=self.account
+        else:
+            try: # scope is an account:
+                scope=scope.name
+            except: # scope is the name of an account:
+                scope=scope                
+        GetTable(self.name, table, scope)
 
 
 

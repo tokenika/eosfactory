@@ -14,19 +14,19 @@ def init():
 
     - **global variables**
 
-        account_eosio: Primary owned account.
+        eosio: Primary owned account.
         wallet: The wallet.
         allice, bob, carol: Prefabricated accounts.
 
     """
-    global account_eosio
-    account_eosio = teos.AccountEosio()
+    global eosio
+    eosio = teos.AccountEosio()
 
     global wallet
     wallet = teos.Wallet()
 
     contract_eosio_bios = teos.SetContract(
-        account_eosio, "eosio.bios", permission=account_eosio)
+        eosio, "eosio.bios", permission=eosio)
     key_owner = teos.CreateKey("key_owner")
     key_active = teos.CreateKey("key_active")
 
@@ -35,15 +35,15 @@ def init():
 
     global alice
     alice = teos.Account(
-        account_eosio, "alice", key_owner, key_active)    
+        eosio, "alice", key_owner, key_active)    
         
     global bob
     bob = teos.Account(
-        account_eosio, "bob", key_owner, key_active)
+        eosio, "bob", key_owner, key_active)
             
     global carol
     carol = teos.Account(
-        account_eosio, "carol", key_owner, key_active)
+        eosio, "carol", key_owner, key_active)
 
 class Contract(teos.Contract):
     """
@@ -102,9 +102,9 @@ class Contract(teos.Contract):
         wallet.import_key(self.key_owner)
         wallet.import_key(self.key_active)
         
-        global account_eosio
+        global eosio
         self.account = teos.Account(
-            account_eosio, self.name, self.key_owner, self.key_active)
+            eosio, self.name, self.key_owner, self.key_active)
         super().__init__(self.account, contract_dir, 
             wast_file, abi_file, 
             permission, expiration_sec, 
