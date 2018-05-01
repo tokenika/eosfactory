@@ -8,7 +8,6 @@ teos_lib/build
 **/Debug
 **/x64
 **/.vs
-**/*.wast
 eosc/eosc_visual_studio/eoscLib.pdb
 *.lib
 eos_libraries/visual_studio/test.exp

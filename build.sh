@@ -6,12 +6,7 @@
 #   This file was downloaded from https://github.com/tokenika/eosfactory
 ##########################################################################
 
-if [ x${EOSIO_SOURCE_DIR} !=x ]; then
-    EOSIO_SOURCE_DIR__=${EOSIO_SOURCE_DIR}
-else
-    EOSIO_SOURCE_DIR__="not set"
-fi
-
+EOSIO_SOURCE_DIR__=""
 CXX_COMPILER=clang++-4.0
 C_COMPILER=clang-4.0
 BUILD_TYPE="Debug"
@@ -31,7 +26,7 @@ while getopts ":e:c:h" opt; do
         if [ $OPTARG == "gnu" ]; then
             CXX_COMPILER=g++
             C_COMPILER=gcc
-        fi           
+        fi          
         ;;
     h)
         printf "%s\n" "
@@ -52,16 +47,17 @@ Usage: ./build.sh [OPTIONS]
         ;;
   esac
 done
+shift $((OPTIND-1))
 
 printf "%s\n" "
 Arguments:
-    EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR__}
+    EOSIO_SOURCE_DIR=${EOSIO_SOURCE_DIR__}
     CXX_COMPILER=${CXX_COMPILER}
     C_COMPILER=${C_COMPILER}
 "
 
-CONTEXT_DIR_ARG=$PWD
-BUILD_DIR=${CONTEXT_DIR_ARG}/build
+CONTEXT_DIR__="$PWD"
+BUILD_DIR="${CONTEXT_DIR__}/build"
 
 ARCH=$( uname )
 TIME_BEGIN=$( date -u +%s )
@@ -104,7 +100,7 @@ Beginning build.
     ARCHITECTURE: ${ARCH}
 "
 
-if [ $ARCH == "Linux" ]; then
+if [ "$ARCH" == "Linux" ]; then
     
     if [ ! -e /etc/os-release ]; then
         printf "\n%s\n" "
@@ -126,13 +122,15 @@ if [ $ARCH == "Linux" ]; then
     fi
 fi	
 
-if [ x${EOSIO_SOURCE_DIR__} == "x" ]; then
+if [ "x${EOSIO_SOURCE_DIR__}" == "x" ]; then
+    if [ "x${EOSIO_SOURCE_DIR}" !== "x" ]; then
     printf "\n%s\n" "
 EOSIO repository not found.
     Please, set environment variable 'EOSIO_SOURCE_DIR' pointing
     the path to the EOSIO repository
-"
+"    
     exit 1
+    fi
 fi
 
 function wslMapWindows2Linux() {
@@ -157,40 +155,48 @@ printf "%s" "
 "
 printf "\n%s\n" "Makes environment variables, if not set already:"
 
-if [[ ${EOSIO_SOURCE_DIR__} != ${EOSIO_SOURCE_DIR} ]]; then
-    echo "export EOSIO_SOURCE_DIR=${EOSIO_SOURCE_DIR__}" >> ~/.bashrc
-    printf "\t%s\n" "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR__}"
+#./build.sh -cgnu -e/mnt/c/Workspaces/EOS/eos/mnt/c/Workspaces/EOS/eos
+
+if [ "x${EOSIO_SOURCE_DIR__}" != "" ]; then
+    if [ "${EOSIO_SOURCE_DIR__}" != "${EOSIO_SOURCE_DIR}" ]; then
+        echo "export EOSIO_SOURCE_DIR=${EOSIO_SOURCE_DIR__}" >> ~/.bashrc
+        printf "\t%s\n" "setting EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR__}"
+    fi
 fi
 
-if [ x${CONTEXT_DIR} == "x" ]; then
-    echo "export CONTEXT_DIR=${CONTEXT_DIR_ARG}" >> ~/.bashrc
-    printf "\t%s\n" "CONTEXT_DIR: ${CONTEXT_DIR_ARG}"
+if [ "x${CONTEXT_DIR}" == "x" ]; then
+    echo "export CONTEXT_DIR=${CONTEXT_DIR__}" >> ~/.bashrc
+    printf "\t%s\n" "setting CONTEXT_DIR: ${CONTEXT_DIR__}"
 else
-    if [ ${CONTEXT_DIR_ARG} != ${CONTEXT_DIR} ]; then
-        echo "export CONTEXT_DIR=${CONTEXT_DIR_ARG}" >> ~/.bashrc
-        printf "\t%s\n" "CONTEXT_DIR: ${CONTEXT_DIR_ARG}"
+    if [ "${CONTEXT_DIR__}" != "${CONTEXT_DIR}" ]; then
+        echo "export CONTEXT_DIR=${CONTEXT_DIR__}" >> ~/.bashrc
+        printf "\t%s\n" "setting CONTEXT_DIR: ${CONTEXT_DIR__}"
     fi        
 fi
 
-if [ x${PYTHONPATH} == "x" ]; then
-    temp=${CONTEXT_DIR_ARG}/teos_python
+if [ "x${PYTHONPATH}" == "x" ]; then
+    temp="${CONTEXT_DIR__}/teos_python"
     echo "export PYTHONPATH=${temp}:${PYTHONPATH}" >> ~/.bashrc
-    printf "\t%s\n" "PYTHONPATH: ${temp}"
+    printf "\t%s\n" "sets PYTHONPATH: ${temp}"
 else
-    if [ ${PYTHONPATH} != *"${CONTEXT_DIR_ARG}/${teos_python}"* ]; then
-        temp=${CONTEXT_DIR_ARG}/teos_python
+    if [ ${PYTHONPATH} != *"${CONTEXT_DIR__}/${teos_python}"* ]; then
+        temp=${CONTEXT_DIR__}/teos_python
         echo "export PYTHONPATH=${temp}:${PYTHONPATH}" >> ~/.bashrc
         printf "\t%s\n" "PYTHONPATH: ${temp}"
     fi        
 fi
 
-if [ x${CONTRACT_WORKSPACE} == "x" ]; then # is not set
-    temp=${CONTEXT_DIR_ARG}/${contracts}
+if [ "x${CONTRACT_WORKSPACE}" == "x" ]; then # is not set
+    temp="${CONTEXT_DIR__}/${contracts}"
     echo "export CONTRACT_WORKSPACE=${temp}" >> ~/.bashrc
     printf "\t%s\n" CONTRACT_WORKSPACE": ${temp}"
 fi
 
 source ~/.bashrc
+printf "\t%s\n" "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR}"
+printf "\t%s\n" "CONTEXT_DIR: ${CONTEXT_DIR}"
+printf "\t%s\n" "PYTHONPATH: ${PYTHONPATH}"
+printf "\t%s\n" "CONTRACT_WORKSPACE: ${CONTRACT_WORKSPACE}"
 
 ##########################################################################
 # Make the file structure
@@ -201,7 +207,7 @@ printf "%s" "
 printf "%s" "
 Makes the file structure:
 
-    ${CONTEXT_DIR_ARG}  # eosfactory repository
+    ${CONTEXT_DIR__}  # eosfactory repository
         ${BUILD_DIR}    # binary dir
             daemon          # local EOSIO node documents
                 data-dir    # the EOSIO node data-dir
@@ -210,13 +216,13 @@ Makes the file structure:
                     config.in
 "
 
-cd ${CONTEXT_DIR_ARG}
+cd ${CONTEXT_DIR__}
 mkdir -p ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}/daemon/data-dir/wallet
 
 cp -u ${EOSIO_SOURCE_DIR}/programs/snapshot/genesis.json \
     ${BUILD_DIR}/daemon/data-dir/genesis.json
-cp -u ${CONTEXT_DIR_ARG}/resources/config.ini \
+cp -u ${CONTEXT_DIR__}/resources/config.ini \
     ${BUILD_DIR}/daemon/data-dir/config.ini
 
 ##########################################################################
@@ -255,7 +261,7 @@ fi
 printf "%s" "
 ##########################################################################
 "
-cd ${CONTEXT_DIR_ARG}
+cd ${CONTEXT_DIR__}
 cd ${library_dir}
 mkdir build
 cd build
@@ -286,7 +292,7 @@ fi
 printf "%s" "
 ##########################################################################
 "
-cd ${CONTEXT_DIR_ARG}
+cd ${CONTEXT_DIR__}
 cd ${executable_dir}
 mkdir build
 cd build
