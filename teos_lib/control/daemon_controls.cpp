@@ -70,7 +70,7 @@ namespace teos {
           }
         }
         if (count <= 0) {
-          putError(string("Failed to kill ") + getDaemonName(this));
+          putError(string("Failed to kill ") + getDaemonName(this) + " pid:");
         }
       }
       catch (std::exception& e) {

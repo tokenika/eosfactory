@@ -6,7 +6,12 @@
 #   This file was downloaded from https://github.com/tokenika/eosfactory
 ##########################################################################
 
-EOSIO_SOURCE_DIR_ARG=${EOSIO_SOURCE_DIR}
+if [ x${EOSIO_SOURCE_DIR} !=x ]; then
+    EOSIO_SOURCE_DIR__=${EOSIO_SOURCE_DIR}
+else
+    EOSIO_SOURCE_DIR__="not set"
+fi
+
 CXX_COMPILER=clang++-4.0
 C_COMPILER=clang-4.0
 BUILD_TYPE="Debug"
@@ -20,7 +25,7 @@ contracts="contracts"
 while getopts ":e:c:h" opt; do
   case $opt in
     e)
-        EOSIO_SOURCE_DIR_ARG=$OPTARG
+        EOSIO_SOURCE_DIR__=$OPTARG
         ;;
     c)
         if [ $OPTARG == "gnu" ]; then
@@ -50,7 +55,7 @@ done
 
 printf "%s\n" "
 Arguments:
-    EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR_ARG}
+    EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR__}
     CXX_COMPILER=${CXX_COMPILER}
     C_COMPILER=${C_COMPILER}
 "
@@ -121,7 +126,7 @@ if [ $ARCH == "Linux" ]; then
     fi
 fi	
 
-if [ x${EOSIO_SOURCE_DIR_ARG} == "x" ]; then
+if [ x${EOSIO_SOURCE_DIR__} == "x" ]; then
     printf "\n%s\n" "
 EOSIO repository not found.
     Please, set environment variable 'EOSIO_SOURCE_DIR' pointing
@@ -143,6 +148,49 @@ function wslMapLinux2Windows() {
     drive_letter=${path:5:1}
     eval "$1=${drive_letter}:${path:6}"
 }
+
+##########################################################################
+# Make Linux environment variables
+##########################################################################
+printf "%s" "
+##########################################################################
+"
+printf "\n%s\n" "Makes environment variables, if not set already:"
+
+if [[ ${EOSIO_SOURCE_DIR__} != ${EOSIO_SOURCE_DIR} ]]; then
+    echo "export EOSIO_SOURCE_DIR=${EOSIO_SOURCE_DIR__}" >> ~/.bashrc
+    printf "\t%s\n" "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR__}"
+fi
+
+if [ x${CONTEXT_DIR} == "x" ]; then
+    echo "export CONTEXT_DIR=${CONTEXT_DIR_ARG}" >> ~/.bashrc
+    printf "\t%s\n" "CONTEXT_DIR: ${CONTEXT_DIR_ARG}"
+else
+    if [ ${CONTEXT_DIR_ARG} != ${CONTEXT_DIR} ]; then
+        echo "export CONTEXT_DIR=${CONTEXT_DIR_ARG}" >> ~/.bashrc
+        printf "\t%s\n" "CONTEXT_DIR: ${CONTEXT_DIR_ARG}"
+    fi        
+fi
+
+if [ x${PYTHONPATH} == "x" ]; then
+    temp=${CONTEXT_DIR_ARG}/teos_python
+    echo "export PYTHONPATH=${temp}:${PYTHONPATH}" >> ~/.bashrc
+    printf "\t%s\n" "PYTHONPATH: ${temp}"
+else
+    if [ ${PYTHONPATH} != *"${CONTEXT_DIR_ARG}/${teos_python}"* ]; then
+        temp=${CONTEXT_DIR_ARG}/teos_python
+        echo "export PYTHONPATH=${temp}:${PYTHONPATH}" >> ~/.bashrc
+        printf "\t%s\n" "PYTHONPATH: ${temp}"
+    fi        
+fi
+
+if [ x${CONTRACT_WORKSPACE} == "x" ]; then # is not set
+    temp=${CONTEXT_DIR_ARG}/${contracts}
+    echo "export CONTRACT_WORKSPACE=${temp}" >> ~/.bashrc
+    printf "\t%s\n" CONTRACT_WORKSPACE": ${temp}"
+fi
+
+source ~/.bashrc
 
 ##########################################################################
 # Make the file structure
@@ -172,41 +220,6 @@ cp -u ${CONTEXT_DIR_ARG}/resources/config.ini \
     ${BUILD_DIR}/daemon/data-dir/config.ini
 
 ##########################################################################
-# Make Linux environment variables
-##########################################################################
-printf "%s" "
-##########################################################################
-"
-printf "\n%s\n" "Makes environment variables, if not set already:"
-
-if [ ${CONTEXT_DIR_ARG} != ${CONTEXT_DIR} ]; then
-    echo "export CONTEXT_DIR=${CONTEXT_DIR_ARG}" >> ~/.bashrc
-    printf "\t%s\n" "CONTEXT_DIR: ${CONTEXT_DIR_ARG}"
-fi
-
-if [ ${EOSIO_SOURCE_DIR_ARG} != ${EOSIO_SOURCE_DIR} ]; then
-    echo "export EOSIO_SOURCE_DIR=${EOSIO_SOURCE_DIR_ARG}" >> ~/.bashrc
-    printf "\t%s\n" "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR_ARG}"
-fi
-
-if [x${PYTHONPATH} == "x" or \ # is not set
-    x${PYTHONPATH} != "x" \ # is set and ...
-    and  \
-    ${PYTHONPATH} != *"${CONTEXT_DIR_ARG}/${teos_python}"* \
-    ]; then
-
-    echo "export PYTHONPATH=\
-    /mnt/c/Workspaces/EOS/eosfactory/teos_python:${PYTHONPATH}" >> ~/.bashrc
-    printf "\t%s\n" "PYTHONPATH: ${PYTHONPATH}"
-fi
-
-if [x${CONTRACT_WORKSPACE} == "x"]; then # is not set
-    temp = ${CONTEXT_DIR_ARG}/${contracts}
-    echo "export CONTRACT_WORKSPACE=${temp}" >> ~/.bashrc
-    printf "\t%s\n" "EOSIO_SOURCE_DIR: ${temp}"
-fi
-
-##########################################################################
 # Make Windows environment variables
 ##########################################################################
 
@@ -216,11 +229,11 @@ if [ x${IS_WSL} != "x" ]; then
     "
     printf "\nMakes Windows environment variables:\n"
 
-    setx.exe EOSIO_SOURCE_DIR ${EOSIO_SOURCE_DIR_ARG}
-    printf "\t%s\n" "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR_ARG}"
+    setx.exe EOSIO_SOURCE_DIR ${EOSIO_SOURCE_DIR__}
+    printf "\t%s\n" "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR__}"
 
     EOSIO_SOURCE_DIR_ARG_WINDOWS=""
-    wslMapLinux2Windows EOSIO_SOURCE_DIR_ARG_WINDOWS ${EOSIO_SOURCE_DIR_ARG}
+    wslMapLinux2Windows EOSIO_SOURCE_DIR_ARG_WINDOWS ${EOSIO_SOURCE_DIR__}
     setx.exe EOSIO_SOURCE_DIR_WINDOWS ${EOSIO_SOURCE_DIR_ARG_WINDOWS}
     printf "\t%s\n" "EOSIO_SOURCE_DIR_WINDOWS: ${EOSIO_SOURCE_DIR_ARG_WINDOWS}"
 
@@ -232,6 +245,9 @@ fi
 if [ -z $CMAKE ]; then
     CMAKE=$( which cmake )
 fi
+
+
+
 
 ##########################################################################
 # compiling library
@@ -314,9 +330,6 @@ if [ x${IS_WSL} != "x" ]; then
     is a valid and existing Windows path. If it is not, set a local Windows
     environment variable 'ROOT_DIR_WINDOWS' to the value of the root of the
     WSL file system. Note that this value may be similar to the displayed one."
-
-else
-    source ~/.bashrc
 fi
 
 printf "\n%s\n" "
@@ -327,7 +340,7 @@ To verify your installation run the following commands:
     Type "help", "copyright", "credits" or "license" for more information.
     >>> import teos
     teos exe: /mnt/c/Workspaces/EOS/eosfactory/teos/build/teos
-    >>> teos.DaemonClear()
+    >>> teos.node_reset()
     #  nodeos exe file: /mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos
     #  genesis state file: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json
     #   server address: 127.0.0.1:8888
