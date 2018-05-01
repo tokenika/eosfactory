@@ -1,20 +1,18 @@
 # Introduction to the `session` module
 
 ```python
-import teos
-import session as s
+from session import *
 
 # import importlib
-# importlib.reload(teos)
 # importlib.reload(s)
 
-teos.node_run()
+run()
 ```
 ## session.init()
 
 ```
-s.init()
-dir(s)
+init()
+dir()
 ```
 ... outputs names that `s` (session module, in general) defines:
 ```
@@ -22,7 +20,7 @@ dir(s)
 ```
 Try the python help facility...
 ```
-help(s.init)
+help(init)
 ```
 ... outputs
 ```
@@ -42,7 +40,7 @@ You have to input `q`, in order to escape the help view.
 
 See the wallet ...
 ```
-print(s.wallet)
+print(wallet)
 ```
 ... result is:
 ```
@@ -53,14 +51,14 @@ print(s.wallet)
  'password': 'PW5JFisSF9VwYbPKZxV6B7iEQMNjNoinU1TsFsXdKXVVnjUnC2JYN'}
 ```
 ```
-print(s.bob)
+print(bob)
 #     account name: bob
 ```
 
 ## session.Contract
 
 ```
-help(s.Contract)
+help(Contract)
 ```
 ```
 Help on class Contract in module session:
@@ -82,7 +80,7 @@ class Contract(teos.Contract)
 Any key to scroll up, `q` to escape.
 
 ```
-contract_currency = s.Contract("currency")
+contract_currency = Contract("currency")
 #         key name: key_owner
 #      private key: 5K6Qh97Z1bMm5b4iX7ewpWK2eNu4fo4Hs65ZhKBokrVNG8uca8U
 #       public key: EOS7UeB2WFkT1CK3cxzPh8aUXTJryw8NsXY2PEdcRQHjAbRBtL4xc

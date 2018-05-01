@@ -113,3 +113,11 @@ class Contract(teos.Contract):
             is_verbose)
 
 
+def reset():
+    teos.node_reset()
+
+def stop():
+    teos.node_stop()
+
+def run():
+    teos.node_run()
