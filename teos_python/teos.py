@@ -374,13 +374,13 @@ class GetCode(_Command):
 
 class GetTable(_Command):
     def __init__(
-        self, contract, scope, table, 
+        self, contract, table, scope,
         limit=10, key="", lower="", upper="",
         is_verbose=True
         ):
         self._jarg["code"] = contract
-        self._jarg["scope"] = scope        
         self._jarg["table"] = table
+        self._jarg["scope"] = scope
         self._jarg["limit"] = limit
         self._jarg["table_key"] = key        
         self._jarg["lower_bound"] = lower
