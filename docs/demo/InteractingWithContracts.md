@@ -12,7 +12,9 @@ In *Visual Studio Code* start a Bash console and type `python3` to run the Pytho
 Next, import the predefined *EOSFactory* Python classes:
 
 ```
-import pyteos
+from teos import *
+import session as s
+
 ```
 
 ## Manage a Local Testnet
@@ -20,7 +22,7 @@ import pyteos
 To start your own single-node local testnet:
 
 ```
-$ pyteos.run()
+$ node_run()
 ```
 
 Assuming everything worked properly, you should see a block generation message every 0.5 seconds.  
@@ -32,20 +34,20 @@ eosio generated block 046b9984... #101527 @ 2018-04-01T14:24:58.000 with 0 trxs
 To stop and then continue running the testnet:
 
 ```
-$ pyteos.stop()
-$ pyteos.run()
+$ node_stop()
+$ node_run()
 ```
 
 And to stop and reset the testnet:
 
 ```
-$ pyteos.reset()
+$ node_reset()
 ```
 
 To get information about the testnet:
 
 ```
-$ pyteos.info()
+$ node_info()
 ```
 
 ## Initialize the Workspace
@@ -53,7 +55,7 @@ $ pyteos.info()
 To initialize the workspace:
 
 ```
-$ pyteos.init()
+$ s.init()
 ```
 
 The initialization process does the following things:
@@ -89,6 +91,8 @@ $ contract.push_action("create", '{"issuer":"eosio", "maximum_supply":"100000000
 **NOTE:** The `push_action` method takes three arguments: the action name, its arguments in JSON format, and the account whose permission is needed. In this case the permission is assigned to the account holding the contract.
 
 ## Issue Tokens
+
+
 
 Now that we have created the token, the issuer can issue new tokens to `alice`:
 

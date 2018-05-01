@@ -102,7 +102,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
-        "args": ["set", "contract", "eosio", "eosio.bios", "-p", "eosio"],
+        "args": ["set", "contract", "eosio", "currency", "-p", "eosio"],
         "stopAtEntry": false,
         "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build",
         "environment": [],

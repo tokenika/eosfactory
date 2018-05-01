@@ -69,7 +69,7 @@ namespace teos {
             count--;
           }
         }
-        if (count < 0) {
+        if (count <= 0) {
           putError(string("Failed to kill ") + getDaemonName(this));
         }
       }
@@ -201,7 +201,6 @@ namespace teos {
     void DaemonStart::deleteWallets()
     {
       namespace bfs = boost::filesystem;      
-      string WALLET_EXT = ".wallet";
       try{
         bfs::path walletDir(getWalletDir(this));
 
@@ -209,10 +208,8 @@ namespace teos {
             : boost::make_iterator_range(
               bfs::directory_iterator(walletDir), {})) 
         {
-        if (bfs::is_regular_file(entry.path()) 
-          && entry.path().extension() == WALLET_EXT ) 
-          {
-          bfs::remove(entry.path());
+          if (bfs::is_regular_file(entry.path())){
+            bfs::remove(entry.path());
           }
         }
       } catch (std::exception& e) {

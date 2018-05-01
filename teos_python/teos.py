@@ -621,7 +621,46 @@ class WAST(_Command):
             self.wast = self.json["WAST"]
 
 
-class _Daemon(_Command):
+class _Node(_Command):
+    """ A representation of the local EOSIO node.
+
+    Any _Node class object depends on external configuration parameters. They
+    are organized on two levels: this module level and the level of a TEOS 
+    executable that powers methodes of this python module.
+
+    - **TEOS-python configuration**::
+
+        TEOS_executable: Where is the TEOS executable. The parameter is set in 
+            the configuration file of this script, which is "teos.json" in the 
+            directory of this module, for example: 
+            {"TEOS_executable":"absolute-path-to-the-teos.exe"}.
+
+    Other relevant onfiguration parameters can be defined in a configuration 
+    file of the TEOS executable, and/or as environment variables, and/or are 
+    hard-codded (in the "config.cpp" file of the "teos library"). The first 
+    definition in this sequence prevails.
+
+    The configuration file of the TEOS executable is named "config.json". It
+    exists in the TEOS executable directory.    
+
+    - **TEOS configuration**::
+
+        EOSIO_SOURCE_DIR: Where is the EOS repository. 
+        EOSIO_DAEMON_ADDRESS: The local IP and port to listen for incoming http 
+            connections, defaults to "127.0.0.1:8888".
+        EOSIO_WALLET_ADDRESS: The local IP and port to listen for incoming http 
+            connections to the local wallet, defaults to "127.0.0.1:8888".
+        data-dir: Directory containing program runtime data (absolute path or
+            relative to ${EOSIO_SOURCE_DIR}), defaults to 
+            "${EOSIO_SOURCE_DIR}/build/daemon/data-dir".
+        config-dir: Directory containing configuration files such as config.ini
+            (absolute path or relative to ${EOSIO_SOURCE_DIR}),
+            defaults to "${data-dir}"
+        wallet-dir: The path of the wallet files (absolute path or relative 
+            to ${data-dir}, defaults to "${data-dir}/wallet"
+        genesis-json: File to read genesis state from, defaults to "genesis.json"
+            (relative to ${config-dir}).
+    """    
     def start(self, clear, is_verbose):
         super().__init__("daemon", "start", False)
         if not self.error and not "head_block_num" in self.json:
@@ -643,21 +682,9 @@ class _Daemon(_Command):
         self.start(clear, is_verbose)
         # if self.error:
         #     self.start(1, is_verbose)
-    
-      
-class DaemonStart(_Command):
-    def __init__(self, is_verbose=True):
-        daemon = _Daemon(0, is_verbose)
-        self.json = daemon.json              
+             
 
-
-class DaemonClear(_Command):
-    def __init__(self, is_verbose=True):
-        daemon = _Daemon(1, is_verbose)
-        self.json = daemon.json
-
-
-class DaemonStop(_Command):
+class NodeStop(_Command):
     def __init__(self, is_verbose=True):
         _Command.__init__(self, "daemon", "stop", is_verbose)
 
@@ -877,69 +904,20 @@ class Contract(SetContract):
 
         return self.console
 
-class Daemon(_Commands):
-    """ A representation of the local EOSIO node.
 
-    Any Daemon class object depends on external configuration parameters. They
-    are organized on two levels: this module level and the level of a TEOS 
-    executable that powers methodes of this python module.
 
-    - **TEOS-python configuration**::
+def node_reset():
+    _Node(1, True)
 
-        TEOS_executable: Where is the TEOS executable. The parameter is set in 
-            the configuration file of this script, which is "teos.json" in the 
-            directory of this module, for example: 
-            {"TEOS_executable":"absolute-path-to-the-teos.exe"}.
 
-    Other relevant onfiguration parameters can be defined in a configuration 
-    file of the TEOS executable, and/or as environment variables, and/or are 
-    hard-codded (in the "config.cpp" file of the "teos library"). The first 
-    definition in this sequence prevails.
+def node_run():
+    _Node(0, True)
 
-    The configuration file of the TEOS executable is named "config.json". It
-    exists in the TEOS executable directory.    
 
-    - **TEOS configuration**::
+def node_stop():
+    NodeStop()
+    
 
-        EOSIO_SOURCE_DIR: Where is the EOS repository. 
-        EOSIO_DAEMON_ADDRESS: The local IP and port to listen for incoming http 
-            connections, defaults to "127.0.0.1:8888".
-        EOSIO_WALLET_ADDRESS: The local IP and port to listen for incoming http 
-            connections to the local wallet, defaults to "127.0.0.1:8888".
-        data-dir: Directory containing program runtime data (absolute path or
-            relative to ${EOSIO_SOURCE_DIR}), defaults to 
-            "${EOSIO_SOURCE_DIR}/build/daemon/data-dir".
-        config-dir: Directory containing configuration files such as config.ini
-            (absolute path or relative to ${EOSIO_SOURCE_DIR}),
-            defaults to "${data-dir}"
-        wallet-dir: The path of the wallet files (absolute path or relative 
-            to ${data-dir}, defaults to "${data-dir}/wallet"
-        genesis-json: File to read genesis state from, defaults to "genesis.json"
-            (relative to ${config-dir}).
-    """
+def node_info():
+    GetInfo()
 
-    def clear(self):
-        """ Starts the EOSIO test node cleared.
-
-        Stops the node, if running, deletes all wallets, and starts test node
-        resetted. 
-        """
-        _Daemon(1, True)
-
-    def start(self):
-        """ Starts the EOSIO test node, if not running.
-        """
-        _Daemon(0, True)
-
-    def stop(self):
-        """ Stops the EOSIO test node.
-        """
-        DaemonStop()
-
-    def info(self):
-        """ Prints the node info.
-        """
-        GetInfo(True)
-
-    def __str__(self):
-        return str(GetInfo(False))

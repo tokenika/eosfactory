@@ -15,6 +15,7 @@ teos_python="teos_python"
 library_dir="teos_lib"
 executable_dir="teos"
 build_dir="build"
+contracts="contracts"
 
 while getopts ":e:c:h" opt; do
   case $opt in
@@ -114,7 +115,7 @@ if [ $ARCH == "Linux" ]; then
 
     OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
     PROC_VERSION=$(cat /proc/version)
-    if [[ $PROC_VERSION == *"Microsoft"* ]]; then 
+    if [ $PROC_VERSION == *"Microsoft"* ]; then 
         IS_WSL="IS_WSL"
         printf "\t%s\n" "Detected Windows Subsystem Linux"
     fi
@@ -188,12 +189,21 @@ if [ ${EOSIO_SOURCE_DIR_ARG} != ${EOSIO_SOURCE_DIR} ]; then
     printf "\t%s\n" "EOSIO_SOURCE_DIR: ${EOSIO_SOURCE_DIR_ARG}"
 fi
 
-if [ x${PYTHONPATH} != "x" ]; then
-    if [[ ${PYTHONPATH} != *"${CONTEXT_DIR_ARG}/${teos_python}"* ]]; then
-        echo "export PYTHONPATH=\
-        /mnt/c/Workspaces/EOS/eosfactory/teos_python:${PYTHONPATH}" >> ~/.bashrc
-        printf "\t%s\n" "PYTHONPATH: ${PYTHONPATH}"
-    fi
+if [x${PYTHONPATH} == "x" or \ # is not set
+    x${PYTHONPATH} != "x" \ # is set and ...
+    and  \
+    ${PYTHONPATH} != *"${CONTEXT_DIR_ARG}/${teos_python}"* \
+    ]; then
+
+    echo "export PYTHONPATH=\
+    /mnt/c/Workspaces/EOS/eosfactory/teos_python:${PYTHONPATH}" >> ~/.bashrc
+    printf "\t%s\n" "PYTHONPATH: ${PYTHONPATH}"
+fi
+
+if [x${CONTRACT_WORKSPACE} == "x"]; then # is not set
+    temp = ${CONTEXT_DIR_ARG}/${contracts}
+    echo "export CONTRACT_WORKSPACE=${temp}" >> ~/.bashrc
+    printf "\t%s\n" "EOSIO_SOURCE_DIR: ${temp}"
 fi
 
 ##########################################################################

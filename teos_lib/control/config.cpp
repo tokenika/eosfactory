@@ -80,9 +80,8 @@ wallet-dir: .
     arg WALLET_DIR = { "wallet-dir", "wallet"}; // relative to data-dir
     arg DAEMON_NAME = { "DAEMON_NAME", "nodeos" };
     arg CONTEXT_DIR = { "CONTEXT_DIR" };
-    arg EOSIO_CONTRACT_BUILD_PATH = { 
-      "EOSIO_CONTRACT_BUILD_PATH", "build/contracts" };
-      //EOSIO_CONTRACT_BUILD_PATH: relative to EOSIO_SOURCE_DIR
+    arg CONTRACT_WORKSPACE = { 
+      "CONTRACT_WORKSPACE", "contracts" };// relative to CONTEXT_DIR
 
     arg BOOST_INCLUDE_DIR = { 
       "BOOST_INCLUDE_DIR", "opt/boost_1_66_0/include" };
@@ -102,7 +101,7 @@ wallet-dir: .
       //First, configure file ...
       boost::property_tree::ptree json = TeosControl::getConfig(teosControl);
       string value = json.get(configKey[0], NOT_DEFINED_VALUE);
-      if(value != NOT_DEFINED_VALUE) {
+      if(value != string(NOT_DEFINED_VALUE)) {
         return value;
       }
       
@@ -213,16 +212,14 @@ wallet-dir: .
           if(!contractDirPath.is_absolute()) 
           {
             bfs::path configContractDirPath 
-              = configValue(teosControl, EOSIO_CONTRACT_BUILD_PATH);
+              = configValue(teosControl, CONTRACT_WORKSPACE);
             if(!configContractDirPath.is_absolute()) 
             {
-              string sourceDir = getSourceDir(teosControl);
-              if(sourceDir.empty()){
-                return "";
-              }
-              configContractDirPath = bfs::path(sourceDir) / configContractDirPath;
+              string context_dir = configValue(teosControl, CONTEXT_DIR);
+              configContractDirPath = bfs::path(context_dir) 
+                / configContractDirPath;
             }
-            contractDirPath = configContractDirPath / contractDirPath;
+            contractDirPath = configContractDirPath / contractDirPath / "build";
           }
 
           if(contractFile[0] == '.')
@@ -321,6 +318,7 @@ wallet-dir: .
           onError(teosControl, e.what());          
           return "";        
       }
+      return "";
     }
 
     ///////////////////////////////////////////////////////////////////////////
