@@ -1,7 +1,7 @@
 install
 workdir
 *.exe
-build
+/build
 teos/build
 teos_lib/build
 
