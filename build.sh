@@ -9,7 +9,9 @@
 EOSIO_SOURCE_DIR__=""
 CXX_COMPILER=clang++-4.0
 C_COMPILER=clang-4.0
-BUILD_TYPE="Debug"
+BUILD_TYPE__="Release"
+
+ECC_IMPL__="secp256k1" # secp256k1 or openssl or mixed
 ROOT_DIR_WINDOWS="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs"
 teos_python="teos_python"
 library_dir="teos_lib"
@@ -17,33 +19,69 @@ executable_dir="teos"
 build_dir="build"
 contracts="contracts"
 
+function usage() {
+    printf "%s\n" "
+Usage: ./build.sh [OPTIONS]
+    -e  EOSIO repository dir. Default is \${EOSIO_SOURCE_DIR}.
+    -c  compiler, 'gnu' or 'clang'. Default is 'gnu'.
+    -i  ECC implementation: secp256k1 or openssl or mixed. Default is secp256k1
+    -t  Build type: Debug or Release. Default is Release
+    -h  this message.
+    "    
+}
+
 while getopts ":e:c:h" opt; do
   case $opt in
     e)
         EOSIO_SOURCE_DIR__=$OPTARG
         ;;
+
     c)
-        if [ "$OPTARG" == "gnu" ]; then
+        compiler="$OPTARG"
+        # if [ "$compiler" != "gnu" -a "$compiler" != "clang" ]; then
+        #     usage()
+        #     exit -1
+        # fi    
+        if [ "$compiler" == "gnu" ]; then
             CXX_COMPILER=g++
             C_COMPILER=gcc
         fi          
         ;;
+
+    i)  ECC_IMPL__="$OPTARG"
+        # if [ "$ECC_IMPL__" != "secp256k1" -a "$ECC_IMPL__" != "openssl"  -a "$ECC_IMPL__" != "mixed" ]
+        # then
+        #     usage()
+        #     exit -1
+        # fi
+        ;;
+
+    t) BUILD_TYPE__="$OPTARG"
+        # if [ "$BUILD_TYPE__" != "Debug" -a "$BUILD_TYPE__" != "Release" ]
+        # then
+        #     usage()
+        #     exit -1        
+        # fi
+        ;;
+
     h)
-        printf "%s\n" "
+    printf "%s\n" "
 Usage: ./build.sh [OPTIONS]
     -e  EOSIO repository dir. Default is \${EOSIO_SOURCE_DIR}.
     -c  compiler, 'gnu' or 'clang'. Default is 'gnu'.
+    -i  ECC implementation: secp256k1 or openssl or mixed. Default is secp256k1
+    -t  Build type: Debug or Release. Default is Release
     -h  this message.
-    "
+    "   
         exit 0
         ;;
     \?)
         printf "Invalid option: -$OPTARG"
-        exit 1
+        exit -1
         ;;
     :)
         printf "Option -$OPTARG requires an argument."
-        exit 1
+        exit -1
         ;;
   esac
 done
@@ -251,9 +289,9 @@ cd build
 
 printf "\n%s\n" "Compiling ${library_dir}. Current directory is ${PWD}"
 
-$CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+$CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE__} \
     -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
-    -DCMAKE_C_COMPILER=${C_COMPILER} ..
+    -DCMAKE_C_COMPILER=${C_COMPILER} -DECC_IMPL=$ECC_IMPL__ ..
 
 if [ $? -ne 0 ]; then
     printf "\n\t%s\n\n" "
@@ -283,9 +321,9 @@ cd build
 
 printf "\n%s\n" "Compiling ${executable_dir}. Current directory is ${PWD}"
 
-$CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+$CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE__} \
     -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
-    -DCMAKE_C_COMPILER=${C_COMPILER} ..
+    -DCMAKE_C_COMPILER=${C_COMPILER} -DECC_IMPL=$ECC_IMPL__ ..
 
 if [ $? -ne 0 ]; then
     printf "\n\t%s\n\n" \
