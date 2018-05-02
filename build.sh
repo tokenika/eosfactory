@@ -7,12 +7,12 @@
 ##########################################################################
 
 EOSIO_SOURCE_DIR__=""
-CXX_COMPILER=clang++-4.0
-C_COMPILER=clang-4.0
+CXX_COMPILER__=clang++-4.0
+C_COMPILER__=clang-4.0
 BUILD_TYPE__="Release"
-
 ECC_IMPL__="secp256k1" # secp256k1 or openssl or mixed
-ROOT_DIR_WINDOWS="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs"
+ROOT_DIR_WINDOWS__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs"
+
 teos_python="teos_python"
 library_dir="teos_lib"
 executable_dir="teos"
@@ -22,12 +22,12 @@ contracts="contracts"
 function usage() {
     printf "%s\n" "
 Usage: ./build.sh [OPTIONS]
-    -e  EOSIO repository dir. Default is \${EOSIO_SOURCE_DIR}.
+    -e  EOSIO repository dir. Default is env. variable EOSIO_SOURCE_DIR.
     -c  compiler, 'gnu' or 'clang'. Default is 'gnu'.
-    -i  ECC implementation: secp256k1 or openssl or mixed. Default is secp256k1
-    -t  Build type: Debug or Release. Default is Release
+    -i  ECC implementation: 'secp256k1' or 'openssl' or 'mixed'. Default is 'secp256k1'.
+    -t  Build type: 'Debug' or 'Release'. Default is 'Release'.
     -h  this message.
-    "    
+"    
 }
 
 while getopts ":e:c:h" opt; do
@@ -38,47 +38,42 @@ while getopts ":e:c:h" opt; do
 
     c)
         compiler="$OPTARG"
-        # if [ "$compiler" != "gnu" -a "$compiler" != "clang" ]; then
-        #     usage()
-        #     exit -1
-        # fi    
+        if [[ ! "$compiler" =~ (gnu|clang)$ ]]; then
+            usage
+            exit -1
+        fi    
         if [ "$compiler" == "gnu" ]; then
-            CXX_COMPILER=g++
-            C_COMPILER=gcc
+            CXX_COMPILER__=g++
+            C_COMPILER__=gcc
         fi          
         ;;
 
-    i)  ECC_IMPL__="$OPTARG"
-        # if [ "$ECC_IMPL__" != "secp256k1" -a "$ECC_IMPL__" != "openssl"  -a "$ECC_IMPL__" != "mixed" ]
-        # then
-        #     usage()
-        #     exit -1
-        # fi
+    i)  
+        ECC_IMPL__="$OPTARG"
+        if [[ ! "$ECC_IMPL__" =~ (secp256k1|openssl|mixed)$ ]]; then
+            usage
+            exit -1
+        fi
         ;;
 
-    t) BUILD_TYPE__="$OPTARG"
-        # if [ "$BUILD_TYPE__" != "Debug" -a "$BUILD_TYPE__" != "Release" ]
-        # then
-        #     usage()
-        #     exit -1        
-        # fi
+    t) 
+        BUILD_TYPE__="$OPTARG"
+        if [[ ! "$BUILD_TYPE__" =~(Debug|Release)$ ]]; then
+            usage
+            exit -1        
+        fi
         ;;
 
     h)
-    printf "%s\n" "
-Usage: ./build.sh [OPTIONS]
-    -e  EOSIO repository dir. Default is \${EOSIO_SOURCE_DIR}.
-    -c  compiler, 'gnu' or 'clang'. Default is 'gnu'.
-    -i  ECC implementation: secp256k1 or openssl or mixed. Default is secp256k1
-    -t  Build type: Debug or Release. Default is Release
-    -h  this message.
-    "   
+        usage
         exit 0
         ;;
+        
     \?)
         printf "Invalid option: -$OPTARG"
         exit -1
         ;;
+
     :)
         printf "Option -$OPTARG requires an argument."
         exit -1
@@ -90,8 +85,8 @@ shift $((OPTIND-1))
 printf "%s\n" "
 Arguments:
     EOSIO_SOURCE_DIR=${EOSIO_SOURCE_DIR__}
-    CXX_COMPILER=${CXX_COMPILER}
-    C_COMPILER=${C_COMPILER}
+    CXX_COMPILER__=${CXX_COMPILER__}
+    C_COMPILER__=${C_COMPILER__}
 "
 
 EOSIO_CONTEXT_DIR__="$PWD"
@@ -239,7 +234,7 @@ if [ ! -z "$IS_WSL" ]; then
     setx.exe EOSIO_SOURCE_DIR_WINDOWS ${EOSIO_SOURCE_DIR_ARG_WINDOWS}
     printf "\t%s\n" "setting windows EOSIO_SOURCE_DIR_WINDOWS: $EOSIO_SOURCE_DIR_ARG_WINDOWS"
 
-    HOME_WINDOWS=${ROOT_DIR_WINDOWS}\\home\\$USER
+    HOME_WINDOWS=${ROOT_DIR_WINDOWS__}\\home\\$USER
     setx.exe HOME_WINDOWS $HOME_WINDOWS
     printf "HOME_WINDOWS: %s\n"  "$HOME_WINDOWS"
 fi
@@ -258,9 +253,9 @@ printf "%s" "
 Makes the file structure:
 
     ${EOSIO_CONTEXT_DIR__}  # eosfactory repository
-        ${BUILD_DIR}    # binary dir
-            daemon          # local EOSIO node documents
-                data-dir    # the EOSIO node data-dir
+        ${BUILD_DIR}  # binary dir
+            daemon  # local EOSIO node documents
+                data-dir  # the EOSIO node data-dir
                     wallet  # local wallets
                     genesis.json
                     config.in
@@ -290,8 +285,8 @@ cd build
 printf "\n%s\n" "Compiling ${library_dir}. Current directory is ${PWD}"
 
 $CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE__} \
-    -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
-    -DCMAKE_C_COMPILER=${C_COMPILER} -DECC_IMPL=$ECC_IMPL__ ..
+    -DCMAKE_CXX_COMPILER=${CXX_COMPILER__} \
+    -DCMAKE_C_COMPILER=${C_COMPILER__} -DECC_IMPL=$ECC_IMPL__ ..
 
 if [ $? -ne 0 ]; then
     printf "\n\t%s\n\n" "
@@ -322,8 +317,8 @@ cd build
 printf "\n%s\n" "Compiling ${executable_dir}. Current directory is ${PWD}"
 
 $CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE__} \
-    -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
-    -DCMAKE_C_COMPILER=${C_COMPILER} -DECC_IMPL=$ECC_IMPL__ ..
+    -DCMAKE_CXX_COMPILER=${CXX_COMPILER__} \
+    -DCMAKE_C_COMPILER=${C_COMPILER__} -DECC_IMPL=$ECC_IMPL__ ..
 
 if [ $? -ne 0 ]; then
     printf "\n\t%s\n\n" \
@@ -354,9 +349,9 @@ if [ ! -z "$IS_WSL" ]; then
     If you use the 'Visual Studio Code', restart it in order to access new 
     environment variables.
 
-    Also check whether ${ROOT_DIR_WINDOWS}
+    Also check whether ${ROOT_DIR_WINDOWS__}
     is an existing Windows path. If it is not, set a local Windows environment 
-    variable 'ROOT_DIR_WINDOWS' to the value of the root of the WSL file system. 
+    variable 'ROOT_DIR_WINDOWS__' to the value of the root of the WSL file system. 
     Note that this value may be similar to the displayed one."
 else
     printf "%s\n" "PLEASE, RESET BASH!."
