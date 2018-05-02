@@ -12,28 +12,28 @@ We make sure everything we do is fully compatible with any major operating syste
 
 ### Architecture
 
-In *EOSFactory* you use Python to interact with your smart-contracts. However under the hood our toolset is powered by C++. 
+In *EOSFactory* you use Python to interact with your smart-contracts. However, under the hood our toolset is powered by C++. Python outside, while C++ inside.
 
 Thus *EOSFactory* is composed of two layers:
 
-- C++ bridge called `teos` connected to an EOS node running a private testnet
-- Python wrapper called `pyteos` acting as a convenient human-oriented interface
+- C++ bridge called `teos` connected to an EOS node running a private testnet,
+- Python wrapper called `pyteos` acting as a convenient human-oriented interface.
 
-### Smart-contract development cycle
+### Development cycle
 
-This is what the development cycle might look like:
+This is what the smart-contract development cycle might look like:
 
-1. You write a smart-contract (in C++)
-2. You write unit-tests (in Python)
-3. You compile your smart-contract.
-4. You start a fresh single-node testnet.
+1. Write a smart-contract (in C++).
+2. Write unit-tests (in Python).
+3. Compile your smart-contract.
+4. Start a fresh single-node testnet.
 5. The testnet is pre-initialized with the Bios contract and a couple of test accounts to play with.
-6. You deploy your smart-contract.
-7. You run your unit-tests.
-8. You tear down the testnet.
-9. You modify your smart-contract and/or unit-tests and jump to stage 3.
+6. Deploy your smart-contract.
+7. Run your unit-tests.
+8. Tear down the testnet.
+9. Modify your smart-contract and/or unit-tests and jump to stage 3.
 
-All the above is done using Python - of course apart from the task of writing smart-contracts. And, as we mentioned before, everything works within Visual Studio Code IDE.
+Every step of the above process is fully automated by Python classes and methods - you, as a developer, only supply the creative part, i.e. the content of the smart-contracts and unit-tests. Unit-tests are designed to be written in Python, while of course smart-contracts are written in C++ - Visual Studio Code perfectly supports both those languages.
 
 ### Python-based unit-testing
 
@@ -45,17 +45,17 @@ c.deploy()
 
 c.push("create", '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}')
 
-c.push("issue", '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', s.eosio)
+c.push("issue", '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', eosio)
 
-c.push("transfer", '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", "memo":"memo"}', s.alice)
+c.push("transfer", '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", "memo":"memo"}', alice)
 
-c.push("transfer", '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", "memo":"memo"}', s.carol)
+c.push("transfer", '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", "memo":"memo"}', carol)
 
-c.push("transfer", '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", "memo":"memo"}', s.bob)
+c.push("transfer", '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", "memo":"memo"}', bob)
 
-t1=c.get("accounts", s.alice)
-t2=c.get("accounts", s.bob)
-t3=c.get("accounts", s.carol)
+t1=c.get("accounts", alice)
+t2=c.get("accounts", bob)
+t3=c.get("accounts", carol)
 
 assert t1.json["rows"][0]["balance"] == '77.0000 EOS'
 assert t2.json["rows"][0]["balance"] == '11.0000 EOS'
@@ -64,7 +64,7 @@ assert t3.json["rows"][0]["balance"] == '12.0000 EOS'
 print("Test OK")
 ```
 
-And this is the output you receive when running it:
+And this is the output you receive after running it:
 
 ```
 #  nodeos exe file: /mnt/d/Workspaces/EOS/eos/build/programs/nodeos/nodeos
@@ -76,7 +76,6 @@ And this is the output you receive when running it:
 #  head block time: 2017-12-04T01:00:00
 
 #         password: PW5Jpe2U2D8HwXgZ89NrNYmZEzXiQY7KZa4hQ2FaKeqB7UyKzTggg
-#  You need to save this password to be able to lock/unlock the wallet!
 
 #   transaction id: c9dd03ad7329b989d808b0022a87a1281215406778599e82c7b80da978d9d2e3
 
