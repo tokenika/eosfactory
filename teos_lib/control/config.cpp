@@ -14,7 +14,7 @@
 #include <teoslib/control/config.hpp>
 #include <teoslib/utilities.hpp>
 
-#define _CRT_SECURE_NO_WARNINGS
+#define EOSIO_CONTRACT_DIR "build/contracts"
 
 using namespace std;
 
@@ -216,11 +216,29 @@ wallet-dir: .
               = configValue(teosControl, EOSIO_CONTRACT_WORKSPACE);
             if(!configContractDirPath.is_absolute()) 
             {
-              string eosioContextDir = configValue(teosControl, EOSIO_CONTEXT_DIR);
+              string eosioContextDir = getContextDir(teosControl);
               configContractDirPath = bfs::path(eosioContextDir) 
                 / configContractDirPath;
             }
             contractDirPath = configContractDirPath / contractDirPath / "build";
+            
+            if(!bfs::exists(contractDirPath))
+            {
+              bfs::path contractDirPathEOSIO = bfs::path(getSourceDir(teosControl)) 
+                / EOSIO_CONTRACT_DIR;
+
+              if(!bfs::exists(contractDirPathEOSIO))
+              {
+                onError(
+                  teosControl, 
+                  (boost::format(
+                    "Cannot find any contract directory: \n"
+                    "neither\n%1%\n nor\n%1%\n is valid path.")
+                  % contractDirPath.string() % contractDirPathEOSIO.string()).str());
+                return "";
+              }
+              contractDirPath = contractDirPathEOSIO;
+            }
           }
 
           if(contractFile[0] == '.')
@@ -240,8 +258,6 @@ wallet-dir: .
           if(bfs::exists(wantedPath) && bfs::is_regular_file(wantedPath)) {
             return wantedPath.string();
           }
-
-
         }
 
         onError(teosControl, (boost::format("Cannot find the contract file:\n%1%\n")
