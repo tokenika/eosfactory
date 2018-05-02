@@ -23,18 +23,21 @@ Thus *EOSFactory* is composed of two layers:
 
 This is what the development cycle might look like:
 
-* You write a smart-contract.
-* You compile your smart-contract.
-* You start a fresh single-node testnet.
-* You deploy your smart-contract.
-* You run unit-tests.
-* You tear down the testnet.
+1. You write a smart-contract (in C++)
+2. You write unit-tests (in Python)
+3. You compile your smart-contract.
+4. You start a fresh single-node testnet.
+5. The testnet is pre-initialized with the Bios contract and a couple of test accounts to play with.
+6. You deploy your smart-contract.
+7. You run your unit-tests.
+8. You tear down the testnet.
+9. You modify your smart-contract and/or unit-tests and jump to stage 3.
 
-All the above is done using Python - of course apart from the task of writing smart-contracts  And everything works within Visual Studio Code IDE.
+All the above is done using Python - of course apart from the task of writing smart-contracts. And, as we mentioned before, everything works within Visual Studio Code IDE.
 
 ### Python-based unit-testing
 
-This is what a simple unit test could look like in *EOSFactory*:
+This is what a simple unit test might look like in *EOSFactory*:
 
 ```
 c = Contract("eosio.token")
