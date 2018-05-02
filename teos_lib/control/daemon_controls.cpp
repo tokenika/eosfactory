@@ -70,7 +70,8 @@ namespace teos {
           }
         }
         if (count <= 0) {
-          putError(string("Failed to kill ") + getDaemonName(this) + " pid:");
+          putError(string("Failed to kill ") + getDaemonName(this) 
+            + ". Pid is " + pid);
         }
       }
       catch (std::exception& e) {
@@ -84,6 +85,7 @@ namespace teos {
     
     const string DaemonStart::DO_NOT_WAIT = "DO_NOT_WAIT";
     const string DaemonStart::DO_NOT_LAUNCH = "DO_NOT_LAUNCH";
+    const string EOSIO_SHARED_MEMORY_SIZE_MB = "100";
 
     void DaemonStart::action()
     { 
@@ -136,16 +138,20 @@ namespace teos {
           + " --data-dir " + reqJson_.get<string>("data-dir")
           + " --config-dir " + reqJson_.get<string>("config-dir")
           + " --wallet-dir " + reqJson_.get<string>("wallet-dir")
+          + " --shared-memory-size-mb " + getSharedMemorySizeMb()
           ;
         if(reqJson_.get("resync-blockchain", false)) {
           commandLine += " --resync-blockchain";
         }
 
         bool isWU;
+        reqJson_.put("command_line", commandLine);
         respJson_.put("command_line", commandLine);
         respJson_.put("is_windows_ubuntu", isWU = isWindowsUbuntu());
 
+        //cout << requestToString(false) << endl;
         // cout << commandLine <<endl;
+
         if(reqJson_.count(DO_NOT_LAUNCH) == 0) {
           if(isWU) {
             bp::spawn("cmd.exe /c start /MIN bash.exe -c " 

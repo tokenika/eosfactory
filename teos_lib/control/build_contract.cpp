@@ -140,7 +140,7 @@ namespace teos {
       if(isError_){
         return;
       }
-      respJson_.put("context_dir", context_path.string());
+      respJson_.put("EOSIO_CONTEXT_DIR", context_path.string());
 
       bfs::path contracts_path = context_path / contracts_dir;
       try{
@@ -269,7 +269,7 @@ namespace teos {
         + " -extra-arg=-nostdinc -extra-arg=-nostdinc++ -extra-arg=-DABIGEN"
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts/musl/upstream/include"
-        + " -extra-arg=-I" + getBOOST_INCLUDE_DIR(this)
+        + " -extra-arg=-I" + getEOSIO_BOOST_INCLUDE_DIR(this)
         + " -extra-arg=-I" + getSourceDir(this) + "/externals/magic_get/include"
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts"
         + " -extra-arg=-I" + contextFolder.string();
@@ -304,7 +304,7 @@ namespace teos {
     void wasmClangHelp()
     {
       string command_line;
-      command_line += getWASM_CLANG(nullptr) + " --help";
+      command_line += getEOSIO_WASM_CLANG(nullptr) + " --help";
       boostProcessSystem(command_line);
     }
 
@@ -361,14 +361,14 @@ namespace teos {
         objectFileList += output.string() + " ";
 
         string command_line;
-        command_line += getWASM_CLANG(this)
+        command_line += getEOSIO_WASM_CLANG(this)
           + " -emit-llvm -O3 --std=c++14 --target=wasm32 -nostdinc -nostdlib"
           + " -nostdlibinc -ffreestanding -nostdlib -fno-threadsafe-statics"
           + " -fno-rtti -fno-exceptions"
           + " -I" + getSourceDir(this) + "/contracts"
           + " -I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
           + " -I" + getSourceDir(this) + "/contracts/musl/upstream/include"
-          + " -I" + getBOOST_INCLUDE_DIR(this)
+          + " -I" + getEOSIO_BOOST_INCLUDE_DIR(this)
           + " -I" + getSourceDir(this) + "/externals/magic_get/include"
           + " -I" + src_file.parent_path().string();
 
@@ -393,7 +393,7 @@ namespace teos {
 
       {
         string command_line;
-        command_line += getWASM_LLVM_LINK(this)
+        command_line += getEOSIO_WASM_LLVM_LINK(this)
           + " -only-needed" 
           + " -o "  + workdir.string() + "/linked.bc"
           + " " + objectFileList // $workdir/built/* DOES NOT WORK
@@ -410,7 +410,7 @@ namespace teos {
     
       {
         string command_line;
-        command_line += getWASM_LLC(this)
+        command_line += getEOSIO_WASM_LLC(this)
           + " -thread-model=single --asm-verbose=false"
           + " -o " + workdir.string() + "/assembly.s"
           + " " + workdir.string() + "/linked.bc";

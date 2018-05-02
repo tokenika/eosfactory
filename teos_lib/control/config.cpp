@@ -73,26 +73,27 @@ wallet-dir: .
     arg EOSIO_DAEMON_ADDRESS = { "EOSIO_DAEMON_ADDRESS"
         , LOCALHOST_HTTP_ADDRESS };
     arg EOSIO_WALLET_ADDRESS = { "EOSIO_WALLET_ADDRESS", EMPTY };
-    arg GENESIS_JSON = { "genesis-json", "genesis.json" }; 
+    arg EOSIO_GENESIS_JSON = { "EOSIO_GENESIS_JSON", "genesis.json" }; 
       //genesis-json: relative to EOSIO_SOURCE_DIR
-    arg DATA_DIR = { "data-dir", "build/daemon/data-dir" };
-    arg CONFIG_DIR = { "config-dir", "build/daemon/data-dir" };
-    arg WALLET_DIR = { "wallet-dir", "wallet"}; // relative to data-dir
-    arg DAEMON_NAME = { "DAEMON_NAME", "nodeos" };
-    arg CONTEXT_DIR = { "CONTEXT_DIR" };
-    arg CONTRACT_WORKSPACE = { 
-      "CONTRACT_WORKSPACE", "contracts" };// relative to CONTEXT_DIR
+    arg EOSIO_DATA_DIR = { "EOSIO_DATA_DIR", "build/daemon/data-dir" };
+    arg EOSIO_CONFIG_DIR = { "EOSIO_CONFIG_DIR", "build/daemon/data-dir" };
+    arg EOSIO_WALLET_DIR = { "EOSIO_WALLET_DIR", "wallet"}; // relative to data-dir
+    arg EOSIO_DAEMON_NAME = { "EOSIO_DAEMON_NAME", "nodeos" };
+    arg EOSIO_CONTEXT_DIR = { "EOSIO_CONTEXT_DIR" };
+    arg EOSIO_CONTRACT_WORKSPACE = { 
+      "EOSIO_CONTRACT_WORKSPACE", "contracts" };// relative to EOSIO_CONTEXT_DIR
 
-    arg BOOST_INCLUDE_DIR = { 
-      "BOOST_INCLUDE_DIR", "opt/boost_1_66_0/include" };
-    arg WASM_CLANG = { "WASM_CLANG", "opt/wasm/bin/clang" };
-      // WASM_CLANG: relative to HOME dir
-    arg WASM_LLVM_LINK = { "WASM_LLVM_LINK", "opt/wasm/bin/llvm-link" };
-      // WASM_LLVM_LINK: relative to HOME dir
-    arg WASM_LLC = { "WASM_LLC", "opt/wasm/bin/llc" };
-      // WASM_LLC: relative to HOME dir
-    arg BINARYEN_BIN = { "BINARYEN_BIN", "opt/binaryen/bin/" };
-      // BINARYEN_BIN: relative to HOME dir
+    arg EOSIO_SHARED_MEMORY_SIZE_MB = { "EOSIO_SHARED_MEMORY_SIZE_MB", "100" };    
+    arg EOSIO_BOOST_INCLUDE_DIR = { 
+      "EOSIO_BOOST_INCLUDE_DIR", "opt/boost_1_66_0/include" };
+    arg EOSIO_WASM_CLANG = { "EOSIO_WASM_CLANG", "opt/wasm/bin/clang" };
+      // EOSIO_WASM_CLANG: relative to HOME dir
+    arg EOSIO_WASM_LLVM_LINK = { "EOSIO_WASM_LLVM_LINK", "opt/wasm/bin/llvm-link" };
+      // EOSIO_WASM_LLVM_LINK: relative to HOME dir
+    arg EOSIO_WASM_LLC = { "EOSIO_WASM_LLC", "opt/wasm/bin/llc" };
+      // EOSIO_WASM_LLC: relative to HOME dir
+    arg EOSIO_BINARYEN_BIN = { "EOSIO_BINARYEN_BIN", "opt/binaryen/bin/" };
+      // EOSIO_BINARYEN_BIN: relative to HOME dir
 
     namespace bfs = boost::filesystem;
 
@@ -133,7 +134,7 @@ wallet-dir: .
 
     string getContextDir(TeosControl* teosControl)
     {
-      string config_value = configValue(teosControl, CONTEXT_DIR);
+      string config_value = configValue(teosControl, EOSIO_CONTEXT_DIR);
       if(config_value.empty()){
         onError(teosControl, "Cannot determine the context directory.");
       }
@@ -156,7 +157,7 @@ wallet-dir: .
     {
       try
       {
-        bfs::path wantedPath(configValue(teosControl, GENESIS_JSON));
+        bfs::path wantedPath(configValue(teosControl, EOSIO_GENESIS_JSON));
         if(!wantedPath.is_absolute()) {
           string configDir = getConfigDir(teosControl);
           if(configDir.empty()){
@@ -212,11 +213,11 @@ wallet-dir: .
           if(!contractDirPath.is_absolute()) 
           {
             bfs::path configContractDirPath 
-              = configValue(teosControl, CONTRACT_WORKSPACE);
+              = configValue(teosControl, EOSIO_CONTRACT_WORKSPACE);
             if(!configContractDirPath.is_absolute()) 
             {
-              string context_dir = configValue(teosControl, CONTEXT_DIR);
-              configContractDirPath = bfs::path(context_dir) 
+              string eosioContextDir = configValue(teosControl, EOSIO_CONTEXT_DIR);
+              configContractDirPath = bfs::path(eosioContextDir) 
                 / configContractDirPath;
             }
             contractDirPath = configContractDirPath / contractDirPath / "build";
@@ -249,7 +250,15 @@ wallet-dir: .
           onError(teosControl, e.what());
       }
       return "";    
-    }    
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // shared-memory-size-mb
+    ///////////////////////////////////////////////////////////////////////////
+    string getSharedMemorySizeMb()
+    {
+      return configValue(nullptr, EOSIO_SHARED_MEMORY_SIZE_MB);
+    }        
 
     ///////////////////////////////////////////////////////////////////////////
     // getHttpServerAddress
@@ -284,7 +293,7 @@ wallet-dir: .
           wantedPath 
             = bfs::path(sourceDir)
               / "build/etc/eosio/node_00" 
-              / configValue(teosControl, DAEMON_NAME);
+              / configValue(teosControl, EOSIO_DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
             return wantedPath.string();
           }          
@@ -293,8 +302,8 @@ wallet-dir: .
         {
           wantedPath 
             = bfs::path(sourceDir)
-              / "build/programs/" / configValue(teosControl, DAEMON_NAME)
-              / configValue(teosControl, DAEMON_NAME);
+              / "build/programs/" / configValue(teosControl, EOSIO_DAEMON_NAME)
+              / configValue(teosControl, EOSIO_DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
             return wantedPath.string();
           }          
@@ -302,7 +311,7 @@ wallet-dir: .
 
         {
           wantedPath = bfs::path("/usr/local/bin")
-              / configValue(teosControl, DAEMON_NAME);
+              / configValue(teosControl, EOSIO_DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
             return wantedPath.string();
           }             
@@ -329,10 +338,10 @@ wallet-dir: .
     {
       try
       { 
-        bfs::path wantedPath(configValue(teosControl, DATA_DIR));
+        bfs::path wantedPath(configValue(teosControl, EOSIO_DATA_DIR));
 
         if(!wantedPath.is_absolute()){
-          string contextDir = configValue(teosControl, CONTEXT_DIR);
+          string contextDir = configValue(teosControl, EOSIO_CONTEXT_DIR);
           if(contextDir.empty()){
             return "";
           }
@@ -363,9 +372,9 @@ wallet-dir: .
     {
       try
       { 
-        bfs::path wantedPath(configValue(teosControl, CONFIG_DIR));
+        bfs::path wantedPath(configValue(teosControl, EOSIO_CONFIG_DIR));
         if(!wantedPath.is_absolute()){
-          string contextDir = configValue(teosControl, CONTEXT_DIR);
+          string contextDir = configValue(teosControl, EOSIO_CONTEXT_DIR);
           if(contextDir.empty()){
             return "";
           }
@@ -394,7 +403,7 @@ wallet-dir: .
     {
       try
       {
-        bfs::path wantedPath(configValue(teosControl, WALLET_DIR));
+        bfs::path wantedPath(configValue(teosControl, EOSIO_WALLET_DIR));
         if(!wantedPath.is_absolute()) {
             wantedPath = getDataDir(teosControl) / wantedPath;
         }
@@ -417,47 +426,47 @@ wallet-dir: .
     // getDaemonName
     ///////////////////////////////////////////////////////////////////////////
     string getDaemonName(TeosControl* teosControl){
-      return configValue(teosControl, DAEMON_NAME);
+      return configValue(teosControl, EOSIO_DAEMON_NAME);
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // getBOOST_INCLUDE_DIR
+    // getEOSIO_BOOST_INCLUDE_DIR
     ///////////////////////////////////////////////////////////////////////////
-    string getBOOST_INCLUDE_DIR(TeosControl* teosControl){
+    string getEOSIO_BOOST_INCLUDE_DIR(TeosControl* teosControl){
       bfs::path home(getenv("HOME"));
-      return (home / configValue(teosControl, BOOST_INCLUDE_DIR)).string();
+      return (home / configValue(teosControl, EOSIO_BOOST_INCLUDE_DIR)).string();
     }    
 
     ///////////////////////////////////////////////////////////////////////////
-    // getWASM_CLANG
+    // getEOSIO_WASM_CLANG
     ///////////////////////////////////////////////////////////////////////////
-    string getWASM_CLANG(TeosControl* teosControl){
+    string getEOSIO_WASM_CLANG(TeosControl* teosControl){
       bfs::path home(getenv("HOME"));
-      return (home / configValue(teosControl, WASM_CLANG)).string();
+      return (home / configValue(teosControl, EOSIO_WASM_CLANG)).string();
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // getWASM_LLVM_LINK
+    // getEOSIO_WASM_LLVM_LINK
     ///////////////////////////////////////////////////////////////////////////
-    string getWASM_LLVM_LINK(TeosControl* teosControl){
+    string getEOSIO_WASM_LLVM_LINK(TeosControl* teosControl){
       bfs::path home(getenv("HOME"));
-      return (home / configValue(teosControl, WASM_LLVM_LINK)).string();
+      return (home / configValue(teosControl, EOSIO_WASM_LLVM_LINK)).string();
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // getBINARYEN_BIN
+    // getEOSIO_BINARYEN_BIN
     ///////////////////////////////////////////////////////////////////////////
-    string getBINARYEN_BIN(TeosControl* teosControl){
+    string getEOSIO_BINARYEN_BIN(TeosControl* teosControl){
       bfs::path home(getenv("HOME"));
-      return (home / configValue(teosControl, BINARYEN_BIN)).string();      
+      return (home / configValue(teosControl, EOSIO_BINARYEN_BIN)).string();      
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // getWASM_LLC
+    // getEOSIO_WASM_LLC
     ///////////////////////////////////////////////////////////////////////////
-    string getWASM_LLC(TeosControl* teosControl){
+    string getEOSIO_WASM_LLC(TeosControl* teosControl){
       bfs::path home(getenv("HOME"));
-      return (home / configValue(teosControl, WASM_LLC)).string();
+      return (home / configValue(teosControl, EOSIO_WASM_LLC)).string();
     }    
   }
 }

@@ -71,14 +71,20 @@ namespace teos
     stringstream ss;
     json_parser::
       write_json(ss, reqJson_, !isRaw);
-    return ss.str();
+    
+    string temp = ss.str();
+    boost::replace_all(temp, "\\/", "/");
+    return temp;
   }
 
   string TeosControl::responseToString(bool isRaw) const {
     stringstream ss;
     json_parser::
       write_json(ss, respJson_, !isRaw);
-    return ss.str();
+    
+    string temp = ss.str();
+    boost::replace_all(temp, "\\/", "/");
+    return temp;
   }
 
   string TeosControl::executable = "";

@@ -7,7 +7,7 @@ set( VERSION_MINOR 0 )
 set( CMAKE_BUILD_TYPE "Debug" )
 
 
-set( CONTEXT_DIR "NOT DEFINED !!" )
+set( EOSIO_CONTEXT_DIR "NOT DEFINED !!" )
 set( EOSIO_SOURCE_DIR "NOT DEFINED !!" )
 set( EOSIO_BINARY_DIR "NOT DEFINED !!" )
 
@@ -19,7 +19,7 @@ message(STATUS "APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../CMakeMod
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules")
 
 # 'common.cmake' sets Lgos common values:
-# CONTEXT_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
+# EOSIO_CONTEXT_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
 # CMAKE_INSTALL_PREFIX, 
 # CMAKE_CXX_STANDARD, CMAKE_BUILD_TYPE, 
 include( ../common.cmake ) 
@@ -58,7 +58,7 @@ find_package(Boost 1.66 REQUIRED COMPONENTS
 )
 if( Boost_FOUND )
   message( STATUS "Boost found.
-  Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}" )
+  EOSIO_BOOST_INCLUDE_DIRS: ${EOSIO_BOOST_INCLUDE_DIRS}" )
 else( Boost_FOUND )
   message ( STATUS "Boost not found. set environment variables:
   BOOST_INCLUDEDIR (where is boost directory, usualy %BOOST_ROOT%)" )
@@ -75,7 +75,7 @@ add_library(${LIB_NAME} STATIC
 
 target_include_directories( ${LIB_NAME} 
   PRIVATE
-    ${Boost_INCLUDE_DIR}
+    ${EOSIO_BOOST_INCLUDE_DIR}
     ${OPENSSL_INCLUDE_DIR}
 
     ${EOSIO_SOURCE_DIR}/libraries/wasm-jit/Include

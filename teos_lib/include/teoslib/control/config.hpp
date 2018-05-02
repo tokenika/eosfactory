@@ -36,14 +36,16 @@ namespace teos {
 
     string getDaemonName(TeosControl* teosControl);
 
-    string getWASM_CLANG(TeosControl* teosControl);
+    string getEOSIO_WASM_CLANG(TeosControl* teosControl);
 
-    string getBOOST_INCLUDE_DIR(TeosControl* teosControl);
+    string getEOSIO_BOOST_INCLUDE_DIR(TeosControl* teosControl);
 
-    string getWASM_LLVM_LINK(TeosControl* teosControl);
+    string getEOSIO_WASM_LLVM_LINK(TeosControl* teosControl);
 
-    string getBINARYEN_BIN(TeosControl* teosControl);
+    string getEOSIO_BINARYEN_BIN(TeosControl* teosControl);
 
-    string getWASM_LLC(TeosControl* teosControl);
+    string getEOSIO_WASM_LLC(TeosControl* teosControl);
+
+    string getSharedMemorySizeMb();
   };
 }

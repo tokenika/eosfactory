@@ -9,7 +9,7 @@ set( VERSION_MINOR 0 )
 set( CMAKE_BUILD_TYPE "Debug" )
 
 
-set( CONTEXT_DIR "NOT DEFINED !!" )
+set( EOSIO_CONTEXT_DIR "NOT DEFINED !!" )
 set( EOSIO_SOURCE_DIR "NOT DEFINED !!" )
 set( EOSIO_BINARY_DIR "NOT DEFINED !!" )
 
@@ -21,7 +21,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
 option( ENABLE_ASAN "enable ASAN" OFF )
 # 'common.cmake' sets Lgos common values:
-# CONTEXT_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
+# EOSIO_CONTEXT_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
 # CMAKE_INSTALL_PREFIX, 
 # CMAKE_CXX_STANDARD, CMAKE_BUILD_TYPE, 
 include( ../common.cmake ) 
@@ -119,7 +119,7 @@ find_package(Boost 1.66 REQUIRED COMPONENTS
 )
 if( Boost_FOUND )
   message( STATUS "Boost found.
-  Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}
+  EOSIO_BOOST_INCLUDE_DIRS: ${EOSIO_BOOST_INCLUDE_DIRS}
   Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}" )
 else( Boost_FOUND )
   message ( STATUS "Boost not found. set environment variables:
@@ -154,15 +154,15 @@ set(teoslib_src ${CMAKE_SOURCE_DIR}/../teos_lib)
 ## END DEPENDENCIES ##########################################################
 
 if( WIN32 )
-  set( WASM_CLANG "" )
-  set( WASM_LLVM_LINK "" )
-  set( WASM_LLC "" )
-  set( BINARYEN_BIN "" )
+  set( EOSIO_WASM_CLANG "" )
+  set( EOSIO_WASM_LLVM_LINK "" )
+  set( EOSIO_WASM_LLC "" )
+  set( EOSIO_BINARYEN_BIN "" )
 else()
-  set( WASM_CLANG "${HOME}/opt/wasm/bin/clang" )
-  set( WASM_LLVM_LINK "${HOME}/opt/wasm/bin/llvm-link" )
-  set( WASM_LLC "${HOME}/opt/wasm/bin/llc" )
-  set( BINARYEN_BIN "/usr/local/binaryen/bin/" )
+  set( EOSIO_WASM_CLANG "${HOME}/opt/wasm/bin/clang" )
+  set( EOSIO_WASM_LLVM_LINK "${HOME}/opt/wasm/bin/llvm-link" )
+  set( EOSIO_WASM_LLC "${HOME}/opt/wasm/bin/llc" )
+  set( EOSIO_BINARYEN_BIN "/usr/local/binaryen/bin/" )
 endif()
 
 ## BEGIN CONFIG FILES ########################################################
@@ -202,7 +202,7 @@ macro( applLinkLibraries applName )
 
   target_include_directories( ${applName} 
     PRIVATE
-      ${Boost_INCLUDE_DIR}
+      ${EOSIO_BOOST_INCLUDE_DIR}
       ${OPENSSL_INCLUDE_DIR}
       include
       "${teoslib_src}/include"

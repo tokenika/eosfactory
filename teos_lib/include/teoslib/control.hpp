@@ -118,6 +118,7 @@ namespace teos
       options_description od("");
       od.add_options()      
         ("jarg", value<string>(&json_), "Json argument.")
+        ("arg", "Print argument.")
         ("json,j", "Print result as json.")
         ("both", "For system use.")
         ("raw,r", "Raw print");
@@ -163,6 +164,9 @@ namespace teos
         cerr << command.responseToString(isRaw) << endl;
         printout(command, vm);
       } else {
+        if (vm.count("arg")) {
+          cout << command.requestToString(isRaw) << endl;
+        }
         if (vm.count("json")) {
           cout << command.responseToString(isRaw) << endl;
         }
