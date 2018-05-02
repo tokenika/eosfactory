@@ -17,5 +17,3 @@ c1t3=c1.get("accounts", s.carol)
 assert c1t1.json["rows"][0]["balance"] == '77.0000 EOS'
 assert c1t2.json["rows"][0]["balance"] == '11.0000 EOS'
 assert c1t3.json["rows"][0]["balance"] == '12.0000 EOS'
-
-print("Test OK")

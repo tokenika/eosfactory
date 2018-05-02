@@ -902,7 +902,7 @@ class Contract(SetContract):
                 scope=scope.name
             except: # scope is the name of an account:
                 scope=scope                
-        GetTable(self.name, table, scope)
+        return GetTable(self.name, table, scope)
 
 
 
