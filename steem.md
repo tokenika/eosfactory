@@ -1,4 +1,4 @@
-# Introducing *EOSFactory* smart-contract framework
+# Introducing *EOSFactory* - an EOS smart-contract development framework
 
 [EOS Factory](http://eosfactory.io/) is a smart-contract development framework, created by [Tokenika](https://tokenika.io). Our aim is to offer a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
 
@@ -158,7 +158,10 @@ Test OK
 
 ### Documentation
 
-* EOSFactory repository
+You'll find the source code of *EOSFactory* in [this GitHub repository](https://github.com/tokenika/eosfactory).
+
+And here is a list of available documentation:
+
 * Installing EOSFactory
 * Interacting with EOS Contracts in EOSFactory
 * Compiling EOS Contracts in EOSFactory
@@ -166,5 +169,13 @@ Test OK
 
 ### The roadmap
 
-*EOSFactory* is still under development. What we present today is just a quick preview. We plan to release it before June 2018.
+*EOSFactory* is still under development. What we present today is just a quick preview. 
 
+What we are working on right now are these two features:
+
+* We want to build a robust mechanism for creating and managing unit-tests. They will be stored as a hierarchy of Python files, in a similar way the process is organized in Ethereum's [Truffle Framework](http://truffleframework.com/) - we just use Python instead of JavaScript.
+* We want to integrate *Ricardian Contracts* into our unit-testing. This is a very interesting (and probably not widely known at this stage) aspect of EOS smart-contracts. For more information please refer to [EOSIO documentation](https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract#hello-world-ricardian-contract).
+
+We plan to have a next release of *EOSFactory* in a couple of weeks, ideally before EOS is launched.
+
+Any feedback, especially critical, is very welcome.
