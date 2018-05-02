@@ -5,6 +5,7 @@ set( LIB_NAME "teoslib" )
 set( VERSION_MAJOR 1 )
 set( VERSION_MINOR 0 )
 set( CMAKE_BUILD_TYPE "Debug" )
+set( ECC_IMPL secp256k1 CACHE STRING "secp256k1 or openssl or mixed")
 
 
 set( EOSIO_CONTEXT_DIR "NOT DEFINED !!" )

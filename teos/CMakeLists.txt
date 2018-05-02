@@ -7,7 +7,7 @@ project ("teos")
 set( VERSION_MAJOR 1 )
 set( VERSION_MINOR 0 )
 set( CMAKE_BUILD_TYPE "Debug" )
-
+set( ECC_IMPL secp256k1 CACHE STRING "secp256k1 or openssl or mixed")
 
 set( EOSIO_CONTEXT_DIR "NOT DEFINED !!" )
 set( EOSIO_SOURCE_DIR "NOT DEFINED !!" )
@@ -151,6 +151,11 @@ llvm_map_components_to_libnames(LLVM_LIBS support core passes mcjit native Debug
 
 set(teoslib_src ${CMAKE_SOURCE_DIR}/../teos_lib)
 
+if( NOT ECC_IMPL STREQUAL openssl )
+  find_package(Secp256k1 REQUIRED)
+  find_package(GMP REQUIRED)
+endif()
+
 ## END DEPENDENCIES ##########################################################
 
 if( WIN32 )
@@ -223,6 +228,14 @@ macro( applLinkLibraries applName )
     set( TARGET_DIR "" )
   endif()     
 
+  
+  if(EXISTS "${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc_debug${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    set(fc "fc_debug")
+  endif()
+  if(EXISTS "${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    set(fc "fc")
+  endif()  
+
   target_link_libraries( ${applName} 
     PRIVATE
       ${teoslib_src}/build/libteoslib.a
@@ -231,7 +244,7 @@ macro( applLinkLibraries applName )
       ${EOSIO_BINARY_DIR}/libraries/chainbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chainbase${CMAKE_STATIC_LIBRARY_SUFFIX}        
       ${EOSIO_BINARY_DIR}/libraries/utilities/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_utilities${CMAKE_STATIC_LIBRARY_SUFFIX}      
       ${EOSIO_BINARY_DIR}/libraries/appbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}appbase${CMAKE_STATIC_LIBRARY_SUFFIX} 
-      ${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc_debug${CMAKE_STATIC_LIBRARY_SUFFIX}       
+      ${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${fc}${CMAKE_STATIC_LIBRARY_SUFFIX}       
 
       ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Emscripten/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Emscripten${CMAKE_STATIC_LIBRARY_SUFFIX}
       ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Runtime/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Runtime${CMAKE_STATIC_LIBRARY_SUFFIX}
@@ -251,6 +264,13 @@ macro( applLinkLibraries applName )
       ${CMAKE_THREAD_LIBS_INIT}
   )
 
+  if( NOT ECC_IMPL STREQUAL openssl )
+    target_link_libraries( ${applName}
+      PRIVATE
+        ${Secp256k1_LIBRARY}
+        ${GMP_LIBRARIES}
+    )
+  endif()
 
   if( WIN32 )
     target_link_libraries( ${applName}
