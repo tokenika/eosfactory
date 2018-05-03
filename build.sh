@@ -30,7 +30,7 @@ Usage: ./build.sh [OPTIONS]
 "    
 }
 
-while getopts ":e:c:h" opt; do
+while getopts ":e:c:i:t:h" opt; do
   case $opt in
     e)
         EOSIO_SOURCE_DIR__=$OPTARG
@@ -84,9 +84,11 @@ shift $((OPTIND-1))
 
 printf "%s\n" "
 Arguments:
-    EOSIO_SOURCE_DIR=${EOSIO_SOURCE_DIR__}
-    CXX_COMPILER__=${CXX_COMPILER__}
-    C_COMPILER__=${C_COMPILER__}
+    EOSIO_SOURCE_DIR=$EOSIO_SOURCE_DIR__
+    CXX_COMPILER__=$CXX_COMPILER__
+    C_COMPILER__=$C_COMPILER__
+    BUILD_TYPE__=$BUILD_TYPE__
+    ECC_IMPL__=$ECC_IMPL__
 "
 
 EOSIO_CONTEXT_DIR__="$PWD"

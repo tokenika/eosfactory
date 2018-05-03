@@ -220,7 +220,7 @@ wallet-dir: .
               configContractDirPath = bfs::path(eosioContextDir) 
                 / configContractDirPath;
             }
-            contractDirPath = configContractDirPath / contractDirPath / "build";
+            contractDirPath = configContractDirPath / contractDir / "build";
             
             if(!bfs::exists(contractDirPath))
             {
@@ -237,7 +237,7 @@ wallet-dir: .
                   % contractDirPath.string() % contractDirPathEOSIO.string()).str());
                 return "";
               }
-              contractDirPath = contractDirPathEOSIO;
+              contractDirPath = contractDirPathEOSIO / contractDir;
             }
           }
 

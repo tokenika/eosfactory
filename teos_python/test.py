@@ -4,7 +4,7 @@ def run():
     s.reset()
     s.init()
 
-    c = s.Contract("/mnt/d/Workspaces/EOS/eos/build/contracts/eosio.token")
+    c = s.Contract("eosio.token")
 
     c.push_action("create", '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}')
     c.push_action("issue", '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', s.eosio)

@@ -2,9 +2,9 @@
 
 [EOS Factory](http://eosfactory.io/) is a smart-contract development framework, created by [Tokenika](https://tokenika.io). Our aim is to offer a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
 
-This is our ultimate goal: using a single command-line interface within an IDE you'll be able to create a private testnet and then compile, unit-test and deploy EOS smart-contracts. 
+This is our ultimate goal: using a single command-line interface within a single IDE you'll be able to launch a private testnet and then compile, unit-test and deploy EOS smart-contracts. 
 
-*EOSFactory* is tightly integrated with the [Visual Studio Code](https://code.visualstudio.com) IDE. This will allow you to write EOS smart-contracts, play with them and then perform proper unit-testing, all within one robust IDE.
+*EOSFactory* is works nicely with the [Visual Studio Code](https://code.visualstudio.com) IDE. This will allow you to write EOS smart-contracts, play with them and then perform proper unit-testing, all within one robust IDE. In the future we plan to add support for other IDE, e.g. [Eclipse](https://www.eclipse.org/ide/).
 
 ### Cross-platform compatibility
 
@@ -12,7 +12,7 @@ We make sure everything we do is fully compatible with any major operating syste
 
 ### Architecture
 
-In *EOSFactory* you use Python to interact with your smart-contracts. However, under the hood our toolset is powered by C++. Python outside, while C++ inside.
+In *EOSFactory* you use Python to interact with your smart-contracts. However, under the hood our toolset is powered by C++. We have Python outside, while C++ inside.
 
 Thus *EOSFactory* is composed of two layers:
 
@@ -34,6 +34,10 @@ This is what the smart-contract development cycle might look like:
 9. Modify your smart-contract and/or unit-tests and jump to stage 3.
 
 Every step of the above process is fully automated by Python classes and methods - you, as a developer, only supply the creative part, i.e. the content of the smart-contracts and unit-tests. Unit-tests are designed to be written in Python, while of course smart-contracts are written in C++ - Visual Studio Code perfectly supports both those languages.
+
+### Object-oriented vs. procedural
+
+Because we make use of Python what you are dealing with are objects. So for example a smart-contract is an object, and you handle it by running its methods, e.g. `contract.compile()`, `constract.deploy()`, `contract.push()` (to push actions), and `contract.get()`(to extract data from its tables).
 
 ### Python-based unit-testing
 
