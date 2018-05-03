@@ -6,11 +6,11 @@
 
 Our ultimate goal is this: using a simple command-line interface within a single IDE you'll be able to launch a private testnet and then compile, unit-test and deploy EOS smart-contracts. 
 
-*EOSFactory* works nicely with Visual Studio Code](https://code.visualstudio.com). This will allow you to write EOS smart-contracts, play with them and then perform proper unit-testing, all within one robust IDE. In the future we plan to add support for other IDEs, e.g. [Eclipse](https://www.eclipse.org/ide/).
+*EOSFactory* works nicely with [Visual Studio Code](https://code.visualstudio.com). This will allow you to write EOS smart-contracts, play with them and then perform proper unit-testing, all within one robust IDE.
 
 ### Cross-platform compatibility
 
-We make sure everything we do is fully compatible with any major operating system, including Windows. Thus our toolset will enable you to run an EOS node and interact with it on Windows 10. As far as we know no other EOS development solution is able to offer that.
+We make sure everything we do is fully compatible with any major operating system, including Windows. Thus our toolset will enable you to run an EOS node and interact with it on Windows 10. As far as we know, no other EOS development solution is able to offer that.
 
 ### Architecture
 
@@ -178,8 +178,8 @@ And here is a list of available documentation:
 
 Right now we are working on the following features:
 
-* Firstly, we want to build a robust mechanism for creating and managing unit-tests. They will be stored as a hierarchy of Python files, in a similar way the process is organized in Ethereum's [Truffle Framework](http://truffleframework.com/) - we just use Python instead of JavaScript.
-* Secondly, we are considering the pros and cons of connecting our Python layer directly to `cleos`, the official EOS CLI. When we started working on EOSFactory, `cleos` (at that time named `eosc`) was in a bad shape and thus not suitable for our needs, so we had to build our own C++ interface to an EOS node. Currently, it might be the case that we could simplify our approach by relying on `cleos`.
+* Firstly, we want to build a robust mechanism for creating and managing unit-tests. They will be stored as a hierarchy of Python files, in a similar way the process is organized in Ethereum's [Truffle Framework](http://truffleframework.com/) - we just use Python instead of JavaScript. Also, we plan to add support for other IDEs, e.g. [Eclipse](https://www.eclipse.org/ide/).
+* Secondly, we are considering the pros and cons of connecting our Python layer directly to `cleos`, the official EOS CLI. When we started working on *EOSFactory*, `cleos` (at that time named `eosc`) was in a bad shape and thus not suitable for our needs, so we had to build our own C++ interface to an EOS node. Currently, it might be the case that we could simplify our approach by relying on `cleos`.
 * And finally, we are thinking about integrating *Ricardian Contracts* into our unit-testing. This is a very interesting (and probably not widely known at this stage) aspect of EOS smart-contracts. For more information please refer to [EOSIO documentation](https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract#hello-world-ricardian-contract).
 
 We plan to have a next release of *EOSFactory* in a couple of weeks, ideally before EOS is launched.
