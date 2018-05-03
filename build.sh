@@ -18,6 +18,7 @@ library_dir="teos_lib"
 executable_dir="teos"
 build_dir="build"
 contracts="contracts"
+teos_exe=teos/build/teos
 
 function usage() {
     printf "%s\n" "
@@ -26,11 +27,12 @@ Usage: ./build.sh [OPTIONS]
     -c  compiler, 'gnu' or 'clang'. Default is 'gnu'.
     -i  ECC implementation: 'secp256k1' or 'openssl' or 'mixed'. Default is 'secp256k1'.
     -t  Build type: 'Debug' or 'Release'. Default is 'Release'.
+    -r  Reset the build. 
     -h  this message.
 "    
 }
 
-while getopts ":e:c:i:t:h" opt; do
+while getopts ":e:c:i:t:rh" opt; do
   case $opt in
     e)
         EOSIO_SOURCE_DIR__=$OPTARG
@@ -63,7 +65,9 @@ while getopts ":e:c:i:t:h" opt; do
             exit -1        
         fi
         ;;
-
+    r)
+        RESET__=RESET
+        ;;
     h)
         usage
         exit 0
@@ -89,6 +93,7 @@ Arguments:
     C_COMPILER__=$C_COMPILER__
     BUILD_TYPE__=$BUILD_TYPE__
     ECC_IMPL__=$ECC_IMPL__
+    RESET__=$RESET__
 "
 
 EOSIO_CONTEXT_DIR__="$PWD"
@@ -188,16 +193,15 @@ printf "\n%s\n" "Sets environment variables, if not set already:"
 
 #./build.sh -cgnu -e/mnt/c/Workspaces/EOS/eos
 
+if [ ! -z "$EOSIO_SOURCE_DIR__" -a "$EOSIO_SOURCE_DIR" != "$EOSIO_SOURCE_DIR__" ]; then
+    echo "export EOSIO_SOURCE_DIR=$EOSIO_SOURCE_DIR__" >> ~/.bashrc
+    printf "\t%s\n" "setting EOSIO_SOURCE_DIR: $EOSIO_SOURCE_DIR__"
+fi
 
 if [ -z "$EOSIO_SHARED_MEMORY_SIZE_MB" ]; then
     value=100
     echo "export EOSIO_SHARED_MEMORY_SIZE_MB=$value" >> ~/.bashrc
     printf "\t%s\n" "setting EOSIO_SHARED_MEMORY_SIZE_MB: $value"
-fi
-
-if [ "$EOSIO_SOURCE_DIR" != "$EOSIO_SOURCE_DIR__" ]; then
-    echo "export EOSIO_SOURCE_DIR=$EOSIO_SOURCE_DIR__" >> ~/.bashrc
-    printf "\t%s\n" "setting EOSIO_SOURCE_DIR: $EOSIO_SOURCE_DIR__"
 fi
 
 if [ "$EOSIO_CONTEXT_DIR" != "$EOSIO_CONTEXT_DIR__" ]; then
@@ -219,8 +223,20 @@ if [ "$EOSIO_CONTRACT_WORKSPACE" != "$EOSIO_CONTRACT_WORKSPACE__" ]; then
 fi
  
 ##########################################################################
-# Sert Windows environment variables
+# Set Windows environment variables
 ##########################################################################
+
+function setWindowsVariable() {
+    #name=$1
+    #value=$2
+
+    setOnWindows=$(cmd.exe /c echo %$1%)
+    setOnWindows=${setOnWindows::-1}
+    if [ "$setOnWindows" != "$2" ]; then
+        setx.exe "$1" "$2"
+        printf "\t%s\n" "setting windows $1: $2"
+    fi    
+}
 
 if [ ! -z "$IS_WSL" ]; then
     printf "%s" "
@@ -228,17 +244,21 @@ if [ ! -z "$IS_WSL" ]; then
     "
     printf "\nSets Windows environment variables:\n"
 
-    setx.exe EOSIO_SOURCE_DIR $EOSIO_SOURCE_DIR__
-    printf "\t%s\n" "setting windows EOSIO_SOURCE_DIR: $EOSIO_SOURCE_DIR__"
+    EOSIO_SOURCE_DIR_SET=""
+    if [ ! -z "$EOSIO_SOURCE_DIR__" -a "$EOSIO_SOURCE_DIR" != "$EOSIO_SOURCE_DIR__" ]; then
+        EOSIO_SOURCE_DIR_SET=$EOSIO_SOURCE_DIR__
+    else
+        EOSIO_SOURCE_DIR_SET=$EOSIO_SOURCE_DIR
+    fi
 
-    EOSIO_SOURCE_DIR_ARG_WINDOWS=""
-    wslMapLinux2Windows EOSIO_SOURCE_DIR_ARG_WINDOWS $EOSIO_SOURCE_DIR__
-    setx.exe EOSIO_SOURCE_DIR_WINDOWS ${EOSIO_SOURCE_DIR_ARG_WINDOWS}
-    printf "\t%s\n" "setting windows EOSIO_SOURCE_DIR_WINDOWS: $EOSIO_SOURCE_DIR_ARG_WINDOWS"
+    setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" $EOSIO_CONTRACT_WORKSPACE__
+    setWindowsVariable "EOSIO_SOURCE_DIR_SET" $EOSIO_SOURCE_DIR_SET
+    setWindowsVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
+    setWindowsVariable "EOSIO_SOURCE_DIR_WINDOWS" wslMapLinux2Windows EOSIO_SOURCE_DIR_WINDOWS__ $EOSIO_SOURCE_DIR_SET
 
-    HOME_WINDOWS=${ROOT_DIR_WINDOWS__}\\home\\$USER
-    setx.exe HOME_WINDOWS $HOME_WINDOWS
-    printf "HOME_WINDOWS: %s\n"  "$HOME_WINDOWS"
+    EOSIO_HOME_WINDOWS=${ROOT_DIR_WINDOWS__}\\home\\$USER
+    setx.exe "EOSIO_HOME_WINDOWS" "$EOSIO_HOME_WINDOWS"
+    printf "EOSIO_HOME_WINDOWS: %s\n"  "$EOSIO_HOME_WINDOWS"
 fi
 
 if [ -z "$CMAKE" ]; then
@@ -274,6 +294,23 @@ cp -u ${EOSIO_CONTEXT_DIR__}/resources/config.ini \
 
 
 ##########################################################################
+# Is EOSIO_SOURCE_DIR set?
+##########################################################################
+
+if [ -z "$EOSIO_SOURCE_DIR" ]; then
+    printf "/n%s\n" "
+THE BUILD IS NOT FINISHED!
+
+THE BASH HAS TO BE RESET in order to load newly set environment variables.
+Afterwards this script can be restarted to continue this build.
+
+Exiting now.
+"
+    exit -1
+fi
+
+
+##########################################################################
 # compiling library
 ##########################################################################
 printf "%s" "
@@ -281,8 +318,13 @@ printf "%s" "
 "
 cd ${EOSIO_CONTEXT_DIR__}
 cd ${library_dir}
+
 mkdir build
 cd build
+if [ ! -z "$RESET__" ]; then
+    printf "%s\n" "Deleting the contents of $PWD"
+    rm -r *
+fi
 
 printf "\n%s\n" "Compiling ${library_dir}. Current directory is ${PWD}"
 
@@ -315,6 +357,10 @@ cd ${EOSIO_CONTEXT_DIR__}
 cd ${executable_dir}
 mkdir build
 cd build
+if [ ! -z "$RESET__" ]; then
+    printf "%s\n" "Deleting the contents of $PWD"
+    rm -r *
+fi
 
 printf "\n%s\n" "Compiling ${executable_dir}. Current directory is ${PWD}"
 

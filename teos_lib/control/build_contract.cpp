@@ -188,41 +188,56 @@ namespace teos {
         {         
           try{
             bfs::create_directory(contract_vscode_path);
-            for (const auto& dirEnt : bfs::recursive_directory_iterator{template_vscode_path})
+            for (const auto& dirEnt 
+              : bfs::recursive_directory_iterator{template_vscode_path})
             {
                 const auto& path = dirEnt.path();
                 auto relativePathStr = path.string();
-                boost::replace_first(relativePathStr, template_vscode_path.string(), "");
+                boost::replace_first(
+                  relativePathStr, template_vscode_path.string(), "");
                 bfs::copy(path, contract_vscode_path / relativePathStr);
             }
           }catch (exception& e) {
             putError(e.what());
           }
 
-          string contents;
-          string tasks_json = "tasks.json";        
-          try{
-            bfs::ifstream in(contract_vscode_path / tasks_json);
-            stringstream ss;
-            ss << in.rdbuf();
-            contents = ss.str();
-            boost::replace_all(contents, "@contract_name@", name);
-          } catch(exception& e){
-            putError(e.what());
+          ////////////////////////////////////////////////////////////////////
+          // CMakeLists.txt
+          ////////////////////////////////////////////////////////////////////
+
+          {
+
           }
 
-          try{
-            bfs::remove(contract_vscode_path / tasks_json);
-            bfs::ofstream ofs (contract_vscode_path / tasks_json);
-            ofs << contents << endl;
-            ofs.flush();
-            ofs.close();          
-          } catch (bfs::filesystem_error &e){
-            putError(e.what());
+          ////////////////////////////////////////////////////////////////////
+          // tasks.json
+          ////////////////////////////////////////////////////////////////////
+          {
+            string contents;
+            string tasks_json = "tasks.json";        
+            try{
+              bfs::ifstream in(contract_vscode_path / tasks_json);
+              stringstream ss;
+              ss << in.rdbuf();
+              contents = ss.str();
+              boost::replace_all(contents, "@contract_name@", name);
+            } catch(exception& e){
+              putError(e.what());
+            }
+
+            try{
+              bfs::remove(contract_vscode_path / tasks_json);
+              bfs::ofstream ofs (contract_vscode_path / tasks_json);
+              ofs << contents << endl;
+              ofs.flush();
+              ofs.close();          
+            } catch (bfs::filesystem_error &e){
+              putError(e.what());
+            }
+            if(isError_){
+              return;
+            }
           }
-          if(isError_){
-            return;
-          } 
         }         
       }
     }

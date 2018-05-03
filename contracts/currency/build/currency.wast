@@ -30,7 +30,7 @@
  (import "env" "send_inline" (func $send_inline (param i32 i32)))
  (table 0 anyfunc)
  (memory $0 1)
- (data (i32.const 4) "\805\00\00")
+ (data (i32.const 4) "\80e\00\00")
  (data (i32.const 16) "issue\n\00")
  (data (i32.const 32) "transfer\n\00")
  (data (i32.const 48) "create\n\00")
@@ -9683,6 +9683,67 @@
   )
   (get_local $0)
  )
+ (func $memcmp (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
+  (local $3 i32)
+  (local $4 i32)
+  (local $5 i32)
+  (set_local $5
+   (i32.const 0)
+  )
+  (block $label$0
+   (br_if $label$0
+    (i32.eqz
+     (get_local $2)
+    )
+   )
+   (block $label$1
+    (loop $label$2
+     (br_if $label$1
+      (i32.ne
+       (tee_local $3
+        (i32.load8_u
+         (get_local $0)
+        )
+       )
+       (tee_local $4
+        (i32.load8_u
+         (get_local $1)
+        )
+       )
+      )
+     )
+     (set_local $1
+      (i32.add
+       (get_local $1)
+       (i32.const 1)
+      )
+     )
+     (set_local $0
+      (i32.add
+       (get_local $0)
+       (i32.const 1)
+      )
+     )
+     (br_if $label$2
+      (tee_local $2
+       (i32.add
+        (get_local $2)
+        (i32.const -1)
+       )
+      )
+     )
+     (br $label$0)
+    )
+   )
+   (set_local $5
+    (i32.sub
+     (get_local $3)
+     (get_local $4)
+    )
+   )
+  )
+  (get_local $5)
+ )
  (func $_Znwj (param $0 i32) (result i32)
   (local $1 i32)
   (local $2 i32)
@@ -10173,67 +10234,6 @@
   )
   (call $abort)
   (unreachable)
- )
- (func $memcmp (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
-  (local $3 i32)
-  (local $4 i32)
-  (local $5 i32)
-  (set_local $5
-   (i32.const 0)
-  )
-  (block $label$0
-   (br_if $label$0
-    (i32.eqz
-     (get_local $2)
-    )
-   )
-   (block $label$1
-    (loop $label$2
-     (br_if $label$1
-      (i32.ne
-       (tee_local $3
-        (i32.load8_u
-         (get_local $0)
-        )
-       )
-       (tee_local $4
-        (i32.load8_u
-         (get_local $1)
-        )
-       )
-      )
-     )
-     (set_local $1
-      (i32.add
-       (get_local $1)
-       (i32.const 1)
-      )
-     )
-     (set_local $0
-      (i32.add
-       (get_local $0)
-       (i32.const 1)
-      )
-     )
-     (br_if $label$2
-      (tee_local $2
-       (i32.add
-        (get_local $2)
-        (i32.const -1)
-       )
-      )
-     )
-     (br $label$0)
-    )
-   )
-   (set_local $5
-    (i32.sub
-     (get_local $3)
-     (get_local $4)
-    )
-   )
-  )
-  (get_local $5)
  )
  (func $malloc (param $0 i32) (result i32)
   (call $_ZN5eosio14memory_manager6mallocEm

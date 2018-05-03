@@ -6,7 +6,7 @@
                 "${EOSIO_SOURCE_DIR_WINDOWS}/contracts",
                 "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/libc++/upstream/include",
                 "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/musl/upstream/include",
-                "${HOME_WINDOWS}/opt/boost_1_66_0/include",
+                "${EOSIO_HOME_WINDOWS}/opt/boost_1_66_0/include",
                 "${workspaceFolder}"
             ],
             "defines": [],
@@ -16,7 +16,7 @@
                     "${EOSIO_SOURCE_DIR_WINDOWS}/contracts",
                     "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/libc++/upstream/include",
                     "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/musl/upstream/include",
-                    "${HOME_WINDOWS}/opt/boost_1_66_0/include",
+                    "${EOSIO_HOME_WINDOWS}/opt/boost_1_66_0/include",
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
