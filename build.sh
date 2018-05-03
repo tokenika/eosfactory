@@ -26,11 +26,12 @@ Usage: ./build.sh [OPTIONS]
     -c  compiler, 'gnu' or 'clang'. Default is 'gnu'.
     -i  ECC implementation: 'secp256k1' or 'openssl' or 'mixed'. Default is 'secp256k1'.
     -t  Build type: 'Debug' or 'Release'. Default is 'Release'.
+    -r  Reset the build. 
     -h  this message.
 "    
 }
 
-while getopts ":e:c:i:t:h" opt; do
+while getopts ":e:c:i:t:rh" opt; do
   case $opt in
     e)
         EOSIO_SOURCE_DIR__=$OPTARG
@@ -63,7 +64,9 @@ while getopts ":e:c:i:t:h" opt; do
             exit -1        
         fi
         ;;
-
+    r)
+        RESET__=RESET
+        ;;
     h)
         usage
         exit 0
@@ -89,6 +92,7 @@ Arguments:
     C_COMPILER__=$C_COMPILER__
     BUILD_TYPE__=$BUILD_TYPE__
     ECC_IMPL__=$ECC_IMPL__
+    RESET__=$RESET__
 "
 
 EOSIO_CONTEXT_DIR__="$PWD"
@@ -188,16 +192,15 @@ printf "\n%s\n" "Sets environment variables, if not set already:"
 
 #./build.sh -cgnu -e/mnt/c/Workspaces/EOS/eos
 
+if [ ! -z "$EOSIO_SOURCE_DIR__" -a "$EOSIO_SOURCE_DIR" != "$EOSIO_SOURCE_DIR__" ]; then
+    echo "export EOSIO_SOURCE_DIR=$EOSIO_SOURCE_DIR__" >> ~/.bashrc
+    printf "\t%s\n" "setting EOSIO_SOURCE_DIR: $EOSIO_SOURCE_DIR__"
+fi
 
 if [ -z "$EOSIO_SHARED_MEMORY_SIZE_MB" ]; then
     value=100
     echo "export EOSIO_SHARED_MEMORY_SIZE_MB=$value" >> ~/.bashrc
     printf "\t%s\n" "setting EOSIO_SHARED_MEMORY_SIZE_MB: $value"
-fi
-
-if [ "$EOSIO_SOURCE_DIR" != "$EOSIO_SOURCE_DIR__" ]; then
-    echo "export EOSIO_SOURCE_DIR=$EOSIO_SOURCE_DIR__" >> ~/.bashrc
-    printf "\t%s\n" "setting EOSIO_SOURCE_DIR: $EOSIO_SOURCE_DIR__"
 fi
 
 if [ "$EOSIO_CONTEXT_DIR" != "$EOSIO_CONTEXT_DIR__" ]; then
@@ -274,6 +277,23 @@ cp -u ${EOSIO_CONTEXT_DIR__}/resources/config.ini \
 
 
 ##########################################################################
+# Is EOSIO_SOURCE_DIR set?
+##########################################################################
+
+if [ -z "$EOSIO_SOURCE_DIR" ]; then
+    printf "/n%s\n" "
+THE BUILD IS NOT FINISHED!
+
+THE BASH HAS TO BE RESET in order to load newly set environment variables.
+Afterwards this script can be restarted to continue this build.
+
+Exiting now.
+"
+    exit -1
+fi
+
+
+##########################################################################
 # compiling library
 ##########################################################################
 printf "%s" "
@@ -281,8 +301,13 @@ printf "%s" "
 "
 cd ${EOSIO_CONTEXT_DIR__}
 cd ${library_dir}
+
 mkdir build
 cd build
+if [ ! -z "$RESET__" ]; then
+    printf "%s\n" "Deleting the contents of $PWD"
+    rm -r *
+fi
 
 printf "\n%s\n" "Compiling ${library_dir}. Current directory is ${PWD}"
 
@@ -315,6 +340,10 @@ cd ${EOSIO_CONTEXT_DIR__}
 cd ${executable_dir}
 mkdir build
 cd build
+if [ ! -z "$RESET__" ]; then
+    printf "%s\n" "Deleting the contents of $PWD"
+    rm -r *
+fi
 
 printf "\n%s\n" "Compiling ${executable_dir}. Current directory is ${PWD}"
 

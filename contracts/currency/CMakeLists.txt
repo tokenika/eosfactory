@@ -1,8 +1,7 @@
-file(GLOB ABI_FILES "*.abi")
-configure_file("${ABI_FILES}" "${CMAKE_CURRENT_BINARY_DIR}" COPYONLY)
+cmake_minimum_required( VERSION 3.5 )
 
-add_wast_executable(TARGET currency
-  INCLUDE_FOLDERS "${STANDARD_INCLUDE_FOLDERS}"
-  LIBRARIES libc++ libc eosiolib
-  DESTINATION_FOLDER ${CMAKE_CURRENT_BINARY_DIR}
-)
+set(teos $ENV{EOSIO_CONTEXT_DIR}/teos/build/teos)
+add_custom_command(OUTPUT currency.abi COMMAND ${teos} generate abi ../)
+add_custom_command(OUTPUT currency.wast COMMAND ${teos} build contract ../)
+add_custom_target(abi ALL DEPENDS currency.abi)
+add_custom_target(wast ALL DEPENDS currency.wast)
