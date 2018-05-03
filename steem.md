@@ -25,7 +25,7 @@ In other words, we have Python outside, while C++ inside.
 
 ### Development cycle
 
-This is what the smart-contract development cycle might look like:
+This is what a smart-contract development cycle might look like:
 
 1. Write a smart-contract (in C++).
 2. Write unit-tests (in Python).
