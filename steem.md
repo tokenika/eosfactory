@@ -1,6 +1,6 @@
 # Introducing *EOSFactory* - an EOS smart-contract development framework
 
-![mmaxresdefault.jpg](https://steemitimages.com/DQmc1xWHyKgce1pUftt9vuvWnqGXPecwPaUBH8Bhsc2UAJR/mmaxresdefault.jpg)
+![Huta-Szkla-Julia-111.jpg](https://steemitimages.com/DQma9A6x8WFLDDtQrGgJ2o9Mma1apHGfjFH1mY9PdKYvGLn/Huta-Szkla-Julia-111.jpg)
 
 [EOS Factory](http://eosfactory.io/) is a smart-contract development framework, created by [Tokenika](https://tokenika.io). Our aim is to offer a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
 
@@ -20,8 +20,6 @@ Thus *EOSFactory* is composed of two layers:
 
 - C++ bridge called `teos` connected to an EOS node running a private testnet,
 - Python wrapper called `pyteos` acting as a convenient human-oriented interface.
-
-![Huta-Szkla-Julia-111.jpg](https://steemitimages.com/DQma9A6x8WFLDDtQrGgJ2o9Mma1apHGfjFH1mY9PdKYvGLn/Huta-Szkla-Julia-111.jpg)
 
 ### Development cycle
 
@@ -176,8 +174,6 @@ And here is a list of available documentation:
 
 ### The roadmap
 
-![projekt_0514_00_b.jpg](https://steemitimages.com/DQmaPc5fCcf3AtgwuTkMXA9H4XPNmELp9vwpc1kBqBpqyyT/projekt_0514_00_b.jpg)
-
 *EOSFactory* is still under development. What we present today is just a quick preview. 
 
 What we are working on right now are these two features:
@@ -191,4 +187,4 @@ Any feedback, especially critical, is very welcome.
 
 ---
 
-`Image sources: bine.info, hutaljuila.com, ytimg.com`
+`Image source: hutaljuila.com`
