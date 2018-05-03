@@ -3,20 +3,20 @@
         {
             "name": "wsl",
             "includePath": [
-                "${EOSIO_SOURCE_DIR_WINDOWS}/contracts",
-                "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/libc++/upstream/include",
-                "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/musl/upstream/include",
-                "${EOSIO_HOME_WINDOWS}/opt/boost_1_66_0/include",
+                "${EOSIO_SOURCE_DIR}/contracts",
+                "${EOSIO_SOURCE_DIR}/contracts/libc++/upstream/include",
+                "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
+                "${HOME}/opt/boost_1_66_0/include",
                 "${workspaceFolder}"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
             "browse": {
                 "path": [
-                    "${EOSIO_SOURCE_DIR_WINDOWS}/contracts",
-                    "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/libc++/upstream/include",
-                    "${EOSIO_SOURCE_DIR_WINDOWS}/contracts/musl/upstream/include",
-                    "${EOSIO_HOME_WINDOWS}/opt/boost_1_66_0/include",
+                    "${EOSIO_SOURCE_DIR}/contracts",
+                    "${EOSIO_SOURCE_DIR}/contracts/libc++/upstream/include",
+                    "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
+                    "${HOME}/opt/boost_1_66_0/include",
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,

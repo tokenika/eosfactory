@@ -6,12 +6,13 @@
 #   This file was downloaded from https://github.com/tokenika/eosfactory
 ##########################################################################
 
-EOSIO_SOURCE_DIR__=""
+EOSIO_SOURCE_DIR__="$EOSIO_SOURCE_DIR"
 CXX_COMPILER__=clang++-4.0
 C_COMPILER__=clang-4.0
 BUILD_TYPE__="Release"
 ECC_IMPL__="secp256k1" # secp256k1 or openssl or mixed
 ROOT_DIR_WINDOWS__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs"
+EOSIO_SHARED_MEMORY_SIZE_MB__=100
 
 teos_python="teos_python"
 library_dir="teos_lib"
@@ -27,12 +28,13 @@ Usage: ./build.sh [OPTIONS]
     -c  compiler, 'gnu' or 'clang'. Default is 'gnu'.
     -i  ECC implementation: 'secp256k1' or 'openssl' or 'mixed'. Default is 'secp256k1'.
     -t  Build type: 'Debug' or 'Release'. Default is 'Release'.
-    -r  Reset the build. 
+    -r  Reset the build.
+    -s  EOSIO node shared memory size (in MB). Default is 100 
     -h  this message.
 "    
 }
 
-while getopts ":e:c:i:t:rh" opt; do
+while getopts ":e:c:i:t:s:rh" opt; do
   case $opt in
     e)
         EOSIO_SOURCE_DIR__=$OPTARG
@@ -65,9 +67,15 @@ while getopts ":e:c:i:t:rh" opt; do
             exit -1        
         fi
         ;;
+
+    s)
+        EOSIO_SHARED_MEMORY_SIZE_MB__="$OPTARG"
+        ;;
+
     r)
         RESET__=RESET
         ;;
+
     h)
         usage
         exit 0
@@ -160,11 +168,11 @@ if [[ "$PROC_VERSION" == *"Microsoft"* ]]; then
     printf "\t%s\n" "Detected Windows Subsystem Linux"
 fi
 
-if [ -z "$EOSIO_SOURCE_DIR__" -a -z "$EOSIO_SOURCE_DIR" ]; then
+if [ -z "$EOSIO_SOURCE_DIR__" ]; then
     printf "\n%s\n" "
 EOSIO repository not found.
-    Please, set environment variable 'EOSIO_SOURCE_DIR' pointing
-    the path to the EOSIO repository
+    Please, set the option `-e`, or environment variable 'EOSIO_SOURCE_DIR' 
+    pointing the path to the EOSIO repository.
 "    
 fi
 
@@ -186,40 +194,33 @@ function wslMapLinux2Windows() {
 ##########################################################################
 # Set Linux environment variables
 ##########################################################################
+function setLinuxVariable() {
+    #name=$1
+    #value=$2
+
+    if [ "$1" != "$2" ]; then
+        echo "export $1=$2" >> ~/.bashrc
+        printf "\t%s\n" "setting $1: $2"
+    fi
+}
+
 printf "%s" "
 ##########################################################################
 "
 printf "\n%s\n" "Sets environment variables, if not set already:"
-
 #./build.sh -cgnu -e/mnt/c/Workspaces/EOS/eos
 
-if [ ! -z "$EOSIO_SOURCE_DIR__" -a "$EOSIO_SOURCE_DIR" != "$EOSIO_SOURCE_DIR__" ]; then
-    echo "export EOSIO_SOURCE_DIR=$EOSIO_SOURCE_DIR__" >> ~/.bashrc
-    printf "\t%s\n" "setting EOSIO_SOURCE_DIR: $EOSIO_SOURCE_DIR__"
-fi
-
-if [ -z "$EOSIO_SHARED_MEMORY_SIZE_MB" ]; then
-    value=100
-    echo "export EOSIO_SHARED_MEMORY_SIZE_MB=$value" >> ~/.bashrc
-    printf "\t%s\n" "setting EOSIO_SHARED_MEMORY_SIZE_MB: $value"
-fi
-
-if [ "$EOSIO_CONTEXT_DIR" != "$EOSIO_CONTEXT_DIR__" ]; then
-    echo "export EOSIO_CONTEXT_DIR=$EOSIO_CONTEXT_DIR__" >> ~/.bashrc
-    printf "\t%s\n" "setting EOSIO_CONTEXT_DIR: $EOSIO_CONTEXT_DIR__"
-fi
+setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
+setLinuxVariable "EOSIO_CONTEXT_DIR" "$EOSIO_CONTEXT_DIR__"
+setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTEXT_DIR__/$contracts"
+setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
+setLinuxVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
 
 PYTHONPATH__="$EOSIO_CONTEXT_DIR__/$teos_python"
 if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]
 then
     echo "export PYTHONPATH=${PYTHONPATH__}:${PYTHONPATH}" >> ~/.bashrc
     printf "\t%s\n" "setting PYTHONPATH: ${PYTHONPATH__}:"
-fi
-
-EOSIO_CONTRACT_WORKSPACE__="$EOSIO_CONTEXT_DIR__/$contracts"
-if [ "$EOSIO_CONTRACT_WORKSPACE" != "$EOSIO_CONTRACT_WORKSPACE__" ]; then
-    echo "export EOSIO_CONTRACT_WORKSPACE=$EOSIO_CONTRACT_WORKSPACE__" >> ~/.bashrc
-    printf "\t%s\n" "setting EOSIO_CONTRACT_WORKSPACE: $EOSIO_CONTRACT_WORKSPACE__"
 fi
  
 ##########################################################################
@@ -251,14 +252,14 @@ if [ ! -z "$IS_WSL" ]; then
         EOSIO_SOURCE_DIR_SET=$EOSIO_SOURCE_DIR
     fi
 
-    setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" $EOSIO_CONTRACT_WORKSPACE__
-    setWindowsVariable "EOSIO_SOURCE_DIR_SET" $EOSIO_SOURCE_DIR_SET
+    setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTEXT_DIR__/$contracts"
     setWindowsVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
-    setWindowsVariable "EOSIO_SOURCE_DIR_WINDOWS" wslMapLinux2Windows EOSIO_SOURCE_DIR_WINDOWS__ $EOSIO_SOURCE_DIR_SET
+    retval=""
+    wslMapLinux2Windows retval $EOSIO_SOURCE_DIR_SET
+    setWindowsVariable "EOSIO_SOURCE_DIR" "$retval" 
 
-    EOSIO_HOME_WINDOWS=${ROOT_DIR_WINDOWS__}\\home\\$USER
-    setx.exe "EOSIO_HOME_WINDOWS" "$EOSIO_HOME_WINDOWS"
-    printf "EOSIO_HOME_WINDOWS: %s\n"  "$EOSIO_HOME_WINDOWS"
+    setx.exe "HOME" "${ROOT_DIR_WINDOWS__}\\home\\$USER"
+    printf "HOME: %s\n"  "${ROOT_DIR_WINDOWS__}\\home\\$USER"
 fi
 
 if [ -z "$CMAKE" ]; then
