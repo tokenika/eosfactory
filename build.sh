@@ -18,6 +18,7 @@ library_dir="teos_lib"
 executable_dir="teos"
 build_dir="build"
 contracts="contracts"
+teos_exe=teos/build/teos
 
 function usage() {
     printf "%s\n" "
@@ -222,8 +223,20 @@ if [ "$EOSIO_CONTRACT_WORKSPACE" != "$EOSIO_CONTRACT_WORKSPACE__" ]; then
 fi
  
 ##########################################################################
-# Sert Windows environment variables
+# Set Windows environment variables
 ##########################################################################
+
+function setWindowsVariable() {
+    #name=$1
+    #value=$2
+
+    setOnWindows=$(cmd.exe /c echo %$1%)
+    setOnWindows=${setOnWindows::-1}
+    if [ "$setOnWindows" != "$2" ]; then
+        setx.exe "$1" "$2"
+        printf "\t%s\n" "setting windows $1: $2"
+    fi    
+}
 
 if [ ! -z "$IS_WSL" ]; then
     printf "%s" "
@@ -231,17 +244,21 @@ if [ ! -z "$IS_WSL" ]; then
     "
     printf "\nSets Windows environment variables:\n"
 
-    setx.exe EOSIO_SOURCE_DIR $EOSIO_SOURCE_DIR__
-    printf "\t%s\n" "setting windows EOSIO_SOURCE_DIR: $EOSIO_SOURCE_DIR__"
+    EOSIO_SOURCE_DIR_SET=""
+    if [ ! -z "$EOSIO_SOURCE_DIR__" -a "$EOSIO_SOURCE_DIR" != "$EOSIO_SOURCE_DIR__" ]; then
+        EOSIO_SOURCE_DIR_SET=$EOSIO_SOURCE_DIR__
+    else
+        EOSIO_SOURCE_DIR_SET=$EOSIO_SOURCE_DIR
+    fi
 
-    EOSIO_SOURCE_DIR_ARG_WINDOWS=""
-    wslMapLinux2Windows EOSIO_SOURCE_DIR_ARG_WINDOWS $EOSIO_SOURCE_DIR__
-    setx.exe EOSIO_SOURCE_DIR_WINDOWS ${EOSIO_SOURCE_DIR_ARG_WINDOWS}
-    printf "\t%s\n" "setting windows EOSIO_SOURCE_DIR_WINDOWS: $EOSIO_SOURCE_DIR_ARG_WINDOWS"
+    setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" $EOSIO_CONTRACT_WORKSPACE__
+    setWindowsVariable "EOSIO_SOURCE_DIR_SET" $EOSIO_SOURCE_DIR_SET
+    setWindowsVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
+    setWindowsVariable "EOSIO_SOURCE_DIR_WINDOWS" wslMapLinux2Windows EOSIO_SOURCE_DIR_WINDOWS__ $EOSIO_SOURCE_DIR_SET
 
-    HOME_WINDOWS=${ROOT_DIR_WINDOWS__}\\home\\$USER
-    setx.exe HOME_WINDOWS $HOME_WINDOWS
-    printf "HOME_WINDOWS: %s\n"  "$HOME_WINDOWS"
+    EOSIO_HOME_WINDOWS=${ROOT_DIR_WINDOWS__}\\home\\$USER
+    setx.exe "EOSIO_HOME_WINDOWS" "$EOSIO_HOME_WINDOWS"
+    printf "EOSIO_HOME_WINDOWS: %s\n"  "$EOSIO_HOME_WINDOWS"
 fi
 
 if [ -z "$CMAKE" ]; then

@@ -3,7 +3,7 @@
  *  @copyright defined in eos/LICENSE.txt
  */
 
-#include <eosiolib/currency.hpp>
+#include "currency.hpp"
 
 extern "C" {
     /// The apply method implements the dispatch of events to this contract
