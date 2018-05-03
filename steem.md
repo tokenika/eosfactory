@@ -1,5 +1,7 @@
 # Introducing *EOSFactory* - an EOS smart-contract development framework
 
+![mmaxresdefault.jpg](https://steemitimages.com/DQmc1xWHyKgce1pUftt9vuvWnqGXPecwPaUBH8Bhsc2UAJR/mmaxresdefault.jpg)
+
 [EOS Factory](http://eosfactory.io/) is a smart-contract development framework, created by [Tokenika](https://tokenika.io). Our aim is to offer a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
 
 This is our ultimate goal: using a single command-line interface within a single IDE you'll be able to launch a private testnet and then compile, unit-test and deploy EOS smart-contracts. 
@@ -19,6 +21,8 @@ Thus *EOSFactory* is composed of two layers:
 - C++ bridge called `teos` connected to an EOS node running a private testnet,
 - Python wrapper called `pyteos` acting as a convenient human-oriented interface.
 
+![Huta-Szkla-Julia-111.jpg](https://steemitimages.com/DQma9A6x8WFLDDtQrGgJ2o9Mma1apHGfjFH1mY9PdKYvGLn/Huta-Szkla-Julia-111.jpg)
+
 ### Development cycle
 
 This is what the smart-contract development cycle might look like:
@@ -37,7 +41,7 @@ Every step of the above process is fully automated by Python classes and methods
 
 ### Object-oriented vs. procedural
 
-Because we make use of Python what you are dealing with are objects. So for example a smart-contract is an object, and you handle it by running its methods, e.g. `contract.compile()`, `constract.deploy()`, `contract.push()` (to push actions), and `contract.get()`(to extract data from its tables).
+Because we make use of Python, what you are dealing with are classes and objects. For example, in *EOSFactory* a smart-contract is an object, and you handle it by running its methods, e.g. `contract.compile()`, `constract.deploy()`, `contract.push()` to push actions, and `contract.get()`to extract data from its tables. This is the opposite of procedural commands used in `cleos`, the official CLI for EOS.
 
 ### Python-based unit-testing
 
@@ -172,6 +176,8 @@ And here is a list of available documentation:
 
 ### The roadmap
 
+![projekt_0514_00_b.jpg](https://steemitimages.com/DQmaPc5fCcf3AtgwuTkMXA9H4XPNmELp9vwpc1kBqBpqyyT/projekt_0514_00_b.jpg)
+
 *EOSFactory* is still under development. What we present today is just a quick preview. 
 
 What we are working on right now are these two features:
@@ -182,3 +188,7 @@ What we are working on right now are these two features:
 We plan to have a next release of *EOSFactory* in a couple of weeks, ideally before EOS is launched.
 
 Any feedback, especially critical, is very welcome.
+
+---
+
+`Image sources: bine.info, hutaljuila.com, ytimg.com`
