@@ -429,28 +429,8 @@ fi
 
 printf "\n%s\n" "
 To verify your installation run the following commands:
-    python3
-    Python 3.5.2 (default, Nov 23 2017, 16:37:01)
-    [GCC 5.4.0 20160609] on linux
-    Type "help", "copyright", "credits" or "license" for more information.
-    >>> import teos
-    teos exe: /mnt/c/Workspaces/EOS/eosfactory/teos/build/teos
-    >>> teos.node_reset()
-    #  nodeos exe file: /mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos
-    #  genesis state file: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json
-    #   server address: 127.0.0.1:8888
-    #  config directory: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir
-    #  wallet directory: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet
-    #  head block number: 1
-    #  head block time: 2018-04-30T13:57:08
-
-    >>> teos.node_info()
-    #       head block: 52
-    #  head block time: 2018-04-30T14:33:05
-    #  last irreversible block: 51
-
-    teos.node_stop()
-    #  Daemon is stopped.
-
-We hope, you will see a minimized window running a local EOSIO node.
+    $ python3
+    >>> import test
+    >>> test()
+    >>> exit()
 "

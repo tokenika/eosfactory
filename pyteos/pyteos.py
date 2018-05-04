@@ -5,10 +5,10 @@ This is a Python front-end for Tokenika 'Teos'. Tokenika Teos is an
 alternative for EOSIO 'cleos'.
 """
 
-# import teos
+# import pyteos
 
 # import importlib
-# importlib.reload(teos)
+# importlib.reload(pyteos)
 
 import os
 import subprocess
@@ -37,7 +37,7 @@ class Setup:
     The configuration file is expected in the same folder as the current file.
     """
     __setupFile = os.path.dirname(os.path.abspath(__file__)) \
-        + "/teos.json"
+        + "/pyteos.json"
     __TEOS_EXE = "TEOS_executable"
     __review = False              
     teos_exe = ""
@@ -66,7 +66,7 @@ class Setup:
             print("teos exe: " + self.teos_exe)
         else:
             print(
-                'ERROR in teos.py!'
+                'ERROR in pyteos.py!'
                 '\nDo not know the teos exe!'
                 '\nIt is expected to be in the config file named\n'
                 '{0}'
@@ -80,7 +80,7 @@ class Setup:
 setup = Setup()
 
 ##############################################################################
-# teos commands
+# pyteos commands
 ##############################################################################
 
 class _Command:
@@ -631,7 +631,7 @@ class _Node(_Command):
     - **TEOS-python configuration**::
 
         TEOS_executable: Where is the TEOS executable. The parameter is set in 
-            the configuration file of this script, which is "teos.json" in the 
+            the configuration file of this script, which is "pyteos.json" in the 
             directory of this module, for example: 
             {"TEOS_executable":"absolute-path-to-the-teos.exe"}.
 
@@ -799,8 +799,8 @@ class AccountEosio(Account):
     Without any such, it is not possible to execute commands that need 
     authorizations.
 
-    account_eosio = teos.AccountEosio()
-    contract_eosio_bios = teos.SetContract(
+    account_eosio = pyteos.AccountEosio()
+    contract_eosio_bios = pyteos.SetContract(
         account_eosio, "eosio.bios", permission=account_eosio)
     #        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d0877...
     """

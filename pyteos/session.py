@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
 """ 
-This is a collection of macros made of elements of the teos module, intent 
+This is a collection of macros made of elements of the pyteos module, intent 
 for experiments with EOSIO smart contracts. 
 """
 
-import teos
+import pyteos
 import pathlib
 
 def reset():
@@ -19,39 +19,39 @@ def reset():
         allice, bob, carol: Prefabricated accounts.
 
     """
-    teos.node_reset()
+    pyteos.node_reset()
 
     global eosio
-    eosio = teos.AccountEosio()
+    eosio = pyteos.AccountEosio()
 
     global wallet
-    wallet = teos.Wallet()
+    wallet = pyteos.Wallet()
 
-    contract_eosio_bios = teos.SetContract(
+    contract_eosio_bios = pyteos.SetContract(
         eosio, "eosio.bios", permission=eosio)
-    key_owner = teos.CreateKey("key_owner")
-    key_active = teos.CreateKey("key_active")
+    key_owner = pyteos.CreateKey("key_owner")
+    key_active = pyteos.CreateKey("key_active")
 
     wallet.import_key(key_owner)
     wallet.import_key(key_active)
 
     global alice
-    alice = teos.Account(
+    alice = pyteos.Account(
         eosio, "alice", key_owner, key_active)    
         
     global bob
-    bob = teos.Account(
+    bob = pyteos.Account(
         eosio, "bob", key_owner, key_active)
             
     global carol
-    carol = teos.Account(
+    carol = pyteos.Account(
         eosio, "carol", key_owner, key_active)
 
-class Contract(teos.Contract):
+class Contract(pyteos.Contract):
     """
     Given a contract directory defining WAST and ABA, creates a contract.
 
-    This class extends the teos.Contract: it goes without the `account`
+    This class extends the pyteos.Contract: it goes without the `account`
     parameter, instead it uses an account created internally.
 
     - **parameters**
@@ -97,15 +97,15 @@ class Contract(teos.Contract):
             is_verbose=True):
         contract_path = pathlib.Path(contract_dir)
         self.name = contract_path.parts[-1]
-        self.key_owner = teos.CreateKey("key_owner")
-        self.key_active = teos.CreateKey("key_active")
+        self.key_owner = pyteos.CreateKey("key_owner")
+        self.key_active = pyteos.CreateKey("key_active")
 
         global wallet
         wallet.import_key(self.key_owner)
         wallet.import_key(self.key_active)
         
         global eosio
-        self.account = teos.Account(
+        self.account = pyteos.Account(
             eosio, self.name, self.key_owner, self.key_active)
         super().__init__(self.account, contract_dir, 
             wast_file, abi_file, 
@@ -116,7 +116,7 @@ class Contract(teos.Contract):
 
 
 def stop():
-    teos.node_stop()
+    pyteos.node_stop()
 
 def run():
-    teos.node_run()
+    pyteos.node_run()
