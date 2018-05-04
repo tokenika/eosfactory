@@ -14,7 +14,7 @@ ECC_IMPL__="secp256k1" # secp256k1 or openssl or mixed
 ROOT_DIR_WINDOWS__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs"
 EOSIO_SHARED_MEMORY_SIZE_MB__=100
 
-teos_python="teos_python"
+pyteos="pyteos"
 library_dir="teos_lib"
 executable_dir="teos"
 build_dir="build"
@@ -216,7 +216,7 @@ setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTEXT_DIR__/$contracts"
 setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
 setLinuxVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
 
-PYTHONPATH__="$EOSIO_CONTEXT_DIR__/$teos_python"
+PYTHONPATH__="$EOSIO_CONTEXT_DIR__/$pyteos"
 if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]
 then
     echo "export PYTHONPATH=${PYTHONPATH__}:${PYTHONPATH}" >> ~/.bashrc
