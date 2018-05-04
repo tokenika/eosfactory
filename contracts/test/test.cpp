@@ -1,5 +1,7 @@
+#include <eosiolib/eosio.hpp>
 #include <eosiolib/print.hpp>
-#include <tokenika.hpp>
+
+#include "test.hpp"
 
 using namespace eosio;
 

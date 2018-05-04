@@ -25,7 +25,7 @@ function usage() {
     printf "%s\n" "
 Usage: ./build.sh [OPTIONS]
     -e  EOSIO repository dir. Default is env. variable EOSIO_SOURCE_DIR.
-    -c  compiler, 'gnu' or 'clang'. Default is 'gnu'.
+    -c  compiler, 'gnu' or 'clang'. Default is 'clang'.
     -i  ECC implementation: 'secp256k1' or 'openssl' or 'mixed'. Default is 'secp256k1'.
     -t  Build type: 'Debug' or 'Release'. Default is 'Release'.
     -r  Reset the build.
@@ -258,10 +258,17 @@ if [ ! -z "$IS_WSL" ]; then
     wslMapLinux2Windows retval $EOSIO_SOURCE_DIR_SET
     setWindowsVariable "EOSIO_SOURCE_DIR" "$retval" 
 
-    setx.exe "HOME" "${ROOT_DIR_WINDOWS__}\\home\\$USER"
-    printf "HOME: %s\n"  "${ROOT_DIR_WINDOWS__}\\home\\$USER"
+    name="HOME"
+    value=$(cmd.exe /c echo %${name}%)
+    value=${value::-1} # a bug patch
+    notSet="%${name}%"
+    if [ "$value" == "$notSet" ]; then 
+        setx.exe "$name" "${ROOT_DIR_WINDOWS__}\\home\\$USER"
+        printf "${name}: %s\n"  "${ROOT_DIR_WINDOWS__}\\home\\$USER"    
+        echo set
+    fi
 fi
-
+exit 1
 if [ -z "$CMAKE" ]; then
     CMAKE=$( which cmake )
 fi
@@ -300,12 +307,14 @@ cp -u ${EOSIO_CONTEXT_DIR__}/resources/config.ini \
 
 if [ -z "$EOSIO_SOURCE_DIR" ]; then
     printf "/n%s\n" "
-THE BUILD IS NOT FINISHED!
-
-THE BASH HAS TO BE RESET in order to load newly set environment variables.
-Afterwards this script can be restarted to continue this build.
-
-Exiting now.
+##########################################################################
+#   THE BUILD IS NOT FINISHED!
+#
+#   THE BASH HAS TO BE RESET in order to load newly set environment 
+#   variables.
+#
+#   Afterwards, this script can be restarted to continue this build.
+##########################################################################
 "
     exit -1
 fi
@@ -398,10 +407,22 @@ if [ ! -z "$IS_WSL" ]; then
     If you use the 'Visual Studio Code', restart it in order to access new 
     environment variables.
 
-    Also check whether ${ROOT_DIR_WINDOWS__}
-    is an existing Windows path. If it is not, set a local Windows environment 
-    variable 'ROOT_DIR_WINDOWS__' to the value of the root of the WSL file system. 
-    Note that this value may be similar to the displayed one."
+    One needed variable expresses the Linux '\$HOME' in terms of the Windows
+    file system. You can see it (in the bash terminal):
+    \$ echo $(cmd.exe /c echo %HOME%)
+    C:\Users\cartman\AppData\Local\Packages\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\LocalState\rootfs\home\cartman
+
+    Check whether 'HOME' points to a valid directory. Do this (in the bash 
+    terminal):
+    \$ echo $(cmd.exe /c dir %HOME%)
+    5 Dir(s) 889,289,691,136 bytes freen_successfulkages\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\LocalState\rootfs\home\cartman
+
+    If not OK, the output is:
+    File Not Found.
+    If so, set the correct value of the 'HOME' variable issuing something 
+    like this:
+    \$ setx.exe 'HOME' '%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs\\home\\$USER'
+"
 else
     printf "%s\n" "PLEASE, RESET BASH!."
 fi

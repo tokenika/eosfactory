@@ -4,9 +4,9 @@
    "version": "2.0.0",   
    "tasks": [
         {
-            "label": "abi",
+            "label": "build",
             "type": "shell",
-            "command": "${env:TEOS} generate abi ${env:CONTRACTS_DIR}/tokenika;${env:TEOS} build contract ${env:CONTRACTS_DIR}/tokenika",
+            "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/test;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/test",
             "problemMatcher": [],
             "presentation": {
                     "reveal": "always",

@@ -4,7 +4,7 @@
    "version": "2.0.0",   
    "tasks": [
         {
-            "label": "abi",
+            "label": "build",
             "type": "shell",
             "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/@skeleton@;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@skeleton@",
             "problemMatcher": [],

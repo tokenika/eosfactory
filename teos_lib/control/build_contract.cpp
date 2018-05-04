@@ -94,34 +94,36 @@ namespace teos {
     {
       namespace bfs = boost::filesystem; 
 
-      if (bfs::is_directory(inTemplate))
+      if (bfs::is_regular_file(inTemplate) && !bfs::exists(inContract))
       {
-        bfs::copy(inTemplate, inContract);
-        return;
-      }
+        string contents;        
+        try{
+          bfs::ifstream in(inTemplate);
+          stringstream ss;
+          ss << in.rdbuf();
+          in.close();
+          contents = ss.str();
+          boost::replace_all(contents, "@" + templContractName + "@", name);
+        } catch(exception& e){
+          putError(e.what());
+          return;
+        }
 
-      string contents;        
-      try{
-        bfs::ifstream in(inTemplate);
-        stringstream ss;
-        ss << in.rdbuf();
-        in.close();
-        contents = ss.str();
-        boost::replace_all(contents, "@" + templContractName + "@", name);
-      } catch(exception& e){
-        putError(e.what());
-        return;
+        try{
+          bfs::ofstream ofs (inContract);
+          ofs << contents << endl;
+          ofs.flush();
+          ofs.close();          
+        } catch (bfs::filesystem_error &e){
+          putError(e.what());
+          return;
+        }         
+      } else
+      {
+        if(!bfs::exists(inContract)) {
+          bfs::copy(inTemplate, inContract);
+        }
       }
-
-      try{
-        bfs::ofstream ofs (inContract);
-        ofs << contents << endl;
-        ofs.flush();
-        ofs.close();          
-      } catch (bfs::filesystem_error &e){
-        putError(e.what());
-        return;
-      }         
     }
 
     void BootstrapContract::bootstrapContract(string name)
