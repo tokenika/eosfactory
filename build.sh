@@ -430,7 +430,7 @@ fi
 printf "\n%s\n" "
 To verify your installation run the following commands:
     $ python3
-    >>> import test
-    >>> test()
-    >>> exit()
+    >>> from test import *
+    >>> run()
+    >>> quit()
 "
