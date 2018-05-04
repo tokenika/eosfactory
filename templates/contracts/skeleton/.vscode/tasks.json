@@ -6,7 +6,7 @@
         {
             "label": "abi",
             "type": "shell",
-            "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/@contract_name@;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@contract_name@",
+            "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/@skeleton@;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@skeleton@",
             "problemMatcher": [],
             "presentation": {
                     "reveal": "always",

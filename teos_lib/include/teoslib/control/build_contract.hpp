@@ -205,10 +205,10 @@ Usage: ./teos create key --jarg '{
       void bootstrapContract(
         string name // contract name
       );
-      void copyTemplate(
-        boost::filesystem::path context_path,
-        boost::filesystem::path contract_path, 
-        string name, string extension);
+      void copy(
+        boost::filesystem::path inTemplate,
+        boost::filesystem::path inContract,
+        string name);
 
     public:
       BootstrapContract(
