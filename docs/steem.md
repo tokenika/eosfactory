@@ -48,28 +48,37 @@ Thanks to Python, what you are dealing with in *EOSFactory* are classes and obje
 This is what a simple unit test might look like in *EOSFactory*:
 
 ```
-c = Contract("eosio.token")
-c.deploy()
+import node
+import sess
+from eosf import *
 
-c.push("create", '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+def run():
+    node.reset()
+    sess.init()
 
-c.push("issue", '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', eosio)
+    c = Contract("eosio.token")
+    c.deploy()
 
-c.push("transfer", '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", "memo":"memo"}', alice)
+    c.push_action("create", '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+    
+    c.push_action("issue", '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', sess.eosio)
 
-c.push("transfer", '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", "memo":"memo"}', carol)
+    c.push_action("transfer", '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", "memo":"memo"}', sess.alice)
+    
+    c.push_action("transfer", '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", "memo":"memo"}', sess.carol)
+    
+    c.push_action("transfer", '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", "memo":"memo"}', sess.bob)
 
-c.push("transfer", '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", "memo":"memo"}', bob)
+    t1=c.get_table("accounts", sess.alice)
+    t2=c.get_table("accounts", sess.bob)
+    t3=c.get_table("accounts", sess.carol)
 
-t1=c.get("accounts", alice)
-t2=c.get("accounts", bob)
-t3=c.get("accounts", carol)
+    assert t1.json["rows"][0]["balance"] == '77.0000 EOS'
+    assert t2.json["rows"][0]["balance"] == '11.0000 EOS'
+    assert t3.json["rows"][0]["balance"] == '12.0000 EOS'
 
-assert t1.json["rows"][0]["balance"] == '77.0000 EOS'
-assert t2.json["rows"][0]["balance"] == '11.0000 EOS'
-assert t3.json["rows"][0]["balance"] == '12.0000 EOS'
-
-print("Test OK")
+    print("Test OK")
+    node.stop()
 ```
 
 And this is the output you receive after running it:
