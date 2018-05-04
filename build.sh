@@ -268,7 +268,7 @@ if [ ! -z "$IS_WSL" ]; then
         echo set
     fi
 fi
-exit 1
+
 if [ -z "$CMAKE" ]; then
     CMAKE=$( which cmake )
 fi
