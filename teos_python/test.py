@@ -2,7 +2,6 @@ import session as s
 
 def run():
     s.reset()
-    s.init()
 
     c = s.Contract("eosio.token")
 
@@ -24,3 +23,4 @@ def run():
     print("Test OK")
 
     s.stop()
+    

@@ -8,7 +8,7 @@ for experiments with EOSIO smart contracts.
 import teos
 import pathlib
 
-def init():
+def reset():
     """
     Initialise a test session.
 
@@ -19,6 +19,8 @@ def init():
         allice, bob, carol: Prefabricated accounts.
 
     """
+    teos.node_reset()
+
     global eosio
     eosio = teos.AccountEosio()
 
@@ -112,9 +114,6 @@ class Contract(teos.Contract):
             max_cpu_usage, max_net_usage,
             is_verbose)
 
-
-def reset():
-    teos.node_reset()
 
 def stop():
     teos.node_stop()
