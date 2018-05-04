@@ -169,10 +169,10 @@ You'll find the source code of *EOSFactory* in [this repository](https://github.
 
 And here is a list of available documentation:
 
-* Installing EOSFactory
-* Interacting with EOS Contracts in EOSFactory
-* Compiling EOS Contracts in EOSFactory
-* Unit-testing EOS Contracts in EOSFactory
+* [Installing EOSFactory](http://eosfactory.io/guides/01.InstallingEOSFactory.html)
+* [Interacting with EOS Contracts in EOSFactory](http://eosfactory.io/guides/02.InteractingWithEOSContractsInEOSFactory.html)
+* [Compiling EOS Contracts in EOSFactory](http://eosfactory.io/guides/03.CompilingEOSContractsInEOSFactory.html)
+* [Unit-testing EOS Contracts in EOSFactory](http://eosfactory.io/guides/04.UnitTestingEOSContractsInEOSFactory.html)
 
 ### The roadmap
 
