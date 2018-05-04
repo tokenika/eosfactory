@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
 """ 
-This is a Python front-end for Tokenika 'Teos'. Tokenika Teos is an 
-alternative for EOSIO 'cleos'.
+This is a Python front-end for 'teos', an alternative for EOSIO 'cleos'.
 """
 
 # import pyteos
