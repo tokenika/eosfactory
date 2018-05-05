@@ -73,3 +73,15 @@ class Contract(pyteos.Contract):
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             is_verbose)
+
+
+class Account(pyteos.Account):
+    def __init__(self, name, creator):
+        key_owner = pyteos.CreateKey("key_owner")
+        key_active = pyteos.CreateKey("key_active")
+
+        sess.wallet.import_key(key_owner)
+        sess.wallet.import_key(key_active)
+        
+        super().__init__(
+            creator, name, key_owner, key_active)

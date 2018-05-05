@@ -14,3 +14,6 @@ def stop():
 
 def run():
     pyteos.node_run()
+
+def info():
+    pyteos.node_info()
