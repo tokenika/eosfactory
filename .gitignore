@@ -5,6 +5,7 @@ build
 build_gnu
 teos/build
 teos_lib/build
+b
 
 **/Debug
 **/x64

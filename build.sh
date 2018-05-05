@@ -451,14 +451,6 @@ RESET the bash!."
 fi
 
 printf "\n%s\n" "
-To verify your installation run the following commands:
-    $ python3
-    >>> from test import *
-    >>> run()
-    >>> quit()
-
-or
-
-    $ python3 ./pyteos/test.py
-
+To verify your installation run the following command:
+    $ python3 ./tests/test1.py
 "
