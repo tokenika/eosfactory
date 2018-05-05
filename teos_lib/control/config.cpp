@@ -309,7 +309,7 @@ wallet-dir: .
           wantedPath 
             = bfs::path(sourceDir)
               / "build/etc/eosio/node_00" 
-              / "."/ configValue(teosControl, EOSIO_DAEMON_NAME);
+              / configValue(teosControl, EOSIO_DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
             return wantedPath.string();
           }          
@@ -319,7 +319,7 @@ wallet-dir: .
           wantedPath 
             = bfs::path(sourceDir)
               / "build/programs/" / configValue(teosControl, EOSIO_DAEMON_NAME)
-              / "." / configValue(teosControl, EOSIO_DAEMON_NAME);
+              / configValue(teosControl, EOSIO_DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
             return wantedPath.string();
           }          
@@ -327,7 +327,7 @@ wallet-dir: .
 
         {
           wantedPath = bfs::path("/usr/local/bin")
-              / "."/ configValue(teosControl, EOSIO_DAEMON_NAME);
+              / configValue(teosControl, EOSIO_DAEMON_NAME);
           if(bfs::exists(wantedPath)) {
             return wantedPath.string();
           }             
