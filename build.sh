@@ -263,7 +263,7 @@ if [ ! -z "$IS_WSL" ]; then
 
     ### env variable HOME
 
-    bashrc="bashrc"
+    bashrc=".bashrc"
     homePathSet=$(cmd.exe /c echo %HOME%)
     bashrcPathSet="${homePathSet::-1}\\$bashrc"
     bashrcDirSet=$(cmd.exe /c dir /B  $bashrcPathSet)
@@ -439,11 +439,23 @@ TIME_END=$(( `date -u +%s` - $TIME_BEGIN ))
 printf "\n%s\n%dmin %dsec\n\n" "eosfactory has been successfully built." \
     $(($TIME_END/60)) $(($TIME_END%60))
 
+printf "${bldred}%s${txtrst}" '
+         _______  _______  _______ _________ _______
+        (  ____ \(  ___  )(  ____ \\__   __/(  ___  )
+        | (    \/| (   ) || (    \/   ) (   | (   ) |
+        | (__    | |   | || (_____    | |   | |   | |
+        |  __)   | |   | |(_____  )   | |   | |   | |
+        | (      | |   | |      ) |   | |   | |   | |
+        | (____/\| (___) |/\____) |___) (___| (___) |
+        (_______/(_______)\_______)\_______/(_______)
+
+'
+
 if [ ! -z "$IS_WSL" ]; then
     printf "%s\n" "
 RESTART
-    the WSL bash.exe (or the Visual Studio Code that uses te bash.exe)
-    in order to access new environment variables.
+    the WSL bash.exe (or the Visual Studio Code that uses bash.exe)
+    in order to access the new environment variables.
 "
 else
     printf "%s\n" "
@@ -451,6 +463,7 @@ RESET the bash!."
 fi
 
 printf "\n%s\n" "
-To verify your installation run the following command:
+VERIFY
+    your installation by running the following command:
     $ python3 ./tests/test1.py
 "
