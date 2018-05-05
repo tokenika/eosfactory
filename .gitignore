@@ -3,9 +3,11 @@ workdir
 *.exe
 build
 build_gnu
-teos/build
-teos_lib/build
 b
+
+!/contracts/currency/build
+!/contracts/test/build
+!/templates/contracts/skeleton/build
 
 **/Debug
 **/x64
