@@ -578,8 +578,7 @@ class PushAction(_Command):
 
 
 class ContractTemplate(_Command):
-    def __init__(
-            self, name, is_verbose=True):
+    def __init__(self, name, is_verbose=True):
 
         self._jarg["name"] = name
 
@@ -594,30 +593,40 @@ class ContractTemplate(_Command):
 
 class ABI(_Command):
     def __init__(
-            self, types_hpp, abi_file="", 
+            self, source, abi_file="", 
             include_dir="", is_verbose=True):
 
-        self._jarg["types_hpp"] = types_hpp
+        try:
+            source = source.contract_dir
+        except:
+            pass
+
+        self._jarg["types_hpp"] = source
         self._jarg["abi_file"] = abi_file
         self._jarg["include_dir"] = include_dir
 
         _Command.__init__(self, "generate", "abi", is_verbose)
-        if not self.error:
-            self.abi = self.json["ABI"]
+        # if not self.error:
+        #     self.abi = self.json["ABI"]
 
 
 class WAST(_Command):
     def __init__(
-            self, src, wast_file="", 
+            self, source, wast_file="", 
             include_dir="", is_verbose=True):
 
-        self._jarg["src"] = src
+        try:
+            source = source.contract_dir
+        except:
+            pass
+
+        self._jarg["src"] = source
         self._jarg["wast_file"] = wast_file
         self._jarg["include_dir"] = include_dir
 
         _Command.__init__(self, "build", "contract", is_verbose)
-        if not self.error:
-            self.wast = self.json["WAST"]
+        # if not self.error:
+        #     self.wast = self.json["WAST"]
 
 
 class _Node(_Command):
@@ -890,12 +899,14 @@ class Contract(SetContract):
 
         return self.console
 
+
     def show_action(self, action, data, permission=""):
         """ Implements the 'cleos push action' without broadcasting. 
 
         """
         self.push_action(action, data, permission, dont_broadcast=1)
     
+
     def get_table(self, table, scope=""):
         """ Prints a contract's table
 

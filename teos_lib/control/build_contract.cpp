@@ -145,8 +145,12 @@ namespace teos {
         if(isError_){
           return;
         }
-        respJson_.put("contract_dir", contract_path.string());
       }
+      respJson_.put("contract_dir", contract_path.string());
+      respJson_.put("source_dir", contract_path.string());
+      respJson_.put("binary_dir", (contract_path / buildDir) .string());
+      respJson_.put("template_cpp", (contract_path / (name + ".cpp")).string());            
+      respJson_.put("template_hpp", (contract_path / (name + ".hpp")).string());            
     
       bfs::path templContractPath 
         = context_path / templContractsDir / templContractName;

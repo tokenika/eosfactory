@@ -283,42 +283,6 @@ namespace teos {
       return accountPermissions;
     }
 
-    // TeosCommand assemble_wast(const std::string& wast, vector<uint8_t>& wasm)
-    // {
-    //   IR::Module module;
-    //   std::vector<WAST::Error> parseErrors;
-    //   WAST::parseModule(wast.c_str(), wast.size(), module, parseErrors);
-    //   if (parseErrors.size())
-    //   {
-    //     stringstream  msg;
-    //     msg << "Error parsing WebAssembly text file:" << std::endl;
-    //     for (auto& error : parseErrors)
-    //     {
-    //       msg << ":" << error.locus.describe() << ": " << error.message.c_str() << std::endl;
-    //       msg << error.locus.sourceLine << std::endl;
-    //       msg << std::setw(error.locus.column(8)) << "^" << std::endl;
-    //     }
-    //     return TeosCommand(msg.str(), CODE_PATH);
-    //   }
-
-    //   try
-    //   {
-    //     // Serialize the WebAssembly module.
-    //     Serialization::ArrayOutputStream stream;
-    //     WASM::serialize(stream, module);
-    //     wasm = stream.getBytes();
-    //   }
-    //   catch (Serialization::FatalSerializationException exception)
-    //   {
-    //     stringstream  msg;
-    //     msg << "Error serializing WebAssembly binary file:" << std::endl;
-    //     msg << exception.message << std::endl;
-
-    //     return TeosCommand(msg.str(), CODE_PATH);
-    //   }
-    //   return TeosCommand(CODE_PATH);
-    // }
-
     TeosCommand  /*fc::variant*/ push_actions(
         vector<chain::action>&& actions,
           unsigned expirationSec = 30, 
