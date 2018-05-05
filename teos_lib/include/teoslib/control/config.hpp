@@ -9,6 +9,7 @@
 namespace teos {
   namespace control {
     using namespace std;
+
     /*
      * All the links with the environmen are defined here:
      */
@@ -47,5 +48,34 @@ namespace teos {
     string getEOSIO_WASM_LLC(TeosControl* teosControl);
 
     string getSharedMemorySizeMb();
-  };
+
+    class GetConfig : public TeosControl
+    {
+    public:
+      GetConfig();
+    };
+
+    class GetConfigOptions : public ControlOptions
+    {
+    public:
+      GetConfigOptions(int argc, const char **argv) 
+        : ControlOptions(argc, argv) {}
+
+    protected:
+      const char* getUsage() {
+        return R"EOF(
+Get Teos configuration.
+Usage: ./teos get config
+)EOF";
+      }
+
+      TeosControl executeCommand() {
+        return GetConfig();
+      }
+
+      void printout(TeosControl command, variables_map &vm){
+        sharp() << "Daemon is stopped." << endl;
+      }
+    };    
+  }
 }

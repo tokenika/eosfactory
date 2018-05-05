@@ -483,7 +483,13 @@ wallet-dir: .
     string getEOSIO_WASM_LLC(TeosControl* teosControl){
       bfs::path home(getenv("HOME"));
       return (home / configValue(teosControl, EOSIO_WASM_LLC)).string();
-    }    
+    }
+
+    GetConfig::GetConfig(){
+        respJson_.put("contextDir", getContextDir(this));
+        respJson_.put("sourceDir", getSourceDir(this));
+        respJson_.put("dataDir", getDataDir(this));
+        respJson_.put("contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));    
   }
 }
 
