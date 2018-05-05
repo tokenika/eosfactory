@@ -26,4 +26,7 @@ def run():
 
     print("Test OK")
     node.stop()
+
+if __name__ == "__main__":
+    run()
     

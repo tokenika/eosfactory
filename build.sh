@@ -15,11 +15,12 @@ ROOT_DIR_WINDOWS__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWind
 EOSIO_SHARED_MEMORY_SIZE_MB__=100
 
 pyteos="pyteos"
+tests="tests"
 library_dir="teos_lib"
 executable_dir="teos"
 build_dir="build"
 contracts="contracts"
-teos_exe=teos/build/teos
+teos_exe="teos/build/teos"
 
 function usage() {
     printf "%s\n" "
@@ -30,6 +31,7 @@ Usage: ./build.sh [OPTIONS]
     -t  Build type: 'Debug' or 'Release'. Default is 'Release'.
     -r  Reset the build.
     -s  EOSIO node shared memory size (in MB). Default is 100 
+    -o  Path to the Windows WSL root, if applicable. Default is $ROOT_DIR_WINDOWS__
     -h  this message.
 "    
 }
@@ -74,6 +76,10 @@ while getopts ":e:c:i:t:s:rh" opt; do
 
     r)
         RESET__=RESET
+        ;;
+
+    o) 
+        ROOT_DIR_WINDOWS__="$OPTARG"
         ;;
 
     h)
@@ -195,12 +201,12 @@ function wslMapLinux2Windows() {
 # Set Linux environment variables
 ##########################################################################
 function setLinuxVariable() {
-    #name=$1
-    #value=$2
+    name=$1
+    value=$2
 
-    if [ "$1" != "$2" ]; then
-        echo "export $1=$2" >> ~/.bashrc
-        printf "\t%s\n" "setting $1: $2"
+    if [ "${!name}" != "$value" ]; then
+        echo "export $name=$value" >> ~/.bashrc
+        printf "\t%s\n" "setting $name: $value"
     fi
 }
 
@@ -216,7 +222,7 @@ setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTEXT_DIR__/$contracts"
 setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
 setLinuxVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
 
-PYTHONPATH__="$EOSIO_CONTEXT_DIR__/$pyteos"
+PYTHONPATH__="$EOSIO_CONTEXT_DIR__/${pyteos}:$EOSIO_CONTEXT_DIR__/${tests}:"
 if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]
 then
     echo "export PYTHONPATH=${PYTHONPATH__}:${PYTHONPATH}" >> ~/.bashrc
@@ -228,9 +234,6 @@ fi
 ##########################################################################
 
 function setWindowsVariable() {
-    #name=$1
-    #value=$2
-
     setOnWindows=$(cmd.exe /c echo %$1%)
     setOnWindows=${setOnWindows::-1}
     if [ "$setOnWindows" != "$2" ]; then
@@ -243,7 +246,7 @@ if [ ! -z "$IS_WSL" ]; then
     printf "%s" "
 ##########################################################################
     "
-    printf "\nSets Windows environment variables:\n"
+    printf "\n%s\n\n" "Sets Windows environment variables, if not set already:"
 
     EOSIO_SOURCE_DIR_SET=""
     if [ ! -z "$EOSIO_SOURCE_DIR__" -a "$EOSIO_SOURCE_DIR" != "$EOSIO_SOURCE_DIR__" ]; then
@@ -258,14 +261,48 @@ if [ ! -z "$IS_WSL" ]; then
     wslMapLinux2Windows retval $EOSIO_SOURCE_DIR_SET
     setWindowsVariable "EOSIO_SOURCE_DIR" "$retval" 
 
-    name="HOME"
-    value=$(cmd.exe /c echo %${name}%)
-    value=${value::-1} # a bug patch
-    notSet="%${name}%"
-    if [ "$value" == "$notSet" ]; then 
-        setx.exe "$name" "${ROOT_DIR_WINDOWS__}\\home\\$USER"
-        printf "${name}: %s\n"  "${ROOT_DIR_WINDOWS__}\\home\\$USER"    
-        echo set
+    ### env variable HOME
+
+    bashrc="bashrc"
+    homePathSet=$(cmd.exe /c echo %HOME%)
+    bashrcPathSet="${homePathSet::-1}\\$bashrc"
+    bashrcDirSet=$(cmd.exe /c dir /B  $bashrcPathSet)
+    if [ ! -z ${bashrcDirSet} ]; then
+        bashrcDirSet=${bashrcDirSet::-1}
+    fi
+    # printf "//// left: %s\n" "${#bashrcDirSet} $bashrcDirSet"
+    # printf "/// right: %s\n" "${#bashrc} $bashrc"    
+    if [ "$bashrcDirSet" != "$bashrc" ]; then
+        homeWindows=${ROOT_DIR_WINDOWS__}\\"home"\\$USER
+
+        bashrcPath=${homeWindows}\\$bashrc
+        bashrcDir=$(cmd.exe /c dir /B  $bashrcPath)
+
+        if [ ! -z ${bashrcDir} ]; then
+            #a=${a// /}
+            bashrcDir=${bashrcDir::-1}
+        fi 
+
+        # printf "//// left: %s\n" "${#bashrcDir} $bashrcDir"
+        # printf "/// right: %s\n" "${#bashrc} $bashrc"    
+        if [ "$bashrcDir" == "$bashrc" ]; then 
+            setx.exe "HOME" "$homeWindows"
+            printf "HOME: %s\n" "$homeWindows"
+        else
+            printf "\n%s" "
+    ######################################################################
+    #   Cannot find the root of the WSL file system which was tried to be
+    #
+    #   ${ROOT_DIR_WINDOWS__}
+    #
+    #   Please, find the path in your computer, and restart the ./build.sh
+    #   with option 
+    #   -o <path to the root of the WSL file system>
+    #   added to the command line.
+    ######################################################################
+    " 
+        exit 1
+        fi
     fi
 fi
 
@@ -404,27 +441,13 @@ printf "\n%s\n%dmin %dsec\n\n" "eosfactory has been successfully built." \
 
 if [ ! -z "$IS_WSL" ]; then
     printf "%s\n" "
-    If you use the 'Visual Studio Code', restart it in order to access new 
-    environment variables.
-
-    One needed variable expresses the Linux '\$HOME' in terms of the Windows
-    file system. You can see it (in the bash terminal):
-    \$ echo $(cmd.exe /c echo %HOME%)
-    C:\Users\cartman\AppData\Local\Packages\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\LocalState\rootfs\home\cartman
-
-    Check whether 'HOME' points to a valid directory. Do this (in the bash 
-    terminal):
-    \$ echo $(cmd.exe /c dir %HOME%)
-    5 Dir(s) 889,289,691,136 bytes freen_successfulkages\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\LocalState\rootfs\home\cartman
-
-    If not OK, the output is:
-    File Not Found.
-    If so, set the correct value of the 'HOME' variable issuing something 
-    like this:
-    \$ setx.exe 'HOME' '%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs\\home\\$USER'
+RESTART
+    the WSL bash.exe (or the Visual Studio Code that uses te bash.exe)
+    in order to access new environment variables.
 "
 else
-    printf "%s\n" "PLEASE, RESET BASH!."
+    printf "%s\n" "
+RESET the bash!."
 fi
 
 printf "\n%s\n" "
@@ -433,4 +456,9 @@ To verify your installation run the following commands:
     >>> from test import *
     >>> run()
     >>> quit()
+
+or
+
+    $ python3 ./pyteos/test.py
+
 "
