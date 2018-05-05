@@ -921,7 +921,6 @@ class Contract(SetContract):
         return GetTable(self.name, table, scope)
 
 
-
 def node_reset():
     _Node(1, True)
 
