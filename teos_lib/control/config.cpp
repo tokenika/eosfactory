@@ -489,7 +489,8 @@ wallet-dir: .
         respJson_.put("contextDir", getContextDir(this));
         respJson_.put("sourceDir", getSourceDir(this));
         respJson_.put("dataDir", getDataDir(this));
-        respJson_.put("contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));    
+        respJson_.put("contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));
+    }  
   }
 }
 
