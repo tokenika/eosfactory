@@ -889,9 +889,15 @@ class Contract(SetContract):
             pprint.pprint(self.action_json)
 
         return self.console
+
+    def show_action(self, action, data, permission=""):
+        """ Implements the 'cleos push action' without broadcasting. 
+
+        """
+        self.push_action(action, data, permission, dont_broadcast=1)
     
     def get_table(self, table, scope=""):
-        """ Prints accounts.
+        """ Prints a contract's table
 
         """
         if not scope:
