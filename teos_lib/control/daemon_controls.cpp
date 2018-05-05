@@ -131,7 +131,7 @@ namespace teos {
           return;
         }
 
-        string commandLine = "./" + reqJson_.get<string>("daemon_exe")
+        string commandLine = reqJson_.get<string>("daemon_exe")
           + " --genesis-json " + reqJson_.get<string>("genesis-json")
           + " --http-server-address " 
           + reqJson_.get<string>("http-server-address")
