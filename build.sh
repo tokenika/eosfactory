@@ -222,7 +222,7 @@ setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTEXT_DIR__/$contracts"
 setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
 setLinuxVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
 
-PYTHONPATH__="$EOSIO_CONTEXT_DIR__/${pyteos}:$EOSIO_CONTEXT_DIR__/${tests}:"
+PYTHONPATH__="$EOSIO_CONTEXT_DIR__/${pyteos}:$EOSIO_CONTEXT_DIR__/${tests}"
 if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]
 then
     echo "export PYTHONPATH=${PYTHONPATH__}:${PYTHONPATH}" >> ~/.bashrc

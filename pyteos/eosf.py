@@ -51,13 +51,27 @@ class Contract(pyteos.Contract):
         key_active: Another key object.
         account: The account that owns the contract.
     """
-    def __init__(self, contract_dir, 
+    def __init__(
+            self, contract_dir, 
             wast_file="", abi_file="", 
             permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             is_verbose=True):
-        contract_path = pathlib.Path(contract_dir)
+        self.contract_dir=contract_dir
+        self.wast_file=wast_file
+        self.abi_file=abi_file
+        self.permission=permission
+        self.expiration_sec=expiration_sec
+        self.skip_signature=skip_signature
+        self.dont_broadcast=dont_broadcast
+        self.forceUnique=forceUnique
+        self.max_cpu_usage=max_cpu_usage
+        self.max_net_usage=max_net_usage
+        self.is_verbose=is_verbose
+
+    def deploy(self):
+        contract_path = pathlib.Path(self.contract_dir)
         self.name = contract_path.parts[-1]
         self.key_owner = pyteos.CreateKey("key_owner")
         self.key_active = pyteos.CreateKey("key_active")
@@ -66,13 +80,14 @@ class Contract(pyteos.Contract):
         sess.wallet.import_key(self.key_active)
         
         self.account = pyteos.Account(
-            sess.eosio, self.name, self.key_owner, self.key_active)
-        super().__init__(self.account, contract_dir, 
-            wast_file, abi_file, 
-            permission, expiration_sec, 
-            skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage,
-            is_verbose)
+            sess.eosio, self.name, self.key_owner, self.key_active)        
+        super().__init__(
+            self.account, self.contract_dir,
+            self.wast_file, self.abi_file,
+            self.permission, self.expiration_sec,
+            self.skip_signature, self.dont_broadcast, self.forceUnique,
+            self.max_cpu_usage, self.max_net_usage,
+            self.is_verbose)
 
 
 class Account(pyteos.Account):
