@@ -436,12 +436,12 @@ printf "%s" "
 ##########################################################################
 "
 TIME_END=$(( `date -u +%s` - $TIME_BEGIN ))
-printf "\n%s\n%dmin %dsec\n\n" "eosfactory has been successfully built." \
+printf "\n%s\n%dmin %dsec\n\n" "EOSFactory has been successfully built." \
     $(($TIME_END/60)) $(($TIME_END%60))
 
 printf "${bldred}%s${txtrst}" '
          _______  _______  _______     _______ 
-        (  ____ \(  ___  )(  ____ \   (  ____ )
+        (  ____ \(  ___  )(  ____ \   (  _____)
         | (    \/| (   ) || (    \/   | (
         | (__    | |   | || (_____    | (___ 
         |  __)   | |   | |(_____  )   |  ___)
@@ -459,11 +459,12 @@ RESTART
 "
 else
     printf "%s\n" "
-RESET the bash!."
+RESTART
+    the bash terminal in order to access the new environment variables."
 fi
 
 printf "\n%s\n" "
 VERIFY
-    your installation by running the following command:
+    the EOSFacotry installation by running the following command:
     $ python3 ./tests/test1.py
 "
