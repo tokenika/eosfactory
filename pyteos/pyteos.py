@@ -965,7 +965,7 @@ class Contract(SetContract):
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0, is_verbose=False
         ):
-        """ Implements the 'cleos push action' command. 
+        """ Implements the 'push action' command. 
 
         """
         if not permission:
@@ -997,7 +997,7 @@ class Contract(SetContract):
 
 
     def show_action(self, action, data, permission=""):
-        """ Implements the 'cleos push action' without broadcasting. 
+        """ Implements the 'push action' command without broadcasting. 
 
         """
         self.push_action(action, data, permission, dont_broadcast=1)
