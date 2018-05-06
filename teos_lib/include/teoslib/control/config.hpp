@@ -72,10 +72,6 @@ Usage: ./teos get config
       TeosControl executeCommand() {
         return GetConfig();
       }
-
-      void printout(TeosControl command, variables_map &vm){
-        sharp() << "Daemon is stopped." << endl;
-      }
     };    
   }
 }

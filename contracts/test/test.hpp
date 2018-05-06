@@ -1,4 +1,0 @@
-#include <eosiolib/eosio.hpp>
-
-
-
