@@ -923,8 +923,8 @@ class Contract(SetContract):
         return self._out
 
 
-    def path():
-        return self.contract_path_absolute
+    def path(self):
+        pprint.pprint(str(self.contract_path_absolute))
 
 
     def deploy(self):
