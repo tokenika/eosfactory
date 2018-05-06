@@ -94,8 +94,8 @@
 <div class="section" id="prerequisites">
 <span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>This tutorial assumes that you have successfully installed <em>EOSFactory</em>. If it’s not the case, please refer to <a class="reference external" href="01.InstallingEOSFactory.html">this guide</a>.</li>
-<li>We also assume that you are familiar with the material covered in <a class="reference external" href="02.GettingStartedwithEOSContractsinEOSFactory.html">Getting Started with EOS Contracts in <em>EOSFactory</em></a>.</li>
+<li>This tutorial assumes that you have successfully installed <em>EOSFactory</em>. If it’s not the case, please refer to <a class="reference external" href="01.InstallingEOSFactory.html">Installing <em>EOSFactory</em></a>.</li>
+<li>We also assume that you are familiar with the material covered in <a class="reference external" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in <em>EOSFactory</em></a>.</li>
 <li>Finally, we assume that you are familiar with the official <a class="reference external" href="https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract">EOS Hello World tutorial</a>, as it presents the default way to compile and deploy smart-contracts in EOS. What we present here is an alternative.</li>
 </ul>
 </div>
@@ -121,13 +121,6 @@
 </div>
 <p>To check the directory where the contract’s files are located:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">path</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>You can keep your contracts in any location you want. However, if it’s a non-standard location (i.e. different from <code class="docutils literal notranslate"><span class="pre">eos/build/contracts</span></code> or <code class="docutils literal notranslate"><span class="pre">eosfactory/contracts</span></code>) then you’ll need to provide the entire path to its folder, e.g.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;/mnt/d/Workspaces/EOS/eosfactory/contracts/hello1&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;~/Workspaces/EOS/eosfactory/contracts/hello2&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

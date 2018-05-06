@@ -91,9 +91,11 @@
 <div class="section" id="prerequisites">
 <span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>If you’re on Windows 10, we assume that you have <em>Windows Subsystem for Linux</em> installed. If that’s not the case, please refer to <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">this guide</a>.</li>
-<li>We also assume that you have successfully installed <em>EOSIO</em> on your machine. If that’s not the case, please refer to <a class="reference external" href="https://github.com/EOSIO/eos/wiki/Local-Environment">this guide</a>. If you are on Windows 10, the only option you have is installing <em>EOSIO</em> in the Ubuntu bash (supplied by <em>Windows Subsystem for Linux</em>), as it cannot be compiled directly on a Windows machine. What we recommend is clone the <em>EOSIO</em> source code in Windows, but build it in the Ubuntu bash, taking advantage of the fact that the entire Windows file structure is fully accessible in the Ubuntu bash.</li>
+<li>If you’re on Windows 10, we assume that you have <a class="reference external" href="https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux"><em>Windows Subsystem for Linux</em></a> installed. If that’s not the case, please refer to <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">this guide</a>.</li>
+<li>We also assume that you have successfully installed <em>EOSIO</em> on your machine. If that’s not the case, please refer to <a class="reference external" href="https://github.com/EOSIO/eos/wiki/Local-Environment">this guide</a>.</li>
+<li>And finally we assume you have <a class="reference external" href="https://www.python.org/download/releases/3.0/"><em>Python3</em></a> installed (this refers to OSX and Linux only, as <em>Windows Subsystem for Linux</em> ships with <em>Python3</em> by default).</li>
 </ul>
+<p><strong>NOTE:</strong> If you are on Windows 10, the only option you have regarding <em>EOSIO</em> installation is building it in the Ubuntu bash (supplied by <em>Windows Subsystem for Linux</em>), as it cannot be compiled directly on a Windows machine. What we recommend is clone the <em>EOSIO</em> source code in Windows, but build it in the Ubuntu bash, taking advantage of the fact that the entire Windows file structure is fully accessible in the Ubuntu bash.</p>
 </div>
 <div class="section" id="get-the-source-code">
 <span id="get-the-source-code"></span><h2>Get the source code<a class="headerlink" href="#get-the-source-code" title="Permalink to this headline">¶</a></h2>
@@ -121,7 +123,7 @@
 <span class="o">./</span><span class="n">build</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> When the build process is finished restart the bash terminal, or alternatively reload <code class="docutils literal notranslate"><span class="pre">bashrc</span></code>:</p>
+<p><strong>NOTE:</strong> When the build process is finished restart the bash terminal or at least reload <code class="docutils literal notranslate"><span class="pre">bashrc</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
 </pre></div>
 </div>
@@ -141,19 +143,16 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
 </pre></div>
 </div>
-<p>Next, still in the bash terminal run this command to define a Windows user variable pointing to your Ubuntu home directory as seen from the Windows file system perspective:</p>
+<p>Next, still in the bash terminal run this command to define a Windows user variable pointing to your Ubuntu home directory, as seen from the Windows file system perspective:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">setx</span><span class="o">.</span><span class="n">exe</span> <span class="s2">&quot;HOME&quot;</span> <span class="s2">&quot;path</span><span class="se">\\</span><span class="s2">to</span><span class="se">\\</span><span class="s2">your</span><span class="se">\\</span><span class="s2">ubuntu</span><span class="se">\\</span><span class="s2">home</span><span class="se">\\</span><span class="s2">directory&quot;</span>
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> Make sure to supply the correct path - most probably it will be similar to this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs\\home\\$USER
-</pre></div>
-</div>
-<p>If so, the entire command will be this:</p>
+<p><strong>NOTE:</strong> Make sure to supply the correct path - most probably it will be similar to the one listed below:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>setx.exe &quot;HOME&quot; %LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs\\home\\$USER
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> If you are unsure what the path is in your case, open <em>Windows Explorer</em> and navigate to the  <code class="docutils literal notranslate"><span class="pre">%LocalAppData%\Packages</span></code> folder and search for <code class="docutils literal notranslate"><span class="pre">rootfs</span></code>.</p>
+<p>If you are unsure what the path is in your case, open <em>Windows Explorer</em> and navigate to the  <code class="docutils literal notranslate"><span class="pre">%LocalAppData%\Packages</span></code> folder and search for <code class="docutils literal notranslate"><span class="pre">rootfs</span></code>.</p>
+<p><strong>NOTE:</strong> Make sure the supplied path ends with your Ubuntu user name.</p>
 <p><strong>NOTE:</strong> Restart your bash terminal for the change to take effect.</p>
 <p>Check if the variable <code class="docutils literal notranslate"><span class="pre">HOME</span></code> has been properly set by running this command in the bash terminal:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>echo $(cmd.exe /c dir %HOME%)

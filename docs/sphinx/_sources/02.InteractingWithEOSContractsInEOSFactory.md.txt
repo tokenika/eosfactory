@@ -4,9 +4,9 @@ The purpose of this tutorial is to demonstrate how *EOSFactory* and its Python C
 
 ## Prerequisites
 
-* This tutorial assumes that you have successfully installed *EOSFactory*. If it's not the case, please refer to [this guide](01.InstallingEOSFactory.html).
+* This tutorial assumes that you have successfully installed *EOSFactory*. If it's not the case, please refer to [Installing *EOSFactory*](01.InstallingEOSFactory.html).
 * We also assume that you are familiar with the official [EOS tutorials](https://github.com/EOSIO/eos/wiki/Tutorial-Getting-Started-With-Contracts), as they will give you a broader context and explain the rationale behind EOS smart-contracts.
-* Finally, *EOSFactory* works perfectly with *Visual Studio Code*. To install it, please refer to [this webpage](https://code.visualstudio.com/download).
+* Finally, *EOSFactory* works perfectly with [*Visual Studio Code*](https://code.visualstudio.com). To install it, please refer to [this webpage](https://code.visualstudio.com/download).
 
 ## Set up *Visual Studio Code* (VSC)
 

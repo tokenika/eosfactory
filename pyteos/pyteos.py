@@ -939,7 +939,7 @@ class Contract(SetContract):
 
     def wast(self):
         if self.is_mutable:
-            self.wast = WAST(str(self.contract_path_absolute))
+            WAST(str(self.contract_path_absolute))
         else:
             print("ERROR!")
             print("Cannot modify system contracts.")
@@ -947,7 +947,7 @@ class Contract(SetContract):
 
     def abi(self):
         if self.is_mutable:
-            self.abi = ABI(str(self.contract_path_absolute))
+            ABI(str(self.contract_path_absolute))
         else:
             print("ERROR!")
             print("Cannot modify system contracts.")
