@@ -18,3 +18,4 @@ eos_libraries/visual_studio/test.exp
 __pycache__
 pyteos/doscs/Makefile
 
+*.pyc

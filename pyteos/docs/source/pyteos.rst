@@ -1,33 +1,30 @@
-Teos python
-===========
+pyteos python
+=============
 
-.. autoclass:: teos.GetAccount
+.. autoclass:: pyteos.GetAccount
 
-.. autoclass:: teos.SetContract
+.. autoclass:: pyteos.SetContract
 
-.. autoclass:: teos.WalletCreate
+.. autoclass:: pyteos.WalletCreate
 
-.. autoclass:: teos.WalletList
+.. autoclass:: pyteos.WalletList
 
-.. autoclass:: teos.WalletImport
+.. autoclass:: pyteos.WalletImport
 
-.. autoclass:: teos.WalletKeys
+.. autoclass:: pyteos.WalletKeys
 
-.. autoclass:: teos.WalletOpen
+.. autoclass:: pyteos.WalletOpen
 
-.. autoclass:: teos.WalletLock
+.. autoclass:: pyteos.WalletLock
 
-.. autoclass:: teos.WalletUnlock
+.. autoclass:: pyteos.WalletUnlock
 
-.. autoclass:: teos.GetInfo
+.. autoclass:: pyteos.GetInfo
 
-.. autoclass:: teos.GetBlock
+.. autoclass:: pyteos.GetBlock
 
-.. autoclass:: teos.Account
+.. autoclass:: pyteos.Account
    :members:
 
-.. autoclass:: teos.Contract
-   :members:
-
-.. autoclass:: teos.Daemon
+.. autoclass:: pyteos.Contract
    :members:
