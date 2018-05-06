@@ -2,37 +2,27 @@
 
 <!doctype html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Teos python &mdash; Teos python 1.0 documentation</title>
-    
-    <link rel="stylesheet" href="static/bizstyle.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
-    <script type="text/javascript" src="static/bizstyle.js"></script>
-    <link rel="top" title="Teos python 1.0 documentation" href="index.html" />
-    <link rel="prev" title="Tutorial Getting Started With Contracts" href="tutorial_getting_with_contracts.html" />
+    <title>pyteos &#8212; EOSFactory 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="node" href="node.html" />
+    <link rel="prev" title="Unit-testing EOS Contracts in EOSFactory" href="04.UnitTestingEOSContractsInEOSFactory.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="static/css3-mediaqueries.js"></script>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
     <![endif]-->
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -40,34 +30,39 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="tutorial_getting_with_contracts.html" title="Tutorial Getting Started With Contracts"
+          <a href="node.html" title="node"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="04.UnitTestingEOSContractsInEOSFactory.html" title="Unit-testing EOS Contracts in EOSFactory"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Teos python 1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EOSFactory 1.0 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="tutorial_getting_with_contracts.html"
-                        title="previous chapter">Tutorial Getting Started With Contracts</a></p>
+  <p class="topless"><a href="04.UnitTestingEOSContractsInEOSFactory.html"
+                        title="previous chapter">Unit-testing EOS Contracts in <em>EOSFactory</em></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="node.html"
+                        title="next chapter">node</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="sources/pyteos.txt"
+      <li><a href="_sources/pyteos.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -78,25 +73,25 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="teos-python">
-<h1>Teos python<a class="headerlink" href="#teos-python" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="pyteos">
+<h1>pyteos<a class="headerlink" href="#pyteos" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="teos.GetAccount">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">GetAccount</code><span class="sig-paren">(</span><em>account</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.GetAccount" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.GetAccount">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">GetAccount</code><span class="sig-paren">(</span><em>account</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.GetAccount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve an account from the blockchain.</p>
-<p>Generic &#8216;str&#8217; method returns a formatted output of the EOSIO node.
-Generic &#8216;repr&#8217; method returns the json output of the EOSIO node.</p>
+<p>Generic ‘str’ method returns a formatted output of the EOSIO node.
+Generic ‘repr’ method returns the json output of the EOSIO node.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>account: The account object or the name of the account to retrieve.
-is_verbose: If &#39;False&#39;, do not print stdout, default is &#39;True&#39;.
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">account</span><span class="p">:</span> <span class="n">The</span> <span class="n">account</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">account</span> <span class="n">to</span> <span class="n">retrieve</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">If</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">do</span> <span class="ow">not</span> <span class="nb">print</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">default</span> <span class="ow">is</span> <span class="s1">&#39;True&#39;</span><span class="o">.</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first"><strong>attributes</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>name: The name of the account.
-error: Whether any error ocurred.
-json: The json representation of the account, if &#39;error; is not set.
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span><span class="p">:</span> <span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">account</span><span class="o">.</span>
+<span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="n">account</span><span class="p">,</span> <span class="k">if</span> <span class="s1">&#39;error; is not set.</span>
 </pre></div>
 </div>
 </li>
@@ -104,38 +99,38 @@ json: The json representation of the account, if &#39;error; is not set.
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.SetContract">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">SetContract</code><span class="sig-paren">(</span><em>owner</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.SetContract" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.SetContract">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">SetContract</code><span class="sig-paren">(</span><em>account</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.SetContract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates the contract on an account.</p>
 <p>Creates the contract on an account, and provides methodes that modify
 this contract.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>owner: An account object or the name of an account that 
-    takes this contract.
-contract_dir: A directory containing the WAST and ABI files 
-    of the contract.
-wast_file: The file containing the contract WAST, relative 
-    to contract-dir, defaults to &quot;&quot;.
-abi_file: The file containing the contract ABI, relative 
-    to contract-dir, defaults to &quot;&quot;.
-permission: An account object or the name of an account that 
-    authorizes the creation.
-expiration_sec: The time in seconds before a transaction expires, 
-    defaults to 30s.
-skip_signature:  If unlocked wallet keys should be used to sign 
-    transaction, defaults to 0.
-dont_broadcast: Whether to broadcast transaction to the network (or 
-    print to stdout), defaults to 0.
-forceUnique: Whether to force the transaction to be unique, what will 
-    consume extra bandwidth and remove any protections against 
-    accidently issuing the same transaction multiple times, defaults 
-    to 0.
-max_cpu_usage: An upper limit on the cpu usage budget, in 
-    instructions-retired, for the execution of the transaction 
-    (defaults to 0 which means no limit).
-max_net_usage: An upper limit on the net usage budget, in bytes, for 
-    the transaction (defaults to 0 which means no limit).
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">account</span><span class="p">:</span> <span class="n">An</span> <span class="n">account</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">an</span> <span class="n">account</span> <span class="n">that</span> 
+    <span class="n">takes</span> <span class="n">this</span> <span class="n">contract</span><span class="o">.</span>
+<span class="n">contract_dir</span><span class="p">:</span> <span class="n">A</span> <span class="n">directory</span> <span class="n">containing</span> <span class="n">the</span> <span class="n">WAST</span> <span class="ow">and</span> <span class="n">ABI</span> <span class="n">files</span> 
+    <span class="n">of</span> <span class="n">the</span> <span class="n">contract</span><span class="o">.</span>
+<span class="n">wast_file</span><span class="p">:</span> <span class="n">The</span> <span class="n">file</span> <span class="n">containing</span> <span class="n">the</span> <span class="n">contract</span> <span class="n">WAST</span><span class="p">,</span> <span class="n">relative</span> 
+    <span class="n">to</span> <span class="n">contract</span><span class="o">-</span><span class="nb">dir</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="s2">&quot;&quot;</span><span class="o">.</span>
+<span class="n">abi_file</span><span class="p">:</span> <span class="n">The</span> <span class="n">file</span> <span class="n">containing</span> <span class="n">the</span> <span class="n">contract</span> <span class="n">ABI</span><span class="p">,</span> <span class="n">relative</span> 
+    <span class="n">to</span> <span class="n">contract</span><span class="o">-</span><span class="nb">dir</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="s2">&quot;&quot;</span><span class="o">.</span>
+<span class="n">permission</span><span class="p">:</span> <span class="n">An</span> <span class="n">account</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">an</span> <span class="n">account</span> <span class="n">that</span> 
+    <span class="n">authorizes</span> <span class="n">the</span> <span class="n">creation</span><span class="o">.</span>
+<span class="n">expiration_sec</span><span class="p">:</span> <span class="n">The</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">seconds</span> <span class="n">before</span> <span class="n">a</span> <span class="n">transaction</span> <span class="n">expires</span><span class="p">,</span> 
+    <span class="n">defaults</span> <span class="n">to</span> <span class="mi">30</span><span class="n">s</span><span class="o">.</span>
+<span class="n">skip_signature</span><span class="p">:</span>  <span class="n">If</span> <span class="n">unlocked</span> <span class="n">wallet</span> <span class="n">keys</span> <span class="n">should</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">sign</span> 
+    <span class="n">transaction</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">dont_broadcast</span><span class="p">:</span> <span class="n">Whether</span> <span class="n">to</span> <span class="n">broadcast</span> <span class="n">transaction</span> <span class="n">to</span> <span class="n">the</span> <span class="n">network</span> <span class="p">(</span><span class="ow">or</span> 
+    <span class="nb">print</span> <span class="n">to</span> <span class="n">stdout</span><span class="p">),</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">forceUnique</span><span class="p">:</span> <span class="n">Whether</span> <span class="n">to</span> <span class="n">force</span> <span class="n">the</span> <span class="n">transaction</span> <span class="n">to</span> <span class="n">be</span> <span class="n">unique</span><span class="p">,</span> <span class="n">what</span> <span class="n">will</span> 
+    <span class="n">consume</span> <span class="n">extra</span> <span class="n">bandwidth</span> <span class="ow">and</span> <span class="n">remove</span> <span class="nb">any</span> <span class="n">protections</span> <span class="n">against</span> 
+    <span class="n">accidently</span> <span class="n">issuing</span> <span class="n">the</span> <span class="n">same</span> <span class="n">transaction</span> <span class="n">multiple</span> <span class="n">times</span><span class="p">,</span> <span class="n">defaults</span> 
+    <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">max_cpu_usage</span><span class="p">:</span> <span class="n">An</span> <span class="n">upper</span> <span class="n">limit</span> <span class="n">on</span> <span class="n">the</span> <span class="n">cpu</span> <span class="n">usage</span> <span class="n">budget</span><span class="p">,</span> <span class="ow">in</span> 
+    <span class="n">instructions</span><span class="o">-</span><span class="n">retired</span><span class="p">,</span> <span class="k">for</span> <span class="n">the</span> <span class="n">execution</span> <span class="n">of</span> <span class="n">the</span> <span class="n">transaction</span> 
+    <span class="p">(</span><span class="n">defaults</span> <span class="n">to</span> <span class="mi">0</span> <span class="n">which</span> <span class="n">means</span> <span class="n">no</span> <span class="n">limit</span><span class="p">)</span><span class="o">.</span>
+<span class="n">max_net_usage</span><span class="p">:</span> <span class="n">An</span> <span class="n">upper</span> <span class="n">limit</span> <span class="n">on</span> <span class="n">the</span> <span class="n">net</span> <span class="n">usage</span> <span class="n">budget</span><span class="p">,</span> <span class="ow">in</span> <span class="nb">bytes</span><span class="p">,</span> <span class="k">for</span> 
+    <span class="n">the</span> <span class="n">transaction</span> <span class="p">(</span><span class="n">defaults</span> <span class="n">to</span> <span class="mi">0</span> <span class="n">which</span> <span class="n">means</span> <span class="n">no</span> <span class="n">limit</span><span class="p">)</span><span class="o">.</span>
 </pre></div>
 </div>
 </li>
@@ -143,23 +138,23 @@ max_net_usage: An upper limit on the net usage budget, in bytes, for
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.WalletCreate">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletCreate</code><span class="sig-paren">(</span><em>name='default'</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletCreate" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.WalletCreate">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletCreate</code><span class="sig-paren">(</span><em>name='default'</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletCreate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new wallet locally.</p>
-<p>Generic &#8216;str&#8217; method returns a formatted output of the EOSIO node.
-Generic &#8216;repr&#8217; method returns the json output of the EOSIO node.</p>
+<p>Generic ‘str’ method returns a formatted output of the EOSIO node.
+Generic ‘repr’ method returns the json output of the EOSIO node.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>name: The name of the new wallet, defaults to &#39;default&#39;.
-is_verbose: If &#39;False&#39;, do not print stdout, default is &#39;True&#39;.
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span><span class="p">:</span> <span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">new</span> <span class="n">wallet</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="s1">&#39;default&#39;</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">If</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">do</span> <span class="ow">not</span> <span class="nb">print</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">default</span> <span class="ow">is</span> <span class="s1">&#39;True&#39;</span><span class="o">.</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first"><strong>attributes</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>name: The name of the wallet.
-password: The password returned by wallet create.
-error: Whether any error ocurred.
-json: The json representation of the wallet, if &#39;error; is not set.
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span><span class="p">:</span> <span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">wallet</span><span class="o">.</span>
+<span class="n">password</span><span class="p">:</span> <span class="n">The</span> <span class="n">password</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">wallet</span> <span class="n">create</span><span class="o">.</span>
+<span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="n">wallet</span><span class="p">,</span> <span class="k">if</span> <span class="s1">&#39;error; is not set.</span>
 </pre></div>
 </div>
 </li>
@@ -167,72 +162,68 @@ json: The json representation of the wallet, if &#39;error; is not set.
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.WalletList">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletList</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletList" title="Permalink to this definition">¶</a></dt>
-<dd><p>List opened wallets, unlocked mark &#8216;*&#8217;.</p>
-<ul>
+<dt id="pyteos.WalletList">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletList</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletList" title="Permalink to this definition">¶</a></dt>
+<dd><p>List opened wallets, unlocked mark ‘*’.</p>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><strong>parameters</strong>::</dt>
-<dd><p class="first last">is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
-</dd>
+<dd>is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
 </dl>
 </li>
 </ul>
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.WalletImport">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletImport</code><span class="sig-paren">(</span><em>key</em>, <em>wallet='default'</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletImport" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.WalletImport">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletImport</code><span class="sig-paren">(</span><em>key</em>, <em>wallet='default'</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletImport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import private key into wallet.</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><strong>parameters</strong>::</dt>
-<dd><p class="first last">wallet: A wallet object or the name of the wallet to import key into.
+<dd>wallet: A wallet object or the name of the wallet to import key into.
 key: A key object or a private key in WIF format to import.
-is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
-</dd>
+is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
 </dl>
 </li>
 </ul>
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.WalletKeys">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletKeys</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletKeys" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.WalletKeys">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletKeys</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletKeys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print list of private keys from all unlocked wallets, in WIF format.</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><strong>parameters</strong>::    </dt>
-<dd><p class="first last">is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
-</dd>
+<dd>is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
 </dl>
 </li>
 </ul>
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.WalletOpen">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletOpen</code><span class="sig-paren">(</span><em>wallet</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletOpen" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.WalletOpen">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletOpen</code><span class="sig-paren">(</span><em>wallet='default'</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletOpen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open an existing wallet.</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><strong>parameters</strong>::</dt>
-<dd><p class="first last">wallet: A wallet object or the name of the wallet to import key into.
-is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
-</dd>
+<dd>wallet: A wallet object or the name of the wallet to import key into.
+is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
 </dl>
 </li>
 </ul>
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.WalletLock">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletLock</code><span class="sig-paren">(</span><em>wallet</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletLock" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.WalletLock">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletLock</code><span class="sig-paren">(</span><em>wallet='default'</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletLock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lock wallet.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>wallet: A wallet object or the name of the wallet to import key into.
-is_verbose: If &#39;False&#39;, do not print stdout, default is &#39;True&#39;.    
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wallet</span><span class="p">:</span> <span class="n">A</span> <span class="n">wallet</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">wallet</span> <span class="n">to</span> <span class="kn">import</span> <span class="nn">key</span> <span class="n">into</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">If</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">do</span> <span class="ow">not</span> <span class="nb">print</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">default</span> <span class="ow">is</span> <span class="s1">&#39;True&#39;</span><span class="o">.</span>    
 </pre></div>
 </div>
 </li>
@@ -240,15 +231,15 @@ is_verbose: If &#39;False&#39;, do not print stdout, default is &#39;True&#39;.
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.WalletUnlock">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">WalletUnlock</code><span class="sig-paren">(</span><em>wallet</em>, <em>password=''</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.WalletUnlock" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.WalletUnlock">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletUnlock</code><span class="sig-paren">(</span><em>wallet='default'</em>, <em>password=''</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletUnlock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unlock wallet.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>wallet: A wallet object or the name of the wallet to import key into.
-password: If the wallet argument is not a wallet object, the password 
-    returned by wallet create, else anything, defaults to &quot;&quot;.
-is_verbose: If &#39;False&#39;, do not print stdout, default is &#39;True&#39;.    
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wallet</span><span class="p">:</span> <span class="n">A</span> <span class="n">wallet</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">wallet</span> <span class="n">to</span> <span class="kn">import</span> <span class="nn">key</span> <span class="n">into</span><span class="o">.</span>
+<span class="n">password</span><span class="p">:</span> <span class="n">If</span> <span class="n">the</span> <span class="n">wallet</span> <span class="n">argument</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">a</span> <span class="n">wallet</span> <span class="nb">object</span><span class="p">,</span> <span class="n">the</span> <span class="n">password</span> 
+    <span class="n">returned</span> <span class="n">by</span> <span class="n">wallet</span> <span class="n">create</span><span class="p">,</span> <span class="k">else</span> <span class="n">anything</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="s2">&quot;&quot;</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">If</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">do</span> <span class="ow">not</span> <span class="nb">print</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">default</span> <span class="ow">is</span> <span class="s1">&#39;True&#39;</span><span class="o">.</span>    
 </pre></div>
 </div>
 </li>
@@ -256,202 +247,140 @@ is_verbose: If &#39;False&#39;, do not print stdout, default is &#39;True&#39;.
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.GetInfo">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">GetInfo</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.GetInfo" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.GetInfo">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">GetInfo</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.GetInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get current blockchain information.</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><strong>parameters</strong>::</dt>
-<dd><p class="first last">is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
-</dd>
+<dd>is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
 </dl>
 </li>
 </ul>
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.GetBlock">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">GetBlock</code><span class="sig-paren">(</span><em>block_number</em>, <em>block_id=''</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.GetBlock" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.GetBlock">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">GetBlock</code><span class="sig-paren">(</span><em>block_number</em>, <em>block_id=''</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.GetBlock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a full block from the blockchain.</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><strong>parameters</strong>::</dt>
-<dd><p class="first last">block_number: The number of the block to retrieve.
-block_id: The ID of the block to retrieve, if set, defaults to &#8220;&#8221;.
-is_verbose: If &#8216;False&#8217;, do not print stdout, default is &#8216;True&#8217;.</p>
-</dd>
+<dd>block_number: The number of the block to retrieve.
+block_id: The ID of the block to retrieve, if set, defaults to “”.
+is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
 </dl>
 </li>
 </ul>
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.Account">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>creator</em>, <em>name</em>, <em>owner_key</em>, <em>active_key</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Account" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.Account">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>creator</em>, <em>name</em>, <em>owner_key</em>, <em>active_key</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.Account" title="Permalink to this definition">¶</a></dt>
 <dd><p>A representation of an EOSIO account.</p>
 <p>Creates a new account on the blockchain, and provides methodes that modify
 this account.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>creator: An account object or the name of an account that 
-    creates the account.
-name: The name of the new account.
-owner_key: The owner key object for the new account.
-active_key: The active key object for the new account.
-permission: An account object or the name of an account that 
-    authorizes the creation.
-expiration_sec: The time in seconds before a transaction expires, 
-    defaults to 30s.
-skip_signature:  If unlocked wallet keys should be used to sign 
-    transaction, defaults to 0.
-dont_broadcast: Whether to broadcast transaction to the network (or 
-    print to stdout), defaults to 0.
-forceUnique: Whether to force the transaction to be unique, what will 
-    consume extra bandwidth and remove any protections against 
-    accidently issuing the same transaction multiple times, defaults 
-    to 0.
-max_cpu_usage: An upper limit on the cpu usage budget, in 
-    instructions-retired, for the execution of the transaction 
-    (defaults to 0 which means no limit).
-max_net_usage: An upper limit on the net usage budget, in bytes, for 
-    the transaction (defaults to 0 which means no limit).
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">creator</span><span class="p">:</span> <span class="n">An</span> <span class="n">account</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">an</span> <span class="n">account</span> <span class="n">that</span> 
+    <span class="n">creates</span> <span class="n">the</span> <span class="n">account</span><span class="o">.</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">new</span> <span class="n">account</span><span class="o">.</span>
+<span class="n">owner_key</span><span class="p">:</span> <span class="n">The</span> <span class="n">owner</span> <span class="n">key</span> <span class="nb">object</span> <span class="k">for</span> <span class="n">the</span> <span class="n">new</span> <span class="n">account</span><span class="o">.</span>
+<span class="n">active_key</span><span class="p">:</span> <span class="n">The</span> <span class="n">active</span> <span class="n">key</span> <span class="nb">object</span> <span class="k">for</span> <span class="n">the</span> <span class="n">new</span> <span class="n">account</span><span class="o">.</span>
+<span class="n">permission</span><span class="p">:</span> <span class="n">An</span> <span class="n">account</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">an</span> <span class="n">account</span> <span class="n">that</span> 
+    <span class="n">authorizes</span> <span class="n">the</span> <span class="n">creation</span><span class="o">.</span>
+<span class="n">expiration_sec</span><span class="p">:</span> <span class="n">The</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">seconds</span> <span class="n">before</span> <span class="n">a</span> <span class="n">transaction</span> <span class="n">expires</span><span class="p">,</span> 
+    <span class="n">defaults</span> <span class="n">to</span> <span class="mi">30</span><span class="n">s</span><span class="o">.</span>
+<span class="n">skip_signature</span><span class="p">:</span>  <span class="n">If</span> <span class="n">unlocked</span> <span class="n">wallet</span> <span class="n">keys</span> <span class="n">should</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">sign</span> 
+    <span class="n">transaction</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">dont_broadcast</span><span class="p">:</span> <span class="n">Whether</span> <span class="n">to</span> <span class="n">broadcast</span> <span class="n">transaction</span> <span class="n">to</span> <span class="n">the</span> <span class="n">network</span> <span class="p">(</span><span class="ow">or</span> 
+    <span class="nb">print</span> <span class="n">to</span> <span class="n">stdout</span><span class="p">),</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">forceUnique</span><span class="p">:</span> <span class="n">Whether</span> <span class="n">to</span> <span class="n">force</span> <span class="n">the</span> <span class="n">transaction</span> <span class="n">to</span> <span class="n">be</span> <span class="n">unique</span><span class="p">,</span> <span class="n">what</span> <span class="n">will</span> 
+    <span class="n">consume</span> <span class="n">extra</span> <span class="n">bandwidth</span> <span class="ow">and</span> <span class="n">remove</span> <span class="nb">any</span> <span class="n">protections</span> <span class="n">against</span> 
+    <span class="n">accidentally</span> <span class="n">issuing</span> <span class="n">the</span> <span class="n">same</span> <span class="n">transaction</span> <span class="n">multiple</span> <span class="n">times</span><span class="p">,</span> <span class="n">defaults</span> 
+    <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">max_cpu_usage</span><span class="p">:</span> <span class="n">An</span> <span class="n">upper</span> <span class="n">limit</span> <span class="n">on</span> <span class="n">the</span> <span class="n">cpu</span> <span class="n">usage</span> <span class="n">budget</span><span class="p">,</span> <span class="ow">in</span> 
+    <span class="n">instructions</span><span class="o">-</span><span class="n">retired</span><span class="p">,</span> <span class="k">for</span> <span class="n">the</span> <span class="n">execution</span> <span class="n">of</span> <span class="n">the</span> <span class="n">transaction</span> 
+    <span class="p">(</span><span class="n">defaults</span> <span class="n">to</span> <span class="mi">0</span> <span class="n">which</span> <span class="n">means</span> <span class="n">no</span> <span class="n">limit</span><span class="p">)</span><span class="o">.</span>
+<span class="n">max_net_usage</span><span class="p">:</span> <span class="n">An</span> <span class="n">upper</span> <span class="n">limit</span> <span class="n">on</span> <span class="n">the</span> <span class="n">net</span> <span class="n">usage</span> <span class="n">budget</span><span class="p">,</span> <span class="ow">in</span> <span class="nb">bytes</span><span class="p">,</span> <span class="k">for</span> 
+    <span class="n">the</span> <span class="n">transaction</span> <span class="p">(</span><span class="n">defaults</span> <span class="n">to</span> <span class="mi">0</span> <span class="n">which</span> <span class="n">means</span> <span class="n">no</span> <span class="n">limit</span><span class="p">)</span><span class="o">.</span>
 </pre></div>
 </div>
 </li>
 </ul>
 <dl class="method">
-<dt id="teos.Account.accounts">
-<code class="descname">accounts</code><span class="sig-paren">(</span><em>account=''</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Account.accounts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints accounts.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="teos.Account.code">
-<code class="descname">code</code><span class="sig-paren">(</span><em>wast_file=''</em>, <em>abi_file=''</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Account.code" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.Account.code">
+<code class="descname">code</code><span class="sig-paren">(</span><em>wast_file=''</em>, <em>abi_file=''</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.Account.code" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the WAST and ABI files for the account.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="teos.Account.set_contract">
-<code class="descname">set_contract</code><span class="sig-paren">(</span><em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Account.set_contract" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.Account.set_contract">
+<code class="descname">set_contract</code><span class="sig-paren">(</span><em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.Account.set_contract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates or update the contract on the account</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="teos.Contract">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>owner</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Contract" title="Permalink to this definition">¶</a></dt>
+<dt id="pyteos.Contract">
+<em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>account</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.Contract" title="Permalink to this definition">¶</a></dt>
 <dd><p>A representation of an EOSIO smart contract.</p>
 <p>Creates the contract on an account, and provides methodes that modify
 this contract.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>owner: An account object or the name of an account that takes this 
-    contract.
-contract_dir: A directory containing the WAST and ABI files of the 
-    contract.
-wast_file: The file containing the contract WAST, relative to 
-    contract-dir, defaults to &quot;&quot;.
-abi_file: The file containing the contract ABI, relative to 
-    contract-dir, defaults to &quot;&quot;.
-permission: An account object or the name of an account that 
-    authorizes the creation.
-expiration_sec: The time in seconds before a transaction expires, 
-    defaults to 30s.
-skip_signature:  If unlocked wallet keys should be used to sign 
-    transaction, defaults to 0.
-dont_broadcast: Whether to broadcast transaction to the network (or 
-    print to stdout), defaults to 0.
-forceUnique: Whether to force the transaction to be unique, what will 
-    consume extra bandwidth and remove any protections against 
-    accidently issuing the same transaction multiple times, defaults 
-    to 0.
-max_cpu_usage: An upper limit on the cpu usage budget, in 
-    instructions-retired, for the execution of the transaction 
-    (defaults to 0 which means no limit).
-max_net_usage: An upper limit on the net usage budget, in bytes, for 
-    the transaction (defaults to 0 which means no limit).
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">owner</span><span class="p">:</span> <span class="n">An</span> <span class="n">account</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">an</span> <span class="n">account</span> <span class="n">that</span> <span class="n">takes</span> <span class="n">this</span> 
+    <span class="n">contract</span><span class="o">.</span>
+<span class="n">contract_dir</span><span class="p">:</span> <span class="n">A</span> <span class="n">directory</span> <span class="n">containing</span> <span class="n">the</span> <span class="n">WAST</span> <span class="ow">and</span> <span class="n">ABI</span> <span class="n">files</span> <span class="n">of</span> <span class="n">the</span> 
+    <span class="n">contract</span><span class="o">.</span> <span class="n">May</span> <span class="n">absolute</span> <span class="ow">or</span> <span class="n">relative</span> <span class="n">to</span> <span class="n">the</span> <span class="n">contract</span> <span class="n">workspace</span><span class="o">.</span>
+<span class="n">wast_file</span><span class="p">:</span> <span class="n">The</span> <span class="n">file</span> <span class="n">containing</span> <span class="n">the</span> <span class="n">contract</span> <span class="n">WAST</span><span class="p">,</span> <span class="n">relative</span> <span class="n">to</span> 
+    <span class="n">contract</span><span class="o">-</span><span class="nb">dir</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="s2">&quot;&quot;</span><span class="o">.</span>
+<span class="n">abi_file</span><span class="p">:</span> <span class="n">The</span> <span class="n">file</span> <span class="n">containing</span> <span class="n">the</span> <span class="n">contract</span> <span class="n">ABI</span><span class="p">,</span> <span class="n">relative</span> <span class="n">to</span> 
+    <span class="n">contract</span><span class="o">-</span><span class="nb">dir</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="s2">&quot;&quot;</span><span class="o">.</span>
+<span class="n">permission</span><span class="p">:</span> <span class="n">An</span> <span class="n">account</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">an</span> <span class="n">account</span> <span class="n">that</span> 
+    <span class="n">authorizes</span> <span class="n">the</span> <span class="n">creation</span><span class="o">.</span>
+<span class="n">expiration_sec</span><span class="p">:</span> <span class="n">The</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">seconds</span> <span class="n">before</span> <span class="n">a</span> <span class="n">transaction</span> <span class="n">expires</span><span class="p">,</span> 
+    <span class="n">defaults</span> <span class="n">to</span> <span class="mi">30</span><span class="n">s</span><span class="o">.</span>
+<span class="n">skip_signature</span><span class="p">:</span>  <span class="n">If</span> <span class="n">unlocked</span> <span class="n">wallet</span> <span class="n">keys</span> <span class="n">should</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">sign</span> 
+    <span class="n">transaction</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">dont_broadcast</span><span class="p">:</span> <span class="n">Whether</span> <span class="n">to</span> <span class="n">broadcast</span> <span class="n">transaction</span> <span class="n">to</span> <span class="n">the</span> <span class="n">network</span> <span class="p">(</span><span class="ow">or</span> 
+    <span class="nb">print</span> <span class="n">to</span> <span class="n">stdout</span><span class="p">),</span> <span class="n">defaults</span> <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">forceUnique</span><span class="p">:</span> <span class="n">Whether</span> <span class="n">to</span> <span class="n">force</span> <span class="n">the</span> <span class="n">transaction</span> <span class="n">to</span> <span class="n">be</span> <span class="n">unique</span><span class="p">,</span> <span class="n">what</span> <span class="n">will</span> 
+    <span class="n">consume</span> <span class="n">extra</span> <span class="n">bandwidth</span> <span class="ow">and</span> <span class="n">remove</span> <span class="nb">any</span> <span class="n">protections</span> <span class="n">against</span> 
+    <span class="n">accidently</span> <span class="n">issuing</span> <span class="n">the</span> <span class="n">same</span> <span class="n">transaction</span> <span class="n">multiple</span> <span class="n">times</span><span class="p">,</span> <span class="n">defaults</span> 
+    <span class="n">to</span> <span class="mf">0.</span>
+<span class="n">max_cpu_usage</span><span class="p">:</span> <span class="n">An</span> <span class="n">upper</span> <span class="n">limit</span> <span class="n">on</span> <span class="n">the</span> <span class="n">cpu</span> <span class="n">usage</span> <span class="n">budget</span><span class="p">,</span> <span class="ow">in</span> 
+    <span class="n">instructions</span><span class="o">-</span><span class="n">retired</span><span class="p">,</span> <span class="k">for</span> <span class="n">the</span> <span class="n">execution</span> <span class="n">of</span> <span class="n">the</span> <span class="n">transaction</span> 
+    <span class="p">(</span><span class="n">defaults</span> <span class="n">to</span> <span class="mi">0</span> <span class="n">which</span> <span class="n">means</span> <span class="n">no</span> <span class="n">limit</span><span class="p">)</span><span class="o">.</span>
+<span class="n">max_net_usage</span><span class="p">:</span> <span class="n">An</span> <span class="n">upper</span> <span class="n">limit</span> <span class="n">on</span> <span class="n">the</span> <span class="n">net</span> <span class="n">usage</span> <span class="n">budget</span><span class="p">,</span> <span class="ow">in</span> <span class="nb">bytes</span><span class="p">,</span> <span class="k">for</span> 
+    <span class="n">the</span> <span class="n">transaction</span> <span class="p">(</span><span class="n">defaults</span> <span class="n">to</span> <span class="mi">0</span> <span class="n">which</span> <span class="n">means</span> <span class="n">no</span> <span class="n">limit</span><span class="p">)</span><span class="o">.</span>
 </pre></div>
 </div>
 </li>
 </ul>
 <dl class="method">
-<dt id="teos.Contract.action">
-<code class="descname">action</code><span class="sig-paren">(</span><em>action</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.Contract.action" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implements the &#8216;cloes push action&#8217; command.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="teos.Daemon">
-<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">Daemon</code><a class="headerlink" href="#teos.Daemon" title="Permalink to this definition">¶</a></dt>
-<dd><p>A representation of the local EOSIO node.</p>
-<p>Any Daemon class object depends on external configuration parameters. They
-are organized on two levels: this module level and the level of a TEOS 
-executable that powers methodes of this python module.</p>
-<ul>
-<li><p class="first"><strong>TEOS-python configuration</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>TEOS_executable: Where is the TEOS executable. The parameter is set in 
-    the configuration file of this script, which is &quot;pyteos.json&quot; in the 
-    directory of this module, for example: 
-    {&quot;TEOS_executable&quot;:&quot;absolute-path-to-the-teos.exe&quot;}.
-</pre></div>
-</div>
-</li>
-</ul>
-<p>Other relevant onfiguration parameters can be defined in a configuration 
-file of the TEOS executable, and/or as environment variables, and/or are 
-hard-codded (in the &#8220;config.cpp&#8221; file of the &#8220;teos library&#8221;). The first 
-definition in this sequence prevails.</p>
-<p>The configuration file of the TEOS executable is named &#8220;config.json&#8221;. It
-exists in the TEOS executable directory.</p>
-<ul>
-<li><p class="first"><strong>TEOS configuration</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>EOSIO_SOURCE_DIR: Where is the EOS repository. 
-EOSIO_DAEMON_ADDRESS: The local IP and port to listen for incoming http 
-    connections, defaults to &quot;127.0.0.1:8888&quot;.
-EOSIO_WALLET_ADDRESS: The local IP and port to listen for incoming http 
-    connections to the local wallet, defaults to &quot;127.0.0.1:8888&quot;.
-data-dir: Directory containing program runtime data (absolute path or
-    relative to ${EOSIO_SOURCE_DIR}), defaults to 
-    &quot;${EOSIO_SOURCE_DIR}/build/daemon/data-dir&quot;.
-config-dir: Directory containing configuration files such as config.ini
-    (absolute path or relative to ${EOSIO_SOURCE_DIR}),
-    defaults to &quot;${data-dir}&quot;
-wallet-dir: The path of the wallet files (absolute path or relative 
-    to ${data-dir}, defaults to &quot;${data-dir}/wallet&quot;
-genesis-json: File to read genesis state from, defaults to &quot;genesis.json&quot;
-    (relative to ${config-dir}).
-</pre></div>
-</div>
-</li>
-</ul>
-<dl class="method">
-<dt id="teos.Daemon.clear">
-<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#teos.Daemon.clear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Starts the EOSIO test node cleared.</p>
-<p>Stops the node, if running, deletes all wallets, and starts test node
-resetted.</p>
+<dt id="pyteos.Contract.get_code">
+<code class="descname">get_code</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.Contract.get_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a contract’s code</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="teos.Daemon.info">
-<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#teos.Daemon.info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints the node info.</p>
+<dt id="pyteos.Contract.get_table">
+<code class="descname">get_table</code><span class="sig-paren">(</span><em>table</em>, <em>scope=''</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.Contract.get_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a contract’s table</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="teos.Daemon.start">
-<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#teos.Daemon.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Starts the EOSIO test node, if not running.</p>
+<dt id="pyteos.Contract.push_action">
+<code class="descname">push_action</code><span class="sig-paren">(</span><em>action</em>, <em>data</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.Contract.push_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements the ‘cleos push action’ command.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="teos.Daemon.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#teos.Daemon.stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stops the EOSIO test node.</p>
+<dt id="pyteos.Contract.show_action">
+<code class="descname">show_action</code><span class="sig-paren">(</span><em>action</em>, <em>data</em>, <em>permission=''</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.Contract.show_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements the ‘cleos push action’ without broadcasting.</p>
 </dd></dl>
 
 </dd></dl>
@@ -471,14 +400,17 @@ resetted.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="tutorial_getting_with_contracts.html" title="Tutorial Getting Started With Contracts"
+          <a href="node.html" title="node"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="04.UnitTestingEOSContractsInEOSFactory.html" title="Unit-testing EOS Contracts in EOSFactory"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Teos python 1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EOSFactory 1.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2018, Tokenika.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
     </div>
   </body>
 </html>

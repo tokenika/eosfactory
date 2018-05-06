@@ -1,0 +1,159 @@
+# Compiling EOS Contracts in *EOSFactory*
+
+The purpose of this tutorial is to demonstrate how *EOSFactory* and its Python CLI can be used to make compiling EOS contracts easy & intuitive.
+
+## Prerequisites
+
+* This tutorial assumes that you have successfully installed *EOSFactory*. If it's not the case, please refer to [this guide](01.InstallingEOSFactory.html).
+* We also assume that you are familiar with the material covered in [Getting Started with EOS Contracts in *EOSFactory*](02.GettingStartedwithEOSContractsinEOSFactory.html).
+* Finally, we assume that you are familiar with the official [EOS Hello World tutorial](https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract), as it presents the default way to compile and deploy smart-contracts in EOS. What we present here is an alternative.
+
+## Set up the Workspace
+
+In *Visual Studio Code*, switch to the bash terminal and type `python3` to run the Python CLI. The prompt should change to `>>>` signifying that it's ready for Python commands.
+
+## Create a Contract Template
+
+First, start the testnet and initialize the workspace:
+
+```
+import node
+node.reset()
+```
+
+```
+import sess
+sess.init()
+```
+
+To create a new contract from a pre-defined template use the `Template` class:
+
+```
+from eosf import *
+contract = Template("hello")
+```
+
+To check the directory where the contract's files are located:
+
+```
+contract.path()
+```
+
+You can keep your contracts in any location you want. However, if it's a non-standard location (i.e. different from `eos/build/contracts` or `eosfactory/contracts`) then you'll need to provide the entire path to its folder, e.g.
+
+```
+contract = Template("/mnt/d/Workspaces/EOS/eosfactory/contracts/hello1")
+```
+
+```
+contract = Template("~/Workspaces/EOS/eosfactory/contracts/hello2")
+```
+
+## Add C++ code
+
+Edit the `hello.cpp` file in *Visual Studio Code* and add the following content to it:
+
+```
+#include <eosiolib/eosio.hpp>
+#include <eosiolib/print.hpp>
+using namespace eosio;
+
+class hello : public eosio::contract {
+  public:
+      using contract::contract;
+
+      /// @abi action 
+      void hi( account_name user ) {
+         print( "Hello, ", name{user} );
+      }
+};
+
+EOSIO_ABI( hello, (hi) )
+```
+
+## Compile the Contract
+
+You can generate ABI and the web assembly code separately:
+
+```
+contract.abi()
+```
+
+```
+contract.wast()
+```
+
+Or you can generate both at the same time:
+
+```
+contract.build()
+```
+
+## Deploy the Contract
+
+Now we can deploy the compiled contract:
+
+```
+contract.deploy()
+```
+
+## Test the Contract
+
+We can play with the contract giving it different arguments:
+
+```
+contract.push_action("hi", '{"user":"alice"}', sess.alice)
+```
+
+```
+contract.push_action("hi", '{"user":"carol"}', sess.alice)
+```
+
+All the above variations should work, as the contract allows anyone to authorize it.
+
+## Modify the code, re-compile & re-deploy
+
+And now let's modify the `hi` method to make it authenticate the user we are dealing with:
+
+```
+void hi( account_name user ) {
+	require_auth( user );
+	print( "Hello, ", name{user} );
+}
+```
+
+Re-compile the contract:
+
+```
+contract.build()
+```
+
+You might want to reset the testnet (but it's optional):
+
+```
+node.reset()
+sess.init()
+```
+
+And finally, re-deploy the contract:
+
+```
+contract.deploy()
+```
+
+Now, if we attempt to mismatch the user and the authority, the contract will throw an error:
+
+```
+contract.push_action("hi", '{"user":"carol"}', sess.alice)
+```
+
+```
+"error":{"code":3030001,"name":"tx_missing_auth","what":"missing required authority"...
+```
+
+But if we use the appropriate authority, there should no error:
+
+```
+contract.push_action("hi", '{"user":"carol"}', sess.carol)
+```
+
