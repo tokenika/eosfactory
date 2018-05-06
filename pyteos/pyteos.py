@@ -923,6 +923,10 @@ class Contract(SetContract):
         return self._out
 
 
+    def path():
+        return self.contract_path_absolute
+
+
     def deploy(self):
         super().__init__(
             self.account, self.contract_dir,
