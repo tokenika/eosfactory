@@ -15,6 +15,7 @@ b
 !/tests/test.py
 !/tests/test1.py
 !/tests/test2.py
+!/tests/test3.py
 
 **/Debug
 **/x64
