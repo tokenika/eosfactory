@@ -19,7 +19,7 @@ Contents:
    pyteos
    node
    sess
-   eofs
+   eosf
 
 Indices and tables
 ==================
