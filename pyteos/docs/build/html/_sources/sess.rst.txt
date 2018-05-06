@@ -1,0 +1,4 @@
+sess
+====
+
+.. autoclass:: sess.init

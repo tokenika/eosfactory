@@ -4,6 +4,7 @@ workdir
 build
 build_gnu
 b
+pyteos/docs#
 
 /contracts/*
 !/contracts/currency
@@ -17,6 +18,7 @@ b
 !/tests/test2.py
 !/tests/test3.py
 !/tests/test4.py
+!/pyteos/docs/build
 
 **/Debug
 **/x64
