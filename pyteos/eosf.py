@@ -58,20 +58,8 @@ class Contract(pyteos.Contract):
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             is_verbose=True):
-        self.contract_dir=contract_dir
-        self.wast_file=wast_file
-        self.abi_file=abi_file
-        self.permission=permission
-        self.expiration_sec=expiration_sec
-        self.skip_signature=skip_signature
-        self.dont_broadcast=dont_broadcast
-        self.forceUnique=forceUnique
-        self.max_cpu_usage=max_cpu_usage
-        self.max_net_usage=max_net_usage
-        self.is_verbose=is_verbose
 
-        contract_path = pathlib.Path(self.contract_dir)
-        self.name = contract_path.parts[-1]
+        self.name = pathlib.Path(contract_dir).parts[-1]
 
         account = pyteos.GetAccount(self.name)
         if account.json["permissions"]:
@@ -79,25 +67,48 @@ class Contract(pyteos.Contract):
         else:
             key_owner = pyteos.CreateKey("key_owner")
             key_active = pyteos.CreateKey("key_active")
-
             sess.wallet.import_key(key_owner)
             sess.wallet.import_key(key_active)
-            
             self.account = pyteos.Account(
                 sess.eosio, self.name, key_owner, key_active)
-
-    def deploy(self):
+        
         super().__init__(
-            self.account, self.contract_dir,
-            self.wast_file, self.abi_file,
-            self.permission, self.expiration_sec,
-            self.skip_signature, self.dont_broadcast, self.forceUnique,
-            self.max_cpu_usage, self.max_net_usage,
-            self.is_verbose)
+            self.account, contract_dir,
+            wast_file, abi_file,
+            permission, expiration_sec,
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            is_verbose)        
+
+
+class ContractTemplate(Contract):
+    """
+    """
+    def __init__(
+            self, name, 
+            wast_file="", abi_file="", 
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            is_verbose=True):
+
+        template = pyteos.ContractTemplate(name)
+        if not template.error:
+            super().__init__(
+                name, 
+                wast_file=wast_file, abi_file=abi_file, 
+                permission=permission, expiration_sec=expiration_sec, 
+                skip_signature=skip_signature, dont_broadcast=skip_signature, 
+                forceUnique=forceUnique,
+                max_cpu_usage=max_cpu_usage, max_net_usage=max_net_usage,
+                is_verbose=is_verbose            
+            )
+
 
 
 class Account(pyteos.Account):
     def __init__(self, name, creator):
+        
         key_owner = pyteos.CreateKey("key_owner")
         key_active = pyteos.CreateKey("key_active")
 

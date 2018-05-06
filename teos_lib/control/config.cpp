@@ -14,8 +14,6 @@
 #include <teoslib/control/config.hpp>
 #include <teoslib/utilities.hpp>
 
-#define EOSIO_CONTRACT_DIR "build/contracts"
-
 using namespace std;
 
 void saveConfigJson(boost::property_tree::ptree json){
@@ -65,6 +63,8 @@ wallet-dir: .
 */   
 
     #define NOT_DEFINED_VALUE ""
+    #define CONTRACTS_DIR "contracts"
+    #define EOSIO_CONTRACT_DIR "build/contracts"
     #define EMPTY ""
 
     typedef vector<string> arg;
@@ -81,7 +81,7 @@ wallet-dir: .
     arg EOSIO_DAEMON_NAME = { "EOSIO_DAEMON_NAME", "nodeos" };
     arg EOSIO_CONTEXT_DIR = { "EOSIO_CONTEXT_DIR" };
     arg EOSIO_CONTRACT_WORKSPACE = { 
-      "EOSIO_CONTRACT_WORKSPACE", "contracts" };// relative to EOSIO_CONTEXT_DIR
+      "EOSIO_CONTRACT_WORKSPACE", CONTRACTS_DIR };// relative to EOSIO_CONTEXT_DIR
 
     arg EOSIO_SHARED_MEMORY_SIZE_MB = { "EOSIO_SHARED_MEMORY_SIZE_MB", "100" };    
     arg EOSIO_BOOST_INCLUDE_DIR = { 
@@ -212,32 +212,33 @@ wallet-dir: .
           bfs::path contractDirPath(contractDir);
           if(!contractDirPath.is_absolute()) 
           {
-            bfs::path configContractDirPath 
+            bfs::path workspacePath 
               = configValue(teosControl, EOSIO_CONTRACT_WORKSPACE);
-            if(!configContractDirPath.is_absolute()) 
+
+            if(!workspacePath.is_absolute()) 
             {
               string eosioContextDir = getContextDir(teosControl);
-              configContractDirPath = bfs::path(eosioContextDir) 
-                / configContractDirPath;
+              workspacePath = bfs::path(eosioContextDir) 
+                / workspacePath;
             }
-            contractDirPath = configContractDirPath / contractDir / "build";
+            contractDirPath = workspacePath / contractDir / "build";
             
             if(!bfs::exists(contractDirPath))
             {
-              bfs::path contractDirPathEOSIO = bfs::path(getSourceDir(teosControl)) 
+              bfs::path workspacePathEosio = bfs::path(getSourceDir(teosControl)) 
                 / EOSIO_CONTRACT_DIR;
 
-              if(!bfs::exists(contractDirPathEOSIO))
+              if(!bfs::exists(workspacePathEosio))
               {
                 onError(
                   teosControl, 
                   (boost::format(
                     "Cannot find any contract directory: \n"
                     "neither\n%1%\n nor\n%1%\n is valid path.")
-                  % contractDirPath.string() % contractDirPathEOSIO.string()).str());
+                  % contractDirPath.string() % workspacePathEosio.string()).str());
                 return "";
               }
-              contractDirPath = contractDirPathEOSIO / contractDir;
+              contractDirPath = workspacePathEosio / contractDir;
             }
           }
 
@@ -489,8 +490,28 @@ wallet-dir: .
         respJson_.put("contextDir", getContextDir(this));
         respJson_.put("sourceDir", getSourceDir(this));
         respJson_.put("dataDir", getDataDir(this));
-        respJson_.put("contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));
-    }  
+        respJson_.put("configDir", getConfigDir(this));
+        respJson_.put("walletDir", getWalletDir(this));
+        respJson_.put("daemonExe", getDaemonExe(this));
+        respJson_.put("genesisJson", getGenesisJson(this));
+        respJson_.put("httpServer", getHttpServerAddress(this));
+        respJson_.put(
+          "httpWallet", 
+          getHttpWalletAddress(this).empty() 
+            ? getHttpServerAddress(this)
+            : getHttpWalletAddress(this));
+        respJson_.put("daemonName", getDaemonName(this));
+        respJson_.put("wsmClang", getEOSIO_WASM_CLANG(this));
+        respJson_.put("boostInclude", getEOSIO_BOOST_INCLUDE_DIR(this));
+        respJson_.put("wasmLink", getEOSIO_WASM_LLVM_LINK(this));
+        respJson_.put("wasmLlc", getEOSIO_WASM_LLC(this));
+        respJson_.put("binaryenBin", getEOSIO_BINARYEN_BIN(this));
+        respJson_.put("sharedMemory", getSharedMemorySizeMb());
+        respJson_.put(
+          "contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));
+        respJson_.put(
+          "workspaceEosio", getSourceDir(this) + "/" EOSIO_CONTRACT_DIR );
+    }
   }
 }
 

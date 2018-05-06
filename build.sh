@@ -454,13 +454,11 @@ printf "${bldred}%s${txtrst}" '
 if [ ! -z "$IS_WSL" ]; then
     printf "%s\n" "
 RESTART
-    the WSL bash.exe (or the Visual Studio Code that uses bash.exe)
-    in order to access the new environment variables.
-"
+    the WSL bash terminal before using EOSFactory."
 else
     printf "%s\n" "
 RESTART
-    the bash terminal in order to access the new environment variables."
+    the bash terminal before using EOSFactory."
 fi
 
 printf "\n%s\n" "

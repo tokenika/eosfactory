@@ -92,6 +92,7 @@ class _Command:
     global setup    
    
     _jarg = json.loads("{}")
+    json = json.loads("{}")
     _out = ""
     error = False 
 
@@ -138,6 +139,14 @@ class _Command:
         return repr(self.json)
 
 
+class GetConfig(_Command):
+    """
+    Get the configurationt of the teos executable.
+    """
+    def __init__(self, is_verbose=True):
+        _Command.__init__(self, "get", "config", is_verbose)        
+
+    
 class GetAccount(_Command):
     """
     Retrieve an account from the blockchain.
@@ -580,6 +589,18 @@ class PushAction(_Command):
 class ContractTemplate(_Command):
     def __init__(self, name, is_verbose=True):
 
+        contract_path = pathlib.Path(name)
+        if not contract_path.is_absolute():
+            config = GetConfig(is_verbose=False)
+            contract_path = \
+                pathlib.Path(config.json["contractWorkspace"]) / name
+
+        if contract_path.exists():
+            self.error = True
+            print("ERROR!")
+            print(name + " is an existing contract definition." )
+            return
+
         self._jarg["name"] = name
 
         _Command.__init__(self, "bootstrap", "contract", is_verbose)
@@ -835,7 +856,7 @@ class Contract(SetContract):
         owner: An account object or the name of an account that takes this 
             contract.
         contract_dir: A directory containing the WAST and ABI files of the 
-            contract.
+            contract. May absolute or relative to the contract workspace.
         wast_file: The file containing the contract WAST, relative to 
             contract-dir, defaults to "".
         abi_file: The file containing the contract ABI, relative to 
@@ -858,10 +879,81 @@ class Contract(SetContract):
         max_net_usage: An upper limit on the net usage budget, in bytes, for 
             the transaction (defaults to 0 which means no limit).
     """
+    def __init__(
+            self, account, contract_dir, 
+            wast_file="", abi_file="", 
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            is_verbose=True):
+            
+        self.account = account
+        self.contract_dir = contract_dir
+        self.wast_file = wast_file
+        self.abi_file = abi_file
+        self.permission = permission
+        self.expiration_sec = expiration_sec
+        self.skip_signature = skip_signature
+        self.dont_broadcast =dont_broadcast
+        self.forceUnique = forceUnique
+        self.max_cpu_usage = max_cpu_usage
+        self.max_net_usage = max_net_usage
+        self.is_verbose = is_verbose
+        self.contract_path_absolute = pathlib.Path(contract_dir)
+        self.is_mutable = True
+
+        if not self.contract_path_absolute.is_absolute():
+            config = GetConfig(is_verbose=False)
+            self.contract_path_absolute = \
+                pathlib.Path(config.json["contractWorkspace"]) / contract_dir
+
+            if not self.contract_path_absolute.exists():
+                self.contract_path_absolute = \
+                pathlib.Path(config.json["workspaceEosio"]) / contract_dir
+                if self.contract_path_absolute.exists():
+                    self.is_mutable = False
+                else:
+                    self.error = True
+                    print("ERROR!")
+                    print(contract_dir + " is not an existing contract definition." )
+                    return
+
+
+    def deploy(self):
+        super().__init__(
+            self.account, self.contract_dir,
+            self.wast_file, self.abi_file,
+            self.permission, self.expiration_sec,
+            self.skip_signature, self.dont_broadcast, self.forceUnique,
+            self.max_cpu_usage, self.max_net_usage,
+            self.is_verbose)
+
+
+    def wast(self):
+        if self.is_mutable:
+            self.wast = WAST(str(self.contract_path_absolute))
+        else:
+            print("ERROR!")
+            print("Cannot modify system contracts.")
+
+
+    def abi(self):
+        if self.is_mutable:
+            self.abi = ABI(str(self.contract_path_absolute))
+        else:
+            print("ERROR!")
+            print("Cannot modify system contracts.")
+
+    
+    def build(self):
+        self.abi()
+        self.wast()
+
 
     def __str__(self):
         return self._out
         
+
     def push_action(
             self, action, data,
             permission="",
@@ -899,12 +991,14 @@ class Contract(SetContract):
 
         return self.console
 
+
     def show_action(self, action, data, permission=""):
         """ Implements the 'cleos push action' without broadcasting. 
 
         """
         self.push_action(action, data, permission, dont_broadcast=1)
     
+
     def get_table(self, table, scope=""):
         """ Prints a contract's table
 
@@ -918,12 +1012,13 @@ class Contract(SetContract):
                 scope=scope                
         return GetTable(self.name, table, scope)
 
+
     def get_code(self):
         """ Prints a contract's code
 
         """
         GetCode(self.name)
-        
+
 
 def node_reset():
     _Node(1, True)
