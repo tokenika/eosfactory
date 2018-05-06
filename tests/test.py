@@ -6,11 +6,9 @@ def run():
     node.reset()
     sess.init()
 
-    c = Template("test2")
-    c.build()
-    c.deploy()
-
-    c.show_action("hi", '{"user":"carol"}', sess.alice)
+    ############################
+    # Your unit-test goes here #
+    ############################
     
     print("Test OK")
     node.stop()

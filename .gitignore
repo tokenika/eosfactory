@@ -5,9 +5,16 @@ build
 build_gnu
 b
 
+/contracts/*
+!/contracts/currency
+
 !/contracts/currency/build
-!/contracts/test/build
 !/templates/contracts/skeleton/build
+
+/tests/*
+!/tests/test.py
+!/tests/test1.py
+!/tests/test2.py
 
 **/Debug
 **/x64
