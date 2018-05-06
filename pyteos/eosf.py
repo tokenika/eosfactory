@@ -81,7 +81,7 @@ class Contract(pyteos.Contract):
             is_verbose)        
 
 
-class ContractTemplate(Contract):
+class Template(Contract):
     """
     """
     def __init__(

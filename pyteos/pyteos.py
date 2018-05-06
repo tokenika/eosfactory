@@ -919,6 +919,10 @@ class Contract(SetContract):
                     return
 
 
+    def __str__(self):
+        return self._out
+
+
     def deploy(self):
         super().__init__(
             self.account, self.contract_dir,
@@ -949,10 +953,6 @@ class Contract(SetContract):
         self.abi()
         self.wast()
 
-
-    def __str__(self):
-        return self._out
-        
 
     def push_action(
             self, action, data,
