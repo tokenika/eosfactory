@@ -1,4 +1,4 @@
-pyteos python
+pyteos
 =============
 
 .. autoclass:: pyteos.GetAccount

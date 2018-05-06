@@ -13,9 +13,10 @@ def init():
     - **global variables**
 
         eosio: Primary owned account.
-        wallet: The wallet.
-        allice, bob, carol: Prefabricated accounts.
 
+        wallet: The wallet.
+        
+        allice, bob, carol: Prefabricated accounts.
     """
     global eosio
     eosio = pyteos.AccountEosio()
