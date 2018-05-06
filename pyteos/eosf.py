@@ -69,24 +69,24 @@ class Contract(pyteos.Contract):
         self.max_cpu_usage=max_cpu_usage
         self.max_net_usage=max_net_usage
         self.is_verbose=is_verbose
-        self.account = ""
 
         contract_path = pathlib.Path(self.contract_dir)
         self.name = contract_path.parts[-1]
 
-    def deploy(self):
-
-        if not self.account:
+        account = pyteos.GetAccount(self.name)
+        if account.json["permissions"]:
+            self.account = account
+        else:
             key_owner = pyteos.CreateKey("key_owner")
             key_active = pyteos.CreateKey("key_active")
 
             sess.wallet.import_key(key_owner)
             sess.wallet.import_key(key_active)
             
-            #unique_name = datetime.datetime.now().strftime("%s")
             self.account = pyteos.Account(
                 sess.eosio, self.name, key_owner, key_active)
 
+    def deploy(self):
         super().__init__(
             self.account, self.contract_dir,
             self.wast_file, self.abi_file,

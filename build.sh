@@ -246,7 +246,7 @@ if [ ! -z "$IS_WSL" ]; then
     printf "%s" "
 ##########################################################################
     "
-    printf "\n%s\n\n" "Sets Windows environment variables, if not set already:"
+    printf "\n%s\n" "Sets Windows environment variables, if not set already:"
 
     EOSIO_SOURCE_DIR_SET=""
     if [ ! -z "$EOSIO_SOURCE_DIR__" -a "$EOSIO_SOURCE_DIR" != "$EOSIO_SOURCE_DIR__" ]; then

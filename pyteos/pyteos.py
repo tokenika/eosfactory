@@ -899,14 +899,12 @@ class Contract(SetContract):
 
         return self.console
 
-
     def show_action(self, action, data, permission=""):
         """ Implements the 'cleos push action' without broadcasting. 
 
         """
         self.push_action(action, data, permission, dont_broadcast=1)
     
-
     def get_table(self, table, scope=""):
         """ Prints a contract's table
 
@@ -920,6 +918,12 @@ class Contract(SetContract):
                 scope=scope                
         return GetTable(self.name, table, scope)
 
+    def get_code(self):
+        """ Prints a contract's code
+
+        """
+        GetCode(self.name)
+        
 
 def node_reset():
     _Node(1, True)
