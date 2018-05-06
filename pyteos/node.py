@@ -26,6 +26,6 @@ def run():
 
 def info():
     """
-    Print response to the 'get info' cleos command.
+    Display EOSIO node status.
     """
     pyteos.node_info()

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """ 
-This is a Python front-end for 'teos', an alternative for EOSIO 'cleos'.
+This is a Python front-end for 'teos', an alternative for block.one CLI called 'cleos'.
 """
 
 # import pyteos

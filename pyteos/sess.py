@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """ 
-This is a collection EOSFactory session elements
+This is a collection of EOSFactory session elements
 """
 
 import pyteos
@@ -12,11 +12,11 @@ def init():
 
     - **global variables**
 
-        eosio: Primary owned account.
+        eosio: Primary EOSIO account predefined in the genesis file
 
-        wallet: The wallet.
+        wallet: The wallet holding keys
         
-        allice, bob, carol: Prefabricated accounts.
+        alice, bob, carol: Prefabricated demo accounts
     """
     global eosio
     eosio = pyteos.AccountEosio()
