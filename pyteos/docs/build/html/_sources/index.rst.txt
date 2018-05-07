@@ -6,23 +6,30 @@
 Welcome to EOSFactory documentation!
 ======================================
 
-Contents:
+Tutorials
+----------
 
 .. toctree::
    :maxdepth: 2
 
    01.InstallingEOSFactory
    02.InteractingWithEOSContractsInEOSFactory
-   03.CompilingEOSContractsInEOSFactory
-   04.UnitTestingEOSContractsInEOSFactory   
+   03.CompilingEOSContractsUsingEOSFactoryInVSC
+   04.UnitTestingEOSContractsUsingEOSFactoryInVSC
    
+Python Documentation
+---------------------
+
+.. toctree::
+   :maxdepth: 1
+
    pyteos
    node
    sess
    eosf
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
