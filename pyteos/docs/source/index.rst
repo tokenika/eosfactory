@@ -13,9 +13,10 @@ Contents:
 
    01.InstallingEOSFactory
    02.InteractingWithEOSContractsInEOSFactory
-   03.CompilingEOSContractsInEOSFactory
-   04.UnitTestingEOSContractsInEOSFactory   
+   03.CompilingEOSContractsUsingEOSFactoryInVSC
+   04.UnitTestingEOSContractsUsingEOSFactoryInVSC
    
+   Python Documentation
    pyteos
    node
    sess
