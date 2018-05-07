@@ -22,8 +22,8 @@ We make sure everything we do is fully compatible with Windows - our toolset wil
 
 * [Installing EOSFactory](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/01.InstallingEOSFactory.md)
 * [Interacting with EOS Contracts in EOSFactory](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/02.InteractingWithEOSContractsInEOSFactory.md)
-* [Compiling EOS Contracts in EOSFactory](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/03.CompilingEOSContractsInEOSFactory.md)
-* [Unit-testing EOS Contracts in EOSFactory](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/04.UnitTestingEOSContractsInEOSFactory.md)
+* [Compiling EOS Contracts using EOSFactory in VSC](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/03.CompilingEOSContractsUsingEOSFactoryInVSC.md)
+* [Unit-testing EOS Contracts using EOSFactory in VSC](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/04.UnitTestingEOSContractsUsingEOSFactoryInVSC.md)
 
 For more details, please refer to [our Sphinx docs](http://eosfactory.io/sphinx/pyteos.html).
 
