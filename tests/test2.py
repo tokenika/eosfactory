@@ -8,7 +8,7 @@ def run():
     node.reset()
     sess.init()
 
-    c = Template("test2")
+    c = Template("hello")
     c.build()
     c.deploy()
 
