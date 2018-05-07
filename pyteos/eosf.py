@@ -11,7 +11,7 @@ import sess
 
 class Contract(pyteos.Contract):
     """
-    Given a contract directory defining WAST and ABA, creates a contract.
+    Creates a contract, given a contract directory containing WAST and ABI.
 
     This class extends the pyteos.Contract: it goes without the `account`
     parameter, instead it uses an account created internally.
@@ -83,6 +83,7 @@ class Contract(pyteos.Contract):
 
 class Template(Contract):
     """
+    Creates a new contract from a pre-defined template.
     """
     def __init__(
             self, name, 
@@ -107,6 +108,9 @@ class Template(Contract):
 
 
 class Account(pyteos.Account):
+    """
+    Creates an account and imports its keys into the wallet.
+    """
     def __init__(self, name, creator):
         
         key_owner = pyteos.CreateKey("key_owner")
