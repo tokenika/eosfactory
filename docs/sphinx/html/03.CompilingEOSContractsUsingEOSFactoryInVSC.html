@@ -52,6 +52,7 @@
 <li><a class="reference internal" href="#deploy-the-contract">Deploy the Contract</a></li>
 <li><a class="reference internal" href="#test-the-contract">Test the Contract</a></li>
 <li><a class="reference internal" href="#modify-the-code-re-compile-re-deploy">Modify the code, re-compile &amp; re-deploy</a></li>
+<li><a class="reference internal" href="#using-cmake-and-intellisense-in-visual-studio-code">Using <em>CMake</em> and <em>IntelliSense</em> in <em>Visual Studio Code</em></a></li>
 </ul>
 </li>
 </ul>
@@ -129,6 +130,7 @@
 <span class="n">contract</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><strong>NOTE:</strong>  For naming contracts use names that are compatible with EOS requirements regarding account names - this is because for each contract <em>EOSFactory</em> creates an account associated with it and this account is has the same name as the contract. So for example underscores are not allowed, use dots instead, and the names cannot be longer than 12 characters. This is a temporary limitation, it will be removed in the future.</p>
 <p>To check the directory where the contract’s files are located:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">path</span><span class="p">()</span>
 </pre></div>
@@ -218,6 +220,19 @@
 </div>
 <p>But if we use the appropriate authority, there should no error:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;carol&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-cmake-and-intellisense-in-visual-studio-code">
+<span id="using-cmake-and-intellisense-in-visual-studio-code"></span><h2>Using <em>CMake</em> and <em>IntelliSense</em> in <em>Visual Studio Code</em><a class="headerlink" href="#using-cmake-and-intellisense-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
+<p>If you open a specific contract folder (e.g. <code class="docutils literal notranslate"><span class="pre">tic.tac.toe</span></code> ) in <em>Visual Studio Code</em>, you’ll be able to make use of VSC <a class="reference external" href="https://code.visualstudio.com/docs/editor/intellisense">IntelliSense</a> feature. Also, you’ll be able to compile your contract using <em>CMake</em> by choosing the <code class="docutils literal notranslate"><span class="pre">Run</span> <span class="pre">Build</span> <span class="pre">Task</span></code> option from the VSC menu, or just <code class="docutils literal notranslate"><span class="pre">Crtl+Shift+B</span></code>.</p>
+<p>Here is what the build process output looks like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">Executing</span> <span class="n">task</span><span class="p">:</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">teos</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">teos</span> <span class="n">generate</span> <span class="n">abi</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">tic</span><span class="o">.</span><span class="n">tac</span><span class="o">.</span><span class="n">toe</span><span class="p">;</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">teos</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">teos</span> <span class="n">build</span> <span class="n">contract</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">tic</span><span class="o">.</span><span class="n">tac</span><span class="o">.</span><span class="n">toe</span> <span class="o">&lt;</span>
+
+<span class="c1">#              ABI: /mnt/d/Workspaces/EOS/eosfactory/contracts/tic.tac.toe/build/tic_tac_toe.abi</span>
+<span class="c1">#             WAST: /mnt/d/Workspaces/EOS/eosfactory/contracts/tic.tac.toe/build/tic_tac_toe.wast</span>
+
+<span class="n">Terminal</span> <span class="n">will</span> <span class="n">be</span> <span class="n">reused</span> <span class="n">by</span> <span class="n">tasks</span><span class="p">,</span> <span class="n">press</span> <span class="nb">any</span> <span class="n">key</span> <span class="n">to</span> <span class="n">close</span> <span class="n">it</span><span class="o">.</span>
 </pre></div>
 </div>
 </div>

@@ -175,6 +175,204 @@ In our case the output looks like this:
 Test OK
 #  Daemon is stopped.
 ```
+## The *Tic-Tac-Toe* game example
+
+Here is a unit-test for the *Tic-Tac-Toe* contract:
+
+```
+import node
+import sess
+from eosf import *
+
+def run():
+    node.reset()
+    sess.init()
+
+    c = Contract("tic.tac.toe")
+    c.deploy()
+
+    c.push_action("create", '{"challenger":"alice", "host":"bob"}', sess.bob)
+
+    t=c.get_table("games", sess.bob)
+    
+    assert t.json["rows"][0]["board"][0] == '0'
+    assert t.json["rows"][0]["board"][1] == '0'
+    assert t.json["rows"][0]["board"][2] == '0'
+    assert t.json["rows"][0]["board"][3] == '0'
+    assert t.json["rows"][0]["board"][4] == '0'
+    assert t.json["rows"][0]["board"][5] == '0'
+    assert t.json["rows"][0]["board"][6] == '0'
+    assert t.json["rows"][0]["board"][7] == '0'
+    assert t.json["rows"][0]["board"][8] == '0'
+
+    c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"bob", "mvt":{"row":0, "column":0} }', sess.bob)
+    
+    c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"alice", "mvt":{"row":1, "column":1} }', sess.alice)
+
+    t=c.get_table("games", sess.bob)
+
+    assert t.json["rows"][0]["board"][0] == '1'
+    assert t.json["rows"][0]["board"][1] == '0'
+    assert t.json["rows"][0]["board"][2] == '0'
+    assert t.json["rows"][0]["board"][3] == '0'
+    assert t.json["rows"][0]["board"][4] == '2'
+    assert t.json["rows"][0]["board"][5] == '0'
+    assert t.json["rows"][0]["board"][6] == '0'
+    assert t.json["rows"][0]["board"][7] == '0'
+    assert t.json["rows"][0]["board"][8] == '0'
+
+    c.push_action("restart", '{"challenger":"alice", "host":"bob", "by":"bob"}', sess.bob)
+    
+    t=c.get_table("games", sess.bob)
+    
+    assert t.json["rows"][0]["board"][0] == '0'
+    assert t.json["rows"][0]["board"][1] == '0'
+    assert t.json["rows"][0]["board"][2] == '0'
+    assert t.json["rows"][0]["board"][3] == '0'
+    assert t.json["rows"][0]["board"][4] == '0'
+    assert t.json["rows"][0]["board"][5] == '0'
+    assert t.json["rows"][0]["board"][6] == '0'
+    assert t.json["rows"][0]["board"][7] == '0'
+    assert t.json["rows"][0]["board"][8] == '0'
+
+    c.push_action("close", '{"challenger":"alice", "host":"bob"}', sess.bob)
+
+    print("Test OK")
+    node.stop()
+
+if __name__ == "__main__":
+    run()
+```
+
+And here is the result:
+
+```
+#  nodeos exe file: /mnt/d/Workspaces/EOS/eos/build/programs/nodeos/nodeos
+#  genesis state file: /mnt/d/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json
+#   server address: 127.0.0.1:8888
+#  config directory: /mnt/d/Workspaces/EOS/eosfactory/build/daemon/data-dir
+#  wallet directory: /mnt/d/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet
+#  head block number: 0
+#  head block time: 2017-12-04T01:00:00
+
+#         password: PW5HvML8Q8XbaBRmKCtPAVtfuZ5Ds7cqSozMAXYP5ugodzX69rpp8
+
+#   transaction id: 68219709ccb1b8573ea8c990305d219eda8bf18482064b554857770e025c8193
+
+#         key name: key_owner
+#      private key: 5JjwZkiSh54PCUDeVrXHk4xJ4rTnBzBSt1gVWrfbUzAkGA5oUUM
+#       public key: EOS6GcnkredTW19B4XYod42DBkVgiqLFxdEws5Zka4cUExUJz91od
+
+#         key name: key_active
+#      private key: 5JaqCGuLZ8KnCuMWjhXbmiemnXZJZp3Kofoj3v24PfTiHQcN8YB
+#       public key: EOS8h2Rop1aXsem5qRVXVWascrFL6mCMBmWjfBmREuV4AZvvqczqw
+
+#   transaction id: a10d62a9f1e8bcd634319f959dcc55e98060a3b59420712bf7bf3474a329e5d1
+
+#   transaction id: 38d3d9a0d745e03c1fc622e471e8860f86805a81dadafcddbdae1665ba1167ed
+
+#   transaction id: 199691aaadc569f3454d52fe7debfca1ec288ffc9030e454ce80d64d243c3085
+
+#     account name: tic.tac.toe
+
+#         key name: key_owner
+#      private key: 5KAobgMVHfXiCaSpFzNBcU79Rn1CrDPpL8r9pRPKEkUjTEM2QVY
+#       public key: EOS8iBzdpLwbdtA6985FZcuq3VKwqXmZjC7TLYH99JrnnwoPn9mjW
+
+#         key name: key_active
+#      private key: 5J7DfiTNzoBU8stH5GqpDVSmQqMRH7LpPXutG73G7g6YPCAUA6D
+#       public key: EOS5LjLLUks8YDxTjRpvGyZE6i8kJmoSnZ7LENupey7Zvag1i7g5X
+
+#   transaction id: e9b846d165058c77629c309683ab7769d43b6d76a6b19f54d79d0e0b5d134ada
+
+#   transaction id: edc826c83dd6f3a243a1dbbe15bd6b7d8610b35845ecd7fbdb4483835024fdba
+
+#   transaction id: b3fd3e72a6bff72ff97a4074356416c0f7356fa45ba654055c9adbbea94cc70f
+
+#  {
+#      "rows": [
+#          {
+#              "challenger": "alice",
+#              "host": "bob",
+#              "turn": "bob",
+#              "winner": "none",
+#              "board": [
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0"
+#              ]
+#          }
+#      ],
+#      "more": "false"
+#  }
+#
+
+#   transaction id: 421c39c68119fabce9065c904f78500fcf6a1424c049bb9875774b6919f7e2ed
+
+#   transaction id: 33aebdf5acd10a947006b4510b0ddd6eaeffec14850840852948ac5ab4ac5f64
+
+#  {
+#      "rows": [
+#          {
+#              "challenger": "alice",
+#              "host": "bob",
+#              "turn": "bob",
+#              "winner": "none",
+#              "board": [
+#                  "1",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "2",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0"
+#              ]
+#          }
+#      ],
+#      "more": "false"
+#  }
+#
+
+#   transaction id: 2a1bb4049b12cb18408e8bed2bb8c7b78b64638c6d50d743e22f29ed4c33c799
+
+#  {
+#      "rows": [
+#          {
+#              "challenger": "alice",
+#              "host": "bob",
+#              "turn": "bob",
+#              "winner": "none",
+#              "board": [
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0"
+#              ]
+#          }
+#      ],
+#      "more": "false"
+#  }
+#
+
+#   transaction id: eadeaf5438107333a30f7122a3377b3fbe95eaedb0618f2a78a09975568383e1
+
+Test OK
+#  Daemon is stopped.
+```
+
 ## Further steps
 
-The above example is just a proof-of-concept solution for unit-testing in *EOSFactory*. Ultimately we want to make unit-testing much better organized and integrated more tightly with *Visual Studio Code*.
+The above schema is just a proof-of-concept solution for unit-testing in *EOSFactory*. Ultimately we want to make unit-testing much better organized and integrated more tightly with *Visual Studio Code*.

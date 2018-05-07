@@ -79,7 +79,7 @@ pygments_style = 'sphinx'
 #
 # haiku classic sphinxdoc bizstyle sphinx_rtd_theme
 
-# html_theme = 'bizstyle' 
+html_theme = 'bizstyle' 
 
 # html_theme = "alabaster"
 
@@ -90,10 +90,8 @@ pygments_style = 'sphinx'
 #     "stickysidebar": "true"
 #}
 
-html_theme_path = ["../.themes/sphinx-theme-graphite", ]
-html_theme = "sphinx-theme-graphite"
-
-
+# html_theme_path = ["../.themes/sphinx-theme-graphite", ]
+# html_theme = "sphinx-theme-graphite"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

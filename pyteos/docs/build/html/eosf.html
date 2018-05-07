@@ -68,6 +68,75 @@
             
   <div class="section" id="eosf">
 <h1>eosf<a class="headerlink" href="#eosf" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="eosf.Contract">
+<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Contract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a contract, given a contract directory containing WAST and ABI.</p>
+<p>This class extends the <cite>pyteos.Contract</cite>: it goes without the <cite>account</cite>
+parameter, instead it uses an account created internally.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><strong>parameters</strong></dt>
+<dd><dl class="first last docutils">
+<dt>contract_dir: A contract directory, structures according to the </dt>
+<dd><em>contract template</em>, that means, including the <cite>build</cite> directory
+that contains WAST and ABI.</dd>
+<dt>wast_file: The file containing the contract WAST, relative </dt>
+<dd>to the <em>contract directory</em>, defaults to empty string.</dd>
+<dt>abi_file: The file containing the contract ABI, relative </dt>
+<dd>to the <em>contract directory</em>, defaults to empty string.</dd>
+<dt>permission: An account object or the name of an account that </dt>
+<dd>authorizes the creation.</dd>
+<dt>expiration_sec: The time in seconds before a transaction expires, </dt>
+<dd>defaults to 30s.</dd>
+<dt>skip_signature:  If unlocked wallet keys should be used to sign </dt>
+<dd>transaction, defaults to 0.</dd>
+<dt>dont_broadcast: Whether to broadcast transaction to the network (or </dt>
+<dd>print to stdout), defaults to 0.</dd>
+<dt>forceUnique: Whether to force the transaction to be unique, what will </dt>
+<dd>consume extra bandwidth and remove any protections against 
+accidently issuing the same transaction multiple times, defaults 
+to 0.</dd>
+<dt>max_cpu_usage: An upper limit on the cpu usage budget, in </dt>
+<dd>instructions-retired, for the execution of the transaction 
+(defaults to 0 which means no limit).</dd>
+<dt>max_net_usage: An upper limit on the net usage budget, in bytes, for </dt>
+<dd>the transaction (defaults to 0 which means no limit).</dd>
+</dl>
+</dd>
+</dl>
+</li>
+</ul>
+<p>The extended constructor adds the following attributes:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>attributes</strong></dt>
+<dd><dl class="first docutils">
+<dt>name: The name of contract`s account. It has the value of the last</dt>
+<dd><p class="first last">part of the contract directory path.</p>
+</dd>
+</dl>
+<p class="last">key_owner: A key object.
+key_active: Another key object.
+account: The account that owns the contract.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="eosf.Template">
+<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Template</code><span class="sig-paren">(</span><em>name</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new contract from a pre-defined template.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="eosf.Account">
+<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>name</em>, <em>creator</em><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an account and imports its keys into the <em>wallet</em>.</p>
+</dd></dl>
+
 </div>
 
 

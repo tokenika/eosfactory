@@ -13,17 +13,17 @@ class Contract(pyteos.Contract):
     """
     Creates a contract, given a contract directory containing WAST and ABI.
 
-    This class extends the pyteos.Contract: it goes without the `account`
+    This class extends the `pyteos.Contract`: it goes without the `account`
     parameter, instead it uses an account created internally.
 
     - **parameters**
         contract_dir: A contract directory, structures according to the 
-            `contract template', that means, including the `build' directory
+            *contract template*, that means, including the `build` directory
             that contains WAST and ABI.
         wast_file: The file containing the contract WAST, relative 
-            to contract-dir, defaults to "".
+            to the *contract directory*, defaults to empty string.
         abi_file: The file containing the contract ABI, relative 
-            to contract-dir, defaults to "".
+            to the *contract directory*, defaults to empty string.
         permission: An account object or the name of an account that 
             authorizes the creation.
         expiration_sec: The time in seconds before a transaction expires, 
@@ -50,6 +50,7 @@ class Contract(pyteos.Contract):
         key_owner: A key object.
         key_active: Another key object.
         account: The account that owns the contract.
+
     """
     def __init__(
             self, contract_dir, 
@@ -109,7 +110,7 @@ class Template(Contract):
 
 class Account(pyteos.Account):
     """
-    Creates an account and imports its keys into the wallet.
+    Creates an account and imports its keys into the *wallet*.
     """
     def __init__(self, name, creator):
         

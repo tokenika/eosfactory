@@ -45,6 +45,7 @@
 <li><a class="reference internal" href="#">Unit-testing EOS Contracts using <em>EOSFactory</em> in <em>Visual Studio Code</em></a><ul>
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li><a class="reference internal" href="#create-a-unit-test">Create a unit-test</a></li>
+<li><a class="reference internal" href="#the-tic-tac-toe-game-example">The <em>Tic-Tac-Toe</em> game example</a></li>
 <li><a class="reference internal" href="#further-steps">Further steps</a></li>
 </ul>
 </li>
@@ -252,9 +253,204 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="the-tic-tac-toe-game-example">
+<span id="the-tic-tac-toe-game-example"></span><h2>The <em>Tic-Tac-Toe</em> game example<a class="headerlink" href="#the-tic-tac-toe-game-example" title="Permalink to this headline">¶</a></h2>
+<p>Here is a unit-test for the <em>Tic-Tac-Toe</em> contract:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">node</span>
+<span class="kn">import</span> <span class="nn">sess</span>
+<span class="kn">from</span> <span class="nn">eosf</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">node</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+    <span class="n">c</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="s2">&quot;tic.tac.toe&quot;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;challenger&quot;:&quot;alice&quot;, &quot;host&quot;:&quot;bob&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+
+    <span class="n">t</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;games&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">8</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;move&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;challenger&quot;:&quot;alice&quot;, &quot;host&quot;:&quot;bob&quot;, &quot;by&quot;:&quot;bob&quot;, &quot;mvt&quot;:{&quot;row&quot;:0, &quot;column&quot;:0} }&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+    
+    <span class="n">c</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;move&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;challenger&quot;:&quot;alice&quot;, &quot;host&quot;:&quot;bob&quot;, &quot;by&quot;:&quot;alice&quot;, &quot;mvt&quot;:{&quot;row&quot;:1, &quot;column&quot;:1} }&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
+
+    <span class="n">t</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;games&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">8</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;restart&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;challenger&quot;:&quot;alice&quot;, &quot;host&quot;:&quot;bob&quot;, &quot;by&quot;:&quot;bob&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+    
+    <span class="n">t</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;games&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">8</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;challenger&quot;:&quot;alice&quot;, &quot;host&quot;:&quot;bob&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test OK&quot;</span><span class="p">)</span>
+    <span class="n">node</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And here is the result:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#  nodeos exe file: /mnt/d/Workspaces/EOS/eos/build/programs/nodeos/nodeos</span>
+<span class="c1">#  genesis state file: /mnt/d/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json</span>
+<span class="c1">#   server address: 127.0.0.1:8888</span>
+<span class="c1">#  config directory: /mnt/d/Workspaces/EOS/eosfactory/build/daemon/data-dir</span>
+<span class="c1">#  wallet directory: /mnt/d/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet</span>
+<span class="c1">#  head block number: 0</span>
+<span class="c1">#  head block time: 2017-12-04T01:00:00</span>
+
+<span class="c1">#         password: PW5HvML8Q8XbaBRmKCtPAVtfuZ5Ds7cqSozMAXYP5ugodzX69rpp8</span>
+
+<span class="c1">#   transaction id: 68219709ccb1b8573ea8c990305d219eda8bf18482064b554857770e025c8193</span>
+
+<span class="c1">#         key name: key_owner</span>
+<span class="c1">#      private key: 5JjwZkiSh54PCUDeVrXHk4xJ4rTnBzBSt1gVWrfbUzAkGA5oUUM</span>
+<span class="c1">#       public key: EOS6GcnkredTW19B4XYod42DBkVgiqLFxdEws5Zka4cUExUJz91od</span>
+
+<span class="c1">#         key name: key_active</span>
+<span class="c1">#      private key: 5JaqCGuLZ8KnCuMWjhXbmiemnXZJZp3Kofoj3v24PfTiHQcN8YB</span>
+<span class="c1">#       public key: EOS8h2Rop1aXsem5qRVXVWascrFL6mCMBmWjfBmREuV4AZvvqczqw</span>
+
+<span class="c1">#   transaction id: a10d62a9f1e8bcd634319f959dcc55e98060a3b59420712bf7bf3474a329e5d1</span>
+
+<span class="c1">#   transaction id: 38d3d9a0d745e03c1fc622e471e8860f86805a81dadafcddbdae1665ba1167ed</span>
+
+<span class="c1">#   transaction id: 199691aaadc569f3454d52fe7debfca1ec288ffc9030e454ce80d64d243c3085</span>
+
+<span class="c1">#     account name: tic.tac.toe</span>
+
+<span class="c1">#         key name: key_owner</span>
+<span class="c1">#      private key: 5KAobgMVHfXiCaSpFzNBcU79Rn1CrDPpL8r9pRPKEkUjTEM2QVY</span>
+<span class="c1">#       public key: EOS8iBzdpLwbdtA6985FZcuq3VKwqXmZjC7TLYH99JrnnwoPn9mjW</span>
+
+<span class="c1">#         key name: key_active</span>
+<span class="c1">#      private key: 5J7DfiTNzoBU8stH5GqpDVSmQqMRH7LpPXutG73G7g6YPCAUA6D</span>
+<span class="c1">#       public key: EOS5LjLLUks8YDxTjRpvGyZE6i8kJmoSnZ7LENupey7Zvag1i7g5X</span>
+
+<span class="c1">#   transaction id: e9b846d165058c77629c309683ab7769d43b6d76a6b19f54d79d0e0b5d134ada</span>
+
+<span class="c1">#   transaction id: edc826c83dd6f3a243a1dbbe15bd6b7d8610b35845ecd7fbdb4483835024fdba</span>
+
+<span class="c1">#   transaction id: b3fd3e72a6bff72ff97a4074356416c0f7356fa45ba654055c9adbbea94cc70f</span>
+
+<span class="c1">#  {</span>
+<span class="c1">#      &quot;rows&quot;: [</span>
+<span class="c1">#          {</span>
+<span class="c1">#              &quot;challenger&quot;: &quot;alice&quot;,</span>
+<span class="c1">#              &quot;host&quot;: &quot;bob&quot;,</span>
+<span class="c1">#              &quot;turn&quot;: &quot;bob&quot;,</span>
+<span class="c1">#              &quot;winner&quot;: &quot;none&quot;,</span>
+<span class="c1">#              &quot;board&quot;: [</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;</span>
+<span class="c1">#              ]</span>
+<span class="c1">#          }</span>
+<span class="c1">#      ],</span>
+<span class="c1">#      &quot;more&quot;: &quot;false&quot;</span>
+<span class="c1">#  }</span>
+<span class="c1">#</span>
+
+<span class="c1">#   transaction id: 421c39c68119fabce9065c904f78500fcf6a1424c049bb9875774b6919f7e2ed</span>
+
+<span class="c1">#   transaction id: 33aebdf5acd10a947006b4510b0ddd6eaeffec14850840852948ac5ab4ac5f64</span>
+
+<span class="c1">#  {</span>
+<span class="c1">#      &quot;rows&quot;: [</span>
+<span class="c1">#          {</span>
+<span class="c1">#              &quot;challenger&quot;: &quot;alice&quot;,</span>
+<span class="c1">#              &quot;host&quot;: &quot;bob&quot;,</span>
+<span class="c1">#              &quot;turn&quot;: &quot;bob&quot;,</span>
+<span class="c1">#              &quot;winner&quot;: &quot;none&quot;,</span>
+<span class="c1">#              &quot;board&quot;: [</span>
+<span class="c1">#                  &quot;1&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;2&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;</span>
+<span class="c1">#              ]</span>
+<span class="c1">#          }</span>
+<span class="c1">#      ],</span>
+<span class="c1">#      &quot;more&quot;: &quot;false&quot;</span>
+<span class="c1">#  }</span>
+<span class="c1">#</span>
+
+<span class="c1">#   transaction id: 2a1bb4049b12cb18408e8bed2bb8c7b78b64638c6d50d743e22f29ed4c33c799</span>
+
+<span class="c1">#  {</span>
+<span class="c1">#      &quot;rows&quot;: [</span>
+<span class="c1">#          {</span>
+<span class="c1">#              &quot;challenger&quot;: &quot;alice&quot;,</span>
+<span class="c1">#              &quot;host&quot;: &quot;bob&quot;,</span>
+<span class="c1">#              &quot;turn&quot;: &quot;bob&quot;,</span>
+<span class="c1">#              &quot;winner&quot;: &quot;none&quot;,</span>
+<span class="c1">#              &quot;board&quot;: [</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;,</span>
+<span class="c1">#                  &quot;0&quot;</span>
+<span class="c1">#              ]</span>
+<span class="c1">#          }</span>
+<span class="c1">#      ],</span>
+<span class="c1">#      &quot;more&quot;: &quot;false&quot;</span>
+<span class="c1">#  }</span>
+<span class="c1">#</span>
+
+<span class="c1">#   transaction id: eadeaf5438107333a30f7122a3377b3fbe95eaedb0618f2a78a09975568383e1</span>
+
+<span class="n">Test</span> <span class="n">OK</span>
+<span class="c1">#  Daemon is stopped.</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="further-steps">
 <span id="further-steps"></span><h2>Further steps<a class="headerlink" href="#further-steps" title="Permalink to this headline">¶</a></h2>
-<p>The above example is just a proof-of-concept solution for unit-testing in <em>EOSFactory</em>. Ultimately we want to make unit-testing much better organized and integrated more tightly with <em>Visual Studio Code</em>.</p>
+<p>The above schema is just a proof-of-concept solution for unit-testing in <em>EOSFactory</em>. Ultimately we want to make unit-testing much better organized and integrated more tightly with <em>Visual Studio Code</em>.</p>
 </div>
 </div>
 
