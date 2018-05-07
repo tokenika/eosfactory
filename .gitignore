@@ -16,6 +16,7 @@ pyteos/docs#
 !/contracts/tic.tac.toe
 
 !/contracts/currency/build
+!/contracts/tic.tac.toe/build
 !/templates/contracts/skeleton/build
 
 /tests/*
