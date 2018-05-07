@@ -462,6 +462,6 @@ $ source ~/.bashrc
 fi
 
 printf "\n%s\n" "
-VERIFY the EOSFacotry installation by running the following command:
+VERIFY the EOSFactory installation by running the following command:
 $ python3 ./tests/test1.py
 "
