@@ -1,3 +1,5 @@
+# python3 ./tests/test.py
+
 import node
 import sess
 from eosf import *
@@ -15,4 +17,3 @@ def run():
 
 if __name__ == "__main__":
     run()
-    
