@@ -46,11 +46,10 @@ class Contract(pyteos.Contract):
 
     - **attributes**
         name: The name of contract`s account. It has the value of the last
-            part of the contract directory path.
+        part of the contract directory path.
         key_owner: A key object.
         key_active: Another key object.
         account: The account that owns the contract.
-
     """
     def __init__(
             self, contract_dir, 

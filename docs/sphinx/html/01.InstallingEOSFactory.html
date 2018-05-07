@@ -16,7 +16,7 @@
     <script type="text/javascript" src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Getting Started with EOS Contracts in EOSFactory" href="02.InteractingWithEOSContractsInEOSFactory.html" />
+    <link rel="next" title="Interacting with EOS Contracts in EOSFactory" href="02.InteractingWithEOSContractsInEOSFactory.html" />
     <link rel="prev" title="Welcome to EOSFactory documentation!" href="index.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Getting Started with EOS Contracts in EOSFactory"
+          <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Interacting with EOS Contracts in EOSFactory"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Welcome to EOSFactory documentation!"
@@ -42,12 +42,12 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Installing <em>EOSFactory</em></a><ul>
+<li><a class="reference internal" href="#">Installing EOSFactory</a><ul>
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li><a class="reference internal" href="#get-the-source-code">Get the source code</a></li>
-<li><a class="reference internal" href="#build-eosfactory-on-linux-osx">Build <em>EOSFactory</em> on Linux &amp; OSX</a></li>
-<li><a class="reference internal" href="#build-eosfactory-on-windows">Build <em>EOSFactory</em> on Windows</a></li>
-<li><a class="reference internal" href="#test-eosfactory">Test <em>EOSFactory</em></a></li>
+<li><a class="reference internal" href="#build-eosfactory-on-linux-osx">Build EOSFactory on Linux &amp; OSX</a></li>
+<li><a class="reference internal" href="#build-eosfactory-on-windows">Build EOSFactory on Windows</a></li>
+<li><a class="reference internal" href="#test-eosfactory">Test EOSFactory</a></li>
 </ul>
 </li>
 </ul>
@@ -57,7 +57,7 @@
                         title="previous chapter">Welcome to EOSFactory documentation!</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="02.InteractingWithEOSContractsInEOSFactory.html"
-                        title="next chapter">Getting Started with EOS Contracts in <em>EOSFactory</em></a></p>
+                        title="next chapter">Interacting with EOS Contracts in EOSFactory</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -86,26 +86,26 @@
           <div class="body" role="main">
             
   <div class="section" id="installing-eosfactory">
-<span id="installing-eosfactory"></span><h1>Installing <em>EOSFactory</em><a class="headerlink" href="#installing-eosfactory" title="Permalink to this headline">¶</a></h1>
-<p>The purpose of this tutorial is to demonstrate how to install <em>EOSFactory</em> on any operating system, including Windows, OSX and Linux.</p>
+<span id="installing-eosfactory"></span><h1>Installing EOSFactory<a class="headerlink" href="#installing-eosfactory" title="Permalink to this headline">¶</a></h1>
+<p>The purpose of this tutorial is to demonstrate how to install EOSFactory on any operating system, including Windows, OSX and Linux.</p>
 <div class="section" id="prerequisites">
 <span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>If you’re on Windows 10, we assume that you have <a class="reference external" href="https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux"><em>Windows Subsystem for Linux</em></a> installed. If that’s not the case, please refer to <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">this guide</a>.</li>
 <li>We also assume that you have successfully installed <em>EOSIO</em> on your machine. If that’s not the case, please refer to <a class="reference external" href="https://github.com/EOSIO/eos/wiki/Local-Environment">this guide</a>.</li>
-<li>And finally we assume you have <a class="reference external" href="https://www.python.org/download/releases/3.0/"><em>Python3</em></a> installed (this refers to OSX and Linux only, as <em>Windows Subsystem for Linux</em> ships with <em>Python3</em> by default).</li>
+<li>And finally we assume you have <a class="reference external" href="https://www.python.org/download/releases/3.0/">Python3</a> installed (this refers to OSX and Linux only, as <em>Windows Subsystem for Linux</em> ships with Python3 by default).</li>
 </ul>
 <p><strong>NOTE:</strong> If you are on Windows 10, the only option you have regarding <em>EOSIO</em> installation is building it in the Ubuntu bash (supplied by <em>Windows Subsystem for Linux</em>), as it cannot be compiled directly on a Windows machine. What we recommend is clone the <em>EOSIO</em> source code in Windows, but build it in the Ubuntu bash, taking advantage of the fact that the entire Windows file structure is fully accessible in the Ubuntu bash.</p>
 </div>
 <div class="section" id="get-the-source-code">
 <span id="get-the-source-code"></span><h2>Get the source code<a class="headerlink" href="#get-the-source-code" title="Permalink to this headline">¶</a></h2>
-<p>Clone <em>EOSFactory</em> source code from the repository:</p>
+<p>Clone EOSFactory source code from the repository:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">tokenika</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="build-eosfactory-on-linux-osx">
-<span id="build-eosfactory-on-linux-osx"></span><h2>Build <em>EOSFactory</em> on Linux &amp; OSX<a class="headerlink" href="#build-eosfactory-on-linux-osx" title="Permalink to this headline">¶</a></h2>
+<span id="build-eosfactory-on-linux-osx"></span><h2>Build EOSFactory on Linux &amp; OSX<a class="headerlink" href="#build-eosfactory-on-linux-osx" title="Permalink to this headline">¶</a></h2>
 <p>Open a bash terminal and define an environment variable called <code class="docutils literal notranslate"><span class="pre">EOSIO_SOURCE_DIR</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="s1">&#39;export EOSIO_SOURCE_DIR=/path/to/your/local/EOSIO/repository&#39;</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">bashrc</span>
 </pre></div>
@@ -129,7 +129,7 @@
 </div>
 </div>
 <div class="section" id="build-eosfactory-on-windows">
-<span id="build-eosfactory-on-windows"></span><h2>Build <em>EOSFactory</em> on Windows<a class="headerlink" href="#build-eosfactory-on-windows" title="Permalink to this headline">¶</a></h2>
+<span id="build-eosfactory-on-windows"></span><h2>Build EOSFactory on Windows<a class="headerlink" href="#build-eosfactory-on-windows" title="Permalink to this headline">¶</a></h2>
 <p>Open an Ubuntu bash terminal supplied by <em>Windows Subsystem for Linux.</em></p>
 <p>In the bash terminal define an environment variable called <code class="docutils literal notranslate"><span class="pre">EOSIO_SOURCE_DIR</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="s1">&#39;export EOSIO_SOURCE_DIR=/path/to/your/local/EOSIO/repository&#39;</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">bashrc</span>
@@ -170,8 +170,8 @@
 <p><strong>NOTE:</strong> When the build process is finished you’ll need to restart your bash terminal.</p>
 </div>
 <div class="section" id="test-eosfactory">
-<span id="test-eosfactory"></span><h2>Test <em>EOSFactory</em><a class="headerlink" href="#test-eosfactory" title="Permalink to this headline">¶</a></h2>
-<p>In the bash terminal, let’s verify that <em>EOSFactory</em> works and is properly hooked up to <em>EOSIO</em>. You can do it by running a simple unit-test:</p>
+<span id="test-eosfactory"></span><h2>Test EOSFactory<a class="headerlink" href="#test-eosfactory" title="Permalink to this headline">¶</a></h2>
+<p>In the bash terminal, let’s verify that EOSFactory works and is properly hooked up to <em>EOSIO</em>. You can do it by running a simple unit-test:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">eosfactory</span>
 <span class="n">python3</span> <span class="o">./</span><span class="n">tests</span><span class="o">/</span><span class="n">test1</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
@@ -192,7 +192,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Getting Started with EOS Contracts in EOSFactory"
+          <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Interacting with EOS Contracts in EOSFactory"
              >next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Welcome to EOSFactory documentation!"

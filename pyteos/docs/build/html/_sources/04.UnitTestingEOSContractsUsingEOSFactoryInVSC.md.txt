@@ -1,11 +1,11 @@
-# Unit-testing EOS Contracts using *EOSFactory* in *Visual Studio Code*
+# Unit-testing EOS Contracts using EOSFactory in *Visual Studio Code*
 
-The purpose of this tutorial is to demonstrate how *EOSFactory* and its Python CLI can be used to make unit-testing EOS contracts easy & intuitive.
+The purpose of this tutorial is to demonstrate how EOSFactory and its Python CLI can be used to make unit-testing EOS contracts easy & intuitive.
 
 ## Prerequisites
 
-* This tutorial assumes that you have successfully installed *EOSFactory*. If it's not the case, please refer to [Installing *EOSFactory*](01.InstallingEOSFactory.html).
-* We also assume that you are familiar with the material covered in [Interacting with EOS Contracts in *EOSFactory*](02.InteractingWithEOSContractsInEOSFactory.html).
+* This tutorial assumes that you have successfully installed EOSFactory. If it's not the case, please refer to [Installing EOSFactory](01.InstallingEOSFactory.html).
+* We also assume that you are familiar with the material covered in [Interacting with EOS Contracts in EOSFactory](02.InteractingWithEOSContractsInEOSFactory.html).
 
 ## Create a unit-test
 
@@ -375,4 +375,4 @@ Test OK
 
 ## Further steps
 
-The above schema is just a proof-of-concept solution for unit-testing in *EOSFactory*. Ultimately we want to make unit-testing much better organized and integrated more tightly with *Visual Studio Code*.
+The above schema is just a proof-of-concept solution for unit-testing in EOSFactory. Ultimately we want to make unit-testing much better organized and integrated more tightly with *Visual Studio Code*.

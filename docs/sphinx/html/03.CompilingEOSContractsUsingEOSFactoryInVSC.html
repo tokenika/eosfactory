@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Unit-testing EOS Contracts using EOSFactory in Visual Studio Code" href="04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html" />
-    <link rel="prev" title="Getting Started with EOS Contracts in EOSFactory" href="02.InteractingWithEOSContractsInEOSFactory.html" />
+    <link rel="prev" title="Interacting with EOS Contracts in EOSFactory" href="02.InteractingWithEOSContractsInEOSFactory.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
@@ -33,7 +33,7 @@
           <a href="04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html" title="Unit-testing EOS Contracts using EOSFactory in Visual Studio Code"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Getting Started with EOS Contracts in EOSFactory"
+          <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Interacting with EOS Contracts in EOSFactory"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">EOSFactory 1.0 documentation</a> &#187;</li> 
       </ul>
@@ -42,7 +42,7 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Compiling EOS Contracts using <em>EOSFactory</em> in <em>Visual Studio Code</em></a><ul>
+<li><a class="reference internal" href="#">Compiling EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a><ul>
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li><a class="reference internal" href="#set-up-visual-studio-code-vsc">Set up <em>Visual Studio Code</em> (VSC)</a></li>
 <li><a class="reference internal" href="#run-python-cli-in-vsc">Run Python CLI in VSC</a></li>
@@ -59,10 +59,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="02.InteractingWithEOSContractsInEOSFactory.html"
-                        title="previous chapter">Getting Started with EOS Contracts in <em>EOSFactory</em></a></p>
+                        title="previous chapter">Interacting with EOS Contracts in EOSFactory</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html"
-                        title="next chapter">Unit-testing EOS Contracts using <em>EOSFactory</em> in <em>Visual Studio Code</em></a></p>
+                        title="next chapter">Unit-testing EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -91,14 +91,14 @@
           <div class="body" role="main">
             
   <div class="section" id="compiling-eos-contracts-using-eosfactory-in-visual-studio-code">
-<span id="compiling-eos-contracts-using-eosfactory-in-visual-studio-code"></span><h1>Compiling EOS Contracts using <em>EOSFactory</em> in <em>Visual Studio Code</em><a class="headerlink" href="#compiling-eos-contracts-using-eosfactory-in-visual-studio-code" title="Permalink to this headline">¶</a></h1>
-<p>The purpose of this tutorial is to demonstrate how <em>EOSFactory</em> and its Python CLI combined with <em>Visual Studio Code</em> can be used to make compiling EOS contracts easy &amp; intuitive.</p>
+<span id="compiling-eos-contracts-using-eosfactory-in-visual-studio-code"></span><h1>Compiling EOS Contracts using EOSFactory in <em>Visual Studio Code</em><a class="headerlink" href="#compiling-eos-contracts-using-eosfactory-in-visual-studio-code" title="Permalink to this headline">¶</a></h1>
+<p>The purpose of this tutorial is to demonstrate how EOSFactory and its Python CLI combined with <em>Visual Studio Code</em> can be used to make compiling EOS contracts easy &amp; intuitive.</p>
 <div class="section" id="prerequisites">
 <span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>This tutorial assumes that you have successfully installed <em>EOSFactory</em>. If it’s not the case, please refer to <a class="reference external" href="01.InstallingEOSFactory.html">Installing <em>EOSFactory</em></a>.</li>
-<li>We also assume that you are familiar with the material covered in <a class="reference external" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in <em>EOSFactory</em></a>.</li>
-<li><em>EOSFactory</em> is fully compatible with <a class="reference external" href="https://code.visualstudio.com"><em>Visual Studio Code</em></a> which is a very convenient tool when working with smart-contract code. To install it, please refer to <a class="reference external" href="https://code.visualstudio.com/download">this webpage</a>.</li>
+<li>This tutorial assumes that you have successfully installed EOSFactory. If it’s not the case, please refer to <a class="reference external" href="01.InstallingEOSFactory.html">Installing EOSFactory</a>.</li>
+<li>We also assume that you are familiar with the material covered in <a class="reference external" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a>.</li>
+<li>EOSFactory is fully compatible with <a class="reference external" href="https://code.visualstudio.com">Visual Studio Code</a> which is a very convenient tool when working with smart-contract code. To install it, please refer to <a class="reference external" href="https://code.visualstudio.com/download">this webpage</a>.</li>
 <li>Finally, we assume that you are familiar with the official <a class="reference external" href="https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract">EOS Hello World tutorial</a>, as it presents the default way to compile and deploy smart-contracts in EOS. What we present here is an alternative.</li>
 </ul>
 </div>
@@ -130,7 +130,7 @@
 <span class="n">contract</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>NOTE:</strong>  For naming contracts use names that are compatible with EOS requirements regarding account names - this is because for each contract <em>EOSFactory</em> creates an account associated with it and this account is has the same name as the contract. So for example underscores are not allowed, use dots instead, and the names cannot be longer than 12 characters. This is a temporary limitation, it will be removed in the future.</p>
+<p><strong>NOTE:</strong>  For naming contracts use names that are compatible with EOS requirements regarding account names - this is because for each contract EOSFactory creates an account associated with it and this account is has the same name as the contract. So for example underscores are not allowed, use dots instead, and the names cannot be longer than 12 characters. This is a temporary limitation, it will be removed in the future.</p>
 <p>To check the directory where the contract’s files are located:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">path</span><span class="p">()</span>
 </pre></div>
@@ -254,7 +254,7 @@
           <a href="04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html" title="Unit-testing EOS Contracts using EOSFactory in Visual Studio Code"
              >next</a> |</li>
         <li class="right" >
-          <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Getting Started with EOS Contracts in EOSFactory"
+          <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Interacting with EOS Contracts in EOSFactory"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">EOSFactory 1.0 documentation</a> &#187;</li> 
       </ul>

@@ -1,17 +1,17 @@
-# Getting Started with EOS Contracts in *EOSFactory* 
+# Interacting with EOS Contracts in EOSFactory 
 
-The purpose of this tutorial is to demonstrate how *EOSFactory* and its Python CLI can be used to make interacting with EOS easy & intuitive.
+The purpose of this tutorial is to demonstrate how EOSFactory and its Python CLI can be used to make interacting with EOS easy & intuitive.
 
 ## Prerequisites
 
-* This tutorial assumes that you have successfully installed *EOSFactory*. If it's not the case, please refer to [Installing *EOSFactory*](01.InstallingEOSFactory.html).
+* This tutorial assumes that you have successfully installed EOSFactory. If it's not the case, please refer to [Installing EOSFactory](01.InstallingEOSFactory.html).
 * We also assume that you are familiar with the official [EOS tutorials](https://github.com/EOSIO/eos/wiki/Tutorial-Getting-Started-With-Contracts), as they will give you a broader context and explain the rationale behind EOS smart-contracts.
 
 ## Run Python CLI
 
 Open a bash terminal (or if you are on Windows, an Ubuntu bash terminal supplied by *Windows Subsystem for Linux*) and type `python3` to run the Python CLI. The prompt should change to `>>>` signifying that it's ready for Python commands.
 
-## Start a Local Testnet
+## Start Local Testnet
 
 To start your own single-node local testnet:
 
@@ -32,37 +32,27 @@ To get information about the testnet:
 node.info()
 ```
 
-## Manage the Local Testnet
+## Manage Local Testnet
 
-#### Stop & continue
-
-To stop and then continue running the testnet:
+To stop the current testnet:
 
 ```
 node.stop()
 ```
 
-Wait a bit until the testnet window disappears, and then:
+To continue running the same testnet:
 
 ```
 node.run()
 ```
 
-#### Stop & reset
-
-To stop and reset the testnet:
-
-```
-node.stop()
-```
-
-Wait a bit until the testnet window disappears, and then:
+To stop the current testnet and start a new one:
 
 ```
 node.reset()
 ```
 
-## Initialize the Workspace
+## Initialize Workspace
 
 To initialize the workspace:
 

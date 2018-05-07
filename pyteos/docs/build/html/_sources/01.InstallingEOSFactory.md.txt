@@ -1,24 +1,24 @@
-# Installing *EOSFactory*
+# Installing EOSFactory
 
-The purpose of this tutorial is to demonstrate how to install *EOSFactory* on any operating system, including Windows, OSX and Linux.
+The purpose of this tutorial is to demonstrate how to install EOSFactory on any operating system, including Windows, OSX and Linux.
 
 ## Prerequisites
 
 * If you're on Windows 10, we assume that you have [*Windows Subsystem for Linux*](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux) installed. If that's not the case, please refer to [this guide](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 * We also assume that you have successfully installed *EOSIO* on your machine. If that's not the case, please refer to [this guide](https://github.com/EOSIO/eos/wiki/Local-Environment).
-* And finally we assume you have [*Python3*](https://www.python.org/download/releases/3.0/) installed (this refers to OSX and Linux only, as *Windows Subsystem for Linux* ships with *Python3* by default).
+* And finally we assume you have [Python3](https://www.python.org/download/releases/3.0/) installed (this refers to OSX and Linux only, as *Windows Subsystem for Linux* ships with Python3 by default).
 
 **NOTE:** If you are on Windows 10, the only option you have regarding *EOSIO* installation is building it in the Ubuntu bash (supplied by *Windows Subsystem for Linux*), as it cannot be compiled directly on a Windows machine. What we recommend is clone the *EOSIO* source code in Windows, but build it in the Ubuntu bash, taking advantage of the fact that the entire Windows file structure is fully accessible in the Ubuntu bash.
 
 ## Get the source code
 
-Clone *EOSFactory* source code from the repository:
+Clone EOSFactory source code from the repository:
 
 ```
 git clone https://github.com/tokenika/eosfactory.git
 ```
 
-## Build *EOSFactory* on Linux & OSX
+## Build EOSFactory on Linux & OSX
 
 Open a bash terminal and define an environment variable called `EOSIO_SOURCE_DIR`:
 
@@ -51,7 +51,7 @@ cd eosfactory
 source ~/.bashrc
 ```
 
-## Build *EOSFactory* on Windows
+## Build EOSFactory on Windows
 
 Open an Ubuntu bash terminal supplied by *Windows Subsystem for Linux.*
 
@@ -112,9 +112,9 @@ cd eosfactory
 
 **NOTE:** When the build process is finished you'll need to restart your bash terminal.
 
-## Test *EOSFactory*
+## Test EOSFactory
 
-In the bash terminal, let's verify that *EOSFactory* works and is properly hooked up to *EOSIO*. You can do it by running a simple unit-test:
+In the bash terminal, let's verify that EOSFactory works and is properly hooked up to *EOSIO*. You can do it by running a simple unit-test:
 
 ```
 cd eosfactory

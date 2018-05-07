@@ -1,12 +1,12 @@
-# Compiling EOS Contracts using *EOSFactory* in *Visual Studio Code*
+# Compiling EOS Contracts using EOSFactory in *Visual Studio Code*
 
-The purpose of this tutorial is to demonstrate how *EOSFactory* and its Python CLI combined with *Visual Studio Code* can be used to make compiling EOS contracts easy & intuitive. 
+The purpose of this tutorial is to demonstrate how EOSFactory and its Python CLI combined with *Visual Studio Code* can be used to make compiling EOS contracts easy & intuitive. 
 
 ## Prerequisites
 
-* This tutorial assumes that you have successfully installed *EOSFactory*. If it's not the case, please refer to [Installing *EOSFactory*](01.InstallingEOSFactory.html).
-* We also assume that you are familiar with the material covered in [Interacting with EOS Contracts in *EOSFactory*](02.InteractingWithEOSContractsInEOSFactory.html).
-* *EOSFactory* is fully compatible with [*Visual Studio Code*](https://code.visualstudio.com) which is a very convenient tool when working with smart-contract code. To install it, please refer to [this webpage](https://code.visualstudio.com/download).
+* This tutorial assumes that you have successfully installed EOSFactory. If it's not the case, please refer to [Installing EOSFactory](01.InstallingEOSFactory.html).
+* We also assume that you are familiar with the material covered in [Interacting with EOS Contracts in EOSFactory](02.InteractingWithEOSContractsInEOSFactory.html).
+* EOSFactory is fully compatible with [Visual Studio Code](https://code.visualstudio.com) which is a very convenient tool when working with smart-contract code. To install it, please refer to [this webpage](https://code.visualstudio.com/download).
 * Finally, we assume that you are familiar with the official [EOS Hello World tutorial](https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract), as it presents the default way to compile and deploy smart-contracts in EOS. What we present here is an alternative.
 
 ## Set up *Visual Studio Code* (VSC)
@@ -44,7 +44,7 @@ from eosf import *
 contract = Template("hello")
 ```
 
-**NOTE:**  For naming contracts use names that are compatible with EOS requirements regarding account names - this is because for each contract *EOSFactory* creates an account associated with it and this account is has the same name as the contract. So for example underscores are not allowed, use dots instead, and the names cannot be longer than 12 characters. This is a temporary limitation, it will be removed in the future.
+**NOTE:**  For naming contracts use names that are compatible with EOS requirements regarding account names - this is because for each contract EOSFactory creates an account associated with it and this account is has the same name as the contract. So for example underscores are not allowed, use dots instead, and the names cannot be longer than 12 characters. This is a temporary limitation, it will be removed in the future.
 
 To check the directory where the contract's files are located:
 
