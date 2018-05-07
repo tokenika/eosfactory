@@ -42,7 +42,7 @@
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html"
-                        title="previous chapter">Unit-testing EOS Contracts using <em>EOSFactory</em> in <em>Visual Studio Code</em></a></p>
+                        title="previous chapter">Unit-testing EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="node.html"
                         title="next chapter">node</a></p>
@@ -165,11 +165,11 @@ Generic ‘repr’ method returns the json output of the EOSIO node.</p>
 <dt id="pyteos.WalletList">
 <em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletList</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletList" title="Permalink to this definition">¶</a></dt>
 <dd><p>List opened wallets, unlocked mark ‘*’.</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><strong>parameters</strong>::</dt>
-<dd>is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
-</dl>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">is_verbose</span><span class="p">:</span> <span class="n">If</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">do</span> <span class="ow">not</span> <span class="nb">print</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">default</span> <span class="ow">is</span> <span class="s1">&#39;True&#39;</span><span class="o">.</span>
+</pre></div>
+</div>
 </li>
 </ul>
 </dd></dl>
@@ -178,13 +178,13 @@ Generic ‘repr’ method returns the json output of the EOSIO node.</p>
 <dt id="pyteos.WalletImport">
 <em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletImport</code><span class="sig-paren">(</span><em>key</em>, <em>wallet='default'</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletImport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import private key into wallet.</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><strong>parameters</strong>::</dt>
-<dd>wallet: A wallet object or the name of the wallet to import key into.
-key: A key object or a private key in WIF format to import.
-is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
-</dl>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wallet</span><span class="p">:</span> <span class="n">A</span> <span class="n">wallet</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">wallet</span> <span class="n">to</span> <span class="kn">import</span> <span class="nn">key</span> <span class="n">into</span><span class="o">.</span>
+<span class="n">key</span><span class="p">:</span> <span class="n">A</span> <span class="n">key</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">private</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">WIF</span> <span class="nb">format</span> <span class="n">to</span> <span class="n">import</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">If</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">do</span> <span class="ow">not</span> <span class="nb">print</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">default</span> <span class="ow">is</span> <span class="s1">&#39;True&#39;</span><span class="o">.</span>
+</pre></div>
+</div>
 </li>
 </ul>
 </dd></dl>
@@ -193,11 +193,11 @@ is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
 <dt id="pyteos.WalletKeys">
 <em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletKeys</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletKeys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print list of private keys from all unlocked wallets, in WIF format.</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><strong>parameters</strong>::    </dt>
-<dd>is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
-</dl>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">is_verbose</span><span class="p">:</span> <span class="n">If</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">do</span> <span class="ow">not</span> <span class="nb">print</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">default</span> <span class="ow">is</span> <span class="s1">&#39;True&#39;</span><span class="o">.</span>
+</pre></div>
+</div>
 </li>
 </ul>
 </dd></dl>
@@ -206,12 +206,12 @@ is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
 <dt id="pyteos.WalletOpen">
 <em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">WalletOpen</code><span class="sig-paren">(</span><em>wallet='default'</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.WalletOpen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open an existing wallet.</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><strong>parameters</strong>::</dt>
-<dd>wallet: A wallet object or the name of the wallet to import key into.
-is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
-</dl>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wallet</span><span class="p">:</span> <span class="n">A</span> <span class="n">wallet</span> <span class="nb">object</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">wallet</span> <span class="n">to</span> <span class="kn">import</span> <span class="nn">key</span> <span class="n">into</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">If</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">do</span> <span class="ow">not</span> <span class="nb">print</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">default</span> <span class="ow">is</span> <span class="s1">&#39;True&#39;</span><span class="o">.</span>
+</pre></div>
+</div>
 </li>
 </ul>
 </dd></dl>
@@ -250,11 +250,11 @@ is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
 <dt id="pyteos.GetInfo">
 <em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">GetInfo</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.GetInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get current blockchain information.</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><strong>parameters</strong>::</dt>
-<dd>is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
-</dl>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">is_verbose</span><span class="p">:</span> <span class="n">If</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">do</span> <span class="ow">not</span> <span class="nb">print</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">default</span> <span class="ow">is</span> <span class="s1">&#39;True&#39;</span><span class="o">.</span>
+</pre></div>
+</div>
 </li>
 </ul>
 </dd></dl>
@@ -263,13 +263,13 @@ is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
 <dt id="pyteos.GetBlock">
 <em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">GetBlock</code><span class="sig-paren">(</span><em>block_number</em>, <em>block_id=''</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.GetBlock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a full block from the blockchain.</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><strong>parameters</strong>::</dt>
-<dd>block_number: The number of the block to retrieve.
-block_id: The ID of the block to retrieve, if set, defaults to “”.
-is_verbose: If ‘False’, do not print stdout, default is ‘True’.</dd>
-</dl>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">block_number</span><span class="p">:</span> <span class="n">The</span> <span class="n">number</span> <span class="n">of</span> <span class="n">the</span> <span class="n">block</span> <span class="n">to</span> <span class="n">retrieve</span><span class="o">.</span>
+<span class="n">block_id</span><span class="p">:</span> <span class="n">The</span> <span class="n">ID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">block</span> <span class="n">to</span> <span class="n">retrieve</span><span class="p">,</span> <span class="k">if</span> <span class="nb">set</span><span class="p">,</span> <span class="n">defaults</span> <span class="n">to</span> <span class="s2">&quot;&quot;</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">If</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="n">do</span> <span class="ow">not</span> <span class="nb">print</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">default</span> <span class="ow">is</span> <span class="s1">&#39;True&#39;</span><span class="o">.</span>    
+</pre></div>
+</div>
 </li>
 </ul>
 </dd></dl>

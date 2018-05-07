@@ -9,7 +9,7 @@ The purpose of this tutorial is to demonstrate how EOSFactory and its Python CLI
 * EOSFactory is fully compatible with [Visual Studio Code](https://code.visualstudio.com) which is a very convenient tool when working with smart-contract code. To install it, please refer to [this webpage](https://code.visualstudio.com/download).
 * Finally, we assume that you are familiar with the official [EOS Hello World tutorial](https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract), as it presents the default way to compile and deploy smart-contracts in EOS. What we present here is an alternative.
 
-## Set up *Visual Studio Code* (VSC)
+## Configure *Visual Studio Code* (VSC)
 
 Start *Visual Studio Code* (VSC) and inside VSC open the `eosfactory` folder.
 

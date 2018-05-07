@@ -221,6 +221,7 @@ class WalletList(_Command):
     List opened wallets, unlocked mark '*'. 
 
     - **parameters**::
+
         is_verbose: If 'False', do not print stdout, default is 'True'.
     """
     def __init__(self, is_verbose=True):
@@ -232,6 +233,7 @@ class WalletImport(_Command):
     Import private key into wallet.
 
     - **parameters**::
+
         wallet: A wallet object or the name of the wallet to import key into.
         key: A key object or a private key in WIF format to import.
         is_verbose: If 'False', do not print stdout, default is 'True'.
@@ -258,7 +260,8 @@ class WalletKeys(_Command):
     """
     Print list of private keys from all unlocked wallets, in WIF format.
 
-    - **parameters**::    
+    - **parameters**::
+
         is_verbose: If 'False', do not print stdout, default is 'True'.
     """
     def __init__(self, is_verbose=True):
@@ -270,6 +273,7 @@ class WalletOpen(_Command):
     Open an existing wallet.
 
     - **parameters**::
+
         wallet: A wallet object or the name of the wallet to import key into.
         is_verbose: If 'False', do not print stdout, default is 'True'.
     """
@@ -330,6 +334,7 @@ class GetInfo(_Command):
     Get current blockchain information.
 
     - **parameters**::
+
         is_verbose: If 'False', do not print stdout, default is 'True'.
     """
     def __init__(self, is_verbose=True):
@@ -346,6 +351,7 @@ class GetBlock(_Command):
     Retrieve a full block from the blockchain.
 
     - **parameters**::
+    
         block_number: The number of the block to retrieve.
         block_id: The ID of the block to retrieve, if set, defaults to "".
         is_verbose: If 'False', do not print stdout, default is 'True'.    

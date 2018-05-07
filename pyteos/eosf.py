@@ -16,7 +16,8 @@ class Contract(pyteos.Contract):
     This class extends the `pyteos.Contract`: it goes without the `account`
     parameter, instead it uses an account created internally.
 
-    - **parameters**
+    - **parameters**::
+
         contract_dir: A contract directory, structures according to the 
             *contract template*, that means, including the `build` directory
             that contains WAST and ABI.
@@ -44,7 +45,8 @@ class Contract(pyteos.Contract):
 
     The extended constructor adds the following attributes:
 
-    - **attributes**
+    - **attributes**::
+
         name: The name of contract`s account. It has the value of the last
         part of the contract directory path.
         key_owner: A key object.
