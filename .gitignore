@@ -4,10 +4,16 @@ workdir
 build
 build_gnu
 b
+CMakeFiles
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+
 pyteos/docs#
 
 /contracts/*
 !/contracts/currency
+!/contracts/tic_tac_toe
 
 !/contracts/currency/build
 !/templates/contracts/skeleton/build
