@@ -1,21 +1,20 @@
+# python3 ./tests/test4.py
+
 import node
 import sess
 from eosf import *
 
 def run():
-node.reset()
-sess.init()
+    node.reset()
+    sess.init()
 
-c = Contract("currency")
-c.get_code()
+    c = Contract("tic.tac.toe")
 
-c.abi()
-c.wast()
+    c.wast()
+    c.deploy()
 
-c.abi()
-
-#print("Test OK")
-node.stop()
+    print("Test OK")
+    node.stop()
 
 if __name__ == "__main__":
     run()

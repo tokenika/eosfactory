@@ -13,7 +13,7 @@ pyteos/docs#
 
 /contracts/*
 !/contracts/currency
-!/contracts/tic_tac_toe
+!/contracts/tic.tac.toe
 
 !/contracts/currency/build
 !/templates/contracts/skeleton/build

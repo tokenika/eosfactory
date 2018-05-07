@@ -1,3 +1,5 @@
+# python3 ./tests/test1.py
+
 import node
 import sess
 from eosf import *
