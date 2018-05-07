@@ -25,7 +25,7 @@ We make sure everything we do is fully compatible with Windows - our toolset wil
 * [Compiling EOS Contracts using EOSFactory in VSC](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/03.CompilingEOSContractsUsingEOSFactoryInVSC.md)
 * [Unit-testing EOS Contracts using EOSFactory in VSC](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/04.UnitTestingEOSContractsUsingEOSFactoryInVSC.md)
 
-For more details, please refer to [our Sphinx docs](http://eosfactory.io/sphinx/pyteos.html).
+For more details, please refer to [our Sphinx docs](http://eosfactory.io/sphinx/html/#python-documentation).
 
 ## Roadmap
 
