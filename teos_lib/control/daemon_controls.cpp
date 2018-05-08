@@ -37,10 +37,11 @@ namespace teos {
       return ss.str();
     }
 
-    bool isWindowsUbuntu()
+    string uname(string options = "-s")
     {
       bp::ipstream pipe_stream;
-      bp::child c(string("cat /proc/version"), bp::std_out > pipe_stream);
+      string cl = string("uname ") + options;
+      bp::child c(cl, bp::std_out > pipe_stream);
 
       string line;
       stringstream ss;
@@ -48,7 +49,12 @@ namespace teos {
         ss << line;
       }
       c.wait();
-      string resp = ss.str();
+      return ss.str();
+    }
+
+    bool isWindowsUbuntu()
+    {
+      string resp = uname("-v");
       return resp.find("Microsoft") != string::npos;
     }
 
@@ -86,6 +92,7 @@ namespace teos {
     const string DaemonStart::DO_NOT_WAIT = "DO_NOT_WAIT";
     const string DaemonStart::DO_NOT_LAUNCH = "DO_NOT_LAUNCH";
     const string EOSIO_SHARED_MEMORY_SIZE_MB = "100";
+    const string DARWIN = "Darwin";
 
     void DaemonStart::action()
     { 
@@ -145,19 +152,25 @@ namespace teos {
         }
 
         bool isWU;
+        string kernelName;
         reqJson_.put("command_line", commandLine);
         respJson_.put("command_line", commandLine);
+        respJson_.put("uname", kernelName = uname());
         respJson_.put("is_windows_ubuntu", isWU = isWindowsUbuntu());
 
-        //cout << requestToString(false) << endl;
+        // cout << requestToString(false) << endl;
         // cout << commandLine <<endl;
-
         if(reqJson_.count(DO_NOT_LAUNCH) == 0) {
           if(isWU) {
             bp::spawn("cmd.exe /c start /MIN bash.exe -c " 
               "'" + commandLine + "'");
           } else {
-            bp::spawn("gnome-terminal -- " + commandLine);
+            if(kernelName == DARWIN){
+              bp::spawn("Terminal -n --args " + commandLine);
+            } else{
+              bp::spawn("gnome-terminal -- " + commandLine);
+            }
+            
           }
         }
         

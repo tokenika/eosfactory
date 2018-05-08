@@ -225,7 +225,26 @@
 </div>
 <div class="section" id="using-cmake-and-intellisense-in-visual-studio-code">
 <span id="using-cmake-and-intellisense-in-visual-studio-code"></span><h2>Using <em>CMake</em> and <em>IntelliSense</em> in <em>Visual Studio Code</em><a class="headerlink" href="#using-cmake-and-intellisense-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
-<p>If you open a specific contract folder (e.g. <code class="docutils literal notranslate"><span class="pre">tic.tac.toe</span></code> ) in <em>Visual Studio Code</em>, you’ll be able to make use of VSC <a class="reference external" href="https://code.visualstudio.com/docs/editor/intellisense">IntelliSense</a> feature. Also, you’ll be able to compile your contract using <em>CMake</em> by choosing the <code class="docutils literal notranslate"><span class="pre">Run</span> <span class="pre">Build</span> <span class="pre">Task</span></code> option from the VSC menu, or just <code class="docutils literal notranslate"><span class="pre">Crtl+Shift+B</span></code>.</p>
+<p>You can use CMake routines to build a contract if it is developed from a <em>Template</em> object as the <em>Template</em> produces the <em>CMakeLists.txt</em> file in the contract’s directory.</p>
+<p>In the contract’s build directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cmake ..
+..................
+..................
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /mnt/c/Workspaces/EOS/eosfactory/contracts/hello/build
+
+$ make
+[ 50%] Generating hello.abi
+#              ABI: ../build/hello.abi
+[ 50%] Built target abi
+Scanning dependencies of target wast
+[100%] Generating hello.wast
+#             WAST: ../build/hello.wast
+[100%] Built target wast
+</pre></div>
+</div>
+<p>If you open a specific contract folder (e.g. <code class="docutils literal notranslate"><span class="pre">tic.tac.toe</span></code> ) in <em>Visual Studio Code</em>, you’ll be able to make use of VSC <a class="reference external" href="https://code.visualstudio.com/docs/editor/intellisense">IntelliSense</a> feature. There you’ll be able to compile your contract using a prefabricated <em>VS code</em> task macro, by choosing the <code class="docutils literal notranslate"><span class="pre">Run</span> <span class="pre">Build</span> <span class="pre">Task</span></code> option from the VSC menu, or just <code class="docutils literal notranslate"><span class="pre">Crtl+Shift+B</span></code>.</p>
 <p>Here is what the build process output looks like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">Executing</span> <span class="n">task</span><span class="p">:</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">teos</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">teos</span> <span class="n">generate</span> <span class="n">abi</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">tic</span><span class="o">.</span><span class="n">tac</span><span class="o">.</span><span class="n">toe</span><span class="p">;</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">teos</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">teos</span> <span class="n">build</span> <span class="n">contract</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">tic</span><span class="o">.</span><span class="n">tac</span><span class="o">.</span><span class="n">toe</span> <span class="o">&lt;</span>
 
