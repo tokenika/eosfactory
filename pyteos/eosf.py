@@ -8,10 +8,6 @@ for experiments with EOSIO smart-contracts.
 import pathlib
 import pyteos
 import sess
-import time
-import datetime
-import re
-import random
 
 class Contract(pyteos.Contract):
     """
@@ -65,18 +61,9 @@ class Contract(pyteos.Contract):
             max_cpu_usage=0, max_net_usage=0,
             is_verbose=True):
 
-        account_name = pathlib.Path(contract_dir).parts[-1]
-        pattern = re.compile("^[a-z, 0-5]*$")
-        if len(account_name) > 12 or not pattern.match(account_name):
-            letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', \
-                       'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', \
-                       'q', 'r', 's', 't', 'u', 'v', 'w', 'x', \
-                       'y', 'z', '.', '1', '2', '3', '4', '5']
-            account_name = ""
-            for i in range(0, 12):
-                account_name += letters[random.randint(0, 31)]
+        self.name = pathlib.Path(contract_dir).parts[-1]
 
-        account = pyteos.GetAccount(account_name)
+        account = pyteos.GetAccount(self.name)
         if account.json["permissions"]:
             self.account = account
         else:
@@ -85,7 +72,7 @@ class Contract(pyteos.Contract):
             sess.wallet.import_key(key_owner)
             sess.wallet.import_key(key_active)
             self.account = pyteos.Account(
-                sess.eosio, account_name, key_owner, key_active)
+                sess.eosio, self.name, key_owner, key_active)
         
         super().__init__(
             self.account, contract_dir,

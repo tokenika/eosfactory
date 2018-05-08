@@ -18,7 +18,7 @@
                     "${EOSIO_SOURCE_DIR}/contracts/libc++/upstream/include",
                     "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
                     "${HOME}/opt/boost_1_66_0/include",
-                    "${EOSIO_SOURCE_DIR}/externals/magic_get/include",
+                    "${EOSIO_SOURCE_DIR}/externals/magic_get/include", 
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
@@ -45,7 +45,7 @@
                     "${EOSIO_SOURCE_DIR}/contracts/libc++/upstream/include",
                     "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
                     "${HOME}/opt/boost_1_66_0/include",
-                    "${EOSIO_SOURCE_DIR}/externals/magic_get/include",
+                    "${EOSIO_SOURCE_DIR}/externals/magic_get/include",                    
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
@@ -53,7 +53,7 @@
             },
             "cStandard": "c11",
             "cppStandard": "c++17"
-        }
+        }        
     ],
-    "version": 4
+    "version": 3
 }
