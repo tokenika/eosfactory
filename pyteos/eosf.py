@@ -8,6 +8,8 @@ for experiments with EOSIO smart-contracts.
 import pathlib
 import pyteos
 import sess
+import re
+import random
 
 class Contract(pyteos.Contract):
     """
@@ -62,6 +64,19 @@ class Contract(pyteos.Contract):
             is_verbose=True):
 
         self.name = pathlib.Path(contract_dir).parts[-1]
+
+        account_name = pathlib.Path(contract_dir).parts[-1]
+        pattern = re.compile("^[a-z, ., 1-5]*$")
+        if len(account_name) > 12 or not pattern.match(account_name):
+            letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', \
+                       'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', \
+                       'q', 'r', 's', 't', 'u', 'v', 'w', 'x', \
+                       'y', 'z', '.', '1', '2', '3', '4', '5']
+            account_name = ""
+            for i in range(0, 12):
+                account_name += letters[random.randint(0, 31)]
+
+        self.name = account_name
 
         account = pyteos.GetAccount(self.name)
         if account.json["permissions"]:
