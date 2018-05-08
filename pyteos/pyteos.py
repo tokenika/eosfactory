@@ -699,6 +699,7 @@ class _Node(_Command):
     def start(self, clear, is_verbose):
         super().__init__("daemon", "start", False)
         if not self.error and not "head_block_num" in self.json:
+            print(self.json["command_line"])
             if(self.json["is_windows_ubuntu"] == "true"):
                 subprocess.call(
                     ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
