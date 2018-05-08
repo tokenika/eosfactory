@@ -16,7 +16,7 @@ Using Python will allow us to build [interactive tutorials](http://eosfactory.io
 
 ## Truly cross-platform
 
-We make sure everything we do is fully compatible with Windows - our toolset will enable you to run an EOS node and interact with it on any operating system, including Windows.
+We make sure everything we do is fully compatible with Windows - our toolset will enable you to run an EOS node and interact with it on any operating system, including Windows, MacOS and Linux.
 
 ## Available documentation:
 
