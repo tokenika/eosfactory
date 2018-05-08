@@ -698,8 +698,9 @@ class _Node(_Command):
     """    
     def start(self, clear, is_verbose):
         super().__init__("daemon", "start", False)
+        self.command_line = ""
         if not self.error and not "head_block_num" in self.json:
-            print(self.json["command_line"])
+            self.command_line = self.json["command_line"]
             if(self.json["is_windows_ubuntu"] == "true"):
                 subprocess.call(
                     ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
@@ -711,7 +712,7 @@ class _Node(_Command):
             del self._jarg["DO_NOT_WAIT"]
             super().__init__("daemon", "start", is_verbose)      
             
-    def __init__(self, clear, is_verbose=True):
+    def __init__(self, clear=0, is_verbose=True):
         self._jarg["resync-blockchain"] = clear
         self._jarg["DO_NOT_WAIT"] = 1
         self._jarg["DO_NOT_LAUNCH"] = 1

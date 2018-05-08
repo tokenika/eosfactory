@@ -140,26 +140,26 @@ By means of confirmation, you should see the transaction in the transaction hist
 It is easy to start with a template. I you have [imported](#python-knowledge) `teos.py` module already,and if the contract name can be `tokenika`, use the creator of the `teos.ContractTemplate` class:
 
 ```python
-template_tokenika = teos.ContractTemplate("tokenika")
-#  template contract: /mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika
+contract_hello = pyteos.ContractTemplate("hello")
+#  template contract: /mnt/c/Workspaces/EOS/eosfactory/contracts/hello
 ```
 Now, you have a new folder in the workspace. You can know the path to it...
 ```
-template_tokenika.contract_dir
-# '/mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika'
+contract_hello.contract_dir
+'/mnt/c/Workspaces/EOS/eosfactory/contracts/hello'
 ```
-If you use the `Visual Studio Code`, you can open it in this contract folder. You will find there a configured, for EOSIO smart contract development, *InteliSense* space enabling code browsing. There you can (Ctrl+Shift+B) build the contract, producing WAST and ABI. We will add more of automatized functionality there: setting contract to the local node, running test, perhaps more.
+If you use the `Visual Studio Code`, you can open it in this contract folder. You will find there a configured, for EOSIO smart contract development, *InteliSense* space enabling code browsing. There you can (Ctrl+Shift+B) build the contract, producing WAST and ABI. Also, you can make use of the `CMakeLists.txt` there.
 
 The contract directory contains the source files of the contract:
 ```
-template_tokenika.hpp
-# '/mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika/tokenika.hpp'
+contract_hello.hpp
+'/mnt/c/Workspaces/EOS/eosfactory/contracts/hello/hello.hpp'
 
-template_tokenika.cpp
-# '/mnt/c/Workspaces/EOS/eosfactory/contracts/tokenika/tokenika.cpp'
+contract_hello.cpp
+'/mnt/c/Workspaces/EOS/eosfactory/contracts/hello/hello.cpp'
 ```
 
-The `template_tokenika.cpp` file is the source file that contains the functions of the contract.
+The `contract_hello.cpp` file is the source file that contains the functions of the contract.
 
 Nota bene:
 
@@ -167,21 +167,31 @@ The original example in the EOSIO wiki [tutorial](#https://github.com/EOSIO/eos/
 
 ```c++
 #include <eosiolib/print.hpp>
-#include <tokenika.hpp>
+#include <hello.hpp>
 
-using namespace eosio;
+/**
+ *  The init() and apply() methods must have C calling convention so that the blockchain can lookup and
+ *  call these methods.
+ */
+extern "C" {
 
-class hello : public eosio::contract {
-  public:
-      using contract::contract; 
+    /**
+     *  This method is called once when the contract is published or updated.
+     */
+    void init()  {
+       eosio::print( "Init World!\n" ); // Replace with actual code
+    }
 
-      /// @abi action 
-      void hi( account_name user ) {
-         print( "Hello, ", name{user} );
-      }
-};
+    /// The apply method implements the dispatch of actions to this contract
+    void apply( uint64_t code, uint64_t action ) {
+       eosio::print( "Hello World: ", eosio::name(code), "->", eosio::name(action), "\n" ); 
+    }
 
-EOSIO_ABI( hello, (hi) )
+} // extern "C")
+```
+
+```
+
 ```
 
 ### wast
