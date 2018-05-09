@@ -63,8 +63,6 @@ class Contract(pyteos.Contract):
             max_cpu_usage=0, max_net_usage=0,
             is_verbose=True):
 
-        self.name = pathlib.Path(contract_dir).parts[-1]
-
         account_name = pathlib.Path(contract_dir).parts[-1]
         pattern = re.compile("^[a-z, ., 1-5]*$")
         if len(account_name) > 12 or not pattern.match(account_name):
@@ -88,7 +86,10 @@ class Contract(pyteos.Contract):
             sess.wallet.import_key(key_active)
             self.account = pyteos.Account(
                 sess.eosio, self.name, key_owner, key_active)
-        
+                
+        if not permission:
+            permission = account
+
         super().__init__(
             self.account, contract_dir,
             wast_file, abi_file,

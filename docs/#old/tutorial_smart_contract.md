@@ -350,48 +350,48 @@ Print C++ API supports
 
 ### Example
 
-Let's write a new contract as example for debugging, named `debug`. We start with a template...
+Let's debug the `currency` contract, renamed `currencydb`.
+
 ```python
 >>> import pyteos
 >>> import node
 >>> import sess
 >>> from eosf import *
-
->>> contract_debug = pyteos.ContractTemplate("debug")
-#  template contract: /mnt/c/Workspaces/EOS/eosfactory/contracts/debug
 ```
 ... and, now, we edit the source files.
 
 ```cpp
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/print.hpp>
-
-#include "debug.hpp"
-
-using namespace eosio;
-
-class hello : public eosio::contract {
-  public:
-      using contract::contract; 
-
-      /// @abi action 
-      void hi( account_name user ) {
-        print( "Amount is smaller than 100\n ", name{user} );
-      }
-};
-
-EOSIO_ABI( hello, (hi) )
 
 ```
 Let's deploy the `debug` contract:
+
 ```
+import pyteos
 import node
 import sess
 from eosf import *
 
+pyteos.set_verbose(False)
 node.reset()
 sess.init() # use help(sess) to see definitions
-
+account_currency = pyteos.Account(
+    sess.eosio, "currency", sess.key_owner, sess.key_active)
+contract_currency = pyteos.Contract(account_currency, "currencydb")
+contract_currency.wast()
+contract_currency.deploy()
+contract_currency.push_action(
+  "create", 
+  '{"issuer":"currency","maximum_supply":"1000000.0000 CUR", \
+  "can_freeze":"0","can_recall":"0","can_whitelist":"0"}')
+contract_currency.debug()
+contract_currency.action(
+  "issue", 
+  '{"to":"currency","quantity":"1000.0000 CUR","memo":""}')
+contract_currency.action(
+  "transfer",
+  '{"from":"currency","to":"eosio","quantity":"20.0000 CUR", \
+    "memo":"my first transfer"}'
+)
 
 ```
 
@@ -410,25 +410,6 @@ sess.init() # use help(sess) to see definitions
 #  head block time: 2017-12-04T01:00:00
 
 >>> sess.init()
-#         password: PW5KBSFTNuRWZSEbdye4kgDbf2skmaV6nFjEybLqdxqhB5wxy5bbv
-#  You need to save this password to be able to lock/unlock the wallet!
-
-#   transaction id: d7d84d0344830fc936a1d1481ebff213a67b065902b18faa07efbbd9a1566c39
-
-#         key name: key_owner
-#      private key: 5Kk86HTu2Y8Tq3ynBcMmkKG921AXU2Er1jfDkyqUPAWSS4hJeF1
-#       public key: EOS8jFsZ427W9XinvpUCgz9AGBMuurCstpFghicQ7YyZ2P5pF5zwZ
-
-#         key name: key_active
-#      private key: 5K11cBEsLVbGh6Dd3zrW3DyUNNDMd7SnDnb42zrqmMnysq1emj8
-#       public key: EOS7JjoNyR7T79G4fsALr2U9xRz8L7XmZKt9Sn1Qd76jvZGxgJEHX
-
-#   transaction id: 2408fe07fee638ad006818465558d9cc37a35d51931c4081c60f6cd86a27189a
-
-#   transaction id: ec4befb2d33e2b107dd81375f7b0995d4a149b7559fab07ad990ccd4fb7da885
-
-#   transaction id: 62e37ba9deee9ace3af5bf9baf7fc87d7f29551d0c2216049cc861eecb9e8369
-
 >>> account_debug = pyteos.Account(
   sess.eosio, "debug", sess.key_owner, sess.key_active)
 #   transaction id: f9beaf68aa867e89b840db9879e5c0d1731ce94668f88404af7b4ba497aea159
@@ -440,6 +421,7 @@ sess.init() # use help(sess) to see definitions
 >>> contract_debug.deploy()
 #   transaction id: 0dfa4b7a49b34ed43b7dbcb9e3a0dc4a87600dc7753610a043037387af305b42
 
+>>> 
 ```
 
 Let's deploy it and send a message to it. Assume that you have `debug` account created and have its key in your wallet.

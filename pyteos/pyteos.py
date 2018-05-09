@@ -61,9 +61,7 @@ class Setup:
             except:
                 pass
         
-        if self.teos_exe:
-            print("teos exe: " + self.teos_exe)
-        else:
+        if not self.teos_exe:
             print(
                 'ERROR in pyteos.py!'
                 '\nDo not know the teos exe!'
@@ -710,15 +708,13 @@ class _Node(_Command):
                     subprocess.Popen(
                         "xterm -e " + self.json["command_line"], shell=True)
 
-                    # subprocess.Popen(
-                    #     open -a Terminal -n --args " + self.json["command_line"], 
-                    #     shell=True)
+                    subprocess.Popen(
+                        'open -a Terminal -n --args " + self.json["command_line"]', 
+                        shell=True)
                 else:
                     subprocess.Popen(
                         "gnome-terminal -- " + self.json["command_line"],
-                        shell=True) 
-                    # subprocess.Popen(
-                    #     "xterm -e " + self.json["command_line"], shell=True)                                           
+                        shell=True)                                        
                                         
 
             del self._jarg["DO_NOT_WAIT"]
@@ -907,6 +903,7 @@ class Contract(SetContract):
             max_cpu_usage=0, max_net_usage=0,
             is_verbose=True):
             
+        self.name = pathlib.Path(contract_dir).parts[-1]
         self.account = account
         self.contract_dir = contract_dir
         self.wast_file = wast_file
@@ -921,6 +918,7 @@ class Contract(SetContract):
         self.is_verbose = is_verbose
         self.contract_path_absolute = pathlib.Path(contract_dir)
         self.is_mutable = True
+        self.console = ""
 
         if not self.contract_path_absolute.is_absolute():
             config = GetConfig(is_verbose=False)
@@ -1008,13 +1006,15 @@ class Contract(SetContract):
             try:
                 self.console = self.action_json["processed"]["action_traces"][0]["console"]
             except:
-                self.console = ""
+                pass
 
         if (dont_broadcast or is_verbose) and not push_action.error:
             pprint.pprint(self.action_json)
 
         return self.console
 
+    def debug(self):
+        print(self.console)
 
     def show_action(self, action, data, permission=""):
         """ Implements the 'push action' command without broadcasting. 

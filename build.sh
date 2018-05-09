@@ -98,7 +98,23 @@ while getopts ":e:c:i:t:s:rh" opt; do
         ;;
   esac
 done
-shift $((OPTIND-1))
+
+##########################################################################
+# Can be EOSIO_SOURCE_DIR defined?
+##########################################################################
+if [ -z "$EOSIO_SOURCE_DIR__" ]; then
+    printf "\n%s\n" "
+##########################################################################
+#   THE BUILD IS NOT FINISHED!
+#   The EOSIO_SOURCE_DIR system variable is not defined. This variable 
+#   points a directory of the EOSIO repository.
+#
+#   It has to be either set as an environmental variable, or put as the 
+#   value of '-e' argument of this (./build.sh) script.
+##########################################################################
+"
+    exit -1
+fi
 
 printf "%s\n" "
 Arguments:
@@ -202,7 +218,7 @@ function setLinuxVariable() {
     name=$1
     value=$2
 
-    if [ "${!name}" != "$value" ]; then
+    if [ ! -z "$value" -a "${!name}" != "$value" ]; then
         echo "export $name=$value" >> ~/.bashrc
         printf "\t%s\n" "setting $name: $value"
     fi
@@ -308,6 +324,18 @@ if [ -z "$CMAKE" ]; then
     CMAKE=$( which cmake )
 fi
 
+if [ -z "$EOSIO_SOURCE_DIR" ]; then
+    printf "\n%s\n" "
+##########################################################################
+#   THE BUILD IS NOT FINISHED!
+#   The EOSIO_SOURCE_DIR system variable is not in this bash.
+#
+#   Please, restart the bash.
+##########################################################################
+"
+    exit -1
+fi
+
 ##########################################################################
 # Make the file structure
 ##########################################################################
@@ -334,25 +362,6 @@ cp -u ${EOSIO_SOURCE_DIR}/programs/snapshot/genesis.json \
     ${BUILD_DIR}/daemon/data-dir/genesis.json
 cp -u ${EOSIO_CONTEXT_DIR__}/resources/config.ini \
     ${BUILD_DIR}/daemon/data-dir/config.ini
-
-
-##########################################################################
-# Is EOSIO_SOURCE_DIR set?
-##########################################################################
-
-if [ -z "$EOSIO_SOURCE_DIR" ]; then
-    printf "/n%s\n" "
-##########################################################################
-#   THE BUILD IS NOT FINISHED!
-#
-#   THE BASH HAS TO BE RESET in order to load newly set environment 
-#   variables.
-#
-#   Afterwards, this script can be restarted to continue this build.
-##########################################################################
-"
-    exit -1
-fi
 
 
 ##########################################################################

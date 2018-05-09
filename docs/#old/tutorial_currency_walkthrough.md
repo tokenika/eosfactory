@@ -9,21 +9,20 @@ purposes. We will validate our single node setup using the sample contract
 
 ## Start EOS node
 ```
-import teos
-teos.set_verbose(False)
+import pyteos
+pyteos.set_verbose(False)
 
-daemon = teos.Daemon()
-daemon.clear()
-#       nodeos exe file: /mnt/e/Workspaces/EOS/eos/build/programs/nodeos/nodeos
-#    genesis state file: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/genesis.json
-#        server address: 127.0.0.1:8888
-#      config directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir
-#      wallet directory: /mnt/e/Workspaces/EOS/eos/build/programs/daemon/data-dir/wallet
-#     head block number: 2
-#       head block time: 2018-04-10T17:20:54
+pyteos.node_reset()
+#  nodeos exe file: /mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos
+#  genesis state file: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json
+#   server address: 127.0.0.1:8888
+#  config directory: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir
+#  wallet directory: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet
+#  head block number: 0
+#  head block time: 2017-12-04T01:00:00
 
-# See a prove that the daemon is started:
-print(daemon)
+# See a prove that the node is started:
+pyteos.node_info()
 #            head block: 1047
 #       head block time: 2018-04-10T16:57:27
 #  last irreversible block: 1046
@@ -35,7 +34,7 @@ a wallet. To create a wallet, you need to have the wallet_api_plugin loaded
 into the nodeos process:
 ```
 
-wallet = teos.Wallet()
+wallet = pyteos.Wallet()
 ```
 The wallet name argument is not set: the default wallet name is 'default'.
 
@@ -44,14 +43,14 @@ The wallet name argument is not set: the default wallet name is 'default'.
 You have to owe an account to be authorized to interact with EOSIO. For tests,
 you can use the 'eosio' account:
 ```
-account_eosio = teos.AccountEosio()
+account_eosio = pyteos.AccountEosio()
 ``` 
 Set a smart contract defined in folder 
 eos-source-dir/build/contracts/eosio.bios/ as the default system contract. 
 This contract enables you to have direct control over the resource allocation 
 of other accounts and to access other privileged API calls.
 ```
-contract_eosio_bios = teos.SetContract(
+contract_eosio_bios = pyteos.SetContract(
   account_eosio, "eosio.bios", permission=account_eosio)
 #        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d087737ada0...
 ```
@@ -67,11 +66,11 @@ The account named "currency" will be used for the "currency" contract.
 Generate two public/private key pairs that will be later assigned as the 
 key_owner and the key_active:
 ```
-key_owner = teos.CreateKey("key_owner")
+key_owner = pyteos.CreateKey("key_owner")
 #              key name: key_owner
 #           private key: 5J4bSiNprJzPYVHqoZdSDGTTd454LiDc89AVvKT4Miv2SyzZTDF
 #            public key: EOS7vDtGf9cVxEChKN7YeDgqMGrgFgvcCdN5qAUEhMMufAnPHddTb
-key_active = teos.CreateKey("key_active")
+key_active = pyteos.CreateKey("key_active")
 #              key name: key_active
 #           private key: 5KRHeQ1S7pEtCw6TMeW6WKvupuR8cVGJjpNbAN5uviXTAtvhmDW
 #            public key: EOS6FfNuYYKoSa7pjhoqqeymi6iwe6j9ukVHiQxPbMeAcHmcoxRwj
@@ -96,7 +95,7 @@ account. The two public keys generated above will be associated with the
 account, one as its owner key and the other as its active key.
 ```
 
-account_currency = teos.Account(
+account_currency = pyteos.Account(
   account_eosio, "currency", key_owner, key_active)
 #        transaction id: 0c4e0fb1163562909a83947b77aa3ee293b880cd61d4c6610f...
 ```
@@ -132,9 +131,10 @@ print(account_currency.code())
 ```
 Upload the currency contract using an authorization of the currency account:
 ```
-contract_currency = teos.Contract(account_currency, "currency")
+contract_currency = pyteos.Contract(account_currency, "currency")
 print(contract_currency)
 #        transaction id: 9c1b663cafcbe7ffbb18527fecfa7aa58237d00e02af125eed...
+contract_currency.deploy()
 ```
 Printout is a valid transaction id.
 
@@ -160,7 +160,6 @@ contract_currency.action(
 ```
 Verify the currency contract has the proper initial balance:
 ```
-account_currency.accounts()
 ```
 ## Transfer funds using the "currency" contract
 
@@ -180,7 +179,7 @@ A successfully submitted transaction has generated a transaction ID.
 
 Check the state of both accounts involved in the previous transaction:
 ```
-account_currency.accounts(account_currency)
+contract_currency.get_table("accounts", account_currency)
 #  {
 #      "rows": [
 #          {
@@ -191,9 +190,10 @@ account_currency.accounts(account_currency)
 #      ],
 #      "more": "false"
 #  }
-#
 
-account_eosio.accounts(account_currency)
+contract_currency.get_table("accounts", account_eosio)
+{'rows': [{'frozen': '0', 'balance': '980.0000 CUR', 'whitelist': '1'}], 'more': 'false'}
+>>> contract_currency.get_table("accounts", account_eosio)
 #  {
 #      "rows": [
 #          {
@@ -204,44 +204,46 @@ account_eosio.accounts(account_currency)
 #      ],
 #      "more": "false"
 #  }
-#
 ```
 
 ## Summary
 
 ```
-daemon = teos.Daemon()
-daemon.clear()
-print(daemon)
-wallet = teos.Wallet()
-account_eosio = teos.AccountEosio()
-contract_eosio_bios = teos.SetContract(
+import pyteos
+
+pyteos.node_reset()
+pyteos.node_info()
+wallet = pyteos.Wallet()
+account_eosio = pyteos.AccountEosio()
+contract_eosio_bios = pyteos.SetContract(
     account_eosio, "eosio.bios", permission=account_eosio)
 
-key_owner = teos.CreateKey("key_owner")
-key_active = teos.CreateKey("key_active")
+key_owner = pyteos.CreateKey("key_owner")
+key_active = pyteos.CreateKey("key_active")
 wallet.import_key(key_owner)
 wallet.import_key(key_active)
-account_currency = teos.Account(
+account_currency = pyteos.Account(
     account_eosio, "currency", key_owner, key_active)
 print(account_currency)
 print(account_currency.code())
-contract_currency = teos.Contract(account_currency, "currency")
+contract_currency = pyteos.Contract(account_currency, "currency")
+contract_currency.deploy()
 print(contract_currency)
 print(account_currency.code())
-contract_currency.action(
+contract_currency.push_action(
   "create", 
   '{"issuer":"currency","maximum_supply":"1000000.0000 CUR", \
   "can_freeze":"0","can_recall":"0","can_whitelist":"0"}')
-contract_currency.action(
+
+contract_currency.push_action(
   "issue", 
   '{"to":"currency","quantity":"1000.0000 CUR","memo":""}')
-account_currency.accounts()
-contract_currency.action(
+contract_currency.push_action(
   "transfer",
   '{"from":"currency","to":"eosio","quantity":"20.0000 CUR", \
     "memo":"my first transfer"}'
 )
-account_currency.accounts(account_currency)
-account_eosio.accounts(account_currency)
+contract_currency.get_table("accounts", account_currency)
+contract_currency.get_table("accounts", account_eosio)
+
 ```
