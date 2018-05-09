@@ -708,12 +708,18 @@ class _Node(_Command):
             else:
                 if self.json["uname"] == "Darwin":
                     subprocess.Popen(
-                        "gnome-terminal -- " + self.json["command_line"],
-                        shell=True)
+                        "xterm -e " + self.json["command_line"], shell=True)
+
+                    # subprocess.Popen(
+                    #     open -a Terminal -n --args " + self.json["command_line"], 
+                    #     shell=True)
                 else:
                     subprocess.Popen(
-                        "Terminal -n --args " + self.json["command_line"], 
-                        shell=True)
+                        "gnome-terminal -- " + self.json["command_line"],
+                        shell=True) 
+                    # subprocess.Popen(
+                    #     "xterm -e " + self.json["command_line"], shell=True)                                           
+                                        
 
             del self._jarg["DO_NOT_WAIT"]
             super().__init__("daemon", "start", is_verbose)      
@@ -743,8 +749,8 @@ class _Commands:
 
 class Wallet(WalletCreate):
 
-    def __init__(self, name="default"):
-        super().__init__(name)
+    def __init__(self, name="default", is_verbose=True):
+        super().__init__(name, is_verbose=is_verbose)
         self.json["keys"] = []
 
     def list(self):

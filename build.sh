@@ -113,7 +113,6 @@ Arguments:
 EOSIO_CONTEXT_DIR__="$PWD"
 BUILD_DIR="${EOSIO_CONTEXT_DIR__}/build"
 
-ARCH=$( uname )
 TIME_BEGIN=$( date -u +%s )
 
 txtbld=$(tput bold)
@@ -128,7 +127,7 @@ if [ ! -d .git ]; then
 This build script only works with sources cloned from git.
     Please clone a new eos directory with 'git clone ${repository} --recursive'
     See the wiki for instructions: ${wiki}
-    Exiting now.    
+    Exiting now.
 "
     exit 1
 fi
@@ -138,7 +137,7 @@ if [ $STALE_SUBMODS -gt 0 ]; then
     printf "\n%s\n" "
 git submodules are not up to date.
     Please run the command 'git submodule update --init --recursive'
-    Exiting now.    
+    Exiting now.
 "
     exit 1
 fi
@@ -151,22 +150,21 @@ Beginning build.
     $( date -u )
     git head id: $( cat .git/refs/heads/master )
     Current branch: $( git branch | grep \* )
-    ARCHITECTURE: ${ARCH}
+    kernel: $(uname --kernel-name)
 "
 
-if [ ! -e /etc/os-release ]; then
+OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
+if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
     printf "\n%s\n" "
 ${eosfactory} currently is tested with the Windows Subsystem Linux and Ubuntu.
 Please install on the latest version of one of these Linux distributions:
     https://www.microsoft.com/en-us/store/p/ubuntu/9nblggh4msv6
 or
     https://www.ubuntu.com/
-Exiting now.
 "
-    exit 1
 fi
 
-OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
+
 PROC_VERSION=$(cat /proc/version)
 
 if [[ "$PROC_VERSION" == *"Microsoft"* ]]; then 

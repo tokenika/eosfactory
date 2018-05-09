@@ -23,16 +23,16 @@ This build script only works with sources cloned from git.
     exit 1
 fi
 
-if [ ! -e /etc/os-release ]; then
-    printf "%s\n\n" "
+
+OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
+if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
+    printf "\n%s\n" "
 ${eosfactory} currently is tested with the Windows Subsystem Linux and Ubuntu.
 Please install on the latest version of one of these Linux distributions:
     https://www.microsoft.com/en-us/store/p/ubuntu/9nblggh4msv6
 or
     https://www.ubuntu.com/
-Exiting now.
 "
-    exit 1
 fi
 
 ##############################################################################
@@ -54,7 +54,7 @@ executable_dir="teos"
 build_dir="build"
 contracts="contracts"
 teos_exe="teos/build/teos"
-ARCH=$( uname )
+
 OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
 IS_WSL=""
 function is_wsl {
@@ -158,7 +158,7 @@ exit -1
 fi
 
 printf "%s" "
-Architecture: $ARCH
+Architecture: $( uname )
 OS: $OS_NAME
 "
 if [ ! -z "$IS_WSL" ]; then
