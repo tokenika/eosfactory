@@ -1,10 +1,42 @@
 #!/bin/bash
-##########################################################################
-#   This script instals tokenika 'eosfactory' both Linux and Windows
-#   (with WSL) computers. It has to be executed in the directory of an
-#   'eosfactory' repository.
+
+printf "%s\n" "
+##############################################################################
+#   This script installs Tokenika 'eosfactory'. It has to be executed in the 
+#   directory with an 'eosfactory' repository.
 #   This file was downloaded from https://github.com/tokenika/eosfactory
-##########################################################################
+##############################################################################
+"
+
+eosfactory="eosfactory"
+repository_dir="https://github.com/tokenika/${eosfactory}"
+wiki="https://github.com/tokenika/${eosfactory}/wiki"
+
+if [ ! -d .git ]; then
+    printf "%s\n\n" "
+This build script only works with sources cloned from git.
+    Please clone a new eos directory with 'git clone ${repository_dir} --recursive'
+    See the wiki for instructions: ${wiki}
+    Exiting now.    
+"
+    exit 1
+fi
+
+
+OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
+if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
+    printf "\n%s\n" "
+${eosfactory} currently is tested with the Windows Subsystem Linux and Ubuntu.
+Please install on the latest version of one of these Linux distributions:
+    https://www.microsoft.com/en-us/store/p/ubuntu/9nblggh4msv6
+or
+    https://www.ubuntu.com/
+"
+fi
+
+##############################################################################
+# Build configuration
+##############################################################################
 
 EOSIO_SOURCE_DIR__="$EOSIO_SOURCE_DIR"
 CXX_COMPILER__=clang++-4.0
@@ -21,6 +53,17 @@ executable_dir="teos"
 build_dir="build"
 contracts="contracts"
 teos_exe="teos/build/teos"
+
+OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
+IS_WSL=""
+function is_wsl {
+    proc_version=$(cat /proc/version)
+    if [[ "$proc_version" == *"Microsoft"* ]]; then 
+        IS_WSL="IS_WSL"
+    fi
+}
+is_wsl
+
 
 function usage() {
     printf "%s\n" "
@@ -98,12 +141,13 @@ while getopts ":e:c:i:t:s:rh" opt; do
         ;;
   esac
 done
+shift $((OPTIND-1))
 
 ##########################################################################
 # Can be EOSIO_SOURCE_DIR defined?
 ##########################################################################
 if [ -z "$EOSIO_SOURCE_DIR__" ]; then
-    printf "\n%s\n" "
+    printf "%s\n" "
 ##########################################################################
 #   THE BUILD IS NOT FINISHED!
 #   The EOSIO_SOURCE_DIR system variable is not defined. This variable 
@@ -116,6 +160,13 @@ if [ -z "$EOSIO_SOURCE_DIR__" ]; then
     exit -1
 fi
 
+printf "%s" "
+Architecture: $( uname )
+OS: $OS_NAME
+"
+if [ ! -z "$IS_WSL" ]; then
+    printf "%s\n" "Windows Subsystem Linux detected"
+fi
 printf "%s\n" "
 Arguments:
     EOSIO_SOURCE_DIR=$EOSIO_SOURCE_DIR__
@@ -128,73 +179,26 @@ Arguments:
 
 EOSIO_CONTEXT_DIR__="$PWD"
 BUILD_DIR="${EOSIO_CONTEXT_DIR__}/build"
-
 TIME_BEGIN=$( date -u +%s )
-
-txtbld=$(tput bold)
-bldred=${txtbld}$(tput setaf 1)
-txtrst=$(tput sgr0)
-eosfactory="eosfactory"
-repository="https://github.com/tokenika/${eosfactory}"
-wiki="https://github.com/tokenika/${eosfactory}/wiki"
-
-if [ ! -d .git ]; then
-    printf "\n%s\n" "
-This build script only works with sources cloned from git.
-    Please clone a new eos directory with 'git clone ${repository} --recursive'
-    See the wiki for instructions: ${wiki}
-    Exiting now.
-"
-    exit 1
-fi
-
 STALE_SUBMODS=$(( `git submodule status | grep -c "^[+\-]"` ))
 if [ $STALE_SUBMODS -gt 0 ]; then
     printf "\n%s\n" "
 git submodules are not up to date.
     Please run the command 'git submodule update --init --recursive'
-    Exiting now.
+    Exiting now.    
 "
     exit 1
 fi
 
 printf "%s" "
-##########################################################################
+##############################################################################
 "
-printf "\n%s" "
+printf "%s" "
 Beginning build.
     $( date -u )
     git head id: $( cat .git/refs/heads/master )
     Current branch: $( git branch | grep \* )
-    kernel: $(uname --kernel-name)
 "
-
-OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
-if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
-    printf "\n%s\n" "
-${eosfactory} currently is tested with the Windows Subsystem Linux and Ubuntu.
-Please install on the latest version of one of these Linux distributions:
-    https://www.microsoft.com/en-us/store/p/ubuntu/9nblggh4msv6
-or
-    https://www.ubuntu.com/
-"
-fi
-
-
-PROC_VERSION=$(cat /proc/version)
-
-if [[ "$PROC_VERSION" == *"Microsoft"* ]]; then 
-    IS_WSL="IS_WSL"
-    printf "\t%s\n" "Detected Windows Subsystem Linux"
-fi
-
-if [ -z "$EOSIO_SOURCE_DIR__" ]; then
-    printf "\n%s\n" "
-EOSIO repository not found.
-    Please, set the option `-e`, or environment variable 'EOSIO_SOURCE_DIR' 
-    pointing the path to the EOSIO repository.
-"    
-fi
 
 function wslMapWindows2Linux() {
     path=$2
@@ -211,23 +215,23 @@ function wslMapLinux2Windows() {
 }
 
 
-##########################################################################
+##############################################################################
 # Set Linux environment variables
-##########################################################################
+##############################################################################
 function setLinuxVariable() {
     name=$1
     value=$2
 
-    if [ ! -z "$value" -a "${!name}" != "$value" ]; then
+    if [  ! -z "$value" -a "${!name}" != "$value" ]; then
         echo "export $name=$value" >> ~/.bashrc
         printf "\t%s\n" "setting $name: $value"
     fi
 }
 
 printf "%s" "
-##########################################################################
+##############################################################################
 "
-printf "\n%s\n" "Sets environment variables, if not set already:"
+printf "%s\n" "Sets environment variables, if not set already:"
 #./build.sh -cgnu -e/mnt/c/Workspaces/EOS/eos
 
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
@@ -243,9 +247,9 @@ then
     printf "\t%s\n" "setting PYTHONPATH: ${PYTHONPATH__}:"
 fi
  
-##########################################################################
+##############################################################################
 # Set Windows environment variables
-##########################################################################
+##############################################################################
 
 function setWindowsVariable() {
     setOnWindows=$(cmd.exe /c echo %$1%)
@@ -258,9 +262,9 @@ function setWindowsVariable() {
 
 if [ ! -z "$IS_WSL" ]; then
     printf "%s" "
-##########################################################################
-    "
-    printf "\n%s\n" "Sets Windows environment variables, if not set already:"
+##############################################################################
+"
+    printf "%s\n" "Sets Windows environment variables, if not set already:"
 
     EOSIO_SOURCE_DIR_SET=""
     if [ ! -z "$EOSIO_SOURCE_DIR__" -a "$EOSIO_SOURCE_DIR" != "$EOSIO_SOURCE_DIR__" ]; then
@@ -365,6 +369,25 @@ cp -u ${EOSIO_CONTEXT_DIR__}/resources/config.ini \
 
 
 ##########################################################################
+# Is EOSIO_SOURCE_DIR set?
+##########################################################################
+
+if [ -z "$EOSIO_SOURCE_DIR" ]; then
+    printf "/n%s\n" "
+##########################################################################
+#   THE BUILD IS NOT FINISHED!
+#
+#   THE BASH HAS TO BE RESET in order to load newly set environment 
+#   variables.
+#
+#   Afterwards, this script can be restarted to continue this build.
+##########################################################################
+"
+    exit -1
+fi
+
+
+##########################################################################
 # compiling library
 ##########################################################################
 printf "%s" "
@@ -401,11 +424,11 @@ if [ $? -ne 0 ]; then
 fi
 
 
-##########################################################################
+##############################################################################
 # compiling executable
-##########################################################################
+##############################################################################
 printf "%s" "
-##########################################################################
+##############################################################################
 "
 cd ${EOSIO_CONTEXT_DIR__}
 cd ${executable_dir}
@@ -446,6 +469,9 @@ TIME_END=$(( `date -u +%s` - $TIME_BEGIN ))
 printf "\n%s\n%dmin %dsec\n\n" "EOSFactory has been successfully built." \
     $(($TIME_END/60)) $(($TIME_END%60))
 
+txtbld=$(tput bold)
+bldred=${txtbld}$(tput setaf 1)
+txtrst=$(tput sgr0)
 printf "${bldred}%s${txtrst}" '
          ______ ____   _____   ______      _____ _______ ____  _______     __
         |  ____/ __ \ / ____| |  ____/\   / ____|__   __/ __ \|  __ \ \   / /
@@ -458,15 +484,16 @@ printf "${bldred}%s${txtrst}" '
 
 if [ ! -z "$IS_WSL" ]; then
     printf "%s\n" "
-RESTART the WSL bash terminal before using EOSFactory."
+RESTART
+    the WSL bash terminal before using EOSFactory."
 else
     printf "%s\n" "
-RESTART the bash terminal before using EOSFactory or at least reload bashrc:
-$ source ~/.bashrc
-"
+RESTART
+    the bash terminal before using EOSFactory."
 fi
 
 printf "\n%s\n" "
-VERIFY the EOSFactory installation by running the following command:
-$ python3 ./tests/test1.py
+VERIFY
+    the EOSFacotry installation by running the following command:
+    $ python3 ./tests/test1.py
 "

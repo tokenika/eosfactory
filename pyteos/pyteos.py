@@ -452,30 +452,30 @@ class CreateAccount(_Command):
             is_verbose=True
             ):
         try:
-            creator = creator.name
+            creator_name = creator.name
         except:
-            creator = creator
+            creator_name = creator
 
         try:
-            owner_key = owner_key.key_public
+            owner_key_public = owner_key.key_public
         except:
-            pass
+            owner_key_public = owner_key
 
         try:
-            active_key = active_key.key_public
+            active_key_public = active_key.key_public
         except:
-            pass
+            active_key_public = active_key
 
         try:
-            permission = permission.name
+            permission_name = permission.name
         except:
-            permission = permission
+            permission_name = permission
         
-        self._jarg["creator"] = creator
+        self._jarg["creator"] = creator_name
         self._jarg["name"] = name
-        self._jarg["ownerKey"] = owner_key
-        self._jarg["activeKey"] = active_key
-        self._jarg["permission"] = permission
+        self._jarg["ownerKey"] = owner_key_public
+        self._jarg["activeKey"] = active_key_public
+        self._jarg["permission"] = permission_name
         self._jarg["expiration"] = expiration_sec        
         self._jarg["skip-sign"] = skip_signature        
         self._jarg["dont-broadcast"] = dont_broadcast
@@ -531,20 +531,20 @@ class SetContract(_Command):
             ):
 
         try:
-            account = account.name
+            self.account_name = account.name
         except:
-            pass
+            self.account_name = account
                
         try:
-            permission = permission.name
+            permission_name = permission.name
         except:
-            pass 
+             permission_name = permission
 
-        self._jarg["account"] = account
+        self._jarg["account"] = self.account_name
         self._jarg["contract-dir"] = contract_dir
         self._jarg["wast-file"] = wast_file
         self._jarg["abi-file"] = abi_file
-        self._jarg["permission"] = permission
+        self._jarg["permission"] = permission_name
         self._jarg["expiration"] = expiration_sec
         self._jarg["skip-sign"] = skip_signature
         self._jarg["dont-broadcast"] = dont_broadcast
@@ -552,8 +552,6 @@ class SetContract(_Command):
         self._jarg["max-cpu-usage"] = max_cpu_usage
         self._jarg["max-net-usage"] = max_net_usage        
         _Command.__init__(self, "set", "contract", is_verbose)
-        if not self.error:
-            self.account = account
 
 
 class PushAction(_Command):
@@ -869,7 +867,7 @@ class Contract(SetContract):
 
     - **parameters**::
 
-        owner: An account object or the name of an account that takes this 
+        account: An account object or the name of an account that takes this 
             contract.
         contract_dir: A directory containing the WAST and ABI files of the 
             contract. May absolute or relative to the contract workspace.
@@ -904,7 +902,11 @@ class Contract(SetContract):
             is_verbose=True):
             
         self.name = pathlib.Path(contract_dir).parts[-1]
-        self.account = account
+        try:
+            self.account_name = account.name
+        except:
+            self.account_name = account
+        
         self.contract_dir = contract_dir
         self.wast_file = wast_file
         self.abi_file = abi_file
@@ -947,7 +949,7 @@ class Contract(SetContract):
 
     def deploy(self):
         super().__init__(
-            self.account, self.contract_dir,
+            self.account_name, self.contract_dir,
             self.wast_file, self.abi_file,
             self.permission, self.expiration_sec,
             self.skip_signature, self.dont_broadcast, self.forceUnique,
@@ -987,7 +989,7 @@ class Contract(SetContract):
 
         """
         if not permission:
-            permission=self.account
+            permission=self.account_name
         else:
             try: # permission is an account:
                 permission=permission.name
@@ -995,7 +997,7 @@ class Contract(SetContract):
                 permission=permission
 
         push_action = PushAction(
-            self.account, action, data,
+            self.account_name, action, data,
             permission, 
             expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,
@@ -1011,9 +1013,7 @@ class Contract(SetContract):
         if (dont_broadcast or is_verbose) and not push_action.error:
             pprint.pprint(self.action_json)
 
-        return self.console
-
-    def debug(self):
+    def out(self):
         print(self.console)
 
     def show_action(self, action, data, permission=""):
@@ -1028,7 +1028,7 @@ class Contract(SetContract):
 
         """
         if not scope:
-            scope=self.account
+            scope=self.account_name
         else:
             try: # scope is an account:
                 scope=scope.name

@@ -383,11 +383,11 @@ contract_currency.push_action(
   "create", 
   '{"issuer":"currency","maximum_supply":"1000000.0000 CUR", \
   "can_freeze":"0","can_recall":"0","can_whitelist":"0"}')
-contract_currency.debug()
-contract_currency.action(
+contract_currency.out()
+contract_currency.push_action(
   "issue", 
   '{"to":"currency","quantity":"1000.0000 CUR","memo":""}')
-contract_currency.action(
+contract_currency.push_action(
   "transfer",
   '{"from":"currency","to":"eosio","quantity":"20.0000 CUR", \
     "memo":"my first transfer"}'
