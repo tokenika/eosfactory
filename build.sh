@@ -58,13 +58,13 @@ contracts="contracts"
 teos_exe="teos/build/teos"
 
 IS_WSL=""
-function is_wsl {
-    proc_version=$(cat /proc/version)
-    if [[ "$proc_version" == *"Microsoft"* ]]; then 
-        IS_WSL="IS_WSL"
-    fi
-}
-is_wsl
+# function is_wsl {
+#     proc_version=$(cat /proc/version)
+#     if [[ "$proc_version" == *"Microsoft"* ]]; then 
+#         IS_WSL="IS_WSL"
+#     fi
+# }
+# is_wsl
 
 function usage() {
     printf "%s\n" "
