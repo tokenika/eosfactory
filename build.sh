@@ -23,13 +23,13 @@ This build script only works with sources cloned from git.
 fi
 
 
-OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
-if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
-    printf "\n%s\n" "
-${eosfactory} currently is tested with the Windows Subsystem Linux, Ubuntu
-and Darwin.
-"
-fi
+# OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
+# if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
+#     printf "\n%s\n" "
+# ${eosfactory} currently is tested with the Windows Subsystem Linux, Ubuntu
+# and Darwin.
+# "
+# fi
 
 if [ "$ARCH" == "Darwin" ]; then
     source scripts/darwin.sh
@@ -163,7 +163,7 @@ fi
 
 printf "%s" "
 Architecture: $( uname )
-OS: $OS_NAME
+# OS: $OS_NAME
 "
 if [ ! -z "$IS_WSL" ]; then
     printf "%s\n" "Windows Subsystem Linux detected"
