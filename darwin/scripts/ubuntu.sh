@@ -8,7 +8,7 @@ function setLinuxVariable() {
 }
 
 function set_CXX_COMPILER__(){
-    CXX_COMPILER__=clang-4.0
+    CXX_COMPILER__=clang++-4.0
 }
 
 function set_C_COMPILER__(){

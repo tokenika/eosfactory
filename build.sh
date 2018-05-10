@@ -22,14 +22,18 @@ This build script only works with sources cloned from git.
     exit 1
 fi
 
+if [ -e "/etc/os-release" ]; then
+    OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
+else
+    OS_NAME="Darwin"
+fi
 
-# OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
-# if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
-#     printf "\n%s\n" "
-# ${eosfactory} currently is tested with the Windows Subsystem Linux, Ubuntu
-# and Darwin.
-# "
-# fi
+if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
+    printf "\n%s\n" "
+${eosfactory} currently is tested with the Windows Subsystem Linux, Ubuntu
+and Darwin.
+"
+fi
 
 if [ "$ARCH" == "Darwin" ]; then
     source scripts/darwin.sh
@@ -58,13 +62,13 @@ contracts="contracts"
 teos_exe="teos/build/teos"
 
 IS_WSL=""
-# function is_wsl {
-#     proc_version=$(cat /proc/version)
-#     if [[ "$proc_version" == *"Microsoft"* ]]; then 
-#         IS_WSL="IS_WSL"
-#     fi
-# }
-# is_wsl
+function is_wsl {
+    uname_a=$(uname -a)
+    if [[ "$uname_a" == *"Microsoft"* ]]; then 
+        IS_WSL="IS_WSL"
+    fi
+}
+is_wsl
 
 function usage() {
     printf "%s\n" "
