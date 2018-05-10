@@ -3,7 +3,6 @@ workdir
 *.exe
 build
 build_gnu
-b
 CMakeFiles
 cmake_install.cmake
 CMakeCache.txt
