@@ -65,6 +65,7 @@ else( Boost_FOUND )
   BOOST_INCLUDEDIR (where is boost directory, usualy %BOOST_ROOT%)" )
 endif( Boost_FOUND )
 
+set( OPENSSL_ROOT_DIR "/usr/local/Cellar/openssl/1.0.2o_1")
 set( OPENSSL_USE_STATIC_LIBS TRUE)
 find_package( OpenSSL REQUIRED )
 if( OpenSSL_FOUND )
