@@ -63,7 +63,7 @@ namespace teos {
 
     protected:
       const char* getUsage() {
-        return R "(
+        return R"(
 Get Teos configuration.
 Usage: ./teos get config
 )";
