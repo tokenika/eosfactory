@@ -1,28 +1,60 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required( VERSION 3.5 )
 
 set( LIB_NAME "teoslib" )
 
-set( VERSION_MAJOR 1 )
-set( VERSION_MINOR 0 )
-set( CMAKE_BUILD_TYPE "Debug" )
-set( ECC_IMPL secp256k1 CACHE STRING "secp256k1 or openssl or mixed")
+set( CMAKE_CXX_STANDARD 14 )
+set( CMAKE_CXX_EXTENSIONS ON )
+set( CXX_STANDARD_REQUIRED ON)
 
 
-set( EOSIO_CONTEXT_DIR "NOT DEFINED !!" )
-set( EOSIO_SOURCE_DIR "NOT DEFINED !!" )
-set( EOSIO_BINARY_DIR "NOT DEFINED !!" )
+set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 
-set( CMAKE_INSTALL_PREFIX "NOT DEFINED !!" )
-set( CMAKE_INSTALL_LIB "NOT DEFINED !!" )
-set( CMAKE_INSTALL_LIB_PREFIX "NOT DEFINED !!" )
+if(UNIX)
+  if(APPLE)
+    set(whole_archive_flag "-force_load")
+    set(no_whole_archive_flag "")
+  else()
+    set(whole_archive_flag "--whole-archive")
+    set(no_whole_archive_flag "--no-whole-archive")
+  endif()
+else()
+  set(whole_archive_flag "--whole-archive")
+  set(no_whole_archive_flag "--no-whole-archive")
+endif()
 
-message(STATUS "APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules")
 
-# 'common.cmake' sets Lgos common values:
-# EOSIO_CONTEXT_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
-# CMAKE_INSTALL_PREFIX, 
-# CMAKE_CXX_STANDARD, CMAKE_BUILD_TYPE, 
+
+if( APPLE )
+    # Apple Specific Options Here
+    message( STATUS "Configuring Eos on OS X" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-deprecated-declarations" )
+else( APPLE )
+    # Linux Specific Options Here
+    message( STATUS "Configuring Eos on Linux" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall" )
+    if ( FULL_STATIC_BUILD )
+        set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
+    endif ( FULL_STATIC_BUILD )
+
+    if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
+        if( CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL 4.0.0 OR CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.0.0 )
+            set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-invalid-partial-specialization" )
+        endif()
+    endif()
+endif( APPLE )
+
+if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-builtin-memcmp" )
+endif()
+
+if( "${CMAKE_GENERATOR}" STREQUAL "Ninja" )
+    if( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
+        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics" )
+    endif()
+endif()
+
+########################################################################
+
 include( ../common.cmake ) 
 if( NOT DEFINED EOSIO_SOURCE_DIR )
 	message( FATAL_ERROR "Something is wrong with the 'commom.cmake' definition file"	)
@@ -97,3 +129,5 @@ target_include_directories( ${LIB_NAME}
 install ( TARGETS ${LIB_NAME} DESTINATION lib )
 install( DIRECTORY include DESTINATION include )
 install( FILES ${CONFIG_JSON_PATH} DESTINATION bin )
+
+
