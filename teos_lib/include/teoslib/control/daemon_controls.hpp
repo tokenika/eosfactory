@@ -26,10 +26,10 @@ namespace teos {
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Kill any running EOS node process.
 Usage: ./teos node kill
-)EOF";
+)";
       }
 
       TeosControl executeCommand() {
@@ -74,10 +74,10 @@ Usage: ./teos node kill
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Start test EOS node.
 Usage: ./teos node start [Options]
-)EOF";
+)";
       }
 
       options_description  argumentDescription() {

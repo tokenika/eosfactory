@@ -55,11 +55,11 @@ namespace teos
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Get current blockchain information
 Usage: ./teos get info [Options]
 Usage: ./teos get info --jarg '{}' [OPTIONS]
-)EOF";
+)";
       }
 
       TeosControl executeCommand() {
@@ -97,11 +97,11 @@ Usage: ./teos get info --jarg '{}' [OPTIONS]
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Retrieve a full block from the blockchain
 Usage: ./teos get block [block_num | block_id] [Options]
 Usage: ./teos get block --jarg '{"block_num_or_id":"<int | string>"}' [OPTIONS]
-)EOF";
+)";
       }
 
       int n;
@@ -178,11 +178,11 @@ Usage: ./teos get block --jarg '{"block_num_or_id":"<int | string>"}' [OPTIONS]
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Fetch a blockchain account
 Usage: ./teos get account [account_name] [Options]
 Usage: ./teos get account --jarg '{"account_name":"<account name>"}' [OPTIONS]
-)EOF";
+)";
       }
 
       string name;
@@ -250,11 +250,11 @@ Usage: ./teos get account --jarg '{"account_name":"<account name>"}' [OPTIONS]
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Fetch a blockchain account
 Usage: ./teos get account [public_key] [Options]
 Usage: ./teos get account --jarg '{"public_key":"<public key>"}' [OPTIONS]
-)EOF";
+)";
       }
 
       string public_key;
@@ -335,12 +335,12 @@ Usage: ./teos get account --jarg '{"public_key":"<public key>"}' [OPTIONS]
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Retrieve the code and ABI for an account
 Usage: ./teos get code [account_name] [Options]
 Usage: ./teos get code --jarg '{"account_name":"<account name>", "wast":"<wast file>", 
 "abi":"<abi file>"}' [OPTIONS]
-)EOF";
+)";
       }
 
       string accountName;
@@ -428,7 +428,7 @@ Usage: ./teos get code --jarg '{"account_name":"<account name>", "wast":"<wast f
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Retrieve the contents of a database table
 Usage: ./teos get table [scope] [contract] [table] [Options]
 Usage: ./teos get table --jarg '{
@@ -440,7 +440,7 @@ Usage: ./teos get table --jarg '{
   "lower_bound":"<lower bound>",
   "upper_bound":"upper bound",      
   }' [OPTIONS]
-)EOF";
+)";
       }
 
       string contract;      

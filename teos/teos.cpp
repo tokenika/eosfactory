@@ -35,14 +35,14 @@
   std::cout << desc << endl;  \
   std::cout << commands << endl;
 
-const char* usage = R"EOF(
+const char* usage = R"(
 Command Line Interface to Eos Daemon
 Usage: ./teos [HOST:PORT] [OPTIONS] [COMMAND] [SUBCOMMAND] [OPTIONS]
 for example:
 192.168.229.140:8888 get block 255
-)EOF";
+)";
 
-const char* commands = R"EOF(
+const char* commands = R"(
 Commands:
   create      Create various items, on and off the blockchain
   get         Retrieve various items and information from the blockchain
@@ -52,7 +52,7 @@ Commands:
   benchmark   Configure and execute benchmarks
   push        Push arbitrary transactions to the blockchain
   node        Test EOS chain node procedures
-)EOF";
+)";
 
 std::map<const std::string, const std::string> subcommandMap = {
   { "create", createSubcommands },
@@ -71,7 +71,7 @@ int main(int argc, const char *argv[]) {
   using namespace teos::control;
   using namespace boost::program_options;
 
-  options_description desc{ "Options" };
+  options_description desc("Options");
   string command;
   string subcommand;
 

@@ -67,11 +67,11 @@ namespace teos
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Create a new wallet locally
 Usage: ./teos wallet create [wallet name] [Options]
 Usage: ./teos wallet create --jarg '{"name":"<wallet name>"}' [OPTIONS]
-)EOF";
+)";
       }
 
       string name;
@@ -154,11 +154,11 @@ Usage: ./teos wallet create --jarg '{"name":"<wallet name>"}' [OPTIONS]
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Import private key into wallet
 Usage: ./teos wallet import [name] [key] [Options]
 Usage: ./teos wallet import --jarg '{"name":"<wallet name>", "key":"<private key>"}' [OPTIONS]
-)EOF";
+)";
       }
 
       string name;
@@ -233,11 +233,11 @@ Usage: ./teos wallet import --jarg '{"name":"<wallet name>", "key":"<private key
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 List opened wallets, *= unlocked
 Usage: ./teos wallet list [Options]
 Usage: ./teos wallet list --jarg '{}' [OPTIONS]
-)EOF";
+)";
       }
 
       TeosControl executeCommand() {
@@ -287,11 +287,11 @@ Usage: ./teos wallet list --jarg '{}' [OPTIONS]
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Open an existing wallet
 Usage: ./teos wallet open [name] [Options]
 Usage: ./teos wallet open --jarg '{"name":"<wallet name>"}' [OPTIONS]
-)EOF";
+)";
       }
 
       string name;
@@ -363,11 +363,11 @@ Usage: ./teos wallet open --jarg '{"name":"<wallet name>"}' [OPTIONS]
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Lock wallet
 Usage: ./teos wallet lock [name] [Options]
 Usage: ./teos wallet lock --jarg '{"name":"<wallet name>"}' [OPTIONS]
-)EOF";
+)";
       }
 
       string name;
@@ -439,11 +439,11 @@ Usage: ./teos wallet lock --jarg '{"name":"<wallet name>"}' [OPTIONS]
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Lock all unlocked wallets
 Usage: ./teos wallet lock_all [Options]
 Usage: ./teos wallet lock_all --jarg '{}' [OPTIONS]
-)EOF";
+)";
       }
 
       TeosControl executeCommand() {
@@ -496,11 +496,11 @@ Usage: ./teos wallet lock_all --jarg '{}' [OPTIONS]
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Unlock wallet
 Usage: ./teos wallet import [password] [name] [Options]
 Usage: ./teos wallet import --jarg '{"password":"<password>", name":"<wallet name>"}' [OPTIONS]
-)EOF";
+)";
       }
 
       string name;
@@ -578,11 +578,11 @@ Usage: ./teos wallet import --jarg '{"password":"<password>", name":"<wallet nam
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 List opened wallets, *= unlocked
 Usage: ./teos wallet list [Options]
 Usage: ./teos wallet list --jarg '{}' [OPTIONS]
-)EOF";
+)";
       }
 
       TeosControl executeCommand() {

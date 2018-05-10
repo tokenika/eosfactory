@@ -1,6 +1,6 @@
 #include <teoslib/command/wallet_commands.hpp>
 
-const char* walletSubcommands = R"EOF(
+const char* walletSubcommands = R"(
 ERROR: RequiredError: Subcommand required
 Interact with local wallet
 Usage : . / teos [OPTIONS] wallet SUBCOMMAND [OPTIONS]
@@ -14,6 +14,6 @@ Subcommands:
     import          Import private key into wallet
     list            List opened wallets, *= unlocked
     keys            List of private keys from all unlocked wallets in wif format.
-)EOF";
+)";
 
 const std::string walletCommandPath = "/v1/wallet/";

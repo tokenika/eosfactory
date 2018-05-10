@@ -65,7 +65,7 @@ namespace teos
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Create or update the contract on an account.
 Usage: ./teos [http address] set contract <account> <contract dir> 
           [wast] [abi] [Options]
@@ -82,7 +82,7 @@ Usage: ./teos [http address] create key --jarg '{
   "max-cpu-usage":"<max cpu usage>",
   "max-net-usage":"<max net usage>"
   }' [OPTIONS]
-)EOF";
+)";
       }
 
       string account;

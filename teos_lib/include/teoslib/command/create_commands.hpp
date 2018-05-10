@@ -71,7 +71,7 @@ namespace teos
     protected:
 
       string getTransactionUsage() {
-        return string(R"EOF(
+        return string(R"(
   "permission":"<permission list>",
   "expiration":<expiration time sec>,  
   "skip-sign":<true|false>,
@@ -80,11 +80,11 @@ namespace teos
   "max-cpu-usage":"<max cpu usage>",
   "max-net-usage":"<max net usage>"
   }' [OPTIONS]
-)EOF");            
+)");            
       }
 
       const char* getUsage() {
-        return (string( R"EOF(
+        return (string( R"(
 Create a new account on the blockchain.
 Usage: ./teos create account [creator] [name] [ownerKey] 
           [activeKey] [Options]
@@ -93,7 +93,7 @@ Usage: ./teos create key --jarg '{
   "name":"<account name>",
   "ownerKey":"<owner public key>",
   "activeKey":"<active public key>",
-)EOF") + getTransactionUsage()).c_str();
+)") + getTransactionUsage()).c_str();
       }
 
       string permission;
@@ -255,11 +255,11 @@ Usage: ./teos create key --jarg '{
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Create a new keypair and print the public and private keys.
 Usage: ./teos create key [key name] [Options]
 Usage: ./teos create key --jarg '{"name":"<key name>"}' [OPTIONS]
-)EOF";
+)";
       }
 
       string keyName;

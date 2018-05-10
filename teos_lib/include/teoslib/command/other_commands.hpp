@@ -27,11 +27,11 @@ namespace teos
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Retrieve version information of the client
 Usage: ./teos version client [Options]
 Usage: ./teos version client --jarg '{}' [OPTIONS]
-)EOF";
+)";
       }
 
       TeosControl executeCommand() {

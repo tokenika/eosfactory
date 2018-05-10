@@ -68,7 +68,7 @@ namespace teos
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Push a transaction with a single message.
 Usage: ./teos push message [contract] [action] [data] [scope] [permission] [Options]
 Usage: ./teos create key --jarg '{
@@ -84,7 +84,7 @@ Usage: ./teos create key --jarg '{
   "max-cpu-usage":"<max cpu usage>",
   "max-net-usage":"<max net usage>"
   }' [OPTIONS]
-)EOF";
+)";
       }
 
       string contract;

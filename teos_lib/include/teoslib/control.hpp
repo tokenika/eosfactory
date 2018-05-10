@@ -187,13 +187,13 @@ namespace teos
     {
       using namespace boost::program_options;
 
-      options_description desc{"Options"};      
+      options_description desc("Options");      
       try {
         desc.add(argumentDescription()).add(groupOptionDescription())
           .add(basicOptionDescription());
         positional_options_description pos_desc;
         setPosDesc(pos_desc);
-        command_line_parser parser{argc_, argv_};
+        command_line_parser parser(argc_, argv_);
         parser.options(desc).positional(pos_desc);
         parsed_options parsed_options = parser.run();
 

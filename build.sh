@@ -26,12 +26,15 @@ fi
 OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
 if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
     printf "\n%s\n" "
-${eosfactory} currently is tested with the Windows Subsystem Linux and Ubuntu.
-Please install on the latest version of one of these Linux distributions:
-    https://www.microsoft.com/en-us/store/p/ubuntu/9nblggh4msv6
-or
-    https://www.ubuntu.com/
+${eosfactory} currently is tested with the Windows Subsystem Linux, Ubuntu
+and Darwin.
 "
+fi
+
+if [ "$ARCH" == "Darwin" ]; then
+    source scripts/darwin.sh
+else
+    source scripts/ubuntu.sh
 fi
 
 ##############################################################################
@@ -39,8 +42,8 @@ fi
 ##############################################################################
 
 EOSIO_SOURCE_DIR__="$EOSIO_SOURCE_DIR"
-CXX_COMPILER__=clang++-4.0
-C_COMPILER__=clang-4.0
+set_CXX_COMPILER__
+set_C_COMPILER__
 BUILD_TYPE__="Release"
 ECC_IMPL__="secp256k1" # secp256k1 or openssl or mixed
 ROOT_DIR_WINDOWS__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs"
@@ -54,7 +57,6 @@ build_dir="build"
 contracts="contracts"
 teos_exe="teos/build/teos"
 
-OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
 IS_WSL=""
 function is_wsl {
     proc_version=$(cat /proc/version)
@@ -63,7 +65,6 @@ function is_wsl {
     fi
 }
 is_wsl
-
 
 function usage() {
     printf "%s\n" "
@@ -218,16 +219,6 @@ function wslMapLinux2Windows() {
 ##############################################################################
 # Set Linux environment variables
 ##############################################################################
-function setLinuxVariable() {
-    name=$1
-    value=$2
-
-    if [  ! -z "$value" -a "${!name}" != "$value" ]; then
-        echo "export $name=$value" >> ~/.bashrc
-        printf "\t%s\n" "setting $name: $value"
-    fi
-}
-
 printf "%s" "
 ##############################################################################
 "
@@ -244,9 +235,10 @@ PYTHONPATH__="$EOSIO_CONTEXT_DIR__/${pyteos}:$EOSIO_CONTEXT_DIR__/${tests}"
 if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]
 then
     echo "export PYTHONPATH=${PYTHONPATH__}:${PYTHONPATH}" >> ~/.bashrc
+    echo "export PYTHONPATH=${PYTHONPATH__}:${PYTHONPATH}" >> ~/.profile
     printf "\t%s\n" "setting PYTHONPATH: ${PYTHONPATH__}:"
 fi
- 
+
 ##############################################################################
 # Set Windows environment variables
 ##############################################################################
@@ -377,7 +369,7 @@ if [ -z "$EOSIO_SOURCE_DIR" ]; then
 ##########################################################################
 #   THE BUILD IS NOT FINISHED!
 #
-#   THE BASH HAS TO BE RESET in order to load newly set environment 
+#   THE LOGIN HAS TO BE RESET in order to load newly set environment 
 #   variables.
 #
 #   Afterwards, this script can be restarted to continue this build.
@@ -415,7 +407,7 @@ if [ $? -ne 0 ]; then
     exit -1
 fi
 
-make
+make VERBOSE=1
 
 if [ $? -ne 0 ]; then
     printf "\n\t%s\n" "
@@ -451,7 +443,7 @@ if [ $? -ne 0 ]; then
     exit -1
 fi
 
-make
+make VERBOSE=1
 
 if [ $? -ne 0 ]; then
     printf "\n\t%s\n" \

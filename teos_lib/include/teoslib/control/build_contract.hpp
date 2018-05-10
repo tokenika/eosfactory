@@ -49,7 +49,7 @@ namespace teos {
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Build smart contract.
 Usage: ./teos build contract src wast_file [Options]
 Usage: ./teos create key --jarg '{
@@ -57,7 +57,7 @@ Usage: ./teos create key --jarg '{
   "wast_file":<>,
   "include_dir":"<comma separated list of include dirs>"
   }' [OPTIONS]
-)EOF";
+)";
       }
 
       string src;
@@ -144,7 +144,7 @@ Usage: ./teos create key --jarg '{
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Generate the ABI specification file.
 Usage: ./teos generate abi types_hpp [Options]
 Usage: ./teos create key --jarg '{
@@ -152,7 +152,7 @@ Usage: ./teos create key --jarg '{
   "abi_file":<target output file>,
   "include_dir":"<comma separated list of include dirs>"
   }' [OPTIONS]
-)EOF";
+)";
       }
 
       string types_hpp;
@@ -237,13 +237,13 @@ Usage: ./teos create key --jarg '{
 
     protected:
       const char* getUsage() {
-        return R"EOF(
+        return R"(
 Make a workspace for a contract, with a c++ code template.
 Usage: ./teos bootstrap contract [Options]
 Usage: ./teos create key --jarg '{
   "name":"<contract name>"
   }' [OPTIONS]
-)EOF";
+)";
       }
 
       string name;

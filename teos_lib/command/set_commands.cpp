@@ -1,7 +1,7 @@
 #include <teoslib/command/set_commands.hpp>
 
 
-const char* setSubcommands = R"EOF(
+const char* setSubcommands = R"(
 ERROR: RequiredError: Subcommand required
 Set or update blockchain state
 Usage: ./teos [OPTIONS] set SUBCOMMAND [OPTIONS]
@@ -12,5 +12,5 @@ Subcommands:
     proxy           Set proxy account for voting
     account         set or update blockchain account state
     action          set or update blockchain action state
-)EOF";
+)";
 
