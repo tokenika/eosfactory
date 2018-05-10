@@ -65,6 +65,36 @@ else( Boost_FOUND )
   BOOST_INCLUDEDIR (where is boost directory, usualy %BOOST_ROOT%)" )
 endif( Boost_FOUND )
 
+set( OPENSSL_USE_STATIC_LIBS TRUE)
+find_package( OpenSSL REQUIRED )
+if( OpenSSL_FOUND )
+  message( STATUS "OpenSSL found.
+  OPENSSL_INCLUDE_DIR: ${OPENSSL_INCLUDE_DIR}
+  OPENSSL_LIBRARIES: ${OPENSSL_LIBRARIES}" )
+else( OpenSSL_FOUND)
+  message( STATUS "OpenSSL not found. set environment variables:
+  OPENSSL_ROOT_DIR (for example, %C_INCLUDE%/OpenSSL/Win64OpenSSL-1_0_2L)" )
+endif( OpenSSL_FOUND )
+
+find_package(LLVM 4.0 REQUIRED CONFIG)
+if( LLVM_FOUND )
+  message( STATUS "LLVM found.
+  LLVM_INCLUDE_DIR: ${LLVM_INCLUDE_DIR}
+  LLVM_LIBRARY_DIR: ${LLVM_LIBRARY_DIR}")
+else( LLVM_FOUND )
+  message ( STATUS "LLVM not found. set environment variable:
+  LLVM_ROOT_DIR (for example, %C_INCLUDE%/LLVM_4_0_1")
+endif( LLVM_FOUND )
+llvm_map_components_to_libnames(LLVM_LIBS support core passes mcjit native DebugInfoDWARF)
+
+set(teoslib_src ${CMAKE_SOURCE_DIR}/../teos_lib)
+
+if( NOT ECC_IMPL STREQUAL openssl )
+  find_package(Secp256k1 REQUIRED)
+  find_package(GMP REQUIRED)
+endif()
+
+
 file( GLOB HEADERS "include/teoslib/*.hpp" 
   "include/teoslib/command/*.hpp" "include/teoslib/control/*hpp" )
 file( GLOB SRC "*cpp" "command/*.cpp" "control/*.cpp" )
