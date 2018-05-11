@@ -140,7 +140,7 @@ namespace teos {
           return;
         }
 
-        string commandLine = reqJson_.get<string>("daemon_exe")
+        string args = string("")
           + " --genesis-json " + reqJson_.get<string>("genesis-json")
           + " --http-server-address " 
           + reqJson_.get<string>("http-server-address")
@@ -150,13 +150,17 @@ namespace teos {
           + " --shared-memory-size-mb " + getSharedMemorySizeMb()
           ;
         if(reqJson_.get("resync-blockchain", false)) {
-          commandLine += " --resync-blockchain";
+          args += " --resync-blockchain";
         }
+        string commandLine = reqJson_.get<string>("daemon_exe") + args;
+
 
         bool isWU;
         string kernelName;
         reqJson_.put("command_line", commandLine);
         respJson_.put("command_line", commandLine);
+        respJson_.put("exe", reqJson_.get<string>("daemon_exe"));
+        respJson_.put("args", args);
         respJson_.put("uname", kernelName = uname());
         respJson_.put("is_windows_ubuntu", isWU = isWindowsUbuntu());
 

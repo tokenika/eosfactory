@@ -191,7 +191,7 @@ if [ ! -z "$IS_WSL" ]; then
 fi
 printf "%s\n" "
 Arguments:
-    EOSIO_SOURCE_DIR=$EOSIO_SOURCE_DIR__
+    EOSIO_SOURCE_DIR_=$EOSIO_SOURCE_DIR__
     CXX_COMPILER__=$CXX_COMPILER__
     C_COMPILER__=$C_COMPILER__
     BUILD_TYPE__=$BUILD_TYPE__
@@ -211,6 +211,9 @@ if [ -z "$EOSIO_SOURCE_DIR__" ]; then
 #
 #   It has to be either set as an environmental variable, or put as the 
 #   value of '-e' argument of this (./build.sh) script.
+#   
+#   For example:
+#   $ ./build.sh -e /mnt/c/Workspaces/EOS/eos
 ##########################################################################
 "
     exit -1
@@ -404,7 +407,6 @@ if [ $? -ne 0 ]; then
 >>>>>> MAKE building ${library_dir} has exited with the above error."
     exit -1
 fi
-
 
 ##############################################################################
 # compiling executable

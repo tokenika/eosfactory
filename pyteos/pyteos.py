@@ -704,7 +704,8 @@ class _Node(_Command):
             else:
                 if self.json["uname"] == "Darwin":
                     subprocess.Popen(
-                        "open -a " + self.json["command_line"], 
+                        "open -a "
+                        + self.json["exe"] + " --args " + self.json["args"],
                         shell=True)
                 else:
                     subprocess.Popen(
