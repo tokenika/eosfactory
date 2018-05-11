@@ -58,13 +58,13 @@ set( Boost_USE_STATIC_RUNTIME OFF )
 set( BOOST_ROOT "$ENV{HOME}/opt/boost_1_66_0" )
 
 find_package(Boost 1.66 REQUIRED COMPONENTS 
+  thread  
+  date_time   
+  filesystem  
   system
-  chrono
-  date_time 
   program_options
-  filesystem
+  chrono
   regex
-  thread
   iostreams
 )
 if( Boost_FOUND )
@@ -202,6 +202,13 @@ macro( applLinkLibraries applName )
       ${CMAKE_THREAD_LIBS_INIT}
   )
 
+  set(THREADS_PREFER_PTHREAD_FLAG ON)
+  find_package(Threads REQUIRED)
+  target_link_libraries(${applName} 
+    PRIVATE
+      Threads::Threads
+  )
+
   if( NOT ECC_IMPL STREQUAL openssl )
     target_link_libraries( ${applName}
       PRIVATE
@@ -210,15 +217,17 @@ macro( applLinkLibraries applName )
     )
   endif()
 
-  if( APPLE )
+  # if( APPLE )
 
-  else()
-    target_link_libraries( ${applName} 
-      PRIVATE 
-        rt  
-        pthread
-    )
-  endif()
+  # else()
+  #   target_link_libraries( ${applName} 
+  #     PRIVATE 
+  #       rt  
+  #       pthread
+  #   )
+  # endif()
+
+
 
 endmacro( applLinkLibraries )
 

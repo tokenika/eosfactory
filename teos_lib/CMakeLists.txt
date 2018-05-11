@@ -41,13 +41,13 @@ set( Boost_USE_STATIC_RUNTIME OFF )
 set( BOOST_ROOT "$ENV{HOME}/opt/boost_1_66_0" )
 
 find_package(Boost 1.66 REQUIRED COMPONENTS 
+  thread  
+  date_time   
+  filesystem  
   system
-  chrono
-  date_time 
   program_options
-  filesystem
+  chrono
   regex
-  thread
   iostreams
 )
 if( Boost_FOUND )
