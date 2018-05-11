@@ -234,13 +234,11 @@ setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
 setLinuxVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
 
 PYTHONPATH__="$EOSIO_CONTEXT_DIR__/${pyteos}:$EOSIO_CONTEXT_DIR__/${tests}"
-if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]
-then
-    echo "export PYTHONPATH=${PYTHONPATH__}:${PYTHONPATH}" >> ~/.bashrc
-    echo "export PYTHONPATH=${PYTHONPATH__}:${PYTHONPATH}" >> ~/.profile
-    printf "\t%s\n" "setting PYTHONPATH: ${PYTHONPATH__}:"
+if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]; then
+    setLinuxVariable "PYTHONPATH" "${PYTHONPATH__}:${PYTHONPATH}"
 fi
 
+                                                                            exit 1
 ##############################################################################
 # Set Windows environment variables
 ##############################################################################
@@ -321,10 +319,18 @@ if [ -z "$EOSIO_SOURCE_DIR" ]; then
 #   THE BUILD IS NOT FINISHED!
 #   The EOSIO_SOURCE_DIR system variable is not in this bash.
 #
-#   Please, restart the bash. 
-#   If Darwin, relog.
+"
+    if [ "$OS_NAME" == "Darwin" ]; then
+        printf "%s\n" "
+#   Please, relog. 
 ##########################################################################
 "
+        else 
+    printf "%s\n" "
+#   Please, restart the bash. 
+##########################################################################
+"
+    fi    
     exit -1
 fi
 

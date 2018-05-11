@@ -1,3 +1,7 @@
+printf "%s\n" "
+         source scripts/${OS_NAME}.sh
+"
+
 function setLinuxVariable() {
     name=$1
     value=$2
