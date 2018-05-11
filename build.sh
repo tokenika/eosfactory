@@ -474,16 +474,6 @@ printf "${bldred}%s${txtrst}" '
                                                       
 '
 
-if [ ! -z "$IS_WSL" ]; then
-    printf "%s\n" "
-RESTART
-    the WSL bash terminal before using EOSFactory."
-else
-    printf "%s\n" "
-RESTART
-    the bash terminal before using EOSFactory."
-fi
-
 printf "\n%s\n" "
 VERIFY
     the EOSFacotry installation by running the following command:

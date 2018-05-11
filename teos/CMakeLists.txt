@@ -217,18 +217,6 @@ macro( applLinkLibraries applName )
     )
   endif()
 
-  # if( APPLE )
-
-  # else()
-  #   target_link_libraries( ${applName} 
-  #     PRIVATE 
-  #       rt  
-  #       pthread
-  #   )
-  # endif()
-
-
-
 endmacro( applLinkLibraries )
 
 add_executable( teos teos.cpp )

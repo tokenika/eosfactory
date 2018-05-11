@@ -12,10 +12,13 @@ def run():
 
     ############################
     # Your unit-test goes here #
+
+    c = Template("hello")
+
     ############################
     
     print("test node.stop():")
-    node.stop()    
+    # node.stop()    
     print("Test OK")
 
 

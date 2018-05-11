@@ -27,7 +27,8 @@ namespace teos {
     string getPid()
     {
       bp::ipstream pipe_stream;
-      string cl = string("pidof ") + getDaemonName(nullptr);
+      //string cl = string("pidof ") + getDaemonName(nullptr);
+      string cl = string("pgrep ") + getDaemonName(nullptr);
       bp::child c(cl, bp::std_out > pipe_stream);
 
       string line;
