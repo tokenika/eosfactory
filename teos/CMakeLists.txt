@@ -41,57 +41,14 @@ set( TEST_HTTP_ADDRESS "eos-testapi.tokenika.io:8888" )
 set( CONFIG_JSON_FILE "config.json" )
 set( CONFIG_JSON "${CONFIG_JSON_FILE}" )
 
-if( WIN32 )
-	# Taken out of the VC projects to avoid the compiler complaining about POSIX code
-	add_definitions( -D_SCL_SECURE_NO_WARNINGS )
-	add_definitions( -D_SCL_SECURE_NO_DEPRECATE )
-	add_definitions( -D_CRT_SECURE_NO_WARNINGS )
-	add_definitions( -D_CRT_SECURE_N_DEPRECATE )
-	add_definitions( -D_CRT_NONSTDC_NO_DEPRECATE )
-	add_definitions( -D_CRT_NONSTDC_NO_WARNINGS )
-	add_definitions( -D__STDC_CONSTANT_MACROS )
-	add_definitions( -D__STDC_FORMAT_MACROS )
-	add_definitions( -D__STDC_LIMIT_MACROS )
-	add_definitions( -D_WIN32_WINNT=0x0501 )
-	#treats warning as error - No
-  add_compile_options( /WX- )
-  
-  add_compile_options( /bigobj )
+# Ensure that even static libraries are relocatable so they can be linked into a .so
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
 
-  # Compile with all warnings and fatal warnings
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX" )
-	if( CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
-		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )
-	else()
-		set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
-	endif()
+if( ENABLE_ASAN )
+  # TODO: hard codding, make it better! //////////////////////  
+  #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address" )
+endif()
 
-	# disable warning: conditional expression is constant
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127" )
-	# disable warning: unreferenced formal parameter
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4100" )
-	# disable warning: assignment operator could not be generated
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4512" )
-	# disable warning: 'typedef ': ignored on left of '' when no variable is declared
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4091" )
-	# disable warning: 'inline': used more than once
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4141" )
-	# disable warning: cast truncates constant value
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4310" )
-	# disable warning: unreachable code
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4702" )
-	# disable warning: The result of the unary '&' operator may be unaligned
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4366" )
-else( WIN32 )
-	# Ensure that even static libraries are relocatable so they can be linked into a .so
-  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-  if( ENABLE_ASAN )
-    # TODO: hard codding, make it better! //////////////////////  
-		#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address" )
-	endif()
-
-endif( WIN32 )
 
 ## BEGIN DEPENDENCIES ########################################################
 
@@ -100,13 +57,6 @@ set( Boost_USE_MULTITHREADED ON )
 set( Boost_USE_STATIC_RUNTIME OFF )
 set( BOOST_ROOT "$ENV{HOME}/opt/boost_1_66_0" )
 
-if( WIN32 )
-  set( Boost_NO_SYSTEM_PATHS ON )
-  set( BOOST_INCLUDEDIR $ENV{BOOST_INCLUDEDIR})
-  message( STATUS "BOOST_INCLUDEDIR: $ENV{BOOST_INCLUDEDIR}")
-  set( BOOST_LIBRARYDIR $ENV{BOOST_LIBRARYDIR} )
-  message( STATUS "BOOST_LIBRARYDIR: $ENV{BOOST_LIBRARYDIR}")
-endif( WIN32 )
 find_package(Boost 1.66 REQUIRED COMPONENTS 
   system
   chrono
@@ -127,7 +77,6 @@ else( Boost_FOUND )
   BOOST_INCLUDEDIR (where is boost directory, usualy %BOOST_ROOT%)" )
 endif( Boost_FOUND )
 
-set( OPENSSL_ROOT_DIR "/usr/local/Cellar/openssl/1.0.2o_1")
 set( OPENSSL_USE_STATIC_LIBS TRUE)
 find_package( OpenSSL REQUIRED )
 if( OpenSSL_FOUND )
@@ -159,17 +108,10 @@ endif()
 
 ## END DEPENDENCIES ##########################################################
 
-if( WIN32 )
-  set( EOSIO_WASM_CLANG "" )
-  set( EOSIO_WASM_LLVM_LINK "" )
-  set( EOSIO_WASM_LLC "" )
-  set( EOSIO_BINARYEN_BIN "" )
-else()
-  set( EOSIO_WASM_CLANG "${HOME}/opt/wasm/bin/clang" )
-  set( EOSIO_WASM_LLVM_LINK "${HOME}/opt/wasm/bin/llvm-link" )
-  set( EOSIO_WASM_LLC "${HOME}/opt/wasm/bin/llc" )
-  set( EOSIO_BINARYEN_BIN "/usr/local/binaryen/bin/" )
-endif()
+set( EOSIO_WASM_CLANG "${HOME}/opt/wasm/bin/clang" )
+set( EOSIO_WASM_LLVM_LINK "${HOME}/opt/wasm/bin/llvm-link" )
+set( EOSIO_WASM_LLC "${HOME}/opt/wasm/bin/llc" )
+set( EOSIO_BINARYEN_BIN "/usr/local/binaryen/bin/" )
 
 ## BEGIN CONFIG FILES ########################################################
 
@@ -223,13 +165,8 @@ macro( applLinkLibraries applName )
     endif()
   endif()
 
-  if( WIN32 )
-    set( TARGET_DIR ${CMAKE_BUILD_TYPE} )
-  else()
-    set( TARGET_DIR "" )
-  endif()     
-
-  
+  set( TARGET_DIR "" )
+ 
   if(EXISTS "${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc_debug${CMAKE_STATIC_LIBRARY_SUFFIX}")
     set(fc "fc_debug")
   endif()
@@ -273,21 +210,14 @@ macro( applLinkLibraries applName )
     )
   endif()
 
-  if( WIN32 )
-    target_link_libraries( ${applName}
-      PRIVATE
-        "$(WindowsSDK_LibraryPath)/x64/crypt32.lib"
-        "$(VC_ReferencesPath_VC_x64)/legacy_stdio_definitions.lib"
-        "Userenv.lib"
-    )
-  endif( WIN32 )
+  if( APPLE )
 
-  if( UNIX )
-  target_link_libraries( ${applName} 
-    PRIVATE 
-      rt  
-      pthread
-  )
+  else()
+    target_link_libraries( ${applName} 
+      PRIVATE 
+        rt  
+        pthread
+    )
   endif()
 
 endmacro( applLinkLibraries )
