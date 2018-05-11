@@ -238,7 +238,6 @@ if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]; then
     setLinuxVariable "PYTHONPATH" "${PYTHONPATH__}:${PYTHONPATH}"
 fi
 
-                                                                            exit 1
 ##############################################################################
 # Set Windows environment variables
 ##############################################################################
