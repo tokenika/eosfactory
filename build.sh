@@ -316,10 +316,13 @@ fi
 if [ -z "$EOSIO_SOURCE_DIR" ]; then
     printf "\n%s\n" "
 ##########################################################################
+"$EOSIO_SOURCE_DIR__"
+"$EOSIO_SOURCE_DIR"
 #   THE BUILD IS NOT FINISHED!
 #   The EOSIO_SOURCE_DIR system variable is not in this bash.
 #
-#   Please, restart the bash.
+#   Please, restart the bash. 
+#   If Darwin, relog.
 ##########################################################################
 "
     exit -1
