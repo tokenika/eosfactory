@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 #include <boost/process.hpp>
-#include <boost/thread/thread.hpp>
+//#include <boost/thread/thread.hpp>
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/thread.hpp>
+//#include <boost/thread.hpp>
 #include <boost/chrono.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/iterator.hpp>
@@ -70,7 +70,7 @@ namespace teos {
           bp::system(string("kill ") + pid);
 
           while (!pid.empty() && count > 0) {
-            boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+            //boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
             pid = getPid();
             count--;
           }
