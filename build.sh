@@ -83,7 +83,7 @@ function setWindowsVariable() {
 if [ -e "/etc/os-release" ]; then
     OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
 else
-    if [ "$( uname )" == "Darwin" ]
+    if [ "$( uname )" == "Darwin" ]; then
         OS_NAME="Darwin"
     fi
 fi
