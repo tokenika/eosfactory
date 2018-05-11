@@ -183,7 +183,7 @@ namespace teos {
           do {
             tc = teos::command::GetInfo(); 
             respJson_ = tc.respJson_;                   
-            boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
+            //boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
             if(count-- == 0){
               putError(tc.errorMsg());
             }
