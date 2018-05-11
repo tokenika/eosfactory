@@ -355,9 +355,9 @@ cd ${EOSIO_CONTEXT_DIR__}
 mkdir -p ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}/daemon/data-dir/wallet
 
-cp -u ${EOSIO_SOURCE_DIR}/programs/snapshot/genesis.json \
+cp ${EOSIO_SOURCE_DIR}/programs/snapshot/genesis.json \
     ${BUILD_DIR}/daemon/data-dir/genesis.json
-cp -u ${EOSIO_CONTEXT_DIR__}/resources/config.ini \
+cp ${EOSIO_CONTEXT_DIR__}/resources/config.ini \
     ${BUILD_DIR}/daemon/data-dir/config.ini
 
 
