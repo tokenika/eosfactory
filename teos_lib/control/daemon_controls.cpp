@@ -212,7 +212,7 @@ namespace teos {
             putError(e.what());
             break;
           }
-          boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
+          //boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
         }
       }
     }
