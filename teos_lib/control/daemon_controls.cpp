@@ -3,11 +3,11 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <thread>
 #include <boost/process.hpp>
-//#include <boost/thread/thread.hpp>
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
-//#include <boost/thread.hpp>
 #include <boost/chrono.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/iterator.hpp>
@@ -18,6 +18,8 @@
 
 namespace  bp = boost::process;
 using namespace std;
+using namespace std::this_thread; // sleep_for, sleep_until
+using namespace std::chrono; // nanoseconds, system_clock, seconds
 
 namespace teos {
   namespace control {
@@ -70,7 +72,7 @@ namespace teos {
           bp::system(string("kill ") + pid);
 
           while (!pid.empty() && count > 0) {
-            //boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+            sleep_for(seconds(1));            
             pid = getPid();
             count--;
           }
@@ -183,7 +185,7 @@ namespace teos {
           do {
             tc = teos::command::GetInfo(); 
             respJson_ = tc.respJson_;                   
-            //boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
+            sleep_for(seconds(1));
             if(count-- == 0){
               putError(tc.errorMsg());
             }
@@ -212,7 +214,7 @@ namespace teos {
             putError(e.what());
             break;
           }
-          //boost::this_thread::sleep_for(boost::chrono::seconds{ 1 });
+          sleep_for(seconds(1));
         }
       }
     }
