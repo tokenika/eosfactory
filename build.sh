@@ -2,8 +2,7 @@
 
 printf "%s\n" "
 ##############################################################################
-#   This script installs Tokenika 'eosfactory'. It has to be executed in the 
-#   directory of the 'eosfactory' repository.
+#   This script installs EOSFactory. It needs to be executed from within the 'eosfactory' folder.
 #   This file was downloaded from https://github.com/tokenika/eosfactory
 ##############################################################################
 "
@@ -28,7 +27,7 @@ fi
 EOSIO_SOURCE_DIR__="$EOSIO_SOURCE_DIR"
 BUILD_TYPE__="Release"
 ECC_IMPL__="secp256k1" # secp256k1 or openssl or mixed
-ROOT_DIR_WINDOWS__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs"
+WSL_ROOT_DIR__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs"
 EOSIO_SHARED_MEMORY_SIZE_MB__=100
 CMAKE_VERBOSE__=0
 
@@ -77,8 +76,7 @@ function setWindowsVariable() {
 }
 
 ##############################################################################
-#   Detect operating system and set its values: 
-#   BOOST_ROOT, OPENSSL_ROOT_DIR, WASM_ROOT, C_COMPILER__, CXX_COMPILER__.
+#   Detect operating system
 ##############################################################################
 if [ -e "/etc/os-release" ]; then
     OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
@@ -91,9 +89,7 @@ fi
 printf "Detected operating system is %s.\n" "${OS_NAME}"
 if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
     printf "\n%s\n" "
-$EOSFactory currently is tested with the Windows Subsystem Linux, Ubuntu
-and Darwin.
-"
+$EOSFactory has beentested with the Windows Subsystem Linux, Ubuntu and Darwin."
 fi
 
 source scripts/${OS_NAME}.sh
@@ -112,10 +108,10 @@ Usage: ./build.sh [OPTIONS]
     -t  Build type: 'Debug' or 'Release'. Default is 'Release'.
     -r  Reset the build.
     -s  EOSIO node shared memory size (in MB). Default is 100 
-    -o  Path to the Windows WSL root, if applicable. Default is $ROOT_DIR_WINDOWS__
+    -o  Path to the Windows WSL root, if applicable. Default is $WSL_ROOT_DIR__
     -v  CMake verbose. Default is OFF.
     -h  this message.
-"    
+"
 }
 
 while getopts ":e:c:i:t:s:rvh" opt; do
@@ -161,7 +157,7 @@ while getopts ":e:c:i:t:s:rvh" opt; do
         ;;
 
     o) 
-        ROOT_DIR_WINDOWS__="$OPTARG"
+        WSL_ROOT_DIR__="$OPTARG"
         ;;
     v)
         CMAKE_VERBOSE__=1
@@ -191,7 +187,7 @@ if [ ! -z "$IS_WSL" ]; then
 fi
 printf "%s\n" "
 Arguments:
-    EOSIO_SOURCE_DIR_=$EOSIO_SOURCE_DIR__
+    EOSIO_SOURCE_DIR__=$EOSIO_SOURCE_DIR__
     CXX_COMPILER__=$CXX_COMPILER__
     C_COMPILER__=$C_COMPILER__
     BUILD_TYPE__=$BUILD_TYPE__
@@ -273,7 +269,7 @@ if [ ! -z "$IS_WSL" ]; then
     # printf "//// left: %s\n" "${#bashrcDirSet} $bashrcDirSet"
     # printf "/// right: %s\n" "${#bashrc} $bashrc"    
     if [ "$bashrcDirSet" != "$bashrc" ]; then
-        homeWindows=${ROOT_DIR_WINDOWS__}\\"home"\\$USER
+        homeWindows=${WSL_ROOT_DIR__}\\"home"\\$USER
 
         bashrcPath=${homeWindows}\\$bashrc
         bashrcDir=$(cmd.exe /c dir /B  $bashrcPath)
@@ -293,7 +289,7 @@ if [ ! -z "$IS_WSL" ]; then
     ######################################################################
     #   Cannot find the root of the WSL file system which was tried to be
     #
-    #   ${ROOT_DIR_WINDOWS__}
+    #   ${WSL_ROOT_DIR__}
     #
     #   Please, find the path in your computer, and restart the ./build.sh
     #   with option 

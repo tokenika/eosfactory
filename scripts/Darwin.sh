@@ -6,7 +6,8 @@ function setLinuxVariable() {
     name=$1
     value=$2
     if [  ! -z "$value" -a "${!name}" != "$value" ]; then
-        echo "export $name=$value" >> ~/.bash_profile
+        export $name=$value
+        echo export $name=$value >> ~/.bash_profile
         printf "\t%s\n" "setting $name: $value"
     fi
 }
