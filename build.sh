@@ -3,7 +3,7 @@
 printf "%s\n" "
 ##############################################################################
 #   This script installs Tokenika 'eosfactory'. It has to be executed in the 
-#   directory with an 'eosfactory' repository.
+#   directory of the 'eosfactory' repository.
 #   This file was downloaded from https://github.com/tokenika/eosfactory
 ##############################################################################
 "
@@ -311,7 +311,7 @@ if [ -z "$CMAKE" ]; then
 fi
 
 if [ -z "$EOSIO_SOURCE_DIR" ]; then
-    printf "\n%s\n" "
+    printf "\n%s" "
 ##########################################################################
 "$EOSIO_SOURCE_DIR__"
 "$EOSIO_SOURCE_DIR"
