@@ -7,6 +7,8 @@ from eosf import *
 def run():
     print('test node.reset():')
     node.reset()
+    print('test node.info():')
+    node.info()
     print('test sess.init():')
     sess.init()
 
@@ -48,6 +50,8 @@ def run():
     print('test node.stop():')
     node.stop()
     print("Test OK")
+
+
 
 if __name__ == "__main__":
     run()

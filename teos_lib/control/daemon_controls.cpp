@@ -173,7 +173,7 @@ namespace teos {
               "'" + commandLine + "'");
           } else {
             if(kernelName == DARWIN){
-              bp::spawn("Terminal -n --args " + commandLine);
+              // bp::spawn("Terminal -n --args " + commandLine);
             } else{
               bp::spawn("gnome-terminal -- " + commandLine);
             }
