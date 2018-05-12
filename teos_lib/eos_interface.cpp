@@ -122,7 +122,7 @@ namespace teos {
             json_parser::write_json(ss1, json, false);
             return true;
           }
-          catch (exception& e) {
+          catch (std::exception& e) {
             putError(e.what(), CODE_PATH);
           }
         }
@@ -162,7 +162,7 @@ namespace teos {
         stringstream ss1; // Try to write respJson, in order to check it.
         json_parser::write_json(ss1, respJson, false);
       }
-      catch (exception& e) {
+      catch (std::exception& e) {
         putError(e.what(), CODE_PATH);
       }
     }
@@ -342,12 +342,11 @@ namespace teos {
             permission.empty() 
               ? vector<chain::permission_level>{{creator,config::active_name}} 
               : get_account_permissions(permission),
-            contracts::newaccount{
+            eosio::chain::newaccount{
               .creator      = creator,
               .name         = newaccount,
               .owner        = eosio::chain::authority{1, {{owner, 1}}, {}},
-              .active       = eosio::chain::authority{1, {{active, 1}}, {}},
-              .recovery     = eosio::chain::authority{1, {}, {{{creator, config::active_name}, 1}}}
+              .active       = eosio::chain::authority{1, {{active, 1}}, {}}
             }
         };
       }
@@ -389,7 +388,7 @@ namespace teos {
           permissions.empty() 
             ? vector<chain::permission_level>{{account,config::active_name}} 
             : get_account_permissions(permissions),
-          contracts::setcode{
+          eosio::chain::setcode{
             .account   = account,
             .vmtype    = 0,
             .vmversion = 0,
@@ -399,12 +398,12 @@ namespace teos {
     }
 
     chain::action create_setabi(
-        const name& account, const contracts::abi_def& abi, vector<string> permissions) {
+        const name& account, const eosio::chain::abi_def& abi, vector<string> permissions) {
       return action {
           permissions.empty() 
             ? vector<chain::permission_level>{{account,config::active_name}} 
             : get_account_permissions(permissions),
-          contracts::setabi{
+          eosio::chain::setabi{
             .account   = account,
             .abi       = abi
           }
@@ -471,7 +470,7 @@ namespace teos {
 
       //try {
       actions.emplace_back( create_setabi(
-          account, fc::json::from_file(abiPath).as<contracts::abi_def>(), 
+          account, fc::json::from_file(abiPath).as<eosio::chain::abi_def>(), 
           permissions) );
       //} EOS_CAPTURE_AND_RETHROW(abi_type_exception,  "Fail to parse ABI JSON")      
       
