@@ -96,7 +96,7 @@ class _Command:
 
     def __init__(
                 self, first, second, 
-                is_verbose=True, suppress_error_msg=False):
+                is_verbose=True, suppress_error_msg=False, is_shell=False):
         cl = [setup.teos_exe, first, second,
             "--jarg", str(self._jarg).replace("'", '"'), "--both"]
         if _is_verbose and is_verbose:
@@ -106,7 +106,7 @@ class _Command:
             cl,
             stdout=subprocess.PIPE, 
             stderr=subprocess.PIPE,
-            cwd=str(pathlib.Path(setup.teos_exe).parent)) 
+            cwd=str(pathlib.Path(setup.teos_exe).parent), shell=is_shell)
 
         # Both, right and error output is passed with stdout:
         self._out = process.stdout.decode("utf-8")
@@ -716,9 +716,9 @@ class _Node(_Command):
                         "gnome-terminal -- " + self.json["command_line"],
                         shell=True)                                        
                                         
-
+            time.sleep(5)
             del self._jarg["DO_NOT_WAIT"]
-            super().__init__("daemon", "start", is_verbose)      
+            super().__init__("daemon", "start", is_verbose, False, True)      
             
     def __init__(self, clear=0, is_verbose=True):
         self._jarg["resync-blockchain"] = clear

@@ -18,7 +18,7 @@ def run():
     ############################
     
     print("test node.stop():")
-    # node.stop()    
+    node.stop()    
     print("Test OK")
 
 
