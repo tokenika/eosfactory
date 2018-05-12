@@ -686,7 +686,7 @@ class _StartNode(_Command):
 class _WaitNode(_Command):
     def __init__(self, is_verbose=True):
         count = 10
-        num = 1
+        num = 2
 
         while True:
             time.sleep(1)
