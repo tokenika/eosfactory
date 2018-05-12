@@ -76,8 +76,10 @@ class Contract(pyteos.Contract):
 
         self.name = account_name
 
-        account = pyteos.GetAccount(self.name)
-        if account.json["permissions"]:
+        account = pyteos.GetAccount(
+            self.name, is_verbose=False, suppress_error_msg=True)
+
+        if not account.error and account.json["permissions"]:
             self.account = account
         else:
             key_owner = pyteos.CreateKey("key_owner")

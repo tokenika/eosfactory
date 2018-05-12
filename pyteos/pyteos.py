@@ -94,7 +94,9 @@ class _Command:
     _out = ""
     error = False 
 
-    def __init__(self, first, second, is_verbose=True):
+    def __init__(
+                self, first, second, 
+                is_verbose=True, suppress_error_msg=False):
         cl = [setup.teos_exe, first, second,
             "--jarg", str(self._jarg).replace("'", '"'), "--both"]
         if _is_verbose and is_verbose:
@@ -117,13 +119,14 @@ class _Command:
      
         if re.match(r'^ERROR', self._out):
             self.error = True
-            width = 80
-            longest = max(self._out.split("\n"), key=len)
-            if len(longest) < width:
-                print(self._out)
-            else:
-                wrapper = textwrap.TextWrapper(width=width)
-                print(wrapper.fill(self._out))
+            if not suppress_error_msg:
+                width = 80
+                longest = max(self._out.split("\n"), key=len)
+                if len(longest) < width:
+                    print(self._out)
+                else:
+                    wrapper = textwrap.TextWrapper(width=width)
+                    print(wrapper.fill(self._out))
 
         try:
             self.json = json.loads(json_resp)
@@ -163,14 +166,15 @@ class GetAccount(_Command):
         error: Whether any error ocurred.
         json: The json representation of the account, if 'error; is not set.
     """
-    def __init__(self, account, is_verbose=True):
+    def __init__(self, account, is_verbose=True, suppress_error_msg=False):
         try:
             account = account.name
         except:
             pass
         
         self._jarg["account_name"] = account
-        _Command.__init__(self, "get", "account", is_verbose)
+        _Command.__init__(
+            self, "get", "account", is_verbose, suppress_error_msg)
         if not self.error:
             self.name = self.json["account_name"]
 
