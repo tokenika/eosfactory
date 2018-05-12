@@ -45,7 +45,7 @@
 <li><a class="reference internal" href="#">Installing EOSFactory</a><ul>
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li><a class="reference internal" href="#get-the-source-code">Get the source code</a></li>
-<li><a class="reference internal" href="#build-eosfactory-on-linux-osx">Build EOSFactory on Linux &amp; OSX</a></li>
+<li><a class="reference internal" href="#build-eosfactory-on-linux-macos">Build EOSFactory on Linux &amp; MacOS</a></li>
 <li><a class="reference internal" href="#build-eosfactory-on-windows">Build EOSFactory on Windows</a></li>
 <li><a class="reference internal" href="#test-eosfactory">Test EOSFactory</a></li>
 </ul>
@@ -92,9 +92,9 @@
 <ul class="simple">
 <li>Windows 10 (version 1709)</li>
 <li>Ubuntu 18.04 LTS</li>
-<li>Ubuntu Server 18.04 LTS + Unity</li>
 <li>MacOS 10.13.4</li>
 </ul>
+<p><strong>NOTE:</strong>  Regarding Ubuntu, as EOSFactory spawns <code class="docutils literal notranslate"><span class="pre">gnome-terminal</span></code> with a <code class="docutils literal notranslate"><span class="pre">nodeos</span></code> process inside, it’s necessary to have <code class="docutils literal notranslate"><span class="pre">gnome-terminal</span></code> and an X server installed.</p>
 <div class="section" id="prerequisites">
 <span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -111,8 +111,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="build-eosfactory-on-linux-osx">
-<span id="build-eosfactory-on-linux-osx"></span><h2>Build EOSFactory on Linux &amp; OSX<a class="headerlink" href="#build-eosfactory-on-linux-osx" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="build-eosfactory-on-linux-macos">
+<span id="build-eosfactory-on-linux-macos"></span><h2>Build EOSFactory on Linux &amp; MacOS<a class="headerlink" href="#build-eosfactory-on-linux-macos" title="Permalink to this headline">¶</a></h2>
 <p>Open a bash terminal and define an environment variable called <code class="docutils literal notranslate"><span class="pre">EOSIO_SOURCE_DIR</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="s1">&#39;export EOSIO_SOURCE_DIR=/path/to/your/local/EOSIO/repository&#39;</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">bashrc</span>
 </pre></div>
