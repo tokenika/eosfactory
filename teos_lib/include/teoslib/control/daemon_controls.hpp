@@ -47,10 +47,14 @@ Usage: ./teos node kill
      */
     class DaemonStart : public TeosControl
     {
+      void configure();
+      void launch();
+      void wait();
       void action();
       void deleteWallets();
       void deleteDaemonData();
     public:
+      static const string CONFIGURE;
       static const string DO_NOT_WAIT;
       static const string DO_NOT_LAUNCH;
 
@@ -58,6 +62,9 @@ Usage: ./teos node kill
         bool resync_blockchain = false)
       {
         reqJson_.put("resync-blockchain", resync_blockchain);
+        reqJson_.put(DO_NOT_WAIT, 0);
+        reqJson_.put(CONFIGURE, 1);
+        reqJson_.put(DO_NOT_LAUNCH, 0);
         action();
       }
 
@@ -95,6 +102,9 @@ Usage: ./teos node start [Options]
         } else {
           reqJson_.put("resync-blockchain", false);
         }
+        reqJson_.put(DaemonStart::DO_NOT_WAIT, 0);
+        reqJson_.put(DaemonStart::CONFIGURE, 1);
+        reqJson_.put(DaemonStart::DO_NOT_LAUNCH, 0);        
         return ok;
       }
 

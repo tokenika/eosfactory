@@ -92,14 +92,35 @@ namespace teos {
     // class DaemonStart
     //////////////////////////////////////////////////////////////////////////
     
+    const string DaemonStart::CONFIGURE = "CONFIGURE";
     const string DaemonStart::DO_NOT_WAIT = "DO_NOT_WAIT";
     const string DaemonStart::DO_NOT_LAUNCH = "DO_NOT_LAUNCH";
     const string EOSIO_SHARED_MEMORY_SIZE_MB = "100";
     const string DARWIN = "Darwin";
-
+    
     void DaemonStart::action()
-    { 
+    {
+      if(reqJson_.get<int>(CONFIGURE) > 0){
+        configure();
+      }
+      if(isError_){
+        return;
+      }
 
+      if(reqJson_.get<int>(DO_NOT_LAUNCH) <= 0){
+        launch();
+      }
+      if(isError_){
+        return;
+      }
+
+      if(reqJson_.get<int>(DO_NOT_WAIT) <= 0){
+        wait();
+      }
+    }
+
+    void DaemonStart::configure()
+    {
       reqJson_.put( "http-server-address", getHttpServerAddress(this));      
       if(isError_){
         return;
@@ -155,51 +176,52 @@ namespace teos {
         }
         string commandLine = reqJson_.get<string>("daemon_exe") + args;
 
-
-        bool isWU;
-        string kernelName;
         reqJson_.put("command_line", commandLine);
         respJson_.put("command_line", commandLine);
         respJson_.put("exe", reqJson_.get<string>("daemon_exe"));
         respJson_.put("args", args);
-        respJson_.put("uname", kernelName = uname());
-        respJson_.put("is_windows_ubuntu", isWU = isWindowsUbuntu());
-
-        // cout << requestToString(false) << endl;
-        // cout << commandLine <<endl;
-        if(reqJson_.count(DO_NOT_LAUNCH) == 0) {
-          if(isWU) {
-            bp::spawn("cmd.exe /c start /MIN bash.exe -c " 
-              "'" + commandLine + "'");
-          } else {
-            if(kernelName == DARWIN){
-              // bp::spawn("Terminal -n --args " + commandLine);
-            } else{
-              bp::spawn("gnome-terminal -- " + commandLine);
-            }
-            
-          }
-        }
-        
-        // Wait until the node is operational:
-        if(reqJson_.count(DO_NOT_WAIT) == 0) {
-          teos::TeosCommand tc;
-          teos::TeosCommand::httpAddress 
-            = reqJson_.get<string>("http-server-address");
-          int count = 10;
-          do {
-            tc = teos::command::GetInfo(); 
-            respJson_ = tc.respJson_;                   
-            sleep_for(seconds(1));
-            if(count-- == 0){
-              putError(tc.errorMsg());
-            }
-          } while (tc.isError_ && count > 0);
-        }
-      }
-      catch (std::exception& e) {
+        respJson_.put("uname", uname());
+        respJson_.put("is_windows_ubuntu", isWindowsUbuntu());
+      } catch (std::exception& e) {
         putError(e.what());
       }
+    }
+
+    void DaemonStart::launch()
+    { 
+        // cout << requestToString(false) << endl;
+        // cout << commandLine <<endl;
+      try{
+
+        if(isWindowsUbuntu()) {
+          bp::spawn("cmd.exe /c start /MIN bash.exe -c " 
+            "'" + reqJson_.get<string>("command_line") + "'");
+        } else {
+          if(uname() == DARWIN){
+            // bp::spawn("Terminal -n --args " + commandLine);
+          } else{
+            bp::spawn("gnome-terminal -- " + reqJson_.get<string>("command_line"));
+          }
+        }
+
+      } catch (std::exception& e) {
+        putError(e.what());
+      }      
+    }   
+
+    void DaemonStart::wait()
+    { 
+      // Wait until the node is operational:
+      teos::TeosCommand tc; 
+      int count = 10;
+      do {
+        sleep_for(seconds(1));            
+        tc = teos::command::GetInfo(); 
+        respJson_ = tc.respJson_;                  
+        if(count-- == 0){
+          putError(tc.errorMsg());
+        }
+      } while (tc.isError_ && count > 0);
     }
 
     void DaemonStart::deleteDaemonData(){

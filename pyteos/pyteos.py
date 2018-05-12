@@ -96,7 +96,7 @@ class _Command:
 
     def __init__(
                 self, first, second, 
-                is_verbose=True, suppress_error_msg=False, is_shell=False):
+                is_verbose=True, suppress_error_msg=False):
         cl = [setup.teos_exe, first, second,
             "--jarg", str(self._jarg).replace("'", '"'), "--both"]
         if _is_verbose and is_verbose:
@@ -106,7 +106,7 @@ class _Command:
             cl,
             stdout=subprocess.PIPE, 
             stderr=subprocess.PIPE,
-            cwd=str(pathlib.Path(setup.teos_exe).parent), shell=is_shell)
+            cwd=str(pathlib.Path(setup.teos_exe).parent)) 
 
         # Both, right and error output is passed with stdout:
         self._out = process.stdout.decode("utf-8")
@@ -655,8 +655,47 @@ class WAST(_Command):
         # if not self.error:
         #     self.wast = self.json["WAST"]
 
+class _StartNode(_Command):
+    def __init__(self, clear=0, is_verbose=True):
+        self._jarg["resync-blockchain"] = clear
+        self._jarg["DO_NOT_WAIT"] = 1
+        self._jarg["DO_NOT_LAUNCH"] = 1
+        self._jarg["CONFIGURE"] = 1
+        _Command.__init__(self, "daemon", "start", False)
 
-class _Node(_Command):
+        self.command_line = ""
+        if not self.error and not "head_block_num" in self.json:
+            self.command_line = self.json["command_line"]
+            if self.json["is_windows_ubuntu"] == "true":
+                subprocess.call(
+                    ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
+                    self.json["command_line"]])
+            else:
+                if self.json["uname"] == "Darwin":
+                    subprocess.Popen(
+                        "open -a "
+                        + self.json["exe"] + " --args " + self.json["args"],
+                        shell=True)
+                else:
+                    subprocess.Popen(
+                        "gnome-terminal -- " + self.json["command_line"],
+                        shell=True)
+
+
+class _WaitNode(_Command):
+    def __init__(self, is_verbose=True):
+        print()
+        self._jarg["DO_NOT_WAIT"] = 0  
+        self._jarg["DO_NOT_LAUNCH"] = 1 
+        self._jarg["CONFIGURE"] = 0               
+        _Command.__init__(self, "daemon", "start", is_verbose)
+
+def node_reset():
+    _StartNode(1, True)
+    _WaitNode(True)    
+
+
+class _Node1(_Command):
     """ A representation of the local EOSIO node.
 
     Any _Node class object depends on external configuration parameters. They
@@ -696,6 +735,12 @@ class _Node(_Command):
         genesis-json: File to read genesis state from, defaults to "genesis.json"
             (relative to ${config-dir}).
     """    
+    def __init__(self, clear=0, is_verbose=True):
+        self._jarg["resync-blockchain"] = clear
+        self._jarg["DO_NOT_WAIT"] = 1
+        self._jarg["DO_NOT_LAUNCH"] = 1
+        self.start(clear, is_verbose)
+
     def start(self, clear, is_verbose):
         super().__init__("daemon", "start", False)
         self.command_line = ""
@@ -716,18 +761,8 @@ class _Node(_Command):
                         "gnome-terminal -- " + self.json["command_line"],
                         shell=True)                                        
                                         
-            time.sleep(5)
             del self._jarg["DO_NOT_WAIT"]
-            super().__init__("daemon", "start", is_verbose, False, True)      
-            
-    def __init__(self, clear=0, is_verbose=True):
-        self._jarg["resync-blockchain"] = clear
-        self._jarg["DO_NOT_WAIT"] = 1
-        self._jarg["DO_NOT_LAUNCH"] = 1
-        self.start(clear, is_verbose)
-        # if self.error:
-        #     self.start(1, is_verbose)
-             
+            super().__init__("daemon", "start", is_verbose)      
 
 class NodeStop(_Command):
     def __init__(self, is_verbose=True):
@@ -1044,10 +1079,6 @@ class Contract(SetContract):
 
         """
         GetCode(self.name)
-
-
-def node_reset():
-    _Node(1, True)
 
 
 def node_run():
