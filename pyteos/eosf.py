@@ -113,7 +113,7 @@ class Template(Contract):
             max_cpu_usage=0, max_net_usage=0,
             is_verbose=True):
 
-        template = pyteos.ContractTemplate(name)
+        template = pyteos.Template(name)
         if not template.error:
             super().__init__(
                 name, 

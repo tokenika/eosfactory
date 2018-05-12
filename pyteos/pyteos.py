@@ -592,7 +592,7 @@ class PushAction(_Command):
             self.name = contract_name
 
 
-class ContractTemplate(_Command):
+class Template(_Command):
     def __init__(self, name, is_verbose=True):
 
         contract_path = pathlib.Path(name)
@@ -655,6 +655,7 @@ class WAST(_Command):
         # if not self.error:
         #     self.wast = self.json["WAST"]
 
+
 class _StartNode(_Command):
     def __init__(self, clear=0, is_verbose=True):
         self._jarg["resync-blockchain"] = clear
@@ -689,10 +690,6 @@ class _WaitNode(_Command):
         self._jarg["DO_NOT_LAUNCH"] = 1 
         self._jarg["CONFIGURE"] = 0               
         _Command.__init__(self, "daemon", "start", is_verbose)
-
-def node_reset():
-    _StartNode(1, True)
-    _WaitNode(True)    
 
 
 class _Node1(_Command):
@@ -763,6 +760,7 @@ class _Node1(_Command):
                                         
             del self._jarg["DO_NOT_WAIT"]
             super().__init__("daemon", "start", is_verbose)      
+
 
 class NodeStop(_Command):
     def __init__(self, is_verbose=True):
@@ -1079,6 +1077,11 @@ class Contract(SetContract):
 
         """
         GetCode(self.name)
+
+
+def node_reset():
+    _StartNode(1, True)
+    _WaitNode(True)
 
 
 def node_run():

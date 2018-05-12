@@ -7,6 +7,8 @@ from eosf import *
 def run():
     print('test node.reset():')
     node.reset()
+    print('test node.info():')
+    node.info()
     print('test sess.init():')
     sess.init()
 
@@ -15,7 +17,7 @@ def run():
     print('test c.deploy():')
     c.deploy()
 
-    print('test c.push_action("create", sess.bob :')
+    print('test c.push_action("create", sess.bob):')
     c.push_action("create", '{"challenger":"alice", "host":"bob"}', sess.bob)
 
     print('test t=c.get_table("games", sess.bob):')
@@ -31,9 +33,9 @@ def run():
     assert t.json["rows"][0]["board"][7] == '0'
     assert t.json["rows"][0]["board"][8] == '0'
 
-    print('test c.push_action("move", sess.bob:')
+    print('test c.push_action("move", sess.bob):')
     c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"bob", "mvt":{"row":0, "column":0} }', sess.bob)
-    print('test c.push_action("move", sess.alice:')
+    print('test c.push_action("move", sess.alice):')
     c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"alice", "mvt":{"row":1, "column":1} }', sess.alice)
 
     t=c.get_table("games", sess.bob)
@@ -48,7 +50,7 @@ def run():
     assert t.json["rows"][0]["board"][7] == '0'
     assert t.json["rows"][0]["board"][8] == '0'
 
-    print('test c.push_action("restart", sess.bob:')
+    print('test c.push_action("restart", sess.bob):')
     c.push_action("restart", '{"challenger":"alice", "host":"bob", "by":"bob"}', sess.bob)
     
     print('test t=c.get_table("games", sess.bob):')
@@ -64,7 +66,7 @@ def run():
     assert t.json["rows"][0]["board"][7] == '0'
     assert t.json["rows"][0]["board"][8] == '0'
 
-    print('test c.push_action("close", sess.bob:')
+    print('test c.push_action("close", sess.bob):')
     c.push_action("close", '{"challenger":"alice", "host":"bob"}', sess.bob)
 
     print('test node.stop():')
