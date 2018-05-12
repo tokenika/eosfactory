@@ -113,7 +113,7 @@ namespace teos {
       if(isError_){
         return;
       }
-
+      cout << "reqJson_.get<int>(DO_NOT_WAIT): " << reqJson_.get<int>(DO_NOT_WAIT) << endl;
       if(reqJson_.get<int>(DO_NOT_WAIT) <= 0){
         wait();
       }
@@ -214,14 +214,28 @@ namespace teos {
       // Wait until the node is operational:
       teos::TeosCommand tc; 
       int count = 10;
-      do {
-        sleep_for(seconds(1));            
-        tc = teos::command::GetInfo(); 
-        respJson_ = tc.respJson_;                  
-        if(count-- == 0){
-          putError(tc.errorMsg());
+      int head_block_num = 2;
+      bool OK = false;
+      for(;;)
+      {
+        sleep_for(seconds(1));
+        tc = teos::command::GetInfo();
+
+        OK = respJson_.get("head_block_num", -1) >= head_block_num;
+
+        if(OK)
+        {
+          respJson_ = tc.respJson_; 
+          cout << "OK" << endl;
+          cout << responseToString(false) << endl;
+          break;          
         }
-      } while (tc.isError_ && count > 0);
+        if( count-- <= 0)
+        {
+          putError(tc.errorMsg());
+          break;
+        }
+      }
     }
 
     void DaemonStart::deleteDaemonData(){
