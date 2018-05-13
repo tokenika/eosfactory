@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Graphite &mdash; EOSFactory 0.8.2 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="EOSFactory 0.8.2 documentation" href="../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          EOSFactory</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.8</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03.CompilingEOSContractsUsingEOSFactoryInVSC.html">Compiling EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html">Unit-testing EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pyteos.html">pyteos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../node.html">node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sess.html">sess</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eosf.html">eosf</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Graphite</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#feedback">Feedback</a></li>
+<li><a class="reference internal" href="#licence">Licence</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/sphinx-theme-graphite-master/README.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="graphite">
+<h1>Graphite<a class="headerlink" href="#graphite" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>A white-on-black theme for the <a class="reference external" href="http://sphinx-doc.org/">Sphinx</a> documentation generator. It has
+slightly muted white text on various shades of dark grey. I created this
+as I find light-on-dark themes typically easier on the eyes, since I tend
+to use dark backgrounds on my terminals and I don&#8217;t like flicking between
+light and dark backgrounds frequently.</p>
+<p>It uses a subtle text shadow and rounded corners to improve legibility, but
+it should also render accpetably on browsers which don&#8217;t support these CSS
+features.</p>
+<p>The theme should cover most common constructions, but it&#8217;s possible there
+are some classes I&#8217;ve missed. It also includes a Pygments theme which I
+think complements it without being overly bright.</p>
+<a class="reference external image-reference" href="http://cartroo.github.com/sphinx-theme-graphite/screenshots/graphite_screenshot_1.png"><img alt="Graphite theme screenshot 1" src="http://cartroo.github.com/sphinx-theme-graphite/screenshots/graphite_screenshot_1.png" style="width: 200px; height: 200px;" /></a>
+<a class="reference external image-reference" href="http://cartroo.github.com/sphinx-theme-graphite/screenshots/graphite_screenshot_2.png"><img alt="Graphite theme screenshot 2" src="http://cartroo.github.com/sphinx-theme-graphite/screenshots/graphite_screenshot_2.png" style="width: 200px; height: 200px;" /></a>
+<a class="reference external image-reference" href="http://cartroo.github.com/sphinx-theme-graphite/screenshots/graphite_screenshot_3.png"><img alt="Graphite theme screenshot 3" src="http://cartroo.github.com/sphinx-theme-graphite/screenshots/graphite_screenshot_3.png" style="width: 200px; height: 200px;" /></a>
+<a class="reference external image-reference" href="http://cartroo.github.com/sphinx-theme-graphite/screenshots/graphite_screenshot_4.png"><img alt="Graphite theme screenshot 4" src="http://cartroo.github.com/sphinx-theme-graphite/screenshots/graphite_screenshot_4.png" style="width: 200px; height: 200px;" /></a>
+</div>
+<div class="section" id="feedback">
+<h2>Feedback<a class="headerlink" href="#feedback" title="Permalink to this headline">¶</a></h2>
+<p>If you have any questions, problems or requests, please get in touch with me
+at <a class="reference external" href="mailto:andy&#37;&#52;&#48;andy-pearce&#46;com">andy<span>&#64;</span>andy-pearce<span>&#46;</span>com</a>.</p>
+<p>If you want to make changes, the themes are available at <a class="reference external" href="https://github.com/Cartroo/sphinx-themes">GitHub</a> - feel
+free to send me pull requests if you make an improvement you feel others would
+find useful.</p>
+</div>
+<div class="section" id="licence">
+<h2>Licence<a class="headerlink" href="#licence" title="Permalink to this headline">¶</a></h2>
+<p>Everything in this repository is in the public domain and may be used,
+copied, modified and redistributed without restriction. This software is
+provided as is, there is no warranty implied or otherwise.</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Tokenika.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
