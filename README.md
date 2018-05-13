@@ -2,9 +2,11 @@
 
 [EOSFactory](http://eosfactory.io/) is a smart-contract development framework, created by [Tokenika](https://tokenika.io).
 
-It's going to have a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
+It's aiming to have a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
 
-Using a single command-line interface you'll be able to create a private testnet and then compile, unit-test and deploy [EOS](https://eos.io/) smart-contracts.
+Using a single command-line interface you can create a private testnet and then compile, unit-test and deploy [EOS](https://eos.io/) smart-contracts.
+
+All of this using simple yet powerful [Python3](https://www.python.org/) syntax.
 
 ## Architecture
 
@@ -16,7 +18,7 @@ Using Python will allow us to build [interactive tutorials](http://eosfactory.io
 
 ## Truly cross-platform
 
-We make sure everything we do is fully compatible with Windows - our toolset will enable you to run an EOS node and interact with it on any operating system, including Windows, MacOS and Linux.
+We make sure everything we do is fully compatible with Windows - our toolset enables you to run an EOS node and interact with it on any operating system, including Windows, MacOS and Linux.
 
 ## Available documentation:
 
@@ -29,5 +31,5 @@ For more details, please refer to [our Sphinx docs](http://eosfactory.io/sphinx/
 
 ## Roadmap
 
-EOS Factory is still under development. We plan to release it before June 2018.
+EOSFactory is currently at an MVP stage. It was initially released in May 2018 and there are subsequent releases to be expected in the near future.
 
