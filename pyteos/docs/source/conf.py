@@ -26,9 +26,9 @@ copyright = u'2018, Tokenika'
 author = u'Tokenika'
 
 # The short X.Y version
-version = u'1.0'
+version = u'0.8'
 # The full version, including alpha/beta/rc tags
-release = u'1.0'
+release = u'0.8.2'
 
 
 # -- General configuration ---------------------------------------------------
@@ -42,7 +42,7 @@ release = u'1.0'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.githubpages',
+#    'sphinx.ext.githubpages',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -81,11 +81,10 @@ pygments_style = 'sphinx'
 # haiku classic sphinxdoc bizstyle sphinx_rtd_theme
 
 # html_theme_path = [sphinx_readable_theme.get_html_theme_path()]
-html_theme = 'bizstyle' 
-
+# html_theme = 'bizstyle' 
 # html_theme = "alabaster"
+html_theme = "classic"
 
-# html_theme = "classic"
 # html_theme_options = {
 #     "rightsidebar": "true",
 #     "relbarbgcolor": "black",

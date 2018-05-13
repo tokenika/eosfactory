@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-""" 
-This is a Python front-end for 'teos', an alternative for block.one CLI called 'cleos'.
+"""
+This is a Python front-end for `teos`, an alternative for block.one CLI called `cleos`.
 """
 
 import os
@@ -87,7 +87,7 @@ setup = Setup()
 class _Command:
     """ A prototype for the command classes.
 
-    Each command class represents a call to a Tokenika 'teos' instance that
+    Each command class represents a call to a Tokenika `teos` instance that
     is launched to responce just this call. 
     """
     global _is_verbose 
@@ -156,19 +156,19 @@ class GetAccount(_Command):
     """
     Retrieve an account from the blockchain.
 
-    Generic 'str' method returns a formatted output of the EOSIO node.
-    Generic 'repr' method returns the json output of the EOSIO node.
+    Generic `str` method returns a formatted output of the EOSIO node.
+    Generic `repr` method returns the json output of the EOSIO node.
 
     - **parameters**::
 
         account: The account object or the name of the account to retrieve.
-        is_verbose: If 'False', do not print stdout, default is 'True'.
+        is_verbose: If `False`, do not print stdout, default is `True`.
 
     - **attributes**::
 
         name: The name of the account.
         error: Whether any error ocurred.
-        json: The json representation of the account, if 'error; is not set.
+        json: The json representation of the account, if `error` is not set.
     """
     def __init__(self, account, is_verbose=True, suppress_error_msg=False):
         try:
@@ -198,20 +198,20 @@ class WalletCreate(_Command):
     """
     Create a new wallet locally.
 
-    Generic 'str' method returns a formatted output of the EOSIO node.
-    Generic 'repr' method returns the json output of the EOSIO node.
+    Generic `str` method returns a formatted output of the EOSIO node.
+    Generic `repr` method returns the json output of the EOSIO node.
 
     - **parameters**::
 
-        name: The name of the new wallet, defaults to 'default'.
-        is_verbose: If 'False', do not print stdout, default is 'True'.
+        name: The name of the new wallet, defaults to `default`.
+        is_verbose: If `False`, do not print stdout, default is `True`.
 
     - **attributes**::
 
         name: The name of the wallet.
         password: The password returned by wallet create.
         error: Whether any error ocurred.
-        json: The json representation of the wallet, if 'error; is not set.
+        json: The json representation of the wallet, if `error` is not set.
     """
     def __init__(self, name="default", is_verbose=True):
         self._jarg["name"] = name
@@ -224,11 +224,11 @@ class WalletCreate(_Command):
 
 class WalletList(_Command):
     """
-    List opened wallets, unlocked mark '*'. 
+    List opened wallets, unlocked mark `*`. 
 
     - **parameters**::
 
-        is_verbose: If 'False', do not print stdout, default is 'True'.
+        is_verbose: If `False`, do not print stdout, default is `True`.
     """
     def __init__(self, is_verbose=True):
         _Command.__init__(self, "wallet", "list", is_verbose)
@@ -242,7 +242,7 @@ class WalletImport(_Command):
 
         wallet: A wallet object or the name of the wallet to import key into.
         key: A key object or a private key in WIF format to import.
-        is_verbose: If 'False', do not print stdout, default is 'True'.
+        is_verbose: If `False`, do not print stdout, default is `True`.
     """
     def __init__(self, key, wallet="default", is_verbose=True):
         try:
@@ -268,7 +268,7 @@ class WalletKeys(_Command):
 
     - **parameters**::
 
-        is_verbose: If 'False', do not print stdout, default is 'True'.
+        is_verbose: If `False`, do not print stdout, default is `True`.
     """
     def __init__(self, is_verbose=True):
         _Command.__init__(self, "wallet", "keys", is_verbose)         
@@ -281,7 +281,7 @@ class WalletOpen(_Command):
     - **parameters**::
 
         wallet: A wallet object or the name of the wallet to import key into.
-        is_verbose: If 'False', do not print stdout, default is 'True'.
+        is_verbose: If `False`, do not print stdout, default is `True`.
     """
     def __init__(self, wallet="default", is_verbose=True):      
         try:
@@ -300,7 +300,7 @@ class WalletLock(_Command):
     - **parameters**::
 
         wallet: A wallet object or the name of the wallet to import key into.
-        is_verbose: If 'False', do not print stdout, default is 'True'.    
+        is_verbose: If `False`, do not print stdout, default is `True`.    
     """
     def __init__(self, wallet="default", is_verbose=True):
         try:
@@ -321,7 +321,7 @@ class WalletUnlock(_Command):
         wallet: A wallet object or the name of the wallet to import key into.
         password: If the wallet argument is not a wallet object, the password 
             returned by wallet create, else anything, defaults to "".
-        is_verbose: If 'False', do not print stdout, default is 'True'.    
+        is_verbose: If `False`, do not print stdout, default is `True`.    
     """
     def __init__(self, wallet="default", password="", is_verbose=True):
         try:
@@ -341,7 +341,7 @@ class GetInfo(_Command):
 
     - **parameters**::
 
-        is_verbose: If 'False', do not print stdout, default is 'True'.
+        is_verbose: If `False`, do not print stdout, default is `True`.
     """
     def __init__(self, is_verbose=True, suppress_error_msg=False):
         _Command.__init__(self, "get", "info", is_verbose, suppress_error_msg)
@@ -360,7 +360,7 @@ class GetBlock(_Command):
     
         block_number: The number of the block to retrieve.
         block_id: The ID of the block to retrieve, if set, defaults to "".
-        is_verbose: If 'False', do not print stdout, default is 'True'.    
+        is_verbose: If `False`, do not print stdout, default is `True`.    
     """
     def __init__(self, block_number, block_id="", is_verbose=True):
         if(block_id == ""):
@@ -809,9 +809,9 @@ class Account(CreateAccount):
 
 
 class AccountEosio(Account):
-    """ A representation of the 'eosio' testing account.
+    """ A representation of the `eosio` testing account.
 
-    EOSIO offers an account, called 'eosio', that can be used for tests. 
+    EOSIO offers an account, called `eosio`, that can be used for tests. 
     Without any such, it is not possible to execute commands that need 
     authorizations.
 
@@ -954,7 +954,7 @@ class Contract(SetContract):
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0, is_verbose=False
         ):
-        """ Implements the 'push action' command. 
+        """ Implements the `push action` command. 
 
         """
         if not permission:
@@ -988,7 +988,7 @@ class Contract(SetContract):
 
 
     def show_action(self, action, data, permission=""):
-        """ Implements the 'push action' command without broadcasting. 
+        """ Implements the `push action` command without broadcasting. 
 
         """
         self.push_action(action, data, permission, dont_broadcast=1)

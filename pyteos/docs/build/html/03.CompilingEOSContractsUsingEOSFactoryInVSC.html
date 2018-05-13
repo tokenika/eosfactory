@@ -1,28 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
-<!doctype html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Compiling EOS Contracts using EOSFactory in Visual Studio Code &#8212; EOSFactory 1.0 documentation</title>
-    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    
+    <title>Compiling EOS Contracts using EOSFactory in Visual Studio Code &mdash; EOSFactory 0.8.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/bizstyle.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="EOSFactory 0.8.2 documentation" href="index.html" />
     <link rel="next" title="Unit-testing EOS Contracts using EOSFactory in Visual Studio Code" href="04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html" />
-    <link rel="prev" title="Interacting with EOS Contracts in EOSFactory" href="02.InteractingWithEOSContractsInEOSFactory.html" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <!--[if lt IE 9]>
-    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
-    <![endif]-->
-  </head><body>
+    <link rel="prev" title="Interacting with EOS Contracts in EOSFactory" href="02.InteractingWithEOSContractsInEOSFactory.html" /> 
+  </head>
+  <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -35,55 +40,9 @@
         <li class="right" >
           <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Interacting with EOS Contracts in EOSFactory"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">EOSFactory 1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EOSFactory 0.8.2 documentation</a> &raquo;</li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Compiling EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a><ul>
-<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
-<li><a class="reference internal" href="#configure-visual-studio-code-vsc">Configure <em>Visual Studio Code</em> (VSC)</a></li>
-<li><a class="reference internal" href="#run-python-cli-in-vsc">Run Python CLI in VSC</a></li>
-<li><a class="reference internal" href="#create-a-contract-template">Create a Contract Template</a></li>
-<li><a class="reference internal" href="#add-c-code">Add C++ code</a></li>
-<li><a class="reference internal" href="#compile-the-contract">Compile the Contract</a></li>
-<li><a class="reference internal" href="#deploy-the-contract">Deploy the Contract</a></li>
-<li><a class="reference internal" href="#test-the-contract">Test the Contract</a></li>
-<li><a class="reference internal" href="#modify-the-code-re-compile-re-deploy">Modify the code, re-compile &amp; re-deploy</a></li>
-<li><a class="reference internal" href="#using-cmake-and-intellisense-in-visual-studio-code">Using <em>CMake</em> and <em>IntelliSense</em> in <em>Visual Studio Code</em></a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="02.InteractingWithEOSContractsInEOSFactory.html"
-                        title="previous chapter">Interacting with EOS Contracts in EOSFactory</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html"
-                        title="next chapter">Unit-testing EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/03.CompilingEOSContractsUsingEOSFactoryInVSC.md.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -96,138 +55,147 @@
 <div class="section" id="prerequisites">
 <span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>This tutorial assumes that you have successfully installed EOSFactory. If it’s not the case, please refer to <a class="reference external" href="01.InstallingEOSFactory.html">Installing EOSFactory</a>.</li>
+<li>This tutorial assumes that you have successfully installed EOSFactory. If it&#8217;s not the case, please refer to <a class="reference external" href="01.InstallingEOSFactory.html">Installing EOSFactory</a>.</li>
 <li>We also assume that you are familiar with the material covered in <a class="reference external" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a>.</li>
-<li>EOSFactory is fully compatible with <a class="reference external" href="https://code.visualstudio.com">Visual Studio Code</a> which is a very convenient tool when working with smart-contract code. To install it, please refer to <a class="reference external" href="https://code.visualstudio.com/download">this webpage</a>.</li>
+<li>EOSFactory is fully compatible with <a class="reference external" href="https://code.visualstudio.com">Visual Studio Code</a> which is a very convenient tool when working with smart-contract code. To install it please refer to <a class="reference external" href="https://code.visualstudio.com/download">this webpage</a>.</li>
 <li>Finally, we assume that you are familiar with the official <a class="reference external" href="https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract">EOS Hello World tutorial</a>, as it presents the default way to compile and deploy smart-contracts in EOS. What we present here is an alternative.</li>
 </ul>
 </div>
 <div class="section" id="configure-visual-studio-code-vsc">
 <span id="configure-visual-studio-code-vsc"></span><h2>Configure <em>Visual Studio Code</em> (VSC)<a class="headerlink" href="#configure-visual-studio-code-vsc" title="Permalink to this headline">¶</a></h2>
-<p>Start <em>Visual Studio Code</em> (VSC) and inside VSC open the <code class="docutils literal notranslate"><span class="pre">eosfactory</span></code> folder.</p>
-<p>In you are on Windows, navigate to <code class="docutils literal notranslate"><span class="pre">Preferences</span> <span class="pre">-&gt;</span> <span class="pre">Settings</span></code> and overwrite the default configuration for the <code class="docutils literal notranslate"><span class="pre">terminal.integrated.shell.windows</span></code> option:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;terminal.integrated.shell.windows&quot;</span><span class="p">:</span> <span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">Windows</span><span class="se">\\</span><span class="s2">sysnative</span><span class="se">\\</span><span class="s2">bash.exe&quot;</span>
+<p>Start <em>Visual Studio Code</em> (VSC) and inside VSC open the <code class="docutils literal"><span class="pre">eosfactory</span></code> folder.</p>
+<p>In you are on Windows, to get access to WSL bash terminal in VSC, navigate to <code class="docutils literal"><span class="pre">Preferences</span> <span class="pre">-&gt;</span> <span class="pre">Settings</span></code> and overwrite the default configuration for the <code class="docutils literal"><span class="pre">terminal.integrated.shell.windows</span></code> option:</p>
+<div class="highlight-python"><div class="highlight"><pre>&quot;terminal.integrated.shell.windows&quot;: &quot;C:\\Windows\\sysnative\\bash.exe&quot;
 </pre></div>
 </div>
 </div>
 <div class="section" id="run-python-cli-in-vsc">
 <span id="run-python-cli-in-vsc"></span><h2>Run Python CLI in VSC<a class="headerlink" href="#run-python-cli-in-vsc" title="Permalink to this headline">¶</a></h2>
-<p>In <em>Visual Studio Code</em>, switch to the bash terminal and type <code class="docutils literal notranslate"><span class="pre">python3</span></code> to run the Python CLI. The prompt should change to <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span></code> signifying that it’s ready for Python commands.</p>
+<p>In <em>Visual Studio Code</em>, switch to the bash terminal and type <code class="docutils literal"><span class="pre">python3</span></code> to run the Python CLI. The prompt should change to <code class="docutils literal"><span class="pre">&gt;&gt;&gt;</span></code> signifying that it&#8217;s ready for Python commands.</p>
 </div>
 <div class="section" id="create-a-contract-template">
 <span id="create-a-contract-template"></span><h2>Create a Contract Template<a class="headerlink" href="#create-a-contract-template" title="Permalink to this headline">¶</a></h2>
 <p>First, start the testnet and initialize the workspace:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">node</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">node</span>
 <span class="n">node</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sess</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">sess</span>
 <span class="n">sess</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>To create a new contract from a pre-defined template use the <code class="docutils literal notranslate"><span class="pre">Template</span></code> class:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eosf</span> <span class="k">import</span> <span class="o">*</span>
+<p>To create a new contract from a pre-defined template use the <code class="docutils literal"><span class="pre">Template</span></code> class:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">eosf</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">contract</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>NOTE:</strong>  For naming contracts use names that are compatible with EOS requirements regarding account names - this is because for each contract EOSFactory creates an account associated with it and this account is has the same name as the contract. So for example underscores are not allowed, use dots instead, and the names cannot be longer than 12 characters. This is a temporary limitation, it will be removed in the future.</p>
-<p>To check the directory where the contract’s files are located:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">path</span><span class="p">()</span>
+<p><strong>NOTE:</strong>  For naming contracts use letters <code class="docutils literal"><span class="pre">a-z</span></code>, <code class="docutils literal"><span class="pre">A-Z</span></code>, numbers <code class="docutils literal"><span class="pre">0-9</span></code>, underscores <code class="docutils literal"><span class="pre">_</span></code> and dots <code class="docutils literal"><span class="pre">.</span></code>.</p>
+<p>To check the directory where the contract&#8217;s files are located:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">path</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="add-c-code">
 <span id="add-c-code"></span><h2>Add C++ code<a class="headerlink" href="#add-c-code" title="Permalink to this headline">¶</a></h2>
-<p>Edit the <code class="docutils literal notranslate"><span class="pre">hello.cpp</span></code> file in <em>Visual Studio Code</em> and add the following content to it:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;eosiolib/eosio.hpp&gt;</span>
-<span class="c1">#include &lt;eosiolib/print.hpp&gt;</span>
-<span class="n">using</span> <span class="n">namespace</span> <span class="n">eosio</span><span class="p">;</span>
+<p>Edit the <code class="docutils literal"><span class="pre">hello.cpp</span></code> file in <em>Visual Studio Code</em> and add the following content to it:</p>
+<div class="highlight-python"><div class="highlight"><pre>#include &lt;eosiolib/eosio.hpp&gt;
+#include &lt;eosiolib/print.hpp&gt;
+using namespace eosio;
 
-<span class="k">class</span> <span class="nc">hello</span> <span class="p">:</span> <span class="n">public</span> <span class="n">eosio</span><span class="p">::</span><span class="n">contract</span> <span class="p">{</span>
-  <span class="n">public</span><span class="p">:</span>
-      <span class="n">using</span> <span class="n">contract</span><span class="p">::</span><span class="n">contract</span><span class="p">;</span>
+class hello : public eosio::contract {
+  public:
+      using contract::contract;
 
-      <span class="o">///</span> <span class="nd">@abi</span> <span class="n">action</span> 
-      <span class="n">void</span> <span class="n">hi</span><span class="p">(</span> <span class="n">account_name</span> <span class="n">user</span> <span class="p">)</span> <span class="p">{</span>
-         <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Hello, &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">}</span> <span class="p">);</span>
-      <span class="p">}</span>
-<span class="p">};</span>
+      /// @abi action 
+      void hi( account_name user ) {
+         print( &quot;Hello, &quot;, name{user} );
+      }
+};
 
-<span class="n">EOSIO_ABI</span><span class="p">(</span> <span class="n">hello</span><span class="p">,</span> <span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="p">)</span>
+EOSIO_ABI( hello, (hi) )
 </pre></div>
 </div>
 </div>
 <div class="section" id="compile-the-contract">
 <span id="compile-the-contract"></span><h2>Compile the Contract<a class="headerlink" href="#compile-the-contract" title="Permalink to this headline">¶</a></h2>
 <p>You can generate ABI and the web assembly code separately:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">abi</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">abi</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">wast</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">wast</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Or you can generate both at the same time:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="deploy-the-contract">
 <span id="deploy-the-contract"></span><h2>Deploy the Contract<a class="headerlink" href="#deploy-the-contract" title="Permalink to this headline">¶</a></h2>
 <p>Now we can deploy the compiled contract:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="test-the-contract">
 <span id="test-the-contract"></span><h2>Test the Contract<a class="headerlink" href="#test-the-contract" title="Permalink to this headline">¶</a></h2>
-<p>We can play with the contract giving it different arguments:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;alice&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
+<p>You can play with the contract giving it different arguments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;alice&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;carol&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;carol&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>All the above variations should work, as the contract allows anyone to authorize it.</p>
 </div>
 <div class="section" id="modify-the-code-re-compile-re-deploy">
 <span id="modify-the-code-re-compile-re-deploy"></span><h2>Modify the code, re-compile &amp; re-deploy<a class="headerlink" href="#modify-the-code-re-compile-re-deploy" title="Permalink to this headline">¶</a></h2>
-<p>And now let’s modify the <code class="docutils literal notranslate"><span class="pre">hi</span></code> method to make it authenticate the user we are dealing with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">hi</span><span class="p">(</span> <span class="n">account_name</span> <span class="n">user</span> <span class="p">)</span> <span class="p">{</span>
-    <span class="n">require_auth</span><span class="p">(</span> <span class="n">user</span> <span class="p">);</span>
-    <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Hello, &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">}</span> <span class="p">);</span>
-<span class="p">}</span>
+<p>And now let&#8217;s modify the <code class="docutils literal"><span class="pre">hi</span></code> method to make it authenticate the user we are dealing with:</p>
+<div class="highlight-python"><div class="highlight"><pre>void hi( account_name user ) {
+    require_auth( user );
+    print( &quot;Hello, &quot;, name{user} );
+}
 </pre></div>
 </div>
 <p>Re-compile the contract:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The following step is optional, as you can re-deploy the contract on the same testnet. However, if you want to reset the testnet, use these commands:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">node</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<p>The following step is optional, as you can re-deploy the contract on the existing testnet. However, if you want to reset the testnet, use these commands:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">sess</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>And finally, re-deploy the contract:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
+<p>And re-deploy the contract:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Now, if we attempt to mismatch the user and the authority, the contract will throw an error:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;carol&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;carol&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;error&quot;</span><span class="p">:{</span><span class="s2">&quot;code&quot;</span><span class="p">:</span><span class="mi">3030001</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;tx_missing_auth&quot;</span><span class="p">,</span><span class="s2">&quot;what&quot;</span><span class="p">:</span><span class="s2">&quot;missing required authority&quot;</span><span class="o">...</span>
+<div class="highlight-python"><div class="highlight"><pre>&quot;error&quot;:{&quot;code&quot;:3030001,&quot;name&quot;:&quot;tx_missing_auth&quot;,&quot;what&quot;:&quot;missing required authority&quot;...
 </pre></div>
 </div>
 <p>But if we use the appropriate authority, there should no error:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;carol&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;carol&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>And finally, when your are done your contract, you might want to delete it from your workspace:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</pre></div>
 </div>
-<div class="section" id="using-cmake-and-intellisense-in-visual-studio-code">
-<span id="using-cmake-and-intellisense-in-visual-studio-code"></span><h2>Using <em>CMake</em> and <em>IntelliSense</em> in <em>Visual Studio Code</em><a class="headerlink" href="#using-cmake-and-intellisense-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
-<p>You can use CMake routines to build a contract if it is developed from a <em>Template</em> object as the <em>Template</em> produces the <em>CMakeLists.txt</em> file in the contract’s directory.</p>
-<p>In the contract’s build directory:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cmake ..
+<p><strong>NOTE:</strong> The above command removes the entire folder.</p>
+</div>
+<div class="section" id="using-cmake-in-visual-studio-code">
+<span id="using-cmake-in-visual-studio-code"></span><h2>Using <em>CMake</em> in <em>Visual Studio Code</em><a class="headerlink" href="#using-cmake-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
+<p>You can use <em>CMake</em> routines to build a contract, provided it has been created in EOSFactory from a template, e.g.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">eosf</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">contract</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">Template</span></code> class produces a <code class="docutils literal"><span class="pre">CMakeLists</span></code> file in the contract&#8217;s directory.  Here is an example of the output produced by <em>CMake</em> :</p>
+<div class="highlight-python"><div class="highlight"><pre>$ cmake ..
 ..................
 ..................
 -- Configuring done
@@ -244,21 +212,73 @@ Scanning dependencies of target wast
 [100%] Built target wast
 </pre></div>
 </div>
-<p>If you open a specific contract folder (e.g. <code class="docutils literal notranslate"><span class="pre">tic.tac.toe</span></code> ) in <em>Visual Studio Code</em>, you’ll be able to make use of VSC <a class="reference external" href="https://code.visualstudio.com/docs/editor/intellisense">IntelliSense</a> feature. There you’ll be able to compile your contract using a prefabricated <em>VS code</em> task macro, by choosing the <code class="docutils literal notranslate"><span class="pre">Run</span> <span class="pre">Build</span> <span class="pre">Task</span></code> option from the VSC menu, or just <code class="docutils literal notranslate"><span class="pre">Crtl+Shift+B</span></code>.</p>
-<p>Here is what the build process output looks like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">Executing</span> <span class="n">task</span><span class="p">:</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">teos</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">teos</span> <span class="n">generate</span> <span class="n">abi</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">tic</span><span class="o">.</span><span class="n">tac</span><span class="o">.</span><span class="n">toe</span><span class="p">;</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">teos</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">teos</span> <span class="n">build</span> <span class="n">contract</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">eosfactory</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">tic</span><span class="o">.</span><span class="n">tac</span><span class="o">.</span><span class="n">toe</span> <span class="o">&lt;</span>
+<p>This way, if you open an individual contract folder (e.g. <code class="docutils literal"><span class="pre">tic.tac.toe</span></code> ) in <em>Visual Studio Code</em>, you&#8217;ll be able to compile your contract using a prefabricated VSC task macro. To do it choose the <code class="docutils literal"><span class="pre">Run</span> <span class="pre">Build</span> <span class="pre">Task</span></code> option from the VSC menu, or just apply the <code class="docutils literal"><span class="pre">Crtl+Shift+B</span></code> shortcut.</p>
+<p>Here is how the output of an automated build process might look like:</p>
+<div class="highlight-python"><div class="highlight"><pre>&gt; Executing task: /mnt/d/Workspaces/EOS/eosfactory/teos/build/teos generate abi /mnt/d/Workspaces/EOS/eosfactory/contracts/tic.tac.toe;/mnt/d/Workspaces/EOS/eosfactory/teos/build/teos build contract /mnt/d/Workspaces/EOS/eosfactory/contracts/tic.tac.toe &lt;
 
-<span class="c1">#              ABI: /mnt/d/Workspaces/EOS/eosfactory/contracts/tic.tac.toe/build/tic_tac_toe.abi</span>
-<span class="c1">#             WAST: /mnt/d/Workspaces/EOS/eosfactory/contracts/tic.tac.toe/build/tic_tac_toe.wast</span>
+#              ABI: /mnt/d/Workspaces/EOS/eosfactory/contracts/tic.tac.toe/build/tic_tac_toe.abi
+#             WAST: /mnt/d/Workspaces/EOS/eosfactory/contracts/tic.tac.toe/build/tic_tac_toe.wast
 
-<span class="n">Terminal</span> <span class="n">will</span> <span class="n">be</span> <span class="n">reused</span> <span class="n">by</span> <span class="n">tasks</span><span class="p">,</span> <span class="n">press</span> <span class="nb">any</span> <span class="n">key</span> <span class="n">to</span> <span class="n">close</span> <span class="n">it</span><span class="o">.</span>
+Terminal will be reused by tasks, press any key to close it.
 </pre></div>
 </div>
+</div>
+<div class="section" id="using-intellisense-in-visual-studio-code">
+<span id="using-intellisense-in-visual-studio-code"></span><h2>Using <em>IntelliSense</em> in <em>Visual Studio Code</em><a class="headerlink" href="#using-intellisense-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
+<p>By opening an individual contract folder in VSC you&#8217;ll also be able to make use of VSC <a class="reference external" href="https://code.visualstudio.com/docs/editor/intellisense">IntelliSense</a> feature. However for that to work you&#8217;ll need to install the C/C++ IntelliSense extension in VSC.</p>
 </div>
 </div>
 
 
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Compiling EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#configure-visual-studio-code-vsc">Configure <em>Visual Studio Code</em> (VSC)</a></li>
+<li><a class="reference internal" href="#run-python-cli-in-vsc">Run Python CLI in VSC</a></li>
+<li><a class="reference internal" href="#create-a-contract-template">Create a Contract Template</a></li>
+<li><a class="reference internal" href="#add-c-code">Add C++ code</a></li>
+<li><a class="reference internal" href="#compile-the-contract">Compile the Contract</a></li>
+<li><a class="reference internal" href="#deploy-the-contract">Deploy the Contract</a></li>
+<li><a class="reference internal" href="#test-the-contract">Test the Contract</a></li>
+<li><a class="reference internal" href="#modify-the-code-re-compile-re-deploy">Modify the code, re-compile &amp; re-deploy</a></li>
+<li><a class="reference internal" href="#using-cmake-in-visual-studio-code">Using <em>CMake</em> in <em>Visual Studio Code</em></a></li>
+<li><a class="reference internal" href="#using-intellisense-in-visual-studio-code">Using <em>IntelliSense</em> in <em>Visual Studio Code</em></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="02.InteractingWithEOSContractsInEOSFactory.html"
+                        title="previous chapter">Interacting with EOS Contracts in EOSFactory</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html"
+                        title="next chapter">Unit-testing EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/03.CompilingEOSContractsUsingEOSFactoryInVSC.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -275,12 +295,12 @@ Scanning dependencies of target wast
         <li class="right" >
           <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Interacting with EOS Contracts in EOSFactory"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">EOSFactory 1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">EOSFactory 0.8.2 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2018, Tokenika.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
+        &copy; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
     </div>
   </body>
 </html>
