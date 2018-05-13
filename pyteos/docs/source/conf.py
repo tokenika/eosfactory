@@ -28,9 +28,9 @@ copyright = u'2018, Tokenika'
 author = u'Tokenika'
 
 # The short X.Y version
-version = u'0.8'
+version = u'v. 0.8.2'
 # The full version, including alpha/beta/rc tags
-release = u'0.8.2'
+release = u'0.0'
 
 
 # -- General configuration ---------------------------------------------------
