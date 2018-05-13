@@ -204,9 +204,9 @@ namespace teos {
 
       bfs::path target_path(target_file);
       if(target_file.empty()){
-        bfs::path build_path(sourcePath / buildDir);
-        if(bfs::exists(build_path)){
-          target_path = build_path / (name + ".abi");
+        bfs::path target_dir(sourcePath / buildDir);
+        if(bfs::exists(target_dir)){
+          target_path = target_dir / (name + ".abi");
         } else {
           target_path = sourcePath / (name + ".abi");
         }
@@ -221,10 +221,11 @@ namespace teos {
         + "/build/programs/eosio-abigen/eosio-abigen"
         + " -extra-arg=-c -extra-arg=--std=c++14 -extra-arg=--target=wasm32"
         + " -extra-arg=-nostdinc -extra-arg=-nostdinc++ -extra-arg=-DABIGEN"
-        + " -extra-arg=-I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
-        + " -extra-arg=-I" + getSourceDir(this) + "/contracts/musl/upstream/include"
+        + " -extra-arg=-I/usr/local/include/" 
         + " -extra-arg=-I" + getEOSIO_BOOST_INCLUDE_DIR(this)
         + " -extra-arg=-I" + getSourceDir(this) + "/externals/magic_get/include"
+        + " -extra-arg=-I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
+        + " -extra-arg=-I" + getSourceDir(this) + "/contracts/musl/upstream/include"
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts"
         + " -extra-arg=-I" + sourcePath.string();
 
@@ -274,12 +275,6 @@ namespace teos {
     {
       namespace bfs = boost::filesystem;
 
-      bfs::path workdir= bfs::temp_directory_path()
-        / bfs::unique_path();
-      bfs::create_directories(workdir);
-      bfs::path workdir_build(workdir / "build");
-      bfs::create_directory(workdir_build);
-
       vector<string> srcs = files(src, {".cpp", ".c"});
       if(srcs.empty()){
         putError((boost::format("The source is empty. The imput is:\n%1%\n")
@@ -288,27 +283,43 @@ namespace teos {
       }
 
       string objectFileList;
-      bfs::path target_path(target_file);
+      bfs::path target_dir;
+      bfs::path target_path;
+      bfs::path workdir;
+      bfs::path workdir_build;
 
       for (string file : srcs)
       {  
         bfs::path src_file(file);
         string name = src_file.stem().string();
 
-        if(target_file.empty())
-        {
-          bfs::path build_path(src_file.parent_path() / buildDir);
-          if(bfs::exists(build_path)){
-            target_path = build_path / (name + ".wast");
-          } else{
-            target_path = src_file.parent_path() / (name + ".wast");
+        if(target_path.empty()) 
+        { // Define target path once.
+          if(target_file.empty())
+          {
+            target_dir = bfs::path(src_file.parent_path() / buildDir);
+            if(bfs::exists(target_dir)){
+              target_path = target_dir / (name + ".wast");
+            } else
+            { 
+              target_dir = bfs::path(src_file.parent_path());
+              target_path = target_dir / (name + ".wast");
+            }
+          } else 
+          {
+            target_path = bfs::path(target_file);
+            if(!target_path.is_absolute()){
+              target_path = src_file.parent_path() / target_path;
+            }
+            target_dir = target_path.parent_path();       
           }
-        } else 
-        {
-          target_path = bfs::path(target_file);
-          if(!target_path.is_absolute()){
-            target_path = src_file.parent_path() / target_path;
-          }          
+
+          workdir = target_dir;
+          bfs::create_directories(workdir);
+          workdir_build = bfs::path(workdir / buildDir);
+          bfs::create_directory(workdir_build);
+
+          cout << "working directory: " << workdir.string();
         }
 
         bfs::path output(workdir_build / (name + ".o"));
@@ -319,11 +330,12 @@ namespace teos {
           + " -emit-llvm -O3 --std=c++14 --target=wasm32 -nostdinc -nostdlib"
           + " -nostdlibinc -ffreestanding -nostdlib -fno-threadsafe-statics"
           + " -fno-rtti -fno-exceptions"
-          + " -I" + getSourceDir(this) + "/contracts"
+          + " -I/usr/local/include/"
+          //+ " -I" + getEOSIO_BOOST_INCLUDE_DIR(this)          
+          + " -I" + getSourceDir(this) + "/externals/magic_get/include"
           + " -I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
           + " -I" + getSourceDir(this) + "/contracts/musl/upstream/include"
-          + " -I" + getEOSIO_BOOST_INCLUDE_DIR(this)
-          + " -I" + getSourceDir(this) + "/externals/magic_get/include"
+          + " -I" + getSourceDir(this) + "/contracts"
           + " -I" + src_file.parent_path().string();
 
         if(!include_dir.empty())
@@ -338,7 +350,25 @@ namespace teos {
         command_line += " -c " + file
           + " -o " + output.string();
 
-        //cout << "command line clang:" << endl << command_line << endl;
+        cout << "command line clang:" << endl << command_line << endl;
+
+        /*
+/Users/sygnet/opt/wasm/bin/clang -emit-llvm -O3 --std=c++14 --target=wasm32 
+-nostdinc -nostdlib -nostdlibinc -ffreestanding -nostdlib -fno-threadsafe-statics 
+-fno-rtti -fno-exceptions -I/usr/local/include/ -I/Users/sygnet/opt/boost_1_66_0/include -I/Users/sygnet/Workspaces/EOS/eos/externals/magic_get/include -I/Users/sygnet/Workspaces/EOS/eos/contracts/libc++/upstream/include -I/Users/sygnet/Workspaces/EOS/eos/contracts/musl/upstream/include -I/Users/sygnet/Workspaces/EOS/eos/contracts -I/Users/sygnet/Workspaces/EOS/eosfactory/contracts/hello -c /Users/sygnet/Workspaces/EOS/eosfactory/contracts/hello/hello.cpp -o /var/folders/1c/29lwvmtd5cjg8cz855pd7rkc0000gn/T/2022-bdbc-8961-2b9e/build/hello.o
+
+/Users/sygnet/opt/wasm/bin/clang -emit-llvm -O3 --std=c++14 --target=wasm32 
+-nostdinc -nostdlib -nostdlibinc -ffreestanding -nostdlib -fno-threadsafe-statics 
+-fno-rtti -fno-exceptions 
+-I/usr/local/include/ 
+-I/Users/sygnet/Workspaces/EOS/eos/externals/magic_get/include 
+-I/Users/sygnet/Workspaces/EOS/eos/contracts/libc++/upstream/include 
+-I/Users/sygnet/Workspaces/EOS/eos/contracts/musl/upstream/include 
+-I/Users/sygnet/Workspaces/EOS/eos/contracts 
+-I/Users/sygnet/Workspaces/EOS/eosfactory/contracts/hello 
+-c /Users/sygnet/Workspaces/EOS/eosfactory/contracts/hello/hello.cpp 
+-o /var/folders/1c/29lwvmtd5cjg8cz855pd7rkc0000gn/T/0e1d-e628-1242-aefb/build/hello.o
+        */
 
         if(!process(command_line, this)){
           return;
