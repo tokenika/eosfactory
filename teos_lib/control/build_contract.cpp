@@ -27,6 +27,7 @@ namespace teos {
 
     bool process(string command_line, TeosControl* teos_control)
     {
+      try{
         namespace bp = boost::process;
 
         bp::ipstream err;
@@ -43,8 +44,12 @@ namespace teos {
           teos_control->putError(error_msg);
           return false;
         }
+      } catch (exception &e){
+        teos_control -> putError(e.what());
+        return false;
+      }  
 
-        return true;
+      return true;
     }
 
     vector<string> files(string comma_list, set<string> extensions)
