@@ -20,14 +20,15 @@ Using Python will allow us to build [interactive tutorials](http://eosfactory.io
 
 We make sure everything we do is fully compatible with Windows - our toolset enables you to run an EOS node and interact with it on any operating system, including Windows, MacOS and Linux.
 
-## Available documentation:
+## User documentation
 
 * [Installing EOSFactory](http://eosfactory.io/sphinx/html/01.InstallingEOSFactory.html)
 * [Interacting with EOS Contracts in EOSFactory](http://eosfactory.io/sphinx/html/02.InteractingWithEOSContractsInEOSFactory.html)
 * [Compiling EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/html/03.CompilingEOSContractsUsingEOSFactoryInVSC.html)
 * [Unit-testing EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/html/04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html)
 
-And here are details regarding Python classes:
+## Developer documentation
+
 * [pyteos](http://eosfactory.io/sphinx/html/pyteos.html)
 * [node](http://eosfactory.io/sphinx/html/node.html)
 * [sess](http://eosfactory.io/sphinx/html/sess.html)
