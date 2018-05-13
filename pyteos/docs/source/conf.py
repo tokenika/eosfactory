@@ -15,6 +15,8 @@
 import os
 import sys
 import sphinx_readable_theme
+import sphinx_bootstrap_theme
+
 # sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../../'))
 
@@ -83,7 +85,13 @@ pygments_style = 'sphinx'
 # html_theme_path = [sphinx_readable_theme.get_html_theme_path()]
 # html_theme = 'bizstyle' 
 # html_theme = "alabaster"
-html_theme = "classic"
+# html_theme = "classic"
+
+html_theme = 'bootstrap'
+html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+
+# html_theme = 'sphinx-theme-graphite-master'
+# html_theme_path = ["."]
 
 # html_theme_options = {
 #     "rightsidebar": "true",
