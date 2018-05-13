@@ -339,8 +339,8 @@ class GetInfo(_Command):
 
         is_verbose: If 'False', do not print stdout, default is 'True'.
     """
-    def __init__(self, is_verbose=True):
-        _Command.__init__(self, "get", "info", is_verbose)
+    def __init__(self, is_verbose=True, suppress_error_msg=False):
+        _Command.__init__(self, "get", "info", is_verbose, suppress_error_msg)
         if not self.error:    
             self.head_block = self.json["head_block_num"]
             self.head_block_time = self.json["head_block_time"]
@@ -685,95 +685,29 @@ class _StartNode(_Command):
 
 class _WaitNode(_Command):
     def __init__(self, is_verbose=True):
-        print()
-        self._jarg["DO_NOT_WAIT"] = 0  
-        self._jarg["DO_NOT_LAUNCH"] = 1 
-        self._jarg["CONFIGURE"] = 0               
-        _Command.__init__(self, "daemon", "start", is_verbose)
+        count = 10
+        num = 2
 
+        while True:
+            time.sleep(1)
+            self.get_info = GetInfo(is_verbose=False, suppress_error_msg=False)
+            count = count - 1
 
-class _Node1(_Command):
-    """ A representation of the local EOSIO node.
+            try:
+                head_block_num = int(self.get_info.json["head_block_num"])
+            except:
+                head_block_num = -1
 
-    Any _Node class object depends on external configuration parameters. They
-    are organized on two levels: this module level and the level of a TEOS 
-    executable that powers methodes of this python module.
+            if head_block_num >= num:
+                break      
 
-    - **TEOS-python configuration**::
-
-        TEOS_executable: Where is the TEOS executable. The parameter is set in 
-            the configuration file of this script, which is "pyteos.json" in the 
-            directory of this module, for example: 
-            {"TEOS_executable":"absolute-path-to-the-teos.exe"}.
-
-    Other relevant onfiguration parameters can be defined in a configuration 
-    file of the TEOS executable, and/or as environment variables, and/or are 
-    hard-codded (in the "config.cpp" file of the "teos library"). The first 
-    definition in this sequence prevails.
-
-    The configuration file of the TEOS executable is named "config.json". It
-    exists in the TEOS executable directory.    
-
-    - **TEOS configuration**::
-
-        EOSIO_SOURCE_DIR: Where is the EOS repository. 
-        EOSIO_DAEMON_ADDRESS: The local IP and port to listen for incoming http 
-            connections, defaults to "127.0.0.1:8888".
-        EOSIO_WALLET_ADDRESS: The local IP and port to listen for incoming http 
-            connections to the local wallet, defaults to "127.0.0.1:8888".
-        data-dir: Directory containing program runtime data (absolute path or
-            relative to ${EOSIO_SOURCE_DIR}), defaults to 
-            "${EOSIO_SOURCE_DIR}/build/daemon/data-dir".
-        config-dir: Directory containing configuration files such as config.ini
-            (absolute path or relative to ${EOSIO_SOURCE_DIR}),
-            defaults to "${data-dir}"
-        wallet-dir: The path of the wallet files (absolute path or relative 
-            to ${data-dir}, defaults to "${data-dir}/wallet"
-        genesis-json: File to read genesis state from, defaults to "genesis.json"
-            (relative to ${config-dir}).
-    """    
-    def __init__(self, clear=0, is_verbose=True):
-        self._jarg["resync-blockchain"] = clear
-        self._jarg["DO_NOT_WAIT"] = 1
-        self._jarg["DO_NOT_LAUNCH"] = 1
-        self.start(clear, is_verbose)
-
-    def start(self, clear, is_verbose):
-        super().__init__("daemon", "start", False)
-        self.command_line = ""
-        if not self.error and not "head_block_num" in self.json:
-            self.command_line = self.json["command_line"]
-            if self.json["is_windows_ubuntu"] == "true":
-                subprocess.call(
-                    ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
-                    self.json["command_line"]])
-            else:
-                if self.json["uname"] == "Darwin":
-                    subprocess.Popen(
-                        "open -a "
-                        + self.json["exe"] + " --args " + self.json["args"],
-                        shell=True)
-                else:
-                    subprocess.Popen(
-                        "gnome-terminal -- " + self.json["command_line"],
-                        shell=True)                                        
-                                        
-            del self._jarg["DO_NOT_WAIT"]
-            super().__init__("daemon", "start", is_verbose)      
+            if count <= 0:
+                break
 
 
 class NodeStop(_Command):
     def __init__(self, is_verbose=True):
         _Command.__init__(self, "daemon", "stop", is_verbose)
-
-
-class _Commands:
-    json = json.loads("{}")
-    def __repr__(self):
-        return repr(self.json)
-
-    def __str__(self):
-        return pprint.pformat(self.json) 
 
 
 class Wallet(WalletCreate):
@@ -1081,7 +1015,8 @@ class Contract(SetContract):
 
 def node_reset():
     _StartNode(1, True)
-    _WaitNode(True)
+    wait = _WaitNode(True)
+    print(wait.get_info)
 
 
 def node_run():

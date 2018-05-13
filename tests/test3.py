@@ -1,4 +1,4 @@
-# python3 ./tests/test.py
+# python3 ./tests/test3.py
 
 import node
 import sess
