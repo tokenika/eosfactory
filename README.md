@@ -30,9 +30,9 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 ## Developer documentation
 
 * [pyteos](http://eosfactory.io/sphinx/html/pyteos.html)
+* [eosf](http://eosfactory.io/sphinx/html/eosf.html)
 * [node](http://eosfactory.io/sphinx/html/node.html)
 * [sess](http://eosfactory.io/sphinx/html/sess.html)
-* [eosf](http://eosfactory.io/sphinx/html/eosf.html)
 
 ## Roadmap
 
