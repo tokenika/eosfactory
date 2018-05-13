@@ -22,14 +22,17 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 
 ## Available documentation:
 
-* [Installing EOSFactory](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/01.InstallingEOSFactory.md)
-* [Interacting with EOS Contracts in EOSFactory](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/02.InteractingWithEOSContractsInEOSFactory.md)
-* [Compiling EOS Contracts using EOSFactory in VSC](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/03.CompilingEOSContractsUsingEOSFactoryInVSC.md)
-* [Unit-testing EOS Contracts using EOSFactory in VSC](https://github.com/tokenika/eosfactory/blob/master/pyteos/docs/source/04.UnitTestingEOSContractsUsingEOSFactoryInVSC.md)
+* [Installing EOSFactory](http://eosfactory.io/sphinx/html/01.InstallingEOSFactory.html)
+* [Interacting with EOS Contracts in EOSFactory](http://eosfactory.io/sphinx/html/02.InteractingWithEOSContractsInEOSFactory.html)
+* [Compiling EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/html/03.CompilingEOSContractsUsingEOSFactoryInVSC.html)
+* [Unit-testing EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/html/04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html)
 
-For more details, please refer to [our Sphinx docs](http://eosfactory.io/sphinx/html/#python-documentation).
+And here are details regarding Python classes:
+* [pyteos](http://eosfactory.io/sphinx/html/pyteos.html)
+* [node](http://eosfactory.io/sphinx/html/node.html)
+* [sess](http://eosfactory.io/sphinx/html/sess.html)
+* [eosf](http://eosfactory.io/sphinx/html/eosf.html)
 
 ## Roadmap
 
 EOSFactory is currently at an MVP stage. It was initially released in May 2018 and there are subsequent releases to be expected in the near future.
-
