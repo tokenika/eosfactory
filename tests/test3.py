@@ -13,7 +13,10 @@ def run():
     sess.init()
 
     print('test Template():')
-    c = Template("hello")
+    c = Template("hello.test3")
+
+    print('test c.path():')
+    c.path()
     
     print('test c.build():')
     c.build()
@@ -28,7 +31,7 @@ def run():
     c.push_action("hi", '{"user":"alice"}', sess.carol)
 
     print('test c.delete():')
-    #c.delete()
+    c.delete()
     
     print('test node.stop():')
     node.stop()    

@@ -4,11 +4,6 @@
 This is a Python front-end for 'teos', an alternative for block.one CLI called 'cleos'.
 """
 
-# import pyteos
-
-# import importlib
-# importlib.reload(pyteos)
-
 import os
 import subprocess
 import json
@@ -912,10 +907,6 @@ class Contract(SetContract):
         return self._out
 
 
-    def path(self):
-        pprint.pprint(str(self.contract_path_absolute))
-
-
     def deploy(self):
         super().__init__(
             self.account_name, self.contract_dir,
@@ -982,8 +973,10 @@ class Contract(SetContract):
         if (dont_broadcast or is_verbose) and not push_action.error:
             pprint.pprint(self.action_json)
 
+
     def out(self):
         print(self.console)
+
 
     def show_action(self, action, data, permission=""):
         """ Implements the 'push action' command without broadcasting. 

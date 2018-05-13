@@ -10,6 +10,7 @@ import pyteos
 import sess
 import re
 import random
+import shutil
 
 class Contract(pyteos.Contract):
     """
@@ -98,7 +99,19 @@ class Contract(pyteos.Contract):
             permission, expiration_sec,
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
-            is_verbose)        
+            is_verbose)
+
+    def get_path(self):
+        return str(self.contract_path_absolute)
+
+
+    def path(self):
+         print("#  " + self.get_path())
+         
+
+    def delete(self):
+        shutil.rmtree(self.get_path())
+        print("#  Contract deleted.")
 
 
 class Template(Contract):
