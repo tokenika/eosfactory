@@ -95,7 +95,7 @@ namespace teos {
       namespace bfs = boost::filesystem; 
 
       if (bfs::is_regular_file(inTemplate) && !bfs::exists(inContract))
-      {
+      {       
         string contents;        
         try{
           bfs::ifstream in(inTemplate);
@@ -108,7 +108,6 @@ namespace teos {
           putError(e.what());
           return;
         }
-
         try{
           bfs::ofstream ofs (inContract);
           ofs << contents << endl;
@@ -119,10 +118,16 @@ namespace teos {
           return;
         }         
       } else
-      {
-        if(!bfs::exists(inContract)) {
-          bfs::copy(inTemplate, inContract);
-        }
+      {    
+        try{
+          if(!bfs::exists(inContract)) {
+            //bfs::copy(inTemplate, inContract);
+            bfs::create_directory(inContract);          
+          }
+        } catch (bfs::filesystem_error &e){
+          putError(e.what());
+          return;
+        }  
       }
     }
 
@@ -146,6 +151,7 @@ namespace teos {
           return;
         }
       }
+
       respJson_.put("contract_dir", contract_path.string());
       respJson_.put("source_dir", contract_path.string());
       respJson_.put("binary_dir", (contract_path / buildDir) .string());
@@ -157,11 +163,21 @@ namespace teos {
 
       for (const auto& dirEnt : bfs::recursive_directory_iterator{templContractPath})
       {
+        try{
           const auto& inTemplate = dirEnt.path();
           auto relativePathStr = inTemplate.string();
           boost::replace_first(relativePathStr, templContractPath.string(), "");
           boost::replace_all(relativePathStr, templContractName, name);
+
+          bfs::path dest = contract_path / relativePathStr;
           copy(inTemplate, contract_path / relativePathStr, name);
+
+        } catch (exception &e){
+          putError(e.what());
+        }
+        if(isError_){
+          return;
+        }
       }
     }
 
