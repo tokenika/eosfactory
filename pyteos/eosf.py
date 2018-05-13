@@ -99,14 +99,12 @@ class Contract(pyteos.Contract):
             permission, expiration_sec,
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
-            is_verbose)
-
-    def get_path(self):
-        return str(self.contract_path_absolute)
+            is_verbose) 
 
 
     def path(self):
-         print("#  " + self.get_path())
+        p = self.get_path()
+        print("#  " + p)
          
 
     def delete(self):

@@ -30,27 +30,33 @@ class Setup:
 
     The configuration file is expected in the same folder as the current file.
     """
-    __setupFile = os.path.dirname(os.path.abspath(__file__)) \
-        + "/pyteos.json"
-    __TEOS_EXE = "TEOS_executable"
+    __setupFile = os.path.dirname(os.path.abspath(__file__)) + "/../config.json"
+    __TEOS_EXE = "teos_executable"
+    __NODE_BLOCK_COUNT = "node_block_count"
+    __NODE_BLOCK_NUM = "node_block_num"
     __review = False              
     teos_exe = ""
+    node_block_count = 0
+    node_block_num = 0
 
     def __init__(self):
+
+        with open(self.__setupFile) as json_data:
+            print("Reading setup from file:\n   {}" \
+                    .format(os.path.realpath(self.__setupFile)))
+            setup_json = json.load(json_data)
+
         path = os.path.dirname(os.path.abspath(__file__)) \
             + "/../teos/build/teos"
         
         if os.path.isfile(path):
             self.teos_exe = os.path.realpath(path)
 
-        if not self.teos_exe:         
-            try: 
+        if not self.teos_exe:
+            try:
                 if os.path.isfile(self.__setupFile):
-                    with open(self.__setupFile) as json_data:
-                        print("Reading setup from file:\n   {}" \
-                                .format(os.path.realpath(self.__setupFile)))
-                        setup_json = json.load(json_data)
-                    path = setup_json[self.__TEOS_EXE]
+                    path = os.path.dirname(os.path.abspath(__file__)) \
+                            + setup_json[self.__TEOS_EXE]
                     if os.path.isfile(path):
                         self.teos_exe = os.path.realpath(path)
             except:
@@ -59,15 +65,18 @@ class Setup:
         if not self.teos_exe:
             print(
                 'ERROR in pyteos.py!'
-                '\nDo not know the teos exe!'
+                '\nDo not know the teos executable!'
                 '\nIt is expected to be in the config file named\n'
                 '{0}'
-                '\nas {{"{1}":"absolute-path-to-the-teos.exe"}} '
+                '\nas {{"{1}":"absolute-path-to-teos-executable"}} '
                 '\n'
                 .format(                 
                     os.path.realpath(self.__setupFile),
                     self.__TEOS_EXE,
-                    ))        
+                    ))
+
+        self.node_block_count = setup_json[self.__NODE_BLOCK_COUNT]
+        self.node_block_num = setup_json[self.__NODE_BLOCK_NUM]
 
 setup = Setup()
 
@@ -680,9 +689,9 @@ class _StartNode(_Command):
 
 class _WaitNode(_Command):
     def __init__(self, is_verbose=True):
-        count = 10
-        num = 3
-
+        count = setup.node_block_count
+        num = setup.node_block_num
+        
         while True:
             time.sleep(1)
             self.get_info = GetInfo(is_verbose=False, suppress_error_msg=False)
@@ -1004,6 +1013,10 @@ class Contract(SetContract):
 
         """
         GetCode(self.name)
+
+
+    def get_path(self):
+        return str(self.contract_path_absolute)
 
 
 def node_reset():

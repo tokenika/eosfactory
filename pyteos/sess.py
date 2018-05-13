@@ -49,3 +49,5 @@ def init():
     carol = pyteos.Account(
         eosio, "carol", key_owner, key_active, is_verbose=False)
 
+    print("#  Available test accounts: " + eosio.name + ", "  + alice.name + ", " + carol.name + ", " + bob.name)
+
