@@ -178,6 +178,30 @@ wallet-dir: .
       return "";  
     }
 
+    string getContractDir(TeosControl* teosControl, string contract_dir)
+    {
+      bfs::path contract_path(contract_dir);
+      if(!contract_path.is_absolute())
+      {
+        bfs::path workspacePath 
+          = configValue(teosControl, EOSIO_CONTRACT_WORKSPACE);
+
+        if(!workspacePath.is_absolute()) 
+        {
+          workspacePath = bfs::path(getContextDir(teosControl)) 
+            / workspacePath;
+        }
+        contract_path = workspacePath / contract_dir / contract_dir;
+      }
+      if(bfs::is_regular_file(contract_path))
+      {
+        return contract_path.parent_path().string();
+      } else
+      {
+        return contract_path.string();
+      }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // getContractFile
     ///////////////////////////////////////////////////////////////////////////
@@ -185,11 +209,11 @@ wallet-dir: .
      * Contract files: WAST, ABI
      */
     string getContractFile(
-        TeosControl* teosControl, string contractDir, string contractFile)
+        TeosControl* teosControl, string contract_dir, string contractFile)
     {
       try
       {
-        if(contractFile.empty() || contractDir.empty()) {
+        if(contractFile.empty() || contract_dir.empty()) {
           onError(
             teosControl, 
             "Cannot find the contract file. Neither 'contract file' nor "
@@ -208,8 +232,8 @@ wallet-dir: .
         }
 
         {
-          contractDir = wslMapWindowsLinux(contractDir);
-          bfs::path contractDirPath(contractDir);
+          contract_dir = wslMapWindowsLinux(contract_dir);
+          bfs::path contractDirPath(contract_dir);
           if(!contractDirPath.is_absolute()) 
           {
             bfs::path workspacePath 
@@ -221,7 +245,7 @@ wallet-dir: .
               workspacePath = bfs::path(eosioContextDir) 
                 / workspacePath;
             }
-            contractDirPath = workspacePath / contractDir / "build";
+            contractDirPath = workspacePath / contract_dir / "build";
             
             if(!bfs::exists(contractDirPath))
             {
@@ -238,7 +262,7 @@ wallet-dir: .
                   % contractDirPath.string() % workspacePathEosio.string()).str());
                 return "";
               }
-              contractDirPath = workspacePathEosio / contractDir;
+              contractDirPath = workspacePathEosio / contract_dir;
             }
           }
 
