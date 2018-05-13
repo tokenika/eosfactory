@@ -10,15 +10,15 @@ def init():
     """
     Initialise a test session.
 
-    - **global variables**
+    - **global variables**::
 
-        eosio: Primary EOSIO account predefined in the genesis file.
+        eosio: The primary EOSIO account predefined in the genesis file.
 
-        wallet: The wallet holding keys.
-        
         alice, bob, carol: Prefabricated demo accounts.
 
         key_owner, key_active: Cryptographic keys.
+
+        wallet: The wallet holding keys.
     """
     global eosio
     eosio = pyteos.AccountEosio(is_verbose=False)

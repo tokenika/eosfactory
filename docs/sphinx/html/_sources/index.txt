@@ -24,9 +24,9 @@ Python Documentation
    :maxdepth: 1
 
    pyteos
+   eosf
    node
    sess
-   eosf
 
 Indices and tables
 ------------------
