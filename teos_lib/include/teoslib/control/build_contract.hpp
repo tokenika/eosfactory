@@ -14,25 +14,22 @@ namespace teos {
     {
       void buildContract(
         string src, // comma separated list of source c/cpp files
-        string target_wast_file = "",
         string include_dir = "" // comma separated list of include dirs
       );
 
     public:
       BuildContract(
         string src, // comma separated list of source c/cpp files
-        string target_wast_file = "",
         string include_dir = ""
       )
       {
-        buildContract(src, target_wast_file, include_dir);
+        buildContract(src, include_dir);
       }
 
       BuildContract(ptree reqJson) : TeosControl(reqJson)
       {
         buildContract(
           reqJson_.get<string>("src"), 
-          reqJson_.get<string>("wast_file"), 
           reqJson_.get<string>("include_dir")
         );
       }
@@ -272,6 +269,84 @@ Usage: ./teos create key --jarg '{
 
       TeosControl executeCommand() {
         return BootstrapContract(reqJson_);
+      }
+
+      void printout(TeosControl command, variables_map &vm) {
+        output("template contract", "%s", GET_STRING(command, "contract_dir"));              
+      }        
+    };
+
+        /**
+     * BootstrapContract: produces template contract workspace.
+    */
+    class DeleteContract : public TeosControl
+    {
+      void deleteContract(
+        string name // contract name
+      );
+
+    public:
+      DeleteContract(
+        string name // contract name
+      )
+      {
+        deleteContract(name);
+      }
+
+      DeleteContract(ptree reqJson) : TeosControl(reqJson)
+      {
+        deleteContract(
+          reqJson_.get<string>("name")
+        );
+      }
+    };
+
+
+    /**
+     * Command-line driver for the DeleteContract class.
+     */ 
+    class DeleteContractOptions : public ControlOptions
+    {
+    public:
+      DeleteContractOptions(int argc, const char **argv) : ControlOptions(argc, argv) {}
+
+    protected:
+      const char* getUsage() {
+        return R"(
+Deletes the workspace of a contract.
+Usage: ./teos delete contract [Options]
+Usage: ./teos delete contract --jarg '{
+  "name":"<contract name>"
+  }' [OPTIONS]
+)";
+      }
+
+      string name;
+
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
+          ("name", value<string>(&name)
+            , "Contract name.");
+            
+        return od;
+      }
+
+      void setPosDesc(positional_options_description& pos_desc) {
+        pos_desc.add("name", 1);
+      }      
+
+      bool checkArguments(variables_map &vm) {
+        bool ok = false;
+        if(vm.count("name")){
+          ok = true;
+          reqJson_.put("name", name);
+        }
+        return ok;
+      }
+
+      TeosControl executeCommand() {
+        return DeleteContract(reqJson_);
       }
 
       void printout(TeosControl command, variables_map &vm) {
