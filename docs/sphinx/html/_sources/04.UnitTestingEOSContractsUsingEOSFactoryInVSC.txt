@@ -1,0 +1,400 @@
+# Unit-testing EOS Contracts using EOSFactory in *Visual Studio Code*
+
+The purpose of this tutorial is to demonstrate how EOSFactory and its Python CLI can be used to make unit-testing EOS contracts easy & intuitive.
+
+## Prerequisites
+
+* This tutorial assumes that you have successfully installed EOSFactory. If it's not the case, please refer to [Installing EOSFactory](01.InstallingEOSFactory.html).
+* We also assume that you are familiar with the material covered in [Interacting with EOS Contracts in EOSFactory](02.InteractingWithEOSContractsInEOSFactory.html).
+
+## Create a unit-test
+
+In *Visual Studio Code* create a new Python file containing your unit-test.
+
+Here is the recommended structure:
+
+```
+import node
+import sess
+from eosf import *
+
+def run():
+    node.reset()
+    sess.init()
+    
+    ############################
+    # Your unit-test goes here #
+    ############################
+    
+    node.stop()
+    print("Test OK")
+    
+if __name__ == "__main__":
+    run()
+```
+
+And below is an example of a unit-test for the `eosio.token` contract:
+
+```
+import node
+import sess
+from eosf import *
+
+def run():
+    node.reset()
+    sess.init()
+
+    c = Contract("eosio.token")
+    c.deploy()
+
+    c.push_action("create", '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+    
+    c.push_action("issue", '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', sess.eosio)
+
+    c.push_action("transfer", '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", "memo":"memo"}', sess.alice)
+    
+    c.push_action("transfer", '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", "memo":"memo"}', sess.carol)
+    
+    c.push_action("transfer", '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", "memo":"memo"}', sess.bob)
+
+    t1=c.get_table("accounts", sess.alice)
+    t2=c.get_table("accounts", sess.bob)
+    t3=c.get_table("accounts", sess.carol)
+
+    assert t1.json["rows"][0]["balance"] == '77.0000 EOS'
+    assert t2.json["rows"][0]["balance"] == '11.0000 EOS'
+    assert t3.json["rows"][0]["balance"] == '12.0000 EOS'
+
+    node.stop()
+    print("Test OK")
+    
+if __name__ == "__main__":
+    run()
+```
+
+Assuming your unit-test file is named `test.py`, you can run it in a Python terminal:
+
+```
+import test
+test.run()
+```
+
+Or you can do it directly in a bash terminal:
+
+```
+python3 ./tests/test.py
+```
+
+In our case the output looks like this:
+
+```
+test node.reset():
+#       head block: 3
+#  head block time: 2018-05-13T08:12:23
+#  last irreversible block: 3
+
+test node.info():
+#       head block: 3
+#  head block time: 2018-05-13T08:12:23
+#  last irreversible block: 3
+
+test sess.init():
+test Contract("eosio.token"):
+#         key name: key_owner
+#      private key: 5KLxYTMQRysqpSgVZmhDUQEZEJPKurqHuE9pFF63TuyZJrdvHhe
+#       public key: EOS7hxPa3mSdW8ZFfDD89iww5zm8UT8zDMmjNaJAnr8SfLyZdTzcf
+
+#         key name: key_active
+#      private key: 5JgqV1B9LTGh5RQXWkDWEyjjkT2SpSToZtcSfdixGZUnaoXJa2c
+#       public key: EOS6Tb34ersKsxHje55ntjpupob9a86FTuEGyyT6R7T91pqQM6QCW
+
+#   transaction id: 105c6ddd8baebc8d1eb3266617d3cd6d33db4e18a1a3a0a1bf3ed65bc8ebb2e6
+
+test c.get_code():
+#        code hash: 0000000000000000000000000000000000000000000000000000000000000000
+
+test c.deploy():
+#   transaction id: 8d3f697f6004092e2d1ba751fa853ceb15ab6eb03af42167eeae47e578aed431
+
+test c.get_code():
+#        code hash: 6e86f77a18905bccfbc585886cebf9205b585e9f04fdc79c644050d7c3ff8ccb
+
+test c.push_action("create"):
+#   transaction id: b0d334165e9ea00bbb700c92f0ecce38f37eabb90523653efcd07bac02bf8258
+
+test c.push_action("issue"):
+#   transaction id: 23346270e5a0d75d706df0f54c658c5be9b6531f089d1fc5df1e8d7796ce2abf
+
+test c.push_action("transfer", sess.alice):
+#   transaction id: b83ea01a6e7a1eafcf95422bd31e4b077463e8f7fa4d67e25df16f7e87e46674
+
+test c.push_action("transfer", sess.carol):
+#   transaction id: 94291123ac67752317bfd9dfed55530610465b4d67601967809772209abcf3be
+
+test c.push_action("transfer" sess.bob):
+#   transaction id: 852cc67e445020024af698cd89f30888479a9ad43c507bd962e444bb96e9aca3
+
+testc.get_table("accounts", sess.alice):
+#  {
+#      "rows": [
+#          {
+#              "balance": "77.0000 EOS",
+#              "frozen": "0",
+#              "whitelist": "1"
+#          }
+#      ],
+#      "more": "false"
+#  }
+#
+
+test c.get_table("accounts", sess.bob):
+#  {
+#      "rows": [
+#          {
+#              "balance": "11.0000 EOS",
+#              "frozen": "0",
+#              "whitelist": "1"
+#          }
+#      ],
+#      "more": "false"
+#  }
+#
+
+test t3=c.get_table("accounts", sess.carol):
+#  {
+#      "rows": [
+#          {
+#              "balance": "12.0000 EOS",
+#              "frozen": "0",
+#              "whitelist": "1"
+#          }
+#      ],
+#      "more": "false"
+#  }
+#
+
+assert t1.json["rows"][0]["balance"] == "77.0000 EOS":
+assert t2.json["rows"][0]["balance"] == "11.0000 EOS":
+assert t3.json["rows"][0]["balance"] == "12.0000 EOS":
+test node.stop():
+#  Daemon is stopped.
+
+Test OK
+```
+## The *Tic-Tac-Toe* game
+
+Here is a unit-test for the *Tic-Tac-Toe* game contract:
+
+```
+import node
+import sess
+from eosf import *
+
+def run():
+    node.reset()
+    sess.init()
+
+    c = Contract("tic.tac.toe")
+    c.deploy()
+
+    c.push_action("create", '{"challenger":"alice", "host":"bob"}', sess.bob)
+
+    t=c.get_table("games", sess.bob)
+    
+    assert t.json["rows"][0]["board"][0] == '0'
+    assert t.json["rows"][0]["board"][1] == '0'
+    assert t.json["rows"][0]["board"][2] == '0'
+    assert t.json["rows"][0]["board"][3] == '0'
+    assert t.json["rows"][0]["board"][4] == '0'
+    assert t.json["rows"][0]["board"][5] == '0'
+    assert t.json["rows"][0]["board"][6] == '0'
+    assert t.json["rows"][0]["board"][7] == '0'
+    assert t.json["rows"][0]["board"][8] == '0'
+
+    c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"bob", "mvt":{"row":0, "column":0} }', sess.bob)
+    
+    c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"alice", "mvt":{"row":1, "column":1} }', sess.alice)
+
+    t=c.get_table("games", sess.bob)
+
+    assert t.json["rows"][0]["board"][0] == '1'
+    assert t.json["rows"][0]["board"][1] == '0'
+    assert t.json["rows"][0]["board"][2] == '0'
+    assert t.json["rows"][0]["board"][3] == '0'
+    assert t.json["rows"][0]["board"][4] == '2'
+    assert t.json["rows"][0]["board"][5] == '0'
+    assert t.json["rows"][0]["board"][6] == '0'
+    assert t.json["rows"][0]["board"][7] == '0'
+    assert t.json["rows"][0]["board"][8] == '0'
+
+    c.push_action("restart", '{"challenger":"alice", "host":"bob", "by":"bob"}', sess.bob)
+    
+    t=c.get_table("games", sess.bob)
+    
+    assert t.json["rows"][0]["board"][0] == '0'
+    assert t.json["rows"][0]["board"][1] == '0'
+    assert t.json["rows"][0]["board"][2] == '0'
+    assert t.json["rows"][0]["board"][3] == '0'
+    assert t.json["rows"][0]["board"][4] == '0'
+    assert t.json["rows"][0]["board"][5] == '0'
+    assert t.json["rows"][0]["board"][6] == '0'
+    assert t.json["rows"][0]["board"][7] == '0'
+    assert t.json["rows"][0]["board"][8] == '0'
+
+   	c.push_action("close", '{"challenger":"alice", "host":"bob"}', sess.bob)
+
+    node.stop()
+    print("Test OK")
+
+if __name__ == "__main__":
+    run()
+```
+
+And here is the result:
+
+```
+test node.reset():
+#       head block: 3
+#  head block time: 2018-05-13T08:13:46
+#  last irreversible block: 3
+
+test node.info():
+#       head block: 3
+#  head block time: 2018-05-13T08:13:46
+#  last irreversible block: 3
+
+test sess.init():
+test c = Contract("tic.tac.toe"):
+#         key name: key_owner
+#      private key: 5KAdpYMTi49RB18VdKqH72FDXd2dUkdU9ih2tr8ZWhFmhFqJirS
+#       public key: EOS8U3MaZWTL2MpJNDmcY8dPbCkk2HNQbU9HV8aPYXTGA2ab9vtKe
+
+#         key name: key_active
+#      private key: 5Ka8Bb52jTF5FUFWv7eToiVDZD8fRZtzCKm5B5PmF3h8hC26PxF
+#       public key: EOS81CvQvZ2GMo9jM2ioT8i2J7HYriteibUAHc2E81pHfU8ZFZdox
+
+#   transaction id: 5317a5cce11f64792b40b9a5b0c594179288c044e0f3f65342665e74948a6473
+
+test c.deploy():
+#   transaction id: 3dd1cb6f666c43de74f5954a68c4880ede56e323baed5ee31b08030829b4e754
+
+test c.push_action("create", sess.bob):
+#   transaction id: 68230a9b217dd58c1db465a791eb5c25fd70631ba599cd114de73aa24eabc01b
+
+test t=c.get_table("games", sess.bob):
+#  {
+#      "rows": [
+#          {
+#              "challenger": "alice",
+#              "host": "bob",
+#              "turn": "bob",
+#              "winner": "none",
+#              "board": [
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0"
+#              ]
+#          }
+#      ],
+#      "more": "false"
+#  }
+#
+
+test c.push_action("move", sess.bob):
+#   transaction id: f0647a1839a451b44efb738d92a3fde4eaa55811d3f88cb450ab4d91cb2f2ba5
+
+test c.push_action("move", sess.alice):
+#   transaction id: 06c3e32d107f54aad31119f69df74518e730589d4d2fcf34e1d6290782c57c25
+
+#  {
+#      "rows": [
+#          {
+#              "challenger": "alice",
+#              "host": "bob",
+#              "turn": "bob",
+#              "winner": "none",
+#              "board": [
+#                  "1",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "2",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0"
+#              ]
+#          }
+#      ],
+#      "more": "false"
+#  }
+#
+
+test c.push_action("restart", sess.bob):
+#   transaction id: 22acba5e221b40e102c57fb2e2bd6ad268d644471c31fe72e8dd2c1c51934cb5
+
+test t=c.get_table("games", sess.bob):
+#  {
+#      "rows": [
+#          {
+#              "challenger": "alice",
+#              "host": "bob",
+#              "turn": "bob",
+#              "winner": "none",
+#              "board": [
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0",
+#                  "0"
+#              ]
+#          }
+#      ],
+#      "more": "false"
+#  }
+#
+
+test c.push_action("close", sess.bob):
+#   transaction id: accaf31cc12619884be50f8e986c336fb2329f1b55d616178443ee964f62a432
+
+test node.stop():
+#  Daemon is stopped.
+
+Test OK
+```
+
+## Further steps
+
+The above schema is just a proof-of-concept solution for unit-testing in EOSFactory. At this stage we don't handle errors properly and we don't offer proper assertions. These are just toy examples.
+
+What's definitely missing is clear separation between EOSFactory source code and a user's workspace where all his contracts & unit-tests are stored. This will be supplied in the next release. For the time being you can keep your contracts in a separate location and refer to them using a full path, e.g.
+
+```
+c = Contract("/mnt/x/Workspaces/contracts/hello")
+```
+
+However, when you create a new contract from a template, paths are not currently supported, so you need to use the contract's folder name e.g.
+
+```
+c = Template("hello")
+```
+
+Then figure out it's location:
+
+```
+c.path()
+```
+
+And then you can move your contract to a desired location and do unit-tests there.
+
+Ultimately we want to make unit-testing much better organized. Also, we'll be aiming at much tighter integration with *Visual Studio Code*.
