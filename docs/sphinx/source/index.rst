@@ -6,6 +6,9 @@
 Welcome to EOSFactory documentation!
 ======================================
 
+`EOSFactory <https://github.com/tokenika/eosfactory>`_ is a smart-contract development framework, created by `Tokenika <https://tokenika.io>`_.
+Using a single command-line interface you can create a private testnet and then compile, unit-test and deploy `EOS <https://eos.io/>`_ smart-contracts.
+
 Tutorials
 ----------
 
