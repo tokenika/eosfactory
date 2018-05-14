@@ -19,7 +19,7 @@ EOSFactory is composed of two layers:
 
 #### Object-oriented
 
-When you use tools like `cleos` all you have at your disposal is issuing commands  - `cleos` does not keep your state. Each time you interact with a contract, you need to tell `cleos` which contract and which account you mean. Contrary to that, in EOSFactory everything is an object. You create a contract, keep reference to it and then invoke its various methods.
+When you use tools like `cleos` all you have at your disposal is issuing separate, one-off commands, as `cleos` is not able to keep your state. Thus each time you interact with a contract, you need to tell `cleos` which contract and which account you mean. Contrary to that, in EOSFactory everything is an object. You create a contract (or an account), keep reference to it and then invoke its various methods.
 
 #### Simple syntax
 
