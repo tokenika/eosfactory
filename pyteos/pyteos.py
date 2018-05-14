@@ -23,14 +23,23 @@ import pathlib
 
 _is_verbose = True
 
-## If set False, TEOS commands print error messages only. 
+def version():
+    """
+    Prints current EOSFactory version
+    """
+    print("Version: " + setup.version)
+
+
 def set_verbose(is_verbose):
-  global _is_verbose
-  _is_verbose = is_verbose
+    """
+    If set `False`, `teos` commands print error messages only.
+    """
+    global _is_verbose
+    _is_verbose = is_verbose
 
 def output__(msg):
-  if _is_verbose:
-    print("#  " + msg.replace("\n", "\n#  "))
+    if _is_verbose:
+        print("#  " + msg.replace("\n", "\n#  "))
 
 class Setup:
     """ Interface to the json configuration file.
@@ -38,10 +47,12 @@ class Setup:
     The configuration file is expected in the same folder as the current file.
     """
     __setupFile = os.path.dirname(os.path.abspath(__file__)) + "/../config.json"
+    __VERSION = "version"
     __TEOS_EXE = "teos_executable"
     __NODE_BLOCK_COUNT = "node_block_count"
     __NODE_BLOCK_NUM = "node_block_num"
-    __review = False              
+    __review = False
+    version = ""
     teos_exe = ""
     node_block_count = 0
     node_block_num = 0
@@ -52,6 +63,8 @@ class Setup:
             print("Reading setup from file:\n   {}" \
                     .format(os.path.realpath(self.__setupFile)))
             setup_json = json.load(json_data)
+
+        self.version = setup_json[self.__VERSION]
 
         path = os.path.dirname(os.path.abspath(__file__)) \
             + "/../teos/build/teos"
@@ -86,6 +99,7 @@ class Setup:
         self.node_block_num = setup_json[self.__NODE_BLOCK_NUM]
 
 setup = Setup()
+version()
 
 ##############################################################################
 # pyteos commands

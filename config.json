@@ -1,4 +1,5 @@
 {
+    "version": "0.8.2",
     "teos_executable": "/../teos/build/teos",
     "node_block_count": 10,
     "node_block_num": 3
