@@ -45,7 +45,7 @@ namespace teos {
           return false;
         }
       } catch (exception &e){
-        teos_control -> putError(e.what());
+        teos_control->putError(e.what());
         return false;
       }  
 
@@ -242,7 +242,6 @@ namespace teos {
         + "/build/programs/eosio-abigen/eosio-abigen"
         + " -extra-arg=-c -extra-arg=--std=c++14 -extra-arg=--target=wasm32"
         + " -extra-arg=-nostdinc -extra-arg=-nostdinc++ -extra-arg=-DABIGEN"
-        + " -extra-arg=-I/usr/local/include/" 
         + " -extra-arg=-I" + getEOSIO_BOOST_INCLUDE_DIR(this)
         + " -extra-arg=-I" + getSourceDir(this) + "/externals/magic_get/include"
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
@@ -338,7 +337,6 @@ namespace teos {
           + " -emit-llvm -O3 --std=c++14 --target=wasm32 -nostdinc -nostdlib"
           + " -nostdlibinc -ffreestanding -nostdlib -fno-threadsafe-statics"
           + " -fno-rtti -fno-exceptions"
-          + " -I/usr/local/include/"
           + " -I" + getEOSIO_BOOST_INCLUDE_DIR(this)          
           + " -I" + getSourceDir(this) + "/externals/magic_get/include"
           + " -I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
@@ -358,7 +356,7 @@ namespace teos {
         command_line += " -c " + file
           + " -o " + output.string();
 
-        // cout << "command line clang:" << endl << command_line << endl;
+        cout << "command line clang:" << endl << command_line << endl;
 
         if(!process(command_line, this)){
           return;

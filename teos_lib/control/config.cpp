@@ -84,20 +84,24 @@ wallet-dir: .
       "EOSIO_CONTRACT_WORKSPACE", CONTRACTS_DIR };// relative to EOSIO_CONTEXT_DIR
 
     arg EOSIO_SHARED_MEMORY_SIZE_MB = { "EOSIO_SHARED_MEMORY_SIZE_MB", "100" };    
-    arg EOSIO_BOOST_INCLUDE_DIR = { 
-      "EOSIO_BOOST_INCLUDE_DIR", "opt/boost_1_66_0/include" };
-    arg EOSIO_WASM_CLANG = { "EOSIO_WASM_CLANG", "opt/wasm/bin/clang" };
+    arg EOSIO_BOOST_INCLUDE_DIR = { "EOSIO_BOOST_INCLUDE_DIR"
+      , "opt/boost_1_66_0/include", "/usr/local/include/" };
+    arg EOSIO_WASM_CLANG = { "EOSIO_WASM_CLANG"
+      , "opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"};
       // EOSIO_WASM_CLANG: relative to HOME dir
-    arg EOSIO_WASM_LLVM_LINK = { "EOSIO_WASM_LLVM_LINK", "opt/wasm/bin/llvm-link" };
+    arg EOSIO_WASM_LLVM_LINK = { "EOSIO_WASM_LLVM_LINK"
+      , "opt/wasm/bin/llvm-link", "/usr/local/wasm/bin/llvm-link" };
       // EOSIO_WASM_LLVM_LINK: relative to HOME dir
-    arg EOSIO_WASM_LLC = { "EOSIO_WASM_LLC", "opt/wasm/bin/llc" };
+    arg EOSIO_WASM_LLC = { "EOSIO_WASM_LLC"
+      , "opt/wasm/bin/llc", "/usr/local/wasm/bin/llc" };
       // EOSIO_WASM_LLC: relative to HOME dir
-    arg EOSIO_BINARYEN_BIN = { "EOSIO_BINARYEN_BIN", "opt/binaryen/bin/" };
+    arg EOSIO_BINARYEN_BIN = { "EOSIO_BINARYEN_BIN"
+      , "opt/binaryen/bin", "/Users/sygnet/Workspaces/EOS/eos/externals/binaryen/bin" };
       // EOSIO_BINARYEN_BIN: relative to HOME dir
 
     namespace bfs = boost::filesystem;
 
-    string configValue(TeosControl* teosControl, arg configKey) 
+    vector<string> configValue(TeosControl* teosControl, arg configKey) 
     {
       //First, configure file ...
       boost::property_tree::ptree json = TeosControl::getConfig(teosControl);
