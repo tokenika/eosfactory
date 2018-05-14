@@ -22,6 +22,7 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 
 ## User documentation
 
+* [Introduction to EOSFactory](http://eosfactory.io/sphinx/build/html/00.IntroductionToEOSFactory.html)
 * [Installing EOSFactory](http://eosfactory.io/sphinx/build/html/01.InstallingEOSFactory.html)
 * [Interacting with EOS Contracts in EOSFactory](http://eosfactory.io/sphinx/build/html/02.InteractingWithEOSContractsInEOSFactory.html)
 * [Compiling EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/build/html/03.CompilingEOSContractsUsingEOSFactoryInVSC.html)

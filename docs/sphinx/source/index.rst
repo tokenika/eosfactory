@@ -10,24 +10,24 @@ Tutorials
 ----------
 
 .. toctree::
-   :maxdepth: 1
+    :maxdepth: 1
 
-   01.InstallingEOSFactory
-   02.InteractingWithEOSContractsInEOSFactory
-   03.CompilingEOSContractsUsingEOSFactoryInVSC
-   04.UnitTestingEOSContractsUsingEOSFactoryInVSC
+    00.IntroductionToEOSFactory
+    01.InstallingEOSFactory
+    02.InteractingWithEOSContractsInEOSFactory
+    03.CompilingEOSContractsUsingEOSFactoryInVSC
+    04.UnitTestingEOSContractsUsingEOSFactoryInVSC
    
 Python Documentation
 ---------------------
 
 .. toctree::
-   :maxdepth: 1
+    :maxdepth: 1
 
-   pyteos
-   eosf
-   node
-   sess
-   teos
+    pyteos
+    eosf
+    node
+    sess
 
 Indices and tables
 ------------------
