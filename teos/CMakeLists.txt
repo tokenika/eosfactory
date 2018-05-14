@@ -108,9 +108,9 @@ endif()
 
 ## END DEPENDENCIES ##########################################################
 
-set( EOSIO_WASM_CLANG "${HOME}/opt/wasm/bin/clang" )
-set( EOSIO_WASM_LLVM_LINK "${HOME}/opt/wasm/bin/llvm-link" )
-set( EOSIO_WASM_LLC "${HOME}/opt/wasm/bin/llc" )
+set( EOSIO_WASM_CLANG "\${HOME}/opt/wasm/bin/clang" )
+set( EOSIO_WASM_LLVM_LINK "\${HOME}/opt/wasm/bin/llvm-link" )
+set( EOSIO_WASM_LLC "\${HOME}/opt/wasm/bin/llc" )
 set( EOSIO_BINARYEN_BIN "/usr/local/binaryen/bin/" )
 
 ## BEGIN CONFIG FILES ########################################################

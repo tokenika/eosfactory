@@ -45,8 +45,6 @@ namespace teos {
 
     string getEOSIO_WASM_LLVM_LINK(TeosControl* teosControl);
 
-    string getEOSIO_BINARYEN_BIN(TeosControl* teosControl);
-
     string getEOSIO_WASM_LLC(TeosControl* teosControl);
 
     string getSharedMemorySizeMb();

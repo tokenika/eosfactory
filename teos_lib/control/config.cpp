@@ -85,38 +85,80 @@ wallet-dir: .
 
     arg EOSIO_SHARED_MEMORY_SIZE_MB = { "EOSIO_SHARED_MEMORY_SIZE_MB", "100" };    
     arg EOSIO_BOOST_INCLUDE_DIR = { "EOSIO_BOOST_INCLUDE_DIR"
-      , "opt/boost_1_66_0/include", "/usr/local/include/" };
+      , "${HOME}/opt/boost_1_66_0/include", "/usr/local/include/" };
     arg EOSIO_WASM_CLANG = { "EOSIO_WASM_CLANG"
-      , "opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"};
+      , "${HOME}/opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"};
       // EOSIO_WASM_CLANG: relative to HOME dir
     arg EOSIO_WASM_LLVM_LINK = { "EOSIO_WASM_LLVM_LINK"
-      , "opt/wasm/bin/llvm-link", "/usr/local/wasm/bin/llvm-link" };
+      , "${HOME}/opt/wasm/bin/llvm-link", "/usr/local/wasm/bin/llvm-link" };
       // EOSIO_WASM_LLVM_LINK: relative to HOME dir
     arg EOSIO_WASM_LLC = { "EOSIO_WASM_LLC"
-      , "opt/wasm/bin/llc", "/usr/local/wasm/bin/llc" };
+      , "${HOME}/opt/wasm/bin/llc", "/usr/local/wasm/bin/llc" };
       // EOSIO_WASM_LLC: relative to HOME dir
-    arg EOSIO_BINARYEN_BIN = { "EOSIO_BINARYEN_BIN"
-      , "opt/binaryen/bin", "/Users/sygnet/Workspaces/EOS/eos/externals/binaryen/bin" };
-      // EOSIO_BINARYEN_BIN: relative to HOME dir
 
     namespace bfs = boost::filesystem;
 
-    vector<string> configValue(TeosControl* teosControl, arg configKey) 
-    {
+    vector<string> configValues(TeosControl* teosControl, arg configKey) 
+    {      
       //First, configure file ...
       boost::property_tree::ptree json = TeosControl::getConfig(teosControl);
-      string value = json.get(configKey[0], NOT_DEFINED_VALUE);
+      string value = json.get(string(configKey[0]), NOT_DEFINED_VALUE);
       if(value != string(NOT_DEFINED_VALUE)) {
-        return value;
+        vector<string> retval = vector<string>();
+        retval.push_back(value);
+        return retval;
       }
       
       // ... next, environmental variable.
       char* env = getenv(configKey[0].c_str());
-      if(env == nullptr){ // Finally, hard-codded value, if any.
-        return configKey.size() > 1 ? configKey[1] : NOT_DEFINED_VALUE;          
-      }
-      return string(env);
+      if(env != nullptr) {
+        vector<string> retval = vector<string>();
+        retval.push_back(string(env));        
+        return retval;
+      } 
 
+      // Finally, hard-codded value, if any.
+      if(configKey.size() > 1) {
+        vector<string> retval = vector<string>();        
+        for(int i = 1; i < configKey.size(); i++) {
+          retval.push_back(configKey[i]);
+        }
+        return retval;          
+      }      
+      
+      vector<string> retval;
+      retval.push_back(string(NOT_DEFINED_VALUE));
+      return retval;
+    }
+
+    string configValue(TeosControl* teosControl, arg configKey) {
+      return configValues(teosControl, configKey)[0];
+    }
+
+    string getValidPath(TeosControl* teosControl, arg configKey, string findFile)
+    {
+      vector<string> values = configValues(teosControl, configKey);
+      bfs::path absolute(values[0]);
+      if(absolute.is_absolute()) {
+        if(bfs::exists(absolute / findFile)) {
+          return absolute.string();
+        }
+      }
+
+      string home = getenv("HOME");
+      for(auto value : values)
+      {
+        try{
+          boost::replace_all(value, "${HOME}", home);
+          bfs::path p(value);
+
+          if(bfs::exists(p / findFile)) {
+            return p.string();
+          }
+        } catch(...){}
+      }
+
+      return "";
     }
 
     void onError(TeosControl* teosControl, string message)
@@ -474,45 +516,35 @@ wallet-dir: .
       return configValue(teosControl, EOSIO_DAEMON_NAME);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    /*/////////////////////////////////////////////////////////////////////////
     // getEOSIO_BOOST_INCLUDE_DIR
-    ///////////////////////////////////////////////////////////////////////////
+        arg EOSIO_BOOST_INCLUDE_DIR = { "EOSIO_BOOST_INCLUDE_DIR"
+      , "${HOME}/opt/boost_1_66_0/include", "/usr/local/include/" };
+    /////////////////////////////////////////////////////////////////////////*/
     string getEOSIO_BOOST_INCLUDE_DIR(TeosControl* teosControl){
-      bfs::path home(getenv("HOME"));
-      return (home / configValue(teosControl, EOSIO_BOOST_INCLUDE_DIR)).string();
-    }    
+      return getValidPath(teosControl, EOSIO_BOOST_INCLUDE_DIR, "boost/version.hpp");
+    }   
 
     ///////////////////////////////////////////////////////////////////////////
     // getEOSIO_WASM_CLANG
     ///////////////////////////////////////////////////////////////////////////
     string getEOSIO_WASM_CLANG(TeosControl* teosControl){
-      bfs::path home(getenv("HOME"));
-      return (home / configValue(teosControl, EOSIO_WASM_CLANG)).string();
+      return getValidPath(teosControl, EOSIO_WASM_CLANG, "");
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // getEOSIO_WASM_LLVM_LINK
     ///////////////////////////////////////////////////////////////////////////
     string getEOSIO_WASM_LLVM_LINK(TeosControl* teosControl){
-      bfs::path home(getenv("HOME"));
-      return (home / configValue(teosControl, EOSIO_WASM_LLVM_LINK)).string();
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // getEOSIO_BINARYEN_BIN
-    ///////////////////////////////////////////////////////////////////////////
-    string getEOSIO_BINARYEN_BIN(TeosControl* teosControl){
-      bfs::path home(getenv("HOME"));
-      return (home / configValue(teosControl, EOSIO_BINARYEN_BIN)).string();      
+      return getValidPath(teosControl, EOSIO_WASM_LLVM_LINK, "");      
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // getEOSIO_WASM_LLC
     ///////////////////////////////////////////////////////////////////////////
     string getEOSIO_WASM_LLC(TeosControl* teosControl){
-      bfs::path home(getenv("HOME"));
-      return (home / configValue(teosControl, EOSIO_WASM_LLC)).string();
-    }
+      return getValidPath(teosControl, EOSIO_WASM_LLC, "");       
+    }    
 
     GetConfig::GetConfig(){
         respJson_.put("contextDir", getContextDir(this));
@@ -533,7 +565,6 @@ wallet-dir: .
         respJson_.put("boostInclude", getEOSIO_BOOST_INCLUDE_DIR(this));
         respJson_.put("wasmLink", getEOSIO_WASM_LLVM_LINK(this));
         respJson_.put("wasmLlc", getEOSIO_WASM_LLC(this));
-        respJson_.put("binaryenBin", getEOSIO_BINARYEN_BIN(this));
         respJson_.put("sharedMemory", getSharedMemorySizeMb());
         respJson_.put(
           "contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));
