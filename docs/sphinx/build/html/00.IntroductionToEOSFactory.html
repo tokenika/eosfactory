@@ -90,13 +90,13 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Introduction to EOSFactory</a><ul>
 <li><a class="reference internal" href="#why-it-s-needed">Why it&#8217;s needed?</a></li>
-<li><a class="reference internal" href="#architecture">Architecture</a></li>
 <li><a class="reference internal" href="#main-features">Main features</a><ul>
 <li><a class="reference internal" href="#object-oriented">Object-oriented</a></li>
 <li><a class="reference internal" href="#simple-syntax">Simple syntax</a></li>
 <li><a class="reference internal" href="#real-testnet">Real testnet</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#architecture">Architecture</a></li>
 <li><a class="reference internal" href="#disclaimer">Disclaimer</a></li>
 </ul>
 </li>
@@ -156,16 +156,8 @@
 <div class="section" id="why-it-s-needed">
 <span id="why-it-s-needed"></span><h2>Why it&#8217;s needed?<a class="headerlink" href="#why-it-s-needed" title="Permalink to this headline">¶</a></h2>
 <p>Everything that EOSFactory offers can be done with the the official EOS toolset, i.e. <code class="docutils literal"><span class="pre">cleos</span></code> and <code class="docutils literal"><span class="pre">eosiocpp</span></code>. Is EOSFactory just another tool like that? Not really.</p>
-<p>Code development and unit-testing involve tasks that need to be executed hundreds of times, and each time in exactly the same way and in the exactly the same context. Therefore those tasks need to be fully automated, as otherwise a lot of times is being wasted and, what&#8217;s even worse, a lot of additional uncertainty is introduced. Manually performed actions are prone to errors.</p>
-<p>And this is what EOSFactory actually brings to the table: an easy &amp; intuitive way to automate the process of dealing with smart-contracts. Write down, in the form of a Python script, what needs to be done multiple times in exactly the same way and in exactly the same context, and then just run the script. EOSFactory will take care of everything else: it will compile your smart-contract, create a new testnet, deploy the contract, invoke its methods and verify the result, then tear down the testnet, and finally report the results. And all of this in a couple of seconds.</p>
-</div>
-<div class="section" id="architecture">
-<span id="architecture"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
-<p>EOSFactory is composed of two layers:</p>
-<ul class="simple">
-<li>C++ bridge connected to an EOS node running a private testnet</li>
-<li>Python wrapper acting as a convenient human-oriented interface</li>
-</ul>
+<p>Code development and unit-testing involve tasks that need to be executed hundreds of times, and each time in exactly the same way and in the exactly the same context. Therefore those tasks need to be fully automated, as otherwise a lot of time is being wasted and, what&#8217;s even worse, a lot of additional uncertainty is introduced. Manually performed actions are prone to errors.</p>
+<p>And this is what EOSFactory actually brings to the table: an easy &amp; intuitive way to automate the process of dealing with smart-contracts. Write down, in the form of a Python script, what needs to be done multiple times in exactly the same way and in exactly the same context, and then just run the script. EOSFactory will take care of everything else: it will compile your smart-contract, create a new testnet, deploy the contract, invoke its methods and verify the response, then tear down the testnet, and finally report the results. And all of this done in a couple of seconds.</p>
 </div>
 <div class="section" id="main-features">
 <span id="main-features"></span><h2>Main features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h2>
@@ -181,6 +173,14 @@
 <span id="real-testnet"></span><h3>Real testnet<a class="headerlink" href="#real-testnet" title="Permalink to this headline">¶</a></h3>
 <p>As EOS full node is very quick we don&#8217;t need to rely on a testnet simulator similar to <a class="reference external" href="https://github.com/trufflesuite/ganache-cli">TestRPC</a> in Ethereum. Instead, we can work with a real testnet and this makes unit-tests much more reliable. Thus EOSFactory has the ability to launch and tear down an EOS testnet in a very efficient way, so that you can fully test your smart-contract in a couple of seconds and do it multiple times.</p>
 </div>
+</div>
+<div class="section" id="architecture">
+<span id="architecture"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
+<p>EOSFactory is composed of two layers:</p>
+<ul class="simple">
+<li>C++ bridge connected to an EOS node running a private testnet</li>
+<li>Python wrapper acting as a convenient human-oriented interface</li>
+</ul>
 </div>
 <div class="section" id="disclaimer">
 <span id="disclaimer"></span><h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Permalink to this headline">¶</a></h2>
