@@ -24,7 +24,7 @@ def run():
     c.push_action("create", '{"challenger":"alice", "host":"bob"}', sess.bob)
 
     print('test t=c.get_table("games", sess.bob):')
-    t=c.get_table("games", sess.bob)
+    t = c.get_table("games", sess.bob)
     
     assert t.json["rows"][0]["board"][0] == '0'
     assert t.json["rows"][0]["board"][1] == '0'
@@ -43,7 +43,7 @@ def run():
     c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"alice", "mvt":{"row":1, "column":1} }', sess.alice)
 
     print('test t=c.get_table("games", sess.bob):')
-    t=c.get_table("games", sess.bob)
+    t = c.get_table("games", sess.bob)
 
     assert t.json["rows"][0]["board"][0] == '1'
     assert t.json["rows"][0]["board"][1] == '0'
@@ -59,7 +59,7 @@ def run():
     c.push_action("restart", '{"challenger":"alice", "host":"bob", "by":"bob"}', sess.bob)
     
     print('test t=c.get_table("games", sess.bob):')
-    t=c.get_table("games", sess.bob)
+    t = c.get_table("games", sess.bob)
     
     assert t.json["rows"][0]["board"][0] == '0'
     assert t.json["rows"][0]["board"][1] == '0'
@@ -78,6 +78,7 @@ def run():
     node.stop()
 
     print("Test OK")
+
 
 if __name__ == "__main__":
     run()
