@@ -13,7 +13,7 @@ def run():
     sess.init()
 
     print('test Template():')
-    c = Template("hello,test3")
+    c = Template("hello-test3")
 
     print('test c.path():')
     c.path()
