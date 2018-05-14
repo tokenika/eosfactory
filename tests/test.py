@@ -12,7 +12,7 @@ def run():
     # Your unit-test goes here #
     ############################
     
-    node.stop()    
+    node.stop()
     print("Test OK")
 
 

@@ -7,13 +7,16 @@ from eosf import *
 def run():
     print('test node.reset():')
     node.reset()
+
     print('test node.info():')
     node.info()
+    
     print('test sess.init():')
     sess.init()
 
     print('test c = Contract("tic.tac.toe"):')
     c = Contract("tic.tac.toe")
+
     print('test c.deploy():')
     c.deploy()
 
@@ -35,9 +38,11 @@ def run():
 
     print('test c.push_action("move", sess.bob):')
     c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"bob", "mvt":{"row":0, "column":0} }', sess.bob)
+
     print('test c.push_action("move", sess.alice):')
     c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"alice", "mvt":{"row":1, "column":1} }', sess.alice)
 
+    print('test t=c.get_table("games", sess.bob):')
     t=c.get_table("games", sess.bob)
 
     assert t.json["rows"][0]["board"][0] == '1'
@@ -70,7 +75,8 @@ def run():
     c.push_action("close", '{"challenger":"alice", "host":"bob"}', sess.bob)
 
     print('test node.stop():')
-    node.stop()    
+    node.stop()
+
     print("Test OK")
 
 if __name__ == "__main__":

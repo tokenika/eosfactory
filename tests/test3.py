@@ -7,8 +7,10 @@ from eosf import *
 def run():
     print('test node.reset():')
     node.reset()
+
     print('test node.info():')
     node.info()
+
     print('test sess.init():')
     sess.init()
 
@@ -40,7 +42,8 @@ def run():
     c.delete()
     
     print('test node.stop():')
-    node.stop()    
+    node.stop()
+    
     print("Test OK")
 
 

@@ -4,20 +4,29 @@ import node
 import sess
 from eosf import *
 
+"""
+NOTE: This test fails due to an unresolved bug
+"""
+
 def run():
     print('test node.reset():')
     node.reset()
+
     print('test node.info():')
     node.info()
+
     print('test sess.init():')
     sess.init()
 
     print('test Contract("eosio.token"):')
     c = Contract("eosio.token")
+
     print('test c.get_code():')
     c.get_code()
+
     print('test c.deploy():')
     c.deploy()
+
     print('test c.get_code():')
     c.get_code()
 
@@ -32,6 +41,7 @@ def run():
     
     print('test node.stop():')
     node.stop()
+
     print("Test OK")
 
 
