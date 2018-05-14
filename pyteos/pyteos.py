@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 
 """
+Python front-end for C++ `teos`, which is an alternative for block.one's `cleos`.
+
 .. module:: pyteos
     :platform: Unix, Windows
-    :synopsis: This is a Python front-end for `teos`, which is an alternative for block.one's `cleos`.
+    :synopsis: Python front-end for C++ `teos`, which is an alternative for block.one's `cleos`.
 
 .. moduleauthor:: Tokenika
 

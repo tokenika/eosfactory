@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 
 """
+Session initiation and storage for session elements.
+
 .. module:: sess
     :platform: Unix, Windows
-    :synopsis: This is a collection of EOSFactory session elements.
+    :synopsis: Session initiation and storage for session elements.
 
 .. moduleauthor:: Tokenika
 

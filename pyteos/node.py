@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 
 """
+Commands controlling an EOS node.
+
 .. module:: node
     :platform: Unix, Windows
-    :synopsis: This is a collection of commands controlling an EOS node.
+    :synopsis: Commands controlling an EOS node.
 
 .. moduleauthor:: Tokenika
 
