@@ -471,7 +471,7 @@ printf "${bldred}%s${txtrst}" '
 '
 
 printf "\n%s\n" "
-To verify EOSFactory installation navigate to the `eosfactory` folder and run these tests:
+To verify EOSFactory installation navigate to the eosfactory folder and run these tests:
     $ python3 ./tests/test1.py
     $ python3 ./tests/test2.py
     $ python3 ./tests/test3.py
