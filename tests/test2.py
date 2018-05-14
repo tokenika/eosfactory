@@ -23,7 +23,7 @@ def run():
     print('test c.push_action("create", sess.bob):')
     c.push_action("create", '{"challenger":"alice", "host":"bob"}', sess.bob)
 
-    print('test t=c.get_table("games", sess.bob):')
+    print('test c.get_table("games", sess.bob):')
     t = c.get_table("games", sess.bob)
     
     assert t.json["rows"][0]["board"][0] == '0'
@@ -42,7 +42,7 @@ def run():
     print('test c.push_action("move", sess.alice):')
     c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"alice", "mvt":{"row":1, "column":1} }', sess.alice)
 
-    print('test t=c.get_table("games", sess.bob):')
+    print('test c.get_table("games", sess.bob):')
     t = c.get_table("games", sess.bob)
 
     assert t.json["rows"][0]["board"][0] == '1'
@@ -58,7 +58,7 @@ def run():
     print('test c.push_action("restart", sess.bob):')
     c.push_action("restart", '{"challenger":"alice", "host":"bob", "by":"bob"}', sess.bob)
     
-    print('test t=c.get_table("games", sess.bob):')
+    print('test c.get_table("games", sess.bob):')
     t = c.get_table("games", sess.bob)
     
     assert t.json["rows"][0]["board"][0] == '0'

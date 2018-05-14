@@ -197,9 +197,9 @@
     
     <span class="n">c</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;transfer&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;from&quot;:&quot;bob&quot;, &quot;to&quot;:&quot;alice&quot;, &quot;quantity&quot;:&quot;2.0000 EOS&quot;, &quot;memo&quot;:&quot;memo&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
 
-    <span class="n">t1</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;accounts&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
-    <span class="n">t2</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;accounts&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
-    <span class="n">t3</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;accounts&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;accounts&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;accounts&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+    <span class="n">t3</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;accounts&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span>
 
     <span class="k">assert</span> <span class="n">t1</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;balance&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;77.0000 EOS&#39;</span>
     <span class="k">assert</span> <span class="n">t2</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;balance&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;11.0000 EOS&#39;</span>
@@ -207,9 +207,6 @@
 
     <span class="n">node</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
     <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Test OK&quot;</span><span class="p">)</span>
-    
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Assuming your unit-test file is named <code class="docutils literal"><span class="pre">test.py</span></code>, you can run it in a Python terminal:</p>
@@ -268,7 +265,7 @@ test c.push_action(&quot;transfer&quot;, sess.carol):
 test c.push_action(&quot;transfer&quot; sess.bob):
 #   transaction id: 852cc67e445020024af698cd89f30888479a9ad43c507bd962e444bb96e9aca3
 
-testc.get_table(&quot;accounts&quot;, sess.alice):
+test c.get_table(&quot;accounts&quot;, sess.alice):
 #  {
 #      &quot;rows&quot;: [
 #          {
@@ -294,7 +291,7 @@ test c.get_table(&quot;accounts&quot;, sess.bob):
 #  }
 #
 
-test t3=c.get_table(&quot;accounts&quot;, sess.carol):
+test c.get_table(&quot;accounts&quot;, sess.carol):
 #  {
 #      &quot;rows&quot;: [
 #          {
@@ -310,6 +307,7 @@ test t3=c.get_table(&quot;accounts&quot;, sess.carol):
 assert t1.json[&quot;rows&quot;][0][&quot;balance&quot;] == &quot;77.0000 EOS&quot;:
 assert t2.json[&quot;rows&quot;][0][&quot;balance&quot;] == &quot;11.0000 EOS&quot;:
 assert t3.json[&quot;rows&quot;][0][&quot;balance&quot;] == &quot;12.0000 EOS&quot;:
+
 test node.stop():
 #  Daemon is stopped.
 
@@ -333,7 +331,7 @@ Test OK
 
     <span class="n">c</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;challenger&quot;:&quot;alice&quot;, &quot;host&quot;:&quot;bob&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
 
-    <span class="n">t</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;games&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;games&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
     
     <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
     <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
@@ -349,7 +347,7 @@ Test OK
     
     <span class="n">c</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;move&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;challenger&quot;:&quot;alice&quot;, &quot;host&quot;:&quot;bob&quot;, &quot;by&quot;:&quot;alice&quot;, &quot;mvt&quot;:{&quot;row&quot;:1, &quot;column&quot;:1} }&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
 
-    <span class="n">t</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;games&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;games&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
 
     <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span>
     <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
@@ -363,7 +361,7 @@ Test OK
 
     <span class="n">c</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;restart&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;challenger&quot;:&quot;alice&quot;, &quot;host&quot;:&quot;bob&quot;, &quot;by&quot;:&quot;bob&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
     
-    <span class="n">t</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;games&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;games&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">bob</span><span class="p">)</span>
     
     <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
     <span class="k">assert</span> <span class="n">t</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;board&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span>
@@ -379,9 +377,6 @@ Test OK
 
     <span class="n">node</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
     <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Test OK&quot;</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>And here is the result:</p>
@@ -413,7 +408,7 @@ test c.deploy():
 test c.push_action(&quot;create&quot;, sess.bob):
 #   transaction id: 68230a9b217dd58c1db465a791eb5c25fd70631ba599cd114de73aa24eabc01b
 
-test t=c.get_table(&quot;games&quot;, sess.bob):
+test c.get_table(&quot;games&quot;, sess.bob):
 #  {
 #      &quot;rows&quot;: [
 #          {
@@ -471,7 +466,7 @@ test c.push_action(&quot;move&quot;, sess.alice):
 test c.push_action(&quot;restart&quot;, sess.bob):
 #   transaction id: 22acba5e221b40e102c57fb2e2bd6ad268d644471c31fe72e8dd2c1c51934cb5
 
-test t=c.get_table(&quot;games&quot;, sess.bob):
+test c.get_table(&quot;games&quot;, sess.bob):
 #  {
 #      &quot;rows&quot;: [
 #          {
@@ -517,11 +512,11 @@ Test OK
 <div class="highlight-python"><div class="highlight"><pre><span class="n">c</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Then figure out it&#8217;s location:</p>
+<p>And then figure out its location:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">c</span><span class="o">.</span><span class="n">path</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>And then you can move your contract to a desired location and do unit-tests there.</p>
+<p>Having done that, you can move your contract to any location you want and do unit-tests there.</p>
 <p>Ultimately we want to make unit-testing much better organized. Also, we&#8217;ll be aiming at much tighter integration with <em>Visual Studio Code</em>.</p>
 </div>
 </div>

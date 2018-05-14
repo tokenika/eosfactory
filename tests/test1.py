@@ -41,14 +41,14 @@ def run():
     print('test c.push_action("transfer" sess.bob):')
     c.push_action("transfer", '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", "memo":"memo"}', sess.bob)
 
-    print('testc.get_table("accounts", sess.alice):')
-    t1=c.get_table("accounts", sess.alice)
+    print('test c.get_table("accounts", sess.alice):')
+    t1 = c.get_table("accounts", sess.alice)
     
     print('test c.get_table("accounts", sess.bob):')
-    t2=c.get_table("accounts", sess.bob)
+    t2 = c.get_table("accounts", sess.bob)
     
-    print('test t3=c.get_table("accounts", sess.carol):')
-    t3=c.get_table("accounts", sess.carol)
+    print('test c.get_table("accounts", sess.carol):')
+    t3 = c.get_table("accounts", sess.carol)
 
     print('assert t1.json["rows"][0]["balance"] == "77.0000 EOS":')
     assert t1.json["rows"][0]["balance"] == '77.0000 EOS'
@@ -61,7 +61,7 @@ def run():
 
     print('test node.stop():')
     node.stop()
-    
+
     print("Test OK")
 
 
