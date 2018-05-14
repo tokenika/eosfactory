@@ -1,6 +1,7 @@
 install
 workdir
 *.exe
+b
 build
 build_gnu
 CMakeFiles
