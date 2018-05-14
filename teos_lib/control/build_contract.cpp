@@ -356,7 +356,7 @@ namespace teos {
         command_line += " -c " + file
           + " -o " + output.string();
 
-        cout << "command line clang:" << endl << command_line << endl;
+        //cout << "command line clang:" << endl << command_line << endl;
 
         if(!process(command_line, this)){
           return;
