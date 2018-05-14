@@ -461,17 +461,18 @@ txtbld=$(tput bold)
 bldred=${txtbld}$(tput setaf 1)
 txtrst=$(tput sgr0)
 printf "${bldred}%s${txtrst}" '
-         ______ ____   _____   ______      _____ _______ ____  _______     __
-        |  ____/ __ \ / ____| |  ____/\   / ____|__   __/ __ \|  __ \ \   / /
-        | |__ | |  | | (___   | |__ /  \ | |       | | | |  | | |__) \ \_/ / 
-        |  __|| |  | |\___ \  |  __/ /\ \| |       | | | |  | |  _  / \   /  
-        | |___| |__| |____) | | | / ____ \ |____   | | | |__| | | \ \  | |   
-        |______\____/|_____/  |_|/_/    \_\_____|  |_|  \____/|_|  \_\ |_|   
+         ______ ____   _____  ______      _____ _______ ____  _______     __
+        |  ____/ __ \ / ____||  ____/\   / ____|__   __/ __ \|  __ \ \   / /
+        | |__ | |  | | (___  | |__ /  \ | |       | | | |  | | |__) \ \_/ / 
+        |  __|| |  | |\___ \ |  __/ /\ \| |       | | | |  | |  _  / \   /  
+        | |___| |__| |____) || | / ____ \ |____   | | | |__| | | \ \  | |   
+        |______\____/|_____/ |_|/_/    \_\_____|  |_|  \____/|_|  \_\ |_|   
                                                       
 '
 
 printf "\n%s\n" "
-VERIFY
-    the EOSFacotry installation by running the following command:
+To verify EOSFactory installation navigate to the `eosfactory` folder and run these tests:
     $ python3 ./tests/test1.py
+    $ python3 ./tests/test2.py
+    $ python3 ./tests/test3.py
 "

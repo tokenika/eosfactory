@@ -4,13 +4,13 @@
 
 The goal is to achieve a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
 
-Using a single command-line interface you can create a private testnet and then compile, unit-test and deploy [EOS](https://eos.io/) smart-contracts.
+With a single command-line interface you can create a private testnet and then compile, unit-test and deploy [EOS](https://eos.io/) smart-contracts.
 
 All of this using simple yet powerful [Python3](https://www.python.org/) syntax.
 
 ## Why it’s needed?
 
-Everything that EOSFactory offers can be done with the the official EOS toolset, i.e. `cleos` and `eosiocpp`. Is EOSFactory just another tool like that? Not really.
+Everything that EOSFactory offers can be done with the official EOS toolset, i.e. `cleos` and `eosiocpp`. Is EOSFactory just another tool like that? Not really.
 
 Code development and unit-testing involve tasks that need to be  executed hundreds of times, and each time in exactly the same way and in  the exactly the same context. Therefore those tasks need to be fully  automated, as otherwise a lot of time is being wasted and, what’s even  worse, a lot of additional uncertainty is introduced. Manually performed  actions are prone to errors.
 

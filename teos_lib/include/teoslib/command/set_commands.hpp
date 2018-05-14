@@ -103,7 +103,7 @@ Usage: ./teos [http address] create key --jarg '{
           ("account,n", value<string>(&account)
             , "The name of account to publish a contract for.")
           ("contract-dir,c", value<string>(&contractDir)
-            , "Contract directory, the the path containing the .wast and .abi")          
+            , "Contract directory, the path containing .wast and .abi")          
           ("wast-file", value<string>(&wastFile)
             , "The WAST for the contract relative to the contract dir.")
           ("abi-file", value<string>(&abiFile)->default_value("")
