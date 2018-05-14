@@ -13,7 +13,7 @@ def run():
     sess.init()
 
     print('test Template():')
-    c = Template("hello.test3")
+    c = Template("hello,test3")
 
     print('test c.path():')
     c.path()
@@ -27,8 +27,8 @@ def run():
     print('test c.push_action("hi", sess.alice):')
     c.push_action("hi", '{"user":"alice"}', sess.alice)
 
-    print('test c.push_action("hi", sess.carol):')
-    c.push_action("hi", '{"user":"alice"}', sess.carol)
+    print('test c.push_action("hi", sess.alice):')
+    c.push_action("hi", '{"user":"carol"}', sess.carol)
 
     print('test c.delete():')
     c.delete()

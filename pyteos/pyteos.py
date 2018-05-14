@@ -993,6 +993,7 @@ class Contract(SetContract):
             self.action_json = push_action.json
             try:
                 self.console = self.action_json["processed"]["action_traces"][0]["console"]
+                print(self.console)
             except:
                 pass
 
