@@ -375,7 +375,7 @@ Test OK
 
 ## Further steps
 
-The above schema is just a proof-of-concept solution for unit-testing in EOSFactory. At this stage we don't handle errors properly and we don't offer proper assertions. These are just toy examples.
+The above schema is just a proof-of-concept solution for unit-testing in EOSFactory. At this stage we don't handle errors properly and we don't offer proper assertions. These are just demo examples.
 
 What's definitely missing is clear separation between EOSFactory source code and a user's workspace where all his contracts & unit-tests are stored. This will be supplied in the next release. For the time being you can keep your contracts in a separate location and refer to them using a full path, e.g.
 
