@@ -1001,8 +1001,8 @@ class Contract(SetContract):
             pprint.pprint(self.action_json)
 
 
-    def out(self):
-        print(self.console)
+    def get_console(self):
+        return self.console
 
 
     def show_action(self, action, data, permission=""):
