@@ -23,7 +23,7 @@ When you use tools like `cleos` all you have at your disposal is issuing command
 
 #### Simple syntax
 
-The front-end of EOSFactory is simply a Python3 CLI. This way you can interact with EOS smart-contract, and prove it works as expected, without having to deal with the complexity of a low-level language like C++. In most cases Python's syntax is clear for everyone.
+The front-end of EOSFactory is simply a Python3 Command Line Interface. This way you can interact with EOS smart-contract, and prove it works as expected, without having to deal with the complexity of a low-level language like C++. In most cases Python's syntax is clear for everyone.
 
 #### Real testnet
 
