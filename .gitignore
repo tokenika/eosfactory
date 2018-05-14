@@ -37,3 +37,4 @@ pyteos/docs/Makefile
 pyteos/docs/.themes
 
 *.pyc
+.vscode/settings.json
