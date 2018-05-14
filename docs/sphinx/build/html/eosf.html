@@ -136,20 +136,20 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="eosf">
-<h1>eosf<a class="headerlink" href="#eosf" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-eosf">
+<span id="eosf"></span><h1>eosf<a class="headerlink" href="#module-eosf" title="Permalink to this headline">¶</a></h1>
 <p>Macros made of elements of the <a class="reference internal" href="pyteos.html#module-pyteos" title="pyteos: Python front-end for C++ `teos`, which is an alternative for block.one's `cleos`. (Unix, Windows)"><code class="xref py py-mod docutils literal"><span class="pre">pyteos</span></code></a> module, intended for experiments with EOSIO smart-contracts.</p>
 <span class="target" id="module-eosf"></span><dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>name</em>, <em>creator</em><span class="sig-paren">)</span></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyteos.Account</span></code></p>
+<dt id="eosf.Account">
+<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>name</em>, <em>creator</em><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyteos.html#pyteos.Account" title="pyteos.Account"><code class="xref py py-class docutils literal"><span class="pre">pyteos.Account</span></code></a></p>
 <p>Creates an account and imports its keys into the <em>wallet</em>.</p>
 </dd></dl>
 
 <dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyteos.Contract</span></code></p>
+<dt id="eosf.Contract">
+<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Contract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyteos.html#pyteos.Contract" title="pyteos.Contract"><code class="xref py py-class docutils literal"><span class="pre">pyteos.Contract</span></code></a></p>
 <p>Creates a contract, given a contract directory containing WAST and ABI.</p>
 <p>This class extends the <cite>pyteos.Contract</cite>: it goes without the <cite>account</cite>
 parameter, instead it uses an account created internally.</p>
@@ -198,9 +198,9 @@ account: The account that owns the contract.
 </dd></dl>
 
 <dl class="class">
-<dt>
-<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Template</code><span class="sig-paren">(</span><em>name</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">eosf.Contract</span></code></p>
+<dt id="eosf.Template">
+<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Template</code><span class="sig-paren">(</span><em>name</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosf.Contract" title="eosf.Contract"><code class="xref py py-class docutils literal"><span class="pre">eosf.Contract</span></code></a></p>
 <p>Creates a new contract from a pre-defined template.</p>
 </dd></dl>
 
