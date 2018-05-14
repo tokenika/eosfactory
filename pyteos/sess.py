@@ -1,7 +1,12 @@
 #!/usr/bin/python3
 
-""" 
-This is a collection of EOSFactory session elements
+"""
+.. module:: sess
+    :platform: Unix, Windows
+    :synopsis: This is a collection of EOSFactory session elements.
+
+.. moduleauthor:: Tokenika
+
 """
 
 import pyteos

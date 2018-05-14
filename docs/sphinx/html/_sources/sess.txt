@@ -1,4 +1,6 @@
 sess
 ====
 
-.. autoclass:: sess.init
+.. automodule:: sess
+    :members:
+    :show-inheritance:

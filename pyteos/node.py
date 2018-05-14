@@ -1,7 +1,12 @@
 #!/usr/bin/python3
 
-""" 
-This is a collection of commands controlling an EOS node
+"""
+.. module:: node
+    :platform: Unix, Windows
+    :synopsis: This is a collection of commands controlling an EOS node.
+
+.. moduleauthor:: Tokenika
+
 """
 
 import pyteos

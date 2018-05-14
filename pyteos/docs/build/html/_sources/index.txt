@@ -10,7 +10,7 @@ Tutorials
 ----------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    01.InstallingEOSFactory
    02.InteractingWithEOSContractsInEOSFactory
@@ -32,4 +32,5 @@ Indices and tables
 ------------------
 
 * :ref:`genindex`
+* :ref:`modindex`
 * :ref:`search`

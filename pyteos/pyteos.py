@@ -1,7 +1,12 @@
 #!/usr/bin/python3
 
 """
-This is a Python front-end for `teos`, an alternative for block.one CLI called `cleos`.
+.. module:: pyteos
+    :platform: Unix, Windows
+    :synopsis: This is a Python front-end for `teos`, which is an alternative for block.one's `cleos`.
+
+.. moduleauthor:: Tokenika
+
 """
 
 import os
@@ -815,10 +820,6 @@ class AccountEosio(Account):
     Without any such, it is not possible to execute commands that need 
     authorizations.
 
-    account_eosio = pyteos.AccountEosio()
-    contract_eosio_bios = pyteos.SetContract(
-        account_eosio, "eosio.bios", permission=account_eosio)
-    #        transaction id: 7d5d9c7f56d46d6eab95f2dea6aaab667b5eb3d0877...
     """
     def __init__(self, is_verbose=True): 
         self.json = json.loads("{}")
@@ -995,7 +996,7 @@ class Contract(SetContract):
     
 
     def get_table(self, table, scope=""):
-        """ Prints a contract's table
+        """ Prints a contract's table.
 
         """
         if not scope:
@@ -1009,7 +1010,7 @@ class Contract(SetContract):
 
 
     def get_code(self):
-        """ Prints a contract's code
+        """ Prints a contract's code.
 
         """
         GetCode(self.name)

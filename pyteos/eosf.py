@@ -1,8 +1,12 @@
 #!/usr/bin/python3
 
-""" 
-This is a collection of macros made of elements of the pyteos module, intended
-for experiments with EOSIO smart-contracts.
+"""
+.. module:: eosf
+    :platform: Unix, Windows
+    :synopsis: This is a collection of macros made of elements of the pyteos module, intended for experiments with EOSIO smart-contracts.
+
+.. moduleauthor:: Tokenika
+
 """
 
 import pathlib
