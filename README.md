@@ -14,23 +14,23 @@ Undoubtedly, everything that EOSFactory offers can be done with the official EOS
 
 Try to go through EOS tutorials based on `cleos` and you'll see how much concentration is required to follow those simple examples without making a single mistake. And now imagine doing it 10 or 100 times. Surely, it's a daunting task!
 
-Code development and unit-testing involve tasks that need to be  executed hundreds of times, and each time in exactly the same way and in  the exactly the same context. Therefore those tasks need to be fully  automated, as otherwise a lot of time is being wasted and, what’s even  worse, a lot of additional uncertainty is introduced. Manually performed  actions are prone to errors.
+Code development and unit-testing involve tasks that need to be executed hundreds of times, and each time in exactly the same way and exactly the same context. Therefore those tasks need to be fully automated, as otherwise a lot of time is being wasted and, what’s even worse, a lot of additional uncertainty is introduced. Manually performed actions are prone to errors.
 
-And this is what EOSFactory actually brings to the table: an easy  & intuitive way to automate the process of dealing with  smart-contracts. Write down, in the form of a Python script, what needs  to be done multiple times in exactly the same way and in exactly the  same context, and then just run the script. EOSFactory will take care of  everything else: it will compile your smart-contract, create a new  testnet, deploy the contract, invoke its methods and verify the  response, then tear down the testnet, and finally report the results.  And all of this done in a couple of seconds.
+And this is what EOSFactory actually brings to the table: an easy & intuitive way to automate the process of dealing with smart-contracts. Write down, in the form of a Python script, what needs to be done multiple times in exactly the same way and exactly the same context, and then just run the script. EOSFactory will take care of everything else: it will compile your smart-contract, create a new testnet, deploy the contract, invoke its methods and verify the response, then tear down the testnet, and finally report the results. And all of this done in a couple of seconds.
 
 ## Main features
 
 ### Object-oriented
 
-When you use tools like `cleos` all you have at your disposal is issuing separate, one-off commands, as `cleos` is not able to keep your state. Thus each time you interact with a contract, you need to tell `cleos`  which contract and which account you mean. Contrary to that, in  EOSFactory everything is an object. You create a contract (or an  account), keep reference to it and then invoke its various methods.
+When you use tools like `cleos` all you have at your disposal is issuing separate, one-off commands, as `cleos` is not able to keep your state. Thus each time you interact with a contract, you need to tell `cleos` which contract and which account you mean. Contrary to that, in EOSFactory everything is an object. You create a contract (or an account), keep reference to it and then invoke its various methods.
 
 ### Simple syntax
 
-The front-end of EOSFactory is simply a Python3 Command Line  Interface. This way you can interact with EOS smart-contract, and prove  it works as expected, without having to deal with the complexity of a  low-level language like C++. In most cases Python’s syntax is clear for  everyone.
+The front-end of EOSFactory is simply a Python3 Command Line Interface. This way you can interact with EOS smart-contract, and prove it works as expected, without having to deal with the complexity of a low-level language like C++. In most cases Python’s syntax is clear for everyone.
 
 ### Real testnet
 
-As EOS full node is very quick we don’t need to rely on a testnet simulator similar to [TestRPC](https://github.com/trufflesuite/ganache-cli)  in Ethereum. Instead, we can work with a real testnet and this makes  unit-tests much more reliable. Thus EOSFactory has the ability to launch  and tear down an EOS testnet in a very efficient way, so that you can  fully test your smart-contract in a couple of seconds and do it multiple  times.
+As EOS full node is very quick we don’t need to rely on a testnet simulator similar to [TestRPC](https://github.com/trufflesuite/ganache-cli) in Ethereum. Instead, we can work with a real testnet and this makes unit-tests much more reliable. Thus EOSFactory has the ability to launch and tear down an EOS testnet in a very efficient way, so that you can fully test your smart-contract in a couple of seconds and do it multiple times.
 
 ## Truly cross-platform
 

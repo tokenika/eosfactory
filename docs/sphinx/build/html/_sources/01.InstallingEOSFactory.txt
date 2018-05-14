@@ -101,7 +101,7 @@ If you have the latest WSL release, this assumption is most likely valid. Howeve
 setx.exe "HOME" %LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs\\home\\$USER
 ```
 
-**NOTE:** If you are unsure what the path is in your case, open *Windows Explorer*, navigate to the  `%LocalAppData%\\Packages` folder and search for `rootfs`.
+**NOTE:** If you are unsure what the path is in your case, open *Windows Explorer*, navigate to the `%LocalAppData%\\Packages` folder and search for `rootfs`.
 
 And finally, load the system variables that were created during installation:
 
