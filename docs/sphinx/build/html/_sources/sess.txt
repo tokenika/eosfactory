@@ -1,5 +1,5 @@
-pyteos
-======
+sess
+====
 
 .. automodule:: sess
     :members:
