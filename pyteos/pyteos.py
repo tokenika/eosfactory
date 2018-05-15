@@ -982,7 +982,7 @@ class Contract(SetContract):
                 permission=permission.name
             except: # permission is the name of an account:
                 permission=permission
-
+    
         push_action = PushAction(
             self.account_name, action, data,
             permission, 
@@ -993,7 +993,9 @@ class Contract(SetContract):
         if not push_action.error:
             self.action_json = push_action.json
             try:
-                self.console = self.action_json["processed"]["action_traces"][0]["console"]
+                self.console = \
+                    self.action_json["processed"]["action_traces"][0] \
+                    ["console"]
                 print(self.console)
             except:
                 pass
