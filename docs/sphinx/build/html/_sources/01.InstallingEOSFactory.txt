@@ -49,18 +49,6 @@ Then run the `build` script by pointing it to the *EOSIO* source code:
 ./build.sh -e ~/Workspaces/EOS/eos
 ```
 
-And finally, load the system variables that were created during installation. The command may differ depending on your system. If you are on Ubuntu:
-
-```
-source ~/.bashrc
-```
-
-And if you are on MacOS:
-
-```
-source ~/.bash_profile
-```
-
 ## Build EOSFactory on Windows
 
 Clone EOSFactory source code from the repository:
@@ -89,27 +77,21 @@ Then run the `build` script by pointing it to the *EOSIO* source code:
 ./build.sh -e /mnt/d/Workspaces/EOS/eos
 ```
 
-After the build process is finished, make sure your `HOME` user variable has been set properly. The `build` script assumes that your WSL is located in this directory:
+**NOTE:** The `build` script assumes that your WSL is located in this directory:
 
 ```
 %LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc
 ```
 
-If you have the latest WSL release, this assumption is most likely valid. However, if for some reasons your WSL is in a different location, please amend your `HOME` user variable manually by using this command in your WSL bash:
+If you have the latest WSL release, this assumption is most likely valid. However, if for some reasons your WSL is in a different location, run the `build` script again with an additional `-o` parameter pointing to your WSL `rootfs` directory, for example:
 
 ```
-setx.exe "HOME" %LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs\\home\\$USER
+./build.sh -e /mnt/d/Workspaces/EOS/eos -o %LocalAppData%\Packages\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\LocalState\rootfs
 ```
 
-**NOTE:** If you are unsure what the path is in your case, open *Windows Explorer*, navigate to the `%LocalAppData%\\Packages` folder and search for `rootfs`.
+If you are unsure what the path is in your case, open Windows Explorer, navigate to the `%LocalAppData%\\Packages` folder and search for `rootfs`.
 
-And finally, load the system variables that were created during installation:
-
-```
-source ~/.bashrc
-```
-
-## Test EOSFactory
+## Load system variables
 
 If the build process is successful, you should see this message:
 
@@ -122,7 +104,23 @@ If the build process is successful, you should see this message:
         |______\____/|_____/ |_|/_/    \_\_____|  |_|  \____/|_|  \_\ |_|  
 ```
 
-Let's verify that EOSFactory works and is properly hooked up to *EOSIO*.
+At this stage you need to load the system variables that were created during EOSFactory installation (alternatively you can just restart your bash terminal and skip this step).
+
+The command may differ depending on your system. If you are on Ubuntu or Windows:
+
+```
+source ~/.bashrc
+```
+
+And if you are on MacOS:
+
+```
+source ~/.bash_profile
+```
+
+## Test EOSFactory
+
+Now let's verify that EOSFactory works and is properly hooked up to *EOSIO*.
 
 First, make sure your working directory is switched to `eosfactory`:
 
@@ -188,5 +186,11 @@ If you want to rebuild EOSFactory from scratch, apply the `-r` option:
 
 ```
 ./build.sh -r
+```
+
+And to get help for the `build` script:
+
+```
+./build.sh -h
 ```
 

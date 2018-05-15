@@ -504,20 +504,19 @@ Test OK
 <div class="section" id="further-steps">
 <span id="further-steps"></span><h2>Further steps<a class="headerlink" href="#further-steps" title="Permalink to this headline">¶</a></h2>
 <p>The above schema is just a proof-of-concept solution for unit-testing in EOSFactory. At this stage we don&#8217;t handle errors properly and we don&#8217;t offer proper assertions. These are just demo examples.</p>
-<p>What&#8217;s definitely missing is clear separation between EOSFactory source code and a user&#8217;s workspace where all his contracts &amp; unit-tests are stored. This will be supplied in the next release. For the time being you can keep your contracts in a separate location and refer to them using a full path, e.g.</p>
+<p>What&#8217;s definitely missing is clear separation between EOSFactory source code and a user&#8217;s workspace where all his contracts &amp; unit-tests are stored. This will be supplied in the next release. For the time being you can keep your contracts in a separate location and refer to them using their full path, for example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">c</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="s2">&quot;/mnt/x/Workspaces/contracts/hello&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>However, when you create a new contract from a template, paths are not currently supported, so you need to use the contract&#8217;s folder name e.g.</p>
+<p>However, when you create a new contract using the <code class="docutils literal"><span class="pre">Template</span></code> class, paths are not currently supported, so you need to specify just the folder name, for example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">c</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>And then figure out its location:</p>
+<p>And then figure out the newly created contract&#8217;s location:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">c</span><span class="o">.</span><span class="n">path</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Having done that, you can move your contract to any location you want and do unit-tests there.</p>
-<p>Ultimately we want to make unit-testing much better organized. Also, we&#8217;ll be aiming at much tighter integration with <em>Visual Studio Code</em>.</p>
+<p>Having done that, you can move your contract to any location you want and then load it into EOSFactory using its full path.</p>
 </div>
 </div>
 
