@@ -29,7 +29,6 @@ def version():
     """
     print("Version: " + setup.version)
 
-
 def set_verbose(is_verbose):
     """
     If set `False`, `teos` commands print error messages only.
@@ -681,7 +680,7 @@ class WAST(_Command):
         #     self.wast = self.json["WAST"]
 
 
-class _StartNode(_Command):
+class NodeStart(_Command):
     def __init__(self, clear=0, is_verbose=True):
         self._jarg["resync-blockchain"] = clear
         self._jarg["DO_NOT_WAIT"] = 1
@@ -708,7 +707,7 @@ class _StartNode(_Command):
                         shell=True)
 
 
-class _WaitNode(_Command):
+class NodeProbe(_Command):
     def __init__(self, is_verbose=True):
         count = setup.node_block_count
         num = setup.node_block_num
@@ -1035,22 +1034,3 @@ class Contract(SetContract):
 
     def get_path(self):
         return str(self.contract_path_absolute)
-
-
-def node_reset():
-    _StartNode(1, True)
-    wait = _WaitNode(True)
-    print(wait.get_info)
-
-
-def node_run():
-    _Node(0, True)
-
-
-def node_stop():
-    NodeStop()
-    
-
-def node_info():
-    GetInfo()
-

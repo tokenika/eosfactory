@@ -15,24 +15,29 @@ import pyteos
 
 def reset():
     """
-    Reset and start a local EOSIO node.
+    Reset and start a local EOS node.
     """
-    pyteos.node_reset()
+    pyteos.NodeStart(1, True)
+    probe = pyteos.NodeProbe(True)
+    print(probe.get_info)
 
-def stop():
-    """
-    Stop a local EOSIO node. 
-    """
-    pyteos.node_stop()
 
 def run():
     """
-    Restart a local EOSIO node.
+    Restart a local EOS node.
     """
-    pyteos.node_run()
+    pyteos.NodeStart(0, True)
+
+
+def stop():
+    """
+    Stop a local EOS node. 
+    """
+    pyteos.NodeStop()
+
 
 def info():
     """
-    Display EOSIO node status.
+    Display EOS node status.
     """
-    pyteos.node_info()
+    pyteos.GetInfo()
