@@ -94,6 +94,7 @@
 <li><a class="reference internal" href="#build-eosfactory-on-ubuntu-macos">Build EOSFactory on Ubuntu &amp; MacOS</a></li>
 <li><a class="reference internal" href="#build-eosfactory-on-windows">Build EOSFactory on Windows</a></li>
 <li><a class="reference internal" href="#test-eosfactory">Test EOSFactory</a></li>
+<li><a class="reference internal" href="#subsequent-eosfactory-builds">Subsequent EOSFactory builds</a></li>
 </ul>
 </li>
 </ul>
@@ -232,6 +233,15 @@
 </div>
 <div class="section" id="test-eosfactory">
 <span id="test-eosfactory"></span><h2>Test EOSFactory<a class="headerlink" href="#test-eosfactory" title="Permalink to this headline">¶</a></h2>
+<p>If the installation is successful you should see this message:</p>
+<div class="highlight-python"><div class="highlight"><pre>         ______ ____   _____  ______      _____ _______ ____  _______     __
+        |  ____/ __ \ / ____||  ____/\   / ____|__   __/ __ \|  __ \ \   / /
+        | |__ | |  | | (___  | |__ /  \ | |       | | | |  | | |__) \ \_/ / 
+        |  __|| |  | |\___ \ |  __/ /\ \| |       | | | |  | |  _  / \   /  
+        | |___| |__| |____) || | / ____ \ |____   | | | |__| | | \ \  | |   
+        |______\____/|_____/ |_|/_/    \_\_____|  |_|  \____/|_|  \_\ |_|  
+</pre></div>
+</div>
 <p>Let&#8217;s verify that EOSFactory works and is properly hooked up to <em>EOSIO</em>.</p>
 <p>First, make sure your working directory is switched to <code class="docutils literal"><span class="pre">eosfactory</span></code>:</p>
 <div class="highlight-python"><div class="highlight"><pre>cd eosfactory
@@ -245,6 +255,31 @@ python3 ./tests/test3.py
 </div>
 <p>If everything works fine, you should see this message at the end of each test round:</p>
 <div class="highlight-python"><div class="highlight"><pre>Test OK
+</pre></div>
+</div>
+<p>If it fails due to the <code class="docutils literal"><span class="pre">ModuleNotFoundError</span></code> error, make sure you&#8217;ve loaded the newly created system variables into your terminal:</p>
+<div class="highlight-python"><div class="highlight"><pre>source ~/.bashrc
+</pre></div>
+</div>
+<p>Or if you are on MacOS:</p>
+<div class="highlight-python"><div class="highlight"><pre>source ~/.bash_profile
+</pre></div>
+</div>
+</div>
+<div class="section" id="subsequent-eosfactory-builds">
+<span id="subsequent-eosfactory-builds"></span><h2>Subsequent EOSFactory builds<a class="headerlink" href="#subsequent-eosfactory-builds" title="Permalink to this headline">¶</a></h2>
+<p>If you want to upgrade to the latest version of EOSFactory:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd eosfactory
+git pull
+</pre></div>
+</div>
+<p>And then just run:</p>
+<div class="highlight-python"><div class="highlight"><pre>./build.sh
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> After the initial successful installation, unless the path to your <em>EOSIO</em> source code has changed, you don&#8217;t need to supply it when doing subsequent EOSFactory builds, as this path is already stored in your system variables.</p>
+<p>If you want rebuild EOSFactory from scratch, apply the <code class="docutils literal"><span class="pre">-r</span></code> option:</p>
+<div class="highlight-python"><div class="highlight"><pre>./build.sh -r
 </pre></div>
 </div>
 </div>
