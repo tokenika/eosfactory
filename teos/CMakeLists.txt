@@ -38,6 +38,8 @@ message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 
 set( TEST_ADDRESS "tokenika")
 set( TEST_HTTP_ADDRESS "eos-testapi.tokenika.io:8888" )
+set( CONFIG_JSON_FILE "config.json" )
+set( CONFIG_JSON "${CONFIG_JSON_FILE}" )
 
 # Ensure that even static libraries are relocatable so they can be linked into a .so
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
@@ -104,6 +106,15 @@ if( NOT ECC_IMPL STREQUAL openssl )
   find_package(GMP REQUIRED)
 endif()
 
+## END DEPENDENCIES ##########################################################
+
+# set( EOSIO_WASM_CLANG "\${HOME}/opt/wasm/bin/clang" )
+# set( EOSIO_WASM_LLVM_LINK "\${HOME}/opt/wasm/bin/llvm-link" )
+# set( EOSIO_WASM_LLC "\${HOME}/opt/wasm/bin/llc" )
+# set( EOSIO_BINARYEN_BIN "/usr/local/binaryen/bin/" )
+
+## BEGIN CONFIG FILES ########################################################
+
 configure_file (
   "config.h.in"
   "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.h"
@@ -112,6 +123,17 @@ configure_file (
 configure_file (
   "config.h.in"
   "${CMAKE_CURRENT_SOURCE_DIR}/../teos_lib/include/teoslib/config.h"
+)
+
+install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
+  DESTINATION "bin" )
+
+install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
+  DESTINATION "bin" )
+
+configure_file (
+  "config.json.in"
+  "${CMAKE_BINARY_DIR}/config.json"
 )
 
 ## END CONFIG FILES #########################################################
