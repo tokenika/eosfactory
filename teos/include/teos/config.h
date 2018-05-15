@@ -3,7 +3,7 @@
 #define PROJECT_NAME "teos"
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 0
-#define CONFIG_JSON "config.json"
+#define CONFIG_JSON ""
 #define TEST_ADDRESS "tokenika"
 #define TEST_HTTP_ADDRESS "eos-testapi.tokenika.io:8888"
 #define USE_CONFIG_JSON "config.json"

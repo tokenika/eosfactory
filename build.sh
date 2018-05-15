@@ -195,22 +195,36 @@ Arguments:
     RESET__=$RESET__
 "
 
-##########################################################################
+##############################################################################
 # Can be EOSIO_SOURCE_DIR defined?
-##########################################################################
+##############################################################################
 if [ -z "$EOSIO_SOURCE_DIR__" ]; then
     printf "%s\n" "
-##########################################################################
+##############################################################################
 #   THE BUILD IS NOT FINISHED!
 #   The EOSIO_SOURCE_DIR system variable is not defined. This variable 
-#   points a directory of the EOSIO repository.
+#   points a directory of the EOSIO repository built. 
+#   (Hence, ${EOSIO_SOURCE_DIR__}/build/programs/nodeos/nodeos points to the
+#   nodeos executable.)
 #
 #   It has to be either set as an environmental variable, or put as the 
 #   value of '-e' argument of this (./build.sh) script.
 #   
 #   For example:
 #   $ ./build.sh -e /mnt/c/Workspaces/EOS/eos
-##########################################################################
+##############################################################################
+"
+    exit -1
+fi
+
+if [ ! -e "${EOSIO_SOURCE_DIR__}/build/programs/nodeos/nodeos" ]; then
+    printf "%s\n" "
+##############################################################################
+#   The EOSIO_SOURCE_DIR system variable seems to be not correct. 
+#   It must be so that ${EOSIO_SOURCE_DIR__}/build/programs/nodeos/nodeos 
+#   points to the nodeos executable.
+#   Is EOSIO build in the standard way?
+##############################################################################
 "
     exit -1
 fi
