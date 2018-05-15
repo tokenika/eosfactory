@@ -220,10 +220,9 @@ fi
 if [ ! -e "${EOSIO_SOURCE_DIR__}/build/programs/nodeos/nodeos" ]; then
     printf "%s\n" "
 ##############################################################################
-#   The EOSIO_SOURCE_DIR system variable seems to be not correct. 
+#   The EOSIO_SOURCE_DIR system variable seems to be incorrect. 
 #   It must be so that ${EOSIO_SOURCE_DIR__}/build/programs/nodeos/nodeos 
 #   points to the nodeos executable.
-#   Is EOSIO build in the standard way?
 ##############################################################################
 "
     exit -1
