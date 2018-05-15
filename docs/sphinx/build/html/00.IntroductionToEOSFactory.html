@@ -91,12 +91,12 @@
 <li><a class="reference internal" href="#">Introduction to EOSFactory</a><ul>
 <li><a class="reference internal" href="#why-it-s-needed">Why it&#8217;s needed?</a></li>
 <li><a class="reference internal" href="#main-features">Main features</a><ul>
-<li><a class="reference internal" href="#object-oriented">Object-oriented</a></li>
-<li><a class="reference internal" href="#simple-syntax">Simple syntax</a></li>
-<li><a class="reference internal" href="#real-testnet">Real testnet</a></li>
+<li><a class="reference internal" href="#object-oriented">1. Object-oriented</a></li>
+<li><a class="reference internal" href="#simple-syntax">2. Simple syntax</a></li>
+<li><a class="reference internal" href="#real-testnet">3. Real testnet</a></li>
+<li><a class="reference internal" href="#truly-cross-platform">4. Truly cross-platform</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#truly-cross-platform">Truly cross-platform</a></li>
 <li><a class="reference internal" href="#architecture">Architecture</a></li>
 <li><a class="reference internal" href="#disclaimer">Disclaimer</a></li>
 </ul>
@@ -164,21 +164,21 @@
 <div class="section" id="main-features">
 <span id="main-features"></span><h2>Main features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="object-oriented">
-<span id="object-oriented"></span><h3>Object-oriented<a class="headerlink" href="#object-oriented" title="Permalink to this headline">¶</a></h3>
+<span id="object-oriented"></span><h3>1. Object-oriented<a class="headerlink" href="#object-oriented" title="Permalink to this headline">¶</a></h3>
 <p>When you use tools like <code class="docutils literal"><span class="pre">cleos</span></code> all you have at your disposal is issuing separate, one-off commands, as <code class="docutils literal"><span class="pre">cleos</span></code> is not able to keep your state. Thus each time you interact with a contract, you need to tell <code class="docutils literal"><span class="pre">cleos</span></code> which contract and which account you mean. Contrary to that, in EOSFactory everything is an object. You create a contract (or an account), keep reference to it and then invoke its various methods.</p>
 </div>
 <div class="section" id="simple-syntax">
-<span id="simple-syntax"></span><h3>Simple syntax<a class="headerlink" href="#simple-syntax" title="Permalink to this headline">¶</a></h3>
+<span id="simple-syntax"></span><h3>2. Simple syntax<a class="headerlink" href="#simple-syntax" title="Permalink to this headline">¶</a></h3>
 <p>The front-end of EOSFactory is simply a Python3 Command Line Interface. This way you can interact with EOS smart-contract, and prove it works as expected, without having to deal with the complexity of a low-level language like C++. In most cases Python&#8217;s syntax is clear for everyone.</p>
 </div>
 <div class="section" id="real-testnet">
-<span id="real-testnet"></span><h3>Real testnet<a class="headerlink" href="#real-testnet" title="Permalink to this headline">¶</a></h3>
+<span id="real-testnet"></span><h3>3. Real testnet<a class="headerlink" href="#real-testnet" title="Permalink to this headline">¶</a></h3>
 <p>As EOS full node is very quick we don&#8217;t need to rely on a testnet simulator similar to <a class="reference external" href="https://github.com/trufflesuite/ganache-cli">TestRPC</a> in Ethereum. Instead, we can work with a real testnet and this makes unit-tests much more reliable. Thus EOSFactory has the ability to launch and tear down an EOS testnet in a very efficient way, so that you can fully test your smart-contract in a couple of seconds and do it multiple times.</p>
 </div>
-</div>
 <div class="section" id="truly-cross-platform">
-<span id="truly-cross-platform"></span><h2>Truly cross-platform<a class="headerlink" href="#truly-cross-platform" title="Permalink to this headline">¶</a></h2>
+<span id="truly-cross-platform"></span><h3>4. Truly cross-platform<a class="headerlink" href="#truly-cross-platform" title="Permalink to this headline">¶</a></h3>
 <p>We make sure everything we do is fully compatible with Windows - our toolset enables you to run an EOS node and interact with it on any operating system, including Windows, MacOS and Linux.</p>
+</div>
 </div>
 <div class="section" id="architecture">
 <span id="architecture"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
