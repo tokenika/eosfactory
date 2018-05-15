@@ -258,6 +258,7 @@ namespace teos {
         trx = callSign.fcVariant_.as<signed_transaction>();
       }
       
+      
       if (!tx_dont_broadcast) {
         /*
         return call(push_txn_func, packed_transaction(trx, compression));
@@ -560,14 +561,6 @@ namespace teos {
       auto result = callJson.fcVariant_;
       auto accountPermissions = get_account_permissions(permissions);
 
-      /*
-      send_actions({
-          chain::action{ 
-            accountPermissions, 
-            contract, action, result.get_object()["binargs"].as<bytes>()
-            }}
-        );
-      */
       return send_actions(
           {
             chain::action
@@ -575,9 +568,10 @@ namespace teos {
               accountPermissions, 
               contract, action, result.get_object()["binargs"].as<bytes>()
             }
-          });
-              // expiration, skipSignature, dontBroadcast, forceUnique,
-              // maxCpuUsage, maxCpuUsage
+          },
+            expiration, skipSignature, dontBroadcast, forceUnique,
+            maxCpuUsage, maxCpuUsage
+          );
     }
   }
 }
