@@ -1,10 +1,10 @@
 # Welcome to EOSFactory
 
-[EOSFactory](http://eosfactory.io/) is a smart-contract development framework, created by [Tokenika](https://tokenika.io).
+[EOSFactory](http://eosfactory.io/) is a Python-based [EOS](https://eos.io) smart-contract development framework, created by [Tokenika](https://tokenika.io).
 
 The goal is to achieve a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
 
-With a single command-line interface you can create a private testnet and then compile, unit-test and deploy [EOS](https://eos.io/) smart-contracts.
+With a single command-line interface you can create a private testnet and then compile, unit-test and deploy EOS smart-contracts.
 
 All of this using simple yet powerful [Python3](https://www.python.org/) syntax.
 
