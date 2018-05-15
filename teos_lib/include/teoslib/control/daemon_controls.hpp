@@ -54,17 +54,12 @@ Usage: ./teos node kill
       void deleteWallets();
       void deleteDaemonData();
     public:
-      static const string CONFIGURE;
-      static const string DO_NOT_WAIT;
       static const string DO_NOT_LAUNCH;
 
       DaemonStart(
         bool resync_blockchain = false)
       {
         reqJson_.put("resync-blockchain", resync_blockchain);
-        reqJson_.put(DO_NOT_WAIT, 0);
-        reqJson_.put(CONFIGURE, 1);
-        reqJson_.put(DO_NOT_LAUNCH, 0);
         action();
       }
 
@@ -101,10 +96,7 @@ Usage: ./teos node start [Options]
           reqJson_.put("resync-blockchain", true);
         } else {
           reqJson_.put("resync-blockchain", false);
-        }
-        reqJson_.put(DaemonStart::DO_NOT_WAIT, 0);
-        reqJson_.put(DaemonStart::CONFIGURE, 1);
-        reqJson_.put(DaemonStart::DO_NOT_LAUNCH, 0);        
+        }       
         return ok;
       }
 
@@ -123,7 +115,7 @@ Usage: ./teos node start [Options]
           , command.reqJson_.get<string>("config-dir").c_str());
         output("wallet directory", "%s"
           , command.reqJson_.get<string>("wallet-dir").c_str());
-        if(command.reqJson_.count(DaemonStart::DO_NOT_WAIT) == 0) {
+        if(command.reqJson_.count(DaemonStart::DO_NOT_LAUNCH) == 0) {
           output("head block number", "%s", command.get<string>("head_block_num").c_str());
           output("head block time", "%s", command.get<string>("head_block_time").c_str());
         }

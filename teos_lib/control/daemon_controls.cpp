@@ -92,30 +92,17 @@ namespace teos {
     // class DaemonStart
     //////////////////////////////////////////////////////////////////////////
     
-    const string DaemonStart::CONFIGURE = "CONFIGURE";
-    const string DaemonStart::DO_NOT_WAIT = "DO_NOT_WAIT";
     const string DaemonStart::DO_NOT_LAUNCH = "DO_NOT_LAUNCH";
     const string EOSIO_SHARED_MEMORY_SIZE_MB = "100";
     const string DARWIN = "Darwin";
     
     void DaemonStart::action()
     {
-      if(reqJson_.get<int>(CONFIGURE) > 0){
-        configure();
-      }
-      if(isError_){
-        return;
-      }
+      configure();
 
-      if(reqJson_.get<int>(DO_NOT_LAUNCH) <= 0){
+      if(reqJson_.get(DO_NOT_LAUNCH, 0) <= 0){
         launch();
-      }
-      if(isError_){
-        return;
-      }
-      cout << "reqJson_.get<int>(DO_NOT_WAIT): " << reqJson_.get<int>(DO_NOT_WAIT) << endl;
-      if(reqJson_.get<int>(DO_NOT_WAIT) <= 0){
-        wait();
+        wait();        
       }
     }
 
