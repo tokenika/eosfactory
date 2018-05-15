@@ -121,7 +121,7 @@ wallet-dir: .
       if(configKey.size() > 1) {
         vector<string> retval = vector<string>();        
         for(int i = 1; i < configKey.size(); i++) {
-          retval.push_back(configKey[i]);
+          retval.push_back(string(configKey[i]));
         }
         return retval;          
       }      
