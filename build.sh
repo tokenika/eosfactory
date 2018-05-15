@@ -89,7 +89,7 @@ fi
 printf "Detected operating system is %s.\n" "${OS_NAME}"
 if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
     printf "\n%s\n" "
-$EOSFactory has beentested with the Windows Subsystem Linux, Ubuntu and Darwin."
+$EOSFactory has been tested with the Windows Subsystem for Linux, Ubuntu and Darwin."
 fi
 
 source scripts/${OS_NAME}.sh
@@ -203,7 +203,7 @@ if [ -z "$EOSIO_SOURCE_DIR__" ]; then
 ##############################################################################
 #   THE BUILD IS NOT FINISHED!
 #   The EOSIO_SOURCE_DIR system variable is not defined. This variable 
-#   points a directory of the EOSIO repository built. 
+#   points a directory of the EOSIO repository build. 
 #   (Hence, ${EOSIO_SOURCE_DIR__}/build/programs/nodeos/nodeos points to the
 #   nodeos executable.)
 #
@@ -305,7 +305,7 @@ if [ ! -z "$IS_WSL" ]; then
     #   ${WSL_ROOT_DIR__}
     #
     #   Please, find the path in your computer, and restart the ./build.sh
-    #   with option 
+    #   with the option 
     #   -o <path to the root of the WSL file system>
     #   added to the command line.
     ######################################################################
@@ -326,19 +326,9 @@ if [ -z "$EOSIO_SOURCE_DIR" ]; then
 "$EOSIO_SOURCE_DIR"
 #   THE BUILD IS NOT FINISHED!
 #   The EOSIO_SOURCE_DIR system variable is not in this bash.
-#
-"
-    if [ "$OS_NAME" == "Darwin" ]; then
-        printf "%s\n" "
-#   Please, relog. 
-##########################################################################
-"
-        else 
-    printf "%s\n" "
 #   Please, restart the bash. 
 ##########################################################################
 "
-    fi    
     exit -1
 fi
 
@@ -379,9 +369,7 @@ if [ -z "$EOSIO_SOURCE_DIR" ]; then
 ##########################################################################
 #   THE BUILD IS NOT FINISHED!
 #
-#   THE LOGIN HAS TO BE RESET in order to load newly set environment 
-#   variables.
-#
+#   This bash needs to restarted to load the newly set environment variables.
 #   Afterwards, this script can be restarted to continue this build.
 ##########################################################################
 "
@@ -483,8 +471,25 @@ printf "${bldred}%s${txtrst}" '
                                                       
 '
 
+
 printf "\n%s\n" "
-To verify EOSFactory installation navigate to the eosfactory folder and run these tests:
+To complete your installation please load the newly created system variables by running this command:
+"
+
+if [ "$OS_NAME" == "Darwin" ]; then
+    printf "%s\n" "
+    $ source ~/.bash_profile
+"
+else 
+    printf "%s\n" "
+    $ source ~/.bashrc
+"
+fi
+
+printf "%s\n" "
+To verify EOSFactory installation navigate to the 'eosfactory' folder and run these tests:
+"
+printf "%s\n" "
     $ python3 ./tests/test1.py
     $ python3 ./tests/test2.py
     $ python3 ./tests/test3.py
