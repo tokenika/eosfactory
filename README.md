@@ -20,19 +20,19 @@ And this is what EOSFactory actually brings to the table: an easy & intuitive wa
 
 ## Main features
 
-### Object-oriented
+#### 1. Object-oriented
 
 When you use tools like `cleos` all you have at your disposal is issuing separate, one-off commands, as `cleos` is not able to keep your state. Thus each time you interact with a contract, you need to tell `cleos` which contract and which account you mean. Contrary to that, in EOSFactory everything is an object. You create a contract (or an account), keep reference to it and then invoke its various methods.
 
-### Simple syntax
+#### 2. Simple syntax
 
 The front-end of EOSFactory is simply a Python3 Command Line Interface. This way you can interact with EOS smart-contract, and prove it works as expected, without having to deal with the complexity of a low-level language like C++. In most cases Python’s syntax is clear for everyone.
 
-### Real testnet
+#### 3. Real testnet
 
 As EOS full node is very quick we don’t need to rely on a testnet simulator similar to [TestRPC](https://github.com/trufflesuite/ganache-cli) in Ethereum. Instead, we can work with a real testnet and this makes unit-tests much more reliable. Thus EOSFactory has the ability to launch and tear down an EOS testnet in a very efficient way, so that you can fully test your smart-contract in a couple of seconds and do it multiple times.
 
-## Truly cross-platform
+#### 4. Truly cross-platform
 
 We make sure everything we do is fully compatible with Windows - our toolset enables you to run an EOS node and interact with it on any operating system, including Windows, MacOS and Linux.
 
