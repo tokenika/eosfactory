@@ -20,6 +20,7 @@ import time
 import glob
 import re
 import pathlib
+import shutil
 
 _is_verbose = True
 
@@ -617,7 +618,7 @@ class PushAction(_Command):
 
 
 class Template(_Command):
-    def __init__(self, name, is_verbose=True):
+    def __init__(self, name, remove_existing=False, is_verbose=True):
 
         contract_path = pathlib.Path(name)
         if not contract_path.is_absolute():
@@ -626,10 +627,13 @@ class Template(_Command):
                 pathlib.Path(config.json["contractWorkspace"]) / name
 
         if contract_path.exists():
-            self.error = True
-            print("ERROR!")
-            print(name + " is an existing contract definition." )
-            return
+            if remove_existing:
+                shutil.rmtree(str(contract_path))
+            else:
+                self.error = True
+                print("ERROR!")
+                print(name + " is an existing contract definition." )
+                return
 
         self._jarg["name"] = name
 
@@ -638,8 +642,8 @@ class Template(_Command):
             self.contract_dir = self.json["contract_dir"] 
             self.source_dir = self.json["source_dir"]
             self.binary_dir = self.json["binary_dir"]
-            self.cpp = self.json["template_cpp"] 
-            self.hpp = self.json["template_hpp"]        
+            self.cpp = self.json["template_cpp"]
+            self.hpp = self.json["template_hpp"]
                    
 
 class ABI(_Command):

@@ -128,18 +128,19 @@ class Template(Contract):
             permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
+            remove_existing=False,
             is_verbose=True):
 
-        template = pyteos.Template(name)
+        template = pyteos.Template(name, remove_existing = remove_existing)
         if not template.error:
             super().__init__(
-                name, 
-                wast_file=wast_file, abi_file=abi_file, 
-                permission=permission, expiration_sec=expiration_sec, 
-                skip_signature=skip_signature, dont_broadcast=skip_signature, 
+                name,
+                wast_file=wast_file, abi_file=abi_file,
+                permission=permission, expiration_sec=expiration_sec,
+                skip_signature=skip_signature, dont_broadcast=skip_signature,
                 forceUnique=forceUnique,
                 max_cpu_usage=max_cpu_usage, max_net_usage=max_net_usage,
-                is_verbose=is_verbose            
+                is_verbose=is_verbose
             )
 
 

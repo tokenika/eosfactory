@@ -15,7 +15,7 @@ def run():
     sess.init()
 
     print('test Template():')
-    c = Template("hello-test3")
+    c = Template("_e4b2ffc804529ce9c6fae258197648cc2", remove_existing = True)
 
     print('test c.path():')
     c.path()
