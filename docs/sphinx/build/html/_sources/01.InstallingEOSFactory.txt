@@ -184,7 +184,7 @@ And then just run:
 
 **NOTE:** After the initial successful installation, unless the path to your *EOSIO* source code has changed, you don't need to supply it when doing subsequent EOSFactory builds, as this path is already stored in your system variables.
 
-If you want rebuild EOSFactory from scratch, apply the `-r` option:
+If you want to rebuild EOSFactory from scratch, apply the `-r` option:
 
 ```
 ./build.sh -r
