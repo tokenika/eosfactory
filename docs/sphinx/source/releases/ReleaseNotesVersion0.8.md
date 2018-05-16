@@ -20,7 +20,8 @@ Using Python commands you currently can:
 ## Current limitations
 
 * Currently unit-tests in EOSFactory are just naïve demo examples. They don't have proper assertions, don't handle errors properly and they don't have proper tear-down methods.
-* You cannot connect EOSFactory to a testnet of your choice, only to the private one.
+* You cannot connect EOSFactory to a testnet of your choice, only to a private one running a single node.
+* Whereas the `nodeos` process runs in the background on MacOS, on other platforms (Windows & Ubuntu) it requires launching a separate terminal window (it's done automatically though). This might be a limitation for GUI-less systems like Ubuntu Server edition.
 * There are no utilities for debugging contracts, except for the "caveman" style, i.e. accessing the output stream produced by its `print()` method.
 * There is no easy way to work with smart-contracts stored outside of EOSFactory `contracts` folder or EOSIO `contracts` folder. If you want to do that you need to refer to the contract folder by its full path.
 * The `Template` class constructor only accepts a folder name, not a path (this is different from the `Contract` constructor which accepts both).
