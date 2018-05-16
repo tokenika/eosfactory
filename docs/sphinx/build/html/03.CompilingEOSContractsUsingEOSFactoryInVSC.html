@@ -229,6 +229,7 @@ EOSIO_ABI( hello, (hi) )
 <div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 </pre></div>
 </div>
+<p><strong>NOTE:</strong> The <code class="docutils literal"><span class="pre">abi()</span></code>  and <code class="docutils literal"><span class="pre">build()</span></code> methods are relying on the <em>EOSIO</em> ABI compiler which has an experimental status in the <em>EOSIO</em> repository. Thus the ABI output might be different than expected. For the time being we recommend using the <code class="docutils literal"><span class="pre">wast()</span></code> method only and creating the ABI file manually.</p>
 </div>
 <div class="section" id="deploy-the-contract">
 <span id="deploy-the-contract"></span><h2>Deploy the Contract<a class="headerlink" href="#deploy-the-contract" title="Permalink to this headline">¶</a></h2>
