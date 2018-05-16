@@ -6,7 +6,7 @@ Our current priority is integration with [Visual Studio Code](https://code.visua
 
 **GUI support**
 
-We plan to provide a graphical interface to the existing Python CLI functionality by creating a *Visual Studio Code* extension for EOSFactory.
+We plan to provide a graphical interface for the existing Python CLI functionality by creating a *Visual Studio Code* extension for EOSFactory.
 
 **Direct connection to EOSIO**
 

@@ -153,7 +153,7 @@
 <span id="what-works-in-this-release"></span><h2>What works in this release<a class="headerlink" href="#what-works-in-this-release" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Launch a single-node private testnet and fully control it: stop it and then continue running it or completely reset it.</li>
-<li>Initialize the testnet with the <code class="docutils literal"><span class="pre">bios</span></code> contract and several test accounts available as <code class="docutils literal"><span class="pre">sess.alice</span></code>, <code class="docutils literal"><span class="pre">sess.bob</span></code> and <code class="docutils literal"><span class="pre">sess.carol</span></code>.</li>
+<li>Initialize a testnet with the <code class="docutils literal"><span class="pre">bios</span></code> contract and several test accounts (available as <code class="docutils literal"><span class="pre">sess.alice</span></code>, <code class="docutils literal"><span class="pre">sess.bob</span></code> and <code class="docutils literal"><span class="pre">sess.carol</span></code>).</li>
 <li>Create additional test accounts (their keys are automatically imported into the wallet).</li>
 <li>Manage the wallet (locking, unlocking etc).</li>
 <li>Have an easy access to demo contracts stored in the <code class="docutils literal"><span class="pre">contracts</span></code> folder of the <em>EOSIO</em> source code (you can instantiate them in EOSFactory by passing their folder name in the <code class="docutils literal"><span class="pre">Contract</span></code> class constructor).</li>
@@ -161,7 +161,7 @@
 <li>Create a new contract from a pre-defined template (this includes the creation of its <em>CMake</em> files).</li>
 <li>Deploy a contract (the account holding the contract is created behind the scenes).</li>
 <li>Interact with a contract by pushing actions to it.</li>
-<li>Extract text messages logged by the contract (i.e. a contract&#8217;s output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method).</li>
+<li>Extract text messages logged by a contract (i.e. a contract&#8217;s output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method).</li>
 <li>Extract data from a contract&#8217;s table.</li>
 <li>Run a simple unit-test utilizing all the above features.</li>
 </ul>
@@ -173,7 +173,7 @@
 <li>You cannot connect EOSFactory to a testnet of your choice, only to a private one running a single node.</li>
 <li>Whereas the <code class="docutils literal"><span class="pre">nodeos</span></code> process runs in the background on MacOS, on other platforms (Windows &amp; Ubuntu) it requires launching a separate terminal window (it&#8217;s done automatically though). This might be a limitation for GUI-less systems like Ubuntu Server edition.</li>
 <li>There are no utilities for debugging contracts, except for the &#8220;caveman&#8221; style, i.e. accessing the output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method.</li>
-<li>There is no easy way to work with smart-contracts stored outside of EOSFactory <code class="docutils literal"><span class="pre">contracts</span></code> folder or EOSIO <code class="docutils literal"><span class="pre">contracts</span></code> folder. If you want to do that you need to refer to the contract folder by its full path.</li>
+<li>There is no easy way to instantiate smart-contracts stored outside of EOSFactory <code class="docutils literal"><span class="pre">contracts</span></code> folder or EOSIO <code class="docutils literal"><span class="pre">contracts</span></code> folder. If you want to do that, you need to refer to the contract&#8217;s folder by supplying its full path.</li>
 <li>The <code class="docutils literal"><span class="pre">Template</span></code> class constructor only accepts a folder name, not a path (this is different from the <code class="docutils literal"><span class="pre">Contract</span></code> constructor which accepts both).</li>
 <li>The <code class="docutils literal"><span class="pre">Contract</span></code> class <code class="docutils literal"><span class="pre">abi()</span></code> and <code class="docutils literal"><span class="pre">build()</span></code> methods are relying on the <em>EOSIO</em> ABI compiler which has an experimental status in the <em>EOSIO</em> repository. Thus the ABI output might be different than expected.</li>
 <li>The <code class="docutils literal"><span class="pre">Contract</span></code> class <code class="docutils literal"><span class="pre">push_action()</span></code> and <code class="docutils literal"><span class="pre">show_action</span></code> methods accept only verbose input, i.e. all action&#8217;s parameters must be named in the JSON syntax.</li>
