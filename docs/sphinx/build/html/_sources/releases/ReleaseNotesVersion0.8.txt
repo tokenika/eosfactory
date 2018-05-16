@@ -27,31 +27,3 @@ Using Python commands you currently can:
 * The `Template` class constructor only accepts a folder name, not a path (this is different from the `Contract` constructor which accepts both).
 * The `Contract` class `abi()` and `build()` methods are relying on the *EOSIO* ABI compiler which has an experimental status in the *EOSIO* repository. Thus the ABI output might be different than expected.
 * The `Contract` class `push_action()` and `show_action` methods accept only verbose input, i.e. all action's parameters must be named in the JSON syntax.
-
-## Plans for the next release
-
-#### 1. Introduce proper unit-testing Python framework
-
-We want to avoid reinventing the wheel and plan to utilize the power of existing Python unit-test frameworks, e.g. [unittest](https://docs.python.org/3/library/unittest.html) or [pytest](https://docs.pytest.org/en/latest/).
-
-#### 2. Support a user-defined workspace
-
-We'll introduce a clear separation between EOSFactory source code (including with its demo examples) and a user's workspace, where his/her contracts and unit-tests are stored.
-
-#### 3. Enable debugging
-
-Smart-contracts can never be properly debugged (as you cannot pause the blockchain easily), but we think we can come up with a quite useful way of tracking a contract's execution.
-
-#### 4. Connect to non-private testnet
-
-You'll be able to connect to any testnet you want, not just the single-node private one, as it is now.
-
-#### 5. Extract the C++ layer as a separate project
-
-We plan to move the C++ layer's source code (called `teos`) into a separate repository, so that it can also serve as a foundation for other projects. What's nice about `teos` is that it's a static library, not an executable like `cleos`, and therefore it's easy to integrate.
-
-## Further plans
-
-* Right now we are aiming for integration with [Visual Studio Code](https://code.visualstudio.com), but we also consider supporting other IDEs, e.g. [Eclipse](https://www.eclipse.org/ide/).
-* We are thinking about integrating *Ricardian Contracts* into our unit-testing. This is a very interesting (and probably not widely known at this  stage) aspect of EOS smart-contracts. For more information please refer  to [EOSIO documentation](https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract#hello-world-ricardian-contract). 
-* We are considering the pros and cons of connecting our Python layer directly to `cleos`, the official EOS CLI. Even if we do that, nothing will change on in the Python API. The biggest advantage of this approach is simplification of the installation process for EOSFactory.

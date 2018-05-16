@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Plan for Subsequent EOSFactory Releases &mdash; EOSFactory 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="EOSFactory 0.0 documentation" href="../index.html" />
+    <link rel="next" title="Long-term EOSFactory Roadmap" href="LongTermEOSFactoryRoadmap.html" />
+    <link rel="prev" title="Unit-testing EOS Contracts using EOSFactory in Visual Studio Code" href="../tutorials/04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          EOSFactory</a>
+        <span class="navbar-text navbar-version pull-left"><b>v. 0.8.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - Version 0.8</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.CompilingEOSContractsUsingEOSFactoryInVSC.html">Compiling EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html">Unit-testing EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Plan for Subsequent EOSFactory Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pyteos.html">pyteos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eosf.html">eosf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../node.html">node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sess.html">sess</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Plan for Subsequent EOSFactory Releases</a><ul>
+<li><a class="reference internal" href="#introduce-proper-unit-testing-python-framework">Introduce proper unit-testing Python framework</a></li>
+<li><a class="reference internal" href="#support-a-user-defined-workspace">Support a user-defined workspace</a></li>
+<li><a class="reference internal" href="#verify-contracts-with-a-c-compiler">Verify contracts with a C++ compiler</a></li>
+<li><a class="reference internal" href="#enable-debugging">Enable debugging</a></li>
+<li><a class="reference internal" href="#connect-to-non-private-testnet">Connect to non-private testnet</a></li>
+<li><a class="reference internal" href="#extract-the-c-layer-as-a-separate-project">Extract the C++ layer as a separate project</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="../tutorials/04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html" title="Previous Chapter: Unit-testing EOS Contracts using EOSFactory in Visual Studio Code"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Unit-testing ...</span>
+    </a>
+  </li>
+  <li>
+    <a href="LongTermEOSFactoryRoadmap.html" title="Next Chapter: Long-term EOSFactory Roadmap"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Long-term EOS... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/roadmap/PlanForSubsequentEOSFactoryReleases.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="plan-for-subsequent-eosfactory-releases">
+<span id="plan-for-subsequent-eosfactory-releases"></span><h1>Plan for Subsequent EOSFactory Releases<a class="headerlink" href="#plan-for-subsequent-eosfactory-releases" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduce-proper-unit-testing-python-framework">
+<span id="introduce-proper-unit-testing-python-framework"></span><h2>Introduce proper unit-testing Python framework<a class="headerlink" href="#introduce-proper-unit-testing-python-framework" title="Permalink to this headline">¶</a></h2>
+<p>We want to avoid reinventing the wheel and plan to utilize the power of existing Python unit-test frameworks, e.g. <a class="reference external" href="https://docs.python.org/3/library/unittest.html">unittest</a> or <a class="reference external" href="https://docs.pytest.org/en/latest/">pytest</a>.</p>
+</div>
+<div class="section" id="support-a-user-defined-workspace">
+<span id="support-a-user-defined-workspace"></span><h2>Support a user-defined workspace<a class="headerlink" href="#support-a-user-defined-workspace" title="Permalink to this headline">¶</a></h2>
+<p>We&#8217;ll introduce a clear separation between EOSFactory source code (including with its demo examples) and a user&#8217;s workspace, where his/her contracts and unit-tests are stored.</p>
+</div>
+<div class="section" id="verify-contracts-with-a-c-compiler">
+<span id="verify-contracts-with-a-c-compiler"></span><h2>Verify contracts with a C++ compiler<a class="headerlink" href="#verify-contracts-with-a-c-compiler" title="Permalink to this headline">¶</a></h2>
+<p>Currently the only way to verify the correctness of a contract&#8217;s C++ code is to go through the entire process of building it and linking by the <em>EOSIO</em> WASM compiler. What we want to achieve is to reduce this process to a simple C++ build (i.e. without the linking stage) and let you apply the WASM compiler only when there are no errors and you want to actually deploy the contract on a testnet.</p>
+</div>
+<div class="section" id="enable-debugging">
+<span id="enable-debugging"></span><h2>Enable debugging<a class="headerlink" href="#enable-debugging" title="Permalink to this headline">¶</a></h2>
+<p>Smart-contracts can never be properly debugged (as you cannot pause the blockchain easily), but we think we can come up with a quite useful way of tracking a contract&#8217;s execution.</p>
+</div>
+<div class="section" id="connect-to-non-private-testnet">
+<span id="connect-to-non-private-testnet"></span><h2>Connect to non-private testnet<a class="headerlink" href="#connect-to-non-private-testnet" title="Permalink to this headline">¶</a></h2>
+<p>You&#8217;ll be able to connect to any testnet you want, not just the single-node private one, as it is now.</p>
+</div>
+<div class="section" id="extract-the-c-layer-as-a-separate-project">
+<span id="extract-the-c-layer-as-a-separate-project"></span><h2>Extract the C++ layer as a separate project<a class="headerlink" href="#extract-the-c-layer-as-a-separate-project" title="Permalink to this headline">¶</a></h2>
+<p>We plan to move the C++ layer&#8217;s source code (called <code class="docutils literal"><span class="pre">teos</span></code>) into a separate repository, so that it can also serve as a foundation for other projects. What&#8217;s nice about <code class="docutils literal"><span class="pre">teos</span></code> is that it&#8217;s a static library, not an executable like <code class="docutils literal"><span class="pre">cleos</span></code>, and therefore it&#8217;s much more suitable for integrations.</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Tokenika.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

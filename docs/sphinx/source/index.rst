@@ -18,8 +18,9 @@ Release Notes
 
     releases/ReleaseNotesVersion0.8
 
+
 Tutorials
-----------
+---------
 
 .. toctree::
     :maxdepth: 1
@@ -29,9 +30,20 @@ Tutorials
     tutorials/02.InteractingWithEOSContractsInEOSFactory
     tutorials/03.CompilingEOSContractsUsingEOSFactoryInVSC
     tutorials/04.UnitTestingEOSContractsUsingEOSFactoryInVSC
-   
+
+
+Roadmap
+-------
+
+.. toctree::
+    :maxdepth: 1
+
+    roadmap/PlanForSubsequentEOSFactoryReleases
+    roadmap/LongTermEOSFactoryRoadmap
+
+
 Python Documentation
----------------------
+--------------------
 
 .. toctree::
     :maxdepth: 1
@@ -40,6 +52,7 @@ Python Documentation
     eosf
     node
     sess
+
 
 Metadata
 ------------------
