@@ -46,16 +46,23 @@ Using Python will allow us to build [interactive tutorials](http://eosfactory.io
 
 ## User documentation
 
-* [Introduction to EOSFactory](http://eosfactory.io/sphinx/build/html/00.IntroductionToEOSFactory.html)
-* [Installing EOSFactory](http://eosfactory.io/sphinx/build/html/01.InstallingEOSFactory.html)
-* [Interacting with EOS Contracts in EOSFactory](http://eosfactory.io/sphinx/build/html/02.InteractingWithEOSContractsInEOSFactory.html)
-* [Compiling EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/build/html/03.CompilingEOSContractsUsingEOSFactoryInVSC.html)
-* [Unit-testing EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/build/html/04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html)
+* [Introduction to EOSFactory](http://eosfactory.io/sphinx/build/html/tutorials/00.IntroductionToEOSFactory.html)
+* [Installing EOSFactory](http://eosfactory.io/sphinx/build/html/tutorials/01.InstallingEOSFactory.html)
+* [Interacting with EOS Contracts in EOSFactory](http://eosfactory.io/sphinx/build/html/tutorials/02.InteractingWithEOSContractsInEOSFactory.html)
+* [Compiling EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/build/html/tutorials/03.CompilingEOSContractsUsingEOSFactoryInVSC.html)
+* [Unit-testing EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/build/html/tutorials/04.UnitTestingEOSContractsUsingEOSFactoryInVSC.html)
 
 ## Developer documentation
 
 Please refer to [this index of Python modules](http://eosfactory.io/sphinx/build/html/py-modindex.html) which constitute the front-end of EOSFactory.
 
+## Release notes
+
+Please refer to [this document](http://eosfactory.io/sphinx/build/html/releases/ReleaseNotesVersion0.8.html).
+
 ## Roadmap
 
 EOSFactory is currently at an MVP stage. It was initially released in May 2018 and there are subsequent releases to be expected in the near future.
+
+- [Plan for Subsequent EOSFactory Releases](http://eosfactory.io/sphinx/build/html/roadmap/PlanForSubsequentEOSFactoryReleases.html)
+- [Long-term EOSFactory Roadmap](http://eosfactory.io/sphinx/build/html/roadmap/LongTermEOSFactoryRoadmap.html)
