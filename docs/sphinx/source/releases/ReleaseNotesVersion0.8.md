@@ -2,20 +2,18 @@
 
 ## What works in this release
 
-Using Python commands you currently can:
-
-* launch a single-node private testnet and fully control it: stop it and then continue running it or completely reset it,
-* initialize the testnet with the `bios` contract and several test accounts available as `sess.alice`, `sess.bob ` and `sess.carol`,
-* create additional test accounts (their keys are automatically imported into the wallet),
-* manage the wallet,
-* easy access to demo contracts stored in the `contracts` folder of the *EOSIO* source code (you can instantiate them in EOSFactory by passing their folder name in the `Contract` class constructor),
-* compile a contract, both ABI & WAST (but please note that the ABI compiler has an experimental status in *EOSIO* repository),
-* create a new contract from a pre-defined template (this includes the creation of its *CMake* files),
-* deploy a contract (the account holding the contract is created behind the scenes),
-* interact with a contract by pushing actions to it,
-* extract text messages logged by the contract (i.e. a contract's output stream produced by its `print()` method),
-* extract data from a contract's table,
-* run a simple unit-test utilizing all the above features.
+* Launch a single-node private testnet and fully control it: stop it and then continue running it or completely reset it.
+* Initialize the testnet with the `bios` contract and several test accounts available as `sess.alice`, `sess.bob ` and `sess.carol`.
+* Create additional test accounts (their keys are automatically imported into the wallet).
+* Manage the wallet (locking, unlocking etc).
+* Have an easy access to demo contracts stored in the `contracts` folder of the *EOSIO* source code (you can instantiate them in EOSFactory by passing their folder name in the `Contract` class constructor).
+* Compile a contract, both ABI & WAST (but please note that the ABI compiler has an experimental status in *EOSIO* repository).
+* Create a new contract from a pre-defined template (this includes the creation of its *CMake* files).
+* Deploy a contract (the account holding the contract is created behind the scenes).
+* Interact with a contract by pushing actions to it.
+* Extract text messages logged by the contract (i.e. a contract's output stream produced by its `print()` method).
+* Extract data from a contract's table.
+* Run a simple unit-test utilizing all the above features.
 
 ## Current limitations
 

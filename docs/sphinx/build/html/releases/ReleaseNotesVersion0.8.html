@@ -151,20 +151,19 @@
 <span id="eosfactory-release-notes-version-0-8"></span><h1>EOSFactory Release Notes - Version 0.8<a class="headerlink" href="#eosfactory-release-notes-version-0-8" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="what-works-in-this-release">
 <span id="what-works-in-this-release"></span><h2>What works in this release<a class="headerlink" href="#what-works-in-this-release" title="Permalink to this headline">¶</a></h2>
-<p>Using Python commands you currently can:</p>
 <ul class="simple">
-<li>launch a single-node private testnet and fully control it: stop it and then continue running it or completely reset it,</li>
-<li>initialize the testnet with the <code class="docutils literal"><span class="pre">bios</span></code> contract and several test accounts available as <code class="docutils literal"><span class="pre">sess.alice</span></code>, <code class="docutils literal"><span class="pre">sess.bob</span></code> and <code class="docutils literal"><span class="pre">sess.carol</span></code>,</li>
-<li>create additional test accounts (their keys are automatically imported into the wallet),</li>
-<li>manage the wallet,</li>
-<li>easy access to demo contracts stored in the <code class="docutils literal"><span class="pre">contracts</span></code> folder of the <em>EOSIO</em> source code (you can instantiate them in EOSFactory by passing their folder name in the <code class="docutils literal"><span class="pre">Contract</span></code> class constructor),</li>
-<li>compile a contract, both ABI &amp; WAST (but please note that the ABI compiler has an experimental status in <em>EOSIO</em> repository),</li>
-<li>create a new contract from a pre-defined template (this includes the creation of its <em>CMake</em> files),</li>
-<li>deploy a contract (the account holding the contract is created behind the scenes),</li>
-<li>interact with a contract by pushing actions to it,</li>
-<li>extract text messages logged by the contract (i.e. a contract&#8217;s output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method),</li>
-<li>extract data from a contract&#8217;s table,</li>
-<li>run a simple unit-test utilizing all the above features.</li>
+<li>Launch a single-node private testnet and fully control it: stop it and then continue running it or completely reset it.</li>
+<li>Initialize the testnet with the <code class="docutils literal"><span class="pre">bios</span></code> contract and several test accounts available as <code class="docutils literal"><span class="pre">sess.alice</span></code>, <code class="docutils literal"><span class="pre">sess.bob</span></code> and <code class="docutils literal"><span class="pre">sess.carol</span></code>.</li>
+<li>Create additional test accounts (their keys are automatically imported into the wallet).</li>
+<li>Manage the wallet (locking, unlocking etc).</li>
+<li>Have an easy access to demo contracts stored in the <code class="docutils literal"><span class="pre">contracts</span></code> folder of the <em>EOSIO</em> source code (you can instantiate them in EOSFactory by passing their folder name in the <code class="docutils literal"><span class="pre">Contract</span></code> class constructor).</li>
+<li>Compile a contract, both ABI &amp; WAST (but please note that the ABI compiler has an experimental status in <em>EOSIO</em> repository).</li>
+<li>Create a new contract from a pre-defined template (this includes the creation of its <em>CMake</em> files).</li>
+<li>Deploy a contract (the account holding the contract is created behind the scenes).</li>
+<li>Interact with a contract by pushing actions to it.</li>
+<li>Extract text messages logged by the contract (i.e. a contract&#8217;s output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method).</li>
+<li>Extract data from a contract&#8217;s table.</li>
+<li>Run a simple unit-test utilizing all the above features.</li>
 </ul>
 </div>
 <div class="section" id="current-limitations">

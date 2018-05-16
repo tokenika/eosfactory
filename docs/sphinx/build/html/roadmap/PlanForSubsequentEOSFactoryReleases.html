@@ -95,15 +95,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Plan for Subsequent EOSFactory Releases</a><ul>
-<li><a class="reference internal" href="#introduce-proper-unit-testing-python-framework">Introduce proper unit-testing Python framework</a></li>
-<li><a class="reference internal" href="#support-a-user-defined-workspace">Support a user-defined workspace</a></li>
-<li><a class="reference internal" href="#verify-contracts-with-a-c-compiler">Verify contracts with a C++ compiler</a></li>
-<li><a class="reference internal" href="#enable-debugging">Enable debugging</a></li>
-<li><a class="reference internal" href="#connect-to-non-private-testnet">Connect to non-private testnet</a></li>
-<li><a class="reference internal" href="#extract-the-c-layer-as-a-separate-project">Extract the C++ layer as a separate project</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Plan for Subsequent EOSFactory Releases</a></li>
 </ul>
 </ul>
 </li>
@@ -153,30 +145,18 @@
       
   <div class="section" id="plan-for-subsequent-eosfactory-releases">
 <span id="plan-for-subsequent-eosfactory-releases"></span><h1>Plan for Subsequent EOSFactory Releases<a class="headerlink" href="#plan-for-subsequent-eosfactory-releases" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="introduce-proper-unit-testing-python-framework">
-<span id="introduce-proper-unit-testing-python-framework"></span><h2>Introduce proper unit-testing Python framework<a class="headerlink" href="#introduce-proper-unit-testing-python-framework" title="Permalink to this headline">¶</a></h2>
+<p><strong>Apply proper unit-testing Python framework</strong></p>
 <p>We want to avoid reinventing the wheel and plan to utilize the power of existing Python unit-test frameworks, e.g. <a class="reference external" href="https://docs.python.org/3/library/unittest.html">unittest</a> or <a class="reference external" href="https://docs.pytest.org/en/latest/">pytest</a>.</p>
-</div>
-<div class="section" id="support-a-user-defined-workspace">
-<span id="support-a-user-defined-workspace"></span><h2>Support a user-defined workspace<a class="headerlink" href="#support-a-user-defined-workspace" title="Permalink to this headline">¶</a></h2>
-<p>We&#8217;ll introduce a clear separation between EOSFactory source code (including with its demo examples) and a user&#8217;s workspace, where his/her contracts and unit-tests are stored.</p>
-</div>
-<div class="section" id="verify-contracts-with-a-c-compiler">
-<span id="verify-contracts-with-a-c-compiler"></span><h2>Verify contracts with a C++ compiler<a class="headerlink" href="#verify-contracts-with-a-c-compiler" title="Permalink to this headline">¶</a></h2>
-<p>Currently the only way to verify the correctness of a contract&#8217;s C++ code is to go through the entire process of building it and linking by the <em>EOSIO</em> WASM compiler. What we want to achieve is to reduce this process to a simple C++ build (i.e. without the linking stage) and let you apply the WASM compiler only when there are no errors and you want to actually deploy the contract on a testnet.</p>
-</div>
-<div class="section" id="enable-debugging">
-<span id="enable-debugging"></span><h2>Enable debugging<a class="headerlink" href="#enable-debugging" title="Permalink to this headline">¶</a></h2>
-<p>Smart-contracts can never be properly debugged (as you cannot pause the blockchain easily), but we think we can come up with a quite useful way of tracking a contract&#8217;s execution.</p>
-</div>
-<div class="section" id="connect-to-non-private-testnet">
-<span id="connect-to-non-private-testnet"></span><h2>Connect to non-private testnet<a class="headerlink" href="#connect-to-non-private-testnet" title="Permalink to this headline">¶</a></h2>
-<p>You&#8217;ll be able to connect to any testnet you want, not just the single-node private one, as it is now.</p>
-</div>
-<div class="section" id="extract-the-c-layer-as-a-separate-project">
-<span id="extract-the-c-layer-as-a-separate-project"></span><h2>Extract the C++ layer as a separate project<a class="headerlink" href="#extract-the-c-layer-as-a-separate-project" title="Permalink to this headline">¶</a></h2>
+<p><strong>Support a user-defined workspace</strong></p>
+<p>We&#8217;ll introduce a clear separation between EOSFactory source code (including its demo examples) and a dedicated workspace, where a user&#8217;s contracts and unit-tests are stored.</p>
+<p><strong>Verify contracts with a C++ compiler</strong></p>
+<p>Currently the only way to verify the correctness of a contract&#8217;s C++ code is to go through the entire process of building and linking done by the <em>EOSIO</em> WASM compiler. What we want to achieve is reduce this process to a simple C++ build (i.e. without the linking stage) and let you apply the WASM compiler only when there are no formal errors and you want to actually deploy the contract on a testnet.</p>
+<p><strong>Enable debugging</strong></p>
+<p>Smart-contracts can never be properly debugged (as you cannot pause the blockchain easily), but we think we can come up with a useful way of tracking a contract&#8217;s execution.</p>
+<p><strong>Connect to non-private testnet</strong></p>
+<p>You&#8217;ll be able to connect to any testnet you want, not just the single-node private one, as it is the case now.</p>
+<p><strong>Extract the C++ layer as a separate project</strong></p>
 <p>We plan to move the C++ layer&#8217;s source code (called <code class="docutils literal"><span class="pre">teos</span></code>) into a separate repository, so that it can also serve as a foundation for other projects. What&#8217;s nice about <code class="docutils literal"><span class="pre">teos</span></code> is that it&#8217;s a static library, not an executable like <code class="docutils literal"><span class="pre">cleos</span></code>, and therefore it&#8217;s much more suitable for integrations.</p>
-</div>
 </div>
 
 
