@@ -10,17 +10,25 @@ Welcome to EOSFactory documentation!
 With a single command-line interface you can create a private testnet and then compile, unit-test and deploy `EOS <https://eos.io/>`_ smart-contracts.
 All of this using simple yet powerful `Python3 <https://www.python.org/>`_ syntax.
 
+Release Notes
+-------------
+
+.. toctree::
+    :maxdepth: 1
+
+    releases/ReleaseNotesVersion0.8
+
 Tutorials
 ----------
 
 .. toctree::
     :maxdepth: 1
 
-    00.IntroductionToEOSFactory
-    01.InstallingEOSFactory
-    02.InteractingWithEOSContractsInEOSFactory
-    03.CompilingEOSContractsUsingEOSFactoryInVSC
-    04.UnitTestingEOSContractsUsingEOSFactoryInVSC
+    tutorials/00.IntroductionToEOSFactory
+    tutorials/01.InstallingEOSFactory
+    tutorials/02.InteractingWithEOSContractsInEOSFactory
+    tutorials/03.CompilingEOSContractsUsingEOSFactoryInVSC
+    tutorials/04.UnitTestingEOSContractsUsingEOSFactoryInVSC
    
 Python Documentation
 ---------------------
