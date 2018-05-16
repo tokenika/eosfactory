@@ -8,7 +8,7 @@ Right now we are aiming for integration with [Visual Studio Code](https://code.v
 
 As far as VSC is concerned, we'd like to create a VSC extension providing GUI interface to EOSFactory CLI functionality.
 
-#### Direct connection to `cleos`
+#### Direct connection to EOSIO
 
 We are considering the pros and cons of connecting our Python layer directly to `cleos`, the official *EOSIO* CLI. Even if we do that, nothing will change in the Python API. The biggest advantage of this approach is simplification of EOSFactory installation process.
 
