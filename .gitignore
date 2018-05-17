@@ -25,6 +25,11 @@ Makefile
 !/tests/test2.py
 !/tests/test3.py
 !/tests/test4.py
+!/tests/unittest.py
+!/tests/unittest1.py
+!/tests/unittest2.py
+!/tests/unittest3.py
+!/tests/unittest4.py
 !/pyteos/docs/build
 
 **/Debug
