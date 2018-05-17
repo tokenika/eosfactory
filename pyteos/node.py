@@ -17,27 +17,27 @@ def reset():
     """
     Reset and start a local EOS node.
     """
-    pyteos.NodeStart(1, True)
-    probe = pyteos.NodeProbe(True)
-    print(probe.get_info)
+    pyteos.NodeStart(1)
+    probe = pyteos.NodeProbe()
+    return probe.get_info
 
 
 def run():
     """
     Restart a local EOS node.
     """
-    pyteos.NodeStart(0, True)
+    return pyteos.NodeStart(0)
 
 
 def stop():
     """
     Stop a local EOS node. 
     """
-    pyteos.NodeStop()
+    return pyteos.NodeStop()
 
 
 def info():
     """
     Display EOS node status.
     """
-    pyteos.GetInfo()
+    return pyteos.GetInfo()

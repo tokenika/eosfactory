@@ -13,7 +13,7 @@ Session initiation and storage for session elements.
 
 import pyteos
 
-def init():
+class Init():
     """
     Initialise a test session.
 
@@ -27,34 +27,70 @@ def init():
 
         wallet: The wallet holding keys.
     """
-    global eosio
-    eosio = pyteos.AccountEosio(is_verbose=False)
+    def __init__(self):
 
-    global wallet
-    wallet = pyteos.Wallet(is_verbose=False)
+        self.error = False
 
-    contract_eosio_bios = pyteos.SetContract(
-        eosio, "eosio.bios", permission=eosio, is_verbose=False)
+        global eosio
+        eosio = pyteos.AccountEosio(is_verbose=False)
+        self.error = self.error and eosio.error
+        if self.error:
+            return
 
-    global key_owner
-    key_owner = pyteos.CreateKey("key_owner", is_verbose=False)
-    global key_active
-    key_active = pyteos.CreateKey("key_active", is_verbose=False)
+        global wallet
+        wallet = pyteos.Wallet(is_verbose=False)
+        self.error = self.error and wallet.error
+        if self.error:
+            return
 
-    wallet.import_key(key_owner)
-    wallet.import_key(key_active)
+        contract_eosio_bios = pyteos.SetContract(
+            eosio, "eosio.bios", permission=eosio, is_verbose=False)
+        self.error = self.error and contract_eosio_bios.error
+        if self.error:
+            return
 
-    global alice
-    alice = pyteos.Account(
-        eosio, "alice", key_owner, key_active, is_verbose=False)    
+        global key_owner
+        key_owner = pyteos.CreateKey("key_owner", is_verbose=False)
+        self.error = self.error and key_owner.error
+        if self.error:
+            return
         
-    global bob
-    bob = pyteos.Account(
-        eosio, "bob", key_owner, key_active, is_verbose=False)
-            
-    global carol
-    carol = pyteos.Account(
-        eosio, "carol", key_owner, key_active, is_verbose=False)
+        global key_active
+        key_active = pyteos.CreateKey("key_active", is_verbose=False)
+        self.error = self.error and key_active.error
+        if self.error:
+            return
 
-    print("#  Available test accounts: " + eosio.name + ", "  + alice.name + ", " + carol.name + ", " + bob.name)
+        result = wallet.import_key(key_owner)
+        self.error = self.error and not result
+        result =  wallet.import_key(key_active)
+        self.error = self.error and result
+        if self.error:
+            return
+
+        global alice
+        alice = pyteos.Account(
+            eosio, "alice", key_owner, key_active, is_verbose=False)    
+        self.error = self.error and alice.error
+        if self.error:
+            return
+
+        global bob
+        bob = pyteos.Account(
+            eosio, "bob", key_owner, key_active, is_verbose=False)
+        self.error = self.error and bob.error
+        if self.error:
+            return            
+                
+        global carol
+        carol = pyteos.Account(
+            eosio, "carol", key_owner, key_active, is_verbose=False)
+        self.error = self.error and carol.error
+        if self.error:
+            return
+
+        if _verbose:
+            print("#  Available test accounts: " 
+                + eosio.name + ", "  
+                + alice.name + ", " + carol.name + ", " + bob.name)
 

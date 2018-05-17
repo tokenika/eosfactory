@@ -266,9 +266,14 @@ if [ ! -z "$IS_WSL" ]; then
 
     setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTEXT_DIR__/$contracts"
     setWindowsVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
+
+    retval=""
+    wslMapLinux2Windows retval $EOSIO_CONTEXT_DIR__
+    setWindowsVariable "EOSIO_CONTEXT_DIR" "$retval" 
+
     retval=""
     wslMapLinux2Windows retval $EOSIO_SOURCE_DIR_SET
-    setWindowsVariable "EOSIO_SOURCE_DIR" "$retval" 
+    setWindowsVariable "EOSIO_SOURCE_DIR" "$retval"     
 
     ### env variable HOME
 

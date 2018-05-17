@@ -60,8 +60,6 @@ class Setup:
     def __init__(self):
 
         with open(self.__setupFile) as json_data:
-            print("Reading setup from file:\n   {}" \
-                    .format(os.path.realpath(self.__setupFile)))
             setup_json = json.load(json_data)
 
         self.version = setup_json[self.__VERSION]
@@ -99,7 +97,6 @@ class Setup:
         self.node_block_num = setup_json[self.__NODE_BLOCK_NUM]
 
 setup = Setup()
-version()
 
 ##############################################################################
 # pyteos commands
@@ -743,28 +740,35 @@ class Wallet(WalletCreate):
         self.json["keys"] = []
 
     def list(self):
-        WalletList()
+        x = WalletList()
+        return not x.error
 
     def open(self):
-        WalletOpen(self.name)
+        x = WalletOpen(self.name)
+        return not x.error
 
     def lock(self):
-        WalletLock(self.name)
+        x = WalletLock(self.name)
+        return not x.error        
 
     def unlock(self):
-        WalletUnlock(self.name, self.json["password"])
+        x = WalletUnlock(self.name, self.json["password"])
+        return not x.error
 
     def import_key(self, key_pair):
         wallet_import = WalletImport(
             key_pair, self.name, is_verbose=False)
         if not wallet_import.error:
             self.json["keys"].append([key_pair.name, key_pair.key_private])
+        return wallet_import.error        
 
     def keys(self):
-        WalletKeys()
+        x = WalletKeys()
+        return not x.error
 
     def open(self):
-        WalletOpen(self.name)
+        x = WalletOpen(self.name)
+        return not x.error
 
     def __str__(self):
         return pprint.pformat(self.json)
@@ -925,8 +929,9 @@ class Contract(SetContract):
                     self.is_mutable = False
                 else:
                     self.error = True
-                    print("ERROR!")
-                    print(contract_dir + " is not an existing contract definition." )
+                    if _is_verbose:
+                        print("ERROR!")
+                        print(contract_dir + " is not an existing contract definition." )
                     return
 
 
@@ -942,27 +947,32 @@ class Contract(SetContract):
             self.skip_signature, self.dont_broadcast, self.forceUnique,
             self.max_cpu_usage, self.max_net_usage,
             self.is_verbose)
+        return not self.error
 
 
     def wast(self):
         if self.is_mutable:
-            WAST(str(self.contract_path_absolute))
+            wast = WAST(str(self.contract_path_absolute))
         else:
-            print("ERROR!")
-            print("Cannot modify system contracts.")
-
+            if _is_verbose:
+                print("ERROR!")
+                print("Cannot modify system contracts.")
+        return not wast.error
 
     def abi(self):
         if self.is_mutable:
-            ABI(str(self.contract_path_absolute))
+            abi = ABI(str(self.contract_path_absolute))
         else:
-            print("ERROR!")
-            print("Cannot modify system contracts.")
+            if _is_verbose:
+                print("ERROR!")
+                print("Cannot modify system contracts.")
+        return not abi.error
 
     
     def build(self):
-        self.abi()
-        self.wast()
+        ok = self.abi()
+        ok = error and self.wast()
+        return ok
 
 
     def push_action(
@@ -990,6 +1000,9 @@ class Contract(SetContract):
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage
             )
+        if push_action.error:
+            return False
+
         if not push_action.error:
             self.action_json = push_action.json
             try:
@@ -1003,6 +1016,8 @@ class Contract(SetContract):
         if (dont_broadcast or is_verbose) and not push_action.error:
             pprint.pprint(self.action_json)
 
+        return True
+
 
     def get_console(self):
         return self.console
@@ -1012,7 +1027,7 @@ class Contract(SetContract):
         """ Implements the `push action` command without broadcasting. 
 
         """
-        self.push_action(action, data, permission, dont_broadcast=1)
+        return self.push_action(action, data, permission, dont_broadcast=1)
     
 
     def get_table(self, table, scope=""):
@@ -1033,8 +1048,8 @@ class Contract(SetContract):
         """ Prints a contract's code.
 
         """
-        GetCode(self.name)
-
+        code = GetCode(self.name)
+        return not code.error
 
     def get_path(self):
         return str(self.contract_path_absolute)

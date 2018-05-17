@@ -47,7 +47,7 @@ Usage: ./teos node kill
      */
     class DaemonStart : public TeosControl
     {
-      void configure();
+      bool configure();
       void launch();
       void wait();
       void action();
