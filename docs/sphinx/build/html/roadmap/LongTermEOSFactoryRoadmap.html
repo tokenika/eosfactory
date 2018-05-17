@@ -95,7 +95,14 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Long-term EOSFactory Roadmap</a></li>
+<li><a class="reference internal" href="#">Long-term EOSFactory Roadmap</a><ul>
+<li><a class="reference internal" href="#support-for-other-ides">1. Support for other IDEs</a></li>
+<li><a class="reference internal" href="#gui-support">2. GUI support</a></li>
+<li><a class="reference internal" href="#direct-connection-to-eosio">3. Direct connection to EOSIO</a></li>
+<li><a class="reference internal" href="#two-implementations">4. Two implementations</a></li>
+<li><a class="reference internal" href="#ricardian-contracts">5. Ricardian Contracts</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -145,16 +152,26 @@
       
   <div class="section" id="long-term-eosfactory-roadmap">
 <span id="long-term-eosfactory-roadmap"></span><h1>Long-term EOSFactory Roadmap<a class="headerlink" href="#long-term-eosfactory-roadmap" title="Permalink to this headline">¶</a></h1>
-<p><strong>Support for other IDEs</strong></p>
+<div class="section" id="support-for-other-ides">
+<span id="support-for-other-ides"></span><h2>1. Support for other IDEs<a class="headerlink" href="#support-for-other-ides" title="Permalink to this headline">¶</a></h2>
 <p>Our current priority is integration with <a class="reference external" href="https://code.visualstudio.com">Visual Studio Code</a>, but we also intend to support other IDEs, e.g. <a class="reference external" href="https://www.eclipse.org/ide/">Eclipse</a>.</p>
-<p><strong>GUI support</strong></p>
+</div>
+<div class="section" id="gui-support">
+<span id="gui-support"></span><h2>2. GUI support<a class="headerlink" href="#gui-support" title="Permalink to this headline">¶</a></h2>
 <p>We plan to provide a graphical interface for the existing Python CLI functionality by creating a <em>Visual Studio Code</em> extension for EOSFactory.</p>
-<p><strong>Direct connection to EOSIO</strong></p>
+</div>
+<div class="section" id="direct-connection-to-eosio">
+<span id="direct-connection-to-eosio"></span><h2>3. Direct connection to EOSIO<a class="headerlink" href="#direct-connection-to-eosio" title="Permalink to this headline">¶</a></h2>
 <p>We are considering pros &amp; cons of connecting our Python layer directly to <code class="docutils literal"><span class="pre">cleos</span></code>, the official <em>EOSIO</em> CLI. The obvious advantage of this approach would be simplification of the installation process for EOSFactory.</p>
-<p><strong>Two implementations</strong></p>
+</div>
+<div class="section" id="two-implementations">
+<span id="two-implementations"></span><h2>4. Two implementations<a class="headerlink" href="#two-implementations" title="Permalink to this headline">¶</a></h2>
 <p>We are also considering splitting the EOSFactory project into two implementations: pure Python (based on <a class="reference external" href="https://docs.python.org/3/library/unittest.html">unittest</a> or <a class="reference external" href="https://docs.pytest.org/en/latest/">pytest</a>) and pure C++ (based on <a class="reference external" href="https://www.boost.org/doc/libs/1_53_0/libs/test/doc/html/utf.html">Boost Unit Test Framework</a>).</p>
-<p><strong>Ricardian Contracts</strong></p>
+</div>
+<div class="section" id="ricardian-contracts">
+<span id="ricardian-contracts"></span><h2>5. Ricardian Contracts<a class="headerlink" href="#ricardian-contracts" title="Permalink to this headline">¶</a></h2>
 <p>And finally, we are thinking about integrating <em>Ricardian Contracts</em> into our framework. For more information please refer to <a class="reference external" href="https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract#hello-world-ricardian-contract">EOSIO documentation</a>.</p>
+</div>
 </div>
 
 
