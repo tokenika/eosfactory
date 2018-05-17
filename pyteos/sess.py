@@ -89,7 +89,7 @@ class Init():
         if self.error:
             return
 
-        if _verbose:
+        if pyteos.is_verbose():
             print("#  Available test accounts: " 
                 + eosio.name + ", "  
                 + alice.name + ", " + carol.name + ", " + bob.name)

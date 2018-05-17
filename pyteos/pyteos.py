@@ -37,6 +37,9 @@ def set_verbose(is_verbose):
     global _is_verbose
     _is_verbose = is_verbose
 
+def is_verbose():
+    return is_verbose
+
 def output__(msg):
     if _is_verbose:
         print("#  " + msg.replace("\n", "\n#  "))
@@ -65,7 +68,7 @@ class Setup:
         self.version = setup_json[self.__VERSION]
 
         path = os.path.dirname(os.path.abspath(__file__)) \
-            + "/../teos/build/teos"
+            + "/../teos/teos/build/teos"
         
         if os.path.isfile(path):
             self.teos_exe = os.path.realpath(path)
@@ -971,7 +974,7 @@ class Contract(SetContract):
     
     def build(self):
         ok = self.abi()
-        ok = error and self.wast()
+        ok = ok and self.wast()
         return ok
 
 

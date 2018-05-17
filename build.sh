@@ -37,11 +37,11 @@ TIME_BEGIN=$( date -u +%s )
 
 pyteos="pyteos"
 tests="tests"
-library_dir="teos_lib"
-executable_dir="teos"
+library_dir="teos/teos_lib"
+executable_dir="teos/teos"
 build_dir="build"
 contracts="contracts"
-teos_exe="teos/build/teos"
+teos_exe="teos/teos/build/teos"
 
 IS_WSL="" # Windows Subsystem Linux
 function is_wsl {
