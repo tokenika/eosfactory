@@ -31,10 +31,9 @@ WSL_ROOT_DIR__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_
 EOSIO_SHARED_MEMORY_SIZE_MB__=100
 CMAKE_VERBOSE__=0
 
-EOSIO_CONTEXT_DIR__="$PWD"
-BUILD_DIR="${EOSIO_CONTEXT_DIR__}/build"
-TIME_BEGIN=$( date -u +%s )
 
+TIME_BEGIN=$( date -u +%s )
+  
 pyteos="pyteos"
 tests="tests"
 library_dir="teos/teos_lib"
@@ -42,6 +41,10 @@ executable_dir="teos/teos"
 build_dir="build"
 contracts="contracts"
 teos_exe="teos/teos/build/teos"
+
+EOSIO_CONTEXT_DIR__="$PWD"
+BUILD_DIR="${EOSIO_CONTEXT_DIR__}/$build_dir"
+EOSIO_CONTRACT_WORKSPACE__="${EOSIO_CONTEXT_DIR__}/$contracts"
 
 IS_WSL="" # Windows Subsystem Linux
 function is_wsl {
@@ -103,8 +106,13 @@ function usage() {
     printf "%s\n" "
 Usage: ./build.sh [OPTIONS]
     -e  EOSIO repository dir. Default is env. variable EOSIO_SOURCE_DIR.
+    -w  Workspace directory: where are your contracts. 
+        Default is $EOSIO_CONTRACT_WORKSPACE__
     -c  compiler, 'gnu' or 'clang'. Default is 'clang'.
-    -i  ECC implementation: 'secp256k1' or 'openssl' or 'mixed'. Default is 'secp256k1'.
+    -C  C compiler path. Default is the system default.
+    -X  C++ compiler path. Default is the system default.
+    -i  ECC implementation: 'secp256k1' or 'openssl' or 'mixed'. 
+        Default is 'secp256k1'.
     -t  Build type: 'Debug' or 'Release'. Default is 'Release'.
     -r  Reset the build.
     -s  EOSIO node shared memory size (in MB). Default is 100 
@@ -114,12 +122,14 @@ Usage: ./build.sh [OPTIONS]
 "
 }
 
-while getopts ":e:c:i:t:s:rvh" opt; do
+while getopts ":e:w:c:C:X:i:t:s:rvh" opt; do
   case $opt in
     e)
         EOSIO_SOURCE_DIR__=$OPTARG
         ;;
-
+    w)
+        EOSIO_CONTRACT_WORKSPACE__==$OPTARG
+        ;;
     c)
         compiler="$OPTARG"
         if [[ ! "$compiler" =~ (gnu|clang)$ ]]; then
@@ -131,7 +141,12 @@ while getopts ":e:c:i:t:s:rvh" opt; do
             C_COMPILER__=gcc
         fi          
         ;;
-
+    C)  
+        C_COMPILER__=$OPTARG
+        ;;
+    X)
+        CXX_COMPILER__=$OPTARG
+        ;;
     i)  
         ECC_IMPL__="$OPTARG"
         if [[ ! "$ECC_IMPL__" =~ (secp256k1|openssl|mixed)$ ]]; then
@@ -238,7 +253,7 @@ printf "%s\n" "Sets environment variables, if not set already:"
 
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
 setLinuxVariable "EOSIO_CONTEXT_DIR" "$EOSIO_CONTEXT_DIR__"
-setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTEXT_DIR__/$contracts"
+setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
 setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
 setLinuxVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
 

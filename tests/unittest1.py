@@ -33,7 +33,7 @@ class Test1(unittest.TestCase):
         self.assertFalse(x.error)
         x = node.info()
         self.assertTrue("last_irreversible_block_id" in x.json.keys())
-        x = sess.Init()
+        x = sess.init()
         self.assertFalse(x.error)
 
     def test_01_contract(self):

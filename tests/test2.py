@@ -12,7 +12,7 @@ def run():
     node.info()
     
     print('test sess.init():')
-    sess.Init()
+    sess.init()
 
     print('test c = Contract("tic.tac.toe"):')
     c = Contract("tic.tac.toe")

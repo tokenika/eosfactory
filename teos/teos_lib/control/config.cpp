@@ -224,28 +224,71 @@ wallet-dir: .
       return "";  
     }
 
+    /** 
+     * getContractDir
+
+    */
     string getContractDir(TeosControl* teosControl, string contract_dir)
     {
-      bfs::path contract_path(contract_dir);
-      if(!contract_path.is_absolute())
-      {
-        bfs::path workspacePath 
-          = configValue(teosControl, EOSIO_CONTRACT_WORKSPACE);
-
-        if(!workspacePath.is_absolute()) 
-        {
-          workspacePath = bfs::path(getContextDir(teosControl)) 
-            / workspacePath;
+      { /*
+          Does the given contract_dir is absolute, is directory and exists?
+        */
+        bfs::path contract_path(contract_dir);
+        if(contract_path.is_absolute() 
+          && bfs::is_directory(contract_path) && bfs::exists(contract_path)) {
+            return contract_path.string()
         }
-        contract_path = workspacePath / contract_dir / contract_dir;
       }
-      if(bfs::is_regular_file(contract_path))
       {
-        return contract_path.parent_path().string();
-      } else
-      {
-        return contract_path.string();
+        /*
+          Does the given contract_dir is an existing subdirectory of the relevent
+          entry in the config.json?
+
+          Does the given contract_dir is an existing subdirectory of the relevent
+          entry in the config.json?
+        */
+        bfs::path contractPath 
+          = bfs::path(configValue(teosControl, EOSIO_CONTRACT_WORKSPACE)) 
+            / contract_dir;
+        if(!contract_path.is_absolute()) {
+          contractPath 
+            = bfs::path(configValue(teosControl, EOSIO_CONTEXT_DIR)) 
+              / contractPath;
+        }
+        if(bfs::is_directory(contract_path) && bfs::exists(contract_path)){
+          return contract_path.string();
+        }
       }
+      {
+        /*
+          Does the given contract directory exists in the 
+          eosfactory/build/contracts directory?
+        */
+        bfs::path contractPath 
+            = bfs::path(configValue(teosControl, EOSIO_CONTEXT_DIR)) 
+              / CONTRACTS_DIR / contract_dir;
+        if(contract_path.is_absolute() 
+          && bfs::is_directory(contract_path) && bfs::exists(contract_path)) {
+            return contract_path.string()        
+      }
+      {
+        /*
+          Does the given contract directory exists in the eos/build/contracts
+          directory?
+        */
+        bfs::path contractPath 
+            = bfs::path(configValue(teosControl, EOSIO_SOURCE_DIR)) 
+              / CONTRACTS_DIR / contract_dir;
+        if(contract_path.is_absolute() 
+          && bfs::is_directory(contract_path) && bfs::exists(contract_path)) {
+            return contract_path.string()
+      }
+
+      /*
+        Set error flag.
+      */
+      onError(teosControl, "Cannot determine the contract directory.");
+      return "";
     }
 
     ///////////////////////////////////////////////////////////////////////////

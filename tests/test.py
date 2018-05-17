@@ -6,7 +6,7 @@ from eosf import *
 
 def run():
     node.reset()
-    sess.Init()
+    sess.init()
 
     ############################
     # Your unit-test goes here #
