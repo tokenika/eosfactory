@@ -8,7 +8,7 @@ We want to avoid reinventing the wheel and plan to utilize the power of existing
 
 We'll introduce a clear separation between EOSFactory source code (including its demo examples) and a dedicated workspace, where a user's contracts and unit-tests are stored.
 
-#### 3. Connect to non-private testnet
+#### 3. Connect to a non-private testnet
 
 You'll be able to connect to any testnet you want, not just the single-node private one, as it is the case now.
 
