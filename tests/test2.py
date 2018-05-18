@@ -17,11 +17,14 @@ def run():
     print('test c = Contract("tic.tac.toe"):')
     c = Contract("tic.tac.toe")
 
+    #c.wast()
+
     print('test c.deploy():')
     c.deploy()
 
     print('test c.push_action("create", sess.bob):')
     c.push_action("create", '{"challenger":"alice", "host":"bob"}', sess.bob)
+    c.get_console()
 
     print('test c.get_table("games", sess.bob):')
     t = c.get_table("games", sess.bob)
@@ -38,9 +41,12 @@ def run():
 
     print('test c.push_action("move", sess.bob):')
     c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"bob", "mvt":{"row":0, "column":0} }', sess.bob)
+    c.get_console()
+
 
     print('test c.push_action("move", sess.alice):')
     c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"alice", "mvt":{"row":1, "column":1} }', sess.alice)
+    c.get_console()
 
     print('test c.get_table("games", sess.bob):')
     t = c.get_table("games", sess.bob)
@@ -57,7 +63,8 @@ def run():
 
     print('test c.push_action("restart", sess.bob):')
     c.push_action("restart", '{"challenger":"alice", "host":"bob", "by":"bob"}', sess.bob)
-    
+    c.get_console()
+
     print('test c.get_table("games", sess.bob):')
     t = c.get_table("games", sess.bob)
     
@@ -73,6 +80,7 @@ def run():
 
     print('test c.push_action("close", sess.bob):')
     c.push_action("close", '{"challenger":"alice", "host":"bob"}', sess.bob)
+    c.get_console()    
 
     print('test node.stop():')
     node.stop()

@@ -150,9 +150,9 @@ class _Command:
                 if len(longest) < width:
                     print(self._out)
                 else:
-                    wrapper = textwrap.TextWrapper(width=width)
-                    print(wrapper.fill(self._out))
-
+                    #wrapper = textwrap.TextWrapper(width=width)
+                    #print(wrapper.fill(self._out))
+                    print(self._out)
         try:
             self.json = json.loads(json_resp)
         except:
