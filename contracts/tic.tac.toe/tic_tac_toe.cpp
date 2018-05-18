@@ -2,6 +2,7 @@
  *  @file
  *  @copyright defined in eos/LICENSE.txt
  */
+#include "logger.hpp"
 #include "tic_tac_toe.hpp"
 
 using namespace eosio;
@@ -37,51 +38,57 @@ struct impl {
     * @return winner of the game (can be either none/ draw/ account name of host/ account name of challenger)
     */
    account_name get_winner(const game& current_game) {
-      if((current_game.board[0] == current_game.board[4] && current_game.board[4] == current_game.board[8]) ||
-         (current_game.board[1] == current_game.board[4] && current_game.board[4] == current_game.board[7]) ||
-         (current_game.board[2] == current_game.board[4] && current_game.board[4] == current_game.board[6]) ||
-         (current_game.board[3] == current_game.board[4] && current_game.board[4] == current_game.board[5])) {
-         //  - | - | x    x | - | -    - | - | -    - | x | -
-         //  - | x | -    - | x | -    x | x | x    - | x | -
-         //  x | - | -    - | - | x    - | - | -    - | x | -
-         if (current_game.board[4] == 1) {
-            return current_game.host;
-         } else if (current_game.board[4] == 2) {
-            return current_game.challenger;
-         }
-      } else if ((current_game.board[0] == current_game.board[1] && current_game.board[1] == current_game.board[2]) ||
-                 (current_game.board[0] == current_game.board[3] && current_game.board[3] == current_game.board[6])) {
-         //  x | x | x       x | - | -
-         //  - | - | -       x | - | -
-         //  - | - | -       x | - | -
-         if (current_game.board[0] == 1) {
-            return current_game.host;
-         } else if (current_game.board[0] == 2) {
-            return current_game.challenger;
-         }
-      } else if ((current_game.board[2] == current_game.board[5] && current_game.board[5] == current_game.board[8]) ||
-                 (current_game.board[6] == current_game.board[7] && current_game.board[7] == current_game.board[8])) {
-         //  - | - | -       - | - | x
-         //  - | - | -       - | - | x
-         //  x | x | x       - | - | x
-         if (current_game.board[8] == 1) {
-            return current_game.host;
-         } else if (current_game.board[8] == 2) {
-            return current_game.challenger;
-         }
-      } else {
-         bool is_board_full = true;
-         for (uint8_t i = 0; i < board_len; i++) {
-            if (is_empty_cell(current_game.board[i])) {
-               is_board_full = false;
-               break;
-            }
-         }
-         if (is_board_full) {
-            return N(draw);
-         }
-      }
-      return N(none);
+
+    logger_info("game: ", current_game);
+
+    if((current_game.board[0] == current_game.board[4] && current_game.board[4] == current_game.board[8]) ||
+        (current_game.board[1] == current_game.board[4] && current_game.board[4] == current_game.board[7]) ||
+        (current_game.board[2] == current_game.board[4] && current_game.board[4] == current_game.board[6]) ||
+        (current_game.board[3] == current_game.board[4] && current_game.board[4] == current_game.board[5])) {
+        //  - | - | x    x | - | -    - | - | -    - | x | -
+        //  - | x | -    - | x | -    x | x | x    - | x | -
+        //  x | - | -    - | - | x    - | - | -    - | x | -
+
+        logger_info("current_game.board[4]: ", current_game.board[4]);
+        
+        if (current_game.board[4] == 1) {
+        return current_game.host;
+        } else if (current_game.board[4] == 2) {
+        return current_game.challenger;
+        }
+    } else if ((current_game.board[0] == current_game.board[1] && current_game.board[1] == current_game.board[2]) ||
+                (current_game.board[0] == current_game.board[3] && current_game.board[3] == current_game.board[6])) {
+        //  x | x | x       x | - | -
+        //  - | - | -       x | - | -
+        //  - | - | -       x | - | -
+        if (current_game.board[0] == 1) {
+        return current_game.host;
+        } else if (current_game.board[0] == 2) {
+        return current_game.challenger;
+        }
+    } else if ((current_game.board[2] == current_game.board[5] && current_game.board[5] == current_game.board[8]) ||
+                (current_game.board[6] == current_game.board[7] && current_game.board[7] == current_game.board[8])) {
+        //  - | - | -       - | - | x
+        //  - | - | -       - | - | x
+        //  x | x | x       - | - | x
+        if (current_game.board[8] == 1) {
+        return current_game.host;
+        } else if (current_game.board[8] == 2) {
+        return current_game.challenger;
+        }
+    } else {
+        bool is_board_full = true;
+        for (uint8_t i = 0; i < board_len; i++) {
+        if (is_empty_cell(current_game.board[i])) {
+            is_board_full = false;
+            break;
+        }
+        }
+        if (is_board_full) {
+        return N(draw);
+        }
+    }
+    return N(none);
    }
 
    /**
