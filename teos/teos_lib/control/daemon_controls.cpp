@@ -98,7 +98,8 @@ namespace teos {
     
     void DaemonStart::action()
     {
-      if(configure() && reqJson_.get(DO_NOT_LAUNCH, 0) <= 0){
+      if(configure() && reqJson_.get(DO_NOT_LAUNCH, 0) <= 0)
+      {
         launch();
         wait();        
       }
@@ -144,6 +145,8 @@ namespace teos {
         } else if(!getPid().empty()){
           teos::TeosCommand tc = teos::command::GetInfo(); 
           respJson_ = tc.respJson_;
+          reqJson_.put(DO_NOT_LAUNCH, 1);
+          respJson_.put(DO_NOT_LAUNCH, 1);          
           return false;
         }
 
@@ -170,6 +173,7 @@ namespace teos {
       } catch (std::exception& e) {
         putError(e.what());
       }
+
       return true;
     }
 
@@ -206,19 +210,21 @@ namespace teos {
       {
         sleep_for(seconds(1));
         tc = teos::command::GetInfo();
-
-        OK = respJson_.get("head_block_num", -1) >= head_block_num;
+        OK = tc.respJson_.get("head_block_num", -1) >= head_block_num;
 
         if(OK)
         {
           respJson_ = tc.respJson_; 
-          cout << "OK" << endl;
-          cout << responseToString(false) << endl;
           break;          
         }
         if( count-- <= 0)
         {
-          putError(tc.errorMsg());
+          if(tc.isError_) {
+            putError(tc.errorMsg());
+          } else
+          {
+            putError("timeout");
+          }
           break;
         }
       }

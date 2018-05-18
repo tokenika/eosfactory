@@ -88,11 +88,24 @@ namespace teos
   }
 
   string TeosControl::executable = "";
+  /*
+    The config file is expected in the application directory, or two
+    levels above.
+  */
   string TeosControl::getConfigJson(){
-    string configJson 
-      = (boost::filesystem::path(TeosControl::executable).parent_path() 
-      / CONFIG_JSON).string();
-    return configJson;
+    namespace bfs = boost::filesystem;
+    /*The path to the application directory, relative to the working dir:*/
+    bfs::path dirPath = (bfs::path(TeosControl::executable)).parent_path();
+    
+    if(bfs::exists(dirPath / CONFIG_JSON)) {
+      return (dirPath / CONFIG_JSON).string();
+    }
+
+    if(bfs::exists(dirPath / "../../" / CONFIG_JSON)) {
+      return (dirPath / "../../" / CONFIG_JSON).string();
+    }
+
+    return "";
   }
 
   ptree TeosControl::getConfig(TeosControl* teosControl) {

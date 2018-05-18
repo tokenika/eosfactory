@@ -67,22 +67,22 @@ class Setup:
 
         self.version = setup_json[self.__VERSION]
 
-        path = os.path.dirname(os.path.abspath(__file__)) \
-            + "/../teos/teos/build/teos"
+        path_to_teos = os.path.dirname(os.path.abspath(__file__)) \
+            + "/../teos/build/teos/teos"
         
-        if os.path.isfile(path):
-            self.teos_exe = os.path.realpath(path)
+        if os.path.isfile(path_to_teos):
+            self.teos_exe = os.path.realpath(path_to_teos)
 
         if not self.teos_exe:
             try:
                 if os.path.isfile(self.__setupFile):
-                    path = os.path.dirname(os.path.abspath(__file__)) \
+                    path_to_teos = os.path.dirname(os.path.abspath(__file__)) \
                             + setup_json[self.__TEOS_EXE]
-                    if os.path.isfile(path):
-                        self.teos_exe = os.path.realpath(path)
+                    if os.path.isfile(path_to_teos):
+                        self.teos_exe = os.path.realpath(path_to_teos)
             except:
                 pass
-        
+
         if not self.teos_exe:
             print(
                 'ERROR in pyteos.py!'

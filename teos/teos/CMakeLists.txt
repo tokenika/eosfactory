@@ -98,7 +98,7 @@ else( LLVM_FOUND )
 endif( LLVM_FOUND )
 llvm_map_components_to_libnames(LLVM_LIBS support core passes mcjit native DebugInfoDWARF)
 
-set(teoslib_src ${CMAKE_SOURCE_DIR}/../teos_lib)
+set(teoslib_src ${CMAKE_SOURCE_DIR}/teos_lib)
 
 if( NOT ECC_IMPL STREQUAL openssl )
   find_package(Secp256k1 REQUIRED)
@@ -121,7 +121,7 @@ configure_file (
 
 configure_file (
   "config.h.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/../teos_lib/include/teoslib/config.h"
+  "${CMAKE_SOURCE_DIR}/teos_lib/include/teoslib/config.h"
 )
 
 install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
@@ -170,7 +170,7 @@ macro( applLinkLibraries applName )
 
   target_link_libraries( ${applName} 
     PRIVATE
-      ${teoslib_src}/build/libteoslib.a
+      ${CMAKE_BINARY_DIR}/teos_lib/libteoslib.a
       ${EOSIO_BINARY_DIR}/plugins/chain_plugin/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chain_plugin${CMAKE_STATIC_LIBRARY_SUFFIX}
       ${EOSIO_BINARY_DIR}/libraries/chain/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eosio_chain${CMAKE_STATIC_LIBRARY_SUFFIX}
       ${EOSIO_BINARY_DIR}/libraries/chainbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chainbase${CMAKE_STATIC_LIBRARY_SUFFIX}        

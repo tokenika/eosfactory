@@ -37,7 +37,7 @@ TIME_BEGIN=$( date -u +%s )
 pyteos="pyteos"
 tests="tests"
 library_dir="teos/teos_lib"
-executable_dir="teos/teos"
+source_dir="teos"
 build_dir="build"
 contracts="contracts"
 teos_exe="teos/teos/build/teos"
@@ -396,16 +396,14 @@ if [ -z "$EOSIO_SOURCE_DIR" ]; then
     exit -1
 fi
 
-
-##########################################################################
-# compiling library
-##########################################################################
+##############################################################################
+# CMake
+##############################################################################
 printf "%s" "
-##########################################################################
+##############################################################################
 "
 cd ${EOSIO_CONTEXT_DIR__}
-cd ${library_dir}
-
+cd ${source_dir}
 mkdir build
 cd build
 if [ ! -z "$RESET__" ]; then
@@ -413,42 +411,7 @@ if [ ! -z "$RESET__" ]; then
     rm -r *
 fi
 
-printf "\n%s\n" "Compiling ${library_dir}. Current directory is ${PWD}"
-
-$CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE__} \
-    -DCMAKE_CXX_COMPILER=${CXX_COMPILER__} \
-    -DCMAKE_C_COMPILER=${C_COMPILER__} -DECC_IMPL=$ECC_IMPL__ ..
-
-if [ $? -ne 0 ]; then
-    printf "\n\t%s\n\n" "
->>>>>> CMAKE building ${library_dir} has exited with the above error."
-    exit -1
-fi
-
-make VERBOSE="$CMAKE_VERBOSE__"
-
-if [ $? -ne 0 ]; then
-    printf "\n\t%s\n" "
->>>>>> MAKE building ${library_dir} has exited with the above error."
-    exit -1
-fi
-
-##############################################################################
-# compiling executable
-##############################################################################
-printf "%s" "
-##############################################################################
-"
-cd ${EOSIO_CONTEXT_DIR__}
-cd ${executable_dir}
-mkdir build
-cd build
-if [ ! -z "$RESET__" ]; then
-    printf "%s\n" "Deleting the contents of $PWD"
-    rm -r *
-fi
-
-printf "\n%s\n" "Compiling ${executable_dir}. Current directory is ${PWD}"
+printf "\n%s\n" "Compiling ${source_dir}. Current directory is ${PWD}"
 
 $CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE__} \
     -DCMAKE_CXX_COMPILER=${CXX_COMPILER__} \
@@ -456,7 +419,7 @@ $CMAKE -DCMAKE_BUILD_TYPE=${BUILD_TYPE__} \
 
 if [ $? -ne 0 ]; then
     printf "\n\t%s\n\n" \
-        ">> CMAKE building ${executable_dir} has exited with the above error."
+        ">> CMAKE building ${source_dir} has exited with the above error."
     exit -1
 fi
 
@@ -464,7 +427,7 @@ make VERBOSE="$CMAKE_VERBOSE__"
 
 if [ $? -ne 0 ]; then
     printf "\n\t%s\n" \
-    ">> MAKE building ${executable_dir} has exited with the above error."
+    ">> MAKE building ${source_dir} has exited with the above error."
     exit -1
 fi
 
