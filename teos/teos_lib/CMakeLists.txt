@@ -1,39 +1,8 @@
-cmake_minimum_required(VERSION 3.5)
-
 set( LIB_NAME "teoslib" )
 
-set( VERSION_MAJOR 1 )
-set( VERSION_MINOR 0 )
-set( CMAKE_BUILD_TYPE "Debug" )
-set( ECC_IMPL secp256k1 CACHE STRING "secp256k1 or openssl or mixed")
+set( CONFIG_JSON "config.json" )
 
-
-set( EOSIO_CONTEXT_DIR "NOT DEFINED !!" )
-set( EOSIO_SOURCE_DIR "NOT DEFINED !!" )
-set( EOSIO_BINARY_DIR "NOT DEFINED !!" )
-
-set( CMAKE_INSTALL_PREFIX "NOT DEFINED !!" )
-set( CMAKE_INSTALL_LIB "NOT DEFINED !!" )
-set( CMAKE_INSTALL_LIB_PREFIX "NOT DEFINED !!" )
-
-message(STATUS "APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules")
-
-# 'common.cmake' sets Lgos common values:
-# EOSIO_CONTEXT_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
-# CMAKE_INSTALL_PREFIX, 
-# CMAKE_CXX_STANDARD, CMAKE_BUILD_TYPE, 
-include( ../common.cmake ) 
-if( NOT DEFINED EOSIO_SOURCE_DIR )
-	message( FATAL_ERROR "Something is wrong with the 'commom.cmake' definition file"	)
-endif()
-
-list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules" )
-
-message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
-
-set( CONFIG_JSON_FILE "config.json" )
-set( CONFIG_JSON "${CONFIG_JSON_FILE}" )
+## BEGIN DEPENDENCIES ########################################################
 
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
@@ -116,6 +85,16 @@ target_include_directories( ${LIB_NAME}
 
   PUBLIC
     include
+)
+
+configure_file (
+  "config.h.in"
+  "${CMAKE_SOURCE_DIR}/teos/include/teos/config.h"
+)
+
+configure_file (
+  "config.h.in"
+  "${CMAKE_SOURCE_DIR}/teos_lib/include/teoslib/config.h"
 )
 
 install ( TARGETS ${LIB_NAME} DESTINATION lib )

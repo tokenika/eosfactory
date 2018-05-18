@@ -1,8 +1,0 @@
-{
-  "EOSIO_DAEMON_NAME":"nodeos",
-  "EOSIO_WASM_CLANG":"/opt/wasm/bin/clang",
-  "EOSIO_WASM_LLVM_LINK":"/opt/wasm/bin/llvm-link",
-  "EOSIO_WASM_LLC":"/opt/wasm/bin/llc",
-  "EOSIO_BINARYEN_BIN":"/usr/local/binaryen/bin/",
-  "genesis-json":"geneis.json"
-}

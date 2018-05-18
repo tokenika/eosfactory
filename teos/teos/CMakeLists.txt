@@ -1,53 +1,12 @@
-cmake_minimum_required (VERSION 3.5)
-# set(CMAKE_C_COMPILER "clang-4.0")
-# set(CMAKE_CXX_COMPILER "clang++-4.0")
-
-project ("teos")
-
-set( VERSION_MAJOR 1 )
-set( VERSION_MINOR 0 )
-set( CMAKE_BUILD_TYPE "Debug" )
-set( ECC_IMPL secp256k1 CACHE STRING "secp256k1 or openssl or mixed")
-
-set( EOSIO_CONTEXT_DIR "NOT DEFINED !!" )
-set( EOSIO_SOURCE_DIR "NOT DEFINED !!" )
-set( EOSIO_BINARY_DIR "NOT DEFINED !!" )
-
-set( CMAKE_INSTALL_PREFIX "NOT DEFINED !!" )
-set( CMAKE_INSTALL_LIB "NOT DEFINED !!" )
-set( CMAKE_INSTALL_LIB_PREFIX "NOT DEFINED !!" )
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
-
-option( ENABLE_ASAN "enable ASAN" OFF )
-# 'common.cmake' sets Lgos common values:
-# EOSIO_CONTEXT_DIR, EOSIO_SOURCE_DIR. EOSIO_BINARY_DIR, 
-# CMAKE_INSTALL_PREFIX, 
-# CMAKE_CXX_STANDARD, CMAKE_BUILD_TYPE, 
-include( ../common.cmake ) 
-if( NOT DEFINED EOSIO_SOURCE_DIR )
-	message( FATAL_ERROR "Something is wrong with the 'commom.cmake' definition file"	)
-endif()
-
 
 set( BUILD_SHARED_LIBS NO )
-set( BUILD_DOXYGEN TRUE )
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules" )
-
-message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 
 set( TEST_ADDRESS "tokenika")
 set( TEST_HTTP_ADDRESS "eos-testapi.tokenika.io:8888" )
-set( CONFIG_JSON "config.json" ) # sets to config.h
 
 # Ensure that even static libraries are relocatable so they can be linked into a .so
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-if( ENABLE_ASAN )
-  # TODO: hard codding, make it better! //////////////////////  
-  #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address" )
-endif()
-
 
 ## BEGIN DEPENDENCIES ########################################################
 
@@ -107,30 +66,11 @@ endif()
 
 ## END DEPENDENCIES ##########################################################
 
-# set( EOSIO_WASM_CLANG "\${HOME}/opt/wasm/bin/clang" )
-# set( EOSIO_WASM_LLVM_LINK "\${HOME}/opt/wasm/bin/llvm-link" )
-# set( EOSIO_WASM_LLC "\${HOME}/opt/wasm/bin/llc" )
-# set( EOSIO_BINARYEN_BIN "/usr/local/binaryen/bin/" )
-
-## BEGIN CONFIG FILES ########################################################
-
-configure_file (
-  "config.h.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.h"
-)
-
-configure_file (
-  "config.h.in"
-  "${CMAKE_SOURCE_DIR}/teos_lib/include/teoslib/config.h"
-)
-
 install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
   DESTINATION "bin" )
 
 install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
   DESTINATION "bin" )
-
-## END CONFIG FILES #########################################################
 
 ## BEGIN executables #########################################################
 
@@ -160,7 +100,7 @@ macro( applLinkLibraries applName )
   endif()
 
   set( TARGET_DIR "" )
- 
+
   if(EXISTS "${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc_debug${CMAKE_STATIC_LIBRARY_SUFFIX}")
     set(fc "fc_debug")
   endif()
