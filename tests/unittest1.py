@@ -34,7 +34,7 @@ class Test1(unittest.TestCase):
         x = node.info()
         self.assertTrue("last_irreversible_block_id" in x.json.keys())
         x = sess.init()
-        self.assertFalse(x.error)
+        self.assertFalse(x)
 
     def test_01_contract(self):
         c = Contract("eosio.token")

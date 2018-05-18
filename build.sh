@@ -128,7 +128,7 @@ while getopts ":e:w:c:C:X:i:t:s:rvh" opt; do
         EOSIO_SOURCE_DIR__=$OPTARG
         ;;
     w)
-        EOSIO_CONTRACT_WORKSPACE__==$OPTARG
+        EOSIO_CONTRACT_WORKSPACE__=$OPTARG
         ;;
     c)
         compiler="$OPTARG"
@@ -491,9 +491,9 @@ printf "${bldred}%s${txtrst}" '
                                                       
 '
 
-
 printf "\n%s\n" "
-To complete your installation please load the newly created system variables by running this command:
+To complete your installation please load the newly created system variables 
+by running this command:
 "
 
 if [ "$OS_NAME" == "Darwin" ]; then
@@ -506,8 +506,22 @@ else
 "
 fi
 
+if [ ! -e "$EOSIO_CONTRACT_WORKSPACE__" ]; then
+    printf "%s\n" "
+##############################################################################
+#   WARNING!
+#   The directory 
+#   $EOSIO_CONTRACT_WORKSPACE__
+#   indicated as the contract workspace does not exist. 
+#    
+#   I you do not create it, some of the tests will fail.
+##############################################################################
+"
+fi
+
 printf "%s\n" "
-To verify EOSFactory installation navigate to the 'eosfactory' folder and run these tests:
+To verify EOSFactory installation navigate to the 'eosfactory' folder and run 
+these tests:
 "
 printf "%s\n" "
     $ python3 ./tests/test1.py

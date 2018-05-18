@@ -38,8 +38,7 @@ message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 
 set( TEST_ADDRESS "tokenika")
 set( TEST_HTTP_ADDRESS "eos-testapi.tokenika.io:8888" )
-set( CONFIG_JSON_FILE "config.json" )
-set( CONFIG_JSON "${CONFIG_JSON_FILE}" )
+set( CONFIG_JSON "config.json" ) # sets to config.h
 
 # Ensure that even static libraries are relocatable so they can be linked into a .so
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
@@ -130,11 +129,6 @@ install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json"
 
 install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
   DESTINATION "bin" )
-
-configure_file (
-  "config.json.in"
-  "${CMAKE_BINARY_DIR}/config.json"
-)
 
 ## END CONFIG FILES #########################################################
 

@@ -142,7 +142,6 @@ namespace teos {
       {    
         try{
           if(!bfs::exists(inContract)) {
-            //bfs::copy(inTemplate, inContract);
             bfs::create_directory(inContract);          
           }
         } catch (bfs::filesystem_error &e){
@@ -156,12 +155,12 @@ namespace teos {
     {
       namespace bfs = boost::filesystem;
 
-      bfs::path context_path(getContextDir(this));
+      bfs::path workspacePath(getContractWorkspace(this));
       if(isError_){
         return;
       }
       
-      bfs::path contract_path = context_path / contractsDir / name;
+      bfs::path contract_path = workspacePath / name;
       { // make contract directory:
         try{
           bfs::create_directory(contract_path);
@@ -179,8 +178,12 @@ namespace teos {
       respJson_.put("template_cpp", (contract_path / (name + ".cpp")).string());            
       respJson_.put("template_hpp", (contract_path / (name + ".hpp")).string());            
     
+      bfs::path contextPath(getContextDir(this));
+      if(isError_){
+        return;
+      }
       bfs::path templContractPath 
-        = context_path / templContractsDir / templContractName;
+        = contextPath / templContractsDir / templContractName;
 
       for (const auto& dirEnt : bfs::recursive_directory_iterator{templContractPath})
       {
