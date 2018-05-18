@@ -1,7 +1,9 @@
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/print.hpp>
 
-#include "@skeleton@.hpp"
+#define DEBUG
+#include "logger.hpp"
+#include "@skeleton@.hpp" 
 
 using namespace eosio;
 
@@ -11,6 +13,7 @@ class hello : public eosio::contract {
 
       /// @abi action 
       void hi( account_name user ) {
+
         print( "Hello, ", name{user} );
       }
 };

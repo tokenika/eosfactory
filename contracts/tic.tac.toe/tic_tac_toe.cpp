@@ -2,6 +2,8 @@
  *  @file
  *  @copyright defined in eos/LICENSE.txt
  */
+
+#define DEBUG
 #include "logger.hpp"
 #include "tic_tac_toe.hpp"
 
@@ -50,7 +52,7 @@ struct impl {
         //  x | - | -    - | - | x    - | - | -    - | x | -
 
         logger_info("current_game.board[4]: ", current_game.board[4]);
-        
+
         if (current_game.board[4] == 1) {
         return current_game.host;
         } else if (current_game.board[4] == 2) {
