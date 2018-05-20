@@ -87,6 +87,13 @@ namespace teos
     return temp;
   }
 
+  bool TeosControl::printError() {
+    if(isError_) {
+      cout << responseToString(true) << endl;
+    }
+    return isError_;
+  }
+
   string TeosControl::executable = "";
   /*
     The config file is expected in the application directory, or two

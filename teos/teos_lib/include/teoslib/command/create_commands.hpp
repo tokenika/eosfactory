@@ -223,7 +223,7 @@ Usage: ./teos create key --jarg '{
        * @param keyName key-pair id.
        * "privateKey":"<private key>" "publicKey":"<public key>"}.
        */
-      CreateKey(string keyName, bool raw = false) : TeosCommand("") {
+      CreateKey(string keyName) : TeosCommand("") {
         KeyPair kp;
         respJson_.put("name", keyName);
         respJson_.put("privateKey", kp.privateKey);
@@ -235,7 +235,7 @@ Usage: ./teos create key --jarg '{
        * @param reqJson a boost json tree argument: {"keyName":"<key name>"}.
        * "privateKey":"<private key>" "publicKey":"<public key>"}.
        */
-      CreateKey(ptree reqJson, bool raw = false) : TeosCommand(
+      CreateKey(ptree reqJson) : TeosCommand(
         "", reqJson) {
         KeyPair kp;
         respJson_.put("name", reqJson.get<string>("name"));

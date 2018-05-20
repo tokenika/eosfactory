@@ -21,6 +21,7 @@ find_package(Boost 1.66 REQUIRED COMPONENTS
   filesystem  
   system
   program_options
+  unit_test_framework
   chrono
   regex
   iostreams
@@ -157,9 +158,13 @@ add_executable( teos teos.cpp )
 applLinkLibraries( teos )
 install( TARGETS teos RUNTIME DESTINATION bin)
 
-add_executable( teos_lib_test teos_lib_test.cpp )
-applLinkLibraries( teos_lib_test )
-install( TARGETS teos_lib_test RUNTIME DESTINATION bin)
+add_executable( test0 test0.cpp )
+applLinkLibraries( test0 )
+install( TARGETS test0 RUNTIME DESTINATION bin)
+
+add_executable( test1 test1.cpp )
+applLinkLibraries( test1 )
+install( TARGETS test1 RUNTIME DESTINATION bin)
 
 ## END executables ###########################################################
 

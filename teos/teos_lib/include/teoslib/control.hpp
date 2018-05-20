@@ -55,14 +55,15 @@ namespace teos
     static string getConfigJson();
     static ptree getConfig(TeosControl* teosControl = nullptr);
 
-    bool isError_ = false;
+    bool isError_;
     ptree reqJson_;
     ptree respJson_;
     void errorRespJson(string sender, string message);
-    void putError(string msg, string sender = "");   
+    void putError(string msg, string sender = "");
+    bool printError();
 
-    TeosControl() {}
-    TeosControl(ptree reqJson) : reqJson_(reqJson) {}
+    TeosControl() {isError_ = false;}
+    TeosControl(ptree reqJson) : reqJson_(reqJson) {isError_ = false;}
 
     string errorMsg() {
       return respJson_.get<string>(teos_ERROR);
