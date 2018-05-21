@@ -542,6 +542,12 @@ namespace teos {
         }        
       }
 
+      TeosCommand status;
+      status.validateJsonData(data, status.reqJson_);
+      if(status.isError_) {
+        return status;
+      }
+
       fc::variant action_args_var;
       //try {
       action_args_var = fc::json::from_string(data);

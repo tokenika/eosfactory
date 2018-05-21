@@ -54,6 +54,7 @@ namespace teos
     static string executable;
     static string getConfigJson();
     static ptree getConfig(TeosControl* teosControl = nullptr);
+    void validateJsonData(string data, ptree &json);
 
     bool isError_;
     ptree reqJson_;

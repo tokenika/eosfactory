@@ -115,6 +115,19 @@ namespace teos
     return "";
   }
 
+  void TeosControl::validateJsonData(string data, ptree &json) {
+    stringstream ss;
+    ss << data;
+    try {
+      read_json(ss, json);
+      stringstream ss1; // Try to write json, in order to check it.
+      json_parser::write_json(ss1, json, false);
+    }
+    catch (exception& e) {
+      putError(e.what());
+    }      
+  }
+
   ptree TeosControl::getConfig(TeosControl* teosControl) {
     ptree config;
     try

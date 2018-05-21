@@ -551,7 +551,7 @@ Usage: ./teos wallet import --jarg '{"password":"<password>", name":"<wallet nam
     public:
 
       WalletKeys() : TeosCommand(
-        string(walletCommandPath + "list_keys"), reqJson_) {
+        string(walletCommandPath + "list_keys")) {
         callEosd();
       }
 

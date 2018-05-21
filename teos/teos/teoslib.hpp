@@ -6,7 +6,6 @@
 #include <string>
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/foreach.hpp>
 
 #include <teoslib/control/build_contract.hpp>
 #include <teoslib/command/get_commands.hpp>
@@ -57,31 +56,6 @@ namespace teoslib
       }
     }
 
-    vector<string> list(bool& isError)
-    {
-      WalletList command;
-      vector<string> retval;
-
-      isError = false;
-      if(command.printError())
-      {
-        isError = true;
-        return retval;        
-      }
-
-      BOOST_FOREACH(ptree::value_type &v
-        , command.respJson_.get_child("wallets"))
-      {
-        retval.push_back(v.second.data());
-      }
-    }
-
-    vector<string> list()
-    {
-      bool isError;
-      return list(isError);
-    }
-
     bool open()
     {
       WalletOpen command(name_);
@@ -105,31 +79,27 @@ namespace teoslib
       WalletImport command(name_, key.private_);
       return !command.printError();
     }
+
+    bool list()
+    {
+      WalletList command;
+      if(!command.printError())
+      {
+      cout << command.responseToString();      
+      }
+      return true;
+    }
   
-    vector<string> keys(bool& isError)
+    bool keys()
     {
       WalletKeys command;
-      vector<string> retval;
-
-      isError = false;
-      if(command.printError())
+      if(!command.printError())
       {
-        isError = true;
-        return retval;
+        cout << command.responseToString(); 
       }
-      
-      BOOST_FOREACH(ptree::value_type &v
-        , command.respJson_.get_child("wallet keys"))
-      {
-        retval.push_back(v.second.data());
-      }        
+      return true;              
     }
 
-    vector<string> keys()
-    {
-      bool isError;
-      return keys(isError);
-    }
   };
 
   class KeyEosio
@@ -166,17 +136,17 @@ namespace teoslib
     AccountEosio() : AccountCreator("eosio"){}      
   };
 
-  class Account : public AccountCreator, CreateAccount
+  class Account : public CreateAccount, public AccountCreator
   {
   public:
-    string permission_;
-    ptree getCode_;
-    ptree setContract_;
+    AccountCreator* permission_;
+    GetCode* getCode_;
+    SetContract* setContract_;
 
     Account(
         AccountCreator creator, string name,
-        Key owner_key, Key active_key,
-        string permission = "",
+        Key key_owner, Key key_active,
+        AccountCreator* permission = nullptr,
         unsigned expiration_sec = 30, 
         bool skip_signature = false,
         bool dont_broadcast = false,
@@ -184,44 +154,59 @@ namespace teoslib
         unsigned max_cpu_usage = 0,
         unsigned max_net_usage = 0) 
         :
-        AccountCreator(creator.name_),
+        AccountCreator(name),
         CreateAccount(
           creator.name_, name,
-          owner_key.public_, active_key.public_,
-          permission,
+          key_owner.public_, key_active.public_,
+          permission ? permission->name_ : "",
           expiration_sec, 
           skip_signature,
           dont_broadcast,
           force_unique,
           max_cpu_usage,
           max_net_usage
-        )
+        ), getCode_(nullptr), setContract_(nullptr)
     {
-      name_ = name;
       permission_ = permission;
       printError();
     }
 
-    string code(string wast_file="", string abiFile="")
+    ~Account()
     {
-        GetCode getCode = GetCode(name_, wast_file, abiFile);
-        getCode_ = getCode.respJson_;
-        return getCode_.get("code", "");
+      if(getCode_) {
+        delete getCode_;
+      }
+
+      if(setContract_) {
+        delete setContract_;
+      }
     }
 
-    ptree setContract(
+    string code(string wast_file="", string abiFile="")
+    {
+      if(getCode_){
+        delete getCode_;
+      }      
+      getCode_ = new GetCode(name_, wast_file, abiFile);
+      if(getCode_->printError())
+      {
+        return "";
+      }
+      return getCode_->respJson_.get<string>("code_hash");
+    }
+
+    SetContract setContract(
         string contract_dir, string wast_file="", string abi_file="", 
         string permission="", 
         int expiration_sec=30, int force_unique=0,
         int max_cpu_usage=0, int max_net_usage=0)
     {
-      SetContract setContract = SetContract(
+      setContract_ = new SetContract(
         name_,
         contract_dir, wast_file, abi_file, permission, 
         expiration_sec, force_unique, max_cpu_usage, max_cpu_usage);
 
-      setContract_ = setContract.respJson_;
-      return setContract_;
+      return *setContract_;
     }
 
   };
@@ -241,7 +226,7 @@ namespace teoslib
     int max_cpu_usage_;
     int max_net_usage_;
 
-    ptree action_;
+    PushAction* action_;
     string console_;
     SetContract* setContract_;
 
@@ -259,7 +244,8 @@ namespace teoslib
               expiration_sec_(expiration_sec),
               skip_signature_(skip_signature), dont_broadcast_(dont_broadcast), 
               force_unique_(force_unique),
-              max_cpu_usage_(max_cpu_usage), max_net_usage_(max_net_usage)
+              max_cpu_usage_(max_cpu_usage), max_net_usage_(max_net_usage),
+              setContract_(nullptr), console_(""), action_(nullptr)
     {}
 
     ~Contract()
@@ -267,6 +253,10 @@ namespace teoslib
       if(setContract_)
       {
         delete setContract_;
+      }
+      if(action_)
+      {
+        delete action_;
       }
     }
 
@@ -317,17 +307,25 @@ namespace teoslib
         int max_cpu_usage=0, int max_net_usage=0
     )
     {
-      PushAction command(
+      if(action_)
+      {
+        delete action_;
+      }
+      action_ = new PushAction(
         account_.name_, action, data,
-          permission_ ? permission_->name_ : "", 
+          permission ? permission->name_ : "", 
           expiration_sec, 
           skip_signature, dont_broadcast, force_unique,
           max_cpu_usage, max_net_usage
         );
-
-      action_ = command.respJson_;
-      console_ = action_.get("processed.action_traces.0.console", "");
-      return !command.printError();
+      if(!action_->printError())
+      {
+        console_ 
+          = action_->respJson_.get<string>(
+              "processed.action_traces.0.console");
+        return true;        
+      }
+      return false;
     }
   };
 

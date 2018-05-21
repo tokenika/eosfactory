@@ -31,16 +31,7 @@ namespace teos
   }
 
   void TeosCommand::normResponse(string response, ptree &respJson) {
-    stringstream ss;
-    ss << response;
-    try {
-      read_json(ss, respJson);
-      stringstream ss1; // Try to write respJson, in order to check it.
-      json_parser::write_json(ss1, respJson, false);
-    }
-    catch (exception& e) {
-      putError(e.what());
-    }
+    TeosCommand::validateJsonData(response, respJson);
   }
 
   void TeosCommand::callEosd()

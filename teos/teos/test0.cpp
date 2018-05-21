@@ -11,43 +11,60 @@
 #include <teoslib/command/wallet_commands.hpp>
 #include <teoslib/command/push_commands.hpp>
 
-#include "teoslib.hpp"
+#include "teostestlib.hpp"
+
 
 using namespace std;
 using namespace teoslib;
-using namespace teos::control;
-using namespace teos::command;
 
 int main(int argc, const char *argv[]) {
 
   using namespace std;
   using namespace teoslib;
-  using namespace teos::control;
-  using namespace teos::command;
 
-  DaemonStart daemonStart(true);
-  AccountEosio eosio;
-  Wallet wallet;
-  Contract contract_eosio_bios(eosio, "eosio.bios", &eosio);
-  cout << contract_eosio_bios.console_ << endl;
-  //cout << contract_eosio_bios.setContract_->responseToString(true) << endl;
+  AccountEosio* eosio;
+  Wallet* wallet;
+  Key* key_owner; 
+  Key* key_active;
+  Account* alice;
+  Account* bob;
+  Account* carol;
+  
+  setup(eosio, wallet, key_owner, key_active, alice, bob, carol);
+  Account account_contract(*eosio, "contract", *key_owner, *key_active);
+  cout << "code: " << account_contract.code() << endl;
 
-  Key owner_key("owner");
-  Key active_key("active");
-  cout << owner_key.responseToString(true) << endl;
-  cout << active_key.responseToString(true) << endl;
+  Contract contract(account_contract, "eosio.token");
+  contract.deploy();
+  cout << "transaction ID: " 
+    << contract.setContract_->respJson_.get<string>("transaction_id") << endl;
+  cout << "code: " << account_contract.code() << endl;
 
-  wallet.import_key(owner_key);
-  wallet.import_key(active_key);
+  contract.push_action(
+    "create", 
+    R"({"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0})");
+  cout << "transaction ID: " 
+    << contract.action_->respJson_.get<string>("transaction_id") << endl;
 
-  // vector<string> keys = wallet.keys();
-  // cout << keys.size() << endl;
-  // for(const string& key: keys)
-  // {
-  //   cout << key << endl;
-  // }
+  contract.push_action(
+    "issue", 
+    R"({"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"})", eosio);
 
-  DaemonStop();  
+  contract.push_action(
+    "transfer", 
+    R"({"from":"alice", "to":"carol", "quantity":"25.0000 EOS", "memo":"memo"})", 
+    alice);
+
+  contract.push_action(
+    "transfer", 
+    R"({"from":"carol", "to":"bob", "quantity":"13.0000 EOS", "memo":"memo"})", 
+    carol);
+
+  contract.push_action(
+    "transfer", 
+    R"({"from":"bob", "to":"alice", "quantity":"2.0000 EOS", "memo":"memo"})", bob);
+  
+  teardown(eosio, wallet, key_owner, key_active, alice, bob, carol); 
 
   return 1;
 }

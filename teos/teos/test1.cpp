@@ -49,12 +49,7 @@ BOOST_AUTO_TEST_CASE(test1)
   // BOOST_REQUIRE(wallet.import_key(owner_key));
   // BOOST_REQUIRE(wallet.import_key(active_key));
 
-  vector<string> keys = wallet.keys();
-  cout << keys.size() << endl;
-  // for(const string& key: keys)
-  // {
-  //   cout << key << endl;
-  // }
+  wallet.keys(); // Prints wallet keys.
 
   DaemonStop();
 }

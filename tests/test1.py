@@ -27,19 +27,34 @@ def run():
     c.get_code()
 
     print('test c.push_action("create"):')
-    c.push_action("create", '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+    c.push_action(
+        "create", 
+        '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
+            "can_freeze":0, "can_recall":0, "can_whitelist":0}')
     
     print('test c.push_action("issue"):')
-    c.push_action("issue", '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', sess.eosio)
+    c.push_action(
+        "issue", 
+        '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', \
+            sess.eosio)
 
     print('test c.push_action("transfer", sess.alice):')
-    c.push_action("transfer", '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", "memo":"memo"}', sess.alice)
+    c.push_action(
+        "transfer", 
+        '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
+            "memo":"memo"}', sess.alice)
     
     print('test c.push_action("transfer", sess.carol):')
-    c.push_action("transfer", '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", "memo":"memo"}', sess.carol)
+    c.push_action(
+        "transfer", 
+        '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", \
+            "memo":"memo"}', sess.carol)
     
     print('test c.push_action("transfer" sess.bob):')
-    c.push_action("transfer", '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", "memo":"memo"}', sess.bob)
+    c.push_action(
+        "transfer", 
+        '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", \
+            "memo":"memo"}', sess.bob)
 
     print('test c.get_table("accounts", sess.alice):')
     t1 = c.get_table("accounts", sess.alice)
