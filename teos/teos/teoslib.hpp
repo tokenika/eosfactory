@@ -227,9 +227,10 @@ namespace teoslib
     int max_net_usage_;
 
     PushAction* action_;
-    string console_;
     SetContract* setContract_;
-
+    GetTable* getTable_;
+    string console_;
+    
     Contract(
           AccountCreator account, string contract_dir,
           AccountCreator* permission = nullptr,            
@@ -258,6 +259,10 @@ namespace teoslib
       {
         delete action_;
       }
+      if(getTable_)
+      {
+        delete getTable_;
+      }      
     }
 
     bool deploy()
@@ -313,7 +318,7 @@ namespace teoslib
       }
       action_ = new PushAction(
         account_.name_, action, data,
-          permission ? permission->name_ : "", 
+          permission ? permission->name_ : account_.name_, 
           expiration_sec, 
           skip_signature, dont_broadcast, force_unique,
           max_cpu_usage, max_net_usage
@@ -321,9 +326,23 @@ namespace teoslib
       if(!action_->printError())
       {
         console_ 
-          = action_->respJson_.get<string>(
-              "processed.action_traces.0.console");
+          = action_->respJson_.get(
+              "processed.action_traces..console", "");
+        cout << console_ << endl;
         return true;        
+      }
+      return false;
+    }
+
+    bool get_table(
+      string table,
+      AccountCreator* scope = nullptr
+    )
+    {
+      getTable_ = GetTable(table, scope ? scope->name : account_.name_);
+      if(!action_->printError())
+      {
+        return true;
       }
       return false;
     }

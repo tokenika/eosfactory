@@ -1,0 +1,38 @@
+transfer action transaction ID: e99e1e563cca05c47231b284fced6351090781f354f3f78fdeb94d092cb7a08d
+{
+    "transaction_id": "4d54931e041fae99bcb3494876ee63d73353fae045a6281839dfea3c29fdc85d",
+    "processed": {
+        "action_traces": [
+            {
+                "receipt": {
+                    "receiver": "contract",
+                    "act_digest": "e859a22f18d33ef698850f7d6f770134eb6e7c033091db0ca57fe809061ef795",
+                    "global_sequence": "55",
+                    "recv_sequence": "6",
+                    "auth_sequence": [
+                        [
+                            "bob",
+                            "1"
+                        ]
+                    ]
+                },
+                "act": {
+                    "account": "contract",
+                    "name": "transfer",
+                    "authorization": [
+                        {
+                            "actor": "bob",
+                            "permission": "active"
+                        }
+                    ],
+                    "data": {
+                        "from": "bob",
+                        "to": "alice",
+                        "quantity": "2.0000 EOS",
+                        "memo": "memo"
+                    },
+                    "hex_data": "0000000000000e3d0000000000855c34204e00000000000004454f5300000000046d656d6f"
+                },
+                "elapsed": "4563",
+                "cpu_usage": "0",
+                "console": "transfer from bob to alice 2.0000 EOS\nbob balance: 11.0000 EOS\nalice balance: 77.0000 EOS\n",

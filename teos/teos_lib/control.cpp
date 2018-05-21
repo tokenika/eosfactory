@@ -124,7 +124,7 @@ namespace teos
       json_parser::write_json(ss1, json, false);
     }
     catch (exception& e) {
-      putError(e.what());
+      putError("Data is not a json.");
     }      
   }
 
