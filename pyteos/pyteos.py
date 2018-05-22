@@ -24,12 +24,6 @@ import shutil
 
 _is_verbose = True
 
-def version():
-    """
-    Prints current EOSFactory version
-    """
-    print("Version: " + setup.version)
-
 def set_verbose(is_verbose):
     """
     If set `False`, `teos` commands print error messages only.
@@ -49,23 +43,17 @@ class Setup:
 
     The configuration file is expected in the same folder as the current file.
     """
-    __setupFile = os.path.dirname(os.path.abspath(__file__)) + "/../config.json"
-    __VERSION = "version"
+    __setupFile = os.path.dirname(os.path.abspath(__file__)) + "/../teos/config.json"
     __TEOS_EXE = "teos_executable"
-    __NODE_BLOCK_COUNT = "node_block_count"
-    __NODE_BLOCK_NUM = "node_block_num"
     __review = False
-    version = ""
     teos_exe = ""
-    node_block_count = 0
-    node_block_num = 0
+    node_block_count = 3
+    node_block_num = 3
 
     def __init__(self):
 
         with open(self.__setupFile) as json_data:
             setup_json = json.load(json_data)
-
-        self.version = setup_json[self.__VERSION]
 
         path_to_teos = os.path.dirname(os.path.abspath(__file__)) \
             + "/../teos/build/teos/teos"
@@ -95,9 +83,6 @@ class Setup:
                     os.path.realpath(self.__setupFile),
                     self.__TEOS_EXE,
                     ))
-
-        self.node_block_count = setup_json[self.__NODE_BLOCK_COUNT]
-        self.node_block_num = setup_json[self.__NODE_BLOCK_NUM]
 
 setup = Setup()
 

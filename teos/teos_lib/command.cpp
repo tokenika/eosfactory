@@ -82,7 +82,7 @@ namespace teos
         "Connection: close" + CRNL + CRNL +
         postMsg;
 
-      ////cout << request << endl;
+      //cout << "callEosd request:\n" << request << endl;
 
       boost::system::error_code error;
 

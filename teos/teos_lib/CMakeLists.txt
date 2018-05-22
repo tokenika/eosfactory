@@ -87,6 +87,10 @@ target_include_directories( ${LIB_NAME}
     include
 )
 
+if( NOT EXISTS "${CMAKE_SOURCE_DIR}/${CONFIG_JSON}")
+  file(WRITE "${CMAKE_SOURCE_DIR}/${CONFIG_JSON}" "{\n\n}")
+endif()
+
 configure_file (
   "config.h.in"
   "${CMAKE_SOURCE_DIR}/teos/include/teos/config.h"
