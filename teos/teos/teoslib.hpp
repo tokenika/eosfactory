@@ -120,7 +120,6 @@ namespace teoslib
   {
   public:
     string name_;
-    ptree respJson_;
     AccountCreator(string name)
     {
       name_ = name;
