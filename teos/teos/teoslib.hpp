@@ -259,10 +259,10 @@ namespace teoslib
       {
         delete action_;
       }
-      if(getTable_)
-      {
-        delete getTable_;
-      }      
+      // if(getTable_)
+      // {
+      //   delete getTable_;
+      // }      
     }
 
     bool deploy()
@@ -334,18 +334,18 @@ namespace teoslib
       return false;
     }
 
-    bool get_table(
-      string table,
-      AccountCreator* scope = nullptr
-    )
-    {
-      getTable_ = GetTable(table, scope ? scope->name : account_.name_);
-      if(!action_->printError())
-      {
-        return true;
-      }
-      return false;
-    }
+    // bool get_table(
+    //   string table,
+    //   AccountCreator* scope = nullptr
+    // )
+    // {
+    //   getTable_ = GetTable(table, scope ? scope->name : account_.name_);
+    //   if(!action_->printError())
+    //   {
+    //     return true;
+    //   }
+    //   return false;
+    // }
   };
 
 }
