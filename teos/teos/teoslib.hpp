@@ -107,15 +107,12 @@ namespace teoslib
   public:
     string name_;
     string private_;
-    string public_;
-    ptree respJson_;      
+    string public_;      
     KeyEosio()
     {
       name_ = "eosio";
       private_ = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
       public_ = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV";
-      respJson_.put("privateKey", private_);
-      respJson_.put("publicKey", public_);
     }
   };
 
