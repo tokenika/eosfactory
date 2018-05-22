@@ -35,7 +35,7 @@ namespace teos{
   TeosCommand setContract(
     string account,
     string contractDir,
-    string wastFile = "", string abiFile = "",
+    string& wastFile, string& abiFile,
     string permission  = "",
     unsigned expiration = 30,
     bool skipSignature = false,

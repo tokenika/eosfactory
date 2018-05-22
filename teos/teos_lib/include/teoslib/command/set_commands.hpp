@@ -35,14 +35,19 @@ namespace teos
           accountName, contractDir, wastFile, abiFile, permission, 
           expiration, skipSignature, dontBroadcast, forceUnique,
           maxCpuUsage, maxNetUsage));
+
+        reqJson_.put("wast-file", wastFile);
+        reqJson_.put("abi-file", abiFile);
       }
 
       SetContract(ptree reqJson) : TeosCommand("", reqJson)
       {
+        string wastFile = reqJson.get<string>("wast-file");
+        string abiFile = reqJson.get<string>("abi-file");
         copy(setContract(
           reqJson.get<string>("account"),
           reqJson.get<string>("contract-dir"),
-          reqJson.get<string>("wast-file"), reqJson.get<string>("abi-file"),
+          wastFile, abiFile,
           reqJson.get<string>("permission"),
           reqJson.get<unsigned>("expiration"),
           reqJson.get<bool>("skip-sign"),

@@ -6,6 +6,7 @@
 #include <string>
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/filesystem.hpp>
 
 #include <teoslib/control/build_contract.hpp>
 #include <teoslib/command/get_commands.hpp>
@@ -210,6 +211,7 @@ namespace teoslib
   class Contract
   {
   public:
+    string name_;
     AccountCreator account_;
     string contract_dir_;
     string wast_file_;
@@ -235,6 +237,7 @@ namespace teoslib
           bool skip_signature=0, bool dont_broadcast=0, bool force_unique=0,
           int max_cpu_usage=0, int max_net_usage=0) 
             : 
+              name_(""),
               account_(account), contract_dir_(contract_dir),
               wast_file_(wast_file), abi_file_(abi_file),
               permission_(permission),
@@ -242,7 +245,8 @@ namespace teoslib
               skip_signature_(skip_signature), dont_broadcast_(dont_broadcast), 
               force_unique_(force_unique),
               max_cpu_usage_(max_cpu_usage), max_net_usage_(max_net_usage),
-              setContract_(nullptr), console_(""), action_(nullptr)
+              setContract_(nullptr), console_(""), action_(nullptr),
+              getTable_(nullptr)
     {}
 
     ~Contract()
@@ -255,10 +259,10 @@ namespace teoslib
       {
         delete action_;
       }
-      // if(getTable_)
-      // {
-      //   delete getTable_;
-      // }      
+      if(getTable_)
+      {
+        delete getTable_;
+      }      
     }
 
     bool deploy()
@@ -271,7 +275,13 @@ namespace teoslib
           skip_signature_, dont_broadcast_, force_unique_,
           max_cpu_usage_, max_net_usage_
         );
-      return !setContract_->printError();
+      if(!setContract_->printError())
+      {
+        name_ = boost::filesystem::path(
+          setContract_->reqJson_.get<string>("wast-file")).stem().string();
+        return true;
+      }
+      return false;
     }
 
     bool wast()
@@ -330,18 +340,23 @@ namespace teoslib
       return false;
     }
 
-    // bool get_table(
-    //   string table,
-    //   AccountCreator* scope = nullptr
-    // )
-    // {
-    //   getTable_ = GetTable(table, scope ? scope->name : account_.name_);
-    //   if(!action_->printError())
-    //   {
-    //     return true;
-    //   }
-    //   return false;
-    // }
+    bool get_table(
+      string table,
+      AccountCreator* scope = nullptr,
+      unsigned limit = 10, string key = "", 
+      string lower = "", string upper = ""
+    )
+    {
+      getTable_ = new GetTable(
+        name_, scope ? scope->name_ : account_.name_, table,
+        limit, key, lower, upper 
+      );
+      if(!action_->printError())
+      {
+        return true;
+      }
+      return false;
+    }
   };
 
 }

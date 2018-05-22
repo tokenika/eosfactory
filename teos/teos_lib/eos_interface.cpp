@@ -414,7 +414,7 @@ namespace teos {
     TeosCommand setContract(
         string account,
         string contractDir,
-        string wastFile, string abiFile,
+        string& wastFile, string& abiFile,
         string permission, unsigned expiration,
         bool skipSignature, bool dontBroadcast, bool forceUnique,
         unsigned maxCpuUsage, unsigned maxNetUsage)
@@ -428,10 +428,9 @@ namespace teos {
         }
       }
 
-      string wastPath;
       {
         TeosCommand status;
-        wastPath = teos::control::getContractFile(
+        wastFile = teos::control::getContractFile(
               &status, contractDir, 
               wastFile.empty() ? ".wast" : wastFile); 
 
@@ -440,10 +439,9 @@ namespace teos {
         } 
       }
 
-      string abiPath;
       {
         TeosCommand status;
-        abiPath = teos::control::getContractFile(
+        abiFile = teos::control::getContractFile(
           &status, contractDir, abiFile.empty() ? ".abi" : abiFile); 
 
         if (status.isError_) {
@@ -452,8 +450,8 @@ namespace teos {
       }
 
       string wast;
-      fc::read_file_contents(wastPath, wast);
-      //FC_ASSERT( !wast.empty(), "no wast file found ${f}", ("f", wastPath) );      
+      fc::read_file_contents(wastFile, wast);
+      //FC_ASSERT( !wast.empty(), "no wast file found ${f}", ("f", wastFile) );      
       vector<uint8_t> wasm;
       const string binary_wasm_header = "\x00\x61\x73\x6d";
       if(wast.compare(0, 4, binary_wasm_header) == 0) {
@@ -467,11 +465,11 @@ namespace teos {
       vector<chain::action> actions;
       actions.emplace_back( create_setcode(
         account, bytes(wasm.begin(), wasm.end()), permissions ) );
-      //FC_ASSERT( fc::exists( abiPath ), "no abi file found ${f}", ("f", abiPath)  );
+      //FC_ASSERT( fc::exists( abiFile ), "no abi file found ${f}", ("f", abiFile)  );
 
       //try {
       actions.emplace_back( create_setabi(
-          account, fc::json::from_file(abiPath).as<eosio::chain::abi_def>(), 
+          account, fc::json::from_file(abiFile).as<eosio::chain::abi_def>(), 
           permissions) );
       //} EOS_CAPTURE_AND_RETHROW(abi_type_exception,  "Fail to parse ABI JSON")      
       
