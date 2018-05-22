@@ -158,13 +158,13 @@ add_executable( teos teos.cpp )
 applLinkLibraries( teos )
 install( TARGETS teos RUNTIME DESTINATION bin)
 
-add_executable( test0 test0.cpp )
-applLinkLibraries( test0 )
-install( TARGETS test0 RUNTIME DESTINATION bin)
-
 add_executable( test1 test1.cpp )
 applLinkLibraries( test1 )
 install( TARGETS test1 RUNTIME DESTINATION bin)
+
+add_executable( unittest1 unittest1.cpp )
+applLinkLibraries( unittest1 )
+install( TARGETS unittest1 RUNTIME DESTINATION bin)
 
 ## END executables ###########################################################
 

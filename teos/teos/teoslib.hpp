@@ -340,7 +340,7 @@ namespace teoslib
       return false;
     }
 
-    bool get_table(
+    ptree get_table(
       string table,
       AccountCreator* scope = nullptr,
       unsigned limit = 10, string key = "", 
@@ -351,11 +351,8 @@ namespace teoslib
         name_, scope ? scope->name_ : account_.name_, table,
         limit, key, lower, upper 
       );
-      if(!action_->printError())
-      {
-        return true;
-      }
-      return false;
+      getTable_->printError();
+      return getTable_->respJson_;
     }
   };
 

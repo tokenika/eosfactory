@@ -29,8 +29,8 @@ namespace teoslib
   )
   {
     bool ok = true;
-    // DaemonStart daemonStart(true);
-    // ok &= !daemonStart.isError_;
+    DaemonStart daemonStart(true);
+    ok &= !daemonStart.isError_;
 
     eosio = new AccountEosio();
     wallet = new Wallet();

@@ -404,6 +404,7 @@ class GetTable(_Command):
         limit=10, key="", lower="", upper="",
         is_verbose=True
         ):
+        self._jarg = json.loads("{}")
         self._jarg["code"] = contract
         self._jarg["table"] = table
         self._jarg["scope"] = scope
