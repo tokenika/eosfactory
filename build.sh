@@ -40,7 +40,7 @@ library_dir="teos/teos_lib"
 source_dir="teos"
 build_dir="build"
 contracts="contracts"
-teos_exe="teos/teos/build/teos"
+teos_exe="teos/build/teos/teos"
 
 EOSIO_CONTEXT_DIR__="$PWD"
 BUILD_DIR="${EOSIO_CONTEXT_DIR__}/$build_dir"
@@ -279,7 +279,7 @@ if [ ! -z "$IS_WSL" ]; then
         EOSIO_SOURCE_DIR_SET=$EOSIO_SOURCE_DIR
     fi
 
-    setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTEXT_DIR__/$contracts"
+    setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
     setWindowsVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
 
     retval=""
@@ -490,4 +490,8 @@ printf "%s\n" "
     $ python3 ./tests/test1.py
     $ python3 ./tests/test2.py
     $ python3 ./tests/test3.py
+    $ python3 ./tests/unittest1.py
+    
+    $ cd teos/build/teos
+    $ ./unittest1
 "

@@ -1,3 +1,13 @@
+/**
+ * @file
+ * @copyright defined in LICENSE.txt
+ * @defgroup teoslib EOSIO Command Line Client Reference
+ * @ingroup teoslib
+ * @author cartman
+ * @date 22 May 2018
+ * @brief C++ library for EOSIO smart contract development environment.
+ */
+
 #pragma once
 
 #include <stdio.h>
@@ -24,13 +34,24 @@ namespace teoslib
   using namespace teos::control;
   using namespace teos::command;
 
+/**
+ * @brief EOSIO cryptographic key representation.
+ * 
+ * Any key object generates and holds a named pair of cryptographic keys.
+ * Key objects are arguments wherever a private or public element of the
+ * pair is expected: as an import to a Wallet object, Account object, ect.
+ */
   class Key : public CreateKey
   {
   public:
     string name_;
     string private_;
     string public_;
-
+/**
+ * @brief Construct a new Key object.
+ * 
+ * @param name explains the role of the key pair: `active key`, for example.
+ */
     Key(string name) : CreateKey(name)
     {
       name_ = name;
@@ -42,6 +63,14 @@ namespace teoslib
     }
   };
 
+
+/**
+ * @brief Representation of an EOSIO local wallet.
+ * 
+ * Wallet can be named, opened, locked and unlocked. A Key object may be
+ * imported to it. All available wallets may be listed. All available keys
+ * may be listed.
+ */
   class Wallet : public WalletCreate
   {
   public:
@@ -103,6 +132,15 @@ namespace teoslib
 
   };
 
+
+/**
+ * @brief Representation of the key pair for the eosio account.
+ * 
+ * In order to modify the blockchain (add an account or define a smart 
+ * contract), it is necessary to own an EOSIO account. The system grands
+ * an account, for tries and tests. An object of the KeyEosio class 
+ * implements keys to this account.
+ */
   class KeyEosio
   {
   public:
@@ -117,6 +155,11 @@ namespace teoslib
     }
   };
 
+
+/**
+ * @brief A prototype of the Account class that represents the EOSIO account.
+ * 
+ */
   class AccountCreator
   {
   public:
@@ -127,12 +170,26 @@ namespace teoslib
     }    
   };
 
+
+/**
+ * @brief Representation of the eosio account.
+ * 
+ * In order to modify the blockchain (add an account or define a smart 
+ * contract), it is necessary to own an EOSIO account. The system grands
+ * an account, for tries and tests. Any object of the AccountEosio class 
+ * implements this account.
+ */
   class AccountEosio : public AccountCreator
   {
   public:
     AccountEosio() : AccountCreator("eosio"){}      
   };
 
+
+/**
+ * @brief 
+ * 
+ */
   class Account : public CreateAccount, public AccountCreator
   {
   public:

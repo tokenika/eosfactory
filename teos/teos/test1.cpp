@@ -22,6 +22,7 @@ int main(int argc, const char *argv[]) {
 
   using namespace std;
   using namespace teoslib;
+  using namespace boost::property_tree;
 
   AccountEosio* eosio;
   Wallet* wallet;

@@ -23,6 +23,14 @@
 #include <teoslib/config.h>
 
 #define teos_ERROR "ERROR!" // Error json key
+#define __FILENAME__ (strrchr(__FILE__, '/') \
+? strrchr(__FILE__, '/') + 1 : __FILE__)
+
+#define SPOT \
+  { \
+    string(" | ") + __FILENAME__ + "[" + to_string(__LINE__) + "]" + \
+      "(" + __FUNCTION__ + ") | " \
+  }
 
 extern std::string formatUsage(std::string unixUsage);
 

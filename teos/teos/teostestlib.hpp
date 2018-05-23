@@ -13,7 +13,7 @@
 #include <teoslib/command/set_commands.hpp>
 #include <teoslib/command/wallet_commands.hpp>
 #include <teoslib/command/push_commands.hpp>
-#include "teoslib.hpp" 
+#include <teoslib/teoslib.hpp> 
 
 using namespace std;
 using namespace boost::property_tree;

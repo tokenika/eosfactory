@@ -24,7 +24,7 @@
    <div id="projectname">teos library
    &#160;<span id="projectnumber">1.0</span>
    </div>
-   <div id="projectbrief">EOSIO front-end C++ library</div>
+   <div id="projectbrief">EOSIO smart contract IDE library</div>
   </td>
  </tr>
  </tbody>
@@ -96,12 +96,18 @@ Inheritance diagram for teos::TeosControl:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:aaa5b0b70263ef6f963636dc43230ef33"><td class="memItemLeft" align="right" valign="top"><a id="aaa5b0b70263ef6f963636dc43230ef33"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>validateJsonData</b> (string data, ptree &amp;json)</td></tr>
+<tr class="separator:aaa5b0b70263ef6f963636dc43230ef33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe614f0745845a707ec5c4e0457ebcc0"><td class="memItemLeft" align="right" valign="top"><a id="abe614f0745845a707ec5c4e0457ebcc0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>errorRespJson</b> (string sender, string message)</td></tr>
 <tr class="separator:abe614f0745845a707ec5c4e0457ebcc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5d500a5c6027ab6c4c9edee0affcf0c"><td class="memItemLeft" align="right" valign="top"><a id="ad5d500a5c6027ab6c4c9edee0affcf0c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>putError</b> (string msg, string sender=&quot;&quot;)</td></tr>
 <tr class="separator:ad5d500a5c6027ab6c4c9edee0affcf0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a005069a333bfa46592633d1bdb1df308"><td class="memItemLeft" align="right" valign="top"><a id="a005069a333bfa46592633d1bdb1df308"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>printError</b> ()</td></tr>
+<tr class="separator:a005069a333bfa46592633d1bdb1df308"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52f86bb515d91acf6cfdccd3fc766187"><td class="memItemLeft" align="right" valign="top"><a id="a52f86bb515d91acf6cfdccd3fc766187"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>TeosControl</b> (ptree reqJson)</td></tr>
 <tr class="separator:a52f86bb515d91acf6cfdccd3fc766187"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,7 +140,7 @@ static ptree&#160;</td><td class="memItemRight" valign="bottom"><b>getConfig</b>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ac8e6788b523dcd724c7a424818da7849"><td class="memItemLeft" align="right" valign="top"><a id="ac8e6788b523dcd724c7a424818da7849"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isError_</b> = false</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isError_</b></td></tr>
 <tr class="separator:ac8e6788b523dcd724c7a424818da7849"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6122f1a2263a80dacd315739861feac7"><td class="memItemLeft" align="right" valign="top"><a id="a6122f1a2263a80dacd315739861feac7"></a>
 ptree&#160;</td><td class="memItemRight" valign="bottom"><b>reqJson_</b></td></tr>

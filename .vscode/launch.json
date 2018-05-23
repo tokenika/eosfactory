@@ -5,13 +5,13 @@
   "version": "0.2.0",
   "configurations": [  
     {
-        "name": "(gdb) wsl test0",
+        "name": "(gdb) wsl unittest1",
         "type": "cppdbg",
         "request": "launch",
-        "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos/test0",
+        "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos/unittest1",
         "args": [],
         "stopAtEntry": false,
-        "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
+        "cwd": "/mnt/c/Workspaces/EOS/eosfactory",
         "environment": [],
         "externalConsole": true,
         "pipeTransport": {

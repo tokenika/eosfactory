@@ -15,6 +15,7 @@
 #endif
 
 #include <teoslib/config.h>
+#include <teoslib/config.hpp>
 #include <teoslib/control.hpp>
 
 std::string formatUsage(std::string unixUsage) {
@@ -94,6 +95,19 @@ namespace teos
     return isError_;
   }
 
+  void TeosControl::validateJsonData(string data, ptree &json) {
+    stringstream ss;
+    ss << data;
+    try {
+      read_json(ss, json);
+      stringstream ss1; // Try to write json, in order to check it.
+      json_parser::write_json(ss1, json, false);
+    }
+    catch (exception& e) {
+      putError("Data is not a json.", SPOT);
+    }      
+  }
+
   string TeosControl::executable = "";
   /*
     The config file is expected in the application directory, or two
@@ -114,20 +128,7 @@ namespace teos
 
     return "";
   }
-
-  void TeosControl::validateJsonData(string data, ptree &json) {
-    stringstream ss;
-    ss << data;
-    try {
-      read_json(ss, json);
-      stringstream ss1; // Try to write json, in order to check it.
-      json_parser::write_json(ss1, json, false);
-    }
-    catch (exception& e) {
-      putError("Data is not a json.");
-    }      
-  }
-
+  
   ptree TeosControl::getConfig(TeosControl* teosControl) {
     ptree config;
     try
@@ -136,9 +137,9 @@ namespace teos
     }
     catch (exception& e) {
       if(teosControl) {
-        teosControl->putError(e.what());
+        teosControl->putError("Cannot read config.json", SPOT);
       } else {
-        cout << teos_ERROR << endl << e.what() << endl;
+        cout << teos_ERROR << endl << "Cannot read config.json" << endl;
       }
     }
     return config;

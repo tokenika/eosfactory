@@ -1,19 +1,9 @@
 var searchData=
 [
-  ['generateabi',['GenerateAbi',['../classteos_1_1control_1_1_generate_abi.html',1,'teos::control']]],
-  ['generateabioptions',['GenerateAbiOptions',['../classteos_1_1control_1_1_generate_abi_options.html',1,'teos::control']]],
-  ['getaccount',['GetAccount',['../classteos_1_1command_1_1_get_account.html',1,'teos::command']]],
-  ['getaccountoptions',['GetAccountOptions',['../classteos_1_1command_1_1_get_account_options.html',1,'teos::command']]],
-  ['getaccounts',['GetAccounts',['../classteos_1_1command_1_1_get_accounts.html',1,'teos::command']]],
-  ['getaccountsoptions',['GetAccountsOptions',['../classteos_1_1command_1_1_get_accounts_options.html',1,'teos::command']]],
-  ['getblock',['GetBlock',['../classteos_1_1command_1_1_get_block.html',1,'teos::command']]],
-  ['getblockoptions',['GetBlockOptions',['../classteos_1_1command_1_1_get_block_options.html',1,'teos::command']]],
-  ['getcode',['GetCode',['../classteos_1_1command_1_1_get_code.html',1,'teos::command']]],
-  ['getcodeoptions',['GetCodeOptions',['../classteos_1_1command_1_1_get_code_options.html',1,'teos::command']]],
-  ['getconfig',['GetConfig',['../classteos_1_1control_1_1_get_config.html',1,'teos::control']]],
-  ['getconfigoptions',['GetConfigOptions',['../classteos_1_1control_1_1_get_config_options.html',1,'teos::control']]],
-  ['getinfo',['GetInfo',['../classteos_1_1command_1_1_get_info.html',1,'teos::command']]],
-  ['getinfooptions',['GetInfoOptions',['../classteos_1_1command_1_1_get_info_options.html',1,'teos::command']]],
-  ['gettable',['GetTable',['../classteos_1_1command_1_1_get_table.html',1,'teos::command']]],
-  ['gettableoptions',['GetTableOptions',['../classteos_1_1command_1_1_get_table_options.html',1,'teos::command']]]
+  ['daemonstart',['DaemonStart',['../classteos_1_1control_1_1_daemon_start.html',1,'teos::control']]],
+  ['daemonstartoptions',['DaemonStartOptions',['../classteos_1_1control_1_1_daemon_start_options.html',1,'teos::control']]],
+  ['daemonstop',['DaemonStop',['../classteos_1_1control_1_1_daemon_stop.html',1,'teos::control']]],
+  ['daemonstopoptions',['DaemonStopOptions',['../classteos_1_1control_1_1_daemon_stop_options.html',1,'teos::control']]],
+  ['deletecontract',['DeleteContract',['../classteos_1_1control_1_1_delete_contract.html',1,'teos::control']]],
+  ['deletecontractoptions',['DeleteContractOptions',['../classteos_1_1control_1_1_delete_contract_options.html',1,'teos::control']]]
 ];

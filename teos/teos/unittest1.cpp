@@ -25,6 +25,14 @@ using namespace boost::property_tree;
 
 BOOST_AUTO_TEST_CASE(test1)
 {
+  printf(
+    R"(
+    First test of the TEOS library (C++).
+    The library is to assist development of EOSIO smart contracts.
+    Please, see the documentation.
+    )"
+    );
+
   AccountEosio* eosio;
   Wallet* wallet;
   Key* key_owner; 
