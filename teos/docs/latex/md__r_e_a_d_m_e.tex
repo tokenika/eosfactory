@@ -1,0 +1,266 @@
+\subsection*{Rationale}
+
+Tokenika T\+E\+OS library was designed for the Tokenika E\+O\+S\+Factory. The E\+O\+S\+Factory is to be an I\+DE (Integrated Development Environment) for E\+O\+S\+IO smart-\/contracts.
+
+From \href{#https://en.wikipedia.org/wiki/Integrated_development_environment}{\tt Wikipedia}\+:
+
+{\itshape An integrated development environment (I\+DE) is a software application that provides comprehensive facilities to computer programmers for software development. An I\+DE normally consists of a source code editor, build automation tools, and a debugger.}
+
+The T\+E\+OS library is the engine that powers these {\itshape comprehensive facilities}.
+
+\subsection*{Walkthrough}
+
+Our plan is to build around the \href{#https://code.visualstudio.com/}{\tt {\itshape Visual Studio Code}}. With VS code, we can have all what we want in one\+: \begin{DoxyVerb}* Linux Mac and Windows compatibility,
+* multi-language (C/C++, Python) support as InteliSense, code browsing,
+* VS code task system,
+* plentifulness of extensions,
+* a room for specialized EOSIO smart-contract IDE extension.
+\end{DoxyVerb}
+
+
+Please, walkthrough the following outline of our I\+DE.
+
+\subsubsection*{Starting with a template}
+
+Let you have installed {\itshape E\+O\+S\+Factory} according to uor instructions. Let you have your smart-\/contract workspace defined, either with the {\ttfamily -\/w} option of the {\ttfamily eosfactory} installer, or with a corresponding entry in the {\ttfamily config.\+json} file, for example\+: 
+\begin{DoxyCode}
+\{
+........................................
+    "EOSIO\_CONTRACT\_WORKSPACE": "/mnt/c/Workspaces/EOS/contracts", 
+........................................
+\}
+\end{DoxyCode}
+ You can start development from a template, for example\+: 
+\begin{DoxyCode}
+$ $EOSIO\_TEOS bootstrap contract hello.teos
+#  template contract: /mnt/c/Workspaces/EOS/contracts/hello.teos
+\end{DoxyCode}
+ Now, let you open {\itshape Visual Studio Code} in the {\ttfamily hello.\+teos} contract directory. Do {\ttfamily C\+T\+R+\+S\+H\+I\+F\+T+P}, chose {\ttfamily Open Folder...} browse to the directory. Please, be sure that you have installed the {\ttfamily C/\+C++} extension to the {\itshape VS code}.
+
+\subsubsection*{Inteli\+Sense and code browsing}
+
+Now, you can open {\ttfamily hello.\+teos.\+cpp}. With the {\ttfamily C/\+C++}, you can go to definition/declaration, for example (see the description of te extension for many more)\+: place right mouse over the {\ttfamily print} function name and chose {\ttfamily Pick Declaration}.
+
+\subsubsection*{Contract compilation}
+
+Not implemented yet.
+
+\#\#\# E\+O\+S\+IO smart contract A\+PI 
+\begin{DoxyCode}
+VS code main menu Tasks -> Run Task... -> API
+\end{DoxyCode}
+ opens \href{#https://eosio.github.io/eos/group__contractdev.html}{\tt Smart Contract A\+PI Reference}.
+
+\subsubsection*{Contract build}
+
+You can build the contract in two ways\+: with the {\itshape VS code} build task, or with the cmake procedures.
+
+\#\#\#\# {\itshape VS code} build task 
+\begin{DoxyCode}
+VS code main menu Tasks -> Run Task Build... -> API
+\end{DoxyCode}
+ results in placing W\+A\+ST and A\+BI files in the contract build directory\+: 
+\begin{DoxyCode}
+Executing task: /mnt/c/Workspaces/EOS/eosfactory/teos/build/teos/teos generate abi
+       /mnt/c/Workspaces/EOS/contracts/hello.teos;/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos/teos build contract
+       /mnt/c/Workspaces/EOS/contracts/hello.teos <
+
+#              ABI: /mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.abi
+#             WAST: /mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.wast
+\end{DoxyCode}
+ \#\#\#\# C\+Make procedures 
+\begin{DoxyCode}
+$ cd build
+$ cmake ..
+.......................
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /mnt/c/Workspaces/EOS/contracts/hello.teos/build
+$ make
+Scanning dependencies of target abi
+[ 50%] Built target abi
+Scanning dependencies of target wast
+[100%] Built target wast
+\end{DoxyCode}
+
+
+\subsubsection*{Contract testing}
+
+Not implemented yet.
+
+However, please, see the following code snippet showing how contract testing can be done. We support two flavors {\itshape C++$\ast$ and $\ast$\+Python}.
+
+\paragraph*{C++ example}
+
+The example comes from from {\ttfamily eosfactory/teos/teos/unittest1.\+cpp}\+: 
+\begin{DoxyCode}
+\{c++\}
+BOOST\_AUTO\_TEST\_CASE(test1)
+\{
+  AccountEosio* eosio;
+  Wallet* wallet;
+  Key* key\_owner; 
+  Key* key\_active;
+  Account* alice;
+  Account* bob;
+  Account* carol;
+
+  BOOST\_REQUIRE(setup(
+    eosio, wallet, key\_owner, key\_active, alice, bob, carol));
+
+  string name = "eosio.token";
+  Account account\_contract(*eosio, name, *key\_owner, *key\_active);
+
+  Contract contract(account\_contract, name);
+
+  BOOST\_REQUIRE(contract.deploy());
+  BOOST\_REQUIRE(contract.push\_action(
+    "create", 
+    R"(\{"issuer":"eosio", "maximum\_supply":"1000000000.0000 EOS", "can\_freeze":0, "can\_recall":0,
+       "can\_whitelist":0\})")
+  );
+
+  BOOST\_REQUIRE(contract.push\_action(
+    "issue", 
+    R"(\{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"\})", eosio));
+
+  BOOST\_REQUIRE(contract.push\_action(
+    "transfer", 
+    R"(\{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", "memo":"memo"\})", 
+    alice));
+
+  BOOST\_REQUIRE(contract.push\_action(
+    "transfer", 
+    R"(\{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", "memo":"memo"\})", 
+    carol));
+
+  BOOST\_REQUIRE(contract.push\_action(
+    "transfer", 
+    R"(\{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", "memo":"memo"\})", bob));
+
+  BOOST\_REQUIRE(
+    contract.get\_table("accounts", alice).get("rows..balance", "ERROR!") 
+      == "77.0000 EOS"
+  );
+  BOOST\_REQUIRE(
+    contract.get\_table("accounts", bob).get("rows..balance", "ERROR!") 
+      == "11.0000 EOS"
+  );
+  BOOST\_REQUIRE(
+    contract.get\_table("accounts", carol).get("rows..balance", "ERROR!") 
+      == "12.0000 EOS"
+  );
+
+  teardown(eosio, wallet, key\_owner, key\_active, alice, bob, carol);
+\end{DoxyCode}
+ In order to see it in action, do 
+\begin{DoxyCode}
+$ $EOSIO\_EOSFACTORY\_DIR/teos/build/teos/unittest1
+\end{DoxyCode}
+
+
+\paragraph*{Python example}
+
+Python example comes from {\ttfamily eosfactory/tests/unittest1.\+cpp}\+:
+
+
+\begin{DoxyCode}
+class Test1(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        pass
+
+    def setUp(self):
+        pass
+
+    def run(self, result=None):
+        """ Stop after first error """      
+        if not result.failures:
+            super().run(result)
+
+    def test\_00\_node\_reset(self):
+        x = node.reset()
+        self.assertFalse(x.error)
+        x = node.info()
+        self.assertTrue("last\_irreversible\_block\_id" in x.json.keys())
+        x = sess.init()
+        self.assertFalse(x)
+
+    def test\_01\_contract(self):
+        c = eosf.Contract("eosio.token")
+        self.assertFalse(c.error, "Contract")
+        x = c.get\_code()
+        self.assertTrue(x, "get\_code")
+        x = c.deploy()
+        self.assertTrue(x, "deploy")
+        x = c.get\_code()
+        self.assertTrue(x, "get\_code") 
+
+        x = c.push\_action(
+            "create", 
+            '\{"issuer":"eosio", "maximum\_supply":"1000000000.0000 EOS", \(\backslash\)
+                "can\_freeze":0, "can\_recall":0, "can\_whitelist":0\}') 
+        self.assertTrue(x, "push\_action create")
+
+        x = c.push\_action(
+            "issue", 
+            '\{"to":"alice", "quantity":"100.0000 EOS", \(\backslash\)
+                "memo":"issue 100.0000 EOS"\}', 
+            sess.eosio)
+        self.assertTrue(x, "push\_action issue")
+
+        x = c.push\_action(
+            "transfer", 
+            '\{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \(\backslash\)
+                "memo":"transfer 25.0000 EOS"\}', 
+            sess.alice)
+        self.assertTrue(x, "push\_action transfer")
+
+        x = c.push\_action(
+            "transfer", 
+            '\{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", \(\backslash\)
+                "memo":"transfer 13.0000 EOS"\}', 
+            sess.carol)
+        self.assertTrue(x, "push\_action transfer")
+
+        x = c.push\_action(
+            "transfer", 
+            '\{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", \(\backslash\)
+                "memo":"transfer 2.0000 EOS"\}', 
+            sess.bob)
+        self.assertTrue(x, "push\_action transfer")
+
+        t1 =  c.get\_table("accounts", sess.alice)
+        self.assertFalse(t1.error, "get table accounts")
+
+        t2 = c.get\_table("accounts", sess.bob)
+        self.assertFalse(t2.error, "get table accounts")
+
+        t3 = c.get\_table("accounts", sess.carol)
+        self.assertFalse(t3.error, "get table accounts")
+
+        self.assertEqual(
+            t1.json["rows"][0]["balance"], "77.0000 EOS")
+        self.assertEqual(
+            t2.json["rows"][0]["balance"], "11.0000 EOS")
+        self.assertEqual(
+            t3.json["rows"][0]["balance"], "12.0000 EOS")
+
+
+    def test\_99\_node\_stop(self):
+        x = node.stop()
+        self.assertTrue(x)
+
+
+    def tearDown(self):
+        pass
+
+    @classmethod
+    def tearDownClass(cls):
+        s = node.stop()
+\end{DoxyCode}
+ In order to see it in action, do 
+\begin{DoxyCode}
+$ python3 $EOSIO\_EOSFACTORY\_DIR/tests/unittest1.py
+\end{DoxyCode}
+ 

@@ -87,7 +87,13 @@ Scanning dependencies of target wast
 
 ### Contract testing
 
-Not implemented yet. However, please, see the following code snippet showing how contract testing cen be done. It comes from `eosfactory/teos/teos/unittest1.cpp:
+Not implemented yet. 
+
+However, please, see the following code snippet showing how contract testing can be done. We support two flavors *C++* and *Python*.
+
+#### C++ example 
+
+The example comes from from `eosfactory/teos/teos/unittest1.cpp`:
 ```c++
 BOOST_AUTO_TEST_CASE(test1)
 {
@@ -149,4 +155,177 @@ BOOST_AUTO_TEST_CASE(test1)
 In order to see it in action, do
 ```
 $ $EOSIO_EOSFACTORY_DIR/teos/build/teos/unittest1
+```
+
+#### Python example
+
+Python example comes from `eosfactory/tests/unittest1.cpp`:
+
+```Python
+class Test1(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        pass
+        
+    def setUp(self):
+        pass
+
+    def run(self, result=None):
+        """ Stop after first error """      
+        if not result.failures:
+            super().run(result)
+    
+    def test_00_node_reset(self):
+        x = node.reset()
+        self.assertFalse(x.error)
+        x = node.info()
+        self.assertTrue("last_irreversible_block_id" in x.json.keys())
+        x = sess.init()
+        self.assertFalse(x)
+
+    def test_01_contract(self):
+        c = eosf.Contract("eosio.token")
+        self.assertFalse(c.error, "Contract")
+        x = c.get_code()
+        self.assertTrue(x, "get_code")
+        x = c.deploy()
+        self.assertTrue(x, "deploy")
+        x = c.get_code()
+        self.assertTrue(x, "get_code") 
+
+        x = c.push_action(
+            "create", 
+            '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
+                "can_freeze":0, "can_recall":0, "can_whitelist":0}') 
+        self.assertTrue(x, "push_action create")
+
+        x = c.push_action(
+            "issue", 
+            '{"to":"alice", "quantity":"100.0000 EOS", \
+                "memo":"issue 100.0000 EOS"}', 
+            sess.eosio)
+        self.assertTrue(x, "push_action issue")
+
+        x = c.push_action(
+            "transfer", 
+            '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
+                "memo":"transfer 25.0000 EOS"}', 
+            sess.alice)
+        self.assertTrue(x, "push_action transfer")
+
+        x = c.push_action(
+            "transfer", 
+            '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", \
+                "memo":"transfer 13.0000 EOS"}', 
+            sess.carol)
+        self.assertTrue(x, "push_action transfer")
+        
+        x = c.push_action(
+            "transfer", 
+            '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", \
+                "memo":"transfer 2.0000 EOS"}', 
+            sess.bob)
+        self.assertTrue(x, "push_action transfer")
+
+        t1 =  c.get_table("accounts", sess.alice)
+        self.assertFalse(t1.error, "get table accounts")
+
+        t2 = c.get_table("accounts", sess.bob)
+        self.assertFalse(t2.error, "get table accounts")
+
+        t3 = c.get_table("accounts", sess.carol)
+        self.assertFalse(t3.error, "get table accounts")
+
+        self.assertEqual(
+            t1.json["rows"][0]["balance"], "77.0000 EOS")
+        self.assertEqual(
+            t2.json["rows"][0]["balance"], "11.0000 EOS")
+        self.assertEqual(
+            t3.json["rows"][0]["balance"], "12.0000 EOS")
+
+
+    def test_99_node_stop(self):
+        x = node.stop()
+        self.assertTrue(x)
+
+
+    def tearDown(self):
+        pass
+
+    @classmethod
+    def tearDownClass(cls):
+        s = node.stop()
+```
+In order to see it in action, do
+```
+$ python3 $EOSIO_EOSFACTORY_DIR/tests/unittest1.py
+```
+
+## Library structure
+
+The library has three layers:
+  * raw basic operation classes, for example GetInfo, DaemonStart, BuildContract;
+  * command-line drivers for the basic operations, for example GetInfoOptions, DaemonStartOptions;
+  * EOSIO notion abstraction classes like Account, Contract, Wallet.
+
+### Command-line drivers
+
+The command-line drivers, operated by the main `teos` application, mimic and/or extend the EOSIO `cleos`. For example, the following sequence of bash commands make sense:
+```
+$ $EOSIO_TEOS bootstrap contract hello.teos     ## new contract template
+#  template contract: /mnt/c/Workspaces/EOS/contracts/hello.teos
+
+$ $EOSIO_TEOS build contract /mnt/c/Workspaces/EOS/contracts/hello.teos
+#  WAST: /mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.wast
+
+$ $EOSIO_TEOS generate abi /mnt/c/Workspaces/EOS/contracts/hello.teos
+#  ABI: /mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.abi
+
+$ $EOSIO_TEOS daemon start -c                   ## reset local node
+#  nodeos exe file: /mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos
+#  genesis state file: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json
+#   server address: 127.0.0.1:8888
+#  config directory: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir
+#  wallet directory: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet
+#  head block number: 3
+#  head block time: 2018-05-23T16:02:40
+
+$ $EOSIO_TEOS wallet create
+#         password: PW5K5jzJZaCXEtrwThSgPjgSjiZj8d9i1fCGZSUM7ZC9XEUySarnD
+#  You need to save this password to be able to lock/unlock the wallet!
+
+$ $EOSIO_TEOS set contract eosio hello.teos --permission eosio
+#   transaction id: ef2744011c17b219f346c2841ebc316c0ebd21da9804ec804c860f71558481ba
+
+$ $EOSIO_TEOS create key owner
+#         key name: owner
+#      private key: 5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
+#       public key: EOS6GKYMgKHeuMAaHb3v4nGBg9NiYRcJoU3YegUYeUwSjUfSJWLdP
+
+$ $EOSIO_TEOS create key active
+#         key name: active
+#      private key: 5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
+#       public key: EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA
+
+$ $EOSIO_TEOS wallet import default 5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
+#           wallet: default
+#     key imported: 5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
+
+$ $EOSIO_TEOS wallet import default 5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
+#           wallet: default
+#     key imported: 5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
+
+$ $EOSIO_TEOS create account eosio hello.teos EOS6GKYMgKHeuMAaHb3v4nGBg9NiYRcJoU3YegUYeUwSjUfSJWLdP EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA
+#   transaction id: 0ff62a96bde5bd911da135557da56fabb3fc1282d8be8797be485aafa519bce4
+
+$ $EOSIO_TEOS set contract hello.teos hello.teos
+#   transaction id: 2820976a76893685f4cfc2578c7c0f0ff3e8b9112732de202dab16afd7b56884
+
+$ $EOSIO_TEOS push action hello.teos hi '["hello.teos"]' -p hello.teos
+#   transaction id: bdbace3b4327f70ccc7d63d1b1287a7abbec4240be9b2d7695192bf80da45f92
+#  INFO account name: 7684013990126944256  @ 17:56:15 hello.teos.cpp[16](hi)
+#  Hello, hello.teos
+
+$ $EOSIO_TEOS daemon stop
+#  Daemon is stopped.
 ```

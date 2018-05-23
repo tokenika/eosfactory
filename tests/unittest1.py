@@ -1,33 +1,27 @@
 # python3 ./tests/test1.py
 
 import unittest
+import json
+import pyteos
 import node
 import sess
-from eosf import *
+import eosf
+
+pyteos.set_verbose(False)
 
 class Test1(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        import pyteos
-        import node
-        import sess
-        import eosf
-        import json
-
-        pyteos.set_verbose(False)
-
+        pass
+        
     def setUp(self):
         pass
 
-    """
-
-    """
     def run(self, result=None):
         """ Stop after first error """      
         if not result.failures:
             super().run(result)
     
-
     def test_00_node_reset(self):
         x = node.reset()
         self.assertFalse(x.error)
@@ -37,7 +31,7 @@ class Test1(unittest.TestCase):
         self.assertFalse(x)
 
     def test_01_contract(self):
-        c = Contract("eosio.token")
+        c = eosf.Contract("eosio.token")
         self.assertFalse(c.error, "Contract")
         x = c.get_code()
         self.assertTrue(x, "get_code")

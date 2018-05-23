@@ -171,6 +171,7 @@ Usage: ./teos create key --jarg '{
         } else
         {
           output("transaction id", "%s", GET_STRING(command, "transaction_id"));
+          output(command.respJson_.get("processed.action_traces..console", ""));
         }         
       }      
 
