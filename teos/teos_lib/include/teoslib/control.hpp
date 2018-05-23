@@ -59,9 +59,6 @@ namespace teos
   class TeosControl
   {
   public:
-    static string executable;
-    static string getConfigJson();
-    static ptree getConfig(TeosControl* teosControl = nullptr);
     void validateJsonData(string data, ptree &json);
 
     bool isError_;

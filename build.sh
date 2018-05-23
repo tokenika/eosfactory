@@ -252,7 +252,7 @@ printf "%s" "
 printf "%s\n" "Sets environment variables, if not set already:"
 
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
-setLinuxVariable "EOSIO_CONTEXT_DIR" "$EOSIO_CONTEXT_DIR__"
+setLinuxVariable "EOSIO_EOSFACTORY_DIR" "$EOSIO_CONTEXT_DIR__"
 setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
 setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
 setLinuxVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
@@ -284,7 +284,7 @@ if [ ! -z "$IS_WSL" ]; then
 
     retval=""
     wslMapLinux2Windows retval $EOSIO_CONTEXT_DIR__
-    setWindowsVariable "EOSIO_CONTEXT_DIR" "$retval" 
+    setWindowsVariable "EOSIO_EOSFACTORY_DIR" "$retval" 
 
     retval=""
     wslMapLinux2Windows retval $EOSIO_SOURCE_DIR_SET
@@ -492,6 +492,5 @@ printf "%s\n" "
     $ python3 ./tests/test3.py
     $ python3 ./tests/unittest1.py
     
-    $ cd teos/build/teos
-    $ ./unittest1
+    $ \$EOSIO_EOSFACTORY_DIR/teos/build/teos/unittest1
 "

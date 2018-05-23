@@ -64,6 +64,7 @@ wallet-dir: .
 
     #define NOT_DEFINED_VALUE ""
     #define CONTRACTS_DIR "contracts"
+    #define TEOS_EXE "teos/build/teos/teos"
     #define EOSIO_CONTRACT_DIR "build/contracts"
     #define EMPTY ""
 
@@ -79,9 +80,11 @@ wallet-dir: .
     arg EOSIO_CONFIG_DIR = { "EOSIO_CONFIG_DIR", "build/daemon/data-dir" };
     arg EOSIO_WALLET_DIR = { "EOSIO_WALLET_DIR", "wallet"}; // relative to data-dir
     arg EOSIO_DAEMON_NAME = { "EOSIO_DAEMON_NAME", "nodeos" };
-    arg EOSIO_CONTEXT_DIR = { "EOSIO_CONTEXT_DIR" };
+    arg EOSIO_EOSFACTORY_DIR = { "EOSIO_EOSFACTORY_DIR" };
+    arg EOSIO_TEOS_DIR = { "EOSIO_TEOS_DIR", "teos" };
+
     arg EOSIO_CONTRACT_WORKSPACE = { 
-      "EOSIO_CONTRACT_WORKSPACE", CONTRACTS_DIR };// relative to EOSIO_CONTEXT_DIR
+      "EOSIO_CONTRACT_WORKSPACE", CONTRACTS_DIR };// relative to EOSIO_EOSFACTORY_DIR
 
     arg EOSIO_SHARED_MEMORY_SIZE_MB = { "EOSIO_SHARED_MEMORY_SIZE_MB", "100" };    
     arg EOSIO_BOOST_INCLUDE_DIR = { "EOSIO_BOOST_INCLUDE_DIR"
@@ -98,10 +101,68 @@ wallet-dir: .
 
     namespace bfs = boost::filesystem;
 
+    void onError(TeosControl* teosControl, string message, string spot="")
+    {
+      if(teosControl){
+        teosControl->putError(message, spot);
+      } else {
+        cout << "ERROR!" << endl << message << endl;
+      }
+    }
+
+    string getTeosConfigJson(TeosControl* teosControl)
+    {
+      try{
+        arg configKey = EOSIO_EOSFACTORY_DIR;
+        const char* env = getenv(configKey[0].c_str());
+        if(env != nullptr) {
+          bfs::path configPath = bfs::path(env) / "teos" / CONFIG_JSON;
+          if(bfs::exists(configPath))       
+          return configPath.string();
+        }          
+        
+        onError(
+          teosControl, 
+          R"(
+Cannot find TEOS config json file. It is expected in the EOSFactory dir.
+The EOSFactory has to be set as the EOSIO_EOSFACTORY_DIR environment
+variable.
+)", 
+          SPOT);
+
+      } catch (exception& e) {
+        onError(teosControl, 
+        R"(
+Cannot find TEOS config json file. It is expected in the EOSFactory dir.
+The EOSFactory has to be set as the EOSIO_EOSFACTORY_DIR environment
+variable.
+)", 
+        SPOT);             
+      }
+      return "";
+    }    
+
+    ptree getConfig(TeosControl* teosControl) 
+    {
+      ptree config;
+      try
+      {
+        read_json(getTeosConfigJson(teosControl), config);
+      }
+      catch (exception& e) {
+        if(teosControl) {
+          teosControl->putError("Cannot read config.json", SPOT);
+        } else {
+          cout << teos_ERROR << endl << "Cannot read config.json" << endl;
+        }
+      }
+      return config;
+    }    
+
     vector<string> configValues(TeosControl* teosControl, arg configKey) 
     {      
       //First, configure file ...
-      boost::property_tree::ptree json = TeosControl::getConfig(teosControl);
+      boost::property_tree::ptree json = getConfig(teosControl);
       string value = json.get(string(configKey[0]), NOT_DEFINED_VALUE);
       if(value != string(NOT_DEFINED_VALUE)) {
         vector<string> retval = vector<string>();
@@ -161,28 +222,12 @@ wallet-dir: .
       return "";
     }
 
-    void onError(TeosControl* teosControl, string message)
+    string getEosFactoryDir(TeosControl* teosControl)
     {
-      string help = boost::str(boost::format(
-        "First, the environmental variable, if any,\n"
-        "next, the 'config.json' file that is:\n"
-        "\t%1%\n"
-        "Finally, the default value in the 'config.cpp' file."
-        ) % TeosControl::getConfigJson()
-      );
-      if(teosControl){
-        teosControl->putError(message + "\n" + help);
-      } else {
-        cout << "ERROR!" << endl << message << endl;
-        cout << help << endl;
-      }
-    }
-
-    string getContextDir(TeosControl* teosControl)
-    {
-      string config_value = configValue(teosControl, EOSIO_CONTEXT_DIR);
+      string config_value = configValue(teosControl, EOSIO_EOSFACTORY_DIR);
       if(config_value.empty()){
-        onError(teosControl, "Cannot determine the context directory.");
+        onError(
+          teosControl, "Cannot determine the context directory.", SPOT);
       }
       return config_value;
     }
@@ -191,7 +236,8 @@ wallet-dir: .
     {
       string config_value = configValue(teosControl, EOSIO_SOURCE_DIR);
       if(config_value.empty()){
-        onError(teosControl, "Cannot determine the EOSIO source directory.");
+        onError(
+          teosControl, "Cannot determine the EOSIO source directory.", SPOT);
       }
       return config_value;
     }
@@ -216,8 +262,9 @@ wallet-dir: .
           return wantedPath.string();
         }
         
-        onError(teosControl, (boost::format("Cannot determine the genesis file:\n%1%\n")
-              % wantedPath.string()).str()); 
+        onError(
+          teosControl, (boost::format("Cannot determine the genesis file:\n%1%\n")
+              % wantedPath.string()).str(), SPOT); 
       } catch (exception& e) {
           onError(teosControl, e.what());               
       }
@@ -252,7 +299,7 @@ wallet-dir: .
             = bfs::path(configValue(teosControl, EOSIO_CONTRACT_WORKSPACE)) 
               / contractDir;
           if(!contractPath.is_absolute()) {
-            bfs::path contextPath(configValue(teosControl, EOSIO_CONTEXT_DIR));
+            bfs::path contextPath(configValue(teosControl, EOSIO_EOSFACTORY_DIR));
             contractPath = contextPath / contractPath;
           }
           if(bfs::exists(contractPath)) {
@@ -265,7 +312,7 @@ wallet-dir: .
             eosfactory/contracts directory?
           */
           bfs::path contractPath 
-              = bfs::path(configValue(teosControl, EOSIO_CONTEXT_DIR)) 
+              = bfs::path(configValue(teosControl, EOSIO_EOSFACTORY_DIR)) 
                 / CONTRACTS_DIR / contractDir;
           if(contractPath.is_absolute() && bfs::exists(contractPath)) {
               return contractPath.string();
@@ -285,12 +332,12 @@ wallet-dir: .
           }
         }
       } catch (std::exception& e) {
-          onError(teosControl, e.what());
+          onError(teosControl, e.what(), SPOT);
       }
       /*
         Set error flag.
       */
-      onError(teosControl, "Cannot determine the contract directory.");
+      onError(teosControl, "Cannot determine the contract directory.", SPOT);
       return "";
     }
 
@@ -313,7 +360,7 @@ wallet-dir: .
           onError(
             teosControl, 
             "Cannot find the contract file. Neither 'contract file' nor "
-            "'contract dir' can be empty.");
+            "'contract dir' can be empty.", SPOT);
           return "";
         }
 
@@ -372,10 +419,10 @@ wallet-dir: .
           }
         }
       } catch (std::exception& e) {
-          onError(teosControl, e.what());
+          onError(teosControl, e.what(), SPOT);
       }
 
-      onError(teosControl, "Cannot find any contract file");       
+      onError(teosControl, "Cannot find any contract file", SPOT);       
       return "";    
     }
 
@@ -384,7 +431,7 @@ wallet-dir: .
         bfs::path workspacePath 
           = bfs::path(configValue(teosControl, EOSIO_CONTRACT_WORKSPACE));
         if(!workspacePath.is_absolute()) {
-          bfs::path contextPath(configValue(teosControl, EOSIO_CONTEXT_DIR));
+          bfs::path contextPath(configValue(teosControl, EOSIO_EOSFACTORY_DIR));
           workspacePath = contextPath / workspacePath;
         }
         if(bfs::exists(workspacePath)) {
@@ -394,7 +441,7 @@ wallet-dir: .
       /*
         Set error flag.
       */
-      onError(teosControl, "Cannot determine the contract workspace.");
+      onError(teosControl, "Cannot determine the contract workspace.", SPOT);
       return ""; 
     }
     
@@ -466,11 +513,11 @@ wallet-dir: .
         if(!bfs::exists(wantedPath)){
           onError(teosControl,
             (boost::format("Cannot determine the EOS test node "
-              "executable file:\n%1%\n") % wantedPath.string()).str());  
+              "executable file:\n%1%\n") % wantedPath.string()).str(), SPOT);  
           return ""; 
         }
       } catch (exception& e) {
-          onError(teosControl, e.what());          
+          onError(teosControl, e.what(), SPOT);          
           return "";        
       }
       return "";
@@ -487,7 +534,7 @@ wallet-dir: .
         bfs::path wantedPath(configValue(teosControl, EOSIO_DATA_DIR));
 
         if(!wantedPath.is_absolute()){
-          string contextDir = configValue(teosControl, EOSIO_CONTEXT_DIR);
+          string contextDir = configValue(teosControl, EOSIO_EOSFACTORY_DIR);
           if(contextDir.empty()){
             return "";
           }
@@ -502,10 +549,10 @@ wallet-dir: .
 
         onError(teosControl,
           (boost::format("Cannot determine the 'data-dir' directory:\n%1%\n")
-            % wantedPath.string()).str()); 
+            % wantedPath.string()).str(), SPOT); 
 
       } catch (std::exception& e){
-        onError(teosControl, e.what());          
+        onError(teosControl, e.what(), SPOT);          
       }
       return "";      
     }
@@ -520,7 +567,7 @@ wallet-dir: .
       { 
         bfs::path wantedPath(configValue(teosControl, EOSIO_CONFIG_DIR));
         if(!wantedPath.is_absolute()){
-          string contextDir = configValue(teosControl, EOSIO_CONTEXT_DIR);
+          string contextDir = configValue(teosControl, EOSIO_EOSFACTORY_DIR);
           if(contextDir.empty()){
             return "";
           }
@@ -533,10 +580,10 @@ wallet-dir: .
 
         onError(teosControl,
           (boost::format("Cannot find the 'config-dir' directory:\n%1%\n")
-            % wantedPath.string()).str());
+            % wantedPath.string()).str(), SPOT);
 
       } catch (std::exception& e) {
-          onError(teosControl, e.what());
+          onError(teosControl, e.what(), SPOT);
       }
       return "";  
     }
@@ -555,17 +602,39 @@ wallet-dir: .
         }
 
         if(bfs::is_directory(wantedPath) && bfs::exists(wantedPath)) {
-            return wantedPath.string();
-          }  
+          return wantedPath.string();
+        }  
 
         onError(teosControl, 
           (boost::format("Cannot find the 'wallet-dir' directory:\n%1%\n")
-            % wantedPath.string()).str());
+            % wantedPath.string()).str(), SPOT);
 
       } catch (std::exception& e) {
-          onError(teosControl, e.what());
+          onError(teosControl, e.what(), SPOT);
       }
       return "";        
+    }
+
+    string getTeosDir(TeosControl* teosControl) {
+      try{
+
+        bfs::path wantedPath(configValue(teosControl, EOSIO_TEOS_DIR));
+        if(!wantedPath.is_absolute()) {
+            wantedPath = 
+              bfs::path(configValue(teosControl, EOSIO_EOSFACTORY_DIR)) / wantedPath;
+        }
+        
+        if(bfs::is_directory(wantedPath) && bfs::exists(wantedPath)) {
+          return wantedPath.string();
+        } 
+
+        onError(teosControl, 
+          (boost::format("Cannot find the teos directory:\n%1%\n")
+            % wantedPath.string()).str(), SPOT);
+      } catch (std::exception& e) {
+          onError(teosControl, e.what(), SPOT);
+      }
+      return ""; 
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -606,7 +675,7 @@ wallet-dir: .
     }    
 
     GetConfig::GetConfig(){
-        respJson_.put("contextDir", getContextDir(this));
+        respJson_.put("contextDir", getEosFactoryDir(this));
         respJson_.put("sourceDir", getSourceDir(this));
         respJson_.put("dataDir", getDataDir(this));
         respJson_.put("configDir", getConfigDir(this));

@@ -29,14 +29,14 @@ def run():
     print('test c.push_action("hi", sess.alice):')
     c.push_action("hi", '{"user":"alice"}', sess.alice)
 
-    print('assert c.get_console() == "Hello, alice":')
-    assert c.get_console() == "Hello, alice"
+    print('\n', 'c.get_console():')
+    print(c.get_console(), "\n")
 
     print('test c.push_action("hi", sess.alice):')
     c.push_action("hi", '{"user":"carol"}', sess.carol)
     
-    print('assert c.get_console() == "Hello, carol":')
-    assert c.get_console() == "Hello, carol"
+    print('\n', 'c.get_console():')
+    print(c.get_console(), "\n")
 
     print('test c.delete():')
     c.delete()

@@ -148,5 +148,5 @@ BOOST_AUTO_TEST_CASE(test1)
 ```
 In order to see it in action, do
 ```
-$ $EOSIO_CONTEXT_DIR/teos/build/teos/unittest1
+$ $EOSIO_EOSFACTORY_DIR/teos/build/teos/unittest1
 ```

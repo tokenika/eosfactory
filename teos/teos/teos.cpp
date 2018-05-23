@@ -77,7 +77,6 @@ int main(int argc, const char *argv[]) {
 
   TeosCommand::httpAddress = LOCALHOST_HTTP_ADDRESS;
   TeosCommand::httpWalletAddress = TeosCommand::httpAddress;
-  TeosControl::executable = argv[0];
 
   if (argc > 1)
   {

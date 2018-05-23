@@ -33,6 +33,7 @@ namespace teos
 {
   using namespace std;
   using namespace boost::property_tree;
+  using namespace teos::control;
 
 #define SHARP "#  "
 #define INDENT "15"
@@ -106,43 +107,6 @@ namespace teos
     catch (exception& e) {
       putError("Data is not a json.", SPOT);
     }      
-  }
-
-  string TeosControl::executable = "";
-  /*
-    The config file is expected in the application directory, or two
-    levels above.
-  */
-  string TeosControl::getConfigJson(){
-    namespace bfs = boost::filesystem;
-    /*The path to the application directory, relative to the working dir:*/
-    bfs::path dirPath = (bfs::path(TeosControl::executable)).parent_path();
-    
-    if(bfs::exists(dirPath / CONFIG_JSON)) {
-      return (dirPath / CONFIG_JSON).string();
-    }
-
-    if(bfs::exists(dirPath / "../../" / CONFIG_JSON)) {
-      return (dirPath / "../../" / CONFIG_JSON).string();
-    }
-
-    return "";
-  }
-  
-  ptree TeosControl::getConfig(TeosControl* teosControl) {
-    ptree config;
-    try
-    {
-      read_json(getConfigJson(), config);
-    }
-    catch (exception& e) {
-      if(teosControl) {
-        teosControl->putError("Cannot read config.json", SPOT);
-      } else {
-        cout << teos_ERROR << endl << "Cannot read config.json" << endl;
-      }
-    }
-    return config;
   }
 
   void TeosControl::errorRespJson(string sender, string message) 

@@ -109,37 +109,31 @@ namespace teos {
     {
       reqJson_.put( "http-server-address", getHttpServerAddress(this));      
       if(isError_){
-        cout << "///////////////////////////////////////////// 1" << endl;
         return false;
       }
       
       reqJson_.put("data-dir", getDataDir(this));
       if(isError_){
-        cout << "///////////////////////////////////////////// 2" << endl;
         return false;
       }         
       
       reqJson_.put("config-dir", getConfigDir(this));
       if(isError_){
-        cout << "///////////////////////////////////////////// 3" << endl;
         return false;
       }
 
       reqJson_.put("genesis-json", getGenesisJson(this));             
       if(isError_){
-        cout << "///////////////////////////////////////////// 4" << endl;
         return false;
       }      
       
       reqJson_.put("wallet-dir", getWalletDir(this));
       if(isError_){
-        cout << "///////////////////////////////////////////// 5" << endl;
         return false;
       }
 
       reqJson_.put("daemon_exe", getDaemonExe(this));
       if(isError_){
-        cout << "///////////////////////////////////////////// 6" << endl;
         return false;
       }
       
@@ -177,10 +171,8 @@ namespace teos {
         respJson_.put("uname", uname());
         respJson_.put("is_windows_ubuntu", isWindowsUbuntu());
       } catch (std::exception& e) {
-        cout << "///////////////////////////////////////////// 7" << endl;
-        putError(e.what());
+        putError(e.what(), SPOT);
       }
-      cout << "///////////////////////////////////////////// OK" << endl; nnnnn
       return true;
     }
 
@@ -189,18 +181,17 @@ namespace teos {
         // cout << requestToString(false) << endl;
         // cout << commandLine <<endl;
       try{
-        cout << "/////////////////// uname: " << uname() << endl;
         if(isWindowsUbuntu()) {
           bp::spawn("cmd.exe /c start /MIN bash.exe -c " 
             "'" + reqJson_.get<string>("command_line") + "'");
         } else {
           if(uname() == DARWIN){
-            string cl = "open -a " + reqJson_.get<string>("daemon_exe")) 
-              + " --args " + reqJson_.get<string>("args"));
-            cout << endl << cl << endl;
+            // string cl = "open -a " + reqJson_.get<string>("daemon_exe")) 
+            //   + " --args " + reqJson_.get<string>("args"));
+            // cout << endl << cl << endl;
             bp::spawn(
-              "open -a " + reqJson_.get<string>("daemon_exe")) 
-              + " --args " + reqJson_.get<string>("args")));
+              "open -a " + reqJson_.get<string>("daemon_exe") 
+              + " --args " + reqJson_.get<string>("args"));
           } else{
             bp::spawn("gnome-terminal -- " + reqJson_.get<string>("command_line"));
           }

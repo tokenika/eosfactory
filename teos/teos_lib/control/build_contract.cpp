@@ -178,7 +178,7 @@ namespace teos {
       respJson_.put("template_cpp", (contract_path / (name + ".cpp")).string());            
       respJson_.put("template_hpp", (contract_path / (name + ".hpp")).string());            
     
-      bfs::path contextPath(getContextDir(this));
+      bfs::path contextPath(getEosFactoryDir(this));
       if(isError_){
         return;
       }

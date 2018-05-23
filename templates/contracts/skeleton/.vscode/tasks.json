@@ -16,6 +16,16 @@
                 "kind": "build",
                 "isDefault": true
             }            
+        },
+        {
+            "taskName": "API",
+            "windows": {
+                "command": "explorer"
+            },
+            "args": [
+                "https://eosio.github.io/eos/group__contractdev.html"
+            ],
+            "problemMatcher": []
         }       
    ]
 }
