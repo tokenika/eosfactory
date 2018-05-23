@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="utilities_8cpp" kind="file" language="C++">
+    <compoundname>utilities.cpp</compoundname>
+    <includes local="no">cstdarg</includes>
+    <includes local="no">cstdlib</includes>
+    <includes local="no">iostream</includes>
+    <includes local="no">boost/process.hpp</includes>
+    <includes local="no">boost/property_tree/ptree.hpp</includes>
+    <includes local="no">boost/property_tree/json_parser.hpp</includes>
+    <includes local="no">boost/algorithm/string.hpp</includes>
+    <includes refid="c-callstack_8h" local="yes">c-callstack.h</includes>
+    <includes refid="utilities_8hpp" local="no">teoslib/utilities.hpp</includes>
+    <incdepgraph>
+      <node id="699">
+        <label>boost/algorithm/string.hpp</label>
+      </node>
+      <node id="692">
+        <label>teos_lib/utilities.cpp</label>
+        <link refid="utilities_8cpp"/>
+        <childnode refid="693" relation="include">
+        </childnode>
+        <childnode refid="694" relation="include">
+        </childnode>
+        <childnode refid="695" relation="include">
+        </childnode>
+        <childnode refid="696" relation="include">
+        </childnode>
+        <childnode refid="697" relation="include">
+        </childnode>
+        <childnode refid="698" relation="include">
+        </childnode>
+        <childnode refid="699" relation="include">
+        </childnode>
+        <childnode refid="700" relation="include">
+        </childnode>
+        <childnode refid="701" relation="include">
+        </childnode>
+      </node>
+      <node id="702">
+        <label>stdlib.h</label>
+      </node>
+      <node id="703">
+        <label>string</label>
+      </node>
+      <node id="693">
+        <label>cstdarg</label>
+      </node>
+      <node id="701">
+        <label>teoslib/utilities.hpp</label>
+        <link refid="utilities_8hpp_source"/>
+        <childnode refid="702" relation="include">
+        </childnode>
+        <childnode refid="703" relation="include">
+        </childnode>
+        <childnode refid="697" relation="include">
+        </childnode>
+        <childnode refid="704" relation="include">
+        </childnode>
+      </node>
+      <node id="704">
+        <label>boost/date_time/posix_time/posix_time.hpp</label>
+      </node>
+      <node id="698">
+        <label>boost/property_tree/json_parser.hpp</label>
+      </node>
+      <node id="696">
+        <label>boost/process.hpp</label>
+      </node>
+      <node id="694">
+        <label>cstdlib</label>
+      </node>
+      <node id="697">
+        <label>boost/property_tree/ptree.hpp</label>
+      </node>
+      <node id="695">
+        <label>iostream</label>
+      </node>
+      <node id="700">
+        <label>c-callstack.h</label>
+        <link refid="c-callstack_8h_source"/>
+      </node>
+    </incdepgraph>
+    <innerclass refid="structteos_1_1_init_get_json" prot="public">teos::InitGetJson</innerclass>
+    <innernamespace refid="namespaceteos">teos</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdarg&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdlib&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/process.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/property_tree/ptree.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/property_tree/json_parser.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/algorithm/string.hpp&gt;</highlight><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;c-callstack.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/utilities.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacestd" kindref="compound">std</ref>;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceteos" kindref="compound">teos</ref><sp/></highlight></codeline>
+<codeline lineno="17"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>boostProcessSystem(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>commandLine)<sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">namespace<sp/><sp/></highlight><highlight class="normal">bp<sp/>=<sp/>boost::process;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>bp::system(commandLine,</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>bp::std_out<sp/>&gt;<sp/>stdout,</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>bp::std_err<sp/>&gt;<sp/>stderr,</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>bp::std_in<sp/>&lt;<sp/>stdin);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/>}<sp/><sp/></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>Type&gt;<sp/>Type<sp/>getJsonPath(ptree<sp/>json,</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>ptree::path_type<sp/>&amp;<sp/>path)<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>json.get&lt;Type&gt;(path);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;&gt;<sp/>boost::posix_time::ptime<sp/>getJsonPath(ptree<sp/>json,</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>ptree::path_type<sp/>&amp;<sp/>path)<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>strToTime(json.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(path));</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="structteos_1_1_init_get_json" refkind="compound"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structteos_1_1_init_get_json" kindref="compound">InitGetJson</ref><sp/>{</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="38"><highlight class="comment"><sp/><sp/><sp/><sp/>Template<sp/>function<sp/>has<sp/>to<sp/>be<sp/>used,<sp/>in<sp/>order<sp/>to<sp/>force<sp/>compiler</highlight></codeline>
+<codeline lineno="39"><highlight class="comment"><sp/><sp/><sp/><sp/>to<sp/>build<sp/>specific<sp/>forms<sp/>needed<sp/>elsewhere.</highlight></codeline>
+<codeline lineno="40"><highlight class="comment"><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>strVal;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>intVal;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>floatVal;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>boost::posix_time::ptime<sp/>ptime;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structteos_1_1_init_get_json" kindref="compound">InitGetJson</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptree<sp/>json;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptree::path_type<sp/>path;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>strVal<sp/>=<sp/>getJsonPath&lt;string&gt;(json,<sp/>path);</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>intVal<sp/>=<sp/>getJsonPath&lt;int&gt;(json,<sp/>path);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>floatVal<sp/>=<sp/>getJsonPath&lt;float&gt;(json,<sp/>path);</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptime<sp/>=<sp/>getJsonPath&lt;boost::posix_time::ptime&gt;(json,<sp/>path);</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">catch</highlight><highlight class="normal"><sp/>(...)<sp/>{}</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><ref refid="structteos_1_1_init_get_json" kindref="compound">InitGetJson</ref><sp/>init;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/>boost::posix_time::ptime<sp/>strToTime(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>str)<sp/>{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>temp<sp/>=<sp/>boost::replace_all_copy(str,<sp/></highlight><highlight class="stringliteral">&quot;-&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>temp<sp/>=<sp/>boost::replace_all_copy(temp,<sp/></highlight><highlight class="stringliteral">&quot;:&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>boost::posix_time::ptime<sp/>t((boost::posix_time::from_iso_string)(temp));</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>t;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/>ptree<sp/>stringToPtree(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>json)<sp/>{</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>boost::replace_all(json,<sp/></highlight><highlight class="stringliteral">&quot;\\\&quot;&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;\&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/>ptree<sp/>ptree;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>stringstream<sp/>ss;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ss<sp/>&lt;&lt;<sp/>json;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>read_json(ss,<sp/>ptree);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">catch</highlight><highlight class="normal"><sp/>(...)<sp/>{</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;argument<sp/>json<sp/>is<sp/>missformatted:&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>cout<sp/>&lt;&lt;<sp/>json<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//NL_RETURN(ptree);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ptree;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>wslMapWindowsLinux(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>path)<sp/>{</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<sp/>!path.empty()<sp/>&amp;&amp;<sp/>path.find(</highlight><highlight class="stringliteral">&quot;:\\&quot;</highlight><highlight class="normal">)<sp/>!=<sp/>string::npos)</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>boost::replace_all(path,<sp/></highlight><highlight class="stringliteral">&quot;\\&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;/&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>drive(1,<sp/>path[0]);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>boost::replace_all(</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>path,<sp/></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>drive<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;:/&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/></highlight><highlight class="stringliteral">&quot;/mnt/&quot;</highlight><highlight class="normal"><sp/>+<sp/>boost::algorithm::to_lower_copy(drive)<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;/&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>path;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="96"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="teos_lib/utilities.cpp"/>
+  </compounddef>
+</doxygen>

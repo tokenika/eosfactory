@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="namespacepentagon" kind="namespace" language="C++">
+    <compoundname>pentagon</compoundname>
+    <innernamespace refid="namespacepentagon_1_1control">pentagon::control</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="teos_lib/control/eosiodServer.cpp" line="25" column="1"/>
+  </compounddef>
+</doxygen>

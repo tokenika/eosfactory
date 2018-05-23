@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classteos_1_1control_1_1_daemon_stop_options" kind="class" language="C++" prot="public">
+    <compoundname>teos::control::DaemonStopOptions</compoundname>
+    <basecompoundref refid="classteos_1_1_control_options" prot="public" virt="non-virtual">teos::ControlOptions</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_stop_options_1a518c6d0d85866b13aae28500da7637bb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>teos::control::DaemonStopOptions::DaemonStopOptions</definition>
+        <argsstring>(int argc, const char **argv)</argsstring>
+        <name>DaemonStopOptions</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>const char **</type>
+          <declname>argv</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="24" column="1" bodyfile="teos_lib/include/teoslib/control/daemon_controls.hpp" bodystart="24" bodyend="25"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_stop_options_1a99e7d5a47cd20e4ad437049263cd367a" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>const char *</type>
+        <definition>const char* teos::control::DaemonStopOptions::getUsage</definition>
+        <argsstring>()</argsstring>
+        <name>getUsage</name>
+        <reimplements refid="classteos_1_1_control_options_1a0aa5671f9bc750ed5280c26c543874f3">getUsage</reimplements>
+        <briefdescription>
+<para>Command &apos;usage&apos; instruction. </para>        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>usage text </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="28" column="1" bodyfile="teos_lib/include/teoslib/control/daemon_controls.hpp" bodystart="28" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_stop_options_1afb91935bea6f426383c3b88d035fe03c" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></type>
+        <definition>TeosControl teos::control::DaemonStopOptions::executeCommand</definition>
+        <argsstring>()</argsstring>
+        <name>executeCommand</name>
+        <reimplements refid="classteos_1_1_control_options_1afc04b2ed27c6b2497a95890498d403d0">executeCommand</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="35" column="1" bodyfile="teos_lib/include/teoslib/control/daemon_controls.hpp" bodystart="35" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_stop_options_1af7e6dac1e8dfd8750f8101e6b48b4912" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void teos::control::DaemonStopOptions::printout</definition>
+        <argsstring>(TeosControl command, variables_map &amp;vm)</argsstring>
+        <name>printout</name>
+        <reimplements refid="classteos_1_1_control_options_1a33001fdd58dea6056f683a8e280c245e">printout</reimplements>
+        <param>
+          <type><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></type>
+          <declname>command</declname>
+        </param>
+        <param>
+          <type>variables_map &amp;</type>
+          <declname>vm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="39" column="1" bodyfile="teos_lib/include/teoslib/control/daemon_controls.hpp" bodystart="39" bodyend="41"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="141">
+        <label>teos::ControlOptions</label>
+        <link refid="classteos_1_1_control_options"/>
+      </node>
+      <node id="140">
+        <label>teos::control::DaemonStopOptions</label>
+        <link refid="classteos_1_1control_1_1_daemon_stop_options"/>
+        <childnode refid="141" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="143">
+        <label>teos::ControlOptions</label>
+        <link refid="classteos_1_1_control_options"/>
+      </node>
+      <node id="142">
+        <label>teos::control::DaemonStopOptions</label>
+        <link refid="classteos_1_1control_1_1_daemon_stop_options"/>
+        <childnode refid="143" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="22" column="1" bodyfile="teos_lib/include/teoslib/control/daemon_controls.hpp" bodystart="21" bodyend="42"/>
+    <listofallmembers>
+      <member refid="classteos_1_1_control_options_1a611508b33386c2a2465e68b333b51c5f" prot="protected" virt="virtual"><scope>teos::control::DaemonStopOptions</scope><name>argumentDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a490f2d5ea05e92a5996beaa6d40c5c32" prot="protected" virt="non-virtual"><scope>teos::control::DaemonStopOptions</scope><name>basicOptionDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a2916fdad936906cec8496b5952936cae" prot="protected" virt="virtual"><scope>teos::control::DaemonStopOptions</scope><name>checkArguments</name></member>
+      <member refid="classteos_1_1_control_options_1ae997028704fe0f8086096d7fa4b71ee9" prot="public" virt="non-virtual"><scope>teos::control::DaemonStopOptions</scope><name>ControlOptions</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_stop_options_1a518c6d0d85866b13aae28500da7637bb" prot="public" virt="non-virtual"><scope>teos::control::DaemonStopOptions</scope><name>DaemonStopOptions</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_stop_options_1afb91935bea6f426383c3b88d035fe03c" prot="protected" virt="virtual"><scope>teos::control::DaemonStopOptions</scope><name>executeCommand</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_stop_options_1a99e7d5a47cd20e4ad437049263cd367a" prot="protected" virt="virtual"><scope>teos::control::DaemonStopOptions</scope><name>getUsage</name></member>
+      <member refid="classteos_1_1_control_options_1ad3496976524c0ca5288018725119fb39" prot="public" virt="non-virtual"><scope>teos::control::DaemonStopOptions</scope><name>go</name></member>
+      <member refid="classteos_1_1_control_options_1a1b39c9263e1abea919db8097b46ecfae" prot="protected" virt="virtual"><scope>teos::control::DaemonStopOptions</scope><name>groupOptionDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a385705bd05cf4cc33892f51737585f9b" prot="protected" virt="non-virtual"><scope>teos::control::DaemonStopOptions</scope><name>json_</name></member>
+      <member refid="classteos_1_1_control_options_1a46025212b1afd9b9e56914844512ac24" prot="protected" virt="virtual"><scope>teos::control::DaemonStopOptions</scope><name>parseGroupVariablesMap</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_stop_options_1af7e6dac1e8dfd8750f8101e6b48b4912" prot="protected" virt="virtual"><scope>teos::control::DaemonStopOptions</scope><name>printout</name></member>
+      <member refid="classteos_1_1_control_options_1aef27b07fd43f5e553f20138deb57657a" prot="protected" virt="non-virtual"><scope>teos::control::DaemonStopOptions</scope><name>reqJson_</name></member>
+      <member refid="classteos_1_1_control_options_1a606085ad334d59eafc103be85e3be146" prot="protected" virt="virtual"><scope>teos::control::DaemonStopOptions</scope><name>setPosDesc</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

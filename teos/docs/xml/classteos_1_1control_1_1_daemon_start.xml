@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classteos_1_1control_1_1_daemon_start" kind="class" language="C++" prot="public">
+    <compoundname>teos::control::DaemonStart</compoundname>
+    <basecompoundref refid="classteos_1_1_teos_control" prot="public" virt="non-virtual">teos::TeosControl</basecompoundref>
+    <includes refid="daemon__controls_8hpp" local="no">daemon_controls.hpp</includes>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="classteos_1_1control_1_1_daemon_start_1ad63b0523ef8e608be7d6c22694763f00" prot="public" static="yes" mutable="no">
+        <type>const string</type>
+        <definition>const string teos::control::DaemonStart::DO_NOT_LAUNCH</definition>
+        <argsstring></argsstring>
+        <name>DO_NOT_LAUNCH</name>
+        <initializer>= &quot;DO_NOT_LAUNCH&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="57" column="1" bodyfile="teos_lib/include/teoslib/control/daemon_controls.hpp" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_start_1a72b519937f5d2e661f16c570595848d6" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool teos::control::DaemonStart::configure</definition>
+        <argsstring>()</argsstring>
+        <name>configure</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="50" column="1" bodyfile="teos_lib/control/daemon_controls.cpp" bodystart="108" bodyend="177"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_start_1a139cc93548b400c551cfaed18e65b50d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void teos::control::DaemonStart::launch</definition>
+        <argsstring>()</argsstring>
+        <name>launch</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="51" column="1" bodyfile="teos_lib/control/daemon_controls.cpp" bodystart="179" bodyend="203"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_start_1a03b1de71f63ad3756a35e8892ca2e2de" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void teos::control::DaemonStart::wait</definition>
+        <argsstring>()</argsstring>
+        <name>wait</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="52" column="1" bodyfile="teos_lib/control/daemon_controls.cpp" bodystart="205" bodyend="234"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_start_1ae616b61532669f1b29cc5c23f865116b" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void teos::control::DaemonStart::action</definition>
+        <argsstring>()</argsstring>
+        <name>action</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="53" column="1" bodyfile="teos_lib/control/daemon_controls.cpp" bodystart="99" bodyend="106"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_start_1a2d670f5e61d78b86a3d614e68c5a4d9c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void teos::control::DaemonStart::deleteWallets</definition>
+        <argsstring>()</argsstring>
+        <name>deleteWallets</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="54" column="1" bodyfile="teos_lib/control/daemon_controls.cpp" bodystart="258" bodyend="275"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_start_1a453fe5ff6181ee394fc0e104c084146a" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void teos::control::DaemonStart::deleteDaemonData</definition>
+        <argsstring>()</argsstring>
+        <name>deleteDaemonData</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="55" column="1" bodyfile="teos_lib/control/daemon_controls.cpp" bodystart="236" bodyend="256"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_start_1a5a17511cf7eabb346b645f3c34ebfb63" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>teos::control::DaemonStart::DaemonStart</definition>
+        <argsstring>(bool resync_blockchain=false)</argsstring>
+        <name>DaemonStart</name>
+        <param>
+          <type>bool</type>
+          <declname>resync_blockchain</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="59" column="1" bodyfile="teos_lib/include/teoslib/control/daemon_controls.hpp" bodystart="59" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1control_1_1_daemon_start_1ae6f2b43eaab462ec4683c9f56ec35019" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>teos::control::DaemonStart::DaemonStart</definition>
+        <argsstring>(ptree reqJson)</argsstring>
+        <name>DaemonStart</name>
+        <param>
+          <type>ptree</type>
+          <declname>reqJson</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="66" column="1" bodyfile="teos_lib/include/teoslib/control/daemon_controls.hpp" bodystart="66" bodyend="69"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Start a test EOSIO daemon if no one is running. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="129">
+        <label>teos::TeosControl</label>
+        <link refid="classteos_1_1_teos_control"/>
+      </node>
+      <node id="128">
+        <label>teos::control::DaemonStart</label>
+        <link refid="classteos_1_1control_1_1_daemon_start"/>
+        <childnode refid="129" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="131">
+        <label>teos::TeosControl</label>
+        <link refid="classteos_1_1_teos_control"/>
+      </node>
+      <node id="130">
+        <label>teos::control::DaemonStart</label>
+        <link refid="classteos_1_1control_1_1_daemon_start"/>
+        <childnode refid="131" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="teos_lib/include/teoslib/control/daemon_controls.hpp" line="49" column="1" bodyfile="teos_lib/include/teoslib/control/daemon_controls.hpp" bodystart="48" bodyend="70"/>
+    <listofallmembers>
+      <member refid="classteos_1_1control_1_1_daemon_start_1ae616b61532669f1b29cc5c23f865116b" prot="private" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>action</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_start_1a72b519937f5d2e661f16c570595848d6" prot="private" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>configure</name></member>
+      <member refid="classteos_1_1_teos_control_1aa318124d7a906e4b1391fae5ad50cfb0" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>copy</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_start_1a5a17511cf7eabb346b645f3c34ebfb63" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>DaemonStart</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_start_1ae6f2b43eaab462ec4683c9f56ec35019" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>DaemonStart</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_start_1a453fe5ff6181ee394fc0e104c084146a" prot="private" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>deleteDaemonData</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_start_1a2d670f5e61d78b86a3d614e68c5a4d9c" prot="private" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>deleteWallets</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_start_1ad63b0523ef8e608be7d6c22694763f00" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>DO_NOT_LAUNCH</name></member>
+      <member refid="classteos_1_1_teos_control_1af23d4fb6c90c83e47bc6917b3add9da7" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>errorMsg</name></member>
+      <member refid="classteos_1_1_teos_control_1abe614f0745845a707ec5c4e0457ebcc0" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>errorRespJson</name></member>
+      <member refid="classteos_1_1_teos_control_1ae5781470510c9bb90a3ef0917e72b1b8" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>get</name></member>
+      <member refid="classteos_1_1_teos_control_1ac8e6788b523dcd724c7a424818da7849" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>isError_</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_start_1a139cc93548b400c551cfaed18e65b50d" prot="private" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>launch</name></member>
+      <member refid="classteos_1_1_teos_control_1a005069a333bfa46592633d1bdb1df308" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>printError</name></member>
+      <member refid="classteos_1_1_teos_control_1ad5d500a5c6027ab6c4c9edee0affcf0c" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>putError</name></member>
+      <member refid="classteos_1_1_teos_control_1a6122f1a2263a80dacd315739861feac7" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>reqJson_</name></member>
+      <member refid="classteos_1_1_teos_control_1af14d89eea741cfc345db34bd2ba75d0b" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>requestToString</name></member>
+      <member refid="classteos_1_1_teos_control_1a1f5268be242e9f6182a083a4d4ec393e" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>respJson_</name></member>
+      <member refid="classteos_1_1_teos_control_1a5a4f418dfe30ab50fb373e341b9974db" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>responseToString</name></member>
+      <member refid="classteos_1_1_teos_control_1a9b73c2bc1b3bd0da9069e4e19f9cd945" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>TeosControl</name></member>
+      <member refid="classteos_1_1_teos_control_1a52f86bb515d91acf6cfdccd3fc766187" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>TeosControl</name></member>
+      <member refid="classteos_1_1_teos_control_1aaa5b0b70263ef6f963636dc43230ef33" prot="public" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>validateJsonData</name></member>
+      <member refid="classteos_1_1control_1_1_daemon_start_1a03b1de71f63ad3756a35e8892ca2e2de" prot="private" virt="non-virtual"><scope>teos::control::DaemonStart</scope><name>wait</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

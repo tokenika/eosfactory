@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classteos_1_1command_1_1_wallet_open" kind="class" language="C++" prot="public">
+    <compoundname>teos::command::WalletOpen</compoundname>
+    <basecompoundref refid="classteos_1_1_teos_command" prot="public" virt="non-virtual">teos::TeosCommand</basecompoundref>
+    <includes refid="wallet__commands_8hpp" local="no">wallet_commands.hpp</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classteos_1_1command_1_1_wallet_open_1a83737d8d2e5f335266e331e3771c50b4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>teos::command::WalletOpen::WalletOpen</definition>
+        <argsstring>(string name=DEFAULT_WALLET_NAME)</argsstring>
+        <name>WalletOpen</name>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+          <defval>DEFAULT_WALLET_NAME</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/wallet_commands.hpp" line="263" column="1" bodyfile="teos_lib/include/teoslib/command/wallet_commands.hpp" bodystart="263" bodyend="267"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_wallet_open_1afe4f67f6e891bf5dcc4e5fb02e372e3f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>teos::command::WalletOpen::WalletOpen</definition>
+        <argsstring>(ptree reqJson)</argsstring>
+        <name>WalletOpen</name>
+        <param>
+          <type>ptree</type>
+          <declname>reqJson</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/wallet_commands.hpp" line="269" column="1" bodyfile="teos_lib/include/teoslib/command/wallet_commands.hpp" bodystart="269" bodyend="272"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_wallet_open_1a7de38b779a421c4964af4679dc5d24f7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>string</type>
+        <definition>string teos::command::WalletOpen::normRequest</definition>
+        <argsstring>(ptree &amp;reqJson)</argsstring>
+        <name>normRequest</name>
+        <reimplements refid="classteos_1_1_teos_command_1abcdc20d75a8e8278cdcae8f0bb482515">normRequest</reimplements>
+        <param>
+          <type>ptree &amp;</type>
+          <declname>reqJson</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/wallet_commands.hpp" line="274" column="1" bodyfile="teos_lib/include/teoslib/command/wallet_commands.hpp" bodystart="274" bodyend="276"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_wallet_open_1aa8b15aa97a21e79224d627a7417f1bda" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void teos::command::WalletOpen::normResponse</definition>
+        <argsstring>(string response, ptree &amp;respJson)</argsstring>
+        <name>normResponse</name>
+        <reimplements refid="classteos_1_1_teos_command_1afc2c37d50b3fda078ce3195d9922ab8e">normResponse</reimplements>
+        <param>
+          <type>string</type>
+          <declname>response</declname>
+        </param>
+        <param>
+          <type>ptree &amp;</type>
+          <declname>respJson</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/wallet_commands.hpp" line="278" column="1" bodyfile="teos_lib/include/teoslib/command/wallet_commands.hpp" bodystart="278" bodyend="278"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Open an existing wallet. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="429">
+        <label>teos::TeosControl</label>
+        <link refid="classteos_1_1_teos_control"/>
+      </node>
+      <node id="428">
+        <label>teos::TeosCommand</label>
+        <link refid="classteos_1_1_teos_command"/>
+        <childnode refid="429" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="427">
+        <label>teos::command::WalletOpen</label>
+        <link refid="classteos_1_1command_1_1_wallet_open"/>
+        <childnode refid="428" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="432">
+        <label>teos::TeosControl</label>
+        <link refid="classteos_1_1_teos_control"/>
+      </node>
+      <node id="431">
+        <label>teos::TeosCommand</label>
+        <link refid="classteos_1_1_teos_command"/>
+        <childnode refid="432" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="430">
+        <label>teos::command::WalletOpen</label>
+        <link refid="classteos_1_1command_1_1_wallet_open"/>
+        <childnode refid="431" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="teos_lib/include/teoslib/command/wallet_commands.hpp" line="261" column="1" bodyfile="teos_lib/include/teoslib/command/wallet_commands.hpp" bodystart="260" bodyend="280"/>
+    <listofallmembers>
+      <member refid="classteos_1_1_teos_command_1ac770c5eabcc7bfc6d4a8a8b2b0443458" prot="protected" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>callEosd</name></member>
+      <member refid="classteos_1_1_teos_command_1a3728e4e87c485b4acb46f0d5c88595ad" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>copy</name></member>
+      <member refid="classteos_1_1_teos_control_1aa318124d7a906e4b1391fae5ad50cfb0" prot="public" virt="non-virtual" ambiguityscope="teos::TeosControl::"><scope>teos::command::WalletOpen</scope><name>copy</name></member>
+      <member refid="classteos_1_1_teos_control_1af23d4fb6c90c83e47bc6917b3add9da7" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>errorMsg</name></member>
+      <member refid="classteos_1_1_teos_control_1abe614f0745845a707ec5c4e0457ebcc0" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>errorRespJson</name></member>
+      <member refid="classteos_1_1_teos_control_1ae5781470510c9bb90a3ef0917e72b1b8" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>get</name></member>
+      <member refid="classteos_1_1_teos_command_1a54be6ca51cd5c3b55b4fd5506319fcaa" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>httpAddress</name></member>
+      <member refid="classteos_1_1_teos_command_1a3c420a38e2e983faab8a32d26c211a0d" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>httpWalletAddress</name></member>
+      <member refid="classteos_1_1_teos_control_1ac8e6788b523dcd724c7a424818da7849" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>isError_</name></member>
+      <member refid="classteos_1_1_teos_command_1a5f377d19a8bb692b2c3008d4b916a950" prot="protected" virt="virtual"><scope>teos::command::WalletOpen</scope><name>isWalletCommand</name></member>
+      <member refid="classteos_1_1command_1_1_wallet_open_1a7de38b779a421c4964af4679dc5d24f7" prot="public" virt="virtual"><scope>teos::command::WalletOpen</scope><name>normRequest</name></member>
+      <member refid="classteos_1_1command_1_1_wallet_open_1aa8b15aa97a21e79224d627a7417f1bda" prot="public" virt="virtual"><scope>teos::command::WalletOpen</scope><name>normResponse</name></member>
+      <member refid="classteos_1_1_teos_command_1a263794bdfe8ef1ee2e01e8a5253495f9" prot="protected" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>path_</name></member>
+      <member refid="classteos_1_1_teos_control_1a005069a333bfa46592633d1bdb1df308" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>printError</name></member>
+      <member refid="classteos_1_1_teos_control_1ad5d500a5c6027ab6c4c9edee0affcf0c" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>putError</name></member>
+      <member refid="classteos_1_1_teos_control_1a6122f1a2263a80dacd315739861feac7" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>reqJson_</name></member>
+      <member refid="classteos_1_1_teos_control_1af14d89eea741cfc345db34bd2ba75d0b" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>requestToString</name></member>
+      <member refid="classteos_1_1_teos_control_1a1f5268be242e9f6182a083a4d4ec393e" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>respJson_</name></member>
+      <member refid="classteos_1_1_teos_control_1a5a4f418dfe30ab50fb373e341b9974db" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>responseToString</name></member>
+      <member refid="classteos_1_1_teos_command_1a914843fee0b714f96176109cafee4014" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>TeosCommand</name></member>
+      <member refid="classteos_1_1_teos_command_1a2b68fe1c3c46f20a1e28e6f468c0a8e0" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>TeosCommand</name></member>
+      <member refid="classteos_1_1_teos_command_1a0d0b0d10829ec7178ba2f9f85db2b67f" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>TeosCommand</name></member>
+      <member refid="classteos_1_1_teos_command_1adf2c680015f9910a386469449626db16" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>TeosCommand</name></member>
+      <member refid="classteos_1_1_teos_control_1a9b73c2bc1b3bd0da9069e4e19f9cd945" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>TeosControl</name></member>
+      <member refid="classteos_1_1_teos_control_1a52f86bb515d91acf6cfdccd3fc766187" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>TeosControl</name></member>
+      <member refid="classteos_1_1_teos_control_1aaa5b0b70263ef6f963636dc43230ef33" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>validateJsonData</name></member>
+      <member refid="classteos_1_1command_1_1_wallet_open_1a83737d8d2e5f335266e331e3771c50b4" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>WalletOpen</name></member>
+      <member refid="classteos_1_1command_1_1_wallet_open_1afe4f67f6e891bf5dcc4e5fb02e372e3f" prot="public" virt="non-virtual"><scope>teos::command::WalletOpen</scope><name>WalletOpen</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

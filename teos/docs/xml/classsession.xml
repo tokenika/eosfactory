@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classsession" kind="class" language="C++" prot="public">
+    <compoundname>session</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classsession_1aa75b2edc5097e728efb04ee5f443a323" prot="private" static="no" mutable="no">
+        <type>tcp::socket</type>
+        <definition>tcp::socket session::socket_</definition>
+        <argsstring></argsstring>
+        <name>socket_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/control/eosiodServer.cpp" line="115" column="1" bodyfile="teos_lib/control/eosiodServer.cpp" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classsession_1ae41bf0bc859e08c197a52141e86e0eb9" prot="private" static="no" mutable="no">
+        <type>char</type>
+        <definition>char session::data_[MAX_LENGTH]</definition>
+        <argsstring>[MAX_LENGTH]</argsstring>
+        <name>data_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/control/eosiodServer.cpp" line="116" column="1" bodyfile="teos_lib/control/eosiodServer.cpp" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classsession_1ae8ec671941d1b8c7ac1b54978692cc85" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>session::session</definition>
+        <argsstring>(boost::asio::io_service &amp;io_service)</argsstring>
+        <name>session</name>
+        <param>
+          <type>boost::asio::io_service &amp;</type>
+          <declname>io_service</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/control/eosiodServer.cpp" line="48" column="1" bodyfile="teos_lib/control/eosiodServer.cpp" bodystart="48" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="classsession_1a877765bc7124ada6580ad2f748b4d72c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>tcp::socket &amp;</type>
+        <definition>tcp::socket&amp; session::socket</definition>
+        <argsstring>()</argsstring>
+        <name>socket</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/control/eosiodServer.cpp" line="53" column="1" bodyfile="teos_lib/control/eosiodServer.cpp" bodystart="53" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="classsession_1ad69144e27f558b8960efae132f2e15f4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void session::start</definition>
+        <argsstring>()</argsstring>
+        <name>start</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/control/eosiodServer.cpp" line="58" column="1" bodyfile="teos_lib/control/eosiodServer.cpp" bodystart="58" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="function" id="classsession_1a07999ceff60bc59bab2d4b53e0c4cc9a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void session::parse</definition>
+        <argsstring>()</argsstring>
+        <name>parse</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/control/eosiodServer.cpp" line="66" column="1" bodyfile="teos_lib/control/eosiodServer.cpp" bodystart="66" bodyend="80"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classsession_1aa0d52f09ba88a0cdde21d2d04cd3a691" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void session::handle_read</definition>
+        <argsstring>(const boost::system::error_code &amp;error, size_t bytes_transferred)</argsstring>
+        <name>handle_read</name>
+        <param>
+          <type>const boost::system::error_code &amp;</type>
+          <declname>error</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>bytes_transferred</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/control/eosiodServer.cpp" line="83" column="1" bodyfile="teos_lib/control/eosiodServer.cpp" bodystart="83" bodyend="98"/>
+      </memberdef>
+      <memberdef kind="function" id="classsession_1afdad56a2d372a355042fa127a106a036" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void session::handle_write</definition>
+        <argsstring>(const boost::system::error_code &amp;error)</argsstring>
+        <name>handle_write</name>
+        <param>
+          <type>const boost::system::error_code &amp;</type>
+          <declname>error</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/control/eosiodServer.cpp" line="100" column="1" bodyfile="teos_lib/control/eosiodServer.cpp" bodystart="100" bodyend="113"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="teos_lib/control/eosiodServer.cpp" line="46" column="1" bodyfile="teos_lib/control/eosiodServer.cpp" bodystart="45" bodyend="117"/>
+    <listofallmembers>
+      <member refid="classsession_1ae41bf0bc859e08c197a52141e86e0eb9" prot="private" virt="non-virtual"><scope>session</scope><name>data_</name></member>
+      <member refid="classsession_1aa0d52f09ba88a0cdde21d2d04cd3a691" prot="private" virt="non-virtual"><scope>session</scope><name>handle_read</name></member>
+      <member refid="classsession_1afdad56a2d372a355042fa127a106a036" prot="private" virt="non-virtual"><scope>session</scope><name>handle_write</name></member>
+      <member refid="classsession_1a07999ceff60bc59bab2d4b53e0c4cc9a" prot="public" virt="non-virtual"><scope>session</scope><name>parse</name></member>
+      <member refid="classsession_1ae8ec671941d1b8c7ac1b54978692cc85" prot="public" virt="non-virtual"><scope>session</scope><name>session</name></member>
+      <member refid="classsession_1a877765bc7124ada6580ad2f748b4d72c" prot="public" virt="non-virtual"><scope>session</scope><name>socket</name></member>
+      <member refid="classsession_1aa75b2edc5097e728efb04ee5f443a323" prot="private" virt="non-virtual"><scope>session</scope><name>socket_</name></member>
+      <member refid="classsession_1ad69144e27f558b8960efae132f2e15f4" prot="public" virt="non-virtual"><scope>session</scope><name>start</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

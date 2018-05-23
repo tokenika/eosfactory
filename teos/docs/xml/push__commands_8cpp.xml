@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="push__commands_8cpp" kind="file" language="C++">
+    <compoundname>push_commands.cpp</compoundname>
+    <includes refid="push__commands_8hpp" local="no">teoslib/command/push_commands.hpp</includes>
+    <incdepgraph>
+      <node id="218">
+        <label>boost/algorithm/string.hpp</label>
+      </node>
+      <node id="231">
+        <label>teoslib/control/config.hpp</label>
+        <link refid="config_8hpp_source"/>
+        <childnode refid="221" relation="include">
+        </childnode>
+        <childnode refid="222" relation="include">
+        </childnode>
+        <childnode refid="232" relation="include">
+        </childnode>
+        <childnode refid="224" relation="include">
+        </childnode>
+      </node>
+      <node id="221">
+        <label>stdlib.h</label>
+      </node>
+      <node id="229">
+        <label>boost/format.hpp</label>
+      </node>
+      <node id="222">
+        <label>string</label>
+      </node>
+      <node id="223">
+        <label>teoslib/command.hpp</label>
+        <link refid="command_8hpp"/>
+        <childnode refid="224" relation="include">
+        </childnode>
+        <childnode refid="231" relation="include">
+        </childnode>
+      </node>
+      <node id="228">
+        <label>boost/program_options.hpp</label>
+      </node>
+      <node id="220">
+        <label>teoslib/eos_interface.hpp</label>
+        <link refid="eos__interface_8hpp_source"/>
+        <childnode refid="221" relation="include">
+        </childnode>
+        <childnode refid="222" relation="include">
+        </childnode>
+        <childnode refid="223" relation="include">
+        </childnode>
+      </node>
+      <node id="216">
+        <label>teoslib/command/push_commands.hpp</label>
+        <link refid="push__commands_8hpp_source"/>
+        <childnode refid="217" relation="include">
+        </childnode>
+        <childnode refid="218" relation="include">
+        </childnode>
+        <childnode refid="219" relation="include">
+        </childnode>
+        <childnode refid="220" relation="include">
+        </childnode>
+        <childnode refid="223" relation="include">
+        </childnode>
+      </node>
+      <node id="230">
+        <label>teoslib/utilities.hpp</label>
+        <link refid="utilities_8hpp_source"/>
+        <childnode refid="221" relation="include">
+        </childnode>
+        <childnode refid="222" relation="include">
+        </childnode>
+        <childnode refid="226" relation="include">
+        </childnode>
+        <childnode refid="227" relation="include">
+        </childnode>
+      </node>
+      <node id="227">
+        <label>boost/date_time/posix_time/posix_time.hpp</label>
+      </node>
+      <node id="219">
+        <label>teoslib/config.h</label>
+        <link refid="lib_2include_2teoslib_2config_8h_source"/>
+      </node>
+      <node id="224">
+        <label>teoslib/control.hpp</label>
+        <link refid="control_8hpp_source"/>
+        <childnode refid="221" relation="include">
+        </childnode>
+        <childnode refid="222" relation="include">
+        </childnode>
+        <childnode refid="225" relation="include">
+        </childnode>
+        <childnode refid="226" relation="include">
+        </childnode>
+        <childnode refid="227" relation="include">
+        </childnode>
+        <childnode refid="228" relation="include">
+        </childnode>
+        <childnode refid="229" relation="include">
+        </childnode>
+        <childnode refid="230" relation="include">
+        </childnode>
+        <childnode refid="219" relation="include">
+        </childnode>
+      </node>
+      <node id="217">
+        <label>vector</label>
+      </node>
+      <node id="232">
+        <label>boost/filesystem.hpp</label>
+      </node>
+      <node id="226">
+        <label>boost/property_tree/ptree.hpp</label>
+      </node>
+      <node id="225">
+        <label>iostream</label>
+      </node>
+      <node id="215">
+        <label>teos_lib/command/push_commands.cpp</label>
+        <link refid="push__commands_8cpp"/>
+        <childnode refid="216" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="push__commands_8cpp_1ac816a38165b901249ebdac339fb85aba" prot="public" static="no" mutable="no">
+        <type>const char *</type>
+        <definition>const char* pushSubcommands</definition>
+        <argsstring></argsstring>
+        <name>pushSubcommands</name>
+        <initializer>= R&quot;(
+ERROR: RequiredError: Subcommand required
+Push arbitrary transactions to the blockchain
+Usage: ./teos [OPTIONS] push SUBCOMMAND [OPTIONS]
+
+Subcommands:
+    message         Push a transaction with a single message
+    transaction     Push an arbitrary JSON transaction
+    transactions    Push an array of arbitrary JSON transactions
+)&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/command/push_commands.cpp" line="3" column="1" bodyfile="teos_lib/command/push_commands.cpp" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;teoslib/command/push_commands.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>pushSubcommands<sp/>=<sp/>R</highlight><highlight class="stringliteral">&quot;(</highlight></codeline>
+<codeline lineno="4"><highlight class="stringliteral">ERROR:<sp/>RequiredError:<sp/>Subcommand<sp/>required</highlight></codeline>
+<codeline lineno="5"><highlight class="stringliteral">Push<sp/>arbitrary<sp/>transactions<sp/>to<sp/>the<sp/>blockchain</highlight></codeline>
+<codeline lineno="6"><highlight class="stringliteral">Usage:<sp/>./teos<sp/>[OPTIONS]<sp/>push<sp/>SUBCOMMAND<sp/>[OPTIONS]</highlight></codeline>
+<codeline lineno="7"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="8"><highlight class="stringliteral">Subcommands:</highlight></codeline>
+<codeline lineno="9"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>message<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Push<sp/>a<sp/>transaction<sp/>with<sp/>a<sp/>single<sp/>message</highlight></codeline>
+<codeline lineno="10"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>transaction<sp/><sp/><sp/><sp/><sp/>Push<sp/>an<sp/>arbitrary<sp/>JSON<sp/>transaction</highlight></codeline>
+<codeline lineno="11"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>transactions<sp/><sp/><sp/><sp/>Push<sp/>an<sp/>array<sp/>of<sp/>arbitrary<sp/>JSON<sp/>transactions</highlight></codeline>
+<codeline lineno="12"><highlight class="stringliteral">)&quot;;</highlight></codeline>
+<codeline lineno="13"><highlight class="stringliteral"></highlight></codeline>
+    </programlisting>
+    <location file="teos_lib/command/push_commands.cpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="daemon__controls_8hpp" kind="file" language="C++">
+    <compoundname>daemon_controls.hpp</compoundname>
+    <includes local="no">string</includes>
+    <includes refid="control_8hpp" local="no">teoslib/control.hpp</includes>
+    <includedby refid="teos_8cpp" local="no">teos/teos.cpp</includedby>
+    <includedby refid="test1_8cpp" local="no">teos/test1.cpp</includedby>
+    <includedby refid="unittest1_8cpp" local="no">teos/unittest1.cpp</includedby>
+    <includedby refid="daemon__controls_8cpp" local="no">teos_lib/control/daemon_controls.cpp</includedby>
+    <incdepgraph>
+      <node id="610">
+        <label>teos_lib/include/teoslib/control/daemon_controls.hpp</label>
+        <link refid="daemon__controls_8hpp"/>
+        <childnode refid="611" relation="include">
+        </childnode>
+        <childnode refid="612" relation="include">
+        </childnode>
+      </node>
+      <node id="613">
+        <label>stdlib.h</label>
+      </node>
+      <node id="618">
+        <label>boost/format.hpp</label>
+      </node>
+      <node id="611">
+        <label>string</label>
+      </node>
+      <node id="617">
+        <label>boost/program_options.hpp</label>
+      </node>
+      <node id="619">
+        <label>teoslib/utilities.hpp</label>
+        <link refid="utilities_8hpp_source"/>
+        <childnode refid="613" relation="include">
+        </childnode>
+        <childnode refid="611" relation="include">
+        </childnode>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="616" relation="include">
+        </childnode>
+      </node>
+      <node id="616">
+        <label>boost/date_time/posix_time/posix_time.hpp</label>
+      </node>
+      <node id="620">
+        <label>teoslib/config.h</label>
+        <link refid="lib_2include_2teoslib_2config_8h_source"/>
+      </node>
+      <node id="612">
+        <label>teoslib/control.hpp</label>
+        <link refid="control_8hpp_source"/>
+        <childnode refid="613" relation="include">
+        </childnode>
+        <childnode refid="611" relation="include">
+        </childnode>
+        <childnode refid="614" relation="include">
+        </childnode>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="616" relation="include">
+        </childnode>
+        <childnode refid="617" relation="include">
+        </childnode>
+        <childnode refid="618" relation="include">
+        </childnode>
+        <childnode refid="619" relation="include">
+        </childnode>
+        <childnode refid="620" relation="include">
+        </childnode>
+      </node>
+      <node id="615">
+        <label>boost/property_tree/ptree.hpp</label>
+      </node>
+      <node id="614">
+        <label>iostream</label>
+      </node>
+    </incdepgraph>
+    <innerclass refid="classteos_1_1control_1_1_daemon_stop" prot="public">teos::control::DaemonStop</innerclass>
+    <innerclass refid="classteos_1_1control_1_1_daemon_stop_options" prot="public">teos::control::DaemonStopOptions</innerclass>
+    <innerclass refid="classteos_1_1control_1_1_daemon_start" prot="public">teos::control::DaemonStart</innerclass>
+    <innerclass refid="classteos_1_1control_1_1_daemon_start_options" prot="public">teos::control::DaemonStartOptions</innerclass>
+    <innernamespace refid="namespaceteos">teos</innernamespace>
+    <innernamespace refid="namespaceteos_1_1control">teos::control</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/control.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacestd" kindref="compound">std</ref>;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceteos" kindref="compound">teos</ref><sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">control<sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="classteos_1_1control_1_1_daemon_stop" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classteos_1_1control_1_1_daemon_stop" kindref="compound">DaemonStop</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classteos_1_1control_1_1_daemon_stop" kindref="compound">DaemonStop</ref>();</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21" refid="classteos_1_1control_1_1_daemon_stop_options" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classteos_1_1control_1_1_daemon_stop_options" kindref="compound">DaemonStopOptions</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classteos_1_1_control_options" kindref="compound">ControlOptions</ref></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classteos_1_1control_1_1_daemon_stop_options" kindref="compound">DaemonStopOptions</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>**argv)<sp/></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="classteos_1_1_control_options" kindref="compound">ControlOptions</ref>(argc,<sp/>argv)<sp/>{}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="28" refid="classteos_1_1control_1_1_daemon_stop_options_1a99e7d5a47cd20e4ad437049263cd367a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="classteos_1_1control_1_1_daemon_stop_options_1a99e7d5a47cd20e4ad437049263cd367a" kindref="member">getUsage</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>R</highlight><highlight class="stringliteral">&quot;(</highlight></codeline>
+<codeline lineno="30"><highlight class="stringliteral">Kill<sp/>any<sp/>running<sp/>EOS<sp/>node<sp/>process.</highlight></codeline>
+<codeline lineno="31"><highlight class="stringliteral">Usage:<sp/>./teos<sp/>node<sp/>kill</highlight></codeline>
+<codeline lineno="32"><highlight class="stringliteral">)&quot;;</highlight></codeline>
+<codeline lineno="33"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="34"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="35"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref><sp/>executeCommand()<sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="classteos_1_1control_1_1_daemon_stop" kindref="compound">DaemonStop</ref>();</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>printout(<ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref><sp/>command,<sp/>variables_map<sp/>&amp;vm){</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sharp()<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Daemon<sp/>is<sp/>stopped.&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="classteos_1_1control_1_1_daemon_start" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classteos_1_1control_1_1_daemon_start" kindref="compound">DaemonStart</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>configure();</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>launch();</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>wait();</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>action();</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>deleteWallets();</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>deleteDaemonData();</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>DO_NOT_LAUNCH;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classteos_1_1control_1_1_daemon_start" kindref="compound">DaemonStart</ref>(</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>resync_blockchain<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;resync-blockchain&quot;</highlight><highlight class="normal">,<sp/>resync_blockchain);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>action();</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classteos_1_1control_1_1_daemon_start" kindref="compound">DaemonStart</ref>(ptree<sp/>reqJson){</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_<sp/>=<sp/>reqJson;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>action();</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72" refid="classteos_1_1control_1_1_daemon_start_options" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classteos_1_1control_1_1_daemon_start_options" kindref="compound">DaemonStartOptions</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classteos_1_1_control_options" kindref="compound">ControlOptions</ref><sp/></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classteos_1_1control_1_1_daemon_start_options" kindref="compound">DaemonStartOptions</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>**argv)<sp/>:<sp/><ref refid="classteos_1_1_control_options" kindref="compound">ControlOptions</ref>(argc,<sp/>argv)<sp/>{}</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="78" refid="classteos_1_1control_1_1_daemon_start_options_1ae036aeede350023308b66b063ba00bd8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="classteos_1_1control_1_1_daemon_start_options_1ae036aeede350023308b66b063ba00bd8" kindref="member">getUsage</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>R</highlight><highlight class="stringliteral">&quot;(</highlight></codeline>
+<codeline lineno="80"><highlight class="stringliteral">Start<sp/>test<sp/>EOS<sp/>node.</highlight></codeline>
+<codeline lineno="81"><highlight class="stringliteral">Usage:<sp/>./teos<sp/>node<sp/>start<sp/>[Options]</highlight></codeline>
+<codeline lineno="82"><highlight class="stringliteral">)&quot;;</highlight></codeline>
+<codeline lineno="83"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="84"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="85"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>options_description<sp/><sp/>argumentDescription()<sp/>{</highlight></codeline>
+<codeline lineno="86"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>options_description<sp/>od(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>od.add_options()</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;clear,c&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;Clear<sp/>chain<sp/>database<sp/>and<sp/>block<sp/>log.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>od;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>checkArguments(variables_map<sp/>&amp;vm)<sp/>{</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>ok<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(vm.count(</highlight><highlight class="stringliteral">&quot;clear&quot;</highlight><highlight class="normal">)){</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;resync-blockchain&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;resync-blockchain&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ok;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>TeosControl<sp/>executeCommand()<sp/>{</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>DaemonStart(reqJson_);</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>printout(TeosControl<sp/>command,<sp/>variables_map<sp/>&amp;vm)<sp/>{</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>output(</highlight><highlight class="stringliteral">&quot;nodeos<sp/>exe<sp/>file&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>command.reqJson_.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;daemon_exe&quot;</highlight><highlight class="normal">).c_str());</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>output(</highlight><highlight class="stringliteral">&quot;genesis<sp/>state<sp/>file&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>command.reqJson_.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;genesis-json&quot;</highlight><highlight class="normal">).c_str());</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>output(</highlight><highlight class="stringliteral">&quot;server<sp/>address&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>command.reqJson_.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;http-server-address&quot;</highlight><highlight class="normal">).c_str());</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>output(</highlight><highlight class="stringliteral">&quot;config<sp/>directory&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>command.reqJson_.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;config-dir&quot;</highlight><highlight class="normal">).c_str());</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>output(</highlight><highlight class="stringliteral">&quot;wallet<sp/>directory&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>command.reqJson_.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;wallet-dir&quot;</highlight><highlight class="normal">).c_str());</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(command.reqJson_.count(DaemonStart::DO_NOT_LAUNCH)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>output(</highlight><highlight class="stringliteral">&quot;head<sp/>block<sp/>number&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/>command.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;head_block_num&quot;</highlight><highlight class="normal">).c_str());</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>output(</highlight><highlight class="stringliteral">&quot;head<sp/>block<sp/>time&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/>command.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;head_block_time&quot;</highlight><highlight class="normal">).c_str());</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="teos_lib/include/teoslib/control/daemon_controls.hpp"/>
+  </compounddef>
+</doxygen>

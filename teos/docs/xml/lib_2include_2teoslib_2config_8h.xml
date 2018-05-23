@@ -1,0 +1,270 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="lib_2include_2teoslib_2config_8h" kind="file" language="C++">
+    <compoundname>config.h</compoundname>
+    <includedby refid="command_8cpp" local="no">teos_lib/command.cpp</includedby>
+    <includedby refid="config_8cpp" local="no">teos_lib/control/config.cpp</includedby>
+    <includedby refid="control_8cpp" local="no">teos_lib/control.cpp</includedby>
+    <includedby refid="create__commands_8hpp" local="no">teos_lib/include/teoslib/command/create_commands.hpp</includedby>
+    <includedby refid="get__commands_8hpp" local="no">teos_lib/include/teoslib/command/get_commands.hpp</includedby>
+    <includedby refid="other__commands_8hpp" local="no">teos_lib/include/teoslib/command/other_commands.hpp</includedby>
+    <includedby refid="push__commands_8hpp" local="no">teos_lib/include/teoslib/command/push_commands.hpp</includedby>
+    <includedby refid="set__commands_8hpp" local="no">teos_lib/include/teoslib/command/set_commands.hpp</includedby>
+    <includedby refid="wallet__commands_8hpp" local="no">teos_lib/include/teoslib/command/wallet_commands.hpp</includedby>
+    <includedby refid="control_8hpp" local="no">teos_lib/include/teoslib/control.hpp</includedby>
+    <invincdepgraph>
+      <node id="27">
+        <label>teos_lib/include/teoslib/control/daemon_controls.hpp</label>
+        <link refid="daemon__controls_8hpp_source"/>
+      </node>
+      <node id="26">
+        <label>teos_lib/include/teoslib/control/config.hpp</label>
+        <link refid="config_8hpp_source"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>teos_lib/include/teoslib/command.hpp</label>
+        <link refid="command_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>teos_lib/include/teoslib/eos_interface.hpp</label>
+        <link refid="eos__interface_8hpp_source"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="19">
+        <label>teos_lib/include/teoslib/command/push_commands.hpp</label>
+        <link refid="push__commands_8hpp_source"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>teos_lib/include/teoslib/command/wallet_commands.hpp</label>
+        <link refid="wallet__commands_8hpp_source"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="20">
+        <label>teos_lib/include/teoslib/command/set_commands.hpp</label>
+        <link refid="set__commands_8hpp_source"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>teos_lib/include/teoslib/config.h</label>
+        <link refid="lib_2include_2teoslib_2config_8h"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>teos_lib/include/teoslib/control.hpp</label>
+        <link refid="control_8hpp_source"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>teos/teostestlib.hpp</label>
+        <link refid="teostestlib_8hpp_source"/>
+      </node>
+      <node id="14">
+        <label>teos_lib/include/teoslib/command/create_commands.hpp</label>
+        <link refid="create__commands_8hpp_source"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>teos_lib/include/teoslib/command/get_commands.hpp</label>
+        <link refid="get__commands_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="25">
+        <label>teos_lib/include/teoslib/control/build_contract.hpp</label>
+        <link refid="build__contract_8hpp_source"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>teos_lib/include/teoslib/teoslib.hpp</label>
+        <link refid="teoslib_8hpp"/>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>teos_lib/include/teoslib/command/other_commands.hpp</label>
+        <link refid="other__commands_8hpp_source"/>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="lib_2include_2teoslib_2config_8h_1ae73053051efbb45c3a39751f5ce9fb36" prot="public" static="no">
+        <name>PROJECT_NAME</name>
+        <initializer>&quot;teos&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/config.h" line="3" column="9" bodyfile="teos_lib/include/teoslib/config.h" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="lib_2include_2teoslib_2config_8h_1a1a53b724b6de666faa8a9e0d06d1055f" prot="public" static="no">
+        <name>VERSION_MAJOR</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/config.h" line="4" column="9" bodyfile="teos_lib/include/teoslib/config.h" bodystart="4" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="lib_2include_2teoslib_2config_8h_1ae0cb52afb79b185b1bf82c7e235f682b" prot="public" static="no">
+        <name>VERSION_MINOR</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/config.h" line="5" column="9" bodyfile="teos_lib/include/teoslib/config.h" bodystart="5" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="lib_2include_2teoslib_2config_8h_1a369ff0879258f1fc6056d6dad43b72b5" prot="public" static="no">
+        <name>CONFIG_JSON</name>
+        <initializer>&quot;config.json&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/config.h" line="6" column="9" bodyfile="teos_lib/include/teoslib/config.h" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="lib_2include_2teoslib_2config_8h_1a9376dcef436c7d444fe4d1fd11749101" prot="public" static="no">
+        <name>TEST_ADDRESS</name>
+        <initializer>&quot;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/config.h" line="7" column="9" bodyfile="teos_lib/include/teoslib/config.h" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="lib_2include_2teoslib_2config_8h_1a124e3b5afde23e1e5dd876a62d129c23" prot="public" static="no">
+        <name>TEST_HTTP_ADDRESS</name>
+        <initializer>&quot;&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/config.h" line="8" column="9" bodyfile="teos_lib/include/teoslib/config.h" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="lib_2include_2teoslib_2config_8h_1a6611fa01e81cccb978550f589109ba0b" prot="public" static="no">
+        <name>USE_CONFIG_JSON</name>
+        <initializer>&quot;config.json&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/config.h" line="9" column="9" bodyfile="teos_lib/include/teoslib/config.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="lib_2include_2teoslib_2config_8h_1ad2021a596db0353ddf73c2dd97822e04" prot="public" static="no">
+        <name>LOCALHOST_ADDRESS</name>
+        <initializer>&quot;localhost&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/config.h" line="10" column="9" bodyfile="teos_lib/include/teoslib/config.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="lib_2include_2teoslib_2config_8h_1a0a54b423460bf5062acfdecf38c57226" prot="public" static="no">
+        <name>LOCALHOST_HTTP_ADDRESS</name>
+        <initializer>&quot;127.0.0.1:8888&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/config.h" line="11" column="9" bodyfile="teos_lib/include/teoslib/config.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PROJECT_NAME<sp/>&quot;teos&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERSION_MAJOR<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VERSION_MINOR<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CONFIG_JSON<sp/>&quot;config.json&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TEST_ADDRESS<sp/>&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TEST_HTTP_ADDRESS<sp/>&quot;&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>USE_CONFIG_JSON<sp/>&quot;config.json&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LOCALHOST_ADDRESS<sp/>&quot;localhost&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LOCALHOST_HTTP_ADDRESS<sp/>&quot;127.0.0.1:8888&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="teos_lib/include/teoslib/config.h"/>
+  </compounddef>
+</doxygen>

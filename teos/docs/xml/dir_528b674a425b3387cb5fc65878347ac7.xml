@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="dir_528b674a425b3387cb5fc65878347ac7" kind="dir">
+    <compoundname>teos_lib/include/teoslib/control</compoundname>
+    <innerfile refid="build__contract_8hpp">build_contract.hpp</innerfile>
+    <innerfile refid="config_8hpp">config.hpp</innerfile>
+    <innerfile refid="daemon__controls_8hpp">daemon_controls.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="teos_lib/include/teoslib/control/"/>
+  </compounddef>
+</doxygen>

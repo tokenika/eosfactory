@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classteos_1_1command_1_1_key_pair" kind="class" language="C++" prot="public">
+    <compoundname>teos::command::KeyPair</compoundname>
+      <sectiondef kind="public-static-attrib">
+      <memberdef kind="variable" id="classteos_1_1command_1_1_key_pair_1accd00dfb50854f396732befecdcf71d1" prot="public" static="yes" mutable="no">
+        <type>string</type>
+        <definition>string teos::command::KeyPair::prk</definition>
+        <argsstring></argsstring>
+        <name>prk</name>
+        <initializer>= KeyPair::privateK()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/eos_interface.hpp" line="17" column="1" bodyfile="teos_lib/include/teoslib/eos_interface.hpp" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classteos_1_1command_1_1_key_pair_1a6f255ea2d4ebc95b7af0da0ae9fb4618" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teos::command::KeyPair::privateKey</definition>
+        <argsstring></argsstring>
+        <name>privateKey</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/eos_interface.hpp" line="18" column="1" bodyfile="teos_lib/include/teoslib/eos_interface.hpp" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_key_pair_1a642b4737875a24960d8acfd27f6bccc7" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teos::command::KeyPair::publicKey</definition>
+        <argsstring></argsstring>
+        <name>publicKey</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/eos_interface.hpp" line="19" column="1" bodyfile="teos_lib/include/teoslib/eos_interface.hpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classteos_1_1command_1_1_key_pair_1a296e5566e03dd649860c3ef98e152682" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>string</type>
+        <definition>string teos::command::KeyPair::privateK</definition>
+        <argsstring>()</argsstring>
+        <name>privateK</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/eos_interface.hpp" line="16" column="1" bodyfile="teos_lib/eos_interface.cpp" bodystart="95" bodyend="98"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classteos_1_1command_1_1_key_pair_1aa8d753e6994bf47d45e1a6891f70457b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>teos::command::KeyPair::KeyPair</definition>
+        <argsstring>()</argsstring>
+        <name>KeyPair</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/eos_interface.hpp" line="20" column="1" bodyfile="teos_lib/eos_interface.cpp" bodystart="89" bodyend="93"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="teos_lib/include/teoslib/eos_interface.hpp" line="13" column="1" bodyfile="teos_lib/include/teoslib/eos_interface.hpp" bodystart="13" bodyend="21"/>
+    <listofallmembers>
+      <member refid="classteos_1_1command_1_1_key_pair_1aa8d753e6994bf47d45e1a6891f70457b" prot="public" virt="non-virtual"><scope>teos::command::KeyPair</scope><name>KeyPair</name></member>
+      <member refid="classteos_1_1command_1_1_key_pair_1a296e5566e03dd649860c3ef98e152682" prot="public" virt="non-virtual"><scope>teos::command::KeyPair</scope><name>privateK</name></member>
+      <member refid="classteos_1_1command_1_1_key_pair_1a6f255ea2d4ebc95b7af0da0ae9fb4618" prot="public" virt="non-virtual"><scope>teos::command::KeyPair</scope><name>privateKey</name></member>
+      <member refid="classteos_1_1command_1_1_key_pair_1accd00dfb50854f396732befecdcf71d1" prot="public" virt="non-virtual"><scope>teos::command::KeyPair</scope><name>prk</name></member>
+      <member refid="classteos_1_1command_1_1_key_pair_1a642b4737875a24960d8acfd27f6bccc7" prot="public" virt="non-virtual"><scope>teos::command::KeyPair</scope><name>publicKey</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

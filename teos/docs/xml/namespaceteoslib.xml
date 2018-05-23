@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="namespaceteoslib" kind="namespace" language="C++">
+    <compoundname>teoslib</compoundname>
+    <innerclass refid="classteoslib_1_1_account" prot="public">teoslib::Account</innerclass>
+    <innerclass refid="classteoslib_1_1_account_creator" prot="public">teoslib::AccountCreator</innerclass>
+    <innerclass refid="classteoslib_1_1_account_eosio" prot="public">teoslib::AccountEosio</innerclass>
+    <innerclass refid="classteoslib_1_1_contract" prot="public">teoslib::Contract</innerclass>
+    <innerclass refid="classteoslib_1_1_key" prot="public">teoslib::Key</innerclass>
+    <innerclass refid="classteoslib_1_1_key_eosio" prot="public">teoslib::KeyEosio</innerclass>
+    <innerclass refid="classteoslib_1_1_wallet" prot="public">teoslib::Wallet</innerclass>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="teostestlib_8hpp_1aa68cdd3a82d14db68fc9da7a0818c5a8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool teoslib::setup</definition>
+        <argsstring>(AccountEosio *&amp;eosio, Wallet *&amp;wallet, Key *&amp;key_owner, Key *&amp;key_active, Account *&amp;alice, Account *&amp;bob, Account *&amp;carol)</argsstring>
+        <name>setup</name>
+        <param>
+          <type><ref refid="classteoslib_1_1_account_eosio" kindref="compound">AccountEosio</ref> *&amp;</type>
+          <declname>eosio</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_wallet" kindref="compound">Wallet</ref> *&amp;</type>
+          <declname>wallet</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_key" kindref="compound">Key</ref> *&amp;</type>
+          <declname>key_owner</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_key" kindref="compound">Key</ref> *&amp;</type>
+          <declname>key_active</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_account" kindref="compound">Account</ref> *&amp;</type>
+          <declname>alice</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_account" kindref="compound">Account</ref> *&amp;</type>
+          <declname>bob</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_account" kindref="compound">Account</ref> *&amp;</type>
+          <declname>carol</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos/teostestlib.hpp" line="25" column="1" bodyfile="teos/teostestlib.hpp" bodystart="25" bodyend="65"/>
+      </memberdef>
+      <memberdef kind="function" id="teostestlib_8hpp_1a24f9cfee9053069eb79961242b221ac5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void teoslib::teardown</definition>
+        <argsstring>(AccountEosio *eosio, Wallet *wallet, Key *key_owner, Key *key_active, Account *alice, Account *bob, Account *carol)</argsstring>
+        <name>teardown</name>
+        <param>
+          <type><ref refid="classteoslib_1_1_account_eosio" kindref="compound">AccountEosio</ref> *</type>
+          <declname>eosio</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_wallet" kindref="compound">Wallet</ref> *</type>
+          <declname>wallet</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_key" kindref="compound">Key</ref> *</type>
+          <declname>key_owner</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_key" kindref="compound">Key</ref> *</type>
+          <declname>key_active</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_account" kindref="compound">Account</ref> *</type>
+          <declname>alice</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_account" kindref="compound">Account</ref> *</type>
+          <declname>bob</declname>
+        </param>
+        <param>
+          <type><ref refid="classteoslib_1_1_account" kindref="compound">Account</ref> *</type>
+          <declname>carol</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos/teostestlib.hpp" line="67" column="1" bodyfile="teos/teostestlib.hpp" bodystart="67" bodyend="102"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="teos/teostestlib.hpp" line="23" column="1"/>
+  </compounddef>
+</doxygen>

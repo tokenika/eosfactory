@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="teos__wallet__commands_8cpp" kind="file" language="C++">
+    <compoundname>teos_wallet_commands.cpp</compoundname>
+    <includes refid="wallet__commands_8hpp" local="no">teoslib/command/wallet_commands.hpp</includes>
+    <incdepgraph>
+      <node id="272">
+        <label>teoslib/control/config.hpp</label>
+        <link refid="config_8hpp_source"/>
+        <childnode refid="266" relation="include">
+        </childnode>
+        <childnode refid="267" relation="include">
+        </childnode>
+        <childnode refid="273" relation="include">
+        </childnode>
+        <childnode refid="265" relation="include">
+        </childnode>
+      </node>
+      <node id="266">
+        <label>stdlib.h</label>
+      </node>
+      <node id="260">
+        <label>boost/foreach.hpp</label>
+      </node>
+      <node id="270">
+        <label>boost/format.hpp</label>
+      </node>
+      <node id="267">
+        <label>string</label>
+      </node>
+      <node id="264">
+        <label>teoslib/command.hpp</label>
+        <link refid="command_8hpp"/>
+        <childnode refid="265" relation="include">
+        </childnode>
+        <childnode refid="272" relation="include">
+        </childnode>
+      </node>
+      <node id="269">
+        <label>boost/program_options.hpp</label>
+      </node>
+      <node id="271">
+        <label>teoslib/utilities.hpp</label>
+        <link refid="utilities_8hpp_source"/>
+        <childnode refid="266" relation="include">
+        </childnode>
+        <childnode refid="267" relation="include">
+        </childnode>
+        <childnode refid="259" relation="include">
+        </childnode>
+        <childnode refid="258" relation="include">
+        </childnode>
+      </node>
+      <node id="256">
+        <label>teos_lib/command/teos_wallet_commands.cpp</label>
+        <link refid="teos__wallet__commands_8cpp"/>
+        <childnode refid="257" relation="include">
+        </childnode>
+      </node>
+      <node id="257">
+        <label>teoslib/command/wallet_commands.hpp</label>
+        <link refid="wallet__commands_8hpp_source"/>
+        <childnode refid="258" relation="include">
+        </childnode>
+        <childnode refid="259" relation="include">
+        </childnode>
+        <childnode refid="260" relation="include">
+        </childnode>
+        <childnode refid="261" relation="include">
+        </childnode>
+        <childnode refid="262" relation="include">
+        </childnode>
+        <childnode refid="263" relation="include">
+        </childnode>
+        <childnode refid="264" relation="include">
+        </childnode>
+      </node>
+      <node id="258">
+        <label>boost/date_time/posix_time/posix_time.hpp</label>
+      </node>
+      <node id="263">
+        <label>teoslib/config.h</label>
+        <link refid="lib_2include_2teoslib_2config_8h_source"/>
+      </node>
+      <node id="265">
+        <label>teoslib/control.hpp</label>
+        <link refid="control_8hpp_source"/>
+        <childnode refid="266" relation="include">
+        </childnode>
+        <childnode refid="267" relation="include">
+        </childnode>
+        <childnode refid="268" relation="include">
+        </childnode>
+        <childnode refid="259" relation="include">
+        </childnode>
+        <childnode refid="258" relation="include">
+        </childnode>
+        <childnode refid="269" relation="include">
+        </childnode>
+        <childnode refid="270" relation="include">
+        </childnode>
+        <childnode refid="271" relation="include">
+        </childnode>
+        <childnode refid="263" relation="include">
+        </childnode>
+      </node>
+      <node id="261">
+        <label>boost/property_tree/json_parser.hpp</label>
+      </node>
+      <node id="273">
+        <label>boost/filesystem.hpp</label>
+      </node>
+      <node id="259">
+        <label>boost/property_tree/ptree.hpp</label>
+      </node>
+      <node id="268">
+        <label>iostream</label>
+      </node>
+      <node id="262">
+        <label>boost/algorithm/string/replace.hpp</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="teos__wallet__commands_8cpp_1a34f1e868ab4ae58e68f8eed5777b5a4e" prot="public" static="no" mutable="no">
+        <type>const char *</type>
+        <definition>const char* walletSubcommands</definition>
+        <argsstring></argsstring>
+        <name>walletSubcommands</name>
+        <initializer>= R&quot;(
+ERROR: RequiredError: Subcommand required
+Interact with local wallet
+Usage : . / teos [OPTIONS] wallet SUBCOMMAND [OPTIONS]
+
+Subcommands:
+    create          Create a new wallet locally
+    open            Open an existing wallet
+    lock            Lock wallet
+    lock_all        Lock all unlocked wallets
+    unlock          Unlock wallet
+    import          Import private key into wallet
+    list            List opened wallets, *= unlocked
+    keys            List of private keys from all unlocked wallets in wif format.
+)&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/command/teos_wallet_commands.cpp" line="3" column="1" bodyfile="teos_lib/command/teos_wallet_commands.cpp" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="teos__wallet__commands_8cpp_1a40513e135b51bd4b371dfe898bfe09b6" prot="public" static="no" mutable="no">
+        <type>const std::string</type>
+        <definition>const std::string walletCommandPath</definition>
+        <argsstring></argsstring>
+        <name>walletCommandPath</name>
+        <initializer>= &quot;/v1/wallet/&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/command/teos_wallet_commands.cpp" line="19" column="1" bodyfile="teos_lib/command/teos_wallet_commands.cpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;teoslib/command/wallet_commands.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>walletSubcommands<sp/>=<sp/>R</highlight><highlight class="stringliteral">&quot;(</highlight></codeline>
+<codeline lineno="4"><highlight class="stringliteral">ERROR:<sp/>RequiredError:<sp/>Subcommand<sp/>required</highlight></codeline>
+<codeline lineno="5"><highlight class="stringliteral">Interact<sp/>with<sp/>local<sp/>wallet</highlight></codeline>
+<codeline lineno="6"><highlight class="stringliteral">Usage<sp/>:<sp/>.<sp/>/<sp/>teos<sp/>[OPTIONS]<sp/>wallet<sp/>SUBCOMMAND<sp/>[OPTIONS]</highlight></codeline>
+<codeline lineno="7"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="8"><highlight class="stringliteral">Subcommands:</highlight></codeline>
+<codeline lineno="9"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>create<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Create<sp/>a<sp/>new<sp/>wallet<sp/>locally</highlight></codeline>
+<codeline lineno="10"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>open<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Open<sp/>an<sp/>existing<sp/>wallet</highlight></codeline>
+<codeline lineno="11"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>lock<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Lock<sp/>wallet</highlight></codeline>
+<codeline lineno="12"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>lock_all<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Lock<sp/>all<sp/>unlocked<sp/>wallets</highlight></codeline>
+<codeline lineno="13"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>unlock<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Unlock<sp/>wallet</highlight></codeline>
+<codeline lineno="14"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>import<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Import<sp/>private<sp/>key<sp/>into<sp/>wallet</highlight></codeline>
+<codeline lineno="15"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>list<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>List<sp/>opened<sp/>wallets,<sp/>*=<sp/>unlocked</highlight></codeline>
+<codeline lineno="16"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>keys<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>List<sp/>of<sp/>private<sp/>keys<sp/>from<sp/>all<sp/>unlocked<sp/>wallets<sp/>in<sp/>wif<sp/>format.</highlight></codeline>
+<codeline lineno="17"><highlight class="stringliteral">)&quot;;</highlight></codeline>
+<codeline lineno="18"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="19"><highlight class="stringliteral"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>walletCommandPath<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;/v1/wallet/&quot;</highlight><highlight class="normal">;</highlight></codeline>
+    </programlisting>
+    <location file="teos_lib/command/teos_wallet_commands.cpp"/>
+  </compounddef>
+</doxygen>

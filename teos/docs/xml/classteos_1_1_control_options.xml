@@ -1,0 +1,569 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classteos_1_1_control_options" kind="class" language="C++" prot="public">
+    <compoundname>teos::ControlOptions</compoundname>
+    <derivedcompoundref refid="classteos_1_1_command_options" prot="public" virt="non-virtual">teos::CommandOptions</derivedcompoundref>
+    <derivedcompoundref refid="classteos_1_1control_1_1_bootstrap_contract_options" prot="public" virt="non-virtual">teos::control::BootstrapContractOptions</derivedcompoundref>
+    <derivedcompoundref refid="classteos_1_1control_1_1_build_contract_options" prot="public" virt="non-virtual">teos::control::BuildContractOptions</derivedcompoundref>
+    <derivedcompoundref refid="classteos_1_1control_1_1_daemon_start_options" prot="public" virt="non-virtual">teos::control::DaemonStartOptions</derivedcompoundref>
+    <derivedcompoundref refid="classteos_1_1control_1_1_daemon_stop_options" prot="public" virt="non-virtual">teos::control::DaemonStopOptions</derivedcompoundref>
+    <derivedcompoundref refid="classteos_1_1control_1_1_delete_contract_options" prot="public" virt="non-virtual">teos::control::DeleteContractOptions</derivedcompoundref>
+    <derivedcompoundref refid="classteos_1_1control_1_1_generate_abi_options" prot="public" virt="non-virtual">teos::control::GenerateAbiOptions</derivedcompoundref>
+    <derivedcompoundref refid="classteos_1_1control_1_1_get_config_options" prot="public" virt="non-virtual">teos::control::GetConfigOptions</derivedcompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classteos_1_1_control_options_1a031f627be4cf3fa07abac8724b936990" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int teos::ControlOptions::argc_</definition>
+        <argsstring></argsstring>
+        <name>argc_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="103" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1_control_options_1a2712eb5c8c827db0024d919312e7fb98" prot="private" static="no" mutable="no">
+        <type>const char **</type>
+        <definition>const char** teos::ControlOptions::argv_</definition>
+        <argsstring></argsstring>
+        <name>argv_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="104" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classteos_1_1_control_options_1a385705bd05cf4cc33892f51737585f9b" prot="protected" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teos::ControlOptions::json_</definition>
+        <argsstring></argsstring>
+        <name>json_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="107" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1_control_options_1aef27b07fd43f5e553f20138deb57657a" prot="protected" static="no" mutable="no">
+        <type>ptree</type>
+        <definition>ptree teos::ControlOptions::reqJson_</definition>
+        <argsstring></argsstring>
+        <name>reqJson_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="108" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classteos_1_1_control_options_1a490f2d5ea05e92a5996beaa6d40c5c32" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>options_description</type>
+        <definition>options_description teos::ControlOptions::basicOptionDescription</definition>
+        <argsstring>()</argsstring>
+        <name>basicOptionDescription</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="110" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="110" bodyend="117"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1_control_options_1a611508b33386c2a2465e68b333b51c5f" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>options_description</type>
+        <definition>virtual options_description teos::ControlOptions::argumentDescription</definition>
+        <argsstring>()</argsstring>
+        <name>argumentDescription</name>
+        <reimplementedby refid="classteos_1_1control_1_1_build_contract_options_1abde356d5a17fa5fbcc4c8f777e4e537c">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_create_options_1a03ae823b5d36d609fef32fee4bc8e91b">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_daemon_start_options_1ab3960fbf33433037a08ef46e0baeedb7">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_push_action_options_1a1d7e797f32e83b014a38d8a209e957e9">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_set_contract_options_1a5115d6a5bc5a499e655556c44e014115">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_block_options_1a5a68a8f531b223e6a9d3ee72333310c8">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_account_options_1aed8f14bd484aaecff46a27f1dd1288cd">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_generate_abi_options_1a86ec12899f14876d6d565b4348fc24bb">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_import_options_1a5b23093e1d0189769adcbd8f9bbd8d3a">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_account_options_1a91575b9022b083326ed27cce53838f19">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_bootstrap_contract_options_1abb435f76b45d14ea9d26b6b4a94f4c0e">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_accounts_options_1a895c2708a09db687d738aa215fcb2ce9">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_key_options_1ad05b210e6e7f9930ed7438ab21257a34">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_open_options_1ad23269217ec4accc93b3d9ba04c5db47">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_delete_contract_options_1a96771a4727132887b02f77e25a8e99e3">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_code_options_1a0cfb2d780f53e27ccc08e8a887d6f053">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_lock_options_1ada29e51e9d79f51b13978af31167ef54">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_table_options_1a35a7ee5c807bf244c3ecb959f93f2f74">argumentDescription</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_unlock_options_1a668aae33dff94bcc5fe964cfd5712666">argumentDescription</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="119" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="119" bodyend="122"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1_control_options_1a1b39c9263e1abea919db8097b46ecfae" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>options_description</type>
+        <definition>virtual options_description teos::ControlOptions::groupOptionDescription</definition>
+        <argsstring>()</argsstring>
+        <name>groupOptionDescription</name>
+        <reimplementedby refid="classteos_1_1_command_options_1ad9cb8c834296b2c5dee2a82c006bfa0c">groupOptionDescription</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="124" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="124" bodyend="133"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1_control_options_1a0aa5671f9bc750ed5280c26c543874f3" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>const char *</type>
+        <definition>virtual const char* teos::ControlOptions::getUsage</definition>
+        <argsstring>()</argsstring>
+        <name>getUsage</name>
+        <reimplementedby refid="classteos_1_1control_1_1_daemon_stop_options_1a99e7d5a47cd20e4ad437049263cd367a">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_version_client_options_1a28b69107e8eb50a2faf9594958bb1d6d">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_build_contract_options_1ac45a323c2bc0c79b97b1d0d1d8afbf4f">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_info_options_1af5b6ec0a42f019ef1058e6f78a84346d">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_get_config_options_1a144b88309b989f2282da43ad56ddb1a6">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_create_options_1ad20c1955cb48f6c9e640c35eae091c30">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_push_action_options_1a1dac78e7b40cc0ff91895d1fc0f7d2b4">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_set_contract_options_1a9176e2b58b222d45c975d6e9fa9b4ac7">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_daemon_start_options_1ae036aeede350023308b66b063ba00bd8">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_account_options_1af5c13799a676966824e5e9e47b1af180">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_block_options_1a85970d4f6337e594d2ac0756f67c50f7">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_generate_abi_options_1a7d2ce1ad86518ee06e0bc5ffbe104b39">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_import_options_1ad641b37bd61f2d4ff3e3049e2dd6be0e">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_account_options_1a987381bcf3f687b7babfe197edf0dc26">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_list_options_1ae6394f5f8c311fc9e56b0d44562cea67">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_bootstrap_contract_options_1af0f63b7aff6d7d41ac9b4b1c542b93f0">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_accounts_options_1ac93b806fa601124aa899474da62d1288">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_key_options_1ac4c7176d534ed832ebfc954e36238a4c">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_open_options_1aedf25a6f772392c2cb0c0de8d80172dd">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_delete_contract_options_1abca9a6e25e4bcaf14b130199f32e4fbf">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_code_options_1a62a3c2c3cc72eb8b9bd5034fb335c7e2">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_lock_options_1aa0b3fd6dc244e1f32955c7a134b4fd85">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_table_options_1a764b61a7d83e508673b73100c45c3d13">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_lock_all_options_1ae45881c064f3d14883f3a1fae105603a">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_unlock_options_1aa630c4deec62ef8d44cb37c03573c071">getUsage</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_keys_options_1a40097f0265580b2c3cdaad721f5cef09">getUsage</reimplementedby>
+        <briefdescription>
+<para>Command &apos;usage&apos; instruction. </para>        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>usage text </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="138" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="138" bodyend="138"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1_control_options_1a606085ad334d59eafc103be85e3be146" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void teos::ControlOptions::setPosDesc</definition>
+        <argsstring>(positional_options_description &amp;pos_descr)</argsstring>
+        <name>setPosDesc</name>
+        <reimplementedby refid="classteos_1_1control_1_1_build_contract_options_1af43e12c147de6a8e890a8afd74bed117">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_create_options_1aa7b5f9da2a345df6998a329f6e07e021">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_block_options_1abce9cbc2c1454d56975ad12be740bd8f">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_push_action_options_1a1e3278dc5640f50a32a9965121eba36d">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_set_contract_options_1aadd7baa3b4b880ad65e079c10ef8a2a7">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_account_options_1a892d104e8131e44a8420f8aca3a590a3">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_generate_abi_options_1a8597accc230c49304e2a361484d846f5">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_import_options_1a33c430a28ea488b0736bb9a09a7f3908">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_account_options_1a58476192130fc6ec9e08ef9aabbc6940">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_bootstrap_contract_options_1a4658b45146d40cb330d0ca609fa1632e">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_accounts_options_1af8bd3d166447f342a64f676a9d2437da">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_key_options_1aaead04dd480db9516e8ccdfd4533b949">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_open_options_1ae01566fb06b790e8b2783c4c302ce06f">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_delete_contract_options_1ad2f35a525326b954a3a88f93aabbed67">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_code_options_1a462d7de6d307c8b87c01a8c458eeb783">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_lock_options_1ae7e05a92f3382c85a3852d91958eb4d4">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_table_options_1a2b6533c23e19f02dbcb1e942bec667b5">setPosDesc</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_unlock_options_1a7650a6cb1eb82ab04334561b5792b736">setPosDesc</reimplementedby>
+        <param>
+          <type>positional_options_description &amp;</type>
+          <declname>pos_descr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="141" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="141" bodyend="142"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1_control_options_1a33001fdd58dea6056f683a8e280c245e" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void teos::ControlOptions::printout</definition>
+        <argsstring>(TeosControl command, variables_map &amp;vm)</argsstring>
+        <name>printout</name>
+        <reimplementedby refid="classteos_1_1control_1_1_daemon_stop_options_1af7e6dac1e8dfd8750f8101e6b48b4912">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_version_client_options_1a1b6021ecadaaed16af399487d573b9f1">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_info_options_1a2713f566133468d9d576e71bd3471f6d">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_build_contract_options_1a01e81d8723fb8f9c8f12c13c5cf70c7f">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_create_options_1a78875cc06e1509c794a265f2b1805259">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_daemon_start_options_1a2dda2e522e76c941e540737cf1149151">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_block_options_1a5e74ced61b77ec00dc565baa269dee02">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_push_action_options_1af073d742bdb1d32f12344a6ee305ff83">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_set_contract_options_1a85524966978c712794976f56dc3bb1c8">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_generate_abi_options_1a035931ecc56a06cd443ad050ff8bcc8b">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_import_options_1a45ecbc443e738c6da3e8d7416cfa4468">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_account_options_1a2f4f089db5a69624545292ad2243bc11">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_account_options_1afafce99b027588616f736949ae051272">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_list_options_1a7f11798f8864183fc502bf9b3d11d302">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_bootstrap_contract_options_1afe65eb4b163e3d964177ac1312053a7a">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_key_options_1a94087926f6ea43b7c05d57f86ae8995b">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_open_options_1a580c7a2b14967ae71abe570515685269">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_delete_contract_options_1a7f27ec50e4dcebd1415c9f98420e555e">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_code_options_1ac7390aecf45c00142f7cc008f7b2660f">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_lock_options_1a9838bc30c785c2ff6312eada29f9d166">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_lock_all_options_1a787263cef86df3559a160bbe3c2507af">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_unlock_options_1acc359227ff0f0962753c5b1ffc264ae8">printout</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_keys_options_1a6fa9db5a2e144c8ab07a4876372e76e7">printout</reimplementedby>
+        <param>
+          <type><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></type>
+          <declname>command</declname>
+        </param>
+        <param>
+          <type>variables_map &amp;</type>
+          <declname>vm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="144" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="144" bodyend="146"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1_control_options_1a2916fdad936906cec8496b5952936cae" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>bool</type>
+        <definition>virtual bool teos::ControlOptions::checkArguments</definition>
+        <argsstring>(variables_map &amp;vm)</argsstring>
+        <name>checkArguments</name>
+        <reimplementedby refid="classteos_1_1control_1_1_build_contract_options_1a893d1aec857470781f69e478e5786b61">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_create_options_1a48cc1abd55a90c1b04c3cd69922efaec">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_daemon_start_options_1a51c828308709fb55cfdde2af4443e976">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_block_options_1a081cfcc951b0f47a30dea915c9daea5e">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_push_action_options_1a48ff4a653e24e3322641a64063dbf340">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_set_contract_options_1ab735136b04248a943f121a564cc99c5e">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_account_options_1a481f9c6206512f1afc8bc6729f8dc76b">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_generate_abi_options_1a1076eeeb66914d7e9580fff26057729b">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_import_options_1a0b788a2c585f9c9df79c4be401bd8ebb">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_account_options_1a6ffd8f40413adfcb07e8b4fecffe5bc2">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_bootstrap_contract_options_1ae41d9ba25f072a5459e704b9f46c46b0">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_accounts_options_1a3c31f6264e33997c8f17475755d69861">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_key_options_1a46cc7933de9c2a71c111bdcfd9a327a8">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_open_options_1a68617d7ca15de92006db594521c710de">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_delete_contract_options_1a9abcdca4ae6c6d2942c255233656f249">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_code_options_1a1731e3500edcca10b78bfb86f74b5ed9">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_lock_options_1ad0346ac84f5d101eb1afe82c5b376476">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_table_options_1a89b799411002a56db84efdada9c8d203">checkArguments</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_unlock_options_1a3c8982dfec1c8affd25a7cb389388afb">checkArguments</reimplementedby>
+        <param>
+          <type>variables_map &amp;</type>
+          <declname>vm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="148" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="148" bodyend="150"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1_control_options_1a46025212b1afd9b9e56914844512ac24" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void teos::ControlOptions::parseGroupVariablesMap</definition>
+        <argsstring>(variables_map &amp;vm)</argsstring>
+        <name>parseGroupVariablesMap</name>
+        <param>
+          <type>variables_map &amp;</type>
+          <declname>vm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="152" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="152" bodyend="184"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1_control_options_1afc04b2ed27c6b2497a95890498d403d0" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></type>
+        <definition>virtual TeosControl teos::ControlOptions::executeCommand</definition>
+        <argsstring>()</argsstring>
+        <name>executeCommand</name>
+        <reimplementedby refid="classteos_1_1control_1_1_daemon_stop_options_1afb91935bea6f426383c3b88d035fe03c">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_version_client_options_1a8cd89cab3d5a38971de1c75facc7a47d">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_info_options_1a34618d24dee722d76c13da4d2010fd63">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_get_config_options_1a842924b3643e7830d15f567f89dfc4a2">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_build_contract_options_1a2671a62aebae8e3cbe42ff94b9a92235">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_create_options_1a4865f7273086dd8cda1234ff72862bab">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_daemon_start_options_1ab02fafd8670769f90b749ba60baf6708">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_block_options_1a58079b3a605d0873679df019e882ead3">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_push_action_options_1a2f8c261e50aca98cdf61a6cd44b48656">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_set_contract_options_1aa12f82f7deb7b77a994d1e1a92ea0eff">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_generate_abi_options_1a4c059549817da0d83c0ef57f7c98bff9">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_import_options_1ac0ecd44469164674a49462711d213532">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_account_options_1a60ecaec7f5e305ee8c97844cbcdda197">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_account_options_1a03ae1a974c59a3942d965ddf9fb56ae3">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_list_options_1a5e7955184f761fd355e8081757fb281e">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_bootstrap_contract_options_1a9f2bb15114542dcb293654e15c016df5">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_accounts_options_1ad6e48fb73341c5469ce56558da5adc87">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_create_key_options_1af47c20b59e773febdfb5f1e2ed0ea735">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_open_options_1a4aec1942f5a46b8565a9ca4e97d6cdf0">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1control_1_1_delete_contract_options_1aed3c2331bc3fe6f0d5175f834e1f83e6">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_code_options_1a53d7ff2b9a882990933bc0a1194f8f28">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_lock_options_1a70a5af011af56d22bf6c7dea6670e516">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_lock_all_options_1ac6ae053d93b6272aa142720cc9020c51">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_get_table_options_1a38ec528365a160cef25ceeba6e0cbfca">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_unlock_options_1a97a2d0020caa85625bb2611203468367">executeCommand</reimplementedby>
+        <reimplementedby refid="classteos_1_1command_1_1_wallet_keys_options_1a959256e35b2f9eaa25ecb86ac97ae34a">executeCommand</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="186" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="186" bodyend="188"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classteos_1_1_control_options_1ae997028704fe0f8086096d7fa4b71ee9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>teos::ControlOptions::ControlOptions</definition>
+        <argsstring>(int argc, const char *argv[])</argsstring>
+        <name>ControlOptions</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>argv</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="191" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="191" bodyend="191"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1_control_options_1ad3496976524c0ca5288018725119fb39" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void teos::ControlOptions::go</definition>
+        <argsstring>()</argsstring>
+        <name>go</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/control.hpp" line="193" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="193" bodyend="224"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="94">
+        <label>teos::control::BootstrapContractOptions</label>
+        <link refid="classteos_1_1control_1_1_bootstrap_contract_options"/>
+        <childnode refid="73" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="74">
+        <label>teos::CommandOptions</label>
+        <link refid="classteos_1_1_command_options"/>
+        <childnode refid="73" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="84">
+        <label>teos::command::SetContractOptions</label>
+        <link refid="classteos_1_1command_1_1_set_contract_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="88">
+        <label>teos::command::WalletKeysOptions</label>
+        <link refid="classteos_1_1command_1_1_wallet_keys_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="83">
+        <label>teos::command::PushActionOptions</label>
+        <link refid="classteos_1_1command_1_1_push_action_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="86">
+        <label>teos::command::WalletCreateOptions</label>
+        <link refid="classteos_1_1command_1_1_wallet_create_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="82">
+        <label>teos::command::GetTableOptions</label>
+        <link refid="classteos_1_1command_1_1_get_table_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="78">
+        <label>teos::command::GetAccountsOptions</label>
+        <link refid="classteos_1_1command_1_1_get_accounts_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="73">
+        <label>teos::ControlOptions</label>
+        <link refid="classteos_1_1_control_options"/>
+      </node>
+      <node id="75">
+        <label>teos::command::CreateAccountOptions</label>
+        <link refid="classteos_1_1command_1_1_create_account_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="96">
+        <label>teos::control::DaemonStartOptions</label>
+        <link refid="classteos_1_1control_1_1_daemon_start_options"/>
+        <childnode refid="73" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="85">
+        <label>teos::command::VersionClientOptions</label>
+        <link refid="classteos_1_1command_1_1_version_client_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="89">
+        <label>teos::command::WalletListOptions</label>
+        <link refid="classteos_1_1command_1_1_wallet_list_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="76">
+        <label>teos::command::CreateKeyOptions</label>
+        <link refid="classteos_1_1command_1_1_create_key_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="100">
+        <label>teos::control::GetConfigOptions</label>
+        <link refid="classteos_1_1control_1_1_get_config_options"/>
+        <childnode refid="73" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="90">
+        <label>teos::command::WalletLockAllOptions</label>
+        <link refid="classteos_1_1command_1_1_wallet_lock_all_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="81">
+        <label>teos::command::GetInfoOptions</label>
+        <link refid="classteos_1_1command_1_1_get_info_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="97">
+        <label>teos::control::DaemonStopOptions</label>
+        <link refid="classteos_1_1control_1_1_daemon_stop_options"/>
+        <childnode refid="73" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="98">
+        <label>teos::control::DeleteContractOptions</label>
+        <link refid="classteos_1_1control_1_1_delete_contract_options"/>
+        <childnode refid="73" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="80">
+        <label>teos::command::GetCodeOptions</label>
+        <link refid="classteos_1_1command_1_1_get_code_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="99">
+        <label>teos::control::GenerateAbiOptions</label>
+        <link refid="classteos_1_1control_1_1_generate_abi_options"/>
+        <childnode refid="73" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="91">
+        <label>teos::command::WalletLockOptions</label>
+        <link refid="classteos_1_1command_1_1_wallet_lock_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="77">
+        <label>teos::command::GetAccountOptions</label>
+        <link refid="classteos_1_1command_1_1_get_account_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="93">
+        <label>teos::command::WalletUnlockOptions</label>
+        <link refid="classteos_1_1command_1_1_wallet_unlock_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="92">
+        <label>teos::command::WalletOpenOptions</label>
+        <link refid="classteos_1_1command_1_1_wallet_open_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="95">
+        <label>teos::control::BuildContractOptions</label>
+        <link refid="classteos_1_1control_1_1_build_contract_options"/>
+        <childnode refid="73" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="87">
+        <label>teos::command::WalletImportOptions</label>
+        <link refid="classteos_1_1command_1_1_wallet_import_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="79">
+        <label>teos::command::GetBlockOptions</label>
+        <link refid="classteos_1_1command_1_1_get_block_options"/>
+        <childnode refid="74" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="teos_lib/include/teoslib/control.hpp" line="102" column="1" bodyfile="teos_lib/include/teoslib/control.hpp" bodystart="101" bodyend="225"/>
+    <listofallmembers>
+      <member refid="classteos_1_1_control_options_1a031f627be4cf3fa07abac8724b936990" prot="private" virt="non-virtual"><scope>teos::ControlOptions</scope><name>argc_</name></member>
+      <member refid="classteos_1_1_control_options_1a611508b33386c2a2465e68b333b51c5f" prot="protected" virt="virtual"><scope>teos::ControlOptions</scope><name>argumentDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a2712eb5c8c827db0024d919312e7fb98" prot="private" virt="non-virtual"><scope>teos::ControlOptions</scope><name>argv_</name></member>
+      <member refid="classteos_1_1_control_options_1a490f2d5ea05e92a5996beaa6d40c5c32" prot="protected" virt="non-virtual"><scope>teos::ControlOptions</scope><name>basicOptionDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a2916fdad936906cec8496b5952936cae" prot="protected" virt="virtual"><scope>teos::ControlOptions</scope><name>checkArguments</name></member>
+      <member refid="classteos_1_1_control_options_1ae997028704fe0f8086096d7fa4b71ee9" prot="public" virt="non-virtual"><scope>teos::ControlOptions</scope><name>ControlOptions</name></member>
+      <member refid="classteos_1_1_control_options_1afc04b2ed27c6b2497a95890498d403d0" prot="protected" virt="virtual"><scope>teos::ControlOptions</scope><name>executeCommand</name></member>
+      <member refid="classteos_1_1_control_options_1a0aa5671f9bc750ed5280c26c543874f3" prot="protected" virt="virtual"><scope>teos::ControlOptions</scope><name>getUsage</name></member>
+      <member refid="classteos_1_1_control_options_1ad3496976524c0ca5288018725119fb39" prot="public" virt="non-virtual"><scope>teos::ControlOptions</scope><name>go</name></member>
+      <member refid="classteos_1_1_control_options_1a1b39c9263e1abea919db8097b46ecfae" prot="protected" virt="virtual"><scope>teos::ControlOptions</scope><name>groupOptionDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a385705bd05cf4cc33892f51737585f9b" prot="protected" virt="non-virtual"><scope>teos::ControlOptions</scope><name>json_</name></member>
+      <member refid="classteos_1_1_control_options_1a46025212b1afd9b9e56914844512ac24" prot="protected" virt="virtual"><scope>teos::ControlOptions</scope><name>parseGroupVariablesMap</name></member>
+      <member refid="classteos_1_1_control_options_1a33001fdd58dea6056f683a8e280c245e" prot="protected" virt="virtual"><scope>teos::ControlOptions</scope><name>printout</name></member>
+      <member refid="classteos_1_1_control_options_1aef27b07fd43f5e553f20138deb57657a" prot="protected" virt="non-virtual"><scope>teos::ControlOptions</scope><name>reqJson_</name></member>
+      <member refid="classteos_1_1_control_options_1a606085ad334d59eafc103be85e3be146" prot="protected" virt="virtual"><scope>teos::ControlOptions</scope><name>setPosDesc</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

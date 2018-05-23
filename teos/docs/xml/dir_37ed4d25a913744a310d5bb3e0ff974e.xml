@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="dir_37ed4d25a913744a310d5bb3e0ff974e" kind="dir">
+    <compoundname>teos/include</compoundname>
+    <innerdir refid="dir_a9472476ebc698323eafbd5803f391ce">teos/include/teos</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="teos/include/"/>
+  </compounddef>
+</doxygen>

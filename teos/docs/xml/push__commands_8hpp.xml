@@ -1,0 +1,351 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="push__commands_8hpp" kind="file" language="C++">
+    <compoundname>push_commands.hpp</compoundname>
+    <includes local="no">vector</includes>
+    <includes local="no">boost/algorithm/string.hpp</includes>
+    <includes refid="lib_2include_2teoslib_2config_8h" local="no">teoslib/config.h</includes>
+    <includes refid="eos__interface_8hpp" local="no">teoslib/eos_interface.hpp</includes>
+    <includes refid="command_8hpp" local="no">teoslib/command.hpp</includes>
+    <includedby refid="teos_8cpp" local="no">teos/teos.cpp</includedby>
+    <includedby refid="teostestlib_8hpp" local="no">teos/teostestlib.hpp</includedby>
+    <includedby refid="test1_8cpp" local="no">teos/test1.cpp</includedby>
+    <includedby refid="unittest1_8cpp" local="no">teos/unittest1.cpp</includedby>
+    <includedby refid="push__commands_8cpp" local="no">teos_lib/command/push_commands.cpp</includedby>
+    <includedby refid="teoslib_8hpp" local="no">teos_lib/include/teoslib/teoslib.hpp</includedby>
+    <incdepgraph>
+      <node id="488">
+        <label>boost/algorithm/string.hpp</label>
+      </node>
+      <node id="501">
+        <label>teoslib/control/config.hpp</label>
+        <link refid="config_8hpp_source"/>
+        <childnode refid="491" relation="include">
+        </childnode>
+        <childnode refid="492" relation="include">
+        </childnode>
+        <childnode refid="502" relation="include">
+        </childnode>
+        <childnode refid="494" relation="include">
+        </childnode>
+      </node>
+      <node id="491">
+        <label>stdlib.h</label>
+      </node>
+      <node id="499">
+        <label>boost/format.hpp</label>
+      </node>
+      <node id="492">
+        <label>string</label>
+      </node>
+      <node id="493">
+        <label>teoslib/command.hpp</label>
+        <link refid="command_8hpp"/>
+        <childnode refid="494" relation="include">
+        </childnode>
+        <childnode refid="501" relation="include">
+        </childnode>
+      </node>
+      <node id="498">
+        <label>boost/program_options.hpp</label>
+      </node>
+      <node id="490">
+        <label>teoslib/eos_interface.hpp</label>
+        <link refid="eos__interface_8hpp_source"/>
+        <childnode refid="491" relation="include">
+        </childnode>
+        <childnode refid="492" relation="include">
+        </childnode>
+        <childnode refid="493" relation="include">
+        </childnode>
+      </node>
+      <node id="486">
+        <label>teos_lib/include/teoslib/command/push_commands.hpp</label>
+        <link refid="push__commands_8hpp"/>
+        <childnode refid="487" relation="include">
+        </childnode>
+        <childnode refid="488" relation="include">
+        </childnode>
+        <childnode refid="489" relation="include">
+        </childnode>
+        <childnode refid="490" relation="include">
+        </childnode>
+        <childnode refid="493" relation="include">
+        </childnode>
+      </node>
+      <node id="500">
+        <label>teoslib/utilities.hpp</label>
+        <link refid="utilities_8hpp_source"/>
+        <childnode refid="491" relation="include">
+        </childnode>
+        <childnode refid="492" relation="include">
+        </childnode>
+        <childnode refid="496" relation="include">
+        </childnode>
+        <childnode refid="497" relation="include">
+        </childnode>
+      </node>
+      <node id="497">
+        <label>boost/date_time/posix_time/posix_time.hpp</label>
+      </node>
+      <node id="489">
+        <label>teoslib/config.h</label>
+        <link refid="lib_2include_2teoslib_2config_8h_source"/>
+      </node>
+      <node id="494">
+        <label>teoslib/control.hpp</label>
+        <link refid="control_8hpp_source"/>
+        <childnode refid="491" relation="include">
+        </childnode>
+        <childnode refid="492" relation="include">
+        </childnode>
+        <childnode refid="495" relation="include">
+        </childnode>
+        <childnode refid="496" relation="include">
+        </childnode>
+        <childnode refid="497" relation="include">
+        </childnode>
+        <childnode refid="498" relation="include">
+        </childnode>
+        <childnode refid="499" relation="include">
+        </childnode>
+        <childnode refid="500" relation="include">
+        </childnode>
+        <childnode refid="489" relation="include">
+        </childnode>
+      </node>
+      <node id="487">
+        <label>vector</label>
+      </node>
+      <node id="502">
+        <label>boost/filesystem.hpp</label>
+      </node>
+      <node id="496">
+        <label>boost/property_tree/ptree.hpp</label>
+      </node>
+      <node id="495">
+        <label>iostream</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="503">
+        <label>teos_lib/include/teoslib/command/push_commands.hpp</label>
+        <link refid="push__commands_8hpp"/>
+        <childnode refid="504" relation="include">
+        </childnode>
+        <childnode refid="505" relation="include">
+        </childnode>
+      </node>
+      <node id="504">
+        <label>teos/teostestlib.hpp</label>
+        <link refid="teostestlib_8hpp_source"/>
+      </node>
+      <node id="505">
+        <label>teos_lib/include/teoslib/teoslib.hpp</label>
+        <link refid="teoslib_8hpp"/>
+        <childnode refid="504" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classteos_1_1command_1_1_push_action" prot="public">teos::command::PushAction</innerclass>
+    <innerclass refid="classteos_1_1command_1_1_push_action_options" prot="public">teos::command::PushActionOptions</innerclass>
+    <innernamespace refid="namespaceteos">teos</innernamespace>
+    <innernamespace refid="namespaceteos_1_1command">teos::command</innernamespace>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="push__commands_8hpp_1ac816a38165b901249ebdac339fb85aba" prot="public" static="no" mutable="no">
+        <type>const char *</type>
+        <definition>const char* pushSubcommands</definition>
+        <argsstring></argsstring>
+        <name>pushSubcommands</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/push_commands.hpp" line="12" column="1" bodyfile="teos_lib/command/push_commands.cpp" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/algorithm/string.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/config.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/eos_interface.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="command_8hpp" kindref="compound">teoslib/command.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacestd" kindref="compound">std</ref>;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>pushSubcommands;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceteos" kindref="compound">teos</ref></highlight></codeline>
+<codeline lineno="15"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">command</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="21" refid="classteos_1_1command_1_1_push_action" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classteos_1_1command_1_1_push_action" kindref="compound">PushAction</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classteos_1_1_teos_command" kindref="compound">TeosCommand</ref></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classteos_1_1command_1_1_push_action" kindref="compound">PushAction</ref>(</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>contractName,<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>action,<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>data,</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>permission<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>expirationSec<sp/>=<sp/>30,<sp/></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>skipSignature<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>dontBroadcast<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>forceUnique<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>maxCpuUsage<sp/>=<sp/>0,</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>maxNetUsage<sp/>=<sp/>0)</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>copy(pushAction(</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>contractName,<sp/>action,<sp/>data,</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>permission,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>expirationSec,</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>skipSignature,<sp/>dontBroadcast,<sp/>forceUnique,</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>maxCpuUsage,<sp/>maxNetUsage));</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classteos_1_1command_1_1_push_action" kindref="compound">PushAction</ref>(ptree<sp/>reqJson)<sp/>:<sp/><ref refid="classteos_1_1_teos_command" kindref="compound">TeosCommand</ref>(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,<sp/>reqJson)</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>copy(pushAction(</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;contract&quot;</highlight><highlight class="normal">),<sp/></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;action&quot;</highlight><highlight class="normal">),<sp/></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;data&quot;</highlight><highlight class="normal">),</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.get&lt;</highlight><highlight class="keywordtype">string</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;permission&quot;</highlight><highlight class="normal">),<sp/></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.get&lt;</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;expiration&quot;</highlight><highlight class="normal">),<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.get&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;skip-sign&quot;</highlight><highlight class="normal">),</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.get&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;dont-broadcast&quot;</highlight><highlight class="normal">),</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.get&lt;</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;force-unique&quot;</highlight><highlight class="normal">),</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.get&lt;</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;max-cpu-usage&quot;</highlight><highlight class="normal">),</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.get&lt;</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal">&gt;(</highlight><highlight class="stringliteral">&quot;max-net-usage&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>));</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63" refid="classteos_1_1command_1_1_push_action_options" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classteos_1_1command_1_1_push_action_options" kindref="compound">PushActionOptions</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classteos_1_1_command_options" kindref="compound">CommandOptions</ref></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classteos_1_1command_1_1_push_action_options" kindref="compound">PushActionOptions</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>**argv)</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/><ref refid="classteos_1_1_command_options" kindref="compound">CommandOptions</ref>(argc,<sp/>argv)<sp/>{}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="70" refid="classteos_1_1command_1_1_push_action_options_1a1dac78e7b40cc0ff91895d1fc0f7d2b4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="classteos_1_1command_1_1_push_action_options_1a1dac78e7b40cc0ff91895d1fc0f7d2b4" kindref="member">getUsage</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>R</highlight><highlight class="stringliteral">&quot;(</highlight></codeline>
+<codeline lineno="72"><highlight class="stringliteral">Push<sp/>a<sp/>transaction<sp/>with<sp/>a<sp/>single<sp/>message.</highlight></codeline>
+<codeline lineno="73"><highlight class="stringliteral">Usage:<sp/>./teos<sp/>push<sp/>message<sp/>[contract]<sp/>[action]<sp/>[data]<sp/>[scope]<sp/>[permission]<sp/>[Options]</highlight></codeline>
+<codeline lineno="74"><highlight class="stringliteral">Usage:<sp/>./teos<sp/>create<sp/>key<sp/>--jarg<sp/>&apos;{</highlight></codeline>
+<codeline lineno="75"><highlight class="stringliteral"><sp/><sp/>&quot;contract&quot;:&quot;&lt;contract<sp/>name&gt;&quot;,</highlight></codeline>
+<codeline lineno="76"><highlight class="stringliteral"><sp/><sp/>&quot;action&quot;:&quot;&lt;action<sp/>on<sp/>contract&gt;&quot;,</highlight></codeline>
+<codeline lineno="77"><highlight class="stringliteral"><sp/><sp/>&quot;data&quot;:&quot;&lt;json<sp/>tree&gt;&quot;,</highlight></codeline>
+<codeline lineno="78"><highlight class="stringliteral"><sp/><sp/>&quot;scope&quot;:&quot;&lt;account<sp/>list&gt;&quot;,</highlight></codeline>
+<codeline lineno="79"><highlight class="stringliteral"><sp/><sp/>&quot;permission&quot;:&quot;&lt;permission<sp/>list&gt;&quot;,</highlight></codeline>
+<codeline lineno="80"><highlight class="stringliteral"><sp/><sp/>&quot;expiration&quot;:&lt;expiration<sp/>time<sp/>sec&gt;,<sp/><sp/></highlight></codeline>
+<codeline lineno="81"><highlight class="stringliteral"><sp/><sp/>&quot;skip-sign&quot;:&lt;true|false&gt;,</highlight></codeline>
+<codeline lineno="82"><highlight class="stringliteral"><sp/><sp/>&quot;dont-broadcast&quot;:&lt;true|false&gt;,</highlight></codeline>
+<codeline lineno="83"><highlight class="stringliteral"><sp/><sp/>&quot;force-unique&quot;:&lt;true|false&gt;,</highlight></codeline>
+<codeline lineno="84"><highlight class="stringliteral"><sp/><sp/>&quot;max-cpu-usage&quot;:&quot;&lt;max<sp/>cpu<sp/>usage&gt;&quot;,</highlight></codeline>
+<codeline lineno="85"><highlight class="stringliteral"><sp/><sp/>&quot;max-net-usage&quot;:&quot;&lt;max<sp/>net<sp/>usage&gt;&quot;</highlight></codeline>
+<codeline lineno="86"><highlight class="stringliteral"><sp/><sp/>}&apos;<sp/>[OPTIONS]</highlight></codeline>
+<codeline lineno="87"><highlight class="stringliteral">)&quot;;</highlight></codeline>
+<codeline lineno="88"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="89"><highlight class="stringliteral"></highlight></codeline>
+<codeline lineno="90"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>contract;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>action;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>data;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>permission;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>expiration;<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>skipSignature;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>dontBroadcast;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>forceUnique;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>maxCpuUsage;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/>maxNetUsage;<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>options_description<sp/><sp/>argumentDescription()<sp/>{</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>options_description<sp/>od(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>od.add_options()</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;contract,c&quot;</highlight><highlight class="normal">,<sp/>value&lt;string&gt;(&amp;contract),<sp/></highlight><highlight class="stringliteral">&quot;The<sp/>account<sp/>providing<sp/>the<sp/>contract<sp/>to<sp/>execute&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;action,a&quot;</highlight><highlight class="normal">,<sp/>value&lt;string&gt;(&amp;action),<sp/></highlight><highlight class="stringliteral">&quot;The<sp/>action<sp/>to<sp/>execute<sp/>on<sp/>the<sp/>contract&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;data,d&quot;</highlight><highlight class="normal">,<sp/>value&lt;string&gt;(&amp;data),<sp/></highlight><highlight class="stringliteral">&quot;The<sp/>arguments<sp/>to<sp/>the<sp/>contract&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;permission,p&quot;</highlight><highlight class="normal">,<sp/>value&lt;string&gt;(&amp;permission)</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-&gt;default_value(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,</highlight><highlight class="stringliteral">&quot;An<sp/>account<sp/>and<sp/>permission<sp/>level<sp/>to<sp/>authorize,<sp/>as<sp/>in<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&apos;account@permission&apos;<sp/>(defaults<sp/>to<sp/>&apos;account@active&apos;)&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;expiration,x&quot;</highlight><highlight class="normal">,<sp/>value&lt;unsigned&gt;(&amp;expiration)-&gt;default_value(30)</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/></highlight><highlight class="stringliteral">&quot;The<sp/>time<sp/>in<sp/>seconds<sp/>before<sp/>a<sp/>transaction<sp/>expires.&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;skip-sign,s&quot;</highlight><highlight class="normal">,<sp/>value&lt;bool&gt;(&amp;skipSignature)-&gt;default_value(</highlight><highlight class="keyword">false</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/></highlight><highlight class="stringliteral">&quot;Specify<sp/>that<sp/>unlocked<sp/>wallet<sp/>keys<sp/>should<sp/>not<sp/>be<sp/>used<sp/>to<sp/>sign<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;transaction,<sp/>defaults<sp/>to<sp/>false.&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;dont-broadcast,d&quot;</highlight><highlight class="normal">,<sp/>value&lt;bool&gt;(&amp;dontBroadcast)-&gt;default_value(</highlight><highlight class="keyword">false</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/></highlight><highlight class="stringliteral">&quot;Don&apos;t<sp/>broadcast<sp/>transaction<sp/>to<sp/>the<sp/>network<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;(just<sp/>print<sp/>to<sp/>stdout).&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;force-unique,f&quot;</highlight><highlight class="normal">,<sp/>value&lt;bool&gt;(&amp;forceUnique)-&gt;default_value(</highlight><highlight class="keyword">false</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/></highlight><highlight class="stringliteral">&quot;force<sp/>the<sp/>transaction<sp/>to<sp/>be<sp/>unique.<sp/>this<sp/>will<sp/>consume<sp/>extra<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;bandwidth<sp/>and<sp/>remove<sp/>any<sp/>protections<sp/>against<sp/>accidently<sp/>issuing<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;the<sp/>same<sp/>transaction<sp/>multiple<sp/>times.&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;max-cpu-usage&quot;</highlight><highlight class="normal">,<sp/>value&lt;unsigned&gt;(&amp;maxCpuUsage)-&gt;default_value(0)</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/></highlight><highlight class="stringliteral">&quot;Upper<sp/>limit<sp/>on<sp/>the<sp/>cpu<sp/>usage<sp/>budget,<sp/>in<sp/>instructions-retired,<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;for<sp/>the<sp/>execution<sp/>of<sp/>the<sp/>transaction<sp/>(defaults<sp/>to<sp/>0<sp/>which<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;means<sp/>no<sp/>limit).&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;max-net-usage&quot;</highlight><highlight class="normal">,<sp/>value&lt;unsigned&gt;(&amp;maxNetUsage)-&gt;default_value(0)</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/><sp/></highlight><highlight class="stringliteral">&quot;Upper<sp/>limit<sp/>on<sp/>the<sp/>net<sp/>usage<sp/>budget,<sp/>in<sp/>bytes,<sp/>for<sp/>the<sp/>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;transaction<sp/>(defaults<sp/>to<sp/>0<sp/>which<sp/>means<sp/>no<sp/>limit)&quot;</highlight><highlight class="normal">);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>od;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>setPosDesc(positional_options_description&amp;<sp/>pos_desc)<sp/>{</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pos_desc.add(</highlight><highlight class="stringliteral">&quot;contract&quot;</highlight><highlight class="normal">,<sp/>1);</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pos_desc.add(</highlight><highlight class="stringliteral">&quot;action&quot;</highlight><highlight class="normal">,<sp/>1);</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pos_desc.add(</highlight><highlight class="stringliteral">&quot;data&quot;</highlight><highlight class="normal">,<sp/>1);</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pos_desc.add(</highlight><highlight class="stringliteral">&quot;scope&quot;</highlight><highlight class="normal">,<sp/>1);</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pos_desc.add(</highlight><highlight class="stringliteral">&quot;permission&quot;</highlight><highlight class="normal">,<sp/>1);</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>checkArguments(variables_map<sp/>&amp;vm)<sp/>{</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>ok<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(vm.count(</highlight><highlight class="stringliteral">&quot;contract&quot;</highlight><highlight class="normal">))<sp/>{</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;contract&quot;</highlight><highlight class="normal">,<sp/>contract);</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(vm.count(</highlight><highlight class="stringliteral">&quot;action&quot;</highlight><highlight class="normal">))<sp/>{</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;action&quot;</highlight><highlight class="normal">,<sp/>action);</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ok<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(vm.count(</highlight><highlight class="stringliteral">&quot;data&quot;</highlight><highlight class="normal">)){</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;data&quot;</highlight><highlight class="normal">,<sp/>data);</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;permission&quot;</highlight><highlight class="normal">,<sp/>permission);</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;expiration&quot;</highlight><highlight class="normal">,<sp/>expiration);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;skip-sign&quot;</highlight><highlight class="normal">,<sp/>skipSignature);</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;dont-broadcast&quot;</highlight><highlight class="normal">,<sp/>dontBroadcast);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;force-unique&quot;</highlight><highlight class="normal">,<sp/>forceUnique);</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;max-cpu-usage&quot;</highlight><highlight class="normal">,<sp/>maxCpuUsage);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_.put(</highlight><highlight class="stringliteral">&quot;max-net-usage&quot;</highlight><highlight class="normal">,<sp/>maxNetUsage);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ok;</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>TeosControl<sp/>executeCommand()<sp/>{</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>PushAction(reqJson_);</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>printout(TeosControl<sp/>command,<sp/>variables_map<sp/>&amp;vm)<sp/>{</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(command.reqJson_.empty())</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>output(</highlight><highlight class="stringliteral">&quot;transaction<sp/>is<sp/>not<sp/>registered.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>output(</highlight><highlight class="stringliteral">&quot;transaction<sp/>id&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;%s&quot;</highlight><highlight class="normal">,<sp/>GET_STRING(command,<sp/></highlight><highlight class="stringliteral">&quot;transaction_id&quot;</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>output(command.respJson_.get(</highlight><highlight class="stringliteral">&quot;processed.action_traces..console&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">));</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="180"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="teos_lib/include/teoslib/command/push_commands.hpp"/>
+  </compounddef>
+</doxygen>

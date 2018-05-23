@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classteoslib_1_1_key" kind="class" language="C++" prot="public">
+    <compoundname>teoslib::Key</compoundname>
+    <basecompoundref refid="classteos_1_1command_1_1_create_key" prot="public" virt="non-virtual">teos::command::CreateKey</basecompoundref>
+    <includes refid="teoslib_8hpp" local="no">teoslib.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classteoslib_1_1_key_1a15d1d7c5cf5b92ae39a9b99446fa1883" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teoslib::Key::name_</definition>
+        <argsstring></argsstring>
+        <name>name_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/teoslib.hpp" line="47" column="1" bodyfile="teos_lib/include/teoslib/teoslib.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteoslib_1_1_key_1ae63a5c3bd28a24bb1d54f0e6170d358d" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teoslib::Key::private_</definition>
+        <argsstring></argsstring>
+        <name>private_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/teoslib.hpp" line="48" column="1" bodyfile="teos_lib/include/teoslib/teoslib.hpp" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteoslib_1_1_key_1a2b2ccda06afa6c19b770636628399208" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teoslib::Key::public_</definition>
+        <argsstring></argsstring>
+        <name>public_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/teoslib.hpp" line="49" column="1" bodyfile="teos_lib/include/teoslib/teoslib.hpp" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classteoslib_1_1_key_1a7c296035add9fcd2fee9fbbf118df3a7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>teoslib::Key::Key</definition>
+        <argsstring>(string name)</argsstring>
+        <name>Key</name>
+        <param>
+          <type>string</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+<para>Construct a new <ref refid="classteoslib_1_1_key" kindref="compound">Key</ref> object. </para>        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>explains the role of the key pair: <computeroutput>active key</computeroutput>, for example. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/teoslib.hpp" line="55" column="1" bodyfile="teos_lib/include/teoslib/teoslib.hpp" bodystart="55" bodyend="63"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>EOSIO cryptographic key representation. </para>    </briefdescription>
+    <detaileddescription>
+<para>Any key object generates and holds a named pair of cryptographic keys. <ref refid="classteoslib_1_1_key" kindref="compound">Key</ref> objects are arguments wherever a private or public element of the pair is expected: as an import to a <ref refid="classteoslib_1_1_wallet" kindref="compound">Wallet</ref> object, <ref refid="classteoslib_1_1_account" kindref="compound">Account</ref> object, ect. </para>    </detaileddescription>
+    <inheritancegraph>
+      <node id="245">
+        <label>teos::TeosControl</label>
+        <link refid="classteos_1_1_teos_control"/>
+      </node>
+      <node id="243">
+        <label>teos::command::CreateKey</label>
+        <link refid="classteos_1_1command_1_1_create_key"/>
+        <childnode refid="244" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="242">
+        <label>teoslib::Key</label>
+        <link refid="classteoslib_1_1_key"/>
+        <childnode refid="243" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="244">
+        <label>teos::TeosCommand</label>
+        <link refid="classteos_1_1_teos_command"/>
+        <childnode refid="245" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="249">
+        <label>teos::TeosControl</label>
+        <link refid="classteos_1_1_teos_control"/>
+      </node>
+      <node id="247">
+        <label>teos::command::CreateKey</label>
+        <link refid="classteos_1_1command_1_1_create_key"/>
+        <childnode refid="248" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="246">
+        <label>teoslib::Key</label>
+        <link refid="classteoslib_1_1_key"/>
+        <childnode refid="247" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="248">
+        <label>teos::TeosCommand</label>
+        <link refid="classteos_1_1_teos_command"/>
+        <childnode refid="249" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="teos_lib/include/teoslib/teoslib.hpp" line="45" column="1" bodyfile="teos_lib/include/teoslib/teoslib.hpp" bodystart="44" bodyend="64"/>
+    <listofallmembers>
+      <member refid="classteos_1_1_teos_command_1ac770c5eabcc7bfc6d4a8a8b2b0443458" prot="protected" virt="non-virtual"><scope>teoslib::Key</scope><name>callEosd</name></member>
+      <member refid="classteos_1_1_teos_command_1a3728e4e87c485b4acb46f0d5c88595ad" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>copy</name></member>
+      <member refid="classteos_1_1_teos_control_1aa318124d7a906e4b1391fae5ad50cfb0" prot="public" virt="non-virtual" ambiguityscope="teos::TeosControl::"><scope>teoslib::Key</scope><name>copy</name></member>
+      <member refid="classteos_1_1command_1_1_create_key_1a9908b3b01b818ccd742978a0b74c9745" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>CreateKey</name></member>
+      <member refid="classteos_1_1command_1_1_create_key_1a9e09786f8c0cef5e37d041567627e9fd" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>CreateKey</name></member>
+      <member refid="classteos_1_1_teos_control_1af23d4fb6c90c83e47bc6917b3add9da7" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>errorMsg</name></member>
+      <member refid="classteos_1_1_teos_control_1abe614f0745845a707ec5c4e0457ebcc0" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>errorRespJson</name></member>
+      <member refid="classteos_1_1_teos_control_1ae5781470510c9bb90a3ef0917e72b1b8" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>get</name></member>
+      <member refid="classteos_1_1_teos_command_1a54be6ca51cd5c3b55b4fd5506319fcaa" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>httpAddress</name></member>
+      <member refid="classteos_1_1_teos_command_1a3c420a38e2e983faab8a32d26c211a0d" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>httpWalletAddress</name></member>
+      <member refid="classteos_1_1_teos_control_1ac8e6788b523dcd724c7a424818da7849" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>isError_</name></member>
+      <member refid="classteos_1_1_teos_command_1a5f377d19a8bb692b2c3008d4b916a950" prot="protected" virt="virtual"><scope>teoslib::Key</scope><name>isWalletCommand</name></member>
+      <member refid="classteoslib_1_1_key_1a7c296035add9fcd2fee9fbbf118df3a7" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>Key</name></member>
+      <member refid="classteoslib_1_1_key_1a15d1d7c5cf5b92ae39a9b99446fa1883" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>name_</name></member>
+      <member refid="classteos_1_1_teos_command_1abcdc20d75a8e8278cdcae8f0bb482515" prot="protected" virt="virtual"><scope>teoslib::Key</scope><name>normRequest</name></member>
+      <member refid="classteos_1_1_teos_command_1afc2c37d50b3fda078ce3195d9922ab8e" prot="protected" virt="virtual"><scope>teoslib::Key</scope><name>normResponse</name></member>
+      <member refid="classteos_1_1_teos_command_1a263794bdfe8ef1ee2e01e8a5253495f9" prot="protected" virt="non-virtual"><scope>teoslib::Key</scope><name>path_</name></member>
+      <member refid="classteos_1_1_teos_control_1a005069a333bfa46592633d1bdb1df308" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>printError</name></member>
+      <member refid="classteoslib_1_1_key_1ae63a5c3bd28a24bb1d54f0e6170d358d" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>private_</name></member>
+      <member refid="classteoslib_1_1_key_1a2b2ccda06afa6c19b770636628399208" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>public_</name></member>
+      <member refid="classteos_1_1_teos_control_1ad5d500a5c6027ab6c4c9edee0affcf0c" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>putError</name></member>
+      <member refid="classteos_1_1_teos_control_1a6122f1a2263a80dacd315739861feac7" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>reqJson_</name></member>
+      <member refid="classteos_1_1_teos_control_1af14d89eea741cfc345db34bd2ba75d0b" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>requestToString</name></member>
+      <member refid="classteos_1_1_teos_control_1a1f5268be242e9f6182a083a4d4ec393e" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>respJson_</name></member>
+      <member refid="classteos_1_1_teos_control_1a5a4f418dfe30ab50fb373e341b9974db" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>responseToString</name></member>
+      <member refid="classteos_1_1_teos_command_1a914843fee0b714f96176109cafee4014" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>TeosCommand</name></member>
+      <member refid="classteos_1_1_teos_command_1a2b68fe1c3c46f20a1e28e6f468c0a8e0" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>TeosCommand</name></member>
+      <member refid="classteos_1_1_teos_command_1a0d0b0d10829ec7178ba2f9f85db2b67f" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>TeosCommand</name></member>
+      <member refid="classteos_1_1_teos_command_1adf2c680015f9910a386469449626db16" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>TeosCommand</name></member>
+      <member refid="classteos_1_1_teos_control_1a9b73c2bc1b3bd0da9069e4e19f9cd945" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>TeosControl</name></member>
+      <member refid="classteos_1_1_teos_control_1a52f86bb515d91acf6cfdccd3fc766187" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>TeosControl</name></member>
+      <member refid="classteos_1_1_teos_control_1aaa5b0b70263ef6f963636dc43230ef33" prot="public" virt="non-virtual"><scope>teoslib::Key</scope><name>validateJsonData</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

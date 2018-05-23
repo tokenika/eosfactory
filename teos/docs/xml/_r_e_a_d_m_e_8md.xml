@@ -1,0 +1,344 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="_r_e_a_d_m_e_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Tokenika<sp/>TEOS<sp/>library</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Rationale</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Tokenika<sp/>TEOS<sp/>library<sp/>was<sp/>designed<sp/>for<sp/>the<sp/>Tokenika<sp/>EOSFactory.<sp/>The<sp/>EOSFactory<sp/>is<sp/>to<sp/>be<sp/>an<sp/>IDE<sp/>(Integrated<sp/>Development<sp/>Environment)<sp/>for<sp/>EOSIO<sp/>smart-contracts.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">From<sp/>[Wikipedia](#https://en.wikipedia.org/wiki/Integrated_development_environment):</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*An<sp/>integrated<sp/>development<sp/>environment<sp/>(IDE)<sp/>is<sp/>a<sp/>software<sp/>application<sp/>that<sp/>provides<sp/>comprehensive<sp/>facilities<sp/>to<sp/>computer<sp/>programmers<sp/>for<sp/>software<sp/>development.<sp/>An<sp/>IDE<sp/>normally<sp/>consists<sp/>of<sp/>a<sp/>source<sp/>code<sp/>editor,<sp/>build<sp/>automation<sp/>tools,<sp/>and<sp/>a<sp/>debugger.*</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>TEOS<sp/>library<sp/>is<sp/>the<sp/>engine<sp/>that<sp/>powers<sp/>these<sp/>*comprehensive<sp/>facilities*.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Walkthrough</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Our<sp/>plan<sp/>is<sp/>to<sp/>build<sp/>around<sp/>the<sp/>[*Visual<sp/>Studio<sp/>Code*](#https://code.visualstudio.com/).<sp/>With<sp/>VS<sp/>code,<sp/>we<sp/>can<sp/>have<sp/>all<sp/>what<sp/>we<sp/>want<sp/>in<sp/>one:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Linux<sp/>Mac<sp/>and<sp/>Windows<sp/>compatibility,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>multi-language<sp/>(C/C++,<sp/>Python)<sp/>support<sp/>as<sp/>InteliSense,<sp/>code<sp/>browsing,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>VS<sp/>code<sp/>task<sp/>system,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>plentifulness<sp/>of<sp/>extensions,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>a<sp/>room<sp/>for<sp/>specialized<sp/>EOSIO<sp/>smart-contract<sp/>IDE<sp/>extension.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Please,<sp/>walkthrough<sp/>the<sp/>following<sp/>outline<sp/>of<sp/>our<sp/>IDE.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Starting<sp/>with<sp/>a<sp/>template</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Let<sp/>you<sp/>have<sp/>installed<sp/>*EOSFactory*<sp/>according<sp/>to<sp/>uor<sp/>instructions.</highlight></codeline>
+<codeline><highlight class="normal">Let<sp/>you<sp/>have<sp/>your<sp/>smart-contract<sp/>workspace<sp/>defined,<sp/>either<sp/>with<sp/>the<sp/>`-w`<sp/>option<sp/>of<sp/>the<sp/>`eosfactory`<sp/>installer,<sp/>or<sp/>with<sp/>a<sp/>corresponding<sp/>entry<sp/>in<sp/>the<sp/>`config.json`<sp/>file,<sp/>for<sp/>example:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal">........................................</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;EOSIO_CONTRACT_WORKSPACE&quot;:<sp/>&quot;/mnt/c/Workspaces/EOS/contracts&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal">........................................</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>start<sp/>development<sp/>from<sp/>a<sp/>template,<sp/>for<sp/>example:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>bootstrap<sp/>contract<sp/>hello.teos</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>template<sp/>contract:<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">Now,<sp/>let<sp/>you<sp/>open<sp/>*Visual<sp/>Studio<sp/>Code*<sp/>in<sp/>the<sp/>`hello.teos`<sp/>contract<sp/>directory.<sp/>Do<sp/>`CTR+SHIFT+P`,<sp/>chose<sp/>`Open<sp/>Folder...`<sp/>browse<sp/>to<sp/>the<sp/>directory.<sp/>Please,<sp/>be<sp/>sure<sp/>that<sp/>you<sp/>have<sp/>installed<sp/>the<sp/>`C/C++`<sp/>extension<sp/>to<sp/>the<sp/>*VS<sp/>code*.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>InteliSense<sp/>and<sp/>code<sp/>browsing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Now,<sp/>you<sp/>can<sp/>open<sp/>`hello.teos.cpp`.<sp/>With<sp/>the<sp/>`C/C++`,<sp/>you<sp/>can<sp/>go<sp/>to<sp/>definition/declaration,<sp/>for<sp/>example<sp/>(see<sp/>the<sp/>description<sp/>of<sp/>te<sp/>extension<sp/>for<sp/>many<sp/>more):<sp/>place<sp/>right<sp/>mouse<sp/>over<sp/>the<sp/>`print`<sp/>function<sp/>name<sp/>and<sp/>chose<sp/>`Pick<sp/>Declaration`.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Contract<sp/>compilation</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Not<sp/>implemented<sp/>yet.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>EOSIO<sp/>smart<sp/>contract<sp/>API</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">VS<sp/>code<sp/>main<sp/>menu<sp/>Tasks<sp/>-&gt;<sp/>Run<sp/>Task...<sp/>-&gt;<sp/>API</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">opens<sp/>[Smart<sp/>Contract<sp/>API<sp/>Reference](#https://eosio.github.io/eos/group__contractdev.html).</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Contract<sp/>build</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">You<sp/>can<sp/>build<sp/>the<sp/>contract<sp/>in<sp/>two<sp/>ways:<sp/>with<sp/>the<sp/>*VS<sp/>code*<sp/>build<sp/>task,<sp/>or<sp/>with<sp/>the<sp/>cmake<sp/>procedures.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>*VS<sp/>code*<sp/>build<sp/>task</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">VS<sp/>code<sp/>main<sp/>menu<sp/>Tasks<sp/>-&gt;<sp/>Run<sp/>Task<sp/>Build...<sp/>-&gt;<sp/>API</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">results<sp/>in<sp/>placing<sp/>WAST<sp/>and<sp/>ABI<sp/>files<sp/>in<sp/>the<sp/>contract<sp/>build<sp/>directory:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">Executing<sp/>task:<sp/>/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos/teos<sp/>generate<sp/>abi<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos;/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos/teos<sp/>build<sp/>contract<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos<sp/>&lt;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ABI:<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.abi</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>WAST:<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.wast</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">####<sp/>CMake<sp/>procedures</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>cd<sp/>build</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>cmake<sp/>..</highlight></codeline>
+<codeline><highlight class="normal">.......................</highlight></codeline>
+<codeline><highlight class="normal">--<sp/>Configuring<sp/>done</highlight></codeline>
+<codeline><highlight class="normal">--<sp/>Generating<sp/>done</highlight></codeline>
+<codeline><highlight class="normal">--<sp/>Build<sp/>files<sp/>have<sp/>been<sp/>written<sp/>to:<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos/build</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>make</highlight></codeline>
+<codeline><highlight class="normal">Scanning<sp/>dependencies<sp/>of<sp/>target<sp/>abi</highlight></codeline>
+<codeline><highlight class="normal">[<sp/>50%]<sp/>Built<sp/>target<sp/>abi</highlight></codeline>
+<codeline><highlight class="normal">Scanning<sp/>dependencies<sp/>of<sp/>target<sp/>wast</highlight></codeline>
+<codeline><highlight class="normal">[100%]<sp/>Built<sp/>target<sp/>wast</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Contract<sp/>testing</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Not<sp/>implemented<sp/>yet.<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">However,<sp/>please,<sp/>see<sp/>the<sp/>following<sp/>code<sp/>snippet<sp/>showing<sp/>how<sp/>contract<sp/>testing<sp/>can<sp/>be<sp/>done.<sp/>We<sp/>support<sp/>two<sp/>flavors<sp/>*C++*<sp/>and<sp/>*Python*.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>C++<sp/>example<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>example<sp/>comes<sp/>from<sp/>from<sp/>`eosfactory/teos/teos/unittest1.cpp`:</highlight></codeline>
+<codeline><highlight class="normal">```c++</highlight></codeline>
+<codeline><highlight class="normal">BOOST_AUTO_TEST_CASE(test1)</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>AccountEosio*<sp/>eosio;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Wallet*<sp/>wallet;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Key*<sp/>key_owner;<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Key*<sp/>key_active;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Account*<sp/>alice;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Account*<sp/>bob;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Account*<sp/>carol;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>BOOST_REQUIRE(setup(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>eosio,<sp/>wallet,<sp/>key_owner,<sp/>key_active,<sp/>alice,<sp/>bob,<sp/>carol));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>string<sp/>name<sp/>=<sp/>&quot;eosio.token&quot;;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Account<sp/>account_contract(*eosio,<sp/>name,<sp/>*key_owner,<sp/>*key_active);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>Contract<sp/>contract(account_contract,<sp/>name);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>BOOST_REQUIRE(contract.deploy());</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>BOOST_REQUIRE(contract.push_action(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;create&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R&quot;({&quot;issuer&quot;:&quot;eosio&quot;,<sp/>&quot;maximum_supply&quot;:&quot;1000000000.0000<sp/>EOS&quot;,<sp/>&quot;can_freeze&quot;:0,<sp/>&quot;can_recall&quot;:0,<sp/>&quot;can_whitelist&quot;:0})&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>BOOST_REQUIRE(contract.push_action(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;issue&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R&quot;({&quot;to&quot;:&quot;alice&quot;,<sp/>&quot;quantity&quot;:&quot;100.0000<sp/>EOS&quot;,<sp/>&quot;memo&quot;:&quot;memo&quot;})&quot;,<sp/>eosio));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>BOOST_REQUIRE(contract.push_action(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;transfer&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R&quot;({&quot;from&quot;:&quot;alice&quot;,<sp/>&quot;to&quot;:&quot;carol&quot;,<sp/>&quot;quantity&quot;:&quot;25.0000<sp/>EOS&quot;,<sp/>&quot;memo&quot;:&quot;memo&quot;})&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>alice));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>BOOST_REQUIRE(contract.push_action(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;transfer&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R&quot;({&quot;from&quot;:&quot;carol&quot;,<sp/>&quot;to&quot;:&quot;bob&quot;,<sp/>&quot;quantity&quot;:&quot;13.0000<sp/>EOS&quot;,<sp/>&quot;memo&quot;:&quot;memo&quot;})&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>carol));</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>BOOST_REQUIRE(contract.push_action(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>&quot;transfer&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>R&quot;({&quot;from&quot;:&quot;bob&quot;,<sp/>&quot;to&quot;:&quot;alice&quot;,<sp/>&quot;quantity&quot;:&quot;2.0000<sp/>EOS&quot;,<sp/>&quot;memo&quot;:&quot;memo&quot;})&quot;,<sp/>bob));</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>BOOST_REQUIRE(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>contract.get_table(&quot;accounts&quot;,<sp/>alice).get(&quot;rows..balance&quot;,<sp/>&quot;ERROR!&quot;)<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>==<sp/>&quot;77.0000<sp/>EOS&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>BOOST_REQUIRE(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>contract.get_table(&quot;accounts&quot;,<sp/>bob).get(&quot;rows..balance&quot;,<sp/>&quot;ERROR!&quot;)<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>==<sp/>&quot;11.0000<sp/>EOS&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>BOOST_REQUIRE(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>contract.get_table(&quot;accounts&quot;,<sp/>carol).get(&quot;rows..balance&quot;,<sp/>&quot;ERROR!&quot;)<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>==<sp/>&quot;12.0000<sp/>EOS&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/>teardown(eosio,<sp/>wallet,<sp/>key_owner,<sp/>key_active,<sp/>alice,<sp/>bob,<sp/>carol);</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">In<sp/>order<sp/>to<sp/>see<sp/>it<sp/>in<sp/>action,<sp/>do</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_EOSFACTORY_DIR/teos/build/teos/unittest1</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Python<sp/>example</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Python<sp/>example<sp/>comes<sp/>from<sp/>`eosfactory/tests/unittest1.cpp`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```Python</highlight></codeline>
+<codeline><highlight class="normal">class<sp/>Test1(unittest.TestCase):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>@classmethod</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>def<sp/>setUpClass(cls):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pass</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>def<sp/>setUp(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pass</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>def<sp/>run(self,<sp/>result=None):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;&quot;&quot;<sp/>Stop<sp/>after<sp/>first<sp/>error<sp/>&quot;&quot;&quot;<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>not<sp/>result.failures:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>super().run(result)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>def<sp/>test_00_node_reset(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>node.reset()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertFalse(x.error)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>node.info()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertTrue(&quot;last_irreversible_block_id&quot;<sp/>in<sp/>x.json.keys())</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>sess.init()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertFalse(x)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>def<sp/>test_01_contract(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>c<sp/>=<sp/>eosf.Contract(&quot;eosio.token&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertFalse(c.error,<sp/>&quot;Contract&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>c.get_code()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertTrue(x,<sp/>&quot;get_code&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>c.deploy()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertTrue(x,<sp/>&quot;deploy&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>c.get_code()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertTrue(x,<sp/>&quot;get_code&quot;)<sp/></highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>c.push_action(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;create&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;{&quot;issuer&quot;:&quot;eosio&quot;,<sp/>&quot;maximum_supply&quot;:&quot;1000000000.0000<sp/>EOS&quot;,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;can_freeze&quot;:0,<sp/>&quot;can_recall&quot;:0,<sp/>&quot;can_whitelist&quot;:0}&apos;)<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertTrue(x,<sp/>&quot;push_action<sp/>create&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>c.push_action(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;issue&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;{&quot;to&quot;:&quot;alice&quot;,<sp/>&quot;quantity&quot;:&quot;100.0000<sp/>EOS&quot;,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;memo&quot;:&quot;issue<sp/>100.0000<sp/>EOS&quot;}&apos;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sess.eosio)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertTrue(x,<sp/>&quot;push_action<sp/>issue&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>c.push_action(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;transfer&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;{&quot;from&quot;:&quot;alice&quot;,<sp/>&quot;to&quot;:&quot;carol&quot;,<sp/>&quot;quantity&quot;:&quot;25.0000<sp/>EOS&quot;,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;memo&quot;:&quot;transfer<sp/>25.0000<sp/>EOS&quot;}&apos;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sess.alice)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertTrue(x,<sp/>&quot;push_action<sp/>transfer&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>c.push_action(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;transfer&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;{&quot;from&quot;:&quot;carol&quot;,<sp/>&quot;to&quot;:&quot;bob&quot;,<sp/>&quot;quantity&quot;:&quot;13.0000<sp/>EOS&quot;,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;memo&quot;:&quot;transfer<sp/>13.0000<sp/>EOS&quot;}&apos;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sess.carol)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertTrue(x,<sp/>&quot;push_action<sp/>transfer&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>c.push_action(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;transfer&quot;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;{&quot;from&quot;:&quot;bob&quot;,<sp/>&quot;to&quot;:&quot;alice&quot;,<sp/>&quot;quantity&quot;:&quot;2.0000<sp/>EOS&quot;,<sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;memo&quot;:&quot;transfer<sp/>2.0000<sp/>EOS&quot;}&apos;,<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sess.bob)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertTrue(x,<sp/>&quot;push_action<sp/>transfer&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t1<sp/>=<sp/><sp/>c.get_table(&quot;accounts&quot;,<sp/>sess.alice)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertFalse(t1.error,<sp/>&quot;get<sp/>table<sp/>accounts&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t2<sp/>=<sp/>c.get_table(&quot;accounts&quot;,<sp/>sess.bob)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertFalse(t2.error,<sp/>&quot;get<sp/>table<sp/>accounts&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t3<sp/>=<sp/>c.get_table(&quot;accounts&quot;,<sp/>sess.carol)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertFalse(t3.error,<sp/>&quot;get<sp/>table<sp/>accounts&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertEqual(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t1.json[&quot;rows&quot;][0][&quot;balance&quot;],<sp/>&quot;77.0000<sp/>EOS&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertEqual(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t2.json[&quot;rows&quot;][0][&quot;balance&quot;],<sp/>&quot;11.0000<sp/>EOS&quot;)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertEqual(</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t3.json[&quot;rows&quot;][0][&quot;balance&quot;],<sp/>&quot;12.0000<sp/>EOS&quot;)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>def<sp/>test_99_node_stop(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>=<sp/>node.stop()</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>self.assertTrue(x)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>def<sp/>tearDown(self):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pass</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>@classmethod</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>def<sp/>tearDownClass(cls):</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>=<sp/>node.stop()</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">In<sp/>order<sp/>to<sp/>see<sp/>it<sp/>in<sp/>action,<sp/>do</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>python3<sp/>$EOSIO_EOSFACTORY_DIR/tests/unittest1.py</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Library<sp/>structure</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>library<sp/>has<sp/>three<sp/>layers:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>raw<sp/>basic<sp/>operation<sp/>classes,<sp/>for<sp/>example<sp/>GetInfo,<sp/>DaemonStart,<sp/>BuildContract;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>command-line<sp/>drivers<sp/>for<sp/>the<sp/>basic<sp/>operations,<sp/>for<sp/>example<sp/>GetInfoOptions,<sp/>DaemonStartOptions;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>*<sp/>EOSIO<sp/>notion<sp/>abstraction<sp/>classes<sp/>like<sp/>Account,<sp/>Contract,<sp/>Wallet.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Command-line<sp/>drivers</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>command-line<sp/>drivers,<sp/>operated<sp/>by<sp/>the<sp/>main<sp/>`teos`<sp/>application,<sp/>mimic<sp/>and/or<sp/>extend<sp/>the<sp/>EOSIO<sp/>`cleos`.<sp/>For<sp/>example,<sp/>the<sp/>following<sp/>sequence<sp/>of<sp/>bash<sp/>commands<sp/>make<sp/>sense:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>bootstrap<sp/>contract<sp/>hello.teos<sp/><sp/><sp/><sp/><sp/>##<sp/>new<sp/>contract<sp/>template</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>template<sp/>contract:<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>build<sp/>contract<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>WAST:<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.wast</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>generate<sp/>abi<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>ABI:<sp/>/mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.abi</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>daemon<sp/>start<sp/>-c<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>##<sp/>reset<sp/>local<sp/>node</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>nodeos<sp/>exe<sp/>file:<sp/>/mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>genesis<sp/>state<sp/>file:<sp/>/mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/>server<sp/>address:<sp/>127.0.0.1:8888</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>config<sp/>directory:<sp/>/mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>wallet<sp/>directory:<sp/>/mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>head<sp/>block<sp/>number:<sp/>3</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>head<sp/>block<sp/>time:<sp/>2018-05-23T16:02:40</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>wallet<sp/>create</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>password:<sp/>PW5K5jzJZaCXEtrwThSgPjgSjiZj8d9i1fCGZSUM7ZC9XEUySarnD</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>You<sp/>need<sp/>to<sp/>save<sp/>this<sp/>password<sp/>to<sp/>be<sp/>able<sp/>to<sp/>lock/unlock<sp/>the<sp/>wallet!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>set<sp/>contract<sp/>eosio<sp/>hello.teos<sp/>--permission<sp/>eosio</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/>transaction<sp/>id:<sp/>ef2744011c17b219f346c2841ebc316c0ebd21da9804ec804c860f71558481ba</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>create<sp/>key<sp/>owner</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>key<sp/>name:<sp/>owner</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/>private<sp/>key:<sp/>5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/>public<sp/>key:<sp/>EOS6GKYMgKHeuMAaHb3v4nGBg9NiYRcJoU3YegUYeUwSjUfSJWLdP</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>create<sp/>key<sp/>active</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>key<sp/>name:<sp/>active</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/>private<sp/>key:<sp/>5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/>public<sp/>key:<sp/>EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>wallet<sp/>import<sp/>default<sp/>5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>wallet:<sp/>default</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/>key<sp/>imported:<sp/>5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>wallet<sp/>import<sp/>default<sp/>5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>wallet:<sp/>default</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/><sp/><sp/>key<sp/>imported:<sp/>5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>create<sp/>account<sp/>eosio<sp/>hello.teos<sp/>EOS6GKYMgKHeuMAaHb3v4nGBg9NiYRcJoU3YegUYeUwSjUfSJWLdP<sp/>EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/>transaction<sp/>id:<sp/>0ff62a96bde5bd911da135557da56fabb3fc1282d8be8797be485aafa519bce4</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>set<sp/>contract<sp/>hello.teos<sp/>hello.teos</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/>transaction<sp/>id:<sp/>2820976a76893685f4cfc2578c7c0f0ff3e8b9112732de202dab16afd7b56884</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>push<sp/>action<sp/>hello.teos<sp/>hi<sp/>&apos;[&quot;hello.teos&quot;]&apos;<sp/>-p<sp/>hello.teos</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/><sp/>transaction<sp/>id:<sp/>bdbace3b4327f70ccc7d63d1b1287a7abbec4240be9b2d7695192bf80da45f92</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>INFO<sp/>account<sp/>name:<sp/>7684013990126944256<sp/><sp/>@<sp/>17:56:15<sp/>hello.teos.cpp[16](hi)</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>Hello,<sp/>hello.teos</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">$<sp/>$EOSIO_TEOS<sp/>daemon<sp/>stop</highlight></codeline>
+<codeline><highlight class="normal">#<sp/><sp/>Daemon<sp/>is<sp/>stopped.</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+    </programlisting>
+    <location file="README.md"/>
+  </compounddef>
+</doxygen>

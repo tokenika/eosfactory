@@ -1,0 +1,298 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="command_8hpp" kind="file" language="C++">
+    <compoundname>command.hpp</compoundname>
+    <includes refid="control_8hpp" local="no">teoslib/control.hpp</includes>
+    <includes refid="config_8hpp" local="no">teoslib/control/config.hpp</includes>
+    <includedby refid="command_8cpp" local="no">teos_lib/command.cpp</includedby>
+    <includedby refid="create__commands_8hpp" local="no">teos_lib/include/teoslib/command/create_commands.hpp</includedby>
+    <includedby refid="get__commands_8hpp" local="no">teos_lib/include/teoslib/command/get_commands.hpp</includedby>
+    <includedby refid="other__commands_8hpp" local="no">teos_lib/include/teoslib/command/other_commands.hpp</includedby>
+    <includedby refid="push__commands_8hpp" local="no">teos_lib/include/teoslib/command/push_commands.hpp</includedby>
+    <includedby refid="set__commands_8hpp" local="no">teos_lib/include/teoslib/command/set_commands.hpp</includedby>
+    <includedby refid="wallet__commands_8hpp" local="no">teos_lib/include/teoslib/command/wallet_commands.hpp</includedby>
+    <includedby refid="eos__interface_8hpp" local="no">teos_lib/include/teoslib/eos_interface.hpp</includedby>
+    <incdepgraph>
+      <node id="421">
+        <label>teoslib/control/config.hpp</label>
+        <link refid="config_8hpp_source"/>
+        <childnode refid="412" relation="include">
+        </childnode>
+        <childnode refid="413" relation="include">
+        </childnode>
+        <childnode refid="422" relation="include">
+        </childnode>
+        <childnode refid="411" relation="include">
+        </childnode>
+      </node>
+      <node id="412">
+        <label>stdlib.h</label>
+      </node>
+      <node id="418">
+        <label>boost/format.hpp</label>
+      </node>
+      <node id="413">
+        <label>string</label>
+      </node>
+      <node id="410">
+        <label>teos_lib/include/teoslib/command.hpp</label>
+        <link refid="command_8hpp"/>
+        <childnode refid="411" relation="include">
+        </childnode>
+        <childnode refid="421" relation="include">
+        </childnode>
+      </node>
+      <node id="417">
+        <label>boost/program_options.hpp</label>
+      </node>
+      <node id="419">
+        <label>teoslib/utilities.hpp</label>
+        <link refid="utilities_8hpp_source"/>
+        <childnode refid="412" relation="include">
+        </childnode>
+        <childnode refid="413" relation="include">
+        </childnode>
+        <childnode refid="415" relation="include">
+        </childnode>
+        <childnode refid="416" relation="include">
+        </childnode>
+      </node>
+      <node id="416">
+        <label>boost/date_time/posix_time/posix_time.hpp</label>
+      </node>
+      <node id="420">
+        <label>teoslib/config.h</label>
+        <link refid="lib_2include_2teoslib_2config_8h_source"/>
+      </node>
+      <node id="411">
+        <label>teoslib/control.hpp</label>
+        <link refid="control_8hpp_source"/>
+        <childnode refid="412" relation="include">
+        </childnode>
+        <childnode refid="413" relation="include">
+        </childnode>
+        <childnode refid="414" relation="include">
+        </childnode>
+        <childnode refid="415" relation="include">
+        </childnode>
+        <childnode refid="416" relation="include">
+        </childnode>
+        <childnode refid="417" relation="include">
+        </childnode>
+        <childnode refid="418" relation="include">
+        </childnode>
+        <childnode refid="419" relation="include">
+        </childnode>
+        <childnode refid="420" relation="include">
+        </childnode>
+      </node>
+      <node id="422">
+        <label>boost/filesystem.hpp</label>
+      </node>
+      <node id="415">
+        <label>boost/property_tree/ptree.hpp</label>
+      </node>
+      <node id="414">
+        <label>iostream</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="423">
+        <label>teos_lib/include/teoslib/command.hpp</label>
+        <link refid="command_8hpp"/>
+        <childnode refid="424" relation="include">
+        </childnode>
+        <childnode refid="427" relation="include">
+        </childnode>
+        <childnode refid="428" relation="include">
+        </childnode>
+        <childnode refid="429" relation="include">
+        </childnode>
+        <childnode refid="430" relation="include">
+        </childnode>
+        <childnode refid="431" relation="include">
+        </childnode>
+        <childnode refid="432" relation="include">
+        </childnode>
+      </node>
+      <node id="432">
+        <label>teos_lib/include/teoslib/eos_interface.hpp</label>
+        <link refid="eos__interface_8hpp_source"/>
+        <childnode refid="424" relation="include">
+        </childnode>
+        <childnode refid="427" relation="include">
+        </childnode>
+        <childnode refid="429" relation="include">
+        </childnode>
+        <childnode refid="430" relation="include">
+        </childnode>
+      </node>
+      <node id="429">
+        <label>teos_lib/include/teoslib/command/push_commands.hpp</label>
+        <link refid="push__commands_8hpp_source"/>
+        <childnode refid="425" relation="include">
+        </childnode>
+        <childnode refid="426" relation="include">
+        </childnode>
+      </node>
+      <node id="431">
+        <label>teos_lib/include/teoslib/command/wallet_commands.hpp</label>
+        <link refid="wallet__commands_8hpp_source"/>
+        <childnode refid="425" relation="include">
+        </childnode>
+        <childnode refid="426" relation="include">
+        </childnode>
+      </node>
+      <node id="430">
+        <label>teos_lib/include/teoslib/command/set_commands.hpp</label>
+        <link refid="set__commands_8hpp_source"/>
+        <childnode refid="425" relation="include">
+        </childnode>
+        <childnode refid="426" relation="include">
+        </childnode>
+      </node>
+      <node id="425">
+        <label>teos/teostestlib.hpp</label>
+        <link refid="teostestlib_8hpp_source"/>
+      </node>
+      <node id="424">
+        <label>teos_lib/include/teoslib/command/create_commands.hpp</label>
+        <link refid="create__commands_8hpp_source"/>
+        <childnode refid="425" relation="include">
+        </childnode>
+        <childnode refid="426" relation="include">
+        </childnode>
+      </node>
+      <node id="427">
+        <label>teos_lib/include/teoslib/command/get_commands.hpp</label>
+        <link refid="get__commands_8hpp"/>
+        <childnode refid="425" relation="include">
+        </childnode>
+        <childnode refid="426" relation="include">
+        </childnode>
+      </node>
+      <node id="426">
+        <label>teos_lib/include/teoslib/teoslib.hpp</label>
+        <link refid="teoslib_8hpp"/>
+        <childnode refid="425" relation="include">
+        </childnode>
+      </node>
+      <node id="428">
+        <label>teos_lib/include/teoslib/command/other_commands.hpp</label>
+        <link refid="other__commands_8hpp_source"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classteos_1_1_teos_command" prot="public">teos::TeosCommand</innerclass>
+    <innerclass refid="classteos_1_1_command_options" prot="public">teos::CommandOptions</innerclass>
+    <innernamespace refid="namespaceteos">teos</innernamespace>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="command_8hpp_1aba176152ccdd4a378174a5de6dfd28c3" prot="public" static="no">
+        <name>TOKENIKA_WALLET</name>
+        <initializer>&quot;tokenikaWallet&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command.hpp" line="16" column="9" bodyfile="teos_lib/include/teoslib/command.hpp" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="command_8hpp_1ae9a7c17dc3f1916a3e37ac1968874850" prot="public" static="no" mutable="no">
+        <type>const string</type>
+        <definition>const string walletCommandPath</definition>
+        <argsstring></argsstring>
+        <name>walletCommandPath</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command.hpp" line="22" column="1" bodyfile="teos_lib/command/teos_wallet_commands.cpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Tool for sending transactions and querying state from EOS blockchain. </para>    </briefdescription>
+    <detaileddescription>
+<para><simplesect kind="copyright"><para>defined in resources/LICENSE.txt Base definitions.</para></simplesect>
+Defines base classes of the project, and helper methods. </para>    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"></codeline>
+<codeline lineno="11"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/control.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/control/config.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TOKENIKA_WALLET<sp/>&quot;tokenikaWallet&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacestd" kindref="compound">std</ref>;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceboost_1_1program__options" kindref="compound">boost::program_options</ref>;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceboost_1_1property__tree" kindref="compound">boost::property_tree</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>walletCommandPath;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceteos" kindref="compound">teos</ref><sp/></highlight></codeline>
+<codeline lineno="25"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="26" refid="classteos_1_1_teos_command" refkind="compound"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classteos_1_1_teos_command" kindref="compound">TeosCommand</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>path_;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>callEosd();</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>normRequest(ptree&amp;<sp/>reqJson);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>normResponse(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>response,<sp/>ptree<sp/>&amp;respJson);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>isWalletCommand()<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>path_.find(walletCommandPath)<sp/>!=<sp/>std::string::npos;<sp/>};</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>httpAddress;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>httpWalletAddress;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classteos_1_1_teos_command" kindref="compound">TeosCommand</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>path,<sp/>ptree<sp/>reqJson);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classteos_1_1_teos_command" kindref="compound">TeosCommand</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>path);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classteos_1_1_teos_command" kindref="compound">TeosCommand</ref>(</highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>errorMsg,<sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>errorSender){</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>errorRespJson(errorSender,<sp/>errorMsg);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classteos_1_1_teos_command" kindref="compound">TeosCommand</ref>()<sp/>{}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>copy(<ref refid="classteos_1_1_teos_command" kindref="compound">TeosCommand</ref><sp/>teosCommand)<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>path_<sp/>=<sp/>teosCommand.path_;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>reqJson_<sp/>=<sp/>teosCommand.reqJson_;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>respJson_<sp/>=<sp/>teosCommand.respJson_;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>isError_<sp/>=<sp/>teosCommand.isError_;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55" refid="classteos_1_1_command_options" refkind="compound"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classteos_1_1_command_options" kindref="compound">CommandOptions</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classteos_1_1_control_options" kindref="compound">ControlOptions</ref></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>options_description<sp/>groupOptionDescription()<sp/>{</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">control<sp/>=<sp/><ref refid="namespaceteos_1_1control" kindref="compound">teos::control</ref>;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>options_description<sp/>od(</highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>od.add_options()</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;address,a&quot;</highlight><highlight class="normal">,<sp/>value&lt;string&gt;(&amp;(TeosCommand::httpAddress))</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-&gt;default_value(TeosCommand::httpAddress.empty()<sp/></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>?<sp/>teos::control::getHttpWalletAddress(</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>TeosCommand::httpAddress),</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;The<sp/>http<sp/>address<sp/>(host:port)<sp/>of<sp/>the<sp/>EOSIO<sp/>daemon.&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="stringliteral">&quot;wallet,w&quot;</highlight><highlight class="normal">,<sp/>value&lt;string&gt;(&amp;(TeosCommand::httpWalletAddress))</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>-&gt;default_value(TeosCommand::httpWalletAddress.empty()</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>?<sp/>teos::control::getHttpWalletAddress(</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>TeosCommand::httpWalletAddress),</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;The<sp/>http<sp/>address<sp/>(host:port)<sp/>where<sp/>eos-wallet<sp/>is<sp/>running.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>od.add(ControlOptions::groupOptionDescription());</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>od;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classteos_1_1_command_options" kindref="compound">CommandOptions</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*argv[])<sp/>:<sp/><ref refid="classteos_1_1_control_options" kindref="compound">ControlOptions</ref>(argc,<sp/>argv)<sp/>{}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>options_description<sp/>httpOptions();</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/>};</highlight></codeline>
+<codeline lineno="82"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="teos_lib/include/teoslib/command.hpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,391 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classteos_1_1command_1_1_create_account_options" kind="class" language="C++" prot="public">
+    <compoundname>teos::command::CreateAccountOptions</compoundname>
+    <basecompoundref refid="classteos_1_1_command_options" prot="public" virt="non-virtual">teos::CommandOptions</basecompoundref>
+    <includes refid="create__commands_8hpp" local="no">create_commands.hpp</includes>
+      <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1a242584daf28306388158a4be3cc599d2" prot="protected" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teos::command::CreateAccountOptions::permission</definition>
+        <argsstring></argsstring>
+        <name>permission</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="99" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1a3c047b24f9efe02637569d2d944ad0dc" prot="protected" static="no" mutable="no">
+        <type>unsigned</type>
+        <definition>unsigned teos::command::CreateAccountOptions::expiration</definition>
+        <argsstring></argsstring>
+        <name>expiration</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="100" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1a99e99fe49e9f88ac06d8e0f52e9c2ea5" prot="protected" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool teos::command::CreateAccountOptions::skipSignature</definition>
+        <argsstring></argsstring>
+        <name>skipSignature</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="101" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1a0f017486e409d3037355d0a164a2e4e0" prot="protected" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool teos::command::CreateAccountOptions::dontBroadcast</definition>
+        <argsstring></argsstring>
+        <name>dontBroadcast</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="102" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1adb4da4cc70268eaa54414bf1c73ee604" prot="protected" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool teos::command::CreateAccountOptions::forceUnique</definition>
+        <argsstring></argsstring>
+        <name>forceUnique</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="103" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1adb934651202adf807e9722de99727501" prot="protected" static="no" mutable="no">
+        <type>unsigned</type>
+        <definition>unsigned teos::command::CreateAccountOptions::maxCpuUsage</definition>
+        <argsstring></argsstring>
+        <name>maxCpuUsage</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="104" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1a24c6ed3d29a86fb662abed2e46568477" prot="protected" static="no" mutable="no">
+        <type>unsigned</type>
+        <definition>unsigned teos::command::CreateAccountOptions::maxNetUsage</definition>
+        <argsstring></argsstring>
+        <name>maxNetUsage</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="105" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1af9576b1dac22ecac291ac0b850dd33e1" prot="protected" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teos::command::CreateAccountOptions::creator</definition>
+        <argsstring></argsstring>
+        <name>creator</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="107" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1a3eb4bc50ad5681004a3e50250cab96f2" prot="protected" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teos::command::CreateAccountOptions::name</definition>
+        <argsstring></argsstring>
+        <name>name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="108" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1a87425103161912ddcf3ff2cc8b477273" prot="protected" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teos::command::CreateAccountOptions::ownerKey</definition>
+        <argsstring></argsstring>
+        <name>ownerKey</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="109" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classteos_1_1command_1_1_create_account_options_1a9a68bb2c9e028001b47ad880a8f2ec0b" prot="protected" static="no" mutable="no">
+        <type>string</type>
+        <definition>string teos::command::CreateAccountOptions::activeKey</definition>
+        <argsstring></argsstring>
+        <name>activeKey</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="110" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classteos_1_1command_1_1_create_account_options_1a885bd48ad537054b0541bcc82e2848c7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>teos::command::CreateAccountOptions::CreateAccountOptions</definition>
+        <argsstring>(int argc, const char **argv)</argsstring>
+        <name>CreateAccountOptions</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>const char **</type>
+          <declname>argv</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="68" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="68" bodyend="69"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classteos_1_1command_1_1_create_account_options_1ae755f847b91be57be448f6ed3a8b8009" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>string</type>
+        <definition>string teos::command::CreateAccountOptions::getTransactionUsage</definition>
+        <argsstring>()</argsstring>
+        <name>getTransactionUsage</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="73" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="73" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_create_account_options_1af5c13799a676966824e5e9e47b1af180" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>const char *</type>
+        <definition>const char* teos::command::CreateAccountOptions::getUsage</definition>
+        <argsstring>()</argsstring>
+        <name>getUsage</name>
+        <reimplements refid="classteos_1_1_control_options_1a0aa5671f9bc750ed5280c26c543874f3">getUsage</reimplements>
+        <briefdescription>
+<para>Command &apos;usage&apos; instruction. </para>        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>usage text </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="86" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="86" bodyend="97"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_create_account_options_1aaaa292c801f19000ed073ca752a34ce2" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>options_description</type>
+        <definition>options_description teos::command::CreateAccountOptions::transactionOptions</definition>
+        <argsstring>()</argsstring>
+        <name>transactionOptions</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="113" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="113" bodyend="141"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_create_account_options_1aed8f14bd484aaecff46a27f1dd1288cd" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>options_description</type>
+        <definition>options_description teos::command::CreateAccountOptions::argumentDescription</definition>
+        <argsstring>()</argsstring>
+        <name>argumentDescription</name>
+        <reimplements refid="classteos_1_1_control_options_1a611508b33386c2a2465e68b333b51c5f">argumentDescription</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="143" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="143" bodyend="155"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_create_account_options_1a892d104e8131e44a8420f8aca3a590a3" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void teos::command::CreateAccountOptions::setPosDesc</definition>
+        <argsstring>(positional_options_description &amp;pos_desc)</argsstring>
+        <name>setPosDesc</name>
+        <reimplements refid="classteos_1_1_control_options_1a606085ad334d59eafc103be85e3be146">setPosDesc</reimplements>
+        <param>
+          <type>positional_options_description &amp;</type>
+          <declname>pos_desc</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="157" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="157" bodyend="162"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_create_account_options_1af5aab64759b629ccdc261f4e3f434a3e" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void teos::command::CreateAccountOptions::transactionArgs</definition>
+        <argsstring>()</argsstring>
+        <name>transactionArgs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="164" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="164" bodyend="172"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_create_account_options_1a481f9c6206512f1afc8bc6729f8dc76b" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>bool</type>
+        <definition>bool teos::command::CreateAccountOptions::checkArguments</definition>
+        <argsstring>(variables_map &amp;vm)</argsstring>
+        <name>checkArguments</name>
+        <reimplements refid="classteos_1_1_control_options_1a2916fdad936906cec8496b5952936cae">checkArguments</reimplements>
+        <param>
+          <type>variables_map &amp;</type>
+          <declname>vm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="174" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="174" bodyend="204"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_create_account_options_1a60ecaec7f5e305ee8c97844cbcdda197" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></type>
+        <definition>TeosControl teos::command::CreateAccountOptions::executeCommand</definition>
+        <argsstring>()</argsstring>
+        <name>executeCommand</name>
+        <reimplements refid="classteos_1_1_control_options_1afc04b2ed27c6b2497a95890498d403d0">executeCommand</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="206" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="206" bodyend="208"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_create_account_options_1a2f4f089db5a69624545292ad2243bc11" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void teos::command::CreateAccountOptions::printout</definition>
+        <argsstring>(TeosControl command, variables_map &amp;vm)</argsstring>
+        <name>printout</name>
+        <reimplements refid="classteos_1_1_control_options_1a33001fdd58dea6056f683a8e280c245e">printout</reimplements>
+        <param>
+          <type><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></type>
+          <declname>command</declname>
+        </param>
+        <param>
+          <type>variables_map &amp;</type>
+          <declname>vm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="210" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="210" bodyend="212"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Command-line driver for the <ref refid="classteos_1_1command_1_1_create_account" kindref="compound">CreateAccount</ref> class. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="110">
+        <label>teos::CommandOptions</label>
+        <link refid="classteos_1_1_command_options"/>
+        <childnode refid="111" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="111">
+        <label>teos::ControlOptions</label>
+        <link refid="classteos_1_1_control_options"/>
+      </node>
+      <node id="109">
+        <label>teos::command::CreateAccountOptions</label>
+        <link refid="classteos_1_1command_1_1_create_account_options"/>
+        <childnode refid="110" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="113">
+        <label>teos::CommandOptions</label>
+        <link refid="classteos_1_1_command_options"/>
+        <childnode refid="114" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="114">
+        <label>teos::ControlOptions</label>
+        <link refid="classteos_1_1_control_options"/>
+      </node>
+      <node id="112">
+        <label>teos::command::CreateAccountOptions</label>
+        <link refid="classteos_1_1command_1_1_create_account_options"/>
+        <childnode refid="113" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="teos_lib/include/teoslib/command/create_commands.hpp" line="66" column="1" bodyfile="teos_lib/include/teoslib/command/create_commands.hpp" bodystart="65" bodyend="213"/>
+    <listofallmembers>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a9a68bb2c9e028001b47ad880a8f2ec0b" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>activeKey</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1aed8f14bd484aaecff46a27f1dd1288cd" prot="protected" virt="virtual"><scope>teos::command::CreateAccountOptions</scope><name>argumentDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a490f2d5ea05e92a5996beaa6d40c5c32" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>basicOptionDescription</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a481f9c6206512f1afc8bc6729f8dc76b" prot="protected" virt="virtual"><scope>teos::command::CreateAccountOptions</scope><name>checkArguments</name></member>
+      <member refid="classteos_1_1_command_options_1aa0fc4c9930fe2bf479abdbe187a4ca65" prot="public" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>CommandOptions</name></member>
+      <member refid="classteos_1_1_control_options_1ae997028704fe0f8086096d7fa4b71ee9" prot="public" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>ControlOptions</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a885bd48ad537054b0541bcc82e2848c7" prot="public" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>CreateAccountOptions</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1af9576b1dac22ecac291ac0b850dd33e1" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>creator</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a0f017486e409d3037355d0a164a2e4e0" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>dontBroadcast</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a60ecaec7f5e305ee8c97844cbcdda197" prot="protected" virt="virtual"><scope>teos::command::CreateAccountOptions</scope><name>executeCommand</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a3c047b24f9efe02637569d2d944ad0dc" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>expiration</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1adb4da4cc70268eaa54414bf1c73ee604" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>forceUnique</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1ae755f847b91be57be448f6ed3a8b8009" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>getTransactionUsage</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1af5c13799a676966824e5e9e47b1af180" prot="protected" virt="virtual"><scope>teos::command::CreateAccountOptions</scope><name>getUsage</name></member>
+      <member refid="classteos_1_1_control_options_1ad3496976524c0ca5288018725119fb39" prot="public" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>go</name></member>
+      <member refid="classteos_1_1_command_options_1ad9cb8c834296b2c5dee2a82c006bfa0c" prot="protected" virt="virtual"><scope>teos::command::CreateAccountOptions</scope><name>groupOptionDescription</name></member>
+      <member refid="classteos_1_1_command_options_1a64481990f4f43f58491bb5def15006c5" prot="public" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>httpOptions</name></member>
+      <member refid="classteos_1_1_control_options_1a385705bd05cf4cc33892f51737585f9b" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>json_</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1adb934651202adf807e9722de99727501" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>maxCpuUsage</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a24c6ed3d29a86fb662abed2e46568477" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>maxNetUsage</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a3eb4bc50ad5681004a3e50250cab96f2" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>name</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a87425103161912ddcf3ff2cc8b477273" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>ownerKey</name></member>
+      <member refid="classteos_1_1_control_options_1a46025212b1afd9b9e56914844512ac24" prot="protected" virt="virtual"><scope>teos::command::CreateAccountOptions</scope><name>parseGroupVariablesMap</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a242584daf28306388158a4be3cc599d2" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>permission</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a2f4f089db5a69624545292ad2243bc11" prot="protected" virt="virtual"><scope>teos::command::CreateAccountOptions</scope><name>printout</name></member>
+      <member refid="classteos_1_1_control_options_1aef27b07fd43f5e553f20138deb57657a" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>reqJson_</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a892d104e8131e44a8420f8aca3a590a3" prot="protected" virt="virtual"><scope>teos::command::CreateAccountOptions</scope><name>setPosDesc</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1a99e99fe49e9f88ac06d8e0f52e9c2ea5" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>skipSignature</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1af5aab64759b629ccdc261f4e3f434a3e" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>transactionArgs</name></member>
+      <member refid="classteos_1_1command_1_1_create_account_options_1aaaa292c801f19000ed073ca752a34ce2" prot="protected" virt="non-virtual"><scope>teos::command::CreateAccountOptions</scope><name>transactionOptions</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

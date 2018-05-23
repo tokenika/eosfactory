@@ -1,0 +1,426 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="test1_8cpp" kind="file" language="C++">
+    <compoundname>test1.cpp</compoundname>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">iostream</includes>
+    <includes local="no">string</includes>
+    <includes local="no">boost/property_tree/ptree.hpp</includes>
+    <includes refid="daemon__controls_8hpp" local="no">teoslib/control/daemon_controls.hpp</includes>
+    <includes refid="get__commands_8hpp" local="no">teoslib/command/get_commands.hpp</includes>
+    <includes refid="create__commands_8hpp" local="no">teoslib/command/create_commands.hpp</includes>
+    <includes refid="set__commands_8hpp" local="no">teoslib/command/set_commands.hpp</includes>
+    <includes refid="wallet__commands_8hpp" local="no">teoslib/command/wallet_commands.hpp</includes>
+    <includes refid="push__commands_8hpp" local="no">teoslib/command/push_commands.hpp</includes>
+    <includes refid="teostestlib_8hpp" local="yes">teostestlib.hpp</includes>
+    <incdepgraph>
+      <node id="98">
+        <label>teoslib/control/daemon_controls.hpp</label>
+        <link refid="daemon__controls_8hpp_source"/>
+        <childnode refid="96" relation="include">
+        </childnode>
+        <childnode refid="99" relation="include">
+        </childnode>
+      </node>
+      <node id="112">
+        <label>boost/algorithm/string.hpp</label>
+      </node>
+      <node id="107">
+        <label>teoslib/control/config.hpp</label>
+        <link refid="config_8hpp_source"/>
+        <childnode refid="94" relation="include">
+        </childnode>
+        <childnode refid="96" relation="include">
+        </childnode>
+        <childnode refid="108" relation="include">
+        </childnode>
+        <childnode refid="99" relation="include">
+        </childnode>
+      </node>
+      <node id="94">
+        <label>stdlib.h</label>
+      </node>
+      <node id="115">
+        <label>boost/foreach.hpp</label>
+      </node>
+      <node id="102">
+        <label>boost/format.hpp</label>
+      </node>
+      <node id="92">
+        <label>teos/test1.cpp</label>
+        <link refid="test1_8cpp"/>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="94" relation="include">
+        </childnode>
+        <childnode refid="95" relation="include">
+        </childnode>
+        <childnode refid="96" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="98" relation="include">
+        </childnode>
+        <childnode refid="105" relation="include">
+        </childnode>
+        <childnode refid="110" relation="include">
+        </childnode>
+        <childnode refid="113" relation="include">
+        </childnode>
+        <childnode refid="114" relation="include">
+        </childnode>
+        <childnode refid="118" relation="include">
+        </childnode>
+        <childnode refid="119" relation="include">
+        </childnode>
+      </node>
+      <node id="96">
+        <label>string</label>
+      </node>
+      <node id="106">
+        <label>teoslib/command.hpp</label>
+        <link refid="command_8hpp"/>
+        <childnode refid="99" relation="include">
+        </childnode>
+        <childnode refid="107" relation="include">
+        </childnode>
+      </node>
+      <node id="101">
+        <label>boost/program_options.hpp</label>
+      </node>
+      <node id="109">
+        <label>teoslib/eos_interface.hpp</label>
+        <link refid="eos__interface_8hpp_source"/>
+        <childnode refid="94" relation="include">
+        </childnode>
+        <childnode refid="96" relation="include">
+        </childnode>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="118">
+        <label>teoslib/command/push_commands.hpp</label>
+        <link refid="push__commands_8hpp_source"/>
+        <childnode refid="111" relation="include">
+        </childnode>
+        <childnode refid="112" relation="include">
+        </childnode>
+        <childnode refid="104" relation="include">
+        </childnode>
+        <childnode refid="109" relation="include">
+        </childnode>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="103">
+        <label>teoslib/utilities.hpp</label>
+        <link refid="utilities_8hpp_source"/>
+        <childnode refid="94" relation="include">
+        </childnode>
+        <childnode refid="96" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="100" relation="include">
+        </childnode>
+      </node>
+      <node id="114">
+        <label>teoslib/command/wallet_commands.hpp</label>
+        <link refid="wallet__commands_8hpp_source"/>
+        <childnode refid="100" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="115" relation="include">
+        </childnode>
+        <childnode refid="116" relation="include">
+        </childnode>
+        <childnode refid="117" relation="include">
+        </childnode>
+        <childnode refid="104" relation="include">
+        </childnode>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="113">
+        <label>teoslib/command/set_commands.hpp</label>
+        <link refid="set__commands_8hpp_source"/>
+        <childnode refid="104" relation="include">
+        </childnode>
+        <childnode refid="109" relation="include">
+        </childnode>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="100">
+        <label>boost/date_time/posix_time/posix_time.hpp</label>
+      </node>
+      <node id="104">
+        <label>teoslib/config.h</label>
+        <link refid="lib_2include_2teoslib_2config_8h_source"/>
+      </node>
+      <node id="99">
+        <label>teoslib/control.hpp</label>
+        <link refid="control_8hpp_source"/>
+        <childnode refid="94" relation="include">
+        </childnode>
+        <childnode refid="96" relation="include">
+        </childnode>
+        <childnode refid="95" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="100" relation="include">
+        </childnode>
+        <childnode refid="101" relation="include">
+        </childnode>
+        <childnode refid="102" relation="include">
+        </childnode>
+        <childnode refid="103" relation="include">
+        </childnode>
+        <childnode refid="104" relation="include">
+        </childnode>
+      </node>
+      <node id="119">
+        <label>teostestlib.hpp</label>
+        <link refid="teostestlib_8hpp_source"/>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="94" relation="include">
+        </childnode>
+        <childnode refid="95" relation="include">
+        </childnode>
+        <childnode refid="96" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="120" relation="include">
+        </childnode>
+        <childnode refid="105" relation="include">
+        </childnode>
+        <childnode refid="110" relation="include">
+        </childnode>
+        <childnode refid="113" relation="include">
+        </childnode>
+        <childnode refid="114" relation="include">
+        </childnode>
+        <childnode refid="118" relation="include">
+        </childnode>
+        <childnode refid="121" relation="include">
+        </childnode>
+      </node>
+      <node id="116">
+        <label>boost/property_tree/json_parser.hpp</label>
+      </node>
+      <node id="110">
+        <label>teoslib/command/create_commands.hpp</label>
+        <link refid="create__commands_8hpp_source"/>
+        <childnode refid="111" relation="include">
+        </childnode>
+        <childnode refid="112" relation="include">
+        </childnode>
+        <childnode refid="104" relation="include">
+        </childnode>
+        <childnode refid="109" relation="include">
+        </childnode>
+        <childnode refid="106" relation="include">
+        </childnode>
+      </node>
+      <node id="111">
+        <label>vector</label>
+      </node>
+      <node id="108">
+        <label>boost/filesystem.hpp</label>
+      </node>
+      <node id="97">
+        <label>boost/property_tree/ptree.hpp</label>
+      </node>
+      <node id="95">
+        <label>iostream</label>
+      </node>
+      <node id="105">
+        <label>teoslib/command/get_commands.hpp</label>
+        <link refid="get__commands_8hpp"/>
+        <childnode refid="100" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="104" relation="include">
+        </childnode>
+        <childnode refid="106" relation="include">
+        </childnode>
+        <childnode refid="109" relation="include">
+        </childnode>
+      </node>
+      <node id="120">
+        <label>teoslib/control/build_contract.hpp</label>
+        <link refid="build__contract_8hpp_source"/>
+        <childnode refid="108" relation="include">
+        </childnode>
+        <childnode refid="99" relation="include">
+        </childnode>
+      </node>
+      <node id="121">
+        <label>teoslib/teoslib.hpp</label>
+        <link refid="teoslib_8hpp"/>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="94" relation="include">
+        </childnode>
+        <childnode refid="95" relation="include">
+        </childnode>
+        <childnode refid="96" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="108" relation="include">
+        </childnode>
+        <childnode refid="120" relation="include">
+        </childnode>
+        <childnode refid="105" relation="include">
+        </childnode>
+        <childnode refid="110" relation="include">
+        </childnode>
+        <childnode refid="113" relation="include">
+        </childnode>
+        <childnode refid="114" relation="include">
+        </childnode>
+        <childnode refid="118" relation="include">
+        </childnode>
+      </node>
+      <node id="117">
+        <label>boost/algorithm/string/replace.hpp</label>
+      </node>
+      <node id="93">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="test1_8cpp_1ac0f2228420376f4db7e1274f2b41667c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int main</definition>
+        <argsstring>(int argc, const char *argv[])</argsstring>
+        <name>main</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>argv</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos/test1.cpp" line="21" column="1" bodyfile="teos/test1.cpp" bodystart="21" bodyend="95"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/property_tree/ptree.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/control/daemon_controls.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="get__commands_8hpp" kindref="compound">teoslib/command/get_commands.hpp</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/command/create_commands.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/command/set_commands.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/command/wallet_commands.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;teoslib/command/push_commands.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;teostestlib.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacestd" kindref="compound">std</ref>;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceteoslib" kindref="compound">teoslib</ref>;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*argv[])<sp/>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacestd" kindref="compound">std</ref>;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceteoslib" kindref="compound">teoslib</ref>;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceboost_1_1property__tree" kindref="compound">boost::property_tree</ref>;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><ref refid="classteoslib_1_1_account_eosio" kindref="compound">AccountEosio</ref>*<sp/><ref refid="namespaceeosio" kindref="compound">eosio</ref>;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><ref refid="classteoslib_1_1_wallet" kindref="compound">Wallet</ref>*<sp/>wallet;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><ref refid="classteoslib_1_1_key" kindref="compound">Key</ref>*<sp/>key_owner;<sp/></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><ref refid="classteoslib_1_1_key" kindref="compound">Key</ref>*<sp/>key_active;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><ref refid="classteoslib_1_1_account" kindref="compound">Account</ref>*<sp/>alice;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><ref refid="classteoslib_1_1_account" kindref="compound">Account</ref>*<sp/>bob;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><ref refid="classteoslib_1_1_account" kindref="compound">Account</ref>*<sp/>carol;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/>setup(<ref refid="namespaceeosio" kindref="compound">eosio</ref>,<sp/>wallet,<sp/>key_owner,<sp/>key_active,<sp/>alice,<sp/>bob,<sp/>carol);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">string</highlight><highlight class="normal"><sp/>name<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;eosio.token&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><ref refid="classteoslib_1_1_account" kindref="compound">Account</ref><sp/>account_contract(*<ref refid="namespaceeosio" kindref="compound">eosio</ref>,<sp/>name,<sp/>*key_owner,<sp/>*key_active);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;code:<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>account_contract.code()<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><ref refid="classteoslib_1_1_contract" kindref="compound">Contract</ref><sp/>contract(account_contract,<sp/>name);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/>contract.deploy();</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>cout<sp/>&lt;&lt;<sp/>&quot;transaction<sp/>ID:<sp/>&quot;<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/>&lt;&lt;<sp/>contract.setContract_-&gt;respJson_.get&lt;string&gt;(&quot;transaction_id&quot;)<sp/>&lt;&lt;<sp/>endl;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;code:<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>account_contract.code()<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/>contract.push_action(</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;create&quot;</highlight><highlight class="normal">,<sp/></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>R</highlight><highlight class="stringliteral">&quot;({&quot;issuer&quot;:&quot;eosio&quot;,<sp/>&quot;maximum_supply&quot;:&quot;1000000000.0000<sp/>EOS&quot;,<sp/>&quot;can_freeze&quot;:0,<sp/>&quot;can_recall&quot;:0,<sp/>&quot;can_whitelist&quot;:0})&quot;);</highlight></codeline>
+<codeline lineno="49"><highlight class="stringliteral"><sp/><sp/></highlight><highlight class="comment">//<sp/>cout<sp/>&lt;&lt;<sp/>&quot;create<sp/>action<sp/>transaction<sp/>ID:<sp/>&quot;<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/>&lt;&lt;<sp/>contract.action_-&gt;respJson_.get&lt;string&gt;(&quot;transaction_id&quot;)<sp/>&lt;&lt;<sp/>endl;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>contract.console_<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/>contract.push_action(</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;issue&quot;</highlight><highlight class="normal">,<sp/></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>R</highlight><highlight class="stringliteral">&quot;({&quot;to&quot;:&quot;alice&quot;,<sp/>&quot;quantity&quot;:&quot;100.0000<sp/>EOS&quot;,<sp/>&quot;memo&quot;:&quot;memo&quot;})&quot;,<sp/><ref refid="namespaceeosio" kindref="compound">eosio</ref>);</highlight></codeline>
+<codeline lineno="56"><highlight class="stringliteral"><sp/><sp/></highlight><highlight class="comment">//<sp/>cout<sp/>&lt;&lt;<sp/>&quot;issue<sp/>action<sp/>transaction<sp/>ID:<sp/>&quot;<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/>&lt;&lt;<sp/>contract.action_-&gt;respJson_.get&lt;string&gt;(&quot;transaction_id&quot;)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>contract.console_<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/>contract.push_action(</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;transfer&quot;</highlight><highlight class="normal">,<sp/></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>R</highlight><highlight class="stringliteral">&quot;({&quot;from&quot;:&quot;alice&quot;,<sp/>&quot;to&quot;:&quot;carol&quot;,<sp/>&quot;quantity&quot;:&quot;25.0000<sp/>EOS&quot;,<sp/>&quot;memo&quot;:&quot;memo&quot;})&quot;,<sp/></highlight></codeline>
+<codeline lineno="63"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>alice);</highlight></codeline>
+<codeline lineno="64"><highlight class="stringliteral"><sp/><sp/></highlight><highlight class="comment">//<sp/>cout<sp/>&lt;&lt;<sp/>&quot;transfer<sp/>action<sp/>transaction<sp/>ID:<sp/>&quot;<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/>&lt;&lt;<sp/>contract.action_-&gt;respJson_.get&lt;string&gt;(&quot;transaction_id&quot;)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>contract.console_<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/>contract.push_action(</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;transfer&quot;</highlight><highlight class="normal">,<sp/></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/>R</highlight><highlight class="stringliteral">&quot;({&quot;from&quot;:&quot;carol&quot;,<sp/>&quot;to&quot;:&quot;bob&quot;,<sp/>&quot;quantity&quot;:&quot;13.0000<sp/>EOS&quot;,<sp/>&quot;memo&quot;:&quot;memo&quot;})&quot;,<sp/></highlight></codeline>
+<codeline lineno="71"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>carol);</highlight></codeline>
+<codeline lineno="72"><highlight class="stringliteral"><sp/><sp/></highlight><highlight class="comment">//<sp/>cout<sp/>&lt;&lt;<sp/>&quot;transfer<sp/>action<sp/>transaction<sp/>ID:<sp/>&quot;<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/>&lt;&lt;<sp/>contract.action_-&gt;respJson_.get&lt;string&gt;(&quot;transaction_id&quot;)<sp/>&lt;&lt;<sp/>endl;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>contract.console_<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/>contract.push_action(</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;transfer&quot;</highlight><highlight class="normal">,<sp/></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>R</highlight><highlight class="stringliteral">&quot;({&quot;from&quot;:&quot;bob&quot;,<sp/>&quot;to&quot;:&quot;alice&quot;,<sp/>&quot;quantity&quot;:&quot;2.0000<sp/>EOS&quot;,<sp/>&quot;memo&quot;:&quot;memo&quot;})&quot;,<sp/>bob);</highlight></codeline>
+<codeline lineno="79"><highlight class="stringliteral"><sp/><sp/></highlight><highlight class="comment">//<sp/>cout<sp/>&lt;&lt;<sp/>&quot;transfer<sp/>action<sp/>transaction<sp/>ID:<sp/>&quot;<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/>&lt;&lt;<sp/>contract.action_-&gt;respJson_.get&lt;string&gt;(&quot;transaction_id&quot;)<sp/>&lt;&lt;<sp/>endl;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>contract.console_<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/>boost::property_tree::ptree<sp/>t1<sp/>=<sp/>contract.get_table(</highlight><highlight class="stringliteral">&quot;accounts&quot;</highlight><highlight class="normal">,<sp/>alice);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;t1<sp/>balance:<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>t1.get(</highlight><highlight class="stringliteral">&quot;rows..balance&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;ERROR!&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/>boost::property_tree::ptree<sp/>t2<sp/>=<sp/>contract.get_table(</highlight><highlight class="stringliteral">&quot;accounts&quot;</highlight><highlight class="normal">,<sp/>bob);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;t2<sp/>balance:<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>t2.get(</highlight><highlight class="stringliteral">&quot;rows..balance&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;ERROR!&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/>boost::property_tree::ptree<sp/>t3<sp/>=<sp/>contract.get_table(</highlight><highlight class="stringliteral">&quot;accounts&quot;</highlight><highlight class="normal">,<sp/>carol);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;t3<sp/>balance:<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>t3.get(</highlight><highlight class="stringliteral">&quot;rows..balance&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;ERROR!&quot;</highlight><highlight class="normal">)<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/>teardown(<ref refid="namespaceeosio" kindref="compound">eosio</ref>,<sp/>wallet,<sp/>key_owner,<sp/>key_active,<sp/>alice,<sp/>bob,<sp/>carol);<sp/></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="teos/test1.cpp"/>
+  </compounddef>
+</doxygen>

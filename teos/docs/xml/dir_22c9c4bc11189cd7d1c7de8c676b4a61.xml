@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="dir_22c9c4bc11189cd7d1c7de8c676b4a61" kind="dir">
+    <compoundname>teos_lib/include/teoslib</compoundname>
+    <innerdir refid="dir_48cad55c096d67cc20f4ab4051fcb1ad">teos_lib/include/teoslib/command</innerdir>
+    <innerdir refid="dir_528b674a425b3387cb5fc65878347ac7">teos_lib/include/teoslib/control</innerdir>
+    <innerfile refid="command_8hpp">command.hpp</innerfile>
+    <innerfile refid="lib_2include_2teoslib_2config_8h">config.h</innerfile>
+    <innerfile refid="control_8hpp">control.hpp</innerfile>
+    <innerfile refid="eos__interface_8hpp">eos_interface.hpp</innerfile>
+    <innerfile refid="teoslib_8hpp">teoslib.hpp</innerfile>
+    <innerfile refid="utilities_8hpp">utilities.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="teos_lib/include/teoslib/"/>
+  </compounddef>
+</doxygen>

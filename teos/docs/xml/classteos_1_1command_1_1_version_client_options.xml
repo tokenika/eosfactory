@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classteos_1_1command_1_1_version_client_options" kind="class" language="C++" prot="public">
+    <compoundname>teos::command::VersionClientOptions</compoundname>
+    <basecompoundref refid="classteos_1_1_command_options" prot="public" virt="non-virtual">teos::CommandOptions</basecompoundref>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classteos_1_1command_1_1_version_client_options_1a989412affdf0f88746ddb855434412e6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>teos::command::VersionClientOptions::VersionClientOptions</definition>
+        <argsstring>(int argc, const char **argv)</argsstring>
+        <name>VersionClientOptions</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>const char **</type>
+          <declname>argv</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/other_commands.hpp" line="25" column="1" bodyfile="teos_lib/include/teoslib/command/other_commands.hpp" bodystart="25" bodyend="26"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classteos_1_1command_1_1_version_client_options_1a28b69107e8eb50a2faf9594958bb1d6d" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>const char *</type>
+        <definition>const char* teos::command::VersionClientOptions::getUsage</definition>
+        <argsstring>()</argsstring>
+        <name>getUsage</name>
+        <reimplements refid="classteos_1_1_control_options_1a0aa5671f9bc750ed5280c26c543874f3">getUsage</reimplements>
+        <briefdescription>
+<para>Command &apos;usage&apos; instruction. </para>        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>usage text </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/other_commands.hpp" line="29" column="1" bodyfile="teos_lib/include/teoslib/command/other_commands.hpp" bodystart="29" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_version_client_options_1a8cd89cab3d5a38971de1c75facc7a47d" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></type>
+        <definition>TeosControl teos::command::VersionClientOptions::executeCommand</definition>
+        <argsstring>()</argsstring>
+        <name>executeCommand</name>
+        <reimplements refid="classteos_1_1_control_options_1afc04b2ed27c6b2497a95890498d403d0">executeCommand</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/other_commands.hpp" line="37" column="1" bodyfile="teos_lib/include/teoslib/command/other_commands.hpp" bodystart="37" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_version_client_options_1a1b6021ecadaaed16af399487d573b9f1" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void teos::command::VersionClientOptions::printout</definition>
+        <argsstring>(TeosControl command, variables_map &amp;vm)</argsstring>
+        <name>printout</name>
+        <reimplements refid="classteos_1_1_control_options_1a33001fdd58dea6056f683a8e280c245e">printout</reimplements>
+        <param>
+          <type><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></type>
+          <declname>command</declname>
+        </param>
+        <param>
+          <type>variables_map &amp;</type>
+          <declname>vm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/other_commands.hpp" line="41" column="1" bodyfile="teos_lib/include/teoslib/command/other_commands.hpp" bodystart="41" bodyend="43"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="347">
+        <label>teos::CommandOptions</label>
+        <link refid="classteos_1_1_command_options"/>
+        <childnode refid="348" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="348">
+        <label>teos::ControlOptions</label>
+        <link refid="classteos_1_1_control_options"/>
+      </node>
+      <node id="346">
+        <label>teos::command::VersionClientOptions</label>
+        <link refid="classteos_1_1command_1_1_version_client_options"/>
+        <childnode refid="347" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="350">
+        <label>teos::CommandOptions</label>
+        <link refid="classteos_1_1_command_options"/>
+        <childnode refid="351" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="351">
+        <label>teos::ControlOptions</label>
+        <link refid="classteos_1_1_control_options"/>
+      </node>
+      <node id="349">
+        <label>teos::command::VersionClientOptions</label>
+        <link refid="classteos_1_1command_1_1_version_client_options"/>
+        <childnode refid="350" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="teos_lib/include/teoslib/command/other_commands.hpp" line="23" column="1" bodyfile="teos_lib/include/teoslib/command/other_commands.hpp" bodystart="22" bodyend="45"/>
+    <listofallmembers>
+      <member refid="classteos_1_1_control_options_1a611508b33386c2a2465e68b333b51c5f" prot="protected" virt="virtual"><scope>teos::command::VersionClientOptions</scope><name>argumentDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a490f2d5ea05e92a5996beaa6d40c5c32" prot="protected" virt="non-virtual"><scope>teos::command::VersionClientOptions</scope><name>basicOptionDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a2916fdad936906cec8496b5952936cae" prot="protected" virt="virtual"><scope>teos::command::VersionClientOptions</scope><name>checkArguments</name></member>
+      <member refid="classteos_1_1_command_options_1aa0fc4c9930fe2bf479abdbe187a4ca65" prot="public" virt="non-virtual"><scope>teos::command::VersionClientOptions</scope><name>CommandOptions</name></member>
+      <member refid="classteos_1_1_control_options_1ae997028704fe0f8086096d7fa4b71ee9" prot="public" virt="non-virtual"><scope>teos::command::VersionClientOptions</scope><name>ControlOptions</name></member>
+      <member refid="classteos_1_1command_1_1_version_client_options_1a8cd89cab3d5a38971de1c75facc7a47d" prot="protected" virt="virtual"><scope>teos::command::VersionClientOptions</scope><name>executeCommand</name></member>
+      <member refid="classteos_1_1command_1_1_version_client_options_1a28b69107e8eb50a2faf9594958bb1d6d" prot="protected" virt="virtual"><scope>teos::command::VersionClientOptions</scope><name>getUsage</name></member>
+      <member refid="classteos_1_1_control_options_1ad3496976524c0ca5288018725119fb39" prot="public" virt="non-virtual"><scope>teos::command::VersionClientOptions</scope><name>go</name></member>
+      <member refid="classteos_1_1_command_options_1ad9cb8c834296b2c5dee2a82c006bfa0c" prot="protected" virt="virtual"><scope>teos::command::VersionClientOptions</scope><name>groupOptionDescription</name></member>
+      <member refid="classteos_1_1_command_options_1a64481990f4f43f58491bb5def15006c5" prot="public" virt="non-virtual"><scope>teos::command::VersionClientOptions</scope><name>httpOptions</name></member>
+      <member refid="classteos_1_1_control_options_1a385705bd05cf4cc33892f51737585f9b" prot="protected" virt="non-virtual"><scope>teos::command::VersionClientOptions</scope><name>json_</name></member>
+      <member refid="classteos_1_1_control_options_1a46025212b1afd9b9e56914844512ac24" prot="protected" virt="virtual"><scope>teos::command::VersionClientOptions</scope><name>parseGroupVariablesMap</name></member>
+      <member refid="classteos_1_1command_1_1_version_client_options_1a1b6021ecadaaed16af399487d573b9f1" prot="protected" virt="virtual"><scope>teos::command::VersionClientOptions</scope><name>printout</name></member>
+      <member refid="classteos_1_1_control_options_1aef27b07fd43f5e553f20138deb57657a" prot="protected" virt="non-virtual"><scope>teos::command::VersionClientOptions</scope><name>reqJson_</name></member>
+      <member refid="classteos_1_1_control_options_1a606085ad334d59eafc103be85e3be146" prot="protected" virt="virtual"><scope>teos::command::VersionClientOptions</scope><name>setPosDesc</name></member>
+      <member refid="classteos_1_1command_1_1_version_client_options_1a989412affdf0f88746ddb855434412e6" prot="public" virt="non-virtual"><scope>teos::command::VersionClientOptions</scope><name>VersionClientOptions</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

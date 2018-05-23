@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="subcommands_8cpp" kind="file" language="C++">
+    <compoundname>subcommands.cpp</compoundname>
+    <includes refid="subcommands_8hpp" local="no">teoslib/command/subcommands.hpp</includes>
+    <incdepgraph>
+      <node id="251">
+        <label>teos_lib/command/subcommands.cpp</label>
+        <link refid="subcommands_8cpp"/>
+        <childnode refid="252" relation="include">
+        </childnode>
+      </node>
+      <node id="252">
+        <label>teoslib/command/subcommands.hpp</label>
+        <link refid="subcommands_8hpp_source"/>
+        <childnode refid="253" relation="include">
+        </childnode>
+        <childnode refid="254" relation="include">
+        </childnode>
+      </node>
+      <node id="253">
+        <label>string</label>
+      </node>
+      <node id="254">
+        <label>map</label>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;teoslib/command/subcommands.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="teos_lib/command/subcommands.cpp"/>
+  </compounddef>
+</doxygen>

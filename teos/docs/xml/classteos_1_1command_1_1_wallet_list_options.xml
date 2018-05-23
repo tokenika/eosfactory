@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classteos_1_1command_1_1_wallet_list_options" kind="class" language="C++" prot="public">
+    <compoundname>teos::command::WalletListOptions</compoundname>
+    <basecompoundref refid="classteos_1_1_command_options" prot="public" virt="non-virtual">teos::CommandOptions</basecompoundref>
+    <includes refid="wallet__commands_8hpp" local="no">wallet_commands.hpp</includes>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classteos_1_1command_1_1_wallet_list_options_1ad2aa7a86ec76aff6a31278bf8187bfdb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>teos::command::WalletListOptions::WalletListOptions</definition>
+        <argsstring>(int argc, const char **argv)</argsstring>
+        <name>WalletListOptions</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>const char **</type>
+          <declname>argv</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/wallet_commands.hpp" line="231" column="1" bodyfile="teos_lib/include/teoslib/command/wallet_commands.hpp" bodystart="231" bodyend="232"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classteos_1_1command_1_1_wallet_list_options_1ae6394f5f8c311fc9e56b0d44562cea67" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>const char *</type>
+        <definition>const char* teos::command::WalletListOptions::getUsage</definition>
+        <argsstring>()</argsstring>
+        <name>getUsage</name>
+        <reimplements refid="classteos_1_1_control_options_1a0aa5671f9bc750ed5280c26c543874f3">getUsage</reimplements>
+        <briefdescription>
+<para>Command &apos;usage&apos; instruction. </para>        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>usage text </para></simplesect>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/wallet_commands.hpp" line="235" column="1" bodyfile="teos_lib/include/teoslib/command/wallet_commands.hpp" bodystart="235" bodyend="241"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_wallet_list_options_1a5e7955184f761fd355e8081757fb281e" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></type>
+        <definition>TeosControl teos::command::WalletListOptions::executeCommand</definition>
+        <argsstring>()</argsstring>
+        <name>executeCommand</name>
+        <reimplements refid="classteos_1_1_control_options_1afc04b2ed27c6b2497a95890498d403d0">executeCommand</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/wallet_commands.hpp" line="243" column="1" bodyfile="teos_lib/include/teoslib/command/wallet_commands.hpp" bodystart="243" bodyend="245"/>
+      </memberdef>
+      <memberdef kind="function" id="classteos_1_1command_1_1_wallet_list_options_1a7f11798f8864183fc502bf9b3d11d302" prot="protected" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void teos::command::WalletListOptions::printout</definition>
+        <argsstring>(TeosControl command, variables_map &amp;vm)</argsstring>
+        <name>printout</name>
+        <reimplements refid="classteos_1_1_control_options_1a33001fdd58dea6056f683a8e280c245e">printout</reimplements>
+        <param>
+          <type><ref refid="classteos_1_1_teos_control" kindref="compound">TeosControl</ref></type>
+          <declname>command</declname>
+        </param>
+        <param>
+          <type>variables_map &amp;</type>
+          <declname>vm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="teos_lib/include/teoslib/command/wallet_commands.hpp" line="247" column="1" bodyfile="teos_lib/include/teoslib/command/wallet_commands.hpp" bodystart="247" bodyend="253"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Command-line driver for the <ref refid="classteos_1_1command_1_1_wallet_list" kindref="compound">WalletList</ref> class. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="398">
+        <label>teos::CommandOptions</label>
+        <link refid="classteos_1_1_command_options"/>
+        <childnode refid="399" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="399">
+        <label>teos::ControlOptions</label>
+        <link refid="classteos_1_1_control_options"/>
+      </node>
+      <node id="397">
+        <label>teos::command::WalletListOptions</label>
+        <link refid="classteos_1_1command_1_1_wallet_list_options"/>
+        <childnode refid="398" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="401">
+        <label>teos::CommandOptions</label>
+        <link refid="classteos_1_1_command_options"/>
+        <childnode refid="402" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="402">
+        <label>teos::ControlOptions</label>
+        <link refid="classteos_1_1_control_options"/>
+      </node>
+      <node id="400">
+        <label>teos::command::WalletListOptions</label>
+        <link refid="classteos_1_1command_1_1_wallet_list_options"/>
+        <childnode refid="401" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="teos_lib/include/teoslib/command/wallet_commands.hpp" line="229" column="1" bodyfile="teos_lib/include/teoslib/command/wallet_commands.hpp" bodystart="228" bodyend="255"/>
+    <listofallmembers>
+      <member refid="classteos_1_1_control_options_1a611508b33386c2a2465e68b333b51c5f" prot="protected" virt="virtual"><scope>teos::command::WalletListOptions</scope><name>argumentDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a490f2d5ea05e92a5996beaa6d40c5c32" prot="protected" virt="non-virtual"><scope>teos::command::WalletListOptions</scope><name>basicOptionDescription</name></member>
+      <member refid="classteos_1_1_control_options_1a2916fdad936906cec8496b5952936cae" prot="protected" virt="virtual"><scope>teos::command::WalletListOptions</scope><name>checkArguments</name></member>
+      <member refid="classteos_1_1_command_options_1aa0fc4c9930fe2bf479abdbe187a4ca65" prot="public" virt="non-virtual"><scope>teos::command::WalletListOptions</scope><name>CommandOptions</name></member>
+      <member refid="classteos_1_1_control_options_1ae997028704fe0f8086096d7fa4b71ee9" prot="public" virt="non-virtual"><scope>teos::command::WalletListOptions</scope><name>ControlOptions</name></member>
+      <member refid="classteos_1_1command_1_1_wallet_list_options_1a5e7955184f761fd355e8081757fb281e" prot="protected" virt="virtual"><scope>teos::command::WalletListOptions</scope><name>executeCommand</name></member>
+      <member refid="classteos_1_1command_1_1_wallet_list_options_1ae6394f5f8c311fc9e56b0d44562cea67" prot="protected" virt="virtual"><scope>teos::command::WalletListOptions</scope><name>getUsage</name></member>
+      <member refid="classteos_1_1_control_options_1ad3496976524c0ca5288018725119fb39" prot="public" virt="non-virtual"><scope>teos::command::WalletListOptions</scope><name>go</name></member>
+      <member refid="classteos_1_1_command_options_1ad9cb8c834296b2c5dee2a82c006bfa0c" prot="protected" virt="virtual"><scope>teos::command::WalletListOptions</scope><name>groupOptionDescription</name></member>
+      <member refid="classteos_1_1_command_options_1a64481990f4f43f58491bb5def15006c5" prot="public" virt="non-virtual"><scope>teos::command::WalletListOptions</scope><name>httpOptions</name></member>
+      <member refid="classteos_1_1_control_options_1a385705bd05cf4cc33892f51737585f9b" prot="protected" virt="non-virtual"><scope>teos::command::WalletListOptions</scope><name>json_</name></member>
+      <member refid="classteos_1_1_control_options_1a46025212b1afd9b9e56914844512ac24" prot="protected" virt="virtual"><scope>teos::command::WalletListOptions</scope><name>parseGroupVariablesMap</name></member>
+      <member refid="classteos_1_1command_1_1_wallet_list_options_1a7f11798f8864183fc502bf9b3d11d302" prot="protected" virt="virtual"><scope>teos::command::WalletListOptions</scope><name>printout</name></member>
+      <member refid="classteos_1_1_control_options_1aef27b07fd43f5e553f20138deb57657a" prot="protected" virt="non-virtual"><scope>teos::command::WalletListOptions</scope><name>reqJson_</name></member>
+      <member refid="classteos_1_1_control_options_1a606085ad334d59eafc103be85e3be146" prot="protected" virt="virtual"><scope>teos::command::WalletListOptions</scope><name>setPosDesc</name></member>
+      <member refid="classteos_1_1command_1_1_wallet_list_options_1ad2aa7a86ec76aff6a31278bf8187bfdb" prot="public" virt="non-virtual"><scope>teos::command::WalletListOptions</scope><name>WalletListOptions</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
