@@ -15,7 +15,7 @@
 #endif
 
 #include <teoslib/config.h>
-#include <teoslib/config.hpp>
+#include <teoslib/control/config.hpp>
 #include <teoslib/control.hpp>
 
 std::string formatUsage(std::string unixUsage) {

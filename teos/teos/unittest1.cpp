@@ -30,6 +30,7 @@ BOOST_AUTO_TEST_CASE(test1)
     First test of the TEOS library (C++).
     The library is to assist development of EOSIO smart contracts.
     Please, see the documentation.
+    
     )"
     );
 
