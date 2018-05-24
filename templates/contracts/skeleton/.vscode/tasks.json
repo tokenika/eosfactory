@@ -4,6 +4,16 @@
    "version": "2.0.0",   
    "tasks": [
         {
+            "label": "compile",
+            "type": "shell",
+            "command": "${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@skeleton@ -c",
+            "problemMatcher": [],
+            "presentation": {
+                    "reveal": "always",
+                    "panel": "dedicated"
+            }       
+        },
+        {
             "label": "build",
             "type": "shell",
             "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/@skeleton@;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@skeleton@",
@@ -16,7 +26,7 @@
                 "kind": "build",
                 "isDefault": true
             }            
-        },
+        },        
         {
             "taskName": "API",
             "windows": {

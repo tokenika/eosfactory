@@ -4,9 +4,7 @@
 
 Tokenika TEOS library was designed for the Tokenika EOSFactory. The EOSFactory is to be an IDE (Integrated Development Environment) for EOSIO smart-contracts.
 
-From [Wikipedia](#https://en.wikipedia.org/wiki/Integrated_development_environment):
-
-*An integrated development environment (IDE) is a software application that provides comprehensive facilities to computer programmers for software development. An IDE normally consists of a source code editor, build automation tools, and a debugger.*
+*An integrated development environment (IDE) is a software application that provides comprehensive facilities to computer programmers for software development. An IDE normally consists of a source code editor, build automation tools, and a debugger.* [ (from Wikipedia)](#https://en.wikipedia.org/wiki/Integrated_development_environment)
 
 The TEOS library is the engine that powers these *comprehensive facilities*.
 
@@ -283,7 +281,8 @@ $ $EOSIO_TEOS generate abi /mnt/c/Workspaces/EOS/contracts/hello.teos
 
 $ $EOSIO_TEOS daemon start -c                   ## reset local node
 #  nodeos exe file: /mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos
-#  genesis state file: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json
+#  genesis state file: 
+  /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json
 #   server address: 127.0.0.1:8888
 #  config directory: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir
 #  wallet directory: /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet
@@ -295,7 +294,8 @@ $ $EOSIO_TEOS wallet create
 #  You need to save this password to be able to lock/unlock the wallet!
 
 $ $EOSIO_TEOS set contract eosio hello.teos --permission eosio
-#   transaction id: ef2744011c17b219f346c2841ebc316c0ebd21da9804ec804c860f71558481ba
+#   transaction id: 
+  ef2744011c17b219f346c2841ebc316c0ebd21da9804ec804c860f71558481ba
 
 $ $EOSIO_TEOS create key owner
 #         key name: owner
@@ -307,25 +307,39 @@ $ $EOSIO_TEOS create key active
 #      private key: 5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
 #       public key: EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA
 
-$ $EOSIO_TEOS wallet import default 5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
+$ $EOSIO_TEOS wallet import default \
+  5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
 #           wallet: default
 #     key imported: 5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
 
-$ $EOSIO_TEOS wallet import default 5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
+$ $EOSIO_TEOS wallet import default 
+  5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
 #           wallet: default
 #     key imported: 5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
 
-$ $EOSIO_TEOS create account eosio hello.teos EOS6GKYMgKHeuMAaHb3v4nGBg9NiYRcJoU3YegUYeUwSjUfSJWLdP EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA
-#   transaction id: 0ff62a96bde5bd911da135557da56fabb3fc1282d8be8797be485aafa519bce4
+$ $EOSIO_TEOS create account eosio hello.teos \
+  EOS6GKYMgKHeuMAaHb3v4nGBg9NiYRcJoU3YegUYeUwSjUfSJWLdP \
+    EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA \
+#   transaction id: 
+  0ff62a96bde5bd911da135557da56fabb3fc1282d8be8797be485aafa519bce4
 
 $ $EOSIO_TEOS set contract hello.teos hello.teos
-#   transaction id: 2820976a76893685f4cfc2578c7c0f0ff3e8b9112732de202dab16afd7b56884
+#   transaction id: 
+  2820976a76893685f4cfc2578c7c0f0ff3e8b9112732de202dab16afd7b56884
 
 $ $EOSIO_TEOS push action hello.teos hi '["hello.teos"]' -p hello.teos
-#   transaction id: bdbace3b4327f70ccc7d63d1b1287a7abbec4240be9b2d7695192bf80da45f92
+#   transaction id: 
+  bdbace3b4327f70ccc7d63d1b1287a7abbec4240be9b2d7695192bf80da45f92
 #  INFO account name: 7684013990126944256  @ 17:56:15 hello.teos.cpp[16](hi)
 #  Hello, hello.teos
 
 $ $EOSIO_TEOS daemon stop
 #  Daemon is stopped.
 ```
+
+This command-line drivers to the basic operation classes power the Python implementation of the  EOSIO abstraction classes.
+
+### C++ EOSIO abstraction classes
+
+The abstraction classes are intent for writing of C++ tests for smart contracts. They make an alternative to the use of the *Tokenika pyteos classes*.
+

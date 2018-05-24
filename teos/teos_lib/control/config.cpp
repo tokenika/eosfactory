@@ -112,32 +112,31 @@ wallet-dir: .
 
     string getTeosConfigJson(TeosControl* teosControl)
     {
+      string trace = "";
       try{
-        arg configKey = EOSIO_EOSFACTORY_DIR;
-        const char* env = getenv(configKey[0].c_str());
+        const char* env = getenv(EOSIO_EOSFACTORY_DIR[0].c_str());
+        trace += env ? env : "env(EOSIO_EOSFACTORY_DIR) is null";
+        trace += "\n";
         if(env != nullptr) {
           bfs::path configPath = bfs::path(env) / "teos" / CONFIG_JSON;
-          if(bfs::exists(configPath))       
-          return configPath.string();
+          trace += configPath.string() + "\n";
+          if(bfs::exists(configPath)) {
+            trace += "returns " + configPath.string() + "\n";
+            return configPath.string();
+          }       
         }          
         
+        throw std::exception();
+
+      } catch (std::exception& e) {
         onError(
           teosControl, 
-          R"(
-Cannot find TEOS config json file. It is expected in the EOSFactory dir.
+          (boost::format(R"(
+Cannot find TEOS config json file. It is expected in the EOSFactory/teos dir.
 The EOSFactory has to be set as the EOSIO_EOSFACTORY_DIR environment
 variable.
-)", 
-          SPOT);
-
-      } catch (exception& e) {
-        onError(teosControl, 
-        R"(
-Cannot find TEOS config json file. It is expected in the EOSFactory dir.
-The EOSFactory has to be set as the EOSIO_EOSFACTORY_DIR environment
-variable.
-)", 
-        SPOT);             
+)""\n trace is \n%1%") % trace).str(), 
+          SPOT );            
       }
       return "";
     }    

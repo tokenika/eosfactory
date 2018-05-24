@@ -41,10 +41,11 @@ source_dir="teos"
 build_dir="build"
 contracts="contracts"
 teos_exe="teos/build/teos/teos"
+config_json="teos/config.json"
 
-EOSIO_CONTEXT_DIR__="$PWD"
-BUILD_DIR="${EOSIO_CONTEXT_DIR__}/$build_dir"
-EOSIO_CONTRACT_WORKSPACE__="${EOSIO_CONTEXT_DIR__}/$contracts"
+EOSIO_EOSFACTORY_DIR__="$PWD"
+BUILD_DIR="${EOSIO_EOSFACTORY_DIR__}/$build_dir"
+EOSIO_CONTRACT_WORKSPACE__="${EOSIO_EOSFACTORY_DIR__}/$contracts"
 
 IS_WSL="" # Windows Subsystem Linux
 function is_wsl {
@@ -252,12 +253,12 @@ printf "%s" "
 printf "%s\n" "Sets environment variables, if not set already:"
 
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
-setLinuxVariable "EOSIO_EOSFACTORY_DIR" "$EOSIO_CONTEXT_DIR__"
+setLinuxVariable "EOSIO_EOSFACTORY_DIR" "$EOSIO_EOSFACTORY_DIR__"
 setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
 setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
-setLinuxVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
+setLinuxVariable "EOSIO_TEOS" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
 
-PYTHONPATH__="$EOSIO_CONTEXT_DIR__/${pyteos}:$EOSIO_CONTEXT_DIR__/${tests}"
+PYTHONPATH__="$EOSIO_EOSFACTORY_DIR__/${pyteos}:$EOSIO_EOSFACTORY_DIR__/${tests}"
 if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]; then
     setLinuxVariable "PYTHONPATH" "${PYTHONPATH__}:${PYTHONPATH}"
 fi
@@ -280,10 +281,10 @@ if [ ! -z "$IS_WSL" ]; then
     fi
 
     setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
-    setWindowsVariable "EOSIO_TEOS" "$EOSIO_CONTEXT_DIR__/$teos_exe"
+    setWindowsVariable "EOSIO_TEOS" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
 
     retval=""
-    wslMapLinux2Windows retval $EOSIO_CONTEXT_DIR__
+    wslMapLinux2Windows retval $EOSIO_EOSFACTORY_DIR__
     setWindowsVariable "EOSIO_EOSFACTORY_DIR" "$retval" 
 
     retval=""
@@ -361,7 +362,7 @@ printf "%s" "
 printf "%s" "
 Makes the file structure:
 
-    ${EOSIO_CONTEXT_DIR__}  # eosfactory repository
+    ${EOSIO_EOSFACTORY_DIR__}  # eosfactory repository
         ${BUILD_DIR}  # binary dir
             daemon  # local EOSIO node documents
                 data-dir  # the EOSIO node data-dir
@@ -370,13 +371,13 @@ Makes the file structure:
                     config.in
 "
 
-cd ${EOSIO_CONTEXT_DIR__}
+cd ${EOSIO_EOSFACTORY_DIR__}
 mkdir -p ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}/daemon/data-dir/wallet
 
 cp ${EOSIO_SOURCE_DIR}/programs/snapshot/genesis.json \
     ${BUILD_DIR}/daemon/data-dir/genesis.json
-cp ${EOSIO_CONTEXT_DIR__}/resources/config.ini \
+cp ${EOSIO_EOSFACTORY_DIR__}/resources/config.ini \
     ${BUILD_DIR}/daemon/data-dir/config.ini
 
 
@@ -402,7 +403,7 @@ fi
 printf "%s" "
 ##############################################################################
 "
-cd ${EOSIO_CONTEXT_DIR__}
+cd ${EOSIO_EOSFACTORY_DIR__}
 cd ${source_dir}
 mkdir build
 cd build

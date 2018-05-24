@@ -292,7 +292,8 @@ namespace teos {
     */
     void BuildContract::buildContract(
       string src, // comma separated list of source c/cpp files
-      string include_dir // comma separated list of include dirs
+      string include_dir, // comma separated list of include dirs
+      bool compile_only
     )
     {
       namespace bfs = boost::filesystem;
@@ -362,8 +363,14 @@ namespace teos {
         //cout << "command line clang:" << endl << command_line << endl;
 
         if(!process(command_line, this)){
+          bfs::remove_all(workdir);
           return;
-        }   
+        }
+        
+        if(compile_only){
+          bfs::remove_all(workdir);
+          return;          
+        }  
       }
 
       {

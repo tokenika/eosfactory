@@ -14,16 +14,18 @@ namespace teos {
     {
       void buildContract(
         string src, // comma separated list of source c/cpp files
-        string include_dir = "" // comma separated list of include dirs
+        string include_dir = "", // comma separated list of include dirs
+        bool compile_only = false
       );
 
     public:
       BuildContract(
         string src, // comma separated list of source c/cpp files
-        string include_dir = ""
+        string include_dir = "",
+        bool compile_only = false
       )
       {
-        buildContract(src, include_dir);
+        buildContract(src, include_dir, compile_only);
       }
 
       BuildContract(ptree reqJson) : TeosControl(reqJson)
@@ -48,17 +50,15 @@ namespace teos {
       const char* getUsage() {
         return R"(
 Build smart contract.
-Usage: ./teos build contract src wast_file [Options]
+Usage: ./teos build contract src [Options]
 Usage: ./teos create key --jarg '{
   "src":"<comma separated list of c/c++ files>",
-  "wast_file":<>,
   "include_dir":"<comma separated list of include dirs>"
   }' [OPTIONS]
 )";
       }
 
       string src;
-      string wast_file;
       string include_dir;
 
       options_description  argumentDescription() {
@@ -66,10 +66,9 @@ Usage: ./teos create key --jarg '{
         od.add_options()
           ("src", value<string>(&src)
             , "Comma separated list of source c/cpp files.")
-          ("wast_file,o", value<string>(&wast_file)->default_value("")
-            , "Target wast file.")
           ("include_dir,d", value<string>(&include_dir)->default_value("")
-            , "Comma separated list of source c/c++ files.");
+            , "Comma separated list of source c/c++ files.")
+          ("compile_only,c", "Compilation only.");
             
         return od;
       }
@@ -83,8 +82,12 @@ Usage: ./teos create key --jarg '{
         if(vm.count("src")){
           ok = true;
           reqJson_.put("src", src);
-          reqJson_.put("wast_file", wast_file);
           reqJson_.put("include_dir", include_dir);
+          if(vm.count("compile_only")){
+            reqJson_.put("compile_only", 1);
+          } else {
+            reqJson_.put("compile_only", 0);
+          }
         }
         return ok;
       }

@@ -5,7 +5,8 @@ printf "%s\n" "
 function setLinuxVariable() {
     name=$1
     value=$2
-    if [  ! -z "$value" -a "${!name}" != "$value" ]; then
+    config=$(grep -Po '"$name":.*?[^\\]",' $EOSIO_EOSFACTORY_DIR__/$config_json)
+    if [ -z "$config"  -a ! -z "$value" -a "${!name}" != "$value" ]; then
         export $name=$value
         echo export $name=$value >> ~/.bash_profile
         printf "\t%s\n" "setting $name: $value"
