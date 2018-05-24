@@ -189,9 +189,9 @@ namespace teos {
             "'" + reqJson_.get<string>("command_line") + "'");
         } else {
           if(uname() == DARWIN){
-            string cl = "open -a " + reqJson_.get<string>("daemon_exe")
-              + " --args " + reqJson_.get<string>("args");
-            cout << endl << cl << endl;
+            // string cl = "open -a " + reqJson_.get<string>("daemon_exe")
+            //   + " --args " + reqJson_.get<string>("args");
+            // cout << endl << cl << endl;
             bp::spawn(
               "open -a " + reqJson_.get<string>("daemon_exe") 
               + " --args " + reqJson_.get<string>("args"));

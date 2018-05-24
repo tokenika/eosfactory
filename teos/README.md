@@ -44,7 +44,7 @@ Now, you can open `hello.teos.cpp`. With the `C/C++`, you can go to definition/d
 
 ### Contract compilation
 
-Not implemented yet.
+
 
 ### EOSIO smart contract API
 ```
