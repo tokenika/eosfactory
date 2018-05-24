@@ -32,6 +32,9 @@
             "windows": {
                 "command": "explorer"
             },
+            "osx": {
+                "command": "open"
+            },
             "args": [
                 "https://eosio.github.io/eos/group__contractdev.html"
             ],
