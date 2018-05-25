@@ -231,15 +231,28 @@ namespace teos {
 
       bfs::path sourcePath(srcs[0]);
       string name = sourcePath.stem().string();
-      sourcePath = sourcePath.parent_path();
 
-      bfs::path target_path;
-      bfs::path target_dir_path(sourcePath / buildDir);
-      if(bfs::exists(target_dir_path)){
-        target_path = bfs::path(target_dir_path) / (name + ".abi");
-      } else {
-        target_path = bfs::path(sourcePath) / (name + ".abi");
+      bfs::path sourceDirPath(sourceDir);
+      bfs::path targetDir;      
+      if(targetDir.empty())
+      {
+        bfs::path td = sourceDirPath / ("../" + buildDir);
+        if(bfs::exists(td)){
+          targetDir = td;
+        }
       }
+      if(targetDir.empty())
+      {
+        bfs::path td = sourceDirPath / buildDir;
+        if(bfs::exists(td)){
+          targetDir = td;
+        }
+      }
+      if(targetDir.empty())
+      {
+        targetDir = sourceDirPath;
+      }      
+      bfs::path target_path = targetDir / (name  + ".abi");
 
       string command_line = getSourceDir(this) 
         + "/build/programs/eosio-abigen/eosio-abigen"

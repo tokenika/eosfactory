@@ -392,7 +392,7 @@ variable.
     }
     
 
-    vector<string> getContractSourceFiles(TeosControl* teosControl, string contractDir)
+    vector<string> getContractSourceFiles(TeosControl* teosControl, string& contractDir)
     {
       contractDir = getContractDir(teosControl, contractDir);
       if(teosControl->isError_){
