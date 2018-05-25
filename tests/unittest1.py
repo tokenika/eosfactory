@@ -6,6 +6,7 @@ import pyteos
 import node
 import sess
 import eosf
+import warnings
 
 pyteos.set_verbose(False)
 
@@ -23,7 +24,9 @@ class Test1(unittest.TestCase):
             super().run(result)
     
     def test_00_node_reset(self):
-        x = node.reset()
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            x = node.reset()
         self.assertFalse(x.error)
         x = node.info()
         self.assertTrue("last_irreversible_block_id" in x.json.keys())
