@@ -36,7 +36,7 @@ You can start development from a template, for example:
 $ $EOSIO_TEOS bootstrap contract hello.teos
 #  template contract: /mnt/c/Workspaces/EOS/contracts/hello.teos
 ```
-Now, let you open *Visual Studio Code* in the `hello.teos` contract directory. Do `CTR+SHIFT+P`, chose `Open Folder...` browse to the directory. Please, be sure that you have installed the `C/C++` extension to the *VS code*.
+Now, let you open *Visual Studio Code* in the `hello.teos` contract directory. Do `CTR+SHIFT+P`, chose `Open Folder...` (or `#+SHIFT+P` chose `Open...` with Mac), browse to the directory. Please, be sure that you have installed the `C/C++` extension to the *VS code*.
 
 ### InteliSense and code browsing
 
