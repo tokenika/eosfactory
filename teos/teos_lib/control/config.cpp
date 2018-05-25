@@ -2,6 +2,8 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <vector>
+#include <set>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -9,6 +11,7 @@
 #include <boost/foreach.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/dll.hpp>
 
 #include <teoslib/config.h>
 #include <teoslib/control/config.hpp>
@@ -114,18 +117,46 @@ wallet-dir: .
     {
       string trace = "";
       try{
-        const char* env = getenv(EOSIO_EOSFACTORY_DIR[0].c_str());
-        trace += env ? env : "env(EOSIO_EOSFACTORY_DIR) is null";
-        trace += "\n";
-        if(env != nullptr) {
-          bfs::path configPath = bfs::path(env) / "teos" / CONFIG_JSON;
+        {
+          const char* env = getenv(EOSIO_EOSFACTORY_DIR[0].c_str());
+          trace += env ? env : "env(EOSIO_EOSFACTORY_DIR) is null";
+          trace += "\n";
+          if(env != nullptr) {
+            bfs::path configPath = bfs::path(env) / "teos" / CONFIG_JSON;
+            trace += configPath.string() + "\n";
+            if(bfs::exists(configPath)) {
+              return configPath.string();
+            } 
+          } 
+        }
+
+        bfs::path programLocation = boost::dll::program_location().parent_path();
+
+        {
+          bfs::path configPath = programLocation / CONFIG_JSON;
           trace += configPath.string() + "\n";
           if(bfs::exists(configPath)) {
-            trace += "returns " + configPath.string() + "\n";
-            return configPath.string();
-          }       
-        }          
-        
+              return configPath.string();
+          }                  
+        }
+
+        {
+          bfs::path configPath = programLocation.parent_path() / CONFIG_JSON;
+          trace += configPath.string() + "\n";
+          if(bfs::exists(configPath)) {
+              return configPath.string();
+          }                  
+        }        
+
+        {
+          bfs::path configPath = programLocation.parent_path()
+            .parent_path() / CONFIG_JSON;
+          trace += configPath.string() + "\n";
+          if(bfs::exists(configPath)) {
+              return configPath.string();
+          }                  
+        }     
+
         throw std::exception();
 
       } catch (std::exception& e) {
@@ -340,6 +371,67 @@ variable.
       return "";
     }
 
+
+    vector<string> getSourceFiles(boost::filesystem::path sourcePath)
+    {
+      namespace bfs = boost::filesystem;
+
+      vector<string> srcs;
+      set<string> extensions({".cpp", ".cxx", ".c"});
+      for (bfs::directory_entry& entry 
+        : boost::make_iterator_range(
+          bfs::directory_iterator(sourcePath), {})) 
+        {
+        if (bfs::is_regular_file(entry.path()) 
+          && extensions.find(entry.path().extension().string()) 
+              != extensions.end()){
+          srcs.push_back(entry.path().string());
+        }
+      }
+      return srcs;
+    }
+    
+
+    vector<string> getContractSourceFiles(TeosControl* teosControl, string contractDir)
+    {
+      contractDir = getContractDir(teosControl, contractDir);
+      if(teosControl->isError_){
+        return vector<string>();;
+      }
+
+      string trace = "contractDir: " + contractDir + "\n";
+      try{
+        {
+          bfs::path sourcePath(contractDir);
+          trace += sourcePath.string() + "\n";
+          vector<string> srcs = getSourceFiles(sourcePath);
+          if(!srcs.empty()){
+            return srcs;            
+          }
+        }
+
+        {
+          bfs::path sourcePath = bfs::path(contractDir) / "/src";
+          trace += sourcePath.string() + "\n";
+          vector<string> srcs = getSourceFiles(sourcePath);
+          if(!srcs.empty()){
+            return srcs;            
+          }
+        }
+
+        throw std::exception();
+
+      } catch (std::exception& e) {
+        onError(
+          teosControl, 
+          (boost::format(R"(
+Cannot find any contract source directory.
+)""\n trace is \n%1%") % trace).str(), 
+          SPOT );            
+      }
+      return vector<string>();
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // getContractFile
     ///////////////////////////////////////////////////////////////////////////
@@ -427,20 +519,30 @@ variable.
 
     string getContractWorkspace(TeosControl* teosControl)
     {
+      string trace = "";
+      try{
         bfs::path workspacePath 
           = bfs::path(configValue(teosControl, EOSIO_CONTRACT_WORKSPACE));
+        trace += workspacePath.string() + "\n";
         if(!workspacePath.is_absolute()) {
           bfs::path contextPath(configValue(teosControl, EOSIO_EOSFACTORY_DIR));
           workspacePath = contextPath / workspacePath;
+          trace += workspacePath.string() + "\n";
         }
         if(bfs::exists(workspacePath)) {
+          trace += "returns " + workspacePath.string() + "\n";
           return workspacePath.string();
         }
 
-      /*
-        Set error flag.
-      */
-      onError(teosControl, "Cannot determine the contract workspace.", SPOT);
+        throw std::exception();        
+      } catch (std::exception& e) {
+        onError(
+          teosControl, 
+          (boost::format(R"(
+Cannot determine the contract workspace.
+)""\n trace is \n%1%") % trace).str(),
+          SPOT);
+      }
       return ""; 
     }
     

@@ -161,6 +161,16 @@ namespace teos {
       }
       
       bfs::path contract_path = workspacePath / name;
+
+      if(bfs::exists(contract_path)){
+        putError(
+          (boost::format(
+          "Contract \n%1%\n workspace already exists. Cannot owerwrite it.") 
+            % contract_path.string()).str(), 
+          SPOT);
+        return;
+      }
+
       { // make contract directory:
         try{
           bfs::create_directory(contract_path);
@@ -206,39 +216,29 @@ namespace teos {
     }
 
     void GenerateAbi::generateAbi(
-      string types_hpp,
-      string target_file,
+      string sourceDir,
       string include_dir // comma separated list of include dirs
     )
     {
       namespace bfs = boost::filesystem;
-      
-      vector<string> srcs = files(types_hpp, {".cpp", "c"});
+
+      vector<string> srcs = getContractSourceFiles(this, sourceDir);
       if(srcs.empty()){
         putError((boost::format("The source is empty. The imput is:\n%1%\n")
-              % types_hpp).str());
+              % sourceDir).str());
         return;
       }
 
-      types_hpp = srcs[0];
-      
-      bfs::path types_pth(types_hpp);
-      string name = types_pth.stem().string();
-      bfs::path sourcePath = types_pth.parent_path();
+      bfs::path sourcePath(srcs[0]);
+      string name = sourcePath.stem().string();
+      sourcePath = sourcePath.parent_path();
 
-      bfs::path target_path(target_file);
-      if(target_file.empty()){
-        bfs::path target_dir_path(sourcePath / buildDir);
-        if(bfs::exists(target_dir_path)){
-          target_path = target_dir_path / (name + ".abi");
-        } else {
-          target_path = sourcePath / (name + ".abi");
-        }
+      bfs::path target_path;
+      bfs::path target_dir_path(sourcePath / buildDir);
+      if(bfs::exists(target_dir_path)){
+        target_path = bfs::path(target_dir_path) / (name + ".abi");
       } else {
-        target_path = bfs::path(target_file);
-        if(!target_path.is_absolute()){
-          target_path = sourcePath / target_path;
-        }
+        target_path = bfs::path(sourcePath) / (name + ".abi");
       }
 
       string command_line = getSourceDir(this) 
@@ -266,11 +266,11 @@ namespace teos {
         + " -destination-file=" + target_path.string()
         + " -verbose=0"
         + " -context=" + sourcePath.string()
-        + " " + types_pth.string() + " --";
+        + " " + sourcePath.string() + " --";
       
       //cout << command_line << endl;
 
-      if(process(command_line, this)){
+      if(process(command_line, this)){  
         boost::property_tree::ptree abi;
         boost::property_tree::read_json(target_path.string(), abi);
         respJson_.add_child("ABI", abi);
@@ -291,17 +291,17 @@ namespace teos {
       https://gist.github.com/yurydelendik/4eeff8248aeb14ce763e#example.
     */
     void BuildContract::buildContract(
-      string src, // comma separated list of source c/cpp files
+      string sourceDir, // contract source directory
       string include_dir, // comma separated list of include dirs
       bool compile_only
     )
     {
       namespace bfs = boost::filesystem;
 
-      vector<string> srcs = files(src, {".cpp", ".c"});
+      vector<string> srcs = getContractSourceFiles(this, sourceDir);
       if(srcs.empty()){
         putError((boost::format("The source is empty. The imput is:\n%1%\n")
-              % src).str());
+              % sourceDir).str());
         return;
       }
 

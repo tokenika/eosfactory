@@ -46,3 +46,5 @@ pyteos/docs/.themes
 .vscode/settings.json
 
 teos/config.json
+keosd.md
+teos/source/conf.py

@@ -133,7 +133,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos/teos",
-        "args": ["build", "contract", "C:\\\\Workspaces\\\\EOS\\\\eosfactory\\\\contracts\\\\hello"],
+        "args": ["build", "contract", "hello.teos", "-c"],
         "stopAtEntry": false,
         "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
         "environment": [],

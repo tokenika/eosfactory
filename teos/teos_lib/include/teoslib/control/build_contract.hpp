@@ -65,7 +65,7 @@ Usage: ./teos create key --jarg '{
         options_description od("");
         od.add_options()
           ("src", value<string>(&src)
-            , "Comma separated list of source c/cpp files.")
+            , "Contract source directory.")
           ("include_dir,d", value<string>(&include_dir)->default_value("")
             , "Comma separated list of source c/c++ files.")
           ("compile_only,c", "Compilation only.");
@@ -108,26 +108,23 @@ Usage: ./teos create key --jarg '{
     class GenerateAbi : public TeosControl
     {
       void generateAbi(
-        string types_hpp, // comma separated list of source c/cpp files
-        string abi_file = "",
+        string sourceDir, // comma separated list of source c/cpp files
         string include_dir = "" // comma separated list of include dirs
       );
 
     public:
       GenerateAbi(
-        string types_hpp, // comma separated list of source c/cpp files
-        string abi_file = "",
+        string sourceDir, // comma separated list of source c/cpp files
         string include_dir = ""
       )
       {
-        generateAbi(types_hpp, abi_file, include_dir);
+        generateAbi(sourceDir, include_dir);
       }
 
       GenerateAbi(ptree reqJson) : TeosControl(reqJson)
       {
         generateAbi(
-          reqJson_.get<string>("types_hpp"), 
-          reqJson_.get<string>("abi_file"), 
+          reqJson_.get<string>("sourceDir"),  
           reqJson_.get<string>("include_dir")
         );
       }
@@ -146,26 +143,22 @@ Usage: ./teos create key --jarg '{
       const char* getUsage() {
         return R"(
 Generate the ABI specification file.
-Usage: ./teos generate abi types_hpp [Options]
+Usage: ./teos generate abi sourceDir [Options]
 Usage: ./teos create key --jarg '{
-  "types_hpp":"<types.hpp>",
-  "abi_file":<target output file>,
+  "sourceDir":"<types.hpp>",
   "include_dir":"<comma separated list of include dirs>"
   }' [OPTIONS]
 )";
       }
 
-      string types_hpp;
-      string abi_file;
+      string sourceDir;
       string include_dir;
 
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("types_hpp", value<string>(&types_hpp)
+          ("sourceDir", value<string>(&sourceDir)
             , "Comma separated list of source c/cpp files.")
-          ("abi_file,o", value<string>(&abi_file)->default_value("")
-            , "Target wast file. If emmpty, its name is derived from the name of 'types_hpp'")
           ("include_dir,d", value<string>(&include_dir)->default_value("")
             , "Comma separated list of source c/c++ files.");
             
@@ -173,15 +166,14 @@ Usage: ./teos create key --jarg '{
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
-        pos_desc.add("types_hpp", 1);
+        pos_desc.add("sourceDir", 1);
       }      
 
       bool checkArguments(variables_map &vm) {
         bool ok = false;
-        if(vm.count("types_hpp")){
+        if(vm.count("sourceDir")){
           ok = true;
-          reqJson_.put("types_hpp", types_hpp);
-          reqJson_.put("abi_file", abi_file);
+          reqJson_.put("sourceDir", sourceDir);
           reqJson_.put("include_dir", include_dir);
         }
         return ok;

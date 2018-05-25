@@ -642,7 +642,7 @@ class ABI(_Command):
         except:
             pass
 
-        self._jarg["types_hpp"] = source
+        self._jarg["sourceDir"] = source
         self._jarg["abi_file"] = abi_file
         self._jarg["include_dir"] = include_dir
 

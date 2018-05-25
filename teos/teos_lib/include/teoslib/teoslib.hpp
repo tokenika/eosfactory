@@ -3,7 +3,7 @@
  * @copyright defined in LICENSE.txt
  * @defgroup teoslib EOSIO Command Line Client Reference
  * @ingroup teoslib
- * @author cartman
+ * @author Tokenika
  * @date 22 May 2018
  * @brief C++ library for EOSIO smart contract development environment.
  */

@@ -44,7 +44,11 @@ Now, you can open `hello.teos.cpp`. With the `C/C++`, you can go to definition/d
 
 ### Contract compilation
 
-
+$EOSIO_TEOS bootstrap contract hello.teos
+```
+VS code main menu Tasks -> Run Task... -> compile
+```
+You can see an error report, if they are compile errors. Linking is not executed.
 
 ### EOSIO smart contract API
 ```
@@ -268,15 +272,18 @@ The library has three layers:
 
 ### Command-line drivers
 
-The command-line drivers, operated by the main `teos` application, mimic and/or extend the EOSIO `cleos`. For example, the following sequence of bash commands make sense:
+The command-line drivers, operated by the main `teos` application, mimic and/or extend *EOSIO cleos*, but they are limited in their functionality to the needs of our smart contract IDE. They are not going to replace  *EOSIO cleos* as a client to a remote EOSIO node. 
+
+However, *Tokeniks teos* can play with a local node. For example, the following sequence of bash commands make sense:
+
 ```
 $ $EOSIO_TEOS bootstrap contract hello.teos     ## new contract template
 #  template contract: /mnt/c/Workspaces/EOS/contracts/hello.teos
 
-$ $EOSIO_TEOS build contract /mnt/c/Workspaces/EOS/contracts/hello.teos
+$ $EOSIO_TEOS build contract hello.teos ## relative to the workspace
 #  WAST: /mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.wast
 
-$ $EOSIO_TEOS generate abi /mnt/c/Workspaces/EOS/contracts/hello.teos
+$ $EOSIO_TEOS generate abi hello.teos ## relative to the workspace
 #  ABI: /mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.abi
 
 $ $EOSIO_TEOS daemon start -c                   ## reset local node

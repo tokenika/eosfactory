@@ -21,6 +21,9 @@ namespace teos {
     
     string getContractDir(TeosControl* teosControl, string contractDir);
 
+    vector<string> getContractSourceFiles(
+      TeosControl* teosControl, string contractDir);
+
     string getEosFactoryDir(TeosControl* teosControl);
 
     string getTeosDir(TeosControl* teosControl);
