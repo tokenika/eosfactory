@@ -218,6 +218,8 @@ Usage: ./teos create key --jarg '{
         string templateName=TEMPLATE
       )
       {
+        reqJson_.put("name", name);
+        reqJson_.put("template", templateName);
         bootstrapContract(name, templateName);
       }
 
@@ -225,7 +227,7 @@ Usage: ./teos create key --jarg '{
       {
         bootstrapContract(
           reqJson_.get<string>("name"),
-          reqJson_.get<string>("template")
+          reqJson_.get("template", TEMPLATE)
         );
       }
     };

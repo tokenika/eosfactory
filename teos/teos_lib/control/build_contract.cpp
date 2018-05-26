@@ -255,12 +255,18 @@ namespace teos {
       namespace bfs = boost::filesystem;
 
       vector<string> srcs = getContractSourceFiles(this, sourceDir);
+      bfs::path targetDirPath(sourceDir);
+
       for(string src: srcs){
         bfs::path srcPath(src);
         if(srcPath.extension().string() == ".abi"){
           putError((boost::format(
-            "An ABI exists in the source directory. Cannot overwrite it:\n%1%\n")
+            "An ABI exists in the source directory. Cannot overwrite it:\n%1%\n"
+            "Just copying it to the target directory")
               % srcPath.string()).str());
+
+          bfs::copy_file(
+            srcPath, targetDirPath, bfs::copy_option::overwrite_if_exists);
           return;
         }
       }
@@ -272,7 +278,7 @@ namespace teos {
 
       bfs::path sourcePath(srcs[0]);
       string name = sourcePath.stem().string();
-      bfs::path targetPath = getTargetDirPath(sourceDir) / (name  + ".abi");
+      bfs::path targetPath = targetDirPath / (name  + ".abi");
 
       string command_line = getSourceDir(this) 
         + "/build/programs/eosio-abigen/eosio-abigen"

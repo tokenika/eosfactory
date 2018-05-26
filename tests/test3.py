@@ -16,6 +16,7 @@ def run():
 
     print('test Template():')
     c = Template("_e4b2ffc804529ce9c6fae258197648cc2", remove_existing = True)
+    print(c.json)
 
     print('test c.path():')
     c.path()
