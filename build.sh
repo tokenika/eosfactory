@@ -28,6 +28,9 @@ EOSIO_SOURCE_DIR__="$EOSIO_SOURCE_DIR"
 BUILD_TYPE__="Release"
 ECC_IMPL__="secp256k1" # secp256k1 or openssl or mixed
 WSL_ROOT_DIR__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs"
+WSL_ROOT_DIR1804__="%LocalAppData%\\Packages\\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\\LocalState\\rootfs"
+
+
 EOSIO_SHARED_MEMORY_SIZE_MB__=100
 CMAKE_VERBOSE__=0
 
@@ -108,16 +111,17 @@ function usage() {
 Usage: ./build.sh [OPTIONS]
     -e  EOSIO repository dir. Default is env. variable EOSIO_SOURCE_DIR.
     -w  Workspace directory: where are your contracts. 
-        Default is $EOSIO_CONTRACT_WORKSPACE__
+            Default is $EOSIO_CONTRACT_WORKSPACE__
     -c  compiler, 'gnu' or 'clang'. Default is 'clang'.
     -C  C compiler path. Default is the system default.
     -X  C++ compiler path. Default is the system default.
     -i  ECC implementation: 'secp256k1' or 'openssl' or 'mixed'. 
-        Default is 'secp256k1'.
+            Default is 'secp256k1'.
     -t  Build type: 'Debug' or 'Release'. Default is 'Release'.
     -r  Reset the build.
     -s  EOSIO node shared memory size (in MB). Default is 100 
-    -o  Path to the Windows WSL root, if applicable. Default is $WSL_ROOT_DIR__
+    -o  Path to the Windows WSL root, if applicable. Default is 
+            $WSL_ROOT_DIR__ or $WSL_ROOT_DIR1804__
     -v  CMake verbose. Default is OFF.
     -h  this message.
 "
@@ -292,26 +296,38 @@ if [ ! -z "$IS_WSL" ]; then
     setWindowsVariable "EOSIO_SOURCE_DIR" "$retval"     
 
     ### env variable HOME
+    homeWindows=""
+    function verifyHome() {
+        bashrc=".bashrc"
+        homePathSet=$(cmd.exe /c echo %HOME%)
+        bashrcPathSet="${homePathSet::-1}\\$bashrc"
+        bashrcDirSet=$(cmd.exe /c dir /B  $bashrcPathSet)
+        if [ ! -z ${bashrcDirSet} ]; then
+            bashrcDirSet=${bashrcDirSet::-1}
+        fi
+        # printf "//// left: %s\n" "${#bashrcDirSet} $bashrcDirSet"
+        # printf "/// right: %s\n" "${#bashrc} $bashrc"    
+        if [ "$bashrcDirSet" != "$bashrc" ]; then
+            homeWindows=${1}\\"home"\\$USER
 
-    bashrc=".bashrc"
-    homePathSet=$(cmd.exe /c echo %HOME%)
-    bashrcPathSet="${homePathSet::-1}\\$bashrc"
-    bashrcDirSet=$(cmd.exe /c dir /B  $bashrcPathSet)
-    if [ ! -z ${bashrcDirSet} ]; then
-        bashrcDirSet=${bashrcDirSet::-1}
+            bashrcPath=${homeWindows}\\$bashrc
+            bashrcDir=$(cmd.exe /c dir /B  $bashrcPath)
+
+            if [ ! -z ${bashrcDir} ]; then
+                #a=${a// /}
+                bashrcDir=${bashrcDir::-1}
+            fi 
+        fi
+    }
+
+    if [ -z "$homeWindows" ]; then
+        verifyHome $WSL_ROOT_DIR__
     fi
-    # printf "//// left: %s\n" "${#bashrcDirSet} $bashrcDirSet"
-    # printf "/// right: %s\n" "${#bashrc} $bashrc"    
-    if [ "$bashrcDirSet" != "$bashrc" ]; then
-        homeWindows=${WSL_ROOT_DIR__}\\"home"\\$USER
+    if [ -z "$homeWindows" ]; then
+        verifyHome $WSL_ROOT_DIR1804__
+    fi
 
-        bashrcPath=${homeWindows}\\$bashrc
-        bashrcDir=$(cmd.exe /c dir /B  $bashrcPath)
-
-        if [ ! -z ${bashrcDir} ]; then
-            #a=${a// /}
-            bashrcDir=${bashrcDir::-1}
-        fi 
+    if [ ! -z "$homeWindows" ]; then
 
         # printf "//// left: %s\n" "${#bashrcDir} $bashrcDir"
         # printf "/// right: %s\n" "${#bashrc} $bashrc"    
@@ -320,23 +336,21 @@ if [ ! -z "$IS_WSL" ]; then
             printf "HOME: %s\n" "$homeWindows"
         else
             printf "\n%s" "
-    ######################################################################
-    #   Cannot find the root of the WSL file system which was tried to be
-    #
-    #   ${WSL_ROOT_DIR__}
-    #
-    #   Please, find the path in your computer, and restart the ./build.sh
-    #   with the option 
-    #   -o <path to the root of the WSL file system>
-    #   added to the command line.
-    ######################################################################
-    " 
-        exit 1
+        ######################################################################
+        #   Cannot find the root of the WSL file system which was tried to be
+        #
+        #   ${WSL_ROOT_DIR__}
+        #
+        #   Please, find the path in your computer, and restart the ./build.sh
+        #   with the option 
+        #   -o <path to the root of the WSL file system>
+        #   added to the command line.
+        ######################################################################
+" 
+            exit 1
         fi
-    fi
-fi
 
-if [ -z "$CMAKE" ]; then
+if [ -z "$CMAKE" ]; then    
     CMAKE=$( which cmake )
 fi
 
@@ -456,8 +470,8 @@ printf "${bldred}%s${txtrst}" '
 '
 
 printf "\n%s\n" "
-To complete your installation please load the newly created system variables 
-by running this command:
+TO COMPLETE your installation please load the newly created system variables 
+by RUNNING THIS COMMAND:
 "
 
 if [ "$OS_NAME" == "Darwin" ]; then

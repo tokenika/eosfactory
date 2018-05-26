@@ -1,21 +1,19 @@
 # python3 ./tests/test1.py
 
+import pyteos
 import node
 import sess
-from eosf import *
+import eosf
 
 def run():
     print('test node.reset():')
     node.reset()
 
-    print('test node.info():')
-    node.info()
-
     print('test sess.init():')
-    sess.init()
+    sess.setup()
 
     print('test Contract("eosio.token"):')
-    c = Contract("eosio.token")
+    c = eosf.Contract("eosio.token")
 
     print('test c.get_code():')
     c.get_code()
@@ -31,7 +29,7 @@ def run():
         "create", 
         '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
             "can_freeze":0, "can_recall":0, "can_whitelist":0}')
-    
+
     print('test c.push_action("issue"):')
     c.push_action(
         "issue", 
@@ -43,13 +41,13 @@ def run():
         "transfer", 
         '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
             "memo":"memo"}', sess.alice)
-    
+
     print('test c.push_action("transfer", sess.carol):')
     c.push_action(
         "transfer", 
         '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", \
             "memo":"memo"}', sess.carol)
-    
+
     print('test c.push_action("transfer" sess.bob):')
     c.push_action(
         "transfer", 

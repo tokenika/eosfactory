@@ -47,8 +47,8 @@ class Setup:
     __TEOS_EXE = "teos_executable"
     __review = False
     teos_exe = ""
-    node_block_count = 3
-    node_block_num = 3
+    node_block_count = 15
+    node_block_num = 5
 
     def __init__(self):
 
@@ -702,7 +702,8 @@ class NodeProbe(_Command):
         
         while True:
             time.sleep(1)
-            self.get_info = GetInfo(is_verbose=False, suppress_error_msg=False)
+            self.get_info = GetInfo(is_verbose=False, suppress_error_msg=True)
+            self.ok = False
             count = count - 1
 
             try:
@@ -711,6 +712,7 @@ class NodeProbe(_Command):
                 head_block_num = -1
 
             if head_block_num >= num:
+                self.ok = True
                 break      
 
             if count <= 0:
@@ -749,7 +751,7 @@ class Wallet(WalletCreate):
             key_pair, self.name, is_verbose=False)
         if not wallet_import.error:
             self.json["keys"].append([key_pair.name, key_pair.key_private])
-        return wallet_import.error        
+        return not wallet_import.error        
 
     def keys(self):
         x = WalletKeys()
@@ -929,6 +931,9 @@ class Contract(SetContract):
 
 
     def deploy(self):
+        """ Deploy the contract.
+        On error, return False.
+        """
         super().__init__(
             self.account_name, self.contract_dir,
             self.wast_file, self.abi_file,
@@ -971,8 +976,8 @@ class Contract(SetContract):
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0, is_verbose=False
         ):
-        """ Implements the `push action` command. 
-
+        """ Push contract action. 
+        On error, return False.
         """
         if not permission:
             permission=self.account_name
@@ -1020,8 +1025,7 @@ class Contract(SetContract):
     
 
     def get_table(self, table, scope=""):
-        """ Prints a contract's table.
-
+        """ Return a contract's table object.
         """
         if not scope:
             scope=self.account_name
@@ -1034,11 +1038,13 @@ class Contract(SetContract):
 
 
     def get_code(self):
-        """ Prints a contract's code.
-
+        """ Print a contract's code.
+        On error, return False.
         """
         code = GetCode(self.name)
         return not code.error
 
     def get_path(self):
+        """ Return contract directory path.
+        """
         return str(self.contract_path_absolute)

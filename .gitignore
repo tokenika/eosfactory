@@ -48,3 +48,4 @@ pyteos/docs/.themes
 teos/config.json
 keosd.md
 teos/source/conf.py
+teos/teos_lib/eos_interface.1.cpp#

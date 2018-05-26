@@ -11,8 +11,8 @@ def run():
     print('test node.info():')
     node.info()
     
-    print('test sess.init():')
-    sess.init()
+    print('test sess.setup():')
+    sess.setup()
 
     print('test c = Contract("tic.tac.toe"):')
     c = Contract("tic.tac.toe")

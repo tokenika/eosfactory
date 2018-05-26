@@ -16,17 +16,21 @@ import pyteos
 def reset():
     """
     Reset and start a local EOS node.
+    On error, return false.
     """
     pyteos.NodeStart(1)
     probe = pyteos.NodeProbe()
-    return probe.get_info
+    return probe.ok
 
 
 def run():
     """
     Restart a local EOS node.
+    On error, return false.
     """
-    return pyteos.NodeStart(0)
+    pyteos.NodeStart(0)
+    probe = pyteos.NodeProbe()
+    return probe.ok
 
 
 def stop():

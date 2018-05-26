@@ -26,42 +26,39 @@ class Test1(unittest.TestCase):
     def test_00_node_reset(self):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            x = node.reset()
-        self.assertFalse(x.error)
-        x = node.info()
-        self.assertTrue("last_irreversible_block_id" in x.json.keys())
-        x = sess.init()
-        self.assertFalse(x)
+            self.assertTrue(node.reset(), "node reset")
+        self.assertTrue(sess.setup(), "session setup")
 
     def test_01_contract(self):
         c = eosf.Contract("eosio.token")
         self.assertFalse(c.error, "Contract")
-        x = c.get_code()
-        self.assertTrue(x, "get_code")
-        x = c.deploy()
-        self.assertTrue(x, "deploy")
-        x = c.get_code()
-        self.assertTrue(x, "get_code") 
 
-        x = c.push_action(
+        self.assertTrue(c.get_code(), "get_code")
+        self.assertTrue(c.deploy(), "deploy")
+        self.assertTrue(c.get_code(), "get_code")
+
+        self.assertTrue(
+            c.push_action(
             "create", 
             '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
-                "can_freeze":0, "can_recall":0, "can_whitelist":0}') 
-        self.assertTrue(x, "push_action create")
+                "can_freeze":0, "can_recall":0, "can_whitelist":0}'), 
+            "push_action create")
 
-        x = c.push_action(
+        self.assertTrue(
+            c.push_action(
             "issue", 
             '{"to":"alice", "quantity":"100.0000 EOS", \
                 "memo":"issue 100.0000 EOS"}', 
-            sess.eosio)
-        self.assertTrue(x, "push_action issue")
+            sess.eosio), 
+            "push_action issue")
 
-        x = c.push_action(
+        self.assertTrue(
+            c.push_action(
             "transfer", 
             '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
                 "memo":"transfer 25.0000 EOS"}', 
-            sess.alice)
-        self.assertTrue(x, "push_action transfer")
+            sess.alice), 
+            "push_action transfer")
 
         x = c.push_action(
             "transfer", 
@@ -70,21 +67,20 @@ class Test1(unittest.TestCase):
             sess.carol)
         self.assertTrue(x, "push_action transfer")
         
-        x = c.push_action(
+        self.assertTrue(
+            c.push_action(
             "transfer", 
             '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", \
                 "memo":"transfer 2.0000 EOS"}', 
-            sess.bob)
-        self.assertTrue(x, "push_action transfer")
+            sess.bob), 
+            "push_action transfer")
 
         t1 =  c.get_table("accounts", sess.alice)
-        self.assertFalse(t1.error, "get table accounts")
-
+        self.assertFalse(t1.error, "get_table alice")
         t2 = c.get_table("accounts", sess.bob)
-        self.assertFalse(t2.error, "get table accounts")
-
+        self.assertFalse(t2.error, "get_table bob")
         t3 = c.get_table("accounts", sess.carol)
-        self.assertFalse(t3.error, "get table accounts")
+        self.assertFalse(t2.error, "get_table carol")
 
         self.assertEqual(
             t1.json["rows"][0]["balance"], "77.0000 EOS")
