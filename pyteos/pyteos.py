@@ -626,10 +626,6 @@ class Template(_Command):
         _Command.__init__(self, "bootstrap", "contract", is_verbose)
         if not self.error:
             self.contract_dir = self.json["contract_dir"] 
-            self.source_dir = self.json["source_dir"]
-            self.binary_dir = self.json["binary_dir"]
-            self.cpp = self.json["template_cpp"]
-            self.hpp = self.json["template_hpp"]
                    
 
 class ABI(_Command):

@@ -188,32 +188,44 @@ Usage: ./teos create key --jarg '{
       }        
     };
 
-
+    #define TEMPLATE "skeleton"
     /**
-     * BootstrapContract: produces template contract workspace.
-    */
+     * @brief BootstrapContract: produce contract workspace from a 
+     * given template.
+     * 
+     * If the template is not set, a default one is used.
+     */
     class BootstrapContract : public TeosControl
     {
       void bootstrapContract(
-        string name // contract name
+        string name, // contract name
+        string templateName=TEMPLATE
       );
       void copy(
         boost::filesystem::path inTemplate,
         boost::filesystem::path inContract,
-        string name);
+        string name, string templateName);
 
     public:
+    /**
+     * @brief Construct a new Bootstrap Contract object.
+     * 
+     * @param name name of the bootstrapped contract.
+     * @param templateName chosen template.
+     */
       BootstrapContract(
-        string name // contract name
+        string name, // contract name
+        string templateName=TEMPLATE
       )
       {
-        bootstrapContract(name);
+        bootstrapContract(name, templateName);
       }
 
       BootstrapContract(ptree reqJson) : TeosControl(reqJson)
       {
         bootstrapContract(
-          reqJson_.get<string>("name")
+          reqJson_.get<string>("name"),
+          reqJson_.get<string>("template")
         );
       }
     };
@@ -230,27 +242,31 @@ Usage: ./teos create key --jarg '{
     protected:
       const char* getUsage() {
         return R"(
-Make a workspace for a contract, with a c++ code template.
-Usage: ./teos bootstrap contract [Options]
+Produce contract workspace from a given template.
+Usage: ./teos bootstrap contract [Options] name template [Options]
 Usage: ./teos create key --jarg '{
-  "name":"<contract name>"
+  "name":"<contract name>",
+  "template":"<template name>"
   }' [OPTIONS]
 )";
       }
 
       string name;
+      string templateName;
 
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("name", value<string>(&name)
-            , "Contract name.");
+          ("name", value<string>(&name), "Contract name.")
+          ("template", value<string>(&templateName)->default_value(TEMPLATE), 
+            "Template name.");
             
         return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
         pos_desc.add("name", 1);
+        pos_desc.add("template", 1);
       }      
 
       bool checkArguments(variables_map &vm) {
@@ -258,6 +274,7 @@ Usage: ./teos create key --jarg '{
         if(vm.count("name")){
           ok = true;
           reqJson_.put("name", name);
+          reqJson_.put("template", templateName);
         }
         return ok;
       }

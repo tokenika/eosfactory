@@ -21,9 +21,7 @@ namespace teos {
   
     // File structure relative to the context dir   
     static const string templContractsDir = "templates/contracts";
-    static const string templContractName = "skeleton";
     static const string contractsDir = "contracts";
-    static const string buildDir = "build";
 
     bool process(string command_line, TeosControl* teos_control)
     {
@@ -110,7 +108,8 @@ namespace teos {
     void BootstrapContract::copy(
       boost::filesystem::path inTemplate,
       boost::filesystem::path inContract,
-      string name
+      string name,
+      string templateName
       )
     {
       namespace bfs = boost::filesystem; 
@@ -124,7 +123,7 @@ namespace teos {
           ss << in.rdbuf();
           in.close();
           contents = ss.str();
-          boost::replace_all(contents, "@" + templContractName + "@", name);
+          boost::replace_all(contents, "@" + templateName + "@", name);
         } catch(exception& e){
           putError(e.what());
           return;
@@ -151,7 +150,8 @@ namespace teos {
       }
     }
 
-    void BootstrapContract::bootstrapContract(string name)
+    void BootstrapContract::bootstrapContract(
+      string name, string templateName)
     {
       namespace bfs = boost::filesystem;
 
@@ -182,18 +182,14 @@ namespace teos {
         }
       }
 
-      respJson_.put("contract_dir", contract_path.string());
-      respJson_.put("source_dir", contract_path.string());
-      respJson_.put("binary_dir", (contract_path / buildDir) .string());
-      respJson_.put("template_cpp", (contract_path / (name + ".cpp")).string());            
-      respJson_.put("template_hpp", (contract_path / (name + ".hpp")).string());            
+      respJson_.put("contract_dir", contract_path.string());           
     
-      bfs::path contextPath(getEosFactoryDir(this));
+      bfs::path eosFactoryDir(getEosFactoryDir(this));
       if(isError_){
         return;
       }
       bfs::path templContractPath 
-        = contextPath / templContractsDir / templContractName;
+        = eosFactoryDir / templContractsDir / templateName;
 
       for (const auto& dirEnt : bfs::recursive_directory_iterator{templContractPath})
       {
@@ -201,10 +197,10 @@ namespace teos {
           const auto& inTemplate = dirEnt.path();
           auto relativePathStr = inTemplate.string();
           boost::replace_first(relativePathStr, templContractPath.string(), "");
-          boost::replace_all(relativePathStr, templContractName, name);
+          boost::replace_all(relativePathStr, templateName, name);
 
           bfs::path dest = contract_path / relativePathStr;
-          copy(inTemplate, contract_path / relativePathStr, name);
+          copy(inTemplate, contract_path / relativePathStr, name, templateName);
 
         } catch (exception &e){
           putError(e.what());
@@ -215,6 +211,42 @@ namespace teos {
       }
     }
 
+    /**
+     * @brief Get the target (build) directory.
+     * 
+     * Given a source directory, tries varies contract IDE structure models
+     * and returns the first existing one.
+     * 
+     * @param sourceDir source directory, where C/C++ files come from.
+     * @return boost::filesystem::path 
+     */
+    boost::filesystem::path getTargetDirPath(string sourceDir)
+    {
+      namespace bfs = boost::filesystem;
+      bfs::path sourceDirPath(sourceDir);
+      bfs::path targetPath;
+      
+      if(targetPath.empty())
+      {
+        bfs::path td = sourceDirPath / ("../build");
+        if(bfs::exists(td)){
+          targetPath = td;
+        }
+      }
+      if(targetPath.empty())
+      {
+        bfs::path td = sourceDirPath / "build";
+        if(bfs::exists(td)){
+          targetPath = td;
+        }
+      }
+      if(targetPath.empty())
+      {
+        targetPath = sourceDirPath;
+      } 
+      return targetPath;
+    }
+
     void GenerateAbi::generateAbi(
       string sourceDir,
       string include_dir // comma separated list of include dirs
@@ -223,6 +255,15 @@ namespace teos {
       namespace bfs = boost::filesystem;
 
       vector<string> srcs = getContractSourceFiles(this, sourceDir);
+      for(string src: srcs){
+        bfs::path srcPath(src);
+        if(srcPath.extension().string() == ".abi"){
+          putError((boost::format(
+            "An ABI exists in the source directory. Cannot overwrite it:\n%1%\n")
+              % srcPath.string()).str());
+          return;
+        }
+      }
       if(srcs.empty()){
         putError((boost::format("The source is empty. The imput is:\n%1%\n")
               % sourceDir).str());
@@ -231,28 +272,7 @@ namespace teos {
 
       bfs::path sourcePath(srcs[0]);
       string name = sourcePath.stem().string();
-
-      bfs::path sourceDirPath(sourceDir);
-      bfs::path targetDir;      
-      if(targetDir.empty())
-      {
-        bfs::path td = sourceDirPath / ("../" + buildDir);
-        if(bfs::exists(td)){
-          targetDir = td;
-        }
-      }
-      if(targetDir.empty())
-      {
-        bfs::path td = sourceDirPath / buildDir;
-        if(bfs::exists(td)){
-          targetDir = td;
-        }
-      }
-      if(targetDir.empty())
-      {
-        targetDir = sourceDirPath;
-      }      
-      bfs::path target_path = targetDir / (name  + ".abi");
+      bfs::path targetPath = getTargetDirPath(sourceDir) / (name  + ".abi");
 
       string command_line = getSourceDir(this) 
         + "/build/programs/eosio-abigen/eosio-abigen"
@@ -276,7 +296,7 @@ namespace teos {
 
       command_line = command_line
         + " -extra-arg=-fparse-all-comments"
-        + " -destination-file=" + target_path.string()
+        + " -destination-file=" + targetPath.string()
         + " -verbose=0"
         + " -context=" + sourcePath.string()
         + " " + sourcePath.string() + " --";
@@ -285,9 +305,9 @@ namespace teos {
 
       if(process(command_line, this)){  
         boost::property_tree::ptree abi;
-        boost::property_tree::read_json(target_path.string(), abi);
+        boost::property_tree::read_json(targetPath.string(), abi);
         respJson_.add_child("ABI", abi);
-        respJson_.put("output", target_path.string());
+        respJson_.put("output", targetPath.string());
           //cout << responseToString();        
       }
     }
@@ -320,7 +340,7 @@ namespace teos {
 
       string objectFileList;
       bfs::path target_dir_path;
-      bfs::path target_path;
+      bfs::path targetPath;
       bfs::path workdir;
       bfs::path workdir_build;
 
@@ -329,20 +349,13 @@ namespace teos {
         bfs::path src_file(file);
         string name = src_file.stem().string();
 
-        if(target_path.empty()) 
+        if(targetPath.empty()) 
         { // Define target path once.
-          target_dir_path = bfs::path(src_file.parent_path() / buildDir);
-          if(bfs::exists(target_dir_path)){
-            target_path = target_dir_path / (name + ".wast");
-          } else
-          { 
-            target_dir_path = bfs::path(src_file.parent_path());
-            target_path = target_dir_path / (name + ".wast");
-          }
+          targetPath = getTargetDirPath(sourceDir) / (name + ".wast");
 
           workdir = target_dir_path / "working_dir";
           bfs::create_directories(workdir);
-          workdir_build = bfs::path(workdir / buildDir);
+          workdir_build = bfs::path(workdir / "build");
           bfs::create_directory(workdir_build);
         }
 
@@ -419,7 +432,7 @@ namespace teos {
       {
         string command_line;
         command_line += getSourceDir(this) + "/build/externals/binaryen/bin/eosio-s2wasm"
-          + " -o " + target_path.string()
+          + " -o " + targetPath.string()
           + " -s 16384"
           + " " + workdir.string() + "/assembly.s";
 
@@ -431,11 +444,11 @@ namespace teos {
       }
       bfs::remove_all(workdir);
 
-      ifstream ifs(target_path.string());
+      ifstream ifs(targetPath.string());
       stringstream ss;
       ss << ifs.rdbuf();
       respJson_.put("WAST", ss.str());
-      respJson_.put("output", target_path.string());
+      respJson_.put("output", targetPath.string());
     }
   }
 }

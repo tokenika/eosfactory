@@ -377,7 +377,7 @@ variable.
       namespace bfs = boost::filesystem;
 
       vector<string> srcs;
-      set<string> extensions({".cpp", ".cxx", ".c"});
+      set<string> extensions({".cpp", ".cxx", ".c", "abi"});
       for (bfs::directory_entry& entry 
         : boost::make_iterator_range(
           bfs::directory_iterator(sourcePath), {})) 

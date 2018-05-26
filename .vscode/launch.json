@@ -71,7 +71,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos/teos",
-        "args": ["bootstrap", "contract", "test"],
+        "args": ["bootstrap", "contract", "test", "eosio.token"],
         "stopAtEntry": false,
         "cwd": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos",
         "environment": [],

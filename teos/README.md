@@ -22,7 +22,7 @@ Please, walkthrough the following outline of our IDE.
 
 ### Starting with a template
 
-Let you have installed *EOSFactory* according to uor instructions.
+Let you have installed *EOSFactory* according to our instructions.
 Let you have your smart-contract workspace defined, either with the `-w` option of the `eosfactory` installer, or with a corresponding entry in the `config.json` file, for example:
 ```
 {
