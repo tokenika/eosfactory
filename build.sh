@@ -296,50 +296,56 @@ if [ ! -z "$IS_WSL" ]; then
     setWindowsVariable "EOSIO_SOURCE_DIR" "$retval"     
 
     ### env variable HOME
-    homeWindows=""
+    homeWindowsIsSet=""
     function verifyHome() {
+        homeToVerify=$1
         bashrc=".bashrc"
-        homePathSet=$(cmd.exe /c echo %HOME%)
-        bashrcPathSet="${homePathSet::-1}\\$bashrc"
-        bashrcDirSet=$(cmd.exe /c dir /B  $bashrcPathSet)
-        if [ ! -z ${bashrcDirSet} ]; then
-            bashrcDirSet=${bashrcDirSet::-1}
-        fi
-        # printf "//// left: %s\n" "${#bashrcDirSet} $bashrcDirSet"
-        # printf "/// right: %s\n" "${#bashrc} $bashrc"    
-        if [ "$bashrcDirSet" != "$bashrc" ]; then
-            homeWindows=${1}\\"home"\\$USER
+
+        # see whether the windows HOME variable is already set:
+            homePathSet=$(cmd.exe /c echo %HOME%) # homePathSet windows env:HOME
+            # supposed to be windows path to .barshrc file:
+            bashrcPathSet="${homePathSet::-1}\\$bashrc"
+            # check whether the $bashrcPathSet directory contains .barshrc:
+            bashrcDirSet=$(cmd.exe /c dir /B  $bashrcPathSet)
+            if [ ! -z ${bashrcDirSet} ]; then
+                bashrcDirSet=${bashrcDirSet::-1}
+            fi
+
+        if [ "$bashrcDirSet" == "$bashrc" ]; then      
+            homeWindowsIsSet=true
+        else
+        # the windows HOME variable is not set:
+            homeWindows=${homeToVerify}\\"home"\\$USER
 
             bashrcPath=${homeWindows}\\$bashrc
             bashrcDir=$(cmd.exe /c dir /B  $bashrcPath)
 
             if [ ! -z ${bashrcDir} ]; then
-                #a=${a// /}
                 bashrcDir=${bashrcDir::-1}
-            fi 
+            fi
+            if [ "$bashrcDir" == "$bashrc" ]; then 
+                setx.exe "HOME" "$homeWindows"
+                homeWindowsIsSet=true
+                printf "HOME: %s\n" "$homeWindows"
+            fi
         fi
     }
 
-    if [ -z "$homeWindows" ]; then
+    if [ -z "$homeWindowsIsSet" ]; then
         verifyHome $WSL_ROOT_DIR__
     fi
-    if [ -z "$homeWindows" ]; then
+    if [ -z "$homeWindowsIsSet" ]; then
         verifyHome $WSL_ROOT_DIR1804__
     fi
 
-    if [ ! -z "$homeWindows" ]; then
-
-        # printf "//// left: %s\n" "${#bashrcDir} $bashrcDir"
-        # printf "/// right: %s\n" "${#bashrc} $bashrc"    
-        if [ "$bashrcDir" == "$bashrc" ]; then 
-            setx.exe "HOME" "$homeWindows"
-            printf "HOME: %s\n" "$homeWindows"
-        else
+    if [ -z "$homeWindowsIsSet" ]; then
             printf "\n%s" "
         ######################################################################
         #   Cannot find the root of the WSL file system which was tried to be
         #
         #   ${WSL_ROOT_DIR__}
+        #   and
+        #   $WSL_ROOT_DIR1804__
         #
         #   Please, find the path in your computer, and restart the ./build.sh
         #   with the option 
@@ -347,10 +353,11 @@ if [ ! -z "$IS_WSL" ]; then
         #   added to the command line.
         ######################################################################
 " 
-            exit 1
-        fi
+        exit 1
+    fi 
+fi
 
-if [ -z "$CMAKE" ]; then    
+if [ -z "$CMAKE" ]; then
     CMAKE=$( which cmake )
 fi
 
@@ -367,6 +374,7 @@ if [ -z "$EOSIO_SOURCE_DIR" ]; then
     exit -1
 fi
 
+exit 1 #########################################################################################
 ##########################################################################
 # Make the file structure
 ##########################################################################
