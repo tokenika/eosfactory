@@ -1,0 +1,64 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",   
+ "tasks": [
+     {
+         "label": "compile",
+         "type": "shell",
+         "windows": {
+             "command": "${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/hello.teos -c"
+         },
+         "osx": {
+             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/hello.teos -c"
+         },
+         "linux": {
+             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/hello.teos -c"
+         },        
+         "presentation": {
+             "reveal": "always",
+             "panel": "dedicated"
+         },
+         "problemMatcher": []
+     },
+     {
+         "label": "build",
+         "type": "shell",
+         "windows": {
+             "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/hello.teos;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/hello.teos",
+         },
+         "osx": {
+             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} generate abi ${EOSIO_CONTRACT_WORKSPACE}/hello.teos;${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/hello.teos",
+         },
+         "linux": {
+             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} generate abi ${EOSIO_CONTRACT_WORKSPACE}/hello.teos;${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/hello.teos",
+         },                
+         "problemMatcher": [],
+         "presentation": {
+             "reveal": "always",
+             "panel": "dedicated"
+         },
+         "group": {
+             "kind": "build",
+             "isDefault": true
+         }
+     },
+     {
+         "taskName": "API",
+         "windows": {
+             "command": "explorer"
+         },
+         "osx": {
+             "command": "open"
+         },
+         "linux": {
+             "command": "sensible-browser"
+         },
+         "args": [
+             "https://eosio.github.io/eos/group__contractdev.html"
+         ],
+         "problemMatcher": []
+     }
+ ]
+ }
+ 

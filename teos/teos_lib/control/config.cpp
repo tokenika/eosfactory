@@ -377,7 +377,7 @@ variable.
       namespace bfs = boost::filesystem;
 
       vector<string> srcs;
-      set<string> extensions({".cpp", ".cxx", ".c", "abi"});
+      set<string> extensions({".cpp", ".cxx", ".c", ".abi"});
       for (bfs::directory_entry& entry 
         : boost::make_iterator_range(
           bfs::directory_iterator(sourcePath), {})) 
@@ -411,7 +411,7 @@ variable.
         }
 
         {
-          bfs::path sourcePath = bfs::path(contractDir) / "/src";
+          bfs::path sourcePath = bfs::path(contractDir) / "src";
           trace += sourcePath.string() + "\n";
           vector<string> srcs = getSourceFiles(sourcePath);
           if(!srcs.empty()){
