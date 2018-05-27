@@ -2,63 +2,69 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",   
- "tasks": [
-     {
-         "label": "compile",
-         "type": "shell",
-         "windows": {
-             "command": "${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src -c"
-         },
-         "osx": {
-             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src -c"
-         },
-         "linux": {
-             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src -c"
-         },        
-         "presentation": {
-             "reveal": "always",
-             "panel": "dedicated"
-         },
-         "problemMatcher": []
-     },
-     {
-         "label": "build",
-         "type": "shell",
-         "windows": {
-             "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src",
-         },
-         "osx": {
-             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} generate abi ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src;${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src",
-         },
-         "linux": {
-             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} generate abi ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src;${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src",
-         },                
-         "problemMatcher": [],
-         "presentation": {
-             "reveal": "always",
-             "panel": "dedicated"
-         },
-         "group": {
-             "kind": "build",
-             "isDefault": true
-         }
-     },
-     {
-         "taskName": "API",
-         "windows": {
-             "command": "explorer"
-         },
-         "osx": {
-             "command": "open"
-         },
-         "linux": {
-             "command": "sensible-browser"
-         },
-         "args": [
-             "https://eosio.github.io/eos/group__contractdev.html"
-         ],
-         "problemMatcher": []
-     }
- ]
- }
+"tasks": [
+    {
+        "label": "compile",
+        "type": "shell",
+        "windows": {
+            "command": "${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src -c"
+        },
+        "osx": {
+            "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src -c"
+        },
+        "linux": {
+            "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src -c"
+        },        
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": []
+    },
+    {
+        "label": "build",
+        "type": "shell",
+        "windows": {
+            "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src",
+        },
+        "osx": {
+            "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} generate abi ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src;${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src",
+        },
+        "linux": {
+            "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} generate abi ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src;${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src",
+        },                
+        "problemMatcher": [],
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        }
+    },
+    {
+        "taskName": "API",
+        "type": "shell",
+        "windows": {
+            "command": "explorer"
+        },
+        "osx": {
+            "command": "open"
+        },
+        "linux": {
+            "command": "sensible-browser"
+        },
+        "args": [
+            "https://eosio.github.io/eos/group__contractdev.html"
+        ],
+        "problemMatcher": []
+    },
+    {
+        "taskName": "test",
+        "type": "shell",
+        "command": "source ./build/pythonpath; python3 ./test/test.py",
+    }
+]
+}
  

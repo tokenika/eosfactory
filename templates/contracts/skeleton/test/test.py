@@ -37,7 +37,11 @@ class Test1(unittest.TestCase):
         self.assertTrue(c.deploy(), "deploy")
         self.assertTrue(c.get_code(), "get_code")
 
-
+        c.push_action("hi", '{"user":"alice"}', sess.alice)
+        out = c.get_console()
+        print(out, "\n")
+        self.assertTrue(out.find("Hello, alice") != -1)
+        
     def test_99_node_stop(self):
         x = node.stop()
         self.assertTrue(x)

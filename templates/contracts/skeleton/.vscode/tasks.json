@@ -58,7 +58,16 @@
              "https://eosio.github.io/eos/group__contractdev.html"
          ],
          "problemMatcher": []
-     }
+     },
+     {
+        "taskName": "test",
+        "type": "shell",
+        "command": "source ./build/pythonpath; python3 ./test/test.py",
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        }
+    }
  ]
  }
  

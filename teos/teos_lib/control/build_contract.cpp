@@ -125,6 +125,7 @@ namespace teos {
           in.close();
           contents = ss.str();
           boost::replace_all(contents, "@" + TEMPLATE_TOKEN + "@", name);
+          boost::replace_all(contents, "${PYTHONPATH}", getenv("PYTHONPATH"));
         } catch(exception& e){
           putError(e.what());
           return;
@@ -191,6 +192,12 @@ namespace teos {
       }
       bfs::path templContractPath 
         = eosFactoryDir / templContractsDir / templateName;
+      if(!bfs::exists(templContractPath))
+      {
+        putError((boost::format("Template '%1%' does not exist.\n")
+              % templateName).str(), SPOT);
+        return;
+      }
 
       for (const auto& dirEnt : bfs::recursive_directory_iterator{templContractPath})
       {
@@ -274,7 +281,7 @@ namespace teos {
       }
       if(srcs.empty()){
         putError((boost::format("The source is empty. The imput is:\n%1%\n")
-              % sourceDir).str());
+              % sourceDir).str(), SPOT);
         return;
       }
 
