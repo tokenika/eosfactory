@@ -50,4 +50,4 @@ teos/config.json
 keosd.md
 teos/source/conf.py
 teos/teos_lib/eos_interface.1.cpp#
-templates/contracts/tasks/.vscode/tasks.json
+templates/contracts/tasks
