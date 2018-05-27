@@ -35,8 +35,9 @@ namespace teos
   using namespace boost::property_tree;
   using namespace teos::control;
 
-#define SHARP "#  "
-#define INDENT "15"
+  #define SHARP "#  "
+  #define INDENT "20"
+
   boost::format output(string label, string format) {
     string header = (boost::format(SHARP "%1$" INDENT "s: ") % label).str();
     return boost::format(header + format);

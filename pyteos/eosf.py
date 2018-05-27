@@ -115,7 +115,7 @@ class Contract(pyteos.Contract):
 
     def delete(self):
         shutil.rmtree(self.get_path())
-        print("#  Contract deleted.")
+        print("#  Contract deleted.\n")
 
 
 class Template(Contract):

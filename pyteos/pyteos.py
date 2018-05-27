@@ -999,7 +999,7 @@ class Contract(SetContract):
                 self.console = \
                     self.action_json["processed"]["action_traces"][0] \
                     ["console"]
-                print(self.console)
+                print(self.console + "\n")
             except:
                 pass
 

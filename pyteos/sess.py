@@ -89,5 +89,5 @@ def setup():
     if pyteos.is_verbose():
         print("#  Available test accounts: " 
             + eosio.name + ", "  
-            + alice.name + ", " + carol.name + ", " + bob.name)
+            + alice.name + ", " + carol.name + ", " + bob.name + "\n")
     return True
