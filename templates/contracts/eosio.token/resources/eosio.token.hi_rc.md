@@ -1,4 +1,4 @@
-# CONTRACT FOR eosio.token::hi
+# CONTRACT FOR contractName::hi
 
 ## ACTION NAME: hi
 

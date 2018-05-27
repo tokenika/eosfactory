@@ -204,7 +204,7 @@ Usage: ./teos create key --jarg '{
       void copy(
         boost::filesystem::path inTemplate,
         boost::filesystem::path inContract,
-        string name, string templateName);
+        string name);
 
     public:
     /**

@@ -412,6 +412,7 @@ variable.
 
         {
           bfs::path sourcePath = bfs::path(contractDir) / "src";
+          contractDir = sourcePath.string();
           trace += sourcePath.string() + "\n";
           vector<string> srcs = getSourceFiles(sourcePath);
           if(!srcs.empty()){

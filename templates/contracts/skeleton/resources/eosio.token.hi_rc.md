@@ -1,4 +1,4 @@
-# CONTRACT FOR skeleton::hi
+# CONTRACT FOR contractName::hi
 
 ## ACTION NAME: hi
 

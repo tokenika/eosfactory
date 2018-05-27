@@ -105,11 +105,12 @@ namespace teos {
       }
     }
 
+    #define TEMPLATE_TOKEN string("contractName")
+
     void BootstrapContract::copy(
       boost::filesystem::path inTemplate,
       boost::filesystem::path inContract,
-      string name,
-      string templateName
+      string name
       )
     {
       namespace bfs = boost::filesystem; 
@@ -123,7 +124,7 @@ namespace teos {
           ss << in.rdbuf();
           in.close();
           contents = ss.str();
-          boost::replace_all(contents, "@" + templateName + "@", name);
+          boost::replace_all(contents, "@" + TEMPLATE_TOKEN + "@", name);
         } catch(exception& e){
           putError(e.what());
           return;
@@ -197,10 +198,10 @@ namespace teos {
           const auto& inTemplate = dirEnt.path();
           auto relativePathStr = inTemplate.string();
           boost::replace_first(relativePathStr, templContractPath.string(), "");
-          boost::replace_all(relativePathStr, templateName, name);
+          boost::replace_all(relativePathStr, TEMPLATE_TOKEN, name);
 
           bfs::path dest = contract_path / relativePathStr;
-          copy(inTemplate, contract_path / relativePathStr, name, templateName);
+          copy(inTemplate, contract_path / relativePathStr, name);
 
         } catch (exception &e){
           putError(e.what());
@@ -255,18 +256,19 @@ namespace teos {
       namespace bfs = boost::filesystem;
 
       vector<string> srcs = getContractSourceFiles(this, sourceDir);
-      bfs::path targetDirPath(sourceDir);
+      bfs::path targetDirPath = getTargetDirPath(sourceDir);
 
       for(string src: srcs){
         bfs::path srcPath(src);
         if(srcPath.extension().string() == ".abi"){
           putError((boost::format(
             "An ABI exists in the source directory. Cannot overwrite it:\n%1%\n"
-            "Just copying it to the target directory")
+            "\tJust copying it to the target directory.")
               % srcPath.string()).str());
 
           bfs::copy_file(
-            srcPath, targetDirPath, bfs::copy_option::overwrite_if_exists);
+            srcPath, targetDirPath / srcPath.filename(), 
+            bfs::copy_option::overwrite_if_exists);
           return;
         }
       }
