@@ -7,4 +7,5 @@ add_custom_command(OUTPUT @CONTRACT_NAME@.wast COMMAND ${teos} build contract ${
 add_custom_target(abi ALL DEPENDS @CONTRACT_NAME@.abi)
 add_custom_target(wast ALL DEPENDS @CONTRACT_NAME@.wast)
 
+file(WRITE ${CMAKE_BINARY_DIR}/pythonpath "export PYTHONPATH=$ENV{PYTHONPATH}")
 add_test(NAME unittest COMMAND python3 ${CMAKE_SOURCE_DIR}/test/test.py)
