@@ -313,7 +313,7 @@ variable.
             Does the given contractDir is absolute, is directory and exists?
           */
           bfs::path contractPath(contractDir);
-          trace += contractPath.string() + "\n";
+          trace += contractPath.string() + SPOT + "\n";
           if(contractPath.is_absolute() 
             && bfs::exists(contractPath)) {
               return contractPath.string();
@@ -330,11 +330,11 @@ variable.
           bfs::path contractPath 
             = bfs::path(configValue(teosControl, EOSIO_CONTRACT_WORKSPACE)) 
               / contractDir;
-          trace += contractPath.string() + "\n";
+          trace += contractPath.string() + SPOT + "\n";
           if(!contractPath.is_absolute()) {
             bfs::path contextPath(configValue(teosControl, EOSIO_EOSFACTORY_DIR));
             contractPath = contextPath / contractPath;
-            trace += contractPath.string() + "\n";
+            trace += contractPath.string() + SPOT + "\n";
           }
           if(bfs::exists(contractPath)) {
             return contractPath.string();
@@ -348,7 +348,7 @@ variable.
           bfs::path contractPath 
               = bfs::path(configValue(teosControl, EOSIO_EOSFACTORY_DIR)) 
                 / CONTRACTS_DIR / contractDir;
-          trace += contractPath.string() + "\n";
+          trace += contractPath.string() + SPOT + "\n";
           if(contractPath.is_absolute() && bfs::exists(contractPath)) {
               return contractPath.string();
             }        
@@ -361,7 +361,7 @@ variable.
           bfs::path contractPath 
               = bfs::path(configValue(teosControl, EOSIO_SOURCE_DIR)) 
                 / EOSIO_CONTRACT_DIR / contractDir;
-          trace += contractPath.string() + "\n";
+          trace += contractPath.string() + SPOT + "\n";
           if(contractPath.is_absolute() 
             && bfs::exists(contractPath)) {
               return contractPath.string();
