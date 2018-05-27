@@ -18,6 +18,7 @@ Makefile
 !/contracts/currency/build
 !/contracts/tic.tac.toe/build
 !/templates/contracts/skeleton/build
+!/templates/contracts/eosio.token/build
 
 /tests/*
 !/tests/test.py
