@@ -22,7 +22,7 @@ namespace teos
     {
     public:
       PushAction(
-          string contractName, string action, string data,
+          string CONTRACT_NAME, string action, string data,
           string permission = "",
           unsigned expirationSec = 30, 
           bool skipSignature = false,
@@ -32,7 +32,7 @@ namespace teos
           unsigned maxNetUsage = 0)
       {
         copy(pushAction(
-          contractName, action, data,
+          CONTRACT_NAME, action, data,
           permission,          
           expirationSec,
           skipSignature, dontBroadcast, forceUnique,

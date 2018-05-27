@@ -3,7 +3,7 @@
 
 #define DEBUG
 #include "logger.hpp"
-#include "@contractName@.hpp" 
+#include "@CONTRACT_NAME@.hpp" 
 
 using namespace eosio;
 

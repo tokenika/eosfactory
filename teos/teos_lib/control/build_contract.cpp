@@ -105,7 +105,7 @@ namespace teos {
       }
     }
 
-    #define TEMPLATE_TOKEN string("contractName")
+    #define TEMPLATE_TOKEN string("CONTRACT_NAME")
 
     void BootstrapContract::copy(
       boost::filesystem::path inTemplate,

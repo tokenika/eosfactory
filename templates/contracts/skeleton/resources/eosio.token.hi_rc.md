@@ -1,4 +1,4 @@
-# CONTRACT FOR contractName::hi
+# CONTRACT FOR CONTRACT_NAME::hi
 
 ## ACTION NAME: hi
 

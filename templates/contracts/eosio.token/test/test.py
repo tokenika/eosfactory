@@ -30,7 +30,7 @@ class Test1(unittest.TestCase):
         self.assertTrue(sess.setup(), "session setup")
 
     def test_01_contract(self):
-        c = eosf.Contract("@contractName@/build")
+        c = eosf.Contract("@CONTRACT_NAME@/build")
         self.assertFalse(c.error, "Contract")
 
         self.assertTrue(c.get_code(), "get_code")

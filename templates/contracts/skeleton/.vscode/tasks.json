@@ -7,13 +7,13 @@
          "label": "compile",
          "type": "shell",
          "windows": {
-             "command": "${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@contractName@/src -c"
+             "command": "${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src -c"
          },
          "osx": {
-             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@contractName@/src -c"
+             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src -c"
          },
          "linux": {
-             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@contractName@/src -c"
+             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src -c"
          },        
          "presentation": {
              "reveal": "always",
@@ -25,13 +25,13 @@
          "label": "build",
          "type": "shell",
          "windows": {
-             "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/@contractName@/src;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@contractName@/src",
+             "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src",
          },
          "osx": {
-             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} generate abi ${EOSIO_CONTRACT_WORKSPACE}/@contractName@/src;${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@contractName@/src",
+             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} generate abi ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src;${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src",
          },
          "linux": {
-             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} generate abi ${EOSIO_CONTRACT_WORKSPACE}/@contractName@/src;${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@contractName@/src",
+             "command": "source $HOME/.bash_profile; ${EOSIO_TEOS} generate abi ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src;${EOSIO_TEOS} build contract ${EOSIO_CONTRACT_WORKSPACE}/@CONTRACT_NAME@/src",
          },                
          "problemMatcher": [],
          "presentation": {
