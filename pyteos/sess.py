@@ -13,6 +13,7 @@ Session initiation and storage for session elements.
 
 import pyteos
 
+
 def setup():
     """
     Initialise a test session.

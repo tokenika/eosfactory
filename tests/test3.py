@@ -15,11 +15,10 @@ def run():
     sess.setup()
 
     print('test Template():')
-    c = Template("_e4b2ffc804529ce9c6fae258197648cc2", remove_existing = True)
-    print(c.json)
+    t = Template("_e4b2ffc804529ce9c6fae258197648cc2", "", remove_existing = True)
 
-    print('test c.path():')
-    c.path()
+    print('Contract based on the template definitions, possibly modified:')
+    c = Contract(t.contract_path_absolute)
     
     print('test c.build():')
     c.build()

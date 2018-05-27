@@ -97,18 +97,22 @@ class _Command:
     is launched to responce just this call. 
     """
     global _is_verbose 
-    global setup    
-   
-    _jarg = json.loads("{}")
-    json = json.loads("{}")
+    global setup
+
+    error = False
     _out = ""
-    error = False 
+    json = json.loads("{}")
 
     def __init__(
-                self, first, second, 
+                self, jarg, first, second, 
                 is_verbose=True, suppress_error_msg=False):
+        self.jarg = jarg
+        # print(".................................")
+        # print(jarg)
+        # print(".................................")
         cl = [setup.teos_exe, first, second,
-            "--jarg", str(self._jarg).replace("'", '"'), "--both"]
+            "--jarg", str(self.jarg).replace("'", '"'), "--both"]
+
         if _is_verbose and is_verbose:
             cl.append("-V")
 
@@ -135,8 +139,6 @@ class _Command:
                 if len(longest) < width:
                     print(self._out)
                 else:
-                    #wrapper = textwrap.TextWrapper(width=width)
-                    #print(wrapper.fill(self._out))
                     print(self._out)
         try:
             self.json = json.loads(json_resp)
@@ -155,7 +157,8 @@ class GetConfig(_Command):
     Get the configurationt of the teos executable.
     """
     def __init__(self, is_verbose=True):
-        _Command.__init__(self, "get", "config", is_verbose)        
+        jarg = json.loads("{}")
+        _Command.__init__(self, jarg, "get", "config", is_verbose)        
 
     
 class GetAccount(_Command):
@@ -181,10 +184,11 @@ class GetAccount(_Command):
             account = account.name
         except:
             pass
-        
-        self._jarg["account_name"] = account
+
+        jarg = json.loads("{}")
+        jarg["account_name"] = account
         _Command.__init__(
-            self, "get", "account", is_verbose, suppress_error_msg)
+            self, jarg, "get", "account", is_verbose, suppress_error_msg)
         if not self.error:
             self.name = self.json["account_name"]
 
@@ -196,8 +200,9 @@ class GetAccounts(_Command):
         except:
             pass
 
-        self._jarg["public_key"] = key
-        _Command.__init__(self, "get", "accounts", is_verbose)
+        jarg = json.loads("{}")
+        jarg["public_key"] = key
+        _Command.__init__(self, jarg, "get", "accounts", is_verbose)
 
 
 class WalletCreate(_Command):
@@ -220,8 +225,9 @@ class WalletCreate(_Command):
         json: The json representation of the wallet, if `error` is not set.
     """
     def __init__(self, name="default", is_verbose=True):
-        self._jarg["name"] = name
-        _Command.__init__(self, "wallet", "create", is_verbose)
+        jarg = json.loads("{}")
+        jarg["name"] = name
+        _Command.__init__(self, jarg, "wallet", "create", is_verbose)
         if not self.error:
             self.name = name
             self.json["name"] = name
@@ -237,7 +243,8 @@ class WalletList(_Command):
         is_verbose: If `False`, do not print stdout, default is `True`.
     """
     def __init__(self, is_verbose=True):
-        _Command.__init__(self, "wallet", "list", is_verbose)
+        jarg = json.loads("{}")
+        _Command.__init__(self, jarg, "wallet", "list", is_verbose)
 
 
 class WalletImport(_Command):
@@ -261,9 +268,10 @@ class WalletImport(_Command):
         except:
             name = wallet
 
-        self._jarg["name"] = name
-        self._jarg["key"] = key_private
-        _Command.__init__(self, "wallet", "import", is_verbose)
+        jarg = json.loads("{}")
+        jarg["name"] = name
+        jarg["key"] = key_private
+        _Command.__init__(self, jarg, "wallet", "import", is_verbose)
         if not self.error:       
             self.key_private = key_private
 
@@ -277,7 +285,8 @@ class WalletKeys(_Command):
         is_verbose: If `False`, do not print stdout, default is `True`.
     """
     def __init__(self, is_verbose=True):
-        _Command.__init__(self, "wallet", "keys", is_verbose)         
+        jarg = json.loads("{}")
+        _Command.__init__(self, jarg, "wallet", "keys", is_verbose)         
 
 
 class WalletOpen(_Command):
@@ -295,8 +304,9 @@ class WalletOpen(_Command):
         except:
             name = wallet
         
-        self._jarg["name"] = name
-        _Command.__init__(self, "wallet", "open", is_verbose)
+        jarg = json.loads("{}")
+        jarg["name"] = name
+        _Command.__init__(self, jarg, "wallet", "open", is_verbose)
 
 
 class WalletLock(_Command):
@@ -314,8 +324,9 @@ class WalletLock(_Command):
         except:
             name = wallet
         
-        self._jarg["name"] = name
-        _Command.__init__(self, "wallet", "lock", is_verbose)
+        jarg = json.loads("{}")
+        jarg["name"] = name
+        _Command.__init__(self, jarg, "wallet", "lock", is_verbose)
 
 
 class WalletUnlock(_Command):
@@ -336,9 +347,10 @@ class WalletUnlock(_Command):
         except:
             name = wallet
 
-        self._jarg["name"] = name
-        self._jarg["password"] = password
-        _Command.__init__(self, "wallet", "unlock", is_verbose)
+        jarg = json.loads("{}")
+        jarg["name"] = name
+        jarg["password"] = password
+        _Command.__init__(self, jarg, "wallet", "unlock", is_verbose)
 
 
 class GetInfo(_Command):
@@ -350,7 +362,8 @@ class GetInfo(_Command):
         is_verbose: If `False`, do not print stdout, default is `True`.
     """
     def __init__(self, is_verbose=True, suppress_error_msg=False):
-        _Command.__init__(self, "get", "info", is_verbose, suppress_error_msg)
+        jarg = json.loads("{}")
+        _Command.__init__(self, jarg, "get", "info", is_verbose, suppress_error_msg)
         if not self.error:    
             self.head_block = self.json["head_block_num"]
             self.head_block_time = self.json["head_block_time"]
@@ -369,12 +382,13 @@ class GetBlock(_Command):
         is_verbose: If `False`, do not print stdout, default is `True`.    
     """
     def __init__(self, block_number, block_id="", is_verbose=True):
+        jarg = json.loads("{}")
         if(block_id == ""):
-            self._jarg["block_num_or_id"] = block_number
+            jarg["block_num_or_id"] = block_number
         else:
-            self._jarg["block_num_or_id"] = block_id
+            jarg["block_num_or_id"] = block_id
         
-        _Command.__init__(self, "get", "block", is_verbose)
+        _Command.__init__(self, jarg, "get", "block", is_verbose)
         if not self.error:   
             self.block_num = self.json["block_num"]
             self.ref_block_prefix = self.json["ref_block_prefix"]
@@ -385,10 +399,11 @@ class GetCode(_Command):
     def __init__(
         self, account_name, wast_file="", abi_file="", is_verbose=True
         ):
-        self._jarg["account_name"] = account_name
-        self._jarg["wast"] = wast_file        
-        self._jarg["abi"] = abi_file
-        _Command.__init__(self, "get", "code", is_verbose)
+        jarg = json.loads("{}")
+        jarg["account_name"] = account_name
+        jarg["wast"] = wast_file        
+        jarg["abi"] = abi_file
+        _Command.__init__(self, jarg, "get", "code", is_verbose)
         if not self.error:
             self.code_hash = self.json["code_hash"]
             self.wast = self.json["wast"] 
@@ -404,21 +419,24 @@ class GetTable(_Command):
         limit=10, key="", lower="", upper="",
         is_verbose=True
         ):
-        self._jarg = json.loads("{}")
-        self._jarg["code"] = contract
-        self._jarg["table"] = table
-        self._jarg["scope"] = scope
-        self._jarg["limit"] = limit
-        self._jarg["table_key"] = key        
-        self._jarg["lower_bound"] = lower
-        self._jarg["upper_bound"] = upper
-        _Command.__init__(self, "get", "table", is_verbose)
+        jarg = json.loads("{}")
+        jarg = json.loads("{}")
+        jarg = json.loads("{}")
+        jarg["code"] = contract
+        jarg["table"] = table
+        jarg["scope"] = scope
+        jarg["limit"] = limit
+        jarg["table_key"] = key        
+        jarg["lower_bound"] = lower
+        jarg["upper_bound"] = upper
+        _Command.__init__(self, jarg, "get", "table", is_verbose)
 
 
 class CreateKey(_Command):
     def __init__(self, keyPairName, is_verbose=True):
-        self._jarg["name"] = keyPairName
-        _Command.__init__(self, "create", "key", is_verbose)
+        jarg = json.loads("{}")
+        jarg["name"] = keyPairName
+        _Command.__init__(self, jarg, "create", "key", is_verbose)
         if not self.error:  
             self.key_private = self.json["privateKey"]
             self.key_public = self.json["publicKey"]
@@ -486,18 +504,19 @@ class CreateAccount(_Command):
         except:
             permission_name = permission
         
-        self._jarg["creator"] = creator_name
-        self._jarg["name"] = name
-        self._jarg["ownerKey"] = owner_key_public
-        self._jarg["activeKey"] = active_key_public
-        self._jarg["permission"] = permission_name
-        self._jarg["expiration"] = expiration_sec        
-        self._jarg["skip-sign"] = skip_signature        
-        self._jarg["dont-broadcast"] = dont_broadcast
-        self._jarg["force-unique"] = forceUnique
-        self._jarg["max-cpu-usage"] = max_cpu_usage
-        self._jarg["max-net-usage"] = max_net_usage          
-        _Command.__init__(self, "create", "account", is_verbose)
+        jarg = json.loads("{}")
+        jarg["creator"] = creator_name
+        jarg["name"] = name
+        jarg["ownerKey"] = owner_key_public
+        jarg["activeKey"] = active_key_public
+        jarg["permission"] = permission_name
+        jarg["expiration"] = expiration_sec        
+        jarg["skip-sign"] = skip_signature        
+        jarg["dont-broadcast"] = dont_broadcast
+        jarg["force-unique"] = forceUnique
+        jarg["max-cpu-usage"] = max_cpu_usage
+        jarg["max-net-usage"] = max_net_usage          
+        _Command.__init__(self, jarg, "create", "account", is_verbose)
         if not self.error:
             self.name = name
 
@@ -554,19 +573,20 @@ class SetContract(_Command):
             permission_name = permission.name
         except:
              permission_name = permission
-
-        self._jarg["account"] = self.account_name
-        self._jarg["contract-dir"] = contract_dir
-        self._jarg["wast-file"] = wast_file
-        self._jarg["abi-file"] = abi_file
-        self._jarg["permission"] = permission_name
-        self._jarg["expiration"] = expiration_sec
-        self._jarg["skip-sign"] = skip_signature
-        self._jarg["dont-broadcast"] = dont_broadcast
-        self._jarg["force-unique"] = forceUnique
-        self._jarg["max-cpu-usage"] = max_cpu_usage
-        self._jarg["max-net-usage"] = max_net_usage        
-        _Command.__init__(self, "set", "contract", is_verbose)
+        
+        jarg = json.loads("{}")
+        jarg["account"] = self.account_name
+        jarg["contract-dir"] = contract_dir
+        jarg["wast-file"] = wast_file
+        jarg["abi-file"] = abi_file
+        jarg["permission"] = permission_name
+        jarg["expiration"] = expiration_sec
+        jarg["skip-sign"] = skip_signature
+        jarg["dont-broadcast"] = dont_broadcast
+        jarg["force-unique"] = forceUnique
+        jarg["max-cpu-usage"] = max_cpu_usage
+        jarg["max-net-usage"] = max_net_usage        
+        _Command.__init__(self, jarg, "set", "contract", is_verbose)
 
 
 class PushAction(_Command):
@@ -588,42 +608,47 @@ class PushAction(_Command):
             except:
                 pass
 
-        self._jarg["contract"] = contract_name
-        self._jarg["action"] = action
-        self._jarg["data"] = data.replace('"', '\\"')
-        self._jarg["permission"] = permission
-        self._jarg["expiration"] = expiration_sec
-        self._jarg["skip-sign"] = skip_signature
-        self._jarg["dont-broadcast"] = dont_broadcast
-        self._jarg["force-unique"] = forceUnique
-        self._jarg["max-cpu-usage"] = max_cpu_usage
-        self._jarg["max-net-usage"] = max_net_usage              
-        _Command.__init__(self, "push", "action", is_verbose)
+        jarg = json.loads("{}")
+        jarg["contract"] = contract_name
+        jarg["action"] = action
+        jarg["data"] = data.replace('"', '\\"')
+        jarg["permission"] = permission
+        jarg["expiration"] = expiration_sec
+        jarg["skip-sign"] = skip_signature
+        jarg["dont-broadcast"] = dont_broadcast
+        jarg["force-unique"] = forceUnique
+        jarg["max-cpu-usage"] = max_cpu_usage
+        jarg["max-net-usage"] = max_net_usage              
+        _Command.__init__(self, jarg, "push", "action", is_verbose)
         if not self.error:
             self.name = contract_name
 
 
 class Template(_Command):
-    def __init__(self, name, remove_existing=False, is_verbose=True):
+    def __init__(
+        self, name, template="", remove_existing=False, is_verbose=True):
 
-        contract_path = pathlib.Path(name)
-        if not contract_path.is_absolute():
+        self.contract_path = pathlib.Path(name)
+        if not self.contract_path.is_absolute():
             config = GetConfig(is_verbose=False)
             contract_path = \
                 pathlib.Path(config.json["contractWorkspace"]) / name
 
-        if contract_path.exists():
+        if self.contract_path.exists():
             if remove_existing:
-                shutil.rmtree(str(contract_path))
+                shutil.rmtree(str(self.contract_path))
             else:
                 self.error = True
                 print("ERROR!")
                 print(name + " is an existing contract definition." )
                 return
 
-        self._jarg["name"] = name
+        jarg = json.loads("{}")
+        jarg["name"] = name
+        if template:
+            jarg["template"] = template
 
-        _Command.__init__(self, "bootstrap", "contract", is_verbose)
+        _Command.__init__(self, jarg, "bootstrap", "contract", is_verbose)
         if not self.error:
             self.contract_dir = self.json["contract_dir"] 
                    
@@ -638,11 +663,12 @@ class ABI(_Command):
         except:
             pass
 
-        self._jarg["sourceDir"] = source
-        self._jarg["abi_file"] = abi_file
-        self._jarg["include_dir"] = include_dir
+        jarg = json.loads("{}")
+        jarg["sourceDir"] = source
+        jarg["abi_file"] = abi_file
+        jarg["include_dir"] = include_dir
 
-        _Command.__init__(self, "generate", "abi", is_verbose)
+        _Command.__init__(self, jarg, "generate", "abi", is_verbose)
         # if not self.error:
         #     self.abi = self.json["ABI"]
 
@@ -657,20 +683,22 @@ class WAST(_Command):
         except:
             pass
 
-        self._jarg["src"] = source
-        self._jarg["wast_file"] = wast_file
-        self._jarg["include_dir"] = include_dir
+        jarg = json.loads("{}")
+        jarg["src"] = source
+        jarg["wast_file"] = wast_file
+        jarg["include_dir"] = include_dir
 
-        _Command.__init__(self, "build", "contract", is_verbose)
+        _Command.__init__(self, jarg, "build", "contract", is_verbose)
         # if not self.error:
         #     self.wast = self.json["WAST"]
 
 
 class NodeStart(_Command):
     def __init__(self, clear=0, is_verbose=True):
-        self._jarg["resync-blockchain"] = clear
-        self._jarg["DO_NOT_LAUNCH"] = 1
-        _Command.__init__(self, "daemon", "start", False)
+        jarg = json.loads("{}")
+        jarg["resync-blockchain"] = clear
+        jarg["DO_NOT_LAUNCH"] = 1
+        _Command.__init__(self, jarg, "daemon", "start", False)
 
         self.command_line = ""
         if not self.error and not "head_block_num" in self.json:
@@ -691,7 +719,7 @@ class NodeStart(_Command):
                         shell=True)
 
 
-class NodeProbe(_Command):
+class NodeProbe:
     def __init__(self, is_verbose=True):
         count = setup.node_block_count
         num = setup.node_block_num
@@ -717,7 +745,8 @@ class NodeProbe(_Command):
 
 class NodeStop(_Command):
     def __init__(self, is_verbose=True):
-        _Command.__init__(self, "daemon", "stop", is_verbose)
+        jarg = json.loads("{}")
+        _Command.__init__(self, jarg, "daemon", "stop", is_verbose)
 
 
 class Wallet(WalletCreate):
@@ -990,6 +1019,7 @@ class Contract(SetContract):
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage
             )
+            
         if push_action.error:
             return False
 
