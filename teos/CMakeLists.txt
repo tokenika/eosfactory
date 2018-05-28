@@ -25,3 +25,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
 
 add_subdirectory( teos_lib )
 add_subdirectory( teos )
+
+install( TARGETS
+   teos
+   RUNTIME DESTINATION "/usr/local/bin"}
+)

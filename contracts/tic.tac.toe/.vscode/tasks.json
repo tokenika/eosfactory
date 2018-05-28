@@ -6,7 +6,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/tic.tac.toe;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/tic.tac.toe",
+            "command": "${env:teos_cli} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/tic.tac.toe;${env:teos_cli} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/tic.tac.toe",
             "problemMatcher": [],
             "presentation": {
                     "reveal": "always",

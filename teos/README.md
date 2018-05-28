@@ -33,7 +33,7 @@ Let you have your smart-contract workspace defined, either with the `-w` option 
 ```
 You can start development from a template, for example:
 ```
-$ $EOSIO_TEOS bootstrap contract hello.teos
+$ $teos_cli bootstrap contract hello.teos
 #  template contract: /mnt/c/Workspaces/EOS/contracts/hello.teos
 ```
 Now, let you open *Visual Studio Code* in the `hello.teos` contract directory. Do `CTR+SHIFT+P`, chose `Open Folder...` (or `#+SHIFT+P` chose `Open...` with Mac), browse to the directory. Please, be sure that you have installed the `C/C++` extension to the *VS code*.
@@ -44,7 +44,7 @@ Now, you can open `hello.teos.cpp`. With the `C/C++`, you can go to definition/d
 
 ### Contract compilation
 
-$EOSIO_TEOS bootstrap contract hello.teos
+$teos_cli bootstrap contract hello.teos
 ```
 VS code main menu Tasks -> Run Task... -> compile
 ```
@@ -275,16 +275,16 @@ The command-line drivers, operated by the main `teos` application, mimic and/or 
 However, *Tokeniks teos* can play with a local node. For example, the following sequence of bash commands make sense:
 
 ```
-$ $EOSIO_TEOS bootstrap contract hello.teos     ## new contract template
+$ $teos_cli bootstrap contract hello.teos     ## new contract template
 #  template contract: /mnt/c/Workspaces/EOS/contracts/hello.teos
 
-$ $EOSIO_TEOS build contract hello.teos ## relative to the workspace
+$ $teos_cli build contract hello.teos ## relative to the workspace
 #  WAST: /mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.wast
 
-$ $EOSIO_TEOS generate abi hello.teos ## relative to the workspace
+$ $teos_cli generate abi hello.teos ## relative to the workspace
 #  ABI: /mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.abi
 
-$ $EOSIO_TEOS daemon start -c                   ## reset local node
+$ $teos_cli daemon start -c                   ## reset local node
 #  nodeos exe file: /mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos
 #  genesis state file: 
   /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json
@@ -294,51 +294,51 @@ $ $EOSIO_TEOS daemon start -c                   ## reset local node
 #  head block number: 3
 #  head block time: 2018-05-23T16:02:40
 
-$ $EOSIO_TEOS wallet create
+$ $teos_cli wallet create
 #         password: PW5K5jzJZaCXEtrwThSgPjgSjiZj8d9i1fCGZSUM7ZC9XEUySarnD
 #  You need to save this password to be able to lock/unlock the wallet!
 
-$ $EOSIO_TEOS set contract eosio hello.teos --permission eosio
+$ $teos_cli set contract eosio hello.teos --permission eosio
 #   transaction id: 
   ef2744011c17b219f346c2841ebc316c0ebd21da9804ec804c860f71558481ba
 
-$ $EOSIO_TEOS create key owner
+$ $teos_cli create key owner
 #         key name: owner
 #      private key: 5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
 #       public key: EOS6GKYMgKHeuMAaHb3v4nGBg9NiYRcJoU3YegUYeUwSjUfSJWLdP
 
-$ $EOSIO_TEOS create key active
+$ $teos_cli create key active
 #         key name: active
 #      private key: 5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
 #       public key: EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA
 
-$ $EOSIO_TEOS wallet import default \
+$ $teos_cli wallet import default \
   5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
 #           wallet: default
 #     key imported: 5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
 
-$ $EOSIO_TEOS wallet import default 
+$ $teos_cli wallet import default 
   5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
 #           wallet: default
 #     key imported: 5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
 
-$ $EOSIO_TEOS create account eosio hello.teos \
+$ $teos_cli create account eosio hello.teos \
   EOS6GKYMgKHeuMAaHb3v4nGBg9NiYRcJoU3YegUYeUwSjUfSJWLdP \
     EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA \
 #   transaction id: 
   0ff62a96bde5bd911da135557da56fabb3fc1282d8be8797be485aafa519bce4
 
-$ $EOSIO_TEOS set contract hello.teos hello.teos
+$ $teos_cli set contract hello.teos hello.teos
 #   transaction id: 
   2820976a76893685f4cfc2578c7c0f0ff3e8b9112732de202dab16afd7b56884
 
-$ $EOSIO_TEOS push action hello.teos hi '["hello.teos"]' -p hello.teos
+$ $teos_cli push action hello.teos hi '["hello.teos"]' -p hello.teos
 #   transaction id: 
   bdbace3b4327f70ccc7d63d1b1287a7abbec4240be9b2d7695192bf80da45f92
 #  INFO account name: 7684013990126944256  @ 17:56:15 hello.teos.cpp[16](hi)
 #  Hello, hello.teos
 
-$ $EOSIO_TEOS daemon stop
+$ $teos_cli daemon stop
 #  Daemon is stopped.
 ```
 

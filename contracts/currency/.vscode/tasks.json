@@ -6,7 +6,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "${env:EOSIO_TEOS} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/currency;${env:EOSIO_TEOS} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/currency",
+            "command": "${env:teos_cli} generate abi ${env:EOSIO_CONTRACT_WORKSPACE}/currency;${env:teos_cli} build contract ${env:EOSIO_CONTRACT_WORKSPACE}/currency",
             "problemMatcher": [],
             "presentation": {
                     "reveal": "always",
