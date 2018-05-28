@@ -61,12 +61,18 @@
         "problemMatcher": []
     },
     {
+        "taskName": "unittest",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; python3 ./test/unittest1.py"
+        }
+    },
+    {
         "taskName": "test",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; python3 ./test/test.py"
+            "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
         }
-        
     }
 ]
 }

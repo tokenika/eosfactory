@@ -7,4 +7,4 @@ add_custom_command(OUTPUT @CONTRACT_NAME@.wast COMMAND ${teos} build contract ${
 add_custom_target(abi ALL DEPENDS @CONTRACT_NAME@.abi)
 add_custom_target(wast ALL DEPENDS @CONTRACT_NAME@.wast)
 
-add_test(NAME unittest COMMAND python3 ${CMAKE_SOURCE_DIR}/test/test.py)
+add_test(NAME unittest COMMAND python3 ${CMAKE_SOURCE_DIR}/test/unittest1.py)

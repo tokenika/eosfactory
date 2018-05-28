@@ -59,6 +59,14 @@
             "https://eosio.github.io/eos/group__contractdev.html"
         ],
         "problemMatcher": []
+    },
+    {
+        "taskName": "unittest",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; python3 ./test/unittest1.py"
+        }
+        
     }
 ]
 }
