@@ -307,7 +307,8 @@ variable.
     */
     string getContractDir(TeosControl* teosControl, string contractDir)
     {
-      string trace = "";
+      string trace = contractDir + SPOT + "\n";      
+      contractDir = wslMapWindowsLinux(contractDir);
       try{
         { /*
             Does the given contractDir is absolute, is directory and exists?
@@ -404,16 +405,17 @@ Cannot determine the contract directory.
 
     vector<string> getContractSourceFiles(TeosControl* teosControl, string& contractDir)
     {
+      contractDir = wslMapWindowsLinux(contractDir);
       contractDir = getContractDir(teosControl, contractDir);
       if(teosControl->isError_){
         return vector<string>();;
       }
 
-      string trace = "contractDir: " + contractDir + "\n";
+      string trace = "contractDir: " + contractDir + SPOT + "\n";
       try{
         {
           bfs::path sourcePath(contractDir);
-          trace += sourcePath.string() + "\n";
+          trace += sourcePath.string() + SPOT + "\n";
           vector<string> srcs = getSourceFiles(sourcePath);
           if(!srcs.empty()){
             return srcs;            
@@ -423,7 +425,7 @@ Cannot determine the contract directory.
         {
           bfs::path sourcePath = bfs::path(contractDir) / "src";
           contractDir = sourcePath.string();
-          trace += sourcePath.string() + "\n";
+          trace += sourcePath.string() + SPOT + "\n";
           vector<string> srcs = getSourceFiles(sourcePath);
           if(!srcs.empty()){
             return srcs;            
@@ -452,6 +454,9 @@ Cannot find any contract source directory.
     string getContractFile(
         TeosControl* teosControl, string contractDir, string contractFile)
     {
+      contractDir = wslMapWindowsLinux(contractDir);
+      contractFile = wslMapWindowsLinux(contractFile);
+      string trace = "";
       try
       {
         if(contractFile.empty() || contractDir.empty()) 
@@ -471,6 +476,7 @@ Cannot find any contract source directory.
             Is the contract file absolute?
           */
           bfs::path contractFilePath(contractFile);
+          trace += contractFilePath.string() + SPOT + "\n"; 
           if(contractFilePath.is_absolute() && bfs::exists(contractFilePath) 
             && bfs::is_regular_file(contractFilePath))
           {
@@ -483,9 +489,9 @@ Cannot find any contract source directory.
             Does the contractDir argument point to a contract directory?
             Try varies internal structures of the contract directories. 
           */
-          contractDir = wslMapWindowsLinux(contractDir);
           bfs::path buildPath // Is existing absolute path!
             = bfs::path(getContractDir(teosControl, contractDir));
+          trace += buildPath.string() + SPOT + "\n";
           if(teosControl->isError_){
             return "";
           }
@@ -501,13 +507,14 @@ Cannot find any contract source directory.
           if(bfs::exists(buildPath / "build")) {
             buildPath = buildPath / "build";
           }
-
+          trace += buildPath.string() + SPOT + "\n";
           if(contractFile[0] == '.')
           {
             for (bfs::directory_entry& entry 
               : boost::make_iterator_range(
                 bfs::directory_iterator(buildPath), {})) 
               {
+              trace += entry.path().string() + SPOT + "\n";
               if (bfs::is_regular_file(entry.path()) 
                 && entry.path().extension() == contractFile) {
                   return entry.path().string();
@@ -516,15 +523,23 @@ Cannot find any contract source directory.
           }   
 
           bfs::path contractFilePath = buildPath / contractFile;
+          trace += contractFilePath.string() + SPOT + "\n";
           if(bfs::exists(contractFilePath) && bfs::is_regular_file(contractFilePath)) {
             return contractFilePath.string();
           }
         }
+
+        throw std::exception();
+
       } catch (std::exception& e) {
-          onError(teosControl, e.what(), SPOT);
+        onError(
+          teosControl, 
+          (boost::format(R"(
+Cannot find any contract file.
+)""\n trace is \n%1%") % trace).str(), 
+          SPOT ); 
       }
 
-      onError(teosControl, "Cannot find any contract file", SPOT);       
       return "";    
     }
 
@@ -703,8 +718,7 @@ Cannot determine the contract workspace.
     ///////////////////////////////////////////////////////////////////////////
     // getWalletDir
     ///////////////////////////////////////////////////////////////////////////
-    string getWalletDir(
-      TeosControl* teosControl)
+    string getWalletDir(TeosControl* teosControl)
     {
       try
       {

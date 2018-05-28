@@ -168,4 +168,9 @@ install( TARGETS unittest1 RUNTIME DESTINATION bin)
 
 ## END executables ###########################################################
 
+install( TARGETS
+   teos
+   RUNTIME DESTINATION "/usr/local/bin"
+)
+
 
