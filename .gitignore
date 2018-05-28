@@ -44,12 +44,11 @@ pyteos/docs/Makefile
 pyteos/docs/.themes
 
 *.pyc
-.vscode/settings.json
+.vscode
 
 teos/config.json
 keosd.md
 teos/source/conf.py
 teos/teos_lib/eos_interface.1.cpp#
 templates/contracts/tasks
-.vscode/tasks.json
 .vscode/tasks.json
