@@ -32,6 +32,10 @@ Makefile
 !/tests/unittest3.py
 !/tests/unittest4.py
 !/pyteos/docs/build
+!/templates/contracts/eosio.token/build
+!/templates/contracts/eosio.token_t/build
+!/templates/contracts/skeleton/build
+!/templates/contracts/skeleton_t/build
 
 **/Debug
 **/x64
@@ -44,11 +48,13 @@ pyteos/docs/Makefile
 pyteos/docs/.themes
 
 *.pyc
-.vscode
 
 teos/config.json
 keosd.md
 teos/source/conf.py
+
 teos/teos_lib/eos_interface.1.cpp#
-templates/contracts/tasks
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/settings.json
 .vscode/tasks.json

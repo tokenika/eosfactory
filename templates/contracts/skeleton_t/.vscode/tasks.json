@@ -1,0 +1,73 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",   
+"tasks": [
+    {
+        "label": "compile",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; ${env:teos_cli} build contract \"${workspaceFolder}\"/src -c"
+        },
+        "osx": {
+            "command": "source ~/.bash_profile; ${teos_cli} build contract \"${workspaceFolder}\"/src -c"
+        },
+        "linux": {
+            "command": "source ~/.profile; ${teos_cli} build contract \"${workspaceFolder}\"/src -c"
+        },
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": []
+    },
+    {
+        "label": "build",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; ${env:teos_cli} generate abi \"${workspaceFolder}\"/src;${env:teos_cli} build contract \"${workspaceFolder}\"/src"
+        },
+        "osx": {
+            "command": "source ~/.bash_profile; ${teos_cli} generate abi \"${workspaceFolder}\"/src; ${teos_cli} build contract \"${workspaceFolder}\"/src"
+        },
+        "linux": {
+            "command": "source ~/.profile; ${teos_cli} generate abi \"${workspaceFolder}\"/src; ${teos_cli} build contract \"${workspaceFolder}\"/src"
+        },
+        "problemMatcher": [],
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        }
+    },
+    {
+        "taskName": "API",
+        "type": "shell",
+        "windows": {
+            "command": "explorer"
+        },
+        "osx": {
+            "command": "open"
+        },
+        "linux": {
+            "command": "sensible-browser"
+        },
+        "args": [
+            "https://eosio.github.io/eos/group__contractdev.html"
+        ],
+        "problemMatcher": []
+    },
+    {
+        "taskName": "test",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; python3 ./test/test.py"
+        }
+        
+    }
+]
+}
+ 
