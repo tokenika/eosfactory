@@ -1,6 +1,7 @@
 # python3 ./tests/unit.test1.py
 
 import unittest
+import warnings
 import json
 import pyteos
 import node
@@ -21,7 +22,9 @@ class Test1(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
-        node.reset()
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            node.reset()
         sess.setup()
         cls.contract = ContractFromTemplate("_e4b2ffc804529ce9c6fae258197648cc2", remove_existing = True)
 
