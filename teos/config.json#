@@ -1,0 +1,7 @@
+{
+    "EOSIO_SOURCE_DIR": "/mnt/c/Workspaces/EOS/eos",
+    "EOSIO_EOSFACTORY_DIR": "/mnt/c/Workspaces/EOS/eosfactory",
+    "EOSIO_CONTRACT_WORKSPACE": "/mnt/c/Workspaces/EOS/contracts",
+    "EOSIO_SHARED_MEMORY_SIZE_MB": "100",
+    "teos_cli": "/mnt/c/Workspaces/EOS/eosfactory/teos/build/teos/teos"
+}

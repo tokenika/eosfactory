@@ -48,7 +48,7 @@ config_json="teos/config.json"
 
 EOSIO_EOSFACTORY_DIR__="$PWD"
 BUILD_DIR="${EOSIO_EOSFACTORY_DIR__}/$build_dir"
-EOSIO_CONTRACT_WORKSPACE__="${EOSIO_EOSFACTORY_DIR__}/$contracts"
+EOSIO_CONTRACT_WORKSPACE__=$EOSIO_CONTRACT_WORKSPACE
 
 IS_WSL="" # Windows Subsystem Linux
 function is_wsl {
@@ -258,9 +258,13 @@ printf "%s\n" "Sets environment variables, if not set already:"
 
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
 setLinuxVariable "EOSIO_EOSFACTORY_DIR" "$EOSIO_EOSFACTORY_DIR__"
-setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
 setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
 setLinuxVariable "teos_cli" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
+
+if [ -z $EOSIO_CONTRACT_WORKSPACE__ ]; then
+    EOSIO_CONTRACT_WORKSPACE__="${EOSIO_EOSFACTORY_DIR__}/$contracts"
+fi
+setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
 
 PYTHONPATH__="$EOSIO_EOSFACTORY_DIR__/${pyteos}:$EOSIO_EOSFACTORY_DIR__/${tests}"
 if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]; then

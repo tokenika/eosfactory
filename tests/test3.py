@@ -20,7 +20,7 @@ def run():
         "_e4b2ffc804529ce9c6fae258197648cc2", "", remove_existing = True)
 
     print('Contract based on the template definitions, possibly modified:')
-    c = eosf.Contract(t.contract_dir())
+    c = eosf.Contract(t.contract_path())
     
     print('test c.build():')
     c.build()

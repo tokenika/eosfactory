@@ -629,34 +629,20 @@ class Template(_Command):
     def __init__(
         self, name, template="", remove_existing=False, is_verbose=True):
 
-        self.contract_path = pathlib.Path(name)
-        if not self.contract_path.is_absolute():
-            config = GetConfig(is_verbose=False)
-            contract_path = \
-                pathlib.Path(config.json["contractWorkspace"]) / name
-
-        if self.contract_path.exists():
-            if remove_existing:
-                shutil.rmtree(str(self.contract_path))
-            else:
-                self.error = True
-                print("ERROR!")
-                print(name + " is an existing contract definition." )
-                return
-
         jarg = json.loads("{}")
         jarg["name"] = name
         if template:
             jarg["template"] = template
+        if remove_existing:
+            jarg["remove"] = 1
 
         _Command.__init__(self, jarg, "bootstrap", "contract", is_verbose)
  
-    
-    def contract_dir(self):
+    def contract_path(self):
         if not self.error:
             return self.json["contract_dir"] 
         else:
-            return "contract_dir() ERROR!"       
+            return "contract_path() ERROR!"       
                    
 
 class ABI(_Command):
@@ -1062,7 +1048,7 @@ class Contract(SetContract):
         code = GetCode(self.name)
         return not code.error
 
-    def get_path(self):
+    def contract_path(self):
         """ Return contract directory path.
         """
         return str(self.contract_path_absolute)

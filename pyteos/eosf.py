@@ -118,12 +118,12 @@ class Contract(pyteos.Contract):
 
 
     def path(self):
-        p = self.get_path()
+        p = self.contract_path()
         print("#  " + p)
          
 
     def delete(self):
-        shutil.rmtree(self.get_path())
+        shutil.rmtree(self.contract_path())
         print("#  Contract deleted.\n")
 
 

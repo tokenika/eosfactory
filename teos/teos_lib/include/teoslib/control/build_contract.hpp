@@ -199,7 +199,8 @@ Usage: ./teos create key --jarg '{
     {
       void bootstrapContract(
         string name, // contract name
-        string templateName=TEMPLATE
+        string templateName=TEMPLATE,
+        bool removeExisting=false
       );
       void copy(
         boost::filesystem::path inTemplate,
@@ -215,19 +216,22 @@ Usage: ./teos create key --jarg '{
      */
       BootstrapContract(
         string name, // contract name
-        string templateName=TEMPLATE
+        string templateName=TEMPLATE,
+        bool removeExisting=false
       )
       {
         reqJson_.put("name", name);
         reqJson_.put("template", templateName);
-        bootstrapContract(name, templateName);
+        reqJson_.put("remove", removeExisting);
+        bootstrapContract(name, templateName, removeExisting);
       }
 
       BootstrapContract(ptree reqJson) : TeosControl(reqJson)
       {
         bootstrapContract(
           reqJson_.get<string>("name"),
-          reqJson_.get("template", TEMPLATE)
+          reqJson_.get("template", TEMPLATE),
+          reqJson_.get<bool>("remove")
         );
       }
     };
@@ -239,7 +243,8 @@ Usage: ./teos create key --jarg '{
     class BootstrapContractOptions : public ControlOptions
     {
     public:
-      BootstrapContractOptions(int argc, const char **argv) : ControlOptions(argc, argv) {}
+      BootstrapContractOptions(int argc, const char **argv) 
+        : ControlOptions(argc, argv) {}
 
     protected:
       const char* getUsage() {
@@ -255,13 +260,16 @@ Usage: ./teos create key --jarg '{
 
       string name;
       string templateName;
+      bool removeExisting;
 
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
           ("name", value<string>(&name), "Contract name.")
           ("template", value<string>(&templateName)->default_value(TEMPLATE), 
-            "Template name.");
+            "Template name.")
+          ("remove", value<bool>(&removeExisting)->default_value(false), 
+            "Remove existing contract path.");
             
         return od;
       }
@@ -277,6 +285,7 @@ Usage: ./teos create key --jarg '{
           ok = true;
           reqJson_.put("name", name);
           reqJson_.put("template", templateName);
+          reqJson_.put("remove", removeExisting);
         }
         return ok;
       }

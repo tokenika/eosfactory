@@ -153,7 +153,7 @@ namespace teos {
     }
 
     void BootstrapContract::bootstrapContract(
-      string name, string templateName)
+      string name, string templateName, bool removeExisting)
     {
       namespace bfs = boost::filesystem;
 
@@ -165,12 +165,18 @@ namespace teos {
       bfs::path contract_path = workspacePath / name;
 
       if(bfs::exists(contract_path)){
-        putError(
-          (boost::format(
-          "Contract \n%1%\n workspace already exists. Cannot owerwrite it.") 
-            % contract_path.string()).str(), 
-          SPOT);
-        return;
+        if(removeExisting)
+        {
+          bfs::remove_all(contract_path);
+        } else
+        {
+          putError(
+            (boost::format(
+            "Contract \n%1%\n workspace already exists. Cannot owerwrite it.") 
+              % contract_path.string()).str(), 
+            SPOT);
+          return;
+        }
       }
 
       { // make contract directory and its build directory:
