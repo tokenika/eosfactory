@@ -90,17 +90,12 @@ class Test1(unittest.TestCase):
             t3.json["rows"][0]["balance"], "12.0000 EOS")
 
 
-    def test_99_node_stop(self):
-        x = node.stop()
-        self.assertTrue(x)
-
-
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
-        s = node.stop()
+        node.stop()
 
 
 if __name__ == "__main__":
