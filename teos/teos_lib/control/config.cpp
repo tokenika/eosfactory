@@ -800,7 +800,7 @@ Cannot determine the contract workspace.
       return getValidPath(teosControl, EOSIO_WASM_LLC, "");       
     }    
 
-    GetConfig::GetConfig(){
+    GetConfig::GetConfig(ptree reqJson) : TeosControl(reqJson){
         respJson_.put("contextDir", getEosFactoryDir(this));
         respJson_.put("sourceDir", getSourceDir(this));
         respJson_.put("dataDir", getDataDir(this));
@@ -824,6 +824,11 @@ Cannot determine the contract workspace.
           "contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));
         respJson_.put(
           "workspaceEosio", getSourceDir(this) + "/" EOSIO_CONTRACT_DIR );
+        if(!reqJson_.get("contract-dir", "").empty())
+        {
+          respJson_.put("contract-dir", getContractDir(
+            this, reqJson_.get<string>("contract-dir")));
+        }
     }
   }
 }

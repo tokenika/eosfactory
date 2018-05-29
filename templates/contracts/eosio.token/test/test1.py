@@ -1,5 +1,6 @@
 # python3 ./tests/test1.py
 
+import sys
 import pyteos
 import node
 import sess
@@ -12,7 +13,7 @@ def run(contract_dir):
     print('test sess.init():')
     sess.setup()
 
-    print('test Contract("eosio.token"):')
+    print('test Contract("@CONTRACT_NAME@"):')
     c = eosf.Contract(contract_dir)
 
     print('test c.get_code():')

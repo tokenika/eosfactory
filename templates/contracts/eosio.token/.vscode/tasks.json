@@ -7,31 +7,32 @@
         "label": "compile",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; ${env:teos_cli} build contract \"${workspaceFolder}\"/src -c"
+            "command": "source ~/.profile; mkdir -p build; ${env:teos_cli} build contract \"${workspaceFolder}\"/src -c"
         },
         "osx": {
-            "command": "source ~/.bash_profile; ${teos_cli} build contract \"${workspaceFolder}\"/src -c"
+            "command": "source ~/.bash_profile; mkdir -p build; ${teos_cli} build contract \"${workspaceFolder}\"/src -c"
         },
         "linux": {
-            "command": "source ~/.profile; ${teos_cli} build contract \"${workspaceFolder}\"/src -c"
+            "command": "source ~/.profile; mkdir -p build; ${teos_cli} build contract \"${workspaceFolder}\"/src -c"
         },
         "presentation": {
             "reveal": "always",
             "panel": "dedicated"
         },
-        "problemMatcher": []
+        "problemMatcher": [
+        ]
     },
     {
         "label": "build",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; ${env:teos_cli} generate abi \"${workspaceFolder}\"/src;${env:teos_cli} build contract \"${workspaceFolder}\"/src"
+            "command": "source ~/.profile; mkdir -p build; ${env:teos_cli} generate abi \"${workspaceFolder}\"/src;${env:teos_cli} build contract \"${workspaceFolder}\"/src"
         },
         "osx": {
-            "command": "source ~/.bash_profile; ${teos_cli} generate abi \"${workspaceFolder}\"/src; ${teos_cli} build contract \"${workspaceFolder}\"/src"
+            "command": "source ~/.bash_profile; mkdir -p build; ${teos_cli} generate abi \"${workspaceFolder}\"/src; ${teos_cli} build contract \"${workspaceFolder}\"/src"
         },
         "linux": {
-            "command": "source ~/.profile; ${teos_cli} generate abi \"${workspaceFolder}\"/src; ${teos_cli} build contract \"${workspaceFolder}\"/src"
+            "command": "source ~/.profile; mkdir -p build; ${teos_cli} generate abi \"${workspaceFolder}\"/src; ${teos_cli} build contract \"${workspaceFolder}\"/src"
         },
         "problemMatcher": [],
         "presentation": {
@@ -41,13 +42,15 @@
         "group": {
             "kind": "build",
             "isDefault": true
-        }
+        },
+        "problemMatcher": [
+        ]
     },
     {
         "taskName": "API",
         "type": "shell",
         "windows": {
-            "command": "explorer"
+            "command": "explorer.exe"
         },
         "osx": {
             "command": "open"
@@ -58,22 +61,40 @@
         "args": [
             "https://eosio.github.io/eos/group__contractdev.html"
         ],
-        "problemMatcher": []
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": [
+        ]
     },
     {
         "taskName": "unittest",
         "type": "shell",
         "windows": {
             "command": "source ~/.profile; python3 ./test/unittest1.py"
-        }
+        },
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": [
+        ]
     },
     {
         "taskName": "test",
         "type": "shell",
         "windows": {
             "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
-        }
+        },
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": [
+        ]
     }
 ]
 }
  
+

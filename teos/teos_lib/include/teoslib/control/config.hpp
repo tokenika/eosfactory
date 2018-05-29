@@ -59,7 +59,7 @@ namespace teos {
     class GetConfig : public TeosControl
     {
     public:
-      GetConfig();
+      GetConfig(ptree reqJson);
     };
 
     class GetConfigOptions : public ControlOptions
@@ -72,12 +72,33 @@ namespace teos {
       const char* getUsage() {
         return R"(
 Get Teos configuration.
-Usage: ./teos get config
+Usage: ./teos get config [<contract dir>]
+Usage: ./teos get config --jarg '{
+  "contract-dir":"<contract dir>",
+  }' [OPTIONS]
 )";
       }
+      string contractDir;
 
+      options_description  argumentDescription() {
+        options_description od("");
+        od.add_options()
+          ("contract-dir", value<string>(&contractDir)->default_value(""),
+            "Contract directory, possibly relative.");
+        return od;
+      }
+
+      void setPosDesc(positional_options_description& pos_desc) {
+        pos_desc.add("contract-dir", 1);
+      } 
+
+      bool checkArguments(variables_map &vm) {
+        reqJson_.put("contract-dir", contractDir);
+        return true;
+      }
+               
       TeosControl executeCommand() {
-        return GetConfig();
+        return GetConfig(reqJson_);
       }
     };    
   }

@@ -82,16 +82,15 @@ namespace teos
   }
   
   string wslMapWindowsLinux(string path) {
+    if( !path.empty() && path.find(":\\") != string::npos)
+    {
       boost::replace_all(path, "\\", "/");
-
-      if( !path.empty() && path.find(":/") != string::npos)
-        {
-          string drive(1, path[0]);
-          boost::replace_all(
-            path, 
-            drive + ":/"
-            , "/mnt/" + boost::algorithm::to_lower_copy(drive) + "/");
-        }
-      return path;
-    }           
+      string drive(1, path[0]);
+      boost::replace_all(
+        path, 
+        drive + ":/"
+        , "/mnt/" + boost::algorithm::to_lower_copy(drive) + "/");
+    }
+    return path;
+  }           
 }

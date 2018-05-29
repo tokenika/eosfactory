@@ -173,9 +173,9 @@ namespace teos {
         return;
       }
 
-      { // make contract directory:
+      { // make contract directory and its build directory:
         try{
-          bfs::create_directory(contract_path);
+          bfs::create_directories(contract_path / "build");
         } catch (bfs::filesystem_error &e){
           putError(e.what());
         }

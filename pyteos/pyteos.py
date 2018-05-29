@@ -156,8 +156,9 @@ class GetConfig(_Command):
     """
     Get the configurationt of the teos executable.
     """
-    def __init__(self, is_verbose=True):
+    def __init__(self, contract_dir="", is_verbose=True):
         jarg = json.loads("{}")
+        jarg["contract-dir"] = contract_dir
         _Command.__init__(self, jarg, "get", "config", is_verbose)        
 
     
@@ -649,8 +650,13 @@ class Template(_Command):
             jarg["template"] = template
 
         _Command.__init__(self, jarg, "bootstrap", "contract", is_verbose)
+ 
+    
+    def contract_dir(self):
         if not self.error:
-            self.contract_dir = self.json["contract_dir"] 
+            return self.json["contract_dir"] 
+        else:
+            return "contract_dir() ERROR!"       
                    
 
 class ABI(_Command):
@@ -933,23 +939,9 @@ class Contract(SetContract):
         self.is_mutable = True
         self.console = ""
 
-        if not self.contract_path_absolute.is_absolute():
-            config = GetConfig(is_verbose=False)
-            self.contract_path_absolute = \
-                pathlib.Path(config.json["contractWorkspace"]) / contract_dir
-
-            if not self.contract_path_absolute.exists():
-                self.contract_path_absolute = \
-                pathlib.Path(config.json["workspaceEosio"]) / contract_dir
-                if self.contract_path_absolute.exists():
-                    self.is_mutable = False
-                else:
-                    self.error = True
-                    if _is_verbose:
-                        print("ERROR!")
-                        print(contract_dir + " is not an existing contract definition." )
-                    return
-
+        config = GetConfig(contract_dir, is_verbose=False)       
+        self.contract_path_absolute = config.json["contract-dir"]
+        
 
     def __str__(self):
         return self._out

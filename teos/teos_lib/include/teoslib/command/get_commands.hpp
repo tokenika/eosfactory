@@ -81,7 +81,7 @@ Usage: ./teos get info --jarg '{}' [OPTIONS]
     {
     public:
 
-      GetBlock(ptree reqJson, bool raw = false) : TeosCommand(
+      GetBlock(ptree reqJson) : TeosCommand(
         string(getCommandPath + "get_block"), reqJson) {
         callEosd();
       }

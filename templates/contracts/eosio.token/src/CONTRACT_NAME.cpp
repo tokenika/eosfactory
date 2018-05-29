@@ -2,7 +2,8 @@
  *  @file
  *  @copyright defined in eos/LICENSE.txt
  */
-
+#define DEBUG
+#include "logger.hpp"
 #include "@CONTRACT_NAME@.hpp"
 
 namespace eosio {
@@ -37,7 +38,7 @@ void token::create( account_name issuer,
 
 void token::issue( account_name to, asset quantity, string memo )
 {
-    print( "issue" );
+    print( "issue\n" );
     auto sym = quantity.symbol;
     eosio_assert( sym.is_valid(), "invalid symbol name" );
 
@@ -50,6 +51,7 @@ void token::issue( account_name to, asset quantity, string memo )
     require_auth( st.issuer );
     eosio_assert( quantity.is_valid(), "invalid quantity" );
     eosio_assert( quantity.amount > 0, "must issue positive quantity" );
+    logger_info("quantity.amount: ", quantity.amount);
 
     eosio_assert( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
     eosio_assert( quantity.amount <= st.max_supply.amount - st.supply.amount, "quantity exceeds available supply");

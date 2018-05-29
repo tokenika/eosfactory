@@ -1,8 +1,9 @@
 # python3 ./tests/test3.py
 
+import pyteos
 import node
 import sess
-from eosf import *
+import eosf
 
 def run():
     print('test node.reset():')
@@ -15,10 +16,11 @@ def run():
     sess.setup()
 
     print('test Template():')
-    t = Template("_e4b2ffc804529ce9c6fae258197648cc2", "", remove_existing = True)
+    t = pyteos.Template(
+        "_e4b2ffc804529ce9c6fae258197648cc2", "", remove_existing = True)
 
     print('Contract based on the template definitions, possibly modified:')
-    c = Contract(t.contract_path_absolute)
+    c = eosf.Contract(t.contract_dir())
     
     print('test c.build():')
     c.build()

@@ -62,6 +62,13 @@ class Contract(pyteos.Contract):
         key_active: Another key object.
         account: The account that owns the contract.
     """
+    def wslMapWindowsLinux(self, path):
+        if ":\\" in path:
+            path = path.replace("\\", "/")
+            drive = path[0]
+            path = path.replace(drive + ":/", "/mnt/" + drive.lower() + "/")
+        return path
+
     def __init__(
             self, contract_dir, 
             wast_file="", abi_file="", 
@@ -69,6 +76,8 @@ class Contract(pyteos.Contract):
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             is_verbose=True):
+
+        contract_dir = self.wslMapWindowsLinux(contract_dir)
 
         account_name = pathlib.Path(contract_dir).parts[-1]
         pattern = re.compile("^[a-z, ., 1-5]*$")
@@ -116,19 +125,6 @@ class Contract(pyteos.Contract):
     def delete(self):
         shutil.rmtree(self.get_path())
         print("#  Contract deleted.\n")
-
-
-class Template():
-    """
-    Creates a new contract folder from a pre-defined template.
-    """
-    def __init__(self, name, template="", remove_existing=False):
-
-        template = pyteos.Template(
-            name, template, remove_existing)
-        config = pyteos.GetConfig(is_verbose=False)
-        self.contract_path_absolute = \
-            pathlib.Path(config.json["contractWorkspace"]) / name
 
 
 class Account(pyteos.Account):
