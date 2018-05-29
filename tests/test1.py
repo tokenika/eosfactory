@@ -9,7 +9,7 @@ def run():
     print('test node.reset():')
     node.reset()
 
-    print('test sess.init():')
+    print('test sess.setup():')
     sess.setup()
 
     print('test Contract("eosio.token"):')

@@ -1,20 +1,18 @@
-# python3 ./tests/test1.py
-
 import sys
 import pyteos
 import node
 import sess
-import eosf
+from eosf import *
 
 def run(contract_dir):
     print('test node.reset():')
     node.reset()
 
-    print('test sess.init():')
+    print('test sess.setup():')
     sess.setup()
 
     print('test Contract("@CONTRACT_NAME@"):')
-    c = eosf.Contract(contract_dir)
+    c = Contract(contract_dir)
 
     print('test c.get_code():')
     c.get_code()
