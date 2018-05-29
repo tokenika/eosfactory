@@ -31,11 +31,6 @@ Makefile
 !/tests/unittest4.py
 !/pyteos/docs/build
 
-!/templates/contracts/eosio.token/build
-!/templates/contracts/eosio.token_t/build
-!/templates/contracts/skeleton/build
-!/templates/contracts/skeleton_t/build
-
 **/Debug
 **/x64
 **/.vs
