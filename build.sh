@@ -491,7 +491,7 @@ if [ "$OS_NAME" == "Darwin" ]; then
 "
 else 
     printf "%s\n" "
-    $ source ~/.bashrc
+    $ source ~/.profile
 "
 fi
 
@@ -516,7 +516,8 @@ printf "%s\n" "
     $ python3 ./tests/test1.py
     $ python3 ./tests/test2.py
     $ python3 ./tests/test3.py
-    $ python3 ./tests/unittest1.py
     
-    $ \$EOSIO_EOSFACTORY_DIR/teos/build/teos/unittest1
+    $ python3 ./tests/unit.test1.py
+    $ python3 ./tests/unit.test2.py
+    $ python3 ./tests/unit.test3.py
 "
