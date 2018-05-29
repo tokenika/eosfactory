@@ -34,7 +34,7 @@ def run():
     print('\n', 'c.get_console():')
     print(c.get_console(), "\n")
 
-    print('test c.push_action("hi", sess.alice):')
+    print('test c.push_action("hi", sess.carol):')
     c.push_action("hi", '{"user":"carol"}', sess.carol)
     
     print('\n', 'c.get_console():')

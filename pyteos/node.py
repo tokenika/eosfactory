@@ -45,3 +45,14 @@ def info():
     Display EOS node status.
     """
     return pyteos.GetInfo()
+
+
+def is_running():
+    """
+    Check if testnet is running.
+    """
+    try:
+        head_block_num = int(pyteos.GetInfo(False).json["head_block_num"])
+    except:
+        head_block_num = -1
+    return head_block_num > 0
