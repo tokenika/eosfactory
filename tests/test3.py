@@ -3,7 +3,7 @@
 import pyteos
 import node
 import sess
-import eosf
+from eosf import *
 
 def run():
     print('test node.reset():')
@@ -15,12 +15,8 @@ def run():
     print('test sess.setup():')
     sess.setup()
 
-    print('test Template():')
-    t = pyteos.Template(
-        "_e4b2ffc804529ce9c6fae258197648cc2", "", remove_existing = True)
-
-    print('Contract based on the template definitions, possibly modified:')
-    c = eosf.Contract(t.contract_path())
+    print('test Contract():')
+    c = ContractFromTemplate("_e4b2ffc804529ce9c6fae258197648cc2", remove_existing = True)
     
     print('test c.build():')
     c.build()
@@ -28,18 +24,15 @@ def run():
     print('test c.deploy():')
     c.deploy()
 
+    print('test c.get_code():')
+    c.get_code()
+
     print('test c.push_action("hi", sess.alice):')
     c.push_action("hi", '{"user":"alice"}', sess.alice)
-
-    print('\n', 'c.get_console():')
-    print(c.get_console(), "\n")
 
     print('test c.push_action("hi", sess.carol):')
     c.push_action("hi", '{"user":"carol"}', sess.carol)
     
-    print('\n', 'c.get_console():')
-    print(c.get_console(), "\n")
-
     print('test c.delete():')
     c.delete()
     

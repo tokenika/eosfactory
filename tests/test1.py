@@ -3,7 +3,7 @@
 import pyteos
 import node
 import sess
-import eosf
+from eosf import *
 
 def run():
     print('test node.reset():')
@@ -13,7 +13,7 @@ def run():
     sess.setup()
 
     print('test Contract("eosio.token"):')
-    c = eosf.Contract("eosio.token")
+    c = Contract("eosio.token")
 
     print('test c.get_code():')
     c.get_code()

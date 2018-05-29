@@ -18,6 +18,7 @@ import re
 import random
 import shutil
 
+
 class Contract(pyteos.Contract):
     """
     Creates a contract, given a contract directory containing WAST and ABI.
@@ -141,3 +142,9 @@ class Account(pyteos.Account):
         
         super().__init__(
             creator, name, key_owner, key_active)
+
+
+class ContractFromTemplate(Contract):
+    def __init__(self, name, template="", remove_existing=False, is_verbose=True):
+        t = pyteos.Template(name, template, remove_existing, is_verbose)
+        super().__init__(t.contract_path())

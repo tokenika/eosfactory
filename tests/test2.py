@@ -2,7 +2,7 @@
 
 import node
 import sess
-import eosf
+from eosf import *
 
 def run():
     print('test node.reset():')
@@ -14,11 +14,8 @@ def run():
     print('test sess.setup():')
     sess.setup()
 
-    print('test c = Contract("tic.tac.toe"):')
-    c = eosf.Contract("tic.tac.toe")
-    print("contract path: " + c.contract_path())
-
-    #c.wast()
+    print('test Contract("tic.tac.toe"):')
+    c = Contract("tic.tac.toe")
 
     print('test c.deploy():')
     c.deploy()

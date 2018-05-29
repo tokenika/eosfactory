@@ -23,8 +23,7 @@ class Test1(unittest.TestCase):
     def setUpClass(cls):
         node.reset()
         sess.setup()
-        template = pyteos.Template("_e4b2ffc804529ce9c6fae258197648cc2", "", remove_existing = True)
-        cls.contract = Contract(template.contract_path())
+        cls.contract = ContractFromTemplate("_e4b2ffc804529ce9c6fae258197648cc2", remove_existing = True)
 
         
     def setUp(self):
@@ -40,8 +39,7 @@ class Test1(unittest.TestCase):
 
 
     def test_03(self):
-        #self.assertTrue(self.__class__.contract.get_code(), "get_code")
-        pass
+        self.assertTrue(self.__class__.contract.get_code(), "get_code")
 
 
     def test_04(self):

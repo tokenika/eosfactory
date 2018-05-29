@@ -27,6 +27,7 @@ Makefile
 !/tests/unit.test1.py
 !/tests/unit.test2.py
 !/tests/unit.test3.py
+
 !/pyteos/docs/build
 
 **/Debug
