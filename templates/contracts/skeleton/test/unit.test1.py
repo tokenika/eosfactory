@@ -49,13 +49,13 @@ class Test1(unittest.TestCase):
 
 
     def test_02(self):
-        """ This should fail due to authority mismatch"""
+        """ This should fail due to authority mismatch """
         self.assertFalse(
             self.contract.push_action(
             "hi", 
             '{"user":"carol"}',
             sess.alice),
-            "push_action hi 3")
+            "push_action hi")
 
 
     def tearDown(self):
