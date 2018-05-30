@@ -159,8 +159,10 @@ namespace teos
       }
       
       TeosControl command = executeCommand();
-      if (command.isError_) {       
-        cout << teos_ERROR << endl << command.errorMsg() << endl;
+      if (command.isError_) { 
+        if(command.errorMsg().length() > string(teos_ERROR).length() + 1){      
+          cout << teos_ERROR << endl << command.errorMsg() << endl;
+        }
         return;
       }
 

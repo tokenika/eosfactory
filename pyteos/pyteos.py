@@ -23,6 +23,7 @@ import pathlib
 import shutil
 
 _is_verbose = True
+_suppress_error_msg = False
 
 def set_verbose(is_verbose):
     """
@@ -30,6 +31,10 @@ def set_verbose(is_verbose):
     """
     global _is_verbose
     _is_verbose = is_verbose
+
+def set_suppress_error_msg(suppress_error_msg):
+    global _suppress_error_msg
+    _suppress_error_msg = suppress_error_msg
 
 def is_verbose():
     return is_verbose
@@ -97,6 +102,7 @@ class _Command:
     is launched to responce just this call. 
     """
     global _is_verbose 
+    global _suppress_error_msg 
     global setup
 
     error = False
@@ -133,13 +139,8 @@ class _Command:
      
         if re.match(r'^ERROR', self._out):
             self.error = True
-            if not suppress_error_msg:
-                width = 80
-                longest = max(self._out.split("\n"), key=len)
-                if len(longest) < width:
-                    print(self._out)
-                else:
-                    print(self._out)
+            if not suppress_error_msg and not _suppress_error_msg:
+                print(self._out)
         try:
             self.json = json.loads(json_resp)
         except:

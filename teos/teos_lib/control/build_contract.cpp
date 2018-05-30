@@ -170,11 +170,11 @@ namespace teos {
           bfs::remove_all(contract_path);
         } else
         {
-          putError(
-            (boost::format(
+          cout << (boost::format(
+            "NOTE:\n"
             "Contract \n%1%\n workspace already exists. Cannot owerwrite it.") 
-              % contract_path.string()).str(), 
-            SPOT);
+              % contract_path.string()).str() << endl;
+          putError("");
           return;
         }
       }
@@ -275,10 +275,12 @@ namespace teos {
       for(string src: srcs){
         bfs::path srcPath(src);
         if(srcPath.extension().string() == ".abi"){
-          putError((boost::format(
+          cout << (boost::format(
+            "NOTE:\n"
             "An ABI exists in the source directory. Cannot overwrite it:\n%1%\n"
             "\tJust copying it to the target directory.")
-              % srcPath.string()).str());
+              % srcPath.string()).str() << endl;
+          putError("");
 
           bfs::copy_file(
             srcPath, targetDirPath / srcPath.filename(), 
