@@ -13,26 +13,31 @@ namespace teos {
     class BuildContract : public TeosControl
     {
       void buildContract(
-        string src, // comma separated list of source c/cpp files
-        string include_dir = "", // comma separated list of include dirs
-        bool compile_only = false
+        string sourceDir, // comma separated list of source c/cpp files
+        string includeDir = "", // comma separated list of include dirs
+        string codeName = "",
+        bool compileOnly = false
       );
 
     public:
       BuildContract(
-        string src, // comma separated list of source c/cpp files
-        string include_dir = "",
-        bool compile_only = false
+        string sourceDir, // comma separated list of source c/cpp files
+        string includeDir = "",
+        string codeName = "",
+        bool compileOnly = false
       )
       {
-        buildContract(src, include_dir, compile_only);
+        buildContract(sourceDir, includeDir, codeName, compileOnly);
       }
 
       BuildContract(ptree reqJson) : TeosControl(reqJson)
       {
         buildContract(
-          reqJson_.get<string>("src"), 
-          reqJson_.get<string>("include_dir")
+          reqJson_.get<string>("sourceDir"), 
+          reqJson_.get("includeDir", ""),
+          reqJson_.get("codeName", ""),
+          reqJson_.get("compileOnly", false)
+
         );
       }
     };
@@ -50,43 +55,49 @@ namespace teos {
       const char* getUsage() {
         return R"(
 Build smart contract.
-Usage: ./teos build contract src [Options]
+Usage: ./teos build contract <source dir> [Options]
 Usage: ./teos create key --jarg '{
-  "src":"<comma separated list of c/c++ files>",
-  "include_dir":"<comma separated list of include dirs>"
+  "sourceDir":"<source dir>",
+  "includeDir":"<comma separated list of include dirs, optional>",
+  "codeName":"<name of the WAST file, optional>"
   }' [OPTIONS]
 )";
       }
 
-      string src;
-      string include_dir;
+      string sourceDir;
+      string includeDir;
+      string codeName;
 
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
-          ("src", value<string>(&src)
+          ("sourceDir", value<string>(&sourceDir)
             , "Contract source directory.")
-          ("include_dir,d", value<string>(&include_dir)->default_value("")
+          ("includeDir,d", value<string>(&includeDir)->default_value("")
             , "Comma separated list of source c/c++ files.")
-          ("compile_only,c", "Compilation only.");
+          ("codeName,n", value<string>(&codeName)->default_value("")
+            , "The name of the WAST file. If not set, it equals to the name "
+              "of the contract project.")
+          ("compileOnly,c", "Compilation only.");
             
         return od;
       }
 
       void setPosDesc(positional_options_description& pos_desc) {
-        pos_desc.add("src", 1);
+        pos_desc.add("sourceDir", 1);
       }      
 
       bool checkArguments(variables_map &vm) {
         bool ok = false;
-        if(vm.count("src")){
+        if(vm.count("sourceDir")){
           ok = true;
-          reqJson_.put("src", src);
-          reqJson_.put("include_dir", include_dir);
-          if(vm.count("compile_only")){
-            reqJson_.put("compile_only", 1);
+          reqJson_.put("sourceDir", sourceDir);
+          reqJson_.put("includeDir", includeDir);
+          reqJson_.put("codeName", codeName);
+          if(vm.count("compileOnly")){
+            reqJson_.put("compileOnly", 1);
           } else {
-            reqJson_.put("compile_only", 0);
+            reqJson_.put("compileOnly", 0);
           }
         }
         return ok;
@@ -97,7 +108,9 @@ Usage: ./teos create key --jarg '{
       }
 
       void printout(TeosControl command, variables_map &vm) {
-        output("WAST", "%s", GET_STRING(command, "output"));
+        if(!command.respJson_.get("output", "").empty()) {
+          output("WAST", "%s", GET_STRING(command, "output"));
+        }
       }    
     };
 
@@ -109,23 +122,26 @@ Usage: ./teos create key --jarg '{
     {
       void generateAbi(
         string sourceDir, // comma separated list of source c/cpp files
-        string include_dir = "" // comma separated list of include dirs
+        string includeDir = "", // comma separated list of include dirs
+        string codeName = ""
       );
 
     public:
       GenerateAbi(
         string sourceDir, // comma separated list of source c/cpp files
-        string include_dir = ""
+        string includeDir = "",
+        string codeName = ""
       )
       {
-        generateAbi(sourceDir, include_dir);
+        generateAbi(sourceDir, includeDir, codeName);
       }
 
       GenerateAbi(ptree reqJson) : TeosControl(reqJson)
       {
         generateAbi(
           reqJson_.get<string>("sourceDir"),  
-          reqJson_.get<string>("include_dir")
+          reqJson_.get("includeDir", ""),
+          reqJson_.get("codeName", "")
         );
       }
     };
@@ -143,24 +159,29 @@ Usage: ./teos create key --jarg '{
       const char* getUsage() {
         return R"(
 Generate the ABI specification file.
-Usage: ./teos generate abi sourceDir [Options]
+Usage: ./teos generate abi <source dir> [Options]
 Usage: ./teos create key --jarg '{
-  "sourceDir":"<types.hpp>",
-  "include_dir":"<comma separated list of include dirs>"
+  "sourceDir":"<source dir>",
+  "includeDir":"<comma separated list of include dirs, optional>",
+  "codeName":"<name of the ABI file, optional>"
   }' [OPTIONS]
 )";
       }
 
       string sourceDir;
-      string include_dir;
+      string includeDir;
+      string codeName;
 
       options_description  argumentDescription() {
         options_description od("");
         od.add_options()
           ("sourceDir", value<string>(&sourceDir)
-            , "Comma separated list of source c/cpp files.")
-          ("include_dir,d", value<string>(&include_dir)->default_value("")
-            , "Comma separated list of source c/c++ files.");
+            , "The directory of the contract project.")
+          ("includeDir,d", value<string>(&includeDir)->default_value("")
+            , "Comma separated list of source c/c++ files.")
+          ("codeName,n", value<string>(&codeName)->default_value("")
+            , "The name of the ABI file. If not set, it equals to the name "
+              "of the contract project.");
             
         return od;
       }
@@ -174,7 +195,8 @@ Usage: ./teos create key --jarg '{
         if(vm.count("sourceDir")){
           ok = true;
           reqJson_.put("sourceDir", sourceDir);
-          reqJson_.put("include_dir", include_dir);
+          reqJson_.put("includeDir", includeDir);
+          reqJson_.put("codeName", codeName);
         }
         return ok;
       }
@@ -184,7 +206,9 @@ Usage: ./teos create key --jarg '{
       }
 
       void printout(TeosControl command, variables_map &vm) {
-        output("ABI", "%s", GET_STRING(command, "output"));
+        if(!command.respJson_.get("output", "").empty()) {
+          output("ABI", "%s", GET_STRING(command, "output"));
+        }
       }        
     };
 

@@ -3,17 +3,18 @@
 import unittest
 import warnings
 import json
+import pyteos
 import node
 import sess
 from eosf import *
 
-set_verbose(False)
+pyteos.set_verbose(False)
 
 class Test1(unittest.TestCase):
 
     contract = None
 
-    def run(self, result=None):
+    def run(self, result = None):
         """ Stop after first error """      
         if not result.failures:
             super().run(result)
@@ -30,32 +31,30 @@ class Test1(unittest.TestCase):
         
     def setUp(self):
         self.assertTrue(node.is_running(), "testnet failure")
-        self.contract = self.__class__.contract
-        self.assertTrue(self.contract.is_created(), "contract failure")
 
         
     def test_01(self):
-        self.assertTrue(self.contract.build(), "build")
+        self.assertTrue(self.__class__.contract.build(), "build")
 
     
     def test_02(self):
-        self.assertTrue(self.contract.deploy(), "deploy")
+        self.assertTrue(self.__class__.contract.deploy(), "deploy")
 
 
     def test_03(self):
-        self.assertTrue(self.contract.get_code(), "get_code")
+        self.assertTrue(self.__class__.contract.get_code(), "get_code")
 
 
     def test_04(self):
         self.assertTrue(
-            self.contract.push_action(
+            self.__class__.contract.push_action(
             "hi", 
             '{"user":"alice"}',
             sess.alice),
             "push_action hi 1")
 
         self.assertTrue(
-            self.contract.push_action(
+            self.__class__.contract.push_action(
             "hi", 
             '{"user":"carol"}',
             sess.carol),
@@ -63,13 +62,12 @@ class Test1(unittest.TestCase):
 
 
     def test_05(self):
-        """ This should fail due to authority mismatch """
         self.assertFalse(
-            self.contract.push_action(
+            self.__class__.contract.push_action(
             "hi", 
             '{"user":"carol"}',
             sess.alice),
-            "push_action hi")
+            "push_action hi 3")
 
 
     def tearDown(self):
@@ -78,7 +76,7 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.contract.delete()
+        #cls.contract.delete()
         node.stop()
 
 

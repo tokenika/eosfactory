@@ -263,7 +263,8 @@ namespace teos {
 
     void GenerateAbi::generateAbi(
       string sourceDir,
-      string include_dir // comma separated list of include dirs
+      string include_dir, // comma separated list of include dirs
+      string codeName
     )
     {
       namespace bfs = boost::filesystem;
@@ -292,7 +293,7 @@ namespace teos {
       }
 
       bfs::path sourcePath(srcs[0]);
-      string name = sourcePath.stem().string();
+      string name = codeName.empty() ? sourcePath.stem().string() : codeName;
       bfs::path targetPath = targetDirPath / (name  + ".abi");
 
       string command_line = getSourceDir(this) 
@@ -347,6 +348,7 @@ namespace teos {
     void BuildContract::buildContract(
       string sourceDir, // contract source directory
       string include_dir, // comma separated list of include dirs
+      string codeName,
       bool compile_only
     )
     {
@@ -368,7 +370,7 @@ namespace teos {
       for (string file : srcs)
       {  
         bfs::path src_file(file);
-        string name = src_file.stem().string();
+        string name = codeName.empty() ? src_file.stem().string() : codeName;
 
         if(targetPath.empty()) 
         { // Define target path once.

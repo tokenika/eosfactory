@@ -668,8 +668,7 @@ class Template(_Command):
 
 class ABI(_Command):
     def __init__(
-            self, source, abi_file="", 
-            include_dir="", is_verbose=True):
+            self, source, code_name="", include_dir="", is_verbose=True):
 
         try:
             source = source.contract_dir
@@ -678,18 +677,15 @@ class ABI(_Command):
 
         jarg = json.loads("{}")
         jarg["sourceDir"] = source
-        jarg["abi_file"] = abi_file
-        jarg["include_dir"] = include_dir
+        jarg["includeDir"] = include_dir
+        jarg["codeName"] = code_name
 
         _Command.__init__(self, jarg, "generate", "abi", is_verbose)
-        # if not self.error:
-        #     self.abi = self.json["ABI"]
 
 
 class WAST(_Command):
     def __init__(
-            self, source, wast_file="", 
-            include_dir="", is_verbose=True):
+            self, source, code_name="", include_dir="", is_verbose=True):
 
         try:
             source = source.contract_dir
@@ -697,14 +693,12 @@ class WAST(_Command):
             pass
 
         jarg = json.loads("{}")
-        jarg["src"] = source
-        jarg["wast_file"] = wast_file
-        jarg["include_dir"] = include_dir
+        jarg["sourceDir"] = source
+        jarg["includeDir"] = include_dir
+        jarg["codeName"] = code_name
+        jarg["compileOnly"] = "0"
 
-        _Command.__init__(self, jarg, "build", "contract", is_verbose)
-        # if not self.error:
-        #     self.wast = self.json["WAST"]
-
+        _Command.__init__(self, jarg, "build", "contract", is_verbose) 
 
 class NodeStart(_Command):
     def __init__(self, clear=0, is_verbose=True):
@@ -962,8 +956,8 @@ class Contract(SetContract):
 
 
     def wast(self):
-        if self.is_mutable:
-            wast = WAST(str(self.contract_path_absolute))
+        if self.is_mutable:            
+            wast = WAST(str(self.contract_path_absolute), self.account_name)
         else:
             if _is_verbose:
                 print("ERROR!")
@@ -973,7 +967,7 @@ class Contract(SetContract):
 
     def abi(self):
         if self.is_mutable:
-            abi = ABI(str(self.contract_path_absolute))
+            abi = ABI(str(self.contract_path_absolute), self.account_name)
         else:
             if _is_verbose:
                 print("ERROR!")
@@ -1060,7 +1054,7 @@ class Contract(SetContract):
         """ Print a contract's code.
         On error, return False.
         """
-        code = GetCode(self.name)
+        code = GetCode(self.account_name)
         return not code.error
 
 
