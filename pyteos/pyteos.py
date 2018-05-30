@@ -193,6 +193,27 @@ class GetAccount(_Command):
         if not self.error:
             self.name = self.json["account_name"]
 
+    def code(self, wast_file="", abi_file=""):
+        """ Retrieve the WAST and ABI files for the account.
+        """
+        code = GetCode(self.name, wast_file, abi_file, is_verbose=False)
+        return code
+
+    def set_contract(
+            self, contract_dir, wast_file="", abi_file="", 
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0):
+        """ Creates or update the contract on the account
+
+        """
+        return SetContract(
+            self.name, contract_dir, wast_file, abi_file,
+            permission, expiration_sec, forceUnique,
+            max_cpu_usage=0, max_net_usage=0,
+            is_verbose=False 
+            )
+
 
 class GetAccounts(_Command):
     def __init__(self, key, is_verbose=True):
@@ -955,6 +976,7 @@ class Contract(SetContract):
                 print("ERROR!")
                 print("Cannot modify system contracts.")
         return not wast.error
+        
 
     def abi(self):
         if self.is_mutable:
@@ -1047,6 +1069,7 @@ class Contract(SetContract):
         """
         code = GetCode(self.name)
         return not code.error
+
 
     def contract_path(self):
         """ Return contract directory path.

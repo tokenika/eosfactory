@@ -23,6 +23,7 @@ Makefile
 !/tests/test2.py
 !/tests/test3.py
 !/tests/unit.test1.py
+!/tests/unit.test1a.py
 !/tests/unit.test2.py
 !/tests/unit.test3.py
 

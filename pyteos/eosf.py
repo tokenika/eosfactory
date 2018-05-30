@@ -18,6 +18,9 @@ import re
 import random
 import shutil
 
+def set_verbose(is_verbose):
+    pyteos.set_verbose(is_verbose)
+
 
 class Contract(pyteos.Contract):
     """
@@ -121,6 +124,17 @@ class Contract(pyteos.Contract):
     def path(self):
         p = self.contract_path()
         print("#  " + p)
+
+
+    def is_created(self):
+        return not self.error
+        
+
+    def is_deployed(self):
+        if not self.get_code():
+            return False
+        t = self.account.code()
+        return not (t.json["code_hash"] == "0000000000000000000000000000000000000000000000000000000000000000")
          
 
     def delete(self):

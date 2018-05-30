@@ -10,7 +10,7 @@ pyteos.set_verbose(False)
 
 class Test1(unittest.TestCase):
 
-    def run(self, result=None):
+    def run(self, result = None):
         """ Stop after first error """      
         if not result.failures:
             super().run(result)

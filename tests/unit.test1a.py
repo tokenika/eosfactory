@@ -3,14 +3,15 @@
 import unittest
 import warnings
 import json
-import pyteos
 import node
 import sess
 from eosf import *
 
-pyteos.set_verbose(False)
+set_verbose(False)
 
 class Test1(unittest.TestCase):
+
+    CONTRACT_NAME = "eosio.token"
 
     def run(self, result = None):
         """ Stop after first error """      
@@ -22,23 +23,20 @@ class Test1(unittest.TestCase):
     def setUpClass(cls):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            node.reset()
-        sess.setup()
+            cls.assertTrue(node.reset(), "node failure")
+        cls.assertTrue(sess.setup(), "session failure")
+
+        contract = Contract(cls.CONTRACT_NAME)
+        cls.assertTrue(contract.is_created(), "contract failure")
+        cls.assertTrue(contract.deploy(), "deployment failure")
 
 
     def setUp(self):
-        self.assertTrue(node.is_running(), "testnet failure")
-        self.contract = Contract("eosio.token")
-        self.assertFalse(self.contract.error, "contract failure")
-
+        self.contract = Contract(self.CONTRACT_NAME)
+        self.assertTrue(self.contract.is_deployed(), "deployment failure")
+        
 
     def test_01(self):
-        self.assertTrue(self.contract.get_code(), "get_code")
-        self.assertTrue(self.contract.deploy(), "deploy")
-        self.assertTrue(self.contract.get_code(), "get_code")
-
-
-    def test_02(self):
         self.assertTrue(
             self.contract.push_action(
             "create", 
@@ -55,7 +53,7 @@ class Test1(unittest.TestCase):
             "push_action issue")
 
 
-    def test_03(self):
+    def test_02(self):
         self.assertTrue(
             self.contract.push_action(
             "transfer", 
@@ -81,7 +79,7 @@ class Test1(unittest.TestCase):
             "push_action transfer")
 
 
-    def test_04(self):   
+    def test_03(self):   
         t1 = self.contract.get_table("accounts", sess.alice)
         self.assertFalse(t1.error, "get_table alice")
 

@@ -12,7 +12,7 @@ class Test1(unittest.TestCase):
 
     contract = None
 
-    def run(self, result=None):
+    def run(self, result = None):
         """ Stop after first error """      
         if not result.failures:
             super().run(result)
