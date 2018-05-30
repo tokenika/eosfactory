@@ -9,6 +9,7 @@ import sess
 from eosf import *
 
 pyteos.set_verbose(False)
+pyteos.set_suppress_error_msg(True)
 
 class Test1(unittest.TestCase):
 
