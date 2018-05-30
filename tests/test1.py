@@ -1,55 +1,55 @@
 # python3 ./tests/test1.py
 
-import pyteos
 import node
 import sess
 from eosf import *
 
 def run():
     print('test node.reset():')
-    node.reset()
+    assert node.reset()
 
     print('test sess.setup():')
-    sess.setup()
+    assert sess.setup()
 
     print('test Contract("eosio.token"):')
     c = Contract("eosio.token")
+    assert c.is_created()
 
     print('test c.get_code():')
-    c.get_code()
+    assert c.get_code()
 
     print('test c.deploy():')
-    c.deploy()
+    assert c.deploy()
 
     print('test c.get_code():')
-    c.get_code()
+    assert c.get_code()
 
     print('test c.push_action("create"):')
-    c.push_action(
+    assert c.push_action(
         "create", 
         '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
             "can_freeze":0, "can_recall":0, "can_whitelist":0}')
 
     print('test c.push_action("issue"):')
-    c.push_action(
+    assert c.push_action(
         "issue", 
         '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', \
             sess.eosio)
 
     print('test c.push_action("transfer", sess.alice):')
-    c.push_action(
+    assert c.push_action(
         "transfer", 
         '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
             "memo":"memo"}', sess.alice)
 
     print('test c.push_action("transfer", sess.carol):')
-    c.push_action(
+    assert c.push_action(
         "transfer", 
         '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", \
             "memo":"memo"}', sess.carol)
 
     print('test c.push_action("transfer" sess.bob):')
-    c.push_action(
+    assert c.push_action(
         "transfer", 
         '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", \
             "memo":"memo"}', sess.bob)

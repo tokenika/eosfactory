@@ -5,25 +5,29 @@ from eosf import *
 
 def run(contract_dir):
     print('test node.reset():')
-    node.reset()
-
-    print('test node.info():')
-    node.info()
+    assert node.reset()
 
     print('test sess.setup():')
-    sess.setup()
+    assert sess.setup()
 
     print('test Contract():')
     c = Contract(contract_dir)
+    assert c.is_created()
 
     print('test c.deploy():')
-    c.deploy()
+    assert c.deploy()
+
+    print('test c.get_code():')
+    assert c.get_code()
 
     print('test c.push_action("hi", sess.alice):')
-    c.push_action("hi", '{"user":"alice"}', sess.alice)
+    assert c.push_action("hi", '{"user":"alice"}', sess.alice)
 
     print('test c.push_action("hi", sess.carol):')
-    c.push_action("hi", '{"user":"carol"}', sess.carol)
+    assert c.push_action("hi", '{"user":"carol"}', sess.carol)
+
+    print('test c.push_action("hi", sess.alice):')
+    assert not c.push_action("hi", '{"user":"carol"}', sess.alice)
     
     print('test node.stop():')
     node.stop()

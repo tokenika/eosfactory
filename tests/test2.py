@@ -6,22 +6,20 @@ from eosf import *
 
 def run():
     print('test node.reset():')
-    node.reset()
-
-    print('test node.info():')
-    node.info()
+    assert node.reset()
     
     print('test sess.setup():')
-    sess.setup()
+    assert sess.setup()
 
     print('test Contract("tic.tac.toe"):')
     c = Contract("tic.tac.toe")
+    assert c.is_created()
 
     print('test c.deploy():')
-    c.deploy()
+    assert c.deploy()
 
     print('test c.push_action("create", sess.bob):')
-    c.push_action("create", '{"challenger":"alice", "host":"bob"}', sess.bob)
+    assert c.push_action("create", '{"challenger":"alice", "host":"bob"}', sess.bob)
     c.get_console()
 
     print('test c.get_table("games", sess.bob):')
@@ -38,12 +36,12 @@ def run():
     assert t.json["rows"][0]["board"][8] == '0'
 
     print('test c.push_action("move", sess.bob):')
-    c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"bob", "mvt":{"row":0, "column":0} }', sess.bob)
+    assert c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"bob", "mvt":{"row":0, "column":0} }', sess.bob)
     c.get_console()
 
 
     print('test c.push_action("move", sess.alice):')
-    c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"alice", "mvt":{"row":1, "column":1} }', sess.alice)
+    assert c.push_action("move", '{"challenger":"alice", "host":"bob", "by":"alice", "mvt":{"row":1, "column":1} }', sess.alice)
     c.get_console()
 
     print('test c.get_table("games", sess.bob):')
@@ -60,7 +58,7 @@ def run():
     assert t.json["rows"][0]["board"][8] == '0'
 
     print('test c.push_action("restart", sess.bob):')
-    c.push_action("restart", '{"challenger":"alice", "host":"bob", "by":"bob"}', sess.bob)
+    assert c.push_action("restart", '{"challenger":"alice", "host":"bob", "by":"bob"}', sess.bob)
     c.get_console()
 
     print('test c.get_table("games", sess.bob):')
@@ -77,7 +75,7 @@ def run():
     assert t.json["rows"][0]["board"][8] == '0'
 
     print('test c.push_action("close", sess.bob):')
-    c.push_action("close", '{"challenger":"alice", "host":"bob"}', sess.bob)
+    assert c.push_action("close", '{"challenger":"alice", "host":"bob"}', sess.bob)
     c.get_console()    
 
     print('test node.stop():')

@@ -3,16 +3,17 @@
 import unittest
 import warnings
 import json
-import pyteos
 import node
 import sess
 from eosf import *
 
-pyteos.set_verbose(False)
+set_verbose(False)
 
 class Test1(unittest.TestCase):
 
-    def run(self, result = None):
+    CONTRACT_NAME = "tic.tac.toe"
+
+    def run(self, result=None):
         """ Stop after first error """      
         if not result.failures:
             super().run(result)
@@ -24,21 +25,18 @@ class Test1(unittest.TestCase):
             warnings.simplefilter("ignore")
             node.reset()
         sess.setup()
+        contract = Contract(cls.CONTRACT_NAME)
+        contract.deploy()
 
 
     def setUp(self):
         self.assertTrue(node.is_running(), "testnet failure")
-        self.contract = Contract("tic.tac.toe")
-        self.assertFalse(self.contract.error, "contract failure")
+        self.contract = Contract(self.CONTRACT_NAME)
+        self.assertTrue(self.contract.is_created(), "contract failure")
+        self.assertTrue(self.contract.is_deployed(), "deployment failure")
 
 
     def test_01(self):
-        self.assertTrue(self.contract.get_code(), "get_code")
-        self.assertTrue(self.contract.deploy(), "deploy")
-        self.assertTrue(self.contract.get_code(), "get_code")
-
-
-    def test_02(self):
         self.assertTrue(
             self.contract.push_action(
             "create", 
@@ -60,7 +58,7 @@ class Test1(unittest.TestCase):
         self.assertEqual(t.json["rows"][0]["board"][8], "0")
 
 
-    def test_03(self):
+    def test_02(self):
         self.assertTrue(
             self.contract.push_action(
             "move", 
@@ -89,7 +87,7 @@ class Test1(unittest.TestCase):
         self.assertEqual(t.json["rows"][0]["board"][8], "0")
 
 
-    def test_04(self):
+    def test_03(self):
         self.assertTrue(
             self.contract.push_action(
             "restart", 
@@ -111,7 +109,7 @@ class Test1(unittest.TestCase):
         self.assertEqual(t.json["rows"][0]["board"][8], "0")
 
 
-    def test_05(self):
+    def test_04(self):
         self.assertTrue(
             self.contract.push_action(
             "close", 

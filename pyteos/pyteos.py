@@ -834,27 +834,20 @@ class Account(CreateAccount):
         max_net_usage: An upper limit on the net usage budget, in bytes, for 
             the transaction (defaults to 0 which means no limit).
     """
-    
+
     def code(self, wast_file="", abi_file=""):
-        """ Retrieve the WAST and ABI files for the account.
-        """
-        code = GetCode(self.name, wast_file, abi_file, is_verbose=False)
-        return code
+        return GetAccount(self.name, is_verbose=False).code(wast_file, abi_file)
 
     def set_contract(
             self, contract_dir, wast_file="", abi_file="", 
             permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0):
-        """ Creates or update the contract on the account
-
-        """
-        return SetContract(
-            self.name, contract_dir, wast_file, abi_file,
-            permission, expiration_sec, forceUnique,
-            max_cpu_usage=0, max_net_usage=0,
-            is_verbose=False 
-            )
+        return GetAccount(self.name, is_verbose=False).set_contract(
+            contract_dir, wast_file, abi_file, 
+            permission, expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage)
 
     def __str__(self):
         return str(GetAccount(self.name, is_verbose=False)) 
