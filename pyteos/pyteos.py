@@ -956,7 +956,7 @@ class Contract(SetContract):
 
 
     def wast(self):
-        if self.is_mutable:            
+        if self.is_mutable:
             wast = WAST(str(self.contract_path_absolute), self.account_name)
         else:
             if _is_verbose:
