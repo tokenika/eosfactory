@@ -1,11 +1,12 @@
-## 1. Test2 Fails
+## 1. Test3 fails
 
-The contract `tic-tac-toe` is expected to be in `EOS/contracts` while it's located in `EOS/eosfactory/contracts`.
+```
+Name is longer than 13 characters (_e4b2ffc804529ce9c6fae258197648cc2)
+```
 
+## 2. Tasks compile & build fail
 
-## 2. Test3 Fails
-
-The flag `remove_existing = True` is not applied.
-
-
-## 3. New edits not discovered by `cmake`
+```
+/bin/bash: generate: command not found
+/bin/bash: build: command not found
+```
