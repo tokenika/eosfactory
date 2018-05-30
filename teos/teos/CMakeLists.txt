@@ -5,9 +5,6 @@ list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../CMakeModules" )
 set( TEST_ADDRESS "tokenika")
 set( TEST_HTTP_ADDRESS "eos-testapi.tokenika.io:8888" )
 
-# Ensure that even static libraries are relocatable so they can be linked into a .so
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
 ## BEGIN DEPENDENCIES ########################################################
 
 set( Boost_USE_STATIC_LIBS ON )
@@ -64,17 +61,17 @@ if( NOT ECC_IMPL STREQUAL openssl )
   find_package(Secp256k1 REQUIRED)
   find_package(GMP REQUIRED)
 endif()
-
 ## END DEPENDENCIES ##########################################################
 
-install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
-  DESTINATION "bin" )
 
 install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
   DESTINATION "bin" )
 
-## BEGIN executables #########################################################
+install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
+  DESTINATION "bin" )
 
+
+## BEGIN macro( applLinkLibraries applName ) #################################
 macro( applLinkLibraries applName )
 
   file(GLOB HEADERS "${teoslib_src}/include/teoslib/*.hpp")
@@ -153,6 +150,11 @@ macro( applLinkLibraries applName )
   endif()
 
 endmacro( applLinkLibraries )
+## END macro( applLinkLibraries applName ) ###################################
+
+
+## add executables ###########################################################
+##############################################################################
 
 add_executable( teos teos.cpp )
 applLinkLibraries( teos )
@@ -166,8 +168,7 @@ add_executable( unittest1 unittest1.cpp )
 applLinkLibraries( unittest1 )
 install( TARGETS unittest1 RUNTIME DESTINATION bin)
 
-## END executables ###########################################################
-
+## install ###################################################################
 install( TARGETS
    teos
    RUNTIME DESTINATION "/usr/local/bin"

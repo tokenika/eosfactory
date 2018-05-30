@@ -19,15 +19,16 @@ Makefile
 !/contracts/tic.tac.toe/build
 
 /tests/*
+!/tests/test.py
 !/tests/test1.py
 !/tests/test2.py
 !/tests/test3.py
-!/tests/unit.test.py
-!/tests/unit.test1.py
-!/tests/unit.test1a.py
-!/tests/unit.test2.py
-!/tests/unit.test3.py
-
+!/tests/test4.py
+!/tests/unittest.py
+!/tests/unittest1.py
+!/tests/unittest2.py
+!/tests/unittest3.py
+!/tests/unittest4.py
 !/pyteos/docs/build
 
 **/Debug
@@ -51,3 +52,4 @@ teos/teos_lib/eos_interface.1.cpp#
 .vscode/launch.json
 .vscode/settings.json
 .vscode/tasks.json
+templates/contracts/eosio.token.cpp
