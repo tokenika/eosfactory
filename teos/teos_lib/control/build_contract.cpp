@@ -408,8 +408,7 @@ namespace teos {
           }
         }        
 
-        command_line += " -c " + file
-          + " -o " + output.string();
+        command_line += " -c " + file + " -o " + output.string();
 
         //cout << "command line clang:" << endl << command_line << endl;
 
@@ -417,63 +416,61 @@ namespace teos {
           bfs::remove_all(workdir);
           return;
         }
+      }
+
+      if(!compile_only)
+      {
+        {
+          string command_line;
+          command_line += getEOSIO_WASM_LLVM_LINK(this)
+            + " -only-needed" 
+            + " -o "  + workdir.string() + "/linked.bc"
+            + " " + objectFileList // $workdir/built/* DOES NOT WORK
+            + " " + getSourceDir(this) + "/build/contracts/musl/libc.bc"
+            + " " + getSourceDir(this) + "/build/contracts/libc++/libc++.bc"
+            + " " + getSourceDir(this) + "/build/contracts/eosiolib/eosiolib.bc";
+
+          //cout << "command line llvm-link:" << endl << command_line << endl;
+
+          if(!process(command_line, this)){
+            return;
+          }   
+        }
         
-        if(compile_only){
-          bfs::remove_all(workdir);
-          return;          
-        }  
+        {
+          string command_line;
+          command_line += getEOSIO_WASM_LLC(this)
+            + " -thread-model=single --asm-verbose=false"
+            + " -o " + workdir.string() + "/assembly.s"
+            + " " + workdir.string() + "/linked.bc";
+          //cout << "command line llc:" << endl << command_line << endl;
+
+          if(!process(command_line, this)){
+            return;
+          } 
+        }
+
+        {
+          string command_line;
+          command_line += getSourceDir(this) + "/build/externals/binaryen/bin/eosio-s2wasm"
+            + " -o " + targetPath.string()
+            + " -s 16384"
+            + " " + workdir.string() + "/assembly.s";
+
+          //cout << "command line eosio-s2wasm:" << endl << command_line << endl;
+
+          if(!process(command_line, this)){
+            return;
+          } 
+        }
+        bfs::remove_all(workdir);
+
+        ifstream ifs(targetPath.string());
+        stringstream ss;
+        ss << ifs.rdbuf();
+        respJson_.put("WAST", ss.str());
+        respJson_.put("output", targetPath.string());
       }
-
-      {
-        string command_line;
-        command_line += getEOSIO_WASM_LLVM_LINK(this)
-          + " -only-needed" 
-          + " -o "  + workdir.string() + "/linked.bc"
-          + " " + objectFileList // $workdir/built/* DOES NOT WORK
-          + " " + getSourceDir(this) + "/build/contracts/musl/libc.bc"
-          + " " + getSourceDir(this) + "/build/contracts/libc++/libc++.bc"
-          + " " + getSourceDir(this) + "/build/contracts/eosiolib/eosiolib.bc";
-
-        //cout << "command line llvm-link:" << endl << command_line << endl;
-
-        if(!process(command_line, this)){
-          return;
-        }   
-      }
-      
-      {
-        string command_line;
-        command_line += getEOSIO_WASM_LLC(this)
-          + " -thread-model=single --asm-verbose=false"
-          + " -o " + workdir.string() + "/assembly.s"
-          + " " + workdir.string() + "/linked.bc";
-        //cout << "command line llc:" << endl << command_line << endl;
-
-        if(!process(command_line, this)){
-          return;
-        } 
-      }
-
-      {
-        string command_line;
-        command_line += getSourceDir(this) + "/build/externals/binaryen/bin/eosio-s2wasm"
-          + " -o " + targetPath.string()
-          + " -s 16384"
-          + " " + workdir.string() + "/assembly.s";
-
-        //cout << "command line eosio-s2wasm:" << endl << command_line << endl;
-
-        if(!process(command_line, this)){
-          return;
-        } 
-      }
-      bfs::remove_all(workdir);
-
-      ifstream ifs(targetPath.string());
-      stringstream ss;
-      ss << ifs.rdbuf();
-      respJson_.put("WAST", ss.str());
-      respJson_.put("output", targetPath.string());
     }
   }
 }
