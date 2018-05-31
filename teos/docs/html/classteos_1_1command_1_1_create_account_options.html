@@ -78,54 +78,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Create an account, buy ram, stake for bandwidth for the account.<br />
- <br />
- Usage: ./teos create account [creator] [name] [ownerKey] [activeKey]<br />
- [Options]<br />
- Usage: ./teos create key &ndash;jarg '{<br />
- "creator":"&lt;creator name&gt;",<br />
- "name":"&lt;account name&gt;",<br />
- "ownerKey":"&lt;owner public key&gt;",<br />
- "activeKey":"&lt;active public key&gt;",<br />
- "permission":"&lt;permission list&gt;",<br />
- "expiration":&lt;expiration time="" sec&gt;=""&gt;,<br />
- "skip-sign":&lt;true|false&gt;,<br />
- "dont-broadcast":&lt;true|false&gt;,<br />
- "force-unique":&lt;true|false&gt;,<br />
- "max-cpu-usage":"&lt;max cpu usage&gt;",<br />
- "max-net-usage":"&lt;max net usage&gt;"<br />
- }' [OPTIONS]<br />
- <br />
- Options:<br />
- <br />
- -c [ &ndash;creator ] arg The name of the account creating the<br />
- new account<br />
- -n [ &ndash;name ] arg The name of the new account<br />
- -o [ &ndash;ownerKey ] arg The owner public key for the account<br />
- -a [ &ndash;activeKey ] arg The active public key for the account<br />
- -p [ &ndash;permission ] arg An account and permission level to<br />
- authorize, as in 'account'<br />
- (defaults to 'account')<br />
- -x [ &ndash;expiration ] arg (=30) The time in seconds before a<br />
- transaction expires.<br />
- -s [ &ndash;skip-sign ] Specify that unlocked wallet keys<br />
- should not be used to sign transaction,<br />
- defaults to false.<br />
- -d [ &ndash;dont-broadcast ] Don't broadcast transaction to the<br />
- network (just print to stdout).<br />
- -f [ &ndash;force-unique ] force the transaction to be unique.<br />
- this will consume extra bandwidth and<br />
- remove any protections against<br />
- accidently issuing the same transaction<br />
- multiple times.<br />
- &ndash;max-cpu-usage arg (=0) Upper limit on the cpu usage budget, in<br />
- instructions-retired, for the execution<br />
- of the transaction (defaults to 0 which<br />
- means no limit).<br />
- &ndash;max-net-usage arg (=0) Upper limit on the net usage budget, in<br />
- bytes, for the transaction (defaults to<br />
- 0 which means no limit)<br />
-  
+<p>Create an account, buy ram, stake for bandwidth for the account.  
  <a href="classteos_1_1command_1_1_create_account_options.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="create__commands_8hpp_source.html">create_commands.hpp</a>&gt;</code></p>
@@ -249,70 +202,68 @@ static options_description&#160;</td><td class="memItemRight" valign="bottom"><b
 <tr class="separator:a64481990f4f43f58491bb5def15006c5 inherit pub_static_methods_classteos_1_1_command_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Create an account, buy ram, stake for bandwidth for the account.<br />
- <br />
- Usage: ./teos create account [creator] [name] [ownerKey] [activeKey]<br />
- [Options]<br />
- Usage: ./teos create key &ndash;jarg '{<br />
- "creator":"&lt;creator name&gt;",<br />
- "name":"&lt;account name&gt;",<br />
- "ownerKey":"&lt;owner public key&gt;",<br />
- "activeKey":"&lt;active public key&gt;",<br />
- "permission":"&lt;permission list&gt;",<br />
- "expiration":&lt;expiration time="" sec&gt;=""&gt;,<br />
- "skip-sign":&lt;true|false&gt;,<br />
- "dont-broadcast":&lt;true|false&gt;,<br />
- "force-unique":&lt;true|false&gt;,<br />
- "max-cpu-usage":"&lt;max cpu usage&gt;",<br />
- "max-net-usage":"&lt;max net usage&gt;"<br />
- }' [OPTIONS]<br />
- <br />
- Options:<br />
- <br />
- -c [ &ndash;creator ] arg The name of the account creating the<br />
- new account<br />
- -n [ &ndash;name ] arg The name of the new account<br />
- -o [ &ndash;ownerKey ] arg The owner public key for the account<br />
- -a [ &ndash;activeKey ] arg The active public key for the account<br />
- -p [ &ndash;permission ] arg An account and permission level to<br />
- authorize, as in 'account'<br />
- (defaults to 'account')<br />
- -x [ &ndash;expiration ] arg (=30) The time in seconds before a<br />
- transaction expires.<br />
- -s [ &ndash;skip-sign ] Specify that unlocked wallet keys<br />
- should not be used to sign transaction,<br />
- defaults to false.<br />
- -d [ &ndash;dont-broadcast ] Don't broadcast transaction to the<br />
- network (just print to stdout).<br />
- -f [ &ndash;force-unique ] force the transaction to be unique.<br />
- this will consume extra bandwidth and<br />
- remove any protections against<br />
- accidently issuing the same transaction<br />
- multiple times.<br />
- &ndash;max-cpu-usage arg (=0) Upper limit on the cpu usage budget, in<br />
- instructions-retired, for the execution<br />
- of the transaction (defaults to 0 which<br />
- means no limit).<br />
- &ndash;max-net-usage arg (=0) Upper limit on the net usage budget, in<br />
- bytes, for the transaction (defaults to<br />
- 0 which means no limit)<br />
- </p>
-<p>&lt;&gt; -a [ &ndash;address ] arg (=127.0.0.1:8888)<br />
- The http address (host:port) of the<br />
- EOSIO node.<br />
- -w [ &ndash;wallet ] arg (=127.0.0.1:8888) The http address (host:port) where<br />
- eos-wallet is running.<br />
-</p>
-<p>&ndash;jarg arg Json argument.<br />
- &ndash;arg Print argument.<br />
- -j [ &ndash;json ] Print result as json.<br />
- &ndash;both For system use.<br />
- -r [ &ndash;raw ] Raw print<br />
-</p>
-<p>-h [ &ndash;help ] Help screen<br />
- -V [ &ndash;verbose ] Output verbose messages<br />
- </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>Create an account, buy ram, stake for bandwidth for the account. </p>
+<pre class="fragment">Usage: ./teos create account [creator] [name] [ownerKey] [activeKey] 
+[Options]
+Usage: ./teos create key --jarg '{
+"creator":"&lt;creator name&gt;",
+"name":"&lt;account name&gt;",
+"ownerKey":"&lt;owner public key&gt;",
+"activeKey":"&lt;active public key&gt;",
+"permission":"&lt;permission list&gt;",
+"expiration":&lt;expiration time sec&gt;,
+"skip-sign":&lt;true|false&gt;,
+"dont-broadcast":&lt;true|false&gt;,
+"force-unique":&lt;true|false&gt;,
+"max-cpu-usage":"&lt;max cpu usage&gt;",
+"max-net-usage":"&lt;max net usage&gt;"
+}' [OPTIONS]
+
+Options:
+
+-c [ --creator ] arg                  The name of the account creating the
+                                        new account
+-n [ --name ] arg                     The name of the new account
+-o [ --ownerKey ] arg                 The owner public key for the account
+-a [ --activeKey ] arg                The active public key for the account
+-p [ --permission ] arg               An account and permission level to
+                                        authorize, as in 'account@permission'
+                                        (defaults to 'account')
+-x [ --expiration ] arg (=30)         The time in seconds before a
+                                        transaction expires.
+-s [ --skip-sign ]                    Specify that unlocked wallet keys
+                                       should not be used to sign transaction,
+                                       defaults to false.
+-d [ --dont-broadcast ]               Don't broadcast transaction to the
+                                        network (just print to stdout).
+-f [ --force-unique ]                 force the transaction to be unique.
+                                        this will consume extra bandwidth and
+                                        remove any protections against
+                                        accidently issuing the same transaction
+                                        multiple times.
+--max-cpu-usage arg (=0)              Upper limit on the cpu usage budget, in
+                                        instructions-retired, for the execution
+                                        of the transaction (defaults to 0 which
+                                        means no limit).
+--max-net-usage arg (=0)              Upper limit on the net usage budget, in
+                                        bytes, for the transaction (defaults to
+                                        0 which means no limit)
+
+-a [ --address ] arg (=127.0.0.1:8888)
+                                        The http address (host:port) of the
+                                        EOSIO node.
+-w [ --wallet ] arg (=127.0.0.1:8888) The http address (host:port) where
+                                        eos-wallet is running.
+
+--jarg arg                            Json argument.
+--arg                                 Print argument.
+-j [ --json ]                         Print result as json.
+--both                                For system use.
+-r [ --raw ]                          Raw print
+
+-h [ --help ]                         Help screen
+-V [ --verbose ]                      Output verbose messages
+</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="af5c13799a676966824e5e9e47b1af180"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af5c13799a676966824e5e9e47b1af180">&#9670;&nbsp;</a></span>getUsage()</h2>
 

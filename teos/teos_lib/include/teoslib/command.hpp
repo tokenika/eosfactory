@@ -60,16 +60,19 @@ namespace teos
       namespace control = teos::control;
       
       options_description od("");
+      string address = TeosCommand::httpAddress.empty() 
+          ? teos::control::getHttpWalletAddress(nullptr)
+          : TeosCommand::httpAddress;
+      string wallet = TeosCommand::httpWalletAddress.empty()
+          ? teos::control::getHttpWalletAddress(nullptr)
+          : TeosCommand::httpWalletAddress;
+
       od.add_options()
         ("address,a", value<string>(&(TeosCommand::httpAddress))
-            ->default_value(TeosCommand::httpAddress.empty() 
-          ? teos::control::getHttpWalletAddress(nullptr)
-          : TeosCommand::httpAddress),
+            ->default_value(address),
           "The http address (host:port) of the EOSIO daemon.")
         ("wallet,w", value<string>(&(TeosCommand::httpWalletAddress))
-            ->default_value(TeosCommand::httpWalletAddress.empty()
-          ? teos::control::getHttpWalletAddress(nullptr)
-          : TeosCommand::httpWalletAddress),
+            ->default_value(wallet),
         "The http address (host:port) where eos-wallet is running.");
       od.add(ControlOptions::groupOptionDescription());
       return od;
