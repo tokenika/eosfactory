@@ -3,14 +3,14 @@
 
 ## Rationale
 
-The EOSFactory grows to be an mature IDE (Integrated Development Environment) for EOSIO smart-contracts.
+The EOSFactory grows to be a mature IDE (Integrated Development Environment) for EOSIO smart-contracts.
 
 *An integrated development environment (IDE) is a software application that provides comprehensive facilities to computer programmers for software development. An IDE normally consists of a source code editor, build automation tools, and a debugger.* [ (from Wikipedia)](#https://en.wikipedia.org/wiki/Integrated_development_environment)
 
 
 ## Walkthrough
 
-Our plan is to build around the [*Visual Studio Code*](#https://code.visualstudio.com/). With VS code, we can have all what we want in one:
+It is built around the [*Visual Studio Code*](#https://code.visualstudio.com/). With VS code, we can have all what we want in one:
 
     * Linux Mac and Windows compatibility,
     * multi-language (C/C++, Python) support as InteliSense, code browsing,
