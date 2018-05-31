@@ -1,3 +1,17 @@
+/**
+ * @file wallet_commands.hpp
+ * @copyright defined in LICENSE.txt
+ * @author Tokenika
+ * @date 30 May 2018
+*/
+
+/**
+ * @defgroup teoslib_raw Raw function classes
+ */
+/**
+ * @defgroup teoslib_cli Command-line drivers
+ */
+
 #pragma once
 
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -22,6 +36,7 @@ namespace teos
   {
 #define DEFAULT_WALLET_NAME "default"
     /**
+     * @ingroup teoslib_raw
      * @brief Create a new wallet locall.
      */
     class WalletCreate : public TeosCommand
@@ -109,6 +124,7 @@ Usage: ./teos wallet create --jarg '{"name":"<wallet name>"}' [OPTIONS]
     };
 
     /**
+     * @ingroup teoslib_raw
      * @brief Import private key into wallet.
      * 
      */
@@ -200,6 +216,11 @@ Usage: ./teos wallet import --jarg '{"name":"<wallet name>", "key":"<private key
 
     };
 
+    /**
+     * @ingroup teoslib_raw
+     * @brief List opened wallets, * = unlocked
+     * 
+     */
     class WalletList : public TeosCommand
     {
     public:
@@ -255,6 +276,7 @@ Usage: ./teos wallet list --jarg '{}' [OPTIONS]
     };
 
     /**
+    * @ingroup teoslib_raw
     * @brief Open an existing wallet.
     */
     class WalletOpen : public TeosCommand
@@ -328,6 +350,7 @@ Usage: ./teos wallet open --jarg '{"name":"<wallet name>"}' [OPTIONS]
     };
 
     /**
+    * @ingroup teoslib_raw
     * @brief Lock wallet
     */
     class WalletLock : public TeosCommand
@@ -404,6 +427,7 @@ Usage: ./teos wallet lock --jarg '{"name":"<wallet name>"}' [OPTIONS]
     };
 
     /**
+    * @ingroup teoslib_raw
     * @brief Lock all unlocked wallets
     */
     class WalletLockAll : public TeosCommand
@@ -457,6 +481,7 @@ Usage: ./teos wallet lock_all --jarg '{}' [OPTIONS]
     };
 
     /**
+    * @ingroup teoslib_raw
     * @brief Unlock wallet
     *
     */
@@ -543,6 +568,7 @@ Usage: ./teos wallet import --jarg '{"password":"<password>", name":"<wallet nam
     };
 
     /**
+    * @ingroup teoslib_raw
     * @brief List opened wallets, *= unlocked
     *
     */

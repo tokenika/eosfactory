@@ -1,9 +1,15 @@
 /**
  * @file get_commands.hpp
- *
- * Definitions for get-type commands.
- *
- * Defines command line options.
+ * @copyright defined in LICENSE.txt
+ * @author Tokenika
+ * @date 30 May 2018
+*/
+
+/**
+ * @defgroup teoslib_raw Raw function classes
+ */
+/**
+ * @defgroup teoslib_cli Command-line drivers
  */
 
 #pragma once
@@ -28,6 +34,7 @@ namespace teos
   {
 
     /**
+     * @ingroup teoslib_raw
      * @brief Get current blockchain information.
      */
     class GetInfo : public TeosCommand
@@ -75,6 +82,7 @@ Usage: ./teos get info --jarg '{}' [OPTIONS]
     };
 
     /**
+     * @ingroup teoslib_raw
      * @brief Retrieve a full block from a blockchain.
      */
     class GetBlock : public TeosCommand
@@ -150,6 +158,7 @@ Usage: ./teos get block --jarg '{"block_num_or_id":"<int | string>"}' [OPTIONS]
     };
 
     /**
+     * @ingroup teoslib_raw
      * @brief Fetch a blockchain account.
     */
     class GetAccount : public TeosCommand
@@ -218,6 +227,7 @@ Usage: ./teos get account --jarg '{"account_name":"<account name>"}' [OPTIONS]
     };
 
     /**
+     * @ingroup teoslib_raw
      * @brief Retrieve accounts associated with a public key.
     */
     class GetAccounts : public TeosCommand
@@ -286,6 +296,7 @@ Usage: ./teos get account --jarg '{"public_key":"<public key>"}' [OPTIONS]
     };
 
     /**
+    * @ingroup teoslib_raw
     * @brief Retrieves the code and ABI for an account.
     */
     class GetCode : public TeosCommand
@@ -385,6 +396,7 @@ Usage: ./teos get code --jarg '{"account_name":"<account name>", "wast":"<wast f
     };
 
     /**
+    * @ingroup teoslib_raw
     * @brief Retrieves the contents of a database table.
     *
     */

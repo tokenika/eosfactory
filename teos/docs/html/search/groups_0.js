@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['eosio_20command_20line_20client_20reference',['EOSIO Command Line Client Reference',['../group__teoslib.html',1,'']]]
+  ['command_2dline_20drivers',['Command-line drivers',['../group__teoslib__cli.html',1,'']]]
 ];

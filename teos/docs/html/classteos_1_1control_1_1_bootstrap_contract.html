@@ -72,9 +72,12 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classteos_1_1control_1_1_bootstrap_contract-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">teos::control::BootstrapContract Class Reference</div>  </div>
+<div class="title">teos::control::BootstrapContract Class Reference<div class="ingroups"><a class="el" href="group__teoslib__raw.html">Raw function classes</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><a class="el" href="classteos_1_1control_1_1_bootstrap_contract.html" title="BootstrapContract: produce contract workspace from a given template. ">BootstrapContract</a>: produce contract workspace from a given template.  
+ <a href="classteos_1_1control_1_1_bootstrap_contract.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="build__contract_8hpp_source.html">build_contract.hpp</a>&gt;</code></p>
 <div class="dynheader">
@@ -89,9 +92,9 @@ Inheritance diagram for teos::control::BootstrapContract:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a43979b7c9daa4406a374c18431e28407"><td class="memItemLeft" align="right" valign="top"><a id="a43979b7c9daa4406a374c18431e28407"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>BootstrapContract</b> (string name)</td></tr>
-<tr class="separator:a43979b7c9daa4406a374c18431e28407"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af866f69d51bd11c738fdc094fab4b7b2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classteos_1_1control_1_1_bootstrap_contract.html#af866f69d51bd11c738fdc094fab4b7b2">BootstrapContract</a> (string name, string templateName=TEMPLATE, bool removeExisting=false)</td></tr>
+<tr class="memdesc:af866f69d51bd11c738fdc094fab4b7b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new Bootstrap Contract object.  <a href="#af866f69d51bd11c738fdc094fab4b7b2">More...</a><br /></td></tr>
+<tr class="separator:af866f69d51bd11c738fdc094fab4b7b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7cbf4e4afab0d22739fbff222c1bd9e"><td class="memItemLeft" align="right" valign="top"><a id="ab7cbf4e4afab0d22739fbff222c1bd9e"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>BootstrapContract</b> (ptree reqJson)</td></tr>
 <tr class="separator:ab7cbf4e4afab0d22739fbff222c1bd9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,8 +145,61 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><b>respJson_</b></td></
 <tr class="separator:a1f5268be242e9f6182a083a4d4ec393e inherit pub_attribs_classteos_1_1_teos_control"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classteos_1_1control_1_1_bootstrap_contract.html">BootstrapContract</a>: produces template contract workspace. </p>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
+<div class="textblock"><p><a class="el" href="classteos_1_1control_1_1_bootstrap_contract.html" title="BootstrapContract: produce contract workspace from a given template. ">BootstrapContract</a>: produce contract workspace from a given template. </p>
+<p>If the template is not set, a default one is used. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="af866f69d51bd11c738fdc094fab4b7b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af866f69d51bd11c738fdc094fab4b7b2">&#9670;&nbsp;</a></span>BootstrapContract()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">teos::control::BootstrapContract::BootstrapContract </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>templateName</em> = <code>TEMPLATE</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>removeExisting</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a new Bootstrap Contract object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>name of the bootstrapped contract. </td></tr>
+    <tr><td class="paramname">templateName</td><td>chosen template. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>teos_lib/include/teoslib/control/<a class="el" href="build__contract_8hpp_source.html">build_contract.hpp</a></li>
 <li>teos_lib/control/build_contract.cpp</li>
 </ul>

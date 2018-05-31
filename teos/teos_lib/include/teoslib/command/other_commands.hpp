@@ -1,3 +1,17 @@
+/**
+ * @file other_commands.hpp
+ * @copyright defined in LICENSE.txt
+ * @author Tokenika
+ * @date 30 May 2018
+*/
+
+/**
+ * @defgroup teoslib_raw Raw function classes
+ */
+/**
+ * @defgroup teoslib_cli Command-line drivers
+ */
+
 #pragma once
 
 #include <teoslib/config.h>
@@ -7,6 +21,11 @@ namespace teos
 {
   namespace command
   {
+    /**
+     * @ingroup teoslib_raw
+     * @brief Retrieve version information of the client
+     * 
+     */
     class VersionClient : public TeosCommand
     {
     public:

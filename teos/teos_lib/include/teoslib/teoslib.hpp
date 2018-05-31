@@ -1,11 +1,13 @@
 /**
  * @file
  * @copyright defined in LICENSE.txt
- * @defgroup teoslib EOSIO Command Line Client Reference
- * @ingroup teoslib
  * @author Tokenika
  * @date 22 May 2018
  * @brief C++ library for EOSIO smart contract development environment.
+ */
+
+/**
+ * @defgroup teoslib_notion EOSIO abstraction classes
  */
 
 #pragma once
@@ -35,6 +37,7 @@ namespace teoslib
   using namespace teos::command;
 
 /**
+ * @ingroup teoslib_notion
  * @brief EOSIO cryptographic key representation.
  * 
  * Any key object generates and holds a named pair of cryptographic keys.
@@ -65,6 +68,7 @@ namespace teoslib
 
 
 /**
+ * @ingroup teoslib_notion
  * @brief Representation of an EOSIO local wallet.
  * 
  * Wallet can be named, opened, locked and unlocked. A Key object may be
@@ -134,6 +138,7 @@ namespace teoslib
 
 
 /**
+ * @ingroup teoslib_notion
  * @brief Representation of the key pair for the eosio account.
  * 
  * In order to modify the blockchain (add an account or define a smart 
@@ -157,6 +162,7 @@ namespace teoslib
 
 
 /**
+ * @ingroup teoslib_notion
  * @brief A prototype of the Account class that represents the EOSIO account.
  * 
  */
@@ -172,6 +178,7 @@ namespace teoslib
 
 
 /**
+ * @ingroup teoslib_notion
  * @brief Representation of the eosio account.
  * 
  * In order to modify the blockchain (add an account or define a smart 
@@ -187,6 +194,7 @@ namespace teoslib
 
 
 /**
+ * @ingroup teoslib_notion
  * @brief 
  * 
  */

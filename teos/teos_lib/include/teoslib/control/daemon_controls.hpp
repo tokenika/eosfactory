@@ -1,3 +1,17 @@
+/**
+ * @file daemon_controls.hpp
+ * @copyright defined in LICENSE.txt
+ * @author Tokenika
+ * @date 30 May 2018
+*/
+
+/**
+ * @defgroup teoslib_raw Raw function classes
+ */
+/**
+ * @defgroup teoslib_cli Command-line drivers
+ */
+
 #pragma once
 
 #include <string>
@@ -10,7 +24,8 @@ namespace teos {
   namespace control {
 
     /**
-     * @brief Kill a running EOS node process.
+     * @ingroup teoslib_raw
+     * @brief Kill the running local NODEOS process.
      */
     class DaemonStop : public TeosControl
     {
@@ -42,7 +57,8 @@ Usage: ./teos node kill
     };
 
     /**
-     * @brief Start a test EOSIO daemon if no one is running.
+     * @ingroup teoslib_raw
+     * @brief Start a local NODEOS node, if no one is running.
      * 
      */
     class DaemonStart : public TeosControl

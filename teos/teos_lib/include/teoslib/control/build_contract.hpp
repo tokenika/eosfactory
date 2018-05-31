@@ -1,3 +1,17 @@
+/**
+ * @file build_contract.hpp
+ * @copyright defined in LICENSE.txt
+ * @author Tokenika
+ * @date 30 May 2018
+*/
+
+/**
+ * @defgroup teoslib_raw Raw function classes
+ */
+/**
+ * @defgroup teoslib_cli Command-line drivers
+ */
+
 #pragma once
 
 #include <boost/filesystem.hpp>
@@ -8,6 +22,7 @@ using namespace std;
 namespace teos {
   namespace control {
     /**
+     * @ingroup teoslib_raw
      * Builds a contract: produces the WAST file.
      */
     class BuildContract : public TeosControl
@@ -116,6 +131,7 @@ Usage: ./teos create key --jarg '{
 
 
     /**
+     * @ingroup teoslib_raw
      * Generates abi: produces the ABI file.
      */
     class GenerateAbi : public TeosControl
@@ -214,6 +230,7 @@ Usage: ./teos create key --jarg '{
 
     #define TEMPLATE "skeleton"
     /**
+     * @ingroup teoslib_raw
      * @brief BootstrapContract: produce contract workspace from a 
      * given template.
      * 
@@ -323,8 +340,9 @@ Usage: ./teos create key --jarg '{
       }        
     };
 
-        /**
-     * BootstrapContract: produces template contract workspace.
+    /**
+     * @ingroup teoslib_raw
+     * Deletes the workspace directory of a contract.
     */
     class DeleteContract : public TeosControl
     {

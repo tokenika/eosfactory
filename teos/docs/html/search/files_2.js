@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['teos_2ehpp',['teos.hpp',['../teos_8hpp.html',1,'']]],
-  ['teoslib_2ehpp',['teoslib.hpp',['../teoslib_8hpp.html',1,'']]]
+  ['daemon_5fcontrols_2ehpp',['daemon_controls.hpp',['../daemon__controls_8hpp.html',1,'']]]
 ];

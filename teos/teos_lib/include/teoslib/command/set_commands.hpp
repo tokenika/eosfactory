@@ -1,3 +1,17 @@
+/**
+ * @file set_commands.hpp
+ * @copyright defined in LICENSE.txt
+ * @author Tokenika
+ * @date 30 May 2018
+*/
+
+/**
+ * @defgroup teoslib_raw Raw function classes
+ */
+/**
+ * @defgroup teoslib_cli Command-line drivers
+ */
+
 #pragma once
 
 #include <teoslib/config.h>
@@ -14,8 +28,10 @@ namespace teos
   namespace command
   {
     /**
-    Create or update the contract on an account.
-    */
+     * @ingroup teoslib_raw
+     * @brief Create or update the contract on an account.
+     * 
+     */
     class SetContract : public TeosCommand
     {
     public:

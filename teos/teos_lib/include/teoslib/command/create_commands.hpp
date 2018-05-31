@@ -1,3 +1,17 @@
+/**
+ * @file create_commands.hpp
+ * @copyright defined in LICENSE.txt
+ * @author Tokenika
+ * @date 30 May 2018
+*/
+
+/**
+ * @defgroup teoslib_raw Raw function classes
+ */
+/**
+ * @defgroup teoslib_cli Command-line drivers
+ */
+
 #pragma once
 
 #include <vector>
@@ -17,8 +31,9 @@ namespace teos
   namespace command
   {
     /**
-    Creates a new account on the blockchain.
-    */
+     * @ingroup teoslib_raw
+     * @brief Creates a new account on the blockchain.
+     */
     class CreateAccount : public TeosCommand
     {
     public:
@@ -213,6 +228,7 @@ Usage: ./teos create key --jarg '{
     };
 
     /**
+     * @ingroup teoslib_raw
      * @brief Create a new keypair and print the public and private keys.
      */
     class CreateKey : public TeosCommand

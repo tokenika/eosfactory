@@ -71,6 +71,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classteos_1_1control_1_1_get_config_options-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">teos::control::GetConfigOptions Class Reference</div>  </div>
@@ -104,6 +105,15 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a144b88309b989f2282da43ad56ddb1a6"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classteos_1_1control_1_1_get_config_options.html#a144b88309b989f2282da43ad56ddb1a6">getUsage</a> ()</td></tr>
 <tr class="memdesc:a144b88309b989f2282da43ad56ddb1a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command 'usage' instruction.  <a href="#a144b88309b989f2282da43ad56ddb1a6">More...</a><br /></td></tr>
 <tr class="separator:a144b88309b989f2282da43ad56ddb1a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20f9cbb75577b41e65d132d17431b4ed"><td class="memItemLeft" align="right" valign="top"><a id="a20f9cbb75577b41e65d132d17431b4ed"></a>
+options_description&#160;</td><td class="memItemRight" valign="bottom"><b>argumentDescription</b> ()</td></tr>
+<tr class="separator:a20f9cbb75577b41e65d132d17431b4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2139102bc747470f4e4d21c28985621"><td class="memItemLeft" align="right" valign="top"><a id="ac2139102bc747470f4e4d21c28985621"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setPosDesc</b> (positional_options_description &amp;pos_desc)</td></tr>
+<tr class="separator:ac2139102bc747470f4e4d21c28985621"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af735eb142cc4445c7bfc20ff8f740ada"><td class="memItemLeft" align="right" valign="top"><a id="af735eb142cc4445c7bfc20ff8f740ada"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkArguments</b> (variables_map &amp;vm)</td></tr>
+<tr class="separator:af735eb142cc4445c7bfc20ff8f740ada"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a842924b3643e7830d15f567f89dfc4a2"><td class="memItemLeft" align="right" valign="top"><a id="a842924b3643e7830d15f567f89dfc4a2"></a>
 <a class="el" href="classteos_1_1_teos_control.html">TeosControl</a>&#160;</td><td class="memItemRight" valign="bottom"><b>executeCommand</b> ()</td></tr>
 <tr class="separator:a842924b3643e7830d15f567f89dfc4a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -111,27 +121,21 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a490f2d5ea05e92a5996beaa6d40c5c32 inherit pro_methods_classteos_1_1_control_options"><td class="memItemLeft" align="right" valign="top"><a id="a490f2d5ea05e92a5996beaa6d40c5c32"></a>
 options_description&#160;</td><td class="memItemRight" valign="bottom"><b>basicOptionDescription</b> ()</td></tr>
 <tr class="separator:a490f2d5ea05e92a5996beaa6d40c5c32 inherit pro_methods_classteos_1_1_control_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a611508b33386c2a2465e68b333b51c5f inherit pro_methods_classteos_1_1_control_options"><td class="memItemLeft" align="right" valign="top"><a id="a611508b33386c2a2465e68b333b51c5f"></a>
-virtual options_description&#160;</td><td class="memItemRight" valign="bottom"><b>argumentDescription</b> ()</td></tr>
-<tr class="separator:a611508b33386c2a2465e68b333b51c5f inherit pro_methods_classteos_1_1_control_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b39c9263e1abea919db8097b46ecfae inherit pro_methods_classteos_1_1_control_options"><td class="memItemLeft" align="right" valign="top"><a id="a1b39c9263e1abea919db8097b46ecfae"></a>
 virtual options_description&#160;</td><td class="memItemRight" valign="bottom"><b>groupOptionDescription</b> ()</td></tr>
 <tr class="separator:a1b39c9263e1abea919db8097b46ecfae inherit pro_methods_classteos_1_1_control_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a606085ad334d59eafc103be85e3be146 inherit pro_methods_classteos_1_1_control_options"><td class="memItemLeft" align="right" valign="top"><a id="a606085ad334d59eafc103be85e3be146"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setPosDesc</b> (positional_options_description &amp;pos_descr)</td></tr>
-<tr class="separator:a606085ad334d59eafc103be85e3be146 inherit pro_methods_classteos_1_1_control_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33001fdd58dea6056f683a8e280c245e inherit pro_methods_classteos_1_1_control_options"><td class="memItemLeft" align="right" valign="top"><a id="a33001fdd58dea6056f683a8e280c245e"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>printout</b> (<a class="el" href="classteos_1_1_teos_control.html">TeosControl</a> command, variables_map &amp;vm)</td></tr>
 <tr class="separator:a33001fdd58dea6056f683a8e280c245e inherit pro_methods_classteos_1_1_control_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2916fdad936906cec8496b5952936cae inherit pro_methods_classteos_1_1_control_options"><td class="memItemLeft" align="right" valign="top"><a id="a2916fdad936906cec8496b5952936cae"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkArguments</b> (variables_map &amp;vm)</td></tr>
-<tr class="separator:a2916fdad936906cec8496b5952936cae inherit pro_methods_classteos_1_1_control_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46025212b1afd9b9e56914844512ac24 inherit pro_methods_classteos_1_1_control_options"><td class="memItemLeft" align="right" valign="top"><a id="a46025212b1afd9b9e56914844512ac24"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>parseGroupVariablesMap</b> (variables_map &amp;vm)</td></tr>
 <tr class="separator:a46025212b1afd9b9e56914844512ac24 inherit pro_methods_classteos_1_1_control_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a1d95ff95b424e8c2a1fdad49fd01092f"><td class="memItemLeft" align="right" valign="top"><a id="a1d95ff95b424e8c2a1fdad49fd01092f"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>contractDir</b></td></tr>
+<tr class="separator:a1d95ff95b424e8c2a1fdad49fd01092f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classteos_1_1_control_options"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classteos_1_1_control_options')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classteos_1_1_control_options.html">teos::ControlOptions</a></td></tr>
 <tr class="memitem:a385705bd05cf4cc33892f51737585f9b inherit pro_attribs_classteos_1_1_control_options"><td class="memItemLeft" align="right" valign="top"><a id="a385705bd05cf4cc33892f51737585f9b"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>json_</b></td></tr>

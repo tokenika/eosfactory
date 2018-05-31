@@ -1,3 +1,17 @@
+/**
+ * @file config.hpp
+ * @copyright defined in LICENSE.txt
+ * @author Tokenika
+ * @date 30 May 2018
+*/
+
+/**
+ * @defgroup teoslib_raw Raw function classes
+ */
+/**
+ * @defgroup teoslib_cli Command-line drivers
+ */
+
 #pragma once
 
 #include <stdlib.h>
@@ -56,6 +70,12 @@ namespace teos {
 
     string getSharedMemorySizeMb();
 
+
+    /**
+     * @ingroup teoslib_raw
+     * @brief Returns the configuration of the runtime.
+     * 
+     */
     class GetConfig : public TeosControl
     {
     public:

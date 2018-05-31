@@ -1,3 +1,17 @@
+/**
+ * @file push_commands.hpp
+ * @copyright defined in LICENSE.txt
+ * @author Tokenika
+ * @date 30 May 2018
+*/
+
+/**
+ * @defgroup teoslib_raw Raw function classes
+ */
+/**
+ * @defgroup teoslib_cli Command-line drivers
+ */
+
 #pragma once
 
 #include <vector>
@@ -16,8 +30,10 @@ namespace teos
   namespace command
   {
     /**
-    Push a transaction with a single message
-    */
+     * @ingroup teoslib_raw
+     * @brief Push a transaction with a single message
+     * 
+     */
     class PushAction : public TeosCommand
     {
     public:
