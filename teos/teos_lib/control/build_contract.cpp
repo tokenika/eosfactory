@@ -161,9 +161,22 @@ namespace teos {
       if(isError_){
         return;
       }
+
+      bfs::path eosFactoryDir(getEosFactoryDir(this));
+      if(isError_){
+        return;
+      }
+      
+      bfs::path templContractPath 
+        = eosFactoryDir / templContractsDir / templateName;
+      if(!bfs::exists(templContractPath))
+      {
+        putError((boost::format("Template '%1%' does not exist.\n")
+              % templateName).str(), SPOT);
+        return;
+      }
       
       bfs::path contract_path = workspacePath / name;
-
       if(bfs::exists(contract_path)){
         if(removeExisting)
         {
@@ -191,19 +204,6 @@ namespace teos {
       }
 
       respJson_.put("contract_dir", contract_path.string());           
-    
-      bfs::path eosFactoryDir(getEosFactoryDir(this));
-      if(isError_){
-        return;
-      }
-      bfs::path templContractPath 
-        = eosFactoryDir / templContractsDir / templateName;
-      if(!bfs::exists(templContractPath))
-      {
-        putError((boost::format("Template '%1%' does not exist.\n")
-              % templateName).str(), SPOT);
-        return;
-      }
 
       for (const auto& dirEnt : bfs::recursive_directory_iterator{templContractPath})
       {
