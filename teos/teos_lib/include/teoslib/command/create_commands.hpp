@@ -32,12 +32,16 @@ namespace teos
   {
     /**
      * @ingroup teoslib_raw
-     * @brief Creates a new account on the blockchain.
+     * @brief Create an account, buy ram, stake for bandwidth for the account.
      */
     class CreateAccount : public TeosCommand
     {
     public:
-
+      /**
+       * @brief Create a Account object
+       * 
+       * @return respJson_ transaction json
+       */
       CreateAccount(
           string creator, string accountName,
           string ownerKeyPubl, string activeKeyPubl,
@@ -58,6 +62,25 @@ namespace teos
           maxCpuUsage, maxNetUsage));
       }
 
+      /**
+       * @brief Create a Account object
+       * 
+       * @param reqJson json:<br>
+       * '{<br>
+       *    "creator":"<creator name>",<br>
+       *    "name":"<account name>",<br>
+       *    "ownerKey":"<owner public key>",<br>
+       *    "activeKey":"<active public key>",<br>
+       *    "permission":"<permission list>",<br>
+       *    "expiration":<expiration time sec>,<br>
+       *    "skip-sign":<true|false>,<br>
+       *    "dont-broadcast":<true|false>,<br>
+       *    "force-unique":<true|false>,<br>
+       *    "max-cpu-usage":"<max cpu usage>",<br>
+       *    "max-net-usage":"<max net usage>"<br>
+       * }'<br>
+       * @return respJson_ transaction json
+       */
       CreateAccount(ptree reqJson) : TeosCommand("", reqJson)
       {
         copy(createAccount(
@@ -75,7 +98,69 @@ namespace teos
     };
 
     /**
-    * @brief Command-line driver for the CreateAccount class.
+    * @ingroup teoslib_cli<br>
+    * @brief Create an account, buy ram, stake for bandwidth for the account.<br>
+    * <br>
+    * Usage: ./teos create account [creator] [name] [ownerKey] [activeKey]<br> 
+    * [Options]<br>
+    * Usage: ./teos create key --jarg '{<br>
+    * "creator":"<creator name>",<br>
+    * "name":"<account name>",<br>
+    * "ownerKey":"<owner public key>",<br>
+    * "activeKey":"<active public key>",<br>
+    * "permission":"<permission list>",<br>
+    * "expiration":<expiration time sec>,<br>
+    * "skip-sign":<true|false>,<br>
+    * "dont-broadcast":<true|false>,<br>
+    * "force-unique":<true|false>,<br>
+    * "max-cpu-usage":"<max cpu usage>",<br>
+    * "max-net-usage":"<max net usage>"<br>
+    * }' [OPTIONS]<br>
+    * <br>
+    * Options:<br>
+    * <br>
+    * -c [ --creator ] arg                  The name of the account creating the<br>
+    *                                         new account<br>
+    * -n [ --name ] arg                     The name of the new account<br>
+    * -o [ --ownerKey ] arg                 The owner public key for the account<br>
+    * -a [ --activeKey ] arg                The active public key for the account<br>
+    * -p [ --permission ] arg               An account and permission level to<br>
+    *                                         authorize, as in 'account@permission'<br>
+    *                                         (defaults to 'account')<br>
+    * -x [ --expiration ] arg (=30)         The time in seconds before a<br>
+    *                                         transaction expires.<br>
+    * -s [ --skip-sign ]                    Specify that unlocked wallet keys<br>
+    *                                        should not be used to sign transaction,<br>
+    *                                        defaults to false.<br>
+    * -d [ --dont-broadcast ]               Don't broadcast transaction to the<br>
+    *                                         network (just print to stdout).<br>
+    * -f [ --force-unique ]                 force the transaction to be unique.<br>
+    *                                         this will consume extra bandwidth and<br>
+    *                                         remove any protections against<br>
+    *                                         accidently issuing the same transaction<br>
+    *                                         multiple times.<br>
+    * --max-cpu-usage arg (=0)              Upper limit on the cpu usage budget, in<br>
+    *                                         instructions-retired, for the execution<br>
+    *                                         of the transaction (defaults to 0 which<br>
+    *                                         means no limit).<br>
+    * --max-net-usage arg (=0)              Upper limit on the net usage budget, in<br>
+    *                                         bytes, for the transaction (defaults to<br>
+    *                                         0 which means no limit)<br>
+    * 
+    * -a [ --address ] arg (=127.0.0.1:8888)<br>
+    *                                         The http address (host:port) of the<br>
+    *                                         EOSIO node.<br>
+    * -w [ --wallet ] arg (=127.0.0.1:8888) The http address (host:port) where<br>
+    *                                         eos-wallet is running.<br>
+    * 
+    * --jarg arg                            Json argument.<br>
+    * --arg                                 Print argument.<br>
+    * -j [ --json ]                         Print result as json.<br>
+    * --both                                For system use.<br>
+    * -r [ --raw ]                          Raw print<br>
+    * 
+    * -h [ --help ]                         Help screen<br>
+    * -V [ --verbose ]                      Output verbose messages<br>
     */
     class CreateAccountOptions : public CommandOptions
     {
@@ -101,7 +186,7 @@ namespace teos
       const char* getUsage() {
         return (string( R"(
 Create a new account on the blockchain.
-Usage: ./teos create account [creator] [name] [ownerKey] 
+Usage: ./teos [Options] create account creator name ownerKey 
           [activeKey] [Options]
 Usage: ./teos create key --jarg '{
   "creator":"<creator name>",
@@ -237,7 +322,10 @@ Usage: ./teos create key --jarg '{
       /**
        * @brief A constructor.
        * @param keyName key-pair id.
-       * "privateKey":"<private key>" "publicKey":"<public key>"}.
+       * @return respJson_ = json({<br>
+       *    "privateKey":"<private key>",<br>
+       *    "publicKey":"<public key>"<br>
+       * })
        */
       CreateKey(string keyName) : TeosCommand("") {
         KeyPair kp;
@@ -249,7 +337,10 @@ Usage: ./teos create key --jarg '{
       /**
        * @brief A constructor.
        * @param reqJson a boost json tree argument: {"keyName":"<key name>"}.
-       * "privateKey":"<private key>" "publicKey":"<public key>"}.
+       * @return respJson_ = json({<br>
+       *    "privateKey":"<private key>",<br> 
+       *    "publicKey":"<public key>"<br>
+       * })
        */
       CreateKey(ptree reqJson) : TeosCommand(
         "", reqJson) {
@@ -261,7 +352,30 @@ Usage: ./teos create key --jarg '{
     };
 
     /**
-    * @brief Command-line driver for the CreateKey class
+    * @ingroup teoslib_cli
+    * @brief Create a new keypair and print the public and private keys.
+    * 
+    * Usage: ./teos create key [key name] [Options]<br>
+    * Usage: ./teos create key --jarg '{"name":"<key name>"}' [OPTIONS]<br>
+    * <br>
+    * Options:<br>
+    * <br>
+    * -n [ --name ] arg (=default)          The name of the new key<br>
+    * <br>
+    * -a [ --address ] arg (=127.0.0.1:8888)<br>
+    *                                         The http address (host:port) of the<br>
+    *                                         EOSIO node.
+    * -w [ --wallet ] arg (=127.0.0.1:8888) The http address (host:port) where<br>
+    *                                         eos-wallet is running.<br>
+    * <br>
+    * --jarg arg                            Json argument.<br>
+    * --arg                                 Print argument.<br>
+    * -j [ --json ]                         Print result as json.<br>
+    * --both                                For system use.<br>
+    * -r [ --raw ]                          Raw print<br>
+    * <br>
+    * -h [ --help ]                         Help screen<br>
+    * -V [ --verbose ]                      Output verbose messages<br>
     */
     class CreateKeyOptions : public CommandOptions
     {

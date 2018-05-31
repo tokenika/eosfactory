@@ -74,11 +74,11 @@ $(function() {
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classteos_1_1command_1_1_create_key_options-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">teos::command::CreateKeyOptions Class Reference</div>  </div>
+<div class="title">teos::command::CreateKeyOptions Class Reference<div class="ingroups"><a class="el" href="group__teoslib__cli.html">Command-line drivers</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Command-line driver for the <a class="el" href="classteos_1_1command_1_1_create_key.html" title="Create a new keypair and print the public and private keys. ">CreateKey</a> class.  
+<p>Create a new keypair and print the public and private keys.  
  <a href="classteos_1_1command_1_1_create_key_options.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="create__commands_8hpp_source.html">create_commands.hpp</a>&gt;</code></p>
@@ -163,7 +163,28 @@ static options_description&#160;</td><td class="memItemRight" valign="bottom"><b
 <tr class="separator:a64481990f4f43f58491bb5def15006c5 inherit pub_static_methods_classteos_1_1_command_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Command-line driver for the <a class="el" href="classteos_1_1command_1_1_create_key.html" title="Create a new keypair and print the public and private keys. ">CreateKey</a> class. </p>
+<div class="textblock"><p>Create a new keypair and print the public and private keys. </p>
+<p>Usage: ./teos create key [key name] [Options]<br />
+ Usage: ./teos create key &ndash;jarg '{"name":"&lt;key name&gt;"}' [OPTIONS]<br />
+ <br />
+ Options:<br />
+ <br />
+ -n [ &ndash;name ] arg (=default) The name of the new key<br />
+ <br />
+ -a [ &ndash;address ] arg (=127.0.0.1:8888)<br />
+ The http address (host:port) of the<br />
+ EOSIO node. -w [ &ndash;wallet ] arg (=127.0.0.1:8888) The http address (host:port) where<br />
+ eos-wallet is running.<br />
+ <br />
+ &ndash;jarg arg Json argument.<br />
+ &ndash;arg Print argument.<br />
+ -j [ &ndash;json ] Print result as json.<br />
+ &ndash;both For system use.<br />
+ -r [ &ndash;raw ] Raw print<br />
+ <br />
+ -h [ &ndash;help ] Help screen<br />
+ -V [ &ndash;verbose ] Output verbose messages<br />
+ </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ac4c7176d534ed832ebfc954e36238a4c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac4c7176d534ed832ebfc954e36238a4c">&#9670;&nbsp;</a></span>getUsage()</h2>
