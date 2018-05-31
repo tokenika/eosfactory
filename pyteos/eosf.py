@@ -21,6 +21,9 @@ import shutil
 def set_verbose(is_verbose):
     pyteos.set_verbose(is_verbose)
 
+def set_suppress_error_msg(suppress_error_msg):
+    pyteos.set_suppress_error_msg(suppress_error_msg)
+
 
 class Contract(pyteos.Contract):
     """

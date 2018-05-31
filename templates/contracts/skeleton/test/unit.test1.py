@@ -6,6 +6,7 @@ import sess
 from eosf import *
 
 set_verbose(False)
+set_suppress_error_msg(True)
 
 class Test1(unittest.TestCase):
 

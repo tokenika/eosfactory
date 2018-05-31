@@ -1,15 +1,14 @@
 # python3 ./tests/unit.test3.py
 
-import pyteos
 import unittest
 import warnings
 import json
 import node
 import sess
-import eosf
+from eosf import *
 
-pyteos.set_verbose(False)
-pyteos.set_suppress_error_msg(True)
+set_verbose(False)
+set_suppress_error_msg(True)
 
 class Test1(unittest.TestCase):
 
@@ -27,7 +26,7 @@ class Test1(unittest.TestCase):
             warnings.simplefilter("ignore")
             node.reset()
         sess.setup()
-        cls.contract = eosf.ContractFromTemplate("_e4b2ffc804529ce9c6fae258197648cc2", remove_existing = True)
+        cls.contract = ContractFromTemplate("_e4b2ffc804529ce9c6fae258197648cc2", remove_existing = True)
 
         
     def setUp(self):
