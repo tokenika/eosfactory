@@ -1,4 +1,4 @@
-# python3 ./tests/unit.test2.py
+# python3 ./tests/unittest2.py
 
 import unittest
 import warnings

@@ -517,7 +517,7 @@ printf "%s\n" "
     $ python3 ./tests/test2.py
     $ python3 ./tests/test3.py
     
-    $ python3 ./tests/unit.test1.py
-    $ python3 ./tests/unit.test2.py
-    $ python3 ./tests/unit.test3.py
+    $ python3 ./tests/unittest1.py
+    $ python3 ./tests/unittest2.py
+    $ python3 ./tests/unittest3.py
 "

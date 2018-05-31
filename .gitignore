@@ -22,9 +22,9 @@ Makefile
 !/tests/test1.py
 !/tests/test2.py
 !/tests/test3.py
-!/tests/unit.test1.py
-!/tests/unit.test2.py
-!/tests/unit.test3.py
+!/tests/unittest1.py
+!/tests/unittest2.py
+!/tests/unittest3.py
 
 !/pyteos/docs/build
 

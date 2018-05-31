@@ -69,10 +69,10 @@
         ]
     },
     {
-        "taskName": "unit.test",
+        "taskName": "unittest",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; python3 ./test/unit.test1.py"
+            "command": "source ~/.profile; python3 ./test/unittest1.py"
         },
         "presentation": {
             "reveal": "always",
