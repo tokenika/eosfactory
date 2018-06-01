@@ -74,9 +74,12 @@ $(function() {
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classteos_1_1control_1_1_generate_abi_options-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">teos::control::GenerateAbiOptions Class Reference</div>  </div>
+<div class="title">teos::control::GenerateAbiOptions Class Reference<div class="ingroups"><a class="el" href="group__teoslib__cli.html">Command-line drivers</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Generate abi: produce the ABI file for the contract.  
+ <a href="classteos_1_1control_1_1_generate_abi_options.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="build__contract_8hpp_source.html">build_contract.hpp</a>&gt;</code></p>
 <div class="dynheader">
@@ -153,8 +156,28 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><b>reqJson_</b></td></t
 <tr class="separator:aef27b07fd43f5e553f20138deb57657a inherit pro_attribs_classteos_1_1_control_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Command-line driver for the <a class="el" href="classteos_1_1control_1_1_generate_abi.html">GenerateAbi</a> class. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>Generate abi: produce the ABI file for the contract. </p>
+<pre class="fragment">Usage: ./teos create key --jarg '{
+  "sourceDir":"&lt;source dir&gt;",
+  "includeDir":"&lt;comma separated list of include dirs, optional&gt;",
+  "codeName":"&lt;name of the ABI file, optional&gt;"
+  }' [OPTIONS]
+
+Options:
+
+  --sourceDir arg          The directory of the contract project.
+  -d [ --includeDir ] arg  Comma separated list of source c/c++ files.
+  -n [ --codeName ] arg    The name of the ABI file. If not set, it equals to
+                           the name of the contract project.
+
+  --jarg arg               Json argument.
+  --arg                    Print argument.
+  -j [ --json ]            Print result as json.
+  --both                   For system use.
+  -r [ --raw ]             Raw print
+
+  -h [ --help ]            Help screen
+  -V [ --verbose ]         Output verbose messages</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a7d2ce1ad86518ee06e0bc5ffbe104b39"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7d2ce1ad86518ee06e0bc5ffbe104b39">&#9670;&nbsp;</a></span>getUsage()</h2>
 
