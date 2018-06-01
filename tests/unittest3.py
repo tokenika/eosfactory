@@ -25,7 +25,7 @@ class Test1(unittest.TestCase):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             node.reset()
-        sess.setup()
+        sess.init()
         cls.contract = ContractFromTemplate("_e4b2ffc804529ce9c6fae258197648cc2", remove_existing = True)
 
         

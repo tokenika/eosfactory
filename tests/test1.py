@@ -8,8 +8,8 @@ def run():
     print('test node.reset():')
     assert node.reset()
 
-    print('test sess.setup():')
-    assert sess.setup()
+    print('test sess.init():')
+    assert sess.init()
 
     print('test Contract("eosio.token"):')
     c = Contract("eosio.token")

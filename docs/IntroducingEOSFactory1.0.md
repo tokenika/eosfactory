@@ -27,7 +27,7 @@ test 2
 2: Test command: /usr/bin/python3 "/mnt/d/Workspaces/EOS/contracts/hello2/test/test1.py" "/mnt/d/Workspaces/EOS/contracts/hello2"
 2: Test timeout computed to be: 1500
 2: test node.reset():
-2: test sess.setup():
+2: test sess.init():
 2:
 2: test Contract("hello2"):
 2: #        transaction id: a4dd652cc617ae3b7b1f784fe1cf47b3ee6b4ed01869711bdb7d19212e946d1e

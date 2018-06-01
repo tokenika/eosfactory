@@ -8,8 +8,8 @@ def run():
     print('test node.reset():')
     assert node.reset()
 
-    print('test sess.setup():')
-    assert sess.setup()
+    print('test sess.init():')
+    assert sess.init()
 
     print('test Contract():')
     c = ContractFromTemplate("_e4b2ffc804529ce9c6fae258197648cc2", remove_existing = True)

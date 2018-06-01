@@ -21,7 +21,7 @@ class Test1(unittest.TestCase):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             node.reset()
-        sess.setup()
+        sess.init()
         contract = Contract("@CONTRACT_NAME@/build")
         contract.deploy()
 
