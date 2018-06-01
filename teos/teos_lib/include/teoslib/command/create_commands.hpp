@@ -102,66 +102,66 @@ namespace teos
     * @brief Create an account, buy ram, stake for bandwidth for the account.
     * 
     \verbatim
-    Usage: ./teos create account [creator] [name] [ownerKey] [activeKey] 
-    [Options]
-    Usage: ./teos create key --jarg '{
-    "creator":"<creator name>",
-    "name":"<account name>",
-    "ownerKey":"<owner public key>",
-    "activeKey":"<active public key>",
-    "permission":"<permission list>",
-    "expiration":<expiration time sec>,
-    "skip-sign":<true|false>,
-    "dont-broadcast":<true|false>,
-    "force-unique":<true|false>,
-    "max-cpu-usage":"<max cpu usage>",
-    "max-net-usage":"<max net usage>"
-    }' [OPTIONS]
-    
-    Options:
-    
-    -c [ --creator ] arg                  The name of the account creating the
-                                            new account
-    -n [ --name ] arg                     The name of the new account
-    -o [ --ownerKey ] arg                 The owner public key for the account
-    -a [ --activeKey ] arg                The active public key for the account
-    -p [ --permission ] arg               An account and permission level to
-                                            authorize, as in 'account@permission'
-                                            (defaults to 'account')
-    -x [ --expiration ] arg (=30)         The time in seconds before a
-                                            transaction expires.
-    -s [ --skip-sign ]                    Specify that unlocked wallet keys
-                                            should not be used to sign 
-                                            transaction,defaults to false.
-    -d [ --dont-broadcast ]               Don't broadcast transaction to the
-                                            network (just print to stdout).
-    -f [ --force-unique ]                 Force the transaction to be unique.
-                                            this will consume extra bandwidth and
-                                            remove any protections against
-                                            accidentally issuing the same 
-                                            transaction multiple times.
-    --max-cpu-usage arg (=0)              Upper limit on the cpu usage budget, in
-                                            instructions-retired, for the execution
-                                            of the transaction (defaults to 0 which
-                                            means no limit).
-    --max-net-usage arg (=0)              Upper limit on the net usage budget, in
-                                            bytes, for the transaction (defaults to
-                                            0 which means no limit)
-    
-    -a [ --address ] arg (=127.0.0.1:8888)
-                                          The http address (host:port) of the
-                                            EOSIO node.
-    -w [ --wallet ] arg (=127.0.0.1:8888) The http address (host:port) where
-                                            eos-wallet is running.
-    
-    --jarg arg                            Json argument.
-    --arg                                 Print argument.
-    -j [ --json ]                         Print result as json.
-    --both                                For system use.
-    -r [ --raw ]                          Raw print
-    
-    -h [ --help ]                         Help screen
-    -V [ --verbose ]                      Output verbose messages
+Usage: ./teos [Options] create account creator name ownerKey
+          [activeKey] [Options]
+Usage: ./teos create key --jarg '{
+  "creator":"<creator name>",
+  "name":"<account name>",
+  "ownerKey":"<owner public key>",
+  "activeKey":"<active public key>",
+
+  "permission":"<permission list>",
+  "expiration":<expiration time sec>,
+  "skip-sign":<true|false>,
+  "dont-broadcast":<true|false>,
+  "force-unique":<true|false>,
+  "max-cpu-usage":"<max cpu usage>",
+  "max-net-usage":"<max net usage>"
+  }' [OPTIONS]
+
+Options:
+
+  -c [ --creator ] arg            The name of the account creating the new
+                                  account
+  -n [ --name ] arg               The name of the new account
+  -o [ --ownerKey ] arg           The owner public key for the account
+  -a [ --activeKey ] arg          The active public key for the account
+
+  -p [ --permission ] arg         An account and permission level to authorize,
+                                  as in 'account@permission' (defaults to
+                                  'account')
+  -x [ --expiration ] arg (=30)   The time in seconds before a transaction
+                                  expires.
+  -s [ --skip-sign ]              Specify that unlocked wallet keys should not
+                                  be used to sign transaction, defaults to
+                                  false.
+  -d [ --dont-broadcast ]         Don't broadcast transaction to the network
+                                  (just print to stdout).
+  -f [ --force-unique ]           force the transaction to be unique. this will
+                                  consume extra bandwidth and remove any
+                                  protections against accidently issuing the
+                                  same transaction multiple times.
+  --max-cpu-usage arg (=0)        Upper limit on the cpu usage budget, in
+                                  instructions-retired, for the execution of
+                                  the transaction (defaults to 0 which means no
+                                  limit).
+  --max-net-usage arg (=0)        Upper limit on the net usage budget, in
+                                  bytes, for the transaction (defaults to 0
+                                  which means no limit)
+
+  -a [ --address ] arg            The http address (host:port) of the EOSIO
+                                  node. Default value is: 127.0.0.1:8888
+  -w [ --wallet ] arg             The http address (host:port) where eos-wallet
+                                  is running. Default value is: 127.0.0.1:8888
+
+  --jarg arg                      Json argument.
+  --arg                           Print argument.
+  -j [ --json ]                   Print result as json.
+  --both                          For system use.
+  -r [ --raw ]                    Raw print
+
+  -h [ --help ]                   Help screen
+  -V [ --verbose ]                Output verbose messages
     \endverbatim
     */
     class CreateAccountOptions : public CommandOptions
@@ -357,27 +357,26 @@ Usage: ./teos create key --jarg '{
     * @brief Create a new keypair and print the public and private keys.
     * 
     \verbatim
-    Usage: ./teos create key [key name] [Options]
-    Usage: ./teos create key --jarg '{"name":"<key name>"}' [OPTIONS]
-    
-    Options:
-    
-    -n [ --name ] arg (=default)          The name of the new key
-    
-    -a [ --address ] arg (=127.0.0.1:8888)
-                                            The http address (host:port) of the
-                                            EOSIO daemon.
-    -w [ --wallet ] arg (=127.0.0.1:8888) The http address (host:port) where
-                                            eos-wallet is running.
-    
-    --jarg arg                            Json argument.
-    --arg                                 Print argument.
-    -j [ --json ]                         Print result as json.
-    --both                                For system use.
-    -r [ --raw ]                          Raw print
-    
-    -h [ --help ]                         Help screen
-    -V [ --verbose ]                      Output verbose messages
+Usage: ./teos create key [key name] [Options]
+Usage: ./teos create key --jarg '{"name":"<key name>"}' [OPTIONS]
+
+Options:
+
+  -n [ --name ] arg (=default)  The name of the new key
+
+  -a [ --address ] arg          The http address (host:port) of the EOSIO node.
+                                Default value is: 127.0.0.1:8888
+  -w [ --wallet ] arg           The http address (host:port) where eos-wallet
+                                is running. Default value is: 127.0.0.1:8888
+
+  --jarg arg                    Json argument.
+  --arg                         Print argument.
+  -j [ --json ]                 Print result as json.
+  --both                        For system use.
+  -r [ --raw ]                  Raw print
+
+  -h [ --help ]                 Help screen
+  -V [ --verbose ]              Output verbose messages
     \endverbatim
     */
     class CreateKeyOptions : public CommandOptions

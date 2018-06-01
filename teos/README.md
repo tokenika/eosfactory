@@ -12,7 +12,7 @@ The TEOS library is the engine that powers these *comprehensive facilities*.
 
 ## Walkthrough
 
-Our plan is to build around the [*Visual Studio Code*](#https://code.visualstudio.com/). With VS code, we can have all what we want in one:
+The IDE is built around the [*Visual Studio Code*](#https://code.visualstudio.com/). With VS code, we can have all what we want in one:
 
     * Linux Mac and Windows compatibility,
     * multi-language (C/C++, Python) support as InteliSense, code browsing,

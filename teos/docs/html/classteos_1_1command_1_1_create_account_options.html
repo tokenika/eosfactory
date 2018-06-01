@@ -203,67 +203,66 @@ static options_description&#160;</td><td class="memItemRight" valign="bottom"><b
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Create an account, buy ram, stake for bandwidth for the account. </p>
-<pre class="fragment">Usage: ./teos create account [creator] [name] [ownerKey] [activeKey] 
-[Options]
+<pre class="fragment">Usage: ./teos [Options] create account creator name ownerKey
+          [activeKey] [Options]
 Usage: ./teos create key --jarg '{
-"creator":"&lt;creator name&gt;",
-"name":"&lt;account name&gt;",
-"ownerKey":"&lt;owner public key&gt;",
-"activeKey":"&lt;active public key&gt;",
-"permission":"&lt;permission list&gt;",
-"expiration":&lt;expiration time sec&gt;,
-"skip-sign":&lt;true|false&gt;,
-"dont-broadcast":&lt;true|false&gt;,
-"force-unique":&lt;true|false&gt;,
-"max-cpu-usage":"&lt;max cpu usage&gt;",
-"max-net-usage":"&lt;max net usage&gt;"
-}' [OPTIONS]
+  "creator":"&lt;creator name&gt;",
+  "name":"&lt;account name&gt;",
+  "ownerKey":"&lt;owner public key&gt;",
+  "activeKey":"&lt;active public key&gt;",
+
+  "permission":"&lt;permission list&gt;",
+  "expiration":&lt;expiration time sec&gt;,
+  "skip-sign":&lt;true|false&gt;,
+  "dont-broadcast":&lt;true|false&gt;,
+  "force-unique":&lt;true|false&gt;,
+  "max-cpu-usage":"&lt;max cpu usage&gt;",
+  "max-net-usage":"&lt;max net usage&gt;"
+  }' [OPTIONS]
 
 Options:
 
--c [ --creator ] arg                  The name of the account creating the
-                                        new account
--n [ --name ] arg                     The name of the new account
--o [ --ownerKey ] arg                 The owner public key for the account
--a [ --activeKey ] arg                The active public key for the account
--p [ --permission ] arg               An account and permission level to
-                                        authorize, as in 'account@permission'
-                                        (defaults to 'account')
--x [ --expiration ] arg (=30)         The time in seconds before a
-                                        transaction expires.
--s [ --skip-sign ]                    Specify that unlocked wallet keys
-                                       should not be used to sign transaction,
-                                       defaults to false.
--d [ --dont-broadcast ]               Don't broadcast transaction to the
-                                        network (just print to stdout).
--f [ --force-unique ]                 force the transaction to be unique.
-                                        this will consume extra bandwidth and
-                                        remove any protections against
-                                        accidently issuing the same transaction
-                                        multiple times.
---max-cpu-usage arg (=0)              Upper limit on the cpu usage budget, in
-                                        instructions-retired, for the execution
-                                        of the transaction (defaults to 0 which
-                                        means no limit).
---max-net-usage arg (=0)              Upper limit on the net usage budget, in
-                                        bytes, for the transaction (defaults to
-                                        0 which means no limit)
+  -c [ --creator ] arg            The name of the account creating the new
+                                  account
+  -n [ --name ] arg               The name of the new account
+  -o [ --ownerKey ] arg           The owner public key for the account
+  -a [ --activeKey ] arg          The active public key for the account
 
--a [ --address ] arg (=127.0.0.1:8888)
-                                        The http address (host:port) of the
-                                        EOSIO node.
--w [ --wallet ] arg (=127.0.0.1:8888) The http address (host:port) where
-                                        eos-wallet is running.
+  -p [ --permission ] arg         An account and permission level to authorize,
+                                  as in 'account@permission' (defaults to
+                                  'account')
+  -x [ --expiration ] arg (=30)   The time in seconds before a transaction
+                                  expires.
+  -s [ --skip-sign ]              Specify that unlocked wallet keys should not
+                                  be used to sign transaction, defaults to
+                                  false.
+  -d [ --dont-broadcast ]         Don't broadcast transaction to the network
+                                  (just print to stdout).
+  -f [ --force-unique ]           force the transaction to be unique. this will
+                                  consume extra bandwidth and remove any
+                                  protections against accidently issuing the
+                                  same transaction multiple times.
+  --max-cpu-usage arg (=0)        Upper limit on the cpu usage budget, in
+                                  instructions-retired, for the execution of
+                                  the transaction (defaults to 0 which means no
+                                  limit).
+  --max-net-usage arg (=0)        Upper limit on the net usage budget, in
+                                  bytes, for the transaction (defaults to 0
+                                  which means no limit)
 
---jarg arg                            Json argument.
---arg                                 Print argument.
--j [ --json ]                         Print result as json.
---both                                For system use.
--r [ --raw ]                          Raw print
+  -a [ --address ] arg            The http address (host:port) of the EOSIO
+                                  node. Default value is: 127.0.0.1:8888
+  -w [ --wallet ] arg             The http address (host:port) where eos-wallet
+                                  is running. Default value is: 127.0.0.1:8888
 
--h [ --help ]                         Help screen
--V [ --verbose ]                      Output verbose messages
-</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
+  --jarg arg                      Json argument.
+  --arg                           Print argument.
+  -j [ --json ]                   Print result as json.
+  --both                          For system use.
+  -r [ --raw ]                    Raw print
+
+  -h [ --help ]                   Help screen
+  -V [ --verbose ]                Output verbose messages</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="af5c13799a676966824e5e9e47b1af180"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af5c13799a676966824e5e9e47b1af180">&#9670;&nbsp;</a></span>getUsage()</h2>
 

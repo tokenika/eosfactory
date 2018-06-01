@@ -58,28 +58,32 @@ namespace teos
 
     options_description groupOptionDescription() {
       namespace control = teos::control;
-      
-      options_description od("");
-      string address = TeosCommand::httpAddress.empty() 
-          ? teos::control::getHttpWalletAddress(nullptr)
-          : TeosCommand::httpAddress;
-      string wallet = TeosCommand::httpWalletAddress.empty()
-          ? teos::control::getHttpWalletAddress(nullptr)
-          : TeosCommand::httpWalletAddress;
 
+      options_description od("");
+      od.add_options();
       od.add_options()
-        ("address,a", value<string>(&(TeosCommand::httpAddress))
-            ->default_value(address),
-          "The http address (host:port) of the EOSIO daemon.")
-        ("wallet,w", value<string>(&(TeosCommand::httpWalletAddress))
-            ->default_value(wallet),
-        "The http address (host:port) where eos-wallet is running.");
+        ("address,a", value<string>(&(TeosCommand::httpAddress)),
+          (string("The http address (host:port) of the EOSIO node. ")
+           + "Default value is: " + TeosCommand::httpAddress).c_str())
+        ("wallet,w", value<string>(&(TeosCommand::httpWalletAddress)),
+          (string("The http address (host:port) where eos-wallet is running.")
+          + " Default value is: " + TeosCommand::httpWalletAddress).c_str());
       od.add(ControlOptions::groupOptionDescription());
       return od;
     }
 
   public:
-    CommandOptions(int argc, const char *argv[]) : ControlOptions(argc, argv) {}
+    CommandOptions(int argc, const char *argv[]) : ControlOptions(argc, argv) 
+    {
+      TeosCommand::httpAddress = TeosCommand::httpAddress.empty() 
+          ? teos::control::getHttpWalletAddress(nullptr)
+          : TeosCommand::httpAddress;
+      TeosCommand::httpWalletAddress = TeosCommand::httpWalletAddress.empty()
+          ? teos::control::getHttpWalletAddress(nullptr)
+          : TeosCommand::httpWalletAddress;
+    }
     static options_description httpOptions();
   };
+
+  
 }
