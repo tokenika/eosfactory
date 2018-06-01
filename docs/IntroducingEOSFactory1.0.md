@@ -2,7 +2,7 @@
 
 **We are proud to announce the second release of EOSFactory. With this release unit tests for EOS smart-contracts become standardized and thus much more reliable. Also, you can now tap into all the utilities offered by Visual Studio Code IDE. Our long-term goal is to turn EOSFactory into a comprehensive IDE (Integrated Development Environment) for EOS smart-contracts.**
 
-![EOSFactory logo.png](https://cdn.steemitimages.com/DQmR21xQNJ4CbS1DoJEAutvYFWU9mD11PAYkCQZpLnHXLdY/EOSFactory%20logo.png)
+![img](https://cdn.steemitimages.com/DQmR21xQNJ4CbS1DoJEAutvYFWU9mD11PAYkCQZpLnHXLdY/EOSFactory%20logo.png)
 
 ### Standardized unit testing
 
@@ -10,7 +10,7 @@ The initial release (v0.8 [published](https://steemit.com/eos/@tokenika/introduc
 
 This release takes [EOSFactory](https://github.com/tokenika/eosfactory) to the next level. We've integrated it with [Unittest](https://docs.python.org/2/library/unittest.html), the standard unit testing framework for Python. What it means is that from now on, when using EOSFactory for working with EOS smart-contracts, you have the power of standardized Python-based unit testing at your disposal.
 
-Below is an exmaple of an EOSFactory unit test output:
+Below is an example of an EOSFactory unit test output:
 
 ```
 Test project /mnt/d/Workspaces/EOS/contracts/hello2/build
@@ -69,7 +69,7 @@ Total Test time (real) =  11.76 sec
 
 ### Main features in v1.0
 
-We believe the features avaialble in this release make EOSFactory quite reliable and production-ready - hence we label it v1.0.  Below is a complete list of those new features:
+We believe the features available in this release make EOSFactory quite reliable and production-ready - hence we label it v1.0.  Below is a complete list of those new features:
 
 #### 1. Standard unit-testing framework
 
@@ -91,17 +91,17 @@ When using the standard EOS toolset, in order to check for errors in a smart-con
 
 ### Aiming to become a comprehensive EOS IDE
 
-Generally, EOSFactory when combined with [Visual Studio Code](https://code.visualstudio.com/) is evolving into a robust EOS smart-contract IDE (Integrated Development Environment). As defined by [Wikipedia](#https://en.wikipedia.org/wiki/Integrated_development_environment):
+Generally, EOSFactory when combined with [Visual Studio Code](https://code.visualstudio.com/) is evolving into a robust EOS smart-contract IDE (Integrated Development Environment). As defined by [Wikipedia](https://mail.google.com/mail/u/0/#https://en.wikipedia.org/wiki/Integrated_development_environment):
 
 > An integrated development environment (IDE) is a software application that provides comprehensive facilities to computer programmers for software development. An IDE normally consists of a source code editor, build automation tools, and a debugger.
 
 With Visual Studio Code integration all the essential programming tools become easily available, as EOSFactory smart-contract template generator is able to produce a complete Visual Studio Code project, which includes not only unit testing support but also:
 
-* Linux, MacOS and Windows compatibility,
-* [CMake](https://cmake.org/) support allowng you to compile, build and unit test your smart-contract by running those three commands: `cmake`, `make`, `ctest`.
-* automated tasks accessible from the VSC menu,
-* all the features that come with [IntelliSense](https://msdn.microsoft.com/en-us/library/hcw1s69b.aspx): e.g. code completion, content assist, code hinting,
-* multiple community-driven extensions, including the possibility to create a specialized EOS smart-contract extension.
+- Linux, MacOS and Windows compatibility,
+- [CMake](https://cmake.org/) support allowing you to compile, build and unit test your smart-contract by running those three commands: `cmake`, `make`, `ctest`.
+- automated tasks accessible from the VSC menu,
+- all the features that come with [IntelliSense](https://msdn.microsoft.com/en-us/library/hcw1s69b.aspx): e.g. code completion, content assist, code hinting,
+- multiple community-driven extensions, including the possibility to create a specialized EOS smart-contract extension.
 
 ![img](https://cdn.steemitimages.com/DQmcYyhEcoz4Az2vEf7vA1AJYgTNzhvKewsKPqd7hqbphyo/peek.png)
 
@@ -109,4 +109,4 @@ With Visual Studio Code integration all the essential programming tools become e
 
 As we mentioned in our previous post, all feedback is very welcome, especially critical, as it motivates us towards improvement.
 
-**NOTE:** For the time being EOSFactory `v1.0` is comaptible EOSIO `dawn-v4.0.0`. Once EOSIO stops changing rapidly and becomes stable, the subsequent EOSFactory release will be comaptible with the latest EOSIO release.
+**NOTE:** For the time being EOSFactory `v1.0` is compatible EOSIO `dawn-v4.0.0`. Once EOSIO stops changing rapidly and becomes stable, the subsequent EOSFactory release will be compatible with the latest EOSIO release.
