@@ -94,6 +94,9 @@ namespace teos {
       namespace bfs = boost::filesystem;
       try{
         bfs::path contract_path(getContractDir(this, contract_dir));
+        if(isError_){
+          return;
+        }
         if(bfs::exists(contract_path) && bfs::is_directory(contract_path))
         {
           cout << "deleteContract: " << contract_path.string() << endl;

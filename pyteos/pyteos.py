@@ -659,9 +659,7 @@ class Template(_Command):
             jarg["remove"] = 1
 
         _Command.__init__(self, jarg, "bootstrap", "contract", is_verbose)
-        print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
         print(self.json)
-        print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
  
     def contract_path(self):
         if not self.error:

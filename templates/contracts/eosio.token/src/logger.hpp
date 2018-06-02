@@ -5,8 +5,7 @@
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 #define logger_info(...) \
   { \
-    print("INFO "); \
-    print(__VA_ARGS__, "  @ "); \
+    print("INFO ", __VA_ARGS__, " @ "); \
     int time = now(); \
     int hour = (time/3600)%24; \
     time = time%3600; \
@@ -14,7 +13,6 @@
     time = time%60; \
     int sec = time; \
     print(hour, ":", min, ":", sec); \
-    /*print_time();*/ \
     print(" ", __FILENAME__, "[", __LINE__, "]", "(", __FUNCTION__, ")\n"); \
   }
 
