@@ -372,7 +372,8 @@ Usage: ./teos create key --jarg '{
         reqJson_.put("name", name);
         reqJson_.put("template", templateName);
         reqJson_.put("remove", removeExisting);
-        bootstrapContract(name, templateName, removeExisting);
+        reqJson_.put("vscode", vscode);
+        bootstrapContract(name, templateName, removeExisting, vscode);
       }
 
       BootstrapContract(ptree reqJson) : TeosControl(reqJson)
@@ -421,10 +422,8 @@ Usage: ./teos create key --jarg '{
           ("name", value<string>(&name), "Contract name.")
           ("template", value<string>(&templateName)->default_value(TEMPLATE), 
             "Template name.")
-          ("remove", value<bool>(&removeExisting)->default_value(false), 
-            "Remove existing contract path.")
-          ("vscode,c", value<bool>(&vscode)->default_value(false), 
-            "Launch Visual Studio Code.")
+          ("remove", "Remove existing contract path.")
+          ("vscode,c", "Launch Visual Studio Code.")
           ;
             
         return od;
@@ -437,11 +436,20 @@ Usage: ./teos create key --jarg '{
 
       bool checkArguments(variables_map &vm) {
         bool ok = false;
+        removeExisting = false;
+        vscode = false;
+
         if(vm.count("name")){
           ok = true;
           reqJson_.put("name", name);
           reqJson_.put("template", templateName);
+          if(vm.count("remove")){
+            removeExisting = true;
+          } 
           reqJson_.put("remove", removeExisting);
+          if(vm.count("vscode")){
+            vscode = true;
+          }
           reqJson_.put("vscode", vscode);
         }
         return ok;
