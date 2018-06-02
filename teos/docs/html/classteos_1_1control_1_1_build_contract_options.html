@@ -74,9 +74,12 @@ $(function() {
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classteos_1_1control_1_1_build_contract_options-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">teos::control::BuildContractOptions Class Reference</div>  </div>
+<div class="title">teos::control::BuildContractOptions Class Reference<div class="ingroups"><a class="el" href="group__teoslib__cli.html">Command-line drivers</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Build a contract: produce the WAST file for the contract.  
+ <a href="classteos_1_1control_1_1_build_contract_options.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="build__contract_8hpp_source.html">build_contract.hpp</a>&gt;</code></p>
 <div class="dynheader">
@@ -153,8 +156,32 @@ ptree&#160;</td><td class="memItemRight" valign="bottom"><b>reqJson_</b></td></t
 <tr class="separator:aef27b07fd43f5e553f20138deb57657a inherit pro_attribs_classteos_1_1_control_options"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Command-line driver for the <a class="el" href="classteos_1_1control_1_1_build_contract.html">BuildContract</a> class. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>Build a contract: produce the WAST file for the contract. </p>
+<pre class="fragment">Build smart contract.
+Usage: ./teos build contract &lt;source dir&gt; [Options]
+Usage: ./teos create key --jarg '{
+  "sourceDir":"&lt;source dir&gt;",
+  "includeDir":"&lt;comma separated list of include dirs, optional&gt;",
+  "codeName":"&lt;name of the WAST file, optional&gt;"
+  }' [OPTIONS]
+
+Options:
+
+  --sourceDir arg          Contract source directory, absolute or relative to
+                           configured directories.
+  -d [ --includeDir ] arg  Comma separated list of include folders.
+  -n [ --codeName ] arg    The name of the WAST file. If not set, equals to the
+                           name of the contract's project.
+  -c [ --compileOnly ]     Compilation only.
+
+  --jarg arg               Json argument.
+  --arg                    Print argument.
+  -j [ --json ]            Print result as json.
+  --both                   For system use.
+  -r [ --raw ]             Raw print
+
+  -h [ --help ]            Help screen
+  -V [ --verbose ]         Output verbose messages</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ac45a323c2bc0c79b97b1d0d1d8afbf4f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac45a323c2bc0c79b97b1d0d1d8afbf4f">&#9670;&nbsp;</a></span>getUsage()</h2>
 

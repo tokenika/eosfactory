@@ -21,23 +21,36 @@ using namespace std;
 
 namespace teos {
   namespace control {
+
+
     /**
      * @ingroup teoslib_raw
-     * Builds a contract: produces the WAST file.
+     * @brief Build a contract: produce the WAST file for the contract.
      */
     class BuildContract : public TeosControl
     {
       void buildContract(
-        string sourceDir, // comma separated list of source c/cpp files
+        string sourceDir,
         string includeDir = "", // comma separated list of include dirs
         string codeName = "",
         bool compileOnly = false
       );
 
     public:
+      /**
+       * @brief Construct a new Build Contract object
+       * 
+       * @param sourceDir 
+       * @param includeDir 
+       * @param codeName 
+       * @param compileOnly 
+       * 
+       * See the description of the BuildContractOptions class for meaning of
+       * the parameters.
+       */
       BuildContract(
-        string sourceDir, // comma separated list of source c/cpp files
-        string includeDir = "",
+        string sourceDir,
+        string includeDir = "", // comma separated list of source c/cpp files
         string codeName = "",
         bool compileOnly = false
       )
@@ -45,6 +58,19 @@ namespace teos {
         buildContract(sourceDir, includeDir, codeName, compileOnly);
       }
 
+      /**
+       * @brief Construct a new Build Contract object
+       * 
+       * @param reqJson:
+       * '{
+       *    "sourceDir":"<source dir>",
+       *    "includeDir":"<comma separated list of include dirs, optional>",
+       *    "codeName":"<name of the WAST file, optional>"
+       * }'
+       *  
+       * See the description of the BuildContractOptions class for meaning of
+       * the parameters.
+       */
       BuildContract(ptree reqJson) : TeosControl(reqJson)
       {
         buildContract(
@@ -58,9 +84,39 @@ namespace teos {
     };
 
 
+
     /**
-     * Command-line driver for the BuildContract class.
-     */ 
+     * @ingroup teoslib_cli
+     * @brief Build a contract: produce the WAST file for the contract.
+     *
+     \verbatim
+Build smart contract.
+Usage: ./teos build contract <source dir> [Options]
+Usage: ./teos create key --jarg '{
+  "sourceDir":"<source dir>",
+  "includeDir":"<comma separated list of include dirs, optional>",
+  "codeName":"<name of the WAST file, optional>"
+  }' [OPTIONS]
+
+Options:
+
+  --sourceDir arg          Contract source directory, absolute or relative to
+                           configured directories.
+  -d [ --includeDir ] arg  Comma separated list of include folders.
+  -n [ --codeName ] arg    The name of the WAST file. If not set, equals to the
+                           name of the contract's project.
+  -c [ --compileOnly ]     Compilation only.
+
+  --jarg arg               Json argument.
+  --arg                    Print argument.
+  -j [ --json ]            Print result as json.
+  --both                   For system use.
+  -r [ --raw ]             Raw print
+
+  -h [ --help ]            Help screen
+  -V [ --verbose ]         Output verbose messages
+     \endverbatim 
+     */
     class BuildContractOptions : public ControlOptions
     {
     public:
@@ -69,7 +125,7 @@ namespace teos {
     protected:
       const char* getUsage() {
         return R"(
-Build smart contract.
+Build smart contract: produce the WAST file for the contract.
 Usage: ./teos build contract <source dir> [Options]
 Usage: ./teos create key --jarg '{
   "sourceDir":"<source dir>",
@@ -87,12 +143,13 @@ Usage: ./teos create key --jarg '{
         options_description od("");
         od.add_options()
           ("sourceDir", value<string>(&sourceDir)
-            , "Contract source directory.")
+            , "Contract source directory, absolute or relative to configured"
+              " directories.")
           ("includeDir,d", value<string>(&includeDir)->default_value("")
-            , "Comma separated list of source c/c++ files.")
+            , "Comma separated list of include folders.")
           ("codeName,n", value<string>(&codeName)->default_value("")
-            , "The name of the WAST file. If not set, it equals to the name "
-              "of the contract project.")
+            , "The name of the WAST file. If not set, equals to the name "
+              "of the contract's project.")
           ("compileOnly,c", "Compilation only.");
             
         return od;
@@ -132,19 +189,29 @@ Usage: ./teos create key --jarg '{
 
     /**
      * @ingroup teoslib_raw
-     * Generates abi: produces the ABI file.
+     * Generate abi: produce the ABI file for the contract.
      */
     class GenerateAbi : public TeosControl
     {
       void generateAbi(
-        string sourceDir, // comma separated list of source c/cpp files
+        string sourceDir, 
         string includeDir = "", // comma separated list of include dirs
         string codeName = ""
       );
 
     public:
+      /**
+       * @brief Construct a new Generate Abi object
+       * 
+       * @param sourceDir 
+       * @param includeDir 
+       * @param codeName 
+       * 
+       * See the description of the GenerateAbiOptions class for meaning of
+       * the parameters.
+       */
       GenerateAbi(
-        string sourceDir, // comma separated list of source c/cpp files
+        string sourceDir,
         string includeDir = "",
         string codeName = ""
       )
@@ -152,6 +219,19 @@ Usage: ./teos create key --jarg '{
         generateAbi(sourceDir, includeDir, codeName);
       }
 
+      /**
+       * @brief Construct a new Generate Abi object
+       * 
+       * @param reqJson 
+       * '{
+       *    "sourceDir":"<source dir>",
+       *    "includeDir":"<comma separated list of include dirs, optional>",
+       *    "codeName":"<name of the WAST file, optional>"
+       * }'
+       *  
+       * See the description of the GenerateAbiOptions class for meaning of
+       * the parameters. 
+       */
       GenerateAbi(ptree reqJson) : TeosControl(reqJson)
       {
         generateAbi(
@@ -163,9 +243,35 @@ Usage: ./teos create key --jarg '{
     };
 
 
+
     /**
-     * Command-line driver for the GenerateAbi class.
-     */ 
+     * @ingroup teoslib_cli
+     * @brief Generate abi: produce the ABI file for the contract.
+     * 
+     \verbatim
+Usage: ./teos create key --jarg '{
+  "sourceDir":"<source dir>",
+  "includeDir":"<comma separated list of include dirs, optional>",
+  "codeName":"<name of the ABI file, optional>"
+  }' [OPTIONS]
+
+Options:
+
+  --sourceDir arg          The directory of the contract project.
+  -d [ --includeDir ] arg  Comma separated list of source c/c++ files.
+  -n [ --codeName ] arg    The name of the ABI file. If not set, it equals to
+                           the name of the contract project.
+
+  --jarg arg               Json argument.
+  --arg                    Print argument.
+  -j [ --json ]            Print result as json.
+  --both                   For system use.
+  -r [ --raw ]             Raw print
+
+  -h [ --help ]            Help screen
+  -V [ --verbose ]         Output verbose messages
+     \endverbatim
+     */
     class GenerateAbiOptions : public ControlOptions
     {
     public:
@@ -174,7 +280,7 @@ Usage: ./teos create key --jarg '{
     protected:
       const char* getUsage() {
         return R"(
-Generate the ABI specification file.
+Generate the ABI file for the contract.
 Usage: ./teos generate abi <source dir> [Options]
 Usage: ./teos create key --jarg '{
   "sourceDir":"<source dir>",

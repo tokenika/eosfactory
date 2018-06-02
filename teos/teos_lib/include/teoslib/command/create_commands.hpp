@@ -40,7 +40,11 @@ namespace teos
       /**
        * @brief Create a Account object
        * 
-       * @return respJson_ transaction json
+       * 
+       * See the description of the CreateAccountOptions class for meaning of
+       * the parameters.
+       * 
+       * @return respJson_ object member kips EOSIO node's response.
        */
       CreateAccount(
           string creator, string accountName,
@@ -79,7 +83,11 @@ namespace teos
        *    "max-cpu-usage":"<max cpu usage>",
        *    "max-net-usage":"<max net usage>"
        * }'
-       * @return respJson_ transaction json
+       * 
+       * See the description of the CreateAccountOptions class for meaning of
+       * the parameters.
+       * 
+       * @return respJson_ object member kips EOSIO node's response.
        */
       CreateAccount(ptree reqJson) : TeosCommand("", reqJson)
       {
@@ -96,6 +104,8 @@ namespace teos
           ));
       }
     };
+
+
 
     /**
     * @ingroup teoslib_cli
@@ -324,10 +334,12 @@ Usage: ./teos create key --jarg '{
       /**
        * @brief A constructor.
        * @param keyName key-pair id.
-       * @return respJson_ = json({
-       *    "privateKey":"<private key>",
-       *    "publicKey":"<public key>"
-       * })
+       *       
+       * See the description of the CreateAccountOptions class for meaning of
+       * the parameters.
+       * 
+       * @return respJson_  object member is json({ "privateKey":"<private key>", 
+       * "publicKey":"<public key>"
        */
       CreateKey(string keyName) : TeosCommand("") {
         KeyPair kp;
@@ -339,7 +351,11 @@ Usage: ./teos create key --jarg '{
       /**
        * @brief A constructor.
        * @param reqJson a boost json tree argument: {"keyName":"<key name>"}.
-       * @return respJson_ = json({ "privateKey":"<private key>", 
+       *       
+       * See the description of the CreateAccountOptions class for meaning of
+       * the parameters.
+       * 
+       * @return respJson_  object member is json({ "privateKey":"<private key>", 
        * "publicKey":"<public key>"
        * })
        */
