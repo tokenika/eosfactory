@@ -96,7 +96,7 @@ An IDE is of help here. It automatize - as mach as its construction is clever of
 * Issue command that starts a new smart-contract project that is named *hello.tokenika*, and you want to develope it basing on the same template as the one used above:
 ```
 $ $teos_cli bootstrap contract hello.tokenika skeleton
-#     template contract: /mnt/c/Workspaces/EOS/contracts/hello.tokenika
+#     template contract: /mnt/c/Workspaces/EOS/contracts/hello.tokenika -c true
 ```
 
 As the result, you have a new *Visual Studio Code* open in the contracts folder.

@@ -156,7 +156,7 @@ namespace teos {
     }
 
     void BootstrapContract::bootstrapContract(
-      string name, string templateName, bool removeExisting)
+      string name, string templateName, bool removeExisting, bool vscode)
     {
       namespace bfs = boost::filesystem;
 
@@ -228,7 +228,8 @@ namespace teos {
       }
 
       {
-      try{
+      if(vscode)
+      {
         namespace bp = boost::process;
 
         if(isWindowsUbuntu()) {
@@ -244,10 +245,7 @@ namespace teos {
                 string("gnome-terminal -- code") + contractPath.string());
             }
           }
-
-        } catch (std::exception& e) {
-          putError(e.what());
-        }  
+        }
       }
     }
 
