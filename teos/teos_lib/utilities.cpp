@@ -94,6 +94,17 @@ namespace teos
     return path;
   }
 
+  string wslMapLinuxWindows(string path) {
+    if( !path.empty() && path.find("/mnt/") != string::npos)
+    {
+      string drive(1, path[5]);
+      path = path.substr(6, path.length());
+      path = boost::algorithm::to_upper_copy(drive) + ":" + path;
+      boost::replace_all(path, "/", "\\\\");
+    }
+    return path;
+  }
+
   string uname(string options)
   {
     namespace  bp = boost::process;
@@ -116,5 +127,5 @@ namespace teos
     string resp = uname("-v");
     return resp.find("Microsoft") != string::npos;
   }
-            
+
 }

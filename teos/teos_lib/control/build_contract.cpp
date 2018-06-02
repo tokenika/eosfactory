@@ -179,17 +179,17 @@ namespace teos {
         return;
       }
       
-      bfs::path contract_path = workspacePath / name;
-      if(bfs::exists(contract_path)){
+      bfs::path contractPath = workspacePath / name;
+      if(bfs::exists(contractPath)){
         if(removeExisting)
         {
-          bfs::remove_all(contract_path);
+          bfs::remove_all(contractPath);
         } else
         {
           cout << (boost::format(
             "NOTE:\n"
             "Contract \n%1%\n workspace already exists. Cannot owerwrite it.") 
-              % contract_path.string()).str() << endl;
+              % contractPath.string()).str() << endl;
           putError("");
           return;
         }
@@ -197,7 +197,7 @@ namespace teos {
 
       { // make contract directory and its build directory:
         try{
-          bfs::create_directories(contract_path / "build");
+          bfs::create_directories(contractPath / "build");
         } catch (bfs::filesystem_error &e){
           putError(e.what());
         }
@@ -206,7 +206,7 @@ namespace teos {
         }
       }
 
-      respJson_.put("contract_dir", contract_path.string());           
+      respJson_.put("contract_dir", contractPath.string());           
 
       for (const auto& dirEnt : bfs::recursive_directory_iterator{templContractPath})
       {
@@ -216,8 +216,8 @@ namespace teos {
           boost::replace_first(relativePathStr, templContractPath.string(), "");
           boost::replace_all(relativePathStr, TEMPLATE_TOKEN, name);
 
-          bfs::path dest = contract_path / relativePathStr;
-          copy(inTemplate, contract_path / relativePathStr, name);
+          bfs::path dest = contractPath / relativePathStr;
+          copy(inTemplate, contractPath / relativePathStr, name);
 
         } catch (exception &e){
           putError(e.what());
@@ -229,19 +229,19 @@ namespace teos {
 
       {
       try{
+        namespace bp = boost::process;
+
         if(isWindowsUbuntu()) {
-            
-            bp::spawn("cmd.exe /c start Code.exe c:\\Workspaces\\EOS\\contracts\\token);
+            string commandLine = string("cmd.exe /c start Code.exe ") 
+              + wslMapLinuxWindows(contractPath.string());
+            bp::spawn(commandLine);
           } else {
             if(uname() == DARWIN){
-              // string cl = "open -a " + reqJson_.get<string>("daemon_exe")
-              //   + " --args " + reqJson_.get<string>("args");
-              // cout << endl << cl << endl;
               bp::spawn(
-                "open -a " + reqJson_.get<string>("daemon_exe") 
-                + " --args " + reqJson_.get<string>("args"));
+                string("open -a code --args ") + contractPath.string());
             } else{
-              bp::spawn("gnome-terminal -- " + reqJson_.get<string>("command_line"));
+              bp::spawn(
+                string("gnome-terminal -- code") + contractPath.string());
             }
           }
 

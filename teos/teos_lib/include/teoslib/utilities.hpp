@@ -8,6 +8,8 @@
 using namespace std;
 using namespace boost::property_tree;
 
+const string DARWIN = "Darwin";
+
 namespace teos {
 
     /**
@@ -45,6 +47,8 @@ namespace teos {
     extern void boostProcessSystem(string commandLine);
 
     extern string wslMapWindowsLinux(string path);
+
+    extern string wslMapLinuxWindows(string path);
 
     extern string uname(string options = "-s");
 

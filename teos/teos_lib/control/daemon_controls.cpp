@@ -74,7 +74,6 @@ namespace teos {
     
     const string DaemonStart::DO_NOT_LAUNCH = "DO_NOT_LAUNCH";
     const string EOSIO_SHARED_MEMORY_SIZE_MB = "100";
-    const string DARWIN = "Darwin";
     
     void DaemonStart::action()
     {
