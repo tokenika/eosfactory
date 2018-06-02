@@ -82,12 +82,69 @@ $(function() {
 <li>Create an account and upload the contract: <div class="fragment"><div class="line">$ cleos create account eosio hello.code EOS7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 </div><div class="line">EOS7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4</div><div class="line">...</div><div class="line">$ cleos set contract hello.code ../hello -p hello.code</div><div class="line">...</div></div><!-- fragment --></li>
 <li>Finally, you can run the contract: <div class="fragment"><div class="line">$ cleos push action hello.code hi &#39;[&quot;user&quot;]&#39; -p user</div><div class="line">executed transaction: 4c10c1426c16b1656e802f3302677594731b380b18a44851d38e8b5275072857  244 bytes  1000 cycles</div><div class="line">#    hello.code &lt;= hello.code::hi               {&quot;user&quot;:&quot;user&quot;}</div><div class="line">&gt;&gt; Hello, user</div></div><!-- fragment --></li>
 </ul>
-<p>And so on. It is very easy, but by sure that you do not confuse the cryptographic keys. Therefore, you cannot be a dummy one, you must be a smart (enough) one, rather.</p>
-<h2>Smart-contract Hello World for dummies.</h2>
+<p>And so on. It is easy, but be sure that you issue the right commands, and do not confuse the cryptographic keys.</p>
+<h3>Integrated Development Environment (IDE)</h3>
+<p>What we do now is a play. However, development of a real smart-contract is a pain: it is an (seemingly) too long chain of corrections in code and tests with a local EOSIO node.</p>
+<p>An IDE is of help here. It automatize - as mach as its construction is clever of - logistics. Ideally, all what is left to the codder is care about the logics of the contract.</p>
+<h2>EOSFactory grows to be a good IDE for EOSIO smart-contracts</h2>
+<p><em>EOSFactory</em> is under development itself, but already now we can see it in action, if you have installed both <em>EOSFactory</em> and <em>Visual Studio Code</em>.</p>
+<ul>
+<li>Issue command that starts a new smart-contract project that is named <em>hello.tokenika</em>, and you want to develope it basing on the same template as the one used above: <div class="fragment"><div class="line">$ $teos_cli bootstrap contract hello.tokenika skeleton</div><div class="line">#     template contract: /mnt/c/Workspaces/EOS/contracts/hello.tokenika</div><div class="line">Code.exe c:\\Workspaces\\EOS\\contracts\\token Will be integrated</div></div><!-- fragment --></li>
+</ul>
+<p>As the result, you have a new <em>Visual Studio Code</em> open in the contracts folder. You can see a standardized structure of this folder. Open the source file: <code>hello.tokenika.cpp</code>. Try the <em>InteliSense</em> feature to see the definition of the <code>print</code> function:</p>
 <div class="image">
-<img src="code.png" alt="EOSFactory"/>
+<img src="VScode/intelisense.png" width="620"/>
 </div>
- </div></div><!-- contents -->
+<ul>
+<li>There happen errors in any code. Some can be spotted automatically with a compiler. Tasks-&gt;Run Task...-&gt;compile. The result of the compilation is in the following figure:</li>
+</ul>
+<div class="image">
+<img src="VScode/compile.png" width="620"/>
+</div>
+<ul>
+<li>Let us build the contract. Use Tasks-&gt;Run Task...-&gt;build. The result of the build process is in the following figure:</li>
+</ul>
+<div class="image">
+<img src="VScode/build.png" width="620"/>
+</div>
+<ul>
+<li>Any contract has to be tested. Use Tasks-&gt;Run Task...-&gt;unittest. The result of the build process is in the following figure. A lot happened during the test process:<ul>
+<li>Local node started clean;</li>
+<li>Local wallet was created;</li>
+<li>EOSIO <code>eosio.bios</code> contract was deployed;</li>
+<li>Cryptographic keys were created</li>
+<li>An account owning the contract was craeated;</li>
+<li>Tested contract was deployed;</li>
+<li>Tested contract was executed;</li>
+<li>Local node was stopped.</li>
+</ul>
+</li>
+</ul>
+<div class="image">
+<img src="VScode/unittest.png" width="620"/>
+</div>
+<ul>
+<li><p class="startli">The EOSFactory can more now, and it is going to be able more and more in the near future. Now:</p><ul>
+<li>All the shown task functionality can be achieved with CMake procedures:<ul>
+<li>build:<br />
+ $ cd build; cmake ..; make</li>
+<li>compile:<br />
+ $ cd build; cmake -DC ..; make</li>
+<li>unittest:<br />
+ $ cd build; ctest -V -R ^unittest$</li>
+<li>test:<br />
+ $ cd build; ctest -V -R ^test$</li>
+</ul>
+</li>
+<li>EOSFactory has two flavours: <code>C/C++/Python</code> and pure <code>C/C++</code>. The former one uses tests written in <em>Python</em></li>
+<li>EOSFactory is going to develop and collect libraries that could facile the process of the development of the EOSIO smart-contracts. Now, we can show one example in action. This is the <code>logger.hpp</code> header in the directory <code>src</code>. (Of course, it is placed there temporarily.)<br />
+<br />
+ The only way to debug a smart contract is by loggers. An example is in the line <code>logger_info("user: ", name{user});</code> in the file <code>src/hello.tokenika.cpp</code>. The effect fronm this code entry is line <code>INFO user: carol @ 8:53:50 hello.tokenika.cpp[16](hi)</code> of the test results.</li>
+</ul>
+<p class="startli">Enjoy. </p>
+</li>
+</ul>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -243,7 +243,6 @@ Usage: ./teos create key --jarg '{
     };
 
 
-
     /**
      * @ingroup teoslib_cli
      * @brief Generate abi: produce the ABI file for the contract.
@@ -275,7 +274,8 @@ Options:
     class GenerateAbiOptions : public ControlOptions
     {
     public:
-      GenerateAbiOptions(int argc, const char **argv) : ControlOptions(argc, argv) {}
+      GenerateAbiOptions(int argc, const char **argv) 
+        : ControlOptions(argc, argv) {}
 
     protected:
       const char* getUsage() {
