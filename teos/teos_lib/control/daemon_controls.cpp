@@ -15,6 +15,7 @@
 #include <teoslib/control/config.hpp>
 #include <teoslib/control/daemon_controls.hpp>
 #include <teoslib/command/get_commands.hpp>
+#include <teoslib/utilities.hpp>
 
 namespace  bp = boost::process;
 using namespace std;
@@ -38,27 +39,6 @@ namespace teos {
       }
       c.wait();
       return ss.str();
-    }
-
-    string uname(string options = "-s")
-    {
-      bp::ipstream pipe_stream;
-      string cl = string("uname ") + options;
-      bp::child c(cl, bp::std_out > pipe_stream);
-
-      string line;
-      stringstream ss;
-      while (pipe_stream && getline(pipe_stream, line) && !line.empty()) {
-        ss << line;
-      }
-      c.wait();
-      return ss.str();
-    }
-
-    bool isWindowsUbuntu()
-    {
-      string resp = uname("-v");
-      return resp.find("Microsoft") != string::npos;
     }
 
     //////////////////////////////////////////////////////////////////////////

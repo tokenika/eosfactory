@@ -226,7 +226,31 @@ namespace teos {
           return;
         }
       }
+
+      {
+      try{
+        if(isWindowsUbuntu()) {
+            
+            bp::spawn("cmd.exe /c start Code.exe c:\\Workspaces\\EOS\\contracts\\token);
+          } else {
+            if(uname() == DARWIN){
+              // string cl = "open -a " + reqJson_.get<string>("daemon_exe")
+              //   + " --args " + reqJson_.get<string>("args");
+              // cout << endl << cl << endl;
+              bp::spawn(
+                "open -a " + reqJson_.get<string>("daemon_exe") 
+                + " --args " + reqJson_.get<string>("args"));
+            } else{
+              bp::spawn("gnome-terminal -- " + reqJson_.get<string>("command_line"));
+            }
+          }
+
+        } catch (std::exception& e) {
+          putError(e.what());
+        }  
+      }
     }
+
 
     /**
      * @brief Get the target (build) directory.

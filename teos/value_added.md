@@ -97,7 +97,6 @@ An IDE is of help here. It automatize - as mach as its construction is clever of
 ```
 $ $teos_cli bootstrap contract hello.tokenika skeleton
 #     template contract: /mnt/c/Workspaces/EOS/contracts/hello.tokenika
-Code.exe c:\\Workspaces\\EOS\\contracts\\token Will be integrated
 ```
 
 As the result, you have a new *Visual Studio Code* open in the contracts folder.

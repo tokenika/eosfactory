@@ -45,4 +45,9 @@ namespace teos {
     extern void boostProcessSystem(string commandLine);
 
     extern string wslMapWindowsLinux(string path);
+
+    extern string uname(string options = "-s");
+
+    extern bool isWindowsUbuntu();
+
 }

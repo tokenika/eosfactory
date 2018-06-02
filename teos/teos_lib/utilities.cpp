@@ -92,5 +92,29 @@ namespace teos
         , "/mnt/" + boost::algorithm::to_lower_copy(drive) + "/");
     }
     return path;
-  }           
+  }
+
+  string uname(string options)
+  {
+    namespace  bp = boost::process;
+
+    bp::ipstream pipe_stream;
+    string cl = string("uname ") + options;
+    bp::child c(cl, bp::std_out > pipe_stream);
+
+    string line;
+    stringstream ss;
+    while (pipe_stream && getline(pipe_stream, line) && !line.empty()) {
+      ss << line;
+    }
+    c.wait();
+    return ss.str();
+  } 
+
+  bool isWindowsUbuntu()
+  {
+    string resp = uname("-v");
+    return resp.find("Microsoft") != string::npos;
+  }
+            
 }
