@@ -272,7 +272,7 @@ Usage: ./teos create key --jarg '{
         bootstrapContract(
           reqJson_.get<string>("name"),
           reqJson_.get("template", TEMPLATE),
-          reqJson_.get<bool>("remove")
+          reqJson_.get("remove", false)
         );
       }
     };

@@ -17,6 +17,7 @@ import sess
 import re
 import random
 import shutil
+import os
 
 def set_verbose(is_verbose):
     pyteos.set_verbose(is_verbose)

@@ -659,10 +659,17 @@ class Template(_Command):
             jarg["remove"] = 1
 
         _Command.__init__(self, jarg, "bootstrap", "contract", is_verbose)
+        print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
+        print(self.json)
+        print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
  
     def contract_path(self):
         if not self.error:
-            return self.json["contract_dir"] 
+            try:
+                return self.json["contract_dir"] 
+            except:
+                self.error = True
+                return "contract_path() ERROR!"
         else:
             return "contract_path() ERROR!"       
                    
@@ -930,12 +937,14 @@ class Contract(SetContract):
         self.max_cpu_usage = max_cpu_usage
         self.max_net_usage = max_net_usage
         self.is_verbose = is_verbose
-        self.contract_path_absolute = pathlib.Path(contract_dir)
-        self.is_mutable = True
+        self.is_mutable = True     
         self.console = ""
 
-        config = GetConfig(contract_dir, is_verbose=False)       
-        self.contract_path_absolute = config.json["contract-dir"]
+        config = GetConfig(contract_dir, is_verbose=False)
+        try:       
+            self.contract_path_absolute = config.json["contract-dir"]
+        except:
+            pass
         
 
     def __str__(self):
