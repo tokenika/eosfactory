@@ -46,7 +46,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           EOSFactory</a>
-        <span class="navbar-text navbar-version pull-left"><b>v. 0.8.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -62,6 +62,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - Version 1.0</a></li>
 </ul>
 <ul class="current">
@@ -215,7 +216,7 @@
 </div>
 <div class="section" id="initial-compilation-with-clang">
 <span id="initial-compilation-with-clang"></span><h3>Initial compilation with <code class="docutils literal"><span class="pre">CLANG</span></code><a class="headerlink" href="#initial-compilation-with-clang" title="Permalink to this headline">¶</a></h3>
-<p>The advantage of using <code class="docutils literal"><span class="pre">CLANG</span></code> compiler (as opposed to <code class="docutils literal"><span class="pre">WASM</span></code> compiler) is that it runs faster and does not involve the linking process. So most of the errors in the code can be spotted automatically by <code class="docutils literal"><span class="pre">CLANG</span></code>.</p>
+<p>The advantage of using the <code class="docutils literal"><span class="pre">CLANG</span></code> compiler (as opposed to the <code class="docutils literal"><span class="pre">WASM</span></code> compiler) is that it runs faster and does not involve the linking process. Thus most of the errors in a smart-contract’s code can be spotted automatically by <code class="docutils literal"><span class="pre">CLANG</span></code>.</p>
 <p>Using a bash terminal in VSC, run the following command to compile your contract with the <code class="docutils literal"><span class="pre">CLANG</span></code> compiler:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cmake</span> <span class="o">..</span>
 </pre></div>
@@ -254,7 +255,7 @@
 <span class="n">Built</span> <span class="n">target</span> <span class="n">wast</span>
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> If the <code class="docutils literal"><span class="pre">ABI</span></code> file already exists in the <code class="docutils literal"><span class="pre">src</span></code> folder (it might happen if you opt to create it manually instead of relying on the <em>EOSIO</em> toolset) <em>CMake</em> will skip <code class="docutils literal"><span class="pre">ABI</span></code> file generation step and proceed with <code class="docutils literal"><span class="pre">WAST</span></code> file generation.</p>
+<p><strong>NOTE:</strong> If the <code class="docutils literal"><span class="pre">ABI</span></code> file already exists in the <code class="docutils literal"><span class="pre">src</span></code> folder (you should keep it there, if you prefer to create it manually instead of relying on the <em>EOSIO</em> toolset) <em>CMake</em> will skip the <code class="docutils literal"><span class="pre">ABI</span></code> file generation step and proceed with <code class="docutils literal"><span class="pre">WAST</span></code> file generation.</p>
 </div>
 <div class="section" id="running-unit-tests">
 <span id="running-unit-tests"></span><h3>Running unit tests<a class="headerlink" href="#running-unit-tests" title="Permalink to this headline">¶</a></h3>
@@ -270,7 +271,7 @@
 <div class="highlight-default"><div class="highlight"><pre><span></span>ctest -R ^test$
 </pre></div>
 </div>
-<p>The outcome of the unit test (in non-verbose mode) should look like this:</p>
+<p>The outcome of the unit test (in the non-verbose mode) should look like this:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Test</span> <span class="n">project</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">hello</span><span class="o">.</span><span class="n">tokenika</span><span class="o">/</span><span class="n">build</span>
     <span class="n">Start</span> <span class="mi">1</span><span class="p">:</span> <span class="n">unittest</span>
 <span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="n">Test</span> <span class="c1">#1: unittest .........................   Passed    6.58 sec</span>
@@ -282,7 +283,7 @@
 <span class="n">Total</span> <span class="n">Test</span> <span class="n">time</span> <span class="p">(</span><span class="n">real</span><span class="p">)</span> <span class="o">=</span>  <span class="mf">11.71</span> <span class="n">sec</span>
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> As you’ve probably noticed, we have two types of unit tests: the standard ones (named <em>unittest1</em>, <em>unittest2</em>, etc) and ad-hoc ones (named <em>test1</em>, <em>test2</em>, etc). We find it useful to have standard unit tests to prove that things work as expected, and ad-hoc tests to investigate bugs and generally monitor the inner workings of a smart-contract. EOSFactory supports both, so you can choose whatever suits your needs.</p>
+<p><strong>NOTE:</strong> As you’ve probably noticed, we have two types of unit tests: the standard ones (named <em>unittest1</em>, <em>unittest2</em>, etc) and ad-hoc ones (named <em>test1</em>, <em>test2</em>, etc). The reason for this duality is this: we find it useful to have standard unit tests to prove that things work as expected, and ad-hoc tests to investigate bugs and generally monitor the inner workings of a smart-contract. EOSFactory supports both, so you can choose whatever suits your needs.</p>
 </div>
 </div>
 <div class="section" id="use-automated-tasks-in-visual-studio-code">
