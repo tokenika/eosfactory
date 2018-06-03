@@ -163,17 +163,37 @@ Total Test time (real) =  11.71 sec
 
 Running VSC automated tasks is an alternative to using *CMake* routines described in the previous section. 
 
-To have your code compiled by the `CLANG` compiler navigate to `Tasks -> compile`:
+To have your code compiled by the `CLANG` compiler navigate to `Tasks -> Compile`:
 
 ![compile](./images/compile.png)
 
-To have your code built by the `WASM` compiler navigate to `Tasks -> build`:
+To have your code built by the `WASM` compiler navigate to `Tasks -> Build`:
 
 ![build](./images/build.png)
 
-To run unit tests navigate to `Tasks -> unittest`:
+To run unit tests navigate to `Tasks -> Unittest`:
 
 ![unittest](./images/unittest.png)
+
+You can further speed up your developement cycle by creating key bindings for those tasks, for example:
+
+```
+    {
+        "key": "ctrl+shift+c",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Compile"
+    }
+    {
+        "key": "ctrl+shift+t",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Test"
+    }
+    {
+        "key": "ctrl+shift+u",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Unittest"
+    }
+```
 
 ## Use *IntelliSense* in *Visual Studio Code*
 
@@ -199,6 +219,18 @@ The effect of the above code entry is the following output in test results:
 INFO user: carol @ 8:53:50 contract.name.cpp[16](hi)
 ```
 
-What that means is that the logger offers you not only the value of a variable, but also the exact line number and the file name where this logger event occured.
+A similar example can be found in the `eosio.token` template:
 
-**NOTE:** If you run your tests using *CMake*, you'll need to apply the verbose mode to be able to see this output.
+```
+logger_info("quantity.amount: ", quantity.amount);
+```
+
+The effect of the above code entry is the following output in test results:
+
+```
+INFO quantity.amount: 1000000 @ 8:43:8 contract.name.cpp[54](issue)
+```
+
+Thus the logger utility offers you much more than just monitoring the value of a variable. You also get the method name, the file name & line number where this logger event occured.
+
+**NOTE:** If you run your tests using *CMake*, you'll need to apply the verbose mode to be able to see the logger output.

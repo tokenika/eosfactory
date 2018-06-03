@@ -8,7 +8,16 @@ Doesn't work on Ubuntu
 ## 3. make & ctest
 Doesn't work on Ubuntu
 
-## 4. test output is always duplicated
+## 4. /teos/config.json
+```
+File "/mnt/d/Workspaces/EOS/eosfactory/pyteos/pyteos.py", line 60, in __init__
+    with open(self.__setupFile) as json_data:
+FileNotFoundError: [Errno 2] No such file or directory: '/mnt/d/Workspaces/EOS/eosfactory/pyteos/../teos/config.json'
+```
+
+---
+
+## 5. test output is always duplicated
 
 
 ---
