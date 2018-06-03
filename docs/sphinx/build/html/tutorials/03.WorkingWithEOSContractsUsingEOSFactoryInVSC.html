@@ -188,8 +188,8 @@
 </div>
 <p><strong>NOTE:</strong> The first parameter (in our case <code class="docutils literal"><span class="pre">contract.name</span></code>) is the name of your contract. It can be any name you want, provided there are no spaces in it. Letters, numbers, underscores <code class="docutils literal"><span class="pre">_</span></code>, dots <code class="docutils literal"><span class="pre">.</span></code> and dashes <code class="docutils literal"><span class="pre">-</span></code> are allowed.</p>
 <p><strong>NOTE:</strong> The second parameter (in our case <code class="docutils literal"><span class="pre">eosio.token</span></code>) is optional and it denotes the template from which the new contract will be created. As of now there are only two templates (called <code class="docutils literal"><span class="pre">skeleton</span></code> and <code class="docutils literal"><span class="pre">eosio.token</span></code>) but there’ll be more in the future.</p>
-<p>Alternatively, you can use the <code class="docutils literal"><span class="pre">$teos_cli</span></code> system variable created during EOSFactory installation. It allows you to run the <code class="docutils literal"><span class="pre">teos</span></code> executable from any location, for example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$teos_cli bootstrap contract contract.name skeleton
+<p>Alternatively, you can use the <code class="docutils literal"><span class="pre">$eosf</span></code> system variable created during EOSFactory installation. It allows you to run the <code class="docutils literal"><span class="pre">teos</span></code> executable from any location, for example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$eosf bootstrap contract contract.name skeleton
 </pre></div>
 </div>
 </div>
@@ -205,7 +205,7 @@
 <div class="section" id="open-visual-studio-code-automatically">
 <span id="open-visual-studio-code-automatically"></span><h2>Open <em>Visual Studio Code</em> automatically<a class="headerlink" href="#open-visual-studio-code-automatically" title="Permalink to this headline">¶</a></h2>
 <p>If you are on Windows, you can use the <code class="docutils literal"><span class="pre">--vsc</span></code> argument to have the contract’s folder opened for you automatically in VSC right after the creation process is finished:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$teos_cli bootstrap contract contract.name skeleton --vsc
+<div class="highlight-default"><div class="highlight"><pre><span></span>$eosf bootstrap contract contract.name skeleton --vsc
 </pre></div>
 </div>
 <p><strong>NOTE:</strong> By default the above feature works on a Windows machine only. To make it work on other operating systems (Linux and MacOS) you need to place your VSC executable is on a system path, so that the <code class="docutils literal"><span class="pre">teos</span></code> executable is able to launch it.</p>
