@@ -74,6 +74,12 @@
         "windows": {
             "command": "source ~/.profile; python3 ./test/unittest1.py"
         },
+        "osx": {
+            "command": "source ~/.bash_profile; python3 ./test/unittest1.py"
+        },
+        "linux": {
+            "command": "source ~/.profile; python3 ./test/unittest1.py"
+        },
         "presentation": {
             "reveal": "always",
             "panel": "dedicated"
@@ -87,6 +93,12 @@
         "windows": {
             "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
         },
+        "osx": {
+            "command": "source ~/.bash_profile; python3 ./test/test1.py \"${workspaceFolder}\""
+        },
+        "linux": {
+            "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
+        },        
         "presentation": {
             "reveal": "always",
             "panel": "dedicated"
