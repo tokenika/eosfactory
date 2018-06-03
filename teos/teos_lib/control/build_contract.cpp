@@ -227,23 +227,53 @@ namespace teos {
         }
       }
 
-      {
       if(vscode)
       {
         namespace bp = boost::process;
 
-        if(isWindowsUbuntu()) {
-            string commandLine = string("cmd.exe /c start Code.exe ") 
+        if(isWindowsUbuntu()) 
+        {            
+          bp::ipstream pipe_stream;
+          string cl = string(
+R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command /ve)");
+          bp::child c(cl, bp::std_out > pipe_stream);
+
+          string line;
+          stringstream ss;
+          while (pipe_stream && getline(pipe_stream, line) && !line.empty()) {
+            ss << line;
+          }
+          c.wait();
+          
+          string value = ss.str();
+          if( value.find("Code.exe") != string::npos)
+          {
+            size_t pos = value.find("\"");
+            value = value.substr(pos + 1);
+            pos = value.find("\\Code");
+            string codePath = value.substr(0, pos);
+            cout << "VSCode path: " << value << endl;
+
+            string commandLine 
+              = string("cmd.exe /c start /D \"") + codePath + "\" Code.exe "
               + wslMapLinuxWindows(contractPath.string());
+            cout << "commandLine\n" << commandLine << endl;
             bp::spawn(commandLine);
-          } else {
-            if(uname() == DARWIN){
-              bp::spawn(
-                string("open -a code --args ") + contractPath.string());
-            } else{
-              bp::spawn(
-                string("gnome-terminal -- code") + contractPath.string());
-            }
+          }else
+          {
+            cout << 
+            "NOTE!\n"
+            "Cannot find the Visual Studio Code in the Registry."
+            "Is it installed?" << endl;
+          }
+        } else 
+        {
+          if(uname() == DARWIN){
+            bp::spawn(
+              string("open -a code --args ") + contractPath.string());
+          } else{
+            bp::spawn(
+              string("gnome-terminal -- code") + contractPath.string());
           }
         }
       }
