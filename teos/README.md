@@ -1,4 +1,4 @@
-# Tokenika TEOS library
+# Introduction to the `teos` library
 
 
 ## Rationale

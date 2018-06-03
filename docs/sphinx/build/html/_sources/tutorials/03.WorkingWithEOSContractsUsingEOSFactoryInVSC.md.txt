@@ -52,6 +52,16 @@ Start *Visual Studio Code* (VSC) and inside VSC open the folder where your newly
 #     template contract: /mnt/d/Workspaces/EOS/contracts/contract.name
 ```
 
+## Open *Visual Studio Code* automatically
+
+If you are on Windows, you can use the `--vscode` argument to have the contract's folder opened for you automatically in VSC right after the creation process is finished: 
+
+```
+$teos_cli bootstrap contract contract.name skeleton --vscode
+```
+
+**NOTE:** By default the above feature works on a Windows machine only. To make it work on other operating systems (Linux and MacOS) you need to place your VSC executable is on a system path, so that the `teos` executable is able to launch it.
+
 ## *Visual Studio Code* project file structure
 
 Once you open a smart-contract's folder in VSC, the file structure should look like this:
@@ -175,8 +185,30 @@ To run unit tests navigate to `Tasks -> unittest`:
 
 ![unittest](./images/unittest.png)
 
-## Using *IntelliSense* in *Visual Studio Code*
+## Use *IntelliSense* in *Visual Studio Code*
 
 By opening an individual contract folder in VSC you'll also be able to make use of VSC [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense) feature. However for that to work you'll need to install the C/C++ IntelliSense extension in VSC.
 
 ![intelisense](./images/intelisense.png)
+
+## Debug with smart loggers
+
+As EOSFactory grows, it will include further libraries that could facilitate the process of smart-contract development.
+
+Here we present one of such features in action: the logging tool. It's quite important, as the only way to debug a smart contract is actually by using loggers.
+
+You'll notice the `logger.hpp` header file in the `src` directory. And if you have applied the `skeleton` template when creating your VSC project, you'll notice the following line in the `contract.name.cpp` file:
+
+```
+logger_info("user: ", name{user});
+```
+
+The effect of the above code entry is the following output in test results:
+
+```
+INFO user: carol @ 8:53:50 contract.name.cpp[16](hi)
+```
+
+What that means is that the logger offers you not only the value of a variable, but also the exact line number and the file name where this logger event occured.
+
+**NOTE:** If you run your tests using *CMake*, you'll need to apply the verbose mode to be able to see this output.

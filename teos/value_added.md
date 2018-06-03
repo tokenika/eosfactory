@@ -1,143 +1,189 @@
-# What value ads the EOSFactory?
+# What's the value added of EOSFactory?
 
-## Smart-contract Hello World for smart ones.
+## Dealing with the `Hello World` smart-contract
 
-Hello World smart contract is easy. It is explain in an EOSIO tutorial, namely [*Tutorial Hello World Contract*](https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract).
+The `Hello World` smart-contract is very simple. It's explained in [*Tutorial Hello World Contract*](https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract).
 
-Let us go through the tutorial.
+Let us go through the tutorial:
 
-* Create a new folder called "hello", cd into the folder, then create a file "hello.cpp" with the following contents:
-```
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/print.hpp>
-using namespace eosio;
+1. Create a new folder called `hello`, switch to this folder, then create a file `hello.cpp` with the following content:
 
-class hello : public eosio::contract {
-  public:
-      using contract::contract;
+   ```
+   #include <eosiolib/eosio.hpp>
+   #include <eosiolib/print.hpp>
+   using namespace eosio;
+   
+   class hello : public eosio::contract {
+     public:
+         using contract::contract;
+   
+         /// @abi action 
+         void hi( account_name user ) {
+            print( "Hello, ", name{user} );
+         }
+   };
+   
+   EOSIO_ABI( hello, (hi) )
+   ```
 
-      /// @abi action 
-      void hi( account_name user ) {
-         print( "Hello, ", name{user} );
-      }
-};
+2. Compile the code to the Web Assembly `wast` format:
 
-EOSIO_ABI( hello, (hi) )
-```
+   ```
+   $ eosiocpp -o hello.wast hello.cpp
+   Build hello.wast
+   ```
 
-* Compile your code to web assembly (.wast) as follows:
-```
-$ eosiocpp -o hello.wast hello.cpp
-Build hello.wast
-```
-* Now, generate the abi:
-```
-$ eosiocpp -g hello.abi hello.cpp
-Generated hello.abi
-```
+3. Now, generate an `ABI` file:
 
-* Create an account and upload the contract:
-```
-cleos push action hello.code hi '["user"]' -p user
-executed transaction: 4c10c1426c16b1656e802f3302677594731b380b18a44851d38e8b5275072857  244 bytes  1000 cycles
-#    hello.code <= hello.code::hi               {"user":"user"}
->> Hello, user
-```
+   ```
+   $ eosiocpp -g hello.abi hello.cpp
+   Generated hello.abi
+   ```
 
-* Open the file "hello.cpp" in your favorite editor and modify the hi() function in hello.cpp as follows:
-```
-void hi( account_name user ) {
-   require_auth( user );
-   print( "Hello, ", name{user} );
-}
-```
+4. Create an account and upload the contract:
 
-* Recompile your code to web assembly (.wast) as follows:
-```
-$ eosiocpp -o hello.wast hello.cpp
-Build hello.wast
-```
+   ```
+   $ cleos push action hello.code hi '["user"]' -p user
+   executed transaction: 4c10c1426c16b1656e802f3302677594731b380b18a44851d38e8b5275072857  244 bytes  1000 cycles
+   #    hello.code <= hello.code::hi               {"user":"user"}
+   >> Hello, user
+   ```
 
-* Again, regenerate the abi:
-```
-$ eosiocpp -g hello.abi hello.cpp
-Generated hello.abi
-```
+5. Open the `hello.cpp` file in your favorite editor and modify the `hi()` function in `hello.cpp` as follows:
 
-* Create an account and upload the contract:
-```
-$ cleos create account eosio hello.code EOS7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 
-EOS7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
-...
-$ cleos set contract hello.code ../hello -p hello.code
-...
-```
+   ```
+   void hi( account_name user ) {
+      require_auth( user );
+      print( "Hello, ", name{user} );
+   }
+   ```
 
-* Finally, you can run the contract:
-```
-$ cleos push action hello.code hi '["user"]' -p user
-executed transaction: 4c10c1426c16b1656e802f3302677594731b380b18a44851d38e8b5275072857  244 bytes  1000 cycles
-#    hello.code <= hello.code::hi               {"user":"user"}
->> Hello, user
-```
+6. Recompile your code to the Web Assembly `wast` format:
 
-And so on. It is easy, but be sure that you issue the right commands, and do not confuse the cryptographic keys.
+   ```
+   $ eosiocpp -o hello.wast hello.cpp
+   Build hello.wast
+   ```
 
-### Integrated Development Environment (IDE)
+7. Regenerate the `ABI` file:
 
-What we do now is a play. However, development of a real smart-contract is a pain: it is an (seemingly) too long chain of corrections in code and tests with a local EOSIO node.
+   ```
+   $ eosiocpp -g hello.abi hello.cpp
+   Generated hello.abi
+   ```
 
-An IDE is of help here. It automatize - as mach as its construction is clever of - logistics. Ideally, all what is left to the codder is care about the logics of the contract. 
+8. Create an account and upload the contract:
 
-## EOSFactory grows to be a good IDE for EOSIO smart-contracts
+   ```
+   $ cleos create account eosio hello.code EOS7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 
+   EOS7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4
+   ...
+   $ cleos set contract hello.code ../hello -p hello.code
+   ...
+   ```
 
-*EOSFactory* is under development itself, but already now we can see it in action, if you have installed both *EOSFactory* and *Visual Studio Code*.
+9. Finally, you can run the contract:
 
-* Issue command that starts a new smart-contract project that is named *hello.tokenika*, and you want to develope it basing on the same template as the one used above:
-```
-$ $teos_cli bootstrap contract hello.tokenika skeleton --vscode
-#     template contract: /mnt/c/Workspaces/EOS/contracts/hello.tokenika
-```
+   ```
+   $ cleos push action hello.code hi '["user"]' -p user
+   executed transaction: 4c10c1426c16b1656e802f3302677594731b380b18a44851d38e8b5275072857  244 bytes  1000 cycles
+   #    hello.code <= hello.code::hi               {"user":"user"}
+   >> Hello, user
+   ```
 
-As the result, you have a new *Visual Studio Code* open in the contracts folder.
-You can see a standardized structure of this folder. Open the source file: `hello.tokenika.cpp`. Try the *InteliSense* feature to see the definition of the `print` function:
+And so on. It is simple stuff, but you need to be very careful to issue the right commands, and not to confuse any of the cryptographic keys.
 
-<img src="VScode/intelisense.png" width="620" />
+## Integrated Development Environment (IDE)
 
-* There happen errors in any code. Some can be spotted automatically with a compiler. Tasks->Run Task...->compile. The result of the compilation is in the following figure:
+What we are delaing with right now are simple demos. However, development of real-life smart-contracts is likely to be complex: most probably it's going to be a long sequence of trial-and-error events involving the source code being tested against a local *EOSIO* node.
 
-<img src="VScode/compile.png" width="620" />
+That's why using a robust IDE seems to be crucial here. The main purpose of on an IDE is to automate everything that does not require creative thinking. Ideally, all what should be left to the coder is the buisness logic of the smart-contract.
 
-* Let us build the contract. Use Tasks->Run Task...->build. The result of the build process is in the following figure:
+## EOSFactory aims be a comprehensive IDE for EOS smart-contracts
 
-<img src="VScode/build.png" width="620" />
+EOSFactory is under development itself, but already we can see its potential in action, provided you have both EOSFactory and *Visual Studio Code* (VSC) installed on your machine.
 
-* Any contract has to be tested. Use Tasks->Run Task...->unittest. The result of the build process is in the following figure. A lot happened during the test process:
-    * Local node started clean;
-    * Local wallet was created;
-    * EOSIO `eosio.bios` contract was deployed;
-    * Cryptographic keys were created
-    * An account owning the contract was craeated;
-    * Tested contract was deployed;
-    * Tested contract was executed;
-    * Local node was stopped.
+1. Create a new smart-contract project named `hello.tokenika`:
 
-<img src="VScode/unittest.png" width="620" />
+   ```
+   $ $teos_cli bootstrap contract hello.tokenika skeleton --vscode
+   #     template contract: /mnt/c/Workspaces/EOS/contracts/hello.tokenika
+   ```
 
-* The EOSFactory can more now, and it is going to be able more and more in the near future. Now:
-    * All the shown task functionality can be achieved with CMake procedures:
-        * build:<br>
-        $ cd build; cmake ..; make
-        * compile:<br>
-        $ cd build; cmake -DC ..; make
-        * unittest:<br>
-        $ cd build; ctest -V -R ^unittest$
-        * test:<br>
-        $ cd build; ctest -V -R ^test$
-    * EOSFactory has two flavours: `C/C++/Python` and pure `C/C++`. The former one uses tests written in *Python*
-    * EOSFactory is going to develop and collect libraries that could facile the process of the development of the EOSIO smart-contracts. Now, we can show one example in action. This is the `logger.hpp` header in the directory `src`. (Of course, it is placed there temporarily.)<br><br>
-    The only way to debug a smart contract is by loggers. An example is in the line `logger_info("user: ", name{user});` in the file `src/hello.tokenika.cpp`. The effect fronm this code entry is line `INFO user: carol  @ 8:53:50 hello.tokenika.cpp[16](hi)` of the test results.
+   As a result, a new *Visual Studio Code* project is created and launched. You'll notice its standardized structure and clear division betweem source files, builds and unit tests.
 
-    Enjoy.       
+2. To play with it, open the `hello.tokenika.cpp` file and try the *InteliSense* feature to see the definition of the `print` function:
 
+   ![intelisense](./docs/html/VScode/intelisense.png)
 
+3. Obviousely you'll be dealing with lots of errors in any code. Some can be spotted automatically with a compiler. Try `Tasks -> Run Task -> compile` to invoke the `CLANG` compiler. This is the output you should get:
+
+   ![compile](./docs/html/VScode/compile.png)
+
+4. Now, Let's build the contract with the `WASM` compliler. For that use `Tasks -> Run Task -> build`. The result of the build process should look like this:
+
+   ![build](./docs/html/VScode/build.png)
+
+5. Any contract has to be tested. Use `Tasks -> Run Task -> unittest`. This is the output you should get:
+
+   ![unittest](./docs/html/VScode/unittest.png)
+
+    A lot happened during the test process:
+
+   * A local *EOSIO* testnet has been started.
+   * Local wallet has been created.
+   * *EOSIO* `eosio.bios` contract has been deployed.
+   * Cryptographic keys have been created.
+   * An account owning the contract has been created.
+   * The contract has been deployed and then executed as part of the unit test.
+   * The local testnet has been stopped and torn down.
+
+6. EOSFactory can more now, and it is going to be able more and more in the near future. Now:
+
+   All the shown task functionality can be achieved with CMake procedures:
+   * build:
+
+     ```
+     $ cd build; cmake ..; make
+     ```
+
+   * compile:
+
+     ```
+     $ cd build; cmake -DC ..; make
+     ```
+
+   * unittest:
+
+     ```
+     $ cd build; ctest -V -R ^unittest$
+     ```
+
+   * test:
+
+     ```
+     $ cd build; ctest -V -R ^test$
+     ```
+
+7. EOSFactory has two flavours:
+
+   *  `C/C++/Python` (using unit tests written in Python)
+   * pure `C/C++` (no Python used, everything is in C/C++)
+
+8. As EOSFactory grows, it will include further libraries that could facilitate the process of smart-contract development.
+
+  Here we present one of such features in action: the logging tool. It's quite important, as the only way to debug a smart contract is actually by using loggers.
+
+  You'll notice the `logger.hpp` header file in the `src` directory. And in the `hello.tokenika.cpp` file you'll notice this line:
+
+  ```
+  logger_info("user: ", name{user});
+  ```
+
+  The effect of the above code entry is the following output in test results:
+
+  ```
+  INFO user: carol @ 8:53:50 hello.tokenika.cpp[16](hi)
+  ```
+
+  What that means is that the logger offers you not only the value of a variable, but also the exact line number and the file name where this logger event occured.

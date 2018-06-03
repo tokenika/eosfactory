@@ -63,7 +63,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - Version 1.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
@@ -97,6 +97,7 @@
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li><a class="reference internal" href="#create-a-new-smart-contract-from-a-template">Create a new smart-contract from a template</a></li>
 <li><a class="reference internal" href="#open-the-smart-contract-in-visual-studio-code">Open the smart-contract in <em>Visual Studio Code</em></a></li>
+<li><a class="reference internal" href="#open-visual-studio-code-automatically">Open <em>Visual Studio Code</em> automatically</a></li>
 <li><a class="reference internal" href="#visual-studio-code-project-file-structure"><em>Visual Studio Code</em> project file structure</a></li>
 <li><a class="reference internal" href="#use-cmake-in-visual-studio-code">Use <em>CMake</em> in <em>Visual Studio Code</em></a><ul>
 <li><a class="reference internal" href="#initial-compilation-with-clang">Initial compilation with <code class="docutils literal"><span class="pre">CLANG</span></code></a></li>
@@ -105,7 +106,8 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#use-automated-tasks-in-visual-studio-code">Use automated tasks in <em>Visual Studio Code</em></a></li>
-<li><a class="reference internal" href="#using-intellisense-in-visual-studio-code">Using <em>IntelliSense</em> in <em>Visual Studio Code</em></a></li>
+<li><a class="reference internal" href="#use-intellisense-in-visual-studio-code">Use <em>IntelliSense</em> in <em>Visual Studio Code</em></a></li>
+<li><a class="reference internal" href="#debug-with-smart-loggers">Debug with smart loggers</a></li>
 </ul>
 </li>
 </ul>
@@ -199,6 +201,14 @@
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#     template contract: /mnt/d/Workspaces/EOS/contracts/contract.name</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="open-visual-studio-code-automatically">
+<span id="open-visual-studio-code-automatically"></span><h2>Open <em>Visual Studio Code</em> automatically<a class="headerlink" href="#open-visual-studio-code-automatically" title="Permalink to this headline">¶</a></h2>
+<p>If you are on Windows, you can use the <code class="docutils literal"><span class="pre">--vscode</span></code> argument to have the contract’s folder opened for you automatically in VSC right after the creation process is finished:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$teos_cli bootstrap contract contract.name skeleton --vscode
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> By default the above feature works on a Windows machine only. To make it work on other operating systems (Linux and MacOS) you need to place your VSC executable is on a system path, so that the <code class="docutils literal"><span class="pre">teos</span></code> executable is able to launch it.</p>
 </div>
 <div class="section" id="visual-studio-code-project-file-structure">
 <span id="visual-studio-code-project-file-structure"></span><h2><em>Visual Studio Code</em> project file structure<a class="headerlink" href="#visual-studio-code-project-file-structure" title="Permalink to this headline">¶</a></h2>
@@ -296,10 +306,25 @@
 <p>To run unit tests navigate to <code class="docutils literal"><span class="pre">Tasks</span> <span class="pre">-&gt;</span> <span class="pre">unittest</span></code>:</p>
 <p><img alt="unittest" src="../_images/unittest.png" /></p>
 </div>
-<div class="section" id="using-intellisense-in-visual-studio-code">
-<span id="using-intellisense-in-visual-studio-code"></span><h2>Using <em>IntelliSense</em> in <em>Visual Studio Code</em><a class="headerlink" href="#using-intellisense-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="use-intellisense-in-visual-studio-code">
+<span id="use-intellisense-in-visual-studio-code"></span><h2>Use <em>IntelliSense</em> in <em>Visual Studio Code</em><a class="headerlink" href="#use-intellisense-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
 <p>By opening an individual contract folder in VSC you’ll also be able to make use of VSC <a class="reference external" href="https://code.visualstudio.com/docs/editor/intellisense">IntelliSense</a> feature. However for that to work you’ll need to install the C/C++ IntelliSense extension in VSC.</p>
 <p><img alt="intelisense" src="../_images/intelisense.png" /></p>
+</div>
+<div class="section" id="debug-with-smart-loggers">
+<span id="debug-with-smart-loggers"></span><h2>Debug with smart loggers<a class="headerlink" href="#debug-with-smart-loggers" title="Permalink to this headline">¶</a></h2>
+<p>As EOSFactory grows, it will include further libraries that could facilitate the process of smart-contract development.</p>
+<p>Here we present one of such features in action: the logging tool. It’s quite important, as the only way to debug a smart contract is actually by using loggers.</p>
+<p>You’ll notice the <code class="docutils literal"><span class="pre">logger.hpp</span></code> header file in the <code class="docutils literal"><span class="pre">src</span></code> directory. And if you have applied the <code class="docutils literal"><span class="pre">skeleton</span></code> template when creating your VSC project, you’ll notice the following line in the <code class="docutils literal"><span class="pre">contract.name.cpp</span></code> file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">logger_info</span><span class="p">(</span><span class="s2">&quot;user: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>The effect of the above code entry is the following output in test results:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">INFO</span> <span class="n">user</span><span class="p">:</span> <span class="n">carol</span> <span class="o">@</span> <span class="mi">8</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">50</span> <span class="n">contract</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">cpp</span><span class="p">[</span><span class="mi">16</span><span class="p">](</span><span class="n">hi</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>What that means is that the logger offers you not only the value of a variable, but also the exact line number and the file name where this logger event occured.</p>
+<p><strong>NOTE:</strong> If you run your tests using <em>CMake</em>, you’ll need to apply the verbose mode to be able to see this output.</p>
 </div>
 </div>
 

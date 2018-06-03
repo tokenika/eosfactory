@@ -65,3 +65,7 @@ EOSFactory is currently at an MVP stage. It was initially released in May 2018 a
 
 - [Plan for Subsequent EOSFactory Releases](http://eosfactory.io/sphinx/build/html/roadmap/PlanForSubsequentEOSFactoryReleases.html)
 - [Long-term EOSFactory Roadmap](http://eosfactory.io/sphinx/build/html/roadmap/LongTermEOSFactoryRoadmap.html)
+
+## Licence
+
+This code is provided as is, under [MIT Licence](LICENCE).
