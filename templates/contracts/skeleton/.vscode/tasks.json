@@ -7,13 +7,13 @@
         "label": "compile",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; mkdir -p build; ${env:teos_cli} build contract \"${workspaceFolder}\"/src -c"
+            "command": "source ~/.profile; mkdir -p build; ${env:eosf} build contract \"${workspaceFolder}\"/src -c"
         },
         "osx": {
-            "command": "source ~/.bash_profile; mkdir -p build; ${teos_cli} build contract \"${workspaceFolder}\"/src -c"
+            "command": "source ~/.bash_profile; mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
         },
         "linux": {
-            "command": "source ~/.profile; mkdir -p build; ${teos_cli} build contract \"${workspaceFolder}\"/src -c"
+            "command": "source ~/.profile; mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
         },
         "presentation": {
             "reveal": "always",
@@ -26,13 +26,13 @@
         "label": "build",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; mkdir -p build; ${env:teos_cli} generate abi \"${workspaceFolder}\"/src;${env:teos_cli} build contract \"${workspaceFolder}\"/src"
+            "command": "source ~/.profile; mkdir -p build; ${env:eosf} generate abi \"${workspaceFolder}\"/src;${env:eosf} build contract \"${workspaceFolder}\"/src"
         },
         "osx": {
-            "command": "source ~/.bash_profile; mkdir -p build; ${teos_cli} generate abi \"${workspaceFolder}\"/src; ${teos_cli} build contract \"${workspaceFolder}\"/src"
+            "command": "source ~/.bash_profile; mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
         },
         "linux": {
-            "command": "source ~/.profile; mkdir -p build; ${teos_cli} generate abi \"${workspaceFolder}\"/src; ${teos_cli} build contract \"${workspaceFolder}\"/src"
+            "command": "source ~/.profile; mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
         },
         "problemMatcher": [],
         "presentation": {

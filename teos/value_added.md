@@ -106,7 +106,7 @@ EOSFactory is under development itself, but already we can see its potential in 
 1. Create a new smart-contract project named `hello.tokenika`:
 
    ```
-   $ $teos_cli bootstrap contract hello.tokenika skeleton --vscode
+   $ $eosf bootstrap contract hello.tokenika skeleton --vscode
    #     template contract: /mnt/c/Workspaces/EOS/contracts/hello.tokenika
    ```
 

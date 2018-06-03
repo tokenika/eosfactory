@@ -38,7 +38,7 @@ Let you have your smart-contract workspace defined, either with the `-w` option 
 ```
 You can start development from a template, for example:
 ```
-$ $teos_cli bootstrap contract token eosio.token.cpp
+$ $eosf bootstrap contract token eosio.token.cpp
 #     template contract: /mnt/c/Workspaces/EOS/contracts/token
 ```
 The second positional parameter name the template used. Templates are in directory `eosfactory/templates`. Currently, only one `cpp` template is available.
@@ -225,16 +225,16 @@ The command-line drivers, operated by the main `teos` application, mimic and/or 
 However, *Tokeniks teos* can play with a local node. For example, the following sequence of bash commands make sense:
 
 ```
-$ $teos_cli bootstrap contract hello.teos     ## new contract template
+$ $eosf bootstrap contract hello.teos     ## new contract template
 #  template contract: /mnt/c/Workspaces/EOS/contracts/hello.teos
 
-$ $teos_cli build contract hello.teos ## relative to the workspace
+$ $eosf build contract hello.teos ## relative to the workspace
 #  WAST: /mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.wast
 
-$ $teos_cli generate abi hello.teos ## relative to the workspace
+$ $eosf generate abi hello.teos ## relative to the workspace
 #  ABI: /mnt/c/Workspaces/EOS/contracts/hello.teos/build/hello.teos.abi
 
-$ $teos_cli daemon start -c                   ## reset local node
+$ $eosf daemon start -c                   ## reset local node
 #  nodeos exe file: /mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos
 #  genesis state file: 
   /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/genesis.json
@@ -244,51 +244,51 @@ $ $teos_cli daemon start -c                   ## reset local node
 #  head block number: 3
 #  head block time: 2018-05-23T16:02:40
 
-$ $teos_cli wallet create
+$ $eosf wallet create
 #         password: PW5K5jzJZaCXEtrwThSgPjgSjiZj8d9i1fCGZSUM7ZC9XEUySarnD
 #  You need to save this password to be able to lock/unlock the wallet!
 
-$ $teos_cli set contract eosio hello.teos --permission eosio
+$ $eosf set contract eosio hello.teos --permission eosio
 #   transaction id: 
   ef2744011c17b219f346c2841ebc316c0ebd21da9804ec804c860f71558481ba
 
-$ $teos_cli create key owner
+$ $eosf create key owner
 #         key name: owner
 #      private key: 5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
 #       public key: EOS6GKYMgKHeuMAaHb3v4nGBg9NiYRcJoU3YegUYeUwSjUfSJWLdP
 
-$ $teos_cli create key active
+$ $eosf create key active
 #         key name: active
 #      private key: 5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
 #       public key: EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA
 
-$ $teos_cli wallet import default \
+$ $eosf wallet import default \
   5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
 #           wallet: default
 #     key imported: 5J5Th3pDjjhkvwiPSETfqoSPp95APj8y7RaaghHtfq7UMUjy3Xa
 
-$ $teos_cli wallet import default 
+$ $eosf wallet import default 
   5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
 #           wallet: default
 #     key imported: 5Jq3guBccY52bw7h3qTTLUHMvg99vx6qDTtyGN7LQrL68nQzszQ
 
-$ $teos_cli create account eosio hello.teos \
+$ $eosf create account eosio hello.teos \
   EOS6GKYMgKHeuMAaHb3v4nGBg9NiYRcJoU3YegUYeUwSjUfSJWLdP \
     EOS7gnfsg5ZiS9wfGUJah18Dmkq4aXz7gQDTcmcFKtV9tMuhB5AeA \
 #   transaction id: 
   0ff62a96bde5bd911da135557da56fabb3fc1282d8be8797be485aafa519bce4
 
-$ $teos_cli set contract hello.teos hello.teos
+$ $eosf set contract hello.teos hello.teos
 #   transaction id: 
   2820976a76893685f4cfc2578c7c0f0ff3e8b9112732de202dab16afd7b56884
 
-$ $teos_cli push action hello.teos hi '["hello.teos"]' -p hello.teos
+$ $eosf push action hello.teos hi '["hello.teos"]' -p hello.teos
 #   transaction id: 
   bdbace3b4327f70ccc7d63d1b1287a7abbec4240be9b2d7695192bf80da45f92
 #  INFO account name: 7684013990126944256  @ 17:56:15 hello.teos.cpp[16](hi)
 #  Hello, hello.teos
 
-$ $teos_cli daemon stop
+$ $eosf daemon stop
 #  Daemon is stopped.
 ```
 

@@ -259,7 +259,7 @@ printf "%s\n" "Sets environment variables, if not set already:"
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
 setLinuxVariable "EOSIO_EOSFACTORY_DIR" "$EOSIO_EOSFACTORY_DIR__"
 setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
-setLinuxVariable "teos_cli" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
+setLinuxVariable "eosf" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
 
 if [ -z $EOSIO_CONTRACT_WORKSPACE__ ]; then
     EOSIO_CONTRACT_WORKSPACE__="${EOSIO_EOSFACTORY_DIR__}/$contracts"
@@ -289,7 +289,7 @@ if [ ! -z "$IS_WSL" ]; then
     fi
 
     setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
-    setWindowsVariable "teos_cli" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
+    setWindowsVariable "eosf" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
 
     retval=""
     wslMapLinux2Windows retval $EOSIO_EOSFACTORY_DIR__

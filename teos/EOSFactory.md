@@ -27,7 +27,7 @@ The EOSFactory has two flavours: one purely C/C++ with EOSIO smart-contract test
 
 Let you have installed *EOSFactory* according to our instructions. Now, you can start development of a *token* contract from a template, for example:
 ```
-$ $teos_cli bootstrap contract token eosio.token.cpp
+$ $eosf bootstrap contract token eosio.token.cpp
 #     template contract: /mnt/c/Workspaces/EOS/contracts/token
 ```
 The second positional parameter name the template used. 
