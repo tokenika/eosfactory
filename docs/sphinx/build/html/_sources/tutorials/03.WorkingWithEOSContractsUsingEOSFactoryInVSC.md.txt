@@ -74,7 +74,7 @@ cd build
 
 #### Initial compilation with `CLANG`
 
-The advantage of using the `CLANG` compiler (as opposed to the `WASM` compiler) is that it runs faster and does not involve the linking process. Thus most of the errors in a smart-contract's code can be spotted automatically by `CLANG`. 
+The advantage of using `CLANG` compiler (as opposed to `WASM` compiler) is that it runs faster and does not involve the linking process. So most of the errors in the code can be spotted automatically by `CLANG`. 
 
 Using a bash terminal in VSC, run the following command to compile your contract with the `CLANG` compiler:
 
@@ -121,7 +121,7 @@ Built target abi
 Built target wast
 ```
 
-**NOTE:** If the `ABI` file already exists in the `src` folder (you should keep it there, if you prefer to create it manually instead of relying on the *EOSIO* toolset) *CMake* will skip the `ABI` file generation step and proceed with `WAST` file generation.
+**NOTE:** If the `ABI` file already exists in the `src` folder (it might happen if you opt to create it manually instead of relying on the *EOSIO* toolset) *CMake* will skip `ABI` file generation step and proceed with `WAST` file generation.
 
 #### Running unit tests
 
@@ -143,7 +143,7 @@ And if you want to be more specific about which unit tests should be run, you ca
 ctest -R ^test$
 ```
 
-The outcome of the unit test (in the non-verbose mode) should look like this:
+The outcome of the unit test (in non-verbose mode) should look like this:
 
 ```
 Test project /mnt/d/Workspaces/EOS/contracts/hello.tokenika/build
@@ -157,7 +157,7 @@ Test project /mnt/d/Workspaces/EOS/contracts/hello.tokenika/build
 Total Test time (real) =  11.71 sec
 ```
 
-**NOTE:** As you've probably noticed, we have two types of unit tests: the standard ones (named *unittest1*, *unittest2*, etc) and ad-hoc ones (named *test1*, *test2*, etc). The reason for this duality is this: we find it useful to have standard unit tests to prove that things work as expected, and ad-hoc tests to investigate bugs and generally monitor the inner workings of a smart-contract. EOSFactory supports both, so you can choose whatever suits your needs.
+**NOTE:** As you've probably noticed, we have two types of unit tests: the standard ones (named *unittest1*, *unittest2*, etc) and ad-hoc ones (named *test1*, *test2*, etc). We find it useful to have standard unit tests to prove that things work as expected, and ad-hoc tests to investigate bugs and generally monitor the inner workings of a smart-contract. EOSFactory supports both, so you can choose whatever suits your needs.
 
 ## Use automated tasks in *Visual Studio Code*
 

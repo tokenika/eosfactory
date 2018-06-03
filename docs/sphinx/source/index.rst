@@ -28,7 +28,7 @@ Tutorials
     tutorials/00.IntroductionToEOSFactory
     tutorials/01.InstallingEOSFactory
     tutorials/02.InteractingWithEOSContractsInEOSFactory
-    tutorials/03.WorkingEOSContractsUsingEOSFactoryInVSC
+    tutorials/03.WorkingWithEOSContractsUsingEOSFactoryInVSC
 
 
 Roadmap

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>EOSFactory Release Notes - Version 0.8 &#8212; EOSFactory 0.0 documentation</title>
+    <title>EOSFactory Release Notes - Version 1.0 &#8212; EOSFactory 0.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -25,6 +25,8 @@
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Introduction to EOSFactory" href="../tutorials/00.IntroductionToEOSFactory.html" />
+    <link rel="prev" title="Welcome to EOSFactory documentation!" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -59,8 +61,8 @@
      href="../index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="ReleaseNotesVersion1.0.html">EOSFactory Release Notes - Version 1.0</a></li>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">EOSFactory Release Notes - Version 1.0</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
@@ -90,7 +92,8 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">EOSFactory Release Notes - Version 0.8</a><ul>
+<li><a class="reference internal" href="#">EOSFactory Release Notes - Version 1.0</a><ul>
+<li><a class="reference internal" href="#compatibility">Compatibility</a></li>
 <li><a class="reference internal" href="#what-works-in-this-release">What works in this release</a></li>
 <li><a class="reference internal" href="#current-limitations">Current limitations</a></li>
 </ul>
@@ -103,6 +106,14 @@
             
               
                 
+  <li>
+    <a href="../index.html" title="Previous Chapter: Welcome to EOSFactory documentation!"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Welcome to EO...</span>
+    </a>
+  </li>
+  <li>
+    <a href="../tutorials/00.IntroductionToEOSFactory.html" title="Next Chapter: Introduction to EOSFactory"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Introduction ... &raquo;</span>
+    </a>
+  </li>
               
             
             
@@ -110,7 +121,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/releases/ReleaseNotesVersion0.8.md.txt"
+  <a href="../_sources/releases/ReleaseNotesVersion1.0.md.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -134,24 +145,26 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="eosfactory-release-notes-version-0-8">
-<span id="eosfactory-release-notes-version-0-8"></span><h1>EOSFactory Release Notes - Version 0.8<a class="headerlink" href="#eosfactory-release-notes-version-0-8" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="eosfactory-release-notes-version-1-0">
+<span id="eosfactory-release-notes-version-1-0"></span><h1>EOSFactory Release Notes - Version 1.0<a class="headerlink" href="#eosfactory-release-notes-version-1-0" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="compatibility">
+<span id="compatibility"></span><h2>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this headline">¶</a></h2>
+<p>EOSFactory <a class="reference external" href="https://github.com/tokenika/eosfactory/releases/tag/v1.0">v1.0</a> is compatible with EOS <a class="reference external" href="https://github.com/EOSIO/eos/releases/tag/dawn-v4.0.0">dawn-v4.0.0</a>.</p>
+</div>
 <div class="section" id="what-works-in-this-release">
 <span id="what-works-in-this-release"></span><h2>What works in this release<a class="headerlink" href="#what-works-in-this-release" title="Permalink to this headline">¶</a></h2>
-<p>Using Python commands you currently can:</p>
 <ul class="simple">
-<li>launch a single-node private testnet and fully control it: stop it and then continue running it or completely reset it,</li>
-<li>initialize the testnet with the <code class="docutils literal"><span class="pre">bios</span></code> contract and several test accounts available as <code class="docutils literal"><span class="pre">sess.alice</span></code>, <code class="docutils literal"><span class="pre">sess.bob</span></code> and <code class="docutils literal"><span class="pre">sess.carol</span></code>,</li>
-<li>create additional test accounts (their keys are automatically imported into the wallet),</li>
-<li>manage the wallet,</li>
-<li>easy access to demo contracts stored in the <code class="docutils literal"><span class="pre">contracts</span></code> folder of the <em>EOSIO</em> source code (you can instantiate them in EOSFactory by passing their folder name in the <code class="docutils literal"><span class="pre">Contract</span></code> class constructor),</li>
-<li>compile a contract, both ABI &amp; WAST (but please note that the ABI compiler has an experimental status in <em>EOSIO</em> repository),</li>
-<li>create a new contract from a pre-defined template (this includes the creation of its <em>CMake</em> files),</li>
-<li>deploy a contract (the account holding the contract is created behind the scenes),</li>
-<li>interact with a contract by pushing actions to it,</li>
-<li>extract text messages logged by the contract (i.e. a contract’s output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method),</li>
-<li>extract data from a contract’s table,</li>
-<li>run a simple unit-test utilizing all the above features.</li>
+<li>Launch a single-node private testnet and fully control it: stop it and then continue running it or completely reset it.</li>
+<li>Initialize a testnet with the <code class="docutils literal"><span class="pre">bios</span></code> contract and several test accounts (available as <code class="docutils literal"><span class="pre">sess.alice</span></code>, <code class="docutils literal"><span class="pre">sess.bob</span></code> and <code class="docutils literal"><span class="pre">sess.carol</span></code>).</li>
+<li>Create additional test accounts (their keys are automatically imported into the wallet).</li>
+<li>Manage the wallet (locking, unlocking etc).</li>
+<li>Have an easy access to demo contracts stored in the <code class="docutils literal"><span class="pre">contracts</span></code> folder of the <em>EOSIO</em> source code (you can instantiate them in EOSFactory by passing their folder name in the <code class="docutils literal"><span class="pre">Contract</span></code> class constructor).</li>
+<li>Compile a contract, both <code class="docutils literal"><span class="pre">ABI</span></code> &amp; <code class="docutils literal"><span class="pre">WAST</span></code> (but please note that the ABI compiler has an experimental status in <em>EOSIO</em> repository).</li>
+<li>Create a new contract from a pre-defined template (this includes the creation of its <a class="reference external" href="https://cmake.org/">CMake</a> files).</li>
+<li>Deploy a contract (the account holding the contract is created behind the scenes).</li>
+<li>Interact with a contract by pushing actions to it.</li>
+<li>Extract data from a contract’s table.</li>
+<li></li>
 </ul>
 </div>
 <div class="section" id="current-limitations">
@@ -161,7 +174,7 @@
 <li>You cannot connect EOSFactory to a testnet of your choice, only to a private one running a single node.</li>
 <li>Whereas the <code class="docutils literal"><span class="pre">nodeos</span></code> process runs in the background on MacOS, on other platforms (Windows &amp; Ubuntu) it requires launching a separate terminal window (it’s done automatically though). This might be a limitation for GUI-less systems like Ubuntu Server edition.</li>
 <li>There are no utilities for debugging contracts, except for the “caveman” style, i.e. accessing the output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method.</li>
-<li>There is no easy way to work with smart-contracts stored outside of EOSFactory <code class="docutils literal"><span class="pre">contracts</span></code> folder or EOSIO <code class="docutils literal"><span class="pre">contracts</span></code> folder. If you want to do that you need to refer to the contract folder by its full path.</li>
+<li>There is no easy way to instantiate smart-contracts stored outside of EOSFactory <code class="docutils literal"><span class="pre">contracts</span></code> folder or EOSIO <code class="docutils literal"><span class="pre">contracts</span></code> folder. If you want to do that, you need to refer to the contract’s folder by supplying its full path.</li>
 <li>The <code class="docutils literal"><span class="pre">Template</span></code> class constructor only accepts a folder name, not a path (this is different from the <code class="docutils literal"><span class="pre">Contract</span></code> constructor which accepts both).</li>
 <li>The <code class="docutils literal"><span class="pre">Contract</span></code> class <code class="docutils literal"><span class="pre">abi()</span></code> and <code class="docutils literal"><span class="pre">build()</span></code> methods are relying on the <em>EOSIO</em> ABI compiler which has an experimental status in the <em>EOSIO</em> repository. Thus the ABI output might be different than expected.</li>
 <li>The <code class="docutils literal"><span class="pre">Contract</span></code> class <code class="docutils literal"><span class="pre">push_action()</span></code> and <code class="docutils literal"><span class="pre">show_action</span></code> methods accept only verbose input, i.e. all action’s parameters must be named in the JSON syntax.</li>

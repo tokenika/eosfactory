@@ -16,7 +16,7 @@ Release Notes
 .. toctree::
     :maxdepth: 1
 
-    releases/ReleaseNotesVersion0.8
+    releases/ReleaseNotesVersion1.0
 
 
 Tutorials
@@ -28,8 +28,7 @@ Tutorials
     tutorials/00.IntroductionToEOSFactory
     tutorials/01.InstallingEOSFactory
     tutorials/02.InteractingWithEOSContractsInEOSFactory
-    tutorials/03.CompilingEOSContractsUsingEOSFactoryInVSC
-    tutorials/04.UnitTestingEOSContractsUsingEOSFactoryInVSC
+    tutorials/03.WorkingWithEOSContractsUsingEOSFactoryInVSC
 
 
 Roadmap
