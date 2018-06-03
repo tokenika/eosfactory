@@ -324,9 +324,8 @@
 </div>
 <div class="section" id="debug-with-smart-loggers">
 <span id="debug-with-smart-loggers"></span><h2>Debug with smart loggers<a class="headerlink" href="#debug-with-smart-loggers" title="Permalink to this headline">¶</a></h2>
-<p>As EOSFactory grows, it will include further libraries that could facilitate the process of smart-contract development.</p>
-<p>Here we present one of such features in action: the logging tool. It’s quite important, as the only way to debug a smart contract is actually by using loggers.</p>
-<p>You’ll notice the <code class="docutils literal"><span class="pre">logger.hpp</span></code> header file in the <code class="docutils literal"><span class="pre">src</span></code> directory. And if you have applied the <code class="docutils literal"><span class="pre">skeleton</span></code> template when creating your VSC project, you’ll notice the following line in the <code class="docutils literal"><span class="pre">contract.name.cpp</span></code> file:</p>
+<p>As EOSFactory gets upgraded, it will include further libraries that enhance the process of smart-contract development. Here we present one of such features in action: the logging tool. It’s quite important, as using loggers is actually the only way to debug smart contracts.</p>
+<p>You might have noticed the <code class="docutils literal"><span class="pre">logger.hpp</span></code> header file in the <code class="docutils literal"><span class="pre">src</span></code> directory. And if you have applied the <code class="docutils literal"><span class="pre">skeleton</span></code> template when creating your VSC project, you’ll also notice the following line in the <code class="docutils literal"><span class="pre">contract.name.cpp</span></code> file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">logger_info</span><span class="p">(</span><span class="s2">&quot;user: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">});</span>
 </pre></div>
 </div>
@@ -342,7 +341,7 @@
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">INFO</span> <span class="n">quantity</span><span class="o">.</span><span class="n">amount</span><span class="p">:</span> <span class="mi">1000000</span> <span class="o">@</span> <span class="mi">8</span><span class="p">:</span><span class="mi">43</span><span class="p">:</span><span class="mi">8</span> <span class="n">contract</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">cpp</span><span class="p">[</span><span class="mi">54</span><span class="p">](</span><span class="n">issue</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Thus the logger utility offers you much more than just monitoring the value of a variable. You also get the method name, the file name &amp; line number where this logger event occured.</p>
+<p>Thus the logger utility offers you much more than just a way of monitoring the value of a variable. What you also get is the method name, the file name &amp; line number where this logger event occured.</p>
 <p><strong>NOTE:</strong> If you run your tests using <em>CMake</em>, you’ll need to apply the verbose mode to be able to see the logger output.</p>
 </div>
 </div>
