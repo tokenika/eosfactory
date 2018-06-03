@@ -54,10 +54,10 @@ Start *Visual Studio Code* (VSC) and inside VSC open the folder where your newly
 
 ## Open *Visual Studio Code* automatically
 
-If you are on Windows, you can use the `--vscode` argument to have the contract's folder opened for you automatically in VSC right after the creation process is finished: 
+If you are on Windows, you can use the `--vsc` argument to have the contract's folder opened for you automatically in VSC right after the creation process is finished: 
 
 ```
-$teos_cli bootstrap contract contract.name skeleton --vscode
+$teos_cli bootstrap contract contract.name skeleton --vsc
 ```
 
 **NOTE:** By default the above feature works on a Windows machine only. To make it work on other operating systems (Linux and MacOS) you need to place your VSC executable is on a system path, so that the `teos` executable is able to launch it.

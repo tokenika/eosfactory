@@ -348,7 +348,7 @@ Usage: ./teos create key --jarg '{
         string name, // contract name
         string templateName=TEMPLATE,
         bool removeExisting=false,
-        bool vscode=false
+        bool vsc=false
       );
       void copy(
         boost::filesystem::path inTemplate,
@@ -366,14 +366,14 @@ Usage: ./teos create key --jarg '{
         string name, // contract name
         string templateName=TEMPLATE,
         bool removeExisting=false,
-        bool vscode=false
+        bool vsc=false
       )
       {
         reqJson_.put("name", name);
         reqJson_.put("template", templateName);
         reqJson_.put("remove", removeExisting);
-        reqJson_.put("vscode", vscode);
-        bootstrapContract(name, templateName, removeExisting, vscode);
+        reqJson_.put("vsc", vsc);
+        bootstrapContract(name, templateName, removeExisting, vsc);
       }
 
       BootstrapContract(ptree reqJson) : TeosControl(reqJson)
@@ -382,7 +382,7 @@ Usage: ./teos create key --jarg '{
           reqJson_.get<string>("name"),
           reqJson_.get("template", TEMPLATE),
           reqJson_.get("remove", false),
-          reqJson_.get("vscode", false)
+          reqJson_.get("vsc", false)
         );
       }
     };
@@ -406,7 +406,7 @@ Usage: ./teos create key --jarg '{
   "name":"<contract name>",
   "template":"<template name>",
   "removeExisting":"<true|false>"
-  "vscode":"<true|false>"
+  "vsc":"<true|false>"
   }' [OPTIONS]
 )";
       }
@@ -414,7 +414,7 @@ Usage: ./teos create key --jarg '{
       string name;
       string templateName;
       bool removeExisting;
-      bool vscode;
+      bool vsc;
 
       options_description  argumentDescription() {
         options_description od("");
@@ -423,7 +423,7 @@ Usage: ./teos create key --jarg '{
           ("template", value<string>(&templateName)->default_value(TEMPLATE), 
             "Template name.")
           ("remove", "Remove existing contract path.")
-          ("vscode,c", "Launch Visual Studio Code.")
+          ("vsc,c", "Launch Visual Studio Code.")
           ;
             
         return od;
@@ -437,7 +437,7 @@ Usage: ./teos create key --jarg '{
       bool checkArguments(variables_map &vm) {
         bool ok = false;
         removeExisting = false;
-        vscode = false;
+        vsc = false;
 
         if(vm.count("name")){
           ok = true;
@@ -447,10 +447,10 @@ Usage: ./teos create key --jarg '{
             removeExisting = true;
           } 
           reqJson_.put("remove", removeExisting);
-          if(vm.count("vscode")){
-            vscode = true;
+          if(vm.count("vsc")){
+            vsc = true;
           }
-          reqJson_.put("vscode", vscode);
+          reqJson_.put("vsc", vsc);
         }
         return ok;
       }
