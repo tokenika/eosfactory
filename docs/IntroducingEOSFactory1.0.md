@@ -46,7 +46,7 @@ Smart-contracts can never be properly debugged (as you cannot pause the blockcha
 
 When using the standard EOS toolset, in order to check for errors in a smart-contract code you need to go through the entire process of building & linking performed by the `WASM` compiler. What we offer is the option of reducing this process to a simple `CLANG` compilation (i.e. without linking). And only when your code is error-free and you are ready for testnet deployment and unit testing, you can switch to the more heavy-weight `WASM` compiler.
 
-#### 5. Visual Studio Code integration
+#### 5. *Visual Studio Code* integration
 
 EOSFactory is becoming more tightly integrated with [Visual Studio Code](https://code.visualstudio.com/). When you create a new smart-contract in EOSFactory, what you get is an entire VSC project, with support for [CMake](https://cmake.org/) builds, automated tasks and [IntelliSense](https://msdn.microsoft.com/en-us/library/hcw1s69b.aspx) features.
 
@@ -78,7 +78,7 @@ With *Visual Studio Code* integration all the essential programming tools become
 
 ## Documentation
 
-The source code is to be found here.
+EOSFactory source code can be found in [this repository](https://github.com/tokenika/eosfactory) on GitHub. As for more detailed documentation, tutorials and installation guides, please refer to [this website](http://eosfactory.io/sphinx/build/html/).
 
 ## Feedback is welcome
 
