@@ -342,6 +342,11 @@ if [ ! -z "$IS_WSL" ]; then
         verifyHome $WSL_ROOT_DIR1804__
     fi
 
+# PS C:\Users\cartman> $WSLREGKEY="HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss"
+# PS C:\Users\cartman> $WSLDEFID=(Get-ItemProperty "$WSLREGKEY").DefaultDistribution
+# PS C:\Users\cartman> $WSLFSPATH=(Get-ItemProperty "$WSLREGKEY\$WSLDEFID").BasePath
+# PS C:\Users\cartman> New-Item -ItemType Junction -Path "$env:LOCALAPPDATA\lxss" -Value "$WSLFSPATH\rootfs"
+
     if [ -z "$homeWindowsIsSet" ]; then
             printf "\n%s" "
         ######################################################################
