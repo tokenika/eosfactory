@@ -156,7 +156,7 @@ namespace teos {
     }
 
     void BootstrapContract::bootstrapContract(
-      string name, string templateName, bool removeExisting, bool vscode)
+      string name, string templateName, bool removeExisting, bool vsc)
     {
       namespace bfs = boost::filesystem;
 
@@ -227,7 +227,7 @@ namespace teos {
         }
       }
 
-      if(vscode)
+      if(vsc)
       {
         namespace bp = boost::process;
 
