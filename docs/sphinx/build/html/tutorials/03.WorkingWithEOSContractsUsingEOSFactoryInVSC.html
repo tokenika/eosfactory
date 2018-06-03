@@ -95,7 +95,7 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a><ul>
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
-<li><a class="reference internal" href="#create-a-new-smart-contract-from-a-template">Create a new smart-contract from a template</a></li>
+<li><a class="reference internal" href="#create-a-new-smart-contract-project">Create a new smart-contract project</a></li>
 <li><a class="reference internal" href="#open-the-smart-contract-in-visual-studio-code">Open the smart-contract in <em>Visual Studio Code</em></a></li>
 <li><a class="reference internal" href="#open-visual-studio-code-automatically">Open <em>Visual Studio Code</em> automatically</a></li>
 <li><a class="reference internal" href="#visual-studio-code-project-file-structure"><em>Visual Studio Code</em> project file structure</a></li>
@@ -176,22 +176,15 @@
 </li>
 </ul>
 </div>
-<div class="section" id="create-a-new-smart-contract-from-a-template">
-<span id="create-a-new-smart-contract-from-a-template"></span><h2>Create a new smart-contract from a template<a class="headerlink" href="#create-a-new-smart-contract-from-a-template" title="Permalink to this headline">¶</a></h2>
-<p>First, navigate to the <code class="docutils literal"><span class="pre">teos/build/teos</span></code> folder inside EOSFactory installation:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">eosfactory</span><span class="o">/</span><span class="n">teos</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">teos</span>
-</pre></div>
-</div>
-<p>And then run the <code class="docutils literal"><span class="pre">teos</span></code> executable:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">teos</span> <span class="n">bootstrap</span> <span class="n">contract</span> <span class="n">contract</span><span class="o">.</span><span class="n">name</span> <span class="n">eosio</span><span class="o">.</span><span class="n">token</span>
-</pre></div>
-</div>
-<p><strong>NOTE:</strong> The first parameter (in our case <code class="docutils literal"><span class="pre">contract.name</span></code>) is the name of your contract. It can be any name you want, provided there are no spaces in it. Letters, numbers, underscores <code class="docutils literal"><span class="pre">_</span></code>, dots <code class="docutils literal"><span class="pre">.</span></code> and dashes <code class="docutils literal"><span class="pre">-</span></code> are allowed.</p>
-<p><strong>NOTE:</strong> The second parameter (in our case <code class="docutils literal"><span class="pre">eosio.token</span></code>) is optional and it denotes the template from which the new contract will be created. As of now there are only two templates (called <code class="docutils literal"><span class="pre">skeleton</span></code> and <code class="docutils literal"><span class="pre">eosio.token</span></code>) but there’ll be more in the future.</p>
-<p>Alternatively, you can use the <code class="docutils literal"><span class="pre">$eosf</span></code> system variable created during EOSFactory installation. It allows you to run the <code class="docutils literal"><span class="pre">teos</span></code> executable from any location, for example:</p>
+<div class="section" id="create-a-new-smart-contract-project">
+<span id="create-a-new-smart-contract-project"></span><h2>Create a new smart-contract project<a class="headerlink" href="#create-a-new-smart-contract-project" title="Permalink to this headline">¶</a></h2>
+<p>In a bash terminal run the following command:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$eosf bootstrap contract contract.name skeleton
 </pre></div>
 </div>
+<p><strong>NOTE:</strong> <code class="docutils literal"><span class="pre">$eosf</span></code> is system variable created during EOSFactory installation. It’s a path pointing to an EOSFactory C++ executable called <code class="docutils literal"><span class="pre">teos</span></code>.</p>
+<p>The first parameter (in our case <code class="docutils literal"><span class="pre">contract.name</span></code>) is the name of your contract. It can be any name you want, provided there are no spaces in it. Letters, numbers, underscores <code class="docutils literal"><span class="pre">_</span></code>, dots <code class="docutils literal"><span class="pre">.</span></code> and dashes <code class="docutils literal"><span class="pre">-</span></code> are allowed.</p>
+<p>The second parameter (in our case <code class="docutils literal"><span class="pre">skeleton</span></code>) denotes the template from which the new contract will be created. As of now there are only two templates (<code class="docutils literal"><span class="pre">skeleton</span></code> and <code class="docutils literal"><span class="pre">eosio.token</span></code>) but there’ll be more in the future. This parameter is optional, the default value is <code class="docutils literal"><span class="pre">skeleton</span></code>.</p>
 </div>
 <div class="section" id="open-the-smart-contract-in-visual-studio-code">
 <span id="open-the-smart-contract-in-visual-studio-code"></span><h2>Open the smart-contract in <em>Visual Studio Code</em><a class="headerlink" href="#open-the-smart-contract-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
@@ -204,11 +197,11 @@
 </div>
 <div class="section" id="open-visual-studio-code-automatically">
 <span id="open-visual-studio-code-automatically"></span><h2>Open <em>Visual Studio Code</em> automatically<a class="headerlink" href="#open-visual-studio-code-automatically" title="Permalink to this headline">¶</a></h2>
-<p>If you are on Windows, you can use the <code class="docutils literal"><span class="pre">--vsc</span></code> argument to have the contract’s folder opened for you automatically in VSC right after the creation process is finished:</p>
+<p>If you are on Windows, you can use the <code class="docutils literal"><span class="pre">--vsc</span></code> argument to have the contract’s folder opened for you automatically in a new instance of VSC right after the contract creation process is finished:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$eosf bootstrap contract contract.name skeleton --vsc
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> By default the above feature works on a Windows machine only. To make it work on other operating systems (Linux and MacOS) you need to place your VSC executable is on a system path, so that the <code class="docutils literal"><span class="pre">teos</span></code> executable is able to launch it.</p>
+<p><strong>NOTE:</strong> As of now, the above feature works on Windows only.</p>
 </div>
 <div class="section" id="visual-studio-code-project-file-structure">
 <span id="visual-studio-code-project-file-structure"></span><h2><em>Visual Studio Code</em> project file structure<a class="headerlink" href="#visual-studio-code-project-file-structure" title="Permalink to this headline">¶</a></h2>

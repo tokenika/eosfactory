@@ -16,29 +16,19 @@ The purpose of this tutorial is to demonstrate how EOSFactory can be combined wi
 
 - Finally, we assume that you are familiar with the official [EOS Hello World tutorial](https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract), as it presents the standard way to compile and deploy smart-contracts in EOS. What we present here is an alternative.
 
-## Create a new smart-contract from a template
+## Create a new smart-contract project
 
-First, navigate to the `teos/build/teos` folder inside EOSFactory installation:
-
-```
-cd eosfactory/teos/build/teos
-```
-
-And then run the `teos` executable:
-
-```
-./teos bootstrap contract contract.name eosio.token
-```
-
-**NOTE:** The first parameter (in our case `contract.name`) is the name of your contract. It can be any name you want, provided there are no spaces in it. Letters, numbers, underscores `_`, dots `.` and dashes `-` are allowed.
-
-**NOTE:** The second parameter (in our case `eosio.token`) is optional and it denotes the template from which the new contract will be created. As of now there are only two templates (called `skeleton` and `eosio.token`) but there'll be more in the future.
-
-Alternatively, you can use the `$eosf` system variable created during EOSFactory installation. It allows you to run the `teos` executable from any location, for example:
+In a bash terminal run the following command:
 
 ```
 $eosf bootstrap contract contract.name skeleton
 ```
+
+**NOTE:** `$eosf` is system variable created during EOSFactory installation. It's a path pointing to an EOSFactory C++ executable called `teos`.
+
+The first parameter (in our case `contract.name`) is the name of your contract. It can be any name you want, provided there are no spaces in it. Letters, numbers, underscores `_`, dots `.` and dashes `-` are allowed.
+
+The second parameter (in our case `skeleton`) denotes the template from which the new contract will be created. As of now there are only two templates (`skeleton` and `eosio.token`) but there'll be more in the future. This parameter is optional, the default value is `skeleton`.
 
 ## Open the smart-contract in *Visual Studio Code*
 
@@ -54,13 +44,13 @@ Start *Visual Studio Code* (VSC) and inside VSC open the folder where your newly
 
 ## Open *Visual Studio Code* automatically
 
-If you are on Windows, you can use the `--vsc` argument to have the contract's folder opened for you automatically in VSC right after the creation process is finished: 
+If you are on Windows, you can use the `--vsc` argument to have the contract's folder opened for you automatically in a new instance of VSC right after the contract creation process is finished: 
 
 ```
 $eosf bootstrap contract contract.name skeleton --vsc
 ```
 
-**NOTE:** By default the above feature works on a Windows machine only. To make it work on other operating systems (Linux and MacOS) you need to place your VSC executable is on a system path, so that the `teos` executable is able to launch it.
+**NOTE:** As of now, the above feature works on Windows only.
 
 ## *Visual Studio Code* project file structure
 
