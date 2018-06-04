@@ -156,7 +156,7 @@ namespace teos {
     }
 
     void BootstrapContract::bootstrapContract(
-      string name, string templateName, bool removeExisting, bool vsc)
+      string name, string templateName, bool removeExisting, bool vscode)
     {
       namespace bfs = boost::filesystem;
 
@@ -227,7 +227,7 @@ namespace teos {
         }
       }
 
-      if(vsc)
+      if(vscode)
       {
         namespace bp = boost::process;
 
@@ -273,7 +273,7 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
               string("open -a code --args ") + contractPath.string());
           } else{
             bp::spawn(
-              string("gnome-terminal -- code") + contractPath.string());
+              string("gnome-terminal -- code ") + contractPath.string());
           }
         }
       }

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['what_20value_20ads_20the_20eosfactory_3f',['What value ads the EOSFactory?',['../md_value_added.html',1,'']]],
+  ['what_27s_20the_20value_20added_20of_20eosfactory_3f',['What&apos;s the value added of EOSFactory?',['../md_value_added.html',1,'']]],
   ['wallet',['Wallet',['../classteoslib_1_1_wallet.html',1,'teoslib']]],
   ['wallet_5fcommands_2ehpp',['wallet_commands.hpp',['../wallet__commands_8hpp.html',1,'']]],
   ['walletcreate',['WalletCreate',['../classteos_1_1command_1_1_wallet_create.html',1,'teos::command::WalletCreate'],['../classteos_1_1command_1_1_wallet_create.html#a78153f8e5eb577cdeb3734c7229df923',1,'teos::command::WalletCreate::WalletCreate(string name=DEFAULT_WALLET_NAME)'],['../classteos_1_1command_1_1_wallet_create.html#a3a7979db66f2ea69186888d50dd6ce69',1,'teos::command::WalletCreate::WalletCreate(ptree reqJson)']]],

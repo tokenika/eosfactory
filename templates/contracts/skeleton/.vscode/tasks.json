@@ -4,7 +4,7 @@
     "version": "2.0.0",   
 "tasks": [
     {
-        "taskName": "Compile",
+        "label": "compile",
         "type": "shell",
         "windows": {
             "command": "source ~/.profile; mkdir -p build; ${env:eosf} build contract \"${workspaceFolder}\"/src -c"
@@ -13,7 +13,7 @@
             "command": "source ~/.bash_profile; mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
         },
         "linux": {
-            "command": "source ~/.profile; mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
+            "command": "mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
         },
         "presentation": {
             "reveal": "always",
@@ -23,7 +23,7 @@
         ]
     },
     {
-        "taskName": "Build",
+        "label": "build",
         "type": "shell",
         "windows": {
             "command": "source ~/.profile; mkdir -p build; ${env:eosf} generate abi \"${workspaceFolder}\"/src;${env:eosf} build contract \"${workspaceFolder}\"/src"
@@ -32,7 +32,7 @@
             "command": "source ~/.bash_profile; mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
         },
         "linux": {
-            "command": "source ~/.profile; mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
+            "command": "mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
         },
         "problemMatcher": [],
         "presentation": {
@@ -47,45 +47,7 @@
         ]
     },
     {
-        "taskName": "Unittest",
-        "type": "shell",
-        "windows": {
-            "command": "source ~/.profile; python3 ./test/unittest1.py"
-        },
-        "osx": {
-            "command": "source ~/.bash_profile; python3 ./test/unittest1.py"
-        },
-        "linux": {
-            "command": "source ~/.profile; python3 ./test/unittest1.py"
-        },
-        "presentation": {
-            "reveal": "always",
-            "panel": "dedicated"
-        },
-        "problemMatcher": [
-        ]
-    },
-    {
-        "taskName": "Test",
-        "type": "shell",
-        "windows": {
-            "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
-        },
-        "osx": {
-            "command": "source ~/.bash_profile; python3 ./test/test1.py \"${workspaceFolder}\""
-        },
-        "linux": {
-            "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
-        },        
-        "presentation": {
-            "reveal": "always",
-            "panel": "dedicated"
-        },
-        "problemMatcher": [
-        ]
-    },
-    /*{
-        "taskName": "EOSIO API",
+        "taskName": "API",
         "type": "shell",
         "windows": {
             "command": "explorer.exe"
@@ -105,8 +67,45 @@
         },
         "problemMatcher": [
         ]
-    }*/
+    },
+    {
+        "taskName": "unittest",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; python3 ./test/unittest1.py"
+        },
+        "osx": {
+            "command": "source ~/.bash_profile; python3 ./test/unittest1.py"
+        },
+        "linux": {
+            "command": "python3 ./test/unittest1.py"
+        },
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": [
+        ]
+    },
+    {
+        "taskName": "test",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
+        },
+        "osx": {
+            "command": "source ~/.bash_profile; python3 ./test/test1.py \"${workspaceFolder}\""
+        },
+        "linux": {
+            "command": "python3 ./test/test1.py \"${workspaceFolder}\""
+        },        
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": [
+        ]
+    }
 ]
 }
- 
 
