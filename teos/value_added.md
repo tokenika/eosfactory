@@ -114,56 +114,46 @@ EOSFactory is under development itself, but already we can see its potential in 
 
 2. To play with it, open the `hello.tokenika.cpp` file and try the *InteliSense* feature to see the definition of the `print` function:
 
-   ![intelisense](./docs/html/VScode/intelisense.png)
+![intelisense](VScode/intelisense1.png)
 
 3. Obviousely you'll be dealing with lots of errors in any code. Some can be spotted automatically with a compiler. Try `Tasks -> Run Task -> compile` to invoke the `CLANG` compiler. This is the output you should get:
 
-   ![compile](./docs/html/VScode/compile.png)
+![compile](VScode/compile1.png)
 
 4. Now, Let's build the contract with the `WASM` compliler. For that use `Tasks -> Run Task -> build`. The result of the build process should look like this:
 
-   ![build](./docs/html/VScode/build.png)
+![build](VScode/build1.png)
 
 5. Any contract has to be tested. Use `Tasks -> Run Task -> unittest`. This is the output you should get:
 
-![unittest](./docs/html/VScode/build.png#left)
+![unittest](VScode/unittest1.png)
 
-    A lot happened during the test process:
-      * A local *EOSIO* testnet has been started.
-      * Local wallet has been created.
-      * *EOSIO* `eosio.bios` contract has been deployed.
-      * Cryptographic keys have been created.
-      * An account owning the contract has been created.
-      * The contract has been deployed and then executed as part of the unit test.
-      * The local testnet has been stopped and torn down.
+        A lot happened during the test process:
+
+          * A local *EOSIO* testnet has been started.
+          * Local wallet has been created.
+          * *EOSIO* `eosio.bios` contract has been deployed.
+          * Cryptographic keys have been created.
+          * An account owning the contract has been created.
+          * The contract has been deployed and then executed 
+            as part of the unit test.
+          * The local testnet has been stopped and torn down.
 
 
 6. EOSFactory can more now, and it is going to be able more and more in the near future. Now:
 
    All the shown task functionality can be achieved with CMake procedures:
-   * build:
-
-     ```
+   * build:<bf>
      $ cd build; cmake ..; make
-     ```
 
-   * compile:
-
-     ```
+   * compile:<bf>
      $ cd build; cmake -DC ..; make
-     ```
 
-   * unittest:
-
-     ```
+   * unittest<bf>
      $ cd build; ctest -V -R ^unittest$
-     ```
 
-   * test:
-
-     ```
+   * test:<bf>
      $ cd build; ctest -V -R ^test$
-     ```
 
 7. EOSFactory has two flavours:
 
