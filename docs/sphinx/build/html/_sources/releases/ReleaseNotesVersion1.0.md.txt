@@ -20,14 +20,14 @@ EOSFactory [v1.0](https://github.com/tokenika/eosfactory/releases/tag/v1.0) is c
 ## New features available in v1.0
 
 * Integrated unit-testing framework.
-* User-defined workspace separate from EOSFactory source code.
-* Logger output containing file name and line number.
-* Contract verification with `CLANG`.
+* User-defined workspace for smart-contract storage.
+* Support for debugging via logger output containing file name & line number.
+* Preliminary code verification with `CLANG`.
 * [Visual Studio Code](https://code.visualstudio.com/) integration, including *CMake* builds and automated tasks.
 
 ## Current limitations
 
 * You cannot connect EOSFactory to a testnet of your choice, only to a private one running a single node.
 * Whereas the `nodeos` process runs in the background on MacOS, on other platforms (Windows & Ubuntu) it requires launching a separate terminal window (it's done automatically though). This might be a limitation for GUI-less systems like Ubuntu Server edition.
-* The `Contract` class `abi()` and `build()` methods are relying on the *EOSIO* ABI compiler which has an experimental status in the *EOSIO* repository. Thus the ABI output might be different than expected.
+* The `Contract` class `abi()` and `build()` methods are relying on the *EOSIO* ABI generator which has an experimental status in the *EOSIO* repository. Thus the ABI output might be different than expected.
 * The `Contract` class `push_action()` and `show_action` methods accept only verbose input, i.e. all action's parameters must be named in the JSON syntax.

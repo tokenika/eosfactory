@@ -172,9 +172,9 @@
 <span id="new-features-available-in-v1-0"></span><h2>New features available in v1.0<a class="headerlink" href="#new-features-available-in-v1-0" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Integrated unit-testing framework.</li>
-<li>User-defined workspace separate from EOSFactory source code.</li>
-<li>Logger output containing file name and line number.</li>
-<li>Contract verification with <code class="docutils literal"><span class="pre">CLANG</span></code>.</li>
+<li>User-defined workspace for smart-contract storage.</li>
+<li>Support for debugging via logger output containing file name &amp; line number.</li>
+<li>Preliminary code verification with <code class="docutils literal"><span class="pre">CLANG</span></code>.</li>
 <li><a class="reference external" href="https://code.visualstudio.com/">Visual Studio Code</a> integration, including <em>CMake</em> builds and automated tasks.</li>
 </ul>
 </div>
@@ -183,7 +183,7 @@
 <ul class="simple">
 <li>You cannot connect EOSFactory to a testnet of your choice, only to a private one running a single node.</li>
 <li>Whereas the <code class="docutils literal"><span class="pre">nodeos</span></code> process runs in the background on MacOS, on other platforms (Windows &amp; Ubuntu) it requires launching a separate terminal window (it’s done automatically though). This might be a limitation for GUI-less systems like Ubuntu Server edition.</li>
-<li>The <code class="docutils literal"><span class="pre">Contract</span></code> class <code class="docutils literal"><span class="pre">abi()</span></code> and <code class="docutils literal"><span class="pre">build()</span></code> methods are relying on the <em>EOSIO</em> ABI compiler which has an experimental status in the <em>EOSIO</em> repository. Thus the ABI output might be different than expected.</li>
+<li>The <code class="docutils literal"><span class="pre">Contract</span></code> class <code class="docutils literal"><span class="pre">abi()</span></code> and <code class="docutils literal"><span class="pre">build()</span></code> methods are relying on the <em>EOSIO</em> ABI generator which has an experimental status in the <em>EOSIO</em> repository. Thus the ABI output might be different than expected.</li>
 <li>The <code class="docutils literal"><span class="pre">Contract</span></code> class <code class="docutils literal"><span class="pre">push_action()</span></code> and <code class="docutils literal"><span class="pre">show_action</span></code> methods accept only verbose input, i.e. all action’s parameters must be named in the JSON syntax.</li>
 </ul>
 </div>

@@ -1,5 +1,9 @@
 # Plan for Subsequent EOSFactory Releases
 
+#### Compatibility with EOSIO v1.0
+
+For the time being EOSFactory v1.0 is compatible EOSIO dawn-v4.0.0. Once EOSIO stops changing rapidly and becomes stable, the subsequent EOSFactory release will be compatible with the latest EOSIO release.
+
 #### Connect to non-private testnet
 
 You'll be able to connect to any testnet you want, not just the single-node private one, as it is now.
