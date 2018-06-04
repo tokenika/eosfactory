@@ -505,9 +505,15 @@ if [ "$OS_NAME" == "Darwin" ]; then
     $ source ~/.bash_profile
 "
 else 
-    printf "%s\n" "
+    if [ "$OS_NAME" == "Ubuntu" ]; then
+        printf "%s\n" "
+    $ source ~/.bashrc
+"
+    else
+        printf "%s\n" "
     $ source ~/.profile
 "
+    fi
 fi
 
 if [ ! -e "$EOSIO_CONTRACT_WORKSPACE__" ]; then

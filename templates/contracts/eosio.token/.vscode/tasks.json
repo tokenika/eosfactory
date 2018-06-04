@@ -10,7 +10,7 @@
             "command": "source ~/.profile; mkdir -p build; ${env:eosf} build contract \"${workspaceFolder}\"/src -c"
         },
         "osx": {
-            "command": "source ~/.bash_profile; mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
+            "command": "mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
         },
         "linux": {
             "command": "mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
@@ -29,7 +29,7 @@
             "command": "source ~/.profile; mkdir -p build; ${env:eosf} generate abi \"${workspaceFolder}\"/src;${env:eosf} build contract \"${workspaceFolder}\"/src"
         },
         "osx": {
-            "command": "source ~/.bash_profile; mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
+            "command": "mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
         },
         "linux": {
             "command": "mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
@@ -53,7 +53,7 @@
             "command": "source ~/.profile; python3 ./test/unittest1.py"
         },
         "osx": {
-            "command": "source ~/.bash_profile; python3 ./test/unittest1.py"
+            "command": "python3 ./test/unittest1.py"
         },
         "linux": {
             "command": "python3 ./test/unittest1.py"
@@ -72,7 +72,7 @@
             "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
         },
         "osx": {
-            "command": "source ~/.bash_profile; python3 ./test/test1.py \"${workspaceFolder}\""
+            "command": "python3 ./test/test1.py \"${workspaceFolder}\""
         },
         "linux": {
             "command": "python3 ./test/test1.py \"${workspaceFolder}\""
