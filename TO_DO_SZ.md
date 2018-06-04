@@ -1,7 +1,7 @@
 
-## make & ctest on Ubuntu
+## name cannot end with a dot
 ```
-Doesn't work on Ubuntu. Change ~/.profile to ~/.bashrc
+{"code":500,"message":"Internal Service Error","error":{"code":3010001,"name":"name_type_exception","what":"Invalid name","details":[{"message":"Name not properly normalized (name: ve2cfmurpve., normalized: ve2cfmurpve) ","file":"name.cpp","line_number":15,"method":"set"}]}}
 ```
 ## /teos/config.json
 ```
