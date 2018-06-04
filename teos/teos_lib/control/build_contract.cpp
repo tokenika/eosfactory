@@ -270,7 +270,8 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
         {
           if(uname() == DARWIN){
             bp::spawn(
-              string("open -a code --args ") + contractPath.string());
+              string("open -n -b "com.microsoft.VSCode" --args ") 
+                + contractPath.string());
           } else{
             bp::spawn(
               string("code ") + contractPath.string());

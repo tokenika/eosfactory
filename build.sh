@@ -2,7 +2,8 @@
 
 printf "%s\n" "
 ##############################################################################
-#   This script installs EOSFactory. It needs to be executed from within the 'eosfactory' folder.
+#   This script installs EOSFactory. It needs to be executed from within 
+#   the 'eosfactory' folder.
 #   This file was downloaded from https://github.com/tokenika/eosfactory
 ##############################################################################
 "
@@ -14,7 +15,8 @@ wiki="https://github.com/tokenika/$EOSFactory/wiki"
 if [ ! -d .git ]; then
     printf "%s\n\n" "
 This build script only works with sources cloned from git.
-    Please clone a new eos directory with 'git clone ${repository_dir} --recursive'
+    Please clone a new eos directory with 
+        'git clone ${repository_dir} --recursive'
     See the wiki for instructions: ${wiki}
     Exiting now.    
 "
@@ -87,6 +89,9 @@ function setWindowsVariable() {
 ##############################################################################
 if [ -e "/etc/os-release" ]; then
     OS_NAME=$( cat /etc/os-release | grep ^NAME | cut -d'=' -f2 | sed 's/\"//gI' )
+    if [ ! -z $IS_WSL ]; then
+        OS_NAME=WSL
+    fi
 else
     if [ "$( uname )" == "Darwin" ]; then
         OS_NAME="Darwin"
@@ -95,8 +100,12 @@ fi
 
 printf "Detected operating system is %s.\n" "${OS_NAME}"
 if [ "${OS_NAME}" != "Ubuntu" -a "${OS_NAME}" != "Darwin" ]; then
-    printf "\n%s\n" "
-$EOSFactory has been tested with the Windows Subsystem for Linux, Ubuntu and Darwin."
+    if [ "${OS_NAME}" != "WSL" ]; then
+        printf "\n%s\n" "
+$EOSFactory has been tested with the Windows Subsystem for Linux, Ubuntu 
+and Darwin."
+        OS_NAME="Ubuntu"
+    fi
 fi
 
 source scripts/${OS_NAME}.sh
@@ -214,6 +223,12 @@ Arguments:
     ECC_IMPL__=$ECC_IMPL__
     RESET__=$RESET__
 "
+# PS C:\Users\cartman> $WSLREGKEY="HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss"
+# PS C:\Users\cartman> $WSLDEFID=(Get-ItemProperty "$WSLREGKEY").DefaultDistribution
+# PS C:\Users\cartman> $WSLFSPATH=(Get-ItemProperty "$WSLREGKEY\$WSLDEFID").BasePath
+# PS C:\Users\cartman> New-Item -ItemType Junction -Path "$env:LOCALAPPDATA\lxss" -Value "$WSLFSPATH\rootfs"
+
+# powershell.exe -Command "&{$WSLREGKEY='HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss'; $WSLDEFID=(Get-ItemProperty "$WSLREGKEY").DefaultDistribution; $WSLFSPATH=(Get-ItemProperty "$WSLREGKEY\$WSLDEFID").BasePath; echo $WSLFSPATH}"
 
 ##############################################################################
 # Can be EOSIO_SOURCE_DIR defined?
