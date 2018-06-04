@@ -8,7 +8,6 @@ import sess
 from eosf import *
 
 set_verbose(False)
-set_suppress_error_msg(True)
 
 class Test1(unittest.TestCase):
 
@@ -65,12 +64,14 @@ class Test1(unittest.TestCase):
 
     def test_05(self):
         """ This should fail due to authority mismatch """
+        set_suppress_error_msg(True)
         self.assertFalse(
             self.contract.push_action(
             "hi", 
             '{"user":"carol"}',
             sess.alice),
             "push_action hi")
+        set_suppress_error_msg(False)
 
 
     def tearDown(self):

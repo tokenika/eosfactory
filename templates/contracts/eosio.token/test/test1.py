@@ -3,6 +3,8 @@ import node
 import sess
 from eosf import *
 
+set_verbose(True)
+
 def run(contract_dir):
     print('test node.reset():')
     assert node.reset()

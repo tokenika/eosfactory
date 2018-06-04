@@ -512,11 +512,7 @@ printf "%s\n" "
 To verify EOSFactory installation navigate to the 'eosfactory' folder and run 
 these tests:
 "
-printf "%s\n" "
-    $ python3 ./tests/test1.py
-    $ python3 ./tests/test2.py
-    $ python3 ./tests/test3.py
-    
+printf "%s\n" "    
     $ python3 ./tests/unittest1.py
     $ python3 ./tests/unittest2.py
     $ python3 ./tests/unittest3.py

@@ -3,6 +3,8 @@ import node
 import sess
 from eosf import *
 
+set_verbose(False)
+
 def run(contract_dir):
     print('test node.reset():')
     assert node.reset()
@@ -26,8 +28,10 @@ def run(contract_dir):
     print('test c.push_action("hi", sess.carol):')
     assert c.push_action("hi", '{"user":"carol"}', sess.carol)
 
+    set_suppress_error_msg(True)
     print('test c.push_action("hi", sess.alice):')
     assert not c.push_action("hi", '{"user":"carol"}', sess.alice)
+    set_suppress_error_msg(False)
     
     print('test node.stop():')
     node.stop()

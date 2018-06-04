@@ -4,6 +4,8 @@ import node
 import sess
 from eosf import *
 
+set_verbose(True)
+
 def run():
     print('test node.reset():')
     assert node.reset()
