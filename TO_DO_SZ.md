@@ -45,4 +45,7 @@ git submodule update --init --recursive
 # PS C:\Users\cartman> $WSLDEFID=(Get-ItemProperty "$WSLREGKEY").DefaultDistribution
 # PS C:\Users\cartman> $WSLFSPATH=(Get-ItemProperty "$WSLREGKEY\$WSLDEFID").BasePath
 # PS C:\Users\cartman> New-Item -ItemType Junction -Path "$env:LOCALAPPDATA\lxss" -Value "$WSLFSPATH\rootfs"
+
+# powershell.exe -Command "&{$WSLREGKEY='HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss'; $WSLDEFID=(Get-ItemProperty "$WSLREGKEY").DefaultDistribution; $WSLFSPATH=(Get-ItemProperty "$WSLREGKEY\$WSLDEFID").BasePath; echo $WSLFSPATH}"
+
 ```

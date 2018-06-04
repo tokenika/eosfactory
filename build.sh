@@ -259,7 +259,7 @@ printf "%s\n" "Sets environment variables, if not set already:"
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
 setLinuxVariable "EOSIO_EOSFACTORY_DIR" "$EOSIO_EOSFACTORY_DIR__"
 setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
-setLinuxVariable "teos_cli" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
+setLinuxVariable "eosf" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
 
 if [ -z $EOSIO_CONTRACT_WORKSPACE__ ]; then
     EOSIO_CONTRACT_WORKSPACE__="${EOSIO_EOSFACTORY_DIR__}/$contracts"
@@ -289,7 +289,7 @@ if [ ! -z "$IS_WSL" ]; then
     fi
 
     setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
-    setWindowsVariable "teos_cli" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
+    setWindowsVariable "eosf" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
 
     retval=""
     wslMapLinux2Windows retval $EOSIO_EOSFACTORY_DIR__
@@ -341,13 +341,6 @@ if [ ! -z "$IS_WSL" ]; then
     if [ -z "$homeWindowsIsSet" ]; then
         verifyHome $WSL_ROOT_DIR1804__
     fi
-
-# PS C:\Users\cartman> $WSLREGKEY="HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss"
-# PS C:\Users\cartman> $WSLDEFID=(Get-ItemProperty "$WSLREGKEY").DefaultDistribution
-# PS C:\Users\cartman> $WSLFSPATH=(Get-ItemProperty "$WSLREGKEY\$WSLDEFID").BasePath
-# PS C:\Users\cartman> New-Item -ItemType Junction -Path "$env:LOCALAPPDATA\lxss" -Value "$WSLFSPATH\rootfs"
-
-# powershell.exe -Command "&{$WSLREGKEY='HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss'; $WSLDEFID=(Get-ItemProperty "$WSLREGKEY").DefaultDistribution; $WSLFSPATH=(Get-ItemProperty "$WSLREGKEY\$WSLDEFID").BasePath; echo $WSLFSPATH}"
 
     if [ -z "$homeWindowsIsSet" ]; then
             printf "\n%s" "
@@ -519,11 +512,7 @@ printf "%s\n" "
 To verify EOSFactory installation navigate to the 'eosfactory' folder and run 
 these tests:
 "
-printf "%s\n" "
-    $ python3 ./tests/test1.py
-    $ python3 ./tests/test2.py
-    $ python3 ./tests/test3.py
-    
+printf "%s\n" "    
     $ python3 ./tests/unittest1.py
     $ python3 ./tests/unittest2.py
     $ python3 ./tests/unittest3.py
