@@ -84,7 +84,7 @@
         "problemMatcher": [
         ]
     },
-    /*{
+    {
         "taskName": "EOSIO API",
         "type": "shell",
         "windows": {
@@ -105,7 +105,7 @@
         },
         "problemMatcher": [
         ]
-    }*/
+    }
 ]
 }
  

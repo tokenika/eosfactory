@@ -1,0 +1,18 @@
+// Place your key bindings in this file to overwrite the defaults
+[
+    {
+        "key": "ctrl+shift+c",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Compile"
+    }
+    {
+        "key": "ctrl+shift+t",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Test"
+    }
+    {
+        "key": "ctrl+shift+u",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Unittest"
+    }
+]
