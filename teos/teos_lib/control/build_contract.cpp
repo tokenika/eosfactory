@@ -273,7 +273,7 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
               string("open -a code --args ") + contractPath.string());
           } else{
             bp::spawn(
-              string("gnome-terminal -- code ") + contractPath.string());
+              string("code ") + contractPath.string());
           }
         }
       }
