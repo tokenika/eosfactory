@@ -16,7 +16,7 @@ FileNotFoundError: [Errno 2] No such file or directory: '/mnt/d/Workspaces/EOS/e
 ```
 Doesn't work on MacOS & Ubuntu
 ```
-## test output is always duplicated
+## test output is always duplicated in verbose mode
 ```
 test c.push_action("hi", sess.carol):
 #        transaction id: b6b8ac846c2f6d98ba014643ef9d11a0f195fcf8d99d55b12e19112e9aa5381b
