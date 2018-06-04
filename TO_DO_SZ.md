@@ -30,7 +30,13 @@ Hello, carol
 ```
 INFO user: carol @ 8:5:3 contract.name.cpp[16](hi)
 ```
-
+## make compatible with EOSIO v1.0.1
+```
+git pull
+git checkout v1.0.1
+git submodule update --init --recursive
+./eosio_build.sh
+```
 
 ---
 

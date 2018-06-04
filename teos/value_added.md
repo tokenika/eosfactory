@@ -106,7 +106,7 @@ EOSFactory is under development itself, but already we can see its potential in 
 1. Create a new smart-contract project named `hello.tokenika`:
 
    ```
-   $ $eosf bootstrap contract hello.tokenika skeleton --vscode
+   $ $eosf bootstrap contract hello.tokenika skeleton --vsc
    #     template contract: /mnt/c/Workspaces/EOS/contracts/hello.tokenika
    ```
 
@@ -116,15 +116,15 @@ EOSFactory is under development itself, but already we can see its potential in 
 
    ![intelisense](./docs/html/VScode/intelisense.png)
 
-3. Obviousely you'll be dealing with lots of errors in any code. Some can be spotted automatically with a compiler. Try `Tasks -> Run Task -> compile` to invoke the `CLANG` compiler. This is the output you should get:
+3. Obviousely you'll be dealing with lots of errors in any code. Some can be spotted automatically with a compiler. Try `Tasks -> Run Task -> Compile` to invoke the `CLANG` compiler. This is the output you should get:
 
    ![compile](./docs/html/VScode/compile.png)
 
-4. Now, Let's build the contract with the `WASM` compliler. For that use `Tasks -> Run Task -> build`. The result of the build process should look like this:
+4. Now, Let's build the contract with the `WASM` compliler. For that use `Tasks -> Run Task -> Build`. The result of the build process should look like this:
 
    ![build](./docs/html/VScode/build.png)
 
-5. Any contract has to be tested. Use `Tasks -> Run Task -> unittest`. This is the output you should get:
+5. Any contract has to be tested. Use `Tasks -> Run Task -> Unittest`. This is the output you should get:
 
    ![unittest](./docs/html/VScode/unittest.png)
 
