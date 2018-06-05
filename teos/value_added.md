@@ -6,7 +6,7 @@ The `Hello World` smart-contract is very simple. It's explained in [*Tutorial He
 
 Let us go through the tutorial:
 
-1. Create a new folder called `hello`, switch to this folder, then create a file `hello.cpp` with the following content:
+* Create a new folder called `hello`, switch to this folder, then create a file `hello.cpp` with the following content:
 
    ```
    #include <eosiolib/eosio.hpp>
@@ -26,21 +26,21 @@ Let us go through the tutorial:
    EOSIO_ABI( hello, (hi) )
    ```
 
-2. Compile the code to the Web Assembly `wast` format:
+* Compile the code to the Web Assembly `wast` format:
 
    ```
    $ eosiocpp -o hello.wast hello.cpp
    Build hello.wast
    ```
 
-3. Now, generate an `ABI` file:
+* Now, generate an `ABI` file:
 
    ```
    $ eosiocpp -g hello.abi hello.cpp
    Generated hello.abi
    ```
 
-4. Create an account and upload the contract:
+* Create an account and upload the contract:
 
    ```
    $ cleos push action hello.code hi '["user"]' -p user
@@ -49,7 +49,7 @@ Let us go through the tutorial:
    >> Hello, user
    ```
 
-5. Open the `hello.cpp` file in your favorite editor and modify the `hi()` function in `hello.cpp` as follows:
+* Open the `hello.cpp` file in your favorite editor and modify the `hi()` function in `hello.cpp` as follows:
 
    ```
    void hi( account_name user ) {
@@ -58,21 +58,21 @@ Let us go through the tutorial:
    }
    ```
 
-6. Recompile your code to the Web Assembly `wast` format:
+* Recompile your code to the Web Assembly `wast` format:
 
    ```
    $ eosiocpp -o hello.wast hello.cpp
    Build hello.wast
    ```
 
-7. Regenerate the `ABI` file:
+* Regenerate the `ABI` file:
 
    ```
    $ eosiocpp -g hello.abi hello.cpp
    Generated hello.abi
    ```
 
-8. Create an account and upload the contract:
+* Create an account and upload the contract:
 
    ```
    $ cleos create account eosio hello.code EOS7ijWCBmoXBi3CgtK7DJxentZZeTkeUnaSDvyro9dq7Sd1C3dC4 
@@ -82,7 +82,7 @@ Let us go through the tutorial:
    ...
    ```
 
-9. Finally, you can run the contract:
+* Finally, you can run the contract:
 
    ```
    $ cleos push action hello.code hi '["user"]' -p user
@@ -103,7 +103,7 @@ That's why using a robust IDE seems to be crucial here. The main purpose of on a
 
 EOSFactory is under development itself, but already we can see its potential in action, provided you have both EOSFactory and *Visual Studio Code* (VSC) installed on your machine.
 
-1. Create a new smart-contract project named `hello.tokenika`:
+* Create a new smart-contract project named `hello.tokenika`:
 
    ```
    $ $eosf bootstrap contract hello.tokenika skeleton --vsc
@@ -112,78 +112,57 @@ EOSFactory is under development itself, but already we can see its potential in 
 
    As a result, a new *Visual Studio Code* project is created and launched. You'll notice its standardized structure and clear division betweem source files, builds and unit tests.
 
-2. To play with it, open the `hello.tokenika.cpp` file and try the *InteliSense* feature to see the definition of the `print` function:
+* To play with it, open the `hello.tokenika.cpp` file and try the *InteliSense* feature to see the definition of the `print` function:
 
-   ![intelisense](./docs/html/VScode/intelisense.png)
+![intelisense](VScode/intelisense1.png)
 
-3. Obviousely you'll be dealing with lots of errors in any code. Some can be spotted automatically with a compiler. Try `Tasks -> Run Task -> Compile` to invoke the `CLANG` compiler. This is the output you should get:
+* Obviousely you'll be dealing with lots of errors in any code. Some can be spotted automatically with a compiler. Try `Tasks -> Run Task -> Compile` to invoke the `CLANG` compiler. This is the output you should get:
 
-   ![compile](./docs/html/VScode/compile.png)
+![compile](VScode/compile1.png)
 
-4. Now, Let's build the contract with the `WASM` compliler. For that use `Tasks -> Run Task -> Build`. The result of the build process should look like this:
+* Now, Let's build the contract with the `WASM` compliler. For that use `Tasks -> Run Task -> Build`. The result of the build process should look like this:
 
-   ![build](./docs/html/VScode/build.png)
+![build](VScode/build1.png)
 
-5. Any contract has to be tested. Use `Tasks -> Run Task -> Unittest`. This is the output you should get:
-
-![unittest](./docs/html/VScode/unittest.png)
-
+* Any contract has to be tested. Use `Tasks -> Run Task -> Unittest`. 
     A lot happened during the test process:
     * A local *EOSIO* testnet has been started.
     * Local wallet has been created.
     * *EOSIO* `eosio.bios` contract has been deployed.
     * Cryptographic keys have been created.
     * An account owning the contract has been created.
-    * The contract has been deployed and then executed as part of the unit test.
+    * The contract has been deployed and then executed as part 
+      of the unit test.
     * The local testnet has been stopped and torn down.
 
+  This is the output you should get:
 
-6. EOSFactory can more now, and it is going to be able more and more in the near future. Now:
+![unittest](VScode/unittest1.png)
+
+* EOSFactory can more now, and it is going to be able more and more in the near future. Now:
 
    All the shown task functionality can be achieved with CMake procedures:
-   * build:
-
-     ```
+   * build:<br>
      $ cd build; cmake ..; make
-     ```
 
-   * compile:
-
-     ```
+   * compile:<br>
      $ cd build; cmake -DC ..; make
-     ```
 
-   * unittest:
-
-     ```
+   * unittest:<br>
      $ cd build; ctest -V -R ^unittest$
-     ```
 
-   * test:
-
-     ```
+   * test:<br>
      $ cd build; ctest -V -R ^test$
-     ```
 
-7. EOSFactory has two flavours:
+* EOSFactory has two flavours:
 
    *  `C/C++/Python` (using unit tests written in Python)
    * pure `C/C++` (no Python used, everything is in C/C++)
 
-8. As EOSFactory grows, it will include further libraries that could facilitate the process of smart-contract development.
-
-  Here we present one of such features in action: the logging tool. It's quite important, as the only way to debug a smart contract is actually by using loggers.
-
-  You'll notice the `logger.hpp` header file in the `src` directory. And in the `hello.tokenika.cpp` file you'll notice this line:
-
-  ```
-  logger_info("user: ", name{user});
-  ```
-
-  The effect of the above code entry is the following output in test results:
-
-  ```
-  INFO user: carol @ 8:53:50 hello.tokenika.cpp[16](hi)
-  ```
-
+* As EOSFactory grows, it will include further libraries that could facilitate the process of smart-contract development.<br>
+  Here we present one of such features in action: the logging tool. It's quite important, as the only way to debug a smart contract is actually by using loggers.<br>
+  You'll notice the `logger.hpp` header file in the `src` directory. And in the `hello.tokenika.cpp` file you'll notice this line:<br>
+  <code>&nbsp;&nbsp;&nbsp;&nbsp;logger_info("user: ", name{user});</code><br>
+  The effect of the above code entry is the following output in test results:<br>
+  <code>&nbsp;&nbsp;&nbsp;&nbsp;INFO user: carol @ 8:53:50 hello.tokenika.cpp\[16](hi)</code><br>
   What that means is that the logger offers you not only the value of a variable, but also the exact line number and the file name where this logger event occured.

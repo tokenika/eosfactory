@@ -223,12 +223,6 @@ Arguments:
     ECC_IMPL__=$ECC_IMPL__
     RESET__=$RESET__
 "
-# PS C:\Users\cartman> $WSLREGKEY="HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss"
-# PS C:\Users\cartman> $WSLDEFID=(Get-ItemProperty "$WSLREGKEY").DefaultDistribution
-# PS C:\Users\cartman> $WSLFSPATH=(Get-ItemProperty "$WSLREGKEY\$WSLDEFID").BasePath
-# PS C:\Users\cartman> New-Item -ItemType Junction -Path "$env:LOCALAPPDATA\lxss" -Value "$WSLFSPATH\rootfs"
-
-# powershell.exe -Command "&{$WSLREGKEY='HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss'; $WSLDEFID=(Get-ItemProperty "$WSLREGKEY").DefaultDistribution; $WSLFSPATH=(Get-ItemProperty "$WSLREGKEY\$WSLDEFID").BasePath; echo $WSLFSPATH}"
 
 ##############################################################################
 # Can be EOSIO_SOURCE_DIR defined?
@@ -356,6 +350,13 @@ if [ ! -z "$IS_WSL" ]; then
     if [ -z "$homeWindowsIsSet" ]; then
         verifyHome $WSL_ROOT_DIR1804__
     fi
+
+# Lxss="hkcu\\Software\\Microsoft\\Windows\\CurrentVersion\\Lxss"
+# dd=$(reg.exe query $Lxss /v Defaultdistribution)
+# dd=$(echo $dd | grep -o -P '(?<={).*(?=})')
+# bp=$(reg.exe query "${Lxss}\\{$dd}" /v BasePath)
+# bp=$(echo $bp | grep -o -P '(?<=REG_SZ)[ A-Za-z0-9:\\\._]*')
+# echo $bp    
 
     if [ -z "$homeWindowsIsSet" ]; then
             printf "\n%s" "
