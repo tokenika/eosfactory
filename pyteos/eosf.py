@@ -95,8 +95,13 @@ class Contract(pyteos.Contract):
                        'q', 'r', 's', 't', 'u', 'v', 'w', 'x', \
                        'y', 'z', '.', '1', '2', '3', '4', '5']
             account_name = ""
-            for i in range(0, 12):
+            for i in range(0, 11):
                 account_name += letters[random.randint(0, 31)]
+            while True:
+                last_letter = letters[random.randint(0, 31)]
+                if last_letter != '.':
+                    account_name += last_letter
+                    break
 
         self.name = account_name
 
