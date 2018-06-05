@@ -127,12 +127,18 @@ If the build process is successful, you should see this message:
         |______\____/|_____/ |_|/_/    \_\_____|  |_|  \____/|_|  \_\ |_|  
 ```
 
-At this stage you need to load the system variables that were created during EOSFactory installation (alternatively you can just restart your bash terminal and skip this step).
+At this stage you need to source the system variables that were created during EOSFactory installation. The command may differ depending on your system. 
 
-The command may differ depending on your system. If you are on Ubuntu or Windows:
+If you are on *Windows Subsystem for Linux*:
 
 ```
 source ~/.profile
+```
+
+If you are on Ubuntu:
+
+```
+source ~/.bashrc
 ```
 
 And if you are on MacOS:
@@ -167,14 +173,17 @@ If the test fails due to the `can't open file './tests/unittest1.py'` error, mak
 
 #### Case 2
 
-If the test fails due to the `ModuleNotFoundError` error, make sure that after building EOSFactory you've loaded the newly created system variables into your terminal:
+If the test fails due to the `ModuleNotFoundError` error, make sure that after building EOSFactory you've sourced the newly created system variables.
 
+If you are on *Windows Subsystem for Linux*:
 ```
 source ~/.profile
 ```
-
-Or if you are on MacOS:
-
+If you are on Ubuntu:
+```
+source ~/.bashrc
+```
+And if you are on MacOS:
 ```
 source ~/.bash_profile
 ```

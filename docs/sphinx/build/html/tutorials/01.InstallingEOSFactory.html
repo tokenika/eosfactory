@@ -262,9 +262,13 @@
         <span class="o">|</span><span class="n">______</span>\<span class="n">____</span><span class="o">/|</span><span class="n">_____</span><span class="o">/</span> <span class="o">|</span><span class="n">_</span><span class="o">|/</span><span class="n">_</span><span class="o">/</span>    \<span class="n">_</span>\<span class="n">_____</span><span class="o">|</span>  <span class="o">|</span><span class="n">_</span><span class="o">|</span>  \<span class="n">____</span><span class="o">/|</span><span class="n">_</span><span class="o">|</span>  \<span class="n">_</span>\ <span class="o">|</span><span class="n">_</span><span class="o">|</span>  
 </pre></div>
 </div>
-<p>At this stage you need to load the system variables that were created during EOSFactory installation (alternatively you can just restart your bash terminal and skip this step).</p>
-<p>The command may differ depending on your system. If you are on Ubuntu or Windows:</p>
+<p>At this stage you need to source the system variables that were created during EOSFactory installation. The command may differ depending on your system.</p>
+<p>If you are on <em>Windows Subsystem for Linux</em>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">profile</span>
+</pre></div>
+</div>
+<p>If you are on Ubuntu:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
 </pre></div>
 </div>
 <p>And if you are on MacOS:</p>
@@ -294,11 +298,16 @@
 </div>
 <div class="section" id="case-2">
 <span id="case-2"></span><h3>Case 2<a class="headerlink" href="#case-2" title="Permalink to this headline">¶</a></h3>
-<p>If the test fails due to the <code class="docutils literal"><span class="pre">ModuleNotFoundError</span></code> error, make sure that after building EOSFactory you’ve loaded the newly created system variables into your terminal:</p>
+<p>If the test fails due to the <code class="docutils literal"><span class="pre">ModuleNotFoundError</span></code> error, make sure that after building EOSFactory you’ve sourced the newly created system variables.</p>
+<p>If you are on <em>Windows Subsystem for Linux</em>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">profile</span>
 </pre></div>
 </div>
-<p>Or if you are on MacOS:</p>
+<p>If you are on Ubuntu:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>And if you are on MacOS:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bash_profile</span>
 </pre></div>
 </div>
