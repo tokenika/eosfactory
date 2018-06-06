@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>EOSFactory Release Notes - v0.8 &#8212; EOSFactory 0.0 documentation</title>
+    
+    <title>EOSFactory Release Notes - v0.8 &mdash; EOSFactory 0.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
         VERSION:     '0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -23,8 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="EOSFactory 0.0 documentation" href="../index.html" />
     <link rel="next" title="EOSFactory Release Notes - v1.0" href="ReleaseNotesVersion1.0.html" />
     <link rel="prev" title="Welcome to EOSFactory documentation!" href="../index.html" />
 <meta charset='utf-8'>
@@ -33,7 +35,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -62,7 +64,7 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">EOSFactory Release Notes - v0.8</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">EOSFactory Release Notes - v0.8</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
 </ul>
 <ul>
@@ -122,7 +124,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/releases/ReleaseNotesVersion0.8.md.txt"
+  <a href="../_sources/releases/ReleaseNotesVersion0.8.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -164,22 +166,22 @@
 <li>Create a new contract from a pre-defined template (this includes the creation of its <em>CMake</em> files).</li>
 <li>Deploy a contract (the account holding the contract is created behind the scenes).</li>
 <li>Interact with a contract by pushing actions to it.</li>
-<li>Extract text messages logged by a contract (i.e. a contract’s output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method).</li>
-<li>Extract data from a contract’s table.</li>
+<li>Extract text messages logged by a contract (i.e. a contract&#8217;s output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method).</li>
+<li>Extract data from a contract&#8217;s table.</li>
 <li>Run a simple unit-test utilizing all the above features.</li>
 </ul>
 </div>
 <div class="section" id="current-limitations">
 <span id="current-limitations"></span><h2>Current limitations<a class="headerlink" href="#current-limitations" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Currently unit-tests in EOSFactory are just naïve demo examples. They don’t have proper assertions, don’t handle errors properly and they don’t have proper tear-down methods.</li>
+<li>Currently unit-tests in EOSFactory are just naïve demo examples. They don&#8217;t have proper assertions, don&#8217;t handle errors properly and they don&#8217;t have proper tear-down methods.</li>
 <li>You cannot connect EOSFactory to a testnet of your choice, only to a private one running a single node.</li>
-<li>Whereas the <code class="docutils literal"><span class="pre">nodeos</span></code> process runs in the background on MacOS, on other platforms (Windows &amp; Ubuntu) it requires launching a separate terminal window (it’s done automatically though). This might be a limitation for GUI-less systems like Ubuntu Server edition.</li>
-<li>There are no utilities for debugging contracts, except for the “caveman” style, i.e. accessing the output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method.</li>
-<li>There is no easy way to instantiate smart-contracts stored outside of EOSFactory <code class="docutils literal"><span class="pre">contracts</span></code> folder or EOSIO <code class="docutils literal"><span class="pre">contracts</span></code> folder. If you want to do that, you need to refer to the contract’s folder by supplying its full path.</li>
+<li>Whereas the <code class="docutils literal"><span class="pre">nodeos</span></code> process runs in the background on MacOS, on other platforms (Windows &amp; Ubuntu) it requires launching a separate terminal window (it&#8217;s done automatically though). This might be a limitation for GUI-less systems like Ubuntu Server edition.</li>
+<li>There are no utilities for debugging contracts, except for the &#8220;caveman&#8221; style, i.e. accessing the output stream produced by its <code class="docutils literal"><span class="pre">print()</span></code> method.</li>
+<li>There is no easy way to instantiate smart-contracts stored outside of EOSFactory <code class="docutils literal"><span class="pre">contracts</span></code> folder or EOSIO <code class="docutils literal"><span class="pre">contracts</span></code> folder. If you want to do that, you need to refer to the contract&#8217;s folder by supplying its full path.</li>
 <li>The <code class="docutils literal"><span class="pre">Template</span></code> class constructor only accepts a folder name, not a path (this is different from the <code class="docutils literal"><span class="pre">Contract</span></code> constructor which accepts both).</li>
 <li>The <code class="docutils literal"><span class="pre">Contract</span></code> class <code class="docutils literal"><span class="pre">abi()</span></code> and <code class="docutils literal"><span class="pre">build()</span></code> methods are relying on the <em>EOSIO</em> ABI compiler which has an experimental status in the <em>EOSIO</em> repository. Thus the ABI output might be different than expected.</li>
-<li>The <code class="docutils literal"><span class="pre">Contract</span></code> class <code class="docutils literal"><span class="pre">push_action()</span></code> and <code class="docutils literal"><span class="pre">show_action</span></code> methods accept only verbose input, i.e. all action’s parameters must be named in the JSON syntax.</li>
+<li>The <code class="docutils literal"><span class="pre">Contract</span></code> class <code class="docutils literal"><span class="pre">push_action()</span></code> and <code class="docutils literal"><span class="pre">show_action</span></code> methods accept only verbose input, i.e. all action&#8217;s parameters must be named in the JSON syntax.</li>
 </ul>
 </div>
 </div>
@@ -197,7 +199,7 @@
     </p>
     <p>
         &copy; Copyright 2018, Tokenika.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.<br/>
     </p>
   </div>
 </footer>

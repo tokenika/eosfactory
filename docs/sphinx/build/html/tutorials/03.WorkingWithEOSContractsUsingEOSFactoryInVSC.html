@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Working with EOS Contracts using EOSFactory in Visual Studio Code &#8212; EOSFactory 0.0 documentation</title>
+    
+    <title>Working with EOS Contracts using EOSFactory in Visual Studio Code &mdash; EOSFactory 0.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
         VERSION:     '0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -23,8 +26,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="EOSFactory 0.0 documentation" href="../index.html" />
     <link rel="next" title="Plan for Subsequent EOSFactory Releases" href="../roadmap/PlanForSubsequentEOSFactoryReleases.html" />
     <link rel="prev" title="Interacting with EOS Contracts in EOSFactory" href="02.InteractingWithEOSContractsInEOSFactory.html" />
 <meta charset='utf-8'>
@@ -33,7 +35,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
+  <body role="document">
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -69,7 +71,7 @@
 <li class="toctree-l1"><a class="reference internal" href="00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
@@ -133,7 +135,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/tutorials/03.WorkingWithEOSContractsUsingEOSFactoryInVSC.md.txt"
+  <a href="../_sources/tutorials/03.WorkingWithEOSContractsUsingEOSFactoryInVSC.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -163,12 +165,12 @@
 <div class="section" id="prerequisites">
 <span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first">This tutorial assumes that you have successfully installed EOSFactory. If it’s not the case, please refer to <a class="reference external" href="https://mail.google.com/mail/u/0/01.InstallingEOSFactory.html">Installing EOSFactory</a>.</p>
+<li><p class="first">This tutorial assumes that you have successfully installed EOSFactory. If it&#8217;s not the case, please refer to <a class="reference external" href="https://mail.google.com/mail/u/0/01.InstallingEOSFactory.html">Installing EOSFactory</a>.</p>
 </li>
 <li><p class="first">We assume that you are familiar with the material covered in <a class="reference external" href="https://mail.google.com/mail/u/0/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a>.</p>
 </li>
 <li><p class="first">We also assume you have <a class="reference external" href="https://code.visualstudio.com/">Visual Studio Code</a> installed. If you are on Windows and run VSC for the first time, in order to get access to <em>Windows Subsystem for Linux</em> bash terminal inside VSC, navigate to <code class="docutils literal"><span class="pre">Preferences</span> <span class="pre">-&gt;</span> <span class="pre">Settings</span></code> and overwrite the default configuration for the <code class="docutils literal"><span class="pre">terminal.integrated.shell.windows</span></code> option:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;terminal.integrated.shell.windows&quot;</span><span class="p">:</span> <span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">Windows</span><span class="se">\\</span><span class="s2">sysnative</span><span class="se">\\</span><span class="s2">bash.exe&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre>&quot;terminal.integrated.shell.windows&quot;: &quot;C:\\Windows\\sysnative\\bash.exe&quot;
 </pre></div>
 </div>
 </li>
@@ -179,82 +181,82 @@
 <div class="section" id="create-a-new-smart-contract-project">
 <span id="create-a-new-smart-contract-project"></span><h2>Create a new smart-contract project<a class="headerlink" href="#create-a-new-smart-contract-project" title="Permalink to this headline">¶</a></h2>
 <p>In a bash terminal run the following command:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$eosf bootstrap contract contract.name skeleton
+<div class="highlight-python"><div class="highlight"><pre>$eosf bootstrap contract contract.name skeleton
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> <code class="docutils literal"><span class="pre">$eosf</span></code> is system variable created during EOSFactory installation. It’s a path pointing to an EOSFactory C++ executable called <code class="docutils literal"><span class="pre">teos</span></code>.</p>
-<p>The first parameter (in our case <code class="docutils literal"><span class="pre">contract.name</span></code>) is the name of your contract. It can be any name you want, provided there are no spaces in it and its length is no longer than 13 characters. Letters, numbers, underscores <code class="docutils literal"><span class="pre">_</span></code>, dots <code class="docutils literal"><span class="pre">.</span></code> and dashes <code class="docutils literal"><span class="pre">-</span></code> are allowed.</p>
-<p>The second parameter (in our case <code class="docutils literal"><span class="pre">skeleton</span></code>) denotes the template from which the new contract will be created. As of now there are only two templates (<code class="docutils literal"><span class="pre">skeleton</span></code> and <code class="docutils literal"><span class="pre">eosio.token</span></code>) but there’ll be more in the future. This parameter is optional, the default value is <code class="docutils literal"><span class="pre">skeleton</span></code>.</p>
+<p><strong>NOTE:</strong> <code class="docutils literal"><span class="pre">$eosf</span></code> is system variable created during EOSFactory installation. It&#8217;s a path pointing to an EOSFactory C++ executable called <code class="docutils literal"><span class="pre">teos</span></code>.</p>
+<p>The first parameter (in our case <code class="docutils literal"><span class="pre">contract.name</span></code>) is the name of your contract. It can be any name you want, provided there are no spaces in it. Letters, numbers, underscores <code class="docutils literal"><span class="pre">_</span></code>, dots <code class="docutils literal"><span class="pre">.</span></code> and dashes <code class="docutils literal"><span class="pre">-</span></code> are allowed.</p>
+<p>The second parameter (in our case <code class="docutils literal"><span class="pre">skeleton</span></code>) denotes the template from which the new contract will be created. As of now there are only two templates (<code class="docutils literal"><span class="pre">skeleton</span></code> and <code class="docutils literal"><span class="pre">eosio.token</span></code>) but there&#8217;ll be more in the future. This parameter is optional, the default value is <code class="docutils literal"><span class="pre">skeleton</span></code>.</p>
 </div>
 <div class="section" id="open-the-smart-contract-in-visual-studio-code">
 <span id="open-the-smart-contract-in-visual-studio-code"></span><h2>Open the smart-contract in <em>Visual Studio Code</em><a class="headerlink" href="#open-the-smart-contract-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
 <p>Start <em>Visual Studio Code</em> (VSC) and inside VSC open the folder where your newly created contract has been placed. The folder name always matches the name of contract itself and can be found within the location you assigned as your workspace during EOSFactory installation.</p>
 <p><img alt="open_folder" src="../_images/open_folder.png" /></p>
 <p><strong>NOTE:</strong> If you are not sure where your newly created contract is, its location is specified during the contract creation process, for example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#     template contract: /mnt/d/Workspaces/EOS/contracts/contract.name</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c1">#     template contract: /mnt/d/Workspaces/EOS/contracts/contract.name</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="open-visual-studio-code-automatically">
 <span id="open-visual-studio-code-automatically"></span><h2>Open <em>Visual Studio Code</em> automatically<a class="headerlink" href="#open-visual-studio-code-automatically" title="Permalink to this headline">¶</a></h2>
-<p>You can use the <code class="docutils literal"><span class="pre">--vsc</span></code> argument to have the contract’s folder opened for you automatically in a new instance of VSC right after the contract creation process is finished:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$eosf bootstrap contract contract.name skeleton --vsc
+<p>You can use the <code class="docutils literal"><span class="pre">--vsc</span></code> argument to have the contract&#8217;s folder opened for you automatically (in a new instance of VSC) right after the new contract&#8217;s creation process is finished:</p>
+<div class="highlight-python"><div class="highlight"><pre>$eosf bootstrap contract contract.name skeleton --vsc
 </pre></div>
 </div>
 </div>
 <div class="section" id="visual-studio-code-project-file-structure">
 <span id="visual-studio-code-project-file-structure"></span><h2><em>Visual Studio Code</em> project file structure<a class="headerlink" href="#visual-studio-code-project-file-structure" title="Permalink to this headline">¶</a></h2>
-<p>Once you open a smart-contract’s folder in VSC, the file structure should look like this:</p>
+<p>Once you open a smart-contract&#8217;s folder in VSC, the file structure should look like this:</p>
 <p><img alt="file_structure" src="../_images/file_structure.png" /></p>
 <p>As you can see, what you get is a standardized structure with a clear separation between the source code, build output files and unit tests.</p>
 </div>
 <div class="section" id="use-cmake-in-visual-studio-code">
 <span id="use-cmake-in-visual-studio-code"></span><h2>Use <em>CMake</em> in <em>Visual Studio Code</em><a class="headerlink" href="#use-cmake-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
 <p>With EOSFactory you can use <a class="reference external" href="https://cmake.org/">CMake</a> routines to compile, build and unit test a contract.</p>
-<p>At this stage we assume that you are running VSC and inside it you have opened your smart-contract’s folder, as described in the previous section.</p>
+<p>At this stage we assume that you are running VSC and inside it you have opened your smart-contract&#8217;s folder, as described in the previous section.</p>
 <p>First open a bash terminal inside VSC (navigate to <code class="docutils literal"><span class="pre">View</span> <span class="pre">-&gt;</span> <span class="pre">Integrated</span> <span class="pre">Terminal</span></code>), and switch to the <code class="docutils literal"><span class="pre">build</span></code> folder:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">build</span>
+<div class="highlight-python"><div class="highlight"><pre>cd build
 </pre></div>
 </div>
 <div class="section" id="initial-compilation-with-clang">
 <span id="initial-compilation-with-clang"></span><h3>Initial compilation with <code class="docutils literal"><span class="pre">CLANG</span></code><a class="headerlink" href="#initial-compilation-with-clang" title="Permalink to this headline">¶</a></h3>
-<p>The advantage of using the <code class="docutils literal"><span class="pre">CLANG</span></code> compiler (as opposed to the <code class="docutils literal"><span class="pre">WASM</span></code> compiler) is that it runs faster and does not involve the linking process. Thus most of the errors in a smart-contract’s code can be spotted automatically by <code class="docutils literal"><span class="pre">CLANG</span></code>.</p>
+<p>The advantage of using the <code class="docutils literal"><span class="pre">CLANG</span></code> compiler (as opposed to the <code class="docutils literal"><span class="pre">WASM</span></code> compiler) is that it runs faster and does not involve the linking process. Thus most of the errors in a smart-contract&#8217;s code can be spotted automatically by <code class="docutils literal"><span class="pre">CLANG</span></code>.</p>
 <p>Using a bash terminal in VSC, run the following command to compile your contract with the <code class="docutils literal"><span class="pre">CLANG</span></code> compiler:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cmake</span> <span class="o">..</span>
+<div class="highlight-python"><div class="highlight"><pre>cmake ..
 </pre></div>
 </div>
 <p>The output should look like this:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="n">The</span> <span class="n">C</span> <span class="n">compiler</span> <span class="n">identification</span> <span class="ow">is</span> <span class="n">GNU</span> <span class="mf">7.3</span><span class="o">.</span><span class="mi">0</span>
-<span class="o">--</span> <span class="n">The</span> <span class="n">CXX</span> <span class="n">compiler</span> <span class="n">identification</span> <span class="ow">is</span> <span class="n">GNU</span> <span class="mf">7.3</span><span class="o">.</span><span class="mi">0</span>
-<span class="o">--</span> <span class="n">Check</span> <span class="k">for</span> <span class="n">working</span> <span class="n">C</span> <span class="n">compiler</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">cc</span>
-<span class="o">--</span> <span class="n">Check</span> <span class="k">for</span> <span class="n">working</span> <span class="n">C</span> <span class="n">compiler</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">cc</span> <span class="o">--</span> <span class="n">works</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">C</span> <span class="n">compiler</span> <span class="n">ABI</span> <span class="n">info</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">C</span> <span class="n">compiler</span> <span class="n">ABI</span> <span class="n">info</span> <span class="o">-</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">C</span> <span class="nb">compile</span> <span class="n">features</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">C</span> <span class="nb">compile</span> <span class="n">features</span> <span class="o">-</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Check</span> <span class="k">for</span> <span class="n">working</span> <span class="n">CXX</span> <span class="n">compiler</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">c</span><span class="o">++</span>
-<span class="o">--</span> <span class="n">Check</span> <span class="k">for</span> <span class="n">working</span> <span class="n">CXX</span> <span class="n">compiler</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">c</span><span class="o">++</span> <span class="o">--</span> <span class="n">works</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">CXX</span> <span class="n">compiler</span> <span class="n">ABI</span> <span class="n">info</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">CXX</span> <span class="n">compiler</span> <span class="n">ABI</span> <span class="n">info</span> <span class="o">-</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">CXX</span> <span class="nb">compile</span> <span class="n">features</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">CXX</span> <span class="nb">compile</span> <span class="n">features</span> <span class="o">-</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Configuring</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Generating</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Build</span> <span class="n">files</span> <span class="n">have</span> <span class="n">been</span> <span class="n">written</span> <span class="n">to</span><span class="p">:</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">contract</span><span class="o">.</span><span class="n">name</span><span class="o">/</span><span class="n">build</span>
+<div class="highlight-python"><div class="highlight"><pre>-- The C compiler identification is GNU 7.3.0
+-- The CXX compiler identification is GNU 7.3.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /mnt/d/Workspaces/EOS/contracts/contract.name/build
 </pre></div>
 </div>
 </div>
 <div class="section" id="building-with-wasm-compiler">
 <span id="building-with-wasm-compiler"></span><h3>Building with <code class="docutils literal"><span class="pre">WASM</span></code> compiler<a class="headerlink" href="#building-with-wasm-compiler" title="Permalink to this headline">¶</a></h3>
 <p>Run the following command to build your contract with the <em>EOSIO</em> <code class="docutils literal"><span class="pre">WASM</span></code> compiler:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">make</span>
 </pre></div>
 </div>
 <p>The output should look like this:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># ABI: /mnt/d/Workspaces/EOS/contracts/hellox/src/../build/contract.name.abi</span>
-<span class="n">Built</span> <span class="n">target</span> <span class="n">abi</span>
-<span class="c1"># WAST: /mnt/d/Workspaces/EOS/contracts/hellox/src/../build/contract.name.wast</span>
-<span class="n">Built</span> <span class="n">target</span> <span class="n">wast</span>
+<div class="highlight-python"><div class="highlight"><pre># ABI: /mnt/d/Workspaces/EOS/contracts/hellox/src/../build/contract.name.abi
+Built target abi
+# WAST: /mnt/d/Workspaces/EOS/contracts/hellox/src/../build/contract.name.wast
+Built target wast
 </pre></div>
 </div>
 <p><strong>NOTE:</strong> If the <code class="docutils literal"><span class="pre">ABI</span></code> file already exists in the <code class="docutils literal"><span class="pre">src</span></code> folder (you should keep it there, if you prefer to create it manually instead of relying on the <em>EOSIO</em> toolset) <em>CMake</em> will skip the <code class="docutils literal"><span class="pre">ABI</span></code> file generation step and proceed with <code class="docutils literal"><span class="pre">WAST</span></code> file generation.</p>
@@ -262,30 +264,28 @@
 <div class="section" id="running-unit-tests">
 <span id="running-unit-tests"></span><h3>Running unit tests<a class="headerlink" href="#running-unit-tests" title="Permalink to this headline">¶</a></h3>
 <p>And finally, after your contract has been successfully built, invoke unit tests with this command:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ctest</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ctest</span>
 </pre></div>
 </div>
 <p>If you want to make your unit tests more verbose, use the <code class="docutils literal"><span class="pre">-V</span></code> parameter:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ctest</span> <span class="o">-</span><span class="n">V</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ctest</span> <span class="o">-</span><span class="n">V</span>
 </pre></div>
 </div>
 <p>And if you want to be more specific about which unit tests should be run, you can use the <code class="docutils literal"><span class="pre">-R</span></code> parameter which allows you to supply a regular expression indicating specific criteria regarding the names of the tests to be run, for example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>ctest -R ^test$
+<div class="highlight-python"><div class="highlight"><pre>ctest -R ^test$
 </pre></div>
 </div>
 <p>The outcome of the unit test (in the non-verbose mode) should look like this:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Test</span> <span class="n">project</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">hello</span><span class="o">.</span><span class="n">tokenika</span><span class="o">/</span><span class="n">build</span>
-    <span class="n">Start</span> <span class="mi">1</span><span class="p">:</span> <span class="n">unittest</span>
-<span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="n">Test</span> <span class="c1">#1: unittest .........................   Passed    6.58 sec</span>
-    <span class="n">Start</span> <span class="mi">2</span><span class="p">:</span> <span class="n">test</span>
-<span class="mi">2</span><span class="o">/</span><span class="mi">2</span> <span class="n">Test</span> <span class="c1">#2: test .............................   Passed    5.12 sec</span>
-
-<span class="mi">100</span><span class="o">%</span> <span class="n">tests</span> <span class="n">passed</span><span class="p">,</span> <span class="mi">0</span> <span class="n">tests</span> <span class="n">failed</span> <span class="n">out</span> <span class="n">of</span> <span class="mi">2</span>
-
-<span class="n">Total</span> <span class="n">Test</span> <span class="n">time</span> <span class="p">(</span><span class="n">real</span><span class="p">)</span> <span class="o">=</span>  <span class="mf">11.71</span> <span class="n">sec</span>
+<div class="highlight-python"><div class="highlight"><pre>Test project /mnt/d/Workspaces/EOS/contracts/hello.tokenika/build
+    Start 1: test
+1/2 Test #1: test .............................   Passed    5.12 sec
+    Start 2: unittest
+2/2 Test #2: unittest .........................   Passed    6.58 sec
+100% tests passed, 0 tests failed out of 2
+Total Test time (real) =  11.71 sec
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> As you’ve probably noticed, we have two types of unit tests: the standard ones (named <em>unittest1</em>, <em>unittest2</em>, etc) and ad-hoc ones (named <em>test1</em>, <em>test2</em>, etc). The reason for this duality is this: we find it useful to have standard unit tests to prove that things work as expected, and ad-hoc tests to investigate bugs and generally monitor the inner workings of a smart-contract. EOSFactory supports both, so you can choose whatever suits your needs.</p>
+<p><strong>NOTE:</strong> As you&#8217;ve probably noticed, we have two types of unit tests: the standard ones (named <em>unittest1</em>, <em>unittest2</em>, etc) and ad-hoc ones (named <em>test1</em>, <em>test2</em>, etc). The reason for this duality is this: we find it useful to have standard unit tests to prove that things work as expected, and ad-hoc tests to investigate bugs and generally monitor the inner workings of a smart-contract. EOSFactory supports both, so you can choose whatever suits your needs.</p>
 </div>
 </div>
 <div class="section" id="use-automated-tasks-in-visual-studio-code">
@@ -298,7 +298,7 @@
 <p>To run unit tests navigate to <code class="docutils literal"><span class="pre">Tasks</span> <span class="pre">-&gt;</span> <span class="pre">Unittest</span></code>:</p>
 <p><img alt="unittest" src="../_images/unittest.png" /></p>
 <p>You can further speed up your developement cycle by creating key bindings for those tasks, for example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="p">{</span>
+<div class="highlight-python"><div class="highlight"><pre>    <span class="p">{</span>
         <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;ctrl+shift+c&quot;</span><span class="p">,</span>
         <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
         <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Compile&quot;</span>
@@ -316,7 +316,7 @@
 </pre></div>
 </div>
 <p>Or if you are on MacOS:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="p">{</span>
+<div class="highlight-python"><div class="highlight"><pre>    <span class="p">{</span>
         <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;cmd+shift+c&quot;</span><span class="p">,</span>
         <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
         <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Compile&quot;</span>
@@ -336,30 +336,30 @@
 </div>
 <div class="section" id="use-intellisense-in-visual-studio-code">
 <span id="use-intellisense-in-visual-studio-code"></span><h2>Use <em>IntelliSense</em> in <em>Visual Studio Code</em><a class="headerlink" href="#use-intellisense-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
-<p>By opening an individual contract folder in VSC you’ll also be able to make use of VSC <a class="reference external" href="https://code.visualstudio.com/docs/editor/intellisense">IntelliSense</a> feature. However for that to work you’ll need to install the C/C++ IntelliSense extension in VSC.</p>
+<p>By opening an individual contract folder in VSC you&#8217;ll also be able to make use of VSC <a class="reference external" href="https://code.visualstudio.com/docs/editor/intellisense">IntelliSense</a> feature. However for that to work you&#8217;ll need to install the C/C++ IntelliSense extension in VSC.</p>
 <p><img alt="intelisense" src="../_images/intelisense.png" /></p>
 </div>
 <div class="section" id="debug-with-smart-loggers">
 <span id="debug-with-smart-loggers"></span><h2>Debug with smart loggers<a class="headerlink" href="#debug-with-smart-loggers" title="Permalink to this headline">¶</a></h2>
-<p>As EOSFactory gets upgraded, it will include further libraries that enhance the process of smart-contract development. Here we present one of such features in action: the logging tool. It’s quite important, as using loggers is actually the only way to debug smart contracts.</p>
-<p>You might have noticed the <code class="docutils literal"><span class="pre">logger.hpp</span></code> header file in the <code class="docutils literal"><span class="pre">src</span></code> directory. And if you have applied the <code class="docutils literal"><span class="pre">skeleton</span></code> template when creating your VSC project, you’ll also notice the following line in the <code class="docutils literal"><span class="pre">contract.name.cpp</span></code> file:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">logger_info</span><span class="p">(</span><span class="s2">&quot;user: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">});</span>
+<p>As EOSFactory gets upgraded, it will include further libraries that enhance the process of smart-contract development. Here we present one of such features in action: the logging tool. It&#8217;s quite important, as using loggers is actually the only way to debug smart contracts.</p>
+<p>You might have noticed the <code class="docutils literal"><span class="pre">logger.hpp</span></code> header file in the <code class="docutils literal"><span class="pre">src</span></code> directory. And if you have applied the <code class="docutils literal"><span class="pre">skeleton</span></code> template when creating your VSC project, you&#8217;ll also notice the following line in the <code class="docutils literal"><span class="pre">contract.name.cpp</span></code> file:</p>
+<div class="highlight-python"><div class="highlight"><pre>logger_info(&quot;user: &quot;, name{user});
 </pre></div>
 </div>
 <p>The effect of the above code entry is the following output in test results:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">INFO</span> <span class="n">user</span><span class="p">:</span> <span class="n">carol</span> <span class="o">@</span> <span class="mi">8</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">50</span> <span class="n">contract</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">cpp</span><span class="p">[</span><span class="mi">16</span><span class="p">](</span><span class="n">hi</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre>INFO user: carol @ 8:53:50 contract.name.cpp[16](hi)
 </pre></div>
 </div>
 <p>A similar example can be found in the <code class="docutils literal"><span class="pre">eosio.token</span></code> template:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">logger_info</span><span class="p">(</span><span class="s2">&quot;quantity.amount: &quot;</span><span class="p">,</span> <span class="n">quantity</span><span class="o">.</span><span class="n">amount</span><span class="p">);</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">logger_info</span><span class="p">(</span><span class="s2">&quot;quantity.amount: &quot;</span><span class="p">,</span> <span class="n">quantity</span><span class="o">.</span><span class="n">amount</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>The effect of the above code entry is the following output in test results:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">INFO</span> <span class="n">quantity</span><span class="o">.</span><span class="n">amount</span><span class="p">:</span> <span class="mi">1000000</span> <span class="o">@</span> <span class="mi">8</span><span class="p">:</span><span class="mi">43</span><span class="p">:</span><span class="mi">8</span> <span class="n">contract</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">cpp</span><span class="p">[</span><span class="mi">54</span><span class="p">](</span><span class="n">issue</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre>INFO quantity.amount: 1000000 @ 8:43:8 contract.name.cpp[54](issue)
 </pre></div>
 </div>
 <p>Thus the logger utility offers you much more than just a way of monitoring the value of a variable. What you also get is the method name, the file name &amp; line number where this logger event occured.</p>
-<p><strong>NOTE:</strong> If you run your tests using <em>CMake</em>, you’ll need to apply the verbose mode to be able to see the logger output.</p>
+<p><strong>NOTE:</strong> If you run your tests using <em>CMake</em>, you&#8217;ll need to apply the verbose mode to be able to see the logger output.</p>
 </div>
 </div>
 
@@ -376,7 +376,7 @@
     </p>
     <p>
         &copy; Copyright 2018, Tokenika.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.<br/>
     </p>
   </div>
 </footer>
