@@ -24,7 +24,9 @@ In a bash terminal run the following command:
 $eosf bootstrap contract contract.name skeleton
 ```
 
-**NOTE:** `$eosf` is system variable created during EOSFactory installation. It's a path pointing to an EOSFactory C++ executable called `teos`.
+**NOTE:** `$eosf` is system variable (hence the `$` in front if it is needed) created during EOSFactory installation. Actually, it's a path pointing to an EOSFactory C++ executable called `teos`.
+
+**NOTE:** If you are on Windows and have not restarted your WSL bash terminal after EOSFactory installation,  you'll need to do so before you execute any command involving the `$eosf` variable (if you are using WSL bash terminal inside *Visual Studio Code*, restart your VSC instead).
 
 The first parameter (in our case `contract.name`) is the name of your contract. It can be any name you want, provided there are no spaces in it. Letters, numbers, underscores `_`, dots `.` and dashes `-` are allowed.
 
