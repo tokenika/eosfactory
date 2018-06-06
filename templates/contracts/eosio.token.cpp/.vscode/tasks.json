@@ -47,20 +47,11 @@
         ]
     },
     {
-        "taskName": "API",
+        "taskName": "Test",
         "type": "shell",
         "windows": {
-            "command": "explorer.exe"
+            "command": "source ~/.profile; cd build; ctest -V -R ^test$ "
         },
-        "osx": {
-            "command": "open"
-        },
-        "linux": {
-            "command": "sensible-browser"
-        },
-        "args": [
-            "https://eosio.github.io/eos/group__contractdev.html"
-        ],
         "presentation": {
             "reveal": "always",
             "panel": "dedicated"
@@ -82,11 +73,20 @@
         ]
     },
     {
-        "taskName": "Test",
+        "taskName": "EOSIO API",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; cd build; ctest -V -R ^test$ "
+            "command": "explorer.exe"
         },
+        "osx": {
+            "command": "open"
+        },
+        "linux": {
+            "command": "sensible-browser"
+        },
+        "args": [
+            "https://eosio.github.io/eos/group__contractdev.html"
+        ],
         "presentation": {
             "reveal": "always",
             "panel": "dedicated"

@@ -47,6 +47,25 @@
         ]
     },
     {
+        "taskName": "Test",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
+        },
+        "osx": {
+            "command": "python3 ./test/test1.py \"${workspaceFolder}\""
+        },
+        "linux": {
+            "command": "python3 ./test/test1.py \"${workspaceFolder}\""
+        },
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": [
+        ]
+    },
+    {
         "taskName": "Unittest",
         "type": "shell",
         "windows": {
@@ -58,25 +77,6 @@
         "linux": {
             "command": "python3 ./test/unittest1.py"
         },
-        "presentation": {
-            "reveal": "always",
-            "panel": "dedicated"
-        },
-        "problemMatcher": [
-        ]
-    },
-    {
-        "taskName": "Test",
-        "type": "shell",
-        "windows": {
-            "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
-        },
-        "osx": {
-            "command": "python3 ./test/test1.py \"${workspaceFolder}\""
-        },
-        "linux": {
-            "command": "python3 ./test/test1.py \"${workspaceFolder}\""
-        },        
         "presentation": {
             "reveal": "always",
             "panel": "dedicated"
