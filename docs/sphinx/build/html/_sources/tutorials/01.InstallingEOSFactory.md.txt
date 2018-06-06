@@ -114,7 +114,7 @@ If you have the latest WSL release, this assumption is most likely valid. Howeve
 
 If you are unsure what the path is in your case, open Windows Explorer, navigate to the `%LocalAppData%\\Packages` folder and search for `rootfs`.
 
-## Load system variables
+## Source system variables
 
 If the build process is successful, you should see this message:
 
@@ -129,23 +129,19 @@ If the build process is successful, you should see this message:
 
 At this stage you need to source the system variables that were created during EOSFactory installation. The command may differ depending on your system. 
 
-If you are on *Windows Subsystem for Linux*:
+* If you are on *Windows Subsystem for Linux* the best option is to restart your WSL bash terminal (alternatively, if you are using a WSL terminal inside *Visual Studio Code*, restart VSC).
 
-```
-source ~/.profile
-```
+* If you are on Ubuntu:
 
-If you are on Ubuntu:
+  ```
+  source ~/.bashrc
+  ```
 
-```
-source ~/.bashrc
-```
+* And if you are on MacOS:
 
-And if you are on MacOS:
-
-```
-source ~/.bash_profile
-```
+  ```
+  source ~/.bash_profile
+  ```
 
 ## Test EOSFactory
 
@@ -173,20 +169,7 @@ If the test fails due to the `can't open file './tests/unittest1.py'` error, mak
 
 #### Case 2
 
-If the test fails due to the `ModuleNotFoundError` error, make sure that after building EOSFactory you've sourced the newly created system variables.
-
-If you are on *Windows Subsystem for Linux*:
-```
-source ~/.profile
-```
-If you are on Ubuntu:
-```
-source ~/.bashrc
-```
-And if you are on MacOS:
-```
-source ~/.bash_profile
-```
+If the test fails due to the `ModuleNotFoundError` error, make sure that after building EOSFactory you've sourced the newly created system variables, as decribed in the previous section.
 
 #### Case 3
 

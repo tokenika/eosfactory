@@ -98,7 +98,7 @@
 <li><a class="reference internal" href="#prerequisites-for-windows">Prerequisites for Windows</a></li>
 <li><a class="reference internal" href="#build-eosfactory-on-ubuntu-macos">Build EOSFactory on Ubuntu &amp; MacOS</a></li>
 <li><a class="reference internal" href="#build-eosfactory-on-windows">Build EOSFactory on Windows</a></li>
-<li><a class="reference internal" href="#load-system-variables">Load system variables</a></li>
+<li><a class="reference internal" href="#source-system-variables">Source system variables</a></li>
 <li><a class="reference internal" href="#test-eosfactory">Test EOSFactory</a></li>
 <li><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
 <li><a class="reference internal" href="#case-1">Case 1</a></li>
@@ -251,8 +251,8 @@
 </div>
 <p>If you are unsure what the path is in your case, open Windows Explorer, navigate to the <code class="docutils literal"><span class="pre">%LocalAppData%\\Packages</span></code> folder and search for <code class="docutils literal"><span class="pre">rootfs</span></code>.</p>
 </div>
-<div class="section" id="load-system-variables">
-<span id="load-system-variables"></span><h2>Load system variables<a class="headerlink" href="#load-system-variables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="source-system-variables">
+<span id="source-system-variables"></span><h2>Source system variables<a class="headerlink" href="#source-system-variables" title="Permalink to this headline">¶</a></h2>
 <p>If the build process is successful, you should see this message:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>         <span class="n">______</span> <span class="n">____</span>   <span class="n">_____</span>  <span class="n">______</span>      <span class="n">_____</span> <span class="n">_______</span> <span class="n">____</span>  <span class="n">_______</span>     <span class="n">__</span>
         <span class="o">|</span>  <span class="n">____</span><span class="o">/</span> <span class="n">__</span> \ <span class="o">/</span> <span class="n">____</span><span class="o">||</span>  <span class="n">____</span><span class="o">/</span>\   <span class="o">/</span> <span class="n">____</span><span class="o">|</span><span class="n">__</span>   <span class="n">__</span><span class="o">/</span> <span class="n">__</span> \<span class="o">|</span>  <span class="n">__</span> \ \   <span class="o">/</span> <span class="o">/</span>
@@ -263,18 +263,20 @@
 </pre></div>
 </div>
 <p>At this stage you need to source the system variables that were created during EOSFactory installation. The command may differ depending on your system.</p>
-<p>If you are on <em>Windows Subsystem for Linux</em>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">profile</span>
-</pre></div>
-</div>
-<p>If you are on Ubuntu:</p>
+<ul>
+<li><p class="first">If you are on <em>Windows Subsystem for Linux</em> the best option is to restart your WSL bash terminal (alternatively, if you are using a WSL terminal inside <em>Visual Studio Code</em>, restart VSC).</p>
+</li>
+<li><p class="first">If you are on Ubuntu:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
 </pre></div>
 </div>
-<p>And if you are on MacOS:</p>
+</li>
+<li><p class="first">And if you are on MacOS:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bash_profile</span>
 </pre></div>
 </div>
+</li>
+</ul>
 </div>
 <div class="section" id="test-eosfactory">
 <span id="test-eosfactory"></span><h2>Test EOSFactory<a class="headerlink" href="#test-eosfactory" title="Permalink to this headline">¶</a></h2>
@@ -298,19 +300,7 @@
 </div>
 <div class="section" id="case-2">
 <span id="case-2"></span><h3>Case 2<a class="headerlink" href="#case-2" title="Permalink to this headline">¶</a></h3>
-<p>If the test fails due to the <code class="docutils literal"><span class="pre">ModuleNotFoundError</span></code> error, make sure that after building EOSFactory you’ve sourced the newly created system variables.</p>
-<p>If you are on <em>Windows Subsystem for Linux</em>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">profile</span>
-</pre></div>
-</div>
-<p>If you are on Ubuntu:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
-</pre></div>
-</div>
-<p>And if you are on MacOS:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bash_profile</span>
-</pre></div>
-</div>
+<p>If the test fails due to the <code class="docutils literal"><span class="pre">ModuleNotFoundError</span></code> error, make sure that after building EOSFactory you’ve sourced the newly created system variables, as decribed in the previous section.</p>
 </div>
 <div class="section" id="case-3">
 <span id="case-3"></span><h3>Case 3<a class="headerlink" href="#case-3" title="Permalink to this headline">¶</a></h3>
