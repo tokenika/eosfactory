@@ -136,7 +136,11 @@ class Contract(pyteos.Contract):
 
 
     def is_created(self):
-        return not self.error
+        try:
+            self.json["transaction id"]
+            return True
+        except:
+            return False
         
 
     def is_deployed(self):
