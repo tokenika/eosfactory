@@ -91,16 +91,16 @@ wallet-dir: .
 
     arg EOSIO_SHARED_MEMORY_SIZE_MB = { "EOSIO_SHARED_MEMORY_SIZE_MB", "100" };    
     arg EOSIO_BOOST_INCLUDE_DIR = { "EOSIO_BOOST_INCLUDE_DIR"
-      , "${HOME}/opt/boost_1_66_0/include", "/usr/local/include/" };
+      , "${U_HOME}/opt/boost_1_66_0/include", "/usr/local/include/" };
     arg EOSIO_WASM_CLANG = { "EOSIO_WASM_CLANG"
-      , "${HOME}/opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"};
-      // EOSIO_WASM_CLANG: relative to HOME dir
+      , "${U_HOME}/opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"};
+      // EOSIO_WASM_CLANG: relative to U_HOME dir
     arg EOSIO_WASM_LLVM_LINK = { "EOSIO_WASM_LLVM_LINK"
-      , "${HOME}/opt/wasm/bin/llvm-link", "/usr/local/wasm/bin/llvm-link" };
-      // EOSIO_WASM_LLVM_LINK: relative to HOME dir
+      , "${U_HOME}/opt/wasm/bin/llvm-link", "/usr/local/wasm/bin/llvm-link" };
+      // EOSIO_WASM_LLVM_LINK: relative to U_HOME dir
     arg EOSIO_WASM_LLC = { "EOSIO_WASM_LLC"
-      , "${HOME}/opt/wasm/bin/llc", "/usr/local/wasm/bin/llc" };
-      // EOSIO_WASM_LLC: relative to HOME dir
+      , "${U_HOME}/opt/wasm/bin/llc", "/usr/local/wasm/bin/llc" };
+      // EOSIO_WASM_LLC: relative to U_HOME dir
 
     namespace bfs = boost::filesystem;
 
@@ -236,11 +236,11 @@ variable.
         }
       }
 
-      string home = getenv("HOME");
+      string home = getenv("U_HOME");
       for(auto value : values)
       {
         try{
-          boost::replace_all(value, "${HOME}", home);
+          boost::replace_all(value, "${U_HOME}", home);
           bfs::path p(value);
 
           if(bfs::exists(p / findFile)) {
@@ -770,7 +770,7 @@ Cannot determine the contract workspace.
     /*/////////////////////////////////////////////////////////////////////////
     // getEOSIO_BOOST_INCLUDE_DIR
         arg EOSIO_BOOST_INCLUDE_DIR = { "EOSIO_BOOST_INCLUDE_DIR"
-      , "${HOME}/opt/boost_1_66_0/include", "/usr/local/include/" };
+      , "${U_HOME}/opt/boost_1_66_0/include", "/usr/local/include/" };
     /////////////////////////////////////////////////////////////////////////*/
     string getEOSIO_BOOST_INCLUDE_DIR(TeosControl* teosControl){
       return getValidPath(teosControl, EOSIO_BOOST_INCLUDE_DIR, "boost/version.hpp");

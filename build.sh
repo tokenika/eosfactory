@@ -268,6 +268,8 @@ printf "%s\n" "Sets environment variables, if not set already:"
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
 setLinuxVariable "EOSIO_EOSFACTORY_DIR" "$EOSIO_EOSFACTORY_DIR__"
 setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
+setLinuxVariable "U_HOME" "$HOME"
+
 setLinuxVariable "eosf" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
 
 if [ -z $EOSIO_CONTRACT_WORKSPACE__ ]; then
@@ -308,14 +310,14 @@ if [ ! -z "$IS_WSL" ]; then
     wslMapLinux2Windows retval $EOSIO_SOURCE_DIR_SET
     setWindowsVariable "EOSIO_SOURCE_DIR" "$retval"     
 
-    ### env variable HOME
+    ### env variable U_HOME
     homeWindowsIsSet=""
     function verifyHome() {
         homeToVerify=$1
         bashrc=".bashrc"
 
-        # see whether the windows HOME variable is already set:
-            homePathSet=$(cmd.exe /c echo %HOME%) # homePathSet windows env:HOME
+        # see whether the windows U_HOME variable is already set:
+            homePathSet=$(cmd.exe /c echo %U_HOME%) # homePathSet windows env:U_HOME
             # supposed to be windows path to .barshrc file:
             bashrcPathSet="${homePathSet::-1}\\$bashrc"
             # check whether the $bashrcPathSet directory contains .barshrc:
@@ -327,7 +329,7 @@ if [ ! -z "$IS_WSL" ]; then
         if [ "$bashrcDirSet" == "$bashrc" ]; then      
             homeWindowsIsSet=true
         else
-        # the windows HOME variable is not set:
+        # the windows U_HOME variable is not set:
             homeWindows=${homeToVerify}\\"home"\\$USER
 
             bashrcPath=${homeWindows}\\$bashrc
@@ -337,9 +339,9 @@ if [ ! -z "$IS_WSL" ]; then
                 bashrcDir=${bashrcDir::-1}
             fi
             if [ "$bashrcDir" == "$bashrc" ]; then 
-                setx.exe "HOME" "$homeWindows"
+                setx.exe "U_HOME" "$homeWindows"
                 homeWindowsIsSet=true
-                printf "HOME: %s\n" "$homeWindows"
+                printf "U_HOME: %s\n" "$homeWindows"
             fi
         fi
     }

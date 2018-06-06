@@ -22,9 +22,9 @@ function set_C_COMPILER__(){
 }
 
 function setCompilersAndDependencies(){
-    export BOOST_ROOT=${HOME}/opt/boost_1_66_0
+    export BOOST_ROOT=${U_HOME}/opt/boost_1_66_0
     export OPENSSL_ROOT_DIR=/usr/include/openssl
-    export WASM_ROOT=${HOME}/opt/wasm   
+    export WASM_ROOT=${U_HOME}/opt/wasm   
 
     C_COMPILER__=clang-4.0
     CXX_COMPILER__=clang++-4.0
