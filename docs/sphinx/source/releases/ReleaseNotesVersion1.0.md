@@ -19,11 +19,11 @@ EOSFactory [v1.0](https://github.com/tokenika/eosfactory/releases/tag/v1.0) is c
 
 ## New features available in v1.0
 
-* Integrated unit-testing framework.
+* Integration with Python [UnitTest](https://docs.python.org/2/library/unittest.html) standard library.
 * User-defined workspace for smart-contract storage.
 * Support for debugging via logger output containing file name & line number.
 * Preliminary code verification with `CLANG`.
-* [Visual Studio Code](https://code.visualstudio.com/) integration, including *CMake* builds and automated tasks.
+* [Visual Studio Code](https://code.visualstudio.com/) integration, including [CMake](https://cmake.org/) builds and automated tasks.
 
 ## Current limitations
 
