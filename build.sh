@@ -344,6 +344,15 @@ if [ ! -z "$IS_WSL" ]; then
         fi
     }
 
+    Lxss="hkcu\\Software\\Microsoft\\Windows\\CurrentVersion\\Lxss"
+    ddKey=$(reg.exe query $Lxss /v Defaultdistribution)
+    dd=$(echo $ddKey | grep -o -P '(?<={).*(?=})')
+    bpKey=$(reg.exe query "${Lxss}\\{$dd}" /v BasePath)
+
+    if [ -z "$homeWindowsIsSet" ]; then
+        verifyHome "$(echo $bpKey | \
+            grep -o -P '(?<=REG_SZ)[ A-Za-z0-9:\\\._]*')\\rootfs"
+    fi
     if [ -z "$homeWindowsIsSet" ]; then
         verifyHome $WSL_ROOT_DIR__
     fi
@@ -351,12 +360,7 @@ if [ ! -z "$IS_WSL" ]; then
         verifyHome $WSL_ROOT_DIR1804__
     fi
 
-# Lxss="hkcu\\Software\\Microsoft\\Windows\\CurrentVersion\\Lxss"
-# dd=$(reg.exe query $Lxss /v Defaultdistribution)
-# dd=$(echo $dd | grep -o -P '(?<={).*(?=})')
-# bp=$(reg.exe query "${Lxss}\\{$dd}" /v BasePath)
-# bp=$(echo $bp | grep -o -P '(?<=REG_SZ)[ A-Za-z0-9:\\\._]*')
-# echo $bp    
+   
 
     if [ -z "$homeWindowsIsSet" ]; then
             printf "\n%s" "

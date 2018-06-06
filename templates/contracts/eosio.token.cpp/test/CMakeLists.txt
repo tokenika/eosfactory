@@ -2,8 +2,6 @@
 set( BUILD_SHARED_LIBS NO )
 set( ECC_IMPL secp256k1 CACHE STRING "secp256k1 or openssl or mixed")
 option( ENABLE_ASAN "enable ASAN" OFF )
-set( TEST_ADDRESS "tokenika")
-set( TEST_HTTP_ADDRESS "eos-testapi.tokenika.io:8888" )
 
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules" )
 
@@ -67,7 +65,6 @@ if( NOT ECC_IMPL STREQUAL openssl )
   find_package(GMP REQUIRED)
 endif()
 ## END DEPENDENCIES ##########################################################
-
 
 install( FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/teos/config.json" 
   DESTINATION "bin" )
@@ -171,8 +168,3 @@ applLinkLibraries( unittest1 )
 
 add_test( NAME test COMMAND test1 )
 add_test( NAME unittest COMMAND unittest1 )
-
-
-
-
-

@@ -1,6 +1,8 @@
 set( LIB_NAME "teoslib" )
 
 set( CONFIG_JSON "config.json" )
+set( TEST_ADDRESS "tokenika")
+set( TEST_HTTP_ADDRESS "eos-testapi.tokenika.io:8888" )
 
 ## BEGIN DEPENDENCIES ########################################################
 

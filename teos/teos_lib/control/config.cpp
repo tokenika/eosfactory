@@ -322,11 +322,8 @@ variable.
         }
         {
           /*
-            Does the given contractDir is an existing subdirectory of the relevent
-            entry in the config.json?
-
-            Does the given contractDir is an existing subdirectory of the relevent
-            entry in the config.json?
+            Does the given contractDir is an existing subdirectory of the 
+            EOSIO_CONTRACT_WORKSPACE entry in the config.json?
           */
           bfs::path contractPath 
             = bfs::path(configValue(teosControl, EOSIO_CONTRACT_WORKSPACE)) 
@@ -801,37 +798,34 @@ Cannot determine the contract workspace.
     }    
 
     GetConfig::GetConfig(ptree reqJson) : TeosControl(reqJson){
-        respJson_.put("contextDir", getEosFactoryDir(this));
-        respJson_.put("sourceDir", getSourceDir(this));
-        respJson_.put("dataDir", getDataDir(this));
-        respJson_.put("configDir", getConfigDir(this));
-        respJson_.put("walletDir", getWalletDir(this));
-        respJson_.put("daemonExe", getDaemonExe(this));
-        respJson_.put("genesisJson", getGenesisJson(this));
-        respJson_.put("httpServer", getHttpServerAddress(this));
-        respJson_.put(
-          "httpWallet", 
-          getHttpWalletAddress(this).empty() 
-            ? getHttpServerAddress(this)
-            : getHttpWalletAddress(this));
-        respJson_.put("daemonName", getDaemonName(this));
-        respJson_.put("wsmClang", getEOSIO_WASM_CLANG(this));
-        respJson_.put("boostInclude", getEOSIO_BOOST_INCLUDE_DIR(this));
-        respJson_.put("wasmLink", getEOSIO_WASM_LLVM_LINK(this));
-        respJson_.put("wasmLlc", getEOSIO_WASM_LLC(this));
-        respJson_.put("sharedMemory", getSharedMemorySizeMb());
-        respJson_.put(
-          "contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));
-        respJson_.put(
-          "workspaceEosio", getSourceDir(this) + "/" EOSIO_CONTRACT_DIR );
-        if(!reqJson_.get("contract-dir", "").empty())
-        {
-          respJson_.put("contract-dir", getContractDir(
-            this, reqJson_.get<string>("contract-dir")));
-        }
+      respJson_.put("EOSIO_SOURCE_DIR", getSourceDir(this));
+      respJson_.put("EOSIO_EOSFACTORY_DIR", getEosFactoryDir(this));
+      respJson_.put("EOSIO_DATA_DIR", getDataDir(this));
+      respJson_.put("EOSIO_CONFIG_DIR", getConfigDir(this));
+      respJson_.put("EOSIO_WALLET_DIR", getWalletDir(this));
+      respJson_.put("nodeExe", getDaemonExe(this));
+      respJson_.put("genesisJson", getGenesisJson(this));
+      respJson_.put("EOSIO_DAEMON_ADDRESS", getHttpServerAddress(this));
+      respJson_.put(
+        "EOSIO_WALLET_ADDRESS", 
+        getHttpWalletAddress(this).empty() 
+          ? getHttpServerAddress(this)
+          : getHttpWalletAddress(this));
+      respJson_.put("EOSIO_DAEMON_NAME", getDaemonName(this));
+      respJson_.put("EOSIO_WASM_CLANG", getEOSIO_WASM_CLANG(this));
+      respJson_.put("EOSIO_BOOST_INCLUDE_DIR", getEOSIO_BOOST_INCLUDE_DIR(this));
+      respJson_.put("EOSIO_WASM_LLVM_LINK", getEOSIO_WASM_LLVM_LINK(this));
+      respJson_.put("EOSIO_WASM_LLC", getEOSIO_WASM_LLC(this));
+      respJson_.put("sharedMemory", getSharedMemorySizeMb());
+      respJson_.put(
+        "contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));
+      respJson_.put(
+        "workspaceEosio", getSourceDir(this) + "/" EOSIO_CONTRACT_DIR );
+      if(!reqJson_.get("contract-dir", "").empty())
+      {
+        respJson_.put("contract-dir", getContractDir(
+          this, reqJson_.get<string>("contract-dir")));
+      }
     }
   }
 }
-
-
-
