@@ -102,5 +102,5 @@ int main(int argc, const char *argv[]) {
 
   teardown(eosio, wallet, key_owner, key_active, alice, bob, carol); 
 
-  return 1;
+  return 0;
 }
