@@ -7,11 +7,10 @@ import node
 import sess
 from eosf import *
 
+CONTRACT_NAME = "eosio.token"
 set_verbose(False)
 
 class Test1(unittest.TestCase):
-
-    CONTRACT_NAME = "eosio.token"
 
     def run(self, result=None):
         """ Stop after first error """      
@@ -25,13 +24,13 @@ class Test1(unittest.TestCase):
             warnings.simplefilter("ignore")
             node.reset()
         sess.init()
-        contract = Contract(cls.CONTRACT_NAME)
+        contract = Contract(CONTRACT_NAME)
         contract.deploy()
 
 
     def setUp(self):
         self.assertTrue(node.is_running(), "testnet failure")
-        self.contract = Contract(self.CONTRACT_NAME)
+        self.contract = Contract(CONTRACT_NAME)
         self.assertTrue(self.contract.is_created(), "contract failure")
         self.assertTrue(self.contract.is_deployed(), "deployment failure")
 

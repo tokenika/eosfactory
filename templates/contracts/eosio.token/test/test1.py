@@ -1,19 +1,19 @@
-import sys
 import node
 import sess
 from eosf import *
 
+CONTRACT_NAME = "@CONTRACT_NAME@/build"
 set_verbose(True)
 
-def run(contract_dir):
+def run():
     print('test node.reset():')
     assert node.reset()
 
     print('test sess.init():')
     assert sess.init()
 
-    print('test Contract("@CONTRACT_NAME@"):')
-    c = Contract(contract_dir)
+    print('test Contract():')
+    c = Contract(CONTRACT_NAME)
     assert c.is_created()
 
     print('test c.get_code():')
@@ -80,4 +80,4 @@ def run(contract_dir):
 
 
 if __name__ == "__main__":
-    run(str(sys.argv[1]))
+    run()

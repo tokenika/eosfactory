@@ -50,13 +50,13 @@
         "taskName": "Test",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; python3 ./test/test1.py \"${workspaceFolder}\""
+            "command": "source ~/.profile; python3 ./test/test1.py"
         },
         "osx": {
-            "command": "python3 ./test/test1.py \"${workspaceFolder}\""
+            "command": "python3 ./test/test1.py"
         },
         "linux": {
-            "command": "python3 ./test/test1.py \"${workspaceFolder}\""
+            "command": "python3 ./test/test1.py"
         },
         "presentation": {
             "reveal": "always",

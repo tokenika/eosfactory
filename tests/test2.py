@@ -4,6 +4,7 @@ import node
 import sess
 from eosf import *
 
+CONTRACT_NAME = "tic.tac.toe"
 set_verbose(True)
 
 def run():
@@ -13,8 +14,8 @@ def run():
     print('test sess.init():')
     assert sess.init()
 
-    print('test Contract("tic.tac.toe"):')
-    c = Contract("tic.tac.toe")
+    print('test Contract():')
+    c = Contract(CONTRACT_NAME)
     assert c.is_created()
 
     print('test c.deploy():')

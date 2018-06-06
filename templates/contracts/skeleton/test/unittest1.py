@@ -5,6 +5,7 @@ import node
 import sess
 from eosf import *
 
+CONTRACT_NAME = "@CONTRACT_NAME@/build"
 set_verbose(False)
 
 class Test1(unittest.TestCase):
@@ -21,13 +22,13 @@ class Test1(unittest.TestCase):
             warnings.simplefilter("ignore")
             node.reset()
         sess.init()
-        contract = Contract("@CONTRACT_NAME@/build")
+        contract = Contract(CONTRACT_NAME)
         contract.deploy()
 
         
     def setUp(self):
         self.assertTrue(node.is_running(), "testnet failure")
-        self.contract = Contract("@CONTRACT_NAME@/build")
+        self.contract = Contract(CONTRACT_NAME)
         self.assertTrue(self.contract.is_created(), "contract failure")
         self.assertTrue(self.contract.is_deployed(), "deployment failure")
 
