@@ -129,19 +129,9 @@ class Contract(pyteos.Contract):
             max_cpu_usage, max_net_usage,
             is_verbose) 
 
-
     def path(self):
         p = self.contract_path()
-        print("#  " + p)
-
-
-    def is_created(self):
-        try:
-            self.json["transaction id"]
-            return True
-        except:
-            return False
-        
+        print("#  " + p)        
 
     def is_deployed(self):
         if not self.get_code():
@@ -149,7 +139,6 @@ class Contract(pyteos.Contract):
         t = self.account.code()
         return not (t.json["code_hash"] == "0000000000000000000000000000000000000000000000000000000000000000")
          
-
     def delete(self):
         shutil.rmtree(self.contract_path())
         print("#  Contract deleted.\n")
