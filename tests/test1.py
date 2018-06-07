@@ -4,6 +4,7 @@ import node
 import sess
 from eosf import *
 
+CONTRACT_NAME = "eosio.token"
 set_verbose(True)
 
 def run():
@@ -13,8 +14,8 @@ def run():
     print('test sess.init():')
     assert sess.init()
 
-    print('test Contract("eosio.token"):')
-    c = Contract("eosio.token")
+    print('test Contract():')
+    c = Contract(CONTRACT_NAME)
     assert c.is_created()
 
     print('test c.get_code():')
