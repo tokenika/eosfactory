@@ -964,6 +964,8 @@ class Contract(SetContract):
             self.is_verbose)
         return not self.error
 
+    def is_created(self):
+        return not self.error
 
     def wast(self):
         if self.is_mutable:            
