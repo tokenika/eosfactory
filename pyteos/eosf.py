@@ -132,21 +132,7 @@ class Contract(pyteos.Contract):
 
     def path(self):
         p = self.contract_path()
-<<<<<<< HEAD
-        print("#  " + p)        
-=======
         print("#  " + p)
-
-
-    def is_created(self):
-        return not self.error
-        # try:
-        #     self.json["transaction id"]
-        #     return True
-        # except:
-        #     return False
-        
->>>>>>> d161198a4e41df2cb2899dbd44694eee33861d47
 
     def is_deployed(self):
         if not self.get_code():
