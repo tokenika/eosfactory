@@ -2,7 +2,7 @@ import node
 import sess
 from eosf import *
 
-CONTRACT_NAME = "@CONTRACT_NAME@/build"
+CONTRACT_NAME = "@CONTRACT_NAME@"
 set_verbose(False)
 
 def run():

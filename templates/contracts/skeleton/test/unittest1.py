@@ -5,13 +5,13 @@ import node
 import sess
 from eosf import *
 
-CONTRACT_NAME = "@CONTRACT_NAME@/build"
+CONTRACT_NAME = "@CONTRACT_NAME@"
 set_verbose(False)
 
 class Test1(unittest.TestCase):
 
     def run(self, result=None):
-        """ Stop after first error """      
+        """ Stop after first error """
         if not result.failures:
             super().run(result)
 
