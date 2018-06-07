@@ -187,10 +187,7 @@ max_net_usage: An upper limit on the net usage budget, in bytes, for
 <dt id="pyteos.AccountEosio">
 <em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">AccountEosio</code><span class="sig-paren">(</span><em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.AccountEosio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyteos.Account" title="pyteos.Account"><code class="xref py py-class docutils literal"><span class="pre">pyteos.Account</span></code></a></p>
-<p>A representation of the <cite>eosio</cite> testing account.</p>
-<p>EOSIO offers an account, called <cite>eosio</cite>, that can be used for tests. 
-Without any such, it is not possible to execute commands that need 
-authorizations.</p>
+<p>A representation of the <cite>eosio</cite> special account.</p>
 </dd></dl>
 
 <dl class="class">
@@ -198,8 +195,8 @@ authorizations.</p>
 <em class="property">class </em><code class="descclassname">pyteos.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>account</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyteos.Contract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pyteos.SetContract" title="pyteos.SetContract"><code class="xref py py-class docutils literal"><span class="pre">pyteos.SetContract</span></code></a></p>
 <p>A representation of an EOSIO smart contract.</p>
-<p>Creates the contract on an account, and provides methodes that modify
-this contract.</p>
+<p>Creates a contract linked to a given account, and provides methods that
+allow to interact with this contract.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
 <div class="highlight-python"><div class="highlight"><pre>account: An account object or the name of an account that takes this 

@@ -859,11 +859,7 @@ class Account(CreateAccount):
 
 
 class AccountEosio(Account):
-    """ A representation of the `eosio` testing account.
-
-    EOSIO offers an account, called `eosio`, that can be used for tests. 
-    Without any such, it is not possible to execute commands that need 
-    authorizations.
+    """ A representation of the `eosio` special account.
 
     """
     def __init__(self, is_verbose=True): 
@@ -881,8 +877,8 @@ class AccountEosio(Account):
 class Contract(SetContract):
     """ A representation of an EOSIO smart contract.
     
-    Creates the contract on an account, and provides methodes that modify
-    this contract.
+    Creates a contract linked to a given account, and provides methods that
+    allow to interact with this contract.
 
     - **parameters**::
 
