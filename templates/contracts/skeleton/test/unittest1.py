@@ -5,7 +5,7 @@ import node
 import sess
 from eosf import *
 
-CONTRACT_NAME = "@CONTRACT_NAME@"
+CONTRACT_NAME = "@CONTRACT_NAME@/build"
 set_verbose(False)
 
 class Test1(unittest.TestCase):
