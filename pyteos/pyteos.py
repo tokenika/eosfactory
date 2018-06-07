@@ -649,7 +649,7 @@ class PushAction(_Command):
 
 class Template(_Command):
     def __init__(
-        self, name, template="", remove_existing=False, is_verbose=True):
+        self, name, template="", remove_existing=False, visual_studio_code=False, is_verbose=True):
 
         jarg = json.loads("{}")
         jarg["name"] = name
@@ -657,6 +657,8 @@ class Template(_Command):
             jarg["template"] = template
         if remove_existing:
             jarg["remove"] = 1
+        if visual_studio_code:
+            jarg["vsc"] = 1
 
         _Command.__init__(self, jarg, "bootstrap", "contract", is_verbose)
         print(self.json)

@@ -11,6 +11,7 @@ Macros made of elements of the :mod:`pyteos` module, intended for experiments wi
 
 """
 
+import sys
 import pathlib
 import pyteos
 import sess
@@ -173,6 +174,13 @@ class Account(pyteos.Account):
 
 
 class ContractFromTemplate(Contract):
-    def __init__(self, name, template="", remove_existing=False, is_verbose=True):
-        t = pyteos.Template(name, template, remove_existing, is_verbose)
+    def __init__(self, name, template="", remove_existing=False, visual_studio_code=False, is_verbose=True):
+        t = pyteos.Template(name, template, remove_existing, visual_studio_code, is_verbose)
         super().__init__(t.contract_path())
+
+
+if __name__ == "__main__":
+    template = ""
+    if len(sys.argv) > 2:
+        template = str(sys.argv[2])
+    pyteos.Template(str(sys.argv[1]), template, remove_existing=False, visual_studio_code=True, is_verbose=False)
