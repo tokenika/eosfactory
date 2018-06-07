@@ -97,14 +97,11 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a><ul>
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
-<li><a class="reference internal" href="#create-a-new-smart-contract-project">Create a new smart-contract project</a></li>
-<li><a class="reference internal" href="#open-the-smart-contract-in-visual-studio-code">Open the smart-contract in <em>Visual Studio Code</em></a></li>
-<li><a class="reference internal" href="#open-visual-studio-code-automatically">Open <em>Visual Studio Code</em> automatically</a></li>
-<li><a class="reference internal" href="#visual-studio-code-project-file-structure"><em>Visual Studio Code</em> project file structure</a></li>
+<li><a class="reference internal" href="#create-a-new-smart-contract-vsc-project">Create a new smart-contract VSC project</a></li>
 <li><a class="reference internal" href="#use-cmake-in-visual-studio-code">Use <em>CMake</em> in <em>Visual Studio Code</em></a><ul>
-<li><a class="reference internal" href="#initial-compilation-with-clang">Initial compilation with <code class="docutils literal"><span class="pre">CLANG</span></code></a></li>
-<li><a class="reference internal" href="#building-with-wasm-compiler">Building with <code class="docutils literal"><span class="pre">WASM</span></code> compiler</a></li>
-<li><a class="reference internal" href="#running-unit-tests">Running unit tests</a></li>
+<li><a class="reference internal" href="#configure">Configure</a></li>
+<li><a class="reference internal" href="#build">Build</a></li>
+<li><a class="reference internal" href="#unit-tests">Unit tests</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#use-automated-tasks-in-visual-studio-code">Use automated tasks in <em>Visual Studio Code</em></a></li>
@@ -178,51 +175,33 @@
 </li>
 </ul>
 </div>
-<div class="section" id="create-a-new-smart-contract-project">
-<span id="create-a-new-smart-contract-project"></span><h2>Create a new smart-contract project<a class="headerlink" href="#create-a-new-smart-contract-project" title="Permalink to this headline">¶</a></h2>
-<p>In a bash terminal run the following command:</p>
-<div class="highlight-python"><div class="highlight"><pre>$eosf bootstrap contract contract.name skeleton
+<div class="section" id="create-a-new-smart-contract-vsc-project">
+<span id="create-a-new-smart-contract-vsc-project"></span><h2>Create a new smart-contract VSC project<a class="headerlink" href="#create-a-new-smart-contract-vsc-project" title="Permalink to this headline">¶</a></h2>
+<p>In a bash terminal first switch to the <code class="docutils literal"><span class="pre">eosfactory</span></code> folder:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd eosfactory
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> <code class="docutils literal"><span class="pre">$eosf</span></code> is system variable (hence the <code class="docutils literal"><span class="pre">$</span></code> in front if it is needed) created during EOSFactory installation. Actually, it&#8217;s a path pointing to an EOSFactory C++ executable called <code class="docutils literal"><span class="pre">teos</span></code>.</p>
-<p><strong>NOTE:</strong> If you are on Windows and have not restarted your WSL bash terminal after EOSFactory installation,  you&#8217;ll need to do so before you execute any command involving the <code class="docutils literal"><span class="pre">$eosf</span></code> variable (if you are using WSL bash terminal inside <em>Visual Studio Code</em>, restart your VSC instead).</p>
+<p>And then run the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>python3 ./pyteos/eosf.py contract.name skeleton
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> If you are on Windows and have not restarted your WSL bash terminal after EOSFactory installation,  you&#8217;ll need to do so before you execute this command (if you are using WSL bash terminal inside <em>Visual Studio Code</em>, restart your VSC instead).</p>
 <p>The first parameter (in our case <code class="docutils literal"><span class="pre">contract.name</span></code>) is the name of your contract. It can be any name you want, provided there are no spaces in it. Letters, numbers, underscores <code class="docutils literal"><span class="pre">_</span></code>, dots <code class="docutils literal"><span class="pre">.</span></code> and dashes <code class="docutils literal"><span class="pre">-</span></code> are allowed.</p>
 <p>The second parameter (in our case <code class="docutils literal"><span class="pre">skeleton</span></code>) denotes the template from which the new contract will be created. As of now there are only two templates (<code class="docutils literal"><span class="pre">skeleton</span></code> and <code class="docutils literal"><span class="pre">eosio.token</span></code>) but there&#8217;ll be more in the future. This parameter is optional, the default value is <code class="docutils literal"><span class="pre">skeleton</span></code>.</p>
-</div>
-<div class="section" id="open-the-smart-contract-in-visual-studio-code">
-<span id="open-the-smart-contract-in-visual-studio-code"></span><h2>Open the smart-contract in <em>Visual Studio Code</em><a class="headerlink" href="#open-the-smart-contract-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
-<p>Start <em>Visual Studio Code</em> (VSC) and inside VSC open the folder where your newly created contract has been placed. The folder name always matches the name of contract itself and can be found within the location you assigned as your workspace during EOSFactory installation.</p>
-<p><img alt="open_folder" src="../_images/open_folder.png" /></p>
-<p><strong>NOTE:</strong> If you are not sure where your newly created contract is, its location is specified during the contract creation process, for example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c1">#     template contract: /mnt/d/Workspaces/EOS/contracts/contract.name</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="open-visual-studio-code-automatically">
-<span id="open-visual-studio-code-automatically"></span><h2>Open <em>Visual Studio Code</em> automatically<a class="headerlink" href="#open-visual-studio-code-automatically" title="Permalink to this headline">¶</a></h2>
-<p>You can use the <code class="docutils literal"><span class="pre">--vsc</span></code> argument to have the contract&#8217;s folder opened for you automatically (in a new instance of VSC) right after the new contract&#8217;s creation process is finished:</p>
-<div class="highlight-python"><div class="highlight"><pre>$eosf bootstrap contract contract.name skeleton --vsc
-</pre></div>
-</div>
-</div>
-<div class="section" id="visual-studio-code-project-file-structure">
-<span id="visual-studio-code-project-file-structure"></span><h2><em>Visual Studio Code</em> project file structure<a class="headerlink" href="#visual-studio-code-project-file-structure" title="Permalink to this headline">¶</a></h2>
-<p>Once you open a smart-contract&#8217;s folder in VSC, the file structure should look like this:</p>
+<p>If the above command is successful, it will launch a new instance of VSC and open a newly created VSC project with the following file structure:</p>
 <p><img alt="file_structure" src="../_images/file_structure.png" /></p>
-<p>As you can see, what you get is a standardized structure with a clear separation between the source code, build output files and unit tests.</p>
+<p>What you get is a complete smart-contract workspace with clear separation between smart-contract source code, build output files and unit tests. Everything is set up and ready to be built and unit tested.</p>
 </div>
 <div class="section" id="use-cmake-in-visual-studio-code">
 <span id="use-cmake-in-visual-studio-code"></span><h2>Use <em>CMake</em> in <em>Visual Studio Code</em><a class="headerlink" href="#use-cmake-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
 <p>With EOSFactory you can use <a class="reference external" href="https://cmake.org/">CMake</a> routines to compile, build and unit test a contract.</p>
-<p>At this stage we assume that you are running VSC and inside it you have opened your smart-contract&#8217;s folder, as described in the previous section.</p>
 <p>First open a bash terminal inside VSC (navigate to <code class="docutils literal"><span class="pre">View</span> <span class="pre">-&gt;</span> <span class="pre">Integrated</span> <span class="pre">Terminal</span></code>), and switch to the <code class="docutils literal"><span class="pre">build</span></code> folder:</p>
 <div class="highlight-python"><div class="highlight"><pre>cd build
 </pre></div>
 </div>
-<div class="section" id="initial-compilation-with-clang">
-<span id="initial-compilation-with-clang"></span><h3>Initial compilation with <code class="docutils literal"><span class="pre">CLANG</span></code><a class="headerlink" href="#initial-compilation-with-clang" title="Permalink to this headline">¶</a></h3>
-<p>The advantage of using the <code class="docutils literal"><span class="pre">CLANG</span></code> compiler (as opposed to the <code class="docutils literal"><span class="pre">WASM</span></code> compiler) is that it runs faster and does not involve the linking process. Thus most of the errors in a smart-contract&#8217;s code can be spotted automatically by <code class="docutils literal"><span class="pre">CLANG</span></code>.</p>
-<p>Using a bash terminal in VSC, run the following command to compile your contract with the <code class="docutils literal"><span class="pre">CLANG</span></code> compiler:</p>
+<div class="section" id="configure">
+<span id="configure"></span><h3>Configure<a class="headerlink" href="#configure" title="Permalink to this headline">¶</a></h3>
+<p>To configure your project:</p>
 <div class="highlight-python"><div class="highlight"><pre>cmake ..
 </pre></div>
 </div>
@@ -247,9 +226,9 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="building-with-wasm-compiler">
-<span id="building-with-wasm-compiler"></span><h3>Building with <code class="docutils literal"><span class="pre">WASM</span></code> compiler<a class="headerlink" href="#building-with-wasm-compiler" title="Permalink to this headline">¶</a></h3>
-<p>Run the following command to build your contract with the <em>EOSIO</em> <code class="docutils literal"><span class="pre">WASM</span></code> compiler:</p>
+<div class="section" id="build">
+<span id="build"></span><h3>Build<a class="headerlink" href="#build" title="Permalink to this headline">¶</a></h3>
+<p>To build your project:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">make</span>
 </pre></div>
 </div>
@@ -262,8 +241,8 @@ Built target wast
 </div>
 <p><strong>NOTE:</strong> If the <code class="docutils literal"><span class="pre">ABI</span></code> file already exists in the <code class="docutils literal"><span class="pre">src</span></code> folder (you should keep it there, if you prefer to create it manually instead of relying on the <em>EOSIO</em> toolset) <em>CMake</em> will skip the <code class="docutils literal"><span class="pre">ABI</span></code> file generation step and proceed with <code class="docutils literal"><span class="pre">WAST</span></code> file generation.</p>
 </div>
-<div class="section" id="running-unit-tests">
-<span id="running-unit-tests"></span><h3>Running unit tests<a class="headerlink" href="#running-unit-tests" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="unit-tests">
+<span id="unit-tests"></span><h3>Unit tests<a class="headerlink" href="#unit-tests" title="Permalink to this headline">¶</a></h3>
 <p>And finally, after your contract has been successfully built, invoke unit tests with this command:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">ctest</span>
 </pre></div>
@@ -278,11 +257,14 @@ Built target wast
 </div>
 <p>The outcome of the unit test (in the non-verbose mode) should look like this:</p>
 <div class="highlight-python"><div class="highlight"><pre>Test project /mnt/d/Workspaces/EOS/contracts/hello.tokenika/build
+
     Start 1: test
 1/2 Test #1: test .............................   Passed    5.12 sec
     Start 2: unittest
 2/2 Test #2: unittest .........................   Passed    6.58 sec
+
 100% tests passed, 0 tests failed out of 2
+
 Total Test time (real) =  11.71 sec
 </pre></div>
 </div>
@@ -292,11 +274,15 @@ Total Test time (real) =  11.71 sec
 <div class="section" id="use-automated-tasks-in-visual-studio-code">
 <span id="use-automated-tasks-in-visual-studio-code"></span><h2>Use automated tasks in <em>Visual Studio Code</em><a class="headerlink" href="#use-automated-tasks-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
 <p>Running VSC automated tasks is an alternative to using <em>CMake</em> routines described in the previous section.</p>
+<p>Also, by using automated tasks you can choose whether you want to just compile the code using the <code class="docutils literal"><span class="pre">CLANG</span></code> compiler or run a complete build with the <code class="docutils literal"><span class="pre">WASM</span></code> compiler.</p>
+<p>The advantage of using the <code class="docutils literal"><span class="pre">CLANG</span></code> compiler (as opposed to the <code class="docutils literal"><span class="pre">WASM</span></code> compiler) is that it runs faster and does not involve the linking process. Thus most of the errors in a smart-contract&#8217;s code can be spotted automatically by <code class="docutils literal"><span class="pre">CLANG</span></code>.</p>
 <p>To have your code compiled by the <code class="docutils literal"><span class="pre">CLANG</span></code> compiler navigate to <code class="docutils literal"><span class="pre">Tasks</span> <span class="pre">-&gt;</span> <span class="pre">Compile</span></code>:</p>
 <p><img alt="compile" src="../_images/compile.png" /></p>
 <p>To have your code built by the <code class="docutils literal"><span class="pre">WASM</span></code> compiler navigate to <code class="docutils literal"><span class="pre">Tasks</span> <span class="pre">-&gt;</span> <span class="pre">Build</span></code>:</p>
 <p><img alt="build" src="../_images/build.png" /></p>
-<p>To run unit tests navigate to <code class="docutils literal"><span class="pre">Tasks</span> <span class="pre">-&gt;</span> <span class="pre">Unittest</span></code>:</p>
+<p>To run ad-hoc unit tests navigate to <code class="docutils literal"><span class="pre">Tasks</span> <span class="pre">-&gt;</span> <span class="pre">Test</span></code>:</p>
+<p><img alt="test" src="../_images/test.png" /></p>
+<p>To run standardized unit tests navigate to <code class="docutils literal"><span class="pre">Tasks</span> <span class="pre">-&gt;</span> <span class="pre">Unittest</span></code>:</p>
 <p><img alt="unittest" src="../_images/unittest.png" /></p>
 <p>You can further speed up your developement cycle by creating key bindings for those tasks, for example:</p>
 <div class="highlight-python"><div class="highlight"><pre>    <span class="p">{</span>
@@ -337,8 +323,9 @@ Total Test time (real) =  11.71 sec
 </div>
 <div class="section" id="use-intellisense-in-visual-studio-code">
 <span id="use-intellisense-in-visual-studio-code"></span><h2>Use <em>IntelliSense</em> in <em>Visual Studio Code</em><a class="headerlink" href="#use-intellisense-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
-<p>By opening an individual contract folder in VSC you&#8217;ll also be able to make use of VSC <a class="reference external" href="https://code.visualstudio.com/docs/editor/intellisense">IntelliSense</a> feature. However for that to work you&#8217;ll need to install the C/C++ IntelliSense extension in VSC.</p>
+<p>You can also make use of VSC <a class="reference external" href="https://code.visualstudio.com/docs/editor/intellisense">IntelliSense</a> feature.</p>
 <p><img alt="intelisense" src="../_images/intelisense.png" /></p>
+<p><strong>NOTE:</strong> For that to work you&#8217;ll need to install the C/C++ IntelliSense extension in VSC.</p>
 </div>
 <div class="section" id="debug-with-smart-loggers">
 <span id="debug-with-smart-loggers"></span><h2>Debug with smart loggers<a class="headerlink" href="#debug-with-smart-loggers" title="Permalink to this headline">¶</a></h2>
