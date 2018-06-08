@@ -98,10 +98,10 @@
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
 <li><a class="reference internal" href="#run-python-cli-in-vsc">Run Python CLI in VSC</a></li>
 <li><a class="reference internal" href="#create-a-new-contract-from-template">Create a new contract from template</a></li>
-<li><a class="reference internal" href="#edit-c-code">Edit C++ code</a></li>
+<li><a class="reference internal" href="#edit-the-source-code">Edit the source code</a></li>
 <li><a class="reference internal" href="#build-the-new-contract">Build the new contract</a></li>
-<li><a class="reference internal" href="#deploy-the-contract">Deploy the Contract</a></li>
-<li><a class="reference internal" href="#test-the-contract">Test the Contract</a></li>
+<li><a class="reference internal" href="#deploy-the-contract">Deploy the contract</a></li>
+<li><a class="reference internal" href="#test-the-contract">Test the contract</a></li>
 <li><a class="reference internal" href="#modify-the-code-re-compile-re-deploy">Modify the code, re-compile &amp; re-deploy</a></li>
 <li><a class="reference internal" href="#exit-python-cli">Exit Python CLI</a></li>
 </ul>
@@ -194,9 +194,9 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="edit-c-code">
-<span id="edit-c-code"></span><h2>Edit C++ code<a class="headerlink" href="#edit-c-code" title="Permalink to this headline">¶</a></h2>
-<p>Edit the <code class="docutils literal"><span class="pre">hello.world.cpp</span></code> file in a text editor and comment out line 17, i.e. <code class="docutils literal"><span class="pre">require_auth(</span> <span class="pre">user</span> <span class="pre">)</span></code>:</p>
+<div class="section" id="edit-the-source-code">
+<span id="edit-the-source-code"></span><h2>Edit the source code<a class="headerlink" href="#edit-the-source-code" title="Permalink to this headline">¶</a></h2>
+<p>Locate the folder containing the new contract (if you’re not sure where it is, use the output produced by the <code class="docutils literal"><span class="pre">contract.path</span></code> method) and edit the <code class="docutils literal"><span class="pre">hello.world.cpp</span></code> file in your favourite text editor by commenting out line 17, i.e. <code class="docutils literal"><span class="pre">require_auth(</span> <span class="pre">user</span> <span class="pre">)</span></code>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#include &lt;eosiolib/eosio.hpp&gt;</span>
 <span class="c1">#include &lt;eosiolib/print.hpp&gt;</span>
 
@@ -238,14 +238,14 @@
 <p><strong>NOTE:</strong> The <code class="docutils literal"><span class="pre">abi()</span></code>  and <code class="docutils literal"><span class="pre">build()</span></code> methods are relying on the <em>EOSIO</em> ABI compiler which has an experimental status in the <em>EOSIO</em> repository. Thus the ABI output might be different than expected. For the time being we recommend using the <code class="docutils literal"><span class="pre">wast()</span></code> method only and creating the ABI file manually.</p>
 </div>
 <div class="section" id="deploy-the-contract">
-<span id="deploy-the-contract"></span><h2>Deploy the Contract<a class="headerlink" href="#deploy-the-contract" title="Permalink to this headline">¶</a></h2>
+<span id="deploy-the-contract"></span><h2>Deploy the contract<a class="headerlink" href="#deploy-the-contract" title="Permalink to this headline">¶</a></h2>
 <p>Now we can deploy the compiled contract:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="test-the-contract">
-<span id="test-the-contract"></span><h2>Test the Contract<a class="headerlink" href="#test-the-contract" title="Permalink to this headline">¶</a></h2>
+<span id="test-the-contract"></span><h2>Test the contract<a class="headerlink" href="#test-the-contract" title="Permalink to this headline">¶</a></h2>
 <p>You can play with the contract giving it different arguments:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;alice&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
 </pre></div>
