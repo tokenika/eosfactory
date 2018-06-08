@@ -80,9 +80,11 @@ target_include_directories( ${LIB_NAME}
     ${EOSIO_SOURCE_DIR}/libraries/utilities/include
     ${EOSIO_SOURCE_DIR}/libraries/softfloat/source/include
     ${EOSIO_SOURCE_DIR}/libraries/chain/include
+    ${EOSIO_BINARY_DIR}/libraries/chain/include    
     ${EOSIO_SOURCE_DIR}/libraries/types/include
     ${EOSIO_SOURCE_DIR}/libraries/chainbase/include
     ${EOSIO_SOURCE_DIR}/plugins/database_plugin/include
+    ${EOSIO_SOURCE_DIR}/plugins/chain_interface/include
     ${EOSIO_SOURCE_DIR}/plugins/chain_plugin/include
 
   PUBLIC

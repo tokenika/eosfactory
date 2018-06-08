@@ -48,7 +48,7 @@ using namespace boost::filesystem;
   template<typename T>
   fc::variant something = call(host, port, path, const T& v);
   
-  Call callSomething(path, fc::variant(v));
+  CallChain callSomething(path, fc::variant(v));
   if (callSomething.isError_) {
     return callSomething;
   }
@@ -57,7 +57,7 @@ using namespace boost::filesystem;
   // for example:
   auto info = get_info();
   // maps to the following:
-  Call callGetInfo(string(getCommandPath + "get_info")); 
+  CallChain callGetInfo(string(getCommandPath + "get_info")); 
     // second arg is defaulted!
 
   if (callGetInfo.isError_) {
@@ -68,7 +68,7 @@ using namespace boost::filesystem;
   // for example:
   auto push = call(push_txn_func, packed_transaction(trx, compression));
   // maps to the following:
-  Call callPush(push_txn_func, packed_transaction(trx, compression));
+  CallChain callPush(push_txn_func, packed_transaction(trx, compression));
   if(callPush.isError_) {
     return callPush;
   }
@@ -103,9 +103,9 @@ namespace teos {
   % __func__ % __FILE__ % __LINE__)
 
     //////////////////////////////////////////////////////////////////////////
-    // class Call
+    // class CallChain
     //////////////////////////////////////////////////////////////////////////
-    class Call : public TeosCommand
+    class CallChain : public TeosCommand
     {
       std::string requestStr;
     public:
@@ -129,7 +129,7 @@ namespace teos {
         return true;
       }
 
-      Call(string path, const fc::variant& postData = fc::variant())
+      CallChain(string path, const fc::variant& postData = fc::variant())
         : TeosCommand(path)
       {
         if (fcaVariant2ptree(postData, reqJson_)) {
@@ -143,7 +143,7 @@ namespace teos {
         }
       }
 
-      Call(fc::variant fcVariant)
+      CallChain(fc::variant fcVariant)
       {
         fcVariant_ = fcVariant;
         fcaVariant2ptree(fcVariant_, respJson_);
@@ -153,7 +153,7 @@ namespace teos {
       void normResponse(std::string response, ptree &respJson);
     };
 
-    void Call::normResponse(std::string response, ptree &respJson) {
+    void CallChain::normResponse(std::string response, ptree &respJson) {
       fcVariant_ = fc::json::from_string(response);
       stringstream ss;
       ss << response;
@@ -169,21 +169,40 @@ namespace teos {
 
     using namespace teos::command;
 
-    Call /*void*/ sign_transaction(
-      chain::signed_transaction& trx,
-      fc::variant& required_keys, 
-      const chain_id_type& chain_id      
-      )
+    CallChain /*void*/ sign_transaction(chain::signed_transaction& trx)
     {
-      fc::variants sign_args = 
-        {
-          fc::variant(trx), 
-          required_keys, 
-          fc::variant(chain_id)
-        };
-      return Call(wallet_sign_trx, sign_args);
+      // TODO better error checking
       /*
-      const auto& signed_trx = call(wallet_url, wallet_sign_trx, sign_args);
+      const auto& public_keys = call(
+        wallet_host, wallet_port, wallet_public_keys);
+      */
+      CallChain callPublicKeys(wallet_public_keys);
+      if(callPublicKeys.isError_) {
+        return callPublicKeys;
+      }
+      const auto& public_keys = callPublicKeys.fcVariant_;
+      auto get_arg = fc::mutable_variant_object
+            ("transaction", (transaction)trx)
+            ("available_keys", public_keys);
+      /*
+      const auto& required_keys = call(host, port, get_required_keys, get_arg);
+      */
+      CallChain callRequiredKeys(get_required_keys, get_arg);
+      if(callRequiredKeys.isError_){
+        return callRequiredKeys;
+      }
+      const auto& required_keys = callRequiredKeys.fcVariant_;
+      // TODO determine chain id
+      fc::variants sign_args = {fc::variant(trx), required_keys["required_keys"]
+        , fc::variant(chain_id_type{})};
+      /*
+      const auto& signed_trx = call(
+        wallet_host, wallet_port, wallet_sign_trx, sign_args);
+      trx = signed_trx.as<signed_transaction>();        
+      */
+      return CallChain(wallet_sign_trx, sign_args);
+      /*
+      trx = signed_trx.as<signed_transaction>();
       */
     }
 
@@ -199,79 +218,57 @@ namespace teos {
         {}, config::system_account_name, "nonce", fc::raw::pack(nonce));
     }
 
-    fc::variant determine_required_keys(const signed_transaction& trx) {
-      // TODO better error checking
-      //wdump((trx));
-      //const auto&public_keys  = call(wallet_url, wallet_public_keys);
-      Call call_public_keys(wallet_public_keys);
-      const auto&public_keys = call_public_keys.fcVariant_;
-
-      auto get_arg = fc::mutable_variant_object
-              ("transaction", (transaction)trx)
-              ("available_keys", public_keys);
-      //const auto& required_keys = call(get_required_keys, get_arg);
-      Call call_required_keys(get_required_keys);
-      const auto&required_keys = call_required_keys.fcVariant_;
-
-      return required_keys["required_keys"];
-    }
-
     TeosCommand /*fc::variant*/ push_transaction(
       signed_transaction& trx,       
-      unsigned expirationSec = 30,
-      bool tx_skip_sign = false,
-      bool tx_dont_broadcast = false,
-      bool tx_force_unique = false,
-      uint32_t tx_max_cpu_usage = 0,
-      uint32_t tx_max_net_usage = 0,
+        unsigned expirationSec = 30,
+        bool tx_skip_sign = false,
+        bool tx_dont_broadcast = false,
+        bool tx_force_unique = false,
+        uint32_t tx_max_cpu_usage = 0,
+        uint32_t tx_max_net_usage = 0,
       int32_t extra_kcpu = 1000,
       packed_transaction::compression_type compression 
-        = packed_transaction::none)
+        = packed_transaction::none)     
     {
       /*
       auto info = get_info();
       */ 
-      Call callGetInfo(string(getCommandPath + "get_info"));
+      CallChain callGetInfo(string(getCommandPath + "get_info"));
       if (callGetInfo.isError_) {
         return callGetInfo;
       }
+
       auto info 
         = callGetInfo.fcVariant_.as<chain_apis::read_only::get_info_results>();
       trx.expiration = info.head_block_time + fc::seconds(expirationSec);
-      trx.set_reference_block(info.last_irreversible_block_id);
-      
+      trx.set_reference_block(info.head_block_id);
+
       if (tx_force_unique) {
          trx.context_free_actions.emplace_back( generate_nonce() );
       }
-
-      auto required_keys = determine_required_keys(trx);
-      size_t num_keys = required_keys.is_array() 
-        ? required_keys.get_array().size() : 1;
-
-      trx.max_cpu_usage_ms = tx_max_net_usage;
-      trx.max_net_usage_words = (tx_max_net_usage + 7)/8;
 
       if (!tx_skip_sign) {
         /*
         sign_transaction(trx);
         */        
-        Call callSign = sign_transaction(trx, required_keys, info.chain_id);
+        CallChain callSign = sign_transaction(trx);
         if (callSign.isError_) {
           return callSign;
         }
         trx = callSign.fcVariant_.as<signed_transaction>();
       }
       
+      
       if (!tx_dont_broadcast) {
         /*
         return call(push_txn_func, packed_transaction(trx, compression));
         */
-        Call callPushTransaction(
+        CallChain callPushTransaction(
           push_txn_func,
           fc::variant(packed_transaction(trx, compression)))/*.fcVarisnt_*/;
         return callPushTransaction;        
       } else {
-        return Call(fc::variant(trx))/*.fcVarisnt_*/;
+        return CallChain(fc::variant(trx))/*.fcVarisnt_*/;
       }
     }
 
@@ -402,15 +399,15 @@ namespace teos {
     }
 
     chain::action create_setabi(
-        const name& account, const eosio::chain::abi_def& abi, vector<string> tx_permission) {
+        const name& account, const eosio::chain::abi_def& abi, vector<string> permissions) {
       return action {
-        tx_permission.empty() 
-          ? vector<chain::permission_level>{{account,config::active_name}} 
-          : get_account_permissions(tx_permission),
-        setabi{
-          .account   = account,
-          .abi       = fc::raw::pack(abi)
-        }
+          permissions.empty() 
+            ? vector<chain::permission_level>{{account,config::active_name}} 
+            : get_account_permissions(permissions),
+          eosio::chain::setabi{
+            .account   = account,
+            .abi       = abi
+          }
       };
     }
 
@@ -496,7 +493,7 @@ namespace teos {
         get_code_func, fc::mutable_variant_object("account_name", 
         accountName));
       */
-      Call callGetCode(string(getCommandPath + "get_code"), 
+      CallChain callGetCode(string(getCommandPath + "get_code"), 
         fc::mutable_variant_object("account_name", accountName));
       auto result = callGetCode.fcVariant_;
 
@@ -561,7 +558,7 @@ namespace teos {
       /*
       auto result = call(json_to_bin_func, arg);
       */
-      Call callJson(json_to_bin_func, fc::variant(arg));
+      CallChain callJson(json_to_bin_func, fc::variant(arg));
       if(callJson.isError_){
         return callJson;
       }

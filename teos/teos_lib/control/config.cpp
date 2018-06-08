@@ -34,7 +34,7 @@ namespace teos {
 
 /*
   --genesis-json arg (="genesis.json")  File to read Genesis State from
-  --resync-blockchain                   clear chain database and block log
+  --delete-all-blocks                   clear chain database and block log
   --http-server-address arg (=127.0.0.1:8888)
                                         The local IP and port to listen for
                                         incoming http connections.
@@ -570,9 +570,9 @@ Cannot determine the contract workspace.
     }
     
     ///////////////////////////////////////////////////////////////////////////
-    // shared-memory-size-mb
+    // chain-state-db-size-mb
     ///////////////////////////////////////////////////////////////////////////
-    string getSharedMemorySizeMb()
+    string getMemorySizeMb()
     {
       return configValue(nullptr, EOSIO_SHARED_MEMORY_SIZE_MB);
     }        
@@ -816,7 +816,7 @@ Cannot determine the contract workspace.
       respJson_.put("EOSIO_BOOST_INCLUDE_DIR", getEOSIO_BOOST_INCLUDE_DIR(this));
       respJson_.put("EOSIO_WASM_LLVM_LINK", getEOSIO_WASM_LLVM_LINK(this));
       respJson_.put("EOSIO_WASM_LLC", getEOSIO_WASM_LLC(this));
-      respJson_.put("sharedMemory", getSharedMemorySizeMb());
+      respJson_.put("sharedMemory", getMemorySizeMb());
       respJson_.put(
         "contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));
       respJson_.put(

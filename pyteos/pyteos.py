@@ -711,7 +711,7 @@ class WAST(_Command):
 class NodeStart(_Command):
     def __init__(self, clear=0, is_verbose=True):
         jarg = json.loads("{}")
-        jarg["resync-blockchain"] = clear
+        jarg["delete-all-blocks"] = clear
         jarg["DO_NOT_LAUNCH"] = 1
         _Command.__init__(self, jarg, "daemon", "start", False)
 

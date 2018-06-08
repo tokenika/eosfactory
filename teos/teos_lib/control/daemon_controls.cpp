@@ -117,7 +117,7 @@ namespace teos {
       }
       
       try{
-        if(reqJson_.get("resync-blockchain", false)){
+        if(reqJson_.get("delete-all-blocks", false)){
           DaemonStop();
           deleteDaemonData();
           deleteWallets();          
@@ -136,10 +136,10 @@ namespace teos {
           + " --data-dir " + reqJson_.get<string>("data-dir")
           + " --config-dir " + reqJson_.get<string>("config-dir")
           + " --wallet-dir " + reqJson_.get<string>("wallet-dir")
-          + " --shared-memory-size-mb " + getSharedMemorySizeMb()
+          + " --chain-state-db-size-mb " + getMemorySizeMb()
           ;
-        if(reqJson_.get("resync-blockchain", false)) {
-          args += " --resync-blockchain";
+        if(reqJson_.get("delete-all-blocks", false)) {
+          args += " --delete-all-blocks";
         }
         string commandLine = reqJson_.get<string>("daemon_exe") + args;
 
@@ -160,8 +160,8 @@ namespace teos {
 
     void DaemonStart::launch()
     { 
-        // cout << requestToString(false) << endl;
-        // cout << commandLine <<endl;
+      // cout << requestToString(false) << endl;
+      // cout << reqJson_.get<string>("command_line") <<endl;
       try{
         if(isWindowsUbuntu()) {
           bp::spawn("cmd.exe /c start /MIN bash.exe -c " 

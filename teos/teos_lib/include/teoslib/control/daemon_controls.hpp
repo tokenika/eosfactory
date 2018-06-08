@@ -73,9 +73,9 @@ Usage: ./teos node kill
       static const string DO_NOT_LAUNCH;
 
       DaemonStart(
-        bool resync_blockchain = false)
+        bool clearBlockchain = false)
       {
-        reqJson_.put("resync-blockchain", resync_blockchain);
+        reqJson_.put("delete-all-blocks", clearBlockchain);
         action();
       }
 
@@ -109,9 +109,9 @@ Usage: ./teos node start [Options]
       bool checkArguments(variables_map &vm) {
         bool ok = true;
         if(vm.count("clear")){
-          reqJson_.put("resync-blockchain", true);
+          reqJson_.put("delete-all-blocks", true);
         } else {
-          reqJson_.put("resync-blockchain", false);
+          reqJson_.put("delete-all-blocks", false);
         }       
         return ok;
       }

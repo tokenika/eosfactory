@@ -18,7 +18,7 @@
 #include <boost/format.hpp>
 
 using boost::asio::ip::tcp;
-#define CLEAR_CHAIN_DATABASE_AND_BLOCK_LOG "--resync-blockchain"
+#define DELETE_ALL_BLOCKS "--delete-all-blocks"
 #define MAX_LENGTH  1024
 #define EOSIO_DAEMON_NAME "nodeos"
 
@@ -65,7 +65,7 @@ public:
 
 void parse()
 {
-  if (std::string(data_) == CLEAR_CHAIN_DATABASE_AND_BLOCK_LOG) {
+  if (std::string(data_) == DELETE_ALL_BLOCKS) {
     boost::process::ipstream pipe_stream;
     boost::process::child c("gcc --version", boost::process::std_out > pipe_stream);
 
