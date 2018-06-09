@@ -199,21 +199,11 @@ namespace teos {
         {}, config::system_account_name, "nonce", fc::raw::pack(nonce));
     }
 
-    fc::variant determine_required_keys(const signed_transaction& trx) {
-      // TODO better error checking
-      //wdump((trx));
-      //const auto&public_keys  = call(wallet_url, wallet_public_keys);
-      Call call_public_keys(wallet_public_keys);
-      const auto&public_keys = call_public_keys.fcVariant_;
-
-      auto get_arg = fc::mutable_variant_object
-              ("transaction", (transaction)trx)
-              ("available_keys", public_keys);
-      //const auto& required_keys = call(get_required_keys, get_arg);
-      Call call_required_keys(get_required_keys);
-      const auto&required_keys = call_required_keys.fcVariant_;
-
-      return required_keys["required_keys"];
+    chain::action generate_nonce_action() 
+    {
+      return chain::action( 
+        {}, config::null_account_name, "nonce", 
+        fc::raw::pack(fc::time_point::now().time_since_epoch().count()));
     }
 
     TeosCommand /*fc::variant*/ push_transaction(
@@ -235,25 +225,50 @@ namespace teos {
       if (callGetInfo.isError_) {
         return callGetInfo;
       }
+      if(callGetInfo.respJson_.get("last_irreversible_block_id", "").empty())
+      {
+        callGetInfo.putError("Invalid last_irreversible_block_id");
+        return callGetInfo;
+      }
       auto info 
         = callGetInfo.fcVariant_.as<chain_apis::read_only::get_info_results>();
       trx.expiration = info.head_block_time + fc::seconds(expirationSec);
       trx.set_reference_block(info.last_irreversible_block_id);
-      
-      if (tx_force_unique) {
-         trx.context_free_actions.emplace_back( generate_nonce() );
-      }
 
-      auto required_keys = determine_required_keys(trx);
-      size_t num_keys = required_keys.is_array() 
-        ? required_keys.get_array().size() : 1;
+      if (tx_force_unique) {
+        trx.context_free_actions.emplace_back( generate_nonce_action() );
+      }
 
       trx.max_cpu_usage_ms = tx_max_net_usage;
       trx.max_net_usage_words = (tx_max_net_usage + 7)/8;
 
       if (!tx_skip_sign) {
+        //fc::variant determine_required_keys(const signed_transaction& trx) 
+        //{
+        //const auto&public_keys  = call(wallet_url, wallet_public_keys);
+        Call call_public_keys(wallet_public_keys);
+        if(call_public_keys.isError_){
+          cout << call_public_keys.errorMsg() << endl;
+          return call_public_keys;
+        }      
+        const auto&public_keys = call_public_keys.fcVariant_;
+
+        auto get_arg = fc::mutable_variant_object
+                ("transaction", (transaction)trx)
+                ("available_keys", public_keys);
+        //const auto& required_keys = call(get_required_keys, get_arg);
+        Call call_required_keys(get_required_keys, get_arg);
+        if(call_required_keys.isError_){
+          cout << call_required_keys.errorMsg() << endl;
+          return call_required_keys;
+        }
+        cout << call_required_keys.responseToString();
+
+        auto required_keys = call_required_keys.fcVariant_["required_keys"];
+        //}
+
         /*
-        sign_transaction(trx);
+        sign_transaction(trx, required_keys, info.chain_id);
         */        
         Call callSign = sign_transaction(trx, required_keys, info.chain_id);
         if (callSign.isError_) {
