@@ -63,6 +63,7 @@ Usage: ./teos node kill
      */
     class DaemonStart : public TeosControl
     {
+      string nameSuffix_;
       bool configure();
       void launch();
       void wait();
@@ -73,7 +74,8 @@ Usage: ./teos node kill
       static const string DO_NOT_LAUNCH;
 
       DaemonStart(
-        bool clearBlockchain = false)
+        bool clearBlockchain = false,
+        string nameSuffix = "11") : nameSuffix_(nameSuffix)
       {
         reqJson_.put("delete-all-blocks", clearBlockchain);
         action();

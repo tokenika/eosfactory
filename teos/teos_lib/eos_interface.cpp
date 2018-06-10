@@ -248,7 +248,6 @@ namespace teos {
         //const auto&public_keys  = call(wallet_url, wallet_public_keys);
         Call call_public_keys(wallet_public_keys);
         if(call_public_keys.isError_){
-          cout << call_public_keys.errorMsg() << endl;
           return call_public_keys;
         }      
         const auto&public_keys = call_public_keys.fcVariant_;
@@ -259,10 +258,8 @@ namespace teos {
         //const auto& required_keys = call(get_required_keys, get_arg);
         Call call_required_keys(get_required_keys, get_arg);
         if(call_required_keys.isError_){
-          cout << call_required_keys.errorMsg() << endl;
           return call_required_keys;
         }
-        cout << call_required_keys.responseToString();
 
         auto required_keys = call_required_keys.fcVariant_["required_keys"];
         //}

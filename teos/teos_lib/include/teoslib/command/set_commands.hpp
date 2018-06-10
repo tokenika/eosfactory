@@ -72,6 +72,9 @@ namespace teos
           reqJson.get<unsigned>("max-cpu-usage"),
           reqJson.get<unsigned>("max-net-usage")
           ));
+        
+        reqJson_.put("wast-file", wastFile);
+        reqJson_.put("abi-file", abiFile);
       }
     };
 
@@ -190,6 +193,8 @@ Usage: ./teos [http address] create key --jarg '{
       }
 
       void printout(TeosControl command, variables_map &vm) {
+        output("wast: %s", command.reqJson_.get("wast-file", "ERROR!").c_str());
+        output("abi: %s", command.reqJson_.get("abi-file", "ERROR!").c_str());
         output("transaction id", "%s", GET_STRING(command, "transaction_id"));
       }
     };
