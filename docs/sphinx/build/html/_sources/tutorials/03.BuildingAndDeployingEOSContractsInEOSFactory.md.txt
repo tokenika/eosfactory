@@ -32,7 +32,7 @@ import sess
 sess.init()
 ```
 
-To create a new contract from a pre-defined template use the `ContractFromTemplate` class:
+To create a new contract from a pre-defined template use the `ContractFromTemplate` class and pass to its constructor a name of your choice, for example:
 
 ```
 from eosf import *
@@ -159,7 +159,9 @@ But if we use the appropriate authority, there should no error:
 contract.push_action("hi", '{"user":"carol"}', sess.carol)
 ```
 
-And finally, when your are done your contract, you might want to delete it from your workspace:
+## Clean up
+
+When your are done your contract, you might want to delete it from your workspace:
 
 ```
 contract.delete()
@@ -167,7 +169,11 @@ contract.delete()
 
 **NOTE:** The above command removes the entire folder.
 
-## Exit Python CLI
+To stop the testnet:
+
+```
+node.stop()
+```
 
 To exit Python CLI:
 

@@ -103,7 +103,7 @@
 <li><a class="reference internal" href="#deploy-the-contract">Deploy the contract</a></li>
 <li><a class="reference internal" href="#test-the-contract">Test the contract</a></li>
 <li><a class="reference internal" href="#modify-the-code-re-compile-re-deploy">Modify the code, re-compile &amp; re-deploy</a></li>
-<li><a class="reference internal" href="#exit-python-cli">Exit Python CLI</a></li>
+<li><a class="reference internal" href="#clean-up">Clean up</a></li>
 </ul>
 </li>
 </ul>
@@ -183,7 +183,7 @@
 <span class="n">sess</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>To create a new contract from a pre-defined template use the <code class="docutils literal"><span class="pre">ContractFromTemplate</span></code> class:</p>
+<p>To create a new contract from a pre-defined template use the <code class="docutils literal"><span class="pre">ContractFromTemplate</span></code> class and pass to its constructor a name of your choice, for example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eosf</span> <span class="k">import</span> <span class="o">*</span>
 <span class="n">contract</span> <span class="o">=</span> <span class="n">ContractFromTemplate</span><span class="p">(</span><span class="s2">&quot;hello.world&quot;</span><span class="p">)</span>
 </pre></div>
@@ -284,14 +284,18 @@
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;carol&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>And finally, when your are done your contract, you might want to delete it from your workspace:</p>
+</div>
+<div class="section" id="clean-up">
+<span id="clean-up"></span><h2>Clean up<a class="headerlink" href="#clean-up" title="Permalink to this headline">¶</a></h2>
+<p>When your are done your contract, you might want to delete it from your workspace:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </pre></div>
 </div>
 <p><strong>NOTE:</strong> The above command removes the entire folder.</p>
+<p>To stop the testnet:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">node</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
 </div>
-<div class="section" id="exit-python-cli">
-<span id="exit-python-cli"></span><h2>Exit Python CLI<a class="headerlink" href="#exit-python-cli" title="Permalink to this headline">¶</a></h2>
 <p>To exit Python CLI:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">exit</span><span class="p">()</span>
 </pre></div>
