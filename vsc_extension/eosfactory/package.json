@@ -1,11 +1,11 @@
 {
     "name": "eosfactory",
     "displayName": "EOSFactory",
-    "description": "EOSIO smart contract IDE",
+    "description": "IDE for EOSIO smart contracts",
     "version": "0.0.1",
     "publisher": "Tokenika",
     "engines": {
-        "vscode": "^1.23.0"
+        "vscode": "^1.24.0"
     },
     "categories": [
         "Other"
@@ -15,12 +15,80 @@
     ],
     "main": "./out/extension",
     "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "EOSFactory configuration",
+            "properties": {
+                "eosfactory.useCodeSnippetsOnMethodSuggest": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "EOSFactory: Complete functions with their parameter signature."
+                },
+                "eosfactory.tsdk": {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "description": "EOSFactory: Specifies the folder path containing the tsserver and lib*.d.ts files to use."
+                }
+            }
+        },                
         "commands": [
             {
                 "command": "extension.sayHello",
-                "title": "Hello World"
+                "title": "Hello World",
+                "category": "EOSF"
             }
-        ]
+        ],
+        "menus": {
+            "editor/title": [{
+                "when": "resourceLangId == markdown",
+                "command": "markdown.showPreview",
+                "alt": "markdown.showPreviewToSide",
+                "group": "navigation"
+            }]                       
+        },
+        "keybindings": [{
+            "command": "extension.sayHello",
+            "key": "ctrl+f1",
+            "mac": "cmd+f1",
+            "when": "editorTextFocus"
+        }],
+        "languages": [{
+            "id": "python",
+            "extensions": [ ".py" ],
+            "aliases": [ "Python", "py" ],
+            "filenames": [ "..." ],
+            "firstLine": "^#!/.*\\bpython[0-9.-]*\\b",
+            "configuration": "./language-configuration.json"
+        }],
+        "views": {
+            "explorer": [
+                {
+                    "id": "nodeDependencies",
+                    "name": "Node Dependencies"
+                }
+            ]
+        },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "eosfactory",
+                    "title": "EOSFactory",
+                    "icon": "resources/tokenika.png"
+                }
+            ]
+        },
+        "views": {
+            "eosfactory": [
+                {
+                    "id": "package-dependencies",
+                    "name": "Dependencies"
+                },
+                {
+                    "id": "package-outline",
+                    "name": "Outline"
+                }
+            ]
+        }                
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",

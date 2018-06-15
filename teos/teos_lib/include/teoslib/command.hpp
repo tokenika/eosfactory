@@ -35,6 +35,8 @@ namespace teos
   public:
     static string httpAddress;
     static string httpWalletAddress;
+    static bool print_request;
+    static bool print_response;
 
     TeosCommand(string path, ptree reqJson);
     TeosCommand(string path);
@@ -67,7 +69,11 @@ namespace teos
            + "Default value is: " + TeosCommand::httpAddress).c_str())
         ("wallet,w", value<string>(&(TeosCommand::httpWalletAddress)),
           (string("The http address (host:port) where eos-wallet is running.")
-          + " Default value is: " + TeosCommand::httpWalletAddress).c_str());
+          + " Default value is: " + TeosCommand::httpWalletAddress).c_str())
+        ("print-request", value<bool>(&(TeosCommand::print_request)), 
+          "Print HTTP request")
+        ("print-response", value<bool>(&(TeosCommand::print_response)), 
+          "Print HTTP response");
       od.add(ControlOptions::groupOptionDescription());
       return od;
     }

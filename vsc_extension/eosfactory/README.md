@@ -1,6 +1,7 @@
 # eosfactory README
 
 This is the README for your extension "eosfactory". After writing up a brief description, we recommend including the following sections.
+<a href="file:///c|\windows\System32\calc.exe">Local Windows Calculator</a>
 
 ## Features
 

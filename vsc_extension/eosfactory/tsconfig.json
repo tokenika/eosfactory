@@ -7,7 +7,7 @@
             "es6"
         ],
         "sourceMap": true,
-        "rootDir": "sourceDir",
+        "rootDir": "src",
         /* Strict Type-Checking Option */
         "strict": true,   /* enable all strict type-checking options */
         /* Additional Checks */

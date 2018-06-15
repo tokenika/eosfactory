@@ -82,7 +82,16 @@ namespace teos
         "Connection: close" + CRNL + CRNL +
         postMsg;
 
-      //cout << "callEosd request:\n" << request << endl;
+      if(print_request)
+      {
+        cout << R"(
+--------------------------
+REQUEST:
+--------------------------          
+        )" << endl;
+        cout << request;
+      }
+      
 
       boost::system::error_code error;
 
@@ -127,7 +136,17 @@ namespace teos
       string mark = CRNL + CRNL; // header end mark
       size_t found = message.find(mark);
       message = message.substr(found + mark.length(), message.length());
-      ////cout << message << endl;
+
+      if(print_response)
+      {
+        cout << R"(
+--------------------------
+RESPONSE:
+--------------------------          
+        )" << endl;
+        cout << message;
+      }      
+
       normResponse(message, respJson_);
     }
     catch (exception& e) {
@@ -137,6 +156,8 @@ namespace teos
 
   string TeosCommand::httpAddress = "";
   string TeosCommand::httpWalletAddress = "";
+  bool TeosCommand::print_request = false;
+  bool TeosCommand::print_response = false;
 
   TeosCommand::TeosCommand( string path, ptree reqJson ) 
     : TeosControl(reqJson), path_(path) {

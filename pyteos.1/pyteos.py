@@ -173,7 +173,8 @@ class GetAccount(_Command):
     - **parameters**::
 
         account: The account object or the name of the account to retrieve.
-        is_verbose: If `False`, do not print stdout, default is `True`.
+        is_verbose: If `False`, do not print unless on error, 
+        default is `True`.
 
     - **attributes**::
 
@@ -238,7 +239,8 @@ class WalletCreate(_Command):
     - **parameters**::
 
         name: The name of the new wallet, defaults to `default`.
-        is_verbose: If `False`, do not print stdout, default is `True`.
+        is_verbose: If `False`, do not print unless on error, 
+        default is `True`.
 
     - **attributes**::
 
@@ -263,7 +265,8 @@ class WalletList(_Command):
 
     - **parameters**::
 
-        is_verbose: If `False`, do not print stdout, default is `True`.
+        is_verbose: If `False`, do not print unless on error, 
+            default is `True`.
     """
     def __init__(self, is_verbose=True):
         jarg = json.loads("{}")
@@ -278,7 +281,8 @@ class WalletImport(_Command):
 
         wallet: A wallet object or the name of the wallet to import key into.
         key: A key object or a private key in WIF format to import.
-        is_verbose: If `False`, do not print stdout, default is `True`.
+        is_verbose: If `False`, do not print unless on error, 
+            default is `True`.
     """
     def __init__(self, key, wallet="default", is_verbose=True):
         try:
@@ -305,7 +309,7 @@ class WalletKeys(_Command):
 
     - **parameters**::
 
-        is_verbose: If `False`, do not print stdout, default is `True`.
+        is_verbose: If `False`, do not print unless on error, default is `True`.
     """
     def __init__(self, is_verbose=True):
         jarg = json.loads("{}")
@@ -319,7 +323,8 @@ class WalletOpen(_Command):
     - **parameters**::
 
         wallet: A wallet object or the name of the wallet to import key into.
-        is_verbose: If `False`, do not print stdout, default is `True`.
+        is_verbose: If `False`, do not print unless on error, 
+            default is `True`.
     """
     def __init__(self, wallet="default", is_verbose=True):      
         try:
@@ -339,7 +344,8 @@ class WalletLock(_Command):
     - **parameters**::
 
         wallet: A wallet object or the name of the wallet to import key into.
-        is_verbose: If `False`, do not print stdout, default is `True`.    
+        is_verbose: If `False`, do not print unless on error, 
+            default is `True`.    
     """
     def __init__(self, wallet="default", is_verbose=True):
         try:
@@ -361,7 +367,8 @@ class WalletUnlock(_Command):
         wallet: A wallet object or the name of the wallet to import key into.
         password: If the wallet argument is not a wallet object, the password 
             returned by wallet create, else anything, defaults to "".
-        is_verbose: If `False`, do not print stdout, default is `True`.    
+        is_verbose: If `False`, do not print unless on error, 
+            default is `True`.    
     """
     def __init__(self, wallet="default", password="", is_verbose=True):
         try:
@@ -382,7 +389,8 @@ class GetInfo(_Command):
 
     - **parameters**::
 
-        is_verbose: If `False`, do not print stdout, default is `True`.
+        is_verbose: If `False`, do not print unless on error, 
+            default is `True`.
     """
     def __init__(self, is_verbose=True, suppress_error_msg=False):
         jarg = json.loads("{}")
@@ -402,7 +410,8 @@ class GetBlock(_Command):
     
         block_number: The number of the block to retrieve.
         block_id: The ID of the block to retrieve, if set, defaults to "".
-        is_verbose: If `False`, do not print stdout, default is `True`.    
+        is_verbose: If `False`, do not print unless on error, 
+            default is `True`.    
     """
     def __init__(self, block_number, block_id="", is_verbose=True):
         jarg = json.loads("{}")
