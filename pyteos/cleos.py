@@ -49,7 +49,8 @@ class _Cleos:
     def __init__(
                 self, args, first, second, 
                 is_verbose=True, suppress_error_msg=False):
-        
+
+        args.append("--json")
         cl = []
         if _print_request:
             cl.append("--print-request")
