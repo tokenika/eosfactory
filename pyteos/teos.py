@@ -17,17 +17,18 @@ EOSIO `cleos`.
 
 import os
 import subprocess
-import json
+import json as json_module
 import time
 import re
 import pathlib
 import setup
+import cleos
 
 
 setup_setup = setup.Setup()
 
 
-class _Control:
+class _Teos:
     """ A prototype for the control classes.
 
     Each control class represents a call to a Tokenika `teos` instance that
@@ -37,18 +38,31 @@ class _Control:
 
     error = False
     _out = ""
-    json = json.loads("{}")
+    json = json_module.loads("{}")
 
     def __init__(
                 self, jarg, first, second, 
                 is_verbose=True, suppress_error_msg=False):
-        self.jarg = jarg
+
+        self.jarg = jarg     
 
         cl = [setup_setup.teos_exe, first, second,
             "--jarg", str(self.jarg).replace("'", '"'), "--both"]
 
-        if setup_setup.is_verbose() and is_verbose:
+        if setup.is_verbose() and is_verbose:
             cl.append("-V")
+
+        if setup.is_print_request():
+            print("REQUEST:")
+            print("---------------------")
+            print(json_module.dumps(jarg))
+            print("---------------------")
+            print("")   
+
+        if setup.is_debug_mode():
+            print("command line sent to cleos:")
+            print(" ".join(cl))
+            print("")
 
         process = subprocess.run(
             cl,
@@ -62,15 +76,22 @@ class _Control:
         # With "--both", json output is passed with stderr: 
         json_resp = process.stderr.decode("utf-8")
 
-        if setup_setup.is_verbose() and is_verbose:
+        if setup.is_print_response():
+            print("RESPONSE:")
+            print("---------------------")
+            print(json_module.dumps(json_module.loads(json_resp), indent=4))
+            print("---------------------")
+            print("")
+
+        if setup.is_verbose() and is_verbose:
             print(self._out)
      
         if re.match(r'^ERROR', self._out):
             self.error = True
-            if not suppress_error_msg and not setup_setup.is_suppress_error_msg():
+            if not suppress_error_msg and not setup.is_suppress_error_msg():
                 print(self._out)
         try:
-            self.json = json.loads(json_resp)
+            self.json = json_module.loads(json_resp)
         except:
             self.json = json_resp
 
@@ -81,23 +102,23 @@ class _Control:
         return repr(self.json)
 
 
-class GetConfig(_Control):
+class GetConfig(_Teos):
     """
     Get the configurationt of the teos executable.
     """
     def __init__(self, contract_dir="", is_verbose=True):
-        jarg = json.loads("{}")
+        jarg = json_module.loads("{}")
         jarg["contract-dir"] = contract_dir
-        _Control.__init__(self, jarg, "get", "config", is_verbose) 
+        _Teos.__init__(self, jarg, "get", "config", is_verbose) 
 
 
-class Template(_Control):
+class Template(_Teos):
     def __init__(
             self, name, template="", remove_existing=False, 
             visual_studio_code=False, is_verbose=True
         ):
 
-        jarg = json.loads("{}")
+        jarg = json_module.loads("{}")
         jarg["name"] = name
         if template:
             jarg["template"] = template
@@ -106,7 +127,7 @@ class Template(_Control):
         if visual_studio_code:
             jarg["vsc"] = 1
 
-        _Control.__init__(self, jarg, "bootstrap", "contract", is_verbose)
+        _Teos.__init__(self, jarg, "bootstrap", "contract", is_verbose)
         print(self.json)
  
     def contract_path(self):
@@ -120,7 +141,7 @@ class Template(_Control):
             return "contract_path() ERROR!"       
                    
 
-class ABI(_Control):
+class ABI(_Teos):
     def __init__(
             self, source, code_name="", include_dir="", is_verbose=True):
 
@@ -129,15 +150,15 @@ class ABI(_Control):
         except:
             pass
 
-        jarg = json.loads("{}")
+        jarg = json_module.loads("{}")
         jarg["sourceDir"] = source
         jarg["includeDir"] = include_dir
         jarg["codeName"] = code_name
 
-        _Control.__init__(self, jarg, "generate", "abi", is_verbose)
+        _Teos.__init__(self, jarg, "generate", "abi", is_verbose)
 
 
-class WAST(_Control):
+class WAST(_Teos):
     def __init__(
             self, source, code_name="", include_dir="", is_verbose=True):
 
@@ -146,20 +167,20 @@ class WAST(_Control):
         except:
             pass
 
-        jarg = json.loads("{}")
+        jarg = json_module.loads("{}")
         jarg["sourceDir"] = source
         jarg["includeDir"] = include_dir
         jarg["codeName"] = code_name
         jarg["compileOnly"] = "0"
 
-        _Control.__init__(self, jarg, "build", "contract", is_verbose) 
+        _Teos.__init__(self, jarg, "build", "contract", is_verbose) 
 
-class NodeStart(_Control):
+class NodeStart(_Teos):
     def __init__(self, clear=0, is_verbose=True):
-        jarg = json.loads("{}")
+        jarg = json_module.loads("{}")
         jarg["delete-all-blocks"] = clear
         jarg["DO_NOT_LAUNCH"] = 1
-        _Control.__init__(self, jarg, "daemon", "start", False)
+        _Teos.__init__(self, jarg, "daemon", "start", False)
 
         self.command_line = ""
         if not self.error and not "head_block_num" in self.json:
@@ -187,7 +208,8 @@ class NodeProbe:
         
         while True:
             time.sleep(1)
-            self.get_info = GetInfo(is_verbose=False, suppress_error_msg=True)
+            self.get_info = cleos.GetInfo(
+                is_verbose=False, suppress_error_msg=True)
             self.ok = False
             count = count - 1
 
@@ -204,20 +226,22 @@ class NodeProbe:
                 break
 
 
-class NodeStop(_Control):
+class NodeStop(_Teos):
     def __init__(self, is_verbose=True):
-        jarg = json.loads("{}")
-        _Control.__init__(self, jarg, "daemon", "stop", is_verbose)
+        jarg = json_module.loads("{}")
+        _Teos.__init__(self, jarg, "daemon", "stop", is_verbose)
 
 
 def node_reset():
     node = NodeStart(1)
     probe = NodeProbe()
+    return probe.get_info
 
 
 def node_start():
     node = NodeStart(0)
     probe = NodeProbe()
+    return probe.get_info
 
 
 def node_stop():

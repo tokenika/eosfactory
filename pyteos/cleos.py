@@ -20,88 +20,72 @@ import pathlib
 import setup
 
 setup_setup = setup.Setup()
-_print_request = False
-_print_response = False
-
-
-def set_print_request():
-    global _print_request
-    _print_request = True
-
-
-def set_print_response():
-    global _print_response
-    _print_response = True
-
 
 class _Cleos:
-    """ A prototype for the command classes.
-
-    Each command class represents a call to a Tokenika `teos` instance that
-    is launched to responce just this call. 
+    """ A prototype for the `cleos` command classes. 
     """
     global setup_setup
 
     error = False
     _out = ""
-    json = json.loads("{}")
+    _err = ""
 
     def __init__(
                 self, args, first, second, 
                 is_verbose=True, suppress_error_msg=False):
 
-        args.append("--json")
-        cl = []
-        if _print_request:
+        cl = [setup_setup.cleos_exe]
+
+        if setup.is_print_request():
             cl.append("--print-request")
-        if _print_response:
+        if setup.is_print_response():
             cl.append("--print-response")
 
-        cl.extend([setup_setup.cleos_exe, first, second])
+        cl.extend([first, second])
         cl.extend(args)
         self.args = args
+
+        if setup.is_debug_mode():
+            print("command line sent to cleos:")
+            print(" ".join(cl))
+            print("")
 
         process = subprocess.run(
             cl,
             stdout=subprocess.PIPE, 
             stderr=subprocess.PIPE,
-            cwd=str(pathlib.Path(setup_setup.teos_exe).parent)) 
+            cwd=str(pathlib.Path(setup_setup.cleos_exe).parent)) 
 
-        _print_request = False
-        _print_response = False
-
-        # Both, right and error output is passed with stdout:
         self._out = process.stdout.decode("utf-8")
+        self._err = process.stderr.decode("utf-8")
 
-        # With "--both", json output is passed with stderr: 
-        json_resp = process.stderr.decode("utf-8")
+        error = True
+        if setup.is_print_response() or setup.is_print_response():
+            print(self._err)
+            print("")
+            error = False
 
-        if setup_setup.is_verbose() and is_verbose:
+        if self._err and error and not setup.is_suppress_error_msg() \
+                and not suppress_error_msg:
+            print("ERROR:")
+            print(self._err)
+            print("")              
+
+        if setup.is_verbose() and is_verbose:
+            print("self._out:")
             print(self._out)
-     
-        if re.match(r'^ERROR', self._out):
-            self.error = True
-            if not suppress_error_msg and not setup_setup.is_suppress_error_msg():
-                print(self._out)
-        try:
-            self.json = json.loads(json_resp)
-        except:
-            self.json = json_resp
+            print("")
 
     def __str__(self):
         return self._out
     
     def __repr__(self):
-        return repr(self.json)      
+        return repr(self._out)      
 
     
 class GetAccount(_Cleos):
-    """
-    Retrieve an account from the blockchain
+    """ Retrieve an account from the blockchain.
     Usage: GetAccount(name, is_verbose=True)
-
-    Generic `str` method returns a formatted output of the EOSIO node.
-    Generic `repr` method returns the json output of the EOSIO node.
 
     - **parameters**::
 
@@ -117,40 +101,20 @@ class GetAccount(_Cleos):
     """
     def __init__(self, account, is_verbose=True, suppress_error_msg=False):
         try:
-            account = account.name
+            account_name = account.name
         except:
-            pass
+            account_name = account
 
         _Cleos.__init__(
-            self, [account], "get", "account", is_verbose, suppress_error_msg)
+            self, [account_name], 
+            "get", "account", is_verbose, suppress_error_msg)
+
         if not self.error:
             self.name = self.json["account_name"]
 
-    def code(self, wast_file="", abi_file=""):
-        """ Retrieve the WAST and ABI files for the account.
-        """
-        code = GetCode(self.name, wast_file, abi_file, is_verbose=False)
-        return code
-
-    def set_contract(
-            self, contract_dir, wast_file="", abi_file="", 
-            permission="", expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0):
-        """ Creates or update the contract on the account
-
-        """
-        return SetContract(
-            self.name, contract_dir, wast_file, abi_file,
-            permission, expiration_sec, forceUnique,
-            max_cpu_usage=0, max_net_usage=0,
-            is_verbose=False 
-            )
-
 
 class GetAccounts(_Cleos):
-    """
-    Retrieve accounts associated with a public key.
+    """ Retrieve accounts associated with a public key.
     Usage: GetAccounts(public_key, is_verbose=True)
     """
     def __init__(self, key, is_verbose=True):
@@ -163,8 +127,7 @@ class GetAccounts(_Cleos):
 
 
 class WalletCreate(_Cleos):
-    """
-    Create a new wallet locally
+    """ Create a new wallet locally.
     Usage: WalletCreate(name="default", is_verbose=True)
 
     - **parameters**::
@@ -177,20 +140,29 @@ class WalletCreate(_Cleos):
 
         name: The name of the wallet.
         password: The password returned by wallet create.
-        error: Whether any error ocurred.
-        json: A json representation of the wallet.    
+        error: Whether any error ocurred. /////////////////////////////////////// TO_DO: add json   
     """
     def __init__(self, name="default", is_verbose=True):
-        _Cleos.__init__(self, [name], "wallet", "create", is_verbose)
+        _Cleos.__init__(self, ["--name", name], "wallet", "create", is_verbose)
+        msg = self._out
         if not self.error:
             self.name = name
+            self.json = json.loads("{}")
             self.json["name"] = name
+            self.json["password"] = msg[msg.find("\"")+1:msg.rfind("\"")]
             self.password = self.json["password"]
 
 
-class WalletList(_Cleos):
+class WalletStop(_Cleos):
+    """Stop keosd (doesn't work with nodeos).
+    Usage: WalletStop()
     """
-    List opened wallets, * = unlocked
+    def __init__(self, is_verbose=True):
+        _Cleos.__init__(self, [], "wallet", "stop", is_verbose)
+
+
+class WalletList(_Cleos):
+    """ List opened wallets, * marks unlocked.
     Usage: WalletList(is_verbose=True)
 
     - **parameters**::
@@ -203,8 +175,7 @@ class WalletList(_Cleos):
 
 
 class WalletImport(_Cleos):
-    """
-    Import private key into wallet
+    """ Import private key into wallet.
     Usage: WalletImport(key, wallet="default", is_verbose=True)
 
     - **parameters**::
@@ -233,8 +204,7 @@ class WalletImport(_Cleos):
 
 
 class WalletKeys(_Cleos):
-    """
-    List of public keys from all unlocked wallets.
+    """ List of public keys from all unlocked wallets.
     Usage: WalletKeys(is_verbose=True)
 
     - **parameters**::
@@ -247,13 +217,14 @@ class WalletKeys(_Cleos):
 
 
 class WalletOpen(_Cleos):
-    """
-    Open an existing wallet.
+    """ Open an existing wallet.
     Usage: WalletOpen(wallet="default", is_verbose=True)
 
     - **parameters**::
 
-        wallet: A wallet object or the name of the wallet to import key into.
+        wallet: The name of the wallet to import key into. May be an object 
+            having the  May be an object having the attribute `name`, like 
+            `CreateAccount`, or a string. 
         is_verbose: If `False`, do not print unless on error, 
             default is `True`.    
     """
@@ -268,13 +239,14 @@ class WalletOpen(_Cleos):
 
 
 class WalletLock(_Cleos):
-    """
-    Lock wallet
+    """ Lock wallet.
     Usage: WalletLock(wallet="default", is_verbose=True)
 
     - **parameters**::
 
-        wallet: A wallet object or the name of the wallet to import key into.
+        wallet: The name of the wallet to import key into. May be an object 
+            having the  May be an object having the attribute `name`, like 
+            `CreateAccount`, or a string. 
         is_verbose: If `False`, do not print unless on error, 
             default is `True`.     
     """
@@ -289,14 +261,15 @@ class WalletLock(_Cleos):
 
 
 class WalletUnlock(_Cleos):
-    """
-    Unlock wallet
+    """ Unlock wallet.
     Usage: WalletUnlock(
         wallet="default", password="", timeout=0, is_verbose=True)
 
     - **parameters**::
 
-        wallet: A wallet object or the name of the wallet to import key into.
+        wallet: The name of the wallet to import key into. May be an object 
+            having the  May be an object having the attribute `name`, 
+            like `CreateAccount`, or a string.
         password: If the wallet argument is not a wallet object, the password 
             returned by wallet create, else anything, defaults to "".
         timeout: The timeout for unlocked wallet in seconds, defoults to 
@@ -320,8 +293,7 @@ class WalletUnlock(_Cleos):
 
 
 class GetInfo(_Cleos):
-    """
-    Get current blockchain information.
+    """ Get current blockchain information.
     Usage: GetInfo(is_verbose=True, suppress_error_msg=False)
 
     - **parameters**::
@@ -332,16 +304,19 @@ class GetInfo(_Cleos):
     """
     def __init__(self, is_verbose=True, suppress_error_msg=False):
         _Cleos.__init__(self, [], "get", "info", is_verbose, suppress_error_msg)
-        if not self.error:    
-            self.head_block = self.json["head_block_num"]
-            self.head_block_time = self.json["head_block_time"]
-            self.last_irreversible_block_num \
-                = self.json["last_irreversible_block_num"]
+        if not self.error:
+            try:
+                self.json = json.loads(str(self._out))
+                self.head_block = self.json["head_block_num"]
+                self.head_block_time = self.json["head_block_time"]
+                self.last_irreversible_block_num \
+                    = self.json["last_irreversible_block_num"]
+            except:
+                pass
 
 
 class GetBlock(_Cleos):
-    """
-    Retrieve a full block from the blockchain.
+    """ Retrieve a full block from the blockchain.
     Usage: GetBlock(block_number, block_id="", is_verbose=True)
 
     - **parameters**::
@@ -366,15 +341,15 @@ class GetBlock(_Cleos):
 
 
 class GetCode(_Cleos):
-    """
-    Retrieve the code and ABI for an account.
+    """ Retrieve the code and ABI for an account.
     Usage: GetCode(
         account, code="", abi="", wasm=False, is_verbose=True)
 
     - **parameters**::
 
-        account: An account object or the name of an account whose 
-            code should be retrieved.
+        account: The name of an account whose code should be retrieved. 
+            May be an object having the  May be an object having the attribute 
+            `name`, like `CreateAccount`, or a string.
         code: The name of the file to save the contract .wast/wasm to.
         abi: The name of the file to save the contract .abi to.
         wasm: Save contract as wasm.
@@ -407,16 +382,17 @@ class GetCode(_Cleos):
 
 
 class GetTable(_Cleos):
-    """
-    Retrieve the contents of a database table
+    """ Retrieve the contents of a database table
     Usage: GetTable(
         contract, scope, table, 
         binary=False, limit=0, key="", lower="", upper="",
         is_verbose=True)
 
     - **parameters**::
-        contract: A `CreateAccount` or `Account` object, or the name, of 
-            the contract that owns the table.
+
+        contract: The name, of the contract that owns the table. May be 
+            an object having the  May be an object having the attribute 
+            `name`, like `CreateAccount`, or a string.
         scope: The scope within the contract in which the table is found,
             can be a `CreateAccount` or `Account` object, or a name.
         table: The name of the table as specified by the contract abi.
@@ -476,8 +452,7 @@ class GetTable(_Cleos):
 
 
 class CreateKey(_Cleos):
-    """
-    Create a new keypair and print the public and private keys.
+    """ Create a new keypair and print the public and private keys.
     Usage: CreateKey(key_name, r1=False, is_verbose=True)
 
     - **parameters**::
@@ -499,8 +474,7 @@ class CreateKey(_Cleos):
 
 
 class CreateAccount(_Cleos):
-    """
-    Create an account, buy ram, stake for bandwidth for the account.
+    """ Create an account, buy ram, stake for bandwidth for the account.
     Usage: CreateAccount(
         creator, name, owner_key, active_key,
         permission="",         
@@ -512,8 +486,9 @@ class CreateAccount(_Cleos):
 
     - **parameters**::
 
-        creator: A `CreateAccount` or `Account` object, or the name, of the 
-            account creating the new account.
+        creator: The name, of the account creating the new account. May be an 
+            object having the  May be an object having the attribute `name`, 
+            like `CreateAccount`, or a string.
         name: The name of the new account.
         owner_key: The owner public key for the new account.
         active_key: The active public key for the new account.
@@ -597,8 +572,7 @@ class CreateAccount(_Cleos):
 
 
 class SetContract(_Cleos):
-    """
-    Create or update the contract on an account.
+    """ Create or update the contract on an account.
     Usage: SetContract(
             account, contract_dir, 
             wast_file="", abi_file="", 
@@ -610,10 +584,10 @@ class SetContract(_Cleos):
 
     - **parameters**:: 
     
-        account: The account to publish a contract for. May be 
-        `CreateAccount` or `Account` object, or the name, of the account.
-        contract_dir: The path containing the .wast and .abi. May be relative
-            to TO_DO &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+        account: The account to publish a contract for. May be an object 
+            having the  May be an object having the attribute `name`, like 
+            `CreateAccount`, or a string.
+        contract_dir: The path containing the .wast and .abi. 
         wast_file: The file containing the contract WAST or WASM relative to 
             `contract_dir`.
         abi_file: The ABI for the contract relative to `contract_dir`.
@@ -705,8 +679,7 @@ class SetContract(_Cleos):
 
 
 class PushAction(_Cleos):
-    """
-    Push a transaction with a single action
+    """ Push a transaction with a single action
     Usage: PushAction(
         account, action, data,
         permission="", expiration_sec=30, 
@@ -715,8 +688,9 @@ class PushAction(_Cleos):
         ref_block="",
         is_verbose=True)
 
-        account: The account to publish a contract for. May be 
-            `CreateAccount` or `Account` object, or the name, of the account.
+        account: The account to publish a contract for.  May be an object 
+            having the  May be an object having the attribute `name`, like 
+            `CreateAccount`, or a string.
         action: A JSON string or filename defining the action to execute on 
             the contract.
         data: The arguments to the contract.
@@ -924,7 +898,7 @@ class Contract(SetContract):
         if self.is_mutable:            
             wast = WAST(str(self.contract_path_absolute), self.account_name)
         else:
-            if setup_setup.is_verbose():
+            if setup.is_verbose():
                 print("ERROR!")
                 print("Cannot modify system contracts.")
         return not wast.error
@@ -934,7 +908,7 @@ class Contract(SetContract):
         if self.is_mutable:
             abi = ABI(str(self.contract_path_absolute), self.account_name)
         else:
-            if setup_setup.is_verbose():
+            if setup.is_verbose():
                 print("ERROR!")
                 print("Cannot modify system contracts.")
         return not abi.error

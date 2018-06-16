@@ -1,30 +1,91 @@
 #!/usr/bin/python3
 
+import os
+import json
 
 _is_verbose = True
 _suppress_error_msg = False
+_is_debug_mode = False
+_print_request = False
+_print_response = False
 
-def set_verbose(is_verbose):
+def set_verbose(status=True):
+    """ If set `False`, print error messages only.
     """
-    If set `False`, print error messages only.
-    """
-    global _is_verbose
-    _is_verbose = is_verbose
-
+    global _status
+    _is_verbose = status
+    if status:
+        print("##### verbose mode is set!")
 
 def is_verbose():
+    """ If `False`, print error messages only.
+    """
     global _is_verbose
     return _is_verbose
 
 
-def set_suppress_error_msg(suppress_error_msg):
+def set_suppress_error_msg(status=True):
+    """If set `True`, suppress error messages.
+    """
     global _suppress_error_msg
-    _suppress_error_msg = suppress_error_msg
-
+    _suppress_error_msg = status
+    if status:
+        print("##### suppress error mode is set!")
 
 def is_suppress_error_msg():
+    """If `True`, suppress error messages.
+    """
     global _suppress_error_msg
     return _suppress_error_msg    
+
+
+def set_print_request(status=True):
+    """If set `True`, print html request sent to the node.
+    """
+    global _print_request
+    _print_request = status
+    if status:
+        print("##### print request mode is set!")
+
+def is_print_request():
+    """If `True`, print html request sent to the node.
+    """
+    global _print_request
+    return _print_request
+
+
+def set_print_response(status=True):
+    """If set `True`, print html response of the node.
+    """
+    global _print_response
+    _print_response = status
+    if status:
+        print("##### print response mode is set!")
+
+def is_print_response():
+    """If `True`, print html response of the node.
+    """
+    global _print_response
+    return _print_response
+
+
+def set_debug_mode(status=True):
+    """If set `True`, print html communication with the node.
+    Also, be super-verbose.
+    """
+    global _is_debug_mode
+    _is_debug_mode = status
+    set_print_request(status)
+    set_print_response(status)
+    if status:
+        print("##### debug mode is set!")
+
+def is_debug_mode():
+    """If `True`, print html communication with the node.
+    Also, be super-verbose.
+    """
+    global _is_debug_mode
+    return _is_debug_mode    
 
 
 def output(msg):
@@ -40,7 +101,7 @@ class Setup:
     __setupFile = os.path.dirname(os.path.abspath(__file__)) + "/../teos/config.json"
     __CLEOS_EXE = "cleos_executable"    
     __TEOS_EXE = "teos_executable"
-    __CLEOS_ENV = "EOSIO_SOURCE_DIR"
+    __EOSIO_SOURCE_DIR = "EOSIO_SOURCE_DIR"
     __TEOS_ENV = "eosf"
 
     __review = False
@@ -54,8 +115,8 @@ class Setup:
 
         if not self.cleos_exe:
             try:
-                path_to_cleos = os.path.dirname(os.environ[__CLEOS_ENV]) \
-                    + "/build/programs/cleos"
+                path_to_cleos = os.environ[self.__EOSIO_SOURCE_DIR] \
+                    + "/build/programs/cleos/cleos"
                 if os.path.isfile(path_to_cleos):
                     self.cleos_exe = os.path.realpath(path_to_cleos)
             except:
@@ -63,14 +124,14 @@ class Setup:
 
         if not self.teos_exe:
             try:
-                path_to_teos = os.path.dirname(os.environ[__TEOS_ENV]) 
+                path_to_teos = os.environ[self.__TEOS_ENV]
                 if os.path.isfile(path_to_teos):
-                    self.teos_exe = os.path.realpath(path_to_cleos)
+                    self.teos_exe = os.path.realpath(path_to_teos)
             except:
                 pass            
 
         if not self.teos_exe:
-            path_to_teos = os.path.dirname(os.path.abspath(__file__)) \
+            path_to_teos =  os.path.abspath(__file__) \
                 + "/../teos/build/teos/teos"
             if os.path.isfile(path_to_teos):
                 self.teos_exe = os.path.realpath(path_to_teos)
@@ -88,14 +149,14 @@ class Setup:
         if not self.cleos_exe:
             print('''ERROR in setup.py!
 Do not know the cleos executable!
-It is expected to be the environment variable:
+It is expected to be derived from the environment variable:
 {0}
 or
 it is expected to be in the config file named
 {1}
 as {{"{2}":"absolute-path-to-eos-repository"}}
             '''.format(
-                    __CLEOS_ENV,                 
+                    self.__EOSIO_SOURCE_DIR,                 
                     os.path.realpath(self.__setupFile),
                     self.__CLEOS_EXE,
                     )
@@ -111,7 +172,7 @@ it is expected to be in the config file named
 {1}
 as {{"{2}":"absolute-path-to-teos-executable"}}
                 '''.format(
-                    __TEOS_ENV,                 
+                    self.__TEOS_ENV,                 
                     os.path.realpath(self.__setupFile),
                     self.__TEOS_EXE,
                     )
