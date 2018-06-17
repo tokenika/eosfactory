@@ -91,11 +91,13 @@ class _Cleos:
             print("")
 
         self.error = ok_substring not in str(self._out)
-        if self._err and self.error \
-                and not setup.is_suppress_error_msg() and not suppress_error_msg:
-            print("ERROR:")
-            print(self._err)
-            print("")              
+        self.json = {}
+        if self._err and self.error:
+            self.json["ERROR"] = self._err
+            if not setup.is_suppress_error_msg() and not suppress_error_msg:
+                print("ERROR:")
+                print(self._err)
+                print("")              
 
         if self.is_verbose:
             print(self._out)
@@ -170,11 +172,13 @@ class WalletCreate(_Cleos):
     """
     def __init__(self, name="default", is_verbose=True):
         _Cleos.__init__(
-            self, ["--name", name], "wallet", "create", is_verbose)
+            self, ["--name", name], "wallet", "create", is_verbose,
+            ok_substring="Creating wallet:")
+
         msg = self._out
         if not self.error:
             self.name = name
-            self.json = json.loads("{}")
+            self.json = {}
             self.json["name"] = name
             self.json["password"] = msg[msg.find("\"")+1:msg.rfind("\"")]
             self.password = self.json["password"]
@@ -203,13 +207,10 @@ class WalletList(_Cleos):
         _Cleos.__init__(
             self, [], "wallet", "list", is_verbose, ok_substring="Wallets")
 
-        self.json = json.loads("{}")
         if not self.error:
-            try:
-                self.json = json.loads("{" + str(self._out).replace("Wallets", \
-                    '"Wallets"', 1) + "}")
-            except:
-                self.error = true
+            self.json = {}
+            self.json = json.loads("{" + str(self._out).replace("Wallets", \
+                '"Wallets"', 1) + "}")
 
 
 class WalletImport(_Cleos):
@@ -238,8 +239,10 @@ class WalletImport(_Cleos):
             self, [key_private, "--name", wallet_name], 
             "wallet", "import", is_verbose, 
             ok_substring="imported private key for:")
-            
-        if not self.error:       
+
+        if not self.error:
+            self.json = {}
+            self.json["key_private"] = key_private     
             self.key_private = key_private
 
 
@@ -253,7 +256,13 @@ class WalletKeys(_Cleos):
             default is `True`.
     """
     def __init__(self, is_verbose=True):
-        _Cleos.__init__(self, [], "wallet", "keys", is_verbose)         
+        _Cleos.__init__(
+            self, [], "wallet", "keys", is_verbose, ok_substring='[\n  "')
+
+        if not self.error:
+            self.json = {}
+            msg = [self._out.replace("\n", "")]
+            self.json["keys"] = msg
 
 
 class WalletOpen(_Cleos):
@@ -292,12 +301,13 @@ class WalletLock(_Cleos):
     """
     def __init__(self, wallet="default", is_verbose=True):
         try:
-            name = wallet.name
+            wallet_name = wallet.name
         except:
-            name = wallet
+            wallet_name = wallet
         
         _Cleos.__init__(
-            self, ["--name", wallet_name], "wallet", "lock", is_verbose)
+            self, ["--name", wallet_name], "wallet", "lock", is_verbose, 
+            ok_substring="Locked:")
 
 
 class WalletUnlock(_Cleos):
@@ -328,8 +338,8 @@ class WalletUnlock(_Cleos):
         _Cleos.__init__(
             self, 
             ["--name", wallet_name, "--password", password, \
-                "--unlock-timeout", timeout], 
-            "wallet", "unlock", is_verbose)
+                "--unlock-timeout", str(timeout)], 
+            "wallet", "unlock", is_verbose, ok_substring="Unlocked:")
 
 
 class GetInfo(_Cleos):
@@ -348,14 +358,11 @@ class GetInfo(_Cleos):
             "head_block_num")
 
         if not self.error:
-            try:
-                self.json = json.loads(str(self._out))
-                self.head_block = self.json["head_block_num"]
-                self.head_block_time = self.json["head_block_time"]
-                self.last_irreversible_block_num \
-                    = self.json["last_irreversible_block_num"]
-            except:
-                self.error = true
+            self.json = json.loads(str(self._out))
+            self.head_block = self.json["head_block_num"]
+            self.head_block_time = self.json["head_block_time"]
+            self.last_irreversible_block_num \
+                = self.json["last_irreversible_block_num"]
 
 
 class GetBlock(_Cleos):
@@ -513,24 +520,19 @@ class CreateKey(_Cleos):
             self, args, "create", "key", is_verbose, 
             ok_substring="Private key:")
 
-        self.json = json.loads("{}")
+        self.json = {}
         if not self.error:
-
             self.json["name"] = key_name
             msg = str(self._out)
             first_collon = msg.find(":")
             first_end = msg.find("\n")
             second_collon = msg.find(":", first_collon + 1)
             self.json["privateKey"] = msg[first_collon + 2 : first_end]
-            self.json["publicKey"] = msg[second_collon + 2 : len(msg)]
+            self.json["publicKey"] = msg[second_collon + 2 : len(msg) - 1]
 
             self.name = key_name
             self.key_private = self.json["privateKey"]
             self.key_public = self.json["publicKey"]
-        else:
-            self.error = true
-
-                   
 
 
 class CreateAccount(_Cleos):
@@ -886,7 +888,7 @@ class Account(CreateAccount):
 class AccountEosio(Account):
 
     def __init__(self, is_verbose=True): 
-        self.json = json.loads("{}")
+        self.json = {}
         self.json["privateKey"] = \
             "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
         self.json["publicKey"] = \
