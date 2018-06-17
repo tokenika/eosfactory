@@ -18,8 +18,30 @@ import pprint
 import re
 import pathlib
 import setup
+import teos
 
 setup_setup = setup.Setup()
+
+_dont_keosd = []
+def dont_keosd(status=True):
+    """ Do not use `keosd` Wallet Manager.
+
+    Instead, use `nodeos`. See https://github.com/EOSIO/eos/wiki/CLI-Wallet
+    for explanations.
+
+    If wallets are not managed by `keosd`, they can be reset with the
+    `teos.node_reset()` function, what is desired when testing smart contracts
+    locally.
+    """
+    global _dont_keosd
+    if status:
+        WalletStop(is_verbose=False, suppress_error_msg=True)
+        config = teos.GetConfig(
+            "", is_verbose=False)
+        _dont_keosd = ["--wallet-url", "http://" \
+            + config.json["EOSIO_DAEMON_ADDRESS"]]
+    else:
+        _dont_keosd = []
 
 class _Cleos:
     """ A prototype for the `cleos` command classes. 
@@ -29,12 +51,16 @@ class _Cleos:
     error = False
     _out = ""
     _err = ""
+    isVerbose = True
 
     def __init__(
                 self, args, first, second, 
-                is_verbose=True, suppress_error_msg=False):
+                is_verbose=True, suppress_error_msg=False, 
+                ok_substring="OK"):
 
         cl = [setup_setup.cleos_exe]
+        global _dont_keosd
+        cl.extend(_dont_keosd)
 
         if setup.is_print_request():
             cl.append("--print-request")
@@ -58,21 +84,20 @@ class _Cleos:
 
         self._out = process.stdout.decode("utf-8")
         self._err = process.stderr.decode("utf-8")
+        self.is_verbose = setup.is_verbose() and is_verbose
 
-        error = True
         if setup.is_print_response() or setup.is_print_response():
             print(self._err)
             print("")
-            error = False
 
-        if self._err and error and not setup.is_suppress_error_msg() \
-                and not suppress_error_msg:
+        self.error = ok_substring not in str(self._out)
+        if self._err and self.error \
+                and not setup.is_suppress_error_msg() and not suppress_error_msg:
             print("ERROR:")
             print(self._err)
             print("")              
 
-        if setup.is_verbose() and is_verbose:
-            print("self._out:")
+        if self.is_verbose:
             print(self._out)
             print("")
 
@@ -123,7 +148,8 @@ class GetAccounts(_Cleos):
         except:
             key_public = key
 
-        _Cleos.__init__(self, [key_public], "get", "accounts", is_verbose)
+        _Cleos.__init__(
+            self, [key_public], "get", "accounts", is_verbose)
 
 
 class WalletCreate(_Cleos):
@@ -143,7 +169,8 @@ class WalletCreate(_Cleos):
         error: Whether any error ocurred. /////////////////////////////////////// TO_DO: add json   
     """
     def __init__(self, name="default", is_verbose=True):
-        _Cleos.__init__(self, ["--name", name], "wallet", "create", is_verbose)
+        _Cleos.__init__(
+            self, ["--name", name], "wallet", "create", is_verbose)
         msg = self._out
         if not self.error:
             self.name = name
@@ -155,10 +182,12 @@ class WalletCreate(_Cleos):
 
 class WalletStop(_Cleos):
     """Stop keosd (doesn't work with nodeos).
-    Usage: WalletStop()
+    Usage: WalletStop(is_verbose=True, suppress_error_msg=False)
     """
-    def __init__(self, is_verbose=True):
-        _Cleos.__init__(self, [], "wallet", "stop", is_verbose)
+    def __init__(self, is_verbose=True, suppress_error_msg=False):
+        _Cleos.__init__(
+            self, [], 
+            "wallet", "stop", is_verbose, suppress_error_msg)
 
 
 class WalletList(_Cleos):
@@ -303,7 +332,10 @@ class GetInfo(_Cleos):
         suppress_error_msg: If `True`, do not print on error.
     """
     def __init__(self, is_verbose=True, suppress_error_msg=False):
-        _Cleos.__init__(self, [], "get", "info", is_verbose, suppress_error_msg)
+        _Cleos.__init__(
+            self, [], "get", "info", is_verbose, suppress_error_msg,
+            "head_block_num")
+
         if not self.error:
             try:
                 self.json = json.loads(str(self._out))
@@ -762,7 +794,7 @@ class PushAction(_Cleos):
 class Wallet(WalletCreate):
 
     def __init__(self, name="default", is_verbose=True):
-        super().__init__(name, is_verbose=is_verbose)
+        super().__init__(name, is_verbose)
         self.json["keys"] = []
 
     def list(self):

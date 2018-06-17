@@ -37,6 +37,7 @@ class _Teos:
     global setup_setup
 
     error = False
+    is_verbose = True
     _out = ""
     json = json_module.loads("{}")
 
@@ -76,6 +77,8 @@ class _Teos:
         # With "--both", json output is passed with stderr: 
         json_resp = process.stderr.decode("utf-8")
 
+        self.is_verbose = setup.is_verbose() and is_verbose
+
         if setup.is_print_response():
             print("RESPONSE:")
             print("---------------------")
@@ -83,7 +86,7 @@ class _Teos:
             print("---------------------")
             print("")
 
-        if setup.is_verbose() and is_verbose:
+        if self.is_verbose:
             print(self._out)
      
         if re.match(r'^ERROR', self._out):
@@ -100,7 +103,6 @@ class _Teos:
     
     def __repr__(self):
         return repr(self.json)
-
 
 class GetConfig(_Teos):
     """
@@ -180,7 +182,7 @@ class NodeStart(_Teos):
         jarg = json_module.loads("{}")
         jarg["delete-all-blocks"] = clear
         jarg["DO_NOT_LAUNCH"] = 1
-        _Teos.__init__(self, jarg, "daemon", "start", False)
+        _Teos.__init__(self, jarg, "daemon", "start", is_verbose)
 
         self.command_line = ""
         if not self.error and not "head_block_num" in self.json:
@@ -202,10 +204,13 @@ class NodeStart(_Teos):
 
 
 class NodeProbe:
+    error = True
+    get_info = ""
+
     def __init__(self, is_verbose=True):
         count = 15
         num = 5
-        
+       
         while True:
             time.sleep(1)
             self.get_info = cleos.GetInfo(
@@ -219,7 +224,7 @@ class NodeProbe:
                 head_block_num = -1
 
             if head_block_num >= num:
-                self.ok = True
+                self.error = False
                 break      
 
             if count <= 0:
@@ -233,17 +238,42 @@ class NodeStop(_Teos):
 
 
 def node_reset():
+    """ Start clean the EOSIO local node.
+
+    Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
+    """
     node = NodeStart(1)
     probe = NodeProbe()
-    return probe.get_info
+    if not probe.error:
+        if node.is_verbose:
+            print("OK")
+        return True
+    else:
+        return False
 
 
 def node_start():
+    """ Restart the EOSIO local node.
+
+    Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
+    """
     node = NodeStart(0)
     probe = NodeProbe()
-    return probe.get_info
+    if not probe.error:
+        if node.is_verbose:
+            print("OK")
+        return True
+    else:
+        return False
 
 
 def node_stop():
+    """ Stops all running EOSIO nodes and empties the local `nodeos` wallet 
+    directory.
+
+    Return: True if no running nodes and the local `nodeos` wallet directory 
+    is empty, otherwise `False`.
+    """
     stop = NodeStop()
+    return not stop.error
 
