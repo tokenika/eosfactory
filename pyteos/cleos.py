@@ -35,7 +35,7 @@ def dont_keosd(status=True):
     """
     global _dont_keosd
     if status:
-        WalletStop(is_verbose=False, suppress_error_msg=True)
+        #WalletStop(is_verbose=False, suppress_error_msg=True)
         config = teos.GetConfig(
             "", is_verbose=False)
         _dont_keosd = ["--wallet-url", "http://" \
@@ -200,7 +200,16 @@ class WalletList(_Cleos):
             default is `True`.    
     """
     def __init__(self, is_verbose=True):
-        _Cleos.__init__(self, [], "wallet", "list", is_verbose)
+        _Cleos.__init__(
+            self, [], "wallet", "list", is_verbose, ok_substring="Wallets")
+
+        self.json = json.loads("{}")
+        if not self.error:
+            try:
+                self.json = json.loads("{" + str(self._out).replace("Wallets", \
+                    '"Wallets"', 1) + "}")
+            except:
+                self.error = true
 
 
 class WalletImport(_Cleos):
@@ -227,7 +236,9 @@ class WalletImport(_Cleos):
 
         _Cleos.__init__(
             self, [key_private, "--name", wallet_name], 
-            "wallet", "import", is_verbose)
+            "wallet", "import", is_verbose, 
+            ok_substring="imported private key for:")
+            
         if not self.error:       
             self.key_private = key_private
 
@@ -344,7 +355,7 @@ class GetInfo(_Cleos):
                 self.last_irreversible_block_num \
                     = self.json["last_irreversible_block_num"]
             except:
-                pass
+                self.error = true
 
 
 class GetBlock(_Cleos):
@@ -493,16 +504,33 @@ class CreateKey(_Cleos):
         r1: Generate a key using the R1 curve (iPhone), instead of the 
             K1 curve (Bitcoin)
     """
-    def __init__(self, keyPairName, is_verbose=True):
-        args = [key_name]
+    def __init__(self, key_name, r1=False, is_verbose=True):
+        args = []
         if r1:
             args.append("--r1")
 
-        _Cleos.__init__(self, args, "create", "key", is_verbose)
-        if not self.error:  
+        _Cleos.__init__(
+            self, args, "create", "key", is_verbose, 
+            ok_substring="Private key:")
+
+        self.json = json.loads("{}")
+        if not self.error:
+
+            self.json["name"] = key_name
+            msg = str(self._out)
+            first_collon = msg.find(":")
+            first_end = msg.find("\n")
+            second_collon = msg.find(":", first_collon + 1)
+            self.json["privateKey"] = msg[first_collon + 2 : first_end]
+            self.json["publicKey"] = msg[second_collon + 2 : len(msg)]
+
+            self.name = key_name
             self.key_private = self.json["privateKey"]
             self.key_public = self.json["publicKey"]
-            self.name = keyPairName       
+        else:
+            self.error = true
+
+                   
 
 
 class CreateAccount(_Cleos):
