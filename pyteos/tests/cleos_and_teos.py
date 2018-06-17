@@ -16,10 +16,18 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cleos.dont_keosd()
+        pass
 
     def setUp(self):
         pass
+
+    def test_03(self):
+        wallet_stop = cleos.WalletStop()
+        self.assertTrue(not wallet_stop.error, "WalletStop")
+        print("---------------------------------------\n")
+
+    def test_04(self):
+        cleos.dont_keosd()
 
     def test_05(self):
         node_reset = teos.node_reset()
@@ -70,6 +78,12 @@ class Test1(unittest.TestCase):
         print(json.dumps(wallet_keys.json, indent=4))
         print("---------------------------------------\n")
 
+    def test_38(self):
+        global wallet_create
+        wallet_open = cleos.WalletOpen(wallet_create)
+        self.assertTrue(not wallet_open.error, "WalletOpen")
+        print("---------------------------------------\n")        
+
     def test_40(self):
         global wallet_create
         wallet_lock = cleos.WalletLock(wallet_create)
@@ -91,6 +105,23 @@ class Test1(unittest.TestCase):
         print(get_info.last_irreversible_block_num)
         print("---------------------------------------\n")
 
+    def test_53(self):
+        get_block = cleos.GetBlock(3)
+        self.assertTrue(not get_block.error, "GetBlock")
+        print(json.dumps(get_block.json, indent=4))
+        print(get_block.block_num)
+        print(get_block.ref_block_prefix)
+        print(get_block.timestamp)
+        print("---------------------------------------\n")
+
+    def test_56(self):
+        account_eosio = cleos.AccountEosio()
+        self.assertTrue(not account_eosio.error, "AccountEosio")
+        print(json.dumps(account_eosio.json, indent=4))
+        print(account_eosio.name)
+        print(account_eosio.key_private)
+        print(account_eosio.key_public)
+        print("---------------------------------------\n")
     
     def tearDown(self):
         pass

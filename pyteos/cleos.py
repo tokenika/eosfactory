@@ -284,7 +284,8 @@ class WalletOpen(_Cleos):
             wallet_name = wallet
         
         _Cleos.__init__(
-            self, ["--name", wallet_name], "wallet", "open", is_verbose)
+            self, ["--name", wallet_name], "wallet", "open", is_verbose,
+            ok_substring="Opened:")
 
 
 class WalletLock(_Cleos):
@@ -379,12 +380,15 @@ class GetBlock(_Cleos):
     def __init__(self, block_number, block_id="", is_verbose=True):
         args = []
         if(block_id == ""):
-            args = [block_number]
+            args = [str(block_number)]
         else:
             args = [block_id]
         
-        _Cleos.__init__(self, args, "get", "block", is_verbose)
-        if not self.error:   
+        _Cleos.__init__(
+            self, args, "get", "block", is_verbose, ok_substring="timestamp")
+
+        if not self.error:
+            self.json = json.loads(self._out)  
             self.block_num = self.json["block_num"]
             self.ref_block_prefix = self.json["ref_block_prefix"]
             self.timestamp = self.json["timestamp"]
@@ -888,15 +892,17 @@ class Account(CreateAccount):
 class AccountEosio(Account):
 
     def __init__(self, is_verbose=True): 
+        self.name = "eosio"        
         self.json = {}
+        self.json["name"] = self.name
         self.json["privateKey"] = \
             "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
         self.json["publicKey"] = \
             "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
         self.key_private = self.json["privateKey"]
         self.key_public = self.json["publicKey"]
-        self.name = "eosio"
-        self._out = "#       transaction id: eosio"   
+
+        self._out = "transaction id: eosio"   
 
 
 class Contract(SetContract):
