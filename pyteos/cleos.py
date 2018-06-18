@@ -209,7 +209,7 @@ class WalletList(_Cleos):
 
         if not self.error:
             self.json = {}
-            self.json = json.loads("{" + str(self._out).replace("Wallets", \
+            self.json = json.loads("{" + self._out.replace("Wallets", \
                 '"Wallets"', 1) + "}")
 
 
@@ -425,14 +425,17 @@ class GetCode(_Cleos):
         if wasm:
             args.extend(["--wasm"])
 
-        _Cleos.__init__(self, args, "get", "code", is_verbose)
+        _Cleos.__init__(self, args, "get", "code", is_verbose, 
+            ok_substring="code hash:")
+        
         if not self.error:
+            self.json = {}
+            msg = str(self._out)
+            print("________________________________________")
+            print(msg)
+            print("________________________________________")
+            self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
             self.code_hash = self.json["code_hash"]
-            self.code = self.json["code"] 
-            if "abi" in self.json:          
-                self.abi = self.json["abi"]
-            else:
-                self.abi = ""
 
 
 class GetTable(_Cleos):
@@ -553,8 +556,8 @@ class CreateAccount(_Cleos):
     - **parameters**::
 
         creator: The name, of the account creating the new account. May be an 
-            object having the  May be an object having the attribute `name`, 
-            like `CreateAccount`, or a string.
+            object having the attribute `name`, like `CreateAccount`, 
+            or a string.
         name: The name of the new account.
         owner_key: The owner public key for the new account.
         active_key: The active public key for the new account.
@@ -604,7 +607,8 @@ class CreateAccount(_Cleos):
         except:
             active_key_public = active_key
 
-        args = [creator_name, name, owner_key_public, active_key_public]
+        args = ["--json", creator_name, name, \
+            owner_key_public, active_key_public]
 
         if permission:
             try:
@@ -632,8 +636,13 @@ class CreateAccount(_Cleos):
         if  ref_block:
             args.expend(["--ref-block", ref_block])
                
-        _Cleos.__init__(self, args, "create", "account", is_verbose)
+        _Cleos.__init__(
+            self, args, "create", "account", is_verbose, 
+            ok_substring="transaction_id")
+            
         if not self.error:
+            self.json = {}
+            self.json = json.loads(self._out)
             self.name = name
 
 
@@ -654,9 +663,8 @@ class SetContract(_Cleos):
             having the  May be an object having the attribute `name`, like 
             `CreateAccount`, or a string.
         contract_dir: The path containing the .wast and .abi. 
-        wast_file: The file containing the contract WAST or WASM relative to 
-            `contract_dir`.
-        abi_file: The ABI for the contract relative to `contract_dir`.
+        wast_file: The file containing the contract WAST or WASM (absolute).
+        abi_file: The ABI for the contract (absolute).
 
         permission: An account and permission level to authorize, as in 
             'account@permission'. May be a `CreateAccount` or `Account` object
@@ -701,19 +709,14 @@ class SetContract(_Cleos):
         try:       
             self.contract_path_absolute = config.json["contract-dir"]
         except:
-            return ##############################################TO_DO
+            self.error = True
+            self.json = {}
+            self.json["ERROR"] = \
+                "cannot find the contract directory:\n{0}" \
+                    .format(self.contract_path_absolute)
+            return
             
-        args = [account_name, self.contract_path_absolute]
-
-        if wast_file:
-            args.append(wast_file)
-        else:
-            args.append(account_name + ".wast")
-        
-        if abi_file:
-            args.append(abi_file)
-        else:
-            args.append(account_name + ".abi")
+        args = ["--json"]
 
         if permission:
             try:
@@ -721,7 +724,7 @@ class SetContract(_Cleos):
             except:
                 permission_name = permission
 
-            args.expend(["--permission", permission_name])
+            args.extend(["--permission", permission_name])
 
         if skip_signature:
             args.append("--skip-sign")
@@ -733,15 +736,24 @@ class SetContract(_Cleos):
             args.append("--force-unique")
 
         if max_cpu_usage:
-            args.expend(["--max-cpu-usage-ms", max_cpu_usage])
+            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
 
         if  max_net_usage:
-            args.expend(["--max-net-usage", max_net_usage])
+            args.extend(["--max-net-usage", max_net_usage])
 
         if  ref_block:
-            args.expend(["--ref-block", ref_block])        
-       
-        _Cleos.__init__(self, args, "set", "contract", is_verbose)
+            args.extend(["--ref-block", ref_block]) 
+
+        args.extend([self.account_name, self.contract_path_absolute])
+
+        if wast_file:
+            args.append(wast_file)
+        
+        if abi_file:
+            args.append(abi_file)
+
+        _Cleos.__init__(self, args, "set", "contract", is_verbose, 
+            ok_substring="transaction_id")
 
 
 class PushAction(_Cleos):
