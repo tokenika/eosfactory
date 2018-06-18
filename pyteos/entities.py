@@ -129,66 +129,71 @@ class Account(cleos.CreateAccount):
             is_verbose=False)
         return self.action
 
+    def get_table(
+            self, scope, table,
+            binary=False, 
+            limit=10, key="", lower="", upper=""):
+
+        self.table = cleos.GetTable(
+                                self.name, scope, table,
+                                binary, 
+                                limit, key, lower, upper)
+        return self.table
+
     def __str__(self):
         return str(cleos.GetAccount(self.name, is_verbose=True))   
 
 
-class Contract(cleos.SetContract):
+class Contract(cleos.CreateAccount):
 
     def __init__(
-            self, account, contract_dir, 
-            wast_file="", abi_file="", 
-            permission="", expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0,
+            self, creator, name, contract_dir, owner_key, 
+            active_key="",
+            permission="",
+            wast_file="", abi_file="",  
+            expiration_sec=30, 
+            skip_signature=0, 
+            dont_broadcast=0, 
+            forceUnique=0,
+            max_cpu_usage=0, 
+            max_net_usage=0,
+            ref_block="",
             is_verbose=True):
-            
-        self.name = pathlib.Path(contract_dir).parts[-1]
-        try:
-            self.account_name = account.name
-        except:
-            self.account_name = account
-        
+
         self.contract_dir = contract_dir
         self.wast_file = wast_file
         self.abi_file = abi_file
-        self.permission = permission
         self.expiration_sec = expiration_sec
         self.skip_signature = skip_signature
-        self.dont_broadcast =dont_broadcast
+        self.dont_broadcast = dont_broadcast
         self.forceUnique = forceUnique
         self.max_cpu_usage = max_cpu_usage
         self.max_net_usage = max_net_usage
-        self.is_verbose = is_verbose
-        self.is_mutable = True     
-        self.console = ""
+        self.ref_block = ref_block
 
-        import teos
-        config = teos.GetConfig(contract_dir, is_verbose=False)
-        try:       
-            self.contract_path_absolute = config.json["contract-dir"]
-        except:
-            pass
-        
+        cleos.CreateAccount.__init__(creator, name, owner_key, active_key,
+            permission, 
+            expiration_sec, skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage, ref_block,
+            is_verbose=False)
 
-    def __str__(self):
-        return self._out
+    def deploy(self, permission=""):
 
-    def deploy(self):
-        """ Deploy the contract.
-        On error, return False.
-        """
-        super().__init__(
-            self.account_name, self.contract_dir,
-            self.wast_file, self.abi_file,
-            self.permission, self.expiration_sec,
+        self.contract = cleos.SetContract(
+            self.name, self.contract_dir, 
+            self.wast_file, self.abi_file, 
+            permission, self.expiration_sec, 
             self.skip_signature, self.dont_broadcast, self.forceUnique,
             self.max_cpu_usage, self.max_net_usage,
-            self.is_verbose)
-        return not self.error
+            self.ref_block,
+            is_verbose=False
+        )
+        return self.contract
 
     def is_created(self):
-        return not self.error
+        if not self.contract:
+            return False
+        return not self.contract.error
 
     def wast(self):
         if self.is_mutable:            
