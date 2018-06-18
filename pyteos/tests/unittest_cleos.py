@@ -80,6 +80,7 @@ class Test1(unittest.TestCase):
     def test_40(self):
         global wallet_default
         wallet_lock = cleos.WalletLock(wallet_default)
+        self.assertTrue(not wallet_lock.error, "WalletLock")
 
     def test_45(self):
         global wallet_default

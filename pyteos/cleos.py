@@ -49,9 +49,10 @@ class _Cleos:
     global setup_setup
 
     error = False
+    is_verbose = True
+    json = {}    
     _out = ""
     _err = ""
-    isVerbose = True
 
     def __init__(
                 self, args, first, second, 
@@ -124,7 +125,8 @@ class GetAccount(_Cleos):
 
         name: The name of the account.
         error: Whether any error ocurred.
-        json: The json representation of the account, if `error` is not set.    
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(self, account, is_verbose=True, suppress_error_msg=False):
         try:
@@ -142,6 +144,12 @@ class GetAccount(_Cleos):
 class GetAccounts(_Cleos):
     """ Retrieve accounts associated with a public key.
     Usage: GetAccounts(public_key, is_verbose=True)
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(self, key, is_verbose=True):
         try:
@@ -171,7 +179,9 @@ class WalletCreate(_Cleos):
 
         name: The name of the wallet.
         password: The password returned by wallet create.
-        error: Whether any error ocurred. /////////////////////////////////////// TO_DO: add json   
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.  
     """
     def __init__(self, name="default", is_verbose=True):
         _Cleos.__init__(
@@ -204,7 +214,13 @@ class WalletList(_Cleos):
     - **parameters**::
 
         is_verbose: If `False`, do not print unless on error, 
-            default is `True`.    
+            default is `True`.
+            
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(self, is_verbose=True):
         _Cleos.__init__(
@@ -216,7 +232,7 @@ class WalletList(_Cleos):
 
 
 class WalletImport(_Cleos):
-    """ Import private key into wallet.
+    """ Import a private key into wallet.
     Usage: WalletImport(key, wallet="default", is_verbose=True)
 
     - **parameters**::
@@ -225,6 +241,12 @@ class WalletImport(_Cleos):
         key: A key object or a private key in WIF format to import.
         is_verbose: If `False`, do not print unless on error, 
             default is `True`.
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(self, key, wallet="default", is_verbose=True):
         try:
@@ -256,6 +278,18 @@ class WalletKeys(_Cleos):
 
         is_verbose: If `False`, do not print unless on error, 
             default is `True`.
+
+    - **parameters**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.
+        
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.         
     """
     def __init__(self, is_verbose=True):
         _Cleos.__init__(
@@ -277,7 +311,13 @@ class WalletOpen(_Cleos):
             having the  May be an object having the attribute `name`, like 
             `CreateAccount`, or a string. 
         is_verbose: If `False`, do not print unless on error, 
-            default is `True`.    
+            default is `True`.
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(self, wallet="default", is_verbose=True):      
         try:
@@ -300,7 +340,13 @@ class WalletLock(_Cleos):
             having the  May be an object having the attribute `name`, like 
             `CreateAccount`, or a string. 
         is_verbose: If `False`, do not print unless on error, 
-            default is `True`.     
+            default is `True`.
+
+    - **parameters**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(self, wallet="default", is_verbose=True):
         try:
@@ -320,7 +366,7 @@ class WalletUnlock(_Cleos):
 
     - **parameters**::
 
-        wallet: The name of the wallet to import key into. May be an object 
+        wallet: The name of the wallet. May be an object 
             having the  May be an object having the attribute `name`, 
             like `CreateAccount`, or a string.
         password: If the wallet argument is not a wallet object, the password 
@@ -329,7 +375,13 @@ class WalletUnlock(_Cleos):
             unlimited.
         is_verbose: If `False`, do not print unless on error, 
             default is `True`.
-    """
+
+    - **attributes**::
+    
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.
+    """    
     def __init__(
             self, wallet="default", password="", timeout=0, is_verbose=True):
         try:
@@ -354,6 +406,12 @@ class GetInfo(_Cleos):
         is_verbose: If `False`, do not print unless on error, 
             default is `True`.
         suppress_error_msg: If `True`, do not print on error.
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(self, is_verbose=True, suppress_error_msg=False):
         _Cleos.__init__(
@@ -377,7 +435,13 @@ class GetBlock(_Cleos):
         block_number: The number of the block to retrieve.
         block_id: The ID of the block to retrieve, if set, defaults to "".
         is_verbose: If `False`, do not print unless on error, 
-            default is `True`.    
+            default is `True`.
+            
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(self, block_number, block_id="", is_verbose=True):
         args = []
@@ -409,6 +473,12 @@ class GetCode(_Cleos):
         code: The name of the file to save the contract .wast/wasm to.
         abi: The name of the file to save the contract .abi to.
         wasm: Save contract as wasm.
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(
             self, account, code="", abi="", 
@@ -462,6 +532,11 @@ class GetTable(_Cleos):
         upper: JSON representation of upper bound value value of key, 
             defaults to last.
         
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.
     """  
     def __init__(
         self, contract, scope, table,
@@ -521,6 +596,12 @@ class CreateKey(_Cleos):
         key_name: Key name.
         r1: Generate a key using the R1 curve (iPhone), instead of the 
             K1 curve (Bitcoin)
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(self, key_name, r1=False, is_verbose=True):
         args = []
@@ -583,6 +664,12 @@ class CreateAccount(_Cleos):
             transaction (defaults to 0 which means no limit).
         ref_block: The reference block num or block id used for TAPOS 
             (Transaction as Proof-of-Stake).
+
+    - **attributes**::
+    
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(
             self, creator, name, owner_key, active_key,
@@ -649,6 +736,21 @@ class CreateAccount(_Cleos):
             self.json = json.loads(self._out)
             self.name = name
 
+class AccountEosio():
+
+    def __init__(self, is_verbose=True): 
+        self.name = "eosio"        
+        self.json = {}
+        self.json["name"] = self.name
+        self.json["privateKey"] = \
+            "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
+        self.json["publicKey"] = \
+            "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
+        self.key_private = self.json["privateKey"]
+        self.key_public = self.json["publicKey"]
+
+        self._out = "transaction id: eosio" 
+
 
 class SetContract(_Cleos):
     """ Create or update the contract on an account.
@@ -686,7 +788,13 @@ class SetContract(_Cleos):
         max_net_usage: Upper limit on the net usage budget, in bytes, for the 
             transaction (defaults to 0 which means no limit).
         ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).    
+            (Transaction as Proof-of-Stake).
+
+    - **attributes**::
+    
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.    
     """
     def __init__(
             self, account, contract_dir, 
@@ -770,6 +878,8 @@ class PushAction(_Cleos):
         ref_block="",
         is_verbose=True)
 
+    - **parameters**::
+
         account: The account to publish a contract for.  May be an object 
             having the  May be an object having the attribute `name`, like 
             `CreateAccount`, or a string.
@@ -794,7 +904,13 @@ class PushAction(_Cleos):
             transaction (defaults to 0 which means no limit).
         ref_block: The reference block num or block id used for TAPOS 
             (Transaction as Proof-of-Stake).
-    """
+
+    - **attributes**::
+    
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.
+    """    
     def __init__(
             self, account, action, data,
             permission="", expiration_sec=30, 
@@ -845,245 +961,7 @@ class PushAction(_Cleos):
             self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
 
 
-class Wallet(WalletCreate):
-
-    def __init__(self, name="default", is_verbose=True):
-        super().__init__(name, is_verbose)
-        self.json["keys"] = []
-
-    def list(self):
-        x = WalletList()
-        return not x.error
-
-    def open(self):
-        x = WalletOpen(self.name)
-        return not x.error
-
-    def lock(self):
-        x = WalletLock(self.name)
-        return not x.error        
-
-    def unlock(self):
-        x = WalletUnlock(self.name, self.json["password"])
-        return not x.error
-
-    def import_key(self, key_pair):
-        wallet_import = WalletImport(
-            key_pair, self.name, is_verbose=False)
-        if not wallet_import.error:
-            self.json["keys"].append([key_pair.name, key_pair.key_private])
-        return not wallet_import.error        
-
-    def keys(self):
-        x = WalletKeys()
-        return not x.error
-
-    def open(self):
-        x = WalletOpen(self.name)
-        return not x.error
-
-    def __str__(self):
-        return pprint.pformat(self.json)
 
 
-class Account(CreateAccount):
-
-    def code(self, wast_file="", abi_file=""):
-        return GetAccount(self.name, is_verbose=False).code(wast_file, abi_file)
-
-    def set_contract(
-            self, contract_dir, wast_file="", abi_file="", 
-            permission="", expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0):
-        return GetAccount(self.name, is_verbose=False).set_contract(
-            contract_dir, wast_file, abi_file, 
-            permission, expiration_sec, 
-            skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage)
-
-    def __str__(self):
-        return str(GetAccount(self.name, is_verbose=False)) 
-    
-    def __repr__(self):
-        return repr(GetAccount(self.name, is_verbose=False))
 
 
-class AccountEosio(Account):
-
-    def __init__(self, is_verbose=True): 
-        self.name = "eosio"        
-        self.json = {}
-        self.json["name"] = self.name
-        self.json["privateKey"] = \
-            "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-        self.json["publicKey"] = \
-            "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-        self.key_private = self.json["privateKey"]
-        self.key_public = self.json["publicKey"]
-
-        self._out = "transaction id: eosio"   
-
-
-class Contract(SetContract):
-
-    def __init__(
-            self, account, contract_dir, 
-            wast_file="", abi_file="", 
-            permission="", expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            is_verbose=True):
-            
-        self.name = pathlib.Path(contract_dir).parts[-1]
-        try:
-            self.account_name = account.name
-        except:
-            self.account_name = account
-        
-        self.contract_dir = contract_dir
-        self.wast_file = wast_file
-        self.abi_file = abi_file
-        self.permission = permission
-        self.expiration_sec = expiration_sec
-        self.skip_signature = skip_signature
-        self.dont_broadcast =dont_broadcast
-        self.forceUnique = forceUnique
-        self.max_cpu_usage = max_cpu_usage
-        self.max_net_usage = max_net_usage
-        self.is_verbose = is_verbose
-        self.is_mutable = True     
-        self.console = ""
-
-        import teos
-        config = teos.GetConfig(contract_dir, is_verbose=False)
-        try:       
-            self.contract_path_absolute = config.json["contract-dir"]
-        except:
-            pass
-        
-
-    def __str__(self):
-        return self._out
-
-    def deploy(self):
-        """ Deploy the contract.
-        On error, return False.
-        """
-        super().__init__(
-            self.account_name, self.contract_dir,
-            self.wast_file, self.abi_file,
-            self.permission, self.expiration_sec,
-            self.skip_signature, self.dont_broadcast, self.forceUnique,
-            self.max_cpu_usage, self.max_net_usage,
-            self.is_verbose)
-        return not self.error
-
-    def is_created(self):
-        return not self.error
-
-    def wast(self):
-        if self.is_mutable:            
-            wast = WAST(str(self.contract_path_absolute), self.account_name)
-        else:
-            if setup.is_verbose():
-                print("ERROR!")
-                print("Cannot modify system contracts.")
-        return not wast.error
-        
-
-    def abi(self):
-        if self.is_mutable:
-            abi = ABI(str(self.contract_path_absolute), self.account_name)
-        else:
-            if setup.is_verbose():
-                print("ERROR!")
-                print("Cannot modify system contracts.")
-        return not abi.error
-
-    
-    def build(self):
-        ok = self.abi()
-        ok = ok and self.wast()
-        return ok
-
-
-    def push_action(
-            self, action, data,
-            permission="",
-            expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0, is_verbose=False
-        ):
-
-        if not permission:
-            permission=self.account_name
-        else:
-            try: # permission is an account:
-                permission=permission.name
-            except: # permission is the name of an account:
-                permission=permission
-    
-        push_action = PushAction(
-            self.account_name, action, data,
-            permission, 
-            expiration_sec, 
-            skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage
-            )
-            
-        if push_action.error:
-            return False
-
-        if not push_action.error:
-            self.action_json = push_action.json
-            try:
-                self.console = \
-                    self.action_json["processed"]["action_traces"][0] \
-                    ["console"]
-                print(self.console + "\n")
-            except:
-                pass
-
-        if (dont_broadcast or is_verbose) and not push_action.error:
-            pprint.pprint(self.action_json)
-
-        return True
-
-
-    def get_console(self):
-        return self.console
-
-
-    def show_action(self, action, data, permission=""):
-        """ Implements the `push action` command without broadcasting. 
-
-        """
-        return self.push_action(action, data, permission, dont_broadcast=1)
-    
-
-    def get_table(self, table, scope=""):
-        """ Return a contract's table object.
-        """
-        if not scope:
-            scope=self.account_name
-        else:
-            try: # scope is an account:
-                scope=scope.name
-            except: # scope is the name of an account:
-                scope=scope                
-        return GetTable(self.name, table, scope)
-
-
-    def get_code(self):
-        """ Print a contract's code.
-        On error, return False.
-        """
-        code = GetCode(self.account_name)
-        return not code.error
-
-
-    def contract_path(self):
-        """ Return contract directory path.
-        """
-        return str(self.contract_path_absolute)

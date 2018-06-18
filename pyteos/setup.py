@@ -12,7 +12,7 @@ _print_response = False
 def set_verbose(status=True):
     """ If set `False`, print error messages only.
     """
-    global _status
+    global _is_verbose
     _is_verbose = status
     if status:
         print("##### verbose mode is set!")
