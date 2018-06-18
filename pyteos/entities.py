@@ -40,111 +40,65 @@ class Wallet(cleos.WalletCreate):
         is_verbose: Verbosity at the constraction time.  
     """
     def list(self):
-        """ Adds the `wallet_list` attribute that lists opened wallets, 
-            * marks unlocked.
-                
-        - **wallet_list attributes**::
-
-            error: Whether any error ocurred.
-            json: The json representation of the object.
-            is_verbose: Verbosity at the constraction time.
+        """ Lists opened wallets, * marks unlocked.
+        Returns `cleos.WalletList` object
         """ 
-        self.wallet_list = cleos.WalletList()
-        return not self.wallet_list.error
+        return cleos.WalletList()
     
     def open(self):
-        """ Opens the wallet and adds the `wallet_open` attribute.
-        
-        - **wallet_open attributes**::
-
-            error: Whether any error ocurred.
-            json: The json representation of the object.
-            is_verbose: Verbosity at the constraction time.     
+        """ Opens the wallet.
+        Returns `WalletOpen` object     
         """
         self.wallet_open = cleos.WalletOpen(self.name)
         return not self.wallet_open.error
 
     def lock(self):
-        """ Locks the wallet and adds the `wallet_lock` attribute.
-
-        - **wallet_lock attributes**::
-
-            error: Whether any error ocurred.
-            json: The json representation of the object.
-            is_verbose: Verbosity at the constraction time.    
+        """ Locks the wallet.
+        Returns `cleos.WalletLock` object.   
         """
         self.wallet_lock = cleos.WalletLock(self.name)
         return not self.wallet_lock.error        
 
     def unlock(self):
-        """ Unlocks the wallet and adds the `wallet_unlock` attribute.
-
-        - **wallet_unlock attributes**::
-
-            error: Whether any error ocurred.
-            json: The json representation of the object.
-            is_verbose: Verbosity at the constraction time.    
+        """ Unlocks the wallet.
+        Returns `WalletUnlock` object.
         """        
         self.wallet_unlock = cleos.WalletUnlock(
             self.name, self.json["password"])
         return not self.wallet_unlock.error
 
     def import_key(self, key_pair):
-        """ Imports a private key into wallet and adds the `wallet_import` 
-        attribute.
-
-        - **parameters**::
-
-            key: A private key in WIF format to import. May be an object 
-                having the  May be an object having the attribute `key_private` 
-                or a string.
-
-        - **wallet_import attributes**::
-
-            error: Whether any error ocurred.
-            json: The json representation of the object.
-            is_verbose: Verbosity at the constraction time. 
+        """ Imports a private key into wallet.
+        Returns `cleos.WalletImport` object
         """
-        self.wallet_import = cleos.WalletImport(
-            key_pair, self.name, is_verbose=False)
-        return not self.wallet_import.error        
+        return cleos.WalletImport(
+            key_pair, self.name, is_verbose=False)       
 
     def keys(self):
-        """ Lists public keys from all unlocked wallets, and adds 
-        the `wallet_keys`.
-
-        - **wallet_keys attributes**::
-
-            error: Whether any error ocurred.
-            json: The json representation of the object.
-            is_verbose: Verbosity at the constraction time.     
+        """ Lists public keys from all unlocked wallets.
+        Returns `cleos.WalletKeys` object.    
         """
-        self.wallet_keys = cleos.WalletKeys()
-        return not self.wallet_keys.error
+        return cleos.WalletKeys()
 
     def __str__(self):
         retval = json.dumps(self.json, indent=4) + "\n"
-        self.keys()
-        retval = retval + json.dumps(self.wallet_keys.json, indent=4) + "\n"
-        self.list()
-        retval = retval + json.dumps(self.wallet_list.json, indent=4) + "\n"
+        retval = retval + json.dumps(self.keys().json, indent=4) + "\n"
+        retval = retval + json.dumps(self.list().json, indent=4) + "\n"
         return retval
 
 
 class Account(cleos.CreateAccount):
 
     def code(self, code="", abi="", wasm=False):
-        self.code = cleos.GetCode(self.name, code, abi, is_verbose=False)
-        return self.code
+        return cleos.GetCode(self.name, code, abi, is_verbose=False)
 
     def set_contract(
-            self, account, contract_dir, 
+            self, contract_dir, 
             wast_file="", abi_file="", 
             permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block="",
-            is_verbose=False):
+            ref_block=""):
 
         self.set_contract = cleos.SetContract(
             self.name, contract_dir, 
@@ -156,6 +110,24 @@ class Account(cleos.CreateAccount):
             is_verbose=False
         )
         return self.set_contract
+
+    def push_action(
+            self, action, data,
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=""):
+        if not permission:
+            permission = self.name
+
+        self.action = cleos.PushAction(
+            self.name, action, data,
+            permission, expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=False)
+        return self.action
 
     def __str__(self):
         return str(cleos.GetAccount(self.name, is_verbose=True))   

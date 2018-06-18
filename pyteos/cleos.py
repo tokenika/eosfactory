@@ -630,7 +630,7 @@ class CreateKey(_Cleos):
 class CreateAccount(_Cleos):
     """ Create an account, buy ram, stake for bandwidth for the account.
     Usage: CreateAccount(
-        creator, name, owner_key, active_key,
+        creator, name, owner_key, active_key="",
         permission="",         
         expiration=30, 
         skip_sign=False, dont_broadcast=False, force_unique=False,
@@ -672,8 +672,9 @@ class CreateAccount(_Cleos):
         is_verbose: Verbosity at the constraction time.    
     """
     def __init__(
-            self, creator, name, owner_key, active_key,
-            permission = "",
+            self, creator, name, owner_key, 
+            active_key="",
+            permission="",
             expiration_sec=30, 
             skip_signature=0, 
             dont_broadcast=0,
@@ -693,6 +694,9 @@ class CreateAccount(_Cleos):
         except:
             owner_key_public = owner_key
 
+        if not active_key:
+            active_key = owner_key
+
         try:
             active_key_public = active_key.key_public
         except:
@@ -707,7 +711,7 @@ class CreateAccount(_Cleos):
             except:
                 permission_name = permission
 
-            args.expend(["--permission", permission_name])
+            args.extend(["--permission", permission_name])
 
         if skip_signature:
             args.append("--skip-sign")
@@ -719,13 +723,13 @@ class CreateAccount(_Cleos):
             args.append("--force-unique")
 
         if max_cpu_usage:
-            args.expend(["--max-cpu-usage-ms", max_cpu_usage])
+            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
 
         if  max_net_usage:
-            args.expend(["--max-net-usage", max_net_usage])
+            args.extend(["--max-net-usage", max_net_usage])
 
         if  ref_block:
-            args.expend(["--ref-block", ref_block])
+            args.extend(["--ref-block", ref_block])
                
         _Cleos.__init__(
             self, args, "create", "account", is_verbose, 
@@ -827,6 +831,14 @@ class SetContract(_Cleos):
                 "cannot find the contract directory:\n{0}" \
                     .format(self.contract_path_absolute)
             return
+
+        if wast_file:
+            if not os.path(wast_file):
+                wast_file = os.path.join(contract_path_absolute, wast_file)
+
+        if abi_file:
+            if not os.path(abi_file):
+                abi_file = os.path.join(contract_path_absolute, abi_file)
             
         args = ["--json"]
 
