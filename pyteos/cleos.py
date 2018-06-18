@@ -134,10 +134,9 @@ class GetAccount(_Cleos):
 
         _Cleos.__init__(
             self, [account_name], 
-            "get", "account", is_verbose, suppress_error_msg)
+            "get", "account", is_verbose, suppress_error_msg, 
+            ok_substring="permissions")
 
-        if not self.error:
-            self.name = self.json["account_name"]
 
 
 class GetAccounts(_Cleos):
@@ -151,7 +150,11 @@ class GetAccounts(_Cleos):
             key_public = key
 
         _Cleos.__init__(
-            self, [key_public], "get", "accounts", is_verbose)
+            self, [key_public], "get", "accounts", is_verbose, 
+            ok_substring="{\n")
+        
+        if not self.error:
+            self.json = json.loads(self._out)
 
 
 class WalletCreate(_Cleos):
@@ -208,7 +211,6 @@ class WalletList(_Cleos):
             self, [], "wallet", "list", is_verbose, ok_substring="Wallets")
 
         if not self.error:
-            self.json = {}
             self.json = json.loads("{" + self._out.replace("Wallets", \
                 '"Wallets"', 1) + "}")
 
@@ -431,9 +433,6 @@ class GetCode(_Cleos):
         if not self.error:
             self.json = {}
             msg = str(self._out)
-            print("________________________________________")
-            print(msg)
-            print("________________________________________")
             self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
             self.code_hash = self.json["code_hash"]
 
@@ -466,6 +465,7 @@ class GetTable(_Cleos):
     """  
     def __init__(
         self, contract, scope, table,
+        binary=False, 
         limit=10, key="", lower="", upper="",
         is_verbose=True
         ):
@@ -489,7 +489,7 @@ class GetTable(_Cleos):
             args.append("--binary")
 
         if limit:
-            args.extend(["--limit", limit])
+            args.extend(["--limit", str(limit)])
 
         if key:
             try:
@@ -505,7 +505,11 @@ class GetTable(_Cleos):
         if upper:
             args.extend(["--upper", upper])
             
-        _Cleos.__init__(self, args, "get", "table", is_verbose)
+        _Cleos.__init__(self, args, "get", "table", is_verbose,
+            ok_substring="{\n")
+        
+        if not self.error:
+            self.json = json.loads(self._out)
 
 
 class CreateKey(_Cleos):
@@ -800,11 +804,11 @@ class PushAction(_Cleos):
             is_verbose=True        
         ):
         try:
-            account_name = account.name
+            self.account_name = account.name
         except:
-            account_name = account
+            self.account_name = account
 
-        args = [account_name, action, data]
+        args = ["--json", self.account_name, action, data]
 
         if permission:
             try:
@@ -812,7 +816,7 @@ class PushAction(_Cleos):
             except:
                 permission_name = permission
 
-            args.expend(["--permission", permission_name])
+            args.extend(["--permission", permission_name])
 
         if skip_signature:
             args.append("--skip-sign")
@@ -824,17 +828,21 @@ class PushAction(_Cleos):
             args.append("--force-unique")
 
         if max_cpu_usage:
-            args.expend(["--max-cpu-usage-ms", max_cpu_usage])
+            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
 
         if  max_net_usage:
-            args.expend(["--max-net-usage", max_net_usage])
+            args.extend(["--max-net-usage", max_net_usage])
 
         if  ref_block:
-            args.expend(["--ref-block", ref_block])
+            args.extend(["--ref-block", ref_block])
                         
-        _Cleos.__init__(self, args, "push", "action", is_verbose)
+        _Cleos.__init__(self, args, "push", "action", is_verbose, 
+            ok_substring="transaction_id")
+
         if not self.error:
-            self.name = account_name
+            self.json = json.loads(self._out)
+            self.console = self.json["processed"]["action_traces"][0]["console"]
+            self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
 
 
 class Wallet(WalletCreate):

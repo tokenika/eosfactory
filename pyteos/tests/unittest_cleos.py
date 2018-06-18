@@ -13,10 +13,11 @@ class Test1(unittest.TestCase):
         """ Stop after first error """      
         if not result.failures:
             super().run(result)
+        print("-------------------------------------------\n")
 
     @classmethod
     def setUpClass(cls):
-        pass
+        setup.set_verbose(False)
 
     def setUp(self):
         pass
@@ -24,8 +25,6 @@ class Test1(unittest.TestCase):
     def test_03(self):
         wallet_stop = cleos.WalletStop()
         self.assertTrue(not wallet_stop.error, "WalletStop")
-
-        print("---------------------------------------\n")
 
     def test_04(self):
         cleos.dont_keosd()
@@ -42,14 +41,10 @@ class Test1(unittest.TestCase):
         print(wallet_default.name)
         print(wallet_default.password)
 
-        print("---------------------------------------\n")
-
     def test_15(self):
         wallet_list = cleos.WalletList()
         self.assertTrue(not wallet_list.error, "WalletList")
         print(json.dumps(wallet_list.json, indent=4))
-
-        print("---------------------------------------\n")
 
     def test_20(self):
         global key_owner
@@ -60,51 +55,36 @@ class Test1(unittest.TestCase):
         print(key_owner.key_private)
         print(key_owner.key_public)
 
-        print("---------------------------------------\n")
-
     def test_25(self):
         global key_owner
         wallet_import = cleos.WalletImport(key_owner)
         self.assertTrue(not wallet_import.error, "WalletImport")
         print(json.dumps(wallet_import.json, indent=4))
         print(wallet_import.key_private)
-
-        print("---------------------------------------\n")
         
     def test_30(self):
         wallet_list = cleos.WalletList()
         self.assertTrue(not wallet_list.error, "WalletList")
         print(json.dumps(wallet_list.json, indent=4))
 
-        print("---------------------------------------\n")
-
     def test_35(self):
         wallet_keys = cleos.WalletKeys()
         self.assertTrue(not wallet_keys.error, "WalletKeys")
         print(json.dumps(wallet_keys.json, indent=4))
-
-        print("---------------------------------------\n")
 
     def test_38(self):
         global wallet_default
         wallet_open = cleos.WalletOpen(wallet_default)
         self.assertTrue(not wallet_open.error, "WalletOpen")
 
-        print("---------------------------------------\n")        
-
     def test_40(self):
         global wallet_default
         wallet_lock = cleos.WalletLock(wallet_default)
-        self.assertTrue(not wallet_lock.error, "WalletLock")
-
-        print("---------------------------------------\n")
 
     def test_45(self):
         global wallet_default
         wallet_unlock = cleos.WalletUnlock(wallet_default)
         self.assertTrue(not wallet_unlock.error, "WalletUnlock")
-
-        print("---------------------------------------\n")
 
     def test_50(self):
         get_info = cleos.GetInfo()
@@ -114,8 +94,6 @@ class Test1(unittest.TestCase):
         print(get_info.head_block_time)
         print(get_info.last_irreversible_block_num)
 
-        print("---------------------------------------\n")
-
     def test_53(self):
         get_block = cleos.GetBlock(3)
         self.assertTrue(not get_block.error, "GetBlock")
@@ -123,8 +101,6 @@ class Test1(unittest.TestCase):
         print(get_block.block_num)
         print(get_block.ref_block_prefix)
         print(get_block.timestamp)
-
-        print("---------------------------------------\n")
 
     def test_56(self):
         global account_eosio
@@ -134,8 +110,6 @@ class Test1(unittest.TestCase):
         print(account_eosio.name)
         print(account_eosio.key_private)
         print(account_eosio.key_public)
-
-        print("---------------------------------------\n")
 
     def test_60(self):
         global account_eosio
@@ -158,15 +132,11 @@ class Test1(unittest.TestCase):
         self.assertTrue(not account_carol.error, "CreateAccount Carol")
         print(account_carol.name)
 
-        print("---------------------------------------\n")
-
     def test_63(self):
         global account_eosio
         contract_eosio_bios = cleos.SetContract( account_eosio, "eosio.bios")
         self.assertTrue(not contract_eosio_bios.error, "SetContract bios")
         print(contract_eosio_bios.contract_path_absolute)
-
-        print("---------------------------------------\n")
     
     def test_66(self):
         global account_eosio
@@ -179,16 +149,64 @@ class Test1(unittest.TestCase):
         contract_ttt = cleos.SetContract(account_ttt, "eosio.token")
         self.assertTrue(not contract_ttt.error, "SetContract eosio.token")
 
-        print("---------------------------------------\n")
-
     def test_69(self):
         global account_ttt
         get_code = cleos.GetCode(account_ttt)
         self.assertTrue(not get_code.error, "GetCode account_ttt")
         print(json.dumps(get_code.json, indent=4))
         print(get_code.code_hash)
-        print("---------------------------------------\n")
 
+    def test_72(self):
+        global account_ttt
+        get_info = cleos.GetInfo(is_verbose=False, suppress_error_msg=True)
+        push_create = cleos.PushAction(
+            account_ttt, "create", 
+            '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
+                "can_freeze":0, "can_recall":0, "can_whitelist":0}',
+            permission=account_ttt)
+        self.assertTrue(not push_create.error, "PushAction create")
+        print(push_create.console)
+        print(push_create.data)          
+
+        global account_eosio
+        push_issue = cleos.PushAction(
+            account_ttt, "issue", 
+            '{"to":"alice", "quantity":"100.0000 EOS", \
+                "memo":"100.0000 EOS to alice"}',
+            permission=account_eosio)
+        self.assertTrue(not push_issue.error, "PushAction issue")
+        print(push_issue.console)
+        print(push_issue.data)
+
+        global account_alice
+        push_transfer = cleos.PushAction(
+            account_ttt, "transfer", 
+            '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
+            "memo":"100.0000 EOS to carol"}',
+            permission=account_alice)
+        self.assertTrue(not push_transfer.error, "PushAction issue")
+        print(push_transfer.console)
+        print(push_transfer.data)
+
+    def test_74(self):
+        global account_ttt
+        global account_alice
+        get_info = cleos.GetInfo(is_verbose=False, suppress_error_msg=True)
+        get_table = cleos.GetTable(account_ttt, account_alice, "accounts")
+        self.assertTrue(not get_table.error, "GetTable")
+        print(json.dumps(get_table.json, indent=4))
+
+    def test_77(self):
+        global key_owner
+        get_accounts = cleos.GetAccounts(key_owner)
+        self.assertTrue(not get_accounts.error, "GetAcounts")
+        print(json.dumps(get_accounts.json, indent=4))
+
+    def test_80(self):
+        global account_alice
+        get_account = cleos.GetAccount(account_alice)
+        self.assertTrue(not get_account.error, "GetAcount")
+        print(json.dumps(get_account.json, indent=4))
     
     def tearDown(self):
         pass
