@@ -19,6 +19,7 @@ import re
 import pathlib
 import setup
 import teos
+import random
 
 setup_setup = setup.Setup()
 
@@ -35,9 +36,9 @@ def dont_keosd(status=True):
     """
     global _dont_keosd
     if status:
-        #WalletStop(is_verbose=False, suppress_error_msg=True)
+        #WalletStop(is_verbose=-1)
         config = teos.GetConfig(
-            "", is_verbose=False)
+            "", is_verbose=0)
         _dont_keosd = ["--wallet-url", "http://" \
             + config.json["EOSIO_DAEMON_ADDRESS"]]
     else:
@@ -49,14 +50,14 @@ class _Cleos:
     global setup_setup
 
     error = False
-    is_verbose = True
+    is_verbose = 1
     json = {}    
+    err_msg = ""
     _out = ""
-    _err = ""
 
     def __init__(
                 self, args, first, second, 
-                is_verbose=True, suppress_error_msg=False, 
+                is_verbose=1, 
                 ok_substring="OK"):
 
         cl = [setup_setup.cleos_exe]
@@ -84,20 +85,20 @@ class _Cleos:
             cwd=str(pathlib.Path(setup_setup.cleos_exe).parent)) 
 
         self._out = process.stdout.decode("utf-8")
-        self._err = process.stderr.decode("utf-8")
+        self.err_msg = process.stderr.decode("utf-8")
         self.is_verbose = setup.is_verbose() and is_verbose
 
         if setup.is_print_response() or setup.is_print_response():
-            print(self._err)
+            print(self.err_msg)
             print("")
 
         self.error = ok_substring not in str(self._out)
         self.json = {}
-        if self._err and self.error:
-            self.json["ERROR"] = self._err
-            if not setup.is_suppress_error_msg() and not suppress_error_msg:
+        if self.err_msg and self.error:
+            self.json["ERROR"] = self.err_msg
+            if setup.is_verbose() >= 0 and is_verbose >= 0:
                 print("ERROR:")
-                print(self._err)
+                print(self.err_msg)
                 print("")              
 
         if self.is_verbose:
@@ -113,7 +114,7 @@ class _Cleos:
     
 class GetAccount(_Cleos):
     """ Retrieve an account from the blockchain.
-    Usage: GetAccount(name, is_verbose=True)
+    Usage: GetAccount(name, is_verbose=1)
 
     - **parameters**::
 
@@ -128,7 +129,7 @@ class GetAccount(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, account, is_verbose=True, suppress_error_msg=False):
+    def __init__(self, account, is_verbose=1):
         try:
             account_name = account.name
         except:
@@ -136,14 +137,13 @@ class GetAccount(_Cleos):
 
         _Cleos.__init__(
             self, [account_name], 
-            "get", "account", is_verbose, suppress_error_msg, 
-            ok_substring="permissions")
+            "get", "account", is_verbose, ok_substring="permissions")
 
 
 
 class GetAccounts(_Cleos):
     """ Retrieve accounts associated with a public key.
-    Usage: GetAccounts(public_key, is_verbose=True)
+    Usage: GetAccounts(public_key, is_verbose=1)
 
     - **attributes**::
 
@@ -151,7 +151,7 @@ class GetAccounts(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, key, is_verbose=True):
+    def __init__(self, key, is_verbose=1):
         try:
             key_public = key.key_public
         except:
@@ -167,7 +167,7 @@ class GetAccounts(_Cleos):
 
 class WalletCreate(_Cleos):
     """ Create a new wallet locally.
-    Usage: WalletCreate(name="default", is_verbose=True)
+    Usage: WalletCreate(name="default", is_verbose=1)
 
     - **parameters**::
 
@@ -183,7 +183,7 @@ class WalletCreate(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.  
     """
-    def __init__(self, name="default", is_verbose=True):
+    def __init__(self, name="default", is_verbose=1):
         _Cleos.__init__(
             self, ["--name", name], "wallet", "create", is_verbose,
             ok_substring="Creating wallet:")
@@ -199,17 +199,17 @@ class WalletCreate(_Cleos):
 
 class WalletStop(_Cleos):
     """Stop keosd (doesn't work with nodeos).
-    Usage: WalletStop(is_verbose=True, suppress_error_msg=False)
+    Usage: WalletStop(is_verbose=1)
     """
-    def __init__(self, is_verbose=True, suppress_error_msg=False):
+    def __init__(self, is_verbose=1):
         _Cleos.__init__(
             self, [], 
-            "wallet", "stop", is_verbose, suppress_error_msg)
+            "wallet", "stop", is_verbose)
 
 
 class WalletList(_Cleos):
     """ List opened wallets, * marks unlocked.
-    Usage: WalletList(is_verbose=True)
+    Usage: WalletList(is_verbose=1)
 
     - **parameters**::
 
@@ -222,7 +222,7 @@ class WalletList(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, is_verbose=True):
+    def __init__(self, is_verbose=1):
         _Cleos.__init__(
             self, [], "wallet", "list", is_verbose, ok_substring="Wallets")
 
@@ -233,7 +233,7 @@ class WalletList(_Cleos):
 
 class WalletImport(_Cleos):
     """ Import a private key into wallet.
-    Usage: WalletImport(key, wallet="default", is_verbose=True)
+    Usage: WalletImport(key, wallet="default", is_verbose=1)
 
     - **parameters**::
 
@@ -248,7 +248,7 @@ class WalletImport(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, key, wallet="default", is_verbose=True):
+    def __init__(self, key, wallet="default", is_verbose=1):
         try:
             key_private = key.key_private
         except:
@@ -272,7 +272,7 @@ class WalletImport(_Cleos):
 
 class WalletKeys(_Cleos):
     """ List of public keys from all unlocked wallets.
-    Usage: WalletKeys(is_verbose=True)
+    Usage: WalletKeys(is_verbose=1)
 
     - **parameters**::
 
@@ -291,7 +291,7 @@ class WalletKeys(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.         
     """
-    def __init__(self, is_verbose=True):
+    def __init__(self, is_verbose=1):
         _Cleos.__init__(
             self, [], "wallet", "keys", is_verbose, ok_substring='[\n  "')
 
@@ -303,7 +303,7 @@ class WalletKeys(_Cleos):
 
 class WalletOpen(_Cleos):
     """ Open an existing wallet.
-    Usage: WalletOpen(wallet="default", is_verbose=True)
+    Usage: WalletOpen(wallet="default", is_verbose=1)
 
     - **parameters**::
 
@@ -319,7 +319,7 @@ class WalletOpen(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, wallet="default", is_verbose=True):      
+    def __init__(self, wallet="default", is_verbose=1):      
         try:
             wallet_name = wallet.name
         except:
@@ -332,7 +332,7 @@ class WalletOpen(_Cleos):
 
 class WalletLock(_Cleos):
     """ Lock wallet.
-    Usage: WalletLock(wallet="default", is_verbose=True)
+    Usage: WalletLock(wallet="default", is_verbose=1)
 
     - **parameters**::
 
@@ -348,7 +348,7 @@ class WalletLock(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, wallet="default", is_verbose=True):
+    def __init__(self, wallet="default", is_verbose=1):
         try:
             wallet_name = wallet.name
         except:
@@ -362,7 +362,7 @@ class WalletLock(_Cleos):
 class WalletUnlock(_Cleos):
     """ Unlock wallet.
     Usage: WalletUnlock(
-        wallet="default", password="", timeout=0, is_verbose=True)
+        wallet="default", password="", timeout=0, is_verbose=1)
 
     - **parameters**::
 
@@ -383,7 +383,7 @@ class WalletUnlock(_Cleos):
         is_verbose: Verbosity at the constraction time.
     """    
     def __init__(
-            self, wallet="default", password="", timeout=0, is_verbose=True):
+            self, wallet="default", password="", timeout=0, is_verbose=1):
         try:
             wallet_name = wallet.name
             password = wallet.password
@@ -399,13 +399,12 @@ class WalletUnlock(_Cleos):
 
 class GetInfo(_Cleos):
     """ Get current blockchain information.
-    Usage: GetInfo(is_verbose=True, suppress_error_msg=False)
+    Usage: GetInfo(is_verbose=1)
 
     - **parameters**::
 
         is_verbose: If `False`, do not print unless on error, 
             default is `True`.
-        suppress_error_msg: If `True`, do not print on error.
 
     - **attributes**::
 
@@ -413,9 +412,9 @@ class GetInfo(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, is_verbose=True, suppress_error_msg=False):
+    def __init__(self, is_verbose=1):
         _Cleos.__init__(
-            self, [], "get", "info", is_verbose, suppress_error_msg,
+            self, [], "get", "info", is_verbose,
             "head_block_num")
 
         if not self.error:
@@ -428,7 +427,7 @@ class GetInfo(_Cleos):
 
 class GetBlock(_Cleos):
     """ Retrieve a full block from the blockchain.
-    Usage: GetBlock(block_number, block_id="", is_verbose=True)
+    Usage: GetBlock(block_number, block_id="", is_verbose=1)
 
     - **parameters**::
     
@@ -443,7 +442,7 @@ class GetBlock(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, block_number, block_id="", is_verbose=True):
+    def __init__(self, block_number, block_id="", is_verbose=1):
         args = []
         if(block_id == ""):
             args = [str(block_number)]
@@ -463,7 +462,7 @@ class GetBlock(_Cleos):
 class GetCode(_Cleos):
     """ Retrieve the code and ABI for an account.
     Usage: GetCode(
-        account, code="", abi="", wasm=False, is_verbose=True)
+        account, code="", abi="", wasm=False, is_verbose=1)
 
     - **parameters**::
 
@@ -482,7 +481,7 @@ class GetCode(_Cleos):
     """
     def __init__(
             self, account, code="", abi="", 
-            wasm=False, is_verbose=True
+            wasm=False, is_verbose=1
         ):
         try:
             account_name = account.name
@@ -510,9 +509,9 @@ class GetCode(_Cleos):
 class GetTable(_Cleos):
     """ Retrieve the contents of a database table
     Usage: GetTable(
-        contract, scope, table, 
+        contract, tables, scope="", 
         binary=False, limit=0, key="", lower="", upper="",
-        is_verbose=True)
+        is_verbose=1)
 
     - **parameters**::
 
@@ -539,10 +538,10 @@ class GetTable(_Cleos):
         is_verbose: Verbosity at the constraction time.
     """  
     def __init__(
-        self, contract, scope, table,
+        self, contract, table, scope,
         binary=False, 
         limit=10, key="", lower="", upper="",
-        is_verbose=True
+        is_verbose=1
         ):
 
         try:
@@ -552,10 +551,13 @@ class GetTable(_Cleos):
 
         args = [contract_name]
 
-        try:
-            scope_name = scope.name
-        except:
-            scope_name = scope
+        if not scope:
+            scope=self.name
+        else:
+            try:
+                scope_name = scope.name
+            except:
+                scope_name = scope
 
         args.append(scope_name)
         args.append(table)
@@ -589,7 +591,7 @@ class GetTable(_Cleos):
 
 class CreateKey(_Cleos):
     """ Create a new keypair and print the public and private keys.
-    Usage: CreateKey(key_name, r1=False, is_verbose=True)
+    Usage: CreateKey(key_name, r1=False, is_verbose=1)
 
     - **parameters**::
 
@@ -603,7 +605,7 @@ class CreateKey(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, key_name, r1=False, is_verbose=True):
+    def __init__(self, key_name, r1=False, is_verbose=1):
         args = []
         if r1:
             args.append("--r1")
@@ -636,7 +638,7 @@ class CreateAccount(_Cleos):
         skip_sign=False, dont_broadcast=False, force_unique=False,
         max_cpu_usage_ms=0, max_net_usage=0,
         ref_block="",
-        is_verbose=True)
+        is_verbose=1)
 
     - **parameters**::
 
@@ -682,13 +684,15 @@ class CreateAccount(_Cleos):
             max_cpu_usage=0,
             max_net_usage=0,
             ref_block="",
-            is_verbose=True
+            is_verbose=1
             ):
         try:
             creator_name = creator.name
         except:
             creator_name = creator
 
+        self.owner_key = owner_key
+        self.active_key = active_key
         try:
             owner_key_public = owner_key.key_public
         except:
@@ -740,9 +744,53 @@ class CreateAccount(_Cleos):
             self.json = json.loads(self._out)
             self.name = name
 
+
+class PrivateAccount(CreateAccount):
+    """
+    """
+    def __init__(
+            self,
+            owner_key="", 
+            active_key="",
+            permission="",
+            expiration_sec=30, 
+            skip_signature=0, 
+            dont_broadcast=0,
+            forceUnique=0,
+            max_cpu_usage=0,
+            max_net_usage=0,
+            ref_block="",
+            is_verbose=1):
+        
+        letters = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', \
+                    'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', \
+                    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', \
+                    'y', 'z', '1', '2', '3', '4', '5']
+        name = ""
+        for i in range(0, 11):
+            name += letters[random.randint(0, 30)]
+
+        if owner_key:
+            if not active_key:
+                active_key = owner_key
+        else:
+            owner_key = CreateKey("owner")
+            active_key = CreateKey("active")
+              
+        
+        CreateAccount.__init__(
+            self, AccountEosio(), name, 
+            owner_key, active_key,
+            permission,
+            expiration_sec, skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=1)
+
+
 class AccountEosio():
 
-    def __init__(self, is_verbose=True): 
+    def __init__(self, is_verbose=1): 
         self.name = "eosio"        
         self.json = {}
         self.json["name"] = self.name
@@ -765,7 +813,7 @@ class SetContract(_Cleos):
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block="",
-            is_verbose=True)
+            is_verbose=1)
 
     - **parameters**:: 
     
@@ -807,7 +855,7 @@ class SetContract(_Cleos):
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block="",
-            is_verbose=True
+            is_verbose=1
             ):
 
         try:
@@ -821,24 +869,16 @@ class SetContract(_Cleos):
              permission_name = permission
 
         import teos
-        config = teos.GetConfig(contract_dir, is_verbose=False)
+        config = teos.GetConfig(contract_dir, is_verbose=0)
         try:       
             self.contract_path_absolute = config.json["contract-dir"]
+            wast_file = config.json["contract-wast"]
+            abi_file = config.json["contract-abi"]
         except:
             self.error = True
             self.json = {}
-            self.json["ERROR"] = \
-                "cannot find the contract directory:\n{0}" \
-                    .format(self.contract_path_absolute)
+            self.json["ERROR"] = "cannot find the contract directory."
             return
-
-        if wast_file:
-            if not os.path(wast_file):
-                wast_file = os.path.join(contract_path_absolute, wast_file)
-
-        if abi_file:
-            if not os.path(abi_file):
-                abi_file = os.path.join(contract_path_absolute, abi_file)
             
         args = ["--json"]
 
@@ -888,7 +928,7 @@ class PushAction(_Cleos):
         skip_signature=0, dont_broadcast=0, forceUnique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block="",
-        is_verbose=True)
+        is_verbose=1)
 
     - **parameters**::
 
@@ -929,7 +969,7 @@ class PushAction(_Cleos):
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block="",
-            is_verbose=True        
+            is_verbose=1        
         ):
         try:
             self.account_name = account.name
@@ -973,6 +1013,8 @@ class PushAction(_Cleos):
             self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
 
 
+def node_is_running():
+    return not GetInfo(is_verbose=-1).error
 
 
 

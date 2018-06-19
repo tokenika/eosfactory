@@ -1,61 +1,74 @@
 # python3 ./tests/test1.py
 
-import node
+import setup
+import teos
+import cleos
 import sess
-from eosf import *
+import entities
 
 CONTRACT_NAME = "eosio.token"
-set_verbose(True)
+setup.set_verbose(0)
+cleos.dont_keosd()
+
 
 def run():
     print('test node.reset():')
-    assert node.reset()
+    assert teos.node_reset()
 
     print('test sess.init():')
     assert sess.init()
 
     print('test Contract():')
-    c = Contract(CONTRACT_NAME)
-    assert c.is_created()
+    c = entities.Contract(
+        cleos.PrivateAccount(sess.key_owner, sess.key_active), CONTRACT_NAME)
+    assert not c.error
 
-    print('test c.get_code():')
-    assert c.get_code()
+    print('test c.code():')
+    assert not c.code().error
 
     print('test c.deploy():')
     assert c.deploy()
 
     print('test c.get_code():')
-    assert c.get_code()
+    assert not c.code().error
 
     print('test c.push_action("create"):')
-    assert c.push_action(
+    assert not c.push_action(
         "create", 
         '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
-            "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+            "can_freeze":0, "can_recall":0, "can_whitelist":0}').error
 
     print('test c.push_action("issue"):')
-    assert c.push_action(
+    assert not c.push_action(
         "issue", 
-        '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', \
-            sess.eosio)
+        '{"to":"' + sess.alice.name 
+            + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
+            sess.account_eosio).error
 
     print('test c.push_action("transfer", sess.alice):')
-    assert c.push_action(
+    assert not c.push_action(
         "transfer", 
-        '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
-            "memo":"memo"}', sess.alice)
+        '{"from":"' 
+            + sess.alice.name 
+            + '", "to":"' + sess.carol.name 
+            + '", "quantity":"25.0000 EOS", "memo":"memo"}', sess.alice).error
 
     print('test c.push_action("transfer", sess.carol):')
-    assert c.push_action(
+    assert not c.push_action(
         "transfer", 
-        '{"from":"carol", "to":"bob", "quantity":"13.0000 EOS", \
-            "memo":"memo"}', sess.carol)
+        '{"from":"' 
+            + sess.carol.name 
+            + '", "to":"' + sess.bob.name 
+            + '", "quantity":"13.0000 EOS", "memo":"memo"}', sess.carol).error
 
     print('test c.push_action("transfer" sess.bob):')
-    assert c.push_action(
+    assert not c.push_action(
         "transfer", 
-        '{"from":"bob", "to":"alice", "quantity":"2.0000 EOS", \
-            "memo":"memo"}', sess.bob)
+        '{"from":"' 
+            + sess.bob.name 
+            + '", "to":"' 
+            + sess.alice.name 
+            + '", "quantity":"2.0000 EOS", "memo":"memo"}', sess.bob).error
 
     print('test c.get_table("accounts", sess.alice):')
     t1 = c.get_table("accounts", sess.alice)
@@ -76,7 +89,7 @@ def run():
     assert t3.json["rows"][0]["balance"] == '12.0000 EOS'
 
     print('test node.stop():')
-    node.stop()
+    teos.node_stop()
 
     print("Test OK")
 

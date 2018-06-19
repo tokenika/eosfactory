@@ -24,32 +24,32 @@ class Test1(unittest.TestCase):
 
     def test_03(self):
         wallet_stop = cleos.WalletStop()
-        self.assertTrue(not wallet_stop.error, "WalletStop")
+        self.assertTrue(not wallet_stop.error)
 
     def test_04(self):
         cleos.dont_keosd()
 
     def test_05(self):
         node_reset = teos.node_reset()
-        self.assertTrue(node_reset, "node_reset")
+        self.assertTrue(node_reset)
 
     def test_10(self):
         global wallet_default
         wallet_default = cleos.WalletCreate()
-        self.assertTrue(not wallet_default.error, "WalletCreate")
+        self.assertTrue(not wallet_default.error)
         print(json.dumps(wallet_default.json, indent=4))
         print(wallet_default.name)
         print(wallet_default.password)
 
     def test_15(self):
         wallet_list = cleos.WalletList()
-        self.assertTrue(not wallet_list.error, "WalletList")
+        self.assertTrue(not wallet_list.error)
         print(json.dumps(wallet_list.json, indent=4))
 
     def test_20(self):
         global key_owner
         key_owner = cleos.CreateKey("owner")
-        self.assertTrue(not key_owner.error, "CreateKey")
+        self.assertTrue(not key_owner.error)
         print(json.dumps(key_owner.json, indent=4))
         print(key_owner.name)
         print(key_owner.key_private)
@@ -58,18 +58,18 @@ class Test1(unittest.TestCase):
     def test_25(self):
         global key_owner
         wallet_import = cleos.WalletImport(key_owner)
-        self.assertTrue(not wallet_import.error, "WalletImport")
+        self.assertTrue(not wallet_import.error)
         print(json.dumps(wallet_import.json, indent=4))
         print(wallet_import.key_private)
         
     def test_30(self):
         wallet_list = cleos.WalletList()
-        self.assertTrue(not wallet_list.error, "WalletList")
+        self.assertTrue(not wallet_list.error)
         print(json.dumps(wallet_list.json, indent=4))
 
     def test_35(self):
         wallet_keys = cleos.WalletKeys()
-        self.assertTrue(not wallet_keys.error, "WalletKeys")
+        self.assertTrue(not wallet_keys.error)
         print(json.dumps(wallet_keys.json, indent=4))
 
     def test_38(self):
@@ -159,7 +159,7 @@ class Test1(unittest.TestCase):
 
     def test_72(self):
         global account_ttt
-        get_info = cleos.GetInfo(is_verbose=False, suppress_error_msg=True)
+        get_info = cleos.GetInfo(is_verbose=-1)
         push_create = cleos.PushAction(
             account_ttt, "create", 
             '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
@@ -192,8 +192,8 @@ class Test1(unittest.TestCase):
     def test_74(self):
         global account_ttt
         global account_alice
-        get_info = cleos.GetInfo(is_verbose=False, suppress_error_msg=True)
-        get_table = cleos.GetTable(account_ttt, account_alice, "accounts")
+        get_info = cleos.GetInfo(is_verbose=-1)
+        get_table = cleos.GetTable(account_ttt, "accounts", account_alice)
         self.assertTrue(not get_table.error, "GetTable")
         print(json.dumps(get_table.json, indent=4))
 

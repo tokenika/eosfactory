@@ -5,8 +5,9 @@ import setup
 import cleos
 import teos
 import entities
-
 import unittest
+from colorama import Fore, Back, Style #sudo python3 -m pip install colorama
+from termcolor import colored, cprint
 
 class Test1(unittest.TestCase):
 
@@ -32,15 +33,15 @@ class Test1(unittest.TestCase):
         global wallet_default
         wallet_default = entities.Wallet()
         wallet_second = entities.Wallet("second")
-        self.assertTrue(not wallet_default.error, "Wallet default")
+        self.assertTrue(not wallet_default.error)
         global key_owner
         key_owner = cleos.CreateKey("owner")
         self.assertTrue(wallet_default.import_key(key_owner), "import_key")
         print(wallet_default)
-        self.assertTrue(wallet_default.open(), "open")
-        self.assertTrue(wallet_default.lock(), "lock")
+        self.assertTrue(wallet_default.open())
+        self.assertTrue(wallet_default.lock())
         print(wallet_default)
-        self.assertTrue(wallet_default.unlock(), "unlock")
+        self.assertTrue(wallet_default.unlock())
 
     def test_10(self):
         global key_owner        
@@ -65,7 +66,115 @@ class Test1(unittest.TestCase):
             account_eosio, "carol", key_owner)
         self.assertTrue(not account_carol.error)
 
+    def test_11(self):
+        global wallet_default
+
+        account = cleos.PrivateAccount()
+        self.assertTrue(not account.error)
+        wallet_default.import_key(account.active_key)
+
+        contract = entities.Contract(account, "tic_tac_toe")
+        is_deployed = contract.deploy()
+        info = cleos.GetInfo(is_verbose=-1)
+
+        print(contract.contract.contract_path_absolute)
+        print(contract.contract.error)
+        if contract.contract.error:
+            print(contract.contract.err_msg)
+        print(is_deployed)
+
+        print(colored("""
+Create a new contract template directory:
+        """, 'green'))
+        contract_dir = "test"
+        template = teos.Template(contract_dir, remove_existing=True)
+        print("template path is {}".format(template.contract_path_absolute))
+
+        print(colored("""
+Again, create a new account, and add a contract to it:
+        """, 'green'))
+        account = cleos.PrivateAccount()
+        self.assertTrue(not account.error)
+        wallet_default.import_key(account.owner_key)
+        wallet_default.import_key(account.active_key)
+        contract = entities.Contract(account, contract_dir)
+        
+        print(colored("""
+However, the contract cannot be deployed because it is not built yet. An attempt
+results in an error message:
+        """, 'green'))
+        is_deployed = contract.deploy()
+        self.assertFalse(is_deployed)
+        if contract.contract.error:
+            print(contract.contract.err_msg)
+
+        print(colored("""
+Use the `build` method of the `entities.Contract` object:
+        """, 'green'))
+        if not is_deployed:
+            contract.build()
+
+        is_deployed = contract.deploy()
+        print("contract is deployed now: {}".format(is_deployed))
+        
+        self.assertTrue(template.delete())
+
+
     def test_12(self):
+        global wallet_default
+        global account_eosio
+        global account_alice
+
+        account = cleos.PrivateAccount()
+        self.assertTrue(not account.error)
+        wallet_default.import_key(account.active_key)
+
+        contract = entities.Contract(account, "eosio.token")
+        is_deployed = contract.deploy()
+        self.assertTrue(is_deployed)
+
+        info = cleos.GetInfo(is_verbose=-1)
+
+        print(colored("""
+contract.push_action('create'
+        """, 'green'))        
+        action_create = contract.push_action(
+            "create", 
+            '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
+                "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+        self.assertTrue(not action_create.error)
+        # print(action_create.console)
+        # print(action_create.data)
+
+        print(colored("""
+contract.push_action('issue'
+        """, 'green'))
+        action_issue = contract.push_action(
+            "issue", 
+            '{"to":"alice", "quantity":"100.0000 EOS", \
+                "memo":"100.0000 EOS to alice"}', permission=account_eosio)
+        self.assertTrue(not action_issue.error)
+
+        print(colored("""
+contract.push_action('transfer'
+        """, 'green'))
+        action_transfer = contract.push_action(
+            "transfer", 
+            '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
+            "memo":"100.0000 EOS to carol"}', permission=account_alice)
+        self.assertTrue(not action_transfer.error)
+
+        info = cleos.GetInfo(is_verbose=-1)
+
+        print(colored("""
+contract.get_table(account_alice.name, "accounts")
+        """, 'green'))
+        table = contract.get_table("accounts", account_alice )
+        self.assertTrue(not table.error)
+        print(json.dumps(table.json, indent=4))
+
+
+    def test_13(self):
         global account_eosio
         global key_owner
 
@@ -94,6 +203,9 @@ class Test1(unittest.TestCase):
         contract_ttt = account_ttt.set_contract("eosio.token")
         self.assertTrue(not contract_ttt.error)
 
+        print(colored("""
+account_ttt.push_action('create'
+        """, 'green')) 
         action_create = account_ttt.push_action(
             "create", 
             '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
@@ -101,21 +213,27 @@ class Test1(unittest.TestCase):
         self.assertTrue(not action_create.error)
         print(action_create.console)
         print(action_create.data)
-
+        
+        print(colored("""
+account_ttt.push_action('issue'
+        """, 'green')) 
         action_issue = account_ttt.push_action(
             "issue", 
             '{"to":"alice", "quantity":"100.0000 EOS", \
                 "memo":"100.0000 EOS to alice"}', permission=account_eosio)
         self.assertTrue(not action_issue.error)
 
+        print(colored("""
+account_ttt.push_action('transfer'
+        """, 'green')) 
         action_transfer = account_ttt.push_action(
             "transfer", 
             '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
             "memo":"100.0000 EOS to carol"}', permission=account_alice)
         self.assertTrue(not action_transfer.error)
 
-        info = cleos.GetInfo(is_verbose=False, suppress_error_msg=True)
-        table = account_ttt.get_table(account_alice, "accounts")
+        info = cleos.GetInfo(is_verbose=-1)
+        table = account_ttt.get_table( "accounts", account_alice)
         self.assertTrue(not table.error)
         print(json.dumps(table.json, indent=4))
 

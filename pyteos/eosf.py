@@ -13,7 +13,9 @@ Macros made of elements of the :mod:`pyteos` module, intended for experiments wi
 
 import sys
 import pathlib
-import pyteos
+import setup
+import teos
+import cleos
 import sess
 import re
 import random
@@ -21,10 +23,7 @@ import shutil
 import os
 
 def set_verbose(is_verbose):
-    pyteos.set_verbose(is_verbose)
-
-def set_suppress_error_msg(suppress_error_msg):
-    pyteos.set_suppress_error_msg(suppress_error_msg)
+    setup.set_verbose(is_verbose)
 
 
 class Contract(pyteos.Contract):

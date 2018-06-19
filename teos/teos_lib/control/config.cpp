@@ -825,6 +825,10 @@ Cannot determine the contract workspace.
       {
         respJson_.put("contract-dir", getContractDir(
           this, reqJson_.get<string>("contract-dir")));
+        respJson_.put("contract-wast", getContractFile(
+          this, reqJson_.get<string>("contract-dir"), ".wast"));
+        respJson_.put("contract-abi", getContractFile(
+          this, reqJson_.get<string>("contract-dir"), ".abi"));
       }
     }
   }

@@ -90,7 +90,11 @@ class Wallet(cleos.WalletCreate):
 class Account(cleos.CreateAccount):
 
     def code(self, code="", abi="", wasm=False):
-        return cleos.GetCode(self.name, code, abi, is_verbose=False)
+        get_code = cleos.GetCode(
+            self.name, code, abi, is_verbose=False)
+        if not get_code.error and self.is_verbose:
+            print("code hash: {}".format(get_code.code_hash))
+        return get_code
 
     def set_contract(
             self, contract_dir, 
@@ -119,6 +123,11 @@ class Account(cleos.CreateAccount):
             ref_block=""):
         if not permission:
             permission = self.name
+        else:
+            try: # permission is an account:
+                permission=permission.name
+            except: # permission is the name of an account:
+                permission=permission
 
         self.action = cleos.PushAction(
             self.name, action, data,
@@ -126,40 +135,44 @@ class Account(cleos.CreateAccount):
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=False)
+            is_verbose=0)
+
+        if not self.action.error:
+            self.console = self.action.console
+            if self.is_verbose:
+                print(self.console + "\n") 
+
         return self.action
 
     def get_table(
-            self, scope, table,
+            self, table, scope="", 
             binary=False, 
             limit=10, key="", lower="", upper=""):
 
         self.table = cleos.GetTable(
-                                self.name, scope, table,
+                                self.name, table, scope,
                                 binary, 
-                                limit, key, lower, upper)
+                                limit, key, lower, upper,
+                                is_verbose=0)
         return self.table
 
     def __str__(self):
-        return str(cleos.GetAccount(self.name, is_verbose=True))   
+        return str(cleos.GetAccount(self.name, is_verbose=1))   
 
 
-class Contract(cleos.CreateAccount):
+class Contract():
 
     def __init__(
-            self, creator, name, contract_dir, owner_key, 
-            active_key="",
-            permission="",
+            self, account, contract_dir,
             wast_file="", abi_file="",  
+            permission="",
             expiration_sec=30, 
-            skip_signature=0, 
-            dont_broadcast=0, 
-            forceUnique=0,
-            max_cpu_usage=0, 
-            max_net_usage=0,
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
             ref_block="",
-            is_verbose=True):
+            is_verbose=1):
 
+        self.account = account
         self.contract_dir = contract_dir
         self.wast_file = wast_file
         self.abi_file = abi_file
@@ -170,34 +183,33 @@ class Contract(cleos.CreateAccount):
         self.max_cpu_usage = max_cpu_usage
         self.max_net_usage = max_net_usage
         self.ref_block = ref_block
+        self.is_mutable = True
 
-        cleos.CreateAccount.__init__(creator, name, owner_key, active_key,
-            permission, 
-            expiration_sec, skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage, ref_block,
-            is_verbose=False)
+        self.contract = None
+        self.console = None
+        self.is_verbose = is_verbose
+        self.error = self.account.error
 
     def deploy(self, permission=""):
-
         self.contract = cleos.SetContract(
-            self.name, self.contract_dir, 
+            self.account, self.contract_dir, 
             self.wast_file, self.abi_file, 
             permission, self.expiration_sec, 
             self.skip_signature, self.dont_broadcast, self.forceUnique,
             self.max_cpu_usage, self.max_net_usage,
             self.ref_block,
-            is_verbose=False
+            is_verbose=0
         )
-        return self.contract
+        return self.is_deployed()
 
-    def is_created(self):
+    def is_deployed(self):
         if not self.contract:
             return False
         return not self.contract.error
 
     def wast(self):
         if self.is_mutable:            
-            wast = WAST(str(self.contract_path_absolute), self.account_name)
+            wast = teos.WAST(self.contract_dir, self.account.name)
         else:
             if setup.is_verbose():
                 print("ERROR!")
@@ -205,9 +217,9 @@ class Contract(cleos.CreateAccount):
         return not wast.error
         
 
-    def abi(self):
+    def abi(self, build_dir=""):            
         if self.is_mutable:
-            abi = ABI(str(self.contract_path_absolute), self.account_name)
+            abi = teos.ABI(self.contract_dir, self.account.name)
         else:
             if setup.is_verbose():
                 print("ERROR!")
@@ -223,45 +235,35 @@ class Contract(cleos.CreateAccount):
 
     def push_action(
             self, action, data,
-            permission="",
-            expiration_sec=30, 
+            permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0, is_verbose=False
+            max_cpu_usage=0, max_net_usage=0, 
+            ref_block="",
+            is_verbose=0
         ):
 
         if not permission:
-            permission=self.account_name
+            permission=self.account.name
         else:
             try: # permission is an account:
                 permission=permission.name
             except: # permission is the name of an account:
                 permission=permission
     
-        push_action = PushAction(
-            self.account_name, action, data,
-            permission, 
-            expiration_sec, 
+        self.action = cleos.PushAction(
+            self.account.name, action, data,
+            permission, expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage
-            )
-            
-        if push_action.error:
-            return False
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=0)
 
-        if not push_action.error:
-            self.action_json = push_action.json
-            try:
-                self.console = \
-                    self.action_json["processed"]["action_traces"][0] \
-                    ["console"]
-                print(self.console + "\n")
-            except:
-                pass
+        if not self.action.error:
+            self.console = self.action.console
+            if self.is_verbose:
+                print(self.console + "\n")         
 
-        if (dont_broadcast or is_verbose) and not push_action.error:
-            pprint.pprint(self.action_json)
-
-        return True
+        return self.action
 
 
     def get_console(self):
@@ -275,28 +277,33 @@ class Contract(cleos.CreateAccount):
         return self.push_action(action, data, permission, dont_broadcast=1)
     
 
-    def get_table(self, table, scope=""):
+    def get_table(
+            self, table, scope="",
+            binary=False, 
+            limit=10, key="", lower="", upper=""):
         """ Return a contract's table object.
         """
-        if not scope:
-            scope=self.account_name
-        else:
-            try: # scope is an account:
-                scope=scope.name
-            except: # scope is the name of an account:
-                scope=scope                
-        return GetTable(self.name, table, scope)
+
+        self.table = cleos.GetTable(
+                    self.account.name, table, scope,
+                    binary=False, 
+                    limit=10, key="", lower="", upper="", 
+                    is_verbose=0)
+        return self.table
 
 
-    def get_code(self):
-        """ Print a contract's code.
-        On error, return False.
-        """
-        code = GetCode(self.account_name)
-        return not code.error
+    def code(self, code="", abi="", wasm=False):
+        get_code = cleos.GetCode(
+            self.account.name, code, abi, is_verbose=0)
+        if not get_code.error and self.is_verbose:
+            print("code hash: {}".format(get_code.code_hash))
+        return get_code
 
 
     def contract_path(self):
         """ Return contract directory path.
         """
-        return str(self.contract_path_absolute)
+        if self.contract:
+            return str(self.contract.contract_path_absolute)
+        else:
+            return str("NOT DEFINED JET")

@@ -11,16 +11,17 @@ Commands controlling an EOS node.
 
 """
 
-import pyteos
+import teos
+import cleos
 
 def reset():
     """
     Reset and start a local EOS node.
     On error, return false.
     """
-    pyteos.NodeStart(1)
-    probe = pyteos.NodeProbe()
-    return probe.ok
+    teos.NodeStart(1)
+    probe = teos.NodeProbe()
+    return probe.error
 
 
 def run():
@@ -28,23 +29,23 @@ def run():
     Restart a local EOS node.
     On error, return false.
     """
-    pyteos.NodeStart(0)
-    probe = pyteos.NodeProbe()
-    return probe.ok
+    teos.NodeStart(0)
+    probe = teos.NodeProbe()
+    return probe.error
 
 
 def stop():
     """
     Stop a local EOS node. 
     """
-    return pyteos.NodeStop()
+    return teos.NodeStop()
 
 
 def info():
     """
     Display EOS node status.
     """
-    return pyteos.GetInfo()
+    return cleos.GetInfo()
 
 
 def is_running():

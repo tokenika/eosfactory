@@ -3,13 +3,12 @@
 import os
 import json
 
-_is_verbose = True
-_suppress_error_msg = False
+_is_verbose = 1
 _is_debug_mode = False
 _print_request = False
 _print_response = False
 
-def set_verbose(status=True):
+def set_verbose(status=1):
     """ If set `False`, print error messages only.
     """
     global _is_verbose
@@ -22,21 +21,6 @@ def is_verbose():
     """
     global _is_verbose
     return _is_verbose
-
-
-def set_suppress_error_msg(status=True):
-    """If set `True`, suppress error messages.
-    """
-    global _suppress_error_msg
-    _suppress_error_msg = status
-    if status:
-        print("##### suppress error mode is set!")
-
-def is_suppress_error_msg():
-    """If `True`, suppress error messages.
-    """
-    global _suppress_error_msg
-    return _suppress_error_msg    
 
 
 def set_print_request(status=True):

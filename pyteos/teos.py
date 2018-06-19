@@ -23,6 +23,7 @@ import re
 import pathlib
 import setup
 import cleos
+import shutil
 
 
 setup_setup = setup.Setup()
@@ -43,14 +44,14 @@ class _Teos:
 
     def __init__(
                 self, jarg, first, second, 
-                is_verbose=True, suppress_error_msg=False):
+                is_verbose_arg=True):
 
         self.jarg = jarg     
 
         cl = [setup_setup.teos_exe, first, second,
             "--jarg", str(self.jarg).replace("'", '"'), "--both"]
 
-        if setup.is_verbose() and is_verbose:
+        if setup.is_verbose() and is_verbose_arg:
             cl.append("-V")
 
         if setup.is_print_request():
@@ -77,7 +78,7 @@ class _Teos:
         # With "--both", json output is passed with stderr: 
         json_resp = process.stderr.decode("utf-8")
 
-        self.is_verbose = setup.is_verbose() and is_verbose
+        self.is_verbose = setup.is_verbose() and is_verbose_arg
 
         if setup.is_print_response():
             print("RESPONSE:")
@@ -91,7 +92,7 @@ class _Teos:
      
         if re.match(r'^ERROR', self._out):
             self.error = True
-            if not suppress_error_msg and not setup.is_suppress_error_msg():
+            if is_verbose_arg >= 0 and setup.is_verbose() >= 0:
                 print(self._out)
         try:
             self.json = json_module.loads(json_resp)
@@ -108,7 +109,7 @@ class GetConfig(_Teos):
     """
     Get the configurationt of the teos executable.
     """
-    def __init__(self, contract_dir="", is_verbose=True):
+    def __init__(self, contract_dir="", is_verbose=1):
         jarg = json_module.loads("{}")
         jarg["contract-dir"] = contract_dir
         _Teos.__init__(self, jarg, "get", "config", is_verbose) 
@@ -117,7 +118,7 @@ class GetConfig(_Teos):
 class Template(_Teos):
     def __init__(
             self, name, template="", remove_existing=False, 
-            visual_studio_code=False, is_verbose=True
+            visual_studio_code=False, is_verbose=1
         ):
 
         jarg = json_module.loads("{}")
@@ -130,22 +131,27 @@ class Template(_Teos):
             jarg["vsc"] = 1
 
         _Teos.__init__(self, jarg, "bootstrap", "contract", is_verbose)
-        print(self.json)
+        try:
+            self.contract_path_absolute = self.json["contract_dir"] 
+            self.contract_build_path = self.json["contract_build_path"]
+        except:
+            pass
+        
+        if self.is_verbose:
+            print(self._out)
  
-    def contract_path(self):
-        if not self.error:
-            try:
-                return self.json["contract_dir"] 
-            except:
-                self.error = True
-                return "contract_path() ERROR!"
-        else:
-            return "contract_path() ERROR!"       
+
+    def delete(self):
+        try:
+            shutil.rmtree(self.contract_path_absolute)
+            return True
+        except:
+            return False 
                    
 
 class ABI(_Teos):
     def __init__(
-            self, source, code_name="", include_dir="", is_verbose=True):
+            self, source, code_name="", include_dir="", is_verbose=1):
 
         try:
             source = source.contract_dir
@@ -162,7 +168,7 @@ class ABI(_Teos):
 
 class WAST(_Teos):
     def __init__(
-            self, source, code_name="", include_dir="", is_verbose=True):
+            self, source, code_name="", include_dir="", is_verbose=1):
 
         try:
             source = source.contract_dir
@@ -178,7 +184,7 @@ class WAST(_Teos):
         _Teos.__init__(self, jarg, "build", "contract", is_verbose) 
 
 class NodeStart(_Teos):
-    def __init__(self, clear=0, is_verbose=True):
+    def __init__(self, clear=0, is_verbose=1):
         jarg = json_module.loads("{}")
         jarg["delete-all-blocks"] = clear
         jarg["DO_NOT_LAUNCH"] = 1
@@ -207,14 +213,13 @@ class NodeProbe:
     error = True
     get_info = ""
 
-    def __init__(self, is_verbose=True):
+    def __init__(self, is_verbose=1):
         count = 15
         num = 5
        
         while True:
             time.sleep(1)
-            self.get_info = cleos.GetInfo(
-                is_verbose=False, suppress_error_msg=True)
+            self.get_info = cleos.GetInfo(is_verbose=-1)
             self.ok = False
             count = count - 1
 
@@ -232,7 +237,7 @@ class NodeProbe:
 
 
 class NodeStop(_Teos):
-    def __init__(self, is_verbose=True):
+    def __init__(self, is_verbose=1):
         jarg = json_module.loads("{}")
         _Teos.__init__(self, jarg, "daemon", "stop", is_verbose)
 
