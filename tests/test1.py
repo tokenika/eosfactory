@@ -19,65 +19,70 @@ def run():
     assert sess.init()
 
     print('test Contract():')
-    c = entities.Contract(
-        cleos.PrivateAccount(sess.key_owner, sess.key_active), CONTRACT_NAME)
-    assert not c.error
+    contract = entities.Contract(
+        cleos.AccountLight(sess.key_owner, sess.key_active), CONTRACT_NAME)
+    assert not contract.error
 
-    print('test c.code():')
-    assert not c.code().error
+    print('test contract.code():')
+    assert not contract.code().error
 
-    print('test c.deploy():')
-    assert c.deploy()
+    print('test contract.deploy():')
+    assert contract.deploy()
 
-    print('test c.get_code():')
-    assert not c.code().error
+    print('test contract.get_code():')
+    assert not contract.code().error
 
-    print('test c.push_action("create"):')
-    assert not c.push_action(
+    print('test contract.push_action("create"):')
+    assert not contract.push_action(
         "create", 
-        '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
+        '{"issuer":"' 
+            + sess.account_eosio.name 
+            + '", "maximum_supply":"1000000000.0000 EOS", \
             "can_freeze":0, "can_recall":0, "can_whitelist":0}').error
 
-    print('test c.push_action("issue"):')
-    assert not c.push_action(
+    print('test contract.push_action("issue"):')
+    assert not contract.push_action(
         "issue", 
         '{"to":"' + sess.alice.name 
             + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
             sess.account_eosio).error
 
-    print('test c.push_action("transfer", sess.alice):')
-    assert not c.push_action(
+    print('test contract.push_action("transfer", sess.alice):')
+    assert not contract.push_action(
         "transfer", 
         '{"from":"' 
             + sess.alice.name 
             + '", "to":"' + sess.carol.name 
-            + '", "quantity":"25.0000 EOS", "memo":"memo"}', sess.alice).error
+            + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
+        sess.alice).error
 
-    print('test c.push_action("transfer", sess.carol):')
-    assert not c.push_action(
+    print('test contract.push_action("transfer", sess.carol):')
+    assert not contract.push_action(
         "transfer", 
         '{"from":"' 
             + sess.carol.name 
             + '", "to":"' + sess.bob.name 
-            + '", "quantity":"13.0000 EOS", "memo":"memo"}', sess.carol).error
+            + '", "quantity":"13.0000 EOS", "memo":"memo"}', 
+        sess.carol).error
 
-    print('test c.push_action("transfer" sess.bob):')
-    assert not c.push_action(
+    print('test contract.push_action("transfer" sess.bob):')
+    assert not contract.push_action(
         "transfer", 
         '{"from":"' 
             + sess.bob.name 
             + '", "to":"' 
             + sess.alice.name 
-            + '", "quantity":"2.0000 EOS", "memo":"memo"}', sess.bob).error
+            + '", "quantity":"2.0000 EOS", "memo":"memo"}', 
+        sess.bob).error
 
-    print('test c.get_table("accounts", sess.alice):')
-    t1 = c.get_table("accounts", sess.alice)
+    print('test contract.get_table("accounts", sess.alice):')
+    t1 = contract.get_table("accounts", sess.alice)
     
-    print('test c.get_table("accounts", sess.bob):')
-    t2 = c.get_table("accounts", sess.bob)
+    print('test contract.get_table("accounts", sess.bob):')
+    t2 = contract.get_table("accounts", sess.bob)
     
-    print('test c.get_table("accounts", sess.carol):')
-    t3 = c.get_table("accounts", sess.carol)
+    print('test contract.get_table("accounts", sess.carol):')
+    t3 = contract.get_table("accounts", sess.carol)
 
     print('assert t1.json["rows"][0]["balance"] == "77.0000 EOS":')
     assert t1.json["rows"][0]["balance"] == '77.0000 EOS'

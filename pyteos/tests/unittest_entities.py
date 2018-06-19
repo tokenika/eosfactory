@@ -69,7 +69,7 @@ class Test1(unittest.TestCase):
     def test_11(self):
         global wallet_default
 
-        account = cleos.PrivateAccount()
+        account = cleos.AccountLight()
         self.assertTrue(not account.error)
         wallet_default.import_key(account.active_key)
 
@@ -93,7 +93,7 @@ Create a new contract template directory:
         print(colored("""
 Again, create a new account, and add a contract to it:
         """, 'green'))
-        account = cleos.PrivateAccount()
+        account = cleos.AccountLight()
         self.assertTrue(not account.error)
         wallet_default.import_key(account.owner_key)
         wallet_default.import_key(account.active_key)
@@ -125,7 +125,7 @@ Use the `build` method of the `entities.Contract` object:
         global account_eosio
         global account_alice
 
-        account = cleos.PrivateAccount()
+        account = cleos.AccountLight()
         self.assertTrue(not account.error)
         wallet_default.import_key(account.active_key)
 

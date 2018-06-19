@@ -745,7 +745,7 @@ class CreateAccount(_Cleos):
             self.name = name
 
 
-class PrivateAccount(CreateAccount):
+class AccountLight(CreateAccount):
     """
     """
     def __init__(

@@ -66,19 +66,19 @@ def init():
         return False
 
     global alice
-    alice = cleos.PrivateAccount(key_owner, key_active)    
+    alice = cleos.AccountLight(key_owner, key_active)    
     if alice.error:
         print("alice account error.")
         return False
 
     global bob
-    bob = cleos.PrivateAccount(key_owner, key_active)
+    bob = cleos.AccountLight(key_owner, key_active)
     if bob.error:
         print("bob account error.")
         return False            
             
     global carol
-    carol = cleos.PrivateAccount(key_owner, key_active)
+    carol = cleos.AccountLight(key_owner, key_active)
     if carol.error:
         print("carol account error.")
         return False
