@@ -1,173 +1,315 @@
 #!/usr/bin/python3
 
 """
-Macros made of elements of the :mod:`pyteos` module, intended for experiments with EOSIO smart-contracts.
+Python front-end for `EOSIO cleos`.
 
-.. module:: eosf
+.. module:: pyteos
     :platform: Unix, Windows
-    :synopsis: Macros made of elements of the `pyteos` module, intended for experiments with EOSIO smart-contracts.
+    :synopsis: Python front-end for `EOSIO cleos`.
 
 .. moduleauthor:: Tokenika
 
 """
 
-import sys
+import os
+import subprocess
+import json
+import pprint
+import re
 import pathlib
 import setup
 import teos
 import cleos
-import sess
-import re
-import random
-import shutil
-import os
 
-def set_verbose(is_verbose):
-    setup.set_verbose(is_verbose)
-
-
-class Contract(pyteos.Contract):
-    """
-    Creates a contract, given a contract directory containing WAST and ABI.
-
-    This class extends the `pyteos.Contract`: it goes without the `account`
-    parameter, instead it uses an account created internally.
+class Wallet(cleos.WalletCreate):
+    """ Create a new wallet locally and operate it.
+    Usage: WalletCreate(name="default", is_verbose=True)
 
     - **parameters**::
 
-        contract_dir: A contract directory, structures according to the 
-            *contract template*, that means, including the `build` directory
-            that contains WAST and ABI.
-        wast_file: The file containing the contract WAST, relative 
-            to the *contract directory*, defaults to empty string.
-        abi_file: The file containing the contract ABI, relative 
-            to the *contract directory*, defaults to empty string.
-        permission: An account object or the name of an account that 
-            authorizes the creation.
-        expiration_sec: The time in seconds before a transaction expires, 
-            defaults to 30s.
-        skip_signature:  If unlocked wallet keys should be used to sign 
-            transaction, defaults to 0.
-        dont_broadcast: Whether to broadcast transaction to the network (or 
-            print to stdout), defaults to 0.
-        forceUnique: Whether to force the transaction to be unique, what will 
-            consume extra bandwidth and remove any protections against 
-            accidently issuing the same transaction multiple times, defaults 
-            to 0.
-        max_cpu_usage: An upper limit on the cpu usage budget, in 
-            instructions-retired, for the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: An upper limit on the net usage budget, in bytes, for 
-            the transaction (defaults to 0 which means no limit). 
-
-    The extended constructor adds the following attributes:
+        name: The name of the new wallet, defaults to `default`.
+        is_verbose: If `False`, do not print unless on error, 
+            default is `True`.
 
     - **attributes**::
 
-        name: The name of contract`s account. It has the value of the last
-        part of the contract directory path.
-        key_owner: A key object.
-        key_active: Another key object.
-        account: The account that owns the contract.
+        name: The name of the wallet.
+        password: The password returned by wallet create.
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.  
     """
-    def wslMapWindowsLinux(self, path):
-        if ":\\" in path:
-            path = path.replace("\\", "/")
-            drive = path[0]
-            path = path.replace(drive + ":/", "/mnt/" + drive.lower() + "/")
-        return path
+    def list(self):
+        """ Lists opened wallets, * marks unlocked.
+        Returns `cleos.WalletList` object
+        """ 
+        return cleos.WalletList()
+    
+    def open(self):
+        """ Opens the wallet.
+        Returns `WalletOpen` object     
+        """
+        self.wallet_open = cleos.WalletOpen(self.name)
+        return not self.wallet_open.error
 
-    def __init__(
+    def lock(self):
+        """ Locks the wallet.
+        Returns `cleos.WalletLock` object.   
+        """
+        self.wallet_lock = cleos.WalletLock(self.name)
+        return not self.wallet_lock.error        
+
+    def unlock(self):
+        """ Unlocks the wallet.
+        Returns `WalletUnlock` object.
+        """        
+        self.wallet_unlock = cleos.WalletUnlock(
+            self.name, self.json["password"])
+        return not self.wallet_unlock.error
+
+    def import_key(self, key_pair):
+        """ Imports a private key into wallet.
+        Returns `cleos.WalletImport` object
+        """
+        return cleos.WalletImport(
+            key_pair, self.name, is_verbose=False)       
+
+    def keys(self):
+        """ Lists public keys from all unlocked wallets.
+        Returns `cleos.WalletKeys` object.    
+        """
+        return cleos.WalletKeys()
+
+    def __str__(self):
+        retval = json.dumps(self.json, indent=4) + "\n"
+        retval = retval + json.dumps(self.keys().json, indent=4) + "\n"
+        retval = retval + json.dumps(self.list().json, indent=4) + "\n"
+        return retval
+
+
+class Account(cleos.AccountLight):
+
+    def code(self, code="", abi="", wasm=False):
+        get_code = cleos.GetCode(
+            self.name, code, abi, is_verbose=False)
+        if not get_code.error and self.is_verbose:
+            print("code hash: {}".format(get_code.code_hash))
+        return get_code
+
+    def set_contract(
             self, contract_dir, 
             wast_file="", abi_file="", 
             permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            is_verbose=True):
+            ref_block=""):
 
-        contract_dir = self.wslMapWindowsLinux(contract_dir)
-
-        account_name = pathlib.Path(contract_dir).parts[-1]
-        pattern = re.compile("^[a-z, ., 1-5]*$")
-        if len(account_name) > 12 or not pattern.match(account_name):
-            letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', \
-                       'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', \
-                       'q', 'r', 's', 't', 'u', 'v', 'w', 'x', \
-                       'y', 'z', '.', '1', '2', '3', '4', '5']
-            account_name = ""
-            for i in range(0, 11):
-                account_name += letters[random.randint(0, 31)]
-            while True:
-                last_letter = letters[random.randint(0, 31)]
-                if last_letter != '.':
-                    account_name += last_letter
-                    break
-
-        self.name = account_name
-
-        account = pyteos.GetAccount(
-            self.name, is_verbose=False, suppress_error_msg=True)
-
-        if not account.error:
-            self.account = account
-        else:
-            key_owner = pyteos.CreateKey("key_owner")
-            key_active = pyteos.CreateKey("key_active")
-            sess.wallet.import_key(key_owner)
-            sess.wallet.import_key(key_active)
-            self.account = pyteos.Account(
-                sess.eosio, self.name, key_owner, key_active)
-                
-        if not permission:
-            permission = account
-
-        super().__init__(
-            self.account, contract_dir,
-            wast_file, abi_file,
-            permission, expiration_sec,
+        self.set_contract = cleos.SetContract(
+            self.name, contract_dir, 
+            wast_file, abi_file, 
+            permission, expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
-            is_verbose) 
+            ref_block,
+            is_verbose=False
+        )
+        return self.set_contract
 
-    def path(self):
-        p = self.contract_path()
-        print("#  " + p)
+    def push_action(
+            self, action, data,
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=""):
+        if not permission:
+            permission = self.name
+        else:
+            try: # permission is an account:
+                permission=permission.name
+            except: # permission is the name of an account:
+                permission=permission
+
+        self.action = cleos.PushAction(
+            self.name, action, data,
+            permission, expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=0)
+
+        if not self.action.error:
+            try:
+                self.console = self.action.console
+                if self.is_verbose:
+                    print(self.console + "\n") 
+            except:
+                pass
+
+        return self.action
+
+    def get_table(
+            self, table, scope="", 
+            binary=False, 
+            limit=10, key="", lower="", upper=""):
+
+        self.table = cleos.GetTable(
+                                self.name, table, scope,
+                                binary, 
+                                limit, key, lower, upper,
+                                is_verbose=0)
+        return self.table
+
+    def __str__(self):
+        return str(cleos.GetAccount(self.name, is_verbose=1))   
+
+
+class Contract():
+
+    def __init__(
+            self, account, contract_dir,
+            wast_file="", abi_file="",  
+            permission="",
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block="",
+            is_verbose=1):
+
+        self.account = account
+        self.contract_dir = contract_dir
+        self.wast_file = wast_file
+        self.abi_file = abi_file
+        self.expiration_sec = expiration_sec
+        self.skip_signature = skip_signature
+        self.dont_broadcast = dont_broadcast
+        self.forceUnique = forceUnique
+        self.max_cpu_usage = max_cpu_usage
+        self.max_net_usage = max_net_usage
+        self.ref_block = ref_block
+        self.is_mutable = True
+
+        self.contract = None
+        self.console = None
+        self.is_verbose = is_verbose
+        self.error = self.account.error
+
+    def deploy(self, permission=""):
+        self.contract = cleos.SetContract(
+            self.account, self.contract_dir, 
+            self.wast_file, self.abi_file, 
+            permission, self.expiration_sec, 
+            self.skip_signature, self.dont_broadcast, self.forceUnique,
+            self.max_cpu_usage, self.max_net_usage,
+            self.ref_block,
+            is_verbose=0
+        )
+        return self.is_deployed()
 
     def is_deployed(self):
-        if not self.get_code():
+        if not self.contract:
             return False
-        t = self.account.code()
-        return not (t.json["code_hash"] == "0000000000000000000000000000000000000000000000000000000000000000")
-         
-    def delete(self):
-        shutil.rmtree(self.contract_path())
-        print("#  Contract deleted.\n")
+        return not self.contract.error
 
-
-class Account(pyteos.Account):
-    """
-    Creates an account and imports its keys into the *wallet*.
-    """
-    def __init__(self, name, creator):
+    def wast(self):
+        if self.is_mutable:            
+            wast = teos.WAST(self.contract_dir, self.account.name)
+        else:
+            if setup.is_verbose():
+                print("ERROR!")
+                print("Cannot modify system contracts.")
+        return not wast.error
         
-        key_owner = pyteos.CreateKey("key_owner")
-        key_active = pyteos.CreateKey("key_active")
 
-        sess.wallet.import_key(key_owner)
-        sess.wallet.import_key(key_active)
-        
-        super().__init__(
-            creator, name, key_owner, key_active)
+    def abi(self, build_dir=""):            
+        if self.is_mutable:
+            abi = teos.ABI(self.contract_dir, self.account.name)
+        else:
+            if setup.is_verbose():
+                print("ERROR!")
+                print("Cannot modify system contracts.")
+        return not abi.error
+
+    
+    def build(self):
+        ok = self.abi()
+        ok = ok and self.wast()
+        return ok
 
 
-class ContractFromTemplate(Contract):
-    def __init__(self, name, template="", remove_existing=False, visual_studio_code=False, is_verbose=True):
-        t = pyteos.Template(name, template, remove_existing, visual_studio_code, is_verbose)
-        super().__init__(t.contract_path())
+    def push_action(
+            self, action, data,
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0, 
+            ref_block="",
+            is_verbose=0
+        ):
+
+        if not permission:
+            permission=self.account.name
+        else:
+            try: # permission is an account:
+                permission=permission.name
+            except: # permission is the name of an account:
+                permission=permission
+    
+        self.action = cleos.PushAction(
+            self.account.name, action, data,
+            permission, expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=0)
+
+        if not self.action.error:
+            try:
+                self.console = self.action.console
+                if self.is_verbose:
+                    print(self.console + "\n") 
+            except:
+                pass        
+
+        return self.action
 
 
-if __name__ == "__main__":
-    template = ""
-    if len(sys.argv) > 2:
-        template = str(sys.argv[2])
-    pyteos.Template(str(sys.argv[1]), template, remove_existing=False, visual_studio_code=True, is_verbose=False)
+    def get_console(self):
+        return self.console
+
+
+    def show_action(self, action, data, permission=""):
+        """ Implements the `push action` command without broadcasting. 
+
+        """
+        return self.push_action(action, data, permission, dont_broadcast=1)
+    
+
+    def get_table(
+            self, table, scope="",
+            binary=False, 
+            limit=10, key="", lower="", upper=""):
+        """ Return a contract's table object.
+        """
+
+        self.table = cleos.GetTable(
+                    self.account.name, table, scope,
+                    binary=False, 
+                    limit=10, key="", lower="", upper="", 
+                    is_verbose=0)
+        return self.table
+
+
+    def code(self, code="", abi="", wasm=False):
+        get_code = cleos.GetCode(
+            self.account.name, code, abi, is_verbose=0)
+        if not get_code.error and self.is_verbose:
+            print("code hash: {}".format(get_code.code_hash))
+        return get_code
+
+
+    def contract_path(self):
+        """ Return contract directory path.
+        """
+        if self.contract:
+            return str(self.contract.contract_path_absolute)
+        else:
+            return str("NOT DEFINED JET")

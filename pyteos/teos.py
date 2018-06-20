@@ -28,7 +28,6 @@ import shutil
 
 setup_setup = setup.Setup()
 
-
 class _Teos:
     """ A prototype for the control classes.
 

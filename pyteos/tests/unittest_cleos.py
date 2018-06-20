@@ -4,7 +4,6 @@ import setup
 import cleos
 import teos
 import json
-
 import unittest
 
 class Test1(unittest.TestCase):
@@ -18,16 +17,12 @@ class Test1(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         setup.set_verbose(False)
+        setup.set_json(False)
+        cleos.dont_keosd()
 
     def setUp(self):
         pass
-
-    def test_03(self):
-        wallet_stop = cleos.WalletStop()
-        self.assertTrue(not wallet_stop.error)
-
-    def test_04(self):
-        cleos.dont_keosd()
+                
 
     def test_05(self):
         node_reset = teos.node_reset()
@@ -106,7 +101,6 @@ class Test1(unittest.TestCase):
     def test_56(self):
         global account_eosio
         account_eosio = cleos.AccountEosio()
-        self.assertTrue(not account_eosio.error, "AccountEosio")
         print(json.dumps(account_eosio.json, indent=4))
         print(account_eosio.name)
         print(account_eosio.key_private)
@@ -166,8 +160,11 @@ class Test1(unittest.TestCase):
                 "can_freeze":0, "can_recall":0, "can_whitelist":0}',
             permission=account_ttt)
         self.assertTrue(not push_create.error, "PushAction create")
-        print(push_create.console)
-        print(push_create.data)          
+        try:
+            print(push_create.console)
+            print(push_create.data) 
+        except:
+            pass         
 
         global account_eosio
         push_issue = cleos.PushAction(

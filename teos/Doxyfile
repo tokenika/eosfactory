@@ -427,7 +427,7 @@ LOOKUP_CACHE_SIZE      = 0
 # Build related configuration options
 #---------------------------------------------------------------------------
 
-# If the EXTRACT_ALL tag is set to YES, doxygen will assume all entities in
+# If the EXTRACT_ALL tag is set to YES, doxygen will assume all eosf in
 # documentation are documented, even if no documentation was available. Private
 # class members and static file members will be hidden unless the
 # EXTRACT_PRIVATE respectively EXTRACT_STATIC tags are set to YES.
@@ -989,7 +989,7 @@ USE_MDFILE_AS_MAINPAGE = README.md
 #---------------------------------------------------------------------------
 
 # If the SOURCE_BROWSER tag is set to YES then a list of source files will be
-# generated. Documented entities will be cross-referenced with these sources.
+# generated. Documented eosf will be cross-referenced with these sources.
 #
 # Note: To get rid of all source code in the generated output, make sure that
 # also VERBATIM_HEADERS is set to NO.
@@ -1017,7 +1017,7 @@ STRIP_CODE_COMMENTS    = YES
 REFERENCED_BY_RELATION = NO
 
 # If the REFERENCES_RELATION tag is set to YES then for each documented function
-# all documented entities called/used by that function will be listed.
+# all documented eosf called/used by that function will be listed.
 # The default value is: NO.
 
 REFERENCES_RELATION    = NO

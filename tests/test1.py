@@ -4,7 +4,7 @@ import setup
 import teos
 import cleos
 import sess
-import entities
+import eosf
 
 CONTRACT_NAME = "eosio.token"
 setup.set_verbose(0)
@@ -19,7 +19,7 @@ def run():
     assert sess.init()
 
     print('test Contract():')
-    contract = entities.Contract(
+    contract = eosf.Contract(
         cleos.AccountLight(sess.key_owner, sess.key_active), CONTRACT_NAME)
     assert not contract.error
 
@@ -36,14 +36,14 @@ def run():
     assert not contract.push_action(
         "create", 
         '{"issuer":"' 
-            + sess.account_eosio.name 
+            + str(sess.account_eosio) 
             + '", "maximum_supply":"1000000000.0000 EOS", \
             "can_freeze":0, "can_recall":0, "can_whitelist":0}').error
 
     print('test contract.push_action("issue"):')
     assert not contract.push_action(
         "issue", 
-        '{"to":"' + sess.alice.name 
+        '{"to":"' + str(sess.alice)
             + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
             sess.account_eosio).error
 
@@ -51,8 +51,8 @@ def run():
     assert not contract.push_action(
         "transfer", 
         '{"from":"' 
-            + sess.alice.name 
-            + '", "to":"' + sess.carol.name 
+            + str(sess.alice)
+            + '", "to":"' + str(sess.carol)
             + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
         sess.alice).error
 
@@ -60,8 +60,8 @@ def run():
     assert not contract.push_action(
         "transfer", 
         '{"from":"' 
-            + sess.carol.name 
-            + '", "to":"' + sess.bob.name 
+            + str(sess.carol)
+            + '", "to":"' + str(sess.bob)
             + '", "quantity":"13.0000 EOS", "memo":"memo"}', 
         sess.carol).error
 
@@ -69,9 +69,9 @@ def run():
     assert not contract.push_action(
         "transfer", 
         '{"from":"' 
-            + sess.bob.name 
+            + str(sess.bob)
             + '", "to":"' 
-            + sess.alice.name 
+            + str(sess.alice)
             + '", "quantity":"2.0000 EOS", "memo":"memo"}', 
         sess.bob).error
 

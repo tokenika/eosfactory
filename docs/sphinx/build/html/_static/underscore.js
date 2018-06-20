@@ -1209,7 +1209,7 @@
     return new Date().getTime();
   };
 
-   // List of HTML entities for escaping.
+   // List of HTML eosf for escaping.
   var escapeMap = {
     '&': '&amp;',
     '<': '&lt;',

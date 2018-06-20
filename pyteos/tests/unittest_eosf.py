@@ -4,10 +4,9 @@ import json
 import setup
 import cleos
 import teos
-import entities
+import eosf
 import unittest
-from colorama import Fore, Back, Style #sudo python3 -m pip install colorama
-from termcolor import colored, cprint
+from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
 class Test1(unittest.TestCase):
 
@@ -20,7 +19,8 @@ class Test1(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         setup.set_verbose(False)
-        cleos.dont_keosd()
+        #cleos.dont_keosd()
+
 
     def setUp(self):
         pass
@@ -31,8 +31,8 @@ class Test1(unittest.TestCase):
 
     def test_08(self):
         global wallet_default
-        wallet_default = entities.Wallet()
-        wallet_second = entities.Wallet("second")
+        wallet_default = eosf.Wallet()
+        wallet_second = eosf.Wallet("second")
         self.assertTrue(not wallet_default.error)
         global key_owner
         key_owner = cleos.CreateKey("owner")
@@ -54,15 +54,15 @@ class Test1(unittest.TestCase):
         contract_eosio_bios = cleos.SetContract( account_eosio, "eosio.bios")
         self.assertTrue(not contract_eosio_bios.error)
 
-        account_alice = entities.Account( 
+        account_alice = eosf.Account( 
             account_eosio, "alice", key_owner)
         self.assertTrue(not account_alice.error)
 
-        account_bill = entities.Account( 
+        account_bill = eosf.Account( 
             account_eosio, "bill", key_owner)
         self.assertTrue(not account_bill.error)
 
-        account_carol = entities.Account( 
+        account_carol = eosf.Account( 
             account_eosio, "carol", key_owner)
         self.assertTrue(not account_carol.error)
 
@@ -73,7 +73,7 @@ class Test1(unittest.TestCase):
         self.assertTrue(not account.error)
         wallet_default.import_key(account.active_key)
 
-        contract = entities.Contract(account, "tic_tac_toe")
+        contract = eosf.Contract(account, "tic_tac_toe")
         is_deployed = contract.deploy()
         info = cleos.GetInfo(is_verbose=-1)
 
@@ -97,7 +97,7 @@ Again, create a new account, and add a contract to it:
         self.assertTrue(not account.error)
         wallet_default.import_key(account.owner_key)
         wallet_default.import_key(account.active_key)
-        contract = entities.Contract(account, contract_dir)
+        contract = eosf.Contract(account, contract_dir)
         
         print(colored("""
 However, the contract cannot be deployed because it is not built yet. An attempt
@@ -109,7 +109,7 @@ results in an error message:
             print(contract.contract.err_msg)
 
         print(colored("""
-Use the `build` method of the `entities.Contract` object:
+Use the `build` method of the `eosf.Contract` object:
         """, 'green'))
         if not is_deployed:
             contract.build()
@@ -129,7 +129,7 @@ Use the `build` method of the `entities.Contract` object:
         self.assertTrue(not account.error)
         wallet_default.import_key(account.active_key)
 
-        contract = entities.Contract(account, "eosio.token")
+        contract = eosf.Contract(account, "eosio.token")
         is_deployed = contract.deploy()
         self.assertTrue(is_deployed)
 
@@ -178,7 +178,7 @@ contract.get_table(account_alice.name, "accounts")
         global account_eosio
         global key_owner
 
-        account_tokenika = entities.Account( 
+        account_tokenika = eosf.Account( 
             account_eosio, "tokenika", key_owner)
         self.assertTrue(not account_tokenika.error)
         print(account_tokenika)
@@ -198,7 +198,7 @@ contract.get_table(account_alice.name, "accounts")
         global account_alice
         global key_owner
 
-        account_ttt = entities.Account(account_eosio, "ttt", key_owner)
+        account_ttt = eosf.Account(account_eosio, "ttt", key_owner)
         self.assertTrue(not account_ttt.error)
         contract_ttt = account_ttt.set_contract("eosio.token")
         self.assertTrue(not contract_ttt.error)

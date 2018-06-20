@@ -4,6 +4,7 @@ import os
 import json
 
 _is_verbose = 1
+_is_json = 0
 _is_debug_mode = False
 _print_request = False
 _print_response = False
@@ -23,6 +24,19 @@ def is_verbose():
     return _is_verbose
 
 
+def set_json(status=1):
+    global _is_json
+    _is_json = status
+    if status:
+        print("##### json mode is set!")
+
+def is_json():
+    """ If `True`, output json.
+    """
+    global _is_json
+    return _is_json
+
+
 def set_print_request(status=True):
     """If set `True`, print html request sent to the node.
     """
@@ -30,6 +44,7 @@ def set_print_request(status=True):
     _print_request = status
     if status:
         print("##### print request mode is set!")
+        set_json()
 
 def is_print_request():
     """If `True`, print html request sent to the node.
@@ -45,6 +60,7 @@ def set_print_response(status=True):
     _print_response = status
     if status:
         print("##### print response mode is set!")
+        set_json()
 
 def is_print_response():
     """If `True`, print html response of the node.
@@ -72,10 +88,9 @@ def is_debug_mode():
     return _is_debug_mode    
 
 
-def output(msg):
-    if _is_verbose:
-        print("#  " + msg.replace("\n", "\n#  "))
-
+# def output(msg):
+#     if _is_verbose:
+#         print("#  " + msg.replace("\n", "\n#  "))
 
 class Setup:
     """ Interface to the json configuration file.

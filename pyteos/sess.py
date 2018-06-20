@@ -14,7 +14,7 @@ Session initiation and storage for session elements.
 import setup
 import teos
 import cleos
-import entities
+import eosf
 
 
 def init():
@@ -38,7 +38,7 @@ def init():
     account_eosio = cleos.AccountEosio()
 
     global wallet
-    wallet = entities.Wallet()
+    wallet = eosf.Wallet()
     if wallet.error:
         print("Wallet error.")
         return False
@@ -55,27 +55,36 @@ def init():
         return False
     
     global key_active
-    key_active = cleos.CreateKey("key_active", )
+    key_active = cleos.CreateKey("key_active")
     if key_active.error:
         print("key_active error.")
         return False
 
-    ok = wallet.import_key(key_owner) and wallet.import_key(key_active)
+    global alice
+    alice = cleos.AccountLight(key_owner, key_active)
+    if alice.error:
+        print("alice account error.")
+        return False
+
+    ok = wallet.import_key(alice)
     if not ok:
         print("wallet.import_key error.")
         return False
 
-    global alice
-    alice = cleos.AccountLight(key_owner, key_active)    
-    if alice.error:
-        print("alice account error.")
-        return False
+    # For import, can be account object or key object or plain string:
+    ok = wallet.import_key(key_active)
+    if not ok:
+        print("wallet.import_key error.")
 
     global bob
     bob = cleos.AccountLight(key_owner, key_active)
     if bob.error:
         print("bob account error.")
-        return False            
+        return False
+
+    ok = wallet.import_key(bob)
+    if not ok:
+        print("wallet.import_key error.")
             
     global carol
     carol = cleos.AccountLight(key_owner, key_active)
