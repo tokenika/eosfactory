@@ -20,7 +20,7 @@ def run():
 
     print('test Contract():')
     contract = eosf.Contract(
-        cleos.AccountLight(sess.key_owner, sess.key_active), CONTRACT_NAME)
+        cleos.AccountLT(sess.key_owner, sess.key_active), CONTRACT_NAME)
     assert not contract.error
 
     print('test contract.code():')

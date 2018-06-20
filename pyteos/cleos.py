@@ -793,7 +793,7 @@ class CreateAccount(_Cleos):
         return self.name
 
 
-class AccountLight(CreateAccount):
+class AccountLT(CreateAccount):
     """
     """
     def __init__(

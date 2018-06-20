@@ -87,7 +87,7 @@ class Wallet(cleos.WalletCreate):
         return retval
 
 
-class Account(cleos.AccountLight):
+class Account(cleos.AccountLT):
 
     def code(self, code="", abi="", wasm=False):
         get_code = cleos.GetCode(

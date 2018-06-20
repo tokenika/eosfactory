@@ -32,11 +32,16 @@ class Test1(unittest.TestCase):
 
     def test_05(self):
         global contract
-        contract = eosf.Contract(
-            cleos.AccountLight(sess.key_owner, sess.key_active), CONTRACT_NAME)
-        self.assertTrue(not contract.error, "contract failure")
+        account = cleos.AccountLT()
+        sess.wallet.import_key(account)
+        
+        print(sess.alice)
+        print(sess.bob)
+        print(sess.carol)
+        print(account)
 
-        self.assertTrue(not contract.error)
+        contract = eosf.Contract(account, CONTRACT_NAME)
+        self.assertTrue(not contract.error, "contract failure")
 
         print('test contract.code():')
         self.assertTrue(not contract.code().error)
@@ -71,6 +76,8 @@ class Test1(unittest.TestCase):
                 + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
             sess.alice).error)
 
+        time.sleep(1)
+        
         print('test contract.push_action("transfer", sess.carol):')
         self.assertTrue(not contract.push_action(
             "transfer", 

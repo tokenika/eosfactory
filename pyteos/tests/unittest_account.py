@@ -47,7 +47,7 @@ with `setup.set_verbose(0)`, nothing is printed.
 Create an account without any wallet available. Should fail:
         """, 'magenta'))
 
-        allice = cleos.AccountLight()
+        allice = cleos.AccountLT()
         self.assertTrue(allice.error, "No available wallet")
 
         print(colored("""
@@ -69,7 +69,7 @@ Create the account:
         """, 'magenta'))
 
         global alice        
-        alice = cleos.AccountLight()
+        alice = cleos.AccountLT()
         self.assertTrue(not alice.error)
 
         print(colored("""
@@ -89,11 +89,11 @@ Introduce two other acconts, `bob` and `carol`:
         """, 'magenta'))
 
         global bob
-        bob = cleos.AccountLight()
+        bob = cleos.AccountLT()
         wallet.import_key(bob)
 
         global carol
-        carol = cleos.AccountLight()
+        carol = cleos.AccountLT()
         wallet.import_key(carol)        
 
     def test_15(self):

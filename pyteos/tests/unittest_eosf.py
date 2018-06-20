@@ -18,8 +18,9 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        setup.set_verbose(False)
-        #cleos.dont_keosd()
+        setup.set_verbose()
+        setup.set_json(False)
+        cleos.dont_keosd()
 
 
     def setUp(self):
@@ -34,42 +35,38 @@ class Test1(unittest.TestCase):
         wallet_default = eosf.Wallet()
         wallet_second = eosf.Wallet("second")
         self.assertTrue(not wallet_default.error)
-        global key_owner
-        key_owner = cleos.CreateKey("owner")
-        self.assertTrue(wallet_default.import_key(key_owner), "import_key")
         print(wallet_default)
         self.assertTrue(wallet_default.open())
         self.assertTrue(wallet_default.lock())
         print(wallet_default)
         self.assertTrue(wallet_default.unlock())
 
-    def test_10(self):
-        global key_owner        
+    def test_10(self):   
         global account_eosio
-        global account_alice
-        global account_bill
-        global account_carol
+        global alice
+        global bill
+        global carol
 
         account_eosio = cleos.AccountEosio() 
         contract_eosio_bios = cleos.SetContract( account_eosio, "eosio.bios")
         self.assertTrue(not contract_eosio_bios.error)
 
-        account_alice = eosf.Account( 
-            account_eosio, "alice", key_owner)
-        self.assertTrue(not account_alice.error)
+        alice = cleos.AccountLT()
+        self.assertTrue(not alice.error)
+        wallet_default.import_key(alice)
 
-        account_bill = eosf.Account( 
-            account_eosio, "bill", key_owner)
-        self.assertTrue(not account_bill.error)
+        bill = cleos.AccountLT()
+        self.assertTrue(not bill.error)
+        wallet_default.import_key(bill)  
 
-        account_carol = eosf.Account( 
-            account_eosio, "carol", key_owner)
-        self.assertTrue(not account_carol.error)
+        carol = cleos.AccountLT()
+        self.assertTrue(not carol.error)
+        wallet_default.import_key(carol)
 
     def test_11(self):
         global wallet_default
 
-        account = cleos.AccountLight()
+        account = cleos.AccountLT()
         self.assertTrue(not account.error)
         wallet_default.import_key(account.active_key)
 
@@ -93,7 +90,7 @@ Create a new contract template directory:
         print(colored("""
 Again, create a new account, and add a contract to it:
         """, 'green'))
-        account = cleos.AccountLight()
+        account = cleos.AccountLT()
         self.assertTrue(not account.error)
         wallet_default.import_key(account.owner_key)
         wallet_default.import_key(account.active_key)
@@ -123,9 +120,10 @@ Use the `build` method of the `eosf.Contract` object:
     def test_12(self):
         global wallet_default
         global account_eosio
-        global account_alice
+        global alice
+        global carol
 
-        account = cleos.AccountLight()
+        account = cleos.AccountLT()
         self.assertTrue(not account.error)
         wallet_default.import_key(account.active_key)
 
@@ -140,7 +138,9 @@ contract.push_action('create'
         """, 'green'))        
         action_create = contract.push_action(
             "create", 
-            '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
+            '{"issuer":"' 
+                + str(account_eosio) 
+                + '", "maximum_supply":"1000000000.0000 EOS", \
                 "can_freeze":0, "can_recall":0, "can_whitelist":0}')
         self.assertTrue(not action_create.error)
         # print(action_create.console)
@@ -151,25 +151,29 @@ contract.push_action('issue'
         """, 'green'))
         action_issue = contract.push_action(
             "issue", 
-            '{"to":"alice", "quantity":"100.0000 EOS", \
-                "memo":"100.0000 EOS to alice"}', permission=account_eosio)
+            '{"to":"' + str(alice)
+                + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
+                account_eosio)
         self.assertTrue(not action_issue.error)
 
+        
         print(colored("""
 contract.push_action('transfer'
         """, 'green'))
         action_transfer = contract.push_action(
             "transfer", 
-            '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
-            "memo":"100.0000 EOS to carol"}', permission=account_alice)
-        self.assertTrue(not action_transfer.error)
+            '{"from":"' 
+                + str(alice)
+                + '", "to":"' + str(carol)
+                + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
+            alice)
 
         info = cleos.GetInfo(is_verbose=-1)
 
         print(colored("""
-contract.get_table(account_alice.name, "accounts")
+contract.get_table(alice.name, "accounts")
         """, 'green'))
-        table = contract.get_table("accounts", account_alice )
+        table = contract.get_table("accounts", alice )
         self.assertTrue(not table.error)
         print(json.dumps(table.json, indent=4))
 
@@ -178,8 +182,8 @@ contract.get_table(account_alice.name, "accounts")
         global account_eosio
         global key_owner
 
-        account_tokenika = eosf.Account( 
-            account_eosio, "tokenika", key_owner)
+        account_tokenika = eosf.Account()
+        ok = wallet_default.import_key(account_tokenika)
         self.assertTrue(not account_tokenika.error)
         print(account_tokenika)
 
@@ -195,11 +199,12 @@ contract.get_table(account_alice.name, "accounts")
 
     def test_15(self):
         global account_eosio
-        global account_alice
+        global alice
         global key_owner
 
-        account_ttt = eosf.Account(account_eosio, "ttt", key_owner)
+        account_ttt = eosf.Account()
         self.assertTrue(not account_ttt.error)
+        ok = wallet_default.import_key(account_ttt)
         contract_ttt = account_ttt.set_contract("eosio.token")
         self.assertTrue(not contract_ttt.error)
 
@@ -208,7 +213,9 @@ account_ttt.push_action('create'
         """, 'green')) 
         action_create = account_ttt.push_action(
             "create", 
-            '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
+            '{"issuer":"' 
+                + str(account_eosio) 
+                + '", "maximum_supply":"1000000000.0000 EOS", \
                 "can_freeze":0, "can_recall":0, "can_whitelist":0}')
         self.assertTrue(not action_create.error)
         print(action_create.console)
@@ -219,8 +226,9 @@ account_ttt.push_action('issue'
         """, 'green')) 
         action_issue = account_ttt.push_action(
             "issue", 
-            '{"to":"alice", "quantity":"100.0000 EOS", \
-                "memo":"100.0000 EOS to alice"}', permission=account_eosio)
+            '{"to":"' + str(alice)
+                + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
+                account_eosio)
         self.assertTrue(not action_issue.error)
 
         print(colored("""
@@ -228,12 +236,15 @@ account_ttt.push_action('transfer'
         """, 'green')) 
         action_transfer = account_ttt.push_action(
             "transfer", 
-            '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
-            "memo":"100.0000 EOS to carol"}', permission=account_alice)
+            '{"from":"' 
+                + str(alice)
+                + '", "to":"' + str(carol)
+                + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
+            alice)
         self.assertTrue(not action_transfer.error)
 
         info = cleos.GetInfo(is_verbose=-1)
-        table = account_ttt.get_table( "accounts", account_alice)
+        table = account_ttt.get_table( "accounts", alice)
         self.assertTrue(not table.error)
         print(json.dumps(table.json, indent=4))
 

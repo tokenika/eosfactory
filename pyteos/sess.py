@@ -48,20 +48,8 @@ def init():
         print("eosio.bios set contract error.")
         return False
 
-    global key_owner
-    key_owner = cleos.CreateKey("key_owner" )
-    if key_owner.error:
-        print("key_owner error.")
-        return False
-    
-    global key_active
-    key_active = cleos.CreateKey("key_active")
-    if key_active.error:
-        print("key_active error.")
-        return False
-
     global alice
-    alice = cleos.AccountLight(key_owner, key_active)
+    alice = cleos.AccountLT()
     if alice.error:
         print("alice account error.")
         return False
@@ -71,26 +59,19 @@ def init():
         print("wallet.import_key error.")
         return False
 
-    # For import, can be account object or key object or plain string:
-    ok = wallet.import_key(key_active)
-    if not ok:
-        print("wallet.import_key error.")
-
     global bob
-    bob = cleos.AccountLight(key_owner, key_active)
+    bob = cleos.AccountLT()
     if bob.error:
         print("bob account error.")
         return False
-
     ok = wallet.import_key(bob)
-    if not ok:
-        print("wallet.import_key error.")
-            
+
     global carol
-    carol = cleos.AccountLight(key_owner, key_active)
+    carol = cleos.AccountLT()
     if carol.error:
         print("carol account error.")
         return False
+    ok = wallet.import_key(carol)
 
     if setup.is_verbose():
         print("#  Available test accounts: " 
