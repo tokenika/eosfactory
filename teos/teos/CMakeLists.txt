@@ -99,30 +99,9 @@ macro( applLinkLibraries applName )
 
   set( TARGET_DIR "" )
 
-  if(EXISTS "${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc_debug${CMAKE_STATIC_LIBRARY_SUFFIX}")
-    set(fc "fc_debug")
-  endif()
-  if(EXISTS "${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}fc${CMAKE_STATIC_LIBRARY_SUFFIX}")
-    set(fc "fc")
-  endif()  
-
   target_link_libraries( ${applName} 
     PRIVATE
       ${CMAKE_BINARY_DIR}/teos_lib/libteoslib.a
-      ${EOSIO_BINARY_DIR}/plugins/chain_plugin/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chain_plugin${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/chain/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eosio_chain${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/chainbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}chainbase${CMAKE_STATIC_LIBRARY_SUFFIX}        
-      ${EOSIO_BINARY_DIR}/libraries/utilities/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}eos_utilities${CMAKE_STATIC_LIBRARY_SUFFIX}      
-      ${EOSIO_BINARY_DIR}/libraries/appbase/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}appbase${CMAKE_STATIC_LIBRARY_SUFFIX} 
-      ${EOSIO_BINARY_DIR}/libraries/fc/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${fc}${CMAKE_STATIC_LIBRARY_SUFFIX}       
-
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Emscripten/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Emscripten${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Runtime/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Runtime${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/WAST/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WAST${CMAKE_STATIC_LIBRARY_SUFFIX}
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/WASM/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}WASM${CMAKE_STATIC_LIBRARY_SUFFIX}      
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/IR/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}IR${CMAKE_STATIC_LIBRARY_SUFFIX}       
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Logging/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Logging${CMAKE_STATIC_LIBRARY_SUFFIX} 
-      ${EOSIO_BINARY_DIR}/libraries/wasm-jit/Source/Platform/${TARGET_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Platform${CMAKE_STATIC_LIBRARY_SUFFIX}
   )
 
   target_link_libraries( ${applName}
@@ -144,8 +123,8 @@ macro( applLinkLibraries applName )
   if( NOT ECC_IMPL STREQUAL openssl )
     target_link_libraries( ${applName}
       PRIVATE
-        ${Secp256k1_LIBRARY}
-        ${GMP_LIBRARIES}
+        # ${Secp256k1_LIBRARY}
+        # ${GMP_LIBRARIES}
     )
   endif()
 
