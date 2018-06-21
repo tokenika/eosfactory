@@ -29,18 +29,6 @@ else( Boost_FOUND )
   BOOST_INCLUDEDIR (where is boost directory, usualy %BOOST_ROOT%)" )
 endif( Boost_FOUND )
 
-set( OPENSSL_ROOT_DIR "/usr/local/Cellar/openssl/1.0.2o_1")
-set( OPENSSL_USE_STATIC_LIBS TRUE)
-find_package( OpenSSL REQUIRED )
-if( OpenSSL_FOUND )
-  message( STATUS "OpenSSL found.
-  OPENSSL_INCLUDE_DIR: ${OPENSSL_INCLUDE_DIR}
-  OPENSSL_LIBRARIES: ${OPENSSL_LIBRARIES}" )
-else( OpenSSL_FOUND)
-  message( STATUS "OpenSSL not found. set environment variables:
-  OPENSSL_ROOT_DIR (for example, %C_INCLUDE%/OpenSSL/Win64OpenSSL-1_0_2L)" )
-endif( OpenSSL_FOUND )
-
 find_package(LLVM 4.0 REQUIRED CONFIG)
 if( LLVM_FOUND )
   message( STATUS "LLVM found.
@@ -72,7 +60,6 @@ add_library(${LIB_NAME} STATIC
 target_include_directories( ${LIB_NAME} 
   PRIVATE
     ${EOSIO_BOOST_INCLUDE_DIR}
-    ${OPENSSL_INCLUDE_DIR}
   PUBLIC
     include
 )
