@@ -82,14 +82,14 @@ class Test1(unittest.TestCase):
 
         print(colored("""
 Create a new contract template directory:
-        """, 'green'))
+        """, 'magenta'))
         contract_dir = "test"
         template = teos.Template(contract_dir, remove_existing=True)
         print("template path is {}".format(template.contract_path_absolute))
 
         print(colored("""
 Again, create a new account, and add a contract to it:
-        """, 'green'))
+        """, 'magenta'))
         account = cleos.AccountLT()
         self.assertTrue(not account.error)
         wallet_default.import_key(account.owner_key)
@@ -98,8 +98,8 @@ Again, create a new account, and add a contract to it:
         
         print(colored("""
 However, the contract cannot be deployed because it is not built yet. An attempt
-results in an error message:
-        """, 'green'))
+results in this error message:
+        """, 'magenta'))
         is_deployed = contract.deploy()
         self.assertFalse(is_deployed)
         if contract.contract.error:
@@ -107,7 +107,7 @@ results in an error message:
 
         print(colored("""
 Use the `build` method of the `eosf.Contract` object:
-        """, 'green'))
+        """, 'magenta'))
         if not is_deployed:
             contract.build()
 
@@ -135,7 +135,7 @@ Use the `build` method of the `eosf.Contract` object:
 
         print(colored("""
 contract.push_action('create'
-        """, 'green'))        
+        """, 'magenta'))        
         action_create = contract.push_action(
             "create", 
             '{"issuer":"' 
@@ -148,7 +148,7 @@ contract.push_action('create'
 
         print(colored("""
 contract.push_action('issue'
-        """, 'green'))
+        """, 'magenta'))
         action_issue = contract.push_action(
             "issue", 
             '{"to":"' + str(alice)
@@ -159,7 +159,7 @@ contract.push_action('issue'
         
         print(colored("""
 contract.push_action('transfer'
-        """, 'green'))
+        """, 'magenta'))
         action_transfer = contract.push_action(
             "transfer", 
             '{"from":"' 
@@ -172,7 +172,7 @@ contract.push_action('transfer'
 
         print(colored("""
 contract.get_table(alice.name, "accounts")
-        """, 'green'))
+        """, 'magenta'))
         table = contract.get_table("accounts", alice )
         self.assertTrue(not table.error)
         print(json.dumps(table.json, indent=4))
@@ -210,7 +210,7 @@ contract.get_table(alice.name, "accounts")
 
         print(colored("""
 account_ttt.push_action('create'
-        """, 'green')) 
+        """, 'magenta')) 
         action_create = account_ttt.push_action(
             "create", 
             '{"issuer":"' 
@@ -223,7 +223,7 @@ account_ttt.push_action('create'
         
         print(colored("""
 account_ttt.push_action('issue'
-        """, 'green')) 
+        """, 'magenta')) 
         action_issue = account_ttt.push_action(
             "issue", 
             '{"to":"' + str(alice)
@@ -233,7 +233,7 @@ account_ttt.push_action('issue'
 
         print(colored("""
 account_ttt.push_action('transfer'
-        """, 'green')) 
+        """, 'magenta')) 
         action_transfer = account_ttt.push_action(
             "transfer", 
             '{"from":"' 

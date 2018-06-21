@@ -23,6 +23,18 @@ import random
 
 setup_setup = setup.Setup()
 
+def reset_nodeos_URL():
+    import teos
+    config = teos.GetConfig(is_verbose=0)
+    try:       
+        url = config.json["EOSIO_DAEMON_ADDRESS"]
+    except:
+        print("cannot determine EOSIO_DAEMON_ADDRESS.")
+        return
+    print("URL where nodeos is to be running: " + url)
+    setup.set_nodeos_URL(url)
+
+
 _dont_keosd = []
 def dont_keosd(status=True):
     """ Do not use `keosd` Wallet Manager.
@@ -61,6 +73,11 @@ class _Cleos:
                 ok_substring=["OK", ""]):
 
         cl = [setup_setup.cleos_exe]
+
+        if not setup.nodeos_URL():
+            reset_nodeos_URL()
+        cl.extend(setup.nodeos_URL())
+
         global _dont_keosd
         cl.extend(_dont_keosd)
 
@@ -1086,6 +1103,8 @@ class PushAction(_Cleos):
 def node_is_running():
     return not GetInfo(is_verbose=-1).error
 
+
+        
 
 
 

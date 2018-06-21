@@ -41,12 +41,10 @@ def init():
     wallet = eosf.Wallet()
     if wallet.error:
         print("Wallet error.")
-        return False
 
     contract_eosio_bios = cleos.SetContract(account_eosio, "eosio.bios")
     if contract_eosio_bios.error:
         print("eosio.bios set contract error.")
-        return False
 
     global alice
     alice = cleos.AccountLT()

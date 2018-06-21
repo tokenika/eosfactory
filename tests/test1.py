@@ -1,14 +1,15 @@
 # python3 ./tests/test1.py
 
-import setup
-import teos
-import cleos
-import sess
 import eosf
+import sess
+import cleos
+import teos
+import setup
 
 CONTRACT_NAME = "eosio.token"
 setup.set_verbose(0)
 cleos.dont_keosd()
+#setup.set_nodeos_URL("54.38.137.99:8090")
 
 
 def run():
@@ -19,8 +20,9 @@ def run():
     assert sess.init()
 
     print('test Contract():')
-    contract = eosf.Contract(
-        cleos.AccountLT(sess.key_owner, sess.key_active), CONTRACT_NAME)
+    account = cleos.AccountLT()
+    sess.wallet.import_key(account)
+    contract = eosf.Contract(account, CONTRACT_NAME)
     assert not contract.error
 
     print('test contract.code():')

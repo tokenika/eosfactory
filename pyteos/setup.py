@@ -8,6 +8,21 @@ _is_json = 0
 _is_debug_mode = False
 _print_request = False
 _print_response = False
+_nodeos_URL = ""
+
+
+def set_nodeos_URL(url="localhost:8888"):
+    global _nodeos_URL
+    _nodeos_URL = "http://" + url
+    
+
+def nodeos_URL():
+    global _nodeos_URL
+    if not _nodeos_URL:
+        return""
+
+    return ["--url", _nodeos_URL]
+    
 
 def set_verbose(status=1):
     """ If set `False`, print error messages only.
