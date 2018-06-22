@@ -21,6 +21,10 @@ import setup
 import teos
 import cleos
 
+def reload():
+    import importlib
+    importlib.reload(eosf)
+
 class Wallet(cleos.WalletCreate):
     """ Create a new wallet locally and operate it.
     Usage: WalletCreate(name="default", is_verbose=True)
@@ -160,7 +164,7 @@ class Account(cleos.AccountLT):
         return self.table
 
     def __str__(self):
-        return str(cleos.GetAccount(self.name, is_verbose=1))   
+        return self.name
 
 
 class Contract():
@@ -313,3 +317,5 @@ class Contract():
             return str(self.contract.contract_path_absolute)
         else:
             return str("NOT DEFINED JET")
+
+

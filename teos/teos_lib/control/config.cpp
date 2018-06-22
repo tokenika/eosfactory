@@ -83,6 +83,7 @@ wallet-dir: .
     arg EOSIO_CONFIG_DIR = { "EOSIO_CONFIG_DIR", "build/daemon/data-dir" };
     arg EOSIO_WALLET_DIR = { "EOSIO_WALLET_DIR", "wallet"}; // relative to data-dir
     arg EOSIO_DAEMON_NAME = { "EOSIO_DAEMON_NAME", "nodeos" };
+    arg EOSIO_CLI_NAME = { "EOSIO_CLI_NAME", "cleos" };
     arg EOSIO_EOSFACTORY_DIR = { "EOSIO_EOSFACTORY_DIR" };
     arg EOSIO_TEOS_DIR = { "EOSIO_TEOS_DIR", "teos" };
 
@@ -606,16 +607,7 @@ Cannot determine the contract workspace.
         }
 
         bfs::path wantedPath;
-        {
-          wantedPath 
-            = bfs::path(sourceDir)
-              / "build/etc/eosio/node_00" 
-              / configValue(teosControl, EOSIO_DAEMON_NAME);
-          if(bfs::exists(wantedPath)) {
-            return wantedPath.string();
-          }          
-        }        
-    
+        
         {
           wantedPath 
             = bfs::path(sourceDir)
@@ -629,6 +621,51 @@ Cannot determine the contract workspace.
         {
           wantedPath = bfs::path("/usr/local/bin")
               / configValue(teosControl, EOSIO_DAEMON_NAME);
+          if(bfs::exists(wantedPath)) {
+            return wantedPath.string();
+          }             
+        }
+
+        if(!bfs::exists(wantedPath)){
+          onError(teosControl,
+            (boost::format("Cannot determine the EOS test node "
+              "executable file:\n%1%\n") % wantedPath.string()).str(), SPOT);  
+          return ""; 
+        }
+      } catch (exception& e) {
+          onError(teosControl, e.what(), SPOT);          
+          return "";        
+      }
+      return "";
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // getCleosExe
+    ///////////////////////////////////////////////////////////////////////////
+    string getCleosExe(TeosControl* teosControl)
+    {
+      try
+      {
+        string sourceDir = getSourceDir(teosControl);
+        if(sourceDir.empty()){
+          return "";
+        }
+
+        bfs::path wantedPath;
+
+        {
+          wantedPath 
+            = bfs::path(sourceDir)
+              / "build/programs/" / configValue(teosControl, EOSIO_CLI_NAME)
+              / configValue(teosControl, EOSIO_CLI_NAME);
+          if(bfs::exists(wantedPath)) {
+            return wantedPath.string();
+          }          
+        }
+
+        {
+          wantedPath = bfs::path("/usr/local/bin")
+              / configValue(teosControl, EOSIO_CLI_NAME);
           if(bfs::exists(wantedPath)) {
             return wantedPath.string();
           }             
@@ -804,6 +841,7 @@ Cannot determine the contract workspace.
       respJson_.put("EOSIO_CONFIG_DIR", getConfigDir(this));
       respJson_.put("EOSIO_WALLET_DIR", getWalletDir(this));
       respJson_.put("nodeExe", getDaemonExe(this));
+      respJson_.put("cleosExe", getCleosExe(this));
       respJson_.put("genesisJson", getGenesisJson(this));
       respJson_.put("EOSIO_DAEMON_ADDRESS", getHttpServerAddress(this));
       respJson_.put(

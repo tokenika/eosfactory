@@ -1,10 +1,10 @@
 # python3 ./tests/test1.py
 
-import eosf
-import sess
-import cleos
-import teos
 import setup
+import teos
+import eosf
+import cleos
+import sess
 
 CONTRACT_NAME = "eosio.token"
 setup.set_verbose(0)

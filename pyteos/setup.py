@@ -15,6 +15,9 @@ def set_nodeos_URL(url="localhost:8888"):
     global _nodeos_URL
     _nodeos_URL = "http://" + url
     
+def set_cryptolions():
+    global _nodeos_URL
+    _nodeos_URL = "http://" + "54.38.137.99:8888"
 
 def nodeos_URL():
     global _nodeos_URL

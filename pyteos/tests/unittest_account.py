@@ -47,53 +47,63 @@ with `setup.set_verbose(0)`, nothing is printed.
 Create an account without any wallet available. Should fail:
         """, 'magenta'))
 
-        allice = cleos.AccountLT()
-        self.assertTrue(allice.error, "No available wallet")
+        alice = cleos.AccountLT()
+        self.assertTrue(alice.error, "No available wallet")
 
         print(colored("""
 Make a wallet and reattempt the account creation:
         """, 'magenta'))
 
         global wallet
-        wallet = eosf.Wallet()  
+        wallet = eosf.Wallet()
+        print(wallet)  
         self.assertTrue(not wallet.error)
 
         print(colored("""
 Call for keys in the wallet:
         """, 'magenta'))
 
-        self.assertTrue(not wallet.keys().error)
+        keys = wallet.keys()
+        print(keys)
+        self.assertTrue(not keys.error)
 
         print(colored("""
-Create the account:
+Create the account alice:
         """, 'magenta'))
 
         global alice        
         alice = cleos.AccountLT()
+        print(alice.account())
         self.assertTrue(not alice.error)
 
         print(colored("""
 Import alice's active key to the wallet. `wallet.import_key(alice)`:
         """, 'magenta'))
 
-        self.assertTrue(not wallet.import_key(alice).error)
+        result = wallet.import_key(alice)
+        print(result)
+        self.assertTrue(not result.error)
 
         print(colored("""
 Call for keys in the wallet:
         """, 'magenta'))
 
-        self.assertTrue(not wallet.keys().error)
+        result = wallet.keys()
+        print(result)
+        self.assertTrue(not result.error)
 
         print(colored("""
-Introduce two other acconts, `bob` and `carol`:
+Introduce two other accounts, `bob` and `carol`:
         """, 'magenta'))
 
         global bob
         bob = cleos.AccountLT()
+        print(bob)
         wallet.import_key(bob)
 
         global carol
         carol = cleos.AccountLT()
+        print(carol)
         wallet.import_key(carol)        
 
     def test_15(self):
@@ -104,69 +114,72 @@ Now, create an account object that will keep a contract:
         """, 'magenta'))
 
         account_ttt = eosf.Account()
+        print(account_ttt)
         self.assertTrue(not account_ttt.error)
 
         print(colored("""
 Let the wallet know the account:
         """, 'magenta'))
-        self.assertTrue(not wallet.import_key(account_ttt).error)
+        result = wallet.import_key(account_ttt)
+        print(result)
+        self.assertTrue(not result.error)
 
-        print(colored("""
-Deploy the contract:
-        """, 'magenta'))
+#         print(colored("""
+# Deploy the contract:
+#         """, 'magenta'))
 
-        contract_ttt = account_ttt.set_contract("eosio.token")
-        self.assertTrue(not contract_ttt.error)
+#         contract_ttt = account_ttt.set_contract("eosio.token")
+#         self.assertTrue(not contract_ttt.error)
 
-        time.sleep(1)
+#         time.sleep(1)
         
-        global alice
-        global bob
-        global carol
+#         global alice
+#         global bob
+#         global carol
 
-        print(colored("""
-account_ttt.push_action('create'
-        """, 'magenta')) 
+#         print(colored("""
+# account_ttt.push_action('create'
+#         """, 'magenta')) 
 
-        action_create = account_ttt.push_action(
-            "create", 
-            '{"issuer":"' 
-                + str(cleos.AccountEosio()) 
-                + '", "maximum_supply":"1000000000.0000 EOS", \
-                "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+#         action_create = account_ttt.push_action(
+#             "create", 
+#             '{"issuer":"' 
+#                 + str(cleos.AccountEosio()) 
+#                 + '", "maximum_supply":"1000000000.0000 EOS", \
+#                 "can_freeze":0, "can_recall":0, "can_whitelist":0}')
 
-        self.assertTrue(not action_create.error)
+#         self.assertTrue(not action_create.error)
         
-        print(colored("""
-account_ttt.push_action('issue'
-        """, 'magenta')) 
+#         print(colored("""
+# account_ttt.push_action('issue'
+#         """, 'magenta')) 
 
-        action_issue = account_ttt.push_action(
-            "issue", 
-            '{"to":"' + str(alice)
-                + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
-                permission=cleos.AccountEosio())
+#         action_issue = account_ttt.push_action(
+#             "issue", 
+#             '{"to":"' + str(alice)
+#                 + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
+#                 permission=cleos.AccountEosio())
         
 
-        print(colored("""
-account_ttt.push_action('transfer'
-        """, 'magenta')) 
+#         print(colored("""
+# account_ttt.push_action('transfer'
+#         """, 'magenta')) 
 
-        action_transfer = account_ttt.push_action(
-            "transfer", 
-            '{"from":"' 
-                + str(alice)
-                + '", "to":"' + str(carol)
-                + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
-            permission=alice)
-        self.assertTrue(not action_transfer.error)
+#         action_transfer = account_ttt.push_action(
+#             "transfer", 
+#             '{"from":"' 
+#                 + str(alice)
+#                 + '", "to":"' + str(carol)
+#                 + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
+#             permission=alice)
+#         self.assertTrue(not action_transfer.error)
 
-        print(colored("""
-Inspect  database entries, for the `alice` account:
-        """, 'magenta'))
+#         print(colored("""
+# Inspect  database entries, for the `alice` account:
+#         """, 'magenta'))
 
-        table = account_ttt.get_table( "accounts", alice)
-        self.assertTrue(not table.error)
+#         table = account_ttt.get_table( "accounts", alice)
+#         self.assertTrue(not table.error)
 
 
     def tearDown(self):

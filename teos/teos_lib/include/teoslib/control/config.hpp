@@ -52,6 +52,8 @@ namespace teos {
 
     string getDaemonExe(TeosControl* teosControl);
 
+    string getCleosExe(TeosControl* teosControl);
+
     string getGenesisJson(TeosControl* teosControl);
 
     string getHttpServerAddress(TeosControl* teosControl);

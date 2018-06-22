@@ -21,6 +21,10 @@ import setup
 import teos
 import random
 
+def reload():
+    import importlib
+    importlib.reload(cleos)
+
 setup_setup = setup.Setup()
 
 def reset_nodeos_URL():
@@ -89,6 +93,7 @@ class _Cleos:
         cl.extend([first, second])
         cl.extend(args)
         self.args = args
+        self.ok_substring = ok_substring
 
         if setup.is_debug_mode():
             print("command line sent to cleos:")
@@ -103,19 +108,20 @@ class _Cleos:
 
         self._out = process.stdout.decode("utf-8")
         self.err_msg = process.stderr.decode("utf-8")
-        self.is_verbose = setup.is_verbose() and is_verbose >=0
+        self.is_verbose = setup.is_verbose() and is_verbose >0
 
         if setup.is_print_response() or setup.is_print_response():
             print(self.err_msg)
             print("")
 
         # print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
-        # # # print(setup.is_verbose())
-        # # # print(is_verbose)
-        # print(self._out)
-        # print(self.err_msg)
-        # # # # print(ok_substring)
-        # # # # print(ok_substring not in self._out)
+        # print(setup.is_verbose())
+        # print(is_verbose)
+        # print(self.is_verbose)
+        # # print(self._out)
+        # # print(self.err_msg)
+        # # print(ok_substring)
+        # # print(ok_substring not in self._out)
         # print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
 
         self.error = not ( \
@@ -131,19 +137,16 @@ class _Cleos:
                 print("ERROR:")
                 print(self.err_msg)
                 print("")
-        else:
-            if self.is_verbose:
-                if ok_substring[0]:
-                    print(self._out)
-                if ok_substring[1]:
-                    print(self.err_msg)
-
 
     def __str__(self):
-        return self._out
+        if self.ok_substring[0]:
+            out = self._out + "\n"
+        if self.ok_substring[1]:
+            out = out + self.err_msg + "\n" 
+        return out
     
     def __repr__(self):
-        return repr(self._out)      
+        return self.__str__()     
 
     
 class GetAccount(_Cleos):
@@ -165,14 +168,18 @@ class GetAccount(_Cleos):
     """
     def __init__(self, account, is_verbose=1):
         try:
-            account_name = account.name
+            self.account_name = account.name
         except:
-            account_name = account
+            self.account_name = account
 
         _Cleos.__init__(
-            self, [account_name], 
+            self, [self.account_name], 
             "get", "account", is_verbose, ok_substring=["permissions", ""])
 
+    def __str__(self):
+        out = "name: {}\n".format(self.account_name)
+        out = out + str(_Cleos.__str__(self))
+        return out
 
 
 class GetAccounts(_Cleos):
@@ -197,6 +204,7 @@ class GetAccounts(_Cleos):
         
         if not self.error:
             self.json = json.loads(self._out)
+            self.names = self.json['account_names']
 
 
 class WalletCreate(_Cleos):
@@ -217,18 +225,25 @@ class WalletCreate(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.  
     """
-    def __init__(self, name="default", is_verbose=1):
-        _Cleos.__init__(
-            self, ["--name", name], "wallet", "create", is_verbose,
-            ok_substring=["Creating wallet:", ""])
+    def __init__(self, name="default", password="", is_verbose=1):
+        self.name = name
+        self.json = {}
+        self.json["name"] = name
 
-        msg = self._out
-        if not self.error:
+        if not password:
+            _Cleos.__init__(
+                self, ["--name", self.name], "wallet", "create", is_verbose,
+                ok_substring=["Creating wallet:", ""])
+            msg = self._out
+            if not self.error:
+                self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
+                self.json["password"] = self.password
+        else:
             self.name = name
-            self.json = {}
-            self.json["name"] = name
-            self.json["password"] = msg[msg.find("\"")+1:msg.rfind("\"")]
-            self.password = self.json["password"]
+            self.password = password
+            self.json["password"] = self.password
+        
+
 
 
 class WalletStop(_Cleos):
@@ -286,14 +301,17 @@ class WalletImport(_Cleos):
     def __init__(self, key, wallet="default", is_verbose=1):
 
         try:
-            key_private = key.active_key
-            if not key_private:
-                raise ValueError('')
+            key_private = key.active_key.key_private
         except:
             try:
-                key_private = key.key_private
+                key_private = key.active_key
+                if not key_private:
+                    raise ValueError('')
             except:
-                key_private = key 
+                try:
+                    key_private = key.key_private
+                except:
+                    key_private = key 
 
         try:
             wallet_name = wallet.name
@@ -804,10 +822,24 @@ class CreateAccount(_Cleos):
             
         if not self.error and setup.is_json():
             self.json = json.loads(self._out)
-            
 
+    def account(self):
+        return str(GetAccount(self.name, is_verbose=1))
+            
     def __str__(self):
         return self.name
+
+
+def account_name():
+    letters = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', \
+                'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', \
+                'q', 'r', 's', 't', 'u', 'v', 'w', 'x', \
+                'y', 'z', '1', '2', '3', '4', '5']
+    name = ""
+    for i in range(0, 12):
+        name += letters[random.randint(0, 30)]
+
+    return name
 
 
 class AccountLT(CreateAccount):
@@ -815,6 +847,7 @@ class AccountLT(CreateAccount):
     """
     def __init__(
             self,
+            creator="",
             owner_key="", 
             active_key="",
             permission="",
@@ -826,14 +859,8 @@ class AccountLT(CreateAccount):
             max_net_usage=0,
             ref_block="",
             is_verbose=1):
-        
-        letters = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', \
-                    'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', \
-                    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', \
-                    'y', 'z', '1', '2', '3', '4', '5']
-        name = ""
-        for i in range(0, 12):
-            name += letters[random.randint(0, 30)]
+
+        name = account_name()
 
         if owner_key:
             if not active_key:
@@ -841,15 +868,38 @@ class AccountLT(CreateAccount):
         else:
             owner_key = CreateKey("owner", is_verbose=-1)
             active_key = CreateKey("active", is_verbose=-1)
+
+        if not creator:
+            creator = AccountEosio()
               
         CreateAccount.__init__(
-            self, AccountEosio(), name, 
+            self, creator, name, 
             owner_key, active_key,
             permission,
             expiration_sec, skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=1)
+
+    
+
+
+class ManualAccount:
+    def __init__(self, name="", is_verbose=True):
+        if not name:
+            self.name = account_name()
+        else:
+            self.name = name
+
+        self.owner_key = CreateKey("owner", is_verbose=0)
+        self.active_key = CreateKey("active", is_verbose=0)
+        if is_verbose:
+            print(self.__str__()) 
+
+    def __str__(self):
+        return "Accout Name: {}\n".format(self.name) \
+            + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
+            + "Active Public Key: {}\n".format(self.active_key.key_public)
 
 
 class AccountEosio():
