@@ -20,6 +20,7 @@ import pathlib
 import setup
 import teos
 import cleos
+from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
 def reload():
     import importlib
@@ -47,20 +48,22 @@ class Wallet(cleos.WalletCreate):
         """ Lists opened wallets, * marks unlocked.
         Returns `cleos.WalletList` object
         """ 
-        return cleos.WalletList()
+        return cleos.WalletList(is_verbose=self.is_verbose)
     
     def open(self):
         """ Opens the wallet.
         Returns `WalletOpen` object     
         """
-        self.wallet_open = cleos.WalletOpen(self.name)
+        self.wallet_open = cleos.WalletOpen(
+            self.name, is_verbose=self.is_verbose)
         return not self.wallet_open.error
 
     def lock(self):
         """ Locks the wallet.
         Returns `cleos.WalletLock` object.   
         """
-        self.wallet_lock = cleos.WalletLock(self.name)
+        self.wallet_lock = cleos.WalletLock(
+            self.name, is_verbose=self.is_verbose)
         return not self.wallet_lock.error        
 
     def unlock(self):
@@ -68,7 +71,7 @@ class Wallet(cleos.WalletCreate):
         Returns `WalletUnlock` object.
         """        
         self.wallet_unlock = cleos.WalletUnlock(
-            self.name, self.json["password"])
+            self.name, self.json["password"], is_verbose=self.is_verbose)
         return not self.wallet_unlock.error
 
     def import_key(self, key_pair):
@@ -76,29 +79,64 @@ class Wallet(cleos.WalletCreate):
         Returns `cleos.WalletImport` object
         """
         return cleos.WalletImport(
-            key_pair, self.name, is_verbose=False)       
+            key_pair, self.name, is_verbose=self.is_verbose)
 
     def keys(self):
         """ Lists public keys from all unlocked wallets.
         Returns `cleos.WalletKeys` object.    
         """
-        return cleos.WalletKeys()
+        return cleos.WalletKeys(is_verbose=self.is_verbose)
 
     def __str__(self):
         retval = json.dumps(self.json, indent=4) + "\n"
         retval = retval + json.dumps(self.keys().json, indent=4) + "\n"
-        retval = retval + json.dumps(self.list().json, indent=4) + "\n"
-        return retval
+        return retval + json.dumps(self.list().json, indent=4) + "\n"
 
 
-class Account(cleos.AccountLT):
+class Account(cleos.CreateAccount):
+    """
+    """
+    def __init__(
+            self,
+            creator="",
+            owner_key="", 
+            active_key="",
+            permission="",
+            expiration_sec=30, 
+            skip_signature=0, 
+            dont_broadcast=0,
+            forceUnique=0,
+            max_cpu_usage=0,
+            max_net_usage=0,
+            ref_block="",
+            is_verbose=1):
+
+        name = cleos.account_name()
+
+        if owner_key:
+            if not active_key:
+                active_key = owner_key
+        else:
+            owner_key = cleos.CreateKey("owner", is_verbose=-1)
+            active_key = cleos.CreateKey("active", is_verbose=-1)
+
+        if not creator:
+            creator = cleos.AccountEosio()
+              
+        cleos.CreateAccount.__init__(
+            self, creator, name, 
+            owner_key, active_key,
+            permission,
+            expiration_sec, skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=is_verbose)    
+
 
     def code(self, code="", abi="", wasm=False):
-        get_code = cleos.GetCode(
-            self.name, code, abi, is_verbose=False)
-        if not get_code.error and self.is_verbose:
-            print("code hash: {}".format(get_code.code_hash))
-        return get_code
+        return cleos.GetCode(
+            self.name, code, abi, is_verbose=self.is_verbose)
+
 
     def set_contract(
             self, contract_dir, 
@@ -115,9 +153,11 @@ class Account(cleos.AccountLT):
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=False
+            is_verbose=self.is_verbose
         )
+
         return self.set_contract
+
 
     def push_action(
             self, action, data,
@@ -139,17 +179,18 @@ class Account(cleos.AccountLT):
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=0)
+            is_verbose=self.is_verbose)
 
         if not self.action.error:
             try:
                 self.console = self.action.console
-                if self.is_verbose:
+                if self.is_verbose > 0:
                     print(self.console + "\n") 
             except:
                 pass
 
         return self.action
+
 
     def get_table(
             self, table, scope="", 
@@ -160,11 +201,13 @@ class Account(cleos.AccountLT):
                                 self.name, table, scope,
                                 binary, 
                                 limit, key, lower, upper,
-                                is_verbose=0)
+                                is_verbose=self.is_verbose)
         return self.table
+
 
     def __str__(self):
         return self.name
+
 
 
 class Contract():
@@ -197,6 +240,7 @@ class Contract():
         self.is_verbose = is_verbose
         self.error = self.account.error
 
+
     def deploy(self, permission=""):
         self.contract = cleos.SetContract(
             self.account, self.contract_dir, 
@@ -205,30 +249,37 @@ class Contract():
             self.skip_signature, self.dont_broadcast, self.forceUnique,
             self.max_cpu_usage, self.max_net_usage,
             self.ref_block,
-            is_verbose=0
+            is_verbose=self.is_verbose
         )
+
         return self.is_deployed()
+
 
     def is_deployed(self):
         if not self.contract:
             return False
         return not self.contract.error
 
+
     def wast(self):
         if self.is_mutable:            
-            wast = teos.WAST(self.contract_dir, self.account.name)
+            wast = teos.WAST(
+                self.contract_dir, self.account.name, 
+                is_verbose=self.is_verbose)
         else:
-            if setup.is_verbose():
+            if self.is_verbose > 0:
                 print("ERROR!")
                 print("Cannot modify system contracts.")
         return not wast.error
         
 
-    def abi(self, build_dir=""):            
+    def abi(self):            
         if self.is_mutable:
-            abi = teos.ABI(self.contract_dir, self.account.name)
+            abi = teos.ABI(
+                self.contract_dir, self.account.name, 
+                is_verbose=self.is_verbose)
         else:
-            if setup.is_verbose():
+            if self.is_verbose > 0:
                 print("ERROR!")
                 print("Cannot modify system contracts.")
         return not abi.error
@@ -245,8 +296,7 @@ class Contract():
             permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0, 
-            ref_block="",
-            is_verbose=0
+            ref_block=""
         ):
 
         if not permission:
@@ -263,7 +313,7 @@ class Contract():
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=0)
+            is_verbose=self.is_verbose)
 
         if not self.action.error:
             try:
@@ -271,7 +321,7 @@ class Contract():
                 if self.is_verbose:
                     print(self.console + "\n") 
             except:
-                pass        
+                pass
 
         return self.action
 
@@ -298,16 +348,15 @@ class Contract():
                     self.account.name, table, scope,
                     binary=False, 
                     limit=10, key="", lower="", upper="", 
-                    is_verbose=0)
+                    is_verbose=self.is_verbose)
+            
         return self.table
 
 
     def code(self, code="", abi="", wasm=False):
-        get_code = cleos.GetCode(
-            self.account.name, code, abi, is_verbose=0)
-        if not get_code.error and self.is_verbose:
-            print("code hash: {}".format(get_code.code_hash))
-        return get_code
+        return cleos.GetCode(
+            self.account.name, code, abi, is_verbose=self.is_verbose)
+
 
 
     def contract_path(self):

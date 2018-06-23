@@ -47,7 +47,7 @@ with `setup.set_verbose(0)`, nothing is printed.
 Create an account without any wallet available. Should fail:
         """, 'magenta'))
 
-        alice = cleos.AccountLT()
+        alice = eosf.Account()
         self.assertTrue(alice.error, "No available wallet")
 
         print(colored("""
@@ -55,55 +55,45 @@ Make a wallet and reattempt the account creation:
         """, 'magenta'))
 
         global wallet
-        wallet = eosf.Wallet()
-        print(wallet)  
+        wallet = eosf.Wallet() 
         self.assertTrue(not wallet.error)
 
         print(colored("""
 Call for keys in the wallet:
         """, 'magenta'))
 
-        keys = wallet.keys()
-        print(keys)
-        self.assertTrue(not keys.error)
+        self.assertTrue(not wallet.keys().error)
 
         print(colored("""
 Create the account alice:
         """, 'magenta'))
 
         global alice        
-        alice = cleos.AccountLT()
-        print(alice.account())
+        alice = eosf.Account()
         self.assertTrue(not alice.error)
 
         print(colored("""
 Import alice's active key to the wallet. `wallet.import_key(alice)`:
         """, 'magenta'))
 
-        result = wallet.import_key(alice)
-        print(result)
-        self.assertTrue(not result.error)
+        self.assertTrue(not wallet.import_key(alice).error)
 
         print(colored("""
 Call for keys in the wallet:
         """, 'magenta'))
 
-        result = wallet.keys()
-        print(result)
-        self.assertTrue(not result.error)
+        self.assertTrue(not wallet.keys().error)
 
         print(colored("""
 Introduce two other accounts, `bob` and `carol`:
         """, 'magenta'))
 
         global bob
-        bob = cleos.AccountLT()
-        print(bob)
+        bob = eosf.Account()
         wallet.import_key(bob)
 
         global carol
-        carol = cleos.AccountLT()
-        print(carol)
+        carol = eosf.Account()
         wallet.import_key(carol)        
 
     def test_15(self):
@@ -114,15 +104,13 @@ Now, create an account object that will keep a contract:
         """, 'magenta'))
 
         account_ttt = eosf.Account()
-        print(account_ttt)
         self.assertTrue(not account_ttt.error)
 
         print(colored("""
 Let the wallet know the account:
         """, 'magenta'))
-        result = wallet.import_key(account_ttt)
-        print(result)
-        self.assertTrue(not result.error)
+        
+        self.assertTrue(not wallet.import_key(account_ttt).error)
 
 #         print(colored("""
 # Deploy the contract:

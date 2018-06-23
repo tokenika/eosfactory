@@ -9,7 +9,6 @@ import unittest
 import json
 import time
 
-CONTRACT_NAME = "eosio.token"
 setup.set_verbose(False)
 cleos.dont_keosd()
 
@@ -20,107 +19,177 @@ class Test1(unittest.TestCase):
         if not result.failures:
             super().run(result)
 
-
     @classmethod
     def setUpClass(cls):
-        teos.node_reset()
-        sess.init()
-
-
+        pass
+        
     def setUp(self):
-        self.assertTrue(cleos.node_is_running(), "testnet failure")
+        pass
+
+
+    def test_04(self):
+        print("""
+Start a local test EOSIO node:
+        """)
+        ok = teos.node_reset()
+        self.assertTrue(ok)
+        
+        print("""
+Create a local wallet (not with EOSIO `keosd` application:
+        """)
+        global wallet
+        wallet = eosf.Wallet()
+        self.assertTrue(not wallet.error)
+
+        print("""
+Implement the `eosio` master account as a `cleos.AccountEosio` object:
+        """)
+        global account_eosio
+        account_eosio = cleos.AccountEosio()
+
+        print("""
+Create accounts `alice`, `bob` and `carol`:
+        """)
+        global alice
+        alice = eosf.Account()
+        self.assertTrue(not alice.error)
+        alice.account
+        wallet.import_key(alice)
+
+        global bob
+        bob = eosf.Account()
+        self.assertTrue(not bob.error)
+        wallet.import_key(bob)        
+
+        global carol
+        carol = eosf.Account()
+        self.assertTrue(not carol.error)
+        wallet.import_key(carol)        
+
 
     def test_05(self):
-        global contract
-        account = cleos.AccountLT()
-        sess.wallet.import_key(account)
+        global wallet
+        global alice
+        global bob
+        global carol
+        global account_eosio
+
+        account = eosf.Account()
+        wallet.import_key(account)
         
-        print(sess.alice)
-        print(sess.bob)
-        print(sess.carol)
+        print(alice)
+        print(bob)
+        print(carol)
         print(account)
 
-        contract = eosf.Contract(account, CONTRACT_NAME)
-        self.assertTrue(not contract.error, "contract failure")
+        self.contract = eosf.Contract(account, "eosio.token")
+        self.assertTrue(not self.contract.error)
 
-        print('test contract.code():')
-        self.assertTrue(not contract.code().error)
+        print("""
+test contract.code():
+        """)
+        self.assertTrue(not self.contract.code().error)
 
-        print('test contract.deploy():')
-        self.assertTrue(contract.deploy())
+        print("""
+test contract.deploy():
+        """)
+        self.assertTrue(self.contract.deploy())
 
-        print('test contract.get_code():')
-        self.assertTrue(not contract.code().error)
+        print("""
+test contract.get_code():
+        """)
+        self.assertTrue(not self.contract.code().error)
 
-        print('test contract.push_action("create"):')
-        self.assertTrue(not contract.push_action(
+        print("""
+test contract.push_action("create"):
+        """)
+        self.assertTrue(not self.contract.push_action(
             "create", 
             '{"issuer":"' 
-                + str(sess.account_eosio) 
+                + str(account_eosio) 
                 + '", "maximum_supply":"1000000000.0000 EOS", \
                 "can_freeze":0, "can_recall":0, "can_whitelist":0}').error)
 
-        print('test contract.push_action("issue"):')
-        self.assertTrue(not contract.push_action(
+        print("""
+test contract.push_action("issue"):
+        """)
+        self.assertTrue(not self.contract.push_action(
             "issue", 
-            '{"to":"' + str(sess.alice)
+            '{"to":"' + str(alice)
                 + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
-                sess.account_eosio).error)
+                account_eosio).error)
 
-        print('test contract.push_action("transfer", sess.alice):')
-        self.assertTrue(not contract.push_action(
+        print("""
+test contract.push_action("transfer", alice):
+        """)
+        self.assertTrue(not self.contract.push_action(
             "transfer", 
             '{"from":"' 
-                + str(sess.alice)
-                + '", "to":"' + str(sess.carol)
+                + str(alice)
+                + '", "to":"' + str(carol)
                 + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
-            sess.alice).error)
+            alice).error)
 
         time.sleep(1)
-        
-        print('test contract.push_action("transfer", sess.carol):')
-        self.assertTrue(not contract.push_action(
+
+        print("""
+test contract.push_action("transfer", carol):
+        """)
+        self.assertTrue(not self.contract.push_action(
             "transfer", 
             '{"from":"' 
-                + str(sess.carol)
-                + '", "to":"' + str(sess.bob)
+                + str(carol)
+                + '", "to":"' + str(bob)
                 + '", "quantity":"13.0000 EOS", "memo":"memo"}', 
-            sess.carol).error)
+            carol).error)
 
-        print('test contract.push_action("transfer" sess.bob):')
-        self.assertTrue(not contract.push_action(
+        print("""
+test contract.push_action("transfer" bob):
+        """)
+        self.assertTrue(not self.contract.push_action(
             "transfer", 
             '{"from":"' 
-                + str(sess.bob)
+                + str(bob)
                 + '", "to":"' 
-                + str(sess.alice)
+                + str(alice)
                 + '", "quantity":"2.0000 EOS", "memo":"memo"}', 
-            sess.bob).error)
+            bob).error)
 
-        print('test contract.get_table("accounts", sess.alice):')
-        t1 = contract.get_table("accounts", sess.alice)
+        print("""
+test contract.get_table("accounts", alice):
+        """) 
+        t1 = self.contract.get_table("accounts", alice)
         
-        print('test contract.get_table("accounts", sess.bob):')
-        t2 = contract.get_table("accounts", sess.bob)
-        
-        print('test contract.get_table("accounts", sess.carol):')
-        t3 = contract.get_table("accounts", sess.carol)
+        print("""
+test contract.get_table("accounts", bob):
+        """)
 
-        print('self.assertTrue(t1.json["rows"][0]["balance"] == "77.0000 EOS":')
-        self.assertTrue(t1.json["rows"][0]["balance"] == '77.0000 EOS')
+        t2 = self.contract.get_table("accounts", bob)
         
-        print('self.assertTrue(t2.json["rows"][0]["balance"] == "11.0000 EOS":')
-        self.assertTrue(t2.json["rows"][0]["balance"] == '11.0000 EOS')
-        
-        print('self.assertTrue(t3.json["rows"][0]["balance"] == "12.0000 EOS":')
-        self.assertTrue(t3.json["rows"][0]["balance"] == '12.0000 EOS')
+        print("""
+test contract.get_table("accounts", carol):
+        """)
+        t3 = self.contract.get_table("accounts", carol)
 
-        print('test node.stop():')
+        print("""
+self.assertTrue(t1.json["rows"][0]["balance"] == "77.0000 EOS":
+        """)
+        self.assertTrue(t1.json["rows"][0]["balance"] == '77.0000 EOS""")
+        
+        print("""
+self.assertTrue(t2.json["rows"][0]["balance"] == "11.0000 EOS":
+        """)
+        self.assertTrue(t2.json["rows"][0]["balance"] == '11.0000 EOS""")
+        
+        print("""
+self.assertTrue(t3.json["rows"][0]["balance"] == "12.0000 EOS":
+        """)
+        self.assertTrue(t3.json["rows"][0]["balance"] == '12.0000 EOS""")
+
+        print("""
+test node.stop():
+        """)
         teos.node_stop()
-
-        print("Test OK")
-
-
 
 
     def tearDown(self):

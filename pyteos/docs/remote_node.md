@@ -108,7 +108,7 @@ Wallet is already unlocked: tokenika
 >>> ok = wallet.unlock()
 Unlocked: tokenika
 
->>> account_second = cleos.AccountLT(account_first)
+>>> account_second = eosf.Account(account_first)
 ERROR:
 Error 3080001: account using more than allotted RAM usage
 
