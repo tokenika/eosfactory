@@ -100,7 +100,7 @@ Deploy the contract:
 See the response of the node, use `print(contract.contract_ttt)`:
         """, 'magenta')
 
-        print(contract.contract_ttt)
+        print(contract_ttt.contract)
 
         cprint("""
 See the response of the node, use `print(contract.contract_ttt)`:
@@ -110,7 +110,7 @@ See the response of the node, use `print(contract.contract_ttt)`:
 Confirm that the account `account_test` contains a contract code:
         """, 'magenta')
 
-        code = account_test.code()
+        code = account_ttt.code()
         print("code hash: {}".format(code.code_hash))
 
         time.sleep(1)
@@ -170,6 +170,8 @@ See the result of the action:
 
         t = contract_ttt.get_table("games", bob)
         self.assertTrue(not t.error)
+
+        time.sleep(2)
 
         print(t.json)
 

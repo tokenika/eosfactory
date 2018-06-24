@@ -15,6 +15,7 @@ managed by the EOSIO keosd and, hence, can be safely manipulated.
 If you use `setup.set_verbose(True)`, you can see the response messages of the
 issued commands.
 """, 'magenta')
+
 cleos.dont_keosd()
 setup.set_verbose(True)
 setup.set_json(False)
@@ -172,26 +173,23 @@ use `contract_test.push_action("hi", '{"user":"' + str(alice) + '"}', alice)`:
             "hi", '{"user":"' + str(alice) + '"}', alice)
 
         self.assertTrue(not action_hi.error)
-        print("console: ".format(action_hi.console))
 
-    #     self.assertTrue(
-    #         self.contract_test.push_action(
-    #         "hi", 
-    #         '{"user":"carol"}',
-    #         sess.carol),
-    #         "push_action hi 2")
+        action_hi = contract_test.push_action(
+            "hi", 
+            '{"user":"' + str(carol) + '"}', carol)
 
+        self.assertTrue(not action_hi.error)
+        
+        cprint("""
+This should fail due to authority mismatch:
+        """, 'magenta')
 
-    # def test_05(self):
-    #     """ This should fail due to authority mismatch """
-    #     set_suppress_error_msg(True)
-    #     self.assertFalse(
-    #         self.contract_test.push_action(
-    #         "hi", 
-    #         '{"user":"carol"}',
-    #         sess.alice),
-    #         "push_action hi")
-    #     set_suppress_error_msg(False)
+        action_hi = contract_test.push_action(
+            "hi", 
+            '{"user":"' + str(carol) + '"}', alice)
+        
+        self.assertTrue(action_hi.error)
+        
 
     def test_80(self):
         global template
@@ -204,7 +202,6 @@ use `contract_test.push_action("hi", '{"user":"' + str(alice) + '"}', alice)`:
     @classmethod
     def tearDownClass(cls):
         teos.node_stop()
-
 
 
 if __name__ == "__main__":

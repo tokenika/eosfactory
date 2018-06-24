@@ -358,7 +358,6 @@ class Contract():
             self.account.name, code, abi, is_verbose=self.is_verbose)
 
 
-
     def contract_path(self):
         """ Return contract directory path.
         """
@@ -366,5 +365,11 @@ class Contract():
             return str(self.contract.contract_path_absolute)
         else:
             return str("NOT DEFINED JET")
+
+    def __str__(self):
+        if self.is_deployed():
+            return str(self.contract)
+        else:
+            return str(self.account)
 
 
