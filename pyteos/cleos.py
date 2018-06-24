@@ -463,8 +463,6 @@ class WalletUnlock(_Cleos):
             like `CreateAccount`, or a string.
         password: If the wallet argument is not a wallet object, the password 
             returned by wallet create, else anything, defaults to "".
-        timeout: The timeout for unlocked wallet in seconds, defoults to 
-            unlimited.
         is_verbose: If `False`, do not print unless on error, 
             default is `True`.
 
@@ -484,8 +482,7 @@ class WalletUnlock(_Cleos):
 
         _Cleos.__init__(
             self, 
-            ["--name", wallet_name, "--password", password, \
-                "--unlock-timeout", str(timeout)], 
+            ["--name", wallet_name, "--password", password], 
             "wallet", "unlock", is_verbose, ok_substring=["Unlocked:", ""])
 
         if not self.error:

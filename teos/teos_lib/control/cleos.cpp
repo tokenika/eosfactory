@@ -17,17 +17,17 @@ namespace teos {
         vector<string> args, string first, string second,
         bool isVerbose, pair<string, string> okSubstring )
       {
-        boost::asio::boost::asio::io_service ios;
+        // boost::asio::boost::asio::io_service ios;
         
 
 
-        string cleosExe = getCleosExe(this);
+        // string cleosExe = getCleosExe(this);
 
 
-        int result = boost::process::system(
-          "/usr/bin/g++", 
-          "main.cpp"
-          );
+        // int result = boost::process::system(
+        //   "/usr/bin/g++", 
+        //   "main.cpp"
+        //   );
       }
 
   }

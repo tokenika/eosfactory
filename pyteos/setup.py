@@ -14,16 +14,20 @@ _nodeos_URL = ""
 def set_nodeos_URL(url="localhost:8888"):
     global _nodeos_URL
     _nodeos_URL = "http://" + url
+
     
 def set_cryptolions():
     global _nodeos_URL
     _nodeos_URL = "http://" + "54.38.137.99:8888"
+    
+def set_tokenika():
+    global _nodeos_URL
+    _nodeos_URL = "https://" + "54.38.58.241:443"
 
 def nodeos_URL():
     global _nodeos_URL
     if not _nodeos_URL:
         return""
-
     return ["--url", _nodeos_URL]
     
 

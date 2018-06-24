@@ -131,7 +131,6 @@ namespace teos {
         }
 
         string args = string("")
-          + " --genesis-json " + reqJson_.get<string>("genesis-json")
           + " --http-server-address " 
           + reqJson_.get<string>("http-server-address")
           + " --data-dir " + reqJson_.get<string>("data-dir")
@@ -140,7 +139,8 @@ namespace teos {
           + " --chain-state-db-size-mb " + getMemorySizeMb()
           ;
         if(reqJson_.get("delete-all-blocks", false)) {
-          args += " --delete-all-blocks";
+          args += " --genesis-json " + reqJson_.get<string>("genesis-json")
+          + " --delete-all-blocks";
         }
         string commandLine = reqJson_.get<string>("daemon_exe") + args;
 

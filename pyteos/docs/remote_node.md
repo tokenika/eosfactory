@@ -36,7 +36,7 @@ Now, see that the remote node responses ...
 ... if it does, if you need a *wallet*, create it:
 ```
 >>> wallet_name = "tokenika"
->>> wallet = cleos.Wallet(wallet_name)
+>>> wallet = eosf.Wallet(wallet_name)
 Creating wallet: tokenika
 Save password to use in the future to unlock this wallet.
 Without password imported keys will not be retrievable.

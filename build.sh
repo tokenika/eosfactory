@@ -537,6 +537,11 @@ if [ ! -e "$EOSIO_CONTRACT_WORKSPACE__" ]; then
 fi
 
 printf "%s\n" "
+INSTALL a Python module that allows for color priting:
+sudo python3 -m pip install termcolor
+"
+
+printf "%s\n" "
 To verify EOSFactory installation navigate to the 'eosfactory' folder and run 
 these tests:
 "

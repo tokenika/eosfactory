@@ -1,76 +1,59 @@
 #!/usr/bin/python3
 
+"""
+Session initiation and storage for session elements.
+
+.. module:: sess
+    :platform: Unix, Windows
+    :synopsis: Session initiation and storage for session elements.
+
+.. moduleauthor:: Tokenika
+
+"""
+
 import setup
 import teos
 import cleos
 import eosf
-import unittest
-
-class TestSessionInit(unittest.TestCase):
-
-    setup.set_verbose(False)
-    cleos.dont_keosd()    
-
-    def run(self, result=None):
-        """ Stop after first error """      
-        if not result.failures:
-            super().run(result)
 
 
-    @classmethod
-    def setUpClass(cls):
-        pass
-        
-    def setUp(self):
-        pass
+def init():
+    """
+    Initialise a test session.
 
+    - **global variables**::
 
-    def test_04(self):
-        print("""
-Start a local test EOSIO node:
-        """)
-        ok = teos.node_reset()
-        self.assertTrue(ok)
-        
-        print("""
-Create a local wallet (not with EOSIO `keosd` application:
-        """)
-        global wallet
-        wallet = eosf.Wallet()
-        self.assertTrue(not wallet.error)
+        account_eosio: The primary EOSIO account predefined in the genesis file.
 
-        print("""
-Implement the `eosio` master account as a `cleos.AccountEosio` object:
-        """)
-        global account_eosio
-        account_eosio = cleos.AccountEosio()
+        alice, bob, carol: Prefabricated demo accounts.
 
-        print("""
-Create accounts `alice`, `bob` and `carol`:
-        """)
-        global alice
-        alice = eosf.Account()
-        self.assertTrue(not alice.error)
-        alice.account
-        wallet.import_key(alice)
+        key_owner, key_active: Cryptographic keys.
 
-        global bob
-        bob = eosf.Account()
-        self.assertTrue(not bob.error)
-        wallet.import_key(bob)        
+        wallet: The wallet holding keys.
 
-        global carol
-        carol = eosf.Account()
-        self.assertTrue(not carol.error)
-        wallet.import_key(carol)        
+        On error, return False.
+    """
 
+    global account_eosio
+    global wallet
+    global alice
+    global bob
+    global carol
 
-    def tearDown(self):
-        pass
+    wallet = eosf.Wallet()
 
-    @classmethod
-    def tearDownClass(cls):
-        pass
+    account_eosio = cleos.AccountEosio()
+    wallet.import_key(account_eosio)
+    
+    contract_eosio_bios = cleos.SetContract(account_eosio, "eosio.bios")
+    alice = eosf.Account()
+    wallet.import_key(alice)
+    bob = eosf.Account()
+    wallet.import_key(bob)
+    carol = eosf.Account()
+    wallet.import_key(carol)
 
-if __name__ == "__main__":
-    unittest.main()
+    if setup.is_verbose():
+        print("#  Available test accounts: " 
+            + account_eosio.name + ", "  
+            + alice.name + ", " + carol.name + ", " + bob.name + "\n")

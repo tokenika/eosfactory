@@ -8,6 +8,7 @@ import eosf
 import unittest
 import json
 import time
+from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
 setup.set_verbose(False)
 cleos.dont_keosd()
@@ -28,43 +29,63 @@ class Test1(unittest.TestCase):
 
 
     def test_04(self):
-        print("""
-Start a local test EOSIO node:
-        """)
+        global wallet
+        global account_eosio
+        global alice
+        global bob
+        global carol
+
+        cprint("""
+Start a local test EOSIO node, use `teos.node_reset()`:
+        """, 'magenta')
+
         ok = teos.node_reset()
         self.assertTrue(ok)
         
-        print("""
-Create a local wallet (not with EOSIO `keosd` application:
-        """)
-        global wallet
+        cprint("""
+Create a local wallet, use `wallet = eosf.Wallet()`:
+        """, 'magenta')
+
         wallet = eosf.Wallet()
         self.assertTrue(not wallet.error)
 
-        print("""
-Implement the `eosio` master account as a `cleos.AccountEosio` object:
-        """)
-        global account_eosio
-        account_eosio = cleos.AccountEosio()
+        cprint("""
+Implement the `eosio` master account as a `cleos.AccountEosio` object,
+use `account_eosio = cleos.AccountEosio()` 
+and `wallet.import_key(account_eosio)`:
+        """, 'magenta')
 
-        print("""
+        account_eosio = cleos.AccountEosio()
+        wallet.import_key(account_eosio)
+
+        cprint("""
+Deploy the `eosio.bios` contract, 
+use `cleos.SetContract(account_eosio, "eosio.bios")`:
+        """, 'magenta')
+
+        contract_eosio_bios = cleos.SetContract(account_eosio, "eosio.bios")
+        self.assertTrue(not contract_eosio_bios.error)
+
+        cprint("""
 Create accounts `alice`, `bob` and `carol`:
-        """)
-        global alice
+        """, 'magenta')
+        
         alice = eosf.Account()
         self.assertTrue(not alice.error)
         alice.account
         wallet.import_key(alice)
 
-        global bob
         bob = eosf.Account()
         self.assertTrue(not bob.error)
         wallet.import_key(bob)        
 
-        global carol
         carol = eosf.Account()
         self.assertTrue(not carol.error)
-        wallet.import_key(carol)        
+        wallet.import_key(carol) 
+
+        cprint("""
+Inspect the account, use `bob.account()`:
+        """, 'magenta')       
 
 
     def test_05(self):
@@ -73,56 +94,53 @@ Create accounts `alice`, `bob` and `carol`:
         global bob
         global carol
         global account_eosio
+        global contract_at
 
-        account = eosf.Account()
-        wallet.import_key(account)
+        account_at = eosf.Account()
+        wallet.import_key(account_at)
         
-        print(alice)
-        print(bob)
-        print(carol)
-        print(account)
 
-        self.contract = eosf.Contract(account, "eosio.token")
-        self.assertTrue(not self.contract.error)
+        contract_at = eosf.Contract(account_at, "eosio.token")
+        self.assertTrue(not contract_at.error)
 
-        print("""
-test contract.code():
-        """)
-        self.assertTrue(not self.contract.code().error)
+        cprint("""
+test contract_at.code():
+        """, 'magenta')
+        self.assertTrue(not contract_at.code().error)
 
-        print("""
-test contract.deploy():
-        """)
-        self.assertTrue(self.contract.deploy())
+        cprint("""
+test contract_at.deploy():
+        """, 'magenta')
+        self.assertTrue(contract_at.deploy())
 
-        print("""
-test contract.get_code():
-        """)
-        self.assertTrue(not self.contract.code().error)
+        cprint("""
+test contract_at.get_code():
+        """, 'magenta')
+        self.assertTrue(not contract_at.code().error)
 
-        print("""
-test contract.push_action("create"):
-        """)
-        self.assertTrue(not self.contract.push_action(
+        cprint("""
+test contract_at.push_action("create"):
+        """, 'magenta')
+        self.assertTrue(not contract_at.push_action(
             "create", 
             '{"issuer":"' 
                 + str(account_eosio) 
                 + '", "maximum_supply":"1000000000.0000 EOS", \
                 "can_freeze":0, "can_recall":0, "can_whitelist":0}').error)
 
-        print("""
-test contract.push_action("issue"):
-        """)
-        self.assertTrue(not self.contract.push_action(
+        cprint("""
+test contract_at.push_action("issue"):
+        """, 'magenta')
+        self.assertTrue(not contract_at.push_action(
             "issue", 
             '{"to":"' + str(alice)
                 + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
                 account_eosio).error)
 
-        print("""
-test contract.push_action("transfer", alice):
-        """)
-        self.assertTrue(not self.contract.push_action(
+        cprint("""
+test contract_at.push_action("transfer", alice):
+        """, 'magenta')
+        self.assertTrue(not contract_at.push_action(
             "transfer", 
             '{"from":"' 
                 + str(alice)
@@ -132,10 +150,10 @@ test contract.push_action("transfer", alice):
 
         time.sleep(1)
 
-        print("""
-test contract.push_action("transfer", carol):
-        """)
-        self.assertTrue(not self.contract.push_action(
+        cprint("""
+test contract_at.push_action("transfer", carol):
+        """, 'magenta')
+        self.assertTrue(not contract_at.push_action(
             "transfer", 
             '{"from":"' 
                 + str(carol)
@@ -143,10 +161,10 @@ test contract.push_action("transfer", carol):
                 + '", "quantity":"13.0000 EOS", "memo":"memo"}', 
             carol).error)
 
-        print("""
-test contract.push_action("transfer" bob):
-        """)
-        self.assertTrue(not self.contract.push_action(
+        cprint("""
+test contract_at.push_action("transfer" bob):
+        """, 'magenta')
+        self.assertTrue(not contract_at.push_action(
             "transfer", 
             '{"from":"' 
                 + str(bob)
@@ -155,40 +173,45 @@ test contract.push_action("transfer" bob):
                 + '", "quantity":"2.0000 EOS", "memo":"memo"}', 
             bob).error)
 
-        print("""
-test contract.get_table("accounts", alice):
-        """) 
-        t1 = self.contract.get_table("accounts", alice)
-        
-        print("""
-test contract.get_table("accounts", bob):
-        """)
+        cprint("""
+Get database table, use `contract_at.get_table("accounts", alice)`:
+        """, 'magenta')
 
-        t2 = self.contract.get_table("accounts", bob)
+        t1 = contract_at.get_table("accounts", alice)
         
-        print("""
-test contract.get_table("accounts", carol):
-        """)
-        t3 = self.contract.get_table("accounts", carol)
+        cprint("""
+Get database table, use `contract_at.get_table("accounts", bob)`:
+        """, 'magenta')
 
-        print("""
+        t2 = contract_at.get_table("accounts", bob)
+        
+        cprint("""
+Get database table, use `contract_at.get_table("accounts", carol)`:
+        """, 'magenta')
+        
+        t3 = contract_at.get_table("accounts", carol)
+
+        cprint("""
 self.assertTrue(t1.json["rows"][0]["balance"] == "77.0000 EOS":
-        """)
-        self.assertTrue(t1.json["rows"][0]["balance"] == '77.0000 EOS""")
-        
-        print("""
-self.assertTrue(t2.json["rows"][0]["balance"] == "11.0000 EOS":
-        """)
-        self.assertTrue(t2.json["rows"][0]["balance"] == '11.0000 EOS""")
-        
-        print("""
-self.assertTrue(t3.json["rows"][0]["balance"] == "12.0000 EOS":
-        """)
-        self.assertTrue(t3.json["rows"][0]["balance"] == '12.0000 EOS""")
+        """, 'magenta')
 
-        print("""
+        self.assertTrue(t1.json["rows"][0]["balance"] == '77.0000 EOS')
+        
+        cprint("""
+self.assertTrue(t2.json["rows"][0]["balance"] == "11.0000 EOS":
+        """, 'magenta')
+
+        self.assertTrue(t2.json["rows"][0]["balance"] == '11.0000 EOS')
+        
+        cprint("""
+self.assertTrue(t3.json["rows"][0]["balance"] == "12.0000 EOS":
+        """, 'magenta')
+
+        self.assertTrue(t3.json["rows"][0]["balance"] == '12.0000 EOS')
+
+        cprint("""
 test node.stop():
-        """)
+        """, 'magenta')
         teos.node_stop()
 
 

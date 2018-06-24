@@ -256,7 +256,7 @@ def node_reset():
         return False
 
 
-def node_start():
+def node_run():
     """ Restart the EOSIO local node.
 
     Return: `True` if `GeiInfo()` call is successful, otherwise `False`.

@@ -101,6 +101,7 @@ class Test1(unittest.TestCase):
     def test_56(self):
         global account_eosio
         account_eosio = cleos.AccountEosio()
+        wallet_import = cleos.WalletImport(account_eosio)
         print(json.dumps(account_eosio.json, indent=4))
         print(account_eosio.name)
         print(account_eosio.key_private)

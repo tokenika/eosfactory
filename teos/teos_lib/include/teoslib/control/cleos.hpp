@@ -17,11 +17,13 @@ namespace teos {
     class Cleos : public TeosControl
     {
       public:
-        Cleos(
-        vector<string> args, string first, string second,
-        bool isVerbose = 1, 
-        pair<string, string> okSubstring("", "") );
-    }
+        Cleos
+        (
+          vector<string> args, string first, string second,
+          bool isVerbose, 
+          pair<string, string> okSubstring 
+        );
+    };
 
   }
 }
