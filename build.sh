@@ -422,7 +422,7 @@ cd ${EOSIO_EOSFACTORY_DIR__}
 mkdir -p ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}/daemon/data-dir/wallet
 
-cp ${EOSIO_SOURCE_DIR}/programs/snapshot/genesis.json \
+cp ${EOSIO_EOSFACTORY_DIR__}/resources/genesis.json \
     ${BUILD_DIR}/daemon/data-dir/genesis.json
 cp ${EOSIO_EOSFACTORY_DIR__}/resources/config.ini \
     ${BUILD_DIR}/daemon/data-dir/config.ini

@@ -922,32 +922,38 @@ def account_name():
     
 class ManualAccount:
     def __init__(
-        self, name="", owner_key="", active_key="", is_verbose=True):
+        self, name="", owner_key_public="", active_key_public="", 
+        is_verbose=True):
 
-        if not owner_key:
-            self.new_account = True  
-            self.name = account_name()
+        if not owner_key_public:
+            self.new_account = True
+            if not name: 
+                self.name = account_name()
+            else:
+                self.name = name
+
             self.owner_key = CreateKey("owner", is_verbose=0)
             self.active_key = CreateKey("active", is_verbose=0)
-        else:
-            self.new_account = False
-            self.owner_key = owner_key
-            if not active_key:
-                self.active_key = owner_key
-            else:
-                self.active_key = active_key
-            self.name = name
-                
-    def __str__(self):
-        if self.new_account:
-            return \
-                "SAVE THE FOLLOWING DATA to use in the future to restore this" \
+            print("SAVE THE FOLLOWING DATA to use in the future to restore this" \
                 + "account object.\n" \
                 + "Accout Name: {}\n".format(self.name) \
                 + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
-                + "Active Public Key: {}\n".format(self.active_key.key_public)
+                + "Active Public Key: {}\n".format(self.active_key.key_public))
         else:
-            return "self.name"
+            self.name = name
+            self.new_account = False
+            self.owner_key = CreateKey("owner", owner_key_public, is_verbose=0)
+            if not active_key_public:
+                self.active_key = owner_key
+            else:
+                self.active_key = CreateKey(
+                    "active", active_key_public, is_verbose=0)
+    
+    def account(self):
+        return str(GetAccount(self.name, is_verbose=1))
+        
+    def __str__(self):
+        return self.name
 
 
 class AccountEosio():

@@ -1,6 +1,5 @@
 # python3 ./tests/unittest2.py
 
-import unittest
 import json
 import time
 import setup
@@ -57,7 +56,7 @@ Create an account to be equipped with a smart contract, namely:
 use `account_ttt = eosf.Account()`:
     """, 'magenta')
 
-    account_ttt = eosf.Account()
+    account_ttt = eosf.Account(account_eosio, "tic.tac.toe")
 
     cprint("""
 Put the account into the wallet, use `wallet.import_key(account_ttt)`:
@@ -119,8 +118,7 @@ Push actions to the contract. Begin with the `create` action:
     action_create = contract_ttt.push_action(
         "create", 
         '{"challenger":"' 
-        + str(alice) +'", "host":"' 
-        + str(bob) + '"}', bob)
+        + str(alice) +'", "host":"' + str(bob) + '"}', bob)
 
     cprint("""
 See the response of the node to the `create` action, 
@@ -139,15 +137,15 @@ See the result of the action:
 
     print(t.json)
 
-    # self.assertEqual(t.json["rows"][0]["board"][0] == "0")
-    # self.assertEqual(t.json["rows"][0]["board"][1] == "0")
-    # self.assertEqual(t.json["rows"][0]["board"][2], "0")
-    # self.assertEqual(t.json["rows"][0]["board"][3], "0")
-    # self.assertEqual(t.json["rows"][0]["board"][4], "0")
-    # self.assertEqual(t.json["rows"][0]["board"][5], "0")
-    # self.assertEqual(t.json["rows"][0]["board"][6], "0")
-    # self.assertEqual(t.json["rows"][0]["board"][7], "0")
-    # self.assertEqual(t.json["rows"][0]["board"][8], "0")
+    assert(t.json["rows"][0]["board"][0] == 0)
+    assert(t.json["rows"][0]["board"][1] == 0)
+    assert(t.json["rows"][0]["board"][2] == 0)
+    assert(t.json["rows"][0]["board"][3] == 0)
+    assert(t.json["rows"][0]["board"][4] == 0)
+    assert(t.json["rows"][0]["board"][5] == 0)
+    assert(t.json["rows"][0]["board"][6] == 0)
+    assert(t.json["rows"][0]["board"][7] == 0)
+    assert(t.json["rows"][0]["board"][8] == 0)
 
         
     action_move = contract_ttt.push_action(
@@ -167,50 +165,41 @@ See the result of the action:
 
     t = contract_ttt.get_table("games", bob)
 
-    print("NNNNNNNNNNNNNNNNNNNNNNNNNNN")
-    print(t.json)
-    print("NNNNNNNNNNNNNNNNNNNNNNNNNNN")
-
-#         self.assertEqual(t.json["rows"][0]["board"][0], "1")
-#         self.assertEqual(t.json["rows"][0]["board"][1], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][2], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][3], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][4], "2")
-#         self.assertEqual(t.json["rows"][0]["board"][5], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][6], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][7], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][8], "0")
+    assert(t.json["rows"][0]["board"][0] == 1)
+    assert(t.json["rows"][0]["board"][1] == 0)
+    assert(t.json["rows"][0]["board"][2] == 0)
+    assert(t.json["rows"][0]["board"][3] == 0)
+    assert(t.json["rows"][0]["board"][4] == 2)
+    assert(t.json["rows"][0]["board"][5] == 0)
+    assert(t.json["rows"][0]["board"][6] == 0)
+    assert(t.json["rows"][0]["board"][7] == 0)
+    assert(t.json["rows"][0]["board"][8] == 0)
 
 
-#     def test_03(self):
-#         self.assertTrue(
-#             self.contract_ttt.push_action(
-#             "restart", 
-#             '{"challenger":"alice", "host":"bob", "by":"bob"}',
-#             sess.bob), 
-#             "push_action restart")
+    action_restart = contract_ttt.push_action(
+        "restart", 
+        '{"challenger":"' 
+            + str(alice) + '", "host":"' 
+            + str(bob) + '", "by":"' + str(bob) + '"}',
+        bob)
 
-#         t = self.contract_ttt.get_table("games", sess.bob)
-#         self.assertFalse(t.error, "get_table")
+    t = contract_ttt.get_table("games", bob)
 
-#         self.assertEqual(t.json["rows"][0]["board"][0], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][1], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][2], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][3], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][4], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][5], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][6], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][7], "0")
-#         self.assertEqual(t.json["rows"][0]["board"][8], "0")
+    assert(t.json["rows"][0]["board"][0] == 0)
+    assert(t.json["rows"][0]["board"][1] == 0)
+    assert(t.json["rows"][0]["board"][2] == 0)
+    assert(t.json["rows"][0]["board"][3] == 0)
+    assert(t.json["rows"][0]["board"][4] == 0)
+    assert(t.json["rows"][0]["board"][5] == 0)
+    assert(t.json["rows"][0]["board"][6] == 0)
+    assert(t.json["rows"][0]["board"][7] == 0)
+    assert(t.json["rows"][0]["board"][8] == 0)
 
 
-#     def test_04(self):
-#         self.assertTrue(
-#             self.contract_ttt.push_action(
-#             "close", 
-#             '{"challenger":"alice", "host":"bob"}',
-#             sess.bob), 
-#             "push_action close")
+    action_close = contract_ttt.push_action(
+        "close", 
+        '{"challenger":"' 
+        + str(alice) + '", "host":"' + str(bob) + '"}', bob)
 
 
 if __name__ == "__main__":

@@ -20,6 +20,7 @@ import pathlib
 import setup
 import teos
 import cleos
+import cleos_system
 from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
 def reload():
@@ -92,6 +93,150 @@ class Wallet(cleos.WalletCreate):
         retval = retval + json.dumps(self.keys().json, indent=4) + "\n"
         return retval + json.dumps(self.list().json, indent=4) + "\n"
 
+class NewAccount():
+    """
+    """
+    def __init__(
+            self, 
+            creator="",     
+            stake_net="",
+            stake_cpu="",
+            owner_key="", active_key="",   
+            permission="", 
+            buy_ram_kbytes=0,
+            buy_ram="",
+            transfer=False,
+            expiration_sec=30, 
+            skip_signature=0, 
+            dont_broadcast=0,
+            forceUnique=0,
+            max_cpu_usage=0,
+            max_net_usage=0,
+            ref_block="",
+            is_verbose=1
+            ):
+
+        name = cleos.account_name()
+
+        if owner_key:
+            if not active_key:
+                active_key = owner_key
+        else:
+            owner_key = cleos.CreateKey("owner", is_verbose=-1)
+            active_key = cleos.CreateKey("active", is_verbose=-1)
+
+        if not creator:
+            creator = cleos.AccountEosio()
+
+        if not stake_net:
+            self.account = cleos.CreateAccount(
+                creator, name, owner_key, active_key,
+                permission,
+                expiration_sec, 
+                skip_signature, dont_broadcast, forceUnique,
+                max_cpu_usage, max_net_usage,
+                ref_block,
+                is_verbose=1
+            )
+        else:
+            self.account = cleos_system.SystemNewaccount(
+                    creator, name, owner_key, active_key,
+                    stake_net, stake_cpu,
+                    permission,
+                    buy_ram_kbytes, buy_ram,
+                    transfer,
+                    expiration_sec, 
+                    skip_signature, dont_broadcast, forceUnique,
+                    max_cpu_usage, max_net_usage,
+                    ref_block,
+                    is_verbose
+            )
+              
+        cleos.CreateAccount.__init__(
+            self, creator, name, 
+            owner_key, active_key,
+            permission,
+            expiration_sec, skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=is_verbose)    
+
+
+    def code(self, code="", abi="", wasm=False):
+        return cleos.GetCode(
+            self.name, code, abi, is_verbose=self.is_verbose)
+
+
+    def set_contract(
+            self, contract_dir, 
+            wast_file="", abi_file="", 
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=""):
+
+        self.set_contract = cleos.SetContract(
+            self.name, contract_dir, 
+            wast_file, abi_file, 
+            permission, expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=self.is_verbose
+        )
+
+        return self.set_contract
+
+
+    def push_action(
+            self, action, data,
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=""):
+        if not permission:
+            permission = self.name
+        else:
+            try: # permission is an account:
+                permission=permission.name
+            except: # permission is the name of an account:
+                permission=permission
+
+        self.action = cleos.PushAction(
+            self.name, action, data,
+            permission, expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=self.is_verbose)
+
+        if not self.action.error:
+            try:
+                self.console = self.action.console
+                if self.is_verbose > 0:
+                    print(self.console + "\n") 
+            except:
+                pass
+
+        return self.action
+
+
+    def get_table(
+            self, table, scope="", 
+            binary=False, 
+            limit=10, key="", lower="", upper=""):
+
+        self.table = cleos.GetTable(
+                                self.name, table, scope,
+                                binary, 
+                                limit, key, lower, upper,
+                                is_verbose=self.is_verbose)
+        return self.table
+
+
+    def __str__(self):
+        return self.name
+
 
 class Account(cleos.CreateAccount):
     """
@@ -99,6 +244,7 @@ class Account(cleos.CreateAccount):
     def __init__(
             self,
             creator="",
+            name="",
             owner_key="", 
             active_key="",
             permission="",
@@ -111,7 +257,8 @@ class Account(cleos.CreateAccount):
             ref_block="",
             is_verbose=1):
 
-        name = cleos.account_name()
+        if not name:
+            name = cleos.account_name()
 
         if owner_key:
             if not active_key:
