@@ -248,7 +248,10 @@ class WalletCreate(_Cleos):
         else:
             self.name = name
             self.password = password
+            self.ok_substring=["OK", ""] 
             self.json["password"] = self.password
+            self._out = "Restored wallet: {0}\nPassword is \n{1}\n" \
+                    .format(self.name, self.password)
 
         if not self.error:
             if self.is_verbose:
@@ -734,31 +737,40 @@ class CreateKey(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, key_name, r1=False, is_verbose=1):
-        args = []
-        if r1:
-            args.append("--r1")
+    def __init__(
+            self, key_name, key_public="", key_private="", r1=False, is_verbose=1):
 
-        _Cleos.__init__(
-            self, args, "create", "key", is_verbose, 
-            ok_substring=["Private key:", ""])
+        if key_public:
+            self.json["publicKey"] = key_public            
+            self.json["privateKey"] = key_private
+            self.ok_substring=["Private key:", ""]
+            self._out = "Private key: {0}\nPublic key: {1}\n" \
+                .format(key_private,key_public)
+        else:
+            args = []
+            if r1:
+                args.append("--r1")
 
-        self.json = {}
-        if not self.error:
-            self.json["name"] = key_name
-            msg = str(self._out)
-            first_collon = msg.find(":")
-            first_end = msg.find("\n")
-            second_collon = msg.find(":", first_collon + 1)
-            self.json["privateKey"] = msg[first_collon + 2 : first_end]
-            self.json["publicKey"] = msg[second_collon + 2 : len(msg) - 1]
+            _Cleos.__init__(
+                self, args, "create", "key", is_verbose, 
+                ok_substring=["Private key:", ""])
 
-            self.name = key_name
-            self.key_private = self.json["privateKey"]
-            self.key_public = self.json["publicKey"]
+            self.json = {}
+            if not self.error:
+                self.json["name"] = key_name
+                msg = str(self._out)
+                first_collon = msg.find(":")
+                first_end = msg.find("\n")
+                second_collon = msg.find(":", first_collon + 1)
+                self.json["privateKey"] = msg[first_collon + 2 : first_end]
+                self.json["publicKey"] = msg[second_collon + 2 : len(msg) - 1]
 
-            if self.is_verbose:
-                print(self.__str__())            
+                if self.is_verbose:
+                    print(self.__str__())
+
+        self.name = key_name
+        self.key_private = self.json["privateKey"]
+        self.key_public = self.json["publicKey"]
 
 
 class CreateAccount(_Cleos):
@@ -909,21 +921,33 @@ def account_name():
 
     
 class ManualAccount:
-    def __init__(self, name="", is_verbose=True):
-        if not name:
+    def __init__(
+        self, name="", owner_key="", active_key="", is_verbose=True):
+
+        if not owner_key:
+            self.new_account = True  
             self.name = account_name()
+            self.owner_key = CreateKey("owner", is_verbose=0)
+            self.active_key = CreateKey("active", is_verbose=0)
         else:
+            self.new_account = False
+            self.owner_key = owner_key
+            if not active_key:
+                self.active_key = owner_key
+            else:
+                self.active_key = active_key
             self.name = name
-
-        self.owner_key = CreateKey("owner", is_verbose=0)
-        self.active_key = CreateKey("active", is_verbose=0)
-        if is_verbose:
-            print(self.__str__()) 
-
+                
     def __str__(self):
-        return "Accout Name: {}\n".format(self.name) \
-            + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
-            + "Active Public Key: {}\n".format(self.active_key.key_public)
+        if self.new_account:
+            return \
+                "SAVE THE FOLLOWING DATA to use in the future to restore this" \
+                + "account object.\n" \
+                + "Accout Name: {}\n".format(self.name) \
+                + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
+                + "Active Public Key: {}\n".format(self.active_key.key_public)
+        else:
+            return "self.name"
 
 
 class AccountEosio():

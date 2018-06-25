@@ -87,7 +87,7 @@ class Wallet(cleos.WalletCreate):
         """
         return cleos.WalletKeys(is_verbose=self.is_verbose)
 
-    def __str__(self):
+    def info(self):
         retval = json.dumps(self.json, indent=4) + "\n"
         retval = retval + json.dumps(self.keys().json, indent=4) + "\n"
         return retval + json.dumps(self.list().json, indent=4) + "\n"

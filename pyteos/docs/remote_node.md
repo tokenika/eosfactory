@@ -1,5 +1,150 @@
 # Tests with a remote node
 
+## Getting testnet account
+
+Go to the *python* interpreter:
+```bash
+$ python3
+```
+```python
+>>> import setup
+>>> import cleos
+>>> import eosf
+
+>>> setup.set_cryptolions()
+```
+The above will cause *EOSFactory* to use [*cryptolions*](http://dev.cryptolions.io/#home) (http://54.38.137.99:8888) testnet.
+
+Create a wallet, if you do not any ...
+```
+>>> wallet_name = "tokenika"
+>>> wallet = eosf.Wallet(wallet_name)
+Creating wallet: tokenika
+Save password to use in the future to unlock this wallet.
+Without password imported keys will not be retrievable.
+"PW5K1kaARAqjMgQ4vd4NtoDvkqbuz4tcQuSfWRL3bXLbrDPb2a8j7"
+
+>>> tokenika_pass = "PW5J3NBesBhoepcn6gCpXSfbYZs7jFt7kqH5D1csErDwN3L9qHFs4"
+```
+... but if you have one, the `Wallet` object with a password that you have kept:
+```
+>>> wallet = eosf.Wallet(
+                "tokenika", "PW5K1kaARAqjMgQ4vd4NtoDvkqbuz4tcQuSfWRL3bXLbrDPb2a8j7")
+Restored wallet: tokenika
+Password is
+PW5K1kaARAqjMgQ4vd4NtoDvkqbuz4tcQuSfWRL3bXLbrDPb2a8j7
+```
+
+```
+>>> ok =  wallet.open()
+Opened: tokenika
+>>> ok = wallet.unlock()
+Unlocked: tokenika
+```
+
+Register an account on the [*cryptolions*](http://dev.cryptolions.io/#home) testnet:
+```
+>>> import setup
+>>> import cleos
+>>> import eosf
+>>> setup.set_cryptolions()
+
+>>> account_master = cleos.ManualAccount()
+
+>>> print(account_master)
+SAVE THE FOLLOWING DATA to use in the future to restore this account object.
+Accout Name: vkgljdlpxuip
+Owner Public Key: EOS7m5MaQPX6xWjqTm8EW1PJ1mXL6pV6nhotGsjK9woNS2wE723BL
+Active Public Key: EOS5wgQCZATqBwhiatufUs3NyWbDX2TzgBvGa4TpXdDLGnQNUV31k
+```
+Use the above output data to feed the *Create Account* form. 
+
+You can see the result:
+```
+>>> ok = cleos.GetAccount(account_master)
+permissions:
+     owner     1:    1 EOS7m5MaQPX6xWjqTm8EW1PJ1mXL6pV6nhotGsjK9woNS2wE723BL
+        active     1:    1 EOS5wgQCZATqBwhiatufUs3NyWbDX2TzgBvGa4TpXdDLGnQNUV31k
+memory:
+     quota:     527.5 KiB    used:     3.365 KiB
+
+net bandwidth:
+     staked:        100.0000 EOS           (total stake delegated from account to self)
+     delegated:       0.0000 EOS           (total staked delegated to account from others)
+     used:                 0 bytes
+     available:         19.2 MiB
+     limit:             19.2 MiB
+
+cpu bandwidth:
+     staked:        100.0000 EOS           (total stake delegated from account to self)
+     delegated:       0.0000 EOS           (total staked delegated to account from others)
+     used:                 0 us
+     available:        3.842 sec
+     limit:            3.842 sec
+
+producers:     <not voted>
+```
+```
+>>> ok = wallet.unlock()
+>>> ok = wallet.import_key(account_master)
+```
+
+## Using remote testnet
+
+Restore both the wallet and the master account:
+```
+import setup
+import teos
+import cleos
+import eosf
+
+setup.set_cryptolions()
+
+>>> wallet = eosf.Wallet(
+                "tokenika", "PW5K1kaARAqjMgQ4vd4NtoDvkqbuz4tcQuSfWRL3bXLbrDPb2a8j7")
+Restored wallet: tokenika
+Password is
+PW5K1kaARAqjMgQ4vd4NtoDvkqbuz4tcQuSfWRL3bXLbrDPb2a8j7
+
+>>> ok = wallet.open()
+Opened: tokenika
+>>> ok = wallet.unlock()
+Unlocked: tokenika
+
+>>> account_master = cleos.ManualAccount(
+        "vkgljdlpxuip",
+        "EOS7m5MaQPX6xWjqTm8EW1PJ1mXL6pV6nhotGsjK9woNS2wE723BL",
+        "EOS5wgQCZATqBwhiatufUs3NyWbDX2TzgBvGa4TpXdDLGnQNUV31k")
+
+
+Create a new account:
+```
+>>> account_new = eosf.Account(account_master)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+## ????????????????????????????????????????????????????????????????????????
+
+
+
+
+
+
+
+
+
+
 > ## First session
 
 ### Get contact with the *Tokenika* node and have a *wallet*
@@ -58,14 +203,14 @@ Unlocked: tokenika
 Register an account on the [*cryptolions*](http://dev.cryptolions.io/#home) testnet:
 ```
 >>> setup.set_cryptolions()
->>> account_first = eosf.ManualAccount()
+>>> account_master = eosf.ManualAccount()
 Accout Name: vkgljdlpxuip
 Owner Public Key: EOS7m5MaQPX6xWjqTm8EW1PJ1mXL6pV6nhotGsjK9woNS2wE723BL
 Active Public Key: EOS5wgQCZATqBwhiatufUs3NyWbDX2TzgBvGa4TpXdDLGnQNUV31k
 ```
 Use the above output data to feed the *Create Account* form. You can see the result:
 ```
->>> ok = cleos.GetAccount(account_first)
+>>> ok = cleos.GetAccount(account_master)
 permissions:
      owner     1:    1 EOS7m5MaQPX6xWjqTm8EW1PJ1mXL6pV6nhotGsjK9woNS2wE723BL
         active     1:    1 EOS5wgQCZATqBwhiatufUs3NyWbDX2TzgBvGa4TpXdDLGnQNUV31k
@@ -98,7 +243,7 @@ Error 3120007: Already unlocked
 Error Details:
 Wallet is already unlocked: tokenika
 
->>> wallet.import_key(account_first)
+>>> wallet.import_key(account_master)
 'imported private key for: EOS8fKnPAWfmjBSsD2Fq37kzBWfwRFQUke8oGUSZ2tDkVH7ehv8D8\n'
 ```
 
@@ -108,7 +253,7 @@ Wallet is already unlocked: tokenika
 >>> ok = wallet.unlock()
 Unlocked: tokenika
 
->>> account_second = eosf.Account(account_first)
+>>> account_second = eosf.Account(account_master)
 ERROR:
 Error 3080001: account using more than allotted RAM usage
 
