@@ -70,34 +70,34 @@ Inspect the account, use `bob.account()`:
 
     print(bob.account())       
 
-    account_at = eosf.Account()
-    wallet.import_key(account_at)
+    account_et = eosf.Account()
+    wallet.import_key(account_et)
     
-    contract_at = eosf.Contract(account_at, "eosio.token")
+    contract_et = eosf.Contract(account_et, "eosio.token")
 
     cprint("""
-test contract_at.code():
+test contract_et.code():
     """, 'magenta')
 
-    print("code hash: ".format(contract_at.code()))
+    print("code hash: ".format(contract_et.code()))
 
     cprint("""
-test contract_at.deploy():
+test contract_et.deploy():
     """, 'magenta')
 
-    ok = contract_at.deploy()
+    ok = contract_et.deploy()
 
     cprint("""
-test contract_at.get_code():
+test contract_et.get_code():
     """, 'magenta')
 
-    print("code hash: ".format(contract_at.code()))
+    print("code hash: ".format(contract_et.code()))
 
     cprint("""
-test contract_at.push_action("create"):
+test contract_et.push_action("create"):
     """, 'magenta')
     
-    action = contract_at.push_action(
+    action = contract_et.push_action(
         "create", 
         '{"issuer":"' 
             + str(account_eosio) 
@@ -105,20 +105,20 @@ test contract_at.push_action("create"):
             "can_freeze":0, "can_recall":0, "can_whitelist":0}')
 
     cprint("""
-test contract_at.push_action("issue"):
+test contract_et.push_action("issue"):
     """, 'magenta')
 
-    action = contract_at.push_action(
+    action = contract_et.push_action(
         "issue", 
         '{"to":"' + str(alice)
             + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
             account_eosio)
 
     cprint("""
-test contract_at.push_action("transfer", alice):
+test contract_et.push_action("transfer", alice):
         """, 'magenta')
         
-    action = contract_at.push_action(
+    action = contract_et.push_action(
         "transfer", 
         '{"from":"' 
             + str(alice)
@@ -129,10 +129,10 @@ test contract_at.push_action("transfer", alice):
     time.sleep(1)
 
     cprint("""
-test contract_at.push_action("transfer", carol):
+test contract_et.push_action("transfer", carol):
     """, 'magenta')
         
-    action = contract_at.push_action(
+    action = contract_et.push_action(
         "transfer", 
         '{"from":"' 
             + str(carol)
@@ -141,10 +141,10 @@ test contract_at.push_action("transfer", carol):
         carol)
 
     cprint("""
-test contract_at.push_action("transfer" bob):
+test contract_et.push_action("transfer" bob):
     """, 'magenta')
         
-    action = contract_at.push_action(
+    action = contract_et.push_action(
         "transfer", 
         '{"from":"' 
             + str(bob)
@@ -154,22 +154,22 @@ test contract_at.push_action("transfer" bob):
         bob)
 
     cprint("""
-Get database table, use `contract_at.get_table("accounts", alice)`:
+Get database table, use `contract_et.get_table("accounts", alice)`:
     """, 'magenta')
 
-    t1 = contract_at.get_table("accounts", alice)
+    t1 = contract_et.get_table("accounts", alice)
     
     cprint("""
-Get database table, use `contract_at.get_table("accounts", bob)`:
+Get database table, use `contract_et.get_table("accounts", bob)`:
     """, 'magenta')
 
-    t2 = contract_at.get_table("accounts", bob)
+    t2 = contract_et.get_table("accounts", bob)
     
     cprint("""
-Get database table, use `contract_at.get_table("accounts", carol)`:
+Get database table, use `contract_et.get_table("accounts", carol)`:
     """, 'magenta')
     
-    t3 = contract_at.get_table("accounts", carol)
+    t3 = contract_et.get_table("accounts", carol)
 
     cprint("""
 assert(t1.json["rows"][0]["balance"] == "77.0000 EOS":

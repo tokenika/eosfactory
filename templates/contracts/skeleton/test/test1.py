@@ -1,43 +1,152 @@
-import node
-import sess
-from eosf import *
+# python3 ./tests/unittest3.py
+
+import json
+import setup
+import teos
+import cleos
+import eosf
+from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
 CONTRACT_NAME = "@CONTRACT_NAME@"
-set_verbose(False)
 
-def run():
-    print('test node.reset():')
-    assert node.reset()
+cprint("""
+Use `cleos.dont_keosd()` instruction, then the wallets used for test are not
+managed by the EOSIO keosd and, hence, can be safely manipulated.
 
-    print('test sess.init():')
-    assert sess.init()
+If you use `setup.set_verbose(True)`, you can see the response messages of the
+issued commands.
+""", 'magenta')
+cleos.dont_keosd()
+setup.set_verbose(True)
+setup.set_json(False)
 
-    print('test Contract():')
-    c = Contract(CONTRACT_NAME)
-    assert c.is_created()
 
-    print('test c.deploy():')
-    assert c.deploy()
+def test():
 
-    print('test c.get_code():')
-    assert c.get_code()
+    cprint("""
+Start a local test EOSIO node, use `teos.node_reset()`:
+    """, 'magenta')
 
-    print('test c.push_action("hi", sess.alice):')
-    assert c.push_action("hi", '{"user":"alice"}', sess.alice)
+    ok = teos.node_reset()
+        
+    cprint("""
+Create a local wallet, use `wallet = eosf.Wallet()`:
+    """, 'magenta')
 
-    print('test c.push_action("hi", sess.carol):')
-    assert c.push_action("hi", '{"user":"carol"}', sess.carol)
+    wallet = eosf.Wallet()
 
-    set_suppress_error_msg(True)
-    print('test c.push_action("hi", sess.alice):')
-    assert not c.push_action("hi", '{"user":"carol"}', sess.alice)
-    set_suppress_error_msg(False)
+    cprint("""
+Implement the `eosio` master account as a `cleos.AccountEosio` object,
+use `account_eosio = cleos.AccountEosio()` 
+and `wallet.import_key(account_eosio)`:
+    """, 'magenta')
+
+    account_eosio = cleos.AccountEosio()
+    wallet.import_key(account_eosio)
+
+    cprint("""
+Deploy the `eosio.bios` contract, 
+use `cleos.SetContract(account_eosio, "eosio.bios")`:
+        """, 'magenta')
+
+    contract_eosio_bios = cleos.SetContract(account_eosio, "eosio.bios")
+
+    contract_dir = CONTRACT_NAME
+
+    cprint("""
+Create a new contract workplace, rooted at `contract_dir = CONTRACT_NAME`, and 
+populate if with elements of a template workspace,
+use `teos.Template(contract_dir)`: 
+    """, 'magenta')
     
-    print('test node.stop():')
-    node.stop()
+    template = teos.Template(contract_dir, remove_existing=True)
+    print("template path is {}".format(template.contract_path_absolute))
+
+    cprint("""
+Create an account for the contract of the workspace. The account is 
+represented with an object of the class `eosf.Account`,
+use `account_test = eosf.Account()`:
+    """, 'magenta')
+
+    account_test = eosf.Account()
+
+    cprint("""
+Put the account `account_test` to the wallet, 
+use `wallet.import_key(account_test)` ...
+    """, 'magenta')
+
+    wallet.import_key(account_test)
+
+    cprint("""
+... and define an object of the class `eosf.Contract` that represents the
+the contract, use `contract_test = eosf.Contract(account_test, contract_dir)`:
+    """, 'magenta')
+
+    contract_test = eosf.Contract(account_test, contract_dir)
+
+    cprint("""
+Deploy the contract use `contract_test.deploy()`:
+    """, 'magenta')
+
+    ok = contract_test.deploy()
+
+    cprint("""
+Confirm that the account `account_test` contains a contract code:
+    """, 'magenta')
+
+    code = account_test.code()
+    print("code hash: {}".format(code.code_hash))
+
+    cprint("""
+Create accounts `alice`and `carol` and put them into the wallet, 
+use `alice = eosf.Account()` and `wallet.import_key(alice)`:
+        """, 'magenta')
+
+    alice = eosf.Account()
+    wallet.import_key(alice)
+
+    carol = eosf.Account()
+    wallet.import_key(carol) 
+
+    cprint("""
+Inspect an account, use `alice.account()`:
+    """, 'magenta')
+
+    alice.account()
+
+    cprint("""
+Invoke an action of the contract, 
+use `contract_test.push_action("hi", '{"user":"' + str(alice) + '"}', alice)`:
+    """, 'magenta')
+
+    action_hi = contract_test.push_action(
+        "hi", '{"user":"' + str(alice) + '"}', alice)
+
+    action_hi = contract_test.push_action(
+        "hi", 
+        '{"user":"' + str(carol) + '"}', carol)
     
-    print("Test OK")
+    cprint("""
+This should fail due to authority mismatch:
+    """, 'magenta')
+
+    action_hi = contract_test.push_action(
+        "hi", 
+        '{"user":"' + str(carol) + '"}', alice)
+        
+
+    def test_80(self):
+        global template
+        self.assertTrue(template.delete())
+
+    def tearDown(self):
+        pass
+
+
+    @classmethod
+    def tearDownClass(cls):
+        teos.node_stop()
 
 
 if __name__ == "__main__":
-    run()
+    test()

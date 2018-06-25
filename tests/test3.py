@@ -153,6 +153,5 @@ This should fail due to authority mismatch:
         teos.node_stop()
 
 
-
 if __name__ == "__main__":
     test()

@@ -85,7 +85,9 @@ Create accounts `alice`, `bob` and `carol`:
 
         cprint("""
 Inspect the account, use `bob.account()`:
-        """, 'magenta')       
+        """, 'magenta')     
+
+        print(bob.account())   
 
 
     def test_05(self):
