@@ -51,22 +51,22 @@ class Test1(unittest.TestCase):
         contract_eosio_bios = cleos.SetContract( account_eosio, "eosio.bios")
         self.assertTrue(not contract_eosio_bios.error)
 
-        alice = eosf.Account()
+        alice = eosf.account()
         self.assertTrue(not alice.error)
         wallet.import_key(alice)
 
-        bill = eosf.Account()
+        bill = eosf.account()
         self.assertTrue(not bill.error)
         wallet.import_key(bill)  
 
-        carol = eosf.Account()
+        carol = eosf.account()
         self.assertTrue(not carol.error)
         wallet.import_key(carol)
 
     def test_11(self):
         global wallet
 
-        account = eosf.Account()
+        account = eosf.account()
         self.assertTrue(not account.error)
         wallet.import_key(account.active_key)
 
@@ -90,7 +90,7 @@ Create a new contract template directory:
         print(colored("""
 Again, create a new account, and add a contract to it:
         """, 'magenta'))
-        account = eosf.Account()
+        account = eosf.account()
         self.assertTrue(not account.error)
         wallet.import_key(account.owner_key)
         wallet.import_key(account.active_key)
@@ -123,7 +123,7 @@ Use the `build` method of the `eosf.Contract` object:
         global alice
         global carol
 
-        account = eosf.Account()
+        account = eosf.account()
         self.assertTrue(not account.error)
         wallet.import_key(account.active_key)
 
@@ -182,7 +182,7 @@ contract.get_table(alice.name, "accounts")
         global account_eosio
         global key_owner
 
-        account_tokenika = eosf.Account()
+        account_tokenika = eosf.account()
         ok = wallet.import_key(account_tokenika)
         self.assertTrue(not account_tokenika.error)
         print(account_tokenika)

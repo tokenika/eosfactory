@@ -53,10 +53,10 @@ use `cleos.SetContract(account_eosio, "eosio.bios")`:
     cprint("""
 Create an account to be equipped with a smart contract, namely:
 "tic_tac_toe" from the EOSIO repository, 
-use `account_ttt = eosf.Account()`:
+use `account_ttt = eosf.account()`:
     """, 'magenta')
 
-    account_ttt = eosf.Account(account_eosio, "tic.tac.toe")
+    account_ttt = eosf.account(name="tic.tac.toe")
 
     cprint("""
 Put the account into the wallet, use `wallet.import_key(account_ttt)`:
@@ -86,7 +86,7 @@ See the response of the node, use `print(contract.contract_ttt)`:
     """, 'magenta')
 
     cprint("""
-Confirm that the account `account_test` contains a contract code:
+Confirm that the account `account_test` contains the contract code:
     """, 'magenta')
 
     code = account_ttt.code()
@@ -94,16 +94,15 @@ Confirm that the account `account_test` contains a contract code:
 
     time.sleep(1)
 
-
     cprint("""
 Create accounts `alice`and `bob`, 
-use `alice = eosf.Account()` and `wallet.import_key(alice)`:
+use `alice = eosf.account()` and `wallet.import_key(alice)`:
     """, 'magenta')
 
-    alice = eosf.Account()
+    alice = eosf.account()
     wallet.import_key(alice)
 
-    bob = eosf.Account()
+    bob = eosf.account()
     wallet.import_key(bob)        
 
     cprint("""

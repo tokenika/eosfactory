@@ -57,13 +57,13 @@ use `cleos.SetContract(account_eosio, "eosio.bios")`:
 Create accounts `alice`, `bob` and `carol`:
     """, 'magenta')
     
-    alice = eosf.Account()
+    alice = eosf.account()
     wallet.import_key(alice)
 
-    bob = eosf.Account()
+    bob = eosf.account()
     wallet.import_key(bob)        
 
-    carol = eosf.Account()
+    carol = eosf.account()
     wallet.import_key(carol) 
 
     cprint("""
@@ -72,7 +72,7 @@ Inspect the account, use `bob.account()`:
 
     print(bob.account())       
 
-    account_et = eosf.Account()
+    account_et = eosf.account()
     wallet.import_key(account_et)
     
     contract_et = eosf.Contract(account_et, CONTRACT_NAME)

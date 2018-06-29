@@ -25,7 +25,7 @@ Save password to use in the future to unlock this wallet.
 Without password imported keys will not be retrievable.
 "PW5KRg1DeMrafTRbrYH44xNz9utzAX9JPC8ugYqH6PspVqPVUQBwQ"
 
->>> tokenika_pass = "PW5JQkdogSY5Q1U4WEzp1hzHy5xv5i2Arb7E2aRNESbDxxdsjdfAH"
+>>> tokenika_pass = "PW5KRg1DeMrafTRbrYH44xNz9utzAX9JPC8ugYqH6PspVqPVUQBwQ"
 ```
 ... but if you have one, the `Wallet` object with a password that you have kept:
 ```
@@ -50,15 +50,11 @@ Register an account on the [*cryptolions*](http://dev.cryptolions.io/#home) test
 >>> import eosf
 >>> setup.set_cryptolions()
 
->>> account_master = cleos.ManualAccount()
+>>> account_master = cleos.AccountMaster()
 SAVE THE FOLLOWING DATA to use in the future to restore thisaccount object.
 Accout Name: upe1ahhgb3xq
 Owner Public Key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
 Active Public Key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
-
-#>>> print(account_master.owner_key)
-#Private key: 5JkcycNLgJHsawz5Sw4cFjjWEs5rSEAYaPR3GwwgPnYGC2rS213
-#Public key: EOS5Hf9xk8S15fqznskXVFFeZQW53VjZiFXSDpCMLmovtoPP8NzBK
 
 >>> print(account_master.owner_key)
 Private key: 5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp
@@ -120,8 +116,9 @@ import
 setup.set_cryptolions()
 
 >>> wallet = eosf.Wallet(
+                "tokenika"
                 "PW5KRg1DeMrafTRbrYH44xNz9utzAX9JPC8ugYqH6PspVqPVUQBwQ"
-                "tokenika", "")
+                )
 Restored wallet: tokenika
 Password is
 "PW5KRg1DeMrafTRbrYH44xNz9utzAX9JPC8ugYqH6PspVqPVUQBwQ"
@@ -132,7 +129,7 @@ Opened: tokenika
 >>> ok = wallet.unlock()
 Unlocked: tokenika
 
->>> account_master = cleos.ManualAccount(
+>>> account_master = cleos.AccountMaster(
         "vkgljdlpxuip",
         "EOS5Hf9xk8S15fqznskXVFFeZQW53VjZiFXSDpCMLmovtoPP8NzBK",
         "EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP")

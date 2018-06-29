@@ -13,7 +13,7 @@ Python front-end for `EOSIO cleos`.
 
 import os
 import subprocess
-import json
+import json as json_module
 import pprint
 import re
 import pathlib
@@ -40,7 +40,7 @@ def reset_nodeos_URL():
     setup.set_nodeos_URL(url)
 
 
-_dont_keosd = []
+_wallet_url = []
 def dont_keosd(status=True):
     """ Do not use `keosd` Wallet Manager.
 
@@ -51,15 +51,20 @@ def dont_keosd(status=True):
     `teos.node_reset()` function, what is desired when testing smart contracts
     locally.
     """
-    global _dont_keosd
+    global _wallet_url
     if status:
         WalletStop(is_verbose=-1)
         config = teos.GetConfig(
             "", is_verbose=0)
-        _dont_keosd = ["--wallet-url", "http://" \
+        _wallet_url = ["--wallet-url", "http://" \
             + config.json["EOSIO_DAEMON_ADDRESS"]]
     else:
-        _dont_keosd = []
+        _wallet_url = []
+
+
+def is_keosd():
+    return not _wallet_url != []
+
 
 class _Cleos:
     """ A prototype for the `cleos` command classes. 
@@ -72,10 +77,24 @@ class _Cleos:
     err_msg = ""
     _out = ""
 
+    def copy_from(self, from_object):
+        self.error = from_object.error
+        self.is_verbose = from_object.is_verbose
+        self.json = from_object.json
+        self.err_msg = from_object.err_msg
+        self._out = from_object._out
+
+
+    def copy_to(self, to_object):
+        to_object.error = self.error
+        to_object.is_verbose = self.is_verbose
+        to_object.json = self.json
+        to_object.err_msg = self.err_msg
+        to_object._out = self._out
+
+
     def __init__(
-                self, args, first, second, 
-                is_verbose=1, 
-                ok_substring=["OK", ""]):
+                self, args, first, second, is_verbose=1):
 
         cl = [setup_setup.cleos_exe]
 
@@ -83,18 +102,17 @@ class _Cleos:
             reset_nodeos_URL()
         cl.extend(setup.nodeos_URL())
 
-        global _dont_keosd
-        cl.extend(_dont_keosd)
+        global _wallet_url
+        cl.extend(_wallet_url)
 
         if setup.is_print_request():
             cl.append("--print-request")
         if setup.is_print_response():
             cl.append("--print-response")
-
+  
         cl.extend([first, second])
         cl.extend(args)
         self.args = args
-        self.ok_substring = ok_substring
 
         if setup.is_debug_mode():
             print("command line sent to cleos:")
@@ -109,7 +127,7 @@ class _Cleos:
 
         self._out = process.stdout.decode("utf-8")
         self.err_msg = process.stderr.decode("utf-8")
-        self.is_verbose = setup.is_verbose() and is_verbose >0
+        self.is_verbose = setup.is_verbose() and is_verbose > 0
 
         if setup.is_print_response() or setup.is_print_response():
             print(self.err_msg)
@@ -121,15 +139,15 @@ class _Cleos:
         # print(self.is_verbose)
         # # print(self._out)
         # # print(self.err_msg)
-        # # print(ok_substring)
-        # # print(ok_substring not in self._out)
         # print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
 
-        self.error = not ( \
-                (not ok_substring[0] is '' and ok_substring[0] in self._out) \
-                or \
-                (not ok_substring[1] is '' and ok_substring[1] in self.err_msg) \
-            )
+        error_key_words = ["Error", "error", "Failed"]
+        self.error = False
+        for word in error_key_words:
+            if word in self.err_msg:
+                self.error = True
+                break
+
         self.json = {}
 
         if self.error:
@@ -140,10 +158,8 @@ class _Cleos:
                 print("")
 
     def __str__(self):
-        if self.ok_substring[0]:
-            out = self._out + "\n"
-        if self.ok_substring[1]:
-            out = out + self.err_msg
+        out = self._out + "\n"
+        out = out + self.err_msg
         return out
     
     def __repr__(self):
@@ -167,17 +183,26 @@ class GetAccount(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.    
     """
-    def __init__(self, account, is_verbose=1):
+    def __init__(self, account, is_verbose=1, json=False):
         try:
             self.account_name = account.name
         except:
             self.account_name = account
 
+        args = [self.account_name]
+        if setup.is_json() or json:
+            args.append("--json")
+
         _Cleos.__init__(
-            self, [self.account_name], 
-            "get", "account", is_verbose, ok_substring=["permissions", ""])
+            self, args, "get", "account", is_verbose)
 
         if not self.error:
+            try:
+                j = json_module.loads(self._out)
+                self.json = j
+            except:
+                pass
+
             if self.is_verbose:
                 print(self.__str__())
 
@@ -204,11 +229,10 @@ class GetAccounts(_Cleos):
             key_public = key
 
         _Cleos.__init__(
-            self, [key_public], "get", "accounts", is_verbose, 
-            ok_substring=["{\n", ""])
+            self, [key_public], "get", "accounts", is_verbose)
         
         if not self.error:
-            self.json = json.loads(self._out)
+            self.json = json_module.loads(self._out)
             self.names = self.json['account_names']
             if self.is_verbose:
                 print(self.__str__())
@@ -232,26 +256,35 @@ class WalletCreate(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.  
     """
-    def __init__(self, name="default", password="", is_verbose=1):
+    def __init__(self, name="default", password="", is_verbose=1):    
         self.name = name
         self.json = {}
         self.json["name"] = name
 
         if not password:
             _Cleos.__init__(
-                self, ["--name", self.name], "wallet", "create", is_verbose,
-                ok_substring=["Creating wallet:", ""])
+                self, ["--name", self.name], "wallet", "create", is_verbose)
+            
             msg = self._out
             if not self.error:
                 self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
-                self.json["password"] = self.password
+                self.json["password"] = self.password               
         else:
-            self.name = name
-            self.password = password
-            self.ok_substring=["OK", ""] 
-            self.json["password"] = self.password
-            self._out = "Restored wallet: {0}\nPassword is \n{1}\n" \
+            WalletOpen(name, is_verbose=-1)
+            wallet_unlock = WalletUnlock(name, password, is_verbose=-1)
+            self.err_msg = wallet_unlock.err_msg  
+
+            if not wallet_unlock.error:
+                self.name = name
+                self.password = password
+                self.json["password"] = self.password
+                self._out = "Restored wallet: {0}\nPassword is \n{1}\n" \
                     .format(self.name, self.password)
+            else:
+                if "Nonexistent wallet" in self.err_msg:
+                    _Cleos.__init__(
+                        self, ["--name", self.name], "wallet", "create", 
+                        is_verbose)
 
         if not self.error:
             if self.is_verbose:
@@ -263,9 +296,7 @@ class WalletStop(_Cleos):
     Usage: WalletStop(is_verbose=1)
     """
     def __init__(self, is_verbose=1):
-        _Cleos.__init__(
-            self, [], 
-            "wallet", "stop", is_verbose)
+        _Cleos.__init__(self, [], "wallet", "stop", is_verbose)
 
         os.system("pkill keosd")
 
@@ -291,11 +322,10 @@ class WalletList(_Cleos):
     """
     def __init__(self, is_verbose=1):
         _Cleos.__init__(
-            self, [], "wallet", "list", is_verbose, 
-            ok_substring=["Wallets", ""])
+            self, [], "wallet", "list", is_verbose)
 
         if not self.error:
-            self.json = json.loads("{" + self._out.replace("Wallets", \
+            self.json = json_module.loads("{" + self._out.replace("Wallets", \
                 '"Wallets"', 1) + "}")
 
             if self.is_verbose:
@@ -341,8 +371,7 @@ class WalletImport(_Cleos):
 
         _Cleos.__init__(
             self, [key_private, "--name", wallet_name], 
-            "wallet", "import", is_verbose, 
-            ok_substring=["imported private key for:", ""])
+            "wallet", "import", is_verbose)
 
         if not self.error:
             self.json = {}
@@ -376,15 +405,19 @@ class WalletKeys(_Cleos):
     """
     def __init__(self, is_verbose=1):
         _Cleos.__init__(
-            self, [], "wallet", "keys", is_verbose, 
-            ok_substring=['[\n  "', ""])
+            self, [], "wallet", "keys", is_verbose)
 
+        self.json = {}
         if not self.error:
-            self.json = {}
-            msg = [self._out.replace("\n", "")]
-            self.json["keys"] = msg
+            if self._out == "[]\n":
+                self.json[""] = []
+            else:
+                self.json[""] = self._out.replace("\n", "") \
+                    .replace("[  ", "").replace('"',"").replace("]", "") \
+                    .split(",  ")              
 
             if self.is_verbose:
+                print("Keys in all opened wallets:")
                 print(self.__str__())            
 
 
@@ -413,8 +446,7 @@ class WalletOpen(_Cleos):
             wallet_name = wallet
         
         _Cleos.__init__(
-            self, ["--name", wallet_name], "wallet", "open", is_verbose,
-            ok_substring=["Opened:", ""])
+            self, ["--name", wallet_name], "wallet", "open", is_verbose)
 
         if not self.error:
             if self.is_verbose:
@@ -446,8 +478,7 @@ class WalletLock(_Cleos):
             wallet_name = wallet
         
         _Cleos.__init__(
-            self, ["--name", wallet_name], "wallet", "lock", is_verbose, 
-            ok_substring=["Locked:", ""])
+            self, ["--name", wallet_name], "wallet", "lock", is_verbose)
 
         if not self.error:
             if self.is_verbose:
@@ -486,7 +517,7 @@ class WalletUnlock(_Cleos):
         _Cleos.__init__(
             self, 
             ["--name", wallet_name, "--password", password], 
-            "wallet", "unlock", is_verbose, ok_substring=["Unlocked:", ""])
+            "wallet", "unlock", is_verbose)
 
         if not self.error:
             if self.is_verbose:
@@ -510,11 +541,10 @@ class GetInfo(_Cleos):
     """
     def __init__(self, is_verbose=1):
         _Cleos.__init__(
-            self, [], "get", "info", is_verbose,
-            ok_substring=["head_block_num", ""])
+            self, [], "get", "info", is_verbose)
 
         if not self.error:
-            self.json = json.loads(str(self._out))
+            self.json = json_module.loads(str(self._out))
             self.head_block = self.json["head_block_num"]
             self.head_block_time = self.json["head_block_time"]
             self.last_irreversible_block_num \
@@ -572,11 +602,10 @@ class GetBlock(_Cleos):
             args = [block_id]
         
         _Cleos.__init__(
-            self, args, "get", "block", is_verbose, 
-            ok_substring=["timestamp", ""])
+            self, args, "get", "block", is_verbose)
 
         if not self.error:
-            self.json = json.loads(self._out)  
+            self.json = json_module.loads(self._out)  
             self.block_num = self.json["block_num"]
             self.ref_block_prefix = self.json["ref_block_prefix"]
             self.timestamp = self.json["timestamp"]
@@ -609,6 +638,7 @@ class GetCode(_Cleos):
             self, account, code="", abi="", 
             wasm=False, is_verbose=1
         ):
+      
         try:
             account_name = account.name
         except:
@@ -622,8 +652,7 @@ class GetCode(_Cleos):
         if wasm:
             args.extend(["--wasm"])
 
-        _Cleos.__init__(self, args, "get", "code", is_verbose, 
-            ok_substring=["code hash:", ""])
+        _Cleos.__init__(self, args, "get", "code", is_verbose)
         
         if not self.error:
             self.json = {}
@@ -711,11 +740,10 @@ class GetTable(_Cleos):
         if upper:
             args.extend(["--upper", upper])
             
-        _Cleos.__init__(self, args, "get", "table", is_verbose,
-            ok_substring=["{\n", ""])
+        _Cleos.__init__(self, args, "get", "table", is_verbose)
         
         if not self.error:
-            self.json = json.loads(self._out)
+            self.json = json_module.loads(self._out)
 
             if self.is_verbose:
                 print(self.__str__())            
@@ -743,7 +771,6 @@ class CreateKey(_Cleos):
         if key_public:
             self.json["publicKey"] = key_public            
             self.json["privateKey"] = key_private
-            self.ok_substring=["Private key:", ""]
             self._out = "Private key: {0}\nPublic key: {1}\n" \
                 .format(key_private,key_public)
         else:
@@ -752,8 +779,7 @@ class CreateKey(_Cleos):
                 args.append("--r1")
 
             _Cleos.__init__(
-                self, args, "create", "key", is_verbose, 
-                ok_substring=["Private key:", ""])
+                self, args, "create", "key", is_verbose)
 
             self.json = {}
             if not self.error:
@@ -772,6 +798,25 @@ class CreateKey(_Cleos):
         self.key_private = self.json["privateKey"]
         self.key_public = self.json["publicKey"]
 
+class RestoreAccount():
+
+    def __init__(self, name, is_verbose=1):
+
+        acc = GetAccount(name, is_verbose=0, json=True)
+        acc.copy_to(self)
+
+        if not self.error:
+            self.name = self.json["account_name"]
+            self.owner_key = ""
+            self.active_key = ""
+            self.is_verbose = setup.is_verbose() and is_verbose > 0
+
+    def account(self):
+        return str(GetAccount(self.name, is_verbose=0))
+            
+    def __str__(self):
+        return self.name
+    
 
 class CreateAccount(_Cleos):
     """ Create an account, buy ram, stake for bandwidth for the account.
@@ -782,7 +827,7 @@ class CreateAccount(_Cleos):
         skip_sign=False, dont_broadcast=False, force_unique=False,
         max_cpu_usage_ms=0, max_net_usage=0,
         ref_block="",
-        is_verbose=1)
+        is_verbose=1)./cl
 
     - **parameters**::
 
@@ -858,9 +903,6 @@ class CreateAccount(_Cleos):
         args = []
         if setup.is_json():
             args.append("--json")
-            ok_substring = ["transaction_id", ""]
-        else:
-            ok_substring = ["", "executed transaction:"]
 
         args.extend([creator_name, name, owner_key_public, active_key_public])
 
@@ -892,17 +934,16 @@ class CreateAccount(_Cleos):
         
         self.name = name
         _Cleos.__init__(
-            self, args, "create", "account", is_verbose, 
-            ok_substring=ok_substring)
+            self, args, "create", "account", is_verbose)
             
-        if not self.error and setup.is_json():
-            self.json = json.loads(self._out)
+        if not self.error:
+            self.json = GetAccount(self.name, is_verbose=0, json=True).json
 
             if self.is_verbose:
                 print(self.__str__())            
 
     def account(self):
-        return str(GetAccount(self.name, is_verbose=1))
+        return str(GetAccount(self.name, is_verbose=0))
             
     def __str__(self):
         return self.name
@@ -920,12 +961,12 @@ def account_name():
     return name
 
     
-class ManualAccount:
+class AccountMaster:
     def __init__(
         self, name="", owner_key_public="", active_key_public="", 
         is_verbose=True):
 
-        if not owner_key_public:
+        if not owner_key_public: # print data for registration
             self.new_account = True
             if not name: 
                 self.name = account_name()
@@ -934,12 +975,16 @@ class ManualAccount:
 
             self.owner_key = CreateKey("owner", is_verbose=0)
             self.active_key = CreateKey("active", is_verbose=0)
-            print("SAVE THE FOLLOWING DATA to use in the future to restore this" \
-                + "account object.\n" \
+            print(
+                "Register the following data with a testnode and\n" \
+                + "save them to restore in the future this account object.\n" \
                 + "Accout Name: {}\n".format(self.name) \
                 + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
-                + "Active Public Key: {}\n".format(self.active_key.key_public))
-        else:
+                + "Active Public Key: {}\n".format(self.active_key.key_public) \
+                + "\n\n" \
+                + "Owner Private Key: {}\n".format(self.owner_key.key_private) \
+                + "Active Private Key: {}\n".format(self.active_key.key_public))
+        else: # restore the master account
             self.name = name
             self.new_account = False
             self.owner_key = CreateKey("owner", owner_key_public, is_verbose=0)
@@ -970,6 +1015,7 @@ class AccountEosio():
 
         self.key_private = self.json["privateKey"]
         self.key_public = self.json["publicKey"]
+
 
         self._out = "transaction id: eosio" 
 
@@ -1056,9 +1102,6 @@ class SetContract(_Cleos):
         args = []
         if setup.is_json():
             args.append("--json")
-            ok_substring=["transaction_id", ""]
-        else:
-            ok_substring=["#", ""]
 
         if permission:
             try:
@@ -1067,22 +1110,16 @@ class SetContract(_Cleos):
                 permission_name = permission
 
             args.extend(["--permission", permission_name])
-
         if skip_signature:
             args.append("--skip-sign")
-
         if dont_broadcast:
             args.append("--dont-broadcast")
-
         if forceUnique:
             args.append("--force-unique")
-
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", max_cpu_usage])
-
         if  max_net_usage:
             args.extend(["--max-net-usage", max_net_usage])
-
         if  ref_block:
             args.extend(["--ref-block", ref_block]) 
 
@@ -1095,8 +1132,7 @@ class SetContract(_Cleos):
             args.append(abi_file)
 
         _Cleos.__init__(
-            self, args, "set", "contract", is_verbose, 
-            ok_substring=ok_substring)
+            self, args, "set", "contract", is_verbose)
 
         if not self.error:
             if self.is_verbose:
@@ -1162,9 +1198,6 @@ class PushAction(_Cleos):
         args = []
         if setup.is_json():
             args.append("--json")
-            ok_substring = ["transaction_id", ""]
-        else:
-            ok_substring = ["#", "executed transaction:"]
 
         args.extend([self.account_name, action, data])
 
@@ -1175,33 +1208,26 @@ class PushAction(_Cleos):
                 permission_name = permission
 
             args.extend(["--permission", permission_name])
-
         if skip_signature:
             args.append("--skip-sign")
-
         if dont_broadcast:
             args.append("--dont-broadcast")
-
         if forceUnique:
             args.append("--force-unique")
-
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", max_cpu_usage])
-
         if  max_net_usage:
             args.extend(["--max-net-usage", max_net_usage])
-
         if  ref_block:
             args.extend(["--ref-block", ref_block])
                         
         self.console = None
         self.data = None
-        _Cleos.__init__(self, args, "push", "action", is_verbose, 
-            ok_substring=ok_substring)
+        _Cleos.__init__(self, args, "push", "action", is_verbose)
 
         if not self.error:
             try:
-                self.json = json.loads(self._out)
+                self.json = json_module.loads(self._out)
                 self.console = self.json["processed"]["action_traces"][0]["console"]
                 self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
             except:

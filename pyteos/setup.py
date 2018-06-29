@@ -9,6 +9,8 @@ _is_debug_mode = False
 _print_request = False
 _print_response = False
 _nodeos_URL = ""
+account_map = "accounts.json"
+password_map = "passwords.json"
 
 
 def set_nodeos_URL(url="localhost:8888"):

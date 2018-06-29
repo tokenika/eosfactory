@@ -65,10 +65,10 @@ use `teos.Template(contract_dir)`:
     cprint("""
 Create an account for the contract of the workspace. The account is 
 represented with an object of the class `eosf.Account`,
-use `account_test = eosf.Account()`:
+use `account_test = eosf.account()`:
     """, 'magenta')
 
-    account_test = eosf.Account()
+    account_test = eosf.account()
 
     cprint("""
 Put the account `account_test` to the wallet, 
@@ -99,13 +99,13 @@ Confirm that the account `account_test` contains a contract code:
 
     cprint("""
 Create accounts `alice`and `carol` and put them into the wallet, 
-use `alice = eosf.Account()` and `wallet.import_key(alice)`:
+use `alice = eosf.account()` and `wallet.import_key(alice)`:
         """, 'magenta')
 
-    alice = eosf.Account()
+    alice = eosf.account()
     wallet.import_key(alice)
 
-    carol = eosf.Account()
+    carol = eosf.account()
     wallet.import_key(carol) 
 
     cprint("""

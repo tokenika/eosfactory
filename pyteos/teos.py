@@ -114,6 +114,20 @@ class GetConfig(_Teos):
         _Teos.__init__(self, jarg, "get", "config", is_verbose) 
 
 
+def get_node_wallet_dir():
+    """
+    Get the directory of the `nodeos` local wallet.
+    """
+    return GetConfig(is_verbose=0).json["EOSIO_WALLET_DIR"]
+
+
+def get_keosd_wallet_dir():
+    """
+    Get the directory of the `nodeos` local wallet.
+    """
+    return GetConfig(is_verbose=0).json["KEOSD_WALLET_DIR"]
+
+
 class Template(_Teos):
     def __init__(
             self, name, template="", remove_existing=False, 

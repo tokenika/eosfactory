@@ -81,18 +81,13 @@ class SystemNewaccount(cleos._Cleos):
     """
     def __init__(
             self, creator, name, owner_key, active_key,
-            stake_net,
-            stake_cpu,
+            stake_net, stake_cpu,
             permission = "",
-            buy_ram_kbytes = 0,
-            buy_ram = "",
+            buy_ram_kbytes = 0, buy_ram = "",
             transfer = False,
             expiration_sec = 30, 
-            skip_signature = 0, 
-            dont_broadcast = 0,
-            forceUnique = 0,
-            max_cpu_usage = 0,
-            max_net_usage = 0,
+            skip_signature = 0, dont_broadcast = 0, forceUnique = 0,
+            max_cpu_usage = 0, max_net_usage = 0,
             ref_block = "",
             is_verbose = 1
             ):
@@ -161,7 +156,8 @@ class SystemNewaccount(cleos._Cleos):
             ok_substring=ok_substring)
             
         if not self.error and setup.is_json():
-            self.json = json.loads(self._out)
+            self.json = cleos.GetAccount(
+                self.name, is_verbose=0, json=True).json
 
             if self.is_verbose:
                 print(self.__str__())            

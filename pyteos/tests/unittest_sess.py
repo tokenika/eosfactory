@@ -50,18 +50,18 @@ Implement the `eosio` master account as a `cleos.AccountEosio` object:
 Create accounts `alice`, `bob` and `carol`:
         """)
         global alice
-        alice = eosf.Account()
+        alice = eosf.account()
         self.assertTrue(not alice.error)
         alice.account
         wallet.import_key(alice)
 
         global bob
-        bob = eosf.Account()
+        bob = eosf.account()
         self.assertTrue(not bob.error)
         wallet.import_key(bob)        
 
         global carol
-        carol = eosf.Account()
+        carol = eosf.account()
         self.assertTrue(not carol.error)
         wallet.import_key(carol)        
 

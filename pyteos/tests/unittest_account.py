@@ -5,8 +5,12 @@ import cleos
 import teos
 import eosf
 import unittest
-from termcolor import colored, cprint #sudo python3 -m pip install termcolor
+from termcolor import colored, cprint
 import time
+
+setup.set_json(False)        
+setup.set_verbose(True)
+cleos.dont_keosd()
 
 class Test1(unittest.TestCase):
 
@@ -18,156 +22,65 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        setup.set_json(False)        
-        setup.set_verbose(True)
+        global wallet 
+        global account_eosio
+
+        account_eosio = cleos.AccountEosio()
+        node_reset = teos.node_reset()
+        wallet = eosf.Wallet()
+        wallet.import_key(account_eosio)
+
 
     def setUp(self):
         pass
 
 
-    def test_04(self):
-
-        print(colored("""
-Start the local node without the `keosd` Wallet Manager, as the 
-`cleos.dont_keosd()` status is set. Also note that the setup status
-`setup.set_json(False)` determines descriptive responce of the node,
-and 'setup.set_verbose()` determines that this responce is visible.
-With `setup.set_verbose(0)`, error messages are printed, only,
-with `setup.set_verbose(0)`, nothing is printed.
-        """, 'magenta'))
-
-        cleos.dont_keosd()
-        node_reset = teos.node_reset()
-        self.assertTrue(node_reset)
-
     def test_05(self):
-        setup.set_json(False)
+        global wallet 
 
-        print(colored("""
-Create an account without any wallet available. Should fail:
-        """, 'magenta'))
-
-        alice = eosf.Account()
-        self.assertTrue(alice.error, "No available wallet")
-
-        print(colored("""
-Make a wallet and reattempt the account creation:
-        """, 'magenta'))
-
-        global wallet
-        wallet = eosf.Wallet() 
-        self.assertTrue(not wallet.error)
-
-        print(colored("""
-Call for keys in the wallet:
-        """, 'magenta'))
-
-        self.assertTrue(not wallet.keys().error)
-
-        print(colored("""
-Create the account alice:
-        """, 'magenta'))
-
-        global alice        
-        alice = eosf.Account()
+        alice = eosf.account()
         self.assertTrue(not alice.error)
-
-        print(colored("""
-Import alice's active key to the wallet. `wallet.import_key(alice)`:
-        """, 'magenta'))
-
-        self.assertTrue(not wallet.import_key(alice).error)
-
-        print(colored("""
-Call for keys in the wallet:
-        """, 'magenta'))
-
-        self.assertTrue(not wallet.keys().error)
-
-        print(colored("""
-Introduce two other accounts, `bob` and `carol`:
-        """, 'magenta'))
-
-        global bob
-        bob = eosf.Account()
-        wallet.import_key(bob)
-
-        global carol
-        carol = eosf.Account()
-        wallet.import_key(carol)        
-
-    def test_15(self):
-        global wallet
-
-        print(colored("""
-Now, create an account object that will keep a contract:
-        """, 'magenta'))
-
-        account_ttt = eosf.Account()
-        self.assertTrue(not account_ttt.error)
-
-        print(colored("""
-Let the wallet know the account:
-        """, 'magenta'))
         
-        self.assertTrue(not wallet.import_key(account_ttt).error)
+        owner_key = alice.owner_key
+        self.assertTrue(not owner_key.error)
+        print("owner keys:")
+        print(owner_key)
 
-#         print(colored("""
-# Deploy the contract:
-#         """, 'magenta'))
+        # active_key = alice.active_key
+        # self.assertTrue(not active_key.error)
+        # print("owner keys:")
+        # print(active_key)
 
-#         contract_ttt = account_ttt.set_contract("eosio.token")
-#         self.assertTrue(not contract_ttt.error)
+        # code = alice.code()
+        # self.assertTrue(not code.error)
 
-#         time.sleep(1)
+        # import_key = wallet.import_key(alice)
+        # print("wallet.import_key[0]:")
+        # print(import_key[0])
+
+        # contract = alice.set_contract("eosio.token")
+        # self.assertTrue(not contract.error)
+        # print(contract)
+
+    # def test_10(self):
+    #     global wallet
+
+    #     bob = eosf.account()
+    #     import_key = wallet.import_key(bob)
+    #     carol = eosf.account()
+    #     import_key = wallet.import_key(carol)
         
-#         global alice
-#         global bob
-#         global carol
+    #     names = set()
+    #     keys = wallet.keys()
+    #     for key in keys.json[""]:
+    #         accounts = cleos.GetAccounts(key, is_verbose=0)
+    #         #print(accounts.json)
+    #         for acc in accounts.json["account_names"]:
+    #             names.add(acc)
 
-#         print(colored("""
-# account_ttt.push_action('create'
-#         """, 'magenta')) 
-
-#         action_create = account_ttt.push_action(
-#             "create", 
-#             '{"issuer":"' 
-#                 + str(cleos.AccountEosio()) 
-#                 + '", "maximum_supply":"1000000000.0000 EOS", \
-#                 "can_freeze":0, "can_recall":0, "can_whitelist":0}')
-
-#         self.assertTrue(not action_create.error)
-        
-#         print(colored("""
-# account_ttt.push_action('issue'
-#         """, 'magenta')) 
-
-#         action_issue = account_ttt.push_action(
-#             "issue", 
-#             '{"to":"' + str(alice)
-#                 + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
-#                 permission=cleos.AccountEosio())
-        
-
-#         print(colored("""
-# account_ttt.push_action('transfer'
-#         """, 'magenta')) 
-
-#         action_transfer = account_ttt.push_action(
-#             "transfer", 
-#             '{"from":"' 
-#                 + str(alice)
-#                 + '", "to":"' + str(carol)
-#                 + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
-#             permission=alice)
-#         self.assertTrue(not action_transfer.error)
-
-#         print(colored("""
-# Inspect  database entries, for the `alice` account:
-#         """, 'magenta'))
-
-#         table = account_ttt.get_table( "accounts", alice)
-#         self.assertTrue(not table.error)
+    #     print("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV")
+    #     print(names)
+    #     print("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV")
 
 
     def tearDown(self):

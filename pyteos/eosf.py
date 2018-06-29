@@ -21,7 +21,8 @@ import setup
 import teos
 import cleos
 import cleos_system
-from termcolor import colored, cprint #sudo python3 -m pip install termcolor
+import inspect
+import types
 
 def reload():
     import importlib
@@ -45,6 +46,35 @@ class Wallet(cleos.WalletCreate):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.  
     """
+    def __init__(self, name="default", password="", is_verbose=1):
+
+        if not cleos.is_keosd(): # look for password:
+            wallet_dir = os.path.expandvars(teos.get_node_wallet_dir())
+            try:
+                with open(wallet_dir + setup.password_map, "r") \
+                        as input:    
+                    password_map = json.load(input)
+                    password = password_map[name]
+            except:
+                pass
+
+        cleos.WalletCreate.__init__(self, name, password, is_verbose)
+
+        if not self.error:
+            if not cleos.is_keosd():
+                wallet_dir = teos.get_node_wallet_dir()
+                try:
+                    with open(wallet_dir + setup.password_map, "r") \
+                            as input:    
+                        password_map = json.load(input)
+                except:
+                    password_map = {}
+                password_map[name] = self.password
+
+                with open(wallet_dir + setup.password_map, "w+") \
+                        as out:    
+                    password_map = json.dump(password_map, out)
+
     def list(self):
         """ Lists opened wallets, * marks unlocked.
         Returns `cleos.WalletList` object
@@ -57,7 +87,7 @@ class Wallet(cleos.WalletCreate):
         """
         self.wallet_open = cleos.WalletOpen(
             self.name, is_verbose=self.is_verbose)
-        return not self.wallet_open.error
+        return self.wallet_open
 
     def lock(self):
         """ Locks the wallet.
@@ -65,7 +95,8 @@ class Wallet(cleos.WalletCreate):
         """
         self.wallet_lock = cleos.WalletLock(
             self.name, is_verbose=self.is_verbose)
-        return not self.wallet_lock.error        
+        return self.wallet_lock    
+
 
     def unlock(self):
         """ Unlocks the wallet.
@@ -73,14 +104,97 @@ class Wallet(cleos.WalletCreate):
         """        
         self.wallet_unlock = cleos.WalletUnlock(
             self.name, self.json["password"], is_verbose=self.is_verbose)
-        return not self.wallet_unlock.error
+        return self.wallet_unlock
 
-    def import_key(self, key_pair):
-        """ Imports a private key into wallet.
-        Returns `cleos.WalletImport` object
+
+    def import_key(self, account_or_key):
+        """ Imports private keys of an account into wallet.
+        Returns list of `cleos.WalletImport` objects
         """
-        return cleos.WalletImport(
-            key_pair, self.name, is_verbose=self.is_verbose)
+        lcls = inspect.stack()[1][0].f_locals
+        lcls.update(inspect.stack()[2][0].f_locals) 
+        retval = []
+        try:
+            account_name = account_or_key.name
+            for name in lcls:
+                if id(account_or_key) == id(lcls[name]):
+                    if cleos.is_keosd():
+                        wallet_dir = \
+                            os.path.expandvars(teos.get_keosd_wallet_dir())
+                    else:
+                        wallet_dir = teos.get_node_wallet_dir()
+                    try:
+                        with open(wallet_dir + setup.account_map, "r") \
+                            as input:    
+                            account_map = json.load(input)
+                    except:
+                        account_map = {}
+
+                    account_map[account_name] = name
+                    with open(wallet_dir + setup.account_map, "w") as out:
+                        json.dump(account_map, out)
+
+            key = account_or_key.owner_key
+            if key:
+                retval.append(
+                    cleos.WalletImport(key, self.name, is_verbose=0))
+
+            key = account_or_key.active_key
+            if key:
+                retval.append(
+                    cleos.WalletImport(key, self.name, is_verbose=0))
+        except:          
+            retval.append(cleos.WalletImport(
+                account_or_key, self.name, is_verbose=0))
+
+        return retval
+
+
+    def restore_accounts(self, namespace):
+        account_names = set() # accounts in wallets
+        keys = cleos.WalletKeys(is_verbose=0).json
+
+        for key in keys[""]:
+            accounts = cleos.GetAccounts(key, is_verbose=0)
+            for acc in accounts.json["account_names"]:
+                account_names.add(acc)
+
+        if self.is_verbose:
+            print("Restored accounts as global variables:")
+
+        restored = dict()
+        if len(account_names) > 0:
+            if cleos.is_keosd():
+                wallet_dir = os.path.expandvars(teos.get_keosd_wallet_dir())
+            else:
+                wallet_dir = teos.get_node_wallet_dir()
+            try:
+                with open(wallet_dir + setup.account_map, "r") as input:    
+                    account_map = json.load(input)
+            except:
+                account_map = {}
+            
+            object_names = set()
+
+            for name in account_names:
+                try:
+                    object_name = account_map[name]
+                    if object_name in object_names:
+                        object_name = object_name + "_" + name
+                except:
+                    object_name = name
+                object_names.add(object_name)
+
+                if object_name:
+                    if self.is_verbose:
+                        print("     {0} ({1})".format(object_name, name))
+                    restored[object_name] = account(name, restore=True)
+        else:
+            if self.is_verbose:
+                print("     empty list")
+        
+        namespace.update(restored)
+        return ""
 
     def keys(self):
         """ Lists public keys from all unlocked wallets.
@@ -88,174 +202,35 @@ class Wallet(cleos.WalletCreate):
         """
         return cleos.WalletKeys(is_verbose=self.is_verbose)
 
+
     def info(self):
         retval = json.dumps(self.json, indent=4) + "\n"
         retval = retval + json.dumps(self.keys().json, indent=4) + "\n"
         return retval + json.dumps(self.list().json, indent=4) + "\n"
-
-class NewAccount():
-    """
-    """
-    def __init__(
-            self, 
-            creator="",     
-            stake_net="",
-            stake_cpu="",
-            owner_key="", active_key="",   
-            permission="", 
-            buy_ram_kbytes=0,
-            buy_ram="",
-            transfer=False,
-            expiration_sec=30, 
-            skip_signature=0, 
-            dont_broadcast=0,
-            forceUnique=0,
-            max_cpu_usage=0,
-            max_net_usage=0,
-            ref_block="",
-            is_verbose=1
-            ):
-
-        name = cleos.account_name()
-
-        if owner_key:
-            if not active_key:
-                active_key = owner_key
-        else:
-            owner_key = cleos.CreateKey("owner", is_verbose=-1)
-            active_key = cleos.CreateKey("active", is_verbose=-1)
-
-        if not creator:
-            creator = cleos.AccountEosio()
-
-        if not stake_net:
-            self.account = cleos.CreateAccount(
-                creator, name, owner_key, active_key,
-                permission,
-                expiration_sec, 
-                skip_signature, dont_broadcast, forceUnique,
-                max_cpu_usage, max_net_usage,
-                ref_block,
-                is_verbose=1
-            )
-        else:
-            self.account = cleos_system.SystemNewaccount(
-                    creator, name, owner_key, active_key,
-                    stake_net, stake_cpu,
-                    permission,
-                    buy_ram_kbytes, buy_ram,
-                    transfer,
-                    expiration_sec, 
-                    skip_signature, dont_broadcast, forceUnique,
-                    max_cpu_usage, max_net_usage,
-                    ref_block,
-                    is_verbose
-            )
-              
-        cleos.CreateAccount.__init__(
-            self, creator, name, 
-            owner_key, active_key,
-            permission,
-            expiration_sec, skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage,
-            ref_block,
-            is_verbose=is_verbose)    
+        
 
 
-    def code(self, code="", abi="", wasm=False):
-        return cleos.GetCode(
-            self.name, code, abi, is_verbose=self.is_verbose)
+def account(
+        creator="", 
+        stake_net="", stake_cpu="",
+        name="", 
+        owner_key="", active_key="",
+        permission = "",
+        buy_ram_kbytes=0, buy_ram="",
+        transfer=False,
+        expiration_sec=30, 
+        skip_signature=0, dont_broadcast=0, forceUnique=0,
+        max_cpu_usage=0, max_net_usage=0,
+        ref_block="",
+        is_verbose=1,
+        restore=False):
 
-
-    def set_contract(
-            self, contract_dir, 
-            wast_file="", abi_file="", 
-            permission="", expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=""):
-
-        self.set_contract = cleos.SetContract(
-            self.name, contract_dir, 
-            wast_file, abi_file, 
-            permission, expiration_sec, 
-            skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage,
-            ref_block,
-            is_verbose=self.is_verbose
-        )
-
-        return self.set_contract
-
-
-    def push_action(
-            self, action, data,
-            permission="", expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=""):
-        if not permission:
-            permission = self.name
-        else:
-            try: # permission is an account:
-                permission=permission.name
-            except: # permission is the name of an account:
-                permission=permission
-
-        self.action = cleos.PushAction(
-            self.name, action, data,
-            permission, expiration_sec, 
-            skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage,
-            ref_block,
-            is_verbose=self.is_verbose)
-
-        if not self.action.error:
-            try:
-                self.console = self.action.console
-                if self.is_verbose > 0:
-                    print(self.console + "\n") 
-            except:
-                pass
-
-        return self.action
-
-
-    def get_table(
-            self, table, scope="", 
-            binary=False, 
-            limit=10, key="", lower="", upper=""):
-
-        self.table = cleos.GetTable(
-                                self.name, table, scope,
-                                binary, 
-                                limit, key, lower, upper,
-                                is_verbose=self.is_verbose)
-        return self.table
-
-
-    def __str__(self):
-        return self.name
-
-
-class Account(cleos.CreateAccount):
-    """
-    """
-    def __init__(
-            self,
-            creator="",
-            name="",
-            owner_key="", 
-            active_key="",
-            permission="",
-            expiration_sec=30, 
-            skip_signature=0, 
-            dont_broadcast=0,
-            forceUnique=0,
-            max_cpu_usage=0,
-            max_net_usage=0,
-            ref_block="",
-            is_verbose=1):
+    account_object = None
+    if restore:
+        if creator:
+            name = creator
+        account_object = cleos.RestoreAccount(name, is_verbose)
+    else:
 
         if not name:
             name = cleos.account_name()
@@ -269,21 +244,40 @@ class Account(cleos.CreateAccount):
 
         if not creator:
             creator = cleos.AccountEosio()
-              
-        cleos.CreateAccount.__init__(
-            self, creator, name, 
-            owner_key, active_key,
-            permission,
-            expiration_sec, skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage,
-            ref_block,
-            is_verbose=is_verbose)    
 
+        if stake_net:
+            account_object = cleos_system.SystemNewaccount(
+                    creator, name, owner_key, active_key,
+                    stake_net, stake_cpu,
+                    permission,
+                    buy_ram_kbytes, buy_ram,
+                    transfer,
+                    expiration_sec, 
+                    skip_signature, dont_broadcast, forceUnique,
+                    max_cpu_usage, max_net_usage,
+                    ref_block,
+                    is_verbose
+                    )
+        else:
+            account_object = cleos.CreateAccount(
+                    creator, name, 
+                    owner_key, active_key,
+                    permission,
+                    expiration_sec, skip_signature, dont_broadcast, forceUnique,
+                    max_cpu_usage, max_net_usage,
+                    ref_block,
+                    is_verbose=is_verbose
+                    )
+                    
+        account_object.owner_key = owner_key
+        account_object.active_key = active_key
 
-    def code(self, code="", abi="", wasm=False):
+    def code(self, code="", abi="", wasm=False):      
         return cleos.GetCode(
-            self.name, code, abi, is_verbose=self.is_verbose)
+            account_object, code, abi, 
+            is_verbose=account_object.is_verbose)
 
+    account_object.code = types.MethodType(code, account_object)
 
     def set_contract(
             self, contract_dir, 
@@ -293,18 +287,20 @@ class Account(cleos.CreateAccount):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=""):
 
-        self.set_contract = cleos.SetContract(
-            self.name, contract_dir, 
+        account_object.set_contract = cleos.SetContract(
+            account_object, contract_dir, 
             wast_file, abi_file, 
             permission, expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=self.is_verbose
+            is_verbose=account_object.is_verbose
         )
 
-        return self.set_contract
+        return account_object.set_contract
 
+    account_object.set_contract = types.MethodType(
+                                    set_contract , account_object)
 
     def push_action(
             self, action, data,
@@ -313,49 +309,56 @@ class Account(cleos.CreateAccount):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=""):
         if not permission:
-            permission = self.name
+            permission = account_object.name
         else:
             try: # permission is an account:
                 permission=permission.name
             except: # permission is the name of an account:
                 permission=permission
 
-        self.action = cleos.PushAction(
-            self.name, action, data,
+        account_object.action = cleos.PushAction(
+            account_object, action, data,
             permission, expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=self.is_verbose)
+            is_verbose=account_object.is_verbose)
 
-        if not self.action.error:
+        if not account_object.action.error:
             try:
-                self.console = self.action.console
-                if self.is_verbose > 0:
-                    print(self.console + "\n") 
+                account_object.console = account_object.action.console
+                if account_object.is_verbose > 0:
+                    print(account_object.console + "\n") 
             except:
                 pass
 
-        return self.action
+        return account_object.action
 
+    account_object.push_action = types.MethodType(
+                                    push_action , account_object)
 
     def get_table(
             self, table, scope="", 
             binary=False, 
             limit=10, key="", lower="", upper=""):
 
-        self.table = cleos.GetTable(
-                                self.name, table, scope,
+        account_object.table = cleos.GetTable(
+                                account_object, table, scope,
                                 binary, 
                                 limit, key, lower, upper,
-                                is_verbose=self.is_verbose)
-        return self.table
+                                is_verbose=account_object.is_verbose)
+        return account_object.table
 
+    account_object.get_table = types.MethodType(
+                                    get_table, account_object)
 
     def __str__(self):
-        return self.name
+        return account_object.name
 
+    account_object.__str__ = types.MethodType(
+                                        __str__, account_object)
 
+    return account_object
 
 class Contract():
 

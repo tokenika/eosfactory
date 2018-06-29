@@ -66,9 +66,9 @@ wallet-dir: .
 */   
 
     #define NOT_DEFINED_VALUE ""
-    #define CONTRACTS_DIR "contracts"
+    #define CONTRACTS_DIR "contracts/"
     #define TEOS_EXE "teos/build/teos/teos"
-    #define EOSIO_CONTRACT_DIR "build/contracts"
+    #define EOSIO_CONTRACT_DIR "build/contracts/"
     #define EMPTY ""
 
     typedef vector<string> arg;
@@ -79,13 +79,13 @@ wallet-dir: .
     arg EOSIO_WALLET_ADDRESS = { "EOSIO_WALLET_ADDRESS", EMPTY };
     arg EOSIO_GENESIS_JSON = { "EOSIO_GENESIS_JSON", "genesis.json" }; 
       //genesis-json: relative to EOSIO_SOURCE_DIR
-    arg EOSIO_DATA_DIR = { "EOSIO_DATA_DIR", "build/daemon/data-dir" };
-    arg EOSIO_CONFIG_DIR = { "EOSIO_CONFIG_DIR", "build/daemon/data-dir" };
-    arg EOSIO_WALLET_DIR = { "EOSIO_WALLET_DIR", "wallet"}; // relative to data-dir
+    arg EOSIO_DATA_DIR = { "EOSIO_DATA_DIR", "build/daemon/data-dir/" };
+    arg EOSIO_CONFIG_DIR = { "EOSIO_CONFIG_DIR", "build/daemon/data-dir/" };
+    arg EOSIO_WALLET_DIR = { "EOSIO_WALLET_DIR", "wallet/"}; // relative to data-dir
     arg EOSIO_DAEMON_NAME = { "EOSIO_DAEMON_NAME", "nodeos" };
     arg EOSIO_CLI_NAME = { "EOSIO_CLI_NAME", "cleos" };
     arg EOSIO_EOSFACTORY_DIR = { "EOSIO_EOSFACTORY_DIR" };
-    arg EOSIO_TEOS_DIR = { "EOSIO_TEOS_DIR", "teos" };
+    arg EOSIO_TEOS_DIR = { "EOSIO_TEOS_DIR", "teos/" };
 
     arg EOSIO_CONTRACT_WORKSPACE = { 
       "EOSIO_CONTRACT_WORKSPACE", CONTRACTS_DIR };// relative to EOSIO_EOSFACTORY_DIR
@@ -775,6 +775,11 @@ Cannot determine the contract workspace.
       return "";        
     }
 
+    string getKeosdWalletDir()
+    {
+      return "${HOME}/eosio-wallet/";
+    }
+
     string getTeosDir(TeosControl* teosControl) {
       try{
 
@@ -840,6 +845,7 @@ Cannot determine the contract workspace.
       respJson_.put("EOSIO_DATA_DIR", getDataDir(this));
       respJson_.put("EOSIO_CONFIG_DIR", getConfigDir(this));
       respJson_.put("EOSIO_WALLET_DIR", getWalletDir(this));
+      respJson_.put("KEOSD_WALLET_DIR", getKeosdWalletDir());
       respJson_.put("nodeExe", getDaemonExe(this));
       respJson_.put("cleosExe", getCleosExe(this));
       respJson_.put("genesisJson", getGenesisJson(this));

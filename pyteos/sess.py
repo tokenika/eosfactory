@@ -46,11 +46,11 @@ def init():
     wallet.import_key(account_eosio)
     
     contract_eosio_bios = cleos.SetContract(account_eosio, "eosio.bios")
-    alice = eosf.Account()
+    alice = eosf.account()
     wallet.import_key(alice)
-    bob = eosf.Account()
+    bob = eosf.account()
     wallet.import_key(bob)
-    carol = eosf.Account()
+    carol = eosf.account()
     wallet.import_key(carol)
 
     if setup.is_verbose():

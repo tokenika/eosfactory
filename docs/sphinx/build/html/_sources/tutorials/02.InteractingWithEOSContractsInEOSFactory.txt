@@ -68,7 +68,7 @@ If you need additional test accounts, you can easily create them:
 
 ```
 from eosf import *
-charlie = Account("charlie", sess.eosio)
+charlie = account()
 ```
 
 **NOTE:** The first argument indicates the new account's name, whereas the second indicates the master account, in this case the default `eosio` account.

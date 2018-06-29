@@ -120,7 +120,7 @@ namespace teos {
       try{
         if(reqJson_.get("delete-all-blocks", false)){
           DaemonStop();
-          deleteDaemonData();
+          //deleteDaemonData();
           deleteWallets();          
         } else if(!getPid().empty()){
           teos::TeosCommand tc = teos::command::GetInfo(); 
