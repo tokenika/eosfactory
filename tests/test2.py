@@ -73,7 +73,7 @@ Create a smart contract object:
     cprint("""
 Deploy the contract:
     """, 'magenta')
-    is_deployed = contract_ttt.deploy()
+    deployed = contract_ttt.deploy()
                 
     cprint("""
 See the response of the node, use `print(contract.contract_ttt)`:

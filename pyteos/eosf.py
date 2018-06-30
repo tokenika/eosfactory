@@ -73,7 +73,7 @@ class Wallet(cleos.WalletCreate):
 
                 with open(wallet_dir + setup.password_map, "w+") \
                         as out:    
-                    password_map = json.dump(password_map, out)
+                    json.dump(password_map, out)
 
     def list(self):
         """ Lists opened wallets, * marks unlocked.
@@ -118,11 +118,7 @@ class Wallet(cleos.WalletCreate):
             account_name = account_or_key.name
             for name in lcls:
                 if id(account_or_key) == id(lcls[name]):
-                    if cleos.is_keosd():
-                        wallet_dir = \
-                            os.path.expandvars(teos.get_keosd_wallet_dir())
-                    else:
-                        wallet_dir = teos.get_node_wallet_dir()
+                    wallet_dir = cleos.get_wallet_dir()
                     try:
                         with open(wallet_dir + setup.account_map, "r") \
                             as input:    
@@ -207,8 +203,24 @@ class Wallet(cleos.WalletCreate):
         retval = json.dumps(self.json, indent=4) + "\n"
         retval = retval + json.dumps(self.keys().json, indent=4) + "\n"
         return retval + json.dumps(self.list().json, indent=4) + "\n"
-        
 
+
+class Transaction():
+    def __init__(self, msg):
+        self.transaction_id = ""
+        msg_keyword = "executed transaction: "
+        if msg_keyword in msg:
+            beg = msg.find(msg_keyword, 0)
+            end = msg.find(" ", beg + 1)
+            self.transaction_id = msg[beg : end]
+        else:
+            try:
+                self.transaction_id = msg.json["transaction_id"]
+            except:
+                pass
+
+    def get_transaction(self):
+        pass
 
 def account(
         creator="", 
@@ -402,7 +414,7 @@ class Contract():
             is_verbose=self.is_verbose
         )
 
-        return self.is_deployed()
+        return self.contract
 
 
     def is_deployed(self):

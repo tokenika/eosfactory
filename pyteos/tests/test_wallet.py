@@ -43,38 +43,35 @@ Without password imported keys will not be retrievable.
         cprint("""
 Register the following data with a testnode and
 save them to restore in the future this account object.
-Accout Name: afvrbndbxh4a
-Owner Public Key: EOS8SJnPZGg1FJMsEz6qUquJJgC1jpc1SpK6TkobVEs6WS92rBsPk
-Active Public Key: EOS7vV5VknErRjmUfNUNS9ANeGRe7k9UvW3XF26isNN6PCmUrKoF7
+Accout Name: nfldugwdvcb5
+Owner Public Key: EOS5qxcKNeALwjHryCrbbhaHDy9CS1Fj5JQ7HikArb7VVNhpJoRys
+Active Public Key: EOS85aw98yY3XZR4hcjjijprog2zAGdDMZFhsbVrAESzXFRRzbsNZ
 
 
-Owner Private Key: 5Ka46WCASq9BoCZy6SPW5YughLSD4BMmkLtYYRkWpZpH3nK9tRW
-Active Private Key: EOS7vV5VknErRjmUfNUNS9ANeGRe7k9UvW3XF26isNN6PCmUrKoF7
+Owner Private Key: 5JeGvwGC1FNyNdY8vjLmJqXajWf48aw1cpYJVaHboEXES81NgyH
+Active Private Key: EOS85aw98yY3XZR4hcjjijprog2zAGdDMZFhsbVrAESzXFRRzbsNZ
         """, 'magenta')
 
         cprint("""
               
         """, 'magenta')
 
-        wallet.import_key(account_master)
+        #wallet.import_key(account_master)
 
+    else:
 ##############################################################################
 # Registered to a testnode
 ##############################################################################
-    #setup.set_debug_mode()
-    cleos.GetAccount("afvrbndbxh4a")
+        setup.set_debug_mode()
+        print(cleos.GetAccount("nfldugwdvcb5"))
 
-    #wallet.restore_accounts(globals())
+        #wallet.restore_accounts(globals())
 
     
 
     #cleos.WalletStop()    
     return    
     cleos.WalletUnlock(wallet_name, wallet_pass)
-
-
-
-
 
     wallet = eosf.Wallet(wallet_name, is_verbose=1)
     # print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
@@ -99,3 +96,64 @@ Active Private Key: EOS7vV5VknErRjmUfNUNS9ANeGRe7k9UvW3XF26isNN6PCmUrKoF7
 
 if __name__ == "__main__":
     test()
+
+
+
+#     cprint("""
+# Restoration of the accounts is important when working with remote EOSIO nodes.
+# Switch a remote node `54.38.137.99:8888`:
+#     """, 'magenta')
+
+#     cleos.dont_keosd(False)
+#     setup.set_nodeos_URL("54.38.137.99:8888")
+#     cleos.WalletStop()
+#     setup.set_debug_mode()
+
+#     wallet_name = "tokenika"
+#     wallet = eosf.Wallet(wallet_name)
+
+#     cprint("""
+# Restoration of the accounts is important when working with remote EOSIO nodes.
+# Switch a remote node `54.38.137.99:8888`:
+#     """, 'magenta')
+    # tokenika_pass = "PW5KRg1DeMrafTRbrYH44xNz9utzAX9JPC8ugYqH6PspVqPVUQBwQ"
+    # return
+    # account_master = cleos.AccountMaster()
+#     cprint("""
+# We have got the following message:
+
+# SAVE THE FOLLOWING DATA to use in the future to restore thisaccount object.
+# Accout Name: upe1ahhgb3xq
+# Owner Public Key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
+# Active Public Key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
+
+# >>> print(account_master.owner_key)
+# Private key: 5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp
+# Public key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
+
+# >>> print(account_master.active_key)
+# Private key: 5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp
+# Public key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
+#     """, 'magenta')
+
+
+
+#     wallet = eosf.Wallet("tokenika", tokenika_pass)
+#     # wallet.list()
+#     # wallet.keys()
+#     # wallet.open()
+#     # wallet.unlock()
+#     # wallet.import_key("5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp")
+#     # 
+#     return    
+#     cleos.GetAccount("upe1ahhgb3xq")
+
+
+#     wallet.restore_accounts(globals())
+
+#     cprint("""
+# Chose one item from the list of restored account objects. 
+# If it is `play11111111`, then:
+#     """, 'magenta')
+
+#     print(play11111111.account())

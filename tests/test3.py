@@ -93,7 +93,7 @@ use `contract_test.build()`:
 Deploy the contract use `contract_test.deploy()`:
     """, 'magenta')
 
-    ok = contract_test.deploy()
+    deployed = contract_test.deploy()
 
     cprint("""
 Confirm that the account `account_test` contains a contract code:

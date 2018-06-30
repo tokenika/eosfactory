@@ -79,7 +79,7 @@ Define a contract, with its code specified in the EOS repository
     """, 'magenta')
 
     contract_et = eosf.Contract(account_et, "eosio.token")
-    ok = contract_et.deploy()
+    contract = contract_et.deploy()
     account_et.code()
 
     action = account_et.push_action(
@@ -134,68 +134,9 @@ Continue operations on the restored account objects:
         account_alice)
 
     cprint("""
-However, note that the accounts have to be declared global, in order to be 
+Note that the accounts have to be declared global, in order to be 
 restorable with the current means.
     """, 'magenta')
-
-#     cprint("""
-# Restoration of the accounts is important when working with remote EOSIO nodes.
-# Switch a remote node `54.38.137.99:8888`:
-#     """, 'magenta')
-
-#     cleos.dont_keosd(False)
-#     setup.set_nodeos_URL("54.38.137.99:8888")
-#     cleos.WalletStop()
-#     setup.set_debug_mode()
-
-#     wallet_name = "tokenika"
-#     wallet = eosf.Wallet(wallet_name)
-
-#     cprint("""
-# Restoration of the accounts is important when working with remote EOSIO nodes.
-# Switch a remote node `54.38.137.99:8888`:
-#     """, 'magenta')
-    # tokenika_pass = "PW5KRg1DeMrafTRbrYH44xNz9utzAX9JPC8ugYqH6PspVqPVUQBwQ"
-    # return
-    # account_master = cleos.AccountMaster()
-#     cprint("""
-# We have got the following message:
-
-# SAVE THE FOLLOWING DATA to use in the future to restore thisaccount object.
-# Accout Name: upe1ahhgb3xq
-# Owner Public Key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
-# Active Public Key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
-
-# >>> print(account_master.owner_key)
-# Private key: 5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp
-# Public key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
-
-# >>> print(account_master.active_key)
-# Private key: 5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp
-# Public key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
-#     """, 'magenta')
-
-
-
-#     wallet = eosf.Wallet("tokenika", tokenika_pass)
-#     # wallet.list()
-#     # wallet.keys()
-#     # wallet.open()
-#     # wallet.unlock()
-#     # wallet.import_key("5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp")
-#     # 
-#     return    
-#     cleos.GetAccount("upe1ahhgb3xq")
-
-
-#     wallet.restore_accounts(globals())
-
-#     cprint("""
-# Chose one item from the list of restored account objects. 
-# If it is `play11111111`, then:
-#     """, 'magenta')
-
-#     print(play11111111.account())
 
 
 if __name__ == "__main__":

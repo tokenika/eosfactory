@@ -9,8 +9,6 @@ import json
 import time
 from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
-CONTRACT_NAME = "@CONTRACT_NAME@"
-
 cprint("""
 Use `cleos.dont_keosd()` instruction, then the wallets used for test are not
 managed by the EOSIO keosd and, hence, can be safely manipulated.
@@ -21,6 +19,7 @@ issued commands.
 
 cleos.dont_keosd()
 setup.set_verbose(True)
+#setup.set_debug_mode()
 
 
 def test():
@@ -75,7 +74,7 @@ Inspect the account, use `bob.account()`:
     account_et = eosf.account()
     wallet.import_key(account_et)
     
-    contract_et = eosf.Contract(account_et, CONTRACT_NAME)
+    contract_et = eosf.Contract(account_et, "eosio.token")
 
     cprint("""
 test contract_et.code():
@@ -87,7 +86,8 @@ test contract_et.code():
 test contract_et.deploy():
     """, 'magenta')
 
-    deployed = contract_et.deploy()
+    contract = contract_et.deploy()
+    contract.get_transaction()
 
     cprint("""
 test contract_et.get_code():
@@ -106,92 +106,14 @@ test contract_et.push_action("create"):
             + '", "maximum_supply":"1000000000.0000 EOS", \
             "can_freeze":0, "can_recall":0, "can_whitelist":0}')
 
-    cprint("""
-test contract_et.push_action("issue"):
-    """, 'magenta')
-
-    action = contract_et.push_action(
-        "issue", 
-        '{"to":"' + str(alice)
-            + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
-            account_eosio)
-
-    cprint("""
-test contract_et.push_action("transfer", alice):
-        """, 'magenta')
-        
-    action = contract_et.push_action(
-        "transfer", 
-        '{"from":"' 
-            + str(alice)
-            + '", "to":"' + str(carol)
-            + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
-        alice)
-
     time.sleep(1)
 
     cprint("""
-test contract_et.push_action("transfer", carol):
-    """, 'magenta')
-        
-    action = contract_et.push_action(
-        "transfer", 
-        '{"from":"' 
-            + str(carol)
-            + '", "to":"' + str(bob)
-            + '", "quantity":"13.0000 EOS", "memo":"memo"}', 
-        carol)
-
-    cprint("""
-test contract_et.push_action("transfer" bob):
-    """, 'magenta')
-        
-    action = contract_et.push_action(
-        "transfer", 
-        '{"from":"' 
-            + str(bob)
-            + '", "to":"' 
-            + str(alice)
-            + '", "quantity":"2.0000 EOS", "memo":"memo"}', 
-        bob)
-
-    cprint("""
-Get database table, use `contract_et.get_table("accounts", alice)`:
+See a resume of the transaction:
     """, 'magenta')
 
-    t1 = contract_et.get_table("accounts", alice)
-    
-    cprint("""
-Get database table, use `contract_et.get_table("accounts", bob)`:
-    """, 'magenta')
+    action.get_transaction()
 
-    t2 = contract_et.get_table("accounts", bob)
-    
-    cprint("""
-Get database table, use `contract_et.get_table("accounts", carol)`:
-    """, 'magenta')
-    
-    t3 = contract_et.get_table("accounts", carol)
-
-    cprint("""
-assert(t1.json["rows"][0]["balance"] == "77.0000 EOS":
-    """, 'magenta')
-
-    time.sleep(1)
-
-    assert(t1.json["rows"][0]["balance"] == '77.0000 EOS')
-    
-    cprint("""
-assert(t2.json["rows"][0]["balance"] == "11.0000 EOS":
-    """, 'magenta')
-
-    assert(t2.json["rows"][0]["balance"] == '11.0000 EOS')
-    
-    cprint("""
-assert(t3.json["rows"][0]["balance"] == "12.0000 EOS":
-    """, 'magenta')
-
-    assert(t3.json["rows"][0]["balance"] == '12.0000 EOS')
 
     cprint("""
 Stop the EOSIO node, use `teos.node.stop()`:

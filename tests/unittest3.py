@@ -124,7 +124,7 @@ use `contract_test.build()`:
 Deploy the contract use `contract_test.deploy()`:
         """, 'magenta')
 
-        self.assertTrue(contract_test.deploy())
+        self.assertTrue(not contract_test.deploy().error)
     
         cprint("""
 Confirm that the account `account_test` contains a contract code:

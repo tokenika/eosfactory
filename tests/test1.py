@@ -86,7 +86,7 @@ test contract_et.code():
 test contract_et.deploy():
     """, 'magenta')
 
-    ok = contract_et.deploy()
+    deployed = contract_et.deploy()
 
     cprint("""
 test contract_et.get_code():

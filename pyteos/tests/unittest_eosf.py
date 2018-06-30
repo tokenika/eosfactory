@@ -71,14 +71,14 @@ class Test1(unittest.TestCase):
         wallet.import_key(account.active_key)
 
         contract = eosf.Contract(account, "tic_tac_toe")
-        is_deployed = contract.deploy()
+        contract = contract.deploy()
         info = cleos.GetInfo(is_verbose=-1)
 
         print(contract.contract.contract_path_absolute)
         print(contract.contract.error)
         if contract.contract.error:
             print(contract.contract.err_msg)
-        print(is_deployed)
+        print(not contract.error)
 
         print(colored("""
 Create a new contract template directory:
@@ -100,7 +100,7 @@ Again, create a new account, and add a contract to it:
 However, the contract cannot be deployed because it is not built yet. An attempt
 results in this error message:
         """, 'magenta'))
-        is_deployed = contract.deploy()
+        contract = contract.deploy()
         self.assertFalse(is_deployed)
         if contract.contract.error:
             print(contract.contract.err_msg)
@@ -108,10 +108,10 @@ results in this error message:
         print(colored("""
 Use the `build` method of the `eosf.Contract` object:
         """, 'magenta'))
-        if not is_deployed:
+        if contract.error:
             contract.build()
 
-        is_deployed = contract.deploy()
+        contract = contract.deploy()
         print("contract is deployed now: {}".format(is_deployed))
         
         self.assertTrue(template.delete())
@@ -128,8 +128,8 @@ Use the `build` method of the `eosf.Contract` object:
         wallet.import_key(account.active_key)
 
         contract = eosf.Contract(account, "eosio.token")
-        is_deployed = contract.deploy()
-        self.assertTrue(is_deployed)
+        deployed = contract.deploy()
+        self.assertTrue(not deployed.error)
 
         info = cleos.GetInfo(is_verbose=-1)
 
