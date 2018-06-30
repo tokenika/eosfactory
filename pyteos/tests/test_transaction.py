@@ -77,26 +77,26 @@ Inspect the account, use `bob.account()`:
     contract_et = eosf.Contract(account_et, "eosio.token")
 
     cprint("""
-test contract_et.code():
+Test contract_et.code():
     """, 'magenta')
 
     print("code hash: ".format(contract_et.code()))
 
     cprint("""
-test contract_et.deploy():
+Test contract_et.deploy():
     """, 'magenta')
 
     contract = contract_et.deploy()
     contract.get_transaction()
 
     cprint("""
-test contract_et.get_code():
+Test contract_et.get_code():
     """, 'magenta')
 
     print("code hash: ".format(contract_et.code()))
 
     cprint("""
-test contract_et.push_action("create"):
+Test contract_et.push_action("create"):
     """, 'magenta')
     
     action = contract_et.push_action(
