@@ -92,7 +92,7 @@ wallet-dir: .
 
     arg EOSIO_SHARED_MEMORY_SIZE_MB = { "EOSIO_SHARED_MEMORY_SIZE_MB", "100" };    
     arg EOSIO_BOOST_INCLUDE_DIR = { "EOSIO_BOOST_INCLUDE_DIR"
-      , "${U_HOME}/opt/boost_1_66_0/include", "/usr/local/include/" };
+      , "${U_HOME}/opt/boost/include", "/usr/local/include/" };
     arg EOSIO_WASM_CLANG = { "EOSIO_WASM_CLANG"
       , "${U_HOME}/opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"};
       // EOSIO_WASM_CLANG: relative to U_HOME dir
@@ -812,7 +812,7 @@ Cannot determine the contract workspace.
     /*/////////////////////////////////////////////////////////////////////////
     // getEOSIO_BOOST_INCLUDE_DIR
         arg EOSIO_BOOST_INCLUDE_DIR = { "EOSIO_BOOST_INCLUDE_DIR"
-      , "${U_HOME}/opt/boost_1_66_0/include", "/usr/local/include/" };
+      , "${U_HOME}/opt/boost/include", "/usr/local/include/" };
     /////////////////////////////////////////////////////////////////////////*/
     string getEOSIO_BOOST_INCLUDE_DIR(TeosControl* teosControl){
       return getValidPath(teosControl, EOSIO_BOOST_INCLUDE_DIR, "boost/version.hpp");
