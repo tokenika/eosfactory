@@ -62,7 +62,7 @@ Active Private Key: 5KfDH4hRXUEdzxv9jzf8EDj7gF2qTSkHprmM4uekK9Huc8GcDK6
 
     else:
 ##############################################################################
-# Registered to a testnode
+# Registered to the testnode
 ##############################################################################
 
         restored = wallet.restore_accounts(globals())
