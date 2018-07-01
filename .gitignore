@@ -53,3 +53,4 @@ teos/teos_lib/eos_interface.1.cpp#
 .vscode/launch.json
 .vscode/settings.json
 .vscode/tasks.json
+vsc_extension/vscode-extension-samples/

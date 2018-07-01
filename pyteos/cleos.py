@@ -11,15 +11,13 @@ Python front-end for `EOSIO cleos`.
 
 """
 
+import random
 import os
 import subprocess
 import json as json_module
-import pprint
-import re
 import pathlib
 import setup
 import teos
-import random
 
 
 def reload():
@@ -128,18 +126,11 @@ class _Cleos:
         self._out = process.stdout.decode("utf-8")
         self.err_msg = process.stderr.decode("utf-8")
         self.is_verbose = setup.is_verbose() and is_verbose > 0
+        self.json = {}
 
         if setup.is_print_response() or setup.is_print_response():
             print(self.err_msg)
             print("")
-
-        # print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
-        # print(setup.is_verbose())
-        # print(is_verbose)
-        # print(self.is_verbose)
-        # # print(self._out)
-        # # print(self.err_msg)
-        # print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
 
         error_key_words = ["Error", "error", "Failed"]
         self.error = False
@@ -148,8 +139,6 @@ class _Cleos:
                 self.error = True
                 break
 
-        self.json = {}
-
         if self.error:
             self.json["ERROR"] = self.err_msg
             if setup.is_verbose() >= 0 and is_verbose >= 0:
@@ -157,13 +146,18 @@ class _Cleos:
                 print(self.err_msg)
                 print("")
 
+    def printself(self):
+        if self.is_verbose > 0:
+            print(self.__str__())
+
     def __str__(self):
         out = self._out + "\n"
         out = out + self.err_msg
         return out
     
     def __repr__(self):
-        return ""     
+        return ""
+
 
 def get_transaction_id(cleos_object):
     transaction_id = ""
@@ -229,8 +223,8 @@ class GetAccount(_Cleos):
             except:
                 pass
 
-            if self.is_verbose > 0:
-                print(self.__str__())
+            self.printself()
+
 
     def __str__(self):
         out = "name: {}\n".format(self.account_name)
@@ -260,8 +254,7 @@ class GetAccounts(_Cleos):
         if not self.error:
             self.json = json_module.loads(self._out)
             self.names = self.json['account_names']
-            if self.is_verbose > 0:
-                print(self.__str__())
+            self.printself()
 
 
 class GetTransaction(_Cleos):
@@ -290,8 +283,7 @@ class GetTransaction(_Cleos):
         if not self.error:
             self.json = json_module.loads(self._out)  
 
-            if self.is_verbose > 0:
-                print(self.__str__())
+            self.printself()
 
 
 class WalletCreate(_Cleos):
@@ -314,7 +306,6 @@ class WalletCreate(_Cleos):
     """
     def __init__(self, name="default", password="", is_verbose=1):    
         self.name = name
-        self.json = {}
         self.json["name"] = name
 
         if not password:
@@ -343,8 +334,7 @@ class WalletCreate(_Cleos):
                         is_verbose)
 
         if not self.error:
-            if self.is_verbose > 0:
-                print(self.__str__())
+            self.printself()
         
 
 class WalletStop(_Cleos):
@@ -357,8 +347,7 @@ class WalletStop(_Cleos):
         os.system("pkill keosd")
 
         if not self.error:
-            if self.is_verbose > 0:
-                print(self.__str__())
+            self.printself()
 
 
 class WalletList(_Cleos):
@@ -383,9 +372,7 @@ class WalletList(_Cleos):
         if not self.error:
             self.json = json_module.loads("{" + self._out.replace("Wallets", \
                 '"Wallets"', 1) + "}")
-
-            if self.is_verbose > 0:
-                print(self.__str__())                
+            self.printself()                
 
 
 class WalletImport(_Cleos):
@@ -430,12 +417,9 @@ class WalletImport(_Cleos):
             "wallet", "import", is_verbose)
 
         if not self.error:
-            self.json = {}
             self.json["key_private"] = key_private     
             self.key_private = key_private
-
-            if self.is_verbose > 0:
-                print(self.__str__())
+            self.printself()
 
 
 class WalletKeys(_Cleos):
@@ -463,7 +447,6 @@ class WalletKeys(_Cleos):
         _Cleos.__init__(
             self, [], "wallet", "keys", is_verbose)
 
-        self.json = {}
         if not self.error:
             if self._out == "[]\n":
                 self.json[""] = []
@@ -472,9 +455,12 @@ class WalletKeys(_Cleos):
                     .replace("[  ", "").replace('"',"").replace("]", "") \
                     .split(",  ")              
 
-            if self.is_verbose > 0:
-                print("Keys in all opened wallets:")
-                print(self.__str__())            
+            self.printself() 
+
+    def __str__(self):
+        out = "Keys in all opened wallets:\n"
+        out = out + str(_Cleos.__str__(self))
+        return out
 
 
 class WalletOpen(_Cleos):
@@ -505,8 +491,7 @@ class WalletOpen(_Cleos):
             self, ["--name", wallet_name], "wallet", "open", is_verbose)
 
         if not self.error:
-            if self.is_verbose > 0:
-                print(self.__str__())            
+            self.printself()            
 
 
 class WalletLock(_Cleos):
@@ -537,8 +522,7 @@ class WalletLock(_Cleos):
             self, ["--name", wallet_name], "wallet", "lock", is_verbose)
 
         if not self.error:
-            if self.is_verbose > 0:
-                print(self.__str__())
+            self.printself()
 
 
 class WalletUnlock(_Cleos):
@@ -576,8 +560,7 @@ class WalletUnlock(_Cleos):
             "wallet", "unlock", is_verbose)
 
         if not self.error:
-            if self.is_verbose > 0:
-                print(self.__str__())            
+            self.printself()            
 
 
 class GetInfo(_Cleos):
@@ -605,9 +588,7 @@ class GetInfo(_Cleos):
             self.head_block_time = self.json["head_block_time"]
             self.last_irreversible_block_num \
                 = self.json["last_irreversible_block_num"]
-
-            if self.is_verbose > 0:
-                print(self.__str__())
+            self.printself()
 
 
 def get_last_block():
@@ -665,9 +646,7 @@ class GetBlock(_Cleos):
             self.block_num = self.json["block_num"]
             self.ref_block_prefix = self.json["ref_block_prefix"]
             self.timestamp = self.json["timestamp"]
-
-            if self.is_verbose > 0:
-                print(self.__str__())            
+            self.printself()
 
 
 class GetCode(_Cleos):
@@ -711,13 +690,10 @@ class GetCode(_Cleos):
         _Cleos.__init__(self, args, "get", "code", is_verbose)
         
         if not self.error:
-            self.json = {}
             msg = str(self._out)
             self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
             self.code_hash = self.json["code_hash"]
-
-            if self.is_verbose > 0:
-                print(self.__str__())            
+            self.printself()
 
 
 class GetTable(_Cleos):
@@ -778,21 +754,16 @@ class GetTable(_Cleos):
 
         if binary:
             args.append("--binary")
-
         if limit:
             args.extend(["--limit", str(limit)])
-
         if key:
             try:
                 key_public = key.active_key_public
             except:
                 key_public = key
-
             args.extend(["--key", key_public])
-        
         if lower:
             args.extend(["--lower", lower])
-
         if upper:
             args.extend(["--upper", upper])
             
@@ -804,8 +775,7 @@ class GetTable(_Cleos):
             except:
                 pass
 
-            if self.is_verbose > 0:
-                print(self.__str__())            
+            self.printself()
 
 
 class CreateKey(_Cleos):
@@ -839,8 +809,7 @@ class CreateKey(_Cleos):
 
             _Cleos.__init__(
                 self, args, "create", "key", is_verbose)
-
-            self.json = {}
+            
             if not self.error:
                 self.json["name"] = key_name
                 msg = str(self._out)
@@ -849,13 +818,12 @@ class CreateKey(_Cleos):
                 second_collon = msg.find(":", first_collon + 1)
                 self.json["privateKey"] = msg[first_collon + 2 : first_end]
                 self.json["publicKey"] = msg[second_collon + 2 : len(msg) - 1]
-
-                if self.is_verbose > 0:
-                    print(self.__str__())
+                self.printself()
 
         self.name = key_name
         self.key_private = self.json["privateKey"]
         self.key_public = self.json["publicKey"]
+
 
 class RestoreAccount():
 
@@ -952,42 +920,31 @@ class CreateAccount(_Cleos):
 
         if not active_key:
             active_key = owner_key
-
         try:
             active_key_public = active_key.key_public
             self.active_key = active_key.key_private
         except:
             active_key_public = active_key
 
-        args = []
+        args = [creator_name, name, owner_key_public, active_key_public]
         if setup.is_json():
             args.append("--json")
-
-        args.extend([creator_name, name, owner_key_public, active_key_public])
-
         if permission:
             try:
                 permission_name = permission.name
             except:
                 permission_name = permission
-
             args.extend(["--permission", permission_name])
-
         if skip_signature:
             args.append("--skip-sign")
-
         if dont_broadcast:
             args.append("--dont-broadcast")
-
         if forceUnique:
             args.append("--force-unique")
-
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", max_cpu_usage])
-
         if  max_net_usage:
             args.extend(["--max-net-usage", max_net_usage])
-
         if  ref_block:
             args.extend(["--ref-block", ref_block])
         
@@ -998,9 +955,7 @@ class CreateAccount(_Cleos):
         if not self.error:
             self.transaction = get_transaction_id(self)
             self.json = GetAccount(self.name, is_verbose=0, json=True).json
-
-            if self.is_verbose > 0:
-                print(self.__str__())            
+            self.printself()
 
     def account(self):
         return str(GetAccount(self.name, is_verbose=0))
@@ -1013,10 +968,7 @@ class CreateAccount(_Cleos):
 
 
 def account_name():
-    letters = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', \
-                'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', \
-                'q', 'r', 's', 't', 'u', 'v', 'w', 'x', \
-                'y', 'z', '1', '2', '3', '4', '5']
+    letters = "abcdefghijklmnopqrstuvwxyz12345"
     name = ""
     for i in range(0, 12):
         name += letters[random.randint(0, 30)]
@@ -1039,14 +991,14 @@ class AccountMaster:
             self.owner_key = CreateKey("owner", is_verbose=0)
             self.active_key = CreateKey("active", is_verbose=0)
             print(
-                "Register the following data with a testnode and\n" \
-                + "save them to restore in the future this account object.\n" \
+                "Register the following data with a testnode, and\n" \
+                + "save them, to restore this account object in the future.\n" \
                 + "Accout Name: {}\n".format(self.name) \
                 + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
                 + "Active Public Key: {}\n".format(self.active_key.key_public) \
                 + "\n\n" \
                 + "Owner Private Key: {}\n".format(self.owner_key.key_private) \
-                + "Active Private Key: {}\n".format(self.active_key.key_public))
+                + "Active Private Key: {}\n".format(self.active_key.key_private))
         else: # restore the master account
             self.name = name
             self.new_account = False
@@ -1067,19 +1019,15 @@ class AccountMaster:
 class AccountEosio():
 
     def __init__(self, is_verbose=1): 
-        self.name = "eosio"        
-        self.json = {}
+        self.name = "eosio"
+        self.json = {}       
         self.json["name"] = self.name
-
         self.json["privateKey"] = \
             "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
         self.json["publicKey"] = \
             "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-
         self.key_private = self.json["privateKey"]
         self.key_public = self.json["publicKey"]
-
-
         self._out = "transaction id: eosio" 
 
     def __str__(self):
@@ -1158,21 +1106,19 @@ class SetContract(_Cleos):
             abi_file = config.json["contract-abi"]
         except:
             self.error = True
-            self.json = {}
             self.json["ERROR"] = "cannot find the contract directory."
             return
             
-        args = []
+        args = [self.account_name, self.contract_path_absolute]
         if setup.is_json():
             args.append("--json")
-
         if permission:
             try:
                 permission_name = permission.name
             except:
                 permission_name = permission
-
             args.extend(["--permission", permission_name])
+
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -1185,12 +1131,8 @@ class SetContract(_Cleos):
             args.extend(["--max-net-usage", max_net_usage])
         if  ref_block:
             args.extend(["--ref-block", ref_block]) 
-
-        args.extend([self.account_name, self.contract_path_absolute])
-
         if wast_file:
             args.append(wast_file)
-        
         if abi_file:
             args.append(abi_file)
 
@@ -1199,8 +1141,7 @@ class SetContract(_Cleos):
 
         if not self.error:
             self.transaction = get_transaction_id(self)
-            if self.is_verbose > 0:
-                print(self.__str__())
+            self.printself()
 
     def get_transaction(self):
         return GetTransaction(self.transaction)
@@ -1262,11 +1203,9 @@ class PushAction(_Cleos):
         except:
             self.account_name = account
 
-        args = []
+        args = [self.account_name, action, data]
         if setup.is_json():
             args.append("--json")
-
-        args.extend([self.account_name, action, data])
 
         if permission:
             try:
@@ -1301,8 +1240,7 @@ class PushAction(_Cleos):
             except:
                 pass
 
-            if self.is_verbose > 0:
-                print(self.__str__())
+            self.printself()
 
     def get_transaction(self):
         return GetTransaction(self.transaction)

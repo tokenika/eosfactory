@@ -16,7 +16,7 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        setup.set_verbose(False)
+        setup.set_verbose(True)
         setup.set_json(False)
         cleos.dont_keosd()
 

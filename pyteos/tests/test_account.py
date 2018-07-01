@@ -96,9 +96,8 @@ Define a contract, with its code specified in the EOS repository
             account_eosio)
     
     cprint("""
-The code of the account is not null anymore. Experiments with the `eosio.token`
-contract are shown elsewere. Here, we show how the session accounts recover after
-a session restart.
+Experiments with the `eosio.token` contract are shown elsewere. Here, we show 
+how the session accounts recover after restarting the session.
     """, 'magenta')
 
     account_alice = None
@@ -106,6 +105,7 @@ a session restart.
     account_carol = None
     account_et = None
     contract_et = None
+    wallet = None
 
     wallet = eosf.Wallet()
 

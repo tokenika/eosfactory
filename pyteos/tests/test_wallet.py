@@ -13,12 +13,10 @@ is_registered_to_testnode = True
 
 def test():
     cleos.dont_keosd(False)
-    setup.set_nodeos_URL("54.38.137.99:8888")
+    setup.set_nodeos_URL("dev.cryptolions.io:38888")
     #setup.set_debug_mode()    
     cleos.WalletStop()
 
-    # wallet_name = "tokenika3"
-    # wallet_pass = "PW5JJ3ZJW3G1ezbfb8K8JQq3m4DCiaZB4knU3f88BHpbtsviogui3"
     wallet_name = "default"
     wallet_pass = "PW5K7Vz63bEEjTTVvRQMTqB3JVvJ7sGUYoN1fwDqA246JayKuiwnh"
 
@@ -35,7 +33,7 @@ Without password imported keys will not be retrievable.
 
 
     if not is_registered_to_testnode:
-##############################################################################        
+##############################################################################
 # Register to a testnode:
 ##############################################################################
 
@@ -56,14 +54,31 @@ Active Private Key: EOS85aw98yY3XZR4hcjjijprog2zAGdDMZFhsbVrAESzXFRRzbsNZ
               
         """, 'magenta')
 
-        #wallet.import_key(account_master)
+        wallet.import_key(account_master)
 
     else:
 ##############################################################################
 # Registered to a testnode
 ##############################################################################
-        setup.set_debug_mode()
-        print(cleos.GetAccount("nfldugwdvcb5"))
+        #setup.set_debug_mode()
+        #wallet.import_key(account_master)
+        key_owner = cleos.CreateKey(
+            "owner",
+            "EOS5qxcKNeALwjHryCrbbhaHDy9CS1Fj5JQ7HikArb7VVNhpJoRys",
+            "5JeGvwGC1FNyNdY8vjLmJqXajWf48aw1cpYJVaHboEXES81NgyH")
+
+        key_active = cleos.CreateKey(
+            "active",
+            "EOS5qxcKNeALwjHryCrbbhaHDy9CS1Fj5JQ7HikArb7VVNhpJoRys",
+            "5JeGvwGC1FNyNdY8vjLmJqXajWf48aw1cpYJVaHboEXES81NgyH")
+            
+        account_master = cleos.AccountMaster(
+            "nfldugwdvcb5",
+            "EOS5qxcKNeALwjHryCrbbhaHDy9CS1Fj5JQ7HikArb7VVNhpJoRys",
+            "EOS85aw98yY3XZR4hcjjijprog2zAGdDMZFhsbVrAESzXFRRzbsNZ"
+        )
+
+        print(account_master.account())
 
         #wallet.restore_accounts(globals())
 
