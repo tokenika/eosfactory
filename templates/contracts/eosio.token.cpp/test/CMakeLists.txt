@@ -84,7 +84,7 @@ macro( applLinkLibraries applName )
 
   target_include_directories( ${applName} 
     PRIVATE
-      ${BOOST_INCLUDE_DIR}
+      ${Boost_INCLUDE_DIRS}
       ${OPENSSL_INCLUDE_DIR}
       include "$ENV{EOSIO_EOSFACTORY_DIR}/teos/teos"
       include "$ENV{EOSIO_EOSFACTORY_DIR}/teos/teos_lib/include"
