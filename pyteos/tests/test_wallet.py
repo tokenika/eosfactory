@@ -11,21 +11,25 @@ import time
 setup.set_verbose(True)
 is_registered_to_testnode = True
 
+
+
+
 def test():
-    cleos.dont_keosd(False)
-    setup.set_nodeos_URL("dev.cryptolions.io:38888")
-    #setup.set_debug_mode()    
+    cleos.use_keosd(True)
+
+    setup.set_nodeos_URL("dev.cryptolions.io:38888")  
     cleos.WalletStop()
 
     wallet_name = "default"
-    wallet_pass = "PW5K7Vz63bEEjTTVvRQMTqB3JVvJ7sGUYoN1fwDqA246JayKuiwnh"
+    wallet_pass = "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N"
+    global account_master
 
     wallet = eosf.Wallet(wallet_name, wallet_pass)
     cprint("""
 Creating wallet: default
 Save password to use in the future to unlock this wallet.
 Without password imported keys will not be retrievable.
-"PW5K7Vz63bEEjTTVvRQMTqB3JVvJ7sGUYoN1fwDqA246JayKuiwnh"
+"PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N"
     """, 'magenta')
 
     wallet.list()
@@ -39,15 +43,15 @@ Without password imported keys will not be retrievable.
 
         account_master = cleos.AccountMaster()
         cprint("""
-Register the following data with a testnode and
-save them to restore in the future this account object.
-Accout Name: nfldugwdvcb5
-Owner Public Key: EOS5qxcKNeALwjHryCrbbhaHDy9CS1Fj5JQ7HikArb7VVNhpJoRys
-Active Public Key: EOS85aw98yY3XZR4hcjjijprog2zAGdDMZFhsbVrAESzXFRRzbsNZ
+Register the following data with a testnode, and
+save them, to restore this account object in the future.
+Accout Name: nbhyi5exmjcl
+Owner Public Key: EOS64THtE5PNEDajKagPg7fERibWRvCjfFmMtQBPSvtnqJivgeeBG
+Active Public Key: EOS7g6S8cC4RnXmC36Ub632H9Mf259jTk7oSJZoMgmPmqM9F4xY2k
 
 
-Owner Private Key: 5JeGvwGC1FNyNdY8vjLmJqXajWf48aw1cpYJVaHboEXES81NgyH
-Active Private Key: EOS85aw98yY3XZR4hcjjijprog2zAGdDMZFhsbVrAESzXFRRzbsNZ
+Owner Private Key: 5JCoQuSAFWNdRFMianHyDJn2YrHHRuoU9ePqxkErSiWuAw3AtYb
+Active Private Key: 5KfDH4hRXUEdzxv9jzf8EDj7gF2qTSkHprmM4uekK9Huc8GcDK6
         """, 'magenta')
 
         cprint("""
@@ -60,115 +64,37 @@ Active Private Key: EOS85aw98yY3XZR4hcjjijprog2zAGdDMZFhsbVrAESzXFRRzbsNZ
 ##############################################################################
 # Registered to a testnode
 ##############################################################################
-        #setup.set_debug_mode()
-        #wallet.import_key(account_master)
-        key_owner = cleos.CreateKey(
-            "owner",
-            "EOS5qxcKNeALwjHryCrbbhaHDy9CS1Fj5JQ7HikArb7VVNhpJoRys",
-            "5JeGvwGC1FNyNdY8vjLmJqXajWf48aw1cpYJVaHboEXES81NgyH")
 
-        key_active = cleos.CreateKey(
-            "active",
-            "EOS5qxcKNeALwjHryCrbbhaHDy9CS1Fj5JQ7HikArb7VVNhpJoRys",
-            "5JeGvwGC1FNyNdY8vjLmJqXajWf48aw1cpYJVaHboEXES81NgyH")
-            
-        account_master = cleos.AccountMaster(
-            "nfldugwdvcb5",
-            "EOS5qxcKNeALwjHryCrbbhaHDy9CS1Fj5JQ7HikArb7VVNhpJoRys",
-            "EOS85aw98yY3XZR4hcjjijprog2zAGdDMZFhsbVrAESzXFRRzbsNZ"
-        )
-
+        restored = wallet.restore_accounts(globals())
+        print()
         print(account_master.account())
 
-        #wallet.restore_accounts(globals())
+        global account_alice
 
-    
+        if "account_alice" in restored:
+            print(account_alice.account())
+        else:
 
-    #cleos.WalletStop()    
-    return    
-    cleos.WalletUnlock(wallet_name, wallet_pass)
+            cprint("""
+./programs/cleos/cleos -u http://"dev.cryptolions.io:38888 system newaccount 
+    nbhyi5exmjcl ljzirxm1wy1n 
+    EOS6wAChSUxgHpUaG8bdCSKVFEMbmT85qnja1bh7zaWiYDp4sLW98 
+    EOS6wAChSUxgHpUaG8bdCSKVFEMbmT85qnja1bh7zaWiYDp4sLW98 
+    --buy-ram-kbytes 8 --stake-net '100 EOS' --stake-cpu '100 EOS' --transfer
+            """, 'magenta')
 
-    wallet = eosf.Wallet(wallet_name, is_verbose=1)
-    # print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
-    # print(wallet.error)
-    # print(wallet.err_msg)
-    # print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
-
-    wallet = eosf.Wallet(wallet_name, tokenika_pass)
-    # wallet.list()
-    # wallet.keys()
-    # wallet.open()
-    # wallet.unlock()
-    # wallet.import_key("5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp")
-    # 
-    
-    cleos.GetAccount("upe1ahhgb3xq")
+            account_alice = eosf.account(
+                account_master,
+                stake_net="100 EOS",
+                stake_cpu="100 EOS",
+                buy_ram_kbytes="8",
+                transfer=True)
+            if(not account_alice.error):
+                wallet.import_key(account_alice)
 
 
-    wallet.restore_accounts(globals())
+    cleos.WalletStop()
 
-    print(play11111111.account())
 
 if __name__ == "__main__":
     test()
-
-
-
-#     cprint("""
-# Restoration of the accounts is important when working with remote EOSIO nodes.
-# Switch a remote node `54.38.137.99:8888`:
-#     """, 'magenta')
-
-#     cleos.dont_keosd(False)
-#     setup.set_nodeos_URL("54.38.137.99:8888")
-#     cleos.WalletStop()
-#     setup.set_debug_mode()
-
-#     wallet_name = "tokenika"
-#     wallet = eosf.Wallet(wallet_name)
-
-#     cprint("""
-# Restoration of the accounts is important when working with remote EOSIO nodes.
-# Switch a remote node `54.38.137.99:8888`:
-#     """, 'magenta')
-    # tokenika_pass = "PW5KRg1DeMrafTRbrYH44xNz9utzAX9JPC8ugYqH6PspVqPVUQBwQ"
-    # return
-    # account_master = cleos.AccountMaster()
-#     cprint("""
-# We have got the following message:
-
-# SAVE THE FOLLOWING DATA to use in the future to restore thisaccount object.
-# Accout Name: upe1ahhgb3xq
-# Owner Public Key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
-# Active Public Key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
-
-# >>> print(account_master.owner_key)
-# Private key: 5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp
-# Public key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
-
-# >>> print(account_master.active_key)
-# Private key: 5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp
-# Public key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
-#     """, 'magenta')
-
-
-
-#     wallet = eosf.Wallet("tokenika", tokenika_pass)
-#     # wallet.list()
-#     # wallet.keys()
-#     # wallet.open()
-#     # wallet.unlock()
-#     # wallet.import_key("5HrA3vzVpavzgbRpiYD5T8jG4eVaeygGCi1spydZQSFBgVCpzQp")
-#     # 
-#     return    
-#     cleos.GetAccount("upe1ahhgb3xq")
-
-
-#     wallet.restore_accounts(globals())
-
-#     cprint("""
-# Chose one item from the list of restored account objects. 
-# If it is `play11111111`, then:
-#     """, 'magenta')
-
-#     print(play11111111.account())

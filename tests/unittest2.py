@@ -10,7 +10,7 @@ import eosf
 from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
 setup.set_verbose(False)
-cleos.dont_keosd()
+cleos.use_keosd(False)
 
 class Test1(unittest.TestCase):
 

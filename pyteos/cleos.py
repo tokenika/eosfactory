@@ -39,10 +39,10 @@ def reset_nodeos_URL():
 
 
 _wallet_url = []
-def dont_keosd(status=True):
-    """ Do not use `keosd` Wallet Manager.
+def use_keosd(status=False):
+    """ Do use `keosd` Wallet Manager.
 
-    Instead, use `nodeos`. See https://github.com/EOSIO/eos/wiki/CLI-Wallet
+    Or use `nodeos`. See https://github.com/EOSIO/eos/wiki/CLI-Wallet
     for explanations.
 
     If wallets are not managed by `keosd`, they can be reset with the
@@ -51,17 +51,17 @@ def dont_keosd(status=True):
     """
     global _wallet_url
     if status:
+        _wallet_url = []
+    else:
         WalletStop(is_verbose=-1)
         config = teos.GetConfig(
             "", is_verbose=0)
         _wallet_url = ["--wallet-url", "http://" \
             + config.json["EOSIO_DAEMON_ADDRESS"]]
-    else:
-        _wallet_url = []
-
+        
 
 def is_keosd():
-    return not _wallet_url != []
+    return _wallet_url == []
 
 
 class _Cleos:
@@ -178,8 +178,7 @@ def get_transaction_id(cleos_object):
 
 def get_wallet_dir():
     if is_keosd():
-        wallet_dir = \
-            os.path.expandvars(teos.get_keosd_wallet_dir())
+        wallet_dir = os.path.expandvars(teos.get_keosd_wallet_dir())
     else:
         wallet_dir = teos.get_node_wallet_dir()
 

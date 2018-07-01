@@ -10,7 +10,7 @@ import time
 
 setup.set_json(False)        
 setup.set_verbose(True)
-cleos.dont_keosd()
+cleos.use_keosd(False)
 
 class Test1(unittest.TestCase):
 

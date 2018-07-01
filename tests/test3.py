@@ -8,13 +8,13 @@ import eosf
 from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
 cprint("""
-Use `cleos.dont_keosd()` instruction, then the wallets used for test are not
+Use `cleos.use_keosd(False)` instruction, then the wallets are not
 managed by the EOSIO keosd and, hence, can be safely manipulated.
 
 If you use `setup.set_verbose(True)`, you can see the response messages of the
 issued commands.
 """, 'magenta')
-cleos.dont_keosd()
+cleos.use_keosd(False)
 setup.set_verbose(True)
 setup.set_json(False)
 

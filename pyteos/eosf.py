@@ -47,7 +47,6 @@ class Wallet(cleos.WalletCreate):
         is_verbose: Verbosity at the constraction time.  
     """
     def __init__(self, name="default", password="", is_verbose=1):
-
         if not cleos.is_keosd(): # look for password:
             wallet_dir = os.path.expandvars(teos.get_node_wallet_dir())
             try:
@@ -190,7 +189,7 @@ class Wallet(cleos.WalletCreate):
                 print("     empty list")
         
         namespace.update(restored)
-        return ""
+        return restored
 
     def keys(self):
         """ Lists public keys from all unlocked wallets.

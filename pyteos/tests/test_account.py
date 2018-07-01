@@ -10,7 +10,7 @@ import time
 
 setup.set_json(False)        
 setup.set_verbose(True)
-cleos.dont_keosd()
+cleos.use_keosd(False)
 
 cprint("""
 Testing `eosf.account()`.
@@ -115,7 +115,7 @@ in the wallet directory.
 
 Note that this provision is available only if the `keosd` Wallet Manager is not 
 used and wallets are managed by the local node - this condition is set with the
-`cleos.dont_keosd()` statement above.
+`cleos.use_keosd(False)` statement above.
     """, 'magenta')
 
     wallet.restore_accounts(globals())

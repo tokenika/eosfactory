@@ -18,7 +18,7 @@ class Test1(unittest.TestCase):
     def setUpClass(cls):
         setup.set_verbose(True)
         setup.set_json(False)
-        cleos.dont_keosd()
+        cleos.use_keosd(False)
 
     def setUp(self):
         pass

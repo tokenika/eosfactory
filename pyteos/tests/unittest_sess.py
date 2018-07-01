@@ -9,7 +9,7 @@ import unittest
 class TestSessionInit(unittest.TestCase):
 
     setup.set_verbose(False)
-    cleos.dont_keosd()    
+    cleos.use_keosd(False)    
 
     def run(self, result=None):
         """ Stop after first error """      

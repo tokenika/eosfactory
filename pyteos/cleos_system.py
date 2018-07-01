@@ -114,14 +114,9 @@ class SystemNewaccount(cleos._Cleos):
         except:
             active_key_public = active_key
 
-        args = []
+        args = [creator_name, name, owner_key_public, active_key_public]
         if setup.is_json():
             args.append("--json")
-            ok_substring = ["transaction_id", ""]
-        else:
-            ok_substring = ["", "executed transaction:"]
-
-        args.extend([creator_name, name, owner_key_public, active_key_public])
         args.extend(["--stake-net", stake_net, "--stake-cpu", stake_cpu])
         if buy_ram_kbytes:
             args.extend(["--buy-ram-kbytes", str(buy_ram_kbytes)])
@@ -152,8 +147,7 @@ class SystemNewaccount(cleos._Cleos):
         self.name = name
 
         cleos._Cleos.__init__(
-            self, args, "system", "newaccount", is_verbose, 
-            ok_substring=ok_substring)
+            self, args, "system", "newaccount", is_verbose)
             
         if not self.error and setup.is_json():
             self.json = cleos.GetAccount(
