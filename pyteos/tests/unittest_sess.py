@@ -33,7 +33,7 @@ Start a local test EOSIO node:
         self.assertTrue(ok)
         
         print("""
-Create a local wallet (not with EOSIO `keosd` application:
+Create a local wallet (not with EOSIO `keosd` application):
         """)
         global wallet
         wallet = eosf.Wallet()
