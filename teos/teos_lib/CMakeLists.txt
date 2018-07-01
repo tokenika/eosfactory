@@ -9,9 +9,9 @@ set( TEST_HTTP_ADDRESS "eos-testapi.tokenika.io:8888" )
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
 set( Boost_USE_STATIC_RUNTIME OFF )
-set( BOOST_ROOT "$ENV{U_HOME}/opt/boost_1_66_0" )
+set( BOOST_ROOT "$ENV{U_HOME}/opt/boost" )
 
-find_package(Boost 1.66 REQUIRED COMPONENTS 
+find_package(Boost 1.67 REQUIRED COMPONENTS 
   thread  
   date_time   
   filesystem  
@@ -23,7 +23,7 @@ find_package(Boost 1.66 REQUIRED COMPONENTS
 )
 if( Boost_FOUND )
   message( STATUS "Boost found.
-  EOSIO_BOOST_INCLUDE_DIRS: ${EOSIO_BOOST_INCLUDE_DIRS}" )
+  Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}" )
 else( Boost_FOUND )
   message ( STATUS "Boost not found. set environment variables:
   BOOST_INCLUDEDIR (where is boost directory, usualy %BOOST_ROOT%)" )
@@ -59,7 +59,7 @@ add_library(${LIB_NAME} STATIC
 
 target_include_directories( ${LIB_NAME} 
   PRIVATE
-    ${EOSIO_BOOST_INCLUDE_DIR}
+    ${Boost_INCLUDE_DIRS}
   PUBLIC
     include
 )

@@ -26,7 +26,7 @@ find_package(Boost 1.66 REQUIRED COMPONENTS
 )
 if( Boost_FOUND )
   message( STATUS "Boost found.
-  EOSIO_BOOST_INCLUDE_DIRS: ${EOSIO_BOOST_INCLUDE_DIRS}
+  Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}
   Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}" )
 else( Boost_FOUND )
   message ( STATUS "Boost not found. set environment variables:
@@ -84,7 +84,7 @@ macro( applLinkLibraries applName )
 
   target_include_directories( ${applName} 
     PRIVATE
-      ${EOSIO_BOOST_INCLUDE_DIR}
+      ${BOOST_INCLUDE_DIR}
       ${OPENSSL_INCLUDE_DIR}
       include "$ENV{EOSIO_EOSFACTORY_DIR}/teos/teos"
       include "$ENV{EOSIO_EOSFACTORY_DIR}/teos/teos_lib/include"

@@ -10,7 +10,7 @@
 # latter case skip to the "Boost CMake" section below.  For the former
 # case results are reported in variables:
 #  Boost_FOUND            - True if headers and requested libraries were found
-#  EOSIO_BOOST_INCLUDE_DIRS     - Boost include directories
+#  Boost_INCLUDE_DIRS     - Boost include directories
 #  Boost_LIBRARY_DIRS     - Link directories for Boost libraries
 #  Boost_LIBRARIES        - Boost component libraries to be linked
 #  Boost_<C>_FOUND        - True if component <C> was found (<C> is upper-case)
@@ -37,7 +37,7 @@
 #                         - List of Boost versions not known to this module
 #                           (Boost install locations may contain the version)
 # and saves search results persistently in CMake cache entries:
-#  EOSIO_BOOST_INCLUDE_DIR         - Directory containing Boost headers
+#  Boost_INCLUDE_DIR         - Directory containing Boost headers
 #  Boost_LIBRARY_DIR         - Directory containing Boost libraries
 #  Boost_<C>_LIBRARY_DEBUG   - Component <C> library debug variant
 #  Boost_<C>_LIBRARY_RELEASE - Component <C> library release variant
@@ -49,9 +49,9 @@
 #
 # This module first searches for the Boost header files using the above hint
 # variables (excluding BOOST_LIBRARYDIR) and saves the result in
-# EOSIO_BOOST_INCLUDE_DIR.  Then it searches for requested component libraries using
+# Boost_INCLUDE_DIR.  Then it searches for requested component libraries using
 # the above hints (excluding BOOST_INCLUDEDIR and Boost_ADDITIONAL_VERSIONS),
-# "lib" directories near EOSIO_BOOST_INCLUDE_DIR, and the library name configuration
+# "lib" directories near Boost_INCLUDE_DIR, and the library name configuration
 # settings below.  It saves the library directory in Boost_LIBRARY_DIR and
 # individual library locations in Boost_<C>_LIBRARY_DEBUG and
 # Boost_<C>_LIBRARY_RELEASE.  When one changes settings used by previous
@@ -108,7 +108,7 @@
 # Example to find Boost headers only:
 #  find_package(Boost 1.36.0)
 #  if(Boost_FOUND)
-#    include_directories(${EOSIO_BOOST_INCLUDE_DIRS})
+#    include_directories(${Boost_INCLUDE_DIRS})
 #    add_executable(foo foo.cc)
 #  endif()
 # Example to find Boost headers and some libraries:
@@ -117,7 +117,7 @@
 #  set(Boost_USE_STATIC_RUNTIME    OFF)
 #  find_package(Boost 1.36.0 COMPONENTS date_time filesystem system ...)
 #  if(Boost_FOUND)
-#    include_directories(${EOSIO_BOOST_INCLUDE_DIRS})
+#    include_directories(${Boost_INCLUDE_DIRS})
 #    add_executable(foo foo.cc)
 #    target_link_libraries(foo ${Boost_LIBRARIES})
 #  endif()
@@ -210,7 +210,7 @@ endif()
 #########################################################################
 
 macro(_Boost_ADJUST_LIB_VARS basename)
-  if(EOSIO_BOOST_INCLUDE_DIR )
+  if(Boost_INCLUDE_DIR )
     if(Boost_${basename}_LIBRARY_DEBUG AND Boost_${basename}_LIBRARY_RELEASE)
       # if the generator supports configuration types then set
       # optimized and debug libraries, or if the CMAKE_BUILD_TYPE has a value
@@ -570,15 +570,15 @@ endif()
 #  Search for Boost include DIR
 # ------------------------------------------------------------------------
 
-set(_Boost_VARS_INC BOOST_INCLUDEDIR EOSIO_BOOST_INCLUDE_DIR Boost_ADDITIONAL_VERSIONS)
+set(_Boost_VARS_INC BOOST_INCLUDEDIR Boost_INCLUDE_DIR Boost_ADDITIONAL_VERSIONS)
 _Boost_CHANGE_DETECT(_Boost_CHANGE_INCDIR ${_Boost_VARS_DIR} ${_Boost_VARS_INC})
-# Clear EOSIO_BOOST_INCLUDE_DIR if it did not change but other input affecting the
+# Clear Boost_INCLUDE_DIR if it did not change but other input affecting the
 # location did.  We will find a new one based on the new inputs.
-if(_Boost_CHANGE_INCDIR AND NOT _EOSIO_BOOST_INCLUDE_DIR_CHANGED)
-  unset(EOSIO_BOOST_INCLUDE_DIR CACHE)
+if(_Boost_CHANGE_INCDIR AND NOT _Boost_INCLUDE_DIR_CHANGED)
+  unset(Boost_INCLUDE_DIR CACHE)
 endif()
 
-if(NOT EOSIO_BOOST_INCLUDE_DIR)
+if(NOT Boost_INCLUDE_DIR)
   set(_boost_INCLUDE_SEARCH_DIRS "")
   if(BOOST_INCLUDEDIR)
     list(APPEND _boost_INCLUDE_SEARCH_DIRS ${BOOST_INCLUDEDIR})
@@ -640,7 +640,7 @@ if(NOT EOSIO_BOOST_INCLUDE_DIR)
   endif()
 
   # Look for a standard boost header file.
-  find_path(EOSIO_BOOST_INCLUDE_DIR
+  find_path(Boost_INCLUDE_DIR
     NAMES         boost/config.hpp
     HINTS         ${_boost_INCLUDE_SEARCH_DIRS}
     PATH_SUFFIXES ${_boost_PATH_SUFFIXES}
@@ -653,16 +653,16 @@ endif()
 
 # Set Boost_FOUND based only on header location and version.
 # It will be updated below for component libraries.
-if(EOSIO_BOOST_INCLUDE_DIR)
+if(Boost_INCLUDE_DIR)
   if(Boost_DEBUG)
     message(STATUS "[ ${CMAKE_CURRENT_LIST_FILE}:${CMAKE_CURRENT_LIST_LINE} ] "
-                   "location of version.hpp: ${EOSIO_BOOST_INCLUDE_DIR}/boost/version.hpp")
+                   "location of version.hpp: ${Boost_INCLUDE_DIR}/boost/version.hpp")
   endif()
 
   # Extract Boost_VERSION and Boost_LIB_VERSION from version.hpp
   set(Boost_VERSION 0)
   set(Boost_LIB_VERSION "")
-  file(STRINGS "${EOSIO_BOOST_INCLUDE_DIR}/boost/version.hpp" _boost_VERSION_HPP_CONTENTS REGEX "#define BOOST_(LIB_)?VERSION ")
+  file(STRINGS "${Boost_INCLUDE_DIR}/boost/version.hpp" _boost_VERSION_HPP_CONTENTS REGEX "#define BOOST_(LIB_)?VERSION ")
   set(_Boost_VERSION_REGEX "([0-9]+)")
   set(_Boost_LIB_VERSION_REGEX "\"([0-9_]+)\"")
   foreach(v VERSION LIB_VERSION)
@@ -677,7 +677,7 @@ if(EOSIO_BOOST_INCLUDE_DIR)
   math(EXPR Boost_SUBMINOR_VERSION "${Boost_VERSION} % 100")
 
   set(Boost_ERROR_REASON
-    "${Boost_ERROR_REASON}Boost version: ${Boost_MAJOR_VERSION}.${Boost_MINOR_VERSION}.${Boost_SUBMINOR_VERSION}\nBoost include path: ${EOSIO_BOOST_INCLUDE_DIR}")
+    "${Boost_ERROR_REASON}Boost version: ${Boost_MAJOR_VERSION}.${Boost_MINOR_VERSION}.${Boost_SUBMINOR_VERSION}\nBoost include path: ${Boost_INCLUDE_DIR}")
   if(Boost_DEBUG)
     message(STATUS "[ ${CMAKE_CURRENT_LIST_FILE}:${CMAKE_CURRENT_LIST_LINE} ] "
                    "version.hpp reveals boost "
@@ -818,7 +818,7 @@ endif()
 #  Begin finding boost libraries
 # ------------------------------------------------------------------------
 set(_Boost_VARS_LIB BOOST_LIBRARYDIR Boost_LIBRARY_DIR)
-_Boost_CHANGE_DETECT(_Boost_CHANGE_LIBDIR ${_Boost_VARS_DIR} ${_Boost_VARS_LIB} EOSIO_BOOST_INCLUDE_DIR)
+_Boost_CHANGE_DETECT(_Boost_CHANGE_LIBDIR ${_Boost_VARS_DIR} ${_Boost_VARS_LIB} Boost_INCLUDE_DIR)
 # Clear Boost_LIBRARY_DIR if it did not change but other input affecting the
 # location did.  We will find a new one based on the new inputs.
 if(_Boost_CHANGE_LIBDIR AND NOT _Boost_LIBRARY_DIR_CHANGED)
@@ -842,10 +842,10 @@ else()
   endif()
 
   list(APPEND _boost_LIBRARY_SEARCH_DIRS
-    ${EOSIO_BOOST_INCLUDE_DIR}/lib
-    ${EOSIO_BOOST_INCLUDE_DIR}/../lib
-    ${EOSIO_BOOST_INCLUDE_DIR}/../lib/${CMAKE_LIBRARY_ARCHITECTURE}
-    ${EOSIO_BOOST_INCLUDE_DIR}/stage/lib
+    ${Boost_INCLUDE_DIR}/lib
+    ${Boost_INCLUDE_DIR}/../lib
+    ${Boost_INCLUDE_DIR}/../lib/${CMAKE_LIBRARY_ARCHITECTURE}
+    ${Boost_INCLUDE_DIR}/stage/lib
     )
   if( Boost_NO_SYSTEM_PATHS )
     list(APPEND _boost_LIBRARY_SEARCH_DIRS NO_CMAKE_SYSTEM_PATH)
@@ -1015,7 +1015,7 @@ endif()
 #  End finding boost libraries
 # ------------------------------------------------------------------------
 
-set(EOSIO_BOOST_INCLUDE_DIRS ${EOSIO_BOOST_INCLUDE_DIR})
+set(Boost_INCLUDE_DIRS ${Boost_INCLUDE_DIR})
 set(Boost_LIBRARY_DIRS ${Boost_LIBRARY_DIR})
 
 # The above setting of Boost_FOUND was based only on the header files.
@@ -1066,7 +1066,7 @@ if(Boost_FOUND)
     # Look for the boost library path.
     # Note that the user may not have installed any libraries
     # so it is quite possible the Boost_LIBRARY_DIRS may not exist.
-    set(_boost_LIB_DIR ${EOSIO_BOOST_INCLUDE_DIR})
+    set(_boost_LIB_DIR ${Boost_INCLUDE_DIR})
 
     if("${_boost_LIB_DIR}" MATCHES "boost-[0-9]+")
       get_filename_component(_boost_LIB_DIR ${_boost_LIB_DIR} PATH)
