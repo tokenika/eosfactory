@@ -10,7 +10,7 @@ list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules" )
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
 set( Boost_USE_STATIC_RUNTIME OFF )
-set( BOOST_ROOT "$ENV{U_HOME}/opt/boost_1_66_0" )
+set( BOOST_ROOT "$ENV{U_HOME}/opt/boost" )
 message(STATUS "BOOST_ROOT: ${BOOST_ROOT}")
 
 find_package(Boost 1.66 REQUIRED COMPONENTS 

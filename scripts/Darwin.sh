@@ -14,7 +14,7 @@ function setLinuxVariable() {
 }
 
 function setCompilersAndDependencies(){
-    export BOOST_ROOT=${U_HOME}/opt/boost_1_66_0
+    export BOOST_ROOT=${U_HOME}/opt/boost
     export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
     export WASM_ROOT=/usr/local/wasm
 

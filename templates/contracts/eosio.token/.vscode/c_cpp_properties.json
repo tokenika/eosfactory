@@ -6,7 +6,7 @@
                 "${EOSIO_SOURCE_DIR}/contracts",
                 "${EOSIO_SOURCE_DIR}/contracts/libc++/upstream/include",
                 "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
-                "${U_HOME}/opt/boost_1_66_0/include",
+                "${U_HOME}/opt/boost/include",
                 "/usr/local/include/",
                 "${EOSIO_SOURCE_DIR}/externals/magic_get/include",
                 "${workspaceFolder}"
@@ -18,16 +18,14 @@
                     "${EOSIO_SOURCE_DIR}/contracts",
                     "${EOSIO_SOURCE_DIR}/contracts/libc++/upstream/include",
                     "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
-                    "${U_HOME}/opt/boost_1_66_0/include",
+                    "${U_HOME}/opt/boost/include",
                     "/usr/local/include/",
                     "${EOSIO_SOURCE_DIR}/externals/magic_get/include",                    
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
-            },
-            "cStandard": "c11",
-            "cppStandard": "c++17"
+            }
         }        
     ],
     "version": 3
