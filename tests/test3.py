@@ -49,7 +49,7 @@ use `cleos.SetContract(account_eosio, "eosio.bios")`:
 
     contract_eosio_bios = cleos.SetContract(account_eosio, "eosio.bios")
 
-    contract_dir = "test"
+    contract_dir = "hello"
 
     cprint("""
 Create a new contract workplace, rooted at `contract_dir = "test"`, and 
@@ -138,19 +138,6 @@ This should fail due to authority mismatch:
     action_hi = contract_test.push_action(
         "hi", 
         '{"user":"' + str(carol) + '"}', alice)
-        
-
-    def test_80(self):
-        global template
-        self.assertTrue(template.delete())
-
-    def tearDown(self):
-        pass
-
-
-    @classmethod
-    def tearDownClass(cls):
-        teos.node_stop()
 
 
 if __name__ == "__main__":

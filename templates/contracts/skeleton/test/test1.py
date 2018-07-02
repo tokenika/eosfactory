@@ -1,5 +1,7 @@
 # python3 ./tests/unittest3.py
 
+import sys
+import os
 import json
 import setup
 import teos
@@ -7,19 +9,19 @@ import cleos
 import eosf
 from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
-CONTRACT_NAME = "@CONTRACT_NAME@"
-
 cprint("""
-Use `use.use_keosd(False)` instruction, then the wallets are not
+Use `cleos.use_keosd(False)` instruction, then the wallets are not
 managed by the EOSIO keosd and, hence, can be safely manipulated.
 
 If you use `setup.set_verbose(True)`, you can see the response messages of the
 issued commands.
 """, 'magenta')
-
 cleos.use_keosd(False)
 setup.set_verbose(True)
 setup.set_json(False)
+
+
+contract_dir = sys.path[0] + "/../"
 
 
 def test():
@@ -52,17 +54,6 @@ use `cleos.SetContract(account_eosio, "eosio.bios")`:
 
     contract_eosio_bios = cleos.SetContract(account_eosio, "eosio.bios")
 
-    contract_dir = CONTRACT_NAME
-
-    cprint("""
-Create a new contract workplace, rooted at `contract_dir = CONTRACT_NAME`, and 
-populate if with elements of a template workspace,
-use `teos.Template(contract_dir)`: 
-    """, 'magenta')
-    
-    template = teos.Template(contract_dir, remove_existing=True)
-    print("template path is {}".format(template.contract_path_absolute))
-
     cprint("""
 Create an account for the contract of the workspace. The account is 
 represented with an object of the class `eosf.Account`,
@@ -84,10 +75,6 @@ the contract, use `contract_test = eosf.Contract(account_test, contract_dir)`:
     """, 'magenta')
 
     contract_test = eosf.Contract(account_test, contract_dir)
-
-    cprint("""
-Deploy the contract use `contract_test.deploy()`:
-    """, 'magenta')
 
     deployed = contract_test.deploy()
 
@@ -126,28 +113,7 @@ use `contract_test.push_action("hi", '{"user":"' + str(alice) + '"}', alice)`:
     action_hi = contract_test.push_action(
         "hi", 
         '{"user":"' + str(carol) + '"}', carol)
-    
-    cprint("""
-This should fail due to authority mismatch:
-    """, 'magenta')
 
-    action_hi = contract_test.push_action(
-        "hi", 
-        '{"user":"' + str(carol) + '"}', alice)
         
-
-    def test_80(self):
-        global template
-        self.assertTrue(template.delete())
-
-    def tearDown(self):
-        pass
-
-
-    @classmethod
-    def tearDownClass(cls):
-        teos.node_stop()
-
-
 if __name__ == "__main__":
     test()
