@@ -402,7 +402,7 @@ class Contract():
         self.error = self.account.error
 
 
-    def deploy(self, permission=""):
+    def deploy(self, permission="", is_verbose=1):
         self.contract = cleos.SetContract(
             self.account, self.contract_dir, 
             self.wast_file, self.abi_file, 
@@ -410,7 +410,7 @@ class Contract():
             self.skip_signature, self.dont_broadcast, self.forceUnique,
             self.max_cpu_usage, self.max_net_usage,
             self.ref_block,
-            is_verbose=self.is_verbose
+            self.is_verbose > 0 and is_verbose > 0
         )
 
         return self.contract
@@ -457,7 +457,8 @@ class Contract():
             permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0, 
-            ref_block=""
+            ref_block="",
+            is_verbose=1
         ):
 
         if not permission:
@@ -474,7 +475,7 @@ class Contract():
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=self.is_verbose)
+            self.is_verbose > 0 and is_verbose > 0)
 
         if not self.action.error:
             try:

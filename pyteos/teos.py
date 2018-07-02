@@ -255,13 +255,13 @@ class NodeStop(_Teos):
         _Teos.__init__(self, jarg, "daemon", "stop", is_verbose)
 
 
-def node_reset():
+def node_reset(is_verbose=1):
     """ Start clean the EOSIO local node.
 
     Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
     """
-    node = NodeStart(1)
-    probe = NodeProbe()
+    node = NodeStart(1, is_verbose)
+    probe = NodeProbe(is_verbose)
     if not probe.error:
         if node.is_verbose:
             print("OK")
@@ -270,13 +270,13 @@ def node_reset():
         return False
 
 
-def node_run():
+def node_run(is_verbose=1):
     """ Restart the EOSIO local node.
 
     Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
     """
-    node = NodeStart(0)
-    probe = NodeProbe()
+    node = NodeStart(0, is_verbose)
+    probe = NodeProbe(is_verbose)
     if not probe.error:
         if node.is_verbose:
             print("OK")
@@ -285,13 +285,13 @@ def node_run():
         return False
 
 
-def node_stop():
+def node_stop(is_verbose=1):
     """ Stops all running EOSIO nodes and empties the local `nodeos` wallet 
     directory.
 
     Return: True if no running nodes and the local `nodeos` wallet directory 
     is empty, otherwise `False`.
     """
-    stop = NodeStop()
+    stop = NodeStop(is_verbose)
     return not stop.error
 
