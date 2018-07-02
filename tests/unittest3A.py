@@ -6,7 +6,7 @@ import cleos
 import eosf
 import unittest
 import json
-from termcolor import colored, cprint
+from termcolor import cprint
 
 setup.set_verbose(True)
 setup.set_json(False)
