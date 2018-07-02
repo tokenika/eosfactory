@@ -1195,7 +1195,8 @@ class PushAction(_Cleos):
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block="",
-            is_verbose=1        
+            is_verbose=1,
+            json=False
         ):
         try:
             self.account_name = account.name
@@ -1203,7 +1204,7 @@ class PushAction(_Cleos):
             self.account_name = account
 
         args = [self.account_name, action, data]
-        if setup.is_json():
+        if setup.is_json() or json:
             args.append("--json")
 
         if permission:

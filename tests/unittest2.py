@@ -67,50 +67,50 @@ use `cleos.SetContract(account_eosio, "eosio.bios")`:
 
     def test_11(self):
         global wallet
-        global contract_ttt
+        global contract_test
 
         cprint("""
 Create an account to be equipped with a smart contract, namely:
 "tic_tac_toe" from the EOSIO repository, 
-use `account_ttt = eosf.account()`:
+use `account_test = eosf.account()`:
         """, 'magenta')
 
-        account_ttt = eosf.account(name="tic.tac.toe")
-        self.assertTrue(not account_ttt.error)
+        account_test = eosf.account(name="tic.tac.toe")
+        self.assertTrue(not account_test.error)
 
         cprint("""
-Put the account into the wallet, use `wallet.import_key(account_ttt)`:
+Put the account into the wallet, use `wallet.import_key(account_test)`:
         """, 'magenta')
         
-        wallet.import_key(account_ttt)
+        wallet.import_key(account_test)
 
         cprint("""
 Create a smart contract object:
         """, 'magenta')
 
-        contract_ttt = eosf.Contract(account_ttt, "tic_tac_toe")
+        contract_test = eosf.Contract(account_test, "tic_tac_toe")
 
         cprint("""
 Deploy the contract:
         """, 'magenta')
-        deployed = contract_ttt.deploy()
+        deployed = contract_test.deploy()
         self.assertTrue(not deployed.error)
                 
         cprint("""
-See the response of the node, use `print(contract.contract_ttt)`:
+See the response of the node, use `print(contract.contract_test)`:
         """, 'magenta')
 
-        print(contract_ttt.contract)
+        print(contract_test.contract)
 
         cprint("""
-See the response of the node, use `print(contract.contract_ttt)`:
+See the response of the node, use `print(contract.contract_test)`:
         """, 'magenta')
 
         cprint("""
 Confirm that the account `account_test` contains a contract code:
         """, 'magenta')
 
-        code = account_ttt.code()
+        code = account_test.code()
         print("code hash: {}".format(code.code_hash))
 
         time.sleep(1)
@@ -141,14 +141,14 @@ Inspect the account, use `bob.account()`:
 
 
     def test_20(self):
-        global contract_ttt
+        global contract_test
         global alice
         global bob
 
         cprint("""
 Push actions to the contract. Begin with the `create` action:
         """, 'magenta')
-        action_create = contract_ttt.push_action(
+        action_create = contract_test.push_action(
             "create", 
             '{"challenger":"' 
             + str(alice) +'", "host":"' 
@@ -168,7 +168,7 @@ See the result of the action:
 
         time.sleep(2)
 
-        t = contract_ttt.get_table("games", bob)
+        t = contract_test.get_table("games", bob)
         self.assertTrue(not t.error)
 
         time.sleep(2)
@@ -185,11 +185,11 @@ See the result of the action:
 
 
     def test_25(self):
-        global contract_ttt
+        global contract_test
         global alice
         global bob
         
-        action_move = contract_ttt.push_action(
+        action_move = contract_test.push_action(
             "move", 
             '{"challenger":"' 
             + str(alice) + '", "host":"' 
@@ -198,7 +198,7 @@ See the result of the action:
 
         self.assertTrue(not action_move.error)
 
-        action_move = contract_ttt.push_action(
+        action_move = contract_test.push_action(
             "move", 
             '{"challenger":"' 
             + str(alice) + '", "host":"' 
@@ -207,7 +207,7 @@ See the result of the action:
 
         self.assertTrue(not action_move.error)
 
-        t = contract_ttt.get_table("games", bob)
+        t = contract_test.get_table("games", bob)
         self.assertTrue(not t.error)
 
 
@@ -224,7 +224,7 @@ See the result of the action:
 
     def test_30(self):
 
-        action_restart = contract_ttt.push_action(
+        action_restart = contract_test.push_action(
                 "restart", 
                 '{"challenger":"' 
                 + str(alice) + '", "host":"' 
@@ -233,7 +233,7 @@ See the result of the action:
 
         self.assertTrue(not action_restart.error)
 
-        t = contract_ttt.get_table("games", bob)
+        t = contract_test.get_table("games", bob)
         self.assertFalse(t.error, "get_table")
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -249,7 +249,7 @@ See the result of the action:
 
     def test_35(self):
 
-        action_close = contract_ttt.push_action(
+        action_close = contract_test.push_action(
                 "close", 
                 '{"challenger":"' 
                 + str(alice) + '", "host":"' + str(bob) + '"}', bob)

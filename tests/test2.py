@@ -53,43 +53,43 @@ use `cleos.SetContract(account_eosio, "eosio.bios")`:
     cprint("""
 Create an account to be equipped with a smart contract, namely:
 "tic_tac_toe" from the EOSIO repository, 
-use `account_ttt = eosf.account()`:
+use `account_test = eosf.account()`:
     """, 'magenta')
 
-    account_ttt = eosf.account(name="tic.tac.toe")
+    account_test = eosf.account(name="tic.tac.toe")
 
     cprint("""
-Put the account into the wallet, use `wallet.import_key(account_ttt)`:
+Put the account into the wallet, use `wallet.import_key(account_test)`:
     """, 'magenta')
     
-    wallet.import_key(account_ttt)
+    wallet.import_key(account_test)
 
     cprint("""
 Create a smart contract object:
     """, 'magenta')
 
-    contract_ttt = eosf.Contract(account_ttt, "tic_tac_toe")
+    contract_test = eosf.Contract(account_test, "tic_tac_toe")
 
     cprint("""
 Deploy the contract:
     """, 'magenta')
-    deployed = contract_ttt.deploy()
+    deployed = contract_test.deploy()
                 
     cprint("""
-See the response of the node, use `print(contract.contract_ttt)`:
+See the response of the node, use `print(contract.contract_test)`:
     """, 'magenta')
 
-    print(contract_ttt.contract)
+    print(contract_test.contract)
 
     cprint("""
-See the response of the node, use `print(contract.contract_ttt)`:
+See the response of the node, use `print(contract.contract_test)`:
     """, 'magenta')
 
     cprint("""
 Confirm that the account `account_test` contains the contract code:
     """, 'magenta')
 
-    code = account_ttt.code()
+    code = account_test.code()
     print("code hash: {}".format(code.code_hash))
 
     time.sleep(1)
@@ -114,7 +114,7 @@ Inspect the account, use `bob.account()`:
     cprint("""
 Push actions to the contract. Begin with the `create` action:
     """, 'magenta')
-    action_create = contract_ttt.push_action(
+    action_create = contract_test.push_action(
         "create", 
         '{"challenger":"' 
         + str(alice) +'", "host":"' + str(bob) + '"}', bob)
@@ -132,7 +132,7 @@ See the result of the action:
 
     time.sleep(2)
 
-    t = contract_ttt.get_table("games", bob)
+    t = contract_test.get_table("games", bob)
 
     print(t.json)
 
@@ -147,14 +147,14 @@ See the result of the action:
     assert(t.json["rows"][0]["board"][8] == 0)
 
         
-    action_move = contract_ttt.push_action(
+    action_move = contract_test.push_action(
         "move", 
         '{"challenger":"' 
         + str(alice) + '", "host":"' 
         + str(bob) + '", "by":"' 
         + str(bob) + '", "mvt":{"row":0, "column":0} }', bob)
 
-    action_move = contract_ttt.push_action(
+    action_move = contract_test.push_action(
         "move", 
         '{"challenger":"' 
         + str(alice) + '", "host":"' 
@@ -162,7 +162,7 @@ See the result of the action:
         + str(alice) + '", "mvt":{"row":1, "column":1} }', alice)
 
 
-    t = contract_ttt.get_table("games", bob)
+    t = contract_test.get_table("games", bob)
 
     assert(t.json["rows"][0]["board"][0] == 1)
     assert(t.json["rows"][0]["board"][1] == 0)
@@ -175,14 +175,14 @@ See the result of the action:
     assert(t.json["rows"][0]["board"][8] == 0)
 
 
-    action_restart = contract_ttt.push_action(
+    action_restart = contract_test.push_action(
         "restart", 
         '{"challenger":"' 
             + str(alice) + '", "host":"' 
             + str(bob) + '", "by":"' + str(bob) + '"}',
         bob)
 
-    t = contract_ttt.get_table("games", bob)
+    t = contract_test.get_table("games", bob)
 
     assert(t.json["rows"][0]["board"][0] == 0)
     assert(t.json["rows"][0]["board"][1] == 0)
@@ -195,7 +195,7 @@ See the result of the action:
     assert(t.json["rows"][0]["board"][8] == 0)
 
 
-    action_close = contract_ttt.push_action(
+    action_close = contract_test.push_action(
         "close", 
         '{"challenger":"' 
         + str(alice) + '", "host":"' + str(bob) + '"}', bob)

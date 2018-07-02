@@ -458,7 +458,9 @@ class Contract():
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0, 
             ref_block="",
-            is_verbose=1
+            is_verbose=1,
+            json=False,
+            console=False
         ):
 
         if not permission:
@@ -468,6 +470,10 @@ class Contract():
                 permission=permission.name
             except: # permission is the name of an account:
                 permission=permission
+
+        if console:
+            is_verbose = 0
+            json = True
     
         self.action = cleos.PushAction(
             self.account.name, action, data,
@@ -475,7 +481,7 @@ class Contract():
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            self.is_verbose > 0 and is_verbose > 0)
+            self.is_verbose > 0 and is_verbose > 0, json)
 
         if not self.action.error:
             try:

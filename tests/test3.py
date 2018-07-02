@@ -138,6 +138,19 @@ This should fail due to authority mismatch:
     action_hi = contract_test.push_action(
         "hi", 
         '{"user":"' + str(carol) + '"}', alice)
+        
+
+    def test_80(self):
+        global template
+        #self.assertTrue(template.delete())
+
+    def tearDown(self):
+        pass
+
+
+    @classmethod
+    def tearDownClass(cls):
+        teos.node_stop()
 
 
 if __name__ == "__main__":

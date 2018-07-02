@@ -96,34 +96,34 @@ Inspect the account, use `bob.account()`:
         global bob
         global carol
         global account_eosio
-        global contract_at
+        global contract_test
 
-        account_at = eosf.account()
-        wallet.import_key(account_at)
+        account_test = eosf.account()
+        wallet.import_key(account_test)
         
 
-        contract_at = eosf.Contract(account_at, "eosio.token")
-        self.assertTrue(not contract_at.error)
+        contract_test = eosf.Contract(account_test, "eosio.token")
+        self.assertTrue(not contract_test.error)
 
         cprint("""
-test contract_at.code():
+test contract_test.code():
         """, 'magenta')
-        self.assertTrue(not contract_at.code().error)
+        self.assertTrue(not contract_test.code().error)
 
         cprint("""
-test contract_at.deploy():
+test contract_test.deploy():
         """, 'magenta')
-        self.assertTrue(contract_at.deploy())
+        self.assertTrue(contract_test.deploy())
 
         cprint("""
-test contract_at.get_code():
+test contract_test.get_code():
         """, 'magenta')
-        self.assertTrue(not contract_at.code().error)
+        self.assertTrue(not contract_test.code().error)
 
         cprint("""
-test contract_at.push_action("create"):
+test contract_test.push_action("create"):
         """, 'magenta')
-        self.assertTrue(not contract_at.push_action(
+        self.assertTrue(not contract_test.push_action(
             "create", 
             '{"issuer":"' 
                 + str(account_eosio) 
@@ -131,18 +131,18 @@ test contract_at.push_action("create"):
                 "can_freeze":0, "can_recall":0, "can_whitelist":0}').error)
 
         cprint("""
-test contract_at.push_action("issue"):
+test contract_test.push_action("issue"):
         """, 'magenta')
-        self.assertTrue(not contract_at.push_action(
+        self.assertTrue(not contract_test.push_action(
             "issue", 
             '{"to":"' + str(alice)
                 + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
                 account_eosio).error)
 
         cprint("""
-test contract_at.push_action("transfer", alice):
+test contract_test.push_action("transfer", alice):
         """, 'magenta')
-        self.assertTrue(not contract_at.push_action(
+        self.assertTrue(not contract_test.push_action(
             "transfer", 
             '{"from":"' 
                 + str(alice)
@@ -153,9 +153,9 @@ test contract_at.push_action("transfer", alice):
         time.sleep(1)
 
         cprint("""
-test contract_at.push_action("transfer", carol):
+test contract_test.push_action("transfer", carol):
         """, 'magenta')
-        self.assertTrue(not contract_at.push_action(
+        self.assertTrue(not contract_test.push_action(
             "transfer", 
             '{"from":"' 
                 + str(carol)
@@ -164,9 +164,9 @@ test contract_at.push_action("transfer", carol):
             carol).error)
 
         cprint("""
-test contract_at.push_action("transfer" bob):
+test contract_test.push_action("transfer" bob):
         """, 'magenta')
-        self.assertTrue(not contract_at.push_action(
+        self.assertTrue(not contract_test.push_action(
             "transfer", 
             '{"from":"' 
                 + str(bob)
@@ -176,22 +176,22 @@ test contract_at.push_action("transfer" bob):
             bob).error)
 
         cprint("""
-Get database table, use `contract_at.get_table("accounts", alice)`:
+Get database table, use `contract_test.get_table("accounts", alice)`:
         """, 'magenta')
 
-        t1 = contract_at.get_table("accounts", alice)
+        t1 = contract_test.get_table("accounts", alice)
         
         cprint("""
-Get database table, use `contract_at.get_table("accounts", bob)`:
+Get database table, use `contract_test.get_table("accounts", bob)`:
         """, 'magenta')
 
-        t2 = contract_at.get_table("accounts", bob)
+        t2 = contract_test.get_table("accounts", bob)
         
         cprint("""
-Get database table, use `contract_at.get_table("accounts", carol)`:
+Get database table, use `contract_test.get_table("accounts", carol)`:
         """, 'magenta')
         
-        t3 = contract_at.get_table("accounts", carol)
+        t3 = contract_test.get_table("accounts", carol)
 
         cprint("""
 self.assertTrue(t1.json["rows"][0]["balance"] == "77.0000 EOS":
