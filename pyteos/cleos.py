@@ -928,7 +928,7 @@ class CreateAccount(_Cleos):
             self.json = GetAccount(self.name, is_verbose=0, json=True).json
             self.printself()
 
-    def account(self):
+    def info(self):
         return str(GetAccount(self.name, is_verbose=0))
 
     def get_transaction(self):
