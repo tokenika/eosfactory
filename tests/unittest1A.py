@@ -126,19 +126,19 @@ Action contract.push_action("transfer" bob)
     def test_03(self):
 
         cprint("""
-Assign t1 = contract.get_table("accounts", alice)
+Assign t1 = contract.table("accounts", alice)
         """, 'magenta')
-        t1 = contract.get_table("accounts", alice)
+        t1 = contract.table("accounts", alice)
 
         cprint("""
-Assign t2 = contract.get_table("accounts", bob)
+Assign t2 = contract.table("accounts", bob)
         """, 'magenta')
-        t2 = contract.get_table("accounts", bob)
+        t2 = contract.table("accounts", bob)
         
         cprint("""
-Assign t3 = contract.get_table("accounts", carol)
+Assign t3 = contract.table("accounts", carol)
         """, 'magenta')
-        t3 = contract.get_table("accounts", carol)
+        t3 = contract.table("accounts", carol)
 
         cprint("""
 Assert t1.json["rows"][0]["balance"] == '77.0000 EOS'

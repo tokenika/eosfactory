@@ -131,7 +131,7 @@ See the result of the action:
 
     time.sleep(2)
 
-    t = contract_test.get_table("games", bob)
+    t = contract_test.table("games", bob)
 
     print(t.json)
 
@@ -161,7 +161,7 @@ See the result of the action:
         + str(alice) + '", "mvt":{"row":1, "column":1} }', alice)
 
 
-    t = contract_test.get_table("games", bob)
+    t = contract_test.table("games", bob)
 
     assert(t.json["rows"][0]["board"][0] == 1)
     assert(t.json["rows"][0]["board"][1] == 0)
@@ -181,7 +181,7 @@ See the result of the action:
             + str(bob) + '", "by":"' + str(bob) + '"}',
         bob)
 
-    t = contract_test.get_table("games", bob)
+    t = contract_test.table("games", bob)
 
     assert(t.json["rows"][0]["board"][0] == 0)
     assert(t.json["rows"][0]["board"][1] == 0)

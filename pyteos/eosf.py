@@ -363,20 +363,20 @@ class Contract():
         return self.push_action(action, data, permission, dont_broadcast=1)
     
 
-    def get_table(
-            self, table, scope="",
+    def table(
+            self, table_name, scope="",
             binary=False, 
             limit=10, key="", lower="", upper=""):
         """ Return a contract's table object.
         """
 
-        self.table = cleos.GetTable(
-                    self.account.name, table, scope,
+        self._table = cleos.GetTable(
+                    self.account.name, table_name, scope,
                     binary=False, 
                     limit=10, key="", lower="", upper="", 
                     is_verbose=self.is_verbose)
             
-        return self.table
+        return self._table
 
 
     def code(self, code="", abi="", wasm=False):
@@ -588,20 +588,20 @@ def account(
     account_object.push_action = types.MethodType(
                                     push_action , account_object)
 
-    def get_table(
-            self, table, scope="", 
+    def table(
+            self, table_name, scope="", 
             binary=False, 
             limit=10, key="", lower="", upper=""):
 
-        account_object.table = cleos.GetTable(
-                                account_object, table, scope,
+        account_object._table = cleos.GetTable(
+                                account_object, table_name, scope,
                                 binary, 
                                 limit, key, lower, upper,
                                 is_verbose=account_object.is_verbose)
-        return account_object.table
+        return account_object._table
 
-    account_object.get_table = types.MethodType(
-                                    get_table, account_object)
+    account_object.table = types.MethodType(
+                                    table, account_object)
 
     def __str__(self):
         return account_object.name

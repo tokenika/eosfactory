@@ -167,7 +167,7 @@ See the result of the action:
 
         time.sleep(2)
 
-        t = contract_test.get_table("games", bob)
+        t = contract_test.table("games", bob)
         self.assertTrue(not t.error)
 
         time.sleep(2)
@@ -206,7 +206,7 @@ See the result of the action:
 
         self.assertTrue(not action_move.error)
 
-        t = contract_test.get_table("games", bob)
+        t = contract_test.table("games", bob)
         self.assertTrue(not t.error)
 
 
@@ -232,8 +232,8 @@ See the result of the action:
 
         self.assertTrue(not action_restart.error)
 
-        t = contract_test.get_table("games", bob)
-        self.assertFalse(t.error, "get_table")
+        t = contract_test.table("games", bob)
+        self.assertFalse(t.error, "table")
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
