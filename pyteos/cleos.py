@@ -809,7 +809,7 @@ class RestoreAccount():
             self.active_key = ""
             self.is_verbose = setup.is_verbose() and is_verbose > 0
 
-    def account(self):
+    def info(self):
         return str(GetAccount(self.name, is_verbose=0))
             
     def __str__(self):

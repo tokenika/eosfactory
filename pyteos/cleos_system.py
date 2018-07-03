@@ -156,7 +156,7 @@ class SystemNewaccount(cleos._Cleos):
             if self.is_verbose:
                 print(self.__str__())            
 
-    def account(self):
+    def info(self):
         return str(GetAccount(self.name, is_verbose=1))
             
     def __str__(self):

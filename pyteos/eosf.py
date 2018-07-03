@@ -457,7 +457,7 @@ class AccountMaster():
                 self.err_msg = "Failed to put into the given wallet!"
 
     
-    def account(self):
+    def info(self):
         return str(GetAccount(self.name, is_verbose=1))
         
 
