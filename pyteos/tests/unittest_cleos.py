@@ -1,10 +1,14 @@
 # python3 ./tests/test1.py
 
+import json
+import unittest
 import setup
 import cleos
 import teos
-import json
-import unittest
+import eosf
+
+setup.use_keosd(False)
+
 
 class Test1(unittest.TestCase):
 
@@ -143,7 +147,7 @@ class Test1(unittest.TestCase):
         self.assertTrue(not account_test.error, "CreateAccount ttt")
         global contract_test
         contract_test = eosf.Contract(account_master, "eosio.bios").deploy()
-        self.assertTrue(not contract_test.error, "SetContract eosio.token")
+        self.assertTrue(not contract_test.error, "Contract(account_master")
 
     def test_69(self):
         global account_test

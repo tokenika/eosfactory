@@ -23,6 +23,7 @@ object, representing an EOSIO account functionality, yet build in many ways:
     -- it can be one restored from the blockchain.
 """, 'magenta')
 
+
 def test():
     global account_alice
     global account_carol
@@ -80,6 +81,8 @@ Define a contract, with its code specified in the EOS repository
     contract_test = eosf.Contract(account_test, "eosio.token")
     deploy = contract_test.deploy()
     account_test.code()
+
+    time.sleep(1)
 
     action = account_test.push_action(
         "create", 
