@@ -5,6 +5,7 @@ import json
 from termcolor import cprint
 import setup
 import eosf
+import node
 
 setup.set_verbose(True)
 setup.set_json(False)
@@ -27,15 +28,11 @@ class Test1(unittest.TestCase):
         global bob
         global carol
 
-        testnet = eosf.reset()
-
+        testnet = node.reset()
         wallet = eosf.Wallet()
 
         account_master = eosf.AccountMaster()
         wallet.import_key(account_master)
-
-        contract_eosio_bios = eosf.Contract(
-                account_master, "eosio.bios").deploy()
 
         alice = eosf.account()
         wallet.import_key(alice)
@@ -45,6 +42,9 @@ class Test1(unittest.TestCase):
 
         carol = eosf.account()
         wallet.import_key(carol)
+
+        contract_eosio_bios = eosf.Contract(
+                account_master, "eosio.bios").deploy()
 
 
     def setUp(self):
@@ -131,7 +131,7 @@ WARNING: This action should fail due to authority mismatch!
     @classmethod
     def tearDownClass(cls):
         template.delete()
-        eosf.stop()
+        node.stop()
 
 
 if __name__ == "__main__":

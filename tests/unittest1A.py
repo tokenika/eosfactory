@@ -5,7 +5,7 @@ import json
 from termcolor import cprint
 import setup
 import eosf
-
+import node
 
 setup.set_verbose(False)
 setup.set_json(False)
@@ -31,7 +31,7 @@ class Test1(unittest.TestCase):
         global contract
         global deployment
 
-        testnet = eosf.reset()
+        testnet = node.reset()
         wallet = eosf.Wallet()
 
         account_master = eosf.AccountMaster()
@@ -162,7 +162,7 @@ Assert t3.json["rows"][0]["balance"] == '12.0000 EOS'
 
     @classmethod
     def tearDownClass(cls):
-        eosf.stop()
+        node.stop()
 
 
 if __name__ == "__main__":
