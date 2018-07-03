@@ -9,7 +9,7 @@ import unittest
 class TestSessionInit(unittest.TestCase):
 
     setup.set_verbose(False)
-    cleos.use_keosd(False)    
+    setup.use_keosd(False)    
 
     def run(self, result=None):
         """ Stop after first error """      
@@ -29,7 +29,7 @@ class TestSessionInit(unittest.TestCase):
         print("""
 Start a local test EOSIO node:
         """)
-        ok = teos.node_reset()
+        reset = eosf.reset()
         self.assertTrue(ok)
         
         print("""
@@ -40,11 +40,11 @@ Create a local wallet (not with EOSIO `keosd` application):
         self.assertTrue(not wallet.error)
 
         print("""
-Implement the `eosio` master account as a `cleos.AccountEosio` object:
+Implement the `eosio` master account as a `cleos.AccountMaster` object:
         """)
-        global account_eosio
-        account_eosio = cleos.AccountEosio()
-        wallet.import_key(account_eosio)
+        global account_master
+        account_master = eosf.AccountMaster()
+        wallet.import_key(account_master)
 
         print("""
 Create accounts `alice`, `bob` and `carol`:

@@ -47,7 +47,7 @@ class Wallet(cleos.WalletCreate):
         is_verbose: Verbosity at the constraction time.  
     """
     def __init__(self, name="default", password="", is_verbose=1):
-        if not cleos.is_keosd(): # look for password:
+        if not setup.is_keosd(): # look for password:
             wallet_dir = os.path.expandvars(teos.get_node_wallet_dir())
             try:
                 with open(wallet_dir + setup.password_map, "r") \
@@ -60,7 +60,7 @@ class Wallet(cleos.WalletCreate):
         cleos.WalletCreate.__init__(self, name, password, is_verbose)
 
         if not self.error:
-            if not cleos.is_keosd():
+            if not setup.is_keosd():
                 wallet_dir = teos.get_node_wallet_dir()
                 try:
                     with open(wallet_dir + setup.password_map, "r") \
@@ -112,11 +112,18 @@ class Wallet(cleos.WalletCreate):
         """
         lcls = inspect.stack()[1][0].f_locals
         lcls.update(inspect.stack()[2][0].f_locals) 
+
+        # print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        # print(account_or_key.name)
+        # print(lcls)
+        # print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+
         retval = []
         try:
             account_name = account_or_key.name
+            
             for name in lcls:
-                if id(account_or_key) == id(lcls[name]):
+                if id(account_or_key) == id(lcls[name]):                  
                     wallet_dir = cleos.get_wallet_dir()
                     try:
                         with open(wallet_dir + setup.account_map, "r") \
@@ -159,7 +166,7 @@ class Wallet(cleos.WalletCreate):
 
         restored = dict()
         if len(account_names) > 0:
-            if cleos.is_keosd():
+            if setup.is_keosd():
                 wallet_dir = os.path.expandvars(teos.get_keosd_wallet_dir())
             else:
                 wallet_dir = teos.get_node_wallet_dir()
@@ -254,7 +261,7 @@ def account(
             active_key = cleos.CreateKey("active", is_verbose=-1)
 
         if not creator:
-            creator = cleos.AccountEosio()
+            creator = AccountMaster()
 
         if stake_net:
             account_object = cleos_system.SystemNewaccount(
@@ -541,3 +548,109 @@ class Contract():
             return str(self.account)
 
 
+def reset(is_verbose=1):
+    """ Start clean the EOSIO local node.
+
+    Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
+    """
+    node = teos.NodeStart(1, is_verbose)
+    probe = teos.NodeProbe(is_verbose)
+    if not probe.error:
+        if node.is_verbose:
+            print("OK")
+    return probe
+
+
+def run(is_verbose=1):
+    """ Restart the EOSIO local node.
+
+    Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
+    """
+    node = teos.NodeStart(0, is_verbose)
+    probe = teos.NodeProbe(is_verbose)
+    if not probe.error:
+        if node.is_verbose:
+            print("OK")
+    return probe
+
+
+def stop(is_verbose=1):
+    """ Stops all running EOSIO nodes and empties the local `nodeos` wallet 
+    directory.
+
+    Return: True if no running nodes and the local `nodeos` wallet directory 
+    is empty, otherwise `False`.
+    """
+    stop = teos.NodeStop(is_verbose)
+    return stop
+
+
+class AccountMaster():
+    def __init__(self, is_verbose=1): 
+        self.name = "eosio"
+        self.json = {}       
+        self.json["name"] = self.name
+        self.json["privateKey"] = \
+            "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
+        self.json["publicKey"] = \
+            "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
+        self.key_private = self.json["privateKey"]
+        self.key_public = self.json["publicKey"]
+        self._out = "transaction id: eosio" 
+
+    def __str__(self):
+        return self.name
+
+class AccountMaster:
+    def __init__(
+            self, name="", owner_key_public="", active_key_public="", 
+            is_verbose=True):
+
+        self.json = {}
+        self.error = False
+        
+        if setup.is_keosd():
+            if not owner_key_public: # print data for registration
+                self.new_account = True
+                if not name: 
+                    self.name = account_name()
+                else:
+                    self.name = name
+
+                self.owner_key = CreateKey("owner", is_verbose=0)
+                self.active_key = CreateKey("active", is_verbose=0)
+                print(
+                    "Register the following data with a testnode, and\n" \
+                    + "save them, to restore this account object in the future.\n" \
+                    + "Accout Name: {}\n".format(self.name) \
+                    + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
+                    + "Active Public Key: {}\n".format(self.active_key.key_public) \
+                    + "\n\n" \
+                    + "Owner Private Key: {}\n".format(self.owner_key.key_private) \
+                    + "Active Private Key: {}\n".format(self.active_key.key_private))
+            else: # restore the master account
+                self.name = name
+                self.new_account = False
+                self.owner_key = CreateKey("owner", owner_key_public, is_verbose=0)
+                if not active_key_public:
+                    self.active_key = owner_key
+                else:
+                    self.active_key = CreateKey(
+                        "active", active_key_public, is_verbose=0)
+        else:
+            self.name = "eosio"  
+            self.json["name"] = self.name
+            self.json["privateKey"] = \
+                "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
+            self.json["publicKey"] = \
+                "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
+            self.key_private = self.json["privateKey"]
+            self.key_public = self.json["publicKey"]
+            self._out = "transaction id: eosio" 
+
+    
+    def account(self):
+        return str(GetAccount(self.name, is_verbose=1))
+        
+    def __str__(self):
+        return self.name

@@ -38,32 +38,6 @@ def reset_nodeos_URL():
     setup.set_nodeos_URL(url)
 
 
-_wallet_url = []
-def use_keosd(status=False):
-    """ Do use `keosd` Wallet Manager.
-
-    Or use `nodeos`. See https://github.com/EOSIO/eos/wiki/CLI-Wallet
-    for explanations.
-
-    If wallets are not managed by `keosd`, they can be reset with the
-    `teos.node_reset()` function, what is desired when testing smart contracts
-    locally.
-    """
-    global _wallet_url
-    if status:
-        _wallet_url = []
-    else:
-        WalletStop(is_verbose=-1)
-        config = teos.GetConfig(
-            "", is_verbose=0)
-        _wallet_url = ["--wallet-url", "http://" \
-            + config.json["EOSIO_DAEMON_ADDRESS"]]
-        
-
-def is_keosd():
-    return _wallet_url == []
-
-
 class _Cleos:
     """ A prototype for the `cleos` command classes. 
     """
@@ -99,9 +73,7 @@ class _Cleos:
         if not setup.nodeos_URL():
             reset_nodeos_URL()
         cl.extend(setup.nodeos_URL())
-
-        global _wallet_url
-        cl.extend(_wallet_url)
+        cl.extend(setup.wallet_URL())
 
         if setup.is_print_request():
             cl.append("--print-request")
@@ -177,7 +149,7 @@ def get_transaction_id(cleos_object):
     return transaction_id
 
 def get_wallet_dir():
-    if is_keosd():
+    if setup.is_keosd():
         wallet_dir = os.path.expandvars(teos.get_keosd_wallet_dir())
     else:
         wallet_dir = teos.get_node_wallet_dir()
@@ -973,64 +945,6 @@ def account_name():
         name += letters[random.randint(0, 30)]
 
     return name
-
-    
-class AccountMaster:
-    def __init__(
-        self, name="", owner_key_public="", active_key_public="", 
-        is_verbose=True):
-
-        if not owner_key_public: # print data for registration
-            self.new_account = True
-            if not name: 
-                self.name = account_name()
-            else:
-                self.name = name
-
-            self.owner_key = CreateKey("owner", is_verbose=0)
-            self.active_key = CreateKey("active", is_verbose=0)
-            print(
-                "Register the following data with a testnode, and\n" \
-                + "save them, to restore this account object in the future.\n" \
-                + "Accout Name: {}\n".format(self.name) \
-                + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
-                + "Active Public Key: {}\n".format(self.active_key.key_public) \
-                + "\n\n" \
-                + "Owner Private Key: {}\n".format(self.owner_key.key_private) \
-                + "Active Private Key: {}\n".format(self.active_key.key_private))
-        else: # restore the master account
-            self.name = name
-            self.new_account = False
-            self.owner_key = CreateKey("owner", owner_key_public, is_verbose=0)
-            if not active_key_public:
-                self.active_key = owner_key
-            else:
-                self.active_key = CreateKey(
-                    "active", active_key_public, is_verbose=0)
-    
-    def account(self):
-        return str(GetAccount(self.name, is_verbose=1))
-        
-    def __str__(self):
-        return self.name
-
-
-class AccountEosio():
-
-    def __init__(self, is_verbose=1): 
-        self.name = "eosio"
-        self.json = {}       
-        self.json["name"] = self.name
-        self.json["privateKey"] = \
-            "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-        self.json["publicKey"] = \
-            "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-        self.key_private = self.json["privateKey"]
-        self.key_public = self.json["publicKey"]
-        self._out = "transaction id: eosio" 
-
-    def __str__(self):
-        return self.name
 
 
 class SetContract(_Cleos):

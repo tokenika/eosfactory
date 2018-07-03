@@ -50,7 +50,7 @@ Register an account on the [*cryptolions*](http://dev.cryptolions.io/#home) test
 >>> import eosf
 >>> setup.set_cryptolions()
 
->>> account_master = cleos.AccountMaster()
+>>> account_master = eosf.AccountMaster()
 SAVE THE FOLLOWING DATA to use in the future to restore thisaccount object.
 Accout Name: upe1ahhgb3xq
 Owner Public Key: EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP
@@ -129,7 +129,7 @@ Opened: tokenika
 >>> ok = wallet.unlock()
 Unlocked: tokenika
 
->>> account_master = cleos.AccountMaster(
+>>> account_master = eosf.AccountMaster(
         "vkgljdlpxuip",
         "EOS5Hf9xk8S15fqznskXVFFeZQW53VjZiFXSDpCMLmovtoPP8NzBK",
         "EOS6GCDeWSDgEwJaqcWpZTJ2PRnYeWuGjTMHstNbHy2cJto9WgvnP")

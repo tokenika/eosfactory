@@ -18,14 +18,14 @@ class Test1(unittest.TestCase):
     def setUpClass(cls):
         setup.set_verbose(True)
         setup.set_json(False)
-        cleos.use_keosd(False)
+        setup.use_keosd(False)
 
     def setUp(self):
         pass
                 
 
     def test_05(self):
-        node_reset = teos.node_reset()
+        node_reset = eosf.reset()
         self.assertTrue(node_reset)
 
     def test_10(self):
@@ -99,67 +99,67 @@ class Test1(unittest.TestCase):
         print(get_block.timestamp)
 
     def test_56(self):
-        global account_eosio
-        account_eosio = cleos.AccountEosio()
-        wallet_import = cleos.WalletImport(account_eosio)
-        print(json.dumps(account_eosio.json, indent=4))
-        print(account_eosio.name)
-        print(account_eosio.key_private)
-        print(account_eosio.key_public)
+        global account_master
+        account_master = eosf.AccountMaster()
+        wallet_import = cleos.WalletImport(account_master)
+        print(json.dumps(account_master.json, indent=4))
+        print(account_master.name)
+        print(account_master.key_private)
+        print(account_master.key_public)
 
     def test_60(self):
-        global account_eosio
+        global account_master
         global key_owner
         account_bob = cleos.CreateAccount(
-            account_eosio, "bob", key_owner, key_owner)
+            account_master, "bob", key_owner, key_owner)
         self.assertTrue(not account_bob.error, "CreateAccount")
         print(json.dumps(account_bob.json, indent=4))
         print(account_bob.name)
 
         global account_alice
         account_alice = cleos.CreateAccount(
-            account_eosio, "alice", key_owner, key_owner, is_verbose=False)
+            account_master, "alice", key_owner, key_owner, is_verbose=False)
         self.assertTrue(not account_alice.error, "CreateAccount Alice")
         print(account_alice.name)
 
         global account_carol
         account_carol = cleos.CreateAccount(
-            account_eosio, "carol", key_owner, key_owner, is_verbose=False)
+            account_master, "carol", key_owner, key_owner, is_verbose=False)
         self.assertTrue(not account_carol.error, "CreateAccount Carol")
         print(account_carol.name)
 
     def test_63(self):
-        global account_eosio
-        contract_eosio_bios = cleos.SetContract( account_eosio, "eosio.bios")
+        global account_master
+        contract_eosio_bios = eosf.Contract(account_master, "eosio.bios").deploy()
         self.assertTrue(not contract_eosio_bios.error, "SetContract bios")
         print(contract_eosio_bios.contract_path_absolute)
     
     def test_66(self):
-        global account_eosio
+        global account_master
         global key_owner
-        global account_ttt
-        account_ttt = cleos.CreateAccount(
-            account_eosio, "ttt", key_owner, key_owner)
-        self.assertTrue(not account_ttt.error, "CreateAccount ttt")
-        global contract_ttt
-        contract_ttt = cleos.SetContract(account_ttt, "eosio.token")
-        self.assertTrue(not contract_ttt.error, "SetContract eosio.token")
+        global account_test
+        account_test = cleos.CreateAccount(
+            account_master, "ttt", key_owner, key_owner)
+        self.assertTrue(not account_test.error, "CreateAccount ttt")
+        global contract_test
+        contract_test = eosf.Contract(account_master, "eosio.bios").deploy()
+        self.assertTrue(not contract_test.error, "SetContract eosio.token")
 
     def test_69(self):
-        global account_ttt
-        get_code = cleos.GetCode(account_ttt)
-        self.assertTrue(not get_code.error, "GetCode account_ttt")
+        global account_test
+        get_code = cleos.GetCode(account_test)
+        self.assertTrue(not get_code.error, "GetCode account_test")
         print(json.dumps(get_code.json, indent=4))
         print(get_code.code_hash)
 
     def test_72(self):
-        global account_ttt
+        global account_test
         get_info = cleos.GetInfo(is_verbose=-1)
         push_create = cleos.PushAction(
-            account_ttt, "create", 
+            account_test, "create", 
             '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", \
                 "can_freeze":0, "can_recall":0, "can_whitelist":0}',
-            permission=account_ttt)
+            permission=account_test)
         self.assertTrue(not push_create.error, "PushAction create")
         try:
             print(push_create.console)
@@ -167,19 +167,19 @@ class Test1(unittest.TestCase):
         except:
             pass         
 
-        global account_eosio
+        global account_master
         push_issue = cleos.PushAction(
-            account_ttt, "issue", 
+            account_test, "issue", 
             '{"to":"alice", "quantity":"100.0000 EOS", \
                 "memo":"100.0000 EOS to alice"}',
-            permission=account_eosio)
+            permission=account_master)
         self.assertTrue(not push_issue.error, "PushAction issue")
         print(push_issue.console)
         print(push_issue.data)
 
         global account_alice
         push_transfer = cleos.PushAction(
-            account_ttt, "transfer", 
+            account_test, "transfer", 
             '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", \
             "memo":"100.0000 EOS to carol"}',
             permission=account_alice)
@@ -188,10 +188,10 @@ class Test1(unittest.TestCase):
         print(push_transfer.data)
 
     def test_74(self):
-        global account_ttt
+        global account_test
         global account_alice
         get_info = cleos.GetInfo(is_verbose=-1)
-        get_table = cleos.GetTable(account_ttt, "accounts", account_alice)
+        get_table = cleos.GetTable(account_test, "accounts", account_alice)
         self.assertTrue(not get_table.error, "GetTable")
         print(json.dumps(get_table.json, indent=4))
 

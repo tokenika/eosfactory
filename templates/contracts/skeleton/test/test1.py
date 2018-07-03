@@ -10,13 +10,13 @@ import eosf
 from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
 cprint("""
-Use `cleos.use_keosd(False)` instruction, then the wallets are not
+Use `setup.use_keosd(False)` instruction, then the wallets are not
 managed by the EOSIO keosd and, hence, can be safely manipulated.
 
 If you use `setup.set_verbose(True)`, you can see the response messages of the
 issued commands.
 """, 'magenta')
-cleos.use_keosd(False)
+setup.use_keosd(False)
 setup.set_verbose(True)
 setup.set_json(False)
 
@@ -27,10 +27,10 @@ contract_dir = sys.path[0] + "/../"
 def test():
 
     cprint("""
-Start a local test EOSIO node, use `teos.node_reset()`:
+Start a local test EOSIO node, use `eosf.reset()`:
     """, 'magenta')
 
-    ok = teos.node_reset()
+    reset = eosf.reset()
         
     cprint("""
 Create a local wallet, use `wallet = eosf.Wallet()`:
@@ -39,20 +39,21 @@ Create a local wallet, use `wallet = eosf.Wallet()`:
     wallet = eosf.Wallet()
 
     cprint("""
-Implement the `eosio` master account as a `cleos.AccountEosio` object,
-use `account_eosio = cleos.AccountEosio()` 
-and `wallet.import_key(account_eosio)`:
+Implement the `eosio` master account as a `cleos.AccountMaster` object,
+use `account_master = eosf.AccountMaster()` 
+and `wallet.import_key(account_master)`:
     """, 'magenta')
 
-    account_eosio = cleos.AccountEosio()
-    wallet.import_key(account_eosio)
+    account_master = eosf.AccountMaster()
+    wallet.import_key(account_master)
 
     cprint("""
 Deploy the `eosio.bios` contract, 
-use `cleos.SetContract(account_eosio, "eosio.bios")`:
+use `cleos.SetContract(account_master, "eosio.bios")`:
         """, 'magenta')
 
-    contract_eosio_bios = cleos.SetContract(account_eosio, "eosio.bios")
+    contract_eosio_bios = eosf.Contract(
+        account_master, "eosio.bios").deploy()
 
     cprint("""
 Create an account for the contract of the workspace. The account is 

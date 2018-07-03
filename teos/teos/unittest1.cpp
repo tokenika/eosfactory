@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(test1)
     )"
     );
 
-  AccountEosio* eosio;
+  AccountMaster* eosio;
   Wallet* wallet;
   Key* key_owner; 
   Key* key_active;
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(test1)
     )"
     );
 
-  AccountEosio* eosio;
+  AccountMaster* eosio;
   Wallet* wallet;
   Key* key_owner; 
   Key* key_active;

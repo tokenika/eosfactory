@@ -10,7 +10,7 @@ import time
 
 setup.set_json(False)        
 setup.set_verbose(True)
-cleos.use_keosd(False)
+setup.use_keosd(False)
 
 class Test1(unittest.TestCase):
 
@@ -23,12 +23,12 @@ class Test1(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         global wallet 
-        global account_eosio
+        global account_master
 
-        account_eosio = cleos.AccountEosio()
-        node_reset = teos.node_reset()
+        account_master = eosf.AccountMaster()
+        reset = eosf.reset()
         wallet = eosf.Wallet()
-        wallet.import_key(account_eosio)
+        wallet.import_key(account_master)
 
 
     def setUp(self):
@@ -88,7 +88,7 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        teos.node_stop()
+        eosf.stop()
 
 if __name__ == "__main__":
     unittest.main()

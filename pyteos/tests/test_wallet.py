@@ -15,7 +15,7 @@ is_registered_to_testnode = True
 
 
 def test():
-    cleos.use_keosd(True)
+    setup.use_keosd(True)
 
     setup.set_nodeos_URL("dev.cryptolions.io:38888")  
     cleos.WalletStop()
@@ -41,7 +41,7 @@ Without password imported keys will not be retrievable.
 # Register to a testnode:
 ##############################################################################
 
-        account_master = cleos.AccountMaster()
+        account_master = eosf.AccountMaster()
         cprint("""
 Register the following data with a testnode, and
 save them, to restore this account object in the future.

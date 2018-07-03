@@ -23,7 +23,7 @@ namespace teoslib
 {  
 
   bool setup(
-    AccountEosio*& eosio, Wallet*& wallet,
+    AccountMaster*& eosio, Wallet*& wallet,
     Key*& key_owner, Key*& key_active,
     Account*& alice, Account*& bob, Account*& carol
   )
@@ -32,7 +32,7 @@ namespace teoslib
     DaemonStart daemonStart(true);
     ok &= !daemonStart.isError_;
 
-    eosio = new AccountEosio();
+    eosio = new AccountMaster();
     wallet = new Wallet();
     ok &= !wallet->isError_; 
 
@@ -65,7 +65,7 @@ namespace teoslib
   }
 
   void teardown(
-    AccountEosio* eosio, Wallet* wallet,
+    AccountMaster* eosio, Wallet* wallet,
     Key* key_owner, Key* key_active,
     Account* alice, Account* bob, Account* carol
   )

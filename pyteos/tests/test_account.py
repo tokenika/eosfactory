@@ -10,7 +10,7 @@ import time
 
 setup.set_json(False)        
 setup.set_verbose(True)
-cleos.use_keosd(False)
+setup.use_keosd(False)
 
 cprint("""
 Testing `eosf.account()`.
@@ -26,32 +26,31 @@ object, representing an EOSIO account functionality, yet build in many ways:
 def test():
     global account_alice
     global account_carol
-    global account_eosio
+    global account_master
     global account_bill
-    global account_et
+    global account_test
 
     cprint("""
 Start session: reset the local EOSIO node, create a wallet object, put the
 master account into it.
     """, 'magenta')
 
-    account_eosio = cleos.AccountEosio()
-    node_reset = teos.node_reset()
+    account_master = eosf.AccountMaster()
+    reset = eosf.reset()
     wallet = eosf.Wallet()
-    wallet.import_key(account_eosio)
+    wallet.import_key(account_master)
 
     cprint("""
 Create an account object, named `account_alice`, with the `eosf.account()`, 
 with default parameters: 
 
-    -- using the `account_eosio` as the creator;
+    -- using the `account_master` as the creator;
     -- using a random 12 character long name;
     -- using internally created `owner` and `active` keys.
     """, 'magenta')
 
     account_alice = eosf.account()
     wallet.import_key(account_alice)
-
 
     account_carol = eosf.account()
     wallet.import_key(account_carol)
@@ -63,37 +62,37 @@ The following `account_bill` object represents the account of the name `bill`
     account_bill = eosf.account(name="bill")
     wallet.import_key(account_bill)
 
-    account_et = eosf.account()
-    wallet.import_key(account_et)
+    account_test = eosf.account()
+    wallet.import_key(account_test)
 
     cprint("""
-The last account `account_et` is going to take a contract. Now, it does not have
+The last account `account_test` is going to take a contract. Now, it does not have
 any:
     """, 'magenta')
 
-    account_et.code()
+    account_test.code()
 
     cprint("""
 Define a contract, with its code specified in the EOS repository 
 (build/contracts/eosio.token), and deploy it:
     """, 'magenta')
 
-    contract_et = eosf.Contract(account_et, "eosio.token")
-    contract = contract_et.deploy()
-    account_et.code()
+    contract_test = eosf.Contract(account_test, "eosio.token")
+    deploy = contract_test.deploy()
+    account_test.code()
 
-    action = account_et.push_action(
+    action = account_test.push_action(
         "create", 
         '{"issuer":"' 
-            + str(account_eosio) 
+            + str(account_master) 
             + '", "maximum_supply":"1000000000.0000 EOS", \
             "can_freeze":0, "can_recall":0, "can_whitelist":0}')
 
-    action = contract_et.push_action(
+    action = contract_test.push_action(
         "issue", 
         '{"to":"' + str(account_alice)
             + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
-            account_eosio)
+            account_master)
     
     cprint("""
 Experiments with the `eosio.token` contract are shown elsewere. Here, we show 
@@ -103,8 +102,8 @@ how the session accounts recover after restarting the session.
     account_alice = None
     account_bill = None
     account_carol = None
-    account_et = None
-    contract_et = None
+    account_test = None
+    contract_test = None
     wallet = None
 
     wallet = eosf.Wallet()
@@ -115,7 +114,7 @@ in the wallet directory.
 
 Note that this provision is available only if the `keosd` Wallet Manager is not 
 used and wallets are managed by the local node - this condition is set with the
-`cleos.use_keosd(False)` statement above.
+`setup.use_keosd(False)` statement above.
     """, 'magenta')
 
     wallet.restore_accounts(globals())
@@ -125,7 +124,7 @@ used and wallets are managed by the local node - this condition is set with the
 Continue operations on the restored account objects:
     """, 'magenta')
 
-    action = account_et.push_action(
+    action = account_test.push_action(
         "transfer", 
         '{"from":"' 
             + str(account_alice)

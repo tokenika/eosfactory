@@ -11,14 +11,14 @@ from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 CONTRACT_NAME = "@CONTRACT_NAME@"
 
 cprint("""
-Use `cleos.use_keosd(False)` instruction, then the wallets are not
+Use `setup.use_keosd(False)` instruction, then the wallets are not
 managed by the EOSIO keosd and, hence, can be safely manipulated.
 
 If you use `setup.set_verbose(True)`, you can see the response messages of the
 issued commands.
 """, 'magenta')
 
-cleos.use_keosd(False)
+setup.use_keosd(False)
 setup.set_verbose(True)
 setup.set_json(False)
 
@@ -41,13 +41,13 @@ class Test1(unittest.TestCase):
 
     def test_04(self):
         global wallet
-        global account_eosio
+        global account_master
 
         cprint("""
-Start a local test EOSIO node, use `teos.node_reset()`:
+Start a local test EOSIO node, use `eosf.reset()`:
         """, 'magenta')
-        ok = teos.node_reset()
-        self.assertTrue(ok)
+        reset = eosf.reset()
+        self.assertTrue(not reset.error)
 
         cprint("""
 Create a local wallet object of the class `eosf.Wallet`, 
@@ -58,19 +58,20 @@ use `wallet = eosf.Wallet()`:
         self.assertTrue(not wallet.error)
 
         cprint("""
-Implement the `eosio` master account as a `cleos.AccountEosio` object,
-use `account_eosio = cleos.AccountEosio()` 
-and `wallet.import_key(account_eosio)`:
+Implement the `eosio` master account as a `cleos.AccountMaster` object,
+use `account_master = eosf.AccountMaster()` 
+and `wallet.import_key(account_master)`:
         """, 'magenta')
 
-        account_eosio = cleos.AccountEosio()
-        wallet.import_key(account_eosio)
+        account_master = eosf.AccountMaster()
+        wallet.import_key(account_master)
 
         cprint("""
 Deploy the `eosio.bios` contract:
         """, 'magenta')
         
-        contract_eosio_bios = cleos.SetContract( account_eosio, "eosio.bios")
+        contract_eosio_bios = eosf.Contract(
+                account_master, "eosio.bios").deploy()
         self.assertTrue(not contract_eosio_bios.error)
 
 
@@ -195,7 +196,7 @@ This should fail due to authority mismatch:
 
     @classmethod
     def tearDownClass(cls):
-        teos.node_stop()
+        eosf.stop()
 
 
 if __name__ == "__main__":

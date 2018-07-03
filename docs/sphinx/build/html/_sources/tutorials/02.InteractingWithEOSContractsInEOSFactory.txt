@@ -16,8 +16,8 @@ Open a bash terminal (or if you are on Windows, open an Ubuntu bash terminal sup
 To start your own single-node local testnet:
 
 ```
-import node
-node.reset()
+import eosf
+eosf.reset()
 ```
 
 On MacOS the *EOSIO* process is run in the background with no visible interface. However in Ubuntu & Windows it's launched in a separate window.
@@ -25,7 +25,7 @@ On MacOS the *EOSIO* process is run in the background with no visible interface.
 To verify the *EOSIO* node is running or to get information about the current state of the testnet:
 
 ```
-node.info()
+cleos.GetInfo()
 ```
 
 ## Manage Local Testnet
@@ -33,19 +33,19 @@ node.info()
 To stop the current testnet:
 
 ```
-node.stop()
+eosf.stop()
 ```
 
 To continue running the same testnet:
 
 ```
-node.run()
+eosf.run()
 ```
 
 To stop the current testnet and start a new one:
 
 ```
-node.reset()
+eosf.reset()
 ```
 
 ## Initialize Workspace

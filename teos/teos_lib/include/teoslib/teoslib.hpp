@@ -183,13 +183,13 @@ namespace teoslib
  * 
  * In order to modify the blockchain (add an account or define a smart 
  * contract), it is necessary to own an EOSIO account. The system grands
- * an account, for tries and tests. Any object of the AccountEosio class 
+ * an account, for tries and tests. Any object of the AccountMaster class 
  * implements this account.
  */
-  class AccountEosio : public AccountCreator
+  class AccountMaster : public AccountCreator
   {
   public:
-    AccountEosio() : AccountCreator("eosio"){}      
+    AccountMaster() : AccountCreator("eosio"){}      
   };
 
 

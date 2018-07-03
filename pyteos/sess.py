@@ -12,8 +12,6 @@ Session initiation and storage for session elements.
 """
 
 import setup
-import teos
-import cleos
 import eosf
 
 
@@ -23,7 +21,7 @@ def init():
 
     - **global variables**::
 
-        account_eosio: The primary EOSIO account predefined in the genesis file.
+        account_master: The primary EOSIO account predefined in the genesis file.
 
         alice, bob, carol: Prefabricated demo accounts.
 
@@ -34,7 +32,7 @@ def init():
         On error, return False.
     """
 
-    global account_eosio
+    global account_master
     global wallet
     global alice
     global bob
@@ -42,10 +40,11 @@ def init():
 
     wallet = eosf.Wallet()
 
-    account_eosio = cleos.AccountEosio()
-    wallet.import_key(account_eosio)
+    account_master = eosf.AccountMaster()
+    wallet.import_key(account_master)
     
-    contract_eosio_bios = cleos.SetContract(account_eosio, "eosio.bios")
+    contract_eosio_bios = eosf.Contract(
+        account_master, "eosio.bios").deploy()
     alice = eosf.account()
     wallet.import_key(alice)
     bob = eosf.account()
@@ -55,5 +54,5 @@ def init():
 
     if setup.is_verbose():
         print("#  Available test accounts: " 
-            + account_eosio.name + ", "  
+            + account_master.name + ", "  
             + alice.name + ", " + carol.name + ", " + bob.name + "\n")

@@ -1,16 +1,15 @@
 # python3 ./tests/unittest3.py
 
-import setup
-import teos
-import cleos
-import eosf
 import unittest
 import json
 from termcolor import cprint
+import setup
+import teos
+import eosf
 
 setup.set_verbose(True)
 setup.set_json(False)
-cleos.use_keosd(False)
+setup.use_keosd(False)
 
 class Test1(unittest.TestCase):
 
@@ -29,14 +28,15 @@ class Test1(unittest.TestCase):
         global bob
         global carol
 
-        testnet = teos.node_reset()
+        testnet = eosf.reset()
 
         wallet = eosf.Wallet()
 
-        eosio = cleos.AccountEosio()
-        wallet.import_key(eosio)
+        account_master = eosf.AccountMaster()
+        wallet.import_key(account_master)
 
-        contract_eosio_bios = cleos.SetContract(eosio, "eosio.bios")
+        contract_eosio_bios = eosf.Contract(
+                account_master, "eosio.bios").deploy()
 
         alice = eosf.account()
         wallet.import_key(alice)
@@ -49,7 +49,7 @@ class Test1(unittest.TestCase):
 
 
     def setUp(self):
-        self.assertTrue(testnet)
+        self.assertTrue(not testnet.error)
         self.assertTrue(not wallet.error)
         self.assertTrue(not contract_eosio_bios.error)
         self.assertTrue(not alice.error)
@@ -132,7 +132,7 @@ WARNING: This action should fail due to authority mismatch!
     @classmethod
     def tearDownClass(cls):
         template.delete()
-        teos.node_stop()
+        eosf.stop()
 
 
 if __name__ == "__main__":

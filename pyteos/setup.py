@@ -9,6 +9,8 @@ _is_debug_mode = False
 _print_request = False
 _print_response = False
 _nodeos_URL = ""
+_wallet_url = ""
+
 account_map = "accounts.json"
 password_map = "passwords.json"
 
@@ -31,6 +33,38 @@ def nodeos_URL():
     if not _nodeos_URL:
         return""
     return ["--url", _nodeos_URL]
+
+
+def wallet_URL():
+    global _wallet_url
+    return _wallet_url
+
+
+def use_keosd(status=False):
+    """ Do use `keosd` Wallet Manager.
+
+    Or use `nodeos`. See https://github.com/EOSIO/eos/wiki/CLI-Wallet
+    for explanations.
+
+    If wallets are not managed by `keosd`, they can be reset with the
+    `eosf.reset()` function, what is desired when testing smart contracts
+    locally.
+    """
+    import teos
+    import cleos
+    global _wallet_url
+    if status:
+        _wallet_url = []
+    else:
+        cleos.WalletStop(is_verbose=-1)
+        config = teos.GetConfig(
+            "", is_verbose=0)
+        _wallet_url = ["--wallet-url", "http://" \
+            + config.json["EOSIO_DAEMON_ADDRESS"]]
+
+
+def is_keosd():
+    return _wallet_url == []
     
 
 def set_verbose(status=1):

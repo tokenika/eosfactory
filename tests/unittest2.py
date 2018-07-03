@@ -3,14 +3,12 @@
 import unittest
 import json
 import time
-import setup
-import teos
-import cleos
-import eosf
 from termcolor import colored, cprint #sudo python3 -m pip install termcolor
+import setup
+import eosf
 
 setup.set_verbose(False)
-cleos.use_keosd(False)
+setup.use_keosd(False)
 
 class Test1(unittest.TestCase):
 
@@ -31,14 +29,14 @@ class Test1(unittest.TestCase):
 
     def test_04(self):
         global wallet
-        global account_eosio
+        global account_master
 
         cprint("""
-Start a local test EOSIO node, use `teos.node_reset()`:
+Start a local test EOSIO node, use `eosf.reset()`:
         """, 'magenta')
 
-        ok = teos.node_reset()
-        self.assertTrue(ok)
+        reset = eosf.reset()
+        self.assertTrue(not reset.error)
         
         cprint("""
 Create a local wallet, use `wallet = eosf.Wallet()`:
@@ -48,20 +46,21 @@ Create a local wallet, use `wallet = eosf.Wallet()`:
         self.assertTrue(not wallet.error)
 
         cprint("""
-Implement the `eosio` master account as a `cleos.AccountEosio` object,
-use `account_eosio = cleos.AccountEosio()` 
-and `wallet.import_key(account_eosio)`:
+Implement the `eosio` master account as a `eosf.AccountMaster` object,
+use `account_master = eosf.AccountMaster()` 
+and `wallet.import_key(account_master)`:
         """, 'magenta')
 
-        account_eosio = cleos.AccountEosio()
-        wallet.import_key(account_eosio)
+        account_master = eosf.AccountMaster()
+        wallet.import_key(account_master)
 
         cprint("""
 Deploy the `eosio.bios` contract, 
-use `cleos.SetContract(account_eosio, "eosio.bios")`:
+use `eosf.Contract(account_master, "eosio.bios").deploy()`:
         """, 'magenta')
 
-        contract_eosio_bios = cleos.SetContract(account_eosio, "eosio.bios")
+        contract_eosio_bios = eosf.Contract(
+                account_master, "eosio.bios").deploy()
         self.assertTrue(not contract_eosio_bios.error)
 
 
@@ -263,7 +262,7 @@ See the result of the action:
 
     @classmethod
     def tearDownClass(cls):
-        teos.node_stop()
+        eosf.stop()
 
 
 if __name__ == "__main__":

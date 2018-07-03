@@ -41,7 +41,7 @@ int main(int argc, const char *argv[]) {
   using namespace teoslib;
   using namespace boost::property_tree;
 
-  AccountEosio* eosio;
+  AccountMaster* eosio;
   Wallet* wallet;
   Key* key_owner; 
   Key* key_active;
@@ -129,7 +129,7 @@ int main(int argc, const char *argv[]) {
   using namespace teoslib;
   using namespace boost::property_tree;
 
-  AccountEosio* eosio;
+  AccountMaster* eosio;
   Wallet* wallet;
   Key* key_owner; 
   Key* key_active;
