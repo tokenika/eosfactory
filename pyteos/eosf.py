@@ -527,12 +527,14 @@ def account(
         account_object.owner_key = owner_key
         account_object.active_key = active_key
 
-        try:
-            wallet.import_key(account_object)
-        except:
-            if is_verbose >= 0:
-                account_object.err_msg = "Failed to put into the given wallet!"
-                account_object.error = True
+        if not wallet is None:
+            try:
+                wallet.import_key(account_object)
+            except:
+                if is_verbose >= 0:
+                    account_object.err_msg = \
+                        "Failed to put into the given wallet!"
+                    account_object.error = True
 
     def code(self, code="", abi="", wasm=False):      
         return cleos.GetCode(

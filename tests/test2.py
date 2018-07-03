@@ -199,6 +199,10 @@ See the result of the action:
         '{"challenger":"' 
         + str(alice) + '", "host":"' + str(bob) + '"}', bob)
 
+    cprint(
+        "OK OK OK OK OK OK OK OK 0K 0K 0K 0K 0K 0K 0K OK OK OK OK OK OK OK",
+        'green'
+    )
 
 if __name__ == "__main__":
    test()

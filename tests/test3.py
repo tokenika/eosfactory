@@ -140,18 +140,10 @@ This should fail due to authority mismatch:
         "hi", 
         '{"user":"' + str(carol) + '"}', alice)
         
-
-    def test_80(self):
-        global template
-        #self.assertTrue(template.delete())
-
-    def tearDown(self):
-        pass
-
-
-    @classmethod
-    def tearDownClass(cls):
-        eosf.stop()
+    cprint(
+        "OK OK OK OK OK OK OK OK 0K 0K 0K 0K 0K 0K 0K OK OK OK OK OK OK OK",
+        'green'
+    )
 
 
 if __name__ == "__main__":

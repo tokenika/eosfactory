@@ -195,6 +195,10 @@ Stop the EOSIO node, use `eosf.stop()`:
 
     eosf.stop()
 
+    cprint(
+        "OK OK OK OK OK OK OK OK 0K 0K 0K 0K 0K 0K 0K OK OK OK OK OK OK OK",
+        'green'
+    )
 
 if __name__ == "__main__":
     test()
