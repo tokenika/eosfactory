@@ -90,7 +90,7 @@ test contract_et.deploy():
     deployed = contract_et.deploy()
 
     cprint("""
-test contract_et.get_code():
+test contract_et.code():
     """, 'magenta')
 
     print("code hash: ".format(contract_et.code()))

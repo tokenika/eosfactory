@@ -122,13 +122,13 @@ class Test1(unittest.TestCase):
 
         global account_alice
         account_alice = cleos.CreateAccount(
-            account_master, "alice", key_owner, key_owner, is_verbose=False)
+            account_master, "alice", key_owner, key_owner, is_verbose=0)
         self.assertTrue(not account_alice.error, "CreateAccount Alice")
         print(account_alice.name)
 
         global account_carol
         account_carol = cleos.CreateAccount(
-            account_master, "carol", key_owner, key_owner, is_verbose=False)
+            account_master, "carol", key_owner, key_owner, is_verbose=0)
         self.assertTrue(not account_carol.error, "CreateAccount Carol")
         print(account_carol.name)
 

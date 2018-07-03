@@ -34,7 +34,7 @@ def reset_nodeos_URL():
     except:
         print("cannot determine EOSIO_DAEMON_ADDRESS.")
         return
-    print("URL where nodeos is to be running: " + url)
+    print("nodeos endpoint: " + url)
     setup.set_nodeos_URL(url)
 
 

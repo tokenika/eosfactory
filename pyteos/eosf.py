@@ -30,13 +30,13 @@ def reload():
 
 class Wallet(cleos.WalletCreate):
     """ Create a new wallet locally and operate it.
-    Usage: WalletCreate(name="default", is_verbose=True)
+    Usage: WalletCreate(name="default", is_verbose=1)
 
     - **parameters**::
 
         name: The name of the new wallet, defaults to `default`.
-        is_verbose: If `False`, do not print unless on error, 
-            default is `True`.
+        is_verbose: If `0`, do not print unless on error, 
+            default is `1`.
 
     - **attributes**::
 
@@ -74,12 +74,14 @@ class Wallet(cleos.WalletCreate):
                         as out:    
                     json.dump(password_map, out)
 
-    def list(self):
+
+    def get_list(self):
         """ Lists opened wallets, * marks unlocked.
         Returns `cleos.WalletList` object
         """ 
         return cleos.WalletList(is_verbose=self.is_verbose)
     
+
     def open(self):
         """ Opens the wallet.
         Returns `WalletOpen` object     
@@ -87,6 +89,7 @@ class Wallet(cleos.WalletCreate):
         self.wallet_open = cleos.WalletOpen(
             self.name, is_verbose=self.is_verbose)
         return self.wallet_open
+
 
     def lock(self):
         """ Locks the wallet.
@@ -198,7 +201,8 @@ class Wallet(cleos.WalletCreate):
         namespace.update(restored)
         return restored
 
-    def keys(self):
+
+    def get_keys(self):
         """ Lists public keys from all unlocked wallets.
         Returns `cleos.WalletKeys` object.    
         """
@@ -227,6 +231,235 @@ class Transaction():
 
     def get_transaction(self):
         pass
+
+
+class Contract():
+
+    def __init__(
+            self, account, contract_dir,
+            wast_file="", abi_file="",  
+            permission="",
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block="",
+            is_verbose=1):
+
+        self.account = account
+        self.contract_dir = contract_dir
+        self.wast_file = wast_file
+        self.abi_file = abi_file
+        self.expiration_sec = expiration_sec
+        self.skip_signature = skip_signature
+        self.dont_broadcast = dont_broadcast
+        self.forceUnique = forceUnique
+        self.max_cpu_usage = max_cpu_usage
+        self.max_net_usage = max_net_usage
+        self.ref_block = ref_block
+        self.is_mutable = True
+
+        self.contract = None
+        self.console = None
+        self.is_verbose = is_verbose
+        self.error = self.account.error
+
+
+    def deploy(self, permission="", is_verbose=1):
+        self.contract = cleos.SetContract(
+            self.account, self.contract_dir, 
+            self.wast_file, self.abi_file, 
+            permission, self.expiration_sec, 
+            self.skip_signature, self.dont_broadcast, self.forceUnique,
+            self.max_cpu_usage, self.max_net_usage,
+            self.ref_block,
+            self.is_verbose > 0 and is_verbose > 0
+        )
+
+        return self.contract
+
+
+    def is_deployed(self):
+        if not self.contract:
+            return False
+        return not self.contract.error
+
+
+    def build_wast(self):
+        if self.is_mutable:            
+            wast = teos.WAST(
+                self.contract_dir, self.account.name, 
+                is_verbose=self.is_verbose)
+        else:
+            if self.is_verbose > 0:
+                print("ERROR!")
+                print("Cannot modify system contracts.")
+        return not wast.error
+        
+
+    def build_abi(self):            
+        if self.is_mutable:
+            abi = teos.ABI(
+                self.contract_dir, self.account.name, 
+                is_verbose=self.is_verbose)
+        else:
+            if self.is_verbose > 0:
+                print("ERROR!")
+                print("Cannot modify system contracts.")
+        return not abi.error
+
+    
+    def build(self):
+        ok = self.build_abi()
+        ok = ok and self.build_wast()
+        return ok
+
+
+    def push_action(
+            self, action, data,
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0, 
+            ref_block="",
+            is_verbose=1,
+            json=False,
+            console=False
+        ):
+
+        if not permission:
+            permission=self.account.name
+        else:
+            try: # permission is an account:
+                permission=permission.name
+            except: # permission is the name of an account:
+                permission=permission
+
+        if console:
+            is_verbose = 0
+            json = True
+    
+        self.action = cleos.PushAction(
+            self.account.name, action, data,
+            permission, expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            self.is_verbose > 0 and is_verbose > 0, json)
+
+        if not self.action.error:
+            try:
+                self.console = self.action.console
+                if self.is_verbose:
+                    print(self.console + "\n") 
+            except:
+                pass
+
+        return self.action
+
+
+    def show_action(self, action, data, permission=""):
+        """ Implements the `push action` command without broadcasting. 
+
+        """
+        return self.push_action(action, data, permission, dont_broadcast=1)
+    
+
+    def get_table(
+            self, table, scope="",
+            binary=False, 
+            limit=10, key="", lower="", upper=""):
+        """ Return a contract's table object.
+        """
+
+        self.table = cleos.GetTable(
+                    self.account.name, table, scope,
+                    binary=False, 
+                    limit=10, key="", lower="", upper="", 
+                    is_verbose=self.is_verbose)
+            
+        return self.table
+
+
+    def code(self, code="", abi="", wasm=False):
+        return cleos.GetCode(
+            self.account.name, code, abi, wasm, is_verbose=self.is_verbose)
+
+
+    def get_console(self):
+        return self.console
+
+
+    def contract_path(self):
+        """ Return contract directory path.
+        """
+        if self.contract:
+            return str(self.contract.contract_path_absolute)
+        else:
+            return str("NOT DEFINED JET")
+
+
+    def __str__(self):
+        if self.is_deployed():
+            return str(self.contract)
+        else:
+            return str(self.account)
+
+
+class AccountMaster():
+    
+    def __init__(
+            self, name="", owner_key_public="", active_key_public="", 
+            is_verbose=1):
+
+        self.json = {}
+        self.error = False
+        
+        if setup.is_keosd():
+            if not owner_key_public: # print data for registration
+                self.new_account = True
+                if not name: 
+                    self.name = account_name()
+                else:
+                    self.name = name
+
+                self.owner_key = CreateKey("owner", is_verbose=0)
+                self.active_key = CreateKey("active", is_verbose=0)
+                print(
+                    "Register the following data with a testnode, and\n" \
+                    + "save them, to restore this account object in the future.\n" \
+                    + "Accout Name: {}\n".format(self.name) \
+                    + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
+                    + "Active Public Key: {}\n".format(self.active_key.key_public) \
+                    + "\n\n" \
+                    + "Owner Private Key: {}\n".format(self.owner_key.key_private) \
+                    + "Active Private Key: {}\n".format(self.active_key.key_private))
+            else: # restore the master account
+                self.name = name
+                self.new_account = False
+                self.owner_key = CreateKey("owner", owner_key_public, is_verbose=0)
+                if not active_key_public:
+                    self.active_key = owner_key
+                else:
+                    self.active_key = CreateKey(
+                        "active", active_key_public, is_verbose=0)
+        else:
+            self.name = "eosio"  
+            self.json["name"] = self.name
+            self.json["privateKey"] = \
+                "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
+            self.json["publicKey"] = \
+                "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
+            self.key_private = self.json["privateKey"]
+            self.key_public = self.json["publicKey"]
+            self._out = "transaction id: eosio" 
+
+    
+    def account(self):
+        return str(GetAccount(self.name, is_verbose=1))
+        
+
+    def __str__(self):
+        return self.name
+
 
 def account(
         creator="", 
@@ -378,174 +611,11 @@ def account(
 
     return account_object
 
-class Contract():
 
-    def __init__(
-            self, account, contract_dir,
-            wast_file="", abi_file="",  
-            permission="",
-            expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block="",
-            is_verbose=1):
-
-        self.account = account
-        self.contract_dir = contract_dir
-        self.wast_file = wast_file
-        self.abi_file = abi_file
-        self.expiration_sec = expiration_sec
-        self.skip_signature = skip_signature
-        self.dont_broadcast = dont_broadcast
-        self.forceUnique = forceUnique
-        self.max_cpu_usage = max_cpu_usage
-        self.max_net_usage = max_net_usage
-        self.ref_block = ref_block
-        self.is_mutable = True
-
-        self.contract = None
-        self.console = None
-        self.is_verbose = is_verbose
-        self.error = self.account.error
-
-
-    def deploy(self, permission="", is_verbose=1):
-        self.contract = cleos.SetContract(
-            self.account, self.contract_dir, 
-            self.wast_file, self.abi_file, 
-            permission, self.expiration_sec, 
-            self.skip_signature, self.dont_broadcast, self.forceUnique,
-            self.max_cpu_usage, self.max_net_usage,
-            self.ref_block,
-            self.is_verbose > 0 and is_verbose > 0
-        )
-
-        return self.contract
-
-
-    def is_deployed(self):
-        if not self.contract:
-            return False
-        return not self.contract.error
-
-
-    def wast(self):
-        if self.is_mutable:            
-            wast = teos.WAST(
-                self.contract_dir, self.account.name, 
-                is_verbose=self.is_verbose)
-        else:
-            if self.is_verbose > 0:
-                print("ERROR!")
-                print("Cannot modify system contracts.")
-        return not wast.error
-        
-
-    def abi(self):            
-        if self.is_mutable:
-            abi = teos.ABI(
-                self.contract_dir, self.account.name, 
-                is_verbose=self.is_verbose)
-        else:
-            if self.is_verbose > 0:
-                print("ERROR!")
-                print("Cannot modify system contracts.")
-        return not abi.error
-
-    
-    def build(self):
-        ok = self.abi()
-        ok = ok and self.wast()
-        return ok
-
-
-    def push_action(
-            self, action, data,
-            permission="", expiration_sec=30, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0, 
-            ref_block="",
-            is_verbose=1,
-            json=False,
-            console=False
-        ):
-
-        if not permission:
-            permission=self.account.name
-        else:
-            try: # permission is an account:
-                permission=permission.name
-            except: # permission is the name of an account:
-                permission=permission
-
-        if console:
-            is_verbose = 0
-            json = True
-    
-        self.action = cleos.PushAction(
-            self.account.name, action, data,
-            permission, expiration_sec, 
-            skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage,
-            ref_block,
-            self.is_verbose > 0 and is_verbose > 0, json)
-
-        if not self.action.error:
-            try:
-                self.console = self.action.console
-                if self.is_verbose:
-                    print(self.console + "\n") 
-            except:
-                pass
-
-        return self.action
-
-
-    def get_console(self):
-        return self.console
-
-
-    def show_action(self, action, data, permission=""):
-        """ Implements the `push action` command without broadcasting. 
-
-        """
-        return self.push_action(action, data, permission, dont_broadcast=1)
-    
-
-    def get_table(
-            self, table, scope="",
-            binary=False, 
-            limit=10, key="", lower="", upper=""):
-        """ Return a contract's table object.
-        """
-
-        self.table = cleos.GetTable(
-                    self.account.name, table, scope,
-                    binary=False, 
-                    limit=10, key="", lower="", upper="", 
-                    is_verbose=self.is_verbose)
-            
-        return self.table
-
-
-    def code(self, code="", abi="", wasm=False):
-        return cleos.GetCode(
-            self.account.name, code, abi, is_verbose=self.is_verbose)
-
-
-    def contract_path(self):
-        """ Return contract directory path.
-        """
-        if self.contract:
-            return str(self.contract.contract_path_absolute)
-        else:
-            return str("NOT DEFINED JET")
-
-    def __str__(self):
-        if self.is_deployed():
-            return str(self.contract)
-        else:
-            return str(self.account)
+def template(name, template="", remove_existing=False, 
+            visual_studio_code=False, is_verbose=1):
+    return teos.Template(name, template, remove_existing, 
+            visual_studio_code, is_verbose)
 
 
 def reset(is_verbose=1):
@@ -583,74 +653,3 @@ def stop(is_verbose=1):
     """
     stop = teos.NodeStop(is_verbose)
     return stop
-
-
-class AccountMaster():
-    def __init__(self, is_verbose=1): 
-        self.name = "eosio"
-        self.json = {}       
-        self.json["name"] = self.name
-        self.json["privateKey"] = \
-            "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-        self.json["publicKey"] = \
-            "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-        self.key_private = self.json["privateKey"]
-        self.key_public = self.json["publicKey"]
-        self._out = "transaction id: eosio" 
-
-    def __str__(self):
-        return self.name
-
-class AccountMaster:
-    def __init__(
-            self, name="", owner_key_public="", active_key_public="", 
-            is_verbose=True):
-
-        self.json = {}
-        self.error = False
-        
-        if setup.is_keosd():
-            if not owner_key_public: # print data for registration
-                self.new_account = True
-                if not name: 
-                    self.name = account_name()
-                else:
-                    self.name = name
-
-                self.owner_key = CreateKey("owner", is_verbose=0)
-                self.active_key = CreateKey("active", is_verbose=0)
-                print(
-                    "Register the following data with a testnode, and\n" \
-                    + "save them, to restore this account object in the future.\n" \
-                    + "Accout Name: {}\n".format(self.name) \
-                    + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
-                    + "Active Public Key: {}\n".format(self.active_key.key_public) \
-                    + "\n\n" \
-                    + "Owner Private Key: {}\n".format(self.owner_key.key_private) \
-                    + "Active Private Key: {}\n".format(self.active_key.key_private))
-            else: # restore the master account
-                self.name = name
-                self.new_account = False
-                self.owner_key = CreateKey("owner", owner_key_public, is_verbose=0)
-                if not active_key_public:
-                    self.active_key = owner_key
-                else:
-                    self.active_key = CreateKey(
-                        "active", active_key_public, is_verbose=0)
-        else:
-            self.name = "eosio"  
-            self.json["name"] = self.name
-            self.json["privateKey"] = \
-                "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-            self.json["publicKey"] = \
-                "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-            self.key_private = self.json["privateKey"]
-            self.key_public = self.json["publicKey"]
-            self._out = "transaction id: eosio" 
-
-    
-    def account(self):
-        return str(GetAccount(self.name, is_verbose=1))
-        
-    def __str__(self):
-        return self.name

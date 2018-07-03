@@ -119,7 +119,7 @@ test contract_at.deploy():
         self.assertTrue(contract_at.deploy())
 
         cprint("""
-test contract_at.get_code():
+test contract_at.code():
         """, 'magenta')
         self.assertTrue(not contract_at.code().error)
 

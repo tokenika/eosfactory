@@ -32,14 +32,10 @@ class Test1(unittest.TestCase):
         global deployment
 
         testnet = eosf.reset()
-
         wallet = eosf.Wallet()
 
         account_master = eosf.AccountMaster()
         wallet.import_key(account_master)
-
-        contract_eosio_bios = eosf.Contract(
-            account_master, "eosio.bios").deploy()
 
         alice = eosf.account()
         wallet.import_key(alice)
@@ -52,6 +48,9 @@ class Test1(unittest.TestCase):
 
         account = eosf.account()
         wallet.import_key(account)
+
+        contract_eosio_bios = eosf.Contract(
+            account_master, "eosio.bios").deploy()
 
         contract = eosf.Contract(account, "eosio.token")
         deployment = contract.deploy()
@@ -142,17 +141,17 @@ Assign t3 = contract.get_table("accounts", carol)
         t3 = contract.get_table("accounts", carol)
 
         cprint("""
-Assert t1.json["rows"][0]["balance"] == "77.0000 EOS"
+Assert t1.json["rows"][0]["balance"] == '77.0000 EOS'
         """, 'magenta')
         self.assertTrue(t1.json["rows"][0]["balance"] == '77.0000 EOS')
 
         cprint("""
-Assert t2.json["rows"][0]["balance"] == "11.0000 EOS"
+Assert t2.json["rows"][0]["balance"] == '11.0000 EOS'
         """, 'magenta')
         self.assertTrue(t2.json["rows"][0]["balance"] == '11.0000 EOS')
 
         cprint("""
-Assert t3.json["rows"][0]["balance"] == "12.0000 EOS"
+Assert t3.json["rows"][0]["balance"] == '12.0000 EOS'
         """, 'magenta')
         self.assertTrue(t3.json["rows"][0]["balance"] == '12.0000 EOS')
 

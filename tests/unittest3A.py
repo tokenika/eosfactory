@@ -4,7 +4,6 @@ import unittest
 import json
 from termcolor import cprint
 import setup
-import teos
 import eosf
 
 setup.set_verbose(True)
@@ -66,7 +65,7 @@ class Test1(unittest.TestCase):
         cprint("""
 Create a new contract workplace
         """, 'magenta')
-        template = teos.Template(contract_dir, remove_existing=True)
+        template = eosf.template(contract_dir, remove_existing=True)
 
         cprint("""
 Create an account associated with the contract
