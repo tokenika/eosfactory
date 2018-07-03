@@ -75,7 +75,7 @@ class Wallet(cleos.WalletCreate):
                     json.dump(password_map, out)
 
 
-    def get_list(self):
+    def index(self):
         """ Lists opened wallets, * marks unlocked.
         Returns `cleos.WalletList` object
         """ 
@@ -199,7 +199,7 @@ class Wallet(cleos.WalletCreate):
         return restored
 
 
-    def get_keys(self):
+    def keys(self):
         """ Lists public keys from all unlocked wallets.
         Returns `cleos.WalletKeys` object.    
         """

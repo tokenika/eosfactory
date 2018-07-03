@@ -1,17 +1,18 @@
 #!/usr/bin/python3
 
 """
-Session initiation and storage for session elements.
+Private testnet set-up and tear-down.
 
 .. module:: node
     :platform: Unix, Windows
-    :synopsis: Session initiation and storage for session elements.
+    :synopsis: Private testnet set-up and tear-down.
 
 .. moduleauthor:: Tokenika
 
 """
 
 import teos
+import cleos
 
 
 def reset(is_verbose=1):
@@ -49,3 +50,21 @@ def stop(is_verbose=1):
     """
     stop = teos.NodeStop(is_verbose)
     return stop
+
+
+def info():
+    """
+    Display EOS node status.
+    """
+    return cleos.GetInfo()
+
+
+def is_running():
+    """
+    Check if testnet is running.
+    """
+    try:
+        head_block_num = int(cleos.GetInfo(0).json["head_block_num"])
+    except:
+        head_block_num = -1
+    return head_block_num > 0
