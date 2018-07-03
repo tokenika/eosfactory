@@ -11,6 +11,7 @@ Python front-end for `EOSIO cleos`.
 
 """
 
+import sys
 import os
 import subprocess
 import json
@@ -24,6 +25,8 @@ import cleos_system
 import inspect
 import types
 import node
+import shutil
+
 
 def reload():
     import importlib
@@ -386,13 +389,24 @@ class Contract():
         return self._console
 
 
-    def contract_path(self):
+    def path(self):
         """ Return contract directory path.
         """
         if self.contract:
             return str(self.contract.contract_path_absolute)
         else:
-            return str("NOT DEFINED JET")
+            return str(self.contract_dir)
+
+
+    def delete(self):
+        try:
+            if self.contract:
+                shutil.rmtree(str(self.contract.contract_path_absolute))
+            else:
+                shutil.rmtree(str(self.contract_dir))
+            return True
+        except:
+            return False
 
 
     def __str__(self):
@@ -400,6 +414,12 @@ class Contract():
             return str(self.contract)
         else:
             return str(self.account)
+
+
+class ContractFromTemplate(Contract):
+    def __init__(self, account, name, template="", remove_existing=False, visual_studio_code=False, is_verbose=True):
+        t = teos.Template(name, template, remove_existing, visual_studio_code, is_verbose)
+        super().__init__(account, t.contract_path_absolute)
 
 
 class AccountMaster():
@@ -626,12 +646,6 @@ def account(
     return account_object
 
 
-def template(name, template="", remove_existing=False, 
-            visual_studio_code=False, is_verbose=1):
-    return teos.Template(name, template, remove_existing, 
-            visual_studio_code, is_verbose)
-
-
 def reset(is_verbose=1):
     return node.reset(is_verbose)
 
@@ -642,3 +656,14 @@ def run(is_verbose=1):
 
 def stop(is_verbose=1):
     return node.stop(is_verbose)
+
+
+if __name__ == "__main__":
+    template = ""
+    if len(sys.argv) > 2:
+        template = str(sys.argv[2])
+
+    wallet = Wallet()
+    eosio = AccountMaster()
+    wallet.import_key(eosio)
+    ContractFromTemplate(eosio, str(sys.argv[1]), template, visual_studio_code=True, is_verbose=False)

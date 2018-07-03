@@ -57,15 +57,9 @@ class Test1(unittest.TestCase):
 
 
     def test_01(self):
-        global template
         global contract
 
-        contract_dir = "_e4b2ffc804529ce9c6fae258197648cc2"
-
-        cprint("""
-Create a new contract workplace
-        """, 'magenta')
-        template = eosf.template(contract_dir, remove_existing=True)
+        name = "_e4b2ffc804529ce9c6fae258197648cc2"
 
         cprint("""
 Create an account associated with the contract
@@ -81,7 +75,7 @@ Add the account to the wallet
         cprint("""
 Create a reference to the new contract
         """, 'magenta')
-        contract = eosf.Contract(account, contract_dir)
+        contract = eosf.ContractFromTemplate(account, name, remove_existing=True)
 
         cprint("""
 Build the contract
@@ -130,7 +124,7 @@ WARNING: This action should fail due to authority mismatch!
 
     @classmethod
     def tearDownClass(cls):
-        template.delete()
+        contract.delete()
         node.stop()
 
 
