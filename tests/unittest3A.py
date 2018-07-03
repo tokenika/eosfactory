@@ -75,7 +75,8 @@ Add the account to the wallet
         cprint("""
 Create a reference to the new contract
         """, 'magenta')
-        contract = eosf.ContractFromTemplate(account, name, remove_existing=True)
+        contract = eosf.ContractFromTemplate(
+                account, name, remove_existing=True)
 
         cprint("""
 Build the contract

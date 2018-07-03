@@ -98,8 +98,9 @@ Define a contract, with its code specified in the EOS repository
             account_master)
     
     cprint("""
-Experiments with the `eosio.token` contract are shown elsewere. Here, we show 
-how the session accounts recover after restarting the session.
+Experiments with the `eosio.token` contract are shown elsewere. 
+Here, we show how the session accounts recover after restarting 
+the session.
     """, 'magenta')
 
     account_alice = None

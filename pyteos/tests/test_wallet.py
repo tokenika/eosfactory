@@ -11,9 +11,6 @@ import time
 setup.set_verbose(True)
 is_registered_to_testnode = True
 
-
-
-
 def test():
     setup.use_keosd(True)
 

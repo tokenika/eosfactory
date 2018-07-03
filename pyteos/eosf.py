@@ -107,7 +107,7 @@ class Wallet(cleos.WalletCreate):
     def unlock(self):
         """ Unlocks the wallet.
         Returns `WalletUnlock` object.
-        """        
+        """
         self.wallet_unlock = cleos.WalletUnlock(
             self.name, self.json["password"], is_verbose=self.is_verbose)
         return self.wallet_unlock
@@ -117,7 +117,7 @@ class Wallet(cleos.WalletCreate):
         """ Imports private keys of an account into wallet.
         Returns list of `cleos.WalletImport` objects
         """
-        retval = []        
+        retval = []
         try:
             lcls = inspect.stack()[1][0].f_locals
             lcls.update(inspect.stack()[2][0].f_locals) 
@@ -125,11 +125,11 @@ class Wallet(cleos.WalletCreate):
                 account_name = account_or_key.name
                 
                 for name in lcls:
-                    if id(account_or_key) == id(lcls[name]):                  
+                    if id(account_or_key) == id(lcls[name]):
                         wallet_dir = cleos.get_wallet_dir()
                         try:
                             with open(wallet_dir + setup.account_map, "r") \
-                                as input:    
+                                as input:
                                 account_map = json.load(input)
                         except:
                             account_map = {}
@@ -147,7 +147,7 @@ class Wallet(cleos.WalletCreate):
                 if key:
                     retval.append(
                         cleos.WalletImport(key, self.name, is_verbose=0))
-            except:          
+            except:
                 retval.append(cleos.WalletImport(
                     account_or_key, self.name, is_verbose=0))
         except:
@@ -205,7 +205,7 @@ class Wallet(cleos.WalletCreate):
 
     def keys(self):
         """ Lists public keys from all unlocked wallets.
-        Returns `cleos.WalletKeys` object.    
+        Returns `cleos.WalletKeys` object.
         """
         return cleos.WalletKeys(is_verbose=self.is_verbose)
 
