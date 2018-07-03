@@ -8,8 +8,6 @@ import cleos
 import teos
 import eosf
 
-setup.use_keosd(False)
-
 
 class Test1(unittest.TestCase):
 
