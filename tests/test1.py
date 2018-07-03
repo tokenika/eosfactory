@@ -54,8 +54,7 @@ use `eosf.Contract(account_master, "eosio.bios").deploy()`:
 Create accounts `alice`, `bob` and `carol`:
     """, 'magenta')
     
-    alice = eosf.account()
-    wallet.import_key(alice)
+    alice = eosf.account(wallet=wallet)
 
     bob = eosf.account()
     wallet.import_key(bob)        

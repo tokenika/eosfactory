@@ -255,3 +255,4 @@ class NodeStop(_Teos):
         _Teos.__init__(self, jarg, "daemon", "stop", is_verbose)
 
 
+setup.use_keosd(False)

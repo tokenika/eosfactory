@@ -1163,7 +1163,6 @@ class PushAction(_Cleos):
 def node_is_running():
     return not GetInfo(is_verbose=-1).error
 
-setup.use_keosd(False)
         
 
 
