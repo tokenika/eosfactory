@@ -156,10 +156,10 @@ class Template(_Teos):
 
     def delete(self):
         try:
-            shutil.rmtree(self.contract_path_absolute)
+            shutil.rmtree(str(self.contract_path_absolute))
             return True
         except:
-            return False 
+            return False
                    
 
 class ABI(_Teos):
