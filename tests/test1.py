@@ -57,7 +57,7 @@ Create accounts `alice`, `bob` and `carol`:
     alice = eosf.account(wallet=wallet)
 
     bob = eosf.account()
-    wallet.import_key(bob)        
+    wallet.import_key(bob)
 
     carol = eosf.account()
     wallet.import_key(carol) 
@@ -66,7 +66,7 @@ Create accounts `alice`, `bob` and `carol`:
 Inspect the account, use `bob.account()`:
     """, 'magenta')
 
-    print(bob.account())       
+    print(bob.account())
 
     account_test = eosf.account()
     wallet.import_key(account_test)

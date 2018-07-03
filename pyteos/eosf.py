@@ -113,44 +113,41 @@ class Wallet(cleos.WalletCreate):
         """ Imports private keys of an account into wallet.
         Returns list of `cleos.WalletImport` objects
         """
-        lcls = inspect.stack()[1][0].f_locals
-        lcls.update(inspect.stack()[2][0].f_locals) 
-
-        # print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-        # print(account_or_key.name)
-        # print(lcls)
-        # print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-
-        retval = []
+        retval = []        
         try:
-            account_name = account_or_key.name
-            
-            for name in lcls:
-                if id(account_or_key) == id(lcls[name]):                  
-                    wallet_dir = cleos.get_wallet_dir()
-                    try:
-                        with open(wallet_dir + setup.account_map, "r") \
-                            as input:    
-                            account_map = json.load(input)
-                    except:
-                        account_map = {}
+            lcls = inspect.stack()[1][0].f_locals
+            lcls.update(inspect.stack()[2][0].f_locals) 
+            try:
+                account_name = account_or_key.name
+                
+                for name in lcls:
+                    if id(account_or_key) == id(lcls[name]):                  
+                        wallet_dir = cleos.get_wallet_dir()
+                        try:
+                            with open(wallet_dir + setup.account_map, "r") \
+                                as input:    
+                                account_map = json.load(input)
+                        except:
+                            account_map = {}
 
-                    account_map[account_name] = name
-                    with open(wallet_dir + setup.account_map, "w") as out:
-                        json.dump(account_map, out)
+                        account_map[account_name] = name
+                        with open(wallet_dir + setup.account_map, "w") as out:
+                            json.dump(account_map, out)
 
-            key = account_or_key.owner_key
-            if key:
-                retval.append(
-                    cleos.WalletImport(key, self.name, is_verbose=0))
+                key = account_or_key.owner_key
+                if key:
+                    retval.append(
+                        cleos.WalletImport(key, self.name, is_verbose=0))
 
-            key = account_or_key.active_key
-            if key:
-                retval.append(
-                    cleos.WalletImport(key, self.name, is_verbose=0))
-        except:          
-            retval.append(cleos.WalletImport(
-                account_or_key, self.name, is_verbose=0))
+                key = account_or_key.active_key
+                if key:
+                    retval.append(
+                        cleos.WalletImport(key, self.name, is_verbose=0))
+            except:          
+                retval.append(cleos.WalletImport(
+                    account_or_key, self.name, is_verbose=0))
+        except:
+            pass
 
         return retval
 
@@ -408,7 +405,7 @@ class AccountMaster():
     
     def __init__(
             self, name="", owner_key_public="", active_key_public="", 
-            is_verbose=1):
+            is_verbose=1, wallet=None):
 
         self.json = {}
         self.error = False
@@ -451,6 +448,12 @@ class AccountMaster():
             self.key_private = self.json["privateKey"]
             self.key_public = self.json["publicKey"]
             self._out = "transaction id: eosio" 
+
+        try:
+            wallet.import_key(self)
+        except:
+            if is_verbose >= 0:
+                self.err_msg = "Failed to put into the given wallet!"
 
     
     def account(self):
