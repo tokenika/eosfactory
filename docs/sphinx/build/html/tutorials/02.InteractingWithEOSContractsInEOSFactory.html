@@ -289,13 +289,13 @@
 <span id="check-the-contract-table"></span><h2>Check the Contract Table<a class="headerlink" href="#check-the-contract-table" title="Permalink to this headline">¶</a></h2>
 <p>From the contract&#8217;s ABI we know that the table keeping track of the token balances is called <code class="docutils literal"><span class="pre">accounts</span></code>.</p>
 <p>Let&#8217;s check the state of both accounts involved in the previous transaction:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;accounts&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;accounts&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s2">&quot;accounts&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="s2">&quot;accounts&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> The <code class="docutils literal"><span class="pre">get_table</span></code> method takes two arguments: the name of the table as specified by the contract ABI and the scope within the contract in which the table is found.</p>
+<p><strong>NOTE:</strong> The <code class="docutils literal"><span class="pre">table</span></code> method takes two arguments: the name of the table as specified by the contract ABI and the scope within the contract in which the table is found.</p>
 </div>
 <div class="section" id="exit-python-cli">
 <span id="exit-python-cli"></span><h2>Exit Python CLI<a class="headerlink" href="#exit-python-cli" title="Permalink to this headline">¶</a></h2>

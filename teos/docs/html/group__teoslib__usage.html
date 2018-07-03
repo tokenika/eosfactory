@@ -156,15 +156,15 @@ Functions</h2></td></tr>
     "memo":"memo"})", bob));
 
   BOOST_REQUIRE(
-    contract.get_table("accounts", alice).get("rows..balance", "ERROR!") 
+    contract.table("accounts", alice).get("rows..balance", "ERROR!") 
       == "77.0000 EOS"
   );
   BOOST_REQUIRE(
-    contract.get_table("accounts", bob).get("rows..balance", "ERROR!") 
+    contract.table("accounts", bob).get("rows..balance", "ERROR!") 
       == "11.0000 EOS"
   );
   BOOST_REQUIRE(
-    contract.get_table("accounts", carol).get("rows..balance", "ERROR!") 
+    contract.table("accounts", carol).get("rows..balance", "ERROR!") 
       == "12.0000 EOS"
   );
 
@@ -272,13 +272,13 @@ Functions</h2></td></tr>
   //    &lt;&lt; endl;
   cout &lt;&lt; contract.console_ &lt;&lt; endl;
 
-  boost::property_tree::ptree t1 = contract.get_table("accounts", alice);
+  boost::property_tree::ptree t1 = contract.table("accounts", alice);
   cout &lt;&lt; "t1 balance: " &lt;&lt; t1.get("rows..balance", "ERROR!") &lt;&lt; endl;
 
-  boost::property_tree::ptree t2 = contract.get_table("accounts", bob);
+  boost::property_tree::ptree t2 = contract.table("accounts", bob);
   cout &lt;&lt; "t2 balance: " &lt;&lt; t2.get("rows..balance", "ERROR!") &lt;&lt; endl;
 
-  boost::property_tree::ptree t3 = contract.get_table("accounts", carol);
+  boost::property_tree::ptree t3 = contract.table("accounts", carol);
   cout &lt;&lt; "t3 balance: " &lt;&lt; t3.get("rows..balance", "ERROR!") &lt;&lt; endl;
 
   teardown(eosio, wallet, key_owner, key_active, alice, bob, carol); 

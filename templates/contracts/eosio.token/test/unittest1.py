@@ -179,22 +179,22 @@ test contract_at.push_action("transfer" bob):
             bob).error)
 
         cprint("""
-Get database table, use `contract_at.get_table("accounts", alice)`:
+Get database table, use `contract_at.table("accounts", alice)`:
         """, 'magenta')
 
-        t1 = contract_at.get_table("accounts", alice)
+        t1 = contract_at.table("accounts", alice)
         
         cprint("""
-Get database table, use `contract_at.get_table("accounts", bob)`:
+Get database table, use `contract_at.table("accounts", bob)`:
         """, 'magenta')
 
-        t2 = contract_at.get_table("accounts", bob)
+        t2 = contract_at.table("accounts", bob)
         
         cprint("""
-Get database table, use `contract_at.get_table("accounts", carol)`:
+Get database table, use `contract_at.table("accounts", carol)`:
         """, 'magenta')
         
-        t3 = contract_at.get_table("accounts", carol)
+        t3 = contract_at.table("accounts", carol)
 
         cprint("""
 self.assertTrue(t1.json["rows"][0]["balance"] == "77.0000 EOS":

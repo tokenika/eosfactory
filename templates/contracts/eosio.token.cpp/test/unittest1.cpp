@@ -80,16 +80,16 @@ BOOST_AUTO_TEST_CASE(test1)
     "memo":"memo"})", bob));
 
   BOOST_REQUIRE(
-    contract.get_table("accounts", alice).get("rows..balance", 
+    contract.table("accounts", alice).get("rows..balance", 
     "ERROR!") 
       == "77.0000 EOS"
   );
   BOOST_REQUIRE(
-    contract.get_table("accounts", bob).get("rows..balance", "ERROR!") 
+    contract.table("accounts", bob).get("rows..balance", "ERROR!") 
       == "11.0000 EOS"
   );
   BOOST_REQUIRE(
-    contract.get_table("accounts", carol).get("rows..balance", "ERROR!") 
+    contract.table("accounts", carol).get("rows..balance", "ERROR!") 
       == "12.0000 EOS"
   );
 

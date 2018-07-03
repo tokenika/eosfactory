@@ -108,13 +108,13 @@ int main(int argc, const char *argv[]) {
   //    << endl;
   cout << contract.console_ << endl;
 
-  boost::property_tree::ptree t1 = contract.get_table("accounts", alice);
+  boost::property_tree::ptree t1 = contract.table("accounts", alice);
   cout << "t1 balance: " << t1.get("rows..balance", "ERROR!") << endl;
 
-  boost::property_tree::ptree t2 = contract.get_table("accounts", bob);
+  boost::property_tree::ptree t2 = contract.table("accounts", bob);
   cout << "t2 balance: " << t2.get("rows..balance", "ERROR!") << endl;
 
-  boost::property_tree::ptree t3 = contract.get_table("accounts", carol);
+  boost::property_tree::ptree t3 = contract.table("accounts", carol);
   cout << "t3 balance: " << t3.get("rows..balance", "ERROR!") << endl;
 
   teardown(eosio, wallet, key_owner, key_active, alice, bob, carol); 
@@ -196,13 +196,13 @@ int main(int argc, const char *argv[]) {
   //    << endl;
   cout << contract.console_ << endl;
 
-  boost::property_tree::ptree t1 = contract.get_table("accounts", alice);
+  boost::property_tree::ptree t1 = contract.table("accounts", alice);
   cout << "t1 balance: " << t1.get("rows..balance", "ERROR!") << endl;
 
-  boost::property_tree::ptree t2 = contract.get_table("accounts", bob);
+  boost::property_tree::ptree t2 = contract.table("accounts", bob);
   cout << "t2 balance: " << t2.get("rows..balance", "ERROR!") << endl;
 
-  boost::property_tree::ptree t3 = contract.get_table("accounts", carol);
+  boost::property_tree::ptree t3 = contract.table("accounts", carol);
   cout << "t3 balance: " << t3.get("rows..balance", "ERROR!") << endl;
 
   teardown(eosio, wallet, key_owner, key_active, alice, bob, carol); 

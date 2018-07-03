@@ -1,6 +1,7 @@
 # python3 ./tests/test1.py
 
 import json
+import time
 import unittest
 import setup
 import cleos
@@ -132,10 +133,12 @@ class Test1(unittest.TestCase):
         self.assertTrue(not account_carol.error, "CreateAccount Carol")
         print(account_carol.name)
 
+        time.sleep(1)
+
     def test_63(self):
         global account_master
         contract_eosio_bios = eosf.Contract(account_master, "eosio.bios").deploy()
-        self.assertTrue(not contract_eosio_bios.error, "SetContract bios")
+        self.assertTrue(not contract_eosio_bios.error, "eosf.Contract(")
         print(contract_eosio_bios.contract_path_absolute)
     
     def test_66(self):
@@ -146,8 +149,8 @@ class Test1(unittest.TestCase):
             account_master, "ttt", key_owner, key_owner)
         self.assertTrue(not account_test.error, "CreateAccount ttt")
         global contract_test
-        contract_test = eosf.Contract(account_master, "eosio.bios").deploy()
-        self.assertTrue(not contract_test.error, "Contract(account_master")
+        contract_test = eosf.Contract(account_test, "eosio.token").deploy()
+        self.assertTrue(not contract_test.error, "Contract(account_test")
 
     def test_69(self):
         global account_test
@@ -195,9 +198,9 @@ class Test1(unittest.TestCase):
         global account_test
         global account_alice
         get_info = cleos.GetInfo(is_verbose=-1)
-        get_table = cleos.GetTable(account_test, "accounts", account_alice)
-        self.assertTrue(not get_table.error, "GetTable")
-        print(json.dumps(get_table.json, indent=4))
+        table = cleos.GetTable(account_test, "accounts", account_alice)
+        self.assertTrue(not table.error, "GetTable")
+        print(json.dumps(table.json, indent=4))
 
     def test_77(self):
         global key_owner

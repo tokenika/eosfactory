@@ -259,7 +259,7 @@ class Contract():
         self.is_mutable = True
 
         self.contract = None
-        self.console = None
+        self._console = None
         self.is_verbose = is_verbose
         self.error = self.account.error
 
@@ -347,9 +347,9 @@ class Contract():
 
         if not self.action.error:
             try:
-                self.console = self.action.console
+                self._console = self.action.console
                 if self.is_verbose:
-                    print(self.console + "\n") 
+                    print(self._console + "\n") 
             except:
                 pass
 
@@ -384,8 +384,8 @@ class Contract():
             self.account.name, code, abi, wasm, is_verbose=self.is_verbose)
 
 
-    def get_console(self):
-        return self.console
+    def console(self):
+        return self._console
 
 
     def contract_path(self):
@@ -577,9 +577,9 @@ def account(
 
         if not account_object.action.error:
             try:
-                account_object.console = account_object.action.console
+                account_object._console = account_object.action.console
                 if account_object.is_verbose > 0:
-                    print(account_object.console + "\n") 
+                    print(account_object._console + "\n") 
             except:
                 pass
 

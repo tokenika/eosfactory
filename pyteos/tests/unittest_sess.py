@@ -30,7 +30,7 @@ class TestSessionInit(unittest.TestCase):
 Start a local test EOSIO node:
         """)
         reset = eosf.reset()
-        self.assertTrue(ok)
+        self.assertTrue(not reset.error)
         
         print("""
 Create a local wallet (not with EOSIO `keosd` application):

@@ -405,7 +405,7 @@ namespace teoslib
       return false;
     }
 
-    ptree get_table(
+    ptree table(
       string table,
       AccountCreator* scope = nullptr,
       unsigned limit = 10, string key = "", 

@@ -32,8 +32,8 @@ Without password imported keys will not be retrievable.
 "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N"
     """, 'magenta')
 
-    wallet.list()
-    wallet.keys()
+    wallet.get_list()
+    wallet.get_keys()
 
 
     if not is_registered_to_testnode:
