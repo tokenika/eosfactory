@@ -1,23 +1,11 @@
 # python3 ./tests/unittest3.py
 
 import sys
-import os
-import json
 import setup
-import teos
-import cleos
 import eosf
 from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
-cprint("""
-Use `setup.use_keosd(False)` instruction, then the wallets are not
-managed by the EOSIO keosd and, hence, can be safely manipulated.
-
-If you use `setup.set_verbose(True)`, you can see the response messages of the
-issued commands.
-""", 'magenta')
-setup.use_keosd(False)
-setup.set_verbose(True)
+setup.set_verbose(False)
 setup.set_json(False)
 
 
@@ -25,96 +13,81 @@ contract_dir = sys.path[0] + "/../"
 
 
 def test():
-
-    cprint("""
-Start a local test EOSIO node, use `eosf.reset()`:
-    """, 'magenta')
-
-    reset = eosf.reset()
-        
-    cprint("""
-Create a local wallet, use `wallet = eosf.Wallet()`:
-    """, 'magenta')
+    reset = eosf.reset(is_verbose=False)    
+    cprint(
+        "Started the local test node: {}".format(not reset.error), 
+        'magenta')
 
     wallet = eosf.Wallet()
+    cprint(
+        "The wallet is OK: {}".format(not wallet.error), 
+        'magenta')
 
-    cprint("""
-Implement the `eosio` master account as a `cleos.AccountMaster` object,
-use `account_master = eosf.AccountMaster()` 
-and `wallet.import_key(account_master)`:
-    """, 'magenta')
-
-    account_master = eosf.AccountMaster()
-    wallet.import_key(account_master)
-
-    cprint("""
-Deploy the `eosio.bios` contract, 
-use `cleos.SetContract(account_master, "eosio.bios")`:
-        """, 'magenta')
+    account_master = eosf.AccountMaster(is_verbose=False)
+    ok = wallet.import_key(account_master)
+    cprint(
+        "The account_master is in the wallet: {}" \
+            .format(not account_master.error), 
+        'magenta')
 
     contract_eosio_bios = eosf.Contract(
-        account_master, "eosio.bios").deploy()
+        account_master, "eosio.bios", is_verbose=False).deploy()   
+    cprint(
+        "The contract_eosio_bios is deployed: {}" \
+            .format(not contract_eosio_bios.error), 
+         'magenta') 
 
-    cprint("""
-Create an account for the contract of the workspace. The account is 
-represented with an object of the class `eosf.Account`,
-use `account_test = eosf.account()`:
-    """, 'magenta')
 
+    cprint("""account_test = eosf.account()""", 'magenta')
     account_test = eosf.account()
 
-    cprint("""
-Put the account `account_test` to the wallet, 
-use `wallet.import_key(account_test)` ...
-    """, 'magenta')
+    cprint("""wallet.import_key(account_test)""", 'magenta')
+    ok = wallet.import_key(account_test)    
 
-    wallet.import_key(account_test)
-
-    cprint("""
-... and define an object of the class `eosf.Contract` that represents the
-the contract, use `contract_test = eosf.Contract(account_test, contract_dir)`:
-    """, 'magenta')
-
+    cprint("""eosf.Contract(account_test, contract_dir)""", 'magenta')
     contract_test = eosf.Contract(account_test, contract_dir)
 
-    deployed = contract_test.deploy()
+    cprint("""contract_test.deploy(is_verbose=0)""", 'magenta')
+    deployed = contract_test.deploy(is_verbose=0)
 
-    cprint("""
-Confirm that the account `account_test` contains a contract code:
-    """, 'magenta')
-
-    code = account_test.code()
+    cprint("""contract_test.code()""", 'magenta')
+    code = contract_test.code()
     print("code hash: {}".format(code.code_hash))
 
-    cprint("""
-Create accounts `alice`and `carol` and put them into the wallet, 
-use `alice = eosf.account()` and `wallet.import_key(alice)`:
-        """, 'magenta')
+##############################################################################
+#
+##############################################################################
 
+    cprint("""alice = eosf.account()""", 'magenta')
     alice = eosf.account()
     wallet.import_key(alice)
 
     carol = eosf.account()
     wallet.import_key(carol) 
 
-    cprint("""
-Inspect an account, use `alice.account()`:
-    """, 'magenta')
-
-    alice.account()
+    cprint("""print(alice.info())""", 'magenta')
+    print(alice.info())
 
     cprint("""
-Invoke an action of the contract, 
-use `contract_test.push_action("hi", '{"user":"' + str(alice) + '"}', alice)`:
+`contract_test.push_action("hi", '{"user":"' + str(alice) + '"}', alice)`:
     """, 'magenta')
 
     action_hi = contract_test.push_action(
-        "hi", '{"user":"' + str(alice) + '"}', alice)
+        "hi", '{"user":"' + str(alice) + '"}', alice, console=True)
+
+    cprint("""
+`contract_test.push_action("hi", '{"user":"' + str(carol) + '"}', carol)`:
+    """, 'magenta')
 
     action_hi = contract_test.push_action(
         "hi", 
-        '{"user":"' + str(carol) + '"}', carol)
+        '{"user":"' + str(carol) + '"}', carol, console=True)
 
+    cprint("""
+eosf.stop():
+    """, 'magenta')
+
+    eosf.stop()
         
 if __name__ == "__main__":
     test()

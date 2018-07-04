@@ -1,26 +1,15 @@
 # python3 ./tests/unittest3.py
 
+import sys
 import unittest
-import json
 import setup
-import teos
-import cleos
 import eosf
 from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 
-CONTRACT_NAME = "@CONTRACT_NAME@"
-
-cprint("""
-Use `setup.use_keosd(False)` instruction, then the wallets are not
-managed by the EOSIO keosd and, hence, can be safely manipulated.
-
-If you use `setup.set_verbose(True)`, you can see the response messages of the
-issued commands.
-""", 'magenta')
-
-setup.use_keosd(False)
 setup.set_verbose(True)
 setup.set_json(False)
+
+contract_dir = sys.path[0] + "/../"
 
 
 class Test1(unittest.TestCase):
@@ -43,34 +32,25 @@ class Test1(unittest.TestCase):
         global wallet
         global account_master
 
-        cprint("""
-Start a local test EOSIO node, use `eosf.reset()`:
-        """, 'magenta')
+        cprint("""eosf.reset()""", 'magenta')
         reset = eosf.reset()
-        self.assertTrue(not reset.error)
+        self.assertTrue(reset)
 
-        cprint("""
-Create a local wallet object of the class `eosf.Wallet`, 
-use `wallet = eosf.Wallet()`:
-        """, 'magenta')
+        cprint("""eosf.Wallet()""", 'magenta')
         
         wallet = eosf.Wallet()
         self.assertTrue(not wallet.error)
 
-        cprint("""
-Implement the `eosio` master account as a `cleos.AccountMaster` object,
-use `account_master = eosf.AccountMaster()` 
-and `wallet.import_key(account_master)`:
-        """, 'magenta')
+        cprint("""account_master = eosf.AccountMaster()""", 'magenta')
 
-        account_master = eosf.AccountMaster()
+        account_master = eosf.AccountMaster(is_verbose=False)
         wallet.import_key(account_master)
 
-        cprint("""
-Deploy the `eosio.bios` contract:
-        """, 'magenta')
+        cprint(
+                "Contract( account_master, 'eosio.bios').deploy()", 
+                'magenta')
         
-        contract_eosio_bios = eosf.Contract(
+        contract_eosio_bios = eosf.Contract( 
                 account_master, "eosio.bios").deploy()
         self.assertTrue(not contract_eosio_bios.error)
 
@@ -80,61 +60,36 @@ Deploy the `eosio.bios` contract:
         global account_test
         global contract_test
 
-        contract_dir = CONTRACT_NAME
-
-        cprint("""
-Create a new contract workplace, rooted at `contract_dir = CONTRACT_NAME`, and 
-populate if with elements of a template workspace,
-use `teos.Template(contract_dir)`: 
-        """, 'magenta')
-        
-        template = teos.Template(contract_dir, remove_existing=True)
-        print("template path is {}".format(template.contract_path_absolute))
-
-        cprint("""
-Create an account for the contract of the workspace. The account is 
-represented with an object of the class `eosf.Account`,
-use `account_test = eosf.account()`:
-        """, 'magenta')
+        cprint("""account_test = eosf.account():""", 'magenta')
 
 
         account_test = eosf.account()
         self.assertTrue(not account_test.error)
 
-        cprint("""
-Put the account `account_test` to the wallet, 
-use `wallet.import_key(account_test)` ...
-        """, 'magenta')
+        cprint("""wallet.import_key(account_test)""", 'magenta')
 
         wallet.import_key(account_test)
 
-        cprint("""
-... and define an object of the class `eosf.Contract` that represents the
-the contract, use `contract_test = eosf.Contract(account_test, contract_dir)`:
-        """, 'magenta')
+        cprint(
+                """contract_test = eosf.Contract(
+                                account_test, contract_dir):""", 
+                'magenta')
 
         contract_test = eosf.Contract(account_test, contract_dir)
 
-        cprint("""
-Deploy the contract use `contract_test.deploy()`:
-        """, 'magenta')
+        cprint("""contract_test.deploy():""", 'magenta')
 
-        self.assertTrue(contract_test.deploy())
+        self.assertTrue(not contract_test.deploy().error)
     
-        cprint("""
-Confirm that the account `account_test` contains a contract code:
-        """, 'magenta')
+        cprint("""code = account_test.code()""", 'magenta')
 
         code = account_test.code()
-        print("code hash: {}".format(code.code_hash))
+        print("""code hash: {}""".format(code.code_hash))
 
 
     def test_15(self):
 
-        cprint("""
-Create accounts `alice`and `carol` and put them into the wallet, 
-use `alice = eosf.account()` and `wallet.import_key(alice)`:
-        """, 'magenta')
+        cprint("""`alice`and `carol`""", 'magenta')
 
         global alice
         alice = eosf.account()
@@ -146,11 +101,9 @@ use `alice = eosf.account()` and `wallet.import_key(alice)`:
         self.assertTrue(not carol.error)
         wallet.import_key(carol) 
 
-        cprint("""
-Inspect an account, use `alice.account()`:
-        """, 'magenta')
+        cprint("""alice.info():""", 'magenta')
 
-        alice.account()
+        alice.info()
 
 
     def test_20(self):
@@ -159,10 +112,7 @@ Inspect an account, use `alice.account()`:
         global alice
         global carol
 
-        cprint("""
-Invoke an action of the contract, 
-use `contract_test.push_action("hi", '{"user":"' + str(alice) + '"}', alice)`:
-        """, 'magenta')
+        cprint("""contract_test.push_action("hi", :""", 'magenta')
 
         action_hi = contract_test.push_action(
             "hi", '{"user":"' + str(alice) + '"}', alice)
@@ -175,21 +125,7 @@ use `contract_test.push_action("hi", '{"user":"' + str(alice) + '"}', alice)`:
 
         self.assertTrue(not action_hi.error)
         
-        cprint("""
-This should fail due to authority mismatch:
-        """, 'magenta')
-
-        action_hi = contract_test.push_action(
-            "hi", 
-            '{"user":"' + str(carol) + '"}', alice)
         
-        self.assertTrue(action_hi.error)
-        
-
-    def test_80(self):
-        global template
-        self.assertTrue(template.delete())
-
     def tearDown(self):
         pass
 

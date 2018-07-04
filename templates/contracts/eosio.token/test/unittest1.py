@@ -1,19 +1,17 @@
 # python3 ./tests/unittest1.py
 
+import sys
 import setup
-import teos
-import cleos
-import sess
 import eosf
 import unittest
-import json
 import time
 from termcolor import colored, cprint #sudo python3 -m pip install termcolor
+import setup
+import eosf
 
-CONTRACT_NAME = "@CONTRACT_NAME@"
+contract_dir = sys.path[0] + "/../"
 
 setup.set_verbose(False)
-setup.use_keosd(False)
 
 class Test1(unittest.TestCase):
 
@@ -37,33 +35,19 @@ class Test1(unittest.TestCase):
         global bob
         global carol
 
-        cprint("""
-Start a local test EOSIO node, use `eosf.reset()`:
-        """, 'magenta')
-
+        cprint("""eosf.reset():""", 'magenta')
         reset = eosf.reset()
         self.assertTrue(not reset.error)
         
-        cprint("""
-Create a local wallet, use `wallet = eosf.Wallet()`:
-        """, 'magenta')
-
+        cprint("""wallet = eosf.Wallet():""", 'magenta')
         wallet = eosf.Wallet()
         self.assertTrue(not wallet.error)
 
-        cprint("""
-Implement the `eosio` master account as a `cleos.AccountMaster` object,
-use `account_master = eosf.AccountMaster()` 
-and `wallet.import_key(account_master)`:
-        """, 'magenta')
-
+        cprint("""eosf.AccountMaster()""", 'magenta')
         account_master = eosf.AccountMaster()
         wallet.import_key(account_master)
 
-        cprint("""
-Deploy the `eosio.bios` contract, 
-use `cleos.SetContract(account_master, "eosio.bios")`:
-        """, 'magenta')
+        cprint("""contract_eosio_bios = eosf.Contract(""", 'magenta')
 
         contract_eosio_bios = eosf.Contract(
                 account_master, "eosio.bios").deploy()
@@ -75,7 +59,6 @@ Create accounts `alice`, `bob` and `carol`:
         
         alice = eosf.account()
         self.assertTrue(not alice.error)
-        alice.account
         wallet.import_key(alice)
 
         bob = eosf.account()
@@ -86,11 +69,8 @@ Create accounts `alice`, `bob` and `carol`:
         self.assertTrue(not carol.error)
         wallet.import_key(carol) 
 
-        cprint("""
-Inspect the account, use `bob.account()`:
-        """, 'magenta')     
-
-        print(bob.account())   
+        cprint("""bob.info() :""", 'magenta')
+        print(bob.info())   
 
 
     def test_05(self):
@@ -99,34 +79,34 @@ Inspect the account, use `bob.account()`:
         global bob
         global carol
         global account_master
-        global contract_at
+        global contract_test
 
-        account_at = eosf.account()
-        wallet.import_key(account_at)
+        account_test = eosf.account()
+        wallet.import_key(account_test)
         
 
-        contract_at = eosf.Contract(account_at, CONTRACT_NAME)
-        self.assertTrue(not contract_at.error)
+        contract_test = eosf.Contract(account_test, contract_dir)
+        self.assertTrue(not contract_test.error)
 
         cprint("""
-test contract_at.code():
+test contract_test.code():
         """, 'magenta')
-        self.assertTrue(not contract_at.code().error)
+        self.assertTrue(not contract_test.code().error)
 
         cprint("""
-test contract_at.deploy():
+test contract_test.deploy():
         """, 'magenta')
-        self.assertTrue(contract_at.deploy())
+        self.assertTrue(contract_test.deploy())
 
         cprint("""
-test contract_at.code():
+test contract_test.get_code():
         """, 'magenta')
-        self.assertTrue(not contract_at.code().error)
+        self.assertTrue(not contract_test.code().error)
 
         cprint("""
-test contract_at.push_action("create"):
+test contract_test.push_action("create"):
         """, 'magenta')
-        self.assertTrue(not contract_at.push_action(
+        self.assertTrue(not contract_test.push_action(
             "create", 
             '{"issuer":"' 
                 + str(account_master) 
@@ -134,18 +114,20 @@ test contract_at.push_action("create"):
                 "can_freeze":0, "can_recall":0, "can_whitelist":0}').error)
 
         cprint("""
-test contract_at.push_action("issue"):
+test contract_test.push_action("issue"):
         """, 'magenta')
-        self.assertTrue(not contract_at.push_action(
+        self.assertTrue(not contract_test.push_action(
             "issue", 
             '{"to":"' + str(alice)
                 + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
                 account_master).error)
 
+
+
         cprint("""
-test contract_at.push_action("transfer", alice):
+test contract_test.push_action("transfer", alice):
         """, 'magenta')
-        self.assertTrue(not contract_at.push_action(
+        self.assertTrue(not contract_test.push_action(
             "transfer", 
             '{"from":"' 
                 + str(alice)
@@ -156,9 +138,9 @@ test contract_at.push_action("transfer", alice):
         time.sleep(1)
 
         cprint("""
-test contract_at.push_action("transfer", carol):
+test contract_test.push_action("transfer", carol):
         """, 'magenta')
-        self.assertTrue(not contract_at.push_action(
+        self.assertTrue(not contract_test.push_action(
             "transfer", 
             '{"from":"' 
                 + str(carol)
@@ -167,9 +149,9 @@ test contract_at.push_action("transfer", carol):
             carol).error)
 
         cprint("""
-test contract_at.push_action("transfer" bob):
+test contract_test.push_action("transfer" bob):
         """, 'magenta')
-        self.assertTrue(not contract_at.push_action(
+        self.assertTrue(not contract_test.push_action(
             "transfer", 
             '{"from":"' 
                 + str(bob)
@@ -179,22 +161,22 @@ test contract_at.push_action("transfer" bob):
             bob).error)
 
         cprint("""
-Get database table, use `contract_at.table("accounts", alice)`:
+Get database table, use `contract_test.table("accounts", alice)`:
         """, 'magenta')
 
-        t1 = contract_at.table("accounts", alice)
+        t1 = contract_test.table("accounts", alice)
         
         cprint("""
-Get database table, use `contract_at.table("accounts", bob)`:
+Get database table, use `contract_test.table("accounts", bob)`:
         """, 'magenta')
 
-        t2 = contract_at.table("accounts", bob)
+        t2 = contract_test.table("accounts", bob)
         
         cprint("""
-Get database table, use `contract_at.table("accounts", carol)`:
+Get database table, use `contract_test.table("accounts", carol)`:
         """, 'magenta')
         
-        t3 = contract_at.table("accounts", carol)
+        t3 = contract_test.table("accounts", carol)
 
         cprint("""
 self.assertTrue(t1.json["rows"][0]["balance"] == "77.0000 EOS":
@@ -226,7 +208,7 @@ test node.stop():
 
     @classmethod
     def tearDownClass(cls):
-        eosf.stop()
+        pass
 
 
 if __name__ == "__main__":
