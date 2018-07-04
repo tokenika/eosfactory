@@ -254,3 +254,15 @@ class NodeStop(_Teos):
         jarg = json_module.loads("{}")
         _Teos.__init__(self, jarg, "daemon", "stop", is_verbose)
 
+
+class NodeIsRunning(_Teos):
+    daemon_pid = ""
+    def __init__(self, is_verbose=1):
+        jarg = json_module.loads("{}")
+        _Teos.__init__(self, jarg, "daemon", "isrunning", is_verbose)
+
+        if not self.error:
+            self.daemon_pid = self.json["daemon_pid"]
+
+
+

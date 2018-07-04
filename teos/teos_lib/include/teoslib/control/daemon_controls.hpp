@@ -27,6 +27,40 @@ namespace teos {
      * @ingroup teoslib_raw
      * @brief Kill the running local NODEOS process.
      */
+    class DaemonIsRunning : public TeosControl
+    {
+    public:
+      DaemonIsRunning();
+    };
+
+    class DaemonIsRunningOptions : public ControlOptions
+    {
+    public:
+      DaemonIsRunningOptions(int argc, const char **argv) 
+        : ControlOptions(argc, argv) {}
+
+    protected:
+      const char* getUsage() {
+        return R"(
+Get PID of any running EOS node process.
+Usage: ./teos node is_running
+)";
+      }
+
+      TeosControl executeCommand() {
+        return DaemonIsRunning();
+      }
+
+      void printout(TeosControl command, variables_map &vm){
+        output("nodeos exe PID", "%s"
+          , command.respJson_.get<string>("daemon_pid").c_str());
+      }
+    };
+
+    /**
+     * @ingroup teoslib_raw
+     * @brief Kill the running local NODEOS process.
+     */
     class DaemonStop : public TeosControl
     {
     public:

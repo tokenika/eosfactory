@@ -51,10 +51,14 @@ def set_wallet_url():
         return
 
     status = setup._is_use_keosd
+    if not teos.NodeIsRunning(is_verbose=0).daemon_pid:
+        status = True
+
+    status = setup._is_use_keosd
     if status:
         _wallet_URL = []
     else:
-        WalletStop(is_verbose=-1)#########################
+        WalletStop(is_verbose=-1)
         config = teos.GetConfig(
             "", is_verbose=0)
         _wallet_URL = ["--wallet-url", "http://" \
@@ -98,7 +102,11 @@ class _Cleos:
         cl.extend(setup.nodeos_URL())
 
         global _wallet_URL        
-        if not ( first == "wallet" and second == "stop"):
+        if not ( \
+            first == "wallet" and second == "stop" \
+            or \
+            first == "wallet" and second == "isrunning"
+            ):
             # To avoid circular call: set_wallet_url calls `WalletStop` that
             # calls set_wallet_url() ...
             set_wallet_url()

@@ -42,6 +42,26 @@ namespace teos {
     }
 
     //////////////////////////////////////////////////////////////////////////
+    // class DaemonIsRunning
+    //////////////////////////////////////////////////////////////////////////
+    DaemonIsRunning::DaemonIsRunning()
+    {
+      try {
+        string pid = getPid();
+        int count = 10;
+        if (!pid.empty()) {
+          respJson_.put("daemon_pid", pid);
+        }
+        else {
+          respJson_.put("daemon_pid", "");
+        }
+      }
+      catch (std::exception& e) {
+        putError(e.what());
+      }
+    }
+
+    //////////////////////////////////////////////////////////////////////////
     // class DaemonStop
     //////////////////////////////////////////////////////////////////////////
     DaemonStop::DaemonStop()
