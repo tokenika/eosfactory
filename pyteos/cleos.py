@@ -38,6 +38,29 @@ def reset_nodeos_URL():
     setup.set_nodeos_URL(url)
 
 
+global _wallet_URL
+_wallet_URL = None
+
+def set_wallet_url():
+    """ Implements the `use_keosd` flag in the `setup` module.
+
+    Is called in the `WalletCreate` class
+    """
+    global _wallet_URL
+    if not _wallet_URL is None:
+        return
+
+    status = setup._is_use_keosd
+    if status:
+        _wallet_URL = []
+    else:
+        WalletStop(is_verbose=-1)#########################
+        config = teos.GetConfig(
+            "", is_verbose=0)
+        _wallet_URL = ["--wallet-url", "http://" \
+            + config.json["EOSIO_DAEMON_ADDRESS"]]
+
+
 class _Cleos:
     """ A prototype for the `cleos` command classes. 
     """
@@ -70,10 +93,19 @@ class _Cleos:
 
         cl = [setup_setup.cleos_exe]
 
-        if not setup.nodeos_URL():
+        if setup.nodeos_URL() is None:
             reset_nodeos_URL()
         cl.extend(setup.nodeos_URL())
-        cl.extend(setup.wallet_URL())
+
+        global _wallet_URL        
+        if not ( first == "wallet" and second == "stop"):
+            # To avoid circular call: set_wallet_url calls `WalletStop` that
+            # calls set_wallet_url() ...
+            set_wallet_url()
+        else:
+            _wallet_URL = []
+
+        cl.extend(_wallet_URL)
 
         if setup.is_print_request():
             cl.append("--print-request")
@@ -147,14 +179,6 @@ def get_transaction_id(cleos_object):
         except:
             pass  
     return transaction_id
-
-def get_wallet_dir():
-    if setup.is_keosd():
-        wallet_dir = os.path.expandvars(teos.get_keosd_wallet_dir())
-    else:
-        wallet_dir = teos.get_node_wallet_dir()
-
-    return wallet_dir
 
     
 class GetAccount(_Cleos):
@@ -275,8 +299,11 @@ class WalletCreate(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.  
     """
-    def __init__(self, name="default", password="", is_verbose=1):    
+    def __init__(self, name="default", password="", is_verbose=1):
+        set_wallet_url()
+
         self.name = name
+        self.password = None
         self.json["name"] = name
 
         if not password:
@@ -1162,8 +1189,6 @@ class PushAction(_Cleos):
 
 def node_is_running():
     return not GetInfo(is_verbose=-1).error
-
-        
 
 
 

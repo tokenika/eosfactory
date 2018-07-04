@@ -70,7 +70,6 @@ Create accounts `alice`, `bob` and `carol`:
         
         alice = eosf.account()
         self.assertTrue(not alice.error)
-        alice.account
         wallet.import_key(alice)
 
         bob = eosf.account()
@@ -82,10 +81,10 @@ Create accounts `alice`, `bob` and `carol`:
         wallet.import_key(carol) 
 
         cprint("""
-Inspect the account, use `bob.account()`:
+Inspect the account, use `bob.info()`:
         """, 'magenta')     
 
-        print(bob.account())   
+        print(bob.info())   
 
 
     def test_05(self):

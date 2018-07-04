@@ -29,8 +29,8 @@ Without password imported keys will not be retrievable.
 "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N"
     """, 'magenta')
 
-    wallet.get_list()
-    wallet.get_keys()
+    wallet.index()
+    wallet.keys()
 
 
     if not is_registered_to_testnode:
@@ -64,12 +64,12 @@ Active Private Key: 5KfDH4hRXUEdzxv9jzf8EDj7gF2qTSkHprmM4uekK9Huc8GcDK6
 
         restored = wallet.restore_accounts(globals())
         print()
-        print(account_master.account())
+        print(account_master.info())
 
         global account_alice
 
         if "account_alice" in restored:
-            print(account_alice.account())
+            print(account_alice.info())
         else:
 
             cprint("""

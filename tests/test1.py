@@ -54,7 +54,8 @@ use `eosf.Contract(account_master, "eosio.bios").deploy()`:
 Create accounts `alice`, `bob` and `carol`:
     """, 'magenta')
     
-    alice = eosf.account(wallet=wallet)
+    alice = eosf.account()
+    wallet.import_key(alice)
 
     bob = eosf.account()
     wallet.import_key(bob)
@@ -66,7 +67,7 @@ Create accounts `alice`, `bob` and `carol`:
 Inspect the account, use `bob.account()`:
     """, 'magenta')
 
-    print(bob.account())
+    print(bob.info())
 
     account_test = eosf.account()
     wallet.import_key(account_test)
@@ -90,6 +91,8 @@ test contract_test.code():
     """, 'magenta')
 
     print("code hash: ".format(contract_test.code()))
+
+    time.sleep(1)
 
     cprint("""
 test contract_test.push_action("create"):

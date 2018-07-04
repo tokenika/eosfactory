@@ -15,17 +15,17 @@ import sys
 import os
 import subprocess
 import json
-import pprint
-import re
-import pathlib
-import setup
-import teos
-import cleos
-import cleos_system
 import inspect
 import types
 import node
 import shutil
+import pprint
+from termcolor import colored, cprint
+
+import setup
+import teos
+import cleos
+import cleos_system
 
 
 def reload():
@@ -51,7 +51,8 @@ class Wallet(cleos.WalletCreate):
         is_verbose: Verbosity at the constraction time.  
     """
     def __init__(self, name="default", password="", is_verbose=1):
-        if not setup.is_keosd(): # look for password:
+
+        if not setup.is_use_keosd(): # look for password:
             wallet_dir = os.path.expandvars(teos.get_node_wallet_dir())
             try:
                 with open(wallet_dir + setup.password_map, "r") \
@@ -64,7 +65,7 @@ class Wallet(cleos.WalletCreate):
         cleos.WalletCreate.__init__(self, name, password, is_verbose)
 
         if not self.error:
-            if not setup.is_keosd():
+            if not setup.is_use_keosd():
                 wallet_dir = teos.get_node_wallet_dir()
                 try:
                     with open(wallet_dir + setup.password_map, "r") \
@@ -77,6 +78,10 @@ class Wallet(cleos.WalletCreate):
                 with open(wallet_dir + setup.password_map, "w+") \
                         as out:    
                     json.dump(password_map, out)
+
+                if self.is_verbose > 0:
+                        cprint("password stored in '{}'".format(
+                            wallet_dir + setup.password_map), 'green')
 
 
     def index(self):
@@ -117,43 +122,77 @@ class Wallet(cleos.WalletCreate):
         """ Imports private keys of an account into wallet.
         Returns list of `cleos.WalletImport` objects
         """
-        retval = []
+        # print("\ninspect.stack():\n")
+        # pprint.pprint(inspect.stack())
+        # print("\ninspect.stack()[1][0]:\n")
+        # pprint.pprint(inspect.stack()[1][0])        
+        # print("\ninspect.stack()[1][0].f_locals:\n")
+        # pprint.pprint(inspect.stack()[1][0].f_locals)
+        # print("\ninspect.stack()[1][0].f_globals:\n")
+        # pprint.pprint(inspect.stack()[1][0].f_globals)
+
+        # print("\ninspect.stack()[2][0]:\n")
+        # pprint.pprint(inspect.stack()[2][0])        
+        # print("\ninspect.stack()[2][0].f_locals:\n")
+        # pprint.pprint(inspect.stack()[2][0].f_locals)
+        # print("\ninspect.stack()[2][0].f_globals:\n")
+        # pprint.pprint(inspect.stack()[2][0].f_globals)
+            
+        lcls = dir()
         try:
             lcls = inspect.stack()[1][0].f_locals
+        except:
+            pass
+        try:
             lcls.update(inspect.stack()[2][0].f_locals) 
-            try:
-                account_name = account_or_key.name
-                
-                for name in lcls:
-                    if id(account_or_key) == id(lcls[name]):
-                        wallet_dir = cleos.get_wallet_dir()
-                        try:
-                            with open(wallet_dir + setup.account_map, "r") \
-                                as input:
-                                account_map = json.load(input)
-                        except:
-                            account_map = {}
-
-                        account_map[account_name] = name
-                        with open(wallet_dir + setup.account_map, "w") as out:
-                            json.dump(account_map, out)
-
-                key = account_or_key.owner_key
-                if key:
-                    retval.append(
-                        cleos.WalletImport(key, self.name, is_verbose=0))
-
-                key = account_or_key.active_key
-                if key:
-                    retval.append(
-                        cleos.WalletImport(key, self.name, is_verbose=0))
-            except:
-                retval.append(cleos.WalletImport(
-                    account_or_key, self.name, is_verbose=0))
         except:
             pass
 
-        return retval
+        account_name = None
+        try: # whether account_or_key is an account:
+            account_name = account_or_key.name
+        except:
+            pass
+        if not account_name is None:
+            for name in lcls:
+                if id(account_or_key) == id(lcls[name]):
+                    if setup.is_use_keosd():
+                        wallet_dir = os.path.expandvars(teos.get_keosd_wallet_dir())
+                    else:
+                        wallet_dir = teos.get_node_wallet_dir()
+
+                    try: # whether the setup map file exists:
+                        with open(wallet_dir + setup.account_map, "r") \
+                            as input:
+                            account_map = json.load(input)
+                    except:
+                        account_map = {}
+
+                    if self.is_verbose > 0:
+                        print("'{}' >>> '{}'".format(
+                            name, wallet_dir + setup.account_map))
+
+                    account_map[account_name] = name
+                    with open(wallet_dir + setup.account_map, "w") as out:
+                        json.dump(account_map, out)              
+
+
+        imported_keys = []
+        try: # whether account_or_key is an account:
+            key = account_or_key.owner_key
+            if key:
+                imported_keys.append(
+                    cleos.WalletImport(key, self.name, is_verbose=0))
+
+            key = account_or_key.active_key
+            if key:
+                imported_keys.append(
+                    cleos.WalletImport(key, self.name, is_verbose=0))
+        except:
+            imported_keys.append(cleos.WalletImport(
+                account_or_key, self.name, is_verbose=0))
+
+        return imported_keys
 
 
     def restore_accounts(self, namespace):
@@ -170,7 +209,7 @@ class Wallet(cleos.WalletCreate):
 
         restored = dict()
         if len(account_names) > 0:
-            if setup.is_keosd():
+            if setup.is_use_keosd():
                 wallet_dir = os.path.expandvars(teos.get_keosd_wallet_dir())
             else:
                 wallet_dir = teos.get_node_wallet_dir()
@@ -426,12 +465,14 @@ class AccountMaster():
     
     def __init__(
             self, name="", owner_key_public="", active_key_public="", 
-            is_verbose=1, wallet=None):
+            is_verbose=1):
 
+        cleos.set_wallet_url()
+        
         self.json = {}
         self.error = False
         
-        if setup.is_keosd():
+        if setup.is_use_keosd():
             if not owner_key_public: # print data for registration
                 self.new_account = True
                 if not name: 
@@ -470,12 +511,6 @@ class AccountMaster():
             self.key_public = self.json["publicKey"]
             self._out = "transaction id: eosio" 
 
-        try:
-            wallet.import_key(self)
-        except:
-            if is_verbose >= 0:
-                self.err_msg = "Failed to put into the given wallet!"
-
     
     def info(self):
         return str(GetAccount(self.name, is_verbose=1))
@@ -498,8 +533,7 @@ def account(
         max_cpu_usage=0, max_net_usage=0,
         ref_block="",
         is_verbose=1,
-        restore=False,
-        wallet=None):
+        restore=False):
 
     account_object = None
     if restore:
@@ -548,14 +582,6 @@ def account(
         account_object.owner_key = owner_key
         account_object.active_key = active_key
 
-        if not wallet is None:
-            try:
-                wallet.import_key(account_object)
-            except:
-                if is_verbose >= 0:
-                    account_object.err_msg = \
-                        "Failed to put into the given wallet!"
-                    account_object.error = True
 
     def code(self, code="", abi="", wasm=False):      
         return cleos.GetCode(

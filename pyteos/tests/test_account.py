@@ -1,8 +1,8 @@
 # python3 ./tests/test1.py
 
 import setup
-import cleos
 import teos
+import cleos
 import eosf
 import unittest
 from termcolor import colored, cprint
@@ -122,7 +122,7 @@ used and wallets are managed by the local node - this condition is set with the
     """, 'magenta')
 
     wallet.restore_accounts(globals())
-    print(account_alice.account())
+    print(account_alice.info())
 
     cprint("""
 Continue operations on the restored account objects:

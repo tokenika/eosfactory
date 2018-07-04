@@ -156,7 +156,7 @@ use `alice = eosf.account()` and `wallet.import_key(alice)`:
 Inspect an account, use `alice.account()`:
         """, 'magenta')
 
-        alice.account()
+        alice.info()
 
 
     def test_20(self):

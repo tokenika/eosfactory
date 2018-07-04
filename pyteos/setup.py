@@ -8,8 +8,8 @@ _is_json = 0
 _is_debug_mode = False
 _print_request = False
 _print_response = False
-_nodeos_URL = ""
-_wallet_url = ""
+_nodeos_URL = None
+_is_use_keosd = False
 
 account_map = "accounts.json"
 password_map = "passwords.json"
@@ -30,14 +30,9 @@ def set_tokenika():
 
 def nodeos_URL():
     global _nodeos_URL
-    if not _nodeos_URL:
-        return""
+    if _nodeos_URL is None:
+        return None
     return ["--url", _nodeos_URL]
-
-
-def wallet_URL():
-    global _wallet_url
-    return _wallet_url
 
 
 def use_keosd(status=False):
@@ -49,22 +44,14 @@ def use_keosd(status=False):
     If wallets are not managed by `keosd`, they can be reset with the
     `eosf.reset()` function, what is desired when testing smart contracts
     locally.
-    """
-    import teos
-    import cleos
-    global _wallet_url
-    if status:
-        _wallet_url = []
-    else:
-        cleos.WalletStop(is_verbose=-1)
-        config = teos.GetConfig(
-            "", is_verbose=0)
-        _wallet_url = ["--wallet-url", "http://" \
-            + config.json["EOSIO_DAEMON_ADDRESS"]]
+    """    
+    global _is_use_keosd
+    _is_use_keosd = status
 
 
-def is_keosd():
-    return _wallet_url == []
+def is_use_keosd():
+    global _is_use_keosd
+    return _is_use_keosd
     
 
 def set_verbose(status=1):

@@ -70,7 +70,7 @@ Create accounts `alice`, `bob` and `carol`:
 Inspect the account, use `bob.account()`:
     """, 'magenta')
 
-    print(bob.account())       
+    print(bob.info())       
 
     account_et = eosf.account()
     wallet.import_key(account_et)

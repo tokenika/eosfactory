@@ -254,5 +254,3 @@ class NodeStop(_Teos):
         jarg = json_module.loads("{}")
         _Teos.__init__(self, jarg, "daemon", "stop", is_verbose)
 
-
-setup.use_keosd(False)

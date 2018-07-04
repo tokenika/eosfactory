@@ -66,10 +66,10 @@ Create accounts `alice`, `bob` and `carol`:
     wallet.import_key(carol) 
 
     cprint("""
-Inspect the account, use `bob.account()`:
+Inspect the account, use `bob.info()`:
     """, 'magenta')
 
-    print(bob.account())       
+    print(bob.info())       
 
     account_et = eosf.account()
     wallet.import_key(account_et)

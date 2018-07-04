@@ -118,7 +118,7 @@ use `alice = eosf.account()` and `wallet.import_key(alice)`:
 Inspect an account, use `alice.account()`:
     """, 'magenta')
 
-    alice.account()
+    alice.info()
 
     cprint("""
 Invoke an action of the contract, 

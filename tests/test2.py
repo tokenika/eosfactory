@@ -105,10 +105,10 @@ use `alice = eosf.account()` and `wallet.import_key(alice)`:
     wallet.import_key(bob)        
 
     cprint("""
-Inspect the account, use `bob.account()`:
+Inspect the account, use `bob.info()`:
     """, 'magenta')
     
-    print(bob.account())
+    print(bob.info())
 
     cprint("""
 Push actions to the contract. Begin with the `create` action:
