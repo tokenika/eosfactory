@@ -53,7 +53,7 @@ class Wallet(cleos.WalletCreate):
     def __init__(self, name="default", password="", is_verbose=1):
 
         if not setup.is_use_keosd(): # look for password:
-            wallet_dir = os.path.expandvars(teos.get_node_wallet_dir())
+            wallet_dir = teos.get_node_wallet_dir()
             try:
                 with open(wallet_dir + setup.password_map, "r") \
                         as input:    
@@ -82,6 +82,9 @@ class Wallet(cleos.WalletCreate):
                 if self.is_verbose > 0:
                         cprint("password stored in '{}'".format(
                             wallet_dir + setup.password_map), 'green')
+            else:
+                wallet_dir = os.path.expandvars(teos.get_keosd_wallet_dir())
+                cprint("wallet directory is '{}'".format(wallet_dir), 'green')
 
 
     def index(self):

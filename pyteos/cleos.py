@@ -53,8 +53,8 @@ def set_wallet_url():
     status = setup._is_use_keosd
     if not teos.NodeIsRunning(is_verbose=0).daemon_pid:
         status = True
+        setup.use_keosd(True)
 
-    status = setup._is_use_keosd
     if status:
         _wallet_URL = []
     else:
