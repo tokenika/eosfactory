@@ -1,8 +1,6 @@
-# python3 ./tests/unittest1.py
-
 import json
 import time
-from termcolor import colored, cprint #sudo python3 -m pip install termcolor
+from termcolor import colored, cprint
 import setup
 import eosf
 

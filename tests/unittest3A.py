@@ -25,47 +25,40 @@ class Test1(unittest.TestCase):
         global wallet
         global contract_eosio_bios
         global alice
-        global bob
         global carol
 
         testnet = node.reset()
         wallet = eosf.Wallet()
 
-        account_master = eosf.AccountMaster()
-        wallet.import_key(account_master)
+        eosio = eosf.AccountMaster()
+        wallet.import_key(eosio)
 
         alice = eosf.account()
         wallet.import_key(alice)
-
-        bob = eosf.account()
-        wallet.import_key(bob)
 
         carol = eosf.account()
         wallet.import_key(carol)
 
         contract_eosio_bios = eosf.Contract(
-                account_master, "eosio.bios").deploy()
+                eosio, "eosio.bios").deploy()
 
 
     def setUp(self):
-        self.assertTrue(not testnet.error)
-        self.assertTrue(not wallet.error)
-        self.assertTrue(not contract_eosio_bios.error)
-        self.assertTrue(not alice.error)
-        self.assertTrue(not bob.error)
-        self.assertTrue(not carol.error)
+        self.assertFalse(testnet.error)
+        self.assertFalse(wallet.error)
+        self.assertFalse(contract_eosio_bios.error)
+        self.assertFalse(alice.error)
+        self.assertFalse(carol.error)
 
 
     def test_01(self):
         global contract
 
-        name = "_e4b2ffc804529ce9c6fae258197648cc2"
-
         cprint("""
 Create an account associated with the contract
         """, 'magenta')
         account = eosf.account()
-        self.assertTrue(not account.error)
+        self.assertFalse(account.error)
 
         cprint("""
 Add the account to the wallet
@@ -75,8 +68,9 @@ Add the account to the wallet
         cprint("""
 Create a reference to the new contract
         """, 'magenta')
-        contract = eosf.ContractFromTemplate(
-                account, name, remove_existing=True)
+        contract = eosf.ContractFromTemplate(account,
+            "_e4b2ffc804529ce9c6fae258197648cc2",
+            remove_existing=True)
 
         cprint("""
 Build the contract
@@ -86,12 +80,12 @@ Build the contract
         cprint("""
 Deploy the contract
         """, 'magenta')
-        self.assertTrue(not contract.deploy().error)
+        self.assertFalse(contract.deploy().error)
     
         cprint("""
 Confirm the account contains code
         """, 'magenta')
-        self.assertTrue(not account.code().error)
+        self.assertFalse(account.code().error)
 
 
     def test_02(self):
@@ -101,14 +95,14 @@ Action contract.push_action("hi", '{"user":"' + str(alice) + '"}', alice)
         """, 'magenta')
         action = contract.push_action(
             "hi", '{"user":"' + str(alice) + '"}', alice)
-        self.assertTrue(not action.error)
+        self.assertFalse(action.error)
 
         cprint("""
 Action contract.push_action("hi", '{"user":"' + str(carol) + '"}', carol)
         """, 'magenta')
         action = contract.push_action(
             "hi", '{"user":"' + str(carol) + '"}', carol)
-        self.assertTrue(not action.error)
+        self.assertFalse(action.error)
 
         cprint("""
 Action contract.push_action("hi", '{"user":"' + str(carol) + '"}', alice)

@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import setup
 import teos
 import cleos

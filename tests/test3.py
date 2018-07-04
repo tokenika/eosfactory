@@ -1,11 +1,10 @@
-# python3 ./tests/unittest3.py
+# python3 ./tests/test3.py
 
 import json
-from termcolor import colored, cprint #sudo python3 -m pip install termcolor
 import setup
 import teos
 import eosf
-from termcolor import colored, cprint #sudo python3 -m pip install termcolor
+from termcolor import cprint
 
 cprint("""
 Use `setup.use_keosd(False)` instruction, then the wallets are not

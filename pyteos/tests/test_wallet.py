@@ -1,5 +1,3 @@
-# python3 ./tests/test1.py
-
 import setup
 import cleos
 import teos

@@ -516,7 +516,7 @@ class AccountMaster():
 
     
     def info(self):
-        return str(GetAccount(self.name, is_verbose=1))
+        return str(cleos.GetAccount(self.name, is_verbose=1))
         
 
     def __str__(self):
@@ -626,9 +626,9 @@ def account(
             permission = account_object.name
         else:
             try: # permission is an account:
-                permission=permission.name
+                permission = permission.name
             except: # permission is the name of an account:
-                permission=permission
+                permission = permission
 
         account_object.action = cleos.PushAction(
             account_object, action, data,
@@ -692,7 +692,4 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         template = str(sys.argv[2])
 
-    wallet = Wallet()
-    eosio = AccountMaster()
-    wallet.import_key(eosio)
-    ContractFromTemplate(eosio, str(sys.argv[1]), template, visual_studio_code=True, is_verbose=False)
+    teos.Template(str(sys.argv[1]), template, visual_studio_code=True, is_verbose=False)
