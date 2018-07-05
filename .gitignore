@@ -21,17 +21,11 @@ teos/teos_lib/include/teoslib/config.h
 
 /tests/*
 !/tests/test1.py
-!/tests/test1A.py
 !/tests/test2.py
-!/tests/test2A.py
 !/tests/test3.py
-!/tests/test3A.py
 !/tests/unittest1.py
-!/tests/unittest1A.py
 !/tests/unittest2.py
-!/tests/unittest2A.py
 !/tests/unittest3.py
-!/tests/unittest3A.py
 
 !/pyteos/docs/build
 
