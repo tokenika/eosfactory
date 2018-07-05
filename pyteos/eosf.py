@@ -20,7 +20,7 @@ import types
 import node
 import shutil
 import pprint
-from termcolor import colored, cprint
+from termcolor import cprint
 
 import setup
 import teos
@@ -485,13 +485,11 @@ class AccountMaster():
                 self.owner_key = cleos.CreateKey("owner", is_verbose=0)
                 self.active_key = cleos.CreateKey("active", is_verbose=0)
                 print(
-                    "Register the following data with a testnode, and\n" \
-                    + "save them, to restore this account object in the future.\n" \
+                    "\nUse the following data to register a new account on a public testnet:\n" \
                     + "Accout Name: {}\n".format(self.name) \
                     + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
-                    + "Active Public Key: {}\n".format(self.active_key.key_public) \
-                    + "\n\n" \
                     + "Owner Private Key: {}\n".format(self.owner_key.key_private) \
+                    + "Active Public Key: {}\n".format(self.active_key.key_public) \
                     + "Active Private Key: {}\n".format(self.active_key.key_private))
             else: # restore the master account
                 self.name = name

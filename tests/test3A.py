@@ -3,7 +3,6 @@
 import setup
 import eosf
 import node
-import json
 from termcolor import cprint
 
 setup.use_keosd(False)

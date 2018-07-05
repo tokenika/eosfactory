@@ -2,70 +2,49 @@ import setup
 import eosf
 from termcolor import cprint
 
+wallet_name = "default"
+wallet_pass = "PW5KftuwFePUSaqrq2d8ZcEtJZYQCsWPE5gyo6DMBEcSUeb646coy"
+deployment = False
+
 setup.set_verbose(True)
 setup.use_keosd(True)
-setup.set_nodeos_URL("dev.cryptolions.io:38888")
+setup.set_nodeos_URL("88.99.97.30:38888")
 
 def test():
     global account_master
-    global account_deploy
-    global account_alice
-    global account_carol
+    global account_alice2
+    global account_carol2
 
-    wallet_name = "default"
-    wallet_pass = "PW5KhZKX2jhmtJWKvUuSChuLE59BHAbFWgGhcsctoDw1Jy437APV3"
-    
     wallet = eosf.Wallet(wallet_name, wallet_pass)
-    cprint("""
-Creating wallet: default
-Save password to use in the future to unlock this wallet.
-Without password imported keys will not be retrievable.
-"PW5KhZKX2jhmtJWKvUuSChuLE59BHAbFWgGhcsctoDw1Jy437APV3"
-    """, 'magenta')
-
-    wallet.index()
-    wallet.keys()
-
     restored = wallet.restore_accounts(globals())
 
-    if (not "account_deploy" in restored):
-        account_deploy = eosf.account(
-            account_master,
-            stake_net="1000 EOS",
-            stake_cpu="1000 EOS",
-            buy_ram_kbytes="1200",
-            transfer=True)
-        if (not account_deploy.error):
-            wallet.import_key(account_deploy)
+    assert("account_master" in restored)
 
-    if (not "account_alice" in restored):
-        account_alice = eosf.account(
+    if (not "account_alice2" in restored):
+        account_alice2 = eosf.account(
             account_master,
             stake_net="100 EOS",
             stake_cpu="100 EOS",
             buy_ram_kbytes="80",
             transfer=True)
-        if (not account_alice.error):
-            wallet.import_key(account_alice)
+        assert(not account_alice2.error)
+        wallet.import_key(account_alice2)
 
-    if (not "account_carol" in restored):
-        account_carol = eosf.account(
+    if (not "account_carol2" in restored):
+        account_carol2 = eosf.account(
             account_master,
             stake_net="1000 EOS",
             stake_cpu="1000 EOS",
             buy_ram_kbytes="1200",
             transfer=True)
-        if (not account_carol.error):
-            wallet.import_key(account_carol)
-    
+        assert(not account_carol2.error)
+        wallet.import_key(account_carol2)
+
     contract = eosf.Contract(
-        account_deploy, "tic_tac_toe_jungle")
-    
-    cprint("""
-Deploy the contract
-    """, 'magenta')
-    deployment = contract.deploy()
-    assert(not deployment.error)
+        account_master, "tic_tac_toe_jungle")
+
+    if deployment:
+        assert(not contract.deploy().error)
 
     cprint("""
 Action contract.push_action("create")
@@ -73,12 +52,12 @@ Action contract.push_action("create")
     action = contract.push_action(
         "create", 
         '{"challenger":"' 
-        + str(account_alice) +'", "host":"' 
-        + str(account_carol) + '"}', account_carol)
+        + str(account_alice2) +'", "host":"' 
+        + str(account_carol2) + '"}', account_carol2)
     print(action)
     assert(not action.error)
     
-    t = contract.table("games", account_carol)
+    t = contract.table("games", account_carol2)
     assert(not t.error)
 
     assert(t.json["rows"][0]["board"][0] == 0)
@@ -97,9 +76,9 @@ Action contract.push_action("move")
     action = contract.push_action(
         "move", 
         '{"challenger":"' 
-        + str(account_alice) + '", "host":"' 
-        + str(account_carol) + '", "by":"' 
-        + str(account_carol) + '", "mvt":{"row":0, "column":0} }', account_carol)
+        + str(account_alice2) + '", "host":"' 
+        + str(account_carol2) + '", "by":"' 
+        + str(account_carol2) + '", "mvt":{"row":0, "column":0} }', account_carol2)
     print(action)
     assert(not action.error)
 
@@ -109,13 +88,13 @@ Action contract.push_action("move")
     action = contract.push_action(
         "move", 
         '{"challenger":"' 
-        + str(account_alice) + '", "host":"' 
-        + str(account_carol) + '", "by":"' 
-        + str(account_alice) + '", "mvt":{"row":1, "column":1} }', account_alice)
+        + str(account_alice2) + '", "host":"' 
+        + str(account_carol2) + '", "by":"' 
+        + str(account_alice2) + '", "mvt":{"row":1, "column":1} }', account_alice2)
     print(action)
     assert(not action.error)
 
-    t = contract.table("games", account_carol)
+    t = contract.table("games", account_carol2)
     assert(not t.error)
 
     assert(t.json["rows"][0]["board"][0] == 1)
@@ -134,12 +113,12 @@ Action contract.push_action("restart")
     action = contract.push_action(
             "restart", 
             '{"challenger":"' 
-            + str(account_alice) + '", "host":"' 
-            + str(account_carol) + '", "by":"' + str(account_carol) + '"}', account_carol)
+            + str(account_alice2) + '", "host":"' 
+            + str(account_carol2) + '", "by":"' + str(account_carol2) + '"}', account_carol2)
     print(action)
     assert(not action.error)
 
-    t = contract.table("games", account_carol)
+    t = contract.table("games", account_carol2)
     assert(not t.error)
 
     assert(t.json["rows"][0]["board"][0] == 0)
@@ -158,7 +137,7 @@ Action contract.push_action("close")
     action = contract.push_action(
             "close", 
             '{"challenger":"' 
-            + str(account_alice) + '", "host":"' + str(account_carol) + '"}', account_carol)
+            + str(account_alice2) + '", "host":"' + str(account_carol2) + '"}', account_carol2)
     print(action)
     assert(not action.error)
 

@@ -1,11 +1,10 @@
 # python3 ./tests/unittest1.py
 
-import unittest
-import json
-from termcolor import cprint
 import setup
 import eosf
 import node
+import unittest
+from termcolor import cprint
 
 setup.set_verbose(False)
 setup.set_json(False)

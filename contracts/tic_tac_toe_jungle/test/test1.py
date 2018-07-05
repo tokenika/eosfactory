@@ -1,47 +1,50 @@
-# python3 ./tests/test2.py
-
 import setup
 import eosf
-import node
 from termcolor import cprint
 
-setup.use_keosd(False)
+wallet_name = "default"
+wallet_pass = "PW5KftuwFePUSaqrq2d8ZcEtJZYQCsWPE5gyo6DMBEcSUeb646coy"
+deployment = False
+
 setup.set_verbose(True)
-#setup.set_debug_mode()
+setup.use_keosd(True)
+setup.set_nodeos_URL("88.99.97.30:38888")
 
 def test():
+    global account_master
+    global account_alice
+    global account_carol
 
-    testnet = node.reset()
-    assert(not testnet.error)
+    wallet = eosf.Wallet(wallet_name, wallet_pass)
+    restored = wallet.restore_accounts(globals())
 
-    wallet = eosf.Wallet()
-    assert(not wallet.error)
+    assert("account_master" in restored)
 
-    eosio = eosf.AccountMaster()
-    assert(not eosio.error)
-    wallet.import_key(eosio)
+    if (not "account_alice" in restored):
+        account_alice = eosf.account(
+            account_master,
+            stake_net="100 EOS",
+            stake_cpu="100 EOS",
+            buy_ram_kbytes="80",
+            transfer=True)
+        assert(not account_alice.error)
+        wallet.import_key(account_alice)
 
-    alice = eosf.account()
-    assert(not alice.error)
-    wallet.import_key(alice)
+    if (not "account_carol" in restored):
+        account_carol = eosf.account(
+            account_master,
+            stake_net="1000 EOS",
+            stake_cpu="1000 EOS",
+            buy_ram_kbytes="1200",
+            transfer=True)
+        assert(not account_carol.error)
+        wallet.import_key(account_carol)
 
-    carol = eosf.account()
-    assert(not carol.error)
-    wallet.import_key(carol)
+    contract = eosf.Contract(
+        account_master, "tic_tac_toe_jungle")
 
-    account = eosf.account(name="tic.tac.toe")
-    assert(not account.error)
-    wallet.import_key(account)
-
-    contract_eosio_bios = eosf.Contract(
-        eosio, "eosio.bios").deploy()
-    assert(not contract_eosio_bios.error)
-
-    contract = eosf.Contract(account, "tic_tac_toe")
-    assert(not contract.error)
-
-    deployment = contract.deploy()
-    assert(not deployment.error)
+    if deployment:
+        assert(not contract.deploy().error)
 
     cprint("""
 Action contract.push_action("create")
@@ -49,12 +52,12 @@ Action contract.push_action("create")
     action = contract.push_action(
         "create", 
         '{"challenger":"' 
-        + str(alice) +'", "host":"' 
-        + str(carol) + '"}', carol)
+        + str(account_alice) +'", "host":"' 
+        + str(account_carol) + '"}', account_carol)
     print(action)
     assert(not action.error)
     
-    t = contract.table("games", carol)
+    t = contract.table("games", account_carol)
     assert(not t.error)
 
     assert(t.json["rows"][0]["board"][0] == 0)
@@ -73,9 +76,9 @@ Action contract.push_action("move")
     action = contract.push_action(
         "move", 
         '{"challenger":"' 
-        + str(alice) + '", "host":"' 
-        + str(carol) + '", "by":"' 
-        + str(carol) + '", "mvt":{"row":0, "column":0} }', carol)
+        + str(account_alice) + '", "host":"' 
+        + str(account_carol) + '", "by":"' 
+        + str(account_carol) + '", "mvt":{"row":0, "column":0} }', account_carol)
     print(action)
     assert(not action.error)
 
@@ -85,13 +88,13 @@ Action contract.push_action("move")
     action = contract.push_action(
         "move", 
         '{"challenger":"' 
-        + str(alice) + '", "host":"' 
-        + str(carol) + '", "by":"' 
-        + str(alice) + '", "mvt":{"row":1, "column":1} }', alice)
+        + str(account_alice) + '", "host":"' 
+        + str(account_carol) + '", "by":"' 
+        + str(account_alice) + '", "mvt":{"row":1, "column":1} }', account_alice)
     print(action)
     assert(not action.error)
 
-    t = contract.table("games", carol)
+    t = contract.table("games", account_carol)
     assert(not t.error)
 
     assert(t.json["rows"][0]["board"][0] == 1)
@@ -110,12 +113,12 @@ Action contract.push_action("restart")
     action = contract.push_action(
             "restart", 
             '{"challenger":"' 
-            + str(alice) + '", "host":"' 
-            + str(carol) + '", "by":"' + str(carol) + '"}', carol)
+            + str(account_alice) + '", "host":"' 
+            + str(account_carol) + '", "by":"' + str(account_carol) + '"}', account_carol)
     print(action)
     assert(not action.error)
 
-    t = contract.table("games", carol)
+    t = contract.table("games", account_carol)
     assert(not t.error)
 
     assert(t.json["rows"][0]["board"][0] == 0)
@@ -134,14 +137,13 @@ Action contract.push_action("close")
     action = contract.push_action(
             "close", 
             '{"challenger":"' 
-            + str(alice) + '", "host":"' + str(carol) + '"}', carol)
+            + str(account_alice) + '", "host":"' + str(account_carol) + '"}', account_carol)
     print(action)
     assert(not action.error)
 
-    node.stop()
-
     cprint("OK OK OK OK OK OK OK OK 0K 0K 0K 0K", 'green')
-    
+
+
 
 if __name__ == "__main__":
-   test()
+    test()

@@ -5,43 +5,42 @@ from termcolor import cprint
 
 setup.set_verbose(True)
 setup.use_keosd(True)
-setup.set_nodeos_URL("dev.cryptolions.io:38888")  
+setup.set_nodeos_URL("88.99.97.30:38888")  
 
 
 def test():
-    global account_master
-
-    wallet_name = "default"
-    wallet_pass = "PW5KhZKX2jhmtJWKvUuSChuLE59BHAbFWgGhcsctoDw1Jy437APV3"
-    
-    wallet = eosf.Wallet(wallet_name, wallet_pass)
-    cprint("""
+    """
 Creating wallet: default
 Save password to use in the future to unlock this wallet.
 Without password imported keys will not be retrievable.
-"PW5KhZKX2jhmtJWKvUuSChuLE59BHAbFWgGhcsctoDw1Jy437APV3"
-    """, 'magenta')
+"PW5KftuwFePUSaqrq2d8ZcEtJZYQCsWPE5gyo6DMBEcSUeb646coy"
+    """
+    """
+Use the following data to register a new account on a public testnet:
+Accout Name: gpdwptppwhs3
+Owner Public Key: EOS8Lg58cfq8sZswvj6jfMQfngsvHjiLuj6MpNna66PM1mUMPZiXd
+Owner Private Key: 5KhXVUvYd5o3sGoZL8usGNBFauLsYTWtdmzHck1GTCVhNJhoAtJ
+Active Public Key: EOS5z8pbMiugbJ5nSBxpQggqhwUFYmHwtxka9f5J8QKXBEn4xE3B6
+Active Private Key: 5HuW65NGrGCQuRKz4SivsCA9JdENUcE91pFYB5TYNUkqm62VeRV
+    """
+
+    global account_master
+
+    wallet_name = "default"
+    wallet_pass = "PW5KftuwFePUSaqrq2d8ZcEtJZYQCsWPE5gyo6DMBEcSUeb646coy"
+    
+    wallet = eosf.Wallet(wallet_name, wallet_pass)
 
     wallet.index()
     wallet.keys()
 
     restored = wallet.restore_accounts(globals())
+
     if (not "account_master" in restored):
-
         account_master = eosf.AccountMaster()
-        cprint("""
-Register the following data with a testnode, and
-save them, to restore this account object in the future.
-Accout Name: pb3ey3ikdi5j
-Owner Public Key: EOS7SycZQs83yo5ziXdVvL7QeL1NguNeS39corGSbMVnxwEbweSYV
-Active Public Key: EOS5uJB6cQ89nDzwPp3azDtcBRDLo6j4QcxEQ5DZRCBPPurCYywAk
-Owner Private Key: 5HyPsQ3TJwma5mqideXtPwzLF8pUkioGy7r6xbDTtNysP9Rf4L4
-Active Private Key: 5JZ6R6gz4e52atZwNGzS34KWRPkrjXfdcKGHTavKBiuKmHfe9Sv
-        """, 'magenta')
-
         wallet.import_key(account_master)
     else:
-        cprint("The 'account_master' is already in the wallet.", 'red')
+        cprint("\nThe 'account_master' is already in the wallet.\n", 'green')
 
 
 if __name__ == "__main__":
