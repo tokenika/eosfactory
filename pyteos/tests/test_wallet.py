@@ -100,12 +100,19 @@ Active Private Key: 5KfDH4hRXUEdzxv9jzf8EDj7gF2qTSkHprmM4uekK9Huc8GcDK6
                 transfer=True)
 
     print(account_test.info())
-    #	name: yeyuoae5rtcg
-    #	permissions:
-    #	     owner     1:    1 EOS8jeCrY4EjJtvcveuy1aK2aFv7rqhGAGvGLJ2Sodazmv2yyi2hm
-    #	     active     1:    1 EOS5PD28JPyHALuRPPJnm1oR83KxLFKvKkVXx9VrsLjLieHSLq35j
-
+    cprint("""
+name: yeyuoae5rtcg
+permissions:
+    owner     1:    1 EOS8jeCrY4EjJtvcveuy1aK2aFv7rqhGAGvGLJ2Sodazmv2yyi2hm
+    active     1:    1 EOS5PD28JPyHALuRPPJnm1oR83KxLFKvKkVXx9VrsLjLieHSLq35j
+    """, 'magenta')
     
+    wallet.open()
+    wallet.unlock()
+    wallet.import_key(account_test)
+
+
+
 
 if __name__ == "__main__":
     test()

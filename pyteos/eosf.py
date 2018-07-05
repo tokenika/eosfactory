@@ -30,7 +30,8 @@ import cleos_system
 
 def reload():
     import importlib
-    importlib.reload(eosf)
+    importlib.reload(eosf)           
+
 
 class Wallet(cleos.WalletCreate):
     """ Create a new wallet locally and operate it.
@@ -172,8 +173,8 @@ class Wallet(cleos.WalletCreate):
                         account_map = {}
 
                     if self.is_verbose > 0:
-                        print("'{}' >>> '{}'".format(
-                            name, wallet_dir + setup.account_map))
+                        print("'{}' ({}) >>> '{}'".format(
+                            name, account_name, wallet_dir + setup.account_map))
 
                     account_map[account_name] = name
                     with open(wallet_dir + setup.account_map, "w") as out:
@@ -479,12 +480,12 @@ class AccountMaster():
             if not owner_key_public: # print data for registration
                 self.new_account = True
                 if not name: 
-                    self.name = account_name()
+                    self.name = cleos.account_name()
                 else:
                     self.name = name
 
-                self.owner_key = CreateKey("owner", is_verbose=0)
-                self.active_key = CreateKey("active", is_verbose=0)
+                self.owner_key = cleos.CreateKey("owner", is_verbose=0)
+                self.active_key = cleos.CreateKey("active", is_verbose=0)
                 print(
                     "Register the following data with a testnode, and\n" \
                     + "save them, to restore this account object in the future.\n" \
@@ -538,6 +539,7 @@ def account(
         is_verbose=1,
         restore=False):
 
+    wallet = None
     account_object = None
     if restore:
         if creator:
@@ -581,7 +583,7 @@ def account(
                     ref_block,
                     is_verbose=is_verbose
                     )
-                    
+        
         account_object.owner_key = owner_key
         account_object.active_key = active_key
 

@@ -34,11 +34,11 @@ Start session: reset the local EOSIO node, create a wallet object, put the
 master account into it.
     """, 'magenta')
 
-    account_master = eosf.AccountMaster()
     reset = eosf.reset()
+    account_master = eosf.AccountMaster()
     wallet = eosf.Wallet()
     wallet.import_key(account_master)
-
+    return
     cprint("""
 Create an account object, named `account_alice`, with the `eosf.account()`, 
 with default parameters: 
