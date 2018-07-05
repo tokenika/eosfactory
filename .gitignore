@@ -16,13 +16,8 @@ teos/teos_lib/include/teoslib/config.h
 !/docs/sphinx/Makefile
 
 /contracts/*
-!/contracts/currency
-!/contracts/tic.tac.toe
-!/contracts/xs_and_os
-
-!/contracts/currency/build
-!/contracts/tic.tac.toe/build
-!/contracts/xs_and_os/build
+!/contracts/tic_tac_toe_jungle
+!/contracts/tic_tac_toe_jungle/build
 
 /tests/*
 !/tests/test1.py

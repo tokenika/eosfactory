@@ -1,0 +1,111 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",   
+"tasks": [
+    {
+        "taskName": "Compile",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; mkdir -p build; ${env:eosf} build contract \"${workspaceFolder}\"/src -c"
+        },
+        "osx": {
+            "command": "mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
+        },
+        "linux": {
+            "command": "mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
+        },
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": [
+        ]
+    },
+    {
+        "taskName": "Build",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; mkdir -p build; ${env:eosf} generate abi \"${workspaceFolder}\"/src;${env:eosf} build contract \"${workspaceFolder}\"/src"
+        },
+        "osx": {
+            "command": "mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
+        },
+        "linux": {
+            "command": "mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
+        },
+        "problemMatcher": [],
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        },
+        "problemMatcher": [
+        ]
+    },
+    {
+        "taskName": "Test",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; python3 ./test/test1.py"
+        },
+        "osx": {
+            "command": "python3 ./test/test1.py"
+        },
+        "linux": {
+            "command": "python3 ./test/test1.py"
+        },
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": [
+        ]
+    },
+    {
+        "taskName": "Unittest",
+        "type": "shell",
+        "windows": {
+            "command": "source ~/.profile; python3 ./test/unittest1.py"
+        },
+        "osx": {
+            "command": "python3 ./test/unittest1.py"
+        },
+        "linux": {
+            "command": "python3 ./test/unittest1.py"
+        },
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": [
+        ]
+    },
+    {
+        "taskName": "EOSIO API",
+        "type": "shell",
+        "windows": {
+            "command": "explorer.exe"
+        },
+        "osx": {
+            "command": "open"
+        },
+        "linux": {
+            "command": "sensible-browser"
+        },
+        "args": [
+            "https://eosio.github.io/eos/group__contractdev.html"
+        ],
+        "presentation": {
+            "reveal": "always",
+            "panel": "dedicated"
+        },
+        "problemMatcher": [
+        ]
+    }
+]
+}
+ 

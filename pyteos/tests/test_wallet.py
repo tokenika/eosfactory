@@ -1,17 +1,14 @@
 import setup
 import cleos
-import teos
 import eosf
-import unittest
-from termcolor import colored, cprint
-import time
+from termcolor import cprint
 
 setup.set_verbose(True)
-is_registered_to_testnode = False
+setup.use_keosd(True)
+setup.set_nodeos_URL("dev.cryptolions.io:38888")  
 
 def test():
-    setup.use_keosd(True)
-    setup.set_nodeos_URL("dev.cryptolions.io:38888")  
+
     cleos.WalletStop()
 
     wallet_name = "default"
@@ -29,72 +26,33 @@ Without password imported keys will not be retrievable.
     wallet.index()
     wallet.keys()
 
-    if not is_registered_to_testnode:
-##############################################################################
-# Register to a testnode:
-##############################################################################
-        restored = wallet.restore_accounts(globals())
-        if not "account_master" in restored:
+    restored = wallet.restore_accounts(globals())
+    print()
+    print(account_master.info())
 
-            account_master = eosf.AccountMaster()
-            cprint("""
-Register the following data with a testnode, and
-save them, to restore this account object in the future.
-Accout Name: nbhyi5exmjcl
-Owner Public Key: EOS64THtE5PNEDajKagPg7fERibWRvCjfFmMtQBPSvtnqJivgeeBG
-Active Public Key: EOS7g6S8cC4RnXmC36Ub632H9Mf259jTk7oSJZoMgmPmqM9F4xY2k
+    global account_alice
 
-
-Owner Private Key: 5JCoQuSAFWNdRFMianHyDJn2YrHHRuoU9ePqxkErSiWuAw3AtYb
-Active Private Key: 5KfDH4hRXUEdzxv9jzf8EDj7gF2qTSkHprmM4uekK9Huc8GcDK6
-            """, 'magenta')
-
-            cprint("""
-                
-            """, 'magenta')
-
-            wallet.import_key(account_master)
-        else:
-            cprint("""
-There is an 'account_master' in the wallet, already.
-            """, 'red')
-
+    if "account_alice" in restored:
+        print(account_alice.info())
     else:
-##############################################################################
-# Registered to the testnode
-##############################################################################
 
-        restored = wallet.restore_accounts(globals())
-        print()
-        print(account_master.info())
-
-        global account_alice
-
-        if "account_alice" in restored:
-            print(account_alice.info())
-        else:
-
-            cprint("""
+        cprint("""
 ./programs/cleos/cleos -u http://"dev.cryptolions.io:38888 system newaccount 
-    nbhyi5exmjcl ljzirxm1wy1n 
-    EOS6wAChSUxgHpUaG8bdCSKVFEMbmT85qnja1bh7zaWiYDp4sLW98 
-    EOS6wAChSUxgHpUaG8bdCSKVFEMbmT85qnja1bh7zaWiYDp4sLW98 
-    --buy-ram-kbytes 8 --stake-net '100 EOS' --stake-cpu '100 EOS' --transfer
-            """, 'magenta')
+nbhyi5exmjcl ljzirxm1wy1n 
+EOS6wAChSUxgHpUaG8bdCSKVFEMbmT85qnja1bh7zaWiYDp4sLW98 
+EOS6wAChSUxgHpUaG8bdCSKVFEMbmT85qnja1bh7zaWiYDp4sLW98 
+--buy-ram-kbytes 8 --stake-net '100 EOS' --stake-cpu '100 EOS' --transfer
+        """, 'magenta')
 
-            account_alice = eosf.account(
-                account_master,
-                stake_net="100 EOS",
-                stake_cpu="100 EOS",
-                buy_ram_kbytes="8",
-                transfer=True)
-            if(not account_alice.error):
-                wallet.import_key(account_alice)
+        account_alice = eosf.account(
+            account_master,
+            stake_net="100 EOS",
+            stake_cpu="100 EOS",
+            buy_ram_kbytes="8",
+            transfer=True)
+        if(not account_alice.error):
+            wallet.import_key(account_alice)
 
-
-    cleos.WalletStop()
-
-    return
 
     account_test = eosf.account(
                 account_master,
@@ -114,19 +72,6 @@ permissions:
     wallet.open()
     wallet.unlock()
     wallet.import_key(account_test)
-
-    contract_test = eosf.Contract(
-        account_test, 
-        "/mnt/c/Workspaces/EOS/eosfactory/contracts/xs_and_os/test/../build/"
-        )
-    wallet.unlock()
-    contract_test.deploy()
-    cprint("""
-ERROR:
-Error 3080001: account using more than allotted RAM usage
-    """, 'magenta')
-
-
 
 
 if __name__ == "__main__":

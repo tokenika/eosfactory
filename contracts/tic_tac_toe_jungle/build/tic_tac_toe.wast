@@ -167,7 +167,7 @@
    (br_if $label$0
     (i64.ne
      (get_local $2)
-     (i64.const -3778506236080873472)
+     (i64.const -2394314995943483776)
     )
    )
    (set_local $2
@@ -929,7 +929,7 @@
   )
   (i64.store offset=24
    (get_local $6)
-   (i64.const -3778506236080873472)
+   (i64.const -2394314995943483776)
   )
   (block $label$0
    (block $label$1
@@ -937,7 +937,7 @@
      (i32.lt_s
       (tee_local $2
        (call $db_find_i64
-        (i64.const -3778506236080873472)
+        (i64.const -2394314995943483776)
         (get_local $4)
         (i64.const 7035937633859534848)
         (i64.load
@@ -1253,7 +1253,7 @@
   )
   (i64.store offset=8
    (get_local $6)
-   (i64.const -3778506236080873472)
+   (i64.const -2394314995943483776)
   )
   (set_local $5
    (i32.const 0)
@@ -1263,7 +1263,7 @@
     (i32.lt_s
      (tee_local $3
       (call $db_find_i64
-       (i64.const -3778506236080873472)
+       (i64.const -2394314995943483776)
        (get_local $4)
        (i64.const 7035937633859534848)
        (i64.load
@@ -1585,7 +1585,7 @@
   )
   (i64.store
    (get_local $6)
-   (i64.const -3778506236080873472)
+   (i64.const -2394314995943483776)
   )
   (set_local $5
    (i32.const 0)
@@ -1595,7 +1595,7 @@
     (i32.lt_s
      (tee_local $1
       (call $db_find_i64
-       (i64.const -3778506236080873472)
+       (i64.const -2394314995943483776)
        (get_local $3)
        (i64.const 7035937633859534848)
        (i64.load
@@ -1897,7 +1897,7 @@
   )
   (i64.store offset=40
    (get_local $12)
-   (i64.const -3778506236080873472)
+   (i64.const -2394314995943483776)
   )
   (set_local $6
    (i32.const 0)
@@ -1907,7 +1907,7 @@
     (i32.lt_s
      (tee_local $7
       (call $db_find_i64
-       (i64.const -3778506236080873472)
+       (i64.const -2394314995943483776)
        (get_local $11)
        (i64.const 7035937633859534848)
        (i64.load
