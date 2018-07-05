@@ -7,11 +7,10 @@ from termcolor import colored, cprint
 import time
 
 setup.set_verbose(True)
-is_registered_to_testnode = True
+is_registered_to_testnode = False
 
 def test():
     setup.use_keosd(True)
-
     setup.set_nodeos_URL("dev.cryptolions.io:38888")  
     cleos.WalletStop()
 
@@ -30,14 +29,15 @@ Without password imported keys will not be retrievable.
     wallet.index()
     wallet.keys()
 
-
     if not is_registered_to_testnode:
 ##############################################################################
 # Register to a testnode:
 ##############################################################################
+        restored = wallet.restore_accounts(globals())
+        if not "account_master" in restored:
 
-        account_master = eosf.AccountMaster()
-        cprint("""
+            account_master = eosf.AccountMaster()
+            cprint("""
 Register the following data with a testnode, and
 save them, to restore this account object in the future.
 Accout Name: nbhyi5exmjcl
@@ -47,13 +47,17 @@ Active Public Key: EOS7g6S8cC4RnXmC36Ub632H9Mf259jTk7oSJZoMgmPmqM9F4xY2k
 
 Owner Private Key: 5JCoQuSAFWNdRFMianHyDJn2YrHHRuoU9ePqxkErSiWuAw3AtYb
 Active Private Key: 5KfDH4hRXUEdzxv9jzf8EDj7gF2qTSkHprmM4uekK9Huc8GcDK6
-        """, 'magenta')
+            """, 'magenta')
 
-        cprint("""
-              
-        """, 'magenta')
+            cprint("""
+                
+            """, 'magenta')
 
-        wallet.import_key(account_master)
+            wallet.import_key(account_master)
+        else:
+            cprint("""
+There is an 'account_master' in the wallet, already.
+            """, 'red')
 
     else:
 ##############################################################################
@@ -106,10 +110,21 @@ permissions:
     owner     1:    1 EOS8jeCrY4EjJtvcveuy1aK2aFv7rqhGAGvGLJ2Sodazmv2yyi2hm
     active     1:    1 EOS5PD28JPyHALuRPPJnm1oR83KxLFKvKkVXx9VrsLjLieHSLq35j
     """, 'magenta')
-    
+
     wallet.open()
     wallet.unlock()
     wallet.import_key(account_test)
+
+    contract_test = eosf.Contract(
+        account_test, 
+        "/mnt/c/Workspaces/EOS/eosfactory/contracts/xs_and_os/test/../build/"
+        )
+    wallet.unlock()
+    contract_test.deploy()
+    cprint("""
+ERROR:
+Error 3080001: account using more than allotted RAM usage
+    """, 'magenta')
 
 
 
