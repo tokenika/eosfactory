@@ -157,7 +157,7 @@ class SystemNewaccount(cleos._Cleos):
                 print(self.__str__())            
 
     def info(self):
-        return str(GetAccount(self.name, is_verbose=1))
+        return str(cleos.GetAccount(self.name, is_verbose=1))
             
     def __str__(self):
         return self.name

@@ -90,6 +90,22 @@ Active Private Key: 5KfDH4hRXUEdzxv9jzf8EDj7gF2qTSkHprmM4uekK9Huc8GcDK6
 
     cleos.WalletStop()
 
+    return
+
+    account_test = eosf.account(
+                account_master,
+                stake_net="10 EOS",
+                stake_cpu="10 EOS",
+                buy_ram_kbytes="8",
+                transfer=True)
+
+    print(account_test.info())
+    #	name: yeyuoae5rtcg
+    #	permissions:
+    #	     owner     1:    1 EOS8jeCrY4EjJtvcveuy1aK2aFv7rqhGAGvGLJ2Sodazmv2yyi2hm
+    #	     active     1:    1 EOS5PD28JPyHALuRPPJnm1oR83KxLFKvKkVXx9VrsLjLieHSLq35j
+
+    
 
 if __name__ == "__main__":
     test()
