@@ -142,7 +142,7 @@ Action contract.push_action("restart")
         self.assertFalse(action.error)
 
         t = contract.table("games", carol)
-        self.assertFalse(t.error, "table")
+        self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)

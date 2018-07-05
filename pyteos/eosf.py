@@ -30,7 +30,7 @@ import cleos_system
 
 def reload():
     import importlib
-    importlib.reload(eosf)           
+    importlib.reload(eosf)
 
 
 class Wallet(cleos.WalletCreate):
@@ -70,14 +70,14 @@ class Wallet(cleos.WalletCreate):
                 wallet_dir = teos.get_node_wallet_dir()
                 try:
                     with open(wallet_dir + setup.password_map, "r") \
-                            as input:    
+                            as input:
                         password_map = json.load(input)
                 except:
                     password_map = {}
                 password_map[name] = self.password
 
                 with open(wallet_dir + setup.password_map, "w+") \
-                        as out:    
+                        as out:
                     json.dump(password_map, out)
 
                 if self.is_verbose > 0:
@@ -97,7 +97,7 @@ class Wallet(cleos.WalletCreate):
 
     def open(self):
         """ Opens the wallet.
-        Returns `WalletOpen` object     
+        Returns `WalletOpen` object
         """
         self.wallet_open = cleos.WalletOpen(
             self.name, is_verbose=self.is_verbose)
@@ -106,7 +106,7 @@ class Wallet(cleos.WalletCreate):
 
     def lock(self):
         """ Locks the wallet.
-        Returns `cleos.WalletLock` object.   
+        Returns `cleos.WalletLock` object.
         """
         self.wallet_lock = cleos.WalletLock(
             self.name, is_verbose=self.is_verbose)
@@ -129,14 +129,14 @@ class Wallet(cleos.WalletCreate):
         # print("\ninspect.stack():\n")
         # pprint.pprint(inspect.stack())
         # print("\ninspect.stack()[1][0]:\n")
-        # pprint.pprint(inspect.stack()[1][0])        
+        # pprint.pprint(inspect.stack()[1][0])
         # print("\ninspect.stack()[1][0].f_locals:\n")
         # pprint.pprint(inspect.stack()[1][0].f_locals)
         # print("\ninspect.stack()[1][0].f_globals:\n")
         # pprint.pprint(inspect.stack()[1][0].f_globals)
 
         # print("\ninspect.stack()[2][0]:\n")
-        # pprint.pprint(inspect.stack()[2][0])        
+        # pprint.pprint(inspect.stack()[2][0])
         # print("\ninspect.stack()[2][0].f_locals:\n")
         # pprint.pprint(inspect.stack()[2][0].f_locals)
         # print("\ninspect.stack()[2][0].f_globals:\n")
@@ -178,7 +178,7 @@ class Wallet(cleos.WalletCreate):
 
                     account_map[account_name] = name
                     with open(wallet_dir + setup.account_map, "w") as out:
-                        json.dump(account_map, out)              
+                        json.dump(account_map, out)
 
 
         imported_keys = []
@@ -329,7 +329,7 @@ class Contract():
 
 
     def build_wast(self):
-        if self.is_mutable:            
+        if self.is_mutable:
             wast = teos.WAST(
                 self.contract_dir, self.account.name, 
                 is_verbose=self.is_verbose)
@@ -337,10 +337,10 @@ class Contract():
             if self.is_verbose > 0:
                 print("ERROR!")
                 print("Cannot modify system contracts.")
-        return not wast.error
+        return wast
         
 
-    def build_abi(self):            
+    def build_abi(self):
         if self.is_mutable:
             abi = teos.ABI(
                 self.contract_dir, self.account.name, 
@@ -349,13 +349,11 @@ class Contract():
             if self.is_verbose > 0:
                 print("ERROR!")
                 print("Cannot modify system contracts.")
-        return not abi.error
+        return abi
 
     
     def build(self):
-        ok = self.build_abi()
-        ok = ok and self.build_wast()
-        return ok
+        return not self.build_abi().error and not self.build_wast().error
 
 
     def push_action(
@@ -532,7 +530,7 @@ def account(
         permission = "",
         buy_ram_kbytes=0, buy_ram="",
         transfer=False,
-        expiration_sec=30, 
+        expiration_sec=30,
         skip_signature=0, dont_broadcast=0, forceUnique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block="",
@@ -588,7 +586,7 @@ def account(
         account_object.active_key = active_key
 
 
-    def code(self, code="", abi="", wasm=False):      
+    def code(self, code="", abi="", wasm=False):
         return cleos.GetCode(
             account_object, code, abi, 
             is_verbose=account_object.is_verbose)

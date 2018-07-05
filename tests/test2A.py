@@ -117,7 +117,7 @@ Action contract.push_action("restart")
     assert(not action.error)
 
     t = contract.table("games", carol)
-    assert(not t.error, "table")
+    assert(not t.error)
 
     assert(t.json["rows"][0]["board"][0] == 0)
     assert(t.json["rows"][0]["board"][1] == 0)

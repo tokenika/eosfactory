@@ -73,9 +73,14 @@ Create a reference to the new contract
             remove_existing=True)
 
         cprint("""
-Build the contract
+Build the contract abi
         """, 'magenta')
-        self.assertTrue(contract.build())
+        self.assertFalse(contract.build_abi().error)
+        
+        cprint("""
+Build the contract wast
+        """, 'magenta')
+        self.assertFalse(contract.build_wast().error)
 
         cprint("""
 Deploy the contract
