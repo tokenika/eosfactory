@@ -1,0 +1,4 @@
+*.abi
+*.wast
+*.cmake
+*.tcl
