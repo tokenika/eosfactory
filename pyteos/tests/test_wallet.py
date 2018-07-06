@@ -9,7 +9,7 @@ setup.set_nodeos_URL("dev.cryptolions.io:38888")
 
 def test():
 
-    cleos.WalletStop()
+    # cleos.WalletStop()
 
     wallet_name = "default"
     wallet_pass = "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N"
@@ -27,6 +27,9 @@ Without password imported keys will not be retrievable.
     wallet.keys()
 
     restored = wallet.restore_accounts(globals())
+
+    return
+
     print()
     print(account_master.info())
 
@@ -73,6 +76,46 @@ permissions:
     wallet.unlock()
     wallet.import_key(account_test)
 
+    return
+
+    import setup
+    import eosf
+    import cleos
+
+    setup.use_keosd(True)
+    setup.set_nodeos_URL("dev.cryptolions.io:38888")
+
+    wallet_name = "default"
+    wallet_pass = "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N"
+    wallet = eosf.Wallet(wallet_name, wallet_pass)
+    wallet.restore_accounts(globals())
+        # print(account_alice.info())
+
+    #     account_test = eosf.account(
+    #                 account_master,
+    #                 stake_net="10 EOS",
+    #                 stake_cpu="10 EOS",
+    #                 buy_ram_kbytes="8",
+    #                 transfer=True)
+
+    #     print(account_test.info())
+    #     cprint("""
+    # name: yeyuoae5rtcg
+    # permissions:
+    #     owner     1:    1 EOS8jeCrY4EjJtvcveuy1aK2aFv7rqhGAGvGLJ2Sodazmv2yyi2hm
+    #     active     1:    1 EOS5PD28JPyHALuRPPJnm1oR83KxLFKvKkVXx9VrsLjLieHSLq35j
+    #     """, 'magenta')
+        
+    #     wallet.open()
+    #     wallet.unlock()
+    #     wallet.import_key(account_test)
+
+    contract_test = eosf.Contract(
+        account_test, 
+        "/mnt/c/Workspaces/EOS/eosfactory/contracts/xs_and_os/test/../build/"
+        , dont_broadcast=True, is_verbose=False).deploy()
+    import json
+    print(json.dumps(contract_test.json, indent=4))
 
 if __name__ == "__main__":
     test()

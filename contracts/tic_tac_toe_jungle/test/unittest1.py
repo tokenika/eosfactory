@@ -2,17 +2,28 @@ import setup
 import eosf
 import unittest
 from termcolor import cprint
+import time
+import sys
 
 wallet_name = "default"
 wallet_pass = "PW5HuwzUusrEBuEVE3oTf1ZrJHEbdAEhfqyMBk8TcwbfEN456Pkum"
-deployment = False
+deployment = True
 
 setup.set_verbose(True)
-setup.use_keosd(True)
-setup.set_nodeos_URL("88.99.97.30:38888")
+# setup.use_keosd(True)
+# setup.set_nodeos_URL("88.99.97.30:38888")
+
+global account_master
+global account_alice
+global account_carol
+global account_test
+global globals_
+globals_ = globals()
+
+contract_dir = sys.path[0] + "/../build"
 
 class Test1(unittest.TestCase):
-
+    
     def run(self, result=None):
         """ Stop after first error """
         if not result.failures:
@@ -21,15 +32,35 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-
-        global account_master
-        global account_alice
-        global account_carol
         global contract
 
-        wallet = eosf.Wallet(wallet_name, wallet_pass)
-        restored = wallet.restore_accounts(globals())
+        if setup.is_use_keosd():
+            wallet = eosf.Wallet(wallet_name, wallet_pass)
+            restored = wallet.restore_accounts(globals_)
+            account_test = account_master
+        else:
+            testnet = eosf.reset()
+            wallet = eosf.Wallet()
+            account_master = eosf.AccountMaster()
+            wallet.import_key(account_master)
 
+            account_alice = eosf.account()
+            wallet.import_key(account_alice)
+            account_carol = eosf.account()
+            wallet.import_key(account_carol)
+
+            account_test = eosf.account(name="r2onomqunelj")
+            wallet.import_key(account_test)            
+
+            wallet = None
+            account_alice = None
+            account_carol = None
+
+            wallet = eosf.Wallet()
+            restored = wallet.restore_accounts(globals_)
+            restored["account_master"] = account_master
+
+         
         assert("account_master" in restored)
 
         if (not "account_alice" in restored):
@@ -52,16 +83,21 @@ class Test1(unittest.TestCase):
             assert(not account_carol.error)
             wallet.import_key(account_carol)
 
-        contract = eosf.Contract(
-            account_master, "tic_tac_toe_jungle")
-
+        print(contract_dir)
+        contract = eosf.Contract(account_test, contract_dir, is_verbose=1)
+        
         if deployment:
-            assert(not contract.deploy().error)
+            deploy = contract.deploy()
+            assert(not deploy.error)
 
+        time.sleep(1)
 
     def setUp(self):
-        pass
+        pass 
 
+
+    def test_01(self):
+        print(account_alice.info())
 
     def test_01(self):
 
