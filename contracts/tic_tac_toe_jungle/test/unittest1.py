@@ -4,7 +4,7 @@ import unittest
 from termcolor import cprint
 
 wallet_name = "default"
-wallet_pass = "PW5KftuwFePUSaqrq2d8ZcEtJZYQCsWPE5gyo6DMBEcSUeb646coy"
+wallet_pass = "PW5HuwzUusrEBuEVE3oTf1ZrJHEbdAEhfqyMBk8TcwbfEN456Pkum"
 deployment = False
 
 setup.set_verbose(True)
@@ -14,17 +14,17 @@ setup.set_nodeos_URL("88.99.97.30:38888")
 class Test1(unittest.TestCase):
 
     def run(self, result=None):
-        """ Stop after first error """      
+        """ Stop after first error """
         if not result.failures:
             super().run(result)
 
 
     @classmethod
     def setUpClass(cls):
+
         global account_master
         global account_alice
         global account_carol
-        global restored
         global contract
 
         wallet = eosf.Wallet(wallet_name, wallet_pass)
@@ -60,10 +60,7 @@ class Test1(unittest.TestCase):
 
 
     def setUp(self):
-        self.assertTrue("account_master" in restored)
-        self.assertTrue("account_alice" in restored)
-        self.assertTrue("account_carol" in restored)
-        self.assertFalse(contract.error)
+        pass
 
 
     def test_01(self):

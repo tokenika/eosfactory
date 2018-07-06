@@ -3,7 +3,7 @@ import eosf
 from termcolor import cprint
 
 wallet_name = "default"
-wallet_pass = "PW5KftuwFePUSaqrq2d8ZcEtJZYQCsWPE5gyo6DMBEcSUeb646coy"
+wallet_pass = "PW5HuwzUusrEBuEVE3oTf1ZrJHEbdAEhfqyMBk8TcwbfEN456Pkum"
 deployment = False
 
 setup.set_verbose(True)
