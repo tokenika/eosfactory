@@ -14,7 +14,7 @@ void token::create( account_name issuer,
 {
     require_auth( _self );
 
-    logger_info("self: ", _self);
+    logger_info( "self: ", _self );
 
     auto sym = maximum_supply.symbol;
     eosio_assert( sym.is_valid(), "invalid symbol name" );
@@ -39,7 +39,7 @@ void token::issue( account_name to, asset quantity, string memo )
     eosio_assert( sym.is_valid(), "invalid symbol name" );
     eosio_assert( memo.size() <= 256, "memo has more than 256 bytes" );
 
-    logger_info("memo.size(): ", memo.size());
+    logger_info( "memo.size(): ", memo.size() );
 
     auto sym_name = sym.name();
     stats statstable( _self, sym_name );
@@ -85,7 +85,7 @@ void token::transfer( account_name from,
     eosio_assert( quantity.symbol == st.supply.symbol, "symbol precision mismatch" );
     eosio_assert( memo.size() <= 256, "memo has more than 256 bytes" );
 
-    logger_info("quantity.amount: ", quantity.amount);
+    logger_info( "quantity.amount: ", quantity.amount );
 
     sub_balance( from, quantity );
     add_balance( to, quantity, from );
