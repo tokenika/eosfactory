@@ -74,7 +74,7 @@ class Wallet(cleos.WalletCreate):
         is_verbose: Verbosity at the constraction time.  
     """
     def __init__(
-        self, name="default", password="", is_verbose=0, 
+        self, name="default", password="", is_verbose=1, 
         verbosity=[Verbosity.EOSF]):
 
         if not setup.is_use_keosd(): # look for password:
