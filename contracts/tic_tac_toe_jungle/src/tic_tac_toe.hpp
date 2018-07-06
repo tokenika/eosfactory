@@ -44,7 +44,7 @@
 
 namespace tic_tac_toe {
    static const account_name games_account = N(games);
-   static const account_name code_account = N(r2onomqunelj);
+   static const account_name code_account = N(hf1ycibxroqa);
 
    /**
     * @brief Data structure to hold game information
