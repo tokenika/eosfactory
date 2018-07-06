@@ -1,13 +1,15 @@
-# python3 ./tests/unittest3.py
-
 import sys
-import unittest
 import setup
 import eosf
-from termcolor import colored, cprint #sudo python3 -m pip install termcolor
+import node
+import unittest
+from termcolor import cprint
+
 
 setup.set_verbose(True)
+setup.use_keosd(False)
 setup.set_json(False)
+
 
 contract_dir = sys.path[0] + "/../"
 
@@ -19,120 +21,70 @@ class Test1(unittest.TestCase):
         if not result.failures:
             super().run(result)
 
-    
+
     @classmethod
     def setUpClass(cls):
-        pass
-        
-    def setUp(self):
-        pass
-
-
-    def test_04(self):
+        global testnet
         global wallet
-        global account_master
-
-        cprint("""eosf.reset()""", 'magenta')
-        reset = eosf.reset()
-        self.assertTrue(reset)
-
-        cprint("""eosf.Wallet()""", 'magenta')
-        
-        wallet = eosf.Wallet()
-        self.assertTrue(not wallet.error)
-
-        cprint("""account_master = eosf.AccountMaster()""", 'magenta')
-
-        account_master = eosf.AccountMaster(is_verbose=False)
-        wallet.import_key(account_master)
-
-        cprint(
-                "Contract( account_master, 'eosio.bios').deploy()", 
-                'magenta')
-        
-        contract_eosio_bios = eosf.Contract( 
-                account_master, "eosio.bios").deploy()
-        self.assertTrue(not contract_eosio_bios.error)
-
-
-    def test_10(self):
-        global template
-        global account_test
-        global contract_test
-
-        cprint("""account_test = eosf.account():""", 'magenta')
-
-
-        account_test = eosf.account()
-        self.assertTrue(not account_test.error)
-
-        cprint("""wallet.import_key(account_test)""", 'magenta')
-
-        wallet.import_key(account_test)
-
-        cprint(
-                """contract_test = eosf.Contract(
-                                account_test, contract_dir):""", 
-                'magenta')
-
-        contract_test = eosf.Contract(account_test, contract_dir)
-
-        cprint("""contract_test.deploy():""", 'magenta')
-
-        self.assertTrue(not contract_test.deploy().error)
-    
-        cprint("""code = account_test.code()""", 'magenta')
-
-        code = account_test.code()
-        print("""code hash: {}""".format(code.code_hash))
-
-
-    def test_15(self):
-
-        cprint("""`alice`and `carol`""", 'magenta')
-
+        global eosio
+        global contract_eosio_bios
         global alice
+        global carol
+        global contract
+        global deployment
+
+        testnet = node.reset()
+        wallet = eosf.Wallet()
+
+        eosio = eosf.AccountMaster()
+        wallet.import_key(eosio)
+
         alice = eosf.account()
-        self.assertTrue(not alice.error)
         wallet.import_key(alice)
 
-        global carol
         carol = eosf.account()
-        self.assertTrue(not carol.error)
-        wallet.import_key(carol) 
+        wallet.import_key(carol)
 
-        cprint("""alice.info():""", 'magenta')
+        account = eosf.account()
+        wallet.import_key(account)
 
-        alice.info()
+        contract_eosio_bios = eosf.Contract(
+            eosio, "eosio.bios").deploy()
+
+        contract = eosf.Contract(account, contract_dir)
+        deployment = contract.deploy()
 
 
-    def test_20(self):
+    def setUp(self):
+        self.assertFalse(testnet.error)
+        self.assertFalse(wallet.error)
+        self.assertFalse(contract_eosio_bios.error)
+        self.assertFalse(alice.error)
+        self.assertFalse(carol.error)
+        self.assertFalse(contract.error)
+        self.assertFalse(deployment.error)
 
-        global contract_test
-        global alice
-        global carol
 
-        cprint("""contract_test.push_action("hi", :""", 'magenta')
+    def test_01(self):
 
-        action_hi = contract_test.push_action(
-            "hi", '{"user":"' + str(alice) + '"}', alice)
+        cprint(
+            """contract.push_action("hi", '{"user":"' + str(alice) + '"}', alice)""", 'magenta')
+        self.assertFalse(contract.push_action(
+            "hi", '{"user":"' + str(alice) + '"}', alice).error)
 
-        self.assertTrue(not action_hi.error)
+        cprint(
+            """contract.push_action("hi", '{"user":"' + str(carol) + '"}', carol)""", 'magenta')
+        self.assertFalse(contract.push_action(
+            "hi", '{"user":"' + str(carol) + '"}', carol).error)
 
-        action_hi = contract_test.push_action(
-            "hi", 
-            '{"user":"' + str(carol) + '"}', carol)
 
-        self.assertTrue(not action_hi.error)
-        
-        
     def tearDown(self):
         pass
 
 
     @classmethod
     def tearDownClass(cls):
-        eosf.stop()
+        node.stop()
 
 
 if __name__ == "__main__":
