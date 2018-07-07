@@ -5,7 +5,7 @@ import sys
 from termcolor import cprint
 
 wallet_name = "default"
-wallet_pass = "PW5J4ju6QsPrgt73QnAepn2BQJzpFpt1kwngK6rcN55dDQrbw72dh"
+wallet_pass = "PW5JbFb7WpvfGiqtsCTFG1EZMjExvCiAJDgYn3QUGzkb9DxvnBd1o"
 deployment = False
 
 setup.set_verbose(True)
@@ -76,7 +76,6 @@ Action contract.push_action("create")
             '{"challenger":"' 
             + str(account_alice) +'", "host":"' 
             + str(account_carol) + '"}', account_carol)
-        print(action)
         self.assertFalse(action.error)
         
         t = contract.table("games", account_carol)
@@ -101,7 +100,6 @@ Action contract.push_action("move")
             + str(account_alice) + '", "host":"' 
             + str(account_carol) + '", "by":"' 
             + str(account_carol) + '", "mvt":{"row":0, "column":0} }', account_carol)
-        print(action)
         self.assertFalse(action.error)
 
         cprint("""
@@ -113,7 +111,6 @@ Action contract.push_action("move")
             + str(account_alice) + '", "host":"' 
             + str(account_carol) + '", "by":"' 
             + str(account_alice) + '", "mvt":{"row":1, "column":1} }', account_alice)
-        print(action)
         self.assertFalse(action.error)
 
         t = contract.table("games", account_carol)
@@ -137,7 +134,6 @@ Action contract.push_action("restart")
                 '{"challenger":"' 
                 + str(account_alice) + '", "host":"' 
                 + str(account_carol) + '", "by":"' + str(account_carol) + '"}', account_carol)
-        print(action)
         self.assertFalse(action.error)
 
         t = contract.table("games", account_carol)
@@ -160,7 +156,6 @@ Action contract.push_action("close")
                 "close", 
                 '{"challenger":"' 
                 + str(account_alice) + '", "host":"' + str(account_carol) + '"}', account_carol)
-        print(action)
         self.assertFalse(action.error)
 
 
