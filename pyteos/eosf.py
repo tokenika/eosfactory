@@ -13,7 +13,6 @@ Python front-end for `EOSIO cleos`.
 
 import sys
 import os
-import subprocess
 import json
 import inspect
 import types
@@ -134,7 +133,7 @@ Wallet directory is
         Returns `cleos.WalletList` object
         """ 
         return cleos.WalletList(is_verbose=self.is_verbose)
-    
+
 
     def open(self):
         """ Opens the wallet.
@@ -175,7 +174,6 @@ Wallet directory is
         # pprint.pprint(inspect.stack()[1][0].f_locals)
         # print("\ninspect.stack()[1][0].f_globals:\n")
         # pprint.pprint(inspect.stack()[1][0].f_globals)
-
         # print("\ninspect.stack()[2][0]:\n")
         # pprint.pprint(inspect.stack()[2][0])
         # print("\ninspect.stack()[2][0].f_locals:\n")
@@ -258,7 +256,7 @@ Wallet directory is
                     account_map = json.load(input)
             except:
                 account_map = {}
-            
+
             object_names = set()
 
             for name in account_names:
@@ -277,7 +275,7 @@ Wallet directory is
         else:
             if self.is_verbose:
                 print("     empty list")
-        
+
         namespace.update(restored)
         return restored
 
@@ -374,19 +372,19 @@ class Contract():
     def build_wast(self):
         if self.is_mutable:
             wast = teos.WAST(
-                self.contract_dir, self.account.name, 
+                self.contract_dir, "",
                 is_verbose=self.is_verbose)
         else:
             if self.is_verbose > 0:
                 print("ERROR!")
                 print("Cannot modify system contracts.")
         return wast
-        
+
 
     def build_abi(self):
         if self.is_mutable:
             abi = teos.ABI(
-                self.contract_dir, self.account.name, 
+                self.contract_dir, "",
                 is_verbose=self.is_verbose)
         else:
             if self.is_verbose > 0:
@@ -394,7 +392,7 @@ class Contract():
                 print("Cannot modify system contracts.")
         return abi
 
-    
+
     def build(self):
         return not self.build_abi().error and not self.build_wast().error
 
@@ -407,21 +405,21 @@ class Contract():
             ref_block="",
             is_verbose=1,
             json=False,
-            console=False
+            output=False
         ):
 
         if not permission:
-            permission=self.account.name
+            permission = self.account.name
         else:
             try: # permission is an account:
-                permission=permission.name
+                permission = permission.name
             except: # permission is the name of an account:
-                permission=permission
+                permission = permission
 
-        if console:
+        if output:
             is_verbose = 0
             json = True
-    
+
         self.action = cleos.PushAction(
             self.account.name, action, data,
             permission, expiration_sec, 
@@ -446,7 +444,7 @@ class Contract():
 
         """
         return self.push_action(action, data, permission, dont_broadcast=1)
-    
+
 
     def table(
             self, table_name, scope="",
@@ -460,7 +458,7 @@ class Contract():
                     binary=False, 
                     limit=10, key="", lower="", upper="", 
                     is_verbose=self.is_verbose)
-            
+
         return self._table
 
 
@@ -507,7 +505,7 @@ class ContractFromTemplate(Contract):
 
 
 class AccountMaster():
-    
+
     def __init__(
             self, name="", owner_key_public="", active_key_public="", 
             is_verbose=1):
@@ -554,10 +552,10 @@ class AccountMaster():
             self.key_public = self.json["publicKey"]
             self._out = "transaction id: eosio" 
 
-    
+
     def info(self):
         return str(cleos.GetAccount(self.name, is_verbose=1))
-        
+
 
     def __str__(self):
         return self.name
@@ -667,7 +665,7 @@ Cannot overwrite it.
                     ref_block,
                     is_verbose=is_verbose
                     )
-        
+
         account_object.owner_key = owner_key
         account_object.active_key = active_key
 
@@ -831,7 +829,7 @@ def account(
                     ref_block,
                     is_verbose=is_verbose
                     )
-        
+
         account_object.owner_key = owner_key
         account_object.active_key = active_key
 

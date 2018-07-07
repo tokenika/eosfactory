@@ -69,12 +69,12 @@ def test():
     cprint(
         """contract.push_action("hi", '{"user":"' + str(alice) + '"}', alice)""", 'magenta')
     assert(not contract.push_action(
-        "hi", '{"user":"' + str(alice) + '"}', alice, console=True).error)
+        "hi", '{"user":"' + str(alice) + '"}', alice, output=True).error)
 
     cprint(
         """contract.push_action("hi", '{"user":"' + str(carol) + '"}', carol)""", 'magenta')
     assert(not contract.push_action(
-        "hi", '{"user":"' + str(carol) + '"}', carol, console=True).error)
+        "hi", '{"user":"' + str(carol) + '"}', carol, output=True).error)
 
     testnet = node.stop()
     assert(not testnet.error)

@@ -56,7 +56,7 @@ Action contract.push_action("create")
         '{"issuer":"'
             + str(eosio)
             + '", "maximum_supply":"1000000000.0000 EOS",\
-            "can_freeze":0, "can_recall":0, "can_whitelist":0}', console=True).error)
+            "can_freeze":0, "can_recall":0, "can_whitelist":0}', output=True).error)
 
     cprint("""
 Action contract.push_action("issue")
@@ -65,7 +65,7 @@ Action contract.push_action("issue")
         "issue",
         '{"to":"' + str(alice)
             + '", "quantity":"100.0000 EOS", "memo":"memo"}',
-            eosio, console=True).error)
+            eosio, output=True).error)
 
     cprint("""
 Action contract.push_action("transfer", alice)
@@ -75,7 +75,7 @@ Action contract.push_action("transfer", alice)
         '{"from":"' + str(alice)
             + '", "to":"' + str(carol)
             + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
-        alice, console=True).error)
+        alice, output=True).error)
 
     cprint("""
 Action contract.push_action("transfer", carol)
@@ -85,7 +85,7 @@ Action contract.push_action("transfer", carol)
         '{"from":"' + str(carol)
             + '", "to":"' + str(bob)
             + '", "quantity":"13.0000 EOS", "memo":"memo"}', 
-        carol, console=True).error)
+        carol, output=True).error)
 
     cprint("""
 Action contract.push_action("transfer" bob)
@@ -95,7 +95,7 @@ Action contract.push_action("transfer" bob)
         '{"from":"' + str(bob)
             + '", "to":"' + str(alice)
             + '", "quantity":"2.0000 EOS", "memo":"memo"}', 
-        bob, console=True).error)
+        bob, output=True).error)
 
     cprint("""
 Assign t1 = contract.table("accounts", alice)
