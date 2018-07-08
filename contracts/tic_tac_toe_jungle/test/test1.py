@@ -2,9 +2,9 @@ import setup
 import eosf
 from termcolor import cprint
 
-wallet_name = "default"
-wallet_pass = "PW5JbFb7WpvfGiqtsCTFG1EZMjExvCiAJDgYn3QUGzkb9DxvnBd1o"
-deployment = False
+wallet_name = ""
+wallet_pass = ""
+deployment = True
 
 setup.set_verbose(True)
 setup.use_keosd(True)
