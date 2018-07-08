@@ -20,7 +20,7 @@ import node
 import shutil
 import pprint
 import enum
-from termcolor import colored, cprint
+from termcolor import cprint
 from textwrap import dedent
 
 import setup
@@ -41,7 +41,7 @@ class Verbosity(enum.Enum):
     ERROR = 4
     OUT = 5
 
-_verbosity = []    
+_verbosity = []
 def set_verbosity(value=_verbosity):
     global _verbosity
     _verbosity = value
@@ -141,7 +141,7 @@ class Wallet(cleos.WalletCreate, _Eosf):
         is_verbose: Verbosity at the constraction time.  
     """
     def __init__(
-                self, name="default", password="", is_verbose=1, 
+                self, name="default", password="", is_verbose=1,
                 verbosity=None):
 
         is_verbose = self.verify_is_verbose(verbosity, is_verbose)
@@ -241,7 +241,7 @@ class Wallet(cleos.WalletCreate, _Eosf):
         """
         self.wallet_lock = cleos.WalletLock(
             self.name, is_verbose=self.is_verbose)
-        return self.wallet_lock    
+        return self.wallet_lock
 
 
     def unlock(self):
@@ -305,7 +305,7 @@ class Wallet(cleos.WalletCreate, _Eosf):
                     account_map[account_name] = name
                     with open(self.wallet_dir_ + setup.account_map, "w") as out:
                         out.write(json.dumps(account_map, sort_keys=True, indent=4))
-                        
+
 
         imported_keys = []
         try: # whether account_or_key is an account:
@@ -367,7 +367,7 @@ class Wallet(cleos.WalletCreate, _Eosf):
         else:
             if self.is_verbose:
                 print("     empty list")
-        
+
         namespace.update(restored)
         return restored
 
@@ -420,7 +420,7 @@ class ContractBuild():
         if self.is_mutable:
             wast = teos.WAST(
                 self.contract_dir, "", 
-                is_verbose=self.is_verbose)                
+                is_verbose=self.is_verbose)
         else:
             if self.is_verbose > 0:
                 print("ERROR!")
@@ -430,8 +430,8 @@ class ContractBuild():
     def build_abi(self):
         if self.is_mutable:
             abi = teos.ABI(
-                self.contract_dir, "", 
-                is_verbose=self.is_verbose)                
+                self.contract_dir, "",
+                is_verbose=self.is_verbose)
         else:
             if self.is_verbose > 0:
                 print("ERROR!")
@@ -453,7 +453,7 @@ class Contract():
             max_cpu_usage=0, max_net_usage=0,
             ref_block="",
             is_verbose=1):
-        
+
         self.account = account
         self.contract_dir = contract_dir
         self.wast_file = wast_file
@@ -502,7 +502,7 @@ class Contract():
 
     def build_wast(self):
         return ContractBuild(
-            self.contract_dir, "", "", 
+            self.contract_dir, "", "",
             self.is_mutable, self.is_verbose).build_wast()
 
 
@@ -520,9 +520,9 @@ class Contract():
 
     def push_action(
             self, action, data,
-            permission="", expiration_sec=30, 
+            permission="", expiration_sec=30,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0, 
+            max_cpu_usage=0, max_net_usage=0,
             ref_block="",
             is_verbose=1,
             json=False,
@@ -564,7 +564,7 @@ class Contract():
 
         """
         return self.push_action(action, data, permission, dont_broadcast=1)
-    
+
 
     def table(
             self, table_name, scope="",
@@ -577,7 +577,7 @@ class Contract():
                     binary=False, 
                     limit=10, key="", lower="", upper="", 
                     is_verbose=self.is_verbose)
-            
+
         return self._table
 
 
@@ -634,7 +634,7 @@ class AccountEosio():
 
         cleos.set_wallet_url(self) # this may set self.error ON
         if not self.error:
-            self.name = "eosio"  
+            self.name = "eosio"
             self.json["name"] = self.name
             config = teos.GetConfig(is_verbose=0)
 
@@ -658,7 +658,7 @@ class AccountEosio():
     
     def info(self):
         return self.account_info
-        
+
 
     def __str__(self):
         return self.name
@@ -687,7 +687,7 @@ class AccountMaster(AccountEosio):
             AccountEosio.__init__(self, is_verbose)
             if self.set_account_info():
                 return
-            
+
             # not local testnet:
             if not owner_key_public: # print data for registration
                 self.new_account = True
@@ -708,21 +708,21 @@ class AccountMaster(AccountEosio):
             else: # restore the master account
                 self.name = name
                 self.new_account = False
-                self.owner_key = CreateKey("owner", owner_key_public, is_verbose=0)
+                self.owner_key = cleos.CreateKey("owner", owner_key_public, is_verbose=0)
                 if not active_key_public:
                     self.active_key = owner_key
                 else:
-                    self.active_key = CreateKey(
+                    self.active_key = cleos.CreateKey(
                         "active", active_key_public, is_verbose=0)
         else:
             print(self.err_msg)
 
         self.set_account_info()
-    
+
 
     def info(self):
         return self.account_info
-        
+
 
     def __str__(self):
         return self.name
@@ -740,7 +740,7 @@ def account_object(
         skip_signature=0, dont_broadcast=0, forceUnique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block="",
-        restore=False,        
+        restore=False,
         is_verbose=1,
         verbosity=None):
 
@@ -832,7 +832,7 @@ def account_object(
                     ref_block,
                     is_verbose=is_verbose
                     )
-        
+
         account_object.owner_key = owner_key
         account_object.active_key = active_key
 
@@ -938,11 +938,10 @@ def account_object(
 
 
 def account(
-        creator="", 
-        stake_net="", stake_cpu="",
-        name="", 
+        creator, name="",
         owner_key="", active_key="",
         permission = "",
+        stake_net="", stake_cpu="",
         buy_ram_kbytes=0, buy_ram="",
         transfer=False,
         expiration_sec=30,
@@ -952,7 +951,6 @@ def account(
         is_verbose=1,
         restore=False):
 
-    wallet = None
     account_object = None
     if restore:
         if creator:
@@ -970,9 +968,6 @@ def account(
             owner_key = cleos.CreateKey("owner", is_verbose=-1)
             active_key = cleos.CreateKey("active", is_verbose=-1)
 
-        if not creator:
-            creator = AccountMaster()
-
         if stake_net:
             account_object = cleos_system.SystemNewaccount(
                     creator, name, owner_key, active_key,
@@ -980,7 +975,7 @@ def account(
                     permission,
                     buy_ram_kbytes, buy_ram,
                     transfer,
-                    expiration_sec, 
+                    expiration_sec,
                     skip_signature, dont_broadcast, forceUnique,
                     max_cpu_usage, max_net_usage,
                     ref_block,
@@ -996,7 +991,7 @@ def account(
                     ref_block,
                     is_verbose=is_verbose
                     )
-        
+
         account_object.owner_key = owner_key
         account_object.active_key = active_key
 
@@ -1006,7 +1001,8 @@ def account(
             account_object, code, abi, 
             is_verbose=account_object.is_verbose)
 
-    account_object.code = types.MethodType(code, account_object)
+    account_object.code = types.MethodType(
+        code, account_object)
 
     def set_contract(
             self, contract_dir, 
@@ -1017,9 +1013,9 @@ def account(
             ref_block=""):
 
         account_object.set_contract = cleos.SetContract(
-            account_object, contract_dir, 
-            wast_file, abi_file, 
-            permission, expiration_sec, 
+            account_object, contract_dir,
+            wast_file, abi_file,
+            permission, expiration_sec,
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
@@ -1029,7 +1025,7 @@ def account(
         return account_object.set_contract
 
     account_object.set_contract = types.MethodType(
-                                    set_contract , account_object)
+        set_contract , account_object)
 
     def push_action(
             self, action, data,
@@ -1057,14 +1053,14 @@ def account(
             try:
                 account_object._console = account_object.action.console
                 if account_object.is_verbose > 0:
-                    print(account_object._console + "\n") 
+                    print(account_object._console + "\n")
             except:
                 pass
 
         return account_object.action
 
     account_object.push_action = types.MethodType(
-                                    push_action , account_object)
+        push_action , account_object)
 
     def table(
             self, table_name, scope="", 
@@ -1079,13 +1075,13 @@ def account(
         return account_object._table
 
     account_object.table = types.MethodType(
-                                    table, account_object)
+        table, account_object)
 
     def __str__(self):
         return account_object.name
 
     account_object.__str__ = types.MethodType(
-                                        __str__, account_object)
+        __str__, account_object)
 
     return account_object
 
