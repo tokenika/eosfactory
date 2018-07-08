@@ -1,7 +1,7 @@
+from termcolor import cprint
 import setup
 import cleos
 import eosf
-from termcolor import cprint
 
 setup.set_verbose(True)
 setup.use_keosd(True)
@@ -9,13 +9,11 @@ setup.set_nodeos_URL("dev.cryptolions.io:38888")
 
 def test():
 
-    # cleos.WalletStop()
-
+    import eosf
     wallet_name = "default"
     wallet_pass = "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N"
-    global account_master
-
     wallet = eosf.Wallet(wallet_name, wallet_pass)
+
     cprint("""
 Creating wallet: default
 Save password to use in the future to unlock this wallet.

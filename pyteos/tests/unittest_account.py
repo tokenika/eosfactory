@@ -23,8 +23,9 @@ class Test1(unittest.TestCase):
         global wallet 
         global account_master
 
-        account_master = eosf.AccountMaster()
         reset = eosf.reset()
+
+        account_master = eosf.AccountMaster()
         wallet = eosf.Wallet()
         wallet.import_key(account_master)
 
@@ -34,15 +35,16 @@ class Test1(unittest.TestCase):
 
 
     def test_05(self):
-        global wallet 
+        pass
+        # global wallet 
 
-        alice = eosf.account()
-        self.assertTrue(not alice.error)
+        # alice = eosf.account()
+        # self.assertTrue(not alice.error)
         
-        owner_key = alice.owner_key
-        self.assertTrue(not owner_key.error)
-        print("owner keys:")
-        print(owner_key)
+        # owner_key = alice.owner_key
+        # self.assertTrue(not owner_key.error)
+        # print("owner keys:")
+        # print(owner_key)
 
         # active_key = alice.active_key
         # self.assertTrue(not active_key.error)

@@ -41,7 +41,7 @@ def reset_nodeos_URL():
 global _wallet_URL
 _wallet_URL = None
 
-def set_wallet_url():
+def set_wallet_url(cleos_object):
     """ Implements the `use_keosd` flag in the `setup` module.
 
     Is called in the `WalletCreate` class
@@ -52,8 +52,11 @@ def set_wallet_url():
 
     status = setup._is_use_keosd
     if not teos.NodeIsRunning(is_verbose=0).daemon_pid:
-        status = True
-        setup.use_keosd(True)
+        if not setup._is_use_keosd():
+            cleos_object.error = True
+            cleos_object.err_msg = """
+Cannot use the local node Wallet Manager if the node is not running."""
+            return False
 
     if status:
         _wallet_URL = []
@@ -63,6 +66,8 @@ def set_wallet_url():
             "", is_verbose=0)
         _wallet_URL = ["--wallet-url", "http://" \
             + config.json["EOSIO_DAEMON_ADDRESS"]]
+
+    return True
 
 
 class _Cleos:
@@ -91,6 +96,14 @@ class _Cleos:
         to_object.err_msg = self.err_msg
         to_object._out = self._out
 
+    def set_is_verbose(self, is_verbose):
+        if setup.is_verbose() and is_verbose > 0:
+            self.is_verbose = 1
+        else:
+            if is_verbose < 0:
+                self.is_verbose = -1
+            else:
+                self.is_verbose = 0        
 
     def __init__(
                 self, args, first, second, is_verbose=1):
@@ -107,37 +120,37 @@ class _Cleos:
             or \
             first == "wallet" and second == "isrunning"
             ):
-            # To avoid circular call: set_wallet_url calls `WalletStop` that
-            # calls set_wallet_url() ...
-            set_wallet_url()
+            set_wallet_url(self) # this may set self.error ON
         else:
             _wallet_URL = []
 
-        cl.extend(_wallet_URL)
+        if not self.error:
+            cl.extend(_wallet_URL)
 
-        if setup.is_print_request():
-            cl.append("--print-request")
-        if setup.is_print_response():
-            cl.append("--print-response")
-  
-        cl.extend([first, second])
-        cl.extend(args)
-        self.args = args
+            if setup.is_print_request():
+                cl.append("--print-request")
+            if setup.is_print_response():
+                cl.append("--print-response")
+    
+            cl.extend([first, second])
+            cl.extend(args)
+            self.args = args
 
-        if setup.is_debug_mode():
-            print("command line sent to cleos:")
-            print(" ".join(cl))
-            print("")
+            if setup.is_debug_mode():
+                print("command line sent to cleos:")
+                print(" ".join(cl))
+                print("")
 
-        process = subprocess.run(
-            cl,
-            stdout=subprocess.PIPE, 
-            stderr=subprocess.PIPE,
-            cwd=str(pathlib.Path(setup_setup.cleos_exe).parent)) 
+            process = subprocess.run(
+                cl,
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE,
+                cwd=str(pathlib.Path(setup_setup.cleos_exe).parent)) 
 
-        self._out = process.stdout.decode("utf-8")
-        self.err_msg = process.stderr.decode("utf-8")
-        self.is_verbose = setup.is_verbose() and is_verbose > 0
+            self._out = process.stdout.decode("utf-8")
+            self.err_msg = process.stderr.decode("utf-8")
+
+        self.set_is_verbose(is_verbose)
         self.json = {}
 
         if setup.is_print_response() or setup.is_print_response():
@@ -145,7 +158,6 @@ class _Cleos:
             print("")
 
         error_key_words = ["Error", "error", "Failed"]
-        self.error = False
         for word in error_key_words:
             if word in self.err_msg:
                 self.error = True
@@ -308,36 +320,41 @@ class WalletCreate(_Cleos):
         is_verbose: Verbosity at the construction time.  
     """
     def __init__(self, name="default", password="", is_verbose=1):
-        set_wallet_url()
 
         self.name = name
         self.password = None
         self.json["name"] = name
+        self.set_is_verbose(is_verbose)
 
-        if not password:
-            _Cleos.__init__(
-                self, ["--name", self.name], "wallet", "create", is_verbose)
-            
-            msg = self._out
-            if not self.error:
-                self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
-                self.json["password"] = self.password               
+        set_wallet_url(self)  # this may set self.error ON
+
+        if not self.error:
+            if not password:
+                _Cleos.__init__(
+                    self, ["--name", self.name], "wallet", "create", is_verbose)
+                
+                msg = self._out
+                if not self.error:
+                    self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
+                    self.json["password"] = self.password               
+            else:         
+                WalletOpen(name, is_verbose=-1)
+                wallet_unlock = WalletUnlock(name, password, is_verbose=-1)
+                self.err_msg = wallet_unlock.err_msg  
+
+                if not wallet_unlock.error:
+                    self.name = name
+                    self.password = password
+                    self.json["password"] = self.password
+                    self._out = "Restored wallet: {0}\nPassword is \n{1}\n" \
+                        .format(self.name, self.password)
+                else:
+                    if "Nonexistent wallet" in self.err_msg:
+                        _Cleos.__init__(
+                            self, ["--name", self.name], "wallet", "create", 
+                            is_verbose)
         else:
-            WalletOpen(name, is_verbose=-1)
-            wallet_unlock = WalletUnlock(name, password, is_verbose=-1)
-            self.err_msg = wallet_unlock.err_msg  
-
-            if not wallet_unlock.error:
-                self.name = name
-                self.password = password
-                self.json["password"] = self.password
-                self._out = "Restored wallet: {0}\nPassword is \n{1}\n" \
-                    .format(self.name, self.password)
-            else:
-                if "Nonexistent wallet" in self.err_msg:
-                    _Cleos.__init__(
-                        self, ["--name", self.name], "wallet", "create", 
-                        is_verbose)
+            print(self.err_msg)
 
         if not self.error:
             self.printself()
@@ -498,6 +515,18 @@ class WalletOpen(_Cleos):
 
         if not self.error:
             self.printself()            
+
+
+class WalletLockAll(_Cleos):
+    """ Lock all unlocked wallets.
+    Usage: WalletLockAll(is_verbose=1)
+    """
+    def __init__(self, wallet="default", is_verbose=1):        
+        _Cleos.__init__(
+            self, [], "wallet", "lock_all", is_verbose)
+
+        if not self.error:
+            self.printself()
 
 
 class WalletLock(_Cleos):

@@ -86,6 +86,10 @@ wallet-dir: .
     arg EOSIO_CLI_NAME = { "EOSIO_CLI_NAME", "cleos" };
     arg EOSIO_EOSFACTORY_DIR = { "EOSIO_EOSFACTORY_DIR" };
     arg EOSIO_TEOS_DIR = { "EOSIO_TEOS_DIR", "teos/" };
+    arg EOSIO_KEY_PRIVATE = { "EOSIO_KEY_PRIVATE", 
+      "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3" };
+    arg EOSIO_KEY_PUBLIC = { "EOSIO_KEY_PUBLIC", 
+      "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV" };
 
     arg EOSIO_CONTRACT_WORKSPACE = { 
       "EOSIO_CONTRACT_WORKSPACE", CONTRACTS_DIR };// relative to EOSIO_EOSFACTORY_DIR
@@ -569,6 +573,16 @@ Cannot determine the contract workspace.
       }
       return ""; 
     }
+
+    string getEosioKeyPrivate()
+    {
+      return configValue(nullptr, EOSIO_KEY_PRIVATE);
+    }
+
+    string getEosioKeyPublic()
+    {
+      return configValue(nullptr, EOSIO_KEY_PUBLIC);
+    }    
     
     ///////////////////////////////////////////////////////////////////////////
     // chain-state-db-size-mb
@@ -850,6 +864,9 @@ Cannot determine the contract workspace.
       respJson_.put("cleosExe", getCleosExe(this));
       respJson_.put("genesisJson", getGenesisJson(this));
       respJson_.put("EOSIO_DAEMON_ADDRESS", getHttpServerAddress(this));
+      respJson_.put("EOSIO_KEY_PRIVATE", getEosioKeyPrivate());
+      respJson_.put("EOSIO_KEY_PUBLIC", getEosioKeyPublic());
+
       respJson_.put(
         "EOSIO_WALLET_ADDRESS", 
         getHttpWalletAddress(this).empty() 

@@ -183,7 +183,7 @@ namespace teos {
     void DaemonStart::launch()
     { 
       // cout << requestToString(false) << endl;
-      // cout << reqJson_.get<string>("command_line") <<endl;
+      cout << reqJson_.get<string>("command_line") <<endl;
       try{
         if(isWindowsUbuntu()) {
           bp::spawn("cmd.exe /c start /MIN bash.exe -c " 

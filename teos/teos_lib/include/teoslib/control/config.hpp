@@ -72,6 +72,10 @@ namespace teos {
 
     string getMemorySizeMb();
 
+    string getEosioKeyPrivate();
+
+    string getEosioKeyPublic();
+
 
     /**
      * @ingroup teoslib_raw
