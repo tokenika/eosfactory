@@ -16,6 +16,8 @@ def test():
     global account_carol
 
     wallet = eosf.Wallet(wallet_name, wallet_pass)
+    assert(not wallet.error)
+    
     restored = wallet.restore_accounts(globals())
 
     assert("account_master" in restored)
