@@ -18,7 +18,7 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        eosf.reset()
+        #eosf.reset()
         global wallet
         wallet = eosf.Wallet()
         wallet1 = eosf.Wallet()

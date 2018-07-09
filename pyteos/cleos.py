@@ -50,15 +50,14 @@ def set_wallet_url(cleos_object):
     if not _wallet_URL is None:
         return
 
-    status = setup._is_use_keosd
     if not teos.NodeIsRunning(is_verbose=0).daemon_pid:
-        if not setup._is_use_keosd():
+        if not setup.is_use_keosd():       
             cleos_object.error = True
             cleos_object.err_msg = """
 Cannot use the local node Wallet Manager if the node is not running."""
             return False
 
-    if status:
+    if setup.is_use_keosd():
         _wallet_URL = []
     else:
         WalletStop(is_verbose=-1)
