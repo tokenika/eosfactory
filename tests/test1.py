@@ -17,31 +17,31 @@ def test():
     wallet = eosf.Wallet()
     assert(not wallet.error)
 
-    eosio = eosf.AccountMaster()
-    assert(not eosio.error)
-    wallet.import_key(eosio)
+    account_master = eosf.AccountMaster()
+    assert(not account_master.error)
+    wallet.import_key(account_master)
 
-    alice = eosf.account()
-    assert(not alice.error)
-    wallet.import_key(alice)
+    account_alice = eosf.account(account_master)
+    assert(not account_alice.error)
+    wallet.import_key(account_alice)
 
-    bob = eosf.account()
-    assert(not bob.error)
-    wallet.import_key(bob)
+    account_bob = eosf.account(account_master)
+    assert(not account_bob.error)
+    wallet.import_key(account_bob)
 
-    carol = eosf.account()
-    assert(not carol.error)
-    wallet.import_key(carol)
+    account_carol = eosf.account(account_master)
+    assert(not account_carol.error)
+    wallet.import_key(account_carol)
 
-    account = eosf.account()
-    assert(not account.error)
-    wallet.import_key(account)
+    account_deploy = eosf.account(account_master)
+    assert(not account_deploy.error)
+    wallet.import_key(account_deploy)
 
     contract_eosio_bios = eosf.Contract(
-        eosio, "eosio.bios").deploy()
+        account_master, "eosio.bios").deploy()
     assert(not contract_eosio_bios.error)
 
-    contract = eosf.Contract(account, "eosio.token")
+    contract = eosf.Contract(account_deploy, "eosio.token")
     assert(not contract.error)
 
     deployment = contract.deploy()
@@ -53,7 +53,7 @@ Action contract.push_action("create")
     assert(not contract.push_action(
         "create",
         '{"issuer":"'
-            + str(eosio)
+            + str(account_master)
             + '", "maximum_supply":"1000000000.0000 EOS",\
             "can_freeze":0, "can_recall":0, "can_whitelist":0}').error)
 
@@ -62,54 +62,54 @@ Action contract.push_action("issue")
     """, 'magenta')
     assert(not contract.push_action(
         "issue",
-        '{"to":"' + str(alice)
+        '{"to":"' + str(account_alice)
             + '", "quantity":"100.0000 EOS", "memo":"memo"}',
-            eosio).error)
+            account_master).error)
 
     cprint("""
-Action contract.push_action("transfer", alice)
+Action contract.push_action("transfer", account_alice)
     """, 'magenta')
     assert(not contract.push_action(
         "transfer",
-        '{"from":"' + str(alice)
-            + '", "to":"' + str(carol)
+        '{"from":"' + str(account_alice)
+            + '", "to":"' + str(account_carol)
             + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
-        alice).error)
+        account_alice).error)
 
     cprint("""
-Action contract.push_action("transfer", carol)
+Action contract.push_action("transfer", account_carol)
     """, 'magenta')
     assert(not contract.push_action(
         "transfer",
-        '{"from":"' + str(carol)
-            + '", "to":"' + str(bob)
+        '{"from":"' + str(account_carol)
+            + '", "to":"' + str(account_bob)
             + '", "quantity":"13.0000 EOS", "memo":"memo"}', 
-        carol).error)
+        account_carol).error)
 
     cprint("""
-Action contract.push_action("transfer" bob)
+Action contract.push_action("transfer" account_bob)
     """, 'magenta')
     assert(not contract.push_action(
         "transfer", 
-        '{"from":"' + str(bob)
-            + '", "to":"' + str(alice)
+        '{"from":"' + str(account_bob)
+            + '", "to":"' + str(account_alice)
             + '", "quantity":"2.0000 EOS", "memo":"memo"}', 
-        bob).error)
+        account_bob).error)
 
     cprint("""
-Assign t1 = contract.table("accounts", alice)
+Assign t1 = contract.table("accounts", account_alice)
     """, 'magenta')
-    t1 = contract.table("accounts", alice)
+    t1 = contract.table("accounts", account_alice)
 
     cprint("""
-Assign t2 = contract.table("accounts", bob)
+Assign t2 = contract.table("accounts", account_bob)
     """, 'magenta')
-    t2 = contract.table("accounts", bob)
+    t2 = contract.table("accounts", account_bob)
     
     cprint("""
-Assign t3 = contract.table("accounts", carol)
+Assign t3 = contract.table("accounts", account_carol)
     """, 'magenta')
-    t3 = contract.table("accounts", carol)
+    t3 = contract.table("accounts", account_carol)
 
     cprint("""
 Assert t1.json["rows"][0]["balance"] == '77.0000 EOS'

@@ -19,45 +19,44 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        global testnet
-        global wallet
-        global eosio
-        global contract_eosio_bios
-        global alice
-        global carol
-        global contract
-        global deployment
-
         testnet = node.reset()
+        assert(not testnet.error)
+
         wallet = eosf.Wallet()
+        assert(not wallet.error)
 
-        eosio = eosf.AccountMaster()
-        wallet.import_key(eosio)
+        account_master = eosf.AccountMaster()
+        wallet.import_key(account_master)
+        assert(not account_master.error)
 
-        alice = eosf.account()
-        wallet.import_key(alice)
+        global account_alice
+        account_alice = eosf.account(account_master)
+        wallet.import_key(account_alice)
+        assert(not account_alice.error)
 
-        carol = eosf.account()
-        wallet.import_key(carol)
+        global account_carol
+        account_carol = eosf.account(account_master)
+        wallet.import_key(account_carol)
+        assert(not account_carol.error)
 
-        account = eosf.account(name="tic.tac.toe")
-        wallet.import_key(account)
+        account_deploy = eosf.account(account_master, name="tic.tac.toe")
+        wallet.import_key(account_deploy)
+        assert(not account_deploy.error)
 
         contract_eosio_bios = eosf.Contract(
-            eosio, "eosio.bios").deploy()
+            account_master, "eosio.bios").deploy()
+        assert(not contract_eosio_bios.error)
 
-        contract = eosf.Contract(account, "tic_tac_toe")
+        global contract
+        contract = eosf.Contract(account_deploy, "tic_tac_toe")
+        assert(not contract.error)
+
         deployment = contract.deploy()
+        assert(not deployment.error)
 
 
     def setUp(self):
-        self.assertFalse(testnet.error)
-        self.assertFalse(wallet.error)
-        self.assertFalse(contract_eosio_bios.error)
-        self.assertFalse(alice.error)
-        self.assertFalse(carol.error)
-        self.assertFalse(contract.error)
-        self.assertFalse(deployment.error)
+        pass
 
 
     def test_01(self):
@@ -68,12 +67,12 @@ Action contract.push_action("create")
         action = contract.push_action(
             "create", 
             '{"challenger":"' 
-            + str(alice) +'", "host":"' 
-            + str(carol) + '"}', carol)
+            + str(account_alice) +'", "host":"' 
+            + str(account_carol) + '"}', account_carol)
         print(action)
         self.assertFalse(action.error)
         
-        t = contract.table("games", carol)
+        t = contract.table("games", account_carol)
         self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -95,9 +94,9 @@ Action contract.push_action("move")
         action = contract.push_action(
             "move", 
             '{"challenger":"' 
-            + str(alice) + '", "host":"' 
-            + str(carol) + '", "by":"' 
-            + str(carol) + '", "mvt":{"row":0, "column":0} }', carol)
+            + str(account_alice) + '", "host":"' 
+            + str(account_carol) + '", "by":"' 
+            + str(account_carol) + '", "mvt":{"row":0, "column":0} }', account_carol)
         print(action)
         self.assertFalse(action.error)
 
@@ -107,13 +106,13 @@ Action contract.push_action("move")
         action = contract.push_action(
             "move", 
             '{"challenger":"' 
-            + str(alice) + '", "host":"' 
-            + str(carol) + '", "by":"' 
-            + str(alice) + '", "mvt":{"row":1, "column":1} }', alice)
+            + str(account_alice) + '", "host":"' 
+            + str(account_carol) + '", "by":"' 
+            + str(account_alice) + '", "mvt":{"row":1, "column":1} }', account_alice)
         print(action)
         self.assertFalse(action.error)
 
-        t = contract.table("games", carol)
+        t = contract.table("games", account_carol)
         self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 1)
@@ -135,12 +134,12 @@ Action contract.push_action("restart")
         action = contract.push_action(
                 "restart", 
                 '{"challenger":"' 
-                + str(alice) + '", "host":"' 
-                + str(carol) + '", "by":"' + str(carol) + '"}', carol)
+                + str(account_alice) + '", "host":"' 
+                + str(account_carol) + '", "by":"' + str(account_carol) + '"}', account_carol)
         print(action)
         self.assertFalse(action.error)
 
-        t = contract.table("games", carol)
+        t = contract.table("games", account_carol)
         self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -162,7 +161,7 @@ Action contract.push_action("close")
         action = contract.push_action(
                 "close", 
                 '{"challenger":"' 
-                + str(alice) + '", "host":"' + str(carol) + '"}', carol)
+                + str(account_alice) + '", "host":"' + str(account_carol) + '"}', account_carol)
         print(action)
         self.assertFalse(action.error)
 

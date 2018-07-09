@@ -4,14 +4,9 @@ import eosf
 import node
 from termcolor import cprint
 
-
 setup.set_verbose(False)
 setup.use_keosd(False)
 setup.set_json(False)
-
-
-contract_dir = sys.path[0] + "/../"
-
 
 def test():
     testnet = node.reset(is_verbose=False)
@@ -42,12 +37,12 @@ def test():
             .format(not contract_eosio_bios.error), 
          'magenta') 
 
-    cprint("account = eosf.account()", 'magenta')
-    account = eosf.account()
-    wallet.import_key(account)    
+    cprint("account_deploy = eosf.account(account_master)", 'magenta')
+    account_deploy = eosf.account(account_master)
+    wallet.import_key(account_deploy)
 
-    cprint("contract = eosf.Contract(account, contract_dir)", 'magenta')
-    contract = eosf.Contract(account, contract_dir)
+    cprint("""contract = eosf.Contract(account_deploy, sys.path[0] + "/../")""", 'magenta')
+    contract = eosf.Contract(account_deploy, sys.path[0] + "/../")
 
     cprint("contract.deploy()", 'magenta')
     assert(not contract.deploy(is_verbose=0).error)
@@ -56,25 +51,25 @@ def test():
     code = contract.code()
     print("code hash: {}".format(code.code_hash))
 
-    cprint("alice = eosf.account()", 'magenta')
-    alice = eosf.account()
-    assert(not alice.error)
-    wallet.import_key(alice)
+    cprint("account_alice = eosf.account(account_master)", 'magenta')
+    account_alice = eosf.account(account_master)
+    assert(not account_alice.error)
+    wallet.import_key(account_alice)
 
-    cprint("carol = eosf.account()", 'magenta')
-    carol = eosf.account()
-    assert(not carol.error)
-    wallet.import_key(carol) 
-
-    cprint(
-        """contract.push_action("hi", '{"user":"' + str(alice) + '"}', alice)""", 'magenta')
-    assert(not contract.push_action(
-        "hi", '{"user":"' + str(alice) + '"}', alice, output=True).error)
+    cprint("account_carol = eosf.account(account_master)", 'magenta')
+    account_carol = eosf.account(account_master)
+    assert(not account_carol.error)
+    wallet.import_key(account_carol) 
 
     cprint(
-        """contract.push_action("hi", '{"user":"' + str(carol) + '"}', carol)""", 'magenta')
+        """contract.push_action("hi", '{"user":"' + str(account_alice) + '"}', account_alice)""", 'magenta')
     assert(not contract.push_action(
-        "hi", '{"user":"' + str(carol) + '"}', carol, output=True).error)
+        "hi", '{"user":"' + str(account_alice) + '"}', account_alice, output=True).error)
+
+    cprint(
+        """contract.push_action("hi", '{"user":"' + str(account_carol) + '"}', account_carol)""", 'magenta')
+    assert(not contract.push_action(
+        "hi", '{"user":"' + str(account_carol) + '"}', account_carol, output=True).error)
 
     testnet = node.stop()
     assert(not testnet.error)

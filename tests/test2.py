@@ -17,27 +17,27 @@ def test():
     wallet = eosf.Wallet()
     assert(not wallet.error)
 
-    eosio = eosf.AccountMaster()
-    assert(not eosio.error)
-    wallet.import_key(eosio)
+    account_master = eosf.AccountMaster()
+    assert(not account_master.error)
+    wallet.import_key(account_master)
 
-    alice = eosf.account()
-    assert(not alice.error)
-    wallet.import_key(alice)
+    account_alice = eosf.account(account_master)
+    assert(not account_alice.error)
+    wallet.import_key(account_alice)
 
-    carol = eosf.account()
-    assert(not carol.error)
-    wallet.import_key(carol)
+    account_carol = eosf.account(account_master)
+    assert(not account_carol.error)
+    wallet.import_key(account_carol)
 
-    account = eosf.account(name="tic.tac.toe")
-    assert(not account.error)
-    wallet.import_key(account)
+    account_deploy = eosf.account(account_master, name="tic.tac.toe")
+    assert(not account_deploy.error)
+    wallet.import_key(account_deploy)
 
     contract_eosio_bios = eosf.Contract(
-        eosio, "eosio.bios").deploy()
+        account_master, "eosio.bios").deploy()
     assert(not contract_eosio_bios.error)
 
-    contract = eosf.Contract(account, "tic_tac_toe")
+    contract = eosf.Contract(account_deploy, "tic_tac_toe")
     assert(not contract.error)
 
     deployment = contract.deploy()
@@ -49,12 +49,12 @@ Action contract.push_action("create")
     action = contract.push_action(
         "create", 
         '{"challenger":"' 
-        + str(alice) +'", "host":"' 
-        + str(carol) + '"}', carol)
+        + str(account_alice) +'", "host":"' 
+        + str(account_carol) + '"}', account_carol)
     print(action)
     assert(not action.error)
     
-    t = contract.table("games", carol)
+    t = contract.table("games", account_carol)
     assert(not t.error)
 
     assert(t.json["rows"][0]["board"][0] == 0)
@@ -73,9 +73,9 @@ Action contract.push_action("move")
     action = contract.push_action(
         "move", 
         '{"challenger":"' 
-        + str(alice) + '", "host":"' 
-        + str(carol) + '", "by":"' 
-        + str(carol) + '", "mvt":{"row":0, "column":0} }', carol)
+        + str(account_alice) + '", "host":"' 
+        + str(account_carol) + '", "by":"' 
+        + str(account_carol) + '", "mvt":{"row":0, "column":0} }', account_carol)
     print(action)
     assert(not action.error)
 
@@ -85,13 +85,13 @@ Action contract.push_action("move")
     action = contract.push_action(
         "move", 
         '{"challenger":"' 
-        + str(alice) + '", "host":"' 
-        + str(carol) + '", "by":"' 
-        + str(alice) + '", "mvt":{"row":1, "column":1} }', alice)
+        + str(account_alice) + '", "host":"' 
+        + str(account_carol) + '", "by":"' 
+        + str(account_alice) + '", "mvt":{"row":1, "column":1} }', account_alice)
     print(action)
     assert(not action.error)
 
-    t = contract.table("games", carol)
+    t = contract.table("games", account_carol)
     assert(not t.error)
 
     assert(t.json["rows"][0]["board"][0] == 1)
@@ -110,12 +110,12 @@ Action contract.push_action("restart")
     action = contract.push_action(
             "restart", 
             '{"challenger":"' 
-            + str(alice) + '", "host":"' 
-            + str(carol) + '", "by":"' + str(carol) + '"}', carol)
+            + str(account_alice) + '", "host":"' 
+            + str(account_carol) + '", "by":"' + str(account_carol) + '"}', account_carol)
     print(action)
     assert(not action.error)
 
-    t = contract.table("games", carol)
+    t = contract.table("games", account_carol)
     assert(not t.error)
 
     assert(t.json["rows"][0]["board"][0] == 0)
@@ -134,7 +134,7 @@ Action contract.push_action("close")
     action = contract.push_action(
             "close", 
             '{"challenger":"' 
-            + str(alice) + '", "host":"' + str(carol) + '"}', carol)
+            + str(account_alice) + '", "host":"' + str(account_carol) + '"}', account_carol)
     print(action)
     assert(not action.error)
 

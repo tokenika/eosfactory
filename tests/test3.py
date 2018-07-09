@@ -16,37 +16,30 @@ def test():
     wallet = eosf.Wallet()
     assert(not wallet.error)
 
-    eosio = eosf.AccountMaster()
-    assert(not eosio.error)
-    wallet.import_key(eosio)
+    account_master = eosf.AccountMaster()
+    assert(not account_master.error)
+    wallet.import_key(account_master)
 
-    alice = eosf.account()
-    assert(not alice.error)
-    wallet.import_key(alice)
+    account_deploy = eosf.account(account_master)
+    wallet.import_key(account_deploy)
+    assert(not account_deploy.error)
 
-    carol = eosf.account()
-    assert(not carol.error)
-    wallet.import_key(carol)
+    account_alice = eosf.account(account_master)
+    assert(not account_alice.error)
+    wallet.import_key(account_alice)
+
+    account_carol = eosf.account(account_master)
+    assert(not account_carol.error)
+    wallet.import_key(account_carol)
 
     contract_eosio_bios = eosf.Contract(
-        eosio, "eosio.bios").deploy()
+        account_master, "eosio.bios").deploy()
     assert(not contract_eosio_bios.error)
-
-    cprint("""
-Create an account associated with the contract
-    """, 'magenta')
-    account = eosf.account()
-    assert(not account.error)
-
-    cprint("""
-Add the account to the wallet
-    """, 'magenta')
-    wallet.import_key(account)
 
     cprint("""
 Create a reference to the new contract
     """, 'magenta')
-    contract = eosf.ContractFromTemplate(account,
+    contract = eosf.ContractFromTemplate(account_deploy,
         "_e4b2ffc804529ce9c6fae258197648cc2",
         remove_existing=True)
 
@@ -66,30 +59,30 @@ Deploy the contract
     assert(not contract.deploy().error)
 
     cprint("""
-Confirm the account contains code
+Confirm `account_deploy` contains code
     """, 'magenta')
-    assert(not account.code().error)
+    assert(not account_deploy.code().error)
 
     cprint("""
-Action contract.push_action("hi", '{"user":"' + str(alice) + '"}', alice)
+Action contract.push_action("hi", '{"user":"' + str(account_alice) + '"}', account_alice)
     """, 'magenta')
     action = contract.push_action(
-        "hi", '{"user":"' + str(alice) + '"}', alice)
+        "hi", '{"user":"' + str(account_alice) + '"}', account_alice)
     assert(not action.error)
 
     cprint("""
-Action contract.push_action("hi", '{"user":"' + str(carol) + '"}', carol)
+Action contract.push_action("hi", '{"user":"' + str(account_carol) + '"}', account_carol)
     """, 'magenta')
     action = contract.push_action(
-        "hi", '{"user":"' + str(carol) + '"}', carol)
+        "hi", '{"user":"' + str(account_carol) + '"}', account_carol)
     assert(not action.error)
 
     cprint("""
-Action contract.push_action("hi", '{"user":"' + str(carol) + '"}', alice)
+Action contract.push_action("hi", '{"user":"' + str(account_carol) + '"}', account_alice)
 WARNING: This action should fail due to authority mismatch!
     """, 'magenta')
     action = contract.push_action(
-        "hi", '{"user":"' + str(carol) + '"}', alice)
+        "hi", '{"user":"' + str(account_carol) + '"}', account_alice)
     assert(action.error)
 
     node.stop()
