@@ -72,7 +72,7 @@ def account_map():
 
 class _Eosf():
 
-    eosf_color = 'blue'
+    eosf_color = 'cyan'
     trace_color = 'magenta'
     error_color = 'red'
     debug_color = 'yellow'
