@@ -21,7 +21,7 @@ class Test1(unittest.TestCase):
         #eosf.reset()
         global wallet
         wallet = eosf.Wallet()
-        wallet1 = eosf.Wallet()
+        #wallet1 = eosf.Wallet()
         # account_master = eosf.AccountMaster()
         # wallet.import_key(account_master)
         # print(account_master.info())

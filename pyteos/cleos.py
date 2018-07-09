@@ -18,6 +18,7 @@ import json as json_module
 import pathlib
 import setup
 import teos
+from textwrap import dedent
 
 
 def reload():
@@ -53,8 +54,9 @@ def set_wallet_url(cleos_object):
     if not teos.NodeIsRunning(is_verbose=0).daemon_pid:
         if not setup.is_use_keosd():       
             cleos_object.error = True
-            cleos_object.err_msg = """
-Cannot use the local node Wallet Manager if the node is not running."""
+            cleos_object.err_msg = heredoc("""
+Cannot use the local node Wallet Manager if the node is not running.            
+            """)
             return False
 
     if setup.is_use_keosd():
@@ -69,6 +71,10 @@ Cannot use the local node Wallet Manager if the node is not running."""
     return True
 
 
+def heredoc(msg):
+    return dedent(msg).strip()
+
+
 class _Cleos:
     """ A prototype for the `cleos` command classes. 
     """
@@ -79,14 +85,6 @@ class _Cleos:
     json = {}    
     err_msg = ""
     _out = ""
-
-    def copy_from(self, from_object):
-        self.error = from_object.error
-        self.is_verbose = from_object.is_verbose
-        self.json = from_object.json
-        self.err_msg = from_object.err_msg
-        self._out = from_object._out
-
 
     def copy_to(self, to_object):
         to_object.error = self.error
@@ -113,16 +111,15 @@ class _Cleos:
             reset_nodeos_URL()
         cl.extend(setup.nodeos_URL())
 
-        global _wallet_URL        
+                
         if not ( \
             first == "wallet" and second == "stop" \
             or \
             first == "wallet" and second == "isrunning"
             ):
             set_wallet_url(self) # this may set self.error ON
-        else:
-            _wallet_URL = []
 
+        global _wallet_URL
         if not self.error:
             cl.extend(_wallet_URL)
 
@@ -164,14 +161,20 @@ class _Cleos:
 
         if self.error:
             self.json["ERROR"] = self.err_msg
-            if setup.is_verbose() >= 0 and is_verbose >= 0:
-                print("ERROR:")
-                print(self.err_msg)
-                print("")
+            self.print_error()
+
 
     def printself(self):
         if self.is_verbose > 0:
             print(self.__str__())
+
+
+    def print_error(self):
+        if self.is_verbose > -1:
+            print("ERROR:")
+            print(self.err_msg)
+            print()
+
 
     def __str__(self):
         out = self._out + "\n"
@@ -325,35 +328,30 @@ class WalletCreate(_Cleos):
         self.json["name"] = name
         self.set_is_verbose(is_verbose)
 
-        set_wallet_url(self)  # this may set self.error ON
+        if not password:
+            _Cleos.__init__(
+                self, ["--name", self.name], "wallet", "create", is_verbose)
+            
+            msg = self._out
+            if not self.error:
+                self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
+                self.json["password"] = self.password               
+        else:         
+            WalletOpen(name, is_verbose=-1)
+            wallet_unlock = WalletUnlock(name, password, is_verbose=-1)
+            self.err_msg = wallet_unlock.err_msg  
 
-        if not self.error:
-            if not password:
-                _Cleos.__init__(
-                    self, ["--name", self.name], "wallet", "create", is_verbose)
-                
-                msg = self._out
-                if not self.error:
-                    self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
-                    self.json["password"] = self.password               
-            else:         
-                WalletOpen(name, is_verbose=-1)
-                wallet_unlock = WalletUnlock(name, password, is_verbose=-1)
-                self.err_msg = wallet_unlock.err_msg  
-
-                if not wallet_unlock.error:
-                    self.name = name
-                    self.password = password
-                    self.json["password"] = self.password
-                    self._out = "Restored wallet: {0}\nPassword is \n{1}\n" \
-                        .format(self.name, self.password)
-                else:
-                    if "Nonexistent wallet" in self.err_msg:
-                        _Cleos.__init__(
-                            self, ["--name", self.name], "wallet", "create", 
-                            is_verbose)
-        else:
-            print(self.err_msg)
+            if not wallet_unlock.error:
+                self.name = name
+                self.password = password
+                self.json["password"] = self.password
+                self._out = "Restored wallet: {0}\nPassword is \n{1}\n" \
+                    .format(self.name, self.password)
+            else:
+                if "Nonexistent wallet" in self.err_msg:
+                    _Cleos.__init__(
+                        self, ["--name", self.name], "wallet", "create", 
+                        is_verbose)
 
         if not self.error:
             self.printself()

@@ -21,7 +21,6 @@ import shutil
 import pprint
 import enum
 from termcolor import cprint
-from textwrap import dedent
 
 import setup
 import teos
@@ -91,13 +90,13 @@ class _Eosf():
     def EOSF(self, msg):
         if msg and Verbosity.EOSF in self.verbosity:
             cprint(
-                dedent(msg).strip(),
+                cleos.heredoc(msg),
                 self.eosf_color)
 
     def TRACE(self, msg):
         if msg and Verbosity.TRACE in self.verbosity:
             cprint(
-                dedent(msg).strip(),
+                cleos.heredoc(msg),
                 self.trace_color)
 
     def EOSF_TRACE(self, msg):
@@ -108,7 +107,7 @@ class _Eosf():
 
     def ERROR(self, msg):
         msg = colored(
-            "ERROR\n{}".format(dedent(msg).strip()), 
+            "ERROR\n{}".format(cleos.heredoc(msg)), 
             self.error_color)
         global _is_throw_error
         if _is_throw_error:
@@ -632,28 +631,24 @@ class AccountEosio():
     def __init__(
             self, is_verbose=1):
 
-        cleos.set_wallet_url(self) # this may set self.error ON
-        if not self.error:
-            self.name = "eosio"
-            self.json["name"] = self.name
-            config = teos.GetConfig(is_verbose=0)
+        self.name = "eosio"
+        self.json["name"] = self.name
+        config = teos.GetConfig(is_verbose=0)
 
-            self.json["privateKey"] = config.json["EOSIO_KEY_PRIVATE"]
-            self.json["publicKey"] = config.json["EOSIO_KEY_PUBLIC"]
-            self.key_private = self.json["privateKey"]
-            self.key_public = self.json["publicKey"]
-            self._out = "transaction id: eosio"
+        self.json["privateKey"] = config.json["EOSIO_KEY_PRIVATE"]
+        self.json["publicKey"] = config.json["EOSIO_KEY_PUBLIC"]
+        self.key_private = self.json["privateKey"]
+        self.key_public = self.json["publicKey"]
+        self._out = "transaction id: eosio"
 
-            account = cleos.GetAccount(self.name, is_verbose=-1)
-            if not account.error:
-                self.account_info = account._out
-            else:
-                if "main.cpp:2712" in account.err_msg:
-                    self.account_info = "The account is not opened yet!"
-                else:
-                    self.account_info = account.err_msg
+        account = cleos.GetAccount(self.name, is_verbose=-1)
+        if not account.error:
+            self.account_info = account._out
         else:
-            print(self.err_msg)
+            if "main.cpp:2712" in account.err_msg:
+                self.account_info = "The account is not opened yet!"
+            else:
+                self.account_info = account.err_msg
 
     
     def info(self):
@@ -682,40 +677,36 @@ class AccountMaster(AccountEosio):
             self, name="", owner_key_public="", active_key_public="", 
             is_verbose=1):
 
-        cleos.set_wallet_url(self)  # this may set self.error ON
-        if not self.error:
-            AccountEosio.__init__(self, is_verbose)
-            if self.set_account_info():
-                return
+        AccountEosio.__init__(self, is_verbose)
+        if self.set_account_info():
+            return
 
-            # not local testnet:
-            if not owner_key_public: # print data for registration
-                self.new_account = True
-                if not name: 
-                    self.name = cleos.account_name()
-                else:
-                    self.name = name
-
-                self.owner_key = cleos.CreateKey("owner", is_verbose=0)
-                self.active_key = cleos.CreateKey("active", is_verbose=0)
-                print(
-                    "\nUse the following data to register a new account on a public testnet:\n" \
-                    + "Accout Name: {}\n".format(self.name) \
-                    + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
-                    + "Owner Private Key: {}\n".format(self.owner_key.key_private) \
-                    + "Active Public Key: {}\n".format(self.active_key.key_public) \
-                    + "Active Private Key: {}\n".format(self.active_key.key_private))
-            else: # restore the master account
+        # not local testnet:
+        if not owner_key_public: # print data for registration
+            self.new_account = True
+            if not name: 
+                self.name = cleos.account_name()
+            else:
                 self.name = name
-                self.new_account = False
-                self.owner_key = cleos.CreateKey("owner", owner_key_public, is_verbose=0)
-                if not active_key_public:
-                    self.active_key = owner_key
-                else:
-                    self.active_key = cleos.CreateKey(
-                        "active", active_key_public, is_verbose=0)
-        else:
-            print(self.err_msg)
+
+            self.owner_key = cleos.CreateKey("owner", is_verbose=0)
+            self.active_key = cleos.CreateKey("active", is_verbose=0)
+            print(
+                "\nUse the following data to register a new account on a public testnet:\n" \
+                + "Accout Name: {}\n".format(self.name) \
+                + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
+                + "Owner Private Key: {}\n".format(self.owner_key.key_private) \
+                + "Active Public Key: {}\n".format(self.active_key.key_public) \
+                + "Active Private Key: {}\n".format(self.active_key.key_private))
+        else: # restore the master account
+            self.name = name
+            self.new_account = False
+            self.owner_key = cleos.CreateKey("owner", owner_key_public, is_verbose=0)
+            if not active_key_public:
+                self.active_key = owner_key
+            else:
+                self.active_key = cleos.CreateKey(
+                    "active", active_key_public, is_verbose=0)
 
         self.set_account_info()
 
