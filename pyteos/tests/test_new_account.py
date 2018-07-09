@@ -7,6 +7,7 @@ import eosf
 #eosf.set_verbosity([eosf.Verbosity.TRACE])
 eosf.set_throw_error(False)
 setup.use_keosd(False)
+#setup.set_debug_mode()
 
 class Test1(unittest.TestCase):
 
@@ -18,15 +19,22 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        eosf.reset()
-        global wallet
-        wallet = eosf.Wallet("xfsadqqada")
-        #wallet1 = eosf.Wallet()
+
+        setup.use_keosd(True)
+        #setup.set_nodeos_URL("88.99.97.30:38888")
+        #wallet = eosf.Wallet("jungle_wallet2")
+        account_master = eosf.AccountMaster()
+
+
+        # eosf.reset()
+        # global wallet
+        # wallet = eosf.Wallet("xfsadqqada")
+        # #wallet1 = eosf.Wallet()
         # account_master = eosf.AccountMaster()
         # wallet.import_key(account_master)
-        # print(account_master.info())
+        # # print(account_master.info())
         # eosf.account_object("account_test")
-        # print(account_test)
+        # # print(account_test.info())
 
     def setUp(self):
         pass

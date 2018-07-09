@@ -159,11 +159,13 @@ class Wallet(cleos.WalletCreate, _Eosf):
         
         if setup.is_use_keosd():
             self.EOSF_TRACE("""
-                ######### Create a `Wallet` object with the KEOSD Wallet Manager.
-                """.format(name))
+                ######### 
+                Create a `Wallet` object with the KEOSD Wallet Manager.
+                """)
         else:
             self.EOSF_TRACE("""
-                ######### Create a `Wallet` object with the NODEOS wallet plugin.
+                ######### 
+                Create a `Wallet` object with the NODEOS wallet plugin.
                 """)
 
         if not setup.is_use_keosd(): # look for password:
@@ -251,6 +253,10 @@ class Wallet(cleos.WalletCreate, _Eosf):
         """
         self.wallet_open = cleos.WalletOpen(
             self.name, is_verbose=self.is_verbose)
+        if self.wallet_open.error:
+            self.ERROR(self.wallet_open.err_msg)
+        else:
+            self.EOSF("Wallet `{}` opened.".format(self.name))
         return self.wallet_open
 
 
@@ -682,10 +688,16 @@ class AccountEosio():
 class AccountMaster(AccountEosio):
 
     def set_account_info(self):
-        account_ = cleos.GetAccount(self.name, is_verbose=-1)
+        account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
         if not account_.error:
-            self.account_info = str(account_)
-            return True
+            print(self.key_public)
+            if self.key_public == \
+                account_.json["permissions"][0]["required_auth"]["keys"] \
+                    [0]["key"]:
+                self.account_info = str(account_)
+                return True
+            else:
+                return False
         else:
             if "main.cpp:2712" in account_.err_msg:
                 self.account_info = "The account is not opened yet!"
@@ -696,7 +708,6 @@ class AccountMaster(AccountEosio):
     def __init__(
             self, name="", owner_key_public="", active_key_public="", 
             is_verbose=1):
-
         AccountEosio.__init__(self, is_verbose)
         if self.set_account_info():
             return
@@ -742,7 +753,7 @@ def account_object(
         account_object_name,
         creator="", 
         stake_net="", stake_cpu="",
-        name="", 
+        account_name="", 
         owner_key="", active_key="",
         permission = "",
         buy_ram_kbytes=0, buy_ram="",
@@ -796,20 +807,22 @@ def account_object(
                 Cannot overwrite it.
                 """.format(acc_name, name, wallet_dir()))
 
-    # create account object:
+    # create the account object:
 
-    return
 
     account_object = None
     if restore:
         if creator:
-            name = creator
-        account_object = cleos.RestoreAccount(name, is_verbose)
+            account_name = creator
+
+        self.EOSF_TRACE("""
+                    ######### 
+                    Create an account object named `{}`, for the blockchain account `{}`.
+                    """.format(account_object_name, account_name))        
+        account_object = cleos.RestoreAccount(account_name, is_verbose)
     else:
-
-        if not name:
-            name = cleos.account_name()
-
+        if not account_name:
+            account_name = cleos.account_name()
         if owner_key:
             if not active_key:
                 active_key = owner_key
@@ -821,8 +834,13 @@ def account_object(
             creator = AccountMaster()
 
         if stake_net:
+            self.EOSF_TRACE("""
+                        ######### 
+                        Create an account object named `{}`, for a new, properly paid, blockchain account `{}`.
+                        """.format(account_object_name, account_name))
+
             account_object = cleos_system.SystemNewaccount(
-                    creator, name, owner_key, active_key,
+                    creator, account_name, owner_key, active_key,
                     stake_net, stake_cpu,
                     permission,
                     buy_ram_kbytes, buy_ram,
@@ -834,8 +852,12 @@ def account_object(
                     is_verbose
                     )
         else:
+            self.EOSF_TRACE("""
+                        ######### 
+                        Create an account object named `{}' for a new local testnet account `{}`.
+                        """.format(account_object_name, account_name))            
             account_object = cleos.CreateAccount(
-                    creator, name, 
+                    creator, account_name, 
                     owner_key, active_key,
                     permission,
                     expiration_sec, skip_signature, dont_broadcast, forceUnique,
@@ -843,6 +865,11 @@ def account_object(
                     ref_block,
                     is_verbose=is_verbose
                     )
+
+        if account_object.error:
+            self.ERROR(account_object.err_msg)
+        else:
+            self.EOSF("""The account object created.""")
 
         account_object.owner_key = owner_key
         account_object.active_key = active_key
@@ -940,6 +967,7 @@ def account_object(
     context_globals[account_object_name] = account_object
 
     # put the account object to the wallet:
+
 
     wallet.open()
     wallet.unlock()
