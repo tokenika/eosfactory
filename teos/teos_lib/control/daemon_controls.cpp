@@ -174,6 +174,7 @@ namespace teos {
         respJson_.put("args", args);
         respJson_.put("uname", uname());
         respJson_.put("is_windows_ubuntu", isWindowsUbuntu());
+        respJson_.put("EOSIO_DAEMON_ADDRESS", getHttpServerAddress(this));
       } catch (std::exception& e) {
         putError(e.what(), SPOT);
       }

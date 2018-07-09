@@ -4,7 +4,7 @@ import setup
 import eosf
 
 
-#eosf.set_verbosity([eosf.Verbosity.TRACE])
+eosf.set_verbosity([eosf.Verbosity.TRACE])
 eosf.set_throw_error(True)
 setup.use_keosd(False)
 

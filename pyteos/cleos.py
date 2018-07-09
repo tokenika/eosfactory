@@ -42,12 +42,16 @@ def reset_nodeos_URL():
 global _wallet_URL
 _wallet_URL = None
 
-def set_wallet_url(cleos_object):
+def set_wallet_url(cleos_object, wallet_url=None):
     """ Implements the `use_keosd` flag in the `setup` module.
 
     Is called in the `WalletCreate` class
     """
     global _wallet_URL
+    if not wallet_url is None:
+        _wallet_URL = ["--wallet-url", "http://" + wallet_url]
+        return
+
     if not _wallet_URL is None:
         return
 
@@ -55,20 +59,16 @@ def set_wallet_url(cleos_object):
         if not setup.is_use_keosd():       
             cleos_object.error = True
             cleos_object.err_msg = heredoc("""
-Cannot use the local node Wallet Manager if the node is not running.            
+Cannot use the local node Wallet Manager if the node is not running.
             """)
-            return False
+            return
 
     if setup.is_use_keosd():
         _wallet_URL = []
     else:
-        WalletStop(is_verbose=-1)
-        config = teos.GetConfig(
-            "", is_verbose=0)
+        config = teos.GetConfig("", is_verbose=0)
         _wallet_URL = ["--wallet-url", "http://" \
             + config.json["EOSIO_DAEMON_ADDRESS"]]
-
-    return True
 
 
 def heredoc(msg):
@@ -111,7 +111,7 @@ class _Cleos:
             reset_nodeos_URL()
         cl.extend(setup.nodeos_URL())
 
-                
+        global _wallet_URL                
         if not ( \
             first == "wallet" and second == "stop" \
             or \
@@ -119,7 +119,7 @@ class _Cleos:
             ):
             set_wallet_url(self) # this may set self.error ON
 
-        global _wallet_URL
+
         if not self.error:
             cl.extend(_wallet_URL)
 
