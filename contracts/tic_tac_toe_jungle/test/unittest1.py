@@ -6,7 +6,7 @@ from termcolor import cprint
 
 wallet_name = "" # Enter wallet name
 wallet_pass = "" # Enter wallet password
-deployment = True # Turn to False after initial run
+deployment = True # Turn to `False` after initial run
 
 setup.set_verbose(True)
 setup.use_keosd(True)
