@@ -49,7 +49,9 @@ Using Python will allow us to build [interactive tutorials](http://eosfactory.io
 * [Introduction to EOSFactory](http://eosfactory.io/sphinx/build/html/tutorials/00.IntroductionToEOSFactory.html)
 * [Installing EOSFactory](http://eosfactory.io/sphinx/build/html/tutorials/01.InstallingEOSFactory.html)
 * [Interacting with EOS Contracts in EOSFactory](http://eosfactory.io/sphinx/build/html/tutorials/02.InteractingWithEOSContractsInEOSFactory.html)
-* [Working with EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/build/html/tutorials/03.WorkingWithEOSContractsUsingEOSFactoryInVSC.html)
+* [Building and deploying EOS Contracts in EOSFactory](http://eosfactory.io/sphinx/build/html/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html)
+* [Working with EOS Contracts using EOSFactory in VSC](http://eosfactory.io/sphinx/build/html/tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html)
+* [Interacting with Public Testnet](http://eosfactory.io/sphinx/build/html/tutorials/05.InteractingWithPublicTestnet.html)
 
 ## Developer documentation
 
@@ -57,7 +59,7 @@ Please refer to [this index of Python modules](http://eosfactory.io/sphinx/build
 
 ## Release notes
 
-Please refer to [this document](http://eosfactory.io/sphinx/build/html/releases/ReleaseNotesVersion1.0.html).
+Please refer to [this document](http://eosfactory.io/sphinx/build/html/releases/ReleaseNotesVersion1.1.html).
 
 ## Roadmap
 

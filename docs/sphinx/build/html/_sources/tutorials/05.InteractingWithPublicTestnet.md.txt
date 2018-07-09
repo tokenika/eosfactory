@@ -165,4 +165,4 @@ Otherwise you'll get this error when trying to re-run the test:
 ```
 assert(not contract.deploy().error)
 ```
-Also, please note that during the initial run two additional accounts are created on the testnet. Their names are random (to ensure their uniqueness) but in the code they are referred to as `account_alice`  and `account_carol`. During subsequent runs those two accounts are re-used.
+Also, please note that during the initial run two additional accounts are created on the testnet. Their names are random (to ensure their uniqueness) but in the code they are referred to as `account_alice`  and `account_carol`. During subsequent runs, those two accounts are re-used.

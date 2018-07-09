@@ -4,9 +4,9 @@ The purpose of this tutorial is to demonstrate how EOSFactory can be combined wi
 
 ## Prerequisites
 
-- This tutorial assumes that you have successfully installed EOSFactory. If it's not the case, please refer to [Installing EOSFactory](https://mail.google.com/mail/u/0/01.InstallingEOSFactory.html).
+- This tutorial assumes that you have successfully installed EOSFactory. If it's not the case, please refer to [Installing EOSFactory](01.InstallingEOSFactory.html).
 
-- We assume that you are familiar with the material covered in [Interacting with EOS Contracts in EOSFactory](https://mail.google.com/mail/u/0/02.InteractingWithEOSContractsInEOSFactory.html).
+- We assume that you are familiar with the material covered in [Interacting with EOS Contracts in EOSFactory](02.InteractingWithEOSContractsInEOSFactory.html).
 
 - We also assume you have [Visual Studio Code](https://code.visualstudio.com/) installed. If you are on Windows and run VSC for the first time, in order to get access to *Windows Subsystem for Linux* bash terminal inside VSC, navigate to `Preferences -> Settings` and overwrite the default configuration for the `terminal.integrated.shell.windows` option:
 
@@ -29,7 +29,6 @@ And then run the following command:
 ```
 python3 ./pyteos/eosf.py contract.name skeleton
 ```
-
 **NOTE:** If you are on Windows and have not restarted your WSL bash terminal after EOSFactory installation,  you'll need to do so before you execute this command (if you are using WSL bash terminal inside *Visual Studio Code*, restart your VSC instead).
 
 The first parameter (in our case `contract.name`) is the name of your contract. It can be any name you want, provided there are no spaces in it. Letters, numbers, underscores `_`, dots `.` and dashes `-` are allowed.
@@ -214,7 +213,7 @@ As EOSFactory gets upgraded, it will include further libraries that enhance the 
 You might have noticed the `logger.hpp` header file in the `src` directory. And if you have applied the `skeleton` template when creating your VSC project, you'll also notice the following line in the `contract.name.cpp` file:
 
 ```
-logger_info("user: ", name{user});
+logger_info( "user: ", name{user} );
 ```
 
 The effect of the above code entry is the following output in test results:

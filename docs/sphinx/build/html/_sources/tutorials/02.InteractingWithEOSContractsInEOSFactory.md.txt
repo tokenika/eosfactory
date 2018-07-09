@@ -16,8 +16,8 @@ Open a bash terminal (or if you are on Windows, open an Ubuntu bash terminal sup
 To start your own single-node local testnet:
 
 ```
-import eosf
-eosf.reset()
+import node
+node.reset()
 ```
 
 On MacOS the *EOSIO* process is run in the background with no visible interface. However in Ubuntu & Windows it's launched in a separate window.
@@ -25,7 +25,7 @@ On MacOS the *EOSIO* process is run in the background with no visible interface.
 To verify the *EOSIO* node is running or to get information about the current state of the testnet:
 
 ```
-cleos.GetInfo()
+node.info()
 ```
 
 ## Manage Local Testnet
@@ -33,19 +33,19 @@ cleos.GetInfo()
 To stop the current testnet:
 
 ```
-eosf.stop()
+node.stop()
 ```
 
 To continue running the same testnet:
 
 ```
-eosf.run()
+node.run()
 ```
 
 To stop the current testnet and start a new one:
 
 ```
-eosf.reset()
+node.reset()
 ```
 
 ## Initialize Workspace
@@ -64,15 +64,6 @@ The initialization process does the following things:
 * creates several test accounts: `alice`, `bob` & `carol`
 * creates a wallet and imports into it the keys of all the above accounts
 
-If you need additional test accounts, you can easily create them:
-
-```
-from eosf import *
-charlie = account()
-```
-
-**NOTE:** The first argument indicates the new account's name, whereas the second indicates the master account, in this case the default `eosio` account.
-
 If you need to lock or unlock your wallet, use the `wallet` object to do it:
 
 ```
@@ -83,40 +74,61 @@ sess.wallet.lock()
 sess.wallet.unlock()
 ```
 
-**NOTE:** You don't need to supply the password, as it's kept for your convenience by Python. Obviously, this only makes sense in a development environment.
+**NOTE:** You don't need to supply the password, as it's kept for your convenience by Python. Obviously, this is  only secure in a development environment.
+
+## Create test accounts
+
+If you need additional test accounts different from the ones genereated by `sess.init()` , you can easily create them:
+
+```
+import eosf
+charlie = eosf.account()
+sess.wallet.import_key(charlie)
+```
+
+You can print the details of an account, for example:
+
+```
+print(charlie.info())
+```
 
 ## Create reference to the EOS Token Contract
 
-To create a reference to an already compiled contract just supply the path to the folder where it's located:
+To create a reference to an already compiled contract first create an account and import its key to a wallet:
 
 ```
-from eosf import *
-contract = Contract("/path/to/your/smart-contract/folder")
+import eosf
+account = eosf.account()
+sess.wallet.import_key(account)
+```
+
+And then create the reference to an existing constract by supplying an account which will be holding the contract and the path to the folder where the contract is located:
+
+```
+contract = eosf.Contract(account, "/path/to/your/smart-contract/folder")
 ```
 
 **NOTE:** You need to supply a valid path to the folder where your smart-contract is located, for example:
 
 ```
-contract = Contract("/mnt/d/Workspaces/EOS/eos/build/contracts/eosio.token")
+contract = eosf.Contract(account, "/mnt/d/Workspaces/EOS/eos/build/contracts/eosio.token")
 ```
 
 Alternatively, supply just the name of the folder, if it can be found in a standard location, i.e. `eos/build/contracts` or `eosfactory/contracts`. This way you can have an easy access to all demo contracts that are shipped with both *EOSIO* and EOSFactory:
 
 ```
-contract = Contract("eosio.token")
+contract = eosf.Contract(account, "eosio.token")
 ```
-
-**NOTE:** When a new contract object is initiated several things are happening behind the scenes: a new account is created with a new pair of keys and the contract is assigned to this new account.
 
 ## Deploy the EOS Token Contract
 
-At this stage the contract has no code deployed. You can check it by running its `get_code` method:
+At this stage the contract has no code deployed. You can check it by running its `code()` method:
 
 ```
-contract.get_code()
+contract.code()
 ```
 
-To deploy the contract use its `deploy` method:
+To deploy the contract use its `deploy()` method:
 
 ```
 contract.deploy()
@@ -125,15 +137,15 @@ contract.deploy()
 And now you can verify that the hash of the deployed code is non-zero:
 
 ```
-contract.get_code()
+contract.code()
 ```
 
 ## Create the EOS Token
 
-To create a new token we call the `create` action on the `eosio.token` contract with the proper arguments for this action:
+To create a new token we call the `create` action on the `eosio.token` contract:
 
 ```
-contract.push_action("create", '{"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+contract.push_action("create", '{"issuer":"' + str(sess.eosio) + '", "maximum_supply":"1000000000.0000 EOS", "can_freeze":0, "can_recall":0, "can_whitelist":0}')
 ```
 
 **NOTE:** The `push_action` method takes two arguments: the action name and its arguments in JSON format. Optionally, you can also add a third argument, i.e. the account whose permission is needed, but in this case it's not necessary, as the permission defaults to the account holding the contract.
@@ -145,7 +157,7 @@ contract.push_action("create", '{"issuer":"eosio", "maximum_supply":"1000000000.
 Now that we have created the token, the issuer can issue new tokens to `alice`:
 
 ```
-contract.push_action("issue", '{"to":"alice", "quantity":"100.0000 EOS", "memo":"memo"}', sess.eosio)
+contract.push_action("issue", '{"to":"' + str(sess.alice) + '", "quantity":"100.0000 EOS", "memo":"memo"}', sess.eosio)
 ```
 
 **NOTE:** In this case the permission is assigned to the default `eosio` account.
@@ -155,7 +167,7 @@ contract.push_action("issue", '{"to":"alice", "quantity":"100.0000 EOS", "memo":
 Now that `alice` has tokens, we will transfer some of them to `carol`: 
 
 ```
-contract.push_action("transfer", '{"from":"alice", "to":"carol", "quantity":"25.0000 EOS", "memo":"memo"}', sess.alice)
+contract.push_action("transfer", '{"from":"' + str(sess.alice) + '", "to":"' + str(sess.carol) + '", "quantity":"25.0000 EOS", "memo":"memo"}', sess.alice)
 ```
 
 **NOTE:** As the third argument we pass the reference to the `alice` account to indicate that she is the one who authorized this action.
@@ -174,7 +186,7 @@ contract.table("accounts", sess.alice)
 contract.table("accounts", sess.carol)
 ```
 
-**NOTE:** The `table` method takes two arguments: the name of the table as specified by the contract ABI and the scope within the contract in which the table is found.
+**NOTE:** The `table()` method takes two arguments: the name of the table as specified by the contract ABI and the scope within the contract in which the table is found.
 
 ## Exit Python CLI
 

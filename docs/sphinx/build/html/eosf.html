@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>eosf &mdash; EOSFactory 0.0 documentation</title>
-    
+    <title>eosf &#8212; EOSFactory 0.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
         VERSION:     '0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -26,7 +23,8 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="EOSFactory 0.0 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="node" href="node.html" />
     <link rel="prev" title="pyteos" href="pyteos.html" />
 <meta charset='utf-8'>
@@ -35,7 +33,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -66,12 +64,15 @@
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion1.1.html">EOSFactory Release Notes - v1.1</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/03.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
@@ -79,7 +80,7 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="pyteos.html">pyteos</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">eosf</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">eosf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="node.html">node</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sess.html">sess</a></li>
 </ul>
@@ -119,7 +120,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="_sources/eosf.txt"
+  <a href="_sources/eosf.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -145,63 +146,80 @@
       
   <div class="section" id="module-eosf">
 <span id="eosf"></span><h1>eosf<a class="headerlink" href="#module-eosf" title="Permalink to this headline">¶</a></h1>
-<p>Macros made of elements of the <a class="reference internal" href="pyteos.html#module-pyteos" title="pyteos: Python front-end for C++ `teos`, which is an alternative for block.one's `cleos`. (Unix, Windows)"><code class="xref py py-mod docutils literal"><span class="pre">pyteos</span></code></a> module, intended for experiments with EOSIO smart-contracts.</p>
-<span class="target" id="module-eosf"></span><dl class="class">
-<dt id="eosf.Account">
-<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>name</em>, <em>creator</em><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Account" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pyteos.html#pyteos.Account" title="pyteos.Account"><code class="xref py py-class docutils literal"><span class="pre">pyteos.Account</span></code></a></p>
-<p>Creates an account and imports its keys into the <em>wallet</em>.</p>
+<p>Python front-end for <cite>EOSIO cleos</cite>.</p>
+<span class="target" id="module-pyteos"></span><dl class="class">
+<dt id="eosf.Verbosity">
+<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Verbosity</code><a class="headerlink" href="#eosf.Verbosity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="eosf.Contract">
-<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>is_verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Contract" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pyteos.html#pyteos.Contract" title="pyteos.Contract"><code class="xref py py-class docutils literal"><span class="pre">pyteos.Contract</span></code></a></p>
-<p>Creates a contract, given a contract directory containing WAST and ABI.</p>
-<p>This class extends the <cite>pyteos.Contract</cite>: it goes without the <cite>account</cite>
-parameter, instead it uses an account created internally.</p>
+<dt id="eosf.Wallet">
+<em class="property">class </em><code class="descclassname">eosf.</code><code class="descname">Wallet</code><span class="sig-paren">(</span><em>name='default'</em>, <em>password=''</em>, <em>is_verbose=1</em>, <em>verbosity=None</em><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">cleos.WalletCreate</span></code>, <code class="xref py py-class docutils literal"><span class="pre">eosf._Eosf</span></code></p>
+<p>Create a new wallet locally and operate it.
+Usage: WalletCreate(name=”default”, is_verbose=1)</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>contract_dir: A contract directory, structures according to the 
-    *contract template*, that means, including the `build` directory
-    that contains WAST and ABI.
-wast_file: The file containing the contract WAST, relative 
-    to the *contract directory*, defaults to empty string.
-abi_file: The file containing the contract ABI, relative 
-    to the *contract directory*, defaults to empty string.
-permission: An account object or the name of an account that 
-    authorizes the creation.
-expiration_sec: The time in seconds before a transaction expires, 
-    defaults to 30s.
-skip_signature:  If unlocked wallet keys should be used to sign 
-    transaction, defaults to 0.
-dont_broadcast: Whether to broadcast transaction to the network (or 
-    print to stdout), defaults to 0.
-forceUnique: Whether to force the transaction to be unique, what will 
-    consume extra bandwidth and remove any protections against 
-    accidently issuing the same transaction multiple times, defaults 
-    to 0.
-max_cpu_usage: An upper limit on the cpu usage budget, in 
-    instructions-retired, for the execution of the transaction 
-    (defaults to 0 which means no limit).
-max_net_usage: An upper limit on the net usage budget, in bytes, for 
-    the transaction (defaults to 0 which means no limit). 
+<div class="highlight-default"><div class="highlight"><pre><span></span>name: The name of the new wallet, defaults to `default`.
+is_verbose: If `0`, do not print unless on error, 
+    default is `1`.
 </pre></div>
 </div>
 </li>
-</ul>
-<p>The extended constructor adds the following attributes:</p>
-<ul>
 <li><p class="first"><strong>attributes</strong>:</p>
-<div class="highlight-python"><div class="highlight"><pre>name: The name of contract`s account. It has the value of the last
-part of the contract directory path.
-key_owner: A key object.
-key_active: Another key object.
-account: The account that owns the contract.
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">name</span><span class="p">:</span> <span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">wallet</span><span class="o">.</span>
+<span class="n">password</span><span class="p">:</span> <span class="n">The</span> <span class="n">password</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">wallet</span> <span class="n">create</span><span class="o">.</span>
+<span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">constraction</span> <span class="n">time</span><span class="o">.</span>  
 </pre></div>
 </div>
 </li>
 </ul>
+<dl class="method">
+<dt id="eosf.Wallet.import_key">
+<code class="descname">import_key</code><span class="sig-paren">(</span><em>account_or_key</em><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Wallet.import_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports private keys of an account into wallet.
+Returns list of <cite>cleos.WalletImport</cite> objects</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosf.Wallet.index">
+<code class="descname">index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Wallet.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists opened wallets, * marks unlocked.
+Returns <cite>cleos.WalletList</cite> object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosf.Wallet.keys">
+<code class="descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Wallet.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists public keys from all unlocked wallets.
+Returns <cite>cleos.WalletKeys</cite> object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosf.Wallet.lock">
+<code class="descname">lock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Wallet.lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locks the wallet.
+Returns <cite>cleos.WalletLock</cite> object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosf.Wallet.open">
+<code class="descname">open</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Wallet.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the wallet.
+Returns <cite>WalletOpen</cite> object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosf.Wallet.unlock">
+<code class="descname">unlock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eosf.Wallet.unlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unlocks the wallet.
+Returns <cite>WalletUnlock</cite> object.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -219,7 +237,7 @@ account: The account that owns the contract.
     </p>
     <p>
         &copy; Copyright 2018, Tokenika.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
     </p>
   </div>
 </footer>

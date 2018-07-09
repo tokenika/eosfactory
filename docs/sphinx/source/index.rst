@@ -18,7 +18,7 @@ Release Notes
 
     releases/ReleaseNotesVersion0.8
     releases/ReleaseNotesVersion1.0
-
+    releases/ReleaseNotesVersion1.1
 
 Tutorials
 ---------
@@ -29,7 +29,9 @@ Tutorials
     tutorials/00.IntroductionToEOSFactory
     tutorials/01.InstallingEOSFactory
     tutorials/02.InteractingWithEOSContractsInEOSFactory
-    tutorials/03.WorkingWithEOSContractsUsingEOSFactoryInVSC
+    tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory
+    tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC
+    tutorials/05.InteractingWithPublicTestnet
 
 
 Roadmap
@@ -48,7 +50,10 @@ Python Documentation
 .. toctree::
     :maxdepth: 1
 
-    pyteos
+    cleos
+    cleos_system
+    setup
+    teos
     eosf
     node
     sess

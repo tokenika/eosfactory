@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Long-term EOSFactory Roadmap &mdash; EOSFactory 0.0 documentation</title>
-    
+    <title>Long-term EOSFactory Roadmap &#8212; EOSFactory 0.0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
         VERSION:     '0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,7 +23,8 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="EOSFactory 0.0 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pyteos" href="../pyteos.html" />
     <link rel="prev" title="Plan for Subsequent EOSFactory Releases" href="PlanForSubsequentEOSFactoryReleases.html" />
 <meta charset='utf-8'>
@@ -35,7 +33,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -66,16 +64,19 @@
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.1.html">EOSFactory Release Notes - v1.1</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Long-term EOSFactory Roadmap</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Long-term EOSFactory Roadmap</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../pyteos.html">pyteos</a></li>
@@ -98,7 +99,6 @@
 <li><a class="reference internal" href="#">Long-term EOSFactory Roadmap</a><ul>
 <li><a class="reference internal" href="#support-for-other-ides">Support for other IDEs</a></li>
 <li><a class="reference internal" href="#gui-support">GUI support</a></li>
-<li><a class="reference internal" href="#direct-connection-to-eosio">Direct connection to EOSIO</a></li>
 <li><a class="reference internal" href="#two-implementations">Two implementations</a></li>
 <li><a class="reference internal" href="#ricardian-contracts">Ricardian Contracts</a></li>
 </ul>
@@ -126,7 +126,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/roadmap/LongTermEOSFactoryRoadmap.txt"
+  <a href="../_sources/roadmap/LongTermEOSFactoryRoadmap.md.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -158,11 +158,7 @@
 </div>
 <div class="section" id="gui-support">
 <span id="gui-support"></span><h2>GUI support<a class="headerlink" href="#gui-support" title="Permalink to this headline">¶</a></h2>
-<p>As far as VSC is concerned, we&#8217;d like to create a VSC extension providing GUI interface to EOSFactory CLI functionality.</p>
-</div>
-<div class="section" id="direct-connection-to-eosio">
-<span id="direct-connection-to-eosio"></span><h2>Direct connection to EOSIO<a class="headerlink" href="#direct-connection-to-eosio" title="Permalink to this headline">¶</a></h2>
-<p>We are considering the pros and cons of connecting our Python layer directly to <code class="docutils literal"><span class="pre">cleos</span></code>, the official <em>EOSIO</em> CLI. Even if we do that, nothing will change in the Python API. The biggest advantage of this approach is simplification of EOSFactory installation process.</p>
+<p>As far as VSC is concerned, we’d like to create a VSC extension providing GUI interface to EOSFactory CLI functionality.</p>
 </div>
 <div class="section" id="two-implementations">
 <span id="two-implementations"></span><h2>Two implementations<a class="headerlink" href="#two-implementations" title="Permalink to this headline">¶</a></h2>
@@ -187,7 +183,7 @@
     </p>
     <p>
         &copy; Copyright 2018, Tokenika.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.<br/>
     </p>
   </div>
 </footer>
