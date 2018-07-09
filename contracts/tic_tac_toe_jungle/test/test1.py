@@ -2,9 +2,9 @@ import setup
 import eosf
 from termcolor import cprint
 
-wallet_name = ""
-wallet_pass = ""
-deployment = True
+wallet_name = "" # Enter wallet name
+wallet_pass = "" # Enter wallet password
+deployment = True # Turn to False after initial run
 
 setup.set_verbose(True)
 setup.use_keosd(True)
@@ -137,7 +137,6 @@ Action contract.push_action("close")
     assert(not action.error)
 
     cprint("OK OK OK OK OK OK OK OK 0K 0K 0K 0K", 'green')
-
 
 
 if __name__ == "__main__":

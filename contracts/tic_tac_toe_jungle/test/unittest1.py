@@ -4,14 +4,13 @@ import unittest
 import sys
 from termcolor import cprint
 
-wallet_name = ""
-wallet_pass = ""
-deployment = True
+wallet_name = "" # Enter wallet name
+wallet_pass = "" # Enter wallet password
+deployment = True # Turn to False after initial run
 
 setup.set_verbose(True)
 setup.use_keosd(True)
 setup.set_nodeos_URL("88.99.97.30:38888")
-
 
 class Test1(unittest.TestCase):
 
