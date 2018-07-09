@@ -128,7 +128,7 @@ class _Eosf():
                 self.debug_color)
 
 
-class Wallet(_Eosf):
+class Wallet(cleos.WalletCreate, _Eosf):
     """ Create a new wallet locally and operate it.
     Usage: WalletCreate(name="default", is_verbose=1)
 
@@ -184,10 +184,7 @@ class Wallet(_Eosf):
             Wallet directory is {}
             """.format(self.wallet_dir_))
 
-        wallet = cleos.WalletCreate(name, password, is_verbose)
-        wallet.copy_to(self)
-        self.name = wallet.name
-        self.password = wallet.password
+        cleos.WalletCreate.__init__(self, name, password, is_verbose)
 
         self.DEBUG("""
             Wallet URL is {}
@@ -236,7 +233,7 @@ class Wallet(_Eosf):
             if "Wallet already exists" in self.err_msg:
                 self.ERROR("""
                     Wallet `{}` already exists.
-                    """.format())
+                    """.format(self.name))
             else:
                 self.ERROR(self.err_msg)
 

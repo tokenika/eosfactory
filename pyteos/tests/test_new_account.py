@@ -6,7 +6,7 @@ import eosf
 
 #eosf.set_verbosity([eosf.Verbosity.TRACE])
 eosf.set_throw_error(False)
-setup.use_keosd(True)
+setup.use_keosd(False)
 
 class Test1(unittest.TestCase):
 
@@ -18,7 +18,7 @@ class Test1(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        #eosf.reset()
+        eosf.reset()
         global wallet
         wallet = eosf.Wallet("xfsadqqada")
         #wallet1 = eosf.Wallet()
