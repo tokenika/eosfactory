@@ -20,7 +20,7 @@ import node
 import shutil
 import pprint
 import enum
-from termcolor import cprint
+from termcolor import cprint, colored
 
 import setup
 import teos
@@ -39,8 +39,9 @@ class Verbosity(enum.Enum):
     EOSF = 3
     ERROR = 4
     OUT = 5
+    DEBUG = 6
 
-_verbosity = []
+_verbosity = [Verbosity.EOSF]
 def set_verbosity(value=_verbosity):
     global _verbosity
     _verbosity = value
@@ -74,6 +75,7 @@ class _Eosf():
     eosf_color = 'blue'
     trace_color = 'magenta'
     error_color = 'red'
+    debug_color = 'yellow'
     verbosity = []
 
     def verify_is_verbose(self, verbosity=None, is_verbose=0):
@@ -83,7 +85,7 @@ class _Eosf():
 
         self.verbosity = verbosity
         if len(Verbosity) > 0 and not Verbosity.CLEOS in verbosity:
-            return 0
+            return -1
         else:
             return is_verbose
 
@@ -107,7 +109,7 @@ class _Eosf():
 
     def ERROR(self, msg):
         msg = colored(
-            "ERROR\n{}".format(cleos.heredoc(msg)), 
+            "ERROR:\n{}".format(cleos.heredoc(msg)), 
             self.error_color)
         global _is_throw_error
         if _is_throw_error:
@@ -115,13 +117,18 @@ class _Eosf():
         else:
             print(msg)
 
-
     def OUT(self, msg):
-        if msg and Verbosity.TRACE in self.verbosity:
+        if msg and Verbosity.OUT in self.verbosity:
             print(dedent(msg).strip())
 
+    def DEBUG(self, msg):
+        if msg and Verbosity.DEBUG in self.verbosity:
+            cprint(
+                cleos.heredoc(msg),
+                self.debug_color)
 
-class Wallet(cleos.WalletCreate, _Eosf):
+
+class Wallet(_Eosf):
     """ Create a new wallet locally and operate it.
     Usage: WalletCreate(name="default", is_verbose=1)
 
@@ -145,12 +152,19 @@ class Wallet(cleos.WalletCreate, _Eosf):
 
         is_verbose = self.verify_is_verbose(verbosity, is_verbose)
 
-        self.EOSF_TRACE("######### Create a `Wallet` object.")
-
         if not setup.is_use_keosd(): # look for password:
             self.wallet_dir_ = teos.get_node_wallet_dir()
         else:
             self.wallet_dir_ = os.path.expandvars(teos.get_keosd_wallet_dir())
+        
+        if setup.is_use_keosd():
+            self.EOSF_TRACE("""
+                ######### Create a `Wallet` object with the KEOSD Wallet Manager.
+                """.format(name))
+        else:
+            self.EOSF_TRACE("""
+                ######### Create a `Wallet` object with the NODEOS wallet plugin.
+                """)
 
         if not setup.is_use_keosd(): # look for password:
             try:
@@ -166,8 +180,19 @@ class Wallet(cleos.WalletCreate, _Eosf):
             except:
                 pass
 
-        cleos.WalletCreate.__init__(self, name, password, is_verbose)
+        self.EOSF("""
+            Wallet directory is {}
+            """.format(self.wallet_dir_))
 
+        wallet = cleos.WalletCreate(name, password, is_verbose)
+        wallet.copy_to(self)
+        self.name = wallet.name
+        self.password = wallet.password
+
+        self.DEBUG("""
+            Wallet URL is {}
+            """.format(cleos.wallet_url()))
+            
         if not self.error:
             if not setup.is_use_keosd(): 
                 try:
@@ -184,29 +209,22 @@ class Wallet(cleos.WalletCreate, _Eosf):
 
                 if not password: # new password
                     self.EOSF_TRACE("""
-                        Created wallet `{}` with the local testnet. Wallet directory is
-                        {}
-                        Password is saved to file:
-                        {}
-                        """.format(
-                                self.name, self.wallet_dir_,
-                                self.wallet_dir_ + setup.password_map)
+                        Created wallet `{}` with the local testnet.
+                        Password is saved to the file {} in the wallet directory.
+                        """.format(self.name, setup.password_map)
                     )
 
                 else: # password taken from file
-                    self.EOSF_TRACE("""
-                        Opened wallet `{}`.
-                        """.format(self.name))
+                    self.EOSF_TRACE("""Opened wallet `{}`.""".format(self.name))
 
             else: # KEOSD Wallet Manager
                 if not password: # new password
                     self.EOSF_TRACE("""
-                        Created wallet `{}` with the `keosd` Wallet Manager. Wallet directory is
-                        {}
+                        Created wallet `{}` with the `keosd` Wallet Manager.
                         Save password to use in the future to unlock this wallet.
                         Without password imported keys will not be retrievable.
                         {}
-                        """.format(self.name, self.wallet_dir_, self.password)
+                        """.format(self.name, self.password)
                     )
 
                 else: # password introduced
@@ -214,8 +232,13 @@ class Wallet(cleos.WalletCreate, _Eosf):
                         Opened wallet {}
                         """.format(self.name))
 
-        else: # self.error:
-            print(self.err_msg)
+        else: # wallet.error:
+            if "Wallet already exists" in self.err_msg:
+                self.ERROR("""
+                    Wallet `{}` already exists.
+                    """.format())
+            else:
+                self.ERROR(self.err_msg)
 
 
     def index(self):

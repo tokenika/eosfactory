@@ -9,7 +9,6 @@ setup.set_nodeos_URL("dev.cryptolions.io:38888")
 
 def test():
 
-    import eosf
     wallet_name = "default"
     wallet_pass = "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N"
     wallet = eosf.Wallet(wallet_name, wallet_pass)

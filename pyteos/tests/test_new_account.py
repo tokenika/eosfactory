@@ -4,14 +4,14 @@ import setup
 import eosf
 
 
-eosf.set_verbosity([eosf.Verbosity.TRACE])
-eosf.set_throw_error(True)
-setup.use_keosd(False)
+#eosf.set_verbosity([eosf.Verbosity.TRACE])
+eosf.set_throw_error(False)
+setup.use_keosd(True)
 
 class Test1(unittest.TestCase):
 
     def run(self, result=None):
-        """ Stop after first error """      
+        """ Stop after first error """
         if not result.failures:
             super().run(result)
         print("-------------------------------------------\n")
@@ -20,7 +20,7 @@ class Test1(unittest.TestCase):
     def setUpClass(cls):
         #eosf.reset()
         global wallet
-        wallet = eosf.Wallet()
+        wallet = eosf.Wallet("xfsadqqada")
         #wallet1 = eosf.Wallet()
         # account_master = eosf.AccountMaster()
         # wallet.import_key(account_master)
@@ -30,6 +30,7 @@ class Test1(unittest.TestCase):
 
     def setUp(self):
         pass
+
 
     def test_05(self):
         pass

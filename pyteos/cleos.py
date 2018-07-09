@@ -42,20 +42,30 @@ def reset_nodeos_URL():
 global _wallet_URL
 _wallet_URL = None
 
+
+def wallet_url():
+    global _wallet_URL
+    return _wallet_URL
+
+
 def set_wallet_url(cleos_object, wallet_url=None):
     """ Implements the `use_keosd` flag in the `setup` module.
 
     Is called in the `WalletCreate` class
     """
     global _wallet_URL
-    if not wallet_url is None:
-        _wallet_URL = ["--wallet-url", "http://" + wallet_url]
-        return
-
     if not _wallet_URL is None:
+        return    
+    
+    if not wallet_url is None:
+        if setup.is_use_keosd():
+            _wallet_URL = []
+        else:
+            _wallet_URL = ["--wallet-url", "http://" + wallet_url]
         return
 
     if not teos.NodeIsRunning(is_verbose=0).daemon_pid:
+    # Otherwise `wallet_url` is set when node is starting.
         if not setup.is_use_keosd():       
             cleos_object.error = True
             cleos_object.err_msg = heredoc("""
@@ -63,12 +73,7 @@ Cannot use the local node Wallet Manager if the node is not running.
             """)
             return
 
-    if setup.is_use_keosd():
-        _wallet_URL = []
-    else:
-        config = teos.GetConfig("", is_verbose=0)
-        _wallet_URL = ["--wallet-url", "http://" \
-            + config.json["EOSIO_DAEMON_ADDRESS"]]
+    _wallet_URL = []
 
 
 def heredoc(msg):
@@ -111,15 +116,8 @@ class _Cleos:
             reset_nodeos_URL()
         cl.extend(setup.nodeos_URL())
 
-        global _wallet_URL                
-        if not ( \
-            first == "wallet" and second == "stop" \
-            or \
-            first == "wallet" and second == "isrunning"
-            ):
-            set_wallet_url(self) # this may set self.error ON
-
-
+        set_wallet_url(self) # this may set self.error ON
+        global _wallet_URL
         if not self.error:
             cl.extend(_wallet_URL)
 
@@ -322,7 +320,6 @@ class WalletCreate(_Cleos):
         is_verbose: Verbosity at the construction time.  
     """
     def __init__(self, name="default", password="", is_verbose=1):
-
         self.name = name
         self.password = None
         self.json["name"] = name
