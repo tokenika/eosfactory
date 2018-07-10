@@ -23,19 +23,6 @@ setup_setup = setup.Setup()
 
 class SystemNewaccount(cleos._Cleos):
     """ Create an account, buy ram, stake for bandwidth for the account.
-    Usage: CreateAccount(
-        creator, name, owner_key, active_key,
-        stake_net,
-        stake_cpu,
-        permission="",
-        buy_ram_kbytes=0,
-        buy_ram=""
-        transfer=False,
-        expiration=30, 
-        skip_sign=False, dont_broadcast=False, force_unique=False,
-        max_cpu_usage_ms=0, max_net_usage=0,
-        ref_block="",
-        is_verbose=1)
 
     - **parameters**::
 
@@ -49,12 +36,8 @@ class SystemNewaccount(cleos._Cleos):
         stake_cpu: The amount of EOS delegated for CPU bandwidth.
         buy_ram: The amount of RAM bytes to purchase for the new account in EOS.
         transfer: Transfer voting power and right to unstake EOS to receiver.
-
-        
         permission: An account and permission level to authorize, as in 
             'account@permission'. May be a `CreateAccount` or `Account` object
-
-        
         expiration: The time in seconds before a transaction expires, 
             defaults to 30s
         skip_sign: Specify if unlocked wallet keys should be used to sign 
@@ -77,7 +60,7 @@ class SystemNewaccount(cleos._Cleos):
         active_key: Active private key.
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the constraction time.    
+        is_verbose: Verbosity at the constraction time.
     """
     def __init__(
             self, creator, name, owner_key, active_key,
@@ -154,7 +137,7 @@ class SystemNewaccount(cleos._Cleos):
                 self.name, is_verbose=0, json=True).json
 
             if self.is_verbose:
-                print(self.__str__())            
+                print(self.__str__())
 
     def info(self):
         return str(cleos.GetAccount(self.name, is_verbose=1))
