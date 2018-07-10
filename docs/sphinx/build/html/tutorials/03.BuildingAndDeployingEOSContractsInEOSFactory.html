@@ -225,10 +225,10 @@
 <div class="section" id="build-the-new-contract">
 <span id="build-the-new-contract"></span><h2>Build the new contract<a class="headerlink" href="#build-the-new-contract" title="Permalink to this headline">¶</a></h2>
 <p>You can generate ABI and the web assembly code separately:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">build_abi</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">temp</span> <span class="o">=</span> <span class="n">contract</span><span class="o">.</span><span class="n">build_abi</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">build_wast</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">temp</span> <span class="o">=</span> <span class="n">contract</span><span class="o">.</span><span class="n">build_wast</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Or you can generate both at the same time:</p>
@@ -263,13 +263,24 @@
 <div class="section" id="test-the-contract">
 <span id="test-the-contract"></span><h2>Test the contract<a class="headerlink" href="#test-the-contract" title="Permalink to this headline">¶</a></h2>
 <p>You can play with the contract giving it different arguments:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>All the above variations should work, as the contract allows anyone to authorize it.</p>
+<p><strong>NOTE:</strong> When the <code class="docutils literal"><span class="pre">output</span></code> flag in the <code class="docutils literal"><span class="pre">push_action()</span></code> method is set to <code class="docutils literal"><span class="pre">True</span></code>, the output from the contract is being displayed in the console, for example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">INFO</span> <span class="n">user</span><span class="p">:</span> <span class="n">alice</span> <span class="o">@</span> <span class="mi">17</span><span class="p">:</span><span class="mi">24</span><span class="p">:</span><span class="mi">7</span> <span class="n">hello</span><span class="o">.</span><span class="n">world55</span><span class="o">.</span><span class="n">cpp</span><span class="p">[</span><span class="mi">16</span><span class="p">](</span><span class="n">hi</span><span class="p">)</span>
+<span class="n">Hello</span><span class="p">,</span> <span class="n">alice</span>
+</pre></div>
+</div>
+<p>If you want to the output stream produced by <code class="docutils literal"><span class="pre">nodeos</span></code> to be displayed instead, set this flag to <code class="docutils literal"><span class="pre">False</span></code> and then you’ll see an output similar to this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">w3qdegfsbago</span> <span class="o">&lt;=</span> <span class="n">w3qdegfsbago</span><span class="p">::</span><span class="n">hi</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;carol&quot;</span><span class="p">}</span>
+<span class="n">executed</span> <span class="n">transaction</span><span class="p">:</span> <span class="mi">8</span><span class="n">c3cf0b611d0d8387ae337c8b</span><span class="o">...</span>
+<span class="n">warning</span><span class="p">:</span> <span class="n">transaction</span> <span class="n">executed</span> <span class="n">locally</span><span class="p">,</span> <span class="n">but</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">confirmed</span> <span class="n">by</span> <span class="n">the</span> <span class="n">network</span> <span class="n">yet</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="modify-the-code-re-compile-re-deploy">
 <span id="modify-the-code-re-compile-re-deploy"></span><h2>Modify the code, re-compile &amp; re-deploy<a class="headerlink" href="#modify-the-code-re-compile-re-deploy" title="Permalink to this headline">¶</a></h2>
@@ -290,14 +301,14 @@
 </pre></div>
 </div>
 <p>Now, if we attempt to mismatch the user and the authority, the contract will throw an error:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Error</span> <span class="mi">3090004</span><span class="p">:</span> <span class="n">missing</span> <span class="n">required</span> <span class="n">authority</span>
 </pre></div>
 </div>
 <p>But if we use the appropriate authority, there should no error:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">carol</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
