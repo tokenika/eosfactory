@@ -168,7 +168,7 @@ class Wallet(cleos.WalletCreate, _Eosf):
                 Create a `Wallet` object with the NODEOS wallet plugin.
                 """)
 
-        if cleos.is_not_running_not_keosd_set_error(self):
+        if cleos.is_notrunningnotkeosd_error(self):
             self.ERROR(self.err_msg)
             return
 
@@ -760,11 +760,11 @@ class AccountMaster(AccountEosio, _Eosf):
                 cleos.wallet_url(), setup.is_use_keosd(),
                 self._out,
                 self.err_msg
-                ))        
+                ))
 
-        if cleos.is_not_running_not_keosd_set_error(self):
+        if cleos.is_notrunningnotkeosd_error(self):
             self.ERROR(self.err_msg)
-            return        
+            return
 
         if self.is_local_testnet():
             return

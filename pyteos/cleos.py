@@ -48,71 +48,45 @@ def wallet_url():
 
 
 def node_is_running():
-    if teos.NodeIsRunning(is_verbose=0).daemon_pid:
-        # get_info = cleos.GetInfo(is_verbose=-1)
-        # if not get_info.error:
-        #     return True
-        # else:
-        #     return False
-        return True
-    else:
-        return False
+    return not teos.NodeIsRunning(is_verbose=0).daemon_pid == ""
     
 
-def is_not_running_not_keosd_set_error(cleos_object):
-    if not node_is_running():
-        print("     not teos.NodeIsRunning(is_verbose=0).daemon_pid:")
-    # Otherwise `wallet_url` is set when node is starting.
-        if not setup.is_use_keosd():
-            print("     not setup.is_use_keosd():")
-            cleos_object.error = True
-            cleos_object.err_msg = heredoc("""
+def is_notrunningnotkeosd_error(cleos_object):
+
+    is_error = not setup.is_use_keosd() and not node_is_running()
+    if is_error:
+        cleos_object.error = True
+        cleos_object.err_msg = heredoc("""
 Cannot use the local node Wallet Manager if the node is not running.
             """)
-            return True
-        else:
-            return False
-        # print("     teos.NodeIsRunning(is_verbose=0).daemon_pid:")
-    return False
+    return is_error
 
 
-def set_wallet_url_arg(cleos_object, url=None):
+def set_wallet_url_arg(cleos_object, url=None, starting=False):
     """ Implements the `use_keosd` flag in the `setup` module.
-
-    Is called in the `WalletCreate` class
     """
+    # print("CCCCCCCCCCCCCC set_wallet_url_arg: {}".format(url))
     global _wallet_url_arg
-    # print()
-    # print("global _wallet_url_arg url:{}".format(url))
-    # print("global _wallet_url_arg _wallet_url_arg:{}".format(_wallet_url_arg))
     if not _wallet_url_arg is None:
         return
 
-    if url is None:
-        # If it is not None, it has been set basing on consciousness of the
-        # status, for example, local node has bin just started
-        if is_not_running_not_keosd_set_error(cleos_object):
-            # print("is_not_running_not_keosd_set_error {}".format(_wallet_url_arg))
-            _wallet_url_arg =  []
-        else:
-            _wallet_url_arg = None
-            return # returning with cleos_object.error set.
-    else:
-        if not url:
+    if is_notrunningnotkeosd_error(cleos_object) and not starting:
+        _wallet_url_arg = None
+        # print("TTTTTTTTTTTTTT is_notrunningnotkeosd_error: {}".format(_wallet_url_arg))
+        return        
+
+    if not url is None:
+        if url == "":
             _wallet_url_arg = []
         else:
             _wallet_url_arg = ["--wallet-url", "http://" + url]
+        # print("FFFFFFFFFFFFF if not url is None: {}".format(_wallet_url_arg))
+        return
 
-    # if url is None: 
-    #     print("url is None {}".format(_wallet_url_arg))
-    #     _wallet_url_arg = []
-    # else:
-    #     if setup.is_use_keosd():
-    #         print("setup.is_use_keosd() {}".format(_wallet_url_arg))
-    #         _wallet_url_arg = []
-    #     else:
-    #         print("not setup.is_use_keosd() {}".format(_wallet_url_arg))
-    #         _wallet_url_arg = ["--wallet-url", "http://" + url]
+    if _wallet_url_arg is None:
+        _wallet_url_arg = []
+        # print("OOOOOOOOOOOOO if not url is None: {}".format(_wallet_url_arg))
+
 
 def heredoc(msg):
     return dedent(msg).strip()
