@@ -179,13 +179,13 @@
 </div>
 <div class="section" id="create-a-new-contract-from-template">
 <span id="create-a-new-contract-from-template"></span><h2>Create a new contract from template<a class="headerlink" href="#create-a-new-contract-from-template" title="Permalink to this headline">¶</a></h2>
-<p>To create a new contract from a pre-defined template all you need is a name for the contract, for example:</p>
+<p>To create a new contract from a pre-defined template all you need is a name for the contract and the name of the template, for example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">eosf</span>
-<span class="n">contract</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">ContractBuilderFromTemplate</span><span class="p">(</span><span class="s2">&quot;hello.world&quot;</span><span class="p">)</span>
+<span class="n">contract</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">ContractBuilderFromTemplate</span><span class="p">(</span><span class="s2">&quot;hello.world&quot;</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="s2">&quot;skeleton&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>NOTE:</strong>  Do not use spaces in contract names. What is allowed are letters, numbers, underscores <code class="docutils literal"><span class="pre">_</span></code>, dots <code class="docutils literal"><span class="pre">.</span></code> and dashes <code class="docutils literal"><span class="pre">-</span></code>.</p>
-<p>The above command creates a new contract. If you wanted to access an existing one, use the following syntax instead:</p>
+<p><strong>NOTE:</strong>  Do not use spaces in contract names. What is allowed are letters, numbers, underscores <code class="docutils literal"><span class="pre">_</span></code>, dots <code class="docutils literal"><span class="pre">.</span></code> and dashes <code class="docutils literal"><span class="pre">-</span></code>. Regarding the second parameter, as of now there are only two templates (<code class="docutils literal"><span class="pre">skeleton</span></code>&nbsp;and&nbsp;<code class="docutils literal"><span class="pre">eosio.token</span></code>) but there’ll be more in the future. This parameter is optional, the default value is&nbsp;<code class="docutils literal"><span class="pre">skeleton</span></code>.</p>
+<p>The above command creates a new contract. However, if you want to access an existing one, use the following syntax instead:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">ContractBuilder</span><span class="p">(</span><span class="s2">&quot;hello.world&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -251,8 +251,12 @@
 <span class="n">sess</span><span class="o">.</span><span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Next, let’s redefine  the contract so that it’s associated with the above account:</p>
+<p>Next, let’s redefine the contract, so that it’s associated with the above account and thus becomes deployable:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">account</span><span class="p">,</span> <span class="n">contract</span><span class="o">.</span><span class="n">path</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Or you can use the contract name explicitly:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">account</span><span class="p">,</span> <span class="s2">&quot;hello.world&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And now we can deploy the contract:</p>
@@ -262,7 +266,7 @@
 </div>
 <div class="section" id="test-the-contract">
 <span id="test-the-contract"></span><h2>Test the contract<a class="headerlink" href="#test-the-contract" title="Permalink to this headline">¶</a></h2>
-<p>You can play with the contract giving it different arguments:</p>
+<p>You can play with the contract by sending it actions with different arguments:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s1">&#39;{&quot;user&quot;:&quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;}&#39;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">alice</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
