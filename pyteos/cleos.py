@@ -61,15 +61,17 @@ def node_is_running():
 
 def is_not_running_not_keosd_set_error(cleos_object):
     if not node_is_running():
-        # print("     not teos.NodeIsRunning(is_verbose=0).daemon_pid:")
+        print("     not teos.NodeIsRunning(is_verbose=0).daemon_pid:")
     # Otherwise `wallet_url` is set when node is starting.
         if not setup.is_use_keosd():
-            # print("     not setup.is_use_keosd():")
+            print("     not setup.is_use_keosd():")
             cleos_object.error = True
             cleos_object.err_msg = heredoc("""
 Cannot use the local node Wallet Manager if the node is not running.
             """)
-        return True
+            return True
+        else:
+            return False
         # print("     teos.NodeIsRunning(is_verbose=0).daemon_pid:")
     return False
 
@@ -1212,8 +1214,3 @@ class PushAction(_Cleos):
 
     def get_transaction(self):
         return GetTransaction(self.transaction)
-
-
-
-
-
