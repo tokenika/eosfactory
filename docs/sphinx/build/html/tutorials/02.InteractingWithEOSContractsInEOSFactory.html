@@ -46,7 +46,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           EOSFactory</a>
-        <span class="navbar-text navbar-version pull-left"><b>v1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v1.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -79,7 +79,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../pyteos.html">pyteos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleos.html">cleos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleos_system.html">cleos_system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teos.html">teos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../eosf.html">eosf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../node.html">node</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sess.html">sess</a></li>
@@ -203,7 +206,12 @@
 </div>
 <div class="section" id="initialize-workspace">
 <span id="initialize-workspace"></span><h2>Initialize Workspace<a class="headerlink" href="#initialize-workspace" title="Permalink to this headline">¶</a></h2>
-<p>To initialize the workspace:</p>
+<p>First, make sure a local testnet is running:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">node</span>
+<span class="n">node</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Then you can initialize the workspace:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sess</span>
 <span class="n">sess</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 </pre></div>
@@ -211,8 +219,8 @@
 <p>The initialization process does the following things:</p>
 <ul class="simple">
 <li>deploys the <em>Bios</em> contract</li>
-<li>creates a reference to the default <code class="docutils literal"><span class="pre">eosio</span></code> account</li>
-<li>creates several test accounts: <code class="docutils literal"><span class="pre">alice</span></code>, <code class="docutils literal"><span class="pre">bob</span></code> &amp; <code class="docutils literal"><span class="pre">carol</span></code></li>
+<li>creates a reference to the default <code class="docutils literal"><span class="pre">eosio</span></code> account, which can be accessed as <code class="docutils literal"><span class="pre">sess.eosio</span></code>,</li>
+<li>creates several test accounts: <code class="docutils literal"><span class="pre">alice</span></code>, <code class="docutils literal"><span class="pre">bob</span></code> &amp; <code class="docutils literal"><span class="pre">carol</span></code>, which can be accessed as <code class="docutils literal"><span class="pre">sess.alice</span></code>, <code class="docutils literal"><span class="pre">sess.bob</span></code> &amp; <code class="docutils literal"><span class="pre">sess.carol</span></code>.</li>
 <li>creates a wallet and imports into it the keys of all the above accounts</li>
 </ul>
 <p>If you need to lock or unlock your wallet, use the <code class="docutils literal"><span class="pre">wallet</span></code> object to do it:</p>
@@ -228,7 +236,7 @@
 <span id="create-test-accounts"></span><h2>Create test accounts<a class="headerlink" href="#create-test-accounts" title="Permalink to this headline">¶</a></h2>
 <p>If you need additional test accounts different from the ones genereated by <code class="docutils literal"><span class="pre">sess.init()</span></code> , you can easily create them:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">eosf</span>
-<span class="n">charlie</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">account</span><span class="p">()</span>
+<span class="n">charlie</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">account</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">eosio</span><span class="p">)</span>
 <span class="n">sess</span><span class="o">.</span><span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">charlie</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -236,12 +244,22 @@
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">charlie</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
 </pre></div>
 </div>
+<p><strong>NOTE:</strong> If you don’t specify the name parameter in <code class="docutils literal"><span class="pre">eosf.account()</span></code>, a random name will be applied (which is useful on a public testnet where extra restrictions apply). However if you want to assign a specific name to an account, you can still do it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">charlie</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">account</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">eosio</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;charlie&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="create-reference-to-the-eos-token-contract">
 <span id="create-reference-to-the-eos-token-contract"></span><h2>Create reference to the EOS Token Contract<a class="headerlink" href="#create-reference-to-the-eos-token-contract" title="Permalink to this headline">¶</a></h2>
+<p>We assume that a local testnet is running and it has been initialized:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">node</span><span class="o">,</span> <span class="nn">sess</span>
+<span class="n">node</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>To create a reference to an already compiled contract first create an account and import its key to a wallet:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">eosf</span>
-<span class="n">account</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">account</span><span class="p">()</span>
+<span class="n">account</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">account</span><span class="p">(</span><span class="n">sess</span><span class="o">.</span><span class="n">eosio</span><span class="p">)</span>
 <span class="n">sess</span><span class="o">.</span><span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
 </pre></div>
 </div>

@@ -2,7 +2,7 @@
 
 ## Compatibility
 
-EOSFactory [v1.1](https://github.com/tokenika/eosfactory/releases/tag/v1.0) is compatible with EOS [v1.0.7](https://github.com/EOSIO/eos/releases/tag/v1.0.7).
+EOSFactory [v1.1](https://github.com/tokenika/eosfactory/releases/tag/v1.0) is compatible with EOS [v1.0.8](https://github.com/EOSIO/eos/releases/tag/v1.0.8).
 
 ## Features available in previous releases
 
@@ -23,11 +23,12 @@ EOSFactory [v1.1](https://github.com/tokenika/eosfactory/releases/tag/v1.0) is c
 * [Visual Studio Code](https://code.visualstudio.com/) integration, including [CMake](https://cmake.org/) builds and automated tasks.
 
 ## New features available in v1.1
-* Full compatibility with the production version of EOS (v1.0.7).
+* Full compatibility with the production version of EOS ([v1.0.8](https://github.com/EOSIO/eos/releases/tag/v1.0.8)).
 * Ability to interact with a public testnet (e.g. [Jungle Testnet](http://dev.cryptolions.io/)).
 * Support for `keosd`, the official wallet management tool.
 * Built-in mechanism for mapping random account names to fixed names needed for smart-contract testing.
-* Color differentiation in console ouput.
+* Color differentiation in console output.
+* Improved error reporting.
 
 ## Current limitations
 

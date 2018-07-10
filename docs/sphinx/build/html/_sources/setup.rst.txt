@@ -1,6 +1,6 @@
-pyteos
-======
+setup
+=====
 
-.. automodule:: pyteos
+.. automodule:: setup
     :members:
     :show-inheritance:

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pyteos &#8212; EOSFactory 0.0 documentation</title>
+    <title>cleos_system &#8212; EOSFactory 0.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="eosf" href="eosf.html" />
-    <link rel="prev" title="Long-term EOSFactory Roadmap" href="roadmap/LongTermEOSFactoryRoadmap.html" />
+    <link rel="next" title="setup" href="setup.html" />
+    <link rel="prev" title="cleos" href="cleos.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -46,7 +46,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           EOSFactory</a>
-        <span class="navbar-text navbar-version pull-left"><b>v1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v1.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -79,7 +79,10 @@
 <li class="toctree-l1"><a class="reference internal" href="roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">pyteos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleos.html">cleos</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">cleos_system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teos.html">teos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosf.html">eosf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="node.html">node</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sess.html">sess</a></li>
@@ -96,7 +99,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">pyteos</a></li>
+<li><a class="reference internal" href="#">cleos_system</a></li>
 </ul>
 </ul>
 </li>
@@ -106,11 +109,11 @@
               
                 
   <li>
-    <a href="roadmap/LongTermEOSFactoryRoadmap.html" title="Previous Chapter: Long-term EOSFactory Roadmap"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Long-term EOS...</span>
+    <a href="cleos.html" title="Previous Chapter: cleos"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; cleos</span>
     </a>
   </li>
   <li>
-    <a href="eosf.html" title="Next Chapter: eosf"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">eosf &raquo;</span>
+    <a href="setup.html" title="Next Chapter: setup"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">setup &raquo;</span>
     </a>
   </li>
               
@@ -120,7 +123,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="_sources/pyteos.rst.txt"
+  <a href="_sources/cleos_system.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -144,8 +147,58 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="module-pyteos">
-<span id="pyteos"></span><h1>pyteos<a class="headerlink" href="#module-pyteos" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-cleos_system">
+<span id="cleos-system"></span><h1>cleos_system<a class="headerlink" href="#module-cleos_system" title="Permalink to this headline">¶</a></h1>
+<p>Python front-end for <cite>EOSIO cleos system</cite>.</p>
+<span class="target" id="module-pyteos"></span><dl class="class">
+<dt id="cleos_system.SystemNewaccount">
+<em class="property">class </em><code class="descclassname">cleos_system.</code><code class="descname">SystemNewaccount</code><span class="sig-paren">(</span><em>creator</em>, <em>name</em>, <em>owner_key</em>, <em>active_key</em>, <em>stake_net</em>, <em>stake_cpu</em>, <em>permission=''</em>, <em>buy_ram_kbytes=0</em>, <em>buy_ram=''</em>, <em>transfer=False</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos_system.SystemNewaccount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">cleos._Cleos</span></code></p>
+<p>Create an account, buy ram, stake for bandwidth for the account.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>creator: The name, of the account creating the new account. May be an 
+    object having the attribute `name`, like `CreateAccount`, 
+    or a string.
+name: The name of the new account.
+owner_key: The owner public key for the new account.
+active_key: The active public key for the new account.
+stake_net: The amount of EOS delegated for net bandwidth.
+stake_cpu: The amount of EOS delegated for CPU bandwidth.
+buy_ram: The amount of RAM bytes to purchase for the new account in EOS.
+transfer: Transfer voting power and right to unstake EOS to receiver.
+permission: An account and permission level to authorize, as in 
+    &#39;account@permission&#39;. May be a `CreateAccount` or `Account` object
+expiration: The time in seconds before a transaction expires, 
+    defaults to 30s
+skip_sign: Specify if unlocked wallet keys should be used to sign 
+    transaction.
+dont_broadcast: Don&#39;t broadcast transaction to the network (just print).
+forceUnique: Force the transaction to be unique. this will consume extra 
+    bandwidth and remove any protections against accidently issuing the 
+    same transaction multiple times.
+max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+    the execution of the transaction 
+    (defaults to 0 which means no limit).
+max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+    transaction (defaults to 0 which means no limit).
+ref_block: The reference block num or block id used for TAPOS 
+    (Transaction as Proof-of-Stake).
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">owner_key</span><span class="p">:</span> <span class="n">Owner</span> <span class="n">private</span> <span class="n">key</span><span class="o">.</span>
+<span class="n">active_key</span><span class="p">:</span> <span class="n">Active</span> <span class="n">private</span> <span class="n">key</span><span class="o">.</span>
+<span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">constraction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
 </div>
 
 

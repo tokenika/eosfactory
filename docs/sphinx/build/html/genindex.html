@@ -45,7 +45,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           EOSFactory</a>
-        <span class="navbar-text navbar-version pull-left"><b>v1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v1.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -78,7 +78,10 @@
 <li class="toctree-l1"><a class="reference internal" href="roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="pyteos.html">pyteos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleos.html">cleos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleos_system.html">cleos_system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teos.html">teos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosf.html">eosf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="node.html">node</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sess.html">sess</a></li>
@@ -132,7 +135,9 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#E"><strong>E</strong></a>
+ <a href="#C"><strong>C</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
@@ -141,15 +146,60 @@
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
 </div>
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cleos.html#module-cleos">cleos (module)</a>
+</li>
+      <li><a href="cleos_system.html#module-cleos_system">cleos_system (module)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cleos.html#cleos.CreateAccount">CreateAccount (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.CreateKey">CreateKey (class in cleos)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="eosf.html#module-eosf">eosf (module)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="teos.html#teos.get_keosd_wallet_dir">get_keosd_wallet_dir() (in module teos)</a>
+</li>
+      <li><a href="teos.html#teos.get_node_wallet_dir">get_node_wallet_dir() (in module teos)</a>
+</li>
+      <li><a href="cleos.html#cleos.GetAccount">GetAccount (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.GetAccounts">GetAccounts (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.GetBlock">GetBlock (class in cleos)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cleos.html#cleos.GetCode">GetCode (class in cleos)</a>
+</li>
+      <li><a href="teos.html#teos.GetConfig">GetConfig (class in teos)</a>
+</li>
+      <li><a href="cleos.html#cleos.GetInfo">GetInfo (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.GetTable">GetTable (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.GetTransaction">GetTransaction (class in cleos)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -161,13 +211,23 @@
 </li>
       <li><a href="eosf.html#eosf.Wallet.index">index() (eosf.Wallet method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="node.html#node.info">info() (in module node)</a>
 </li>
       <li><a href="sess.html#sess.init">init() (in module sess)</a>
 </li>
+      <li><a href="setup.html#setup.is_json">is_json() (in module setup)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="setup.html#setup.is_print_command_line">is_print_command_line() (in module setup)</a>
+</li>
+      <li><a href="setup.html#setup.is_print_request">is_print_request() (in module setup)</a>
+</li>
+      <li><a href="setup.html#setup.is_print_response">is_print_response() (in module setup)</a>
+</li>
       <li><a href="node.html#node.is_running">is_running() (in module node)</a>
+</li>
+      <li><a href="setup.html#setup.is_verbose">is_verbose() (in module setup)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -207,7 +267,11 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="eosf.html#module-pyteos">pyteos (module)</a>, <a href="pyteos.html#module-pyteos">[1]</a>
+      <li><a href="cleos.html#cleos.PushAction">PushAction (class in cleos)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cleos.html#module-pyteos">pyteos (module)</a>, <a href="cleos_system.html#module-pyteos">[1]</a>, <a href="eosf.html#module-pyteos">[2]</a>, <a href="teos.html#module-pyteos">[3]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -229,9 +293,35 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sess.html#module-sess">sess (module)</a>, <a href="sess.html#module-sess">[1]</a>
 </li>
+      <li><a href="setup.html#setup.set_command_line_mode">set_command_line_mode() (in module setup)</a>
+</li>
+      <li><a href="setup.html#setup.set_print_request">set_print_request() (in module setup)</a>
+</li>
+      <li><a href="setup.html#setup.set_print_response">set_print_response() (in module setup)</a>
+</li>
+      <li><a href="setup.html#setup.set_verbose">set_verbose() (in module setup)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cleos.html#cleos.set_wallet_url_arg">set_wallet_url_arg() (in module cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.SetContract">SetContract (class in cleos)</a>
+</li>
+      <li><a href="setup.html#setup.Setup">Setup (class in setup)</a>
+</li>
+      <li><a href="setup.html#module-setup">setup (module)</a>
+</li>
       <li><a href="node.html#node.stop">stop() (in module node)</a>
+</li>
+      <li><a href="cleos_system.html#cleos_system.SystemNewaccount">SystemNewaccount (class in cleos_system)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="teos.html#module-teos">teos (module)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -240,6 +330,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="eosf.html#eosf.Wallet.unlock">unlock() (eosf.Wallet method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="setup.html#setup.use_keosd">use_keosd() (in module setup)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -256,6 +350,26 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="eosf.html#eosf.Wallet">Wallet (class in eosf)</a>
+</li>
+      <li><a href="cleos.html#cleos.WalletCreate">WalletCreate (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.WalletImport">WalletImport (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.WalletKeys">WalletKeys (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.WalletList">WalletList (class in cleos)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cleos.html#cleos.WalletLock">WalletLock (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.WalletLockAll">WalletLockAll (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.WalletOpen">WalletOpen (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.WalletStop">WalletStop (class in cleos)</a>
+</li>
+      <li><a href="cleos.html#cleos.WalletUnlock">WalletUnlock (class in cleos)</a>
 </li>
   </ul></td>
 </tr></table>

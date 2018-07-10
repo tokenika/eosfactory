@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Welcome to EOSFactory documentation! &#8212; EOSFactory 0.0 documentation</title>
+    <title>teos &#8212; EOSFactory 0.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -25,7 +25,8 @@
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="EOSFactory Release Notes - v0.8" href="releases/ReleaseNotesVersion0.8.html" />
+    <link rel="next" title="eosf" href="eosf.html" />
+    <link rel="prev" title="setup" href="setup.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -43,7 +44,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="index.html">
           EOSFactory</a>
         <span class="navbar-text navbar-version pull-left"><b>v1.1</b></span>
       </div>
@@ -57,7 +58,7 @@
      id="dLabelGlobalToc"
      data-toggle="dropdown"
      data-target="#"
-     href="#">Site <b class="caret"></b></a>
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
@@ -77,11 +78,11 @@
 <li class="toctree-l1"><a class="reference internal" href="roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
 </ul>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="cleos.html">cleos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cleos_system.html">cleos_system</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="teos.html">teos</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">teos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosf.html">eosf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="node.html">node</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sess.html">sess</a></li>
@@ -98,14 +99,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Welcome to EOSFactory documentation!</a><ul>
-<li><a class="reference internal" href="#release-notes">Release Notes</a></li>
-<li><a class="reference internal" href="#tutorials">Tutorials</a></li>
-<li><a class="reference internal" href="#roadmap">Roadmap</a></li>
-<li><a class="reference internal" href="#python-documentation">Python Documentation</a></li>
-<li><a class="reference internal" href="#metadata">Metadata</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">teos</a></li>
 </ul>
 </ul>
 </li>
@@ -115,7 +109,11 @@
               
                 
   <li>
-    <a href="releases/ReleaseNotesVersion0.8.html" title="Next Chapter: EOSFactory Release Notes - v0.8"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">EOSFactory Re... &raquo;</span>
+    <a href="setup.html" title="Previous Chapter: setup"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; setup</span>
+    </a>
+  </li>
+  <li>
+    <a href="eosf.html" title="Next Chapter: eosf"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">eosf &raquo;</span>
     </a>
   </li>
               
@@ -125,7 +123,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="_sources/index.rst.txt"
+  <a href="_sources/teos.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -149,65 +147,30 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="welcome-to-eosfactory-documentation">
-<h1>Welcome to EOSFactory documentation!<a class="headerlink" href="#welcome-to-eosfactory-documentation" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://github.com/tokenika/eosfactory">EOSFactory</a> is a Python-based EOS smart-contract development framework, created by <a class="reference external" href="https://tokenika.io">Tokenika</a>.
-With a single command-line interface you can create a private testnet and then compile, unit-test and deploy <a class="reference external" href="https://eos.io/">EOS</a> smart-contracts.
-All of this using simple yet powerful <a class="reference external" href="https://www.python.org/">Python3</a> syntax.</p>
-<div class="section" id="release-notes">
-<h2>Release Notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
-<li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
-<li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion1.1.html">EOSFactory Release Notes - v1.1</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="tutorials">
-<h2>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="roadmap">
-<h2>Roadmap<a class="headerlink" href="#roadmap" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="python-documentation">
-<h2>Python Documentation<a class="headerlink" href="#python-documentation" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="cleos.html">cleos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cleos_system.html">cleos_system</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="teos.html">teos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="eosf.html">eosf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="node.html">node</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sess.html">sess</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="metadata">
-<h2>Metadata<a class="headerlink" href="#metadata" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
-</ul>
-</div>
+  <div class="section" id="module-teos">
+<span id="teos"></span><h1>teos<a class="headerlink" href="#module-teos" title="Permalink to this headline">¶</a></h1>
+<p>Python front-end for C++ <cite>teos</cite> controll classes, which implement functionality 
+needed for EOSIO smart-contract development process, yet not available form the
+EOSIO <cite>cleos</cite>.</p>
+<span class="target" id="module-pyteos"></span><dl class="class">
+<dt id="teos.GetConfig">
+<em class="property">class </em><code class="descclassname">teos.</code><code class="descname">GetConfig</code><span class="sig-paren">(</span><em>contract_dir=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#teos.GetConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">teos._Teos</span></code></p>
+<p>Get the configurationt of the teos executable.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="teos.get_keosd_wallet_dir">
+<code class="descclassname">teos.</code><code class="descname">get_keosd_wallet_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#teos.get_keosd_wallet_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the directory of the <cite>nodeos</cite> local wallet.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="teos.get_node_wallet_dir">
+<code class="descclassname">teos.</code><code class="descname">get_node_wallet_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#teos.get_node_wallet_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the directory of the <cite>nodeos</cite> local wallet.</p>
+</dd></dl>
+
 </div>
 
 

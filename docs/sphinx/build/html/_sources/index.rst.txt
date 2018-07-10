@@ -50,7 +50,10 @@ Python Documentation
 .. toctree::
     :maxdepth: 1
 
-    pyteos
+    cleos
+    cleos_system
+    setup
+    teos
     eosf
     node
     sess

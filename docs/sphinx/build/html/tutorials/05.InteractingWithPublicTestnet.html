@@ -46,7 +46,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           EOSFactory</a>
-        <span class="navbar-text navbar-version pull-left"><b>v1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>v1.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -79,7 +79,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../pyteos.html">pyteos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleos.html">cleos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleos_system.html">cleos_system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../teos.html">teos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../eosf.html">eosf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../node.html">node</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sess.html">sess</a></li>
@@ -172,7 +175,7 @@
 <div class="section" id="the-problems-with-public-testnet">
 <span id="the-problems-with-public-testnet"></span><h2>The problems with public testnet<a class="headerlink" href="#the-problems-with-public-testnet" title="Permalink to this headline">¶</a></h2>
 <p>To be able to create a new account on a public testnet you need an account name and two public keys (owner &amp; active). The problem with account names is that they need to be unique and also comply with strict rules (e.g. <code class="docutils literal"><span class="pre">[a-z1-5]{12}</span></code> ).</p>
-<p>Another problem is that you do not have full control of a public testnet (as is the case with a local private testnet) and you cannot reset it and thus each time you use a public testnet for your smart-contract testing you need to either create a new set of accounts (which is ineffective and time consuming) or you need to carefully recycle the same set of accounts (each having a unique random name).</p>
+<p>Another problem is that you do not have full control of a public testnet (as is the case with a local private testnet), you cannot reset it any time you want and thus each time you use a public testnet for your smart-contract testing you need to either create a new set of accounts (which is ineffective and time consuming) or you need to carefully recycle the same set of accounts (each having a unique random name).</p>
 <p>EOSFactory uses the latter approach and offers a built-in mechanism for mapping random account names to fixed names used in smart-contract testing. The mapping is stored in this location: <code class="docutils literal"><span class="pre">~/eosio-wallet/accounts.json</span></code>.</p>
 <p>And this what account mapping looks like in action:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Restored</span> <span class="n">accounts</span> <span class="k">as</span> <span class="k">global</span> <span class="n">variables</span><span class="p">:</span>
@@ -279,7 +282,7 @@
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Also, please note that during the initial run two additional accounts are created on the testnet. Their names are random (to ensure their uniqueness) but in the code they are referred to as <code class="docutils literal"><span class="pre">account_alice</span></code>  and <code class="docutils literal"><span class="pre">account_carol</span></code>. During subsequent runs, those two accounts are re-used.</p>
+<p>Also, please note that during the initial run two additional accounts are created on the testnet. Their names are random (to ensure their uniqueness) but in the code they are referred to as <code class="docutils literal"><span class="pre">account_alice</span></code>  and <code class="docutils literal"><span class="pre">account_carol</span></code>. During subsequent runs those two accounts are re-used.</p>
 </div>
 </div>
 

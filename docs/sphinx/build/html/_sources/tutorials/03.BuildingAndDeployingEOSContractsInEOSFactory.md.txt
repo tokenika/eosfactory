@@ -20,41 +20,28 @@ The prompt should change to `>>>` signifying that it's ready for Python commands
 
 ## Create a new contract from template
 
-First, start the testnet and initialize the workspace:
-
-```
-import node
-node.reset()
-```
-
-```
-import sess
-sess.init()
-```
-
-Then create an account which will be holding the contract:
+To create a new contract from a pre-defined template all you need is a name for the contract, for example:
 
 ```
 import eosf
-account = eosf.account()
-sess.wallet.import_key(account)
-```
-
-To create a new contract from a pre-defined template use the `ContractFromTemplate` class and pass to its constructor two paremetres: a reference to an existing account and a name for the contract, for example:
-
-```
-contract = eosf.ContractFromTemplate(account, "hello.world")
+contract = eosf.ContractBuilderFromTemplate("hello.world")
 ```
 
 **NOTE:**  Do not use spaces in contract names. What is allowed are letters, numbers, underscores `_`, dots `.` and dashes `- `. 
+
+The above command creates a new contract. If you wanted to access an existing one, use the following syntax instead:
+
+```
+contract = eosf.ContractBuilder("hello.world")
+```
+
+## Edit the source code
 
 To check the directory where the contract's files are located:
 
 ```
 contract.path()
 ```
-
-## Edit the source code
 
 Locate the folder containing the new contract (if you're not sure where it is, use the output produced by the `contract.path` method) and edit the `hello.world.cpp` file in your favourite text editor by commenting out line 17, i.e. `require_auth( user ) `:
 
@@ -64,7 +51,7 @@ Locate the folder containing the new contract (if you're not sure where it is, u
 
 #define DEBUG
 #include "logger.hpp"
-#include "hello.world88.hpp" 
+#include "hello.world.hpp" 
 
 using namespace eosio;
 
@@ -106,7 +93,29 @@ contract.build()
 
 ## Deploy the contract
 
-Now we can deploy the compiled contract:
+First, start the testnet and initialize the workspace:
+
+```
+import node, sess
+node.reset()
+sess.init()
+```
+
+Then create an account which will be holding the contract:
+
+```
+import eosf
+account = eosf.account(sess.eosio)
+sess.wallet.import_key(account)
+```
+
+Next, let's redefine  the contract so that it's associated with the above account: 
+
+```
+contract = eosf.Contract(account, contract.path())
+```
+
+And now we can deploy the contract:
 
 ```
 contract.deploy()
