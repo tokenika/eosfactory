@@ -21,9 +21,9 @@ def init():
 
     - **global variables**::
 
-        account_master: The primary EOSIO account predefined in the genesis file.
+        eosio: The primary EOSIO account predefined in the genesis file.
 
-        account_alice, account_bob, account_carol: Prefabricated demo accounts.
+        alice, bob, carol: Prefabricated demo accounts.
 
         key_owner, key_active: Cryptographic keys.
 
@@ -33,28 +33,28 @@ def init():
     """
 
     global wallet
-    global account_master
-    global account_alice
-    global account_bob
-    global account_carol
+    global eosio
+    global alice
+    global bob
+    global carol
 
     wallet = eosf.Wallet()
 
-    account_master = eosf.AccountMaster()
-    wallet.import_key(account_master)
+    eosio = eosf.AccountMaster()
+    wallet.import_key(eosio)
     
-    account_alice = eosf.account(account_master, "alice")
-    wallet.import_key(account_alice)
+    alice = eosf.account(eosio, "alice")
+    wallet.import_key(alice)
     
-    account_bob = eosf.account(account_master, "bob")
-    wallet.import_key(account_bob)
+    bob = eosf.account(eosio, "bob")
+    wallet.import_key(bob)
     
-    account_carol = eosf.account(account_master, "carol")
-    wallet.import_key(account_carol)
+    carol = eosf.account(eosio, "carol")
+    wallet.import_key(carol)
 
-    eosf.Contract(account_master, "eosio.bios").deploy()
+    eosf.Contract(eosio, "eosio.bios").deploy()
 
     if setup.is_verbose():
         print("#  Available test accounts: " 
-            + account_master.name + ", "  
-            + account_alice.name + ", " + account_carol.name + ", " + account_bob.name + "\n")
+            + eosio.name + ", "  
+            + alice.name + ", " + carol.name + ", " + bob.name + "\n")
