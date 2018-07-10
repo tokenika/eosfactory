@@ -449,11 +449,11 @@ class Transaction():
         pass
 
 
-class ContractBuild():
+class ContractBuilder():
     def __init__(
             self, contract_dir,
             wast_file="", abi_file="",
-            is_mutable = True,  
+            is_mutable = True,
             is_verbose=1):
 
         self.contract_dir = contract_dir
@@ -462,10 +462,13 @@ class ContractBuild():
         self.is_mutable = is_mutable
         self.is_verbose = is_verbose
 
+    def path(self):
+        return self.contract_dir
+
     def build_wast(self):
         if self.is_mutable:
             wast = teos.WAST(
-                self.contract_dir, "", 
+                self.contract_dir, "",
                 is_verbose=self.is_verbose)
         else:
             if self.is_verbose > 0:
@@ -486,6 +489,12 @@ class ContractBuild():
 
     def build(self):
         return not self.build_abi().error and not self.build_wast().error
+
+
+class ContractBuilderFromTemplate(ContractBuilder):
+    def __init__(self, name, template="", remove_existing=False, visual_studio_code=False, is_verbose=True):
+        t = teos.Template(name, template, remove_existing, visual_studio_code, is_verbose)
+        super().__init__(t.contract_path_absolute)
 
 
 class Contract():
@@ -547,19 +556,19 @@ class Contract():
 
 
     def build_wast(self):
-        return ContractBuild(
+        return ContractBuilder(
             self.contract_dir, "", "",
             self.is_mutable, self.is_verbose).build_wast()
 
 
     def build_abi(self):
-        return ContractBuild(
+        return ContractBuilder(
             self.contract_dir, "", "", 
             self.is_mutable, self.is_verbose).build_abi()
 
     
     def build(self):
-        return ContractBuild(
+        return ContractBuilder(
             self.contract_dir, "", "", 
             self.is_mutable, self.is_verbose).build()
 
@@ -661,12 +670,6 @@ class Contract():
             return str(self.contract)
         else:
             return str(self.account)
-
-
-class ContractFromTemplate(Contract):
-    def __init__(self, account, name, template="", remove_existing=False, visual_studio_code=False, is_verbose=True):
-        t = teos.Template(name, template, remove_existing, visual_studio_code, is_verbose)
-        super().__init__(account, t.contract_path_absolute)
 
 
 class AccountEosio():
