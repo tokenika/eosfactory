@@ -43,13 +43,13 @@ def init():
     account_master = eosf.AccountMaster()
     wallet.import_key(account_master)
     
-    account_alice = eosf.account(account_master)
+    account_alice = eosf.account(account_master, "alice")
     wallet.import_key(account_alice)
     
-    account_bob = eosf.account(account_master)
+    account_bob = eosf.account(account_master, "bob")
     wallet.import_key(account_bob)
     
-    account_carol = eosf.account(account_master)
+    account_carol = eosf.account(account_master, "carol")
     wallet.import_key(account_carol)
 
     eosf.Contract(account_master, "eosio.bios").deploy()
