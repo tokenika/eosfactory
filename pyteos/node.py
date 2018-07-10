@@ -21,7 +21,7 @@ def reset(is_verbose=1):
     Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
     """
     node = teos.NodeStart(1, is_verbose)
-    cleos.set_wallet_url(None, node.json["EOSIO_DAEMON_ADDRESS"])
+    cleos.set_wallet_url_arg(node, node.json["EOSIO_DAEMON_ADDRESS"])
     probe = teos.NodeProbe(is_verbose)
     if not probe.error:
         if node.is_verbose:
@@ -35,7 +35,7 @@ def run(is_verbose=1):
     Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
     """
     node = teos.NodeStart(0, is_verbose)
-    cleos.set_wallet_url(None, node.json["EOSIO_DAEMON_ADDRESS"])
+    cleos.set_wallet_url_arg(node, node.json["EOSIO_DAEMON_ADDRESS"])
     probe = teos.NodeProbe(is_verbose)
     if not probe.error:
         if node.is_verbose:
@@ -51,6 +51,7 @@ def stop(is_verbose=1):
     is empty, otherwise `False`.
     """
     stop = teos.NodeStop(is_verbose)
+    cleos.set_wallet_url_arg(stop, "")
     return stop
 
 

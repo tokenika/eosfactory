@@ -119,7 +119,7 @@ class _Eosf():
 
     def OUT(self, msg):
         if msg and Verbosity.OUT in self.verbosity:
-            print(dedent(msg).strip())
+            print(cleos.heredoc(msg))
 
     def DEBUG(self, msg):
         if msg and Verbosity.DEBUG in self.verbosity:
@@ -168,7 +168,11 @@ class Wallet(cleos.WalletCreate, _Eosf):
                 Create a `Wallet` object with the NODEOS wallet plugin.
                 """)
 
-        if not setup.is_use_keosd(): # look for password:
+        if cleos.is_not_running_not_keosd_set_error(self):
+            self.ERROR(self.err_msg)
+            return
+
+        if not password and not setup.is_use_keosd(): # look for password:
             try:
                 with open(self.wallet_dir_ + setup.password_map, "r") \
                         as input:    
@@ -186,11 +190,26 @@ class Wallet(cleos.WalletCreate, _Eosf):
             Wallet directory is {}
             """.format(self.wallet_dir_))
 
+        self.DEBUG("""
+            Local node is running: {}
+            """.format(cleos.node_is_running()))
+
         cleos.WalletCreate.__init__(self, name, password, is_verbose)
 
         self.DEBUG("""
+            Name is `{}`
             Wallet URL is {}
-            """.format(cleos.wallet_url()))
+            Use keosd status is {}
+            self._out:
+            {}
+            self.err_msg:
+            {}
+            """.format(
+                self.name,
+                cleos.wallet_url(), setup.is_use_keosd(),
+                self._out,
+                self.err_msg
+                ))
             
         if not self.error:
             if not setup.is_use_keosd(): 
@@ -233,11 +252,13 @@ class Wallet(cleos.WalletCreate, _Eosf):
 
         else: # wallet.error:
             if "Wallet already exists" in self.err_msg:
-                self.ERROR("""
-                    Wallet `{}` already exists.
-                    """.format(self.name))
-            else:
-                self.ERROR(self.err_msg)
+                self.ERROR("Wallet `{}` already exists.".format(self.name))
+                return
+            if "Invalid wallet password" in self.err_msg:
+                self.ERROR("Invalid password.")
+                return
+
+            self.ERROR(self.err_msg)
 
 
     def index(self):
@@ -652,6 +673,7 @@ class AccountEosio():
 
     json = {}
     error = False
+    err_msg = ""
     account_info = "The account is not opened yet!"
 
     def __init__(
@@ -684,37 +706,72 @@ class AccountEosio():
     def __str__(self):
         return self.name
 
+class AccountMaster(AccountEosio, _Eosf):
 
-class AccountMaster(AccountEosio):
-
-    def set_account_info(self):
+    
+    def is_local_testnet(self):
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
-        if not account_.error:
-            print(self.key_public)
-            if self.key_public == \
+        # print(cleos._wallet_url_arg)
+        # print(account_)
+        if not account_.error and \
+            self.key_public == \
                 account_.json["permissions"][0]["required_auth"]["keys"] \
                     [0]["key"]:
-                self.account_info = str(account_)
-                return True
-            else:
-                return False
+            self.account_info = str(account_)
+            self.EOSF("""
+                Local testnet is ON: the `eosio` account is master.
+                """)
+            return True
         else:
-            if "main.cpp:2712" in account_.err_msg:
-                self.account_info = "The account is not opened yet!"
-            else:
-                self.account_info = account_.err_msg
             return False
 
     def __init__(
             self, name="", owner_key_public="", active_key_public="", 
-            is_verbose=1):
+            is_verbose=1, verbosity=None):
+
+        is_verbose = self.verify_is_verbose(verbosity, is_verbose)
+    
+        self.EOSF_TRACE("""
+            ######### 
+            Get master account.
+            """)
+
+        self.DEBUG("""
+            Local node is running: {}
+            """.format(cleos.node_is_running()))
+
         AccountEosio.__init__(self, is_verbose)
-        if self.set_account_info():
+
+        self.DEBUG("""
+            Name is `{}`
+            Wallet URL is {}
+            Use keosd status is {}
+            self._out:
+            {}
+
+            self.err_msg:
+            {}
+
+            """.format(
+                self.name,
+                cleos.wallet_url(), setup.is_use_keosd(),
+                self._out,
+                self.err_msg
+                ))        
+
+        if cleos.is_not_running_not_keosd_set_error(self):
+            self.ERROR(self.err_msg)
+            return        
+
+        if self.is_local_testnet():
             return
+
+        self.account_info = "The account is not opened yet!"
+        self.DEBUG("It is not the local testnet.")
+        #cleos.set_wallet_url_arg(node, "")
 
         # not local testnet:
         if not owner_key_public: # print data for registration
-            self.new_account = True
             if not name: 
                 self.name = cleos.account_name()
             else:
@@ -722,24 +779,29 @@ class AccountMaster(AccountEosio):
 
             self.owner_key = cleos.CreateKey("owner", is_verbose=0)
             self.active_key = cleos.CreateKey("active", is_verbose=0)
-            print(
-                "\nUse the following data to register a new account on a public testnet:\n" \
-                + "Accout Name: {}\n".format(self.name) \
-                + "Owner Public Key: {}\n".format(self.owner_key.key_public) \
-                + "Owner Private Key: {}\n".format(self.owner_key.key_private) \
-                + "Active Public Key: {}\n".format(self.active_key.key_public) \
-                + "Active Private Key: {}\n".format(self.active_key.key_private))
+            self.OUT("""
+                Use the following data to register a new account on a public testnet:
+                Accout Name: {}
+                Owner Public Key: {}
+                Owner Private Key: {}
+                Active Public Key: {}
+                Active Private Key: {}
+                """.format(
+                    self.name,
+                    self.owner_key.key_public, self.owner_key.key_private,
+                    self.active_key.key_public, self.active_key.key_private
+                    ))
         else: # restore the master account
             self.name = name
-            self.new_account = False
             self.owner_key = cleos.CreateKey("owner", owner_key_public, is_verbose=0)
             if not active_key_public:
                 self.active_key = owner_key
             else:
                 self.active_key = cleos.CreateKey(
                     "active", active_key_public, is_verbose=0)
-
-        self.set_account_info()
+            account_ = cleos.GetAccount(name, is_verbose=-1)
+            if not account_.error:
+                self.account_info = str(account_)
 
 
     def info(self):

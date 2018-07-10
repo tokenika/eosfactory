@@ -17,7 +17,7 @@ issued commands.
 
 setup.use_keosd(False)
 setup.set_verbose(True)
-#setup.set_debug_mode()
+#setup.set_command_line_mode()
 
 
 def test():

@@ -60,7 +60,7 @@ class _Teos:
             print("---------------------")
             print("")   
 
-        if setup.is_debug_mode():
+        if setup.is_print_command_line():
             print("command line sent to cleos:")
             print(" ".join(cl))
             print("")
@@ -204,7 +204,10 @@ class NodeStart(_Teos):
         _Teos.__init__(self, jarg, "daemon", "start", is_verbose)
 
         self.command_line = ""
-        if not self.error and not "head_block_num" in self.json:
+        if not self.error:
+            if "DO_NOT_LAUNCH" in self.json and self.json["DO_NOT_LAUNCH"]:
+                return
+                
             self.command_line = self.json["command_line"]
             if self.json["is_windows_ubuntu"] == "true":
                 subprocess.call(

@@ -5,7 +5,7 @@ import json
 
 _is_verbose = 1
 _is_json = 0
-_is_debug_mode = False
+_is_command_line_mode = False
 _print_request = False
 _print_response = False
 _nodeos_URL = None
@@ -114,23 +114,21 @@ def is_print_response():
     return _print_response
 
 
-def set_debug_mode(status=True):
+def set_command_line_mode(status=True):
     """If set `True`, print html communication with the node.
     Also, be super-verbose.
     """
-    global _is_debug_mode
-    _is_debug_mode = status
-    set_print_request(status)
-    set_print_response(status)
+    global _is_command_line_mode
+    _is_command_line_mode = status
     if status:
-        print("##### debug mode is set!")
+        print("##### command line mode is set!")
 
-def is_debug_mode():
+def is_print_command_line():
     """If `True`, print html communication with the node.
     Also, be super-verbose.
     """
-    global _is_debug_mode
-    return _is_debug_mode    
+    global _is_command_line_mode
+    return _is_command_line_mode    
 
 
 # def output(msg):

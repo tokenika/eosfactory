@@ -143,10 +143,9 @@ namespace teos {
           //deleteDaemonData();
           deleteWallets();          
         } else if(!getPid().empty()){
-          teos::TeosCommand tc = teos::command::GetInfo(); 
-          respJson_ = tc.respJson_;
           reqJson_.put(DO_NOT_LAUNCH, 1);
-          respJson_.put(DO_NOT_LAUNCH, 1);          
+          respJson_.put(DO_NOT_LAUNCH, 1);
+          respJson_.put("EOSIO_DAEMON_ADDRESS", getHttpServerAddress(this));          
           return false;
         }
 
