@@ -41,7 +41,7 @@ class Verbosity(enum.Enum):
     OUT = 5
     DEBUG = 6
 
-_verbosity = [Verbosity.EOSF]
+_verbosity = [Verbosity.EOSF, Verbosity.OUT]
 def set_verbosity(value=_verbosity):
     global _verbosity
     _verbosity = value
