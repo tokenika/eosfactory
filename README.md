@@ -1,6 +1,6 @@
 # Welcome to EOSFactory
 
-[EOSFactory](http://eosfactory.io/) is a Python-based [EOS](https://eos.io) smart-contract development framework, created by [Tokenika](https://tokenika.io).
+[EOSFactory](http://eosfactory.io/) is a Python-based [EOS](https://eos.io) smart-contract development & testing framework, created by [Tokenika](https://tokenika.io).
 
 The goal is to achieve a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
 
@@ -61,9 +61,13 @@ Please refer to [this index of Python modules](http://eosfactory.io/sphinx/build
 
 Please refer to [this document](http://eosfactory.io/sphinx/build/html/releases/ReleaseNotesVersion1.1.html).
 
+## Status
+
+As of `v1.1` release EOSFactory is production-ready, which means it can be used for working with real-life smart-contracts. Both local (private) testnets and remote (public) testnets are supported.
+
 ## Roadmap
 
-EOSFactory is currently at an MVP stage. It was initially released in May 2018 and there are subsequent releases to be expected in the near future. Our long-term goal is to turn EOSFactory into a comprehensive IDE (Integrated Development Environment) for EOS smart-contracts.
+Our long-term goal is to turn EOSFactory into a comprehensive IDE (Integrated Development Environment) for EOS smart-contracts, smilar to Ethereum's [Truffle Framework](https://truffleframework.com/).
 
 - [Plan for Subsequent EOSFactory Releases](http://eosfactory.io/sphinx/build/html/roadmap/PlanForSubsequentEOSFactoryReleases.html)
 - [Long-term EOSFactory Roadmap](http://eosfactory.io/sphinx/build/html/roadmap/LongTermEOSFactoryRoadmap.html)

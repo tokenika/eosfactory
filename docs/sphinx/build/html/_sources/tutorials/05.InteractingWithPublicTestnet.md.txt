@@ -41,6 +41,8 @@ Then run the following set of commands.
 import setup, eosf
 setup.use_keosd(True)
 setup.set_nodeos_URL("88.99.97.30:38888")
+eosf.kill_keosd()
+eosf.clear_account_mapping([])
 wallet = eosf.Wallet("jungle_wallet")
 ```
 

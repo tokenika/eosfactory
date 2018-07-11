@@ -23,7 +23,7 @@ EOSFactory [v1.1](https://github.com/tokenika/eosfactory/releases/tag/v1.0) is c
 * [Visual Studio Code](https://code.visualstudio.com/) integration, including [CMake](https://cmake.org/) builds and automated tasks.
 
 ## New features available in v1.1
-* Full compatibility with the production version of EOS ([v1.0.8](https://github.com/EOSIO/eos/releases/tag/v1.0.8)).
+* Full compatibility with production version of EOS ([v1.0.8](https://github.com/EOSIO/eos/releases/tag/v1.0.8) and higher).
 * Ability to interact with a public testnet (e.g. [Jungle Testnet](http://dev.cryptolions.io/)).
 * Support for `keosd`, the official wallet management tool.
 * Built-in mechanism for mapping random account names to fixed names needed for smart-contract testing.
