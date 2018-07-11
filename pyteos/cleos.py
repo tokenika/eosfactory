@@ -62,7 +62,7 @@ Cannot use the local node Wallet Manager if the node is not running.
     return is_error
 
 
-def set_wallet_url_arg(cleos_object, url=None, starting=False):
+def set_wallet_url_arg(cleos_object, url=None, check_error=True):
     """ Implements the `use_keosd` flag in the `setup` module.
     """
     # print("CCCCCCCCCCCCCC set_wallet_url_arg: {}".format(url))
@@ -70,13 +70,13 @@ def set_wallet_url_arg(cleos_object, url=None, starting=False):
     if not _wallet_url_arg is None:
         return
 
-    if is_notrunningnotkeosd_error(cleos_object) and not starting:
+    if check_error and is_notrunningnotkeosd_error(cleos_object):
         _wallet_url_arg = None
         # print("TTTTTTTTTTTTTT is_notrunningnotkeosd_error: {}".format(_wallet_url_arg))
         return        
 
     if not url is None:
-        if url == "":
+        if not url:
             _wallet_url_arg = []
         else:
             _wallet_url_arg = ["--wallet-url", "http://" + url]
