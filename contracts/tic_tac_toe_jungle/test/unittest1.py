@@ -6,7 +6,12 @@ from termcolor import cprint
 
 wallet_name = "" # Enter wallet name
 wallet_pass = "" # Enter wallet password
-deployment = True # Turn to `False` after initial run
+
+"""
+This flag needs to be set to `True` only for the initial run
+or after the contract is changed and re-built
+"""
+deployment = True
 
 setup.set_verbose(True)
 setup.use_keosd(True)
