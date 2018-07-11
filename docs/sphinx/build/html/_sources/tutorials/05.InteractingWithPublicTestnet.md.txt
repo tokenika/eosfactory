@@ -127,7 +127,7 @@ And then:
 make
 ```
 
-## Prepare the unit test
+## Prepare unit tests
 
 Edit the `test/unittest1.py` file and in lines `7` & `8` enter the name and password of the wallet created in the first step:
 
@@ -143,9 +143,9 @@ wallet_name = "jungle_wallet"
 wallet_pass = "PW5KDRWrMAev57rfJ8z9FXpRA1tEG4EJ6nsnpVAfYdHRe5WDMnnLz"
 ```
 
-Perform a similar amendment in the the `test/test1.py` file and make sure both files are saved after being modified.
+Perform similar amendments in the the `test/test1.py` file and make sure both files are saved after being modified.
 
-## Run the unit test
+## Run unit tests
 
 Finally, open a bash terminal, navigate to the `tic_tac_toe_jungle/test` folder and execute the content of the `unittest1.py ` file:
 

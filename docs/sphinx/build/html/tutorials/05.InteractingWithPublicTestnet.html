@@ -104,8 +104,8 @@
 <li><a class="reference internal" href="#the-problems-with-public-testnet">The problems with public testnet</a></li>
 <li><a class="reference internal" href="#create-a-new-account-on-a-public-testnet">Create a new account on a public testnet</a></li>
 <li><a class="reference internal" href="#build-the-smart-contract">Build the smart-contract</a></li>
-<li><a class="reference internal" href="#prepare-the-unit-test">Prepare the unit test</a></li>
-<li><a class="reference internal" href="#run-the-unit-test">Run the unit test</a></li>
+<li><a class="reference internal" href="#prepare-unit-tests">Prepare unit tests</a></li>
+<li><a class="reference internal" href="#run-unit-tests">Run unit tests</a></li>
 <li><a class="reference internal" href="#run-unit-tests-using-cmake">Run unit tests using <em>CMake</em></a></li>
 </ul>
 </li>
@@ -253,8 +253,8 @@ PW5KDRWrMAev57rfJ8z9FXpRA1tEG4EJ6nsnpVAfYdHRe5WDMnnLz
 </pre></div>
 </div>
 </div>
-<div class="section" id="prepare-the-unit-test">
-<span id="prepare-the-unit-test"></span><h2>Prepare the unit test<a class="headerlink" href="#prepare-the-unit-test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="prepare-unit-tests">
+<span id="prepare-unit-tests"></span><h2>Prepare unit tests<a class="headerlink" href="#prepare-unit-tests" title="Permalink to this headline">¶</a></h2>
 <p>Edit the <code class="docutils literal"><span class="pre">test/unittest1.py</span></code> file and in lines <code class="docutils literal"><span class="pre">7</span></code> &amp; <code class="docutils literal"><span class="pre">8</span></code> enter the name and password of the wallet created in the first step:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wallet_name</span> <span class="o">=</span> <span class="s2">&quot;&lt;your wallet name&gt;&quot;</span>
 <span class="n">wallet_pass</span> <span class="o">=</span> <span class="s2">&quot;&lt;your wallet password&gt;&quot;</span>
@@ -265,10 +265,10 @@ PW5KDRWrMAev57rfJ8z9FXpRA1tEG4EJ6nsnpVAfYdHRe5WDMnnLz
 <span class="n">wallet_pass</span> <span class="o">=</span> <span class="s2">&quot;PW5KDRWrMAev57rfJ8z9FXpRA1tEG4EJ6nsnpVAfYdHRe5WDMnnLz&quot;</span>
 </pre></div>
 </div>
-<p>Perform a similar amendment in the the <code class="docutils literal"><span class="pre">test/test1.py</span></code> file and make sure both files are saved after being modified.</p>
+<p>Perform similar amendments in the the <code class="docutils literal"><span class="pre">test/test1.py</span></code> file and make sure both files are saved after being modified.</p>
 </div>
-<div class="section" id="run-the-unit-test">
-<span id="run-the-unit-test"></span><h2>Run the unit test<a class="headerlink" href="#run-the-unit-test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="run-unit-tests">
+<span id="run-unit-tests"></span><h2>Run unit tests<a class="headerlink" href="#run-unit-tests" title="Permalink to this headline">¶</a></h2>
 <p>Finally, open a bash terminal, navigate to the <code class="docutils literal"><span class="pre">tic_tac_toe_jungle/test</span></code> folder and execute the content of the <code class="docutils literal"><span class="pre">unittest1.py</span></code> file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">unittest1</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
