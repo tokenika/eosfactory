@@ -16,6 +16,14 @@ cryptolions = "88.99.97.30:38888"
 
 class Test1(unittest.TestCase):
 
+    def run(self, result=None):
+        super().run(result)
+        print("""
+
+NEXT TEST ====================================================================
+""")
+
+
     @classmethod
     def setUpClass(cls):
         pass
@@ -41,8 +49,8 @@ class Test1(unittest.TestCase):
         setup.use_keosd(False)
         eosf.reset(is_verbose=0)
         eosf.Wallet()
-        eosf.stop()
-        node.run()
+        eosf.stop(is_verbose=0)
+        node.run(is_verbose=0)
         
         wallet = eosf.Wallet()
         self.assertTrue(wallet.error)
@@ -52,8 +60,8 @@ class Test1(unittest.TestCase):
         setup.use_keosd(False)
         eosf.reset(is_verbose=0)
         wallet = eosf.Wallet()
-        eosf.stop()
-        eosf.run()        
+        eosf.stop(is_verbose=0)
+        eosf.run(is_verbose=0)        
         
         wallet = eosf.Wallet(
             "default", "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV")

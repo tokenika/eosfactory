@@ -11,6 +11,14 @@ eosf.set_throw_error(True)
 
 class Test1(unittest.TestCase):
 
+    def run(self, result=None):
+        super().run(result)
+        print("""
+
+NEXT TEST ====================================================================
+""")
+
+
     @classmethod
     def setUpClass(cls):
         pass
@@ -22,8 +30,8 @@ class Test1(unittest.TestCase):
     def test_local_testnet(self):
         setup.use_keosd(False)
         eosf.reset(is_verbose=0)
-        eosf.stop()
-        eosf.run()
+        eosf.stop(is_verbose=0)
+        eosf.run(is_verbose=0)
 
         account_master = eosf.AccountMaster()
         print(account_master.info())
