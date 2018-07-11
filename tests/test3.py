@@ -39,7 +39,7 @@ def test():
     cprint("""
 Create a reference to the new contract
     """, 'magenta')
-    contract = eosf.ContractFromTemplate(account_deploy,
+    contract = eosf.ContractBuilderFromTemplate(account_deploy,
         "_e4b2ffc804529ce9c6fae258197648cc2",
         remove_existing=True)
 
