@@ -514,7 +514,7 @@ if [ "$OS_NAME" == "Darwin" ]; then
 else 
     if [ "$OS_NAME" == "Ubuntu" ]; then
         printf "%s\n" "
-    $ source ~/.bashrc
+    $ source ~/.profile
 "
     else
         printf "%s\n" "

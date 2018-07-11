@@ -13,7 +13,7 @@
             "command": "mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
         },
         "linux": {
-            "command": "mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
+            "command": "source ~/.profile; mkdir -p build; ${eosf} build contract \"${workspaceFolder}\"/src -c"
         },
         "presentation": {
             "reveal": "always",
@@ -32,7 +32,7 @@
             "command": "mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
         },
         "linux": {
-            "command": "mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
+            "command": "source ~/.profile; mkdir -p build; ${eosf} generate abi \"${workspaceFolder}\"/src; ${eosf} build contract \"${workspaceFolder}\"/src"
         },
         "problemMatcher": [],
         "presentation": {
@@ -56,7 +56,7 @@
             "command": "python3 ./test/test1.py"
         },
         "linux": {
-            "command": "python3 ./test/test1.py"
+            "command": "source ~/.profile; python3 ./test/test1.py"
         },
         "presentation": {
             "reveal": "always",
@@ -75,7 +75,7 @@
             "command": "python3 ./test/unittest1.py"
         },
         "linux": {
-            "command": "python3 ./test/unittest1.py"
+            "command": "source ~/.profile; python3 ./test/unittest1.py"
         },
         "presentation": {
             "reveal": "always",
