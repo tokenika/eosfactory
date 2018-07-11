@@ -70,6 +70,29 @@ def account_map():
     return account_map
 
 
+def clear_account_mapping(exclude=["account_master"]):
+    wallet_dir_ = wallet_dir()
+    account_map = {}
+
+    try: # whether the setup map file exists:
+        with open(wallet_dir_ + setup.account_map, "r") as input:
+            account_map = json.load(input)
+    except:
+        pass
+        
+    clear_map = {}
+    for account_name in account_map:
+        if account_map[account_name] in exclude:
+            clear_map[account_name] = account_map[account_name]
+        
+    with open(wallet_dir_ + setup.account_map, "w") as out:
+        out.write(json.dumps(clear_map, sort_keys=True, indent=4))
+
+
+def kill_keosd():
+    cleos.WalletStop(is_verbose=-1)
+
+
 class _Eosf():
 
     eosf_color = 'cyan'
