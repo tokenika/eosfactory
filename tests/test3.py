@@ -9,6 +9,8 @@ setup.use_keosd(False)
 setup.set_verbose(True)
 #setup.set_command_line_mode()
 
+CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
+
 def test():
     testnet = node.reset()
     assert(not testnet.error)
@@ -39,15 +41,19 @@ def test():
     cprint("""
 Create a reference to the new contract
     """, 'magenta')
-    contract = eosf.ContractBuilderFromTemplate(account_deploy,
-        "_e4b2ffc804529ce9c6fae258197648cc2",
+    contract = eosf.ContractBuilderFromTemplate(CONTRACT_NAME,
         remove_existing=True)
 
     cprint("""
 Build the contract abi
     """, 'magenta')
     assert(not contract.build_abi().error)
-    
+
+    cprint("""
+Associate the contract with an account
+    """, 'magenta')
+    contract = eosf.Contract(account_deploy, CONTRACT_NAME)
+
     cprint("""
 Build the contract wast
     """, 'magenta')
@@ -85,6 +91,7 @@ WARNING: This action should fail due to authority mismatch!
         "hi", '{"user":"' + str(account_carol) + '"}', account_alice)
     assert(action.error)
 
+    contract.delete()
     node.stop()
 
     cprint("OK OK OK OK OK OK OK OK 0K 0K 0K 0K", 'green')

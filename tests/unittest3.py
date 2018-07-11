@@ -10,6 +10,8 @@ setup.set_verbose(True)
 setup.set_json(False)
 setup.use_keosd(False)
 
+CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
+
 class Test1(unittest.TestCase):
 
     def run(self, result=None):
@@ -59,8 +61,7 @@ class Test1(unittest.TestCase):
         cprint("""
 Create a reference to the new contract
         """, 'magenta')
-        contract = eosf.ContractBuilderFromTemplate(account_deploy,
-            "_e4b2ffc804529ce9c6fae258197648cc2",
+        contract = eosf.ContractBuilderFromTemplate(CONTRACT_NAME,
             remove_existing=True)
 
         cprint("""
@@ -72,6 +73,11 @@ Build the contract abi
 Build the contract wast
         """, 'magenta')
         self.assertFalse(contract.build_wast().error)
+
+        cprint("""
+Associate the contract with an account
+        """, 'magenta')
+        contract = eosf.Contract(account_deploy, CONTRACT_NAME)
 
         cprint("""
 Deploy the contract
