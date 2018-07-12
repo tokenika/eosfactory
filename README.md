@@ -64,13 +64,15 @@ Please refer to [this document](http://eosfactory.io/sphinx/build/html/releases/
 
 ## Current status
 
-As of the `v1.1` release EOSFactory is a production-ready system, which means it can be used for working with real-life smart-contracts.
+As of the [v1.1](https://github.com/tokenika/eosfactory/releases/tag/v1.1) release, EOSFactory is a production-ready system, which means it can be used for working with real-life smart-contracts.
 
 Both local (private) testnets and remote (public) testnets are supported. Theoretically you could even use it on the EOS mainnet, even though it's not recommended at this stage for security reasons.
 
 ## Roadmap
 
-Our long-term goal is to turn EOSFactory into a comprehensive IDE (Integrated Development Environment) for EOS smart-contracts, smilar to Ethereum's [Truffle Framework](https://truffleframework.com/).
+After [v1.1](https://github.com/tokenika/eosfactory/releases/tag/v1.1) has been released, our current focus is mainly on stabilizing the code, collecting feedback from users and improving UX.
+
+Our long-term goal is to turn EOSFactory into a comprehensive IDE (Integrated Development Environment) for EOS smart-contracts, similar to Ethereum's [Truffle Framework](https://truffleframework.com/).
 
 - [Plan for Subsequent EOSFactory Releases](http://eosfactory.io/sphinx/build/html/roadmap/PlanForSubsequentEOSFactoryReleases.html)
 - [Long-term EOSFactory Roadmap](http://eosfactory.io/sphinx/build/html/roadmap/LongTermEOSFactoryRoadmap.html)
