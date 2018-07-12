@@ -1,12 +1,12 @@
 # Interacting with Public Testnet
 
-The purpose of this tutorial is to demonstrate how EOSFactory can be used to deploy and test EOS smart-contracts on a public testnet, e.g. [Jungle](http://dev.cryptolions.io).
+The purpose of this tutorial is to demonstrate how EOSFactory can be used to deploy and test EOS smart-contracts on a public testnet, e.g. [Jungle Testnet](http://dev.cryptolions.io).
 
 ## Prerequisites
 
 - This tutorial assumes that you have successfully installed EOSFactory. If it's not the case, please refer to [Installing EOSFactory](01.InstallingEOSFactory.html).
 
-- We assume that you are familiar with the material covered in [Interacting with EOS Contracts in EOSFactory](02.InteractingWithEOSContractsInEOSFactory.html) and [Building & Deploying EOS Contracts using EOSFactory](03.BuildingAndDeployingEOSContractsInEOSFactory.md).
+- We assume that you are familiar with the material covered in [Interacting with EOS Contracts in EOSFactory](02.InteractingWithEOSContractsInEOSFactory.html) and [Building & Deploying EOS Contracts using EOSFactory](03.BuildingAndDeployingEOSContractsInEOSFactory.html).
 
 - We also assume you have [Visual Studio Code](https://code.visualstudio.com/) installed. If you are on Windows and run VSC for the first time, in order to get access to *Windows Subsystem for Linux* bash terminal inside VSC, navigate to `Preferences -> Settings` and overwrite the default configuration for the `terminal.integrated.shell.windows` option:
 
@@ -46,7 +46,7 @@ eosf.clear_account_mapping([])
 wallet = eosf.Wallet("jungle_wallet")
 ```
 
-**NOTE:** The `88.99.97.30:38888` URL is a Cryptolions endpoint to the [Jungle Testnet](http://dev.cryptolions.io/). For public testnet we need to rely on the `keosd` toolset for wallet management, which means that your wallet will be stored in the `~/eosio-wallet` folder. The name `jungle_wallet` can be replaced by any name you prefer - just make sure there is no naming conflict with any an existing wallet.
+**NOTE:** The `88.99.97.30:38888` URL is a [CryptoLions](https://cryptolions.io/) endpoint to the [Jungle Testnet](http://dev.cryptolions.io/). For public testnet we need to rely on the `keosd` toolset for wallet management, which means that your wallet will be stored in the `~/eosio-wallet` folder. The name `jungle_wallet` can be replaced by any name you prefer - just make sure there is no naming conflict with any an existing wallet.
 
 This is the outcome you should get:
 
@@ -80,7 +80,7 @@ Active Private Key: 5KU4eMGPSw8z9UJfTc5pRBhkkXNEdVpKAQd9sCbeEFdVdXhBHAH
 
 Next, open the [Jungle Testnet monitor](http://dev.cryptolions.io/) in your web browser and create a new account there (select the `Create Account` menu option) using the above data for account name, owner public key and active public key. Then use the testnet faucet (select the `Faucet` menu option) to send some funds into the newly created account.
 
-Next, navigate back to your Python terminal and run these two commands:
+Next, navigate back to your Python terminal and run these commands:
 
 ```
 wallet.unlock()
@@ -213,7 +213,7 @@ Test project /mnt/d/Workspaces/EOS/eosfactory/contracts/tic_tac_toe_jungle/build
 Total Test time (real) =   8.25 sec
 ```
 
-If you prefer more verbosity use the `-V` flag:
+If you prefer more verbosity, use the `-V` flag:
 
 ```
 ctest -V

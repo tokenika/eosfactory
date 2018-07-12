@@ -61,9 +61,11 @@ Please refer to [this index of Python modules](http://eosfactory.io/sphinx/build
 
 Please refer to [this document](http://eosfactory.io/sphinx/build/html/releases/ReleaseNotesVersion1.1.html).
 
-## Status
+## Current status
 
-As of `v1.1` release EOSFactory is production-ready, which means it can be used for working with real-life smart-contracts. Both local (private) testnets and remote (public) testnets are supported.
+As of the `v1.1` release EOSFactory is a production-ready system, which means it can be used for working with real-life smart-contracts.
+
+Both local (private) testnets and remote (public) testnets are supported. Theoretically you could even use it on the EOS mainnet, even though it's not recommended at this stage for security reasons.
 
 ## Roadmap
 

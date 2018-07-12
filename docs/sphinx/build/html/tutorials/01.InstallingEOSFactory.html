@@ -326,10 +326,13 @@
 </pre></div>
 </div>
 <p>And then just run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">build</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> After the initial successful installation, unless the path to your <em>EOSIO</em> source code and/or your workspace directory has changed, you don’t need to supply them when doing subsequent EOSFactory builds, as those paths are already stored in your system variables. If you do need to supply those parameters, use this syntax:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">build</span><span class="o">.</span><span class="n">sh</span> <span class="o">-</span><span class="n">e</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">EOSIO</span><span class="o">/</span><span class="n">repository</span> <span class="o">-</span><span class="n">w</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">workspace</span>
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> After the initial successful installation, unless the path to your <em>EOSIO</em> source code has changed, you don’t need to supply it when doing subsequent EOSFactory builds, as this path is already stored in your system variables.</p>
 <p>If you want to rebuild EOSFactory from scratch, apply the <code class="docutils literal"><span class="pre">-r</span></code> option:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">build</span><span class="o">.</span><span class="n">sh</span> <span class="o">-</span><span class="n">r</span>
 </pre></div>

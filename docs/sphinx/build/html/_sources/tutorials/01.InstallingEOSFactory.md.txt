@@ -194,10 +194,14 @@ git pull
 And then just run:
 
 ```
-./build.sh -e /path/to/your/local/EOSIO/repository -w /path/to/your/local/workspace
+./build.sh
 ```
 
-**NOTE:** After the initial successful installation, unless the path to your *EOSIO* source code has changed, you don't need to supply it when doing subsequent EOSFactory builds, as this path is already stored in your system variables.
+**NOTE:** After the initial successful installation, unless the path to your *EOSIO* source code and/or your workspace directory has changed, you don't need to supply them when doing subsequent EOSFactory builds, as those paths are already stored in your system variables. If you do need to supply those parameters, use this syntax:
+
+```
+./build.sh -e /path/to/your/local/EOSIO/repository -w /path/to/your/local/workspace
+```
 
 If you want to rebuild EOSFactory from scratch, apply the `-r` option:
 
