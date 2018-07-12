@@ -32,6 +32,7 @@ EOSFactory [v1.1](https://github.com/tokenika/eosfactory/releases/tag/v1.1) is c
 
 ## Current limitations
 
+* There are some edge cases where account mappings get erased and the user needs to start from scratch in terms of setting up an account on a public testnet.
 * Whereas the `nodeos` process runs in the background on MacOS, on other platforms (Windows & Ubuntu) it requires launching a separate terminal window (it's done automatically though). This might be a limitation for GUI-less systems like Ubuntu Server edition.
 * The `Contract` class `abi()` and `build()` methods are relying on the *EOSIO* ABI generator which has an experimental status in the *EOSIO* repository. Thus the ABI output might be different than expected.
 * The `Contract` class `push_action()` and `show_action` methods accept only verbose input, i.e. all action's parameters must be named in the JSON syntax.

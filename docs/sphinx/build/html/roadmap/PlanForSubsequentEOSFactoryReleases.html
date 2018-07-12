@@ -100,9 +100,9 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Plan for Subsequent EOSFactory Releases</a><ul>
-<li><a class="reference internal" href="#compatibility-with-eosio-v1-0">Compatibility with EOSIO v1.0</a></li>
-<li><a class="reference internal" href="#connect-to-non-private-testnet">Connect to non-private testnet</a></li>
-<li><a class="reference internal" href="#extract-the-c-layer-as-a-separate-project">Extract the C++ layer as a separate project</a></li>
+<li><a class="reference internal" href="#improving-python-interface">Improving Python interface</a></li>
+<li><a class="reference internal" href="#better-integration-with-visual-studio-code">Better integration with Visual Studio Code</a></li>
+<li><a class="reference internal" href="#extracting-the-c-layer-as-a-separate-project">Extracting the C++ layer as a separate project</a></li>
 </ul>
 </li>
 </ul>
@@ -154,17 +154,19 @@
       
   <div class="section" id="plan-for-subsequent-eosfactory-releases">
 <span id="plan-for-subsequent-eosfactory-releases"></span><h1>Plan for Subsequent EOSFactory Releases<a class="headerlink" href="#plan-for-subsequent-eosfactory-releases" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="compatibility-with-eosio-v1-0">
-<span id="compatibility-with-eosio-v1-0"></span><h2>Compatibility with EOSIO v1.0<a class="headerlink" href="#compatibility-with-eosio-v1-0" title="Permalink to this headline">¶</a></h2>
-<p>For the time being EOSFactory v1.0 is compatible EOSIO dawn-v4.0.0. Once EOSIO stops changing rapidly and becomes stable, the subsequent EOSFactory release will be compatible with the latest EOSIO release.</p>
+<div class="section" id="improving-python-interface">
+<span id="improving-python-interface"></span><h2>Improving Python interface<a class="headerlink" href="#improving-python-interface" title="Permalink to this headline">¶</a></h2>
+<p>We plan to make EOSFactory workflow more intuitive and user-friendly. We still see some areas for improvement in this regard.</p>
+<p>####Improving account management</p>
+<p>We need to improve the way accounts are handled and managed, especially in case of interacting with a public testnet. As of now, it might happen that account mappings get erased and the user needs to start from scratch in terms of setting up an account on a public testnet.</p>
 </div>
-<div class="section" id="connect-to-non-private-testnet">
-<span id="connect-to-non-private-testnet"></span><h2>Connect to non-private testnet<a class="headerlink" href="#connect-to-non-private-testnet" title="Permalink to this headline">¶</a></h2>
-<p>You’ll be able to connect to any testnet you want, not just the single-node private one, as it is now.</p>
+<div class="section" id="better-integration-with-visual-studio-code">
+<span id="better-integration-with-visual-studio-code"></span><h2>Better integration with Visual Studio Code<a class="headerlink" href="#better-integration-with-visual-studio-code" title="Permalink to this headline">¶</a></h2>
+<p>There is still a lot of things we can do to make EOSFactory more tightly integrated with VSC. What’s important, we still want to offer the option to perform all the tasks in a standard bash terminal &amp; your favorite code editor or IDE, thus work entirely outside of VSC.</p>
 </div>
-<div class="section" id="extract-the-c-layer-as-a-separate-project">
-<span id="extract-the-c-layer-as-a-separate-project"></span><h2>Extract the C++ layer as a separate project<a class="headerlink" href="#extract-the-c-layer-as-a-separate-project" title="Permalink to this headline">¶</a></h2>
-<p>We plan to move the C++ layer’s source code (called <code class="docutils literal"><span class="pre">teos</span></code>) into a separate repository, so that it can also serve as a foundation for other projects. What’s nice about <code class="docutils literal"><span class="pre">teos</span></code> is that it’s a static library, not an executable like <code class="docutils literal"><span class="pre">cleos</span></code>, and therefore it’s much more suitable for integrations.</p>
+<div class="section" id="extracting-the-c-layer-as-a-separate-project">
+<span id="extracting-the-c-layer-as-a-separate-project"></span><h2>Extracting the C++ layer as a separate project<a class="headerlink" href="#extracting-the-c-layer-as-a-separate-project" title="Permalink to this headline">¶</a></h2>
+<p>We plan to move the C++ layer’s source code (i.e.<code class="docutils literal"><span class="pre">teos</span></code>) into a separate repository, so that it can also serve as a foundation for other projects. What’s nice about <code class="docutils literal"><span class="pre">teos</span></code> is that it’s a static library, not an executable like <code class="docutils literal"><span class="pre">cleos</span></code>, and therefore it’s much more suitable for integrations.</p>
 </div>
 </div>
 
