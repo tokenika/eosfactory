@@ -192,10 +192,11 @@
 </div>
 <div class="section" id="architecture">
 <span id="architecture"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
-<p>EOSFactory is composed of two layers:</p>
+<p>EOSFactory is composed of three layers:</p>
 <ul class="simple">
-<li>C++ client (i.e. <code class="docutils literal"><span class="pre">cleos</span></code>) connected to an EOS node (i.e. <code class="docutils literal"><span class="pre">nodeos</span></code>) running a private or public testnet</li>
-<li>Python wrapper acting as a convenient human-oriented interface</li>
+<li>C++ client (i.e. <code class="docutils literal"><span class="pre">cleos</span></code>) connected to an EOS node (i.e. <code class="docutils literal"><span class="pre">nodeos</span></code>) running a private or public testnet,</li>
+<li>C++ bridge (i.e. <code class="docutils literal"><span class="pre">teos</span></code>) for functionalities not supported by <code class="docutils literal"><span class="pre">cleos</span></code>,</li>
+<li>Python wrapper acting as a convenient human-oriented interface.</li>
 </ul>
 </div>
 </div>
