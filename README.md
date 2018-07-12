@@ -39,7 +39,7 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 ## Architecture
 
 EOSFactory is composed of two layers:
-- C++ bridge connected to an EOS node running a private testnet
+- C++ `nodeos` client connected to an EOS node running a private or public testnet
 - Python wrapper acting as a convenient human-oriented interface
 
 Using Python will allow us to build [interactive tutorials](http://eosfactory.io/sphinx/build/html/) for EOS smart-contracts.
