@@ -4,11 +4,11 @@
 
 We plan to make EOSFactory workflow more intuitive and user-friendly. We still see some areas for improvement in this regard.
 
-####Improving account management
+#### Improving EOS account management
 
 We need to improve the way accounts are handled and managed, especially in case of interacting with a public testnet. As of now, it might happen that account mappings get erased and the user needs to start from scratch in terms of setting up an account on a public testnet.
 
-#### Better integration with Visual Studio Code
+#### Better integration with *Visual Studio Code*
 
 There is still a lot of things we can do to make EOSFactory more tightly integrated with VSC. What's important, we still want to offer the option to perform all the tasks in a standard bash terminal & your favorite code editor or IDE, thus work entirely outside of VSC.
 
