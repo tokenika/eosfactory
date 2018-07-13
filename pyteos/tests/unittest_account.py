@@ -1,9 +1,5 @@
-import os
 import unittest
-from termcolor import cprint
 import setup
-import cleos
-import node
 import eosf
 import time
 

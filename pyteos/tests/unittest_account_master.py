@@ -1,8 +1,10 @@
 import unittest
-from termcolor import cprint
 import setup
-import cleos
 import eosf
+import time
+
+from eosf_wallet import Wallet
+from eosf_account import account_factory, AccountMaster
 
 
 eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, eosf.Verbosity.DEBUG])
@@ -33,7 +35,7 @@ NEXT TEST ====================================================================
         eosf.stop(is_verbose=0)
         eosf.run(is_verbose=0)
 
-        account_master = eosf.AccountMaster()
+        account_master = AccountMaster()
         print(account_master.info())
 
 
@@ -41,7 +43,7 @@ NEXT TEST ====================================================================
         setup.use_keosd(True)
         setup.set_nodeos_URL("88.99.97.30:38888")
 
-        account_master = eosf.AccountMaster()
+        account_master = AccountMaster()
         print()
 
     
@@ -49,12 +51,11 @@ NEXT TEST ====================================================================
         setup.use_keosd(True)
         setup.set_nodeos_URL("88.99.97.30:38888")
         
-        account_master = eosf.AccountMaster(
+        AccountMaster(
             "nbhyi5exmjcl",
-            "EOS6wAChSUxgHpUaG8bdCSKVFEMbmT85qnja1bh7zaWiYDp4sLW98",
-            "EOS6wAChSUxgHpUaG8bdCSKVFEMbmT85qnja1bh7zaWiYDp4sLW98"
-        )
-        print(account_master.info())
+            "account_master")
+        print(account_master.owner_key)
+        #print(account_master.info())
 
 
     def test_is_not_running_not_keosd_set(self):
@@ -62,7 +63,7 @@ NEXT TEST ====================================================================
         eosf.stop(is_verbose=0)
 
         with self.assertRaises(Exception):
-            eosf.AccountMaster()
+            AccountMaster()
 
   
     def tearDown(self):

@@ -47,7 +47,7 @@ class AccountEosio():
         return self.name
 
 
-class AccountMaster(AccountEosio, _Eosf):
+class AccountMaster(AccountEosio, eosf._Eosf):
 
     def is_local_testnet(self):
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
@@ -134,7 +134,6 @@ class AccountMaster(AccountEosio, _Eosf):
         else: # restore the master account
 
             account_ = cleos.GetAccount(name, json=True, is_verbose=-1)
-            print(json.dumps(account_.json, indent=4))
             if not account_.error:
                 self.account_info = str(account_)
                 self.name = name
@@ -154,13 +153,14 @@ class AccountMaster(AccountEosio, _Eosf):
                     [0]["key"], 
                     is_verbose=0)
 
-                account_map_json = account_map()
+                account_map_json = eosf.account_map()
                 for acc_n in account_map_json:
                     if account_map[acc_n] == account_object_name:
                         account_map[acc_n] = account_object_name + "_" + acc_n
                     
-                account_map[self.name] = account_object_name
-                
+                account_map_json[self.name] = account_object_name
+                context_globals = inspect.stack()[1][0].f_globals
+                context_globals[account_object_name] = self
 
 
     def info(self):
