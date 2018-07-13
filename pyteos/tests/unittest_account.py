@@ -1,94 +1,56 @@
+import os
+import unittest
+from termcolor import cprint
 import setup
 import cleos
-import teos
+import node
 import eosf
-import unittest
-from termcolor import colored, cprint
 import time
 
-setup.set_json(False)        
-setup.set_verbose(True)
-setup.use_keosd(False)
+
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT]) #, eosf.Verbosity.DEBUG])
+eosf.set_throw_error(False)
+#setup.set_command_line_mode()
+
+cryptolions = "88.99.97.30:38888"
 
 class Test1(unittest.TestCase):
 
     def run(self, result=None):
-        """ Stop after first error """      
-        if not result.failures:
-            super().run(result)
-        print("-------------------------------------------\n")
+        super().run(result)
+        print("""
+
+NEXT TEST ====================================================================
+""")
+
 
     @classmethod
     def setUpClass(cls):
-        global wallet 
-        global account_master
-
-        reset = eosf.reset()
-
-        account_master = eosf.AccountMaster()
-        wallet = eosf.Wallet()
-        wallet.import_key(account_master)
-
+        pass
 
     def setUp(self):
         pass
 
-
     def test_05(self):
-        pass
-        # global wallet 
+        setup.use_keosd(False)
+        eosf.reset(is_verbose=0)
+        wallet = eosf.Wallet()
+        account_master = eosf.AccountMaster()
+        wallet.import_key(account_master)
 
-        # alice = eosf.account()
-        # self.assertTrue(not alice.error)
+        eosf.account_factory("account_alice")
+        print(account_alice.info())
+
+        eosf.account_factory("account_alice")
         
-        # owner_key = alice.owner_key
-        # self.assertTrue(not owner_key.error)
-        # print("owner keys:")
-        # print(owner_key)
-
-        # active_key = alice.active_key
-        # self.assertTrue(not active_key.error)
-        # print("owner keys:")
-        # print(active_key)
-
-        # code = alice.code()
-        # self.assertTrue(not code.error)
-
-        # import_key = wallet.import_key(alice)
-        # print("wallet.import_key[0]:")
-        # print(import_key[0])
-
-        # contract = alice.set_contract("eosio.token")
-        # self.assertTrue(not contract.error)
-        # print(contract)
-
-    # def test_10(self):
-    #     global wallet
-
-    #     bob = eosf.account()
-    #     import_key = wallet.import_key(bob)
-    #     carol = eosf.account()
-    #     import_key = wallet.import_key(carol)
-        
-    #     names = set()
-    #     keys = wallet.keys()
-    #     for key in keys.json[""]:
-    #         accounts = cleos.GetAccounts(key, is_verbose=0)
-    #         #print(accounts.json)
-    #         for acc in accounts.json["account_names"]:
-    #             names.add(acc)
-
-    #     print("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV")
-    #     print(names)
-    #     print("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV")
-
 
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
-        eosf.stop()
+        pass
+
 
 if __name__ == "__main__":
     unittest.main()

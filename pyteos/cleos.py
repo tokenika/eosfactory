@@ -479,7 +479,7 @@ class WalletKeys(_Cleos):
                 self.json[""] = self._out.replace("\n", "") \
                     .replace("[  ", "").replace('"',"").replace("]", "") \
                     .split(",  ")
-
+                    
             self.printself() 
 
     def __str__(self):

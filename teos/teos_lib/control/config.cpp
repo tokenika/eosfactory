@@ -31,40 +31,6 @@ void saveConfigJson(boost::property_tree::ptree json){
 namespace teos {
   namespace control {
 
-
-/*
-  --genesis-json arg (="genesis.json")  File to read Genesis State from
-  --delete-all-blocks                   clear chain database and block log
-  --http-server-address arg (=127.0.0.1:8888)
-                                        The local IP and port to listen for
-                                        incoming http connections.
-  --wallet-dir arg (=".")               The path of the wallet files (absolute
-                                        path or relative to application data
-                                        dir)
-
-  -d [ --data-dir ] arg                 Directory containing program runtime
-                                        data
-  --config-dir arg                      Directory containing configuration
-                                        files such as config.ini
-  -c [ --config ] arg (="config.ini")   Configuration file name relative to
-                                        config-dir
-
-Jast after build, facts are:
-
-daemon_exe: ${EOSIO_SOURCE_DIR}/build/programs/nodeos/nodeos
-
-config-dir: ${EOSIO_SOURCE_DIR}\build\etc\eosio\node_00/
-${EOSIO_SOURCE_DIR}\build\etc\eosio\node_00/config.ini
-${EOSIO_SOURCE_DIR}\build\etc\eosio\node_00/genesis.json
-
-data-dir: ${EOSIO_SOURCE_DIR}\build\var\lib\eosio\node_00/
-    ${EOSIO_SOURCE_DIR}\build\var\lib\eosio\node_00\blocks
-    ${EOSIO_SOURCE_DIR}\build\var\lib\eosio\node_00\shared_mem
-
-wallet-dir: .
-    ${EOSIO_SOURCE_DIR}\build\var\lib\eosio\node_00/default.wallet
-*/   
-
     #define NOT_DEFINED_VALUE ""
     #define CONTRACTS_DIR "contracts/"
     #define TEOS_EXE "teos/build/teos/teos"

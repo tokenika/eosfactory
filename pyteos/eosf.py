@@ -175,10 +175,7 @@ class Wallet(cleos.WalletCreate, _Eosf):
 
         is_verbose = self.verify_is_verbose(verbosity, is_verbose)
 
-        if not setup.is_use_keosd(): # look for password:
-            self.wallet_dir_ = teos.get_node_wallet_dir()
-        else:
-            self.wallet_dir_ = os.path.expandvars(teos.get_keosd_wallet_dir())
+        self.wallet_dir = wallet_dir()
         
         if setup.is_use_keosd():
             self.EOSF_TRACE("""
@@ -197,7 +194,7 @@ class Wallet(cleos.WalletCreate, _Eosf):
 
         if not password and not setup.is_use_keosd(): # look for password:
             try:
-                with open(self.wallet_dir_ + setup.password_map, "r") \
+                with open(self.wallet_dir + setup.password_map, "r") \
                         as input:    
                     password_map = json.load(input)
                     password = password_map[name]
@@ -205,13 +202,13 @@ class Wallet(cleos.WalletCreate, _Eosf):
                 self.EOSF("""
                     Pasword is restored from the file:
                     {}
-                    """.format(self.wallet_dir_ + setup.password_map))
+                    """.format(self.wallet_dir + setup.password_map))
             except:
                 pass
 
         self.EOSF("""
             Wallet directory is {}
-            """.format(self.wallet_dir_))
+            """.format(self.wallet_dir))
 
         self.DEBUG("""
             Local node is running: {}
@@ -237,14 +234,14 @@ class Wallet(cleos.WalletCreate, _Eosf):
         if not self.error:
             if not setup.is_use_keosd(): 
                 try:
-                    with open(self.wallet_dir_ + setup.password_map, "r") \
+                    with open(self.wallet_dir + setup.password_map, "r") \
                             as input:
                         password_map = json.load(input)
                 except:
                     password_map = {}
                 password_map[name] = self.password
 
-                with open(self.wallet_dir_ + setup.password_map, "w+") \
+                with open(self.wallet_dir + setup.password_map, "w+") \
                         as out:
                     json.dump(password_map, out)
 
@@ -288,7 +285,7 @@ class Wallet(cleos.WalletCreate, _Eosf):
         """ Lists opened wallets, * marks unlocked.
         Returns `cleos.WalletList` object
         """ 
-        return cleos.WalletList(is_verbose=self.is_verbose)
+        cleos.WalletList(is_verbose=self.is_verbose)
     
 
     def open(self):
@@ -301,7 +298,6 @@ class Wallet(cleos.WalletCreate, _Eosf):
             self.ERROR(self.wallet_open.err_msg)
         else:
             self.EOSF("Wallet `{}` opened.".format(self.name))
-        return self.wallet_open
 
 
     def lock(self):
@@ -310,7 +306,6 @@ class Wallet(cleos.WalletCreate, _Eosf):
         """
         self.wallet_lock = cleos.WalletLock(
             self.name, is_verbose=self.is_verbose)
-        return self.wallet_lock
 
 
     def unlock(self):
@@ -319,79 +314,41 @@ class Wallet(cleos.WalletCreate, _Eosf):
         """
         self.wallet_unlock = cleos.WalletUnlock(
             self.name, self.json["password"], is_verbose=self.is_verbose)
-        return self.wallet_unlock
 
 
     def import_key(self, account_or_key):
         """ Imports private keys of an account into wallet.
         Returns list of `cleos.WalletImport` objects
         """
-        # print("\ninspect.stack():\n")
-        # pprint.pprint(inspect.stack())
-        # print("\ninspect.stack()[1][0]:\n")
-        # pprint.pprint(inspect.stack()[1][0])
-        # print("\ninspect.stack()[1][0].f_locals:\n")
-        # pprint.pprint(inspect.stack()[1][0].f_locals)
-        # print("\ninspect.stack()[1][0].f_globals:\n")
-        # pprint.pprint(inspect.stack()[1][0].f_globals)
-
-        # print("\ninspect.stack()[2][0]:\n")
-        # pprint.pprint(inspect.stack()[2][0])
-        # print("\ninspect.stack()[2][0].f_locals:\n")
-        # pprint.pprint(inspect.stack()[2][0].f_locals)
-        # print("\ninspect.stack()[2][0].f_globals:\n")
-        # pprint.pprint(inspect.stack()[2][0].f_globals)
-            
-        lcls = dir()
-        try:
-            lcls = inspect.stack()[1][0].f_locals
-        except:
-            pass
-        try:
-            lcls.update(inspect.stack()[2][0].f_locals) 
-        except:
-            pass
-
+        imported_keys = []
         account_name = None
         try: # whether account_or_key is an account:
-            account_name = account_or_key.name
-        except:
-            pass
-        if not account_name is None:
-            for name in lcls:
-                if id(account_or_key) == id(lcls[name]):
-                    try: # whether the setup map file exists:
-                        with open(self.wallet_dir_ + setup.account_map, "r") \
-                            as input:
-                            account_map = json.load(input)
-                    except:
-                        account_map = {}
-
-                    if self.is_verbose > 0:
-                        print("'{}' ({}) >>> '{}'".format(
-                            name, account_name, self.wallet_dir_ + setup.account_map))
-
-                    account_map[account_name] = name
-                    with open(self.wallet_dir_ + setup.account_map, "w") as out:
-                        out.write(json.dumps(account_map, sort_keys=True, indent=4))
-
-
-        imported_keys = []
-        try: # whether account_or_key is an account:
             key = account_or_key.owner_key
+            account_name = account_or_key.name
             if key:
-                imported_keys.append(
-                    cleos.WalletImport(key, self.name, is_verbose=0))
+                imported_keys.append(key.key_public)
+                cleos.WalletImport(key, self.name, is_verbose=-1)
+                imported_keys.append(key.key_public)
 
             key = account_or_key.active_key
             if key:
-                imported_keys.append(
-                    cleos.WalletImport(key, self.name, is_verbose=0))
+                imported_keys.append(key.key_public)
+                cleos.WalletImport(key, self.name, is_verbose=-1)                    
         except:
-            imported_keys.append(cleos.WalletImport(
-                account_or_key, self.name, is_verbose=0))
+            imported_keys.append(account_or_key.key_public)
+            cleos.WalletImport(account_or_key, self.name, is_verbose=-1)
 
-        return imported_keys
+        self.EOSF_TRACE("""
+            Importing keys of the account '{}' into the wallet '{}'
+            """.format(account_name, self.name)
+                    )
+                    
+        wallet_keys = cleos.WalletKeys(is_verbose=-1)
+        for key in imported_keys:
+            if not key in wallet_keys.json[""]:
+                self.ERROR("""
+                Failed to import keys of the account '{}' into the wallet '{}'
+                """.format(account_name, self.name))
 
 
     def restore_accounts(self, namespace):
@@ -445,7 +402,54 @@ class Wallet(cleos.WalletCreate, _Eosf):
         """ Lists public keys from all unlocked wallets.
         Returns `cleos.WalletKeys` object.
         """
-        return cleos.WalletKeys(is_verbose=self.is_verbose)
+        cleos.WalletKeys(is_verbose=self.is_verbose)
+
+
+    def map_acount(account_object_name, account_object, check_map=True):
+        account_map_ = account_map()
+
+        if check_map:
+            account_map_ = account_map()
+            for name, object_name in account_map_.items():
+                if object_name == account_object_name:
+                    self.OUT("""
+                        The given account object name
+                        `{}`({})
+                        points to an existing account, mapped in a file in directory:
+                        `{}`
+                        Cannot overwrite it, however, the existing name can be changed.
+                        Enter a new name to change, or nothing to escape.
+                        """.format(object_name, name, self.wallet_dir))
+                    new_name = input("<<< ")
+                    for name, object_name in account_map_.items():
+                        if object_name == new_name:
+
+
+                    self.ERROR("""
+                        The given account object name
+                        `{}`({})
+                        points to an existing account, mapped in a file in directory:
+                        `{}`
+                        Cannot overwrite it.
+                        """.format(object_name, name, self.wallet_dir))
+        else:
+            account_map_[account_object.name] = account_object_name
+            with open(self.wallet_dir + setup.account_map, "w") as out:
+                        out.write(json.dumps(account_map, sort_keys=True, indent=4))
+
+            self.EOSF_TRACE("""
+                Account '{}' mapped as '{}', stored in the file '{}' in the wallet directory:
+                {}
+                """.format(
+                    account_object.name,
+                    account_object_name,
+                    setup.account_map,
+                    self.wallet_dir + setup.account_map))
+
+
+        account_map[account_name] = name
+        with open(wallet.wallet_dir + setup.account_map, "w") as out:
+            out.write(json.dumps(account_map, sort_keys=True, indent=4))
 
 
     def info(self):
@@ -732,6 +736,7 @@ class AccountEosio():
     def __str__(self):
         return self.name
 
+
 class AccountMaster(AccountEosio, _Eosf):
 
     
@@ -837,7 +842,8 @@ class AccountMaster(AccountEosio, _Eosf):
     def __str__(self):
         return self.name
 
-def account_object(
+
+def account_factory(
         account_object_name,
         creator="", 
         stake_net="", stake_cpu="",
@@ -884,21 +890,10 @@ def account_object(
             {}
             """.format(wallets))
 
-    account_map_ = account_map()
-    for name, acc_name in account_map_.items():
-        if acc_name == account_object_name:
-            self.ERROR( """
-                The given account object name
-                `{}`({})
-                points to an existing account, mapped in a file in directory:
-                `{}`
-                Cannot overwrite it.
-                """.format(acc_name, name, wallet_dir()))
+    account_object = None
+    wallet.map_acount(account_object_name, account_object, True)
 
     # create the account object:
-
-
-    account_object = None
     if restore:
         if creator:
             account_name = creator
@@ -1051,15 +1046,15 @@ def account_object(
                                         __str__, account_object)
 
     # export the account object to the globals in the calling module:
-
     context_globals[account_object_name] = account_object
 
     # put the account object to the wallet:
-
-
     wallet.open()
     wallet.unlock()
     wallet.import_key(account_object)
+
+    if not account_object.error and not wallet.error:
+        wallet.map_account(account_object_name, account_object)
 
     return account_object
 
