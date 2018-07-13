@@ -69,7 +69,7 @@ class AccountMaster(AccountEosio, eosf._Eosf):
             self, name="", account_object_name="", 
             is_verbose=1, verbosity=None):
 
-        is_verbose = self.verify_is_verbose(verbosity, is_verbose)
+        is_verbose = self.verify_is_verbose(verbosity)
     
         self.EOSF_TRACE("""
             ######### 
@@ -171,6 +171,28 @@ class AccountMaster(AccountEosio, eosf._Eosf):
         return self.name
 
 
+def is_local_testnet():
+        account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
+        # print(cleos._wallet_url_arg)
+        # print(account_)
+        if not account_.error and \
+            self.key_public == \
+                account_.json["permissions"][0]["required_auth"]["keys"] \
+                    [0]["key"]:
+            self.account_info = str(account_)
+            self.EOSF("""
+                Local testnet is ON: the `eosio` account is master.
+                """)
+            return True
+        else:
+            return False
+
+
+def account_master_factory(
+            name="", account_object_name="", verbosity=None):
+    pass
+
+
 def account_factory(
         account_object_name,
         creator="", 
@@ -185,12 +207,11 @@ def account_factory(
         max_cpu_usage=0, max_net_usage=0,
         ref_block="",
         restore=False,
-        is_verbose=1,
         verbosity=None):
 
     self = eosf._Eosf()
     account_object = self
-    is_verbose = self.verify_is_verbose(verbosity, is_verbose)
+    is_verbose = self.verify_is_verbose(verbosity)
 
     objects = None    
     context_locals = inspect.stack()[1][0].f_locals

@@ -49,8 +49,6 @@ NEXT TEST ====================================================================
         account_factory("account_alice")
         self.assertTrue(account_alice.error)
 
-        return 
-
         account_factory("account_test")
         contract_test = eosf.Contract(account_test, "eosio.token")
         deploy = contract_test.deploy()

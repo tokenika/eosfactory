@@ -25,11 +25,9 @@ class Wallet(cleos.WalletCreate, eosf._Eosf):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.  
     """
-    def __init__(
-                self, name="default", password="", is_verbose=1,
-                verbosity=None):
+    def __init__(self, name="default", password="", verbosity=None):
 
-        is_verbose = self.verify_is_verbose(verbosity, is_verbose)
+        is_verbose = self.verify_is_verbose(verbosity)
 
         self.wallet_dir = eosf.wallet_dir()
         

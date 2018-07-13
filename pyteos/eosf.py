@@ -102,7 +102,7 @@ class _Eosf():
     debug_color = 'yellow'
     verbosity = []
 
-    def verify_is_verbose(self, verbosity=None, is_verbose=0):
+    def verify_is_verbose(self, verbosity=None):
         if verbosity is None:
             global _verbosity
             verbosity = _verbosity
@@ -111,7 +111,7 @@ class _Eosf():
         if len(Verbosity) > 0 and not Verbosity.CLEOS in verbosity:
             return -1
         else:
-            return is_verbose
+            return 1
 
     def EOSF(self, msg):
         if msg and Verbosity.EOSF in self.verbosity:
