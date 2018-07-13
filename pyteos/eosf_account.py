@@ -1,0 +1,382 @@
+import json
+import inspect
+import types
+
+import setup
+import teos
+import cleos
+import cleos_system
+import eosf
+import eosf_wallet
+
+class AccountEosio():
+
+    json = {}
+    error = False
+    err_msg = ""
+    account_info = "The account is not opened yet!"
+
+    def __init__(
+            self, is_verbose=1):
+
+        self.name = "eosio"
+        self.json["name"] = self.name
+        config = teos.GetConfig(is_verbose=0)
+
+        self.json["privateKey"] = config.json["EOSIO_KEY_PRIVATE"]
+        self.json["publicKey"] = config.json["EOSIO_KEY_PUBLIC"]
+        self.key_private = self.json["privateKey"]
+        self.key_public = self.json["publicKey"]
+        self._out = "transaction id: eosio"
+
+        account = cleos.GetAccount(self.name, is_verbose=-1)
+        if not account.error:
+            self.account_info = account._out
+        else:
+            if "main.cpp:2712" in account.err_msg:
+                self.account_info = "The account is not opened yet!"
+            else:
+                self.account_info = account.err_msg
+
+    
+    def info(self):
+        return self.account_info
+
+
+    def __str__(self):
+        return self.name
+
+
+class AccountMaster(AccountEosio, eosf._Eosf):
+
+    
+    def is_local_testnet(self):
+        account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
+        # print(cleos._wallet_url_arg)
+        # print(account_)
+        if not account_.error and \
+            self.key_public == \
+                account_.json["permissions"][0]["required_auth"]["keys"] \
+                    [0]["key"]:
+            self.account_info = str(account_)
+            self.EOSF("""
+                Local testnet is ON: the `eosio` account is master.
+                """)
+            return True
+        else:
+            return False
+
+    def __init__(
+            self, name="", owner_key_public="", active_key_public="", 
+            is_verbose=1, verbosity=None):
+
+        is_verbose = self.verify_is_verbose(verbosity, is_verbose)
+    
+        self.EOSF_TRACE("""
+            ######### 
+            Get master account.
+            """)
+
+        self.DEBUG("""
+            Local node is running: {}
+            """.format(cleos.node_is_running()))
+
+        AccountEosio.__init__(self, is_verbose)
+
+        self.DEBUG("""
+            Name is `{}`
+            Wallet URL is {}
+            Use keosd status is {}
+            self._out:
+            {}
+
+            self.err_msg:
+            {}
+
+            """.format(
+                self.name,
+                cleos.wallet_url(), setup.is_use_keosd(),
+                self._out,
+                self.err_msg
+                ))
+
+        if cleos.is_notrunningnotkeosd_error(self):
+            self.ERROR(self.err_msg)
+            return
+
+        if self.is_local_testnet():
+            return
+
+        self.account_info = "The account is not opened yet!"
+        self.DEBUG("It is not the local testnet.")
+        #cleos.set_wallet_url_arg(node, "")
+
+        # not local testnet:
+        if not owner_key_public: # print data for registration
+            if not name: 
+                self.name = cleos.account_name()
+            else:
+                self.name = name
+
+            self.owner_key = cleos.CreateKey("owner", is_verbose=0)
+            self.active_key = cleos.CreateKey("active", is_verbose=0)
+            self.OUT("""
+                Use the following data to register a new account on a public testnet:
+                Accout Name: {}
+                Owner Public Key: {}
+                Owner Private Key: {}
+                Active Public Key: {}
+                Active Private Key: {}
+                """.format(
+                    self.name,
+                    self.owner_key.key_public, self.owner_key.key_private,
+                    self.active_key.key_public, self.active_key.key_private
+                    ))
+        else: # restore the master account
+            self.name = name
+            self.owner_key = cleos.CreateKey("owner", owner_key_public, is_verbose=0)
+            if not active_key_public:
+                self.active_key = owner_key
+            else:
+                self.active_key = cleos.CreateKey(
+                    "active", active_key_public, is_verbose=0)
+            account_ = cleos.GetAccount(name, is_verbose=-1)
+            if not account_.error:
+                self.account_info = str(account_)
+
+
+    def info(self):
+        return self.account_info
+
+
+    def __str__(self):
+        return self.name
+
+
+def account_master_factory(
+        account_object_name="", owner_key_public="", active_key_public="", 
+        is_verbose=1, verbosity=None):
+
+
+def account_factory(
+        account_object_name,
+        creator="", 
+        stake_net="", stake_cpu="",
+        account_name="", 
+        owner_key="", active_key="",
+        permission = "",
+        buy_ram_kbytes=0, buy_ram="",
+        transfer=False,
+        expiration_sec=30,
+        skip_signature=0, dont_broadcast=0, forceUnique=0,
+        max_cpu_usage=0, max_net_usage=0,
+        ref_block="",
+        restore=False,
+        is_verbose=1,
+        verbosity=None):
+
+    self = eosf._Eosf()
+    account_object = self
+    is_verbose = self.verify_is_verbose(verbosity, is_verbose)
+
+    objects = None    
+    context_locals = inspect.stack()[1][0].f_locals
+    context_globals = inspect.stack()[1][0].f_globals
+    objects = {**context_globals, **context_locals}
+
+    wallet = None
+    wallets = []
+    for name in objects:
+        if isinstance(objects[name], eosf_wallet.Wallet):
+            wallets.append(name)
+            wallet = objects[name]
+
+    error = False
+
+    if len(wallets) == 0:
+        self.ERROR("""
+            Cannot find any `Wallet` object.
+            Add the definition of an `Wallet` object, for example:
+            `wallet = eosf.Wallet()`
+            """)
+    if len(wallets) > 1:
+        self.ERROR("""
+            Too many `Wallet` objects.
+            Can be precisely one wallet object in the scope, but there is many: 
+            {}
+            """.format(wallets))
+
+
+    if not wallet.is_name_taken(account_object_name):
+        context_globals[account_object_name] = account_object
+        account_object.error = True
+        return
+
+
+    # create the account object:
+    account_object = None
+    if restore:
+        if creator:
+            account_name = creator
+
+        self.EOSF_TRACE("""
+                    ######### 
+                    Create the account object named `{}`, for the blockchain account `{}`.
+                    """.format(account_object_name, account_name))        
+        account_object = cleos.RestoreAccount(account_name, is_verbose)
+    else:
+        if not account_name:
+            account_name = cleos.account_name()
+        if owner_key:
+            if not active_key:
+                active_key = owner_key
+        else:
+            owner_key = cleos.CreateKey("owner", is_verbose=-1)
+            active_key = cleos.CreateKey("active", is_verbose=-1)
+
+        if not creator:
+            creator = AccountMaster()
+
+        if stake_net:
+            self.EOSF_TRACE("""
+                        ######### 
+                        Create the account object named `{}`, for the new, properly paid, 
+                        blockchain account `{}`.
+                        """.format(account_object_name, account_name))
+
+            account_object = cleos_system.SystemNewaccount(
+                    creator, account_name, owner_key, active_key,
+                    stake_net, stake_cpu,
+                    permission,
+                    buy_ram_kbytes, buy_ram,
+                    transfer,
+                    expiration_sec, 
+                    skip_signature, dont_broadcast, forceUnique,
+                    max_cpu_usage, max_net_usage,
+                    ref_block,
+                    is_verbose
+                    )
+        else:
+            self.EOSF_TRACE("""
+                        ######### 
+                        Create the account object named `{}' for the new local testnet account `{}`.
+                        """.format(account_object_name, account_name))            
+            account_object = cleos.CreateAccount(
+                    creator, account_name, 
+                    owner_key, active_key,
+                    permission,
+                    expiration_sec, skip_signature, dont_broadcast, forceUnique,
+                    max_cpu_usage, max_net_usage,
+                    ref_block,
+                    is_verbose=is_verbose
+                    )
+
+        if account_object.error:
+            self.ERROR(account_object.err_msg)
+        else:
+            self.EOSF("""The account object created.""")
+
+        account_object.owner_key = owner_key
+        account_object.active_key = active_key
+
+    # append account methodes to the account_object:
+
+    def code(account_object, code="", abi="", wasm=False):
+        return cleos.GetCode(
+            account_object, code, abi, 
+            is_verbose=account_object.is_verbose)
+
+    account_object.code = types.MethodType(code, account_object)
+
+    def set_contract(
+            account_object, contract_dir, 
+            wast_file="", abi_file="", 
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=""):
+
+        account_object.set_contract = cleos.SetContract(
+            account_object, contract_dir, 
+            wast_file, abi_file, 
+            permission, expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=account_object.is_verbose
+        )
+
+        return account_object.set_contract
+
+    account_object.set_contract = types.MethodType(
+                                    set_contract , account_object)
+
+    def push_action(
+            account_object, action, data,
+            permission="", expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=""):
+        if not permission:
+            permission = account_object.name
+        else:
+            try: # permission is an account:
+                permission = permission.name
+            except: # permission is the name of an account:
+                permission = permission
+
+        account_object.action = cleos.PushAction(
+            account_object, action, data,
+            permission, expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=account_object.is_verbose)
+
+        if not account_object.action.error:
+            try:
+                account_object._console = account_object.action.console
+                if account_object.is_verbose > 0:
+                    print(account_object._console + "\n") 
+            except:
+                pass
+
+        return account_object.action
+
+    account_object.push_action = types.MethodType(
+                                    push_action , account_object)
+
+    def table(
+            account_object, table_name, scope="", 
+            binary=False, 
+            limit=10, key="", lower="", upper=""):
+
+        account_object._table = cleos.GetTable(
+                                account_object, table_name, scope,
+                                binary, 
+                                limit, key, lower, upper,
+                                is_verbose=account_object.is_verbose)
+        return account_object._table
+
+    account_object.table = types.MethodType(
+                                    table, account_object)
+
+    def __str__(account_object):
+        return account_object.name
+
+    account_object.__str__ = types.MethodType(
+                                        __str__, account_object)
+
+    # export the account object to the globals in the calling module:
+    context_globals[account_object_name] = account_object
+
+    # put the account object to the wallet:
+    wallet.open()
+    wallet.unlock()
+    wallet.import_key(account_object)
+
+    if not account_object.error and not wallet.error:
+        wallet.map_account(account_object_name, account_object)
+
+    return account_object
+
