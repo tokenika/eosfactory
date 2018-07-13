@@ -209,8 +209,7 @@ def account_factory(
         restore=False,
         verbosity=None):
 
-    self = eosf._Eosf()
-    account_object = self
+    account_object = self = eosf._Eosf()
     is_verbose = self.verify_is_verbose(verbosity)
 
     objects = None    
@@ -228,32 +227,28 @@ def account_factory(
     error = False
 
     if len(wallets) == 0:
-        self.ERROR("""
+        account_object.ERROR("""
             Cannot find any `Wallet` object.
             Add the definition of an `Wallet` object, for example:
             `wallet = eosf.Wallet()`
             """)
     if len(wallets) > 1:
-        self.ERROR("""
+        account_object.ERROR("""
             Too many `Wallet` objects.
             Can be precisely one wallet object in the scope, but there is many: 
             {}
             """.format(wallets))
-
 
     if not wallet.is_name_taken(account_object_name):
         context_globals[account_object_name] = account_object
         account_object.error = True
         return
 
-
-    # create the account object:
-    account_object = None
     if restore:
         if creator:
             account_name = creator
 
-        self.EOSF_TRACE("""
+        account_object.EOSF_TRACE("""
                     ######### 
                     Create the account object named `{}`, for the blockchain account `{}`.
                     """.format(account_object_name, account_name))        
@@ -272,7 +267,7 @@ def account_factory(
             creator = AccountMaster()
 
         if stake_net:
-            self.EOSF_TRACE("""
+            account_object.EOSF_TRACE("""
                         ######### 
                         Create the account object named `{}`, for the new, properly paid, 
                         blockchain account `{}`.
@@ -291,7 +286,7 @@ def account_factory(
                     is_verbose
                     )
         else:
-            self.EOSF_TRACE("""
+            account_object.EOSF_TRACE("""
                         ######### 
                         Create the account object named `{}' for the new local testnet account `{}`.
                         """.format(account_object_name, account_name))            
@@ -306,9 +301,9 @@ def account_factory(
                     )
 
         if account_object.error:
-            self.ERROR(account_object.err_msg)
+            account_object.ERROR(account_object.err_msg)
         else:
-            self.EOSF("""The account object created.""")
+            account_object.EOSF("""The account object created.""")
 
         account_object.owner_key = owner_key
         account_object.active_key = active_key
