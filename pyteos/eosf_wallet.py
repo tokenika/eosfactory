@@ -7,7 +7,7 @@ import cleos
 import eosf
 
 
-class Wallet(cleos.WalletCreate, eosf._Eosf):
+class Wallet(cleos.WalletCreate):
     """ Create a new wallet locally and operate it.
     Usage: WalletCreate(name="default", is_verbose=1)
 
@@ -27,24 +27,28 @@ class Wallet(cleos.WalletCreate, eosf._Eosf):
     """
     def __init__(self, name="default", password="", verbosity=None):
 
-        is_verbose = self.verify_is_verbose(verbosity)
-
+        self.logger = eosf._Eosf(verbosity)
         self.wallet_dir = eosf.wallet_dir()
         
         if setup.is_use_keosd():
-            self.EOSF_TRACE("""
+            self.logger.EOSF_TRACE("""
                 ######### 
                 Create a `Wallet` object with the KEOSD Wallet Manager.
                 """)
         else:
-            self.EOSF_TRACE("""
+            self.logger.EOSF_TRACE("""
                 ######### 
                 Create a `Wallet` object with the NODEOS wallet plugin.
                 """)
 
+        self.logger.EOSF("""
+                The wallet directory is
+                {}.
+                """.format(self.wallet_dir))
+
         if cleos.is_notrunningnotkeosd_error(self):
-            self.ERROR(self.err_msg)
-            return
+            self.logger.ERROR(self.err_msg)
+            return self.logger
 
         if not password and not setup.is_use_keosd(): # look for password:
             try:
@@ -53,39 +57,39 @@ class Wallet(cleos.WalletCreate, eosf._Eosf):
                     password_map = json.load(input)
                     password = password_map[name]
 
-                self.EOSF("""
-                    Pasword is restored from the file:
+                self.loggerelf.EOSF("""
+                    The pasword is restored from the file:
                     {}
                     """.format(self.wallet_dir + setup.password_map))
             except:
                 pass
 
-        self.EOSF("""
-            Wallet directory is {}
-            """.format(self.wallet_dir))
-
-        self.DEBUG("""
+        self.logger.DEBUG("""
             Local node is running: {}
             """.format(cleos.node_is_running()))
 
-        cleos.WalletCreate.__init__(self, name, password, is_verbose)
+        cleos.WalletCreate.__init__(self, name, password, is_verbose=-1)
 
-        self.DEBUG("""
+        self.logger.DEBUG("""
             Name is `{}`
             Wallet URL is {}
             Use keosd status is {}
-            self._out:
+            self.out_msg:
             {}
             self.err_msg:
             {}
             """.format(
                 self.name,
                 cleos.wallet_url(), setup.is_use_keosd(),
-                self._out,
+                self.out_msg,
                 self.err_msg
                 ))
             
         if not self.error:
+            self.logger.OUT(
+                self.out_msg
+            )
+
             if not setup.is_use_keosd(): 
                 try:
                     with open(self.wallet_dir + setup.password_map, "r") \
@@ -100,18 +104,18 @@ class Wallet(cleos.WalletCreate, eosf._Eosf):
                     json.dump(password_map, out)
 
                 if not password: # new password
-                    self.EOSF_TRACE("""
+                    self.logger.EOSF_TRACE("""
                         Created wallet `{}` with the local testnet.
                         Password is saved to the file {} in the wallet directory.
                         """.format(self.name, setup.password_map)
                     )
 
                 else: # password taken from file
-                    self.EOSF_TRACE("""Opened wallet `{}`.""".format(self.name))
+                    self.logger.EOSF_TRACE("Opened wallet `{}`.".format(self.name))
 
             else: # KEOSD Wallet Manager
                 if not password: # new password
-                    self.EOSF_TRACE("""
+                    self.logger.EOSF_TRACE("""
                         Created wallet `{}` with the `keosd` Wallet Manager.
                         Save password to use in the future to unlock this wallet.
                         Without password imported keys will not be retrievable.
@@ -120,19 +124,19 @@ class Wallet(cleos.WalletCreate, eosf._Eosf):
                     )
 
                 else: # password introduced
-                    self.EOSF_TRACE("""
+                    self.logger.EOSF_TRACE("""
                         Opened wallet {}
                         """.format(self.name))
 
         else: # wallet.error:
             if "Wallet already exists" in self.err_msg:
-                self.ERROR("Wallet `{}` already exists.".format(self.name))
+                self.logger.ERROR("Wallet `{}` already exists.".format(self.name))
                 return
             if "Invalid wallet password" in self.err_msg:
-                self.ERROR("Invalid password.")
+                self.logger.ERROR("Invalid password.")
                 return
 
-            self.ERROR(self.err_msg)
+            self.logger.ERROR(self.err_msg)
 
 
     def index(self):
@@ -149,9 +153,9 @@ class Wallet(cleos.WalletCreate, eosf._Eosf):
         self.wallet_open = cleos.WalletOpen(
             self.name, is_verbose=self.is_verbose)
         if self.wallet_open.error:
-            self.ERROR(self.wallet_open.err_msg)
+            self.logger.ERROR(self.wallet_open.err_msg)
         else:
-            self.EOSF("Wallet `{}` opened.".format(self.name))
+            self.logger.EOSF("Wallet `{}` opened.".format(self.name))
 
 
     def lock(self):
@@ -177,22 +181,24 @@ class Wallet(cleos.WalletCreate, eosf._Eosf):
         imported_keys = []
         account_name = None
         try: # whether account_or_key is an account:
-            key = account_or_key.owner_key
             account_name = account_or_key.name
+            key = account_or_key.owner_key
             if key:
                 imported_keys.append(key.key_public)
                 cleos.WalletImport(key, self.name, is_verbose=-1)
                 imported_keys.append(key.key_public)
-
-            key = account_or_key.active_key
-            if key:
-                imported_keys.append(key.key_public)
-                cleos.WalletImport(key, self.name, is_verbose=-1)                    
+            try:
+                key = account_or_key.active_key
+                if key:
+                    imported_keys.append(key.key_public)
+                    cleos.WalletImport(key, self.name, is_verbose=-1)
+            except:
+                pass                    
         except:
             imported_keys.append(account_or_key.key_public)
             cleos.WalletImport(account_or_key, self.name, is_verbose=-1)
 
-        self.EOSF_TRACE("""
+        self.logger.EOSF_TRACE("""
             Importing keys of the account '{}' into the wallet '{}'
             """.format(account_name, self.name)
                     )
@@ -200,7 +206,7 @@ class Wallet(cleos.WalletCreate, eosf._Eosf):
         wallet_keys = cleos.WalletKeys(is_verbose=-1)
         for key in imported_keys:
             if not key in wallet_keys.json[""]:
-                self.ERROR("""
+                self.logger.ERROR("""
                 Failed to import keys of the account '{}' into the wallet '{}'
                 """.format(account_name, self.name))
 
@@ -280,7 +286,7 @@ class Wallet(cleos.WalletCreate, eosf._Eosf):
             if object_name == account_object_name:
                 self.__change_object_name()
 
-                self.ERROR("""
+                self.logger.ERROR("""
                     The given account object name
                     `{}`({})
                     points to an existing account, mapped in a file in directory:
@@ -298,7 +304,7 @@ class Wallet(cleos.WalletCreate, eosf._Eosf):
             with open(self.wallet_dir + setup.account_map, "w") as out:
                 out.write(json.dumps(account_map_json, sort_keys=True, indent=4))
 
-            self.EOSF_TRACE("""
+            self.logger.EOSF_TRACE("""
                 Account '{}' mapped as '{}', stored in the file '{}' 
                 in the wallet directory:
                 {}

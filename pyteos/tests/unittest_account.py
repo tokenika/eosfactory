@@ -30,44 +30,64 @@ NEXT TEST ====================================================================
         pass
 
 
-    def test_05(self):
+    def test_too_many_wallets(self):
         setup.use_keosd(False)
         eosf.reset(is_verbose=0)
         wallet = Wallet()
-        account_master = AccountMaster()
-        wallet.import_key(account_master)
         ######################################################################
 
-        account_factory("account_alice")
-        print(account_alice.info())
+        wallet1 = Wallet("second")
+        logger = account_factory("account_alice")
+        self.assertTrue("Too many `Wallet` objects." in logger.err_msg)
 
-        account_factory("account_carrol")
-        print("The name attribute of the 'account_carrol' account object is '{}'" \
-            .format(account_carrol))
-        print("{}".format(account_carrol.code()))
 
-        account_factory("account_alice")
-        self.assertTrue(account_alice.error)
+    def test_there_is_no_wallet(self):
+        setup.use_keosd(False)
+        eosf.reset(is_verbose=0)
+        ######################################################################
 
-        account_factory("account_test")
-        contract_test = eosf.Contract(account_test, "eosio.token")
-        deploy = contract_test.deploy()
-        account_test.code()
+        logger = account_factory("account_alice")        
+        self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
 
-        time.sleep(1)
 
-        action = account_test.push_action(
-            "create", 
-            '{"issuer":"' 
-                + str(account_master) 
-                + '", "maximum_supply":"1000000000.0000 EOS", \
-                "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+    # def test_usage(self):
+    #     setup.use_keosd(False)
+    #     eosf.reset(is_verbose=0)
+    #     wallet = Wallet()
+    #     account_master = AccountMaster()
+    #     wallet.import_key(account_master)
+    #     ######################################################################
 
-        action = contract_test.push_action(
-        "issue", 
-        '{"to":"' + str(account_alice)
-            + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
-            account_master)
+    #     account_factory("account_alice")
+    #     print(account_alice.info())
+
+    #     account_factory("account_carrol")
+    #     print("The name attribute of the 'account_carrol' account object is '{}'" \
+    #         .format(account_carrol))
+    #     print("{}".format(account_carrol.code()))
+
+    #     account_factory("account_alice")
+    #     self.assertTrue(account_alice.error)
+
+    #     account_factory("account_test")
+    #     contract_test = eosf.Contract(account_test, "eosio.token")
+    #     deploy = contract_test.deploy()
+    #     account_test.code()
+
+    #     time.sleep(1)
+
+    #     action = account_test.push_action(
+    #         "create", 
+    #         '{"issuer":"' 
+    #             + str(account_master) 
+    #             + '", "maximum_supply":"1000000000.0000 EOS", \
+    #             "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+
+    #     action = contract_test.push_action(
+    #     "issue", 
+    #     '{"to":"' + str(account_alice)
+    #         + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
+    #         account_master)
 
 
     def tearDown(self):

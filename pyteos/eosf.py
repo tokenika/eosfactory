@@ -34,12 +34,12 @@ def reload():
 
 
 class Verbosity(enum.Enum):
-    CLEOS = 1
-    TRACE = 2
-    EOSF = 3
-    ERROR = 4
-    OUT = 5
-    DEBUG = 6
+    CLEOS = ''
+    TRACE = 'magenta'
+    EOSF = 'cyan'
+    ERROR = 'red'
+    OUT = ''
+    DEBUG = 'yellow'
 
 _verbosity = [Verbosity.EOSF, Verbosity.OUT]
 def set_verbosity(value=_verbosity):
@@ -96,34 +96,30 @@ def kill_keosd():
 
 class _Eosf():
 
-    eosf_color = 'cyan'
-    trace_color = 'magenta'
-    error_color = 'red'
-    debug_color = 'yellow'
     verbosity = []
+    error = False
+    err_msg = ""
 
-    def verify_is_verbose(self, verbosity=None):
+    def __init__(self, verbosity):
         if verbosity is None:
             global _verbosity
             verbosity = _verbosity
 
         self.verbosity = verbosity
-        if len(Verbosity) > 0 and not Verbosity.CLEOS in verbosity:
-            return -1
-        else:
-            return 1
 
     def EOSF(self, msg):
         if msg and Verbosity.EOSF in self.verbosity:
             cprint(
                 cleos.heredoc(msg),
-                self.eosf_color)
+                Verbosity.EOSF.value)
+
 
     def TRACE(self, msg):
         if msg and Verbosity.TRACE in self.verbosity:
             cprint(
                 cleos.heredoc(msg),
-                self.trace_color)
+                Verbosity.TRACE.value)
+
 
     def EOSF_TRACE(self, msg):
         if msg and Verbosity.EOSF in self.verbosity:
@@ -131,25 +127,36 @@ class _Eosf():
         else:
             self.TRACE(msg)
 
-    def ERROR(self, msg):
+
+    def ERROR(self, msg=""):
+        if not msg:
+            msg =  self.err_msg
+        else:
+            self.err_msg = msg
+            self.error = True
+
         msg = colored(
             "ERROR:\n{}".format(cleos.heredoc(msg)), 
-            self.error_color)
+            Verbosity.ERROR.value)
+
         global _is_throw_error
         if _is_throw_error:
             raise Exception(msg)
         else:
             print(msg)
 
+
     def OUT(self, msg):
         if msg and Verbosity.OUT in self.verbosity:
+            self.out_msg = msg
             print(cleos.heredoc(msg))
+
 
     def DEBUG(self, msg):
         if msg and Verbosity.DEBUG in self.verbosity:
             cprint(
                 cleos.heredoc(msg),
-                self.debug_color)
+                Verbosity.DEBUG.value)
 
 
 class Transaction():

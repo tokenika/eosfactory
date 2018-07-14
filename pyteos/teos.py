@@ -72,7 +72,7 @@ class _Teos:
             cwd=str(pathlib.Path(setup_setup.teos_exe).parent)) 
 
         # Both, right and error output is passed with stdout:
-        self._out = process.stdout.decode("utf-8")
+        self.out_msg = process.stdout.decode("utf-8")
 
         # With "--both", json output is passed with stderr: 
         json_resp = process.stderr.decode("utf-8")
@@ -87,19 +87,19 @@ class _Teos:
             print("")
 
         if self.is_verbose:
-            print(self._out)
+            print(self.out_msg)
      
-        if re.match(r'^ERROR', self._out):
+        if re.match(r'^ERROR', self.out_msg):
             self.error = True
             if is_verbose_arg >= 0 and setup.is_verbose() >= 0:
-                print(self._out)
+                print(self.out_msg)
         try:
             self.json = json_module.loads(json_resp)
         except:
             self.json = json_resp
 
     def __str__(self):
-        return self._out
+        return self.out_msg
     
     def __repr__(self):
         return repr(self.json)
@@ -151,7 +151,7 @@ class Template(_Teos):
             pass
         
         if self.is_verbose:
-            print(self._out)
+            print(self.out_msg)
  
 
     def delete(self):

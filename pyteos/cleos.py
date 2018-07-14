@@ -108,7 +108,7 @@ class _Cleos:
         to_object.is_verbose = self.is_verbose
         to_object.json = self.json
         to_object.err_msg = self.err_msg
-        to_object._out = self._out
+        to_object.out_msg = self.out_msg
 
     def set_is_verbose(self, is_verbose):
         if setup.is_verbose() and is_verbose > 0:
@@ -153,7 +153,7 @@ class _Cleos:
                 stderr=subprocess.PIPE,
                 cwd=str(pathlib.Path(setup_setup.cleos_exe).parent)) 
 
-            self._out = process.stdout.decode("utf-8")
+            self.out_msg = process.stdout.decode("utf-8")
             self.err_msg = process.stderr.decode("utf-8")
 
         self.set_is_verbose(is_verbose)
@@ -187,7 +187,7 @@ class _Cleos:
 
 
     def __str__(self):
-        out = self._out + "\n"
+        out = self.out_msg + "\n"
         out = out + self.err_msg
         return out
 
@@ -207,7 +207,7 @@ def get_transaction_id(cleos_object):
         transaction_id = msg[beg : end]
     else:
         try:
-            json = json_module.loads(cleos_object._out)
+            json = json_module.loads(cleos_object.out_msg)
             transaction_id = json["transaction_id"]
         except:
             pass
@@ -245,7 +245,7 @@ class GetAccount(_Cleos):
 
         if not self.error:
             try:
-                j = json_module.loads(self._out)
+                j = json_module.loads(self.out_msg)
                 self.json = j
             except:
                 pass
@@ -278,7 +278,7 @@ class GetAccounts(_Cleos):
             self, [key_public], "get", "accounts", is_verbose)
 
         if not self.error:
-            self.json = json_module.loads(self._out)
+            self.json = json_module.loads(self.out_msg)
             self.names = self.json['account_names']
             self.printself()
 
@@ -306,7 +306,7 @@ class GetTransaction(_Cleos):
             self, [transaction_id], "get", "transaction", is_verbose)
 
         if not self.error:
-            self.json = json_module.loads(self._out)
+            self.json = json_module.loads(self.out_msg)
 
             self.printself()
 
@@ -338,7 +338,7 @@ class WalletCreate(_Cleos):
             _Cleos.__init__(
                 self, ["--name", self.name], "wallet", "create", is_verbose)
             
-            msg = self._out
+            msg = self.out_msg
             if not self.error:
                 self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
                 self.json["password"] = self.password
@@ -353,7 +353,7 @@ class WalletCreate(_Cleos):
                 self.name = name
                 self.password = password
                 self.json["password"] = self.password
-                self._out = "Restored wallet: {0}\nPassword is \n{1}\n" \
+                self.out_msg = "Restored wallet: {0}\nPassword is \n{1}\n" \
                     .format(self.name, self.password)
             else:
                 if "Nonexistent wallet" in self.err_msg:
@@ -397,7 +397,7 @@ class WalletList(_Cleos):
             self, [], "wallet", "list", is_verbose)
 
         if not self.error:
-            self.json = json_module.loads("{" + self._out.replace("Wallets", \
+            self.json = json_module.loads("{" + self.out_msg.replace("Wallets", \
                 '"Wallets"', 1) + "}")
             self.printself()
 
@@ -473,10 +473,10 @@ class WalletKeys(_Cleos):
             self, [], "wallet", "keys", is_verbose)
 
         if not self.error:
-            if self._out == "[]\n":
+            if self.out_msg == "[]\n":
                 self.json[""] = []
             else:
-                self.json[""] = self._out.replace("\n", "") \
+                self.json[""] = self.out_msg.replace("\n", "") \
                     .replace("[  ", "").replace('"',"").replace("]", "") \
                     .split(",  ")
                     
@@ -614,7 +614,7 @@ class GetInfo(_Cleos):
             self, [], "get", "info", is_verbose)
 
         if not self.error:
-            self.json = json_module.loads(str(self._out))
+            self.json = json_module.loads(str(self.out_msg))
             self.head_block = self.json["head_block_num"]
             self.head_block_time = self.json["head_block_time"]
             self.last_irreversible_block_num \
@@ -672,7 +672,7 @@ class GetBlock(_Cleos):
             self, args, "get", "block", is_verbose)
 
         if not self.error:
-            self.json = json_module.loads(self._out)
+            self.json = json_module.loads(self.out_msg)
             self.block_num = self.json["block_num"]
             self.ref_block_prefix = self.json["ref_block_prefix"]
             self.timestamp = self.json["timestamp"]
@@ -718,7 +718,7 @@ class GetCode(_Cleos):
         _Cleos.__init__(self, args, "get", "code", is_verbose)
 
         if not self.error:
-            msg = str(self._out)
+            msg = str(self.out_msg)
             self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
             self.code_hash = self.json["code_hash"]
             self.printself()
@@ -795,7 +795,7 @@ class GetTable(_Cleos):
 
         if not self.error:
             try:
-                self.json = json_module.loads(self._out)
+                self.json = json_module.loads(self.out_msg)
             except:
                 pass
 
@@ -821,9 +821,9 @@ class CreateKey(_Cleos):
             self, key_name, key_public="", key_private="", r1=False, is_verbose=1):
 
         if key_public:
-            self.json["publicKey"] = key_public            
-            self.json["privateKey"] = key_private
-            self._out = "Private key: {0}\nPublic key: {1}\n" \
+            self.json["publicKey"] = self.key_public = key_public           
+            self.json["privateKey"] = self.key_private = key_private
+            self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
                 .format(key_private,key_public)
         else:
             args = []
@@ -835,7 +835,7 @@ class CreateKey(_Cleos):
             
             if not self.error:
                 self.json["name"] = key_name
-                msg = str(self._out)
+                msg = str(self.out_msg)
                 first_collon = msg.find(":")
                 first_end = msg.find("\n")
                 second_collon = msg.find(":", first_collon + 1)
@@ -1178,7 +1178,7 @@ class PushAction(_Cleos):
         if not self.error:
             self.transaction = get_transaction_id(self)
             try:
-                self.json = json_module.loads(self._out)
+                self.json = json_module.loads(self.out_msg)
                 self.console = self.json["processed"]["action_traces"][0]["console"]
                 self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
             except:
