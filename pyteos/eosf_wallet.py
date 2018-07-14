@@ -69,21 +69,6 @@ class Wallet(cleos.WalletCreate):
             """.format(cleos.node_is_running()))
 
         cleos.WalletCreate.__init__(self, name, password, is_verbose=-1)
-
-        self.logger.DEBUG("""
-            Name is `{}`
-            Wallet URL is {}
-            Use keosd status is {}
-            self.out_msg:
-            {}
-            self.err_msg:
-            {}
-            """.format(
-                self.name,
-                cleos.wallet_url(), setup.is_use_keosd(),
-                self.out_msg,
-                self.err_msg
-                ))
             
         if not self.error:
             self.logger.OUT(

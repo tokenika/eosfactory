@@ -61,21 +61,25 @@ NEXT TEST ====================================================================
     #             in logger.err_msg)
 
 
-    def test_testnet_create_account(self):
-        setup.use_keosd(True)
-        ######################################################################
+    # def test_testnet_create_account(self):
+    #     setup.use_keosd(True)
+    #     ######################################################################
         
-        logger = account_master_factory()
-        self.assertTrue(
-            "Use the following data to register a new account on a public testnet:" \
-                in logger.out_msg)
+    #     logger = account_master_factory()
+    #     self.assertTrue(
+    #         "Use the following data to register a new account on a public testnet:" \
+    #             in logger.out_msg)
 
 
-    def test_restore_testnet_account(self)
+    def test_restore_testnet_account(self):
         setup.use_keosd(True)
+        wallet = Wallet(
+            "default", 
+            "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N")
         ######################################################################
 
-        account_master_factory("account_master", )
+        account_master_factory("account_master", "nbhyi5exmjcl")
+        # print(account_master.info())
 
 
 
