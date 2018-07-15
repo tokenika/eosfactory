@@ -210,12 +210,8 @@ class Wallet(cleos.WalletCreate):
 
         restored = dict()
         if len(account_names) > 0:
-            if setup.is_use_keosd():
-                wallet_dir_ = os.path.expandvars(teos.get_keosd_wallet_dir())
-            else:
-                wallet_dir_ = teos.get_node_wallet_dir()
             try:
-                with open(wallet_dir_ + setup.account_map, "r") as input:    
+                with open(self.wallet_dir + setup.account_map, "r") as input:    
                     account_map = json.load(input)
             except:
                 account_map = {}
@@ -250,41 +246,60 @@ class Wallet(cleos.WalletCreate):
         cleos.WalletKeys(is_verbose=self.is_verbose)
 
 
-    def __change_object_name(self):
-        # self.OUT("""
-        #     The given account object name
-        #     `{}`({})
-        #     points to an existing account, mapped in a file in directory:
-        #     `{}`
-        #     Cannot overwrite it, however, the existing name can be changed.
-        #     Enter a new name to change, or nothing to escape.
-        #     """.format(object_name, name, self.wallet_dir))
-        # new_name = input("<<< ")
-        # for name, object_name in account_map_.items():
-        pass
-        #????????????????????????????? TODO 
+    def edit_account_map(self, text_editor="nano"):
+        eosf.edit_account_map(text_editor)
 
 
     def is_name_taken(self, account_object_name):
-        account_map_json = eosf.account_map()
-        for name, object_name in account_map_json.items():
-            if object_name == account_object_name:
-                self.__change_object_name()
 
-                self.logger.ERROR("""
-                    The given account object name
-                    `{}`({})
-                    points to an existing account, mapped in a file in directory:
-                    `{}`
-                    Cannot overwrite it.
-                    """.format(object_name, name, self.wallet_dir))
+        while True:
+            account_map_json = eosf.account_map(self.logger)
+            if account_map_json is None:
                 return False
+
+            is_taken = False
+            for name, object_name in account_map_json.items():
+                if object_name == account_object_name:
+
+                    self.logger.ERROR("""
+                        The given account object name
+                        `{}`({})
+                        points to an existing account, mapped in a file in directory:
+                        `{}`
+                        Cannot overwrite it.
+
+                        However, you can free the name by changing the mapping. 
+                        Do you want to edit the file?
+                        """.format(object_name, name, self.wallet_dir))
+
+                    is_taken = True
+                    break
+
+            if is_taken:
+                answer = input("y/n <<< ")
+                if answer == "y":
+                    eosf.edit_account_map()
+                    continue
+                else:
+                    logger.ERROR("""
+            Use the function 'eosf.edit_account_map(text_editor="nano")'
+            or the corresponding method of any object of the 'eosf_wallet.Wallet` 
+            class to edit the file.
+                    """)
+                    return False
+            else:
+                break
+
         return True
             
 
     def map_account(self, account_object_name, account_object):
-        if self.is_name_taken(account_object_name):
-            account_map_json = eosf.account_map()
+
+        if not self.is_name_taken(account_object_name):
+            account_map_json = eosf.account_map(self.logger)
+            if account_map_json is None:
+                return
+
             account_map_json[account_object.name] = account_object_name
             with open(self.wallet_dir + setup.account_map, "w") as out:
                 out.write(json.dumps(account_map_json, sort_keys=True, indent=4))

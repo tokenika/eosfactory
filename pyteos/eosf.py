@@ -61,14 +61,41 @@ def wallet_dir():
     return wallet_dir_
 
 
-def account_map():
+def account_map(logger):
+
     wallet_dir_ = wallet_dir()
-    try: # whether the setup map file exists:
-        with open(wallet_dir_ + setup.account_map, "r") as input:
-            account_map = json.load(input)
-    except:
-        account_map = {}
-    return account_map
+    while True:
+        try: # whether the setup map file exists:
+            with open(wallet_dir_ + setup.account_map, "r") as input_file:
+                return json.load(input_file)
+
+        except Exception as e:
+            if isinstance(e, FileNotFoundError):
+                return {}
+            else: 
+                logger.ERROR("""
+                    The account mapping file is misformed. The error message is:
+                    {}
+                    
+                    Do you want to edit the file?
+                    """.format(str(e)))
+                    
+                answer = input("y/n <<< ")
+                if answer == "y":
+                    edit_account_map()
+                    continue
+                else:
+                    logger.ERROR("""
+            Use the function 'eosf.edit_account_map(text_editor="nano")'
+            or the corresponding method of any object of the 'eosf_wallet.Wallet` 
+            class to edit the file.
+                    """)                    
+                    return None
+
+
+def edit_account_map(text_editor="nano"):
+    import subprocess
+    subprocess.run([text_editor, wallet_dir() + setup.account_map])
 
 
 def clear_account_mapping(exclude=["account_master"]):
