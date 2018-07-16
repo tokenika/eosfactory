@@ -301,8 +301,10 @@ class Wallet(cleos.WalletCreate):
                 return
 
             account_map_json[account_object.name] = account_object_name
+            # account_map_json = sorted(
+            #     account_map_json.items(), key=lambda x: x[1])
             with open(self.wallet_dir + setup.account_map, "w") as out:
-                out.write(json.dumps(account_map_json, sort_keys=True, indent=4))
+                out.write(json.dumps(account_map_json, sort_keys=False, indent=4))
 
             self.logger.EOSF_TRACE("""
                 Account '{}' mapped as '{}', stored in the file '{}' 
