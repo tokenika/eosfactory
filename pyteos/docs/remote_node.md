@@ -11,7 +11,7 @@ $ python3
 >>> import cleos
 >>> import eosf
 
->>> setup.set_cryptolions()
+>>> setup.set_nodeos_address("88.99.97.30:38888")
 ```
 The above setting will cause *EOSFactory* to use [*cryptolions*](http://dev.cryptolions.io/#home) testnet (http://54.38.137.99:8888).  
 
@@ -113,7 +113,7 @@ import cleos
 import eosf
 import 
 
-setup.set_cryptolions()
+setup.set_nodeos_address("88.99.97.30:38888")
 
 >>> wallet = eosf.Wallet(
                 "tokenika"

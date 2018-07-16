@@ -250,7 +250,7 @@ class Wallet(cleos.WalletCreate):
         eosf.edit_account_map(text_editor)
 
 
-    def is_name_taken(self, account_object_name):
+    def is_name_taken(self, account_object_name, account_name):
 
         while True:
             account_map_json = eosf.account_map(self.logger)
@@ -260,20 +260,22 @@ class Wallet(cleos.WalletCreate):
             is_taken = False
             for name, object_name in account_map_json.items():
                 if object_name == account_object_name:
+                    if not name == account_name:
+                        self.logger.ERROR("""
+                The given account object name
+                `{}`({})
+                points to an existing account, of the name {},
+                mapped in a file in directory:
+                `{}`
+                Cannot overwrite it.
 
-                    self.logger.ERROR("""
-                        The given account object name
-                        `{}`({})
-                        points to an existing account, mapped in a file in directory:
-                        `{}`
-                        Cannot overwrite it.
+                However, you can free the name by changing the mapping. 
+                Do you want to edit the file?
+                """.format(
+                    account_object_name, account_name, name, self.wallet_dir))
 
-                        However, you can free the name by changing the mapping. 
-                        Do you want to edit the file?
-                        """.format(object_name, name, self.wallet_dir))
-
-                    is_taken = True
-                    break
+                        is_taken = True
+                        break
 
             if is_taken:
                 answer = input("y/n <<< ")
@@ -281,7 +283,7 @@ class Wallet(cleos.WalletCreate):
                     eosf.edit_account_map()
                     continue
                 else:
-                    logger.ERROR("""
+                    self.logger.ERROR("""
             Use the function 'eosf.edit_account_map(text_editor="nano")'
             or the corresponding method of any object of the 'eosf_wallet.Wallet` 
             class to edit the file.
@@ -290,21 +292,20 @@ class Wallet(cleos.WalletCreate):
             else:
                 break
 
-        return True
+        return False
             
 
     def map_account(self, account_object_name, account_object):
-
-        if not self.is_name_taken(account_object_name):
+        if not self.is_name_taken(account_object_name, account_object.name):
             account_map_json = eosf.account_map(self.logger)
             if account_map_json is None:
                 return
 
             account_map_json[account_object.name] = account_object_name
-            # account_map_json = sorted(
-            #     account_map_json.items(), key=lambda x: x[1])
+            print(eosf.account_mapp_to_string(account_map_json))
+
             with open(self.wallet_dir + setup.account_map, "w") as out:
-                out.write(json.dumps(account_map_json, sort_keys=False, indent=4))
+                out.write(eosf.account_mapp_to_string(account_map_json))
 
             self.logger.EOSF_TRACE("""
                 Account '{}' mapped as '{}', stored in the file '{}' 

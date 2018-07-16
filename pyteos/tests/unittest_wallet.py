@@ -40,7 +40,7 @@ NEXT TEST ====================================================================
         except:
             pass
 
-        setup.set_nodeos_URL(cryptolions)
+        setup.set_nodeos_address(cryptolions)
         wallet = eosf.Wallet(wallet_name)
         self.assertTrue(not wallet.error)
 

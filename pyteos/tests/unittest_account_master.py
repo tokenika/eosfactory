@@ -72,6 +72,7 @@ NEXT TEST ====================================================================
 
 
     def test_restore_testnet_account(self):
+        setup.set_nodeos_address(cryptolions)
         setup.use_keosd(True)
         wallet = Wallet(
             "default", 

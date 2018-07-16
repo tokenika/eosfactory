@@ -27,24 +27,20 @@ def reload():
 
 setup_setup = setup.Setup()
 
-def reset_nodeos_URL():
-    import teos
-    config = teos.GetConfig(is_verbose=0)
-    try:       
-        url = config.json["EOSIO_DAEMON_ADDRESS"]
-    except:
-        print("cannot determine EOSIO_DAEMON_ADDRESS.")
-        return
-    setup.set_nodeos_URL(url)
+
+def set_local_nodeos_address():
+    config = teos.GetConfig(is_verbose=0)       
+    setup.set_nodeos_address(config.json["EOSIO_DAEMON_ADDRESS"])
+    setup.set_is_local_address(True)
 
 
-global _wallet_url_arg
-_wallet_url_arg = None
+global _wallet_address_arg
+_wallet_address_arg = None
 
 
 def wallet_url():
-    global _wallet_url_arg
-    return _wallet_url_arg
+    global _wallet_address_arg
+    return _wallet_address_arg
 
 
 def node_is_running():
@@ -66,26 +62,26 @@ def set_wallet_url_arg(cleos_object, url=None, check_error=True):
     """ Implements the `use_keosd` flag in the `setup` module.
     """
     # print("CCCCCCCCCCCCCC set_wallet_url_arg: {}".format(url))
-    global _wallet_url_arg
-    if not _wallet_url_arg is None:
+    global _wallet_address_arg
+    if not _wallet_address_arg is None:
         return
 
     if check_error and is_notrunningnotkeosd_error(cleos_object):
-        _wallet_url_arg = None
-        # print("TTTTTTTTTTTTTT is_notrunningnotkeosd_error: {}".format(_wallet_url_arg))
+        _wallet_address_arg = None
+        # print("TTTTTTTTTTTTTT is_notrunningnotkeosd_error: {}".format(_wallet_address_arg))
         return        
 
     if not url is None:
         if not url:
-            _wallet_url_arg = []
+            _wallet_address_arg = []
         else:
-            _wallet_url_arg = ["--wallet-url", "http://" + url]
-        # print("FFFFFFFFFFFFF if not url is None: {}".format(_wallet_url_arg))
+            _wallet_address_arg = ["--wallet-url", "http://" + url]
+        # print("FFFFFFFFFFFFF if not url is None: {}".format(_wallet_address_arg))
         return
 
-    if _wallet_url_arg is None:
-        _wallet_url_arg = []
-        # print("OOOOOOOOOOOOO if not url is None: {}".format(_wallet_url_arg))
+    if _wallet_address_arg is None:
+        _wallet_address_arg = []
+        # print("OOOOOOOOOOOOO if not url is None: {}".format(_wallet_address_arg))
 
 
 def heredoc(msg):
@@ -124,14 +120,14 @@ class _Cleos:
 
         cl = [setup_setup.cleos_exe]
 
-        if setup.nodeos_URL() is None:
-            reset_nodeos_URL()
-        cl.extend(setup.nodeos_URL())
+        if setup.nodeos_address_arg() is None:
+            set_local_nodeos_address()
+        cl.extend(setup.nodeos_address_arg())
 
         set_wallet_url_arg(self) # this may set self.error ON
-        global _wallet_url_arg
+        global _wallet_address_arg
         if not self.error:
-            cl.extend(_wallet_url_arg)
+            cl.extend(_wallet_address_arg)
 
             if setup.is_print_request():
                 cl.append("--print-request")
@@ -628,11 +624,6 @@ def get_last_block():
 
 
 def get_block_trx_data(block_num):
-    # import cleos
-    # setup.set_verbose(0)
-    # setup.set_cryptolions()
-    # setup.set_verbose(0)
-    # cleos.get_block_trx_data(4050)
     block = GetBlock(block_num)
     trxs = block.json["transactions"]
     for trx in trxs:

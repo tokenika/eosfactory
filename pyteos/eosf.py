@@ -98,7 +98,21 @@ def edit_account_map(text_editor="nano"):
     subprocess.run([text_editor, wallet_dir() + setup.account_map])
 
 
-def clear_account_mapping(exclude=["account_master"]):
+def account_mapp_to_string(account_map):
+    sort = sorted(account_map, key=account_map.get, reverse=False)
+    retval = "{\n"
+    next = False
+    for k in sort:
+        if next:
+            retval = retval + ",\n"
+        next = True
+        retval = retval + '    "{}": "{}"'.format(k, account_map[k])
+    retval = retval + "\n}\n"
+
+    return retval
+
+
+def clear_account_mapp(exclude=["account_master"]):
     wallet_dir_ = wallet_dir()
     account_map = {}
 
@@ -114,7 +128,7 @@ def clear_account_mapping(exclude=["account_master"]):
             clear_map[account_name] = account_map[account_name]
         
     with open(wallet_dir_ + setup.account_map, "w") as out:
-        out.write(json.dumps(clear_map, sort_keys=True, indent=4))
+        out.write(account_mapp_to_string(account_map))
 
 
 def kill_keosd():

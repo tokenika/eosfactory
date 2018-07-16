@@ -5,7 +5,7 @@ from termcolor import cprint
 
 setup.set_verbose(True)
 setup.use_keosd(True)
-setup.set_nodeos_URL("88.99.97.30:38888")  
+setup.set_nodeos_address("88.99.97.30:38888")  
 
 
 def test():

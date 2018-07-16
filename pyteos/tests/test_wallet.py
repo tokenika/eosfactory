@@ -5,7 +5,7 @@ import eosf
 
 setup.set_verbose(True)
 setup.use_keosd(True)
-setup.set_nodeos_URL("dev.cryptolions.io:38888")  
+setup.set_nodeos_address("dev.cryptolions.io:38888")  
 
 def test():
 
@@ -80,7 +80,7 @@ permissions:
     import cleos
 
     setup.use_keosd(True)
-    setup.set_nodeos_URL("dev.cryptolions.io:38888")
+    setup.set_nodeos_address("dev.cryptolions.io:38888")
 
     wallet_name = "default"
     wallet_pass = "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N"

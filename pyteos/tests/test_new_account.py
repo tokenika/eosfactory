@@ -21,7 +21,7 @@ class Test1(unittest.TestCase):
     def setUpClass(cls):
 
         setup.use_keosd(False)
-        #setup.set_nodeos_URL("88.99.97.30:38888")
+        #setup.set_nodeos_address("88.99.97.30:38888")
         #wallet = eosf.Wallet("jungle_wallet2")
         account_master = eosf.AccountMaster()
         print(account_master.info())

@@ -10,9 +10,9 @@ import eosf
 import eosf_wallet
 
 
-def is_local_testnet():
+def is_local_testnet_running():
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
-        # print(cleos._wallet_url_arg)
+        # print(cleos._wallet_address_arg)
         # print(account_)
         if not account_.error and \
             self.key_public == \
@@ -59,7 +59,7 @@ def precisely_one_wallet(logger, levels_below=2):
     return wallet
     
 
-def is_local_testnet(account_eosio):
+def is_local_testnet_running(account_eosio):
     account_ = cleos.GetAccount(account_eosio.name, json=True, is_verbose=-1)
     if not account_.error and \
         account_eosio.owner_key.key_public == \
@@ -85,6 +85,25 @@ def put_account_to_wallet(
 
 def account_master_factory(
             account_object_name="", name="", verbosity=None, levels_below=1):
+    """
+    If `account_object_name` is not defined, prints data for 
+    registration on a testnet. Then, if the name is not set, the registration 
+    name is random.
+
+    Otherwise the following conditions are checked:
+    * precisely one `Wallet` object is defined;
+    * setup.use_keosd(True) or the local testnet is running.
+
+    If the local testnet is running then an account object, representing 
+    the `eosio` account, is created in the global namespace of the calling
+    module.
+
+    If the local testnet is stopped then an outer testnet has to be defined
+    with `setup.set_nodeos_address(<url>)`, and must be 
+    `setup.use_keosd(True)`.
+
+    
+    """
 
     logger = eosf._Eosf(verbosity)
 
@@ -111,7 +130,7 @@ def account_master_factory(
 
         return logger
 
-    if account_object_name:
+    if account_object_name: # 
         logger.EOSF_TRACE("""
             ######### 
             Create the master account object named `{}`...
@@ -121,19 +140,15 @@ def account_master_factory(
             ######### 
             Create a master account object ...
             """.format(account_object_name))
-
+    
     if cleos.is_notrunningnotkeosd_error(logger):
         logger.ERROR()
         return logger
-
+    
     wallet = precisely_one_wallet(logger, levels_below=levels_below+1)
     if wallet is None:
         return logger
-        
-    if not wallet.is_name_taken(account_object_name):
-        inspect.stack()[levels_below][0].f_globals[account_object_name] = None
-        return wallet.logger
-
+   
     account_object = types.SimpleNamespace()
     account_object.name = "eosio"
     config = teos.GetConfig(is_verbose=0)
@@ -143,37 +158,41 @@ def account_master_factory(
         config.json["EOSIO_KEY_PRIVATE"]
         )
 
-    if is_local_testnet(account_object):
-
-        if cleos.is_notrunningnotkeosd_error(logger):
-            logger.ERROR()
-            return logger
-
+    if is_local_testnet_running(account_object):
         put_account_to_wallet(
             account_object, wallet, account_object_name, levels_below+1)
         return
 
     # not local testnet
-    # restore the master account
+    if setup.is_local_address():
+        logger.ERROR("""
+        Node address is not set.
+        Use 'setup.set_nodeos_address(<URL>)'
+        """)
+        return logger
 
-    account_object = cleos.GetAccount(name, json=True, is_verbose=-1)
+    account_object = cleos.GetAccount(name, json=True, is_verbose=-1) 
     if not account_object.error:
-        account_object.account_info = str(account_)
+        account_object.name = name
+        account_object.account_info = str(account_object)
         account_object.owner_key = cleos.CreateKey(
             "active", 
             account_object.json["permissions"][0]["required_auth"]["keys"] \
             [0]["key"], 
             is_verbose=0)
 
-        self.owner_key = cleos.CreateKey(
+        account_object.owner_key = cleos.CreateKey(
             "owner", 
-            account_.json["permissions"][1]["required_auth"]["keys"] \
+            account_object.json["permissions"][1]["required_auth"]["keys"] \
             [0]["key"], 
             is_verbose=0)
 
         put_account_to_wallet(
             account_object, wallet, account_object_name, levels_below+1)
         return
+    else:
+        logger.ERROR(account_object.err_msg)
+        return logger
 
 
 def account_factory(

@@ -8,31 +8,33 @@ _is_json = 0
 _is_command_line_mode = False
 _print_request = False
 _print_response = False
-_nodeos_URL = None
+_nodeos_address = None
+_is_local_address = False
 _is_use_keosd = False
-
 account_map = "accounts.json"
 password_map = "passwords.json"
 
 
-def set_nodeos_URL(url="localhost:8888"):
-    global _nodeos_URL
-    _nodeos_URL = "http://" + url
+def set_is_local_address(status):
+    global _is_local_address
+    _is_local_address = status
 
-    
-def set_cryptolions():
-    global _nodeos_URL
-    _nodeos_URL = "http://" + "54.38.137.99:8888"
-    
-def set_tokenika():
-    global _nodeos_URL
-    _nodeos_URL = "https://" + "54.38.58.241:443"
 
-def nodeos_URL():
-    global _nodeos_URL
-    if _nodeos_URL is None:
+def is_local_address():
+    global _is_local_address
+    return _is_local_address
+
+
+def set_nodeos_address(url):
+    global _nodeos_address
+    _nodeos_address = "http://" + url
+
+
+def nodeos_address_arg():
+    global _nodeos_address
+    if _nodeos_address is None:
         return None
-    return ["--url", _nodeos_URL]
+    return ["--url", _nodeos_address]
 
 
 def use_keosd(status=False):
