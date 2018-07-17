@@ -130,9 +130,9 @@ def account_master_create(
     #############
 
     Check the following conditions:
-    * precisely one ``Wallet`` object is defined;
     * ``setup.use_keosd(True)`` or the local testnet is running.
-
+    * precisely one ``Wallet`` object is defined;
+    
     Local testnet
     #############
 
@@ -191,8 +191,8 @@ def account_master_create(
 
     """
     Check the following conditions:
-    * precisely one ``Wallet`` object is defined;
     * ``setup.use_keosd(True)`` or the local testnet is running.
+    * precisely one ``Wallet`` object is defined;
     """
     
     if cleos.is_notrunningnotkeosd_error(logger):

@@ -48,6 +48,10 @@ def set_verbosity(value=_verbosity):
     global _verbosity
     _verbosity = value
 
+_verbosity_plus = []
+def set_verbosity_plus(value=[]):
+    global _verbosity_plus
+    _verbosity_plus = value
 
 _is_throw_error = False
 def set_throw_error(status=False):
@@ -78,28 +82,44 @@ class Logger():
         self.verbosity = verbosity
 
     def COMMENT(self, msg):
-        if msg and Verbosity.EOSF in self.verbosity:
-            cprint(
-                cleos.heredoc(msg) + "\n",
-                Verbosity.COMMENT.value)
+        cprint(
+            cleos.heredoc(msg) + "\n",
+            Verbosity.COMMENT.value)
 
     def EOSF(self, msg):
-        if msg and Verbosity.EOSF in self.verbosity:
+        if msg and (Verbosity.EOSF in self.verbosity \
+                or Verbosity.EOSF in _verbosity_plus):
             cprint(
                 cleos.heredoc(msg),
                 Verbosity.EOSF.value)
 
     def TRACE(self, msg):
-        if msg and Verbosity.TRACE in self.verbosity:
+        if msg and (Verbosity.TRACE in self.verbosity \
+                or Verbosity.TRACE in _verbosity_plus):
             cprint(
                 cleos.heredoc(msg),
                 Verbosity.TRACE.value)
 
     def EOSF_TRACE(self, msg):
-        if msg and Verbosity.EOSF in self.verbosity:
+        if msg and Verbosity.EOSF in self.verbosity \
+                or Verbosity.EOSF in _verbosity_plus:
             self.EOSF(msg)
         else:
             self.TRACE(msg)
+
+    def OUT(self, msg):
+        if msg and (Verbosity.OUT in self.verbosity \
+                or Verbosity.OUT in _verbosity_plus):
+            self.out_msg = msg
+            print(cleos.heredoc(msg) + "\n")
+
+
+    def DEBUG(self, msg):
+        if msg and (Verbosity.DEBUG in self.verbosity \
+                or Verbosity.DEBUG in _verbosity_plus):
+            cprint(
+                cleos.heredoc(msg),
+                Verbosity.DEBUG.value)
 
     def ERROR(self, err_msg=""):
         """Print an error message or throw 'Exception'.
@@ -137,20 +157,6 @@ class Logger():
             raise Exception(err_msg)
         else:
             print(err_msg)
-
-
-    def OUT(self, msg):
-        if msg and Verbosity.OUT in self.verbosity:
-            self.out_msg = msg
-            print(cleos.heredoc(msg) + "\n")
-
-
-    def DEBUG(self, msg):
-        if msg and Verbosity.DEBUG in self.verbosity:
-            cprint(
-                cleos.heredoc(msg),
-                Verbosity.DEBUG.value)
-
 
 def wallet_dir():
     if setup.is_use_keosd():

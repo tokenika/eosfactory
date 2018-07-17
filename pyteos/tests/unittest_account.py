@@ -12,7 +12,6 @@ eosf.set_throw_error(False)
 #setup.set_command_line_mode()
 
 cryptolions = "88.99.97.30:38888"
-
 l = eosf.Logger()
 
 class Test1(unittest.TestCase):

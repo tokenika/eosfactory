@@ -7,7 +7,8 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT]) #, eosf.Verbosity.DEBUG])
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
+#eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
 #setup.set_command_line_mode()
 
@@ -31,62 +32,101 @@ NEXT TEST ====================================================================
     def setUp(self):
         eosf.set_is_testing_errors(False)
 
-
-    def test_too_many_wallets(self):
-        l.COMMENT("""
-        Check the following condition:
-        * precisely one ``Wallet`` object is defined when calling the 
-            ``account_master_create(...)`` function.
-        """)
-        eosf.set_throw_error(True)
-        setup.use_keosd(False)
-        eosf.reset(is_verbose=0)
-        wallet = Wallet()
-        eosf.set_throw_error(False)
-        eosf.set_is_testing_errors()
-        ######################################################################
-
-        wallet1 = Wallet("second")
-        l.COMMENT("""
-        Added second wallet, named "second". Calling the ``account_master_create(...)`` 
-        function should result in an error message:
-        """)        
-        eosf.set_is_testing_errors()
-        logger = account_master_create("account_master")
-        self.assertTrue("Too many `Wallet` objects." in logger.err_msg)
-
-
-    def test_there_is_no_wallet(self):
-        l.COMMENT("""
-        Check the following condition:
-        * precisely one ``Wallet`` object is defined when calling the 
-            ``account_master_create(...)`` function.
-        """)
-        eosf.set_throw_error(True)
-        setup.use_keosd(False)
-        eosf.reset(is_verbose=0)
-        eosf.set_throw_error(False)
-        ######################################################################
-
-        l.COMMENT("""
-        There is not any ``Wallet`` object. Calling the ``account_master_create(...)`` 
-        function should result in an error message:
-        """)
-        eosf.set_is_testing_errors()
-        logger = account_master_create("account_master")        
-        self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
-
-
-    # def test_is_not_running_not_keosd_set(self):
+    # def test_too_many_wallets(self):
+    #     l.COMMENT("""
+    #     Check the condition that
+    #     precisely one ``Wallet`` object is defined when calling the 
+    #         ``account_master_create(...)`` function.
+    #     """)
+    #     eosf.set_throw_error(True)
     #     setup.use_keosd(False)
-    #     eosf.stop(is_verbose=0)
+    #     eosf.reset(is_verbose=0)
+    #     wallet = Wallet()
+    #     eosf.set_throw_error(False)
+    #     eosf.set_is_testing_errors()
     #     ######################################################################
 
+    #     wallet1 = Wallet("second")
+    #     l.COMMENT("""
+    #     Added second wallet, named "second". Calling the ``account_master_create(...)`` 
+    #     function should result in an error message:
+    #     """)        
+    #     eosf.set_is_testing_errors()
+    #     logger = account_master_create("account_master")
+    #     self.assertTrue("Too many `Wallet` objects." in logger.err_msg)
+
+    # def test_there_is_no_wallet(self):
+    #     l.COMMENT("""
+    #     Check the condition that
+    #     precisely one ``Wallet`` object is defined when calling the 
+    #         ``account_master_create(...)`` function.
+    #     """)
+    #     eosf.set_throw_error(True)
+    #     setup.use_keosd(False)
+    #     eosf.reset(is_verbose=0)
+    #     eosf.set_throw_error(False)
+    #     ######################################################################
+
+    #     l.COMMENT("""
+    #     There is not any ``Wallet`` object. Calling the ``account_master_create(...)`` 
+    #     function should result in an error message:
+    #     """)
+    #     eosf.set_is_testing_errors()
+    #     logger = account_master_create("account_master")        
+    #     self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
+
+    # def test_is_not_running_not_keosd_set(self):
+    #     l.COMMENT("""
+    #     Check the condition that
+    #     ``setup.use_keosd(True)`` or the local testnet is running.
+    #     """)
+    #     eosf.set_throw_error(True)
+
+    #     setup.use_keosd(False) 
+    #     eosf.stop(is_verbose=0)
+
+    #     eosf.set_throw_error(False)
+    #     ######################################################################
+
+    #     eosf.set_is_testing_errors()
     #     logger = account_master_create("account_master") 
     #     self.assertTrue(
     #         "Cannot use the local node Wallet Manager if the node is not running." \
     #             in logger.err_msg)
 
+    def test_testnet_create_account(self):
+        l.COMMENT("""
+        If the local testnet is running, ``account_master_create(<test object name>)``
+        puts the created account object into the global namespace, and puts the
+        account into the wallet.
+
+        With the local testnet, the name of the master account is ``eosio``.
+        """)
+        eosf.set_throw_error(True)
+
+        setup.use_keosd(False)
+        eosf.reset(is_verbose=0)
+        wallet = Wallet()
+
+        eosf.set_throw_error(False)
+        ######################################################################
+        
+        l.COMMENT("""
+        With the local testnet, the name of the master account is ``eosio``:
+        """)        
+        account_master_create("account_master")
+        self.assertTrue(account_master.name == "eosio")
+        wallet.keys()
+
+        l.COMMENT("""
+        With the local testnet, the wallet passwords are stored in a file.
+        Let us restart the testnet and restore the wallet:
+        """)
+
+        eosf.stop(is_verbose=0)
+        eosf.run(is_verbose=0)
+        wallet = Wallet()
+        wallet.keys()
 
     # def test_testnet_create_account(self):
     #     setup.use_keosd(True)

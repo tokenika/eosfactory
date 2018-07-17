@@ -71,10 +71,6 @@ class Wallet(cleos.WalletCreate):
         cleos.WalletCreate.__init__(self, name, password, is_verbose=-1)
             
         if not self.error:
-            self.logger.OUT(
-                self.out_msg
-            )
-
             if not setup.is_use_keosd(): 
                 try:
                     with open(self.wallet_dir + setup.password_map, "r") \
@@ -99,6 +95,8 @@ class Wallet(cleos.WalletCreate):
                     self.logger.EOSF_TRACE("Opened wallet `{}`.".format(self.name))
 
             else: # KEOSD Wallet Manager
+                self.logger.OUT(self.out_msg)
+                
                 if not password: # new password
                     self.logger.EOSF_TRACE("""
                         Created wallet `{}` with the `keosd` Wallet Manager.
@@ -128,17 +126,18 @@ class Wallet(cleos.WalletCreate):
         """ Lists opened wallets, * marks unlocked.
         Returns `cleos.WalletList` object
         """ 
-        cleos.WalletList(is_verbose=self.is_verbose)
+        list = cleos.WalletList(is_verbose=0)
+        self.logger.OUT(list.out_msg)
     
 
     def open(self):
         """ Opens the wallet.
         Returns `WalletOpen` object
         """
-        self.wallet_open = cleos.WalletOpen(
-            self.name, is_verbose=self.is_verbose)
-        if self.wallet_open.error:
-            self.logger.ERROR(self.wallet_open.err_msg)
+        wallet_open = cleos.WalletOpen(
+            self.name, is_verbose=-1)
+        if wallet_open.error:
+            self.logger.ERROR(wallet_open.err_msg)
         else:
             self.logger.EOSF("Wallet `{}` opened.".format(self.name))
 
@@ -147,16 +146,21 @@ class Wallet(cleos.WalletCreate):
         """ Locks the wallet.
         Returns `cleos.WalletLock` object.
         """
-        self.wallet_lock = cleos.WalletLock(
+        wallet_lock = cleos.WalletLock(
             self.name, is_verbose=self.is_verbose)
+        if wallet_lock.error:
+            self.logger.ERROR(wallet_lock.err_msg)
+        else:
+            self.logger.EOSF("Wallet `{}` opened.".format(self.name))
 
 
     def unlock(self):
         """ Unlocks the wallet.
         Returns `WalletUnlock` object.
         """
-        self.wallet_unlock = cleos.WalletUnlock(
-            self.name, self.json["password"], is_verbose=self.is_verbose)
+        wallet_unlock = cleos.WalletUnlock(
+            self.name, self.json["password"], is_verbose=-1)
+        if 
 
 
     def import_key(self, account_or_key):
@@ -165,21 +169,28 @@ class Wallet(cleos.WalletCreate):
         """
         imported_keys = []
         account_name = None
+
         try: # whether account_or_key is an account:
             account_name = account_or_key.name
             key = account_or_key.owner_key
-            if key:
-                imported_keys.append(key.key_public)
-                cleos.WalletImport(key, self.name, is_verbose=-1)
-                imported_keys.append(key.key_public)
+            imported_keys.append(key.key_public)
+            cleos.WalletImport(key, self.name, is_verbose=-1)
+            imported_keys.append(key.key_public)
+
+            self.logger.DEBUG("""
+            account_or_key is like an account.
+            """)
+
             try:
                 key = account_or_key.active_key
-                if key:
-                    imported_keys.append(key.key_public)
-                    cleos.WalletImport(key, self.name, is_verbose=-1)
+                imported_keys.append(key.key_public)
+                cleos.WalletImport(key, self.name, is_verbose=-1)
             except:
                 pass                    
         except:
+            self.logger.DEBUG("""
+            account_or_key is not like an account.
+            """)
             imported_keys.append(account_or_key.key_public)
             cleos.WalletImport(account_or_key, self.name, is_verbose=-1)
 
@@ -187,13 +198,29 @@ class Wallet(cleos.WalletCreate):
             Importing keys of the account '{}' into the wallet '{}'
             """.format(account_name, self.name)
                     )
-                    
+        
         wallet_keys = cleos.WalletKeys(is_verbose=-1)
+        self.logger.DEBUG("""
+            wallet_keys:
+            {}
+            """.format(wallet_keys))
+
+        if len(imported_keys) == 0:
+            self.logger.ERROR("""
+                The list of imported keys is empty.
+                """)
+
+        ok = True
         for key in imported_keys:
             if not key in wallet_keys.json[""]:
+                ok = False
                 self.logger.ERROR("""
                 Failed to import keys of the account '{}' into the wallet '{}'
                 """.format(account_name, self.name))
+        if ok:
+            self.logger.EOSF("""
+            Cross-checked: all account keys are in the wallet.
+            """)
 
 
     def restore_accounts(self, namespace):
@@ -302,7 +329,9 @@ class Wallet(cleos.WalletCreate):
                 return
 
             account_map_json[account_object.name] = account_object_name
-            print(eosf.account_mapp_to_string(account_map_json))
+            self.logger.DEBUG("""
+            {}
+            """.format(eosf.account_mapp_to_string(account_map_json)))
 
             with open(self.wallet_dir + setup.account_map, "w") as out:
                 out.write(eosf.account_mapp_to_string(account_map_json))
