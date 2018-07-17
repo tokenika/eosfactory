@@ -34,12 +34,14 @@ def reload():
 
 
 class Verbosity(enum.Enum):
-    CLEOS = ''
+    COMMENT = 'green'
     TRACE = 'magenta'
     EOSF = 'cyan'
     ERROR = 'red'
+    ERROR_TESTING = 'blue'
     OUT = ''
     DEBUG = 'yellow'
+
 
 _verbosity = [Verbosity.EOSF, Verbosity.OUT]
 def set_verbosity(value=_verbosity):
@@ -51,6 +53,103 @@ _is_throw_error = False
 def set_throw_error(status=False):
     global _is_throw_error
     _is_throw_error = status
+
+_is_testing_error = False
+def set_is_testing_errors(status=True):
+    """Changes the color of the ``ERROR`` logger printout.
+
+    Makes it less alarming.
+    """
+    if status:
+        global _is_testing_error
+        _is_testing_error = status
+
+class Logger():
+
+    verbosity = []
+    error = False
+    err_msg = ""
+
+    def __init__(self, verbosity=None):
+        if verbosity is None:
+            global _verbosity
+            verbosity = _verbosity
+
+        self.verbosity = verbosity
+
+    def COMMENT(self, msg):
+        if msg and Verbosity.EOSF in self.verbosity:
+            cprint(
+                cleos.heredoc(msg) + "\n",
+                Verbosity.COMMENT.value)
+
+    def EOSF(self, msg):
+        if msg and Verbosity.EOSF in self.verbosity:
+            cprint(
+                cleos.heredoc(msg),
+                Verbosity.EOSF.value)
+
+    def TRACE(self, msg):
+        if msg and Verbosity.TRACE in self.verbosity:
+            cprint(
+                cleos.heredoc(msg),
+                Verbosity.TRACE.value)
+
+    def EOSF_TRACE(self, msg):
+        if msg and Verbosity.EOSF in self.verbosity:
+            self.EOSF(msg)
+        else:
+            self.TRACE(msg)
+
+    def ERROR(self, err_msg=""):
+        """Print an error message or throw 'Exception'.
+
+        The 'err_msg' argument may be a string error message or any object having
+        the string attribute `err_msg`. If it is not set, 'self.err_msg' is used.
+
+        If 'set_throw_error(True)', an `Exception object is thrown, otherwise the
+        message is printed.
+
+        arguments:
+        err_msg -- error message string or object having attribute err_msg
+        """
+
+        if not err_msg:
+            err_msg =  self.err_msg
+        else:
+            try:
+                err_msg = self.err_msg = msg.err_msg
+            except:
+                self.err_msg = err_msg
+            self.error = True
+
+        if _is_testing_error:
+            color = Verbosity.ERROR_TESTING.value
+        else:
+            color = Verbosity.ERROR.value
+
+        err_msg = colored(
+            "ERROR:\n{}".format(cleos.heredoc(err_msg)), 
+            color)  + "\n"
+
+        global _is_throw_error
+        if _is_throw_error:
+            raise Exception(err_msg)
+        else:
+            print(err_msg)
+
+
+    def OUT(self, msg):
+        if msg and Verbosity.OUT in self.verbosity:
+            self.out_msg = msg
+            print(cleos.heredoc(msg) + "\n")
+
+
+    def DEBUG(self, msg):
+        if msg and Verbosity.DEBUG in self.verbosity:
+            cprint(
+                cleos.heredoc(msg),
+                Verbosity.DEBUG.value)
 
 
 def wallet_dir():
@@ -133,71 +232,6 @@ def clear_account_mapp(exclude=["account_master"]):
 
 def kill_keosd():
     cleos.WalletStop(is_verbose=-1)
-
-
-class _Eosf():
-
-    verbosity = []
-    error = False
-    err_msg = ""
-
-    def __init__(self, verbosity):
-        if verbosity is None:
-            global _verbosity
-            verbosity = _verbosity
-
-        self.verbosity = verbosity
-
-    def EOSF(self, msg):
-        if msg and Verbosity.EOSF in self.verbosity:
-            cprint(
-                cleos.heredoc(msg),
-                Verbosity.EOSF.value)
-
-
-    def TRACE(self, msg):
-        if msg and Verbosity.TRACE in self.verbosity:
-            cprint(
-                cleos.heredoc(msg),
-                Verbosity.TRACE.value)
-
-
-    def EOSF_TRACE(self, msg):
-        if msg and Verbosity.EOSF in self.verbosity:
-            self.EOSF(msg)
-        else:
-            self.TRACE(msg)
-
-
-    def ERROR(self, msg=""):
-        if not msg:
-            msg =  self.err_msg
-        else:
-            self.err_msg = msg
-            self.error = True
-
-        msg = colored(
-            "ERROR:\n{}".format(cleos.heredoc(msg)), 
-            Verbosity.ERROR.value)
-
-        global _is_throw_error
-        if _is_throw_error:
-            raise Exception(msg)
-        else:
-            print(msg)
-
-
-    def OUT(self, msg):
-        if msg and Verbosity.OUT in self.verbosity:
-            self.out_msg = msg
-            print(cleos.heredoc(msg))
-
-
-    def DEBUG(self, msg):
-        if msg and Verbosity.DEBUG in self.verbosity:
-            cprint(
-                cleos.heredoc(msg),
-                Verbosity.DEBUG.value)
 
 
 class Transaction():

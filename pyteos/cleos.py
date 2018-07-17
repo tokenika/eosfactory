@@ -59,7 +59,7 @@ Cannot use the local node Wallet Manager if the node is not running.
 
 
 def set_wallet_url_arg(cleos_object, url=None, check_error=True):
-    """ Implements the `use_keosd` flag in the `setup` module.
+    """Implements the `use_keosd` flag in the `setup` module.
     """
     # print("CCCCCCCCCCCCCC set_wallet_url_arg: {}".format(url))
     global _wallet_address_arg
@@ -89,7 +89,7 @@ def heredoc(msg):
 
 
 class _Cleos:
-    """ A prototype for the `cleos` command classes.
+    """A prototype for the `cleos` command classes.
     """
     global setup_setup
 
@@ -211,7 +211,7 @@ def get_transaction_id(cleos_object):
 
     
 class GetAccount(_Cleos):
-    """ Retrieve an account from the blockchain.
+    """Retrieve an account from the blockchain.
 
     - **parameters**::
 
@@ -256,7 +256,7 @@ class GetAccount(_Cleos):
 
 
 class GetAccounts(_Cleos):
-    """ Retrieve accounts associated with a public key.
+    """Retrieve accounts associated with a public key.
 
     - **attributes**::
 
@@ -280,7 +280,7 @@ class GetAccounts(_Cleos):
 
 
 class GetTransaction(_Cleos):
-    """ Retrieve a transaction from the blockchain
+    """Retrieve a transaction from the blockchain.
 
     - **parameters**::
 
@@ -308,7 +308,7 @@ class GetTransaction(_Cleos):
 
 
 class WalletCreate(_Cleos):
-    """ Create a new wallet locally.
+    """Create a new wallet locally.
 
     - **parameters**::
 
@@ -375,7 +375,7 @@ class WalletStop(_Cleos):
 
 
 class WalletList(_Cleos):
-    """ List opened wallets, * marks unlocked.
+    """List opened wallets, * marks unlocked.
 
     - **parameters**::
 
@@ -399,7 +399,7 @@ class WalletList(_Cleos):
 
 
 class WalletImport(_Cleos):
-    """ Import a private key into wallet.
+    """Import a private key into wallet.
 
     - **parameters**::
 
@@ -445,7 +445,7 @@ class WalletImport(_Cleos):
 
 
 class WalletKeys(_Cleos):
-    """ List of public keys from all unlocked wallets.
+    """List of public keys from all unlocked wallets.
 
     - **parameters**::
 
@@ -485,7 +485,7 @@ class WalletKeys(_Cleos):
 
 
 class WalletOpen(_Cleos):
-    """ Open an existing wallet.
+    """Open an existing wallet.
 
     - **parameters**::
 
@@ -515,7 +515,7 @@ class WalletOpen(_Cleos):
 
 
 class WalletLockAll(_Cleos):
-    """ Lock all unlocked wallets.
+    """Lock all unlocked wallets.
     """
     def __init__(self, wallet="default", is_verbose=1):
         _Cleos.__init__(
@@ -526,7 +526,7 @@ class WalletLockAll(_Cleos):
 
 
 class WalletLock(_Cleos):
-    """ Lock wallet.
+    """Lock wallet.
 
     - **parameters**::
 
@@ -556,7 +556,7 @@ class WalletLock(_Cleos):
 
 
 class WalletUnlock(_Cleos):
-    """ Unlock wallet.
+    """Unlock wallet.
 
     - **parameters**::
 
@@ -573,7 +573,7 @@ class WalletUnlock(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """    
+    """
     def __init__(
             self, wallet="default", password="", timeout=0, is_verbose=1):
         try:
@@ -592,7 +592,7 @@ class WalletUnlock(_Cleos):
 
 
 class GetInfo(_Cleos):
-    """ Get current blockchain information.
+    """Get current blockchain information.
 
     - **parameters**::
 
@@ -637,7 +637,7 @@ def get_block_trx_cout(block_num):
 
 
 class GetBlock(_Cleos):
-    """ Retrieve a full block from the blockchain.
+    """Retrieve a full block from the blockchain.
 
     - **parameters**::
     
@@ -671,7 +671,7 @@ class GetBlock(_Cleos):
 
 
 class GetCode(_Cleos):
-    """ Retrieve the code and ABI for an account.
+    """Retrieve the code and ABI for an account.
 
     - **parameters**::
 
@@ -716,7 +716,7 @@ class GetCode(_Cleos):
 
 
 class GetTable(_Cleos):
-    """ Retrieve the contents of a database table
+    """Retrieve the contents of a database table
 
     - **parameters**::
 
@@ -741,7 +741,7 @@ class GetTable(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """  
+    """
     def __init__(
         self, contract, table, scope,
         binary=False, 
@@ -794,7 +794,7 @@ class GetTable(_Cleos):
 
 
 class CreateKey(_Cleos):
-    """ Create a new keypair and print the public and private keys.
+    """Create a new keypair and print the public and private keys.
 
     - **parameters**::
 
@@ -861,7 +861,7 @@ class RestoreAccount():
 
 
 class CreateAccount(_Cleos):
-    """ Create an account, buy ram, stake for bandwidth for the account.
+    """Create an account, buy ram, stake for bandwidth for the account.
 
     - **parameters**::
 
@@ -985,7 +985,7 @@ def account_name():
 
 
 class SetContract(_Cleos):
-    """ Create or update the contract on an account.
+    """Create or update the contract on an account.
 
     - **parameters**:: 
 
@@ -1090,7 +1090,7 @@ class SetContract(_Cleos):
 
 
 class PushAction(_Cleos):
-    """ Push a transaction with a single action
+    """Push a transaction with a single action
 
     - **parameters**::
 

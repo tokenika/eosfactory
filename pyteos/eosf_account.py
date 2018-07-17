@@ -1,6 +1,7 @@
 import json
 import inspect
 import types
+import time
 
 import setup
 import teos
@@ -69,7 +70,6 @@ def is_local_testnet_running(account_eosio):
     else:
         return False
 
-
 def put_account_to_wallet(
         account_object, wallet, account_object_name, levels_below):
     # export the account object to the globals in the calling module:
@@ -82,64 +82,118 @@ def put_account_to_wallet(
     wallet.import_key(account_object)
     wallet.map_account(account_object_name, account_object)        
 
+def add_account_object(account_object_name, name):
+    """Look for an account, if found, put it into the wallet.
 
-def account_master_factory(
-            account_object_name="", name="", verbosity=None, levels_below=1):
+    - **parameters**::
+
+        account_object_name: the name of the account object
+        name: the name of the account
+
+    - **return**::
+        account object, if account exists, ``None`` otherwise
+        
     """
-    If `account_object_name` is not defined, prints data for 
-    registration on a testnet. Then, if the name is not set, the registration 
-    name is random.
+    account_object_ = cleos.GetAccount(name, json=True, is_verbose=-1) 
+    if not account_object_.error:
+        account_object_.name = name
+        account_object_.account_info = str(account_object_)
+        account_object_.owner_key = cleos.CreateKey(
+            "active", 
+            account_object_.json["permissions"][0]["required_auth"]["keys"] \
+            [0]["key"], 
+            is_verbose=0)
 
-    Otherwise the following conditions are checked:
-    * precisely one `Wallet` object is defined;
-    * setup.use_keosd(True) or the local testnet is running.
+        account_object_.owner_key = cleos.CreateKey(
+            "owner", 
+            account_object_.json["permissions"][1]["required_auth"]["keys"] \
+            [0]["key"], 
+            is_verbose=0)
 
-    If the local testnet is running then an account object, representing 
-    the `eosio` account, is created in the global namespace of the calling
-    module.
+        put_account_to_wallet(
+            account_object_, wallet, account_object_name, levels_below+1)
+        return True
+    return False
 
-    If the local testnet is stopped then an outer testnet has to be defined
-    with `setup.set_nodeos_address(<url>)`, and must be 
-    `setup.use_keosd(True)`.
+def account_master_create(
+            account_object_name, name="", verbosity=None, levels_below=1):
+    """Create account object in caller's global namespace.
 
+    - **parameters**::
+
+        account_object_name:: the name of the account object
+        name: the name of the account; random, if not set
+        verbosity: argument to the internal logger
+        levels_below: experimental argument
+
+    Preconditions
+    #############
+
+    Check the following conditions:
+    * precisely one ``Wallet`` object is defined;
+    * ``setup.use_keosd(True)`` or the local testnet is running.
+
+    Local testnet
+    #############
+
+    If the local testnet is running, create an account object representing 
+    the ``eosio`` account. Put the account into the wallet. Put the account
+    object into the global namespace of the caller, and **return**.
+
+    Remote testnet
+    ##############
+
+    Otherwise, an outer testnet has to be defined with 
+    ``setup.set_nodeos_address(<url>)``, and must be ``setup.use_keosd(True)``.
+
+    Existing account
+    ****************
+
+    If the ``name`` argument is set, check the testnet for presence of the 
+    account. If present, create the corresponding object and put the account 
+    into the wallet, and put the account object into the global namespace of 
+    the caller. and **return**. Otherwise start a  registration procedure, 
+    described in the next paragraph.
+
+    Registration to a remote testnet
+    ********************************
+
+    If the ``name`` argument is not set or it does not address any existing
+    account, see the previous paragraph, start a registration procedure.
+
+    * if the ``name`` argument is not set, make it random
+    * print registration data, namely:
+        * account name
+        * owner public key
+        * active public key
+        * owner private key
+        * active private key
+    * wait for the user to register the master account
+    * . . . . 
+    * detect the named account on the remote testnet
+    * put the account into the wallet
+    * put the account object into the global namespace of the caller
     
+    Name conflict between account objects
+    #####################################
+
+    If the new account object is going to be added to the wallet, an error
+    is reported. Then an offer is given to edith the mapping file in order
+    to resolve the conflict. When the conflict is resolved, the procedure
+    finishes successfully.
     """
 
-    logger = eosf._Eosf(verbosity)
+    logger = eosf.Logger(verbosity)
+    logger.EOSF_TRACE("""
+        ######### 
+        Create the master account object named `{}`...
+        """.format(account_object_name))
 
-    if not account_object_name: # print data for registration
-        if not name: 
-            name = cleos.account_name()
-        else:
-            name = name
-
-        owner_key = cleos.CreateKey("owner", is_verbose=0)
-        active_key = cleos.CreateKey("active", is_verbose=0)
-        logger.OUT("""
-            Use the following data to register a new account on a public testnet:
-            Accout Name: {}
-            Owner Public Key: {}
-            Owner Private Key: {}
-            Active Public Key: {}
-            Active Private Key: {}
-            """.format(
-                name,
-                owner_key.key_public, owner_key.key_private,
-                active_key.key_public, active_key.key_private
-                ))
-
-        return logger
-
-    if account_object_name: # 
-        logger.EOSF_TRACE("""
-            ######### 
-            Create the master account object named `{}`...
-            """.format(account_object_name))
-    else:
-        logger.EOSF_TRACE("""
-            ######### 
-            Create a master account object ...
-            """.format(account_object_name))
+    """
+    Check the following conditions:
+    * precisely one ``Wallet`` object is defined;
+    * ``setup.use_keosd(True)`` or the local testnet is running.
+    """
     
     if cleos.is_notrunningnotkeosd_error(logger):
         logger.ERROR()
@@ -148,6 +202,12 @@ def account_master_factory(
     wallet = precisely_one_wallet(logger, levels_below=levels_below+1)
     if wallet is None:
         return logger
+
+    """
+    If the local testnet is running, create an account object representing 
+    the ``eosio`` account. Put the account into the wallet. Put the account
+    object into the global namespace of the caller, and **return**.
+    """
    
     account_object = types.SimpleNamespace()
     account_object.name = "eosio"
@@ -163,39 +223,80 @@ def account_master_factory(
             account_object, wallet, account_object_name, levels_below+1)
         return
 
-    # not local testnet
+    """
+    Otherwise, an outer testnet has to be defined with 
+    ``setup.set_nodeos_address(<url>)``, and must be ``setup.use_keosd(True)``.
+    """
+
     if setup.is_local_address():
         logger.ERROR("""
-        Node address is not set.
+        If the local testnet is not running, an outer testnet has to be 
+        defined with `setup.set_nodeos_address(<url>)`.
         Use 'setup.set_nodeos_address(<URL>)'
         """)
         return logger
 
-    account_object = cleos.GetAccount(name, json=True, is_verbose=-1) 
-    if not account_object.error:
-        account_object.name = name
-        account_object.account_info = str(account_object)
-        account_object.owner_key = cleos.CreateKey(
-            "active", 
-            account_object.json["permissions"][0]["required_auth"]["keys"] \
-            [0]["key"], 
-            is_verbose=0)
-
-        account_object.owner_key = cleos.CreateKey(
-            "owner", 
-            account_object.json["permissions"][1]["required_auth"]["keys"] \
-            [0]["key"], 
-            is_verbose=0)
-
-        put_account_to_wallet(
-            account_object, wallet, account_object_name, levels_below+1)
-        return
-    else:
-        logger.ERROR(account_object.err_msg)
+    if not setup.is_use_keosd():
+        logger.ERROR("""
+        If the local testnet is not running, you have to use the 'keosd' 
+        Wallet Manager. Use 'setup.use_keosd(True)' command.
+        """)
         return logger
 
+    """
+    If the ``name`` argument is set, check the testnet for presence of the 
+    account. If present, create the corresponding object and put the account 
+    into the wallet, and put the account object into the global namespace of 
+    the caller. and **return**.
+    """
+    if add_account_object(account_object_name, name):
+        return
 
-def account_factory(
+    """
+    If the ``name`` argument is not set or it does not address any existing
+    account, see the previous paragraph, start a registration procedure.
+
+    * if the ``name`` argument is not set, make it random
+    * print registration data, namely:
+        * account name
+        * owner public key
+        * active public key
+        * owner private key
+        * active private key
+    """
+    if not name: 
+        name = cleos.account_name()
+    else:
+        name = name
+
+    owner_key = cleos.CreateKey("owner", is_verbose=0)
+    active_key = cleos.CreateKey("active", is_verbose=0)
+    logger.OUT("""
+        Use the following data to register a new account on a public testnet:
+        Accout Name: {}
+        Owner Public Key: {}
+        Owner Private Key: {}
+        Active Public Key: {}
+        Active Private Key: {}
+        """.format(
+            name,
+            owner_key.key_public, owner_key.key_private,
+            active_key.key_public, active_key.key_private
+            ))
+
+    """
+    * wait for the user to register the master account
+    * . . . . 
+    * detect the named account on the remote testnet
+    * put the account into the wallet
+    * put the account object into the global namespace of the caller
+    """
+    while True:
+        time.sleep(2)
+        if add_account_object(account_object_name, name):
+            return
+
+def account_create(
         account_object_name,
         creator, 
         stake_net="", stake_cpu="",
@@ -212,7 +313,7 @@ def account_factory(
         verbosity=None,
         levels_below=1):
 
-    logger = eosf._Eosf(verbosity)
+    logger = eosf.Logger(verbosity)
     
     logger.EOSF_TRACE("""
         ######### 

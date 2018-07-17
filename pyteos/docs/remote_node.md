@@ -48,7 +48,7 @@ Register an account on the [*cryptolions*](http://dev.cryptolions.io/#home) test
 >>> import setup
 >>> import cleos
 >>> import eosf
->>> setup.set_cryptolions()
+>>> setup.set_nodeos_address("88.99.97.30:38888")
 
 >>> account_master = eosf.AccountMaster()
 SAVE THE FOLLOWING DATA to use in the future to restore thisaccount object.

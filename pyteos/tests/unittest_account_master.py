@@ -4,7 +4,7 @@ import eosf
 import time
 
 from eosf_wallet import Wallet
-from eosf_account import account_factory, account_master_factory
+from eosf_account import account_create, account_master_create
 
 
 eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT]) #, eosf.Verbosity.DEBUG])
@@ -12,6 +12,8 @@ eosf.set_throw_error(False)
 #setup.set_command_line_mode()
 
 cryptolions = "88.99.97.30:38888"
+
+l = eosf.Logger()
 
 class Test1(unittest.TestCase):
 
@@ -24,30 +26,55 @@ NEXT TEST ====================================================================
 
     @classmethod
     def setUpClass(cls):
-        pass
+        print()
 
     def setUp(self):
-        pass
+        eosf.set_is_testing_errors(False)
 
 
-    # def test_too_many_wallets(self):
-    #     setup.use_keosd(False)
-    #     eosf.reset(is_verbose=0)
-    #     wallet = Wallet()
-    #     ######################################################################
+    def test_too_many_wallets(self):
+        l.COMMENT("""
+        Check the following condition:
+        * precisely one ``Wallet`` object is defined when calling the 
+            ``account_master_create(...)`` function.
+        """)
+        eosf.set_throw_error(True)
+        setup.use_keosd(False)
+        eosf.reset(is_verbose=0)
+        wallet = Wallet()
+        eosf.set_throw_error(False)
+        eosf.set_is_testing_errors()
+        ######################################################################
 
-    #     wallet1 = Wallet("second")
-    #     logger = account_master_factory("account_master")
-    #     self.assertTrue("Too many `Wallet` objects." in logger.err_msg)
+        wallet1 = Wallet("second")
+        l.COMMENT("""
+        Added second wallet, named "second". Calling the ``account_master_create(...)`` 
+        function should result in an error message:
+        """)        
+        eosf.set_is_testing_errors()
+        logger = account_master_create("account_master")
+        self.assertTrue("Too many `Wallet` objects." in logger.err_msg)
 
 
-    # def test_there_is_no_wallet(self):
-    #     setup.use_keosd(False)
-    #     eosf.reset(is_verbose=0)
-    #     ######################################################################
+    def test_there_is_no_wallet(self):
+        l.COMMENT("""
+        Check the following condition:
+        * precisely one ``Wallet`` object is defined when calling the 
+            ``account_master_create(...)`` function.
+        """)
+        eosf.set_throw_error(True)
+        setup.use_keosd(False)
+        eosf.reset(is_verbose=0)
+        eosf.set_throw_error(False)
+        ######################################################################
 
-    #     logger = account_master_factory("account_master")        
-    #     self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
+        l.COMMENT("""
+        There is not any ``Wallet`` object. Calling the ``account_master_create(...)`` 
+        function should result in an error message:
+        """)
+        eosf.set_is_testing_errors()
+        logger = account_master_create("account_master")        
+        self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
 
 
     # def test_is_not_running_not_keosd_set(self):
@@ -55,7 +82,7 @@ NEXT TEST ====================================================================
     #     eosf.stop(is_verbose=0)
     #     ######################################################################
 
-    #     logger = account_master_factory("account_master") 
+    #     logger = account_master_create("account_master") 
     #     self.assertTrue(
     #         "Cannot use the local node Wallet Manager if the node is not running." \
     #             in logger.err_msg)
@@ -65,22 +92,22 @@ NEXT TEST ====================================================================
     #     setup.use_keosd(True)
     #     ######################################################################
         
-    #     logger = account_master_factory()
+    #     logger = account_master_create()
     #     self.assertTrue(
     #         "Use the following data to register a new account on a public testnet:" \
     #             in logger.out_msg)
 
 
-    def test_restore_testnet_account(self):
-        setup.set_nodeos_address(cryptolions)
-        setup.use_keosd(True)
-        wallet = Wallet(
-            "default", 
-            "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N")
-        ######################################################################
+    # def test_restore_testnet_account(self):
+    #     setup.set_nodeos_address(cryptolions)
+    #     setup.use_keosd(True)
+    #     wallet = Wallet(
+    #         "default", 
+    #         "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N")
+    #     ######################################################################
 
-        account_master_factory("account_master", "nbhyi5exmjcl")
-        # print(account_master.info())
+    #     account_master_create("account_master", "nbhyi5exmjcl")
+    #     # print(account_master.info())
 
 
 
@@ -88,21 +115,21 @@ NEXT TEST ====================================================================
     #     setup.use_keosd(False)
     #     eosf.reset(is_verbose=0)
     #     wallet = Wallet()
-    #     account_master_factory("account_master")
+    #     account_master_create("account_master")
     #     ######################################################################
 
-    #     account_factory("account_alice", account_master)
+    #     account_create("account_alice", account_master)
     #     print(account_alice.info())
 
-    #     account_factory("account_carrol")
+    #     account_create("account_carrol")
     #     print("The name attribute of the 'account_carrol' account object is '{}'" \
     #         .format(account_carrol))
     #     print("{}".format(account_carrol.code()))
 
-    #     account_factory("account_alice")
+    #     account_create("account_alice")
     #     self.assertTrue(account_alice.error)
 
-    #     account_factory("account_test")
+    #     account_create("account_test")
     #     contract_test = eosf.Contract(account_test, "eosio.token")
     #     deploy = contract_test.deploy()
     #     account_test.code()

@@ -27,7 +27,7 @@ class Wallet(cleos.WalletCreate):
     """
     def __init__(self, name="default", password="", verbosity=None):
 
-        self.logger = eosf._Eosf(verbosity)
+        self.logger = eosf.Logger(verbosity)
         self.wallet_dir = eosf.wallet_dir()
         
         if setup.is_use_keosd():
