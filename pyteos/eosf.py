@@ -42,7 +42,6 @@ class Verbosity(enum.Enum):
     OUT = ''
     DEBUG = 'yellow'
 
-
 _verbosity = [Verbosity.EOSF, Verbosity.OUT]
 def set_verbosity(value=_verbosity):
     global _verbosity
@@ -71,8 +70,8 @@ def set_is_testing_errors(status=True):
 class Logger():
 
     verbosity = []
-    error = False
     err_msg = ""
+    error = False
 
     def __init__(self, verbosity=None):
         if verbosity is None:
@@ -121,42 +120,47 @@ class Logger():
                 cleos.heredoc(msg),
                 Verbosity.DEBUG.value)
 
-    def ERROR(self, err_msg=""):
+    def ERROR(self, err_msg):
         """Print an error message or throw 'Exception'.
 
         The 'err_msg' argument may be a string error message or any object having
-        the string attribute `err_msg`. If it is not set, 'self.err_msg' is used.
+        the string attribute `err_msg`.
 
         If 'set_throw_error(True)', an `Exception object is thrown, otherwise the
         message is printed.
 
         arguments:
-        err_msg -- error message string or object having attribute err_msg
+        err_msg -- error message string or object having the attribute err_msg
         """
-
-        if not err_msg:
-            err_msg =  self.err_msg
-        else:
+        error = False
+        if not self.error:
             try:
-                err_msg = self.err_msg = msg.err_msg
+                self.err_msg = msg.err_msg
+                self.error = msg.error
             except:
-                self.err_msg = err_msg
-            self.error = True
+                if err_msg:
+                    self.error = True
+                    self.err_msg = err_msg
+
+        if not self.error:
+            return False
 
         if _is_testing_error:
             color = Verbosity.ERROR_TESTING.value
         else:
             color = Verbosity.ERROR.value
 
-        err_msg = colored(
-            "ERROR:\n{}".format(cleos.heredoc(err_msg)), 
+        self.err_msg = colored(
+            "ERROR:\n{}".format(cleos.heredoc(self.err_msg)), 
             color)  + "\n"
 
         global _is_throw_error
         if _is_throw_error:
-            raise Exception(err_msg)
+            raise Exception(self.err_msg)
         else:
-            print(err_msg)
+            print(self.err_msg)
+
+        return True
 
 def wallet_dir():
     if setup.is_use_keosd():

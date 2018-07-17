@@ -82,7 +82,7 @@ def put_account_to_wallet(
     wallet.import_key(account_object)
     wallet.map_account(account_object_name, account_object)        
 
-def add_account_object(account_object_name, name):
+def add_account_object(account_object_name, name, wallet, levels_below):
     """Look for an account, if found, put it into the wallet.
 
     - **parameters**::
@@ -112,6 +112,13 @@ def add_account_object(account_object_name, name):
 
         put_account_to_wallet(
             account_object_, wallet, account_object_name, levels_below+1)
+
+        def info(account_object):
+            ao = cleos.GetAccount(account_object.name, is_verbose=-1)
+            return ao.out_msg
+
+        account_object_.info = types.MethodType(info, account_object_)
+
         return True
     return False
 
@@ -197,11 +204,11 @@ def account_master_create(
     
     if cleos.is_notrunningnotkeosd_error(logger):
         logger.ERROR()
-        return logger
+        return
     
     wallet = precisely_one_wallet(logger, levels_below=levels_below+1)
     if wallet is None:
-        return logger
+        return
 
     """
     If the local testnet is running, create an account object representing 
@@ -217,6 +224,12 @@ def account_master_create(
         config.json["EOSIO_KEY_PUBLIC"],
         config.json["EOSIO_KEY_PRIVATE"]
         )
+
+    def info(account_object):
+        ao = cleos.GetAccount(account_object.name, is_verbose=-1)
+        return ao.out_msg
+
+    account_object.info = types.MethodType(info, account_object)
 
     if is_local_testnet_running(account_object):
         put_account_to_wallet(
@@ -234,14 +247,14 @@ def account_master_create(
         defined with `setup.set_nodeos_address(<url>)`.
         Use 'setup.set_nodeos_address(<URL>)'
         """)
-        return logger
+        return
 
     if not setup.is_use_keosd():
         logger.ERROR("""
         If the local testnet is not running, you have to use the 'keosd' 
         Wallet Manager. Use 'setup.use_keosd(True)' command.
         """)
-        return logger
+        return
 
     """
     If the ``name`` argument is set, check the testnet for presence of the 
@@ -249,7 +262,7 @@ def account_master_create(
     into the wallet, and put the account object into the global namespace of 
     the caller. and **return**.
     """
-    if add_account_object(account_object_name, name):
+    if add_account_object(account_object_name, name, wallet, levels_below+1):
         return
 
     """
@@ -293,7 +306,7 @@ def account_master_create(
     """
     while True:
         time.sleep(2)
-        if add_account_object(account_object_name, name):
+        if add_account_object(account_object_name, name, wallet, levels_below+1):
             return
 
 def account_create(
@@ -322,7 +335,7 @@ def account_create(
 
     wallet = precisely_one_wallet(logger, levels_below=levels_below+1)
     if wallet is None:
-        return logger
+        return
         
     account_object = None
     if not wallet.is_name_taken(account_object_name):
@@ -381,9 +394,7 @@ def account_create(
                     is_verbose=-1
                     )
 
-        if account_object.error:
-            logger.ERROR(account_object.err_msg)
-        else:
+        if not logger.ERROR(account_object):
             logger.EOSF("""The account object created.""")
 
         account_object.owner_key = owner_key

@@ -117,7 +117,7 @@ class _Cleos:
 
     def __init__(
                 self, args, first, second, is_verbose=1):
-
+        
         cl = [setup_setup.cleos_exe]
 
         if setup.nodeos_address_arg() is None:

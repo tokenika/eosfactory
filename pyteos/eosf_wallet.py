@@ -25,6 +25,8 @@ class Wallet(cleos.WalletCreate):
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.  
     """
+    wallet_keys = None
+
     def __init__(self, name="default", password="", verbosity=None):
 
         self.logger = eosf.Logger(verbosity)
@@ -46,9 +48,9 @@ class Wallet(cleos.WalletCreate):
                 {}.
                 """.format(self.wallet_dir))
 
-        if cleos.is_notrunningnotkeosd_error(self):
-            self.logger.ERROR(self.err_msg)
-            return self.logger
+        if cleos.is_notrunningnotkeosd_error(self.logger):
+            self.logger.ERROR()
+            return 
 
         if not password and not setup.is_use_keosd(): # look for password:
             try:
@@ -119,8 +121,7 @@ class Wallet(cleos.WalletCreate):
                 self.logger.ERROR("Invalid password.")
                 return
 
-            self.logger.ERROR(self.err_msg)
-
+            self.logger.ERROR(self)
 
     def index(self):
         """ Lists opened wallets, * marks unlocked.
@@ -129,30 +130,27 @@ class Wallet(cleos.WalletCreate):
         list = cleos.WalletList(is_verbose=0)
         self.logger.OUT(list.out_msg)
     
-
     def open(self):
         """ Opens the wallet.
         Returns `WalletOpen` object
         """
         wallet_open = cleos.WalletOpen(
             self.name, is_verbose=-1)
-        if wallet_open.error:
-            self.logger.ERROR(wallet_open.err_msg)
-        else:
+        print("FFFFFFFFFFFFFFFFFFFFFFF")
+        print(wallet_open.err_msg)
+        print(wallet_open.error)
+        print("FFFFFFFFFFFFFFFFFFFFFFF")
+        if not self.logger.ERROR(wallet_open):
             self.logger.EOSF("Wallet `{}` opened.".format(self.name))
-
 
     def lock(self):
         """ Locks the wallet.
         Returns `cleos.WalletLock` object.
         """
         wallet_lock = cleos.WalletLock(
-            self.name, is_verbose=self.is_verbose)
-        if wallet_lock.error:
-            self.logger.ERROR(wallet_lock.err_msg)
-        else:
-            self.logger.EOSF("Wallet `{}` opened.".format(self.name))
-
+            self.name, is_verbose=-1)
+        if not self.logger.ERROR(wallet_lock):
+            self.logger.EOSF("Wallet `{}` locked.".format(self.name))
 
     def unlock(self):
         """ Unlocks the wallet.
@@ -160,8 +158,8 @@ class Wallet(cleos.WalletCreate):
         """
         wallet_unlock = cleos.WalletUnlock(
             self.name, self.json["password"], is_verbose=-1)
-        if 
-
+        if not self.logger.ERROR(wallet_unlock):
+            self.logger.EOSF("Wallet `{}` unlocked.".format(self.name))
 
     def import_key(self, account_or_key):
         """ Imports private keys of an account into wallet.
@@ -232,8 +230,9 @@ class Wallet(cleos.WalletCreate):
             for acc in accounts.json["account_names"]:
                 account_names.add(acc)
 
-        if self.is_verbose:
-            print("Restored accounts as global variables:")
+        self.logger.EOSF("""
+                Restored accounts as global variables:
+                """)
 
         restored = dict()
         if len(account_names) > 0:
@@ -255,27 +254,29 @@ class Wallet(cleos.WalletCreate):
                 object_names.add(object_name)
 
                 if object_name:
-                    if self.is_verbose:
-                        print("     {0} ({1})".format(object_name, name))
+                    self.logger.EOSF("""
+                         {} ({})
+                    """.format(object_name, name))
                     restored[object_name] = account(name, restore=True)
         else:
-            if self.is_verbose:
-                print("     empty list")
+            self.logger.EOSF("""
+                 empty list
+            """)
 
         namespace.update(restored)
         return restored
-
 
     def keys(self):
         """ Lists public keys from all unlocked wallets.
         Returns `cleos.WalletKeys` object.
         """
-        cleos.WalletKeys(is_verbose=self.is_verbose)
-
+        self.wallet_keys = cleos.WalletKeys(is_verbose=-1)
+        self.logger.EOSF("""
+            {}
+            """.format(self.wallet_keys.out_msg))
 
     def edit_account_map(self, text_editor="nano"):
         eosf.edit_account_map(text_editor)
-
 
     def is_name_taken(self, account_object_name, account_name):
 
