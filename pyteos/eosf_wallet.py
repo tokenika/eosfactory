@@ -48,9 +48,9 @@ class Wallet(cleos.WalletCreate):
                 {}.
                 """.format(self.wallet_dir))
 
-        if cleos.is_notrunningnotkeosd_error(self.logger):
-            self.logger.ERROR()
-            return 
+        cleos.is_notrunningnotkeosd_error(self.logger)
+        if self.logger.ERROR():
+            return self.logger
 
         if not password and not setup.is_use_keosd(): # look for password:
             try:
@@ -115,11 +115,14 @@ class Wallet(cleos.WalletCreate):
 
         else: # wallet.error:
             if "Wallet already exists" in self.err_msg:
-                self.logger.ERROR("Wallet `{}` already exists.".format(self.name))
-                return
+                self.logger.ERROR("""
+                Wallet `{}` already exists in the directory
+                {}
+                """.format(self.name, self.wallet_dir))
+                return self.logger
             if "Invalid wallet password" in self.err_msg:
                 self.logger.ERROR("Invalid password.")
-                return
+                return self.logger
 
             self.logger.ERROR(self)
 
@@ -136,10 +139,6 @@ class Wallet(cleos.WalletCreate):
         """
         wallet_open = cleos.WalletOpen(
             self.name, is_verbose=-1)
-        print("FFFFFFFFFFFFFFFFFFFFFFF")
-        print(wallet_open.err_msg)
-        print(wallet_open.error)
-        print("FFFFFFFFFFFFFFFFFFFFFFF")
         if not self.logger.ERROR(wallet_open):
             self.logger.EOSF("Wallet `{}` opened.".format(self.name))
 

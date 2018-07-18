@@ -63,9 +63,8 @@ def set_is_testing_errors(status=True):
 
     Makes it less alarming.
     """
-    if status:
-        global _is_testing_error
-        _is_testing_error = status
+    global _is_testing_error
+    _is_testing_error = status
 
 class Logger():
 
@@ -81,8 +80,10 @@ class Logger():
         self.verbosity = verbosity
 
     def COMMENT(self, msg):
+        frame = inspect.stack()[1][0]
+        test_name = inspect.getframeinfo(frame).function
         cprint(
-            cleos.heredoc(msg) + "\n",
+            "###  in " + test_name + ":\n" + cleos.heredoc(msg) + "\n",
             Verbosity.COMMENT.value)
 
     def EOSF(self, msg):
@@ -120,7 +121,7 @@ class Logger():
                 cleos.heredoc(msg),
                 Verbosity.DEBUG.value)
 
-    def ERROR(self, err_msg):
+    def ERROR(self, err_msg=None):
         """Print an error message or throw 'Exception'.
 
         The 'err_msg' argument may be a string error message or any object having
@@ -135,8 +136,8 @@ class Logger():
         error = False
         if not self.error:
             try:
-                self.err_msg = msg.err_msg
-                self.error = msg.error
+                self.err_msg = err_msg.err_msg
+                self.error = err_msg.error
             except:
                 if err_msg:
                     self.error = True

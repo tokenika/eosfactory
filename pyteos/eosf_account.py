@@ -202,13 +202,13 @@ def account_master_create(
     * precisely one ``Wallet`` object is defined;
     """
     
-    if cleos.is_notrunningnotkeosd_error(logger):
-        logger.ERROR()
-        return
+    cleos.is_notrunningnotkeosd_error(logger)
+    if logger.ERROR():
+        return logger
     
     wallet = precisely_one_wallet(logger, levels_below=levels_below+1)
     if wallet is None:
-        return
+        return logger
 
     """
     If the local testnet is running, create an account object representing 
@@ -247,14 +247,14 @@ def account_master_create(
         defined with `setup.set_nodeos_address(<url>)`.
         Use 'setup.set_nodeos_address(<URL>)'
         """)
-        return
+        return logger
 
     if not setup.is_use_keosd():
         logger.ERROR("""
         If the local testnet is not running, you have to use the 'keosd' 
         Wallet Manager. Use 'setup.use_keosd(True)' command.
         """)
-        return
+        return logger
 
     """
     If the ``name`` argument is set, check the testnet for presence of the 
