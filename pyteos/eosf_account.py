@@ -91,7 +91,9 @@ def put_account_to_wallet(
         return False        
 
 def add_account_object(
-    account_object_name, name, wallet, levels_below, logger):
+    account_object_name, name, 
+    owner_key, active_key,
+    wallet, levels_below, logger):
     """Look for an account, if found, put it into the wallet.
 
     - **parameters**::
@@ -111,19 +113,44 @@ def add_account_object(
     account_object.exists = False
     account_object.in_wallet = False
 
+
     if not account_object.error:
         account_object.exists = True
-        account_object.active_key = cleos.CreateKey(
-            "active", 
-            account_object.json["permissions"][0]["required_auth"]["keys"] \
-            [0]["key"], 
-            is_verbose=0)
+        if not owner_key is None:
+            try:
+                owner_key_private = owner_key.key_private
+            except:
+                owner_key_private = owner_key
 
-        account_object.owner_key = cleos.CreateKey(
-            "owner", 
-            account_object.json["permissions"][1]["required_auth"]["keys"] \
-            [0]["key"], 
-            is_verbose=0)
+            account_object.owner_key = cleos.CreateKey(
+                "owner", 
+                account_object.json["permissions"][1]["required_auth"]["keys"] \
+                [0]["key"], owner_key_private,
+                is_verbose=0)                
+        else:
+            account_object.owner_key = cleos.CreateKey(
+                "owner", 
+                account_object.json["permissions"][1]["required_auth"]["keys"] \
+                [0]["key"], 
+                is_verbose=0)
+
+        if not active_key is None:
+            try:
+                active_key_private = active_key.key_private
+            except:
+                active_key_private = active_key 
+
+            account_object.active_key = cleos.CreateKey(
+                "active", 
+                account_object.json["permissions"][0]["required_auth"]["keys"] \
+                [0]["key"], active_key_private,
+                is_verbose=0)                          
+        else:
+            account_object.owner_key = cleos.CreateKey(
+                "owner", 
+                account_object.json["permissions"][0]["required_auth"]["keys"] \
+                [0]["key"], 
+                is_verbose=0)
 
         def info(account_object):
             ao = cleos.GetAccount(account_object.name, is_verbose=-1)
@@ -147,7 +174,9 @@ def add_account_object(
     return account_object
 
 def account_master_create(
-            account_object_name, name="", verbosity=None, levels_below=1):
+            account_object_name, name="", 
+            owner_key=None, active_key=None,
+            verbosity=None, levels_below=1):
     """Create account object in caller's global namespace.
 
     - **parameters**::
@@ -288,7 +317,9 @@ def account_master_create(
     """
     while True:
         account_object = add_account_object(
-            account_object_name, name, wallet, levels_below+1, logger)
+            account_object_name, name, 
+            owner_key, active_key,
+            wallet, levels_below+1, logger)
         if account_object.in_wallet:
             return
 
@@ -299,15 +330,15 @@ def account_master_create(
             Use the following data to register a new account on a public testnet:
             Accout Name: {}
             Owner Public Key: {}
-            Owner Private Key: {}
-
             Active Public Key: {}
+
+            Owner Private Key: {}
             Active Private Key: {}
             """.format(
                 account_object.name,
-                account_object.owner_key.key_public, 
+                account_object.owner_key.key_public,
+                account_object.active_key.key_public,
                 account_object.owner_key.key_private,
-                account_object.active_key.key_public, 
                 account_object.active_key.key_private
                 ))
 
@@ -323,6 +354,8 @@ def account_master_create(
             if decision == "y":
                 name = input(
                     "enter the account name or nothing to make the name random <<< ")
+            else:
+                return
 
 def account_create(
         account_object_name,
