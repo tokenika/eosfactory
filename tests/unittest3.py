@@ -8,7 +8,7 @@ from termcolor import cprint
 
 setup.set_verbose(True)
 setup.set_json(False)
-setup.use_keosd(False)
+eosf.use_keosd(False)
 
 CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
 

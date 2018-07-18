@@ -116,9 +116,8 @@ class Wallet(cleos.WalletCreate):
         else: # wallet.error:
             if "Wallet already exists" in self.err_msg:
                 self.logger.ERROR("""
-                Wallet `{}` already exists in the directory
-                {}
-                """.format(self.name, self.wallet_dir))
+                Wallet `{}` already exists.
+                """.format(self.name))
                 return self.logger
             if "Invalid wallet password" in self.err_msg:
                 self.logger.ERROR("Invalid password.")
@@ -137,8 +136,7 @@ class Wallet(cleos.WalletCreate):
         """ Opens the wallet.
         Returns `WalletOpen` object
         """
-        wallet_open = cleos.WalletOpen(
-            self.name, is_verbose=-1)
+        wallet_open = cleos.WalletOpen(self.name, is_verbose=-1)
         if not self.logger.ERROR(wallet_open):
             self.logger.EOSF("Wallet `{}` opened.".format(self.name))
 
@@ -146,10 +144,17 @@ class Wallet(cleos.WalletCreate):
         """ Locks the wallet.
         Returns `cleos.WalletLock` object.
         """
-        wallet_lock = cleos.WalletLock(
-            self.name, is_verbose=-1)
+        wallet_lock = cleos.WalletLock(self.name, is_verbose=-1)
         if not self.logger.ERROR(wallet_lock):
             self.logger.EOSF("Wallet `{}` locked.".format(self.name))
+
+    def lock_all(self):
+        """ Locks the wallet.
+        Returns `cleos.WalletLock` object.
+        """
+        wallet_lock_all = cleos.WalletLock(is_verbose=-1)
+        if not self.logger.ERROR(wallet_lock_all):
+            self.logger.EOSF("All wallet locked.")            
 
     def unlock(self):
         """ Unlocks the wallet.
@@ -171,7 +176,10 @@ class Wallet(cleos.WalletCreate):
             account_name = account_or_key.name
             key = account_or_key.owner_key
             imported_keys.append(key.key_public)
-            cleos.WalletImport(key, self.name, is_verbose=-1)
+            wallet_import = cleos.WalletImport(key, self.name, is_verbose=-1)
+            print("DDDDDDDDDDDDDDDDDDDDDD")
+            print(key)
+            print(wallet_import.err_msg)
             imported_keys.append(key.key_public)
 
             self.logger.DEBUG("""
@@ -181,7 +189,11 @@ class Wallet(cleos.WalletCreate):
             try:
                 key = account_or_key.active_key
                 imported_keys.append(key.key_public)
-                cleos.WalletImport(key, self.name, is_verbose=-1)
+                wallet_import = cleos.WalletImport(key, self.name, is_verbose=-1)
+                print(key)
+                print("FFFFFFFFFFFFFFFFFFFFF")
+                print(wallet_import.err_msg)
+                
             except:
                 pass                    
         except:
@@ -219,6 +231,12 @@ class Wallet(cleos.WalletCreate):
             Cross-checked: all account keys are in the wallet.
             """)
 
+    def keys_in_wallets(self, keys):
+        wallet_keys = cleos.WalletKeys(is_verbose=-1)
+        for key in keys:
+            if not key in wallet_keys.json[""]:
+                return False
+        return True
 
     def restore_accounts(self, namespace):
         account_names = set() # accounts in wallets
@@ -271,6 +289,7 @@ class Wallet(cleos.WalletCreate):
         """
         self.wallet_keys = cleos.WalletKeys(is_verbose=-1)
         self.logger.EOSF("""
+            Keys in all open walets:
             {}
             """.format(self.wallet_keys.out_msg))
 

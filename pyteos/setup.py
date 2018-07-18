@@ -14,6 +14,9 @@ _is_use_keosd = False
 account_map = "accounts.json"
 password_map = "passwords.json"
 
+def restart():
+    global _nodeos_address
+    _nodeos_address = None
 
 def set_is_local_address(status):
     global _is_local_address

@@ -33,7 +33,7 @@ NEXT TEST ====================================================================
 
     # def test_too_many_wallets(self):
     #     eosf.set_throw_error(True)
-    #     setup.use_keosd(False)
+    #     eosf.use_keosd(False)
     #     eosf.reset(is_verbose=0)
     #     wallet = Wallet()
     #     eosf.set_throw_error(False)
@@ -54,7 +54,7 @@ NEXT TEST ====================================================================
         * Check the same in the next test function.
         """)
         eosf.set_throw_error(True)
-        setup.use_keosd(False)
+        eosf.use_keosd(False)
         eosf.reset(is_verbose=0)
         wallet = Wallet()
         eosf.set_throw_error(False)
@@ -65,7 +65,7 @@ NEXT TEST ====================================================================
 
 
     # def test_there_is_no_wallet(self):
-    #     setup.use_keosd(False)
+    #     eosf.use_keosd(False)
     #     eosf.reset(is_verbose=0)
     #     ######################################################################
 
@@ -74,7 +74,7 @@ NEXT TEST ====================================================================
 
 
     # def test_usage(self):
-    #     setup.use_keosd(False)
+    #     eosf.use_keosd(False)
     #     eosf.reset(is_verbose=0)
     #     wallet = Wallet()
     #     account_master = AccountMaster()

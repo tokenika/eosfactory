@@ -5,14 +5,14 @@ import setup
 import eosf
 
 cprint("""
-Use `setup.use_keosd(False)` instruction, then the wallets are not
+Use `eosf.use_keosd(False)` instruction, then the wallets are not
 managed by the EOSIO keosd and, hence, can be safely manipulated.
 
 If `setup.set_verbose(True)`, print the response messages of the
 issued commands.
 """, 'magenta')
 
-setup.use_keosd(False)
+eosf.use_keosd(False)
 setup.set_verbose(True)
 #setup.set_command_line_mode()
 

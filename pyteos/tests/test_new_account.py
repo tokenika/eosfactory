@@ -6,7 +6,7 @@ import eosf
 
 #eosf.set_verbosity([eosf.Verbosity.TRACE])
 eosf.set_throw_error(False)
-setup.use_keosd(False)
+eosf.use_keosd(False)
 #setup.set_command_line_mode()
 
 class Test1(unittest.TestCase):
@@ -20,7 +20,7 @@ class Test1(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
 
-        setup.use_keosd(False)
+        eosf.use_keosd(False)
         #setup.set_nodeos_address("88.99.97.30:38888")
         #wallet = eosf.Wallet("jungle_wallet2")
         account_master = eosf.AccountMaster()

@@ -13,6 +13,7 @@ Python front-end for `EOSIO cleos`.
 
 import random
 import os
+import time
 import subprocess
 import json as json_module
 import pathlib
@@ -20,33 +21,28 @@ import setup
 import teos
 from textwrap import dedent
 
-
-def reload():
-    import importlib
-    importlib.reload(cleos)
-
 setup_setup = setup.Setup()
+_wallet_address_arg = None
 
+def restart():
+    setup.restart()
+    global setup_setup
+    setup_setup = setup.Setup()
+    global _wallet_address_arg
+    _wallet_address_arg = None
 
 def set_local_nodeos_address():
     config = teos.GetConfig(is_verbose=0)       
     setup.set_nodeos_address(config.json["EOSIO_DAEMON_ADDRESS"])
     setup.set_is_local_address(True)
 
-
-global _wallet_address_arg
-_wallet_address_arg = None
-
-
 def wallet_url():
     global _wallet_address_arg
     return _wallet_address_arg
 
-
 def node_is_running():
     return not teos.NodeIsRunning(is_verbose=0).daemon_pid == ""
     
-
 def is_notrunningnotkeosd_error(cleos_object):
 
     is_error = not setup.is_use_keosd() and not node_is_running()
@@ -57,18 +53,17 @@ Cannot use the local node Wallet Manager if the node is not running.
             """)
     return is_error
 
-
 def set_wallet_url_arg(cleos_object, url=None, check_error=True):
     """Implements the `use_keosd` flag in the `setup` module.
     """
-    # print("CCCCCCCCCCCCCC set_wallet_url_arg: {}".format(url))
+    #print("CCCCCCCCCCCCCC url is: {}".format(url))
     global _wallet_address_arg
     if not _wallet_address_arg is None:
         return
 
     if check_error and is_notrunningnotkeosd_error(cleos_object):
         _wallet_address_arg = None
-        # print("TTTTTTTTTTTTTT is_notrunningnotkeosd_error: {}".format(_wallet_address_arg))
+        #print("TTTTTTTTTTTTTT _wallet_address_arg is: {}".format(_wallet_address_arg))
         return        
 
     if not url is None:
@@ -76,17 +71,15 @@ def set_wallet_url_arg(cleos_object, url=None, check_error=True):
             _wallet_address_arg = []
         else:
             _wallet_address_arg = ["--wallet-url", "http://" + url]
-        # print("FFFFFFFFFFFFF if not url is None: {}".format(_wallet_address_arg))
+        #print("FFFFFFFFFFFFF _wallet_address_arg is: {}".format(_wallet_address_arg))
         return
 
     if _wallet_address_arg is None:
         _wallet_address_arg = []
-        # print("OOOOOOOOOOOOO if not url is None: {}".format(_wallet_address_arg))
-
+        #print("OOOOOOOOOOOOO _wallet_address_arg is: {}".format(_wallet_address_arg))
 
 def heredoc(msg):
     return dedent(msg).strip()
-
 
 class _Cleos:
     """A prototype for the `cleos` command classes.
@@ -115,8 +108,7 @@ class _Cleos:
             else:
                 self.is_verbose = 0
 
-    def __init__(
-                self, args, first, second, is_verbose=1):
+    def __init__(self, args, first, second, is_verbose=1):
         
         cl = [setup_setup.cleos_exe]
 
@@ -167,13 +159,12 @@ class _Cleos:
 
         if self.error:
             self.json["ERROR"] = self.err_msg
-            self.print_error()
-
+            if is_verbose > 0:
+                self.print_error()
 
     def printself(self):
         if self.is_verbose > 0:
             print(self.__str__())
-
 
     def print_error(self):
         if self.is_verbose > -1:
@@ -181,16 +172,13 @@ class _Cleos:
             print(self.err_msg)
             print()
 
-
     def __str__(self):
         out = self.out_msg + "\n"
         out = out + self.err_msg
         return out
 
-
     def __repr__(self):
         return ""
-
 
 def get_transaction_id(cleos_object):
     transaction_id = ""
@@ -209,7 +197,6 @@ def get_transaction_id(cleos_object):
             pass
     return transaction_id
 
-    
 class GetAccount(_Cleos):
     """Retrieve an account from the blockchain.
 
@@ -248,12 +235,10 @@ class GetAccount(_Cleos):
 
             self.printself()
 
-
     def __str__(self):
         out = "name: {}\n".format(self.account_name)
         out = out + str(_Cleos.__str__(self))
         return out
-
 
 class GetAccounts(_Cleos):
     """Retrieve accounts associated with a public key.
@@ -277,7 +262,6 @@ class GetAccounts(_Cleos):
             self.json = json_module.loads(self.out_msg)
             self.names = self.json['account_names']
             self.printself()
-
 
 class GetTransaction(_Cleos):
     """Retrieve a transaction from the blockchain.
@@ -349,8 +333,7 @@ class WalletCreate(_Cleos):
                 self.name = name
                 self.password = password
                 self.json["password"] = self.password
-                self.out_msg = "Restored wallet: {0}\nPassword is \n{1}\n" \
-                    .format(self.name, self.password)
+                self.out_msg = "Restored wallet: {}".format(self.name)
             else:
                 if "Nonexistent wallet" in self.err_msg:
                     _Cleos.__init__(
@@ -367,8 +350,6 @@ class WalletStop(_Cleos):
     """
     def __init__(self, is_verbose=1):
         _Cleos.__init__(self, [], "wallet", "stop", is_verbose)
-
-        os.system("pkill keosd")
 
         if not self.error:
             self.printself()

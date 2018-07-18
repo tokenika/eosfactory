@@ -32,7 +32,7 @@ NEXT TEST ====================================================================
         pass
 
     def test_create_keosd_wallet(self):
-        setup.use_keosd(True)
+        eosf.use_keosd(True)
         cleos.WalletStop(is_verbose=0)
         wallet_name = "jungle_wallet"
         try:
@@ -46,7 +46,7 @@ NEXT TEST ====================================================================
 
 
     def test_reopen_with_stored_password(self): 
-        setup.use_keosd(False)
+        eosf.use_keosd(False)
         eosf.reset(is_verbose=0)
         eosf.Wallet()
         eosf.stop(is_verbose=0)
@@ -57,7 +57,7 @@ NEXT TEST ====================================================================
 
 
     def test_invalid_password(self): 
-        setup.use_keosd(False)
+        eosf.use_keosd(False)
         eosf.reset(is_verbose=0)
         wallet = eosf.Wallet()
         eosf.stop(is_verbose=0)
@@ -69,7 +69,7 @@ NEXT TEST ====================================================================
 
 
     def test_is_not_running_not_keosd_set(self):
-        setup.use_keosd(False)
+        eosf.use_keosd(False)
         eosf.stop(is_verbose=0)
         
         wallet = eosf.Wallet()

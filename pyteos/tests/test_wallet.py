@@ -4,7 +4,7 @@ import cleos
 import eosf
 
 setup.set_verbose(True)
-setup.use_keosd(True)
+eosf.use_keosd(True)
 setup.set_nodeos_address("dev.cryptolions.io:38888")  
 
 def test():
@@ -79,7 +79,7 @@ permissions:
     import eosf
     import cleos
 
-    setup.use_keosd(True)
+    eosf.use_keosd(True)
     setup.set_nodeos_address("dev.cryptolions.io:38888")
 
     wallet_name = "default"

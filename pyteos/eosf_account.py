@@ -71,7 +71,7 @@ def is_local_testnet_running(account_eosio):
         return False
 
 def put_account_to_wallet(
-        account_object, wallet, account_object_name, levels_below):
+        account_object, wallet, account_object_name, levels_below, logger):
     # export the account object to the globals in the calling module:
     inspect.stack()[levels_below][0].f_globals[account_object_name] \
         = account_object
@@ -79,10 +79,19 @@ def put_account_to_wallet(
     # put the account object to the wallet:
     wallet.open()
     wallet.unlock()
-    wallet.import_key(account_object)
-    wallet.map_account(account_object_name, account_object)        
+    if wallet.keys_in_wallets([account_object.owner_key.key_private, \
+            account_object.active_key.key_private]):
+        wallet.import_key(account_object)
+        wallet.map_account(account_object_name, account_object)
+        return True
+    else:
+        logger.EOSF("""
+        Wrong or missing keys for the account ``{}`` in the wallets.
+        """.format(account_object.name))
+        return False        
 
-def add_account_object(account_object_name, name, wallet, levels_below):
+def add_account_object(
+    account_object_name, name, wallet, levels_below, logger):
     """Look for an account, if found, put it into the wallet.
 
     - **parameters**::
@@ -94,33 +103,48 @@ def add_account_object(account_object_name, name, wallet, levels_below):
         account object, if account exists, ``None`` otherwise
         
     """
-    account_object_ = cleos.GetAccount(name, json=True, is_verbose=-1) 
-    if not account_object_.error:
-        account_object_.name = name
-        account_object_.account_info = str(account_object_)
-        account_object_.owner_key = cleos.CreateKey(
+    account_object = cleos.GetAccount(name, json=True, is_verbose=-1)
+    if not name: 
+        account_object.name = cleos.account_name()
+    else:
+        account_object.name = name    
+    account_object.exists = False
+    account_object.in_wallet = False
+
+    if not account_object.error:
+        account_object.exists = True
+        account_object.active_key = cleos.CreateKey(
             "active", 
-            account_object_.json["permissions"][0]["required_auth"]["keys"] \
+            account_object.json["permissions"][0]["required_auth"]["keys"] \
             [0]["key"], 
             is_verbose=0)
 
-        account_object_.owner_key = cleos.CreateKey(
+        account_object.owner_key = cleos.CreateKey(
             "owner", 
-            account_object_.json["permissions"][1]["required_auth"]["keys"] \
+            account_object.json["permissions"][1]["required_auth"]["keys"] \
             [0]["key"], 
             is_verbose=0)
-
-        put_account_to_wallet(
-            account_object_, wallet, account_object_name, levels_below+1)
 
         def info(account_object):
             ao = cleos.GetAccount(account_object.name, is_verbose=-1)
             return ao.out_msg
+        account_object.info = types.MethodType(info, account_object)
 
-        account_object_.info = types.MethodType(info, account_object_)
+        logger.EOSF("""
+        Account ``{}`` exists in the blockchain. It may be added to the 
+        wallet if the wallet has keys to it. Checking ... 
+        """.format(account_object.name))
 
-        return True
-    return False
+        if put_account_to_wallet(
+            account_object, wallet, account_object_name, levels_below+1, logger):
+            account_object.in_wallet = True
+    else:
+        logger.EOSF("""
+        Account ``{}`` does not exist in the blockchain. It may be 
+        registered to the test node.
+        """.format(account_object.name))
+
+    return account_object
 
 def account_master_create(
             account_object_name, name="", verbosity=None, levels_below=1):
@@ -137,7 +161,7 @@ def account_master_create(
     #############
 
     Check the following conditions:
-    * ``setup.use_keosd(True)`` or the local testnet is running.
+    * ``eosf.use_keosd(True)`` or the local testnet is running.
     * precisely one ``Wallet`` object is defined;
     
     Local testnet
@@ -151,7 +175,7 @@ def account_master_create(
     ##############
 
     Otherwise, an outer testnet has to be defined with 
-    ``setup.set_nodeos_address(<url>)``, and must be ``setup.use_keosd(True)``.
+    ``setup.set_nodeos_address(<url>)``, and must be ``eosf.use_keosd(True)``.
 
     Existing account
     ****************
@@ -198,7 +222,7 @@ def account_master_create(
 
     """
     Check the following conditions:
-    * ``setup.use_keosd(True)`` or the local testnet is running.
+    * ``eosf.use_keosd(True)`` or the local testnet is running.
     * precisely one ``Wallet`` object is defined;
     """
     
@@ -238,7 +262,7 @@ def account_master_create(
 
     """
     Otherwise, an outer testnet has to be defined with 
-    ``setup.set_nodeos_address(<url>)``, and must be ``setup.use_keosd(True)``.
+    ``setup.set_nodeos_address(<url>)``, and must be ``eosf.use_keosd(True)``.
     """
 
     if setup.is_local_address():
@@ -252,62 +276,53 @@ def account_master_create(
     if not setup.is_use_keosd():
         logger.ERROR("""
         If the local testnet is not running, you have to use the 'keosd' 
-        Wallet Manager. Use 'setup.use_keosd(True)' command.
+        Wallet Manager. Use 'eosf.use_keosd(True)' command.
         """)
         return logger
 
     """
-    If the ``name`` argument is set, check the testnet for presence of the 
-    account. If present, create the corresponding object and put the account 
-    into the wallet, and put the account object into the global namespace of 
-    the caller. and **return**.
-    """
-    if add_account_object(account_object_name, name, wallet, levels_below+1):
-        return
-
-    """
-    If the ``name`` argument is not set or it does not address any existing
-    account, see the previous paragraph, start a registration procedure.
-
-    * if the ``name`` argument is not set, make it random
-    * print registration data, namely:
-        * account name
-        * owner public key
-        * active public key
-        * owner private key
-        * active private key
-    """
-    if not name: 
-        name = cleos.account_name()
-    else:
-        name = name
-
-    owner_key = cleos.CreateKey("owner", is_verbose=0)
-    active_key = cleos.CreateKey("active", is_verbose=0)
-    logger.OUT("""
-        Use the following data to register a new account on a public testnet:
-        Accout Name: {}
-        Owner Public Key: {}
-        Owner Private Key: {}
-        Active Public Key: {}
-        Active Private Key: {}
-        """.format(
-            name,
-            owner_key.key_public, owner_key.key_private,
-            active_key.key_public, active_key.key_private
-            ))
-
-    """
-    * wait for the user to register the master account
-    * . . . . 
-    * detect the named account on the remote testnet
-    * put the account into the wallet
-    * put the account object into the global namespace of the caller
+    If the ``name`` argument is not set, it is randomized. Check the testnet for 
+    presence of the account. If present, create the corresponding object and see 
+    whether it is in the wallets. If so, put the account object into the global 
+    namespace of the caller. and **return**. 
     """
     while True:
-        time.sleep(2)
-        if add_account_object(account_object_name, name, wallet, levels_below+1):
+        account_object = add_account_object(
+            account_object_name, name, wallet, levels_below+1, logger)
+        if account_object.in_wallet:
             return
+
+        if not account_object.exists:
+            account_object.owner_key = cleos.CreateKey("owner", is_verbose=-1)
+            account_object.active_key = cleos.CreateKey("active", is_verbose=-1)
+            logger.OUT("""
+            Use the following data to register a new account on a public testnet:
+            Accout Name: {}
+            Owner Public Key: {}
+            Owner Private Key: {}
+
+            Active Public Key: {}
+            Active Private Key: {}
+            """.format(
+                account_object.name,
+                account_object.owner_key.key_public, 
+                account_object.owner_key.key_private,
+                account_object.active_key.key_public, 
+                account_object.active_key.key_private
+                ))
+
+            is_ready = input("ENTER when ready or 'q' to quit <<< ")
+            if is_ready == "q":
+                return
+        else:
+            logger.EOSF("""
+            ###
+            You can try another name. Do you wish to do this?
+            """)
+            decision = input("y/n <<< ")
+            if decision == "y":
+                name = input(
+                    "enter the account name or nothing to make the name random <<< ")
 
 def account_create(
         account_object_name,

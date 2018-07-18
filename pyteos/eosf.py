@@ -13,6 +13,7 @@ Python front-end for `EOSIO cleos`.
 
 import sys
 import os
+import time
 import json
 import inspect
 import types
@@ -27,10 +28,8 @@ import teos
 import cleos
 import cleos_system
 
-
-def reload():
-    import importlib
-    importlib.reload(eosf)
+def restart():
+    cleos.restart()
 
 
 class Verbosity(enum.Enum):
@@ -83,7 +82,7 @@ class Logger():
         frame = inspect.stack()[1][0]
         test_name = inspect.getframeinfo(frame).function
         cprint(
-            "###  in " + test_name + ":\n" + cleos.heredoc(msg) + "\n",
+            "###  " + test_name + ":\n" + cleos.heredoc(msg) + "\n",
             Verbosity.COMMENT.value)
 
     def EOSF(self, msg):
@@ -112,7 +111,6 @@ class Logger():
                 or Verbosity.OUT in _verbosity_plus):
             self.out_msg = msg
             print(cleos.heredoc(msg) + "\n")
-
 
     def DEBUG(self, msg):
         if msg and (Verbosity.DEBUG in self.verbosity \
@@ -170,7 +168,6 @@ def wallet_dir():
         wallet_dir_ = teos.get_node_wallet_dir()
     return wallet_dir_
 
-
 def account_map(logger):
 
     wallet_dir_ = wallet_dir()
@@ -202,11 +199,9 @@ def account_map(logger):
                     """)                    
                     return None
 
-
 def edit_account_map(text_editor="nano"):
     import subprocess
     subprocess.run([text_editor, wallet_dir() + setup.account_map])
-
 
 def account_mapp_to_string(account_map):
     sort = sorted(account_map, key=account_map.get, reverse=False)
@@ -220,7 +215,6 @@ def account_mapp_to_string(account_map):
     retval = retval + "\n}\n"
 
     return retval
-
 
 def clear_account_mapp(exclude=["account_master"]):
     wallet_dir_ = wallet_dir()
@@ -240,10 +234,19 @@ def clear_account_mapp(exclude=["account_master"]):
     with open(wallet_dir_ + setup.account_map, "w") as out:
         out.write(account_mapp_to_string(account_map))
 
-
-def kill_keosd():
+def stop_keosd():
     cleos.WalletStop(is_verbose=-1)
 
+def kill_keosd():
+    os.system("pkill keosd")
+
+def use_keosd(status):
+    if status:
+        setup.use_keosd(True)
+    else:
+        kill_keosd()
+        time.sleep(3)
+        setup.use_keosd(False)
 
 class Transaction():
     def __init__(self, msg):
@@ -261,7 +264,6 @@ class Transaction():
 
     def get_transaction(self):
         pass
-
 
 class ContractBuilder():
     def __init__(
@@ -304,12 +306,10 @@ class ContractBuilder():
     def build(self):
         return not self.build_abi().error and not self.build_wast().error
 
-
 class ContractBuilderFromTemplate(ContractBuilder):
     def __init__(self, name, template="", remove_existing=False, visual_studio_code=False, is_verbose=True):
         t = teos.Template(name, template, remove_existing, visual_studio_code, is_verbose)
         super().__init__(t.contract_path_absolute)
-
 
 class Contract():
 
@@ -362,30 +362,25 @@ class Contract():
 
             return self.contract
 
-
     def is_deployed(self):
         if not self.contract:
             return False
         return not self.contract.error
-
 
     def build_wast(self):
         return ContractBuilder(
             self.contract_dir, "", "",
             self.is_mutable, self.is_verbose).build_wast()
 
-
     def build_abi(self):
         return ContractBuilder(
             self.contract_dir, "", "", 
             self.is_mutable, self.is_verbose).build_abi()
 
-    
     def build(self):
         return ContractBuilder(
             self.contract_dir, "", "", 
             self.is_mutable, self.is_verbose).build()
-
 
     def push_action(
             self, action, data,
@@ -427,13 +422,11 @@ class Contract():
 
         return self.action
 
-
     def show_action(self, action, data, permission=""):
         """ Implements the `push action` command without broadcasting. 
 
         """
         return self.push_action(action, data, permission, dont_broadcast=1)
-
 
     def table(
             self, table_name, scope="",
@@ -449,15 +442,12 @@ class Contract():
 
         return self._table
 
-
     def code(self, code="", abi="", wasm=False):
         return cleos.GetCode(
             self.account.name, code, abi, wasm, is_verbose=self.is_verbose)
 
-
     def console(self):
         return self._console
-
 
     def path(self):
         """ Return contract directory path.
@@ -466,7 +456,6 @@ class Contract():
             return str(self.contract.contract_path_absolute)
         else:
             return str(self.contract_dir)
-
 
     def delete(self):
         try:
@@ -478,25 +467,20 @@ class Contract():
         except:
             return False
 
-
     def __str__(self):
         if self.is_deployed():
             return str(self.contract)
         else:
             return str(self.account)
 
-
 def reset(is_verbose=1):
     return node.reset(is_verbose)
-
 
 def run(is_verbose=1):
     return node.run(is_verbose)
 
-
 def stop(is_verbose=1):
     return node.stop(is_verbose)
-
 
 if __name__ == "__main__":
     template = ""

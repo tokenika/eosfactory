@@ -7,7 +7,7 @@ import unittest
 class TestSessionInit(unittest.TestCase):
 
     setup.set_verbose(False)
-    setup.use_keosd(False)    
+    eosf.use_keosd(False)    
 
     def run(self, result=None):
         """ Stop after first error """      

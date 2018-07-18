@@ -8,7 +8,7 @@ from termcolor import cprint
 
 setup.set_verbose(False)
 setup.set_json(False)
-setup.use_keosd(False)
+eosf.use_keosd(False)
 
 class Test1(unittest.TestCase):
 

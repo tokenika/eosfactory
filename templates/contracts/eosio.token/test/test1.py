@@ -4,7 +4,7 @@ import eosf
 import node
 from termcolor import cprint
 
-setup.use_keosd(False)
+eosf.use_keosd(False)
 setup.set_verbose(False)
 setup.set_json(False)
 

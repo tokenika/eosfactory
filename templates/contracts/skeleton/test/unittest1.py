@@ -6,7 +6,7 @@ import unittest
 from termcolor import cprint
 
 setup.set_verbose(True)
-setup.use_keosd(False)
+eosf.use_keosd(False)
 setup.set_json(False)
 
 class Test1(unittest.TestCase):

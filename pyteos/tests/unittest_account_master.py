@@ -1,6 +1,7 @@
 import unittest
 import setup
 import eosf
+import cleos
 import time
 
 from eosf_wallet import Wallet
@@ -13,6 +14,7 @@ eosf.set_throw_error(False)
 #setup.set_command_line_mode()
 
 cryptolions = "88.99.97.30:38888"
+not_imputed = True
 
 l = eosf.Logger()
 
@@ -30,6 +32,7 @@ NEXT TEST ====================================================================
         print()
 
     def setUp(self):
+        eosf.restart()
         eosf.set_is_testing_errors(False)
 
     def test_too_many_wallets(self):
@@ -38,10 +41,8 @@ NEXT TEST ====================================================================
         precisely one ``Wallet`` object is defined when calling the 
             ``account_master_create(...)`` function.
         """)
-        
         eosf.set_throw_error(True)
-        setup.use_keosd(False)
-        eosf.stop(is_verbose=0)
+        eosf.use_keosd(False)
         eosf.reset(is_verbose=0)
         wallet = Wallet()
         eosf.set_throw_error(False)
@@ -64,7 +65,7 @@ NEXT TEST ====================================================================
             ``account_master_create(...)`` function.
         """)
         eosf.set_throw_error(True)
-        setup.use_keosd(False)
+        eosf.use_keosd(False)
         eosf.reset(is_verbose=0)
         eosf.set_throw_error(False)
         ######################################################################
@@ -80,13 +81,13 @@ NEXT TEST ====================================================================
     def test_is_not_running_not_keosd_set(self):
         l.COMMENT("""
         Check the condition that
-        ``setup.use_keosd(True)`` or the local testnet is running.
+        ``eosf.use_keosd(True)`` or the local testnet is running.
         """)
         eosf.set_throw_error(True)
 
-        setup.use_keosd(False) 
+        eosf.use_keosd(False)
         eosf.stop(is_verbose=0)
-
+    
         eosf.set_throw_error(False)
         ######################################################################
 
@@ -106,7 +107,7 @@ NEXT TEST ====================================================================
         """)
         eosf.set_throw_error(True)
 
-        setup.use_keosd(False)
+        eosf.use_keosd(False)
         eosf.reset(is_verbose=0)
         wallet = Wallet()
 
@@ -144,41 +145,46 @@ NEXT TEST ====================================================================
         self.assertTrue(keys1 == keys2)
 
 
-    # def test_testnet_create_account(self):
-    #     l.COMMENT("""
-    #     If the ``name`` argument is set, check the testnet for presence of the 
-    #     account. If present, create the corresponding object and put the account 
-    #     into the wallet, and put the account object into the global namespace of 
-    #     the caller. and **return**.
-    #     """)
-    #     eosf.set_throw_error(True)
+    def test_testnet_create_account(self):
+        if not_imputed:
+            return
+        l.COMMENT("""
+        If the ``name`` argument is set, check the testnet for presence of the 
+        account. If present, create the corresponding object and see whether it
+        is in the wallets. If so, put the account object into the global namespace 
+        of the caller. and **return**.
+        """)
+        eosf.set_throw_error(True)
+        eosf.use_keosd(True)
+        setup.set_nodeos_address(cryptolions)
+        wallet = Wallet(
+            "default",
+            "PW5J5KW7erKzqJmn9gMrvzev4pLxR3Vt9BRkx94BqdfHkw4z4bNTd"
+            )
 
-    #     setup.use_keosd(True)
-    #     setup.set_nodeos_address(cryptolions)
-    #     eosf.stop(is_verbose=0)
-    #     wallet = Wallet(
-    #         "default",
-    #         "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N"
-    #         )
-
-    #     eosf.set_throw_error(False)
-    #     ######################################################################
+        eosf.set_throw_error(False)
+        ######################################################################
         
-    #     account_master_create("account_master", "nbhyi5exmjcl")
-    #     info = account_master.info()
-    #     print(info)
+        account_master_create("account_master", "nbhyi5exmjcl")
 
-    #     l.COMMENT("""
-    #     Assert that the info is well-formed.
-    #     """)
-    #     self.assertTrue(
-    #         "total staked delegated to account from others" in info)
 
+
+        # wallet.keys()
+        # info = account_master.info()
+        # print(info)
+
+        # l.COMMENT("""
+        # Assert that the info is well-formed.
+        # """)
+        # self.assertTrue(
+        #     "total staked delegated to account from others" in info)
+
+        
 
 
     # def test_restore_testnet_account(self):
     #     setup.set_nodeos_address(cryptolions)
-    #     setup.use_keosd(True)
+    #     eosf.use_keosd(True)
     #     wallet = Wallet(
     #         "default", 
     #         "PW5JhJKaibFbv1cg8sPQiCtiGLh5WP4FFWFeRqXANetKeA8XKn31N")
@@ -190,7 +196,7 @@ NEXT TEST ====================================================================
 
 
     # def test_usage(self):
-    #     setup.use_keosd(False)
+    #     eosf.use_keosd(False)
     #     eosf.reset(is_verbose=0)
     #     wallet = Wallet()
     #     account_master_create("account_master")

@@ -12,7 +12,7 @@ or after the contract is changed and re-built
 deployment = False
 
 setup.set_verbose(True)
-setup.use_keosd(True)
+eosf.use_keosd(True)
 setup.set_nodeos_address("88.99.97.30:38888") # CryptoLions endpoint
 
 def test():

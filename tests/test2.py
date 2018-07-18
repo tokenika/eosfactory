@@ -5,7 +5,7 @@ import eosf
 import node
 from termcolor import cprint
 
-setup.use_keosd(False)
+eosf.use_keosd(False)
 setup.set_verbose(True)
 #setup.set_command_line_mode()
 
