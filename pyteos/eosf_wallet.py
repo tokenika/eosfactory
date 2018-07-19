@@ -171,13 +171,14 @@ class Wallet(cleos.WalletCreate):
         """
         imported_keys = []
         account_name = None
-
+        import pdb; pdb.set_trace()
         try: # whether account_or_key is an account:
             account_name = account_or_key.name
             key = account_or_key.owner_key
             imported_keys.append(key.key_public)
-            wallet_import = cleos.WalletImport(key, self.name, is_verbose=-1)
-            print("DDDDDDDDDDDDDDDDDDDDDD")
+
+            wallet_import = cleos.WalletImport(
+                key, self.name, is_verbose=-1)
             print(key)
             print(wallet_import.err_msg)
             imported_keys.append(key.key_public)
@@ -189,9 +190,10 @@ class Wallet(cleos.WalletCreate):
             try:
                 key = account_or_key.active_key
                 imported_keys.append(key.key_public)
-                wallet_import = cleos.WalletImport(key, self.name, is_verbose=-1)
+
+                wallet_import = cleos.WalletImport(
+                    key, self.name, is_verbose=-1)
                 print(key)
-                print("FFFFFFFFFFFFFFFFFFFFF")
                 print(wallet_import.err_msg)
                 
             except:
@@ -218,6 +220,7 @@ class Wallet(cleos.WalletCreate):
             self.logger.ERROR("""
                 The list of imported keys is empty.
                 """)
+            return False
 
         ok = True
         for key in imported_keys:
@@ -226,10 +229,12 @@ class Wallet(cleos.WalletCreate):
                 self.logger.ERROR("""
                 Failed to import keys of the account '{}' into the wallet '{}'
                 """.format(account_name, self.name))
+                return False
         if ok:
             self.logger.EOSF("""
             Cross-checked: all account keys are in the wallet.
             """)
+        return True
 
     def keys_in_wallets(self, keys):
         wallet_keys = cleos.WalletKeys(is_verbose=-1)

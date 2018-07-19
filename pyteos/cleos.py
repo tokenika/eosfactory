@@ -416,9 +416,9 @@ class WalletImport(_Cleos):
             wallet_name = wallet
 
         _Cleos.__init__(
-            self, [key_private, "--name", wallet_name],
+            self, ["--private-key", key_private, "--name", wallet_name],
             "wallet", "import", is_verbose)
-
+        import pdb; pdb.set_trace()
         if not self.error:
             self.json["key_private"] = key_private
             self.key_private = key_private

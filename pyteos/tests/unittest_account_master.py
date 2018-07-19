@@ -11,7 +11,7 @@ from eosf_account import account_create, account_master_create
 eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
 #eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
-#setup.set_command_line_mode()
+setup.set_command_line_mode()
 
 cryptolions = "88.99.97.30:38888"
 not_imputed = True

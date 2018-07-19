@@ -72,10 +72,7 @@ def is_local_testnet_running(account_eosio):
 
 def put_account_to_wallet(
         account_object, wallet, account_object_name, levels_below, logger):
-    # export the account object to the globals in the calling module:
-    inspect.stack()[levels_below][0].f_globals[account_object_name] \
-        = account_object
-
+    import pdb; pdb.set_trace()
     # put the account object to the wallet:
     wallet.open()
     wallet.unlock()
@@ -83,12 +80,20 @@ def put_account_to_wallet(
             account_object.active_key.key_private]):
         wallet.import_key(account_object)
         wallet.map_account(account_object_name, account_object)
+        # export the account object to the globals in the calling module:
+        inspect.stack()[levels_below][0].f_globals[account_object_name] \
+            = account_object_name
+        account_object.in_wallet = True
         return True
     else:
-        logger.EOSF("""
-        Wrong or missing keys for the account ``{}`` in the wallets.
-        """.format(account_object.name))
-        return False        
+        import pdb; pdb.set_trace()
+        if wallet.import_key(account_object):
+            return True
+        else:
+            logger.EOSF("""
+            Wrong or missing keys for the account ``{}`` in the wallets.
+            """.format(account_object.name))
+            return False        
 
 def add_account_object(
     account_object_name, name, 
@@ -112,7 +117,7 @@ def add_account_object(
         account_object.name = name    
     account_object.exists = False
     account_object.in_wallet = False
-
+    account_object.put_in_wallet = False
 
     if not account_object.error:
         account_object.exists = True
@@ -320,7 +325,7 @@ def account_master_create(
             account_object_name, name, 
             owner_key, active_key,
             wallet, levels_below+1, logger)
-        if account_object.in_wallet:
+        if account_object.in_wallet or account_object.put_in_wallet:
             return
 
         if not account_object.exists:
