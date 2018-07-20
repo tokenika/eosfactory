@@ -56,14 +56,12 @@ Cannot use the local node Wallet Manager if the node is not running.
 def set_wallet_url_arg(cleos_object, url=None, check_error=True):
     """Implements the `use_keosd` flag in the `setup` module.
     """
-    #print("CCCCCCCCCCCCCC url is: {}".format(url))
     global _wallet_address_arg
     if not _wallet_address_arg is None:
         return
 
     if check_error and is_notrunningnotkeosd_error(cleos_object):
         _wallet_address_arg = None
-        #print("TTTTTTTTTTTTTT _wallet_address_arg is: {}".format(_wallet_address_arg))
         return        
 
     if not url is None:
@@ -71,12 +69,10 @@ def set_wallet_url_arg(cleos_object, url=None, check_error=True):
             _wallet_address_arg = []
         else:
             _wallet_address_arg = ["--wallet-url", "http://" + url]
-        #print("FFFFFFFFFFFFF _wallet_address_arg is: {}".format(_wallet_address_arg))
         return
 
     if _wallet_address_arg is None:
         _wallet_address_arg = []
-        #print("OOOOOOOOOOOOO _wallet_address_arg is: {}".format(_wallet_address_arg))
 
 def heredoc(msg):
     return dedent(msg).strip()
@@ -215,11 +211,11 @@ class GetAccount(_Cleos):
     """
     def __init__(self, account, is_verbose=1, json=False):
         try:
-            self.account_name = account.name
+            self.name = account.name
         except:
-            self.account_name = account
+            self.name = account
 
-        args = [self.account_name]
+        args = [self.name]
         if setup.is_json() or json:
             args.append("--json")
 
@@ -236,7 +232,7 @@ class GetAccount(_Cleos):
             self.printself()
 
     def __str__(self):
-        out = "name: {}\n".format(self.account_name)
+        out = "name: {}\n".format(self.name)
         out = out + str(_Cleos.__str__(self))
         return out
 
@@ -397,31 +393,63 @@ class WalletImport(_Cleos):
     """
     def __init__(self, key, wallet="default", is_verbose=1):
 
-        try:
-            key_private = key.active_key.key_private
-        except:
-            try:
-                key_private = key.active_key
-                if not key_private:
-                    raise ValueError('')
-            except:
-                try:
-                    key_private = key.key_private
-                except:
-                    key_private = key 
+        self.set_is_verbose(is_verbose)
 
-        try:
+        try: # is the key a key object?
+            key_private = key.key_private
+        except: # key is a string:
+            key_private = key 
+
+        try: # is the wallet an Wallet object?
             wallet_name = wallet.name
-        except:
+        except: # wallet is a string
             wallet_name = wallet
 
         _Cleos.__init__(
             self, ["--private-key", key_private, "--name", wallet_name],
             "wallet", "import", is_verbose)
-        import pdb; pdb.set_trace()
+
         if not self.error:
             self.json["key_private"] = key_private
             self.key_private = key_private
+            self.printself()
+
+class WalletRemove_key(_Cleos):
+    """Remove key from wallet
+    - **parameters**::
+
+        wallet: A wallet object or the name of the wallet to import key into.
+        password: The password returned by wallet create.
+        key: A key object or a private key in WIF format to import.
+        is_verbose: If `0`, do not print unless on error; if `-1`, 
+            do not print. Default is `1`.
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        is_verbose: Verbosity at the construction time.
+    """
+    def __init__(self, key, wallet, password, is_verbose=1):
+
+        self.set_is_verbose(is_verbose)
+
+        try: # is the key a key object?
+            key_public = key.key_public
+        except: # key is a string:
+            key_public = key 
+
+        try: # is the wallet an Wallet object?
+            wallet_name = wallet.name
+        except: # wallet is a string
+            wallet_name = wallet
+
+        _Cleos.__init__(
+            self, [key_public, "--name", wallet_name, "--password", password], 
+            "wallet", "remove_key", is_verbose)
+
+        if not self.error:
+            self.json["key_public"] = key_public
+            self.key_public = key_public
             self.printself()
 
 
@@ -792,7 +820,7 @@ class CreateKey(_Cleos):
     def __init__(
             self, key_name, key_public="", key_private="", r1=False, is_verbose=1):
 
-        if key_public:
+        if key_public or key_private:
             self.json["publicKey"] = self.key_public = key_public           
             self.json["privateKey"] = self.key_private = key_private
             self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
@@ -937,7 +965,6 @@ class CreateAccount(_Cleos):
         if  ref_block:
             args.extend(["--ref-block", ref_block])
         
-        self.name = name
         _Cleos.__init__(
             self, args, "create", "account", is_verbose)
             

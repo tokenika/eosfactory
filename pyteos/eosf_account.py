@@ -27,6 +27,13 @@ def is_local_testnet_running():
         else:
             return False
 
+def is_do_not_exist_error(account_object, logger):
+    if("main.cpp:2888" in account_object.err_msg):
+        logger.EOSF("""
+        Account ``{}`` does not exist in the blockchain. It may be created.
+        """.format(account_object.name))
+        return True
+    return False
 
 def precisely_one_wallet(logger, levels_below=2):
     objects = None    
@@ -72,13 +79,12 @@ def is_local_testnet_running(account_eosio):
 
 def put_account_to_wallet(
         account_object, wallet, account_object_name, levels_below, logger):
-    import pdb; pdb.set_trace()
     # put the account object to the wallet:
     wallet.open()
     wallet.unlock()
+
     if wallet.keys_in_wallets([account_object.owner_key.key_private, \
             account_object.active_key.key_private]):
-        wallet.import_key(account_object)
         wallet.map_account(account_object_name, account_object)
         # export the account object to the globals in the calling module:
         inspect.stack()[levels_below][0].f_globals[account_object_name] \
@@ -86,8 +92,12 @@ def put_account_to_wallet(
         account_object.in_wallet = True
         return True
     else:
-        import pdb; pdb.set_trace()
         if wallet.import_key(account_object):
+            wallet.map_account(account_object_name, account_object)
+            # export the account object to the globals in the calling module:
+            inspect.stack()[levels_below][0].f_globals[account_object_name] \
+                = account_object_name
+            account_object.just_put_into_wallet = True
             return True
         else:
             logger.EOSF("""
@@ -96,65 +106,67 @@ def put_account_to_wallet(
             return False        
 
 def add_account_object(
-    account_object_name, name, 
-    owner_key, active_key,
+    account_object_name, account_name, 
+    owner_key_private, active_key_private,
     wallet, levels_below, logger):
-    """Look for an account, if found, put it into the wallet.
+    """Look for the account of the given name, put it into the wallet.
 
     - **parameters**::
 
         account_object_name: the name of the account object
-        name: the name of the account
+        account_name: the name of the account
+        owner_key_private: private owner key, if not ``None``, used for 
+            adding any orphan account, when preivate keys are restored from
+            a safe
+        active_key_private: private active key, if not ``None``, used for 
+            adding any orphan account, when preivate keys are restored from
+            a safe 
 
     - **return**::
         account object, if account exists, ``None`` otherwise
         
     """
-    account_object = cleos.GetAccount(name, json=True, is_verbose=-1)
-    if not name: 
-        account_object.name = cleos.account_name()
-    else:
-        account_object.name = name    
+    if not account_name: 
+        account_name = cleos.account_name()
+    account_object = cleos.GetAccount(account_name, json=True, is_verbose=-1)
+
+    account_object.name = account_name
     account_object.exists = False
     account_object.in_wallet = False
-    account_object.put_in_wallet = False
+    account_object.just_put_into_wallet = False
+    account_object.fatal_error = False
 
-    if not account_object.error:
+    if account_object.error:
+        if not is_do_not_exist_error(account_object, logger):
+            logger.ERROR(account_object.err_msg)
+            account_object.fatal_error = True
+    else:
         account_object.exists = True
-        if not owner_key is None:
-            try:
-                owner_key_private = owner_key.key_private
-            except:
-                owner_key_private = owner_key
 
-            account_object.owner_key = cleos.CreateKey(
-                "owner", 
-                account_object.json["permissions"][1]["required_auth"]["keys"] \
-                [0]["key"], owner_key_private,
-                is_verbose=0)                
-        else:
+        if owner_key_private is None:
             account_object.owner_key = cleos.CreateKey(
                 "owner", 
                 account_object.json["permissions"][1]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
+        else: # an orphan account, private key is restored from a safe
+            account_object.owner_key = cleos.CreateKey(
+                "owner", 
+                account_object.json["permissions"][1]["required_auth"]["keys"] \
+                [0]["key"], owner_key_private,
+                is_verbose=0) 
 
-        if not active_key is None:
-            try:
-                active_key_private = active_key.key_private
-            except:
-                active_key_private = active_key 
-
-            account_object.active_key = cleos.CreateKey(
-                "active", 
-                account_object.json["permissions"][0]["required_auth"]["keys"] \
-                [0]["key"], active_key_private,
-                is_verbose=0)                          
-        else:
+        if active_key_private is None:
             account_object.owner_key = cleos.CreateKey(
                 "owner", 
                 account_object.json["permissions"][0]["required_auth"]["keys"] \
                 [0]["key"], 
+                is_verbose=0)
+        else: # an orphan account, private key is restored from a safe
+            account_object.active_key = cleos.CreateKey(
+                "active", 
+                account_object.json["permissions"][0]["required_auth"]["keys"] \
+                [0]["key"], active_key_private,
                 is_verbose=0)
 
         def info(account_object):
@@ -163,23 +175,23 @@ def add_account_object(
         account_object.info = types.MethodType(info, account_object)
 
         logger.EOSF("""
-        Account ``{}`` exists in the blockchain. It may be added to the 
-        wallet if the wallet has keys to it. Checking ... 
+        Account ``{}`` exists in the blockchain. Checking whether the wallet
+        has keys to it ... 
         """.format(account_object.name))
 
         if put_account_to_wallet(
             account_object, wallet, account_object_name, levels_below+1, logger):
             account_object.in_wallet = True
-    else:
-        logger.EOSF("""
-        Account ``{}`` does not exist in the blockchain. It may be 
-        registered to the test node.
-        """.format(account_object.name))
+
+        if account_object.in_wallet:
+            logger.EOSF("""
+            ... indeed, there are proper keys in the wallet.
+            """)
 
     return account_object
 
 def account_master_create(
-            account_object_name, name="", 
+            account_object_name, account_name="", 
             owner_key=None, active_key=None,
             verbosity=None, levels_below=1):
     """Create account object in caller's global namespace.
@@ -187,7 +199,7 @@ def account_master_create(
     - **parameters**::
 
         account_object_name:: the name of the account object
-        name: the name of the account; random, if not set
+        account_name: the name of the account; random, if not set
         verbosity: argument to the internal logger
         levels_below: experimental argument
 
@@ -214,7 +226,7 @@ def account_master_create(
     Existing account
     ****************
 
-    If the ``name`` argument is set, check the testnet for presence of the 
+    If the ``account_name`` argument is set, check the testnet for presence of the 
     account. If present, create the corresponding object and put the account 
     into the wallet, and put the account object into the global namespace of 
     the caller. and **return**. Otherwise start a  registration procedure, 
@@ -223,10 +235,10 @@ def account_master_create(
     Registration to a remote testnet
     ********************************
 
-    If the ``name`` argument is not set or it does not address any existing
+    If the ``account_name`` argument is not set or it does not address any existing
     account, see the previous paragraph, start a registration procedure.
 
-    * if the ``name`` argument is not set, make it random
+    * if the ``account_name`` argument is not set, make it random
     * print registration data, namely:
         * account name
         * owner public key
@@ -273,7 +285,6 @@ def account_master_create(
     the ``eosio`` account. Put the account into the wallet. Put the account
     object into the global namespace of the caller, and **return**.
     """
-   
     account_object = types.SimpleNamespace()
     account_object.name = "eosio"
     config = teos.GetConfig(is_verbose=0)
@@ -282,6 +293,7 @@ def account_master_create(
         config.json["EOSIO_KEY_PUBLIC"],
         config.json["EOSIO_KEY_PRIVATE"]
         )
+    account_object.active_key = account_object.owner_key
 
     def info(account_object):
         ao = cleos.GetAccount(account_object.name, is_verbose=-1)
@@ -291,7 +303,8 @@ def account_master_create(
 
     if is_local_testnet_running(account_object):
         put_account_to_wallet(
-            account_object, wallet, account_object_name, levels_below+1)
+            account_object, wallet, account_object_name, 
+            levels_below+1, logger)
         return
 
     """
@@ -315,22 +328,37 @@ def account_master_create(
         return logger
 
     """
-    If the ``name`` argument is not set, it is randomized. Check the testnet for 
+    If the ``account_name`` argument is not set, it is randomized. Check the testnet for 
     presence of the account. If present, create the corresponding object and see 
     whether it is in the wallets. If so, put the account object into the global 
     namespace of the caller. and **return**. 
     """
     while True:
         account_object = add_account_object(
-            account_object_name, name, 
+            account_object_name, account_name, 
             owner_key, active_key,
             wallet, levels_below+1, logger)
-        if account_object.in_wallet or account_object.put_in_wallet:
+        
+        if account_object.in_wallet \
+                or account_object.just_put_into_wallet \
+                or account_object.fatal_error:
             return
-
+  
         if not account_object.exists:
-            account_object.owner_key = cleos.CreateKey("owner", is_verbose=-1)
-            account_object.active_key = cleos.CreateKey("active", is_verbose=-1)
+            if owner_key is None:
+                account_object.owner_key = cleos.CreateKey(
+                    "owner", is_verbose=-1)
+            else:
+                account_object.owner_key = cleos.CreateKey(
+                    "owner", "", owner_key, is_verbose=-1)
+
+            if active_key is None:
+                account_object.active_key = cleos.CreateKey(
+                    "active", is_verbose=-1)
+            else:
+                account_object.active_key = cleos.CreateKey(
+                    "active", "", active_key, is_verbose=-1)
+
             logger.OUT("""
             Use the following data to register a new account on a public testnet:
             Accout Name: {}
@@ -347,9 +375,13 @@ def account_master_create(
                 account_object.active_key.key_private
                 ))
 
-            is_ready = input("ENTER when ready or 'q' to quit <<< ")
-            if is_ready == "q":
-                return
+            while True:
+                is_ready = input("enter 'go' when ready or 'q' to quit <<< ")
+                if is_ready == "q":
+                    return
+                else: 
+                    if is_ready == "go":
+                        break
         else:
             logger.EOSF("""
             ###
@@ -357,7 +389,7 @@ def account_master_create(
             """)
             decision = input("y/n <<< ")
             if decision == "y":
-                name = input(
+                account_name = input(
                     "enter the account name or nothing to make the name random <<< ")
             else:
                 return
@@ -383,7 +415,7 @@ def account_create(
     
     logger.EOSF_TRACE("""
         ######### 
-        Create the account object named `{}` ...
+        Create the account object `{}` ...
         """.format(account_object_name))
 
     wallet = precisely_one_wallet(logger, levels_below=levels_below+1)
@@ -391,7 +423,7 @@ def account_create(
         return
         
     account_object = None
-    if not wallet.is_name_taken(account_object_name):
+    if not wallet.is_name_taken(account_object_name, account_name):
         inspect.stack()[levels_below][0].f_globals[account_object_name] = account_object
         return wallet.logger
 

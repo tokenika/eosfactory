@@ -241,6 +241,7 @@ def kill_keosd():
     os.system("pkill keosd")
 
 def use_keosd(status):
+    restart()
     if status:
         setup.use_keosd(True)
     else:

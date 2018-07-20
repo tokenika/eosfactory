@@ -2,16 +2,19 @@ import unittest
 import setup
 import eosf
 import time
+import eosf_account
 
 from eosf_wallet import Wallet
-from eosf_account import account_create
+from eosf_account import account_create, account_master_create
 
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT]) #, eosf.Verbosity.DEBUG])
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
+# eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
 #setup.set_command_line_mode()
 
 cryptolions = "88.99.97.30:38888"
+not_imputed = False
 l = eosf.Logger()
 
 class Test1(unittest.TestCase):
@@ -28,89 +31,102 @@ NEXT TEST ====================================================================
         print()
 
     def setUp(self):
-        pass
+        eosf.restart()
+        eosf.set_is_testing_errors(False)
+        eosf.set_throw_error(True)
 
 
     # def test_too_many_wallets(self):
-    #     eosf.set_throw_error(True)
+    #     l.COMMENT("""
+    #     Check the condition that
+    #     precisely one ``Wallet`` object is defined when calling the 
+    #         ``account_master_create(...)`` function.
+    #     """)        
     #     eosf.use_keosd(False)
     #     eosf.reset(is_verbose=0)
     #     wallet = Wallet()
     #     eosf.set_throw_error(False)
+    #     eosf.set_is_testing_errors()
     #     ######################################################################
-
+    #     l.COMMENT("""
+    #     Added second wallet, named "second". Calling the ``account_master_create(...)`` 
+    #     function should result in an error message:
+    #     """)   
     #     wallet1 = Wallet("second")
-    #     logger = account_create("account_alice")
+
+    #     logger = account_master_create("account_master")
     #     self.assertTrue("Too many `Wallet` objects." in logger.err_msg)
 
+    # def test_global_namespace1(self):
+    #     l.COMMENT("""
+    #     Check the condition that
+    #     precisely one ``Wallet`` object is defined when calling the 
+    #         ``account_master_create(...)`` function.
+    #     """)
+    #     eosf.use_keosd(False)
+    #     eosf.reset(is_verbose=0)
+    #     eosf.set_throw_error(False)
+    #     eosf.set_is_testing_errors()
+    #     ######################################################################
 
-    def test_global_namespace1(self):
-        l.COMMENT("""
-        Show that the account object that represents an account is defined in the
-        global namespace of the caller.
+    #     logger = account_master_create("account_master")
+    #     self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
 
-        * Create an account object named `account_alice`.
-        * Check `account_alice in globals()'.
-        * Check the same in the next test function.
-        """)
-        eosf.set_throw_error(True)
+    def test_account_name_conflict(self):
+        if not_imputed:
+            return
+
         eosf.use_keosd(False)
         eosf.reset(is_verbose=0)
         wallet = Wallet()
-        eosf.set_throw_error(False)
+        account_master_create("account_master")
         ######################################################################
 
-        account_create("account_alice")
-        self.assertTrue(account_alice in globals())
+        l.COMMENT("""
+        As the ``account_master`` object is in the namespace, create two account
+        objects: 
+        ``account_alice`` and ``account_carrol``.
+        Then try to create another account object called ``account_alice``. Although
+        this object is going to refer to a new blockchain account, it cannot accept
+        the given name: error is issued.
+
+        However, you are prompted to change the blocking name. Change it to 
+        ``account_alice_b``.
+        """)
+        account_create("account_alice", account_master)
+        account_create("account_carrol", account_master)
+        account_create("account_alice", account_master)
 
 
-    # def test_there_is_no_wallet(self):
-    #     eosf.use_keosd(False)
-    #     eosf.reset(is_verbose=0)
-    #     ######################################################################
+        # print(account_alice.info())
 
-    #     logger = account_create("account_alice")        
-    #     self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
+        
+        # print("The name attribute of the 'account_carrol' account object is '{}'" \
+        #     .format(account_carrol))
+        # print("{}".format(account_carrol.code()))
 
+        # account_create("account_alice")
+        # self.assertTrue(account_alice.error)
 
-    # def test_usage(self):
-    #     eosf.use_keosd(False)
-    #     eosf.reset(is_verbose=0)
-    #     wallet = Wallet()
-    #     account_master = AccountMaster()
-    #     wallet.import_key(account_master)
-    #     ######################################################################
+        # account_create("account_test")
+        # contract_test = eosf.Contract(account_test, "eosio.token")
+        # deploy = contract_test.deploy()
+        # account_test.code()
 
-    #     account_create("account_alice")
-    #     print(account_alice.info())
+        # time.sleep(1)
 
-    #     account_create("account_carrol")
-    #     print("The name attribute of the 'account_carrol' account object is '{}'" \
-    #         .format(account_carrol))
-    #     print("{}".format(account_carrol.code()))
+        # action = account_test.push_action(
+        #     "create", 
+        #     '{"issuer":"' 
+        #         + str(account_master) 
+        #         + '", "maximum_supply":"1000000000.0000 EOS", \
+        #         "can_freeze":0, "can_recall":0, "can_whitelist":0}')
 
-    #     account_create("account_alice")
-    #     self.assertTrue(account_alice.error)
-
-    #     account_create("account_test")
-    #     contract_test = eosf.Contract(account_test, "eosio.token")
-    #     deploy = contract_test.deploy()
-    #     account_test.code()
-
-    #     time.sleep(1)
-
-    #     action = account_test.push_action(
-    #         "create", 
-    #         '{"issuer":"' 
-    #             + str(account_master) 
-    #             + '", "maximum_supply":"1000000000.0000 EOS", \
-    #             "can_freeze":0, "can_recall":0, "can_whitelist":0}')
-
-    #     action = contract_test.push_action(
-    #     "issue", 
-    #     '{"to":"' + str(account_alice)
-    #         + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
-    #         account_master)
+        # action = contract_test.push_action(
+        # "issue", 
+        # '{"to":"' + str(account_alice)
+        #     + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
+        #     account_master)
 
 
     def tearDown(self):

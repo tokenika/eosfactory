@@ -165,13 +165,81 @@ class Wallet(cleos.WalletCreate):
         if not self.logger.ERROR(wallet_unlock):
             self.logger.EOSF("Wallet `{}` unlocked.".format(self.name))
 
+    def remove_key(self, account_or_key):
+        removed_keys = []
+        account_name = None
+        try: # whether account_or_key is an account:
+            account_name = account_or_key.name
+            key = account_or_key.owner_key
+            removed_keys.append(key.key_public)
+
+            remove_key = cleos.WalletRemove_key(
+                key, self.name, self.password, is_verbose=-1)
+            removed_keys.append(key.key_public)
+
+            self.logger.DEBUG("""
+            account_or_key is like an account.
+            """)
+            try: # the account may have active key, as well:
+                key = account_or_key.active_key
+                remove_key = cleos.WalletRemove_key(
+                    key, self.name, self.password, is_verbose=-1)
+                removed_keys.append(key.key_public)
+            except:
+                pass                    
+        except:
+            self.logger.DEBUG("""
+            account_or_key is not like an account.
+            """)
+            try:
+                cleos.WalletRemove_key(
+                    account_or_key, self.name, self.password, is_verbose=-1)
+                removed_keys.append(account_or_key.key_public)
+            except: # account_or_key is string
+                remove_key = cleos.WalletRemove_key(
+                    account_or_key, self.name, self.password, is_verbose=-1)
+                removed_keys.append(account_or_key)
+
+        if account_name is None:
+            if len(removed_keys) > 0:
+                self.logger.EOSF_TRACE("""
+                    Removing key '{}' 
+                    from the wallet '{}'
+                    """.format(removed_keys[0], self.name)
+                            )
+        else:            
+            self.logger.EOSF_TRACE("""
+                Removing keys of the account '{}' from the wallet '{}'
+                """.format(account_name, self.name)
+                        )        
+
+        wallet_keys = cleos.WalletKeys(is_verbose=-1)
+        self.logger.DEBUG("""
+            wallet_keys:
+            {}
+            """.format(wallet_keys))
+
+        ok = True
+        for key in removed_keys:
+            if key in wallet_keys.json[""]:
+                ok = False
+                self.logger.ERROR("""
+                Failed to remove key '{}' from the wallet '{}'
+                """.format(key, self.name))
+                return False
+        if ok:
+            self.logger.EOSF("""
+            Cross-checked: all account keys are in the wallet.
+            """)
+        return True
+
+
     def import_key(self, account_or_key):
         """ Imports private keys of an account into wallet.
         Returns list of `cleos.WalletImport` objects
         """
         imported_keys = []
         account_name = None
-        import pdb; pdb.set_trace()
         try: # whether account_or_key is an account:
             account_name = account_or_key.name
             key = account_or_key.owner_key
@@ -179,8 +247,6 @@ class Wallet(cleos.WalletCreate):
 
             wallet_import = cleos.WalletImport(
                 key, self.name, is_verbose=-1)
-            print(key)
-            print(wallet_import.err_msg)
             imported_keys.append(key.key_public)
 
             self.logger.DEBUG("""
@@ -193,8 +259,6 @@ class Wallet(cleos.WalletCreate):
 
                 wallet_import = cleos.WalletImport(
                     key, self.name, is_verbose=-1)
-                print(key)
-                print(wallet_import.err_msg)
                 
             except:
                 pass                    
@@ -202,14 +266,13 @@ class Wallet(cleos.WalletCreate):
             self.logger.DEBUG("""
             account_or_key is not like an account.
             """)
-            imported_keys.append(account_or_key.key_public)
             cleos.WalletImport(account_or_key, self.name, is_verbose=-1)
+            imported_keys.append(account_or_key.key_public)            
 
         self.logger.EOSF_TRACE("""
             Importing keys of the account '{}' into the wallet '{}'
             """.format(account_name, self.name)
                     )
-        
         wallet_keys = cleos.WalletKeys(is_verbose=-1)
         self.logger.DEBUG("""
             wallet_keys:
