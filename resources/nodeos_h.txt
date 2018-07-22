@@ -1,4 +1,6 @@
-/mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos -hApplication Options:
+/mnt/c/Workspaces/EOS/eos/build/programs/nodeos/nodeos -h
+Application Options:
+
 Config Options for eosio::bnet_plugin:
   --bnet-endpoint arg (=0.0.0.0:4321)   the endpoint upon which to listen for
                                         incoming connections
@@ -39,13 +41,23 @@ Config Options for eosio::chain_plugin:
   --checkpoint arg                      Pairs of [BLOCK_NUM,BLOCK_ID] that
                                         should be enforced as checkpoints.
   --wasm-runtime wavm/binaryen          Override default WASM runtime
-  --abi-serializer-max-time-ms arg      Override default maximum ABI
+  --abi-serializer-max-time-ms arg (=15000)
+                                        Override default maximum ABI
                                         serialization time allowed in ms
-  --chain-state-db-size-mb arg (=1024)  Maximum size (in MB) of the chain state
-                                        database
+  --chain-state-db-size-mb arg (=1024)  Maximum size (in MiB) of the chain
+                                        state database
+  --chain-state-db-guard-size-mb arg (=128)
+                                        Safely shut down node when free space
+                                        remaining in the chain state database
+                                        drops below this size (in MiB).
   --reversible-blocks-db-size-mb arg (=340)
-                                        Maximum size (in MB) of the reversible
+                                        Maximum size (in MiB) of the reversible
                                         blocks database
+  --reversible-blocks-db-guard-size-mb arg (=2)
+                                        Safely shut down node when free space
+                                        remaining in the reverseible blocks
+                                        database drops below this size (in
+                                        MiB).
   --contracts-console                   print contract's output to console
   --actor-whitelist arg                 Account added to actor whitelist (may
                                         specify multiple times)
@@ -62,6 +74,16 @@ Config Options for eosio::chain_plugin:
                                         that should not be included in
                                         authorities (may specify multiple
                                         times)
+  --read-mode arg (=speculative)        Database read mode ("speculative" or
+                                        "head").
+                                        In "speculative" mode database contains
+                                        changes done up to the head block plus
+                                        changes made by transactions not yet
+                                        included to the blockchain.
+                                        In "head" mode database contains
+                                        changes done up to the current head
+                                        block.
+
 
 Command Line Options for eosio::chain_plugin:
   --genesis-json arg                    File to read Genesis State from
@@ -87,6 +109,12 @@ Command Line Options for eosio::chain_plugin:
   --truncate-at-block arg (=0)          stop hard replay / block log recovery
                                         at this block number (if set to
                                         non-zero number)
+  --import-reversible-blocks arg        replace reversible block database with
+                                        blocks imported from specified file and
+                                        then exit
+  --export-reversible-blocks arg        export reversible block database in
+                                        portable format into specified file and
+                                        then exit
 
 Config Options for eosio::history_plugin:
   -f [ --filter-on ] arg                Track actions which match
@@ -130,6 +158,39 @@ Config Options for eosio::http_plugin:
   --max-body-size arg (=1048576)        The maximum body size in bytes allowed
                                         for incoming RPC requests
   --verbose-http-errors                 Append the error log to HTTP responses
+  --http-validate-host arg (=1)         If set to false, then any incoming
+                                        "Host" header is considered valid
+  --http-alias arg                      Additionaly acceptable values for the
+                                        "Host" header of incoming HTTP
+                                        requests, can be specified multiple
+                                        times.  Includes http/s_server_address
+                                        by default.
+
+Config Options for eosio::login_plugin:
+  --max-login-requests arg (=1000000)   The maximum number of pending login
+                                        requests
+  --max-login-timeout arg (=60)         The maximum timeout for pending login
+                                        requests (in seconds)
+
+Config Options for eosio::mongo_db_plugin:
+  -q [ --mongodb-queue-size ] arg (=256)
+                                        The target queue size between nodeos
+                                        and MongoDB plugin thread.
+  --mongodb-wipe                        Required with --replay-blockchain,
+                                        --hard-replay-blockchain, or
+                                        --delete-all-blocks to wipe mongo
+                                        db.This option required to prevent
+                                        accidental wipe of mongo db.
+  --mongodb-block-start arg (=0)        If specified then only abi data pushed
+                                        to mongodb until specified block is
+                                        reached.
+  -m [ --mongodb-uri ] arg              MongoDB URI connection string, see:
+                                        https://docs.mongodb.com/master/referen
+                                        ce/connection-string/. If not specified
+                                        then plugin is disabled. Default
+                                        database 'EOS' is used if not specified
+                                        in URI. Example: mongodb://127.0.0.1:27
+                                        017/EOS
 
 Config Options for eosio::net_plugin:
   --p2p-listen-endpoint arg (=0.0.0.0:9876)
@@ -142,7 +203,7 @@ Config Options for eosio::net_plugin:
                                         connect to. Use multiple
                                         p2p-peer-address options as needed to
                                         compose a network.
-  --p2p-max-nodes-per-host arg (=1)     Maximum number of client0nodes from any
+  --p2p-max-nodes-per-host arg (=1)     Maximum number of client nodes from any
                                         single IP address
   --agent-name arg (="EOS Test Agent")  The name supplied to identify this node
                                         amongst the peers.
@@ -247,6 +308,18 @@ Config Options for eosio::producer_plugin:
                                         milliseconds) that is allowd for
                                         sending blocks to a keosd provider for
                                         signing
+  --greylist-account arg                account that can not access to extended
+                                        CPU/NET virtual resources
+  --produce-time-offset-us arg (=0)     offset of non last block producing time
+                                        in micro second. Negative number
+                                        results in blocks to go out sooner, and
+                                        positive number results in blocks to go
+                                        out later
+  --last-block-time-offset-us arg (=0)  offset of last block producing time in
+                                        micro second. Negative number results
+                                        in blocks to go out sooner, and
+                                        positive number results in blocks to go
+                                        out later
 
 Config Options for eosio::txn_test_gen_plugin:
   --txn-reference-block-lag arg (=0)    Lag in number of blocks from the head
@@ -264,6 +337,11 @@ Config Options for eosio::wallet_plugin:
                                         number of seconds of inactivity.
                                         Activity is defined as any wallet
                                         command e.g. list-wallets.
+  --yubihsm-url URL                     Override default URL of
+                                        http://localhost:12345 for connecting
+                                        to yubihsm-connector
+  --yubihsm-authkey key_num             Enables YubiHSM support using given
+                                        Authkey
 
 Application Config Options:
   --plugin arg                          Plugin(s) to enable, may be specified

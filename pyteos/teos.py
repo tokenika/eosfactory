@@ -194,7 +194,7 @@ class WAST(_Teos):
         jarg["codeName"] = code_name
         jarg["compileOnly"] = "0"
 
-        _Teos.__init__(self, jarg, "build", "contract", is_verbose) 
+        _Teos.__init__(self, jarg, "build", "contract", is_verbose)        
 
 class NodeStart(_Teos):
     def __init__(self, clear=0, is_verbose=1):
@@ -204,6 +204,7 @@ class NodeStart(_Teos):
         _Teos.__init__(self, jarg, "daemon", "start", is_verbose)
 
         self.command_line = ""
+
         if not self.error:
             if "DO_NOT_LAUNCH" in self.json and self.json["DO_NOT_LAUNCH"]:
                 return
@@ -222,8 +223,7 @@ class NodeStart(_Teos):
                 else:
                     subprocess.Popen(
                         "gnome-terminal -- " + self.json["command_line"],
-                        shell=True)
-
+                        shell=True)                    
 
 class NodeProbe:
     error = True
@@ -249,15 +249,20 @@ class NodeProbe:
                 break      
 
             if count <= 0:
+                self.err_msg = """
+                The local node do not response. 
+                """
+                if is_verbose >= 0:
+                    print("ERROR:")
+                    print(self.err_msg)
+                    print()                    
                 break
-
-
+        
 class NodeStop(_Teos):
     def __init__(self, is_verbose=1):
         jarg = json_module.loads("{}")
-        _Teos.__init__(self, jarg, "daemon", "stop", is_verbose)
-
-
+        _Teos.__init__(self, jarg, "daemon", "stop", is_verbose)                    
+    
 class NodeIsRunning(_Teos):
     daemon_pid = ""
     def __init__(self, is_verbose=1):

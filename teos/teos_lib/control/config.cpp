@@ -60,7 +60,7 @@ namespace teos {
     arg EOSIO_CONTRACT_WORKSPACE = { 
       "EOSIO_CONTRACT_WORKSPACE", CONTRACTS_DIR };// relative to EOSIO_EOSFACTORY_DIR
 
-    arg EOSIO_SHARED_MEMORY_SIZE_MB = { "EOSIO_SHARED_MEMORY_SIZE_MB", "100" };    
+    arg EOSIO_SHARED_MEMORY_SIZE_MB = { "EOSIO_SHARED_MEMORY_SIZE_MB", "200" };    
     arg EOSIO_BOOST_INCLUDE_DIR = { "EOSIO_BOOST_INCLUDE_DIR"
       , "${U_HOME}/opt/boost/include", "/usr/local/include/" };
     arg EOSIO_WASM_CLANG = { "EOSIO_WASM_CLANG"

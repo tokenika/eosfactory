@@ -21,9 +21,7 @@ def reset(is_verbose=1):
     Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
     """
     node = teos.NodeStart(1, is_verbose)
-    # print("XXXXXXXXXXXXX teos.NodeStart(1, is_verbose)")
     cleos.set_wallet_url_arg(node, node.json["EOSIO_DAEMON_ADDRESS"], False)
-    # print("XXXXXXXXXXXXX teos.NodeStart(1, is_verbose)")
 
     probe = teos.NodeProbe(is_verbose)
     if not probe.error:

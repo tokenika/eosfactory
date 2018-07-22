@@ -96,7 +96,7 @@ NEXT TEST ====================================================================
         account_create("account_alice", account_master)
         account_create("account_carrol", account_master)
         account_create("account_alice", account_master)
-
+        wallet.keys()
 
         # print(account_alice.info())
 

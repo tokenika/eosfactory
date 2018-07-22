@@ -75,7 +75,9 @@ def set_wallet_url_arg(cleos_object, url=None, check_error=True):
         _wallet_address_arg = []
 
 def heredoc(msg):
-    return dedent(msg).strip()
+    msg = dedent(msg).strip()
+    msg.replace("<br>", "\n")
+    return msg
 
 class _Cleos:
     """A prototype for the `cleos` command classes.
@@ -617,7 +619,6 @@ class GetInfo(_Cleos):
     def __init__(self, is_verbose=1):
         _Cleos.__init__(
             self, [], "get", "info", is_verbose)
-
         if not self.error:
             self.json = json_module.loads(str(self.out_msg))
             self.head_block = self.json["head_block_num"]

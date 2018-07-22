@@ -27,14 +27,6 @@ def is_local_testnet_running():
         else:
             return False
 
-def is_do_not_exist_error(account_object, logger):
-    if("main.cpp:2888" in account_object.err_msg):
-        logger.EOSF("""
-        Account ``{}`` does not exist in the blockchain. It may be created.
-        """.format(account_object.name))
-        return True
-    return False
-
 def precisely_one_wallet(logger, levels_below=2):
     objects = None    
     context_locals = inspect.stack()[levels_below][0].f_locals
@@ -136,9 +128,7 @@ def add_account_object(
     account_object.just_put_into_wallet = False
     account_object.fatal_error = False
 
-    if account_object.error:
-        if not is_do_not_exist_error(account_object, logger):
-            logger.ERROR(account_object.err_msg)
+    if logger.ERROR(account_object):
             account_object.fatal_error = True
     else:
         account_object.exists = True

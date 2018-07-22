@@ -149,6 +149,16 @@ class Logger():
         else:
             color = Verbosity.ERROR.value
 
+        ######################################################################
+        # explaining errors:
+
+        if("main.cpp:2888" in self.err_msg):
+            self.err_msg = """
+    Account ``{}`` does not exist in the blockchain. It may be created.
+    """.format(account_object.name)
+
+        ######################################################################
+
         self.err_msg = colored(
             "ERROR:\n{}".format(cleos.heredoc(self.err_msg)), 
             color)  + "\n"
@@ -474,14 +484,71 @@ class Contract():
         else:
             return str(self.account)
 
-def reset(is_verbose=1):
-    return node.reset(is_verbose)
+def reset(verbosity=None):
+    """ Start clean the EOSIO local node.
+
+    Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
+    """
+    node = teos.NodeStart(1, is_verbose=-1)
+    print(node.json["command_line"])
+    cleos.set_wallet_url_arg(node, node.json["EOSIO_DAEMON_ADDRESS"], False)
+    probe = teos.NodeProbe(is_verbose=-1)
+    logger = Logger(verbosity)
+    if not logger.ERROR(probe):
+        logger.EOSF_TRACE("""
+        #########
+        Local test node reset and is running.
+        """)
 
 def run(is_verbose=1):
-    return node.run(is_verbose)
+    """ Restart the EOSIO local node.
+
+    Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
+    """
+    node = teos.NodeStart(0, is_verbose=-1)
+    cleos.set_wallet_url_arg(node, node.json["EOSIO_DAEMON_ADDRESS"], False)
+    probe = teos.NodeProbe(is_verbose=-1)
+    logger = Logger(verbosity)
+    if not logger.ERROR(probe):
+        logger.EOSF_TRACE("""
+        #########
+        Local test node started and is running.
+        """)
 
 def stop(is_verbose=1):
-    return node.stop(is_verbose)
+    """ Stops all running EOSIO nodes and empties the local `nodeos` wallet 
+    directory.
+
+    Return: True if no running nodes and the local `nodeos` wallet directory 
+    is empty, otherwise `False`.
+    """
+    stop = teos.NodeStop(is_verbose=-1)
+    cleos.set_wallet_url_arg(stop, "")
+    logger = Logger(verbosity)
+    if not logger.ERROR(stop):
+        logger.EOSF_TRACE("""
+        #########
+        Local test node is stopped.
+        """)
+
+def info():
+    """
+    Display EOS node status.
+    """
+    get_info = cleos.GetInfo()
+    logger = Logger(verbosity)
+    if not logger.ERROR(get_info):
+        logger.OUT(str(logger))
+
+def is_running():
+    """
+    Check if testnet is running.
+    """
+    try: # if running, produces json
+        head_block_num = int(cleos.GetInfo(0).json["head_block_num"])
+    except:
+        head_block_num = -1
+    return head_block_num > 0
 
 if __name__ == "__main__":
     template = ""
