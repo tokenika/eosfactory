@@ -82,7 +82,7 @@ class Logger():
         frame = inspect.stack()[1][0]
         test_name = inspect.getframeinfo(frame).function
         cprint(
-            "###  " + test_name + ":\n" + cleos.heredoc(msg) + "\n",
+            "\n###  " + test_name + ":\n" + cleos.heredoc(msg) + "\n",
             Verbosity.COMMENT.value)
 
     def EOSF(self, msg):
@@ -489,47 +489,46 @@ def reset(verbosity=None):
 
     Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
     """
-    node = teos.NodeStart(1, is_verbose=-1)
-    print(node.json["command_line"])
+    node = teos.NodeStart(1, is_verbose=0)
     cleos.set_wallet_url_arg(node, node.json["EOSIO_DAEMON_ADDRESS"], False)
     probe = teos.NodeProbe(is_verbose=-1)
     logger = Logger(verbosity)
     if not logger.ERROR(probe):
         logger.EOSF_TRACE("""
-        #########
-        Local test node reset and is running.
+        ######### Local test node is reset and is running.
         """)
+        logger.OUT(str(node))
 
-def run(is_verbose=1):
+def run(verbosity=None):
     """ Restart the EOSIO local node.
 
     Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
     """
-    node = teos.NodeStart(0, is_verbose=-1)
+    node = teos.NodeStart(0, is_verbose=0)
     cleos.set_wallet_url_arg(node, node.json["EOSIO_DAEMON_ADDRESS"], False)
     probe = teos.NodeProbe(is_verbose=-1)
     logger = Logger(verbosity)
     if not logger.ERROR(probe):
         logger.EOSF_TRACE("""
-        #########
-        Local test node started and is running.
+        ######### Local test node is started and is running.
         """)
+        logger.OUT(str(node))
 
-def stop(is_verbose=1):
+def stop(verbosity=None):
     """ Stops all running EOSIO nodes and empties the local `nodeos` wallet 
     directory.
 
     Return: True if no running nodes and the local `nodeos` wallet directory 
     is empty, otherwise `False`.
     """
-    stop = teos.NodeStop(is_verbose=-1)
+    stop = teos.NodeStop(is_verbose=0)
     cleos.set_wallet_url_arg(stop, "")
     logger = Logger(verbosity)
     if not logger.ERROR(stop):
         logger.EOSF_TRACE("""
-        #########
-        Local test node is stopped.
+        ######### Local test node is stopped.
         """)
+        logger.OUT(str(stop))
 
 def info():
     """

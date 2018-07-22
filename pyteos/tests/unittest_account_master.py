@@ -42,7 +42,7 @@ NEXT TEST ====================================================================
     #         ``account_master_create(...)`` function.
     #     """)
     #     eosf.use_keosd(False)
-    #     eosf.reset(is_verbose=0)
+    #     eosf.reset([eosf.Verbosity.TRACE])
     #     wallet = Wallet()
     #     eosf.set_throw_error(False)
     #     eosf.set_is_testing_errors()
@@ -64,7 +64,7 @@ NEXT TEST ====================================================================
             ``account_master_create(...)`` function.
         """)
         eosf.use_keosd(False)
-        eosf.reset(is_verbose=0)
+        eosf.reset([eosf.Verbosity.TRACE])
         eosf.set_throw_error(False)
         eosf.set_is_testing_errors()
         ######################################################################
@@ -105,7 +105,7 @@ NEXT TEST ====================================================================
     #     """)
 
     #     eosf.use_keosd(False)
-    #     eosf.reset(is_verbose=0)
+    #     eosf.reset([eosf.Verbosity.TRACE])
     #     wallet = Wallet()
 
     #     eosf.set_throw_error(False)
@@ -170,7 +170,7 @@ NEXT TEST ====================================================================
     #     the given name is found. Probably, it may change, therefore is to be tested. 
     #     """)
     #     eosf.use_keosd(False)
-    #     eosf.reset(is_verbose=0)
+    #     eosf.reset([eosf.Verbosity.TRACE])
     #     eosf.set_throw_error(False)
     #     ######################################################################
     #     get_account = cleos.GetAccount("hwtsfwytrwty")

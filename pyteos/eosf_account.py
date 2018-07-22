@@ -252,8 +252,7 @@ def account_master_create(
 
     logger = eosf.Logger(verbosity)
     logger.EOSF_TRACE("""
-        ######### 
-        Create the master account object named `{}`...
+        ######### Create the master account object named `{}`...
         """.format(account_object_name))
 
     """
@@ -404,8 +403,7 @@ def account_create(
     logger = eosf.Logger(verbosity)
     
     logger.EOSF_TRACE("""
-        ######### 
-        Create the account object `{}` ...
+        ######### Create the account object `{}` ...
         """.format(account_object_name))
 
     wallet = precisely_one_wallet(logger, levels_below=levels_below+1)

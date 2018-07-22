@@ -26,7 +26,7 @@ class Test1(unittest.TestCase):
                 
 
     def test_05(self):
-        node_reset = eosf.reset()
+        node_reset = eosf.reset([eosf.Verbosity.TRACE])
         self.assertTrue(node_reset)
 
     def test_10(self):

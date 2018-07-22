@@ -20,10 +20,10 @@ setup.set_verbose(True)
 def test():
 
     cprint("""
-Start a local test EOSIO node, use `eosf.reset()`:
+Start a local test EOSIO node, use `eosf.reset([eosf.Verbosity.TRACE])`:
     """, 'magenta')
 
-    reset = eosf.reset()
+    reset = eosf.reset([eosf.Verbosity.TRACE])
         
     cprint("""
 Create a local wallet, use `wallet = eosf.Wallet()`:

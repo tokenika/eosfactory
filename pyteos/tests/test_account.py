@@ -34,7 +34,7 @@ Start session: reset the local EOSIO node, create a wallet object, put the
 master account into it.
     """, 'magenta')
 
-    reset = eosf.reset()
+    reset = eosf.reset([eosf.Verbosity.TRACE])
     account_master = eosf.AccountMaster()
     wallet = eosf.Wallet()
     wallet.import_key(account_master)

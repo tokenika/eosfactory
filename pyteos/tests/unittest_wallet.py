@@ -47,7 +47,7 @@ NEXT TEST ====================================================================
 
     def test_reopen_with_stored_password(self): 
         eosf.use_keosd(False)
-        eosf.reset(is_verbose=0)
+        eosf.reset([eosf.Verbosity.TRACE])
         eosf.Wallet()
         eosf.stop(is_verbose=0)
         node.run(is_verbose=0)
@@ -58,7 +58,7 @@ NEXT TEST ====================================================================
 
     def test_invalid_password(self): 
         eosf.use_keosd(False)
-        eosf.reset(is_verbose=0)
+        eosf.reset([eosf.Verbosity.TRACE])
         wallet = eosf.Wallet()
         eosf.stop(is_verbose=0)
         eosf.run(is_verbose=0)        

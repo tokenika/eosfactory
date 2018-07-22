@@ -16,6 +16,7 @@ EOSIO `cleos`.
 """
 
 import os
+import sys
 import subprocess
 import json as json_module
 import time
@@ -228,6 +229,7 @@ class NodeStart(_Teos):
 class NodeProbe:
     error = True
     get_info = ""
+    err_msg = ""
 
     def __init__(self, is_verbose=1):
         count = 15
@@ -238,7 +240,9 @@ class NodeProbe:
             self.get_info = cleos.GetInfo(is_verbose=-1)
             self.ok = False
             count = count - 1
-
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            
             try:
                 head_block_num = int(self.get_info.json["head_block_num"])
             except:

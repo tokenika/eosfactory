@@ -43,7 +43,7 @@ NEXT TEST ====================================================================
     #         ``account_master_create(...)`` function.
     #     """)        
     #     eosf.use_keosd(False)
-    #     eosf.reset(is_verbose=0)
+    #     eosf.reset([eosf.Verbosity.TRACE])
     #     wallet = Wallet()
     #     eosf.set_throw_error(False)
     #     eosf.set_is_testing_errors()
@@ -64,7 +64,7 @@ NEXT TEST ====================================================================
     #         ``account_master_create(...)`` function.
     #     """)
     #     eosf.use_keosd(False)
-    #     eosf.reset(is_verbose=0)
+    #     eosf.reset([eosf.Verbosity.TRACE])
     #     eosf.set_throw_error(False)
     #     eosf.set_is_testing_errors()
     #     ######################################################################
@@ -77,7 +77,7 @@ NEXT TEST ====================================================================
             return
 
         eosf.use_keosd(False)
-        eosf.reset(is_verbose=0)
+        eosf.reset([eosf.Verbosity.TRACE])
         wallet = Wallet()
         account_master_create("account_master")
         ######################################################################

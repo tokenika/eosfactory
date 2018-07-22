@@ -47,7 +47,7 @@ def use_keosd(status=False):
     for explanations.
 
     If wallets are not managed by `keosd`, they can be reset with the
-    `eosf.reset()` function, what is desired when testing smart contracts
+    `eosf.reset([eosf.Verbosity.TRACE])` function, what is desired when testing smart contracts
     locally.
     """    
     global _is_use_keosd

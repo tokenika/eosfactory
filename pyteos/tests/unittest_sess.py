@@ -27,7 +27,7 @@ class TestSessionInit(unittest.TestCase):
         print("""
 Start a local test EOSIO node:
         """)
-        reset = eosf.reset()
+        reset = eosf.reset([eosf.Verbosity.TRACE])
         self.assertTrue(not reset.error)
         
         print("""

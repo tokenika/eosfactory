@@ -34,18 +34,16 @@ class Wallet(cleos.WalletCreate):
         
         if setup.is_use_keosd():
             self.logger.EOSF_TRACE("""
-                ######### 
-                Create a `Wallet` object with the KEOSD Wallet Manager.
+                ######### Create a `Wallet` object with the KEOSD Wallet Manager.
                 """)
         else:
             self.logger.EOSF_TRACE("""
-                ######### 
-                Create a `Wallet` object with the NODEOS wallet plugin.
+                ######### Create a `Wallet` object with the NODEOS wallet plugin.
                 """)
 
         self.logger.EOSF("""
-                The wallet directory is
-                {}.
+                * Wallet directory is
+                    {}.
                 """.format(self.wallet_dir))
 
         cleos.is_notrunningnotkeosd_error(self.logger)
@@ -88,8 +86,8 @@ class Wallet(cleos.WalletCreate):
 
                 if not password: # new password
                     self.logger.EOSF_TRACE("""
-                        Created wallet `{}` with the local testnet.
-                        Password is saved to the file {} in the wallet directory.
+                        * Created wallet ``{}`` with the local testnet.
+                        * Password is saved to the file ``{}`` in the wallet directory.
                         """.format(self.name, setup.password_map)
                     )
 
@@ -138,10 +136,12 @@ class Wallet(cleos.WalletCreate):
         """
         wallet_open = cleos.WalletOpen(self.name, is_verbose=-1)
         if not self.logger.ERROR(wallet_open):
-            self.logger.EOSF("Wallet `{}` opened.".format(self.name))
+            self.logger.EOSF("""
+            * Wallet ``{}`` opened.
+            """.format(self.name))
 
     def lock(self):
-        """ Locks the wallet.
+        """ Lock the wallet.
         Returns `cleos.WalletLock` object.
         """
         wallet_lock = cleos.WalletLock(self.name, is_verbose=-1)
@@ -149,7 +149,7 @@ class Wallet(cleos.WalletCreate):
             self.logger.EOSF("Wallet `{}` locked.".format(self.name))
 
     def lock_all(self):
-        """ Locks the wallet.
+        """ Lock the wallet.
         Returns `cleos.WalletLock` object.
         """
         wallet_lock_all = cleos.WalletLock(is_verbose=-1)
@@ -157,13 +157,15 @@ class Wallet(cleos.WalletCreate):
             self.logger.EOSF("All wallet locked.")            
 
     def unlock(self):
-        """ Unlocks the wallet.
+        """ Unlock the wallet.
         Returns `WalletUnlock` object.
         """
         wallet_unlock = cleos.WalletUnlock(
             self.name, self.json["password"], is_verbose=-1)
         if not self.logger.ERROR(wallet_unlock):
-            self.logger.EOSF("Wallet `{}` unlocked.".format(self.name))
+            self.logger.EOSF("""
+            * Wallet ``{}`` unlocked.
+            """.format(self.name))
 
     def remove_key(self, account_or_key):
         removed_keys = []
@@ -229,7 +231,7 @@ class Wallet(cleos.WalletCreate):
                 return False
         if ok:
             self.logger.EOSF("""
-            Cross-checked: all account keys are in the wallet.
+            * Cross-checked: all listed keys removed from the wallet.
             """)
         return True
 
@@ -270,7 +272,7 @@ class Wallet(cleos.WalletCreate):
             imported_keys.append(account_or_key.key_public)            
 
         self.logger.EOSF_TRACE("""
-            Importing keys of the account '{}' into the wallet '{}'
+            * Importing keys of the account ``{}`` into the wallet '{}'
             """.format(account_name, self.name)
                     )
         wallet_keys = cleos.WalletKeys(is_verbose=-1)
@@ -295,7 +297,7 @@ class Wallet(cleos.WalletCreate):
                 return False
         if ok:
             self.logger.EOSF("""
-            Cross-checked: all account keys are in the wallet.
+            * Cross-checked: all account keys are in the wallet.
             """)
         return True
 
@@ -424,9 +426,9 @@ class Wallet(cleos.WalletCreate):
                 out.write(eosf.account_mapp_to_string(account_map_json))
 
             self.logger.EOSF_TRACE("""
-                Account '{}' mapped as '{}', stored in the file '{}' 
-                in the wallet directory:
-                {}
+                * Account '{}' mapped as '{}', stored in the file '{}' 
+                    in the wallet directory:
+                    {}
                 """.format(
                     account_object.name,
                     account_object_name,

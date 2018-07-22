@@ -11,57 +11,36 @@ Private testnet set-up and tear-down.
 
 """
 
-import teos
-import cleos
+import eosf
 
-
-def reset(is_verbose=1):
+def reset(verbosity=None):
     """ Start clean the EOSIO local node.
 
     Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
     """
-    node = teos.NodeStart(1, is_verbose)
-    cleos.set_wallet_url_arg(node, node.json["EOSIO_DAEMON_ADDRESS"], False)
+    eosf.reset(verbosity)
 
-    probe = teos.NodeProbe(is_verbose)
-    if not probe.error:
-        if node.is_verbose:
-            print("OK")
-    return probe
-
-
-def run(is_verbose=1):
+def run(verbosity=None):
     """ Restart the EOSIO local node.
 
     Return: `True` if `GeiInfo()` call is successful, otherwise `False`.
     """
-    node = teos.NodeStart(0, is_verbose)
-    cleos.set_wallet_url_arg(node, node.json["EOSIO_DAEMON_ADDRESS"], False)
-    probe = teos.NodeProbe(is_verbose)
-    if not probe.error:
-        if node.is_verbose:
-            print("OK")
-    return probe
+    eosf.run(verbosity)
 
-
-def stop(is_verbose=1):
+def stop(verbosity=None):
     """ Stops all running EOSIO nodes and empties the local `nodeos` wallet 
     directory.
 
     Return: True if no running nodes and the local `nodeos` wallet directory 
     is empty, otherwise `False`.
     """
-    stop = teos.NodeStop(is_verbose)
-    cleos.set_wallet_url_arg(stop, "")
-    return stop
-
+    eosf.stop(verbosity)
 
 def info():
     """
     Display EOS node status.
     """
     return cleos.GetInfo()
-
 
 def is_running():
     """

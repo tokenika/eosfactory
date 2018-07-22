@@ -27,7 +27,7 @@ class Test1(unittest.TestCase):
         print(account_master.info())
 
 
-        # eosf.reset()
+        # eosf.reset([eosf.Verbosity.TRACE])
         # global wallet
         # wallet = eosf.Wallet("xfsadqqada")
         # #wallet1 = eosf.Wallet()
