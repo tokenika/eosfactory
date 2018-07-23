@@ -48,14 +48,13 @@ NEXT TEST ====================================================================
     #     eosf.set_is_testing_errors()
     #     ######################################################################
 
-    #     wallet1 = Wallet("second")
-    #     l.COMMENT("""
-    #     Added second wallet, named "second". Calling the ``account_master_create(...)`` 
-    #     function should result in an error message:
-    #     """)        
-    #     eosf.set_is_testing_errors()
-    #     logger = account_master_create("account_master")
-    #     self.assertTrue("Too many `Wallet` objects." in logger.err_msg)
+        # wallet1 = Wallet("second")
+        # l.COMMENT("""
+        # Added second wallet, named "second". Calling the ``account_master_create(...)`` 
+        # function should result in an error message:
+        # """)        
+        # wallet1 = Wallet("second")
+        # self.assertTrue("It can be only one" in wallet1.logger.err_msg)
 
     def test_there_is_no_wallet(self):
         l.COMMENT("""

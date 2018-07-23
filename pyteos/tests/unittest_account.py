@@ -53,9 +53,7 @@ NEXT TEST ====================================================================
     #     function should result in an error message:
     #     """)   
     #     wallet1 = Wallet("second")
-
-    #     logger = account_master_create("account_master")
-    #     self.assertTrue("Too many `Wallet` objects." in logger.err_msg)
+    #     self.assertTrue("It can be only one" in wallet1.logger.err_msg)
 
     # def test_global_namespace1(self):
     #     l.COMMENT("""
@@ -77,9 +75,11 @@ NEXT TEST ====================================================================
             return
 
         eosf.use_keosd(False)
-        eosf.reset([eosf.Verbosity.TRACE])
+        eosf.reset([eosf.Verbosity.TRACE]) 
         wallet = Wallet()
         account_master_create("account_master")
+        eosf.set_throw_error(False)
+        eosf.set_is_testing_errors()
         ######################################################################
 
         l.COMMENT("""
@@ -90,13 +90,13 @@ NEXT TEST ====================================================================
         this object is going to refer to a new blockchain account, it cannot accept
         the given name: error is issued.
 
-        However, you are prompted to change the blocking name. Change it to 
+        You are prompted to change the blocking name. Change it to 
         ``account_alice_b``.
         """)
         account_create("account_alice", account_master)
         account_create("account_carrol", account_master)
-        account_create("account_alice", account_master)
-        wallet.keys()
+        # account_create("account_alice", account_master)
+        # wallet.keys()
 
         # print(account_alice.info())
 

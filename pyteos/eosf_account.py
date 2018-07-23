@@ -13,8 +13,6 @@ import eosf_wallet
 
 def is_local_testnet_running():
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
-        # print(cleos._wallet_address_arg)
-        # print(account_)
         if not account_.error and \
             self.key_public == \
                 account_.json["permissions"][0]["required_auth"]["keys"] \
@@ -27,38 +25,37 @@ def is_local_testnet_running():
         else:
             return False
 
-def precisely_one_wallet(logger, levels_below=2):
-    objects = None    
-    context_locals = inspect.stack()[levels_below][0].f_locals
-    context_globals = inspect.stack()[levels_below][0].f_globals
-    objects = {**context_globals, **context_locals}
+"""The namespace where account objects go.
+"""
+wallet_globals = None
+"""The singleton ``Wallet`` object.
+"""
+wallet = None
+def is_wallet_defined(logger):
+    """
+    """
+    inspect_stack = inspect.stack()
+    global wallet
+    global wallet_globals
+    for index in range(self.size):
+        locals = inspect_stack[index][0].f_locals
+        globals = inspect_stack[index][0].f_globals
+        
+        objects = {**globals, **locals}
+        for name in objects:
+            if isinstance(objects[name], eosf_wallet.Wallet):
+                wallet = objects[name] 
+                wallet_globals = globals
+        if not self.frame_index is None:
+            break
 
-    wallet = None
-    wallets = []
-    for name in objects:
-        if isinstance(objects[name], eosf_wallet.Wallet):
-            wallets.append(name)
-            wallet = objects[name]
-
-    if len(wallets) == 0:
+    if wallet is None:
         logger.ERROR("""
             Cannot find any `Wallet` object.
             Add the definition of an `Wallet` object, for example:
             `wallet = eosf.Wallet()`
             """)
-        return None
-
-    if len(wallets) > 1:
-        logger.ERROR("""
-            Too many `Wallet` objects.
-            It can be precisely one wallet object in the scope, but there is many: 
-            {}
-            """.format(wallets))
-        return None
-
-    return wallet
     
-
 def is_local_testnet_running(account_eosio):
     account_ = cleos.GetAccount(account_eosio.name, json=True, is_verbose=-1)
     if not account_.error and \
@@ -69,26 +66,25 @@ def is_local_testnet_running(account_eosio):
     else:
         return False
 
-def put_account_to_wallet(
-        account_object, wallet, account_object_name, levels_below, logger):
-    # put the account object to the wallet:
+def put_account_to_wallet_and_on_stack(
+        account_object, account_object_name, logger):
+
+    global wallet
+    global wallet_globals    
     wallet.open()
     wallet.unlock()
-
     if wallet.keys_in_wallets([account_object.owner_key.key_private, \
             account_object.active_key.key_private]):
         wallet.map_account(account_object_name, account_object)
-        # export the account object to the globals in the calling module:
-        inspect.stack()[levels_below][0].f_globals[account_object_name] \
-            = account_object_name
+        # export the account object to the globals in the wallet module:
+        wallet_globals[account_object_name] = account_object
         account_object.in_wallet = True
         return True
     else:
         if wallet.import_key(account_object):
             wallet.map_account(account_object_name, account_object)
-            # export the account object to the globals in the calling module:
-            inspect.stack()[levels_below][0].f_globals[account_object_name] \
-                = account_object_name
+            # export the account object to the globals in the wallet module:
+            wallet_globals[account_object_name] = account_object
             account_object.just_put_into_wallet = True
             return True
         else:
@@ -97,10 +93,22 @@ def put_account_to_wallet(
             """.format(account_object.name))
             return False        
 
-def add_account_object(
-    account_object_name, account_name, 
-    owner_key_private, active_key_private,
-    wallet, levels_below, logger):
+class Eosio():
+    def __init__(self):
+        self.name = "eosio"
+        config = teos.GetConfig(is_verbose=0)
+        self.owner_key = cleos.CreateKey(
+            "owner",
+            config.json["EOSIO_KEY_PUBLIC"],
+            config.json["EOSIO_KEY_PRIVATE"]
+            )
+        self.active_key = self.owner_key
+
+    def info(self):
+        return cleos.GetAccount(
+            self.name, is_verbose=-1).out_msg
+
+class AccountMaster():
     """Look for the account of the given name, put it into the wallet.
 
     - **parameters**::
@@ -117,73 +125,75 @@ def add_account_object(
     - **return**::
         account object, if account exists, ``None`` otherwise
         
-    """
-    if not account_name: 
-        account_name = cleos.account_name()
-    account_object = cleos.GetAccount(account_name, json=True, is_verbose=-1)
+    """    
+    def __init__(
+        account_object_name, account_name, 
+        owner_key_private, active_key_private, verbosity=None):
 
-    account_object.name = account_name
-    account_object.exists = False
-    account_object.in_wallet = False
-    account_object.just_put_into_wallet = False
-    account_object.fatal_error = False
+        if not account_name: 
+            account_name = cleos.account_name()
+        self.account_name = account_name
+        self.exists = False
+        self.in_wallet = False
+        self.just_put_into_wallet = False
+        self.fatal_error = False
+        self.logger = eosf.Logger(verbosity)
 
-    if logger.ERROR(account_object):
-            account_object.fatal_error = True
-    else:
-        account_object.exists = True
+        account_object = cleos.GetAccount(
+            account_name, json=True, is_verbose=-1)
+        if logger.ERROR(account_object):
+                self.fatal_error = True
+        else:
+            self.exists = True
 
-        if owner_key_private is None:
-            account_object.owner_key = cleos.CreateKey(
-                "owner", 
-                account_object.json["permissions"][1]["required_auth"]["keys"] \
-                [0]["key"], 
-                is_verbose=0)
-        else: # an orphan account, private key is restored from a safe
-            account_object.owner_key = cleos.CreateKey(
-                "owner", 
-                account_object.json["permissions"][1]["required_auth"]["keys"] \
-                [0]["key"], owner_key_private,
-                is_verbose=0) 
+            if owner_key_private is None:
+                self.owner_key = cleos.CreateKey(
+                    "owner", 
+                    self.json["permissions"][1]["required_auth"]["keys"] \
+                    [0]["key"], 
+                    is_verbose=0)
+            else: # an orphan account, private key is restored from a safe
+                self.owner_key = cleos.CreateKey(
+                    "owner", 
+                    self.json["permissions"][1]["required_auth"]["keys"] \
+                    [0]["key"], owner_key_private,
+                    is_verbose=0) 
 
-        if active_key_private is None:
-            account_object.owner_key = cleos.CreateKey(
-                "owner", 
-                account_object.json["permissions"][0]["required_auth"]["keys"] \
-                [0]["key"], 
-                is_verbose=0)
-        else: # an orphan account, private key is restored from a safe
-            account_object.active_key = cleos.CreateKey(
-                "active", 
-                account_object.json["permissions"][0]["required_auth"]["keys"] \
-                [0]["key"], active_key_private,
-                is_verbose=0)
+            if active_key_private is None:
+                self.owner_key = cleos.CreateKey(
+                    "owner", 
+                    self.json["permissions"][0]["required_auth"]["keys"] \
+                    [0]["key"], 
+                    is_verbose=0)
+            else: # an orphan account, private key is restored from a safe
+                self.active_key = cleos.CreateKey(
+                    "active", 
+                    self.json["permissions"][0]["required_auth"]["keys"] \
+                    [0]["key"], active_key_private,
+                    is_verbose=0)
 
-        def info(account_object):
-            ao = cleos.GetAccount(account_object.name, is_verbose=-1)
-            return ao.out_msg
-        account_object.info = types.MethodType(info, account_object)
+            def info(self):
+                ao = cleos.GetAccount(self.name, is_verbose=-1)
+                return ao.out_msg
 
-        logger.EOSF("""
-        Account ``{}`` exists in the blockchain. Checking whether the wallet
-        has keys to it ... 
-        """.format(account_object.name))
-
-        if put_account_to_wallet(
-            account_object, wallet, account_object_name, levels_below+1, logger):
-            account_object.in_wallet = True
-
-        if account_object.in_wallet:
             logger.EOSF("""
-            ... indeed, there are proper keys in the wallet.
-            """)
+            Account ``{}`` exists in the blockchain. Checking whether the wallet
+            has keys to it ... 
+            """.format(self.account_name))
 
-    return account_object
+            if put_account_to_wallet_and_on_stack(
+                    self, account_object_name, logger):
+                self.in_wallet = True
+
+            if self.in_wallet:
+                logger.EOSF("""
+                ... indeed, there are proper keys in the wallet.
+                """)
 
 def account_master_create(
             account_object_name, account_name="", 
             owner_key=None, active_key=None,
-            verbosity=None, levels_below=1):
+            verbosity=None):
     """Create account object in caller's global namespace.
 
     - **parameters**::
@@ -191,7 +201,6 @@ def account_master_create(
         account_object_name:: the name of the account object
         account_name: the name of the account; random, if not set
         verbosity: argument to the internal logger
-        levels_below: experimental argument
 
     Preconditions
     #############
@@ -265,7 +274,8 @@ def account_master_create(
     if logger.ERROR():
         return logger
     
-    wallet = precisely_one_wallet(logger, levels_below=levels_below+1)
+    is_wallet_defined(logger)
+    global wallet
     if wallet is None:
         return logger
 
@@ -274,26 +284,11 @@ def account_master_create(
     the ``eosio`` account. Put the account into the wallet. Put the account
     object into the global namespace of the caller, and **return**.
     """
-    account_object = types.SimpleNamespace()
-    account_object.name = "eosio"
-    config = teos.GetConfig(is_verbose=0)
-    account_object.owner_key = cleos.CreateKey(
-        "owner",
-        config.json["EOSIO_KEY_PUBLIC"],
-        config.json["EOSIO_KEY_PRIVATE"]
-        )
-    account_object.active_key = account_object.owner_key
-
-    def info(account_object):
-        ao = cleos.GetAccount(account_object.name, is_verbose=-1)
-        return ao.out_msg
-
-    account_object.info = types.MethodType(info, account_object)
+    account_object = Eosio()
 
     if is_local_testnet_running(account_object):
-        put_account_to_wallet(
-            account_object, wallet, account_object_name, 
-            levels_below+1, logger)
+        put_account_to_wallet_and_on_stack(
+            account_object, account_object_name, logger)
         return
 
     """
@@ -323,10 +318,10 @@ def account_master_create(
     namespace of the caller. and **return**. 
     """
     while True:
-        account_object = add_account_object(
+        account_object = AccountMaster(
             account_object_name, account_name, 
-            owner_key, active_key,
-            wallet, levels_below+1, logger)
+            owner_key, active_key, verbosity
+        )
         
         if account_object.in_wallet \
                 or account_object.just_put_into_wallet \
@@ -397,8 +392,7 @@ def account_create(
         max_cpu_usage=0, max_net_usage=0,
         ref_block="",
         restore=False,
-        verbosity=None,
-        levels_below=1):
+        verbosity=None):
 
     logger = eosf.Logger(verbosity)
     
@@ -406,15 +400,15 @@ def account_create(
         ######### Create the account object `{}` ...
         """.format(account_object_name))
 
-    wallet = precisely_one_wallet(logger, levels_below=levels_below+1)
+    is_wallet_defined(logger)
+    global wallet
     if wallet is None:
         return
         
-    account_object = None
-    if not wallet.is_name_taken(account_object_name, account_name):
-        inspect.stack()[levels_below][0].f_globals[account_object_name] = account_object
+    if wallet.is_name_taken(account_object_name, account_name):
         return wallet.logger
 
+    account_object = None
     if restore:
         if creator:
             account_name = creator
@@ -559,9 +553,11 @@ def account_create(
     account_object.__str__ = types.MethodType(__str__, account_object)
 
     # export the account object to the globals in the calling module:
-    inspect.stack()[levels_below][0].f_globals[account_object_name] = account_object
+    global wallet_globals
+    wallet_globals[account_object_name] = account_object
 
     # put the account object to the wallet:
+    global wallet
     wallet.open()
     wallet.unlock()
     wallet.import_key(account_object)

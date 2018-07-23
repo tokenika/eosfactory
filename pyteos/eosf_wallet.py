@@ -6,6 +6,7 @@ import teos
 import cleos
 import eosf
 
+wallet = None
 
 class Wallet(cleos.WalletCreate):
     """ Create a new wallet locally and operate it.
@@ -28,8 +29,16 @@ class Wallet(cleos.WalletCreate):
     wallet_keys = None
 
     def __init__(self, name="default", password="", verbosity=None):
-
         self.logger = eosf.Logger(verbosity)
+        global wallet
+        if not wallet is None:
+            self.logger.ERROR("""
+            It can be only one ``Wallet`` object in the script; there is one
+            named ``{}``.
+            """.format(wallet.name))
+            return
+
+        wallet = self
         self.wallet_dir = eosf.wallet_dir()
         
         if setup.is_use_keosd():
