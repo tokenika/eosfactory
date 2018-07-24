@@ -160,6 +160,11 @@ class Logger():
     Account ``{}`` does not exist in the blockchain. It may be created.
     """.format(account_object.name)
 
+        if("Error 3120002: Nonexistent wallet" in self.err_msg):
+            self.err_msg = """
+    Account ``{}`` does not exist in the blockchain. It may be created.
+    """.format(account_object.name)
+
         ######################################################################
 
         self.err_msg = colored(

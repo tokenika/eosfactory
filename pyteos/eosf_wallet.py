@@ -132,14 +132,6 @@ class Wallet(cleos.WalletCreate):
 
             self.logger.ERROR(self)
 
-    def __reset_error(self):
-        self.error = False
-        self.err_msg = ""
-
-    def __set_error(self, err_msg):
-        self.error = True
-        self.err_msg = err_msg
-
     def index(self):
         """ Lists opened wallets, * marks unlocked.
         Returns `cleos.WalletList` object
@@ -151,42 +143,42 @@ class Wallet(cleos.WalletCreate):
         """ Opens the wallet.
         Returns `WalletOpen` object
         """
-        self.__reset_error()
+        self._reset_error()
         result = cleos.WalletOpen(self.name, is_verbose=-1)
         if not self.logger.ERROR(result):
             self.logger.EOSF("""
             * Wallet ``{}`` opened.
             """.format(self.name))
         else:
-            self.__set_error(result.err_msg) 
+            self._set_error(result) 
 
     def lock(self):
         """ Lock the wallet.
         Returns `cleos.WalletLock` object.
         """
-        self.__reset_error()
+        self._reset_error()
         result = cleos.WalletLock(self.name, is_verbose=-1)
         if not self.logger.ERROR(result):
             self.logger.EOSF("Wallet `{}` locked.".format(self.name))
         else:
-            self.__set_error(result.err_msg) 
+            self._set_error(result) 
 
     def lock_all(self):
         """ Lock the wallet.
         Returns `cleos.WalletLock` object.
         """
-        self.__reset_error()
+        self._reset_error()
         result = cleos.WalletLock(is_verbose=-1)
         if not self.logger.ERROR(result):
             self.logger.EOSF("All wallet locked.")
         else:
-            self.__set_error(result.err_msg)                        
+            self._set_error(result)                        
 
     def unlock(self):
         """ Unlock the wallet.
         Returns `WalletUnlock` object.
         """
-        self.__reset_error()
+        self._reset_error()
         result = cleos.WalletUnlock(
             self.name, self.json["password"], is_verbose=-1)
         if not self.logger.ERROR(result):
@@ -194,12 +186,12 @@ class Wallet(cleos.WalletCreate):
             * Wallet ``{}`` unlocked.
             """.format(self.name))
         else:
-            self.__set_error(result.err_msg)
+            self._set_error(result)
 
     def remove_key(self, account_or_key):
         """
         """
-        self.__reset_error()
+        self._reset_error()
         removed_keys = []
         account_name = None
         try: # whether account_or_key is an account:
@@ -261,7 +253,7 @@ class Wallet(cleos.WalletCreate):
                 Failed to remove key '{}' from the wallet '{}'
                 """.format(key, self.name)
 
-                self.__set_error(err_msg)
+                self._set_error(err_msg)
                 self.logger.ERROR(self.err_msg)
                 return False
         if ok:
@@ -275,7 +267,7 @@ class Wallet(cleos.WalletCreate):
         """ Imports private keys of an account into wallet.
         Returns list of `cleos.WalletImport` objects
         """
-        self.__reset_error()
+        self._reset_error()
         imported_keys = []
         account_name = None
         try: # whether account_or_key is an account:
@@ -321,7 +313,7 @@ class Wallet(cleos.WalletCreate):
             err_msg = """
                 The list of imported keys is empty.
                 """
-            self.__set_error(err_msg)
+            self._set_error(err_msg)
             self.logger.ERROR(err_msg)
             return False
 
@@ -333,7 +325,7 @@ class Wallet(cleos.WalletCreate):
                 Failed to import keys of the account '{}' into the wallet '{}'
                 """.format(account_name, self.name)
 
-                self.__set_error(err_msg)
+                self._set_error(err_msg)
                 self.logger.ERROR(err_msg)
                 return False
         if ok:
@@ -352,7 +344,7 @@ class Wallet(cleos.WalletCreate):
     def restore_accounts(self, namespace):
         """
         """
-        self.__reset_error()
+        self._reset_error()
         account_names = set() # accounts in wallets
         keys = cleos.WalletKeys(is_verbose=0).json
 
@@ -401,7 +393,7 @@ class Wallet(cleos.WalletCreate):
         """ Lists public keys from all unlocked wallets.
         Returns `cleos.WalletKeys` object.
         """
-        self.__reset_error()
+        self._reset_error()
         self.wallet_keys = cleos.WalletKeys(is_verbose=-1)
         self.logger.EOSF("""
             Keys in all open walets:
@@ -412,7 +404,7 @@ class Wallet(cleos.WalletCreate):
         eosf.edit_account_map(text_editor)
 
     def is_name_taken(self, account_object_name, account_name):
-        self.__reset_error()
+        self._reset_error()
         while True:
             account_map_json = eosf.account_map(self.logger)
             if account_map_json is None:
@@ -470,7 +462,7 @@ class Wallet(cleos.WalletCreate):
                 out.write(eosf.account_mapp_to_string(account_map_json))
 
             self.logger.EOSF_TRACE("""
-                * Account '{}' mapped as '{}', stored in the file '{}' 
+                * Account ``{}`` mapped as '{}', stored in the file ``{}`` 
                     in the wallet directory:
                     {}
                 """.format(

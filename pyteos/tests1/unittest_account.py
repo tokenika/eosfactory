@@ -36,49 +36,52 @@ NEXT TEST ====================================================================
         eosf.set_throw_error(True)
 
 
-    # def test_too_many_wallets(self):
-    #     _.COMMENT("""
-    #     Check the condition that
-    #     precisely one ``Wallet`` object is defined when calling the 
-    #         ``account_master_create(...)`` function.
-    #     """)        
-    #     eosf.use_keosd(False)
-    #     eosf.reset([eosf.Verbosity.TRACE])
-    #     wallet = Wallet()
-    #     eosf.set_throw_error(False)
-    #     eosf.set_is_testing_errors()
-    #     ######################################################################
-    #     _.COMMENT("""
-    #     Added second wallet, named "second". Calling the ``account_master_create(...)`` 
-    #     function should result in an error message:
-    #     """)   
-    #     wallet1 = Wallet("second")
-    #     self.assertTrue("It can be only one" in wallet1.logger.err_msg)
+    def test_too_many_wallets(self):
+        _.COMMENT("""
+        Check the condition that
+        precisely one ``Wallet`` object is defined when calling the 
+            ``account_master_create(...)`` function.
+        """)        
+        eosf.use_keosd(False)
+        eosf.reset([eosf.Verbosity.TRACE])
+        wallet = Wallet()
+        eosf.set_throw_error(False)
+        eosf.set_is_testing_errors()
+        ######################################################################
+        _.COMMENT("""
+        Added second wallet, named "second". Calling the ``account_master_create(...)`` 
+        function should result in an error message:
+        """)
+        eosf.set_throw_error(False)  
+        wallet1 = Wallet("second")
+        self.assertTrue("It can be only one" in wallet1.logger.err_msg)
 
-    # def test_global_namespace1(self):
-    #     _.COMMENT("""
-    #     Check the condition that
-    #     precisely one ``Wallet`` object is defined when calling the 
-    #         ``account_master_create(...)`` function.
-    #     """)
-    #     eosf.use_keosd(False)
-    #     eosf.reset([eosf.Verbosity.TRACE])
-    #     eosf.set_throw_error(False)
-    #     eosf.set_is_testing_errors()
-    #     ######################################################################
+    def test_global_namespace1(self):
+        _.COMMENT("""
+        Check the condition that
+        precisely one ``Wallet`` object is defined when calling the 
+            ``account_master_create(...)`` function.
+        """)
+        eosf.use_keosd(False)
+        eosf.reset([eosf.Verbosity.TRACE])
+        eosf.set_throw_error(False)
+        eosf.set_is_testing_errors()
+        ######################################################################
 
-    #     logger = account_master_create("account_master")
-    #     self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
+        logger = account_master_create("account_master")
+        self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
 
     def test_account_name_conflict(self):
         if not_imputed:
             return
-
+        _.COMMENT("""
+        Check the condition that the account object name is not in use with 
+        physical account.
+        """)
         eosf.use_keosd(False)
         eosf.reset([eosf.Verbosity.TRACE]) 
         wallet = Wallet()
         account_master_create("account_master")
-        account_master.info()
         eosf.set_throw_error(False)
         eosf.set_is_testing_errors()
         ######################################################################

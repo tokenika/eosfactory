@@ -483,10 +483,29 @@ def account_create(
 
     # append account methodes to the account_object:
 
+    def _reset_error(account_object):
+        account_object.error = False
+        account_object.err_msg = ""
+        
+    account_object._reset_error = types.MethodType(_reset_error, account_object) 
+
+    def _set_error(account_object, err_msg):
+        try:
+            account_object.err_msg = err_msg.err_msg
+        except:
+            account_object.err_msg = err_msg
+        if account_object.err_msg:
+            account_object.error = True
+
+    account_object._set_error = types.MethodType(_set_error, account_object)    
+
     def code(account_object, code="", abi="", wasm=False):
-        return cleos.GetCode(
-            account_object, code, abi, 
-            is_verbose=-1)
+        account_object._reset_error()
+        result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
+        if not logger.ERROR(result):
+            logger.OUT(result)
+        else:
+            account_object._set_error(result) 
 
     account_object.code = types.MethodType(code, account_object)
 
@@ -498,7 +517,8 @@ def account_create(
             max_cpu_usage=0, max_net_usage=0,
             ref_block=""):
 
-        account_object.set_contract = cleos.SetContract(
+        account_object._reset_error()
+        result = cleos.SetContract(
             account_object, contract_dir, 
             wast_file, abi_file, 
             permission, expiration_sec, 
@@ -506,9 +526,13 @@ def account_create(
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=-1
-        )
-
-        return account_object.set_contract
+            )
+        if not logger.ERROR(result):
+            logger.OUT(result)
+            account_object.set_contract = result
+        else:
+            account_object.set_contract = None
+            account_object._set_error(result) 
 
     account_object.set_contract = types.MethodType(
                                     set_contract , account_object)
@@ -527,22 +551,25 @@ def account_create(
             except: # permission is the name of an account:
                 permission = permission
 
-        account_object.action = cleos.PushAction(
+        result = cleos.PushAction(
             account_object, action, data,
             permission, expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=-1)
-
-        if not account_object.action.error:
+        if not logger.ERROR(result):
+            logger.OUT(result)
+            account_object.action = result
             try:
-                account_object._console = account_object.action.console
+                account_object._console = result.console
                 logger.OUT(account_object._console)
             except:
                 pass
-
-        return account_object.action
+        else:
+            account_object._set_error(result)
+            account_object.action = None
+            account_object._set_error(result) 
 
     account_object.push_action = types.MethodType(
                                     push_action , account_object)
@@ -552,12 +579,17 @@ def account_create(
             binary=False, 
             limit=10, key="", lower="", upper=""):
 
-        account_object._table = cleos.GetTable(
+        result = cleos.GetTable(
                                 account_object, table_name, scope,
                                 binary, 
                                 limit, key, lower, upper,
                                 is_verbose=-1)
-        return account_object._table
+        if not logger.ERROR(result):
+            logger.OUT(result)
+            account_object.table = result
+        else:
+            account_object.table = None
+            account_object._set_error(result) 
 
     account_object.table = types.MethodType(table, account_object)
 
