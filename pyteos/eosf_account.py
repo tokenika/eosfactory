@@ -483,21 +483,15 @@ def account_create(
 
     # append account methodes to the account_object:
 
-    def _reset_error(account_object):
-        account_object.error = False
-        account_object.err_msg = ""
-        
-    account_object._reset_error = types.MethodType(_reset_error, account_object) 
+    def _error_dic(account_object, err_msg):
+        if("main.cpp:2888" in err_msg):
+            err_msg = """
+        Account ``{}`` does not exist in the blockchain. It may be created.
+        """.format(account_object.name)
+            return err_msg
+        return err_msg
 
-    def _set_error(account_object, err_msg):
-        try:
-            account_object.err_msg = err_msg.err_msg
-        except:
-            account_object.err_msg = err_msg
-        if account_object.err_msg:
-            account_object.error = True
-
-    account_object._set_error = types.MethodType(_set_error, account_object)    
+    account_object._error_dic = types.MethodType(_error_dic, account_object)
 
     def code(account_object, code="", abi="", wasm=False):
         account_object._reset_error()

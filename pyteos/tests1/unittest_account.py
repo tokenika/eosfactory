@@ -64,10 +64,11 @@ NEXT TEST ====================================================================
         """)
         eosf.use_keosd(False)
         eosf.reset([eosf.Verbosity.TRACE])
-        eosf.set_throw_error(False)
         eosf.set_is_testing_errors()
         ######################################################################
-
+#         ERROR:
+# Error 3120002: Nonexistent wallet
+# Are you sure you typed the wallet name correctly?
         logger = account_master_create("account_master")
         self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
 

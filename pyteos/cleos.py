@@ -160,15 +160,19 @@ class _Cleos:
             if is_verbose > 0:
                 self.print_error()
 
+    def _error_dic(self, err_msg):
+        return err_msg
+
     def _reset_error(self):
         self.error = False
         self.err_msg = ""
 
     def _set_error(self, err_msg):
         try:
-            self.err_msg = err_msg.err_msg
+            self.err_msg = self._error_dic(err_msg.err_msg)
         except:
-            self.err_msg = err_msg
+            self.err_msg = self._error_dic(err_msg)
+
         if self.err_msg:
             self.error = True
 
