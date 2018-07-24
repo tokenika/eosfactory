@@ -30,26 +30,27 @@ def is_local_testnet_running():
 wallet_globals = None
 """The singleton ``Wallet`` object.
 """
-wallet = None
+wallet_singleton = None
 def is_wallet_defined(logger):
     """
     """
     inspect_stack = inspect.stack()
-    global wallet
+    size = len(inspect_stack)
+    global wallet_singleton
     global wallet_globals
-    for index in range(self.size):
+    for index in range(size):
         locals = inspect_stack[index][0].f_locals
         globals = inspect_stack[index][0].f_globals
         
         objects = {**globals, **locals}
         for name in objects:
             if isinstance(objects[name], eosf_wallet.Wallet):
-                wallet = objects[name] 
+                wallet_singleton = objects[name] 
                 wallet_globals = globals
-        if not self.frame_index is None:
+        if not wallet_singleton is None:
             break
 
-    if wallet is None:
+    if wallet_singleton is None:
         logger.ERROR("""
             Cannot find any `Wallet` object.
             Add the definition of an `Wallet` object, for example:
@@ -69,20 +70,20 @@ def is_local_testnet_running(account_eosio):
 def put_account_to_wallet_and_on_stack(
         account_object, account_object_name, logger):
 
-    global wallet
+    global wallet_singleton
     global wallet_globals    
-    wallet.open()
-    wallet.unlock()
-    if wallet.keys_in_wallets([account_object.owner_key.key_private, \
+    wallet_singleton.open()
+    wallet_singleton.unlock()
+    if wallet_singleton.keys_in_wallets([account_object.owner_key.key_private, \
             account_object.active_key.key_private]):
-        wallet.map_account(account_object_name, account_object)
+        wallet_singleton.map_account(account_object_name, account_object)
         # export the account object to the globals in the wallet module:
         wallet_globals[account_object_name] = account_object
         account_object.in_wallet = True
         return True
     else:
-        if wallet.import_key(account_object):
-            wallet.map_account(account_object_name, account_object)
+        if wallet_singleton.import_key(account_object):
+            wallet_singleton.map_account(account_object_name, account_object)
             # export the account object to the globals in the wallet module:
             wallet_globals[account_object_name] = account_object
             account_object.just_put_into_wallet = True
@@ -105,8 +106,8 @@ class Eosio():
         self.active_key = self.owner_key
 
     def info(self):
-        return cleos.GetAccount(
-            self.name, is_verbose=-1).out_msg
+        print(cleos.GetAccount(
+            self.name, is_verbose=-1).out_msg)
 
 class AccountMaster():
     """Look for the account of the given name, put it into the wallet.
@@ -174,7 +175,7 @@ class AccountMaster():
 
             def info(self):
                 ao = cleos.GetAccount(self.name, is_verbose=-1)
-                return ao.out_msg
+                print(ao.out_msg)
 
             logger.EOSF("""
             Account ``{}`` exists in the blockchain. Checking whether the wallet
@@ -266,17 +267,16 @@ def account_master_create(
 
     """
     Check the following conditions:
-    * ``eosf.use_keosd(True)`` or the local testnet is running.
-    * precisely one ``Wallet`` object is defined;
-    """
-    
+    * ``eosf.use_keosd(True)`` or the local testnet is running;
+    * a ``Wallet`` object is defined;
+    """  
     cleos.is_notrunningnotkeosd_error(logger)
     if logger.ERROR():
         return logger
     
     is_wallet_defined(logger)
-    global wallet
-    if wallet is None:
+    global wallet_singleton
+    if wallet_singleton is None:
         return logger
 
     """
@@ -395,19 +395,31 @@ def account_create(
         verbosity=None):
 
     logger = eosf.Logger(verbosity)
-    
     logger.EOSF_TRACE("""
         ######### Create the account object `{}` ...
         """.format(account_object_name))
 
+    """
+    Check the following conditions:
+    * ``eosf.use_keosd(True)`` or the local testnet is running;
+    * a ``Wallet`` object is defined;
+    * the account object name is not in use, already.
+    """
+    cleos.is_notrunningnotkeosd_error(logger)
+    if logger.ERROR():
+        return logger
+
     is_wallet_defined(logger)
-    global wallet
-    if wallet is None:
+    global wallet_singleton
+    if wallet_singleton is None:
         return
         
-    if wallet.is_name_taken(account_object_name, account_name):
-        return wallet.logger
+    if wallet_singleton.is_name_taken(account_object_name, account_name):
+        return wallet_singleton.logger
 
+    """
+    Create an account object.
+    """
     account_object = None
     if restore:
         if creator:
@@ -462,10 +474,12 @@ def account_create(
                     )
 
         if not logger.ERROR(account_object):
-            logger.EOSF("""The account object created.""")
+            logger.EOSF("""The account object is created.""")
 
         account_object.owner_key = owner_key
         account_object.active_key = active_key
+        put_account_to_wallet_and_on_stack(
+            account_object, account_object_name, logger)
 
     # append account methodes to the account_object:
 
@@ -552,18 +566,5 @@ def account_create(
 
     account_object.__str__ = types.MethodType(__str__, account_object)
 
-    # export the account object to the globals in the calling module:
-    global wallet_globals
-    wallet_globals[account_object_name] = account_object
 
-    # put the account object to the wallet:
-    global wallet
-    wallet.open()
-    wallet.unlock()
-    wallet.import_key(account_object)
-
-    if not account_object.error and not wallet.error:
-        wallet.map_account(account_object_name, account_object)
-
-    return account_object
 

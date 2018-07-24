@@ -864,7 +864,7 @@ class RestoreAccount():
             self.is_verbose = setup.is_verbose() and is_verbose > 0
 
     def info(self):
-        return str(GetAccount(self.name, is_verbose=0))
+        print(str(GetAccount(self.name, is_verbose=0)))
 
     def __str__(self):
         return self.name
@@ -942,7 +942,8 @@ class CreateAccount(_Cleos):
             self.active_key = active_key.key_private
         except:
             active_key_public = active_key
-
+        self.name = name
+        
         args = [creator_name, name, owner_key_public, active_key_public]
         if setup.is_json():
             args.append("--json")
@@ -971,11 +972,11 @@ class CreateAccount(_Cleos):
             
         if not self.error:
             self.transaction = get_transaction_id(self)
-            self.json = GetAccount(self.name, is_verbose=0, json=True).json
+            self.json = GetAccount(name, is_verbose=0, json=True).json
             self.printself()
 
     def info(self):
-        return str(GetAccount(self.name, is_verbose=0))
+        print(str(GetAccount(self.name, is_verbose=0)))
 
     def get_transaction(self):
         return GetTransaction(self.transaction)

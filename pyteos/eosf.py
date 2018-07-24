@@ -85,6 +85,9 @@ class Logger():
             "\n###  " + test_name + ":\n" + cleos.heredoc(msg) + "\n",
             Verbosity.COMMENT.value)
 
+    def SCENARIO(self, msg):
+        self.COMMENT(msg)
+
     def EOSF(self, msg):
         if msg and (Verbosity.EOSF in self.verbosity \
                 or Verbosity.EOSF in _verbosity_plus):
@@ -132,7 +135,7 @@ class Logger():
         err_msg -- error message string or object having the attribute err_msg
         """
         error = False
-        if not self.error:
+        if not err_msg is None:
             try:
                 self.err_msg = err_msg.err_msg
                 self.error = err_msg.error

@@ -16,7 +16,7 @@ eosf.set_throw_error(False)
 
 cryptolions = "88.99.97.30:38888"
 not_imputed = True
-l = eosf.Logger()
+_ = eosf.Logger()
 
 class Test1(unittest.TestCase):
 
@@ -36,7 +36,7 @@ NEXT TEST ====================================================================
         eosf.set_throw_error(True)
 
     # def test_too_many_wallets(self):
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     Check the condition that
     #     precisely one ``Wallet`` object is defined when calling the 
     #         ``account_master_create(...)`` function.
@@ -49,7 +49,7 @@ NEXT TEST ====================================================================
     #     ######################################################################
 
         # wallet1 = Wallet("second")
-        # l.COMMENT("""
+        # _.COMMENT("""
         # Added second wallet, named "second". Calling the ``account_master_create(...)`` 
         # function should result in an error message:
         # """)        
@@ -57,7 +57,7 @@ NEXT TEST ====================================================================
         # self.assertTrue("It can be only one" in wallet1.logger.err_msg)
 
     def test_there_is_no_wallet(self):
-        l.COMMENT("""
+        _.COMMENT("""
         Check the condition that
         precisely one ``Wallet`` object is defined when calling the 
             ``account_master_create(...)`` function.
@@ -68,7 +68,7 @@ NEXT TEST ====================================================================
         eosf.set_is_testing_errors()
         ######################################################################
 
-        l.COMMENT("""
+        _.COMMENT("""
         There is not any ``Wallet`` object. Calling the ``account_master_create(...)`` 
         function should result in an error message:
         """)
@@ -77,7 +77,7 @@ NEXT TEST ====================================================================
         self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
 
     # def test_is_not_running_not_keosd_set(self):
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     Check the condition that
     #     ``eosf.use_keosd(True)`` or the local testnet is running.
     #     """)
@@ -95,7 +95,7 @@ NEXT TEST ====================================================================
     #             in logger.err_msg)
 
     # def test_testnet_create_account(self):
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     If the local testnet is running, ``account_master_create(<test object name>)``
     #     puts the created account object into the global namespace, and puts the
     #     account into the wallet.
@@ -110,18 +110,18 @@ NEXT TEST ====================================================================
     #     eosf.set_throw_error(False)
     #     ######################################################################
         
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     With the local testnet, the name of the master account is ``eosio``:
     #     """)        
     #     account_master_create("account_master")
     #     self.assertTrue(account_master.name == "eosio")
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     Wallet keys:
     #     """)         
     #     wallet.keys()
     #     keys1 = wallet.wallet_keys.json
 
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     With the local testnet, the wallet passwords are stored in a file.
     #     Let us restart the testnet and restore the wallet:
     #     """)
@@ -129,13 +129,13 @@ NEXT TEST ====================================================================
     #     eosf.stop(is_verbose=0)
     #     eosf.run(is_verbose=0)
     #     wallet = Wallet()
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     Wallet keys:
     #     """)           
     #     wallet.keys()
     #     keys2 = wallet.wallet_keys.json
 
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     Assert that key lists are equal.
     #     """)
     #     self.assertTrue(keys1 == keys2)
@@ -145,7 +145,7 @@ NEXT TEST ====================================================================
     #     if not_imputed:
     #         return
     
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     If the ``name`` argument is set, check the testnet for presence of the 
     #     account. If present, create the corresponding object and see whether it
     #     is in the wallets. If so, put the account object into the global namespace 
@@ -164,7 +164,7 @@ NEXT TEST ====================================================================
     #     account_master_create("account_master")
 
     # def test_is_do_not_exist_error(self):
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     The cleos ``get account`` command returns a not specific error responce when
     #     the given name is found. Probably, it may change, therefore is to be tested. 
     #     """)
@@ -173,18 +173,18 @@ NEXT TEST ====================================================================
     #     eosf.set_throw_error(False)
     #     ######################################################################
     #     get_account = cleos.GetAccount("hwtsfwytrwty")
-    #     l.EOSF("""
+    #     _.EOSF("""
     #     The original error message is
     #     {}
     #             Next, it follows this message formatted:
     #     """.format(get_account.err_msg))
-    #     self.assertTrue(eosf_account.is_do_not_exist_error(get_account, l))    
+    #     self.assertTrue(eosf_account.is_do_not_exist_error(get_account, _))    
 
     def test_testnet_create_account(self):
         if not_imputed:
             return
             
-        l.COMMENT("""
+        _.COMMENT("""
         If the ``name`` argument is set, and, additionally, private keys are given,
         check the testnet for presence of the 
         account. If present, create the corresponding object and put it

@@ -15,7 +15,7 @@ eosf.set_throw_error(False)
 
 cryptolions = "88.99.97.30:38888"
 not_imputed = False
-l = eosf.Logger()
+_ = eosf.Logger()
 
 class Test1(unittest.TestCase):
 
@@ -37,7 +37,7 @@ NEXT TEST ====================================================================
 
 
     # def test_too_many_wallets(self):
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     Check the condition that
     #     precisely one ``Wallet`` object is defined when calling the 
     #         ``account_master_create(...)`` function.
@@ -48,7 +48,7 @@ NEXT TEST ====================================================================
     #     eosf.set_throw_error(False)
     #     eosf.set_is_testing_errors()
     #     ######################################################################
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     Added second wallet, named "second". Calling the ``account_master_create(...)`` 
     #     function should result in an error message:
     #     """)   
@@ -56,7 +56,7 @@ NEXT TEST ====================================================================
     #     self.assertTrue("It can be only one" in wallet1.logger.err_msg)
 
     # def test_global_namespace1(self):
-    #     l.COMMENT("""
+    #     _.COMMENT("""
     #     Check the condition that
     #     precisely one ``Wallet`` object is defined when calling the 
     #         ``account_master_create(...)`` function.
@@ -78,11 +78,12 @@ NEXT TEST ====================================================================
         eosf.reset([eosf.Verbosity.TRACE]) 
         wallet = Wallet()
         account_master_create("account_master")
+        account_master.info()
         eosf.set_throw_error(False)
         eosf.set_is_testing_errors()
         ######################################################################
 
-        l.COMMENT("""
+        _.COMMENT("""
         As the ``account_master`` object is in the namespace, create two account
         objects: 
         ``account_alice`` and ``account_carrol``.
@@ -95,8 +96,8 @@ NEXT TEST ====================================================================
         """)
         account_create("account_alice", account_master)
         account_create("account_carrol", account_master)
-        # account_create("account_alice", account_master)
-        # wallet.keys()
+        account_create("account_alice", account_master)
+        wallet.keys()
 
         # print(account_alice.info())
 
