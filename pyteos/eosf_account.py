@@ -318,8 +318,7 @@ def account_master_create(
     * ``eosf.use_keosd(True)`` or the local testnet is running;
     * a ``Wallet`` object is defined;
     """  
-    cleos.is_notrunningnotkeosd_error(logger)
-    if logger.ERROR():
+    if logger.ERROR(cleos.is_notrunningnotkeosd_error()):
         return logger
     
     is_wallet_defined(logger)
@@ -453,8 +452,7 @@ def account_create(
     * a ``Wallet`` object is defined;
     * the account object name is not in use, already.
     """
-    cleos.is_notrunningnotkeosd_error(logger)
-    if logger.ERROR():
+    if logger.ERROR(cleos.is_notrunningnotkeosd_error()):
         return logger
 
     is_wallet_defined(logger)
@@ -530,7 +528,8 @@ def account_create(
     # append account methodes to the account_object
     ##########################################################################
 
-    def error_map(account_object, cleos_object = None):
+    def error_map(account_object, err_msg):
+
         if "main.cpp:2888" in err_msg:
             err_msg = """
     Account ``{}`` does not exist in the blockchain. It may be created.
@@ -605,8 +604,8 @@ def account_create(
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=-1)
-        if not logger.ERROR(result):
-            logger.OUT(result)
+        if not account_object.ERROR(result):
+            account_object.OUT(result)
             account_object.action = result
             try:
                 account_object._console = result.console

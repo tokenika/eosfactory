@@ -14,13 +14,12 @@ class ContractBuilder():
             self, contract_dir,
             wast_file="", abi_file="",
             is_mutable = True,
-            is_verbose=1):
+            verbosity=None):
 
         self.contract_dir = contract_dir
         self.wast_file = wast_file
         self.abi_file = abi_file
         self.is_mutable = is_mutable
-        self.is_verbose = is_verbose
 
     def path(self):
         return self.contract_dir
@@ -29,7 +28,7 @@ class ContractBuilder():
         if self.is_mutable:
             wast = teos.WAST(
                 self.contract_dir, "",
-                is_verbose=self.is_verbose)
+                is_verbose=-1)
         else:
             if self.is_verbose > 0:
                 print("ERROR!")
@@ -40,7 +39,7 @@ class ContractBuilder():
         if self.is_mutable:
             abi = teos.ABI(
                 self.contract_dir, "",
-                is_verbose=self.is_verbose)
+                is_verbose=-1)
         else:
             if self.is_verbose > 0:
                 print("ERROR!")
@@ -67,8 +66,6 @@ class Contract(eosf.Logger):
             ref_block="",
             verbosity=None):
 
-        eosf.Logger.__init__(self, verbosity)
-
         self.account = account
         self.contract_dir = contract_dir
         self.wast_file = wast_file
@@ -81,10 +78,12 @@ class Contract(eosf.Logger):
         self.max_net_usage = max_net_usage
         self.ref_block = ref_block
         self.is_mutable = True
-
+        self.verbosity = verbosity
         self.contract = None
         self._console = None
         self.error = self.account.error
+
+        eosf.Logger.__init__(self, verbosity)
 
         self.EOSF_TRACE("""
                 ######### Create a `Contract` object.
@@ -96,28 +95,33 @@ class Contract(eosf.Logger):
                     {}
                 """.format(config.json["contract-dir"]))
 
-    def error_map(self, cleos_object = None):
-        return err_msg
+    def error_map(self, err_msg):
+        return err_msg        
 
-    def deploy(self, permission="", is_verbose=-1):
-        self.contract = cleos.SetContract(
+    def deploy(self, permission=""):
+        result = cleos.SetContract(
             self.account, self.contract_dir, 
             self.wast_file, self.abi_file, 
             permission, self.expiration_sec, 
             self.skip_signature, self.dont_broadcast, self.forceUnique,
             self.max_cpu_usage, self.max_net_usage,
             self.ref_block,
-            self.is_verbose > 0 and is_verbose > 0
+            is_verbose=-1
         )
-        if not self.contract.error:
+        if not self.ERROR(result):
+            self.EOSF("""
+            * Contract deployed.
+            """)
             try:
-                self.contract.json = json.loads(self.contract.err_msg)
-                for action in self.contract.json["actions"]:
+                result.json = json.loads(result.err_msg)
+                for action in result.json["actions"]:
                     action["data"] = "contract code data, deleted for readability ..................."
             except:
                 pass
 
-            return self.contract
+            self.contract = result
+        else:
+            self.contract = None
 
     def is_deployed(self):
         if not self.contract:
@@ -127,17 +131,17 @@ class Contract(eosf.Logger):
     def build_wast(self):
         return ContractBuilder(
             self.contract_dir, "", "",
-            self.is_mutable, self.is_verbose).build_wast()
+            self.is_mutable, self.verbosity).build_wast()
 
     def build_abi(self):
         return ContractBuilder(
             self.contract_dir, "", "", 
-            self.is_mutable, self.is_verbose).build_abi()
+            self.is_mutable, self.verbosity).build_abi()
 
     def build(self):
         return ContractBuilder(
             self.contract_dir, "", "", 
-            self.is_mutable, self.is_verbose).build()
+            self.is_mutable, self.verbosity).build()
 
     def push_action(
             self, action, data,
@@ -172,8 +176,7 @@ class Contract(eosf.Logger):
         if not self.action.error:
             try:
                 self._console = self.action.console
-                if self.is_verbose:
-                    print(self._console + "\n") 
+                print(self._console + "\n") 
             except:
                 pass
 
@@ -195,13 +198,13 @@ class Contract(eosf.Logger):
                     self.account.name, table_name, scope,
                     binary=False, 
                     limit=10, key="", lower="", upper="", 
-                    is_verbose=self.is_verbose)
+                    is_verbose=-1)
 
         return self._table
 
     def code(self, code="", abi="", wasm=False):
         return cleos.GetCode(
-            self.account.name, code, abi, wasm, is_verbose=self.is_verbose)
+            self.account.name, code, abi, wasm, is_verbose=-1)
 
     def console(self):
         return self._console

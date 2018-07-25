@@ -155,7 +155,14 @@ class Logger():
                 msg,
                 ", ".join(Verbosity.DEBUG.value))
 
-    def ERROR(self, err_msg=None):
+    def error_map(self, err_msg):
+        return err_msg
+
+    def switch(self, cleos_object):
+        cleos_object.err_msg = self.error_map(cleos_object.err_msg)
+        return cleos_object                
+
+    def ERROR(self, err_msg):
         """Print an error message or throw 'Exception'.
 
         The 'err_msg' argument may be a string error message or any object having
@@ -167,22 +174,13 @@ class Logger():
         arguments:
         err_msg -- error message string or object having the attribute err_msg
         """
-        if not err_msg is None:
-            error = True
-            try:
-                error = err_msg.error
-            except:
-                pass
-
-            try:
-                err_msg = err_msg.error_map()
-            except:
-                try:
-                    err_msg = err_msg.err_msg
-                except:
-                    pass
-        else:
-            return False
+        error = True
+        try:
+            cleos_object = self.switch(err_msg)
+            error = cleos_object.error
+            err_msg = cleos_object.err_msg
+        except:
+            pass
 
         if not error or not err_msg:
             return False

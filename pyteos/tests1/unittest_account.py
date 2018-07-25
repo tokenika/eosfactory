@@ -124,33 +124,16 @@ NEXT TEST ====================================================================
         account_create("account_test", account_master)
         account_test.code()
         contract_test = Contract(account_test, "eosio.token")
-        # deploy = contract_test.deploy()
-        # account_test.code()
+        deploy = contract_test.deploy()
+        account_test.code()
+        time.sleep(1)
 
-
-        # print(account_alice.info())
-
-        
-        # print("The name attribute of the 'account_carrol' account object is '{}'" \
-        #     .format(account_carrol))
-        # print("{}".format(account_carrol.code()))
-
-        # account_create("account_alice")
-        # self.assertTrue(account_alice.error)
-
-        # 
-        # contract_test = eosf.Contract(account_test, "eosio.token")
-        # deploy = contract_test.deploy()
-        # account_test.code()
-
-        # time.sleep(1)
-
-        # action = account_test.push_action(
-        #     "create", 
-        #     '{"issuer":"' 
-        #         + str(account_master) 
-        #         + '", "maximum_supply":"1000000000.0000 EOS", \
-        #         "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+        action = account_test.push_action(
+            "create", 
+            '{"issuer":"' 
+                + str(account_master) 
+                + '", "maximum_supply":"1000000000.0000 EOS", \
+                "can_freeze":0, "can_recall":0, "can_whitelist":0}')
 
         # action = contract_test.push_action(
         # "issue", 

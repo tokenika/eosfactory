@@ -27,11 +27,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
         is_verbose: Verbosity at the constraction time.  
     """
 
-    def error_map(self, cleos_object = None):
-        if not cleos_object is None:
-            err_msg = cleos_object.err_msg
-        else:
-            err_msg = self.err_msg
+    def error_map(self, err_msg):
 
         if "Wallet already exists" in err_msg:
             return"""
@@ -78,8 +74,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                     {}.
                 """.format(self.wallet_dir))
 
-        cleos.is_notrunningnotkeosd_error(self)
-        if self.ERROR():
+        if self.ERROR(cleos.is_notrunningnotkeosd_error()):
             return
 
         if not password and not setup.is_use_keosd(): # look for password:
@@ -144,7 +139,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
         Returns `WalletOpen` object
         """
         result = cleos.WalletOpen(self.name, is_verbose=-1)
-        if not self.ERROR(self.error_map(result)):
+        if not self.ERROR(result):
             self.EOSF("""
             * Wallet ``{}`` opened.
             """.format(self.name))
@@ -154,7 +149,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
         Returns `cleos.WalletLock` object.
         """
         result = cleos.WalletLock(self.name, is_verbose=-1)
-        if not self.ERROR(self.error_map(result)):
+        if not self.ERROR(result):
             self.EOSF("Wallet `{}` locked.".format(self.name))
 
     def lock_all(self):
@@ -171,7 +166,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
         """
         result = cleos.WalletUnlock(
             self.name, self.json["password"], is_verbose=-1)
-        if not self.ERROR(self.error_map(result)):
+        if not self.ERROR(result):
             self.EOSF("""
             * Wallet ``{}`` unlocked.
             """.format(self.name))
