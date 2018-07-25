@@ -34,6 +34,8 @@ wallet_singleton = None
 def is_wallet_defined(logger):
     """
     """
+    if not wallet_globals is None:
+        return
     inspect_stack = inspect.stack()
     size = len(inspect_stack)
     global wallet_singleton
@@ -74,6 +76,7 @@ def put_account_to_wallet_and_on_stack(
     global wallet_globals    
     wallet_singleton.open()
     wallet_singleton.unlock()
+
     if wallet_singleton.keys_in_wallets([account_object.owner_key.key_private, \
             account_object.active_key.key_private]):
         wallet_singleton.map_account(account_object_name, account_object)
@@ -191,6 +194,51 @@ class AccountMaster():
                 ... indeed, there are proper keys in the wallet.
                 """)
 
+class RestoreAccount(cleos.RestoreAccount, eosf.Logger):
+    def __init__(self, name, verbosity=None):
+        cleos.RestoreAccount.__init__(self, name, is_verbose=-1)
+        eosf.Logger.__init__(self, verbosity)
+
+class CreateAccount(cleos.CreateAccount, eosf.Logger):
+    def __init__(
+            self, creator, name, owner_key, 
+            active_key="",
+            permission="",
+            expiration_sec=30, 
+            skip_signature=0, 
+            dont_broadcast=0,
+            forceUnique=0,
+            max_cpu_usage=0,
+            max_net_usage=0,
+            ref_block="",
+            verbosity=None):
+        cleos.CreateAccount.__init__(
+            self, creator, name, owner_key, active_key, permission,
+            expiration_sec, skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block, is_verbose=-1
+            )
+        eosf.Logger.__init__(self, verbosity)
+
+class SystemNewaccount(cleos_system.SystemNewaccount, eosf.Logger):
+    def __init__(
+            self, creator, name, owner_key, active_key,
+            stake_net, stake_cpu,
+            permission="",
+            buy_ram_kbytes=0, buy_ram="",
+            transfer=False,
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block="",
+            verbosity=None):
+        cleos_system.__init__(
+            self, creator, name, owner_key, active_key,
+            stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
+            transfer, expiration_sec, skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage, ref_block, is_verbose=-1)
+        eosf.Logger.__init__(self, verbosity)
+        
 def account_master_create(
             account_object_name, account_name="", 
             owner_key=None, active_key=None,
@@ -415,7 +463,7 @@ def account_create(
         return
         
     if wallet_singleton.is_name_taken(account_object_name, account_name):
-        return wallet_singleton.logger
+        return wallet_singleton
 
     """
     Create an account object.
@@ -424,12 +472,11 @@ def account_create(
     if restore:
         if creator:
             account_name = creator
-
         logger.EOSF_TRACE("""
-                    ... for the blockchain account `{}`.
-                    """.format(account_object_name, account_name))      
-    
-        account_object = cleos.RestoreAccount(account_name, is_verbose=-1)
+                        ... for the blockchain account `{}`.
+                        """.format(account_object_name, account_name)) 
+        account_object = RestoreAccount(account_name, verbosity)
+             
     else:
         if not account_name:
             account_name = cleos.account_name()
@@ -446,7 +493,7 @@ def account_create(
                         blockchain account `{}`.
                         """.format(account_object_name, account_name))
 
-            account_object = cleos_system.SystemNewaccount(
+            account_object = SystemNewaccount(
                     creator, account_name, owner_key, active_key,
                     stake_net, stake_cpu,
                     permission,
@@ -456,50 +503,58 @@ def account_create(
                     skip_signature, dont_broadcast, forceUnique,
                     max_cpu_usage, max_net_usage,
                     ref_block,
-                    is_verbose=-1
+                    verbosity
                     )
         else:
             logger.EOSF_TRACE("""
-                        ... for the new local testnet account `{}`.
-                        """.format(account_object_name, account_name))
-
-            account_object = cleos.CreateAccount(
+                            ... for the local testnet account.
+                        """)
+            account_object = CreateAccount(
                     creator, account_name, 
                     owner_key, active_key,
                     permission,
                     expiration_sec, skip_signature, dont_broadcast, forceUnique,
                     max_cpu_usage, max_net_usage,
                     ref_block,
-                    is_verbose=-1
+                    verbosity
                     )
+            account_object
 
-        if not logger.ERROR(account_object):
-            logger.EOSF("""The account object is created.""")
 
         account_object.owner_key = owner_key
         account_object.active_key = active_key
         put_account_to_wallet_and_on_stack(
             account_object, account_object_name, logger)
 
-    # append account methodes to the account_object:
+    ##########################################################################
+    # append account methodes to the account_object
+    ##########################################################################
 
-    def _error_dic(account_object, err_msg):
-        if("main.cpp:2888" in err_msg):
+    def error_map(account_object, cleos_object = None):
+        if "main.cpp:2888" in err_msg:
             err_msg = """
-        Account ``{}`` does not exist in the blockchain. It may be created.
-        """.format(account_object.name)
+    Account ``{}`` does not exist in the blockchain. It may be created.
+    """.format(account_object.name)
             return err_msg
+        if "transaction executed locally, but may not be" in err_msg:
+            return ""
+
         return err_msg
 
-    account_object._error_dic = types.MethodType(_error_dic, account_object)
+    account_object.error_map = types.MethodType(error_map, account_object)
+
+    if not logger.ERROR(account_object):
+        logger.EOSF("""
+            * The account object is created.
+            """)    
 
     def code(account_object, code="", abi="", wasm=False):
-        account_object._reset_error()
         result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
-        if not logger.ERROR(result):
-            logger.OUT(result)
-        else:
-            account_object._set_error(result) 
+        if not account_object.ERROR(result):
+            account_object.EOSF_TRACE("""
+            * code()
+            """)
+            account_object.OUT(result.out_msg)
 
     account_object.code = types.MethodType(code, account_object)
 
@@ -511,7 +566,6 @@ def account_create(
             max_cpu_usage=0, max_net_usage=0,
             ref_block=""):
 
-        account_object._reset_error()
         result = cleos.SetContract(
             account_object, contract_dir, 
             wast_file, abi_file, 
@@ -526,7 +580,6 @@ def account_create(
             account_object.set_contract = result
         else:
             account_object.set_contract = None
-            account_object._set_error(result) 
 
     account_object.set_contract = types.MethodType(
                                     set_contract , account_object)
@@ -561,9 +614,7 @@ def account_create(
             except:
                 pass
         else:
-            account_object._set_error(result)
             account_object.action = None
-            account_object._set_error(result) 
 
     account_object.push_action = types.MethodType(
                                     push_action , account_object)
@@ -583,7 +634,6 @@ def account_create(
             account_object.table = result
         else:
             account_object.table = None
-            account_object._set_error(result) 
 
     account_object.table = types.MethodType(table, account_object)
 

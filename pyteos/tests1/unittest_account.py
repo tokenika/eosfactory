@@ -6,7 +6,7 @@ import eosf_account
 
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
-
+from eosf_contract import Contract
 
 eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
 # eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
@@ -35,49 +35,81 @@ NEXT TEST ====================================================================
         eosf.set_is_testing_errors(False)
         eosf.set_throw_error(True)
 
+    # def test_too_many_wallets(self):
+    #     _.SCENARIO("""
+    #     Check the condition that
+    #     precisely one ``Wallet`` object is defined when calling the 
+    #         ``account_master_create(...)`` function.
+        
+    #     Make a second wallet, expecting an error message.
+    #     """)        
+    #     eosf.use_keosd(False)
+    #     eosf.reset([eosf.Verbosity.TRACE])
+    #     wallet = Wallet()
+    #     eosf.set_throw_error(False)
+    #     eosf.set_is_testing_errors()
+    #     ######################################################################
+    #     _.COMMENT("""
+    #     Added second wallet, named "second". Calling the ``account_master_create(...)`` 
+    #     function should result in an error message:
+    #     """)
+    #     eosf.set_throw_error(False)  
+    #     wallet1 = Wallet("second")
+    #     self.assertTrue("It can be only one" in wallet1.error_buffer)
 
-    def test_too_many_wallets(self):
-        _.COMMENT("""
-        Check the condition that
-        precisely one ``Wallet`` object is defined when calling the 
-            ``account_master_create(...)`` function.
-        """)        
-        eosf.use_keosd(False)
-        eosf.reset([eosf.Verbosity.TRACE])
-        wallet = Wallet()
-        eosf.set_throw_error(False)
-        eosf.set_is_testing_errors()
-        ######################################################################
-        _.COMMENT("""
-        Added second wallet, named "second". Calling the ``account_master_create(...)`` 
-        function should result in an error message:
-        """)
-        eosf.set_throw_error(False)  
-        wallet1 = Wallet("second")
-        self.assertTrue("It can be only one" in wallet1.logger.err_msg)
+    # def test_wallet_is_not_found(self):
+    #     _.COMMENT("""
+    #     Check the condition that
+    #     precisely one ``Wallet`` object is defined when calling the 
+    #         ``account_master_create(...)`` function.
 
-    def test_global_namespace1(self):
-        _.COMMENT("""
-        Check the condition that
-        precisely one ``Wallet`` object is defined when calling the 
-            ``account_master_create(...)`` function.
-        """)
-        eosf.use_keosd(False)
-        eosf.reset([eosf.Verbosity.TRACE])
-        eosf.set_is_testing_errors()
-        ######################################################################
-#         ERROR:
-# Error 3120002: Nonexistent wallet
-# Are you sure you typed the wallet name correctly?
-        logger = account_master_create("account_master")
-        self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
+    #     Attempt account creation without any wallet in the scope.
+    #     """)
+    #     eosf.set_is_testing_errors()
+    #     eosf.use_keosd(False)
+    #     eosf.reset([eosf.Verbosity.TRACE])
+    #     eosf.set_throw_error(False)
+    #     eosf.set_is_testing_errors()
+    #     ######################################################################
 
-    def test_account_name_conflict(self):
-        if not_imputed:
-            return
-        _.COMMENT("""
-        Check the condition that the account object name is not in use with 
-        physical account.
+    #     logger = account_master_create("account_master")
+    #     self.assertTrue("Cannot find any `Wallet` object." in logger.error_buffer)
+
+    # def test_account_name_conflict(self):
+    #     if not_imputed:
+    #         return
+    #     _.SCENARIO("""
+    #     Check the condition that the given account object name is already 
+    #     ascribed to a physical account.
+    #     """)
+    #     eosf.use_keosd(False)
+    #     eosf.reset([eosf.Verbosity.TRACE]) 
+    #     wallet = Wallet()
+    #     account_master_create("account_master")
+    #     eosf.set_throw_error(False)
+    #     eosf.set_is_testing_errors()
+    #     ######################################################################
+
+    #     _.COMMENT("""
+    #     With the ``account_master`` object is in the namespace, create two account
+    #     objects: ``account_alice`` and ``account_carrol``.
+        
+    #     Then try to create another account object called ``account_alice``. Although
+    #     this object is going to refer to a new blockchain account, it cannot accept
+    #     the given name: error is issued.
+
+    #     You are prompted to change the blocking name. Change it to 
+    #     ``account_alice_b``.
+    #     """)
+    #     account_create("account_alice", account_master)
+    #     account_create("account_carrol", account_master)
+    #     account_create("account_alice", account_master)
+
+    def test_contract_creation(self):
+        _.SCENARIO("""
+        With the master account, create three accounts: ``account_alice``, 
+        ``account_carrol`` and ``account_test``. Add the ``eosio.token``
+        contract to the last account.
         """)
         eosf.use_keosd(False)
         eosf.reset([eosf.Verbosity.TRACE]) 
@@ -87,21 +119,14 @@ NEXT TEST ====================================================================
         eosf.set_is_testing_errors()
         ######################################################################
 
-        _.COMMENT("""
-        As the ``account_master`` object is in the namespace, create two account
-        objects: 
-        ``account_alice`` and ``account_carrol``.
-        Then try to create another account object called ``account_alice``. Although
-        this object is going to refer to a new blockchain account, it cannot accept
-        the given name: error is issued.
-
-        You are prompted to change the blocking name. Change it to 
-        ``account_alice_b``.
-        """)
         account_create("account_alice", account_master)
         account_create("account_carrol", account_master)
-        account_create("account_alice", account_master)
-        wallet.keys()
+        account_create("account_test", account_master)
+        account_test.code()
+        contract_test = Contract(account_test, "eosio.token")
+        # deploy = contract_test.deploy()
+        # account_test.code()
+
 
         # print(account_alice.info())
 
@@ -113,7 +138,7 @@ NEXT TEST ====================================================================
         # account_create("account_alice")
         # self.assertTrue(account_alice.error)
 
-        # account_create("account_test")
+        # 
         # contract_test = eosf.Contract(account_test, "eosio.token")
         # deploy = contract_test.deploy()
         # account_test.code()
