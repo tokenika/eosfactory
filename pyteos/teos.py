@@ -37,6 +37,7 @@ class _Teos:
     global setup_setup
 
     error = False
+    err_msg = ""
     is_verbose = True
     _out = ""
     json = json_module.loads("{}")

@@ -6,7 +6,7 @@
 The structure of the `Cases` files is explained in the file `setup.md` in
 this file's directory.
 
-Note, that all case files are both ``Markdown`` and ``Python` scripts. 
+Note, that all case files are both ``Markdown`` and ``Python`` scripts. 
 Therefore, you can execute them with `python3 <file name>` bash command, or 
 you can view them, (RIGHT MOUSE -> Open Preview if you use the ``Visual Studio 
 Code``).
@@ -31,6 +31,7 @@ eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE]) # start the local test node, reset
 """
 ```
+#### The `Wallet` object
 ```
 Create the singleton wallet object. The object represent a physical wallet,
 managed for either the KEOSD or NODEOS Wallet Manager:
@@ -45,12 +46,15 @@ account_master_create("account_master")
 eosf.set_throw_error(False) # make the errors be printed
 """
 ```
+
 ## Case
 ```
 With the master account, create four accounts: ``account_alice``, 
-``account_bob``, account_carrol`` and ``account_test``. Add the ``eosio.token`` 
-contract to the last account.
-
+``account_bob``, ``account_carrol`` and ``account_test``. Add the 
+``eosio.token`` contract to the last account.
+```
+#### The `account_create` factory
+```
 Note that the account-creation command places in the global namespace the
 account object named with the first argument. The object represent a physical
 account in the blockchain and in the wallet.
