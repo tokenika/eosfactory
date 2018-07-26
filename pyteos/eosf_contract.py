@@ -171,7 +171,7 @@ class Contract(eosf.Logger):
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            self.is_verbose > 0 and is_verbose > 0, json)
+            is_verbose=-1)
 
         if not self.action.error:
             try:

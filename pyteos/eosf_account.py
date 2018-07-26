@@ -2,6 +2,7 @@ import json
 import inspect
 import types
 import time
+import re
 
 import setup
 import teos
@@ -112,6 +113,9 @@ class Eosio():
         print(cleos.GetAccount(
             self.name, is_verbose=-1).out_msg)
 
+    def __str__(self):
+        return self.name
+
 class AccountMaster():
     """Look for the account of the given name, put it into the wallet.
 
@@ -131,12 +135,12 @@ class AccountMaster():
         
     """    
     def __init__(
-        account_object_name, account_name, 
+        account_object_name, name, 
         owner_key_private, active_key_private, verbosity=None):
 
-        if not account_name: 
-            account_name = cleos.account_name()
-        self.account_name = account_name
+        if not name: 
+            name = cleos.account_name()
+        self.name = name
         self.exists = False
         self.in_wallet = False
         self.just_put_into_wallet = False
@@ -144,7 +148,7 @@ class AccountMaster():
         self.logger = eosf.Logger(verbosity)
 
         account_object = cleos.GetAccount(
-            account_name, json=True, is_verbose=-1)
+            name, json=True, is_verbose=-1)
         if logger.ERROR(account_object):
                 self.fatal_error = True
         else:
@@ -176,14 +180,10 @@ class AccountMaster():
                     [0]["key"], active_key_private,
                     is_verbose=0)
 
-            def info(self):
-                ao = cleos.GetAccount(self.name, is_verbose=-1)
-                print(ao.out_msg)
-
             logger.EOSF("""
             Account ``{}`` exists in the blockchain. Checking whether the wallet
             has keys to it ... 
-            """.format(self.account_name))
+            """.format(self.name))
 
             if put_account_to_wallet_and_on_stack(
                     self, account_object_name, logger):
@@ -193,6 +193,14 @@ class AccountMaster():
                 logger.EOSF("""
                 ... indeed, there are proper keys in the wallet.
                 """)
+
+    def info(self):
+        result = cleos.GetAccount(self.name, is_verbose=-1)
+        if not logger.ERROR(result):
+            print(ao.out_msg)
+
+    def __str__(self):
+        return self.name
 
 class RestoreAccount(cleos.RestoreAccount, eosf.Logger):
     def __init__(self, name, verbosity=None):
@@ -604,8 +612,13 @@ def account_create(
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=-1)
+
         if not account_object.ERROR(result):
-            account_object.OUT(result)
+            account_object.EOSF_TRACE("""
+            * Push action:
+                {}
+            """.format(re.sub(' +',' ',data)))
+            account_object.OUT(result.out_msg)
             account_object.action = result
             try:
                 account_object._console = result.console
@@ -624,15 +637,23 @@ def account_create(
             limit=10, key="", lower="", upper=""):
 
         result = cleos.GetTable(
-                                account_object, table_name, scope,
-                                binary, 
-                                limit, key, lower, upper,
-                                is_verbose=-1)
-        if not logger.ERROR(result):
-            logger.OUT(result)
-            account_object.table = result
-        else:
-            account_object.table = None
+                    account_object, table_name, scope,
+                    binary, 
+                    limit, key, lower, upper,
+                    is_verbose=-1)
+        if not account_object.ERROR(result):
+            try:
+                account_map = eosf.account_map()
+                scope = account_map[str(scope)]
+            except:
+                pass
+
+            account_object.EOSF_TRACE("""
+            * Table ''{}'' for ``{}``
+            """.format(table_name, scope))
+            account_object.OUT(result.out_msg)
+            return result
+        return None
 
     account_object.table = types.MethodType(table, account_object)
 

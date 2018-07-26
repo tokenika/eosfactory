@@ -105,50 +105,12 @@ NEXT TEST ====================================================================
     #     account_create("account_carrol", account_master)
     #     account_create("account_alice", account_master)
 
-    def test_contract_creation(self):
-        _.SCENARIO("""
-        With the master account, create three accounts: ``account_alice``, 
-        ``account_carrol`` and ``account_test``. Add the ``eosio.token``
-        contract to the last account.
-        """)
-        eosf.use_keosd(False)
-        eosf.reset([eosf.Verbosity.TRACE]) 
-        wallet = Wallet()
-        account_master_create("account_master")
-        eosf.set_throw_error(False)
-        eosf.set_is_testing_errors()
-        ######################################################################
-
-        account_create("account_alice", account_master)
-        account_create("account_carrol", account_master)
-        account_create("account_test", account_master)
-        account_test.code()
-        contract_test = Contract(account_test, "eosio.token")
-        deploy = contract_test.deploy()
-        account_test.code()
-        time.sleep(1)
-
-        action = account_test.push_action(
-            "create", 
-            '{"issuer":"' 
-                + str(account_master) 
-                + '", "maximum_supply":"1000000000.0000 EOS", \
-                "can_freeze":0, "can_recall":0, "can_whitelist":0}')
-
-        # action = contract_test.push_action(
-        # "issue", 
-        # '{"to":"' + str(account_alice)
-        #     + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
-        #     account_master)
-
-
     def tearDown(self):
         pass
 
     @classmethod
     def tearDownClass(cls):
         pass
-
 
 if __name__ == "__main__":
     unittest.main()

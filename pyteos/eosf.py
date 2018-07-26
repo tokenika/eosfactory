@@ -115,6 +115,9 @@ class Logger():
             self.TRACE(msg, do)
 
     def OUT_INFO(self, msg, do=False):
+        msg = cleos.heredoc(msg)
+        self.out_info_buffer = msg
+
         error = False
         try:
             error = msg.error
@@ -129,28 +132,28 @@ class Logger():
         if msg and (Verbosity.OUT_INFO in self.verbosity \
                 or Verbosity.OUT_INFO in _verbosity_plus) \
                 or do:
-            msg = cleos.heredoc(msg)
-            self.out_info_buffer = msg
             cprint(
                 msg,
                 ", ".join(Verbosity.OUT_INFO.value))
 
     def OUT(self, msg, do=False):
+        msg = cleos.heredoc(msg)
+        self.out_buffer = msg
+
         if msg and (Verbosity.OUT in self.verbosity \
                 or Verbosity.OUT in _verbosity_plus) \
                 or do:
-            msg = cleos.heredoc(msg)
-            self.out_buffer = msg
             print(msg + "\n")
 
         self.OUT_INFO(msg, do)
 
     def DEBUG(self, msg, do=False):
+        msg = cleos.heredoc(msg)
+        self.debug_buffer = msg
+
         if msg and (Verbosity.DEBUG in self.verbosity \
                 or Verbosity.DEBUG in _verbosity_plus) \
                 or do:
-            msg = cleos.heredoc(msg)
-            self.debug_buffer = msg
             cprint(
                 msg,
                 ", ".join(Verbosity.DEBUG.value))
@@ -186,9 +189,9 @@ class Logger():
             return False
 
         if _is_testing_error:
-            color = Verbosity.ERROR_TESTING.value
+            color = ", ".join(Verbosity.ERROR_TESTING.value)
         else:
-            color = Verbosity.ERROR.value
+            color = ", ".join(Verbosity.ERROR.value)
 
         err_msg = colored(
             "ERROR:\n{}".format(cleos.heredoc(err_msg)), 
@@ -210,7 +213,9 @@ def wallet_dir():
         wallet_dir_ = teos.get_node_wallet_dir()
     return wallet_dir_
 
-def account_map(logger):
+"""Return json account map
+"""
+def account_map(logger=None):
 
     wallet_dir_ = wallet_dir()
     while True:
@@ -222,24 +227,25 @@ def account_map(logger):
             if isinstance(e, FileNotFoundError):
                 return {}
             else: 
-                logger.ERROR("""
-                    The account mapping file is misformed. The error message is:
-                    {}
-                    
-                    Do you want to edit the file?
-                    """.format(str(e)))
-                    
-                answer = input("y/n <<< ")
-                if answer == "y":
-                    edit_account_map()
-                    continue
-                else:
+                if not logger is None:
                     logger.ERROR("""
+                The account mapping file is misformed. The error message is:
+                {}
+                
+                Do you want to edit the file?
+                """.format(str(e)))
+                        
+                    answer = input("y/n <<< ")
+                    if answer == "y":
+                        edit_account_map()
+                        continue
+                    else:
+                        logger.ERROR("""
             Use the function 'eosf.edit_account_map(text_editor="nano")'
             or the corresponding method of any object of the 'eosf_wallet.Wallet` 
             class to edit the file.
-                    """)                    
-                    return None
+                        """)                    
+                        return None
 
 def edit_account_map(text_editor="nano"):
     import subprocess
