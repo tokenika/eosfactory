@@ -2,13 +2,16 @@
 # Eosio Token Contract
 
 ## Cases
+```
+The structure of the `Cases` files is explained in the file `setup.md` in
+this file's directory.
 
-The structure of the `Cases` files is explained in the file `setup.md`.
+Note, that all case files are both ``Markdown`` and ``Python` scripts. 
+Therefore, you can execute them with `python3 <file name>` bash command, or 
+you can view them, (RIGHT MOUSE -> Open Preview if you use the ``Visual Studio 
+Code``).
+```
 
-Note, that all case files are, in the same time, both `Markdown` and `Python`
-scripts. Therefore, you can execute it with `python3 <file name>` or you can
-preview it, `RIGHT MOUSE -> Open Preview` if you use the `Visual Studio Code`.
- 
 ## Set-up
 ```
 """
@@ -22,22 +25,36 @@ from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
 eosf.restart()
-eosf.set_is_testing_errors(False)
-eosf.set_throw_error(True)
+eosf.set_throw_error(True) # make the errors be thrown as exceptions
 
 eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE]) 
+eosf.reset([eosf.Verbosity.TRACE]) # start the local test node, reset
+"""
+```
+```
+Create the singleton wallet object. The object represent a physical wallet,
+managed for either the KEOSD or NODEOS Wallet Manager:
+```
+```
+"""
 wallet = Wallet()
-account_master_create("account_master")
-eosf.set_throw_error(False)
-eosf.set_is_testing_errors()
+
+# the master account authorizes actions on the blockchain:
+account_master_create("account_master") 
+
+eosf.set_throw_error(False) # make the errors be printed
 """
 ```
 ## Case
-
+```
 With the master account, create four accounts: ``account_alice``, 
-``account_bob``, account_carrol`` and ``account_test``. Add the 
-``eosio.token`` contract to the last account.
+``account_bob``, account_carrol`` and ``account_test``. Add the ``eosio.token`` 
+contract to the last account.
+
+Note that the account-creation command places in the global namespace the
+account object named with the first argument. The object represent a physical
+account in the blockchain and in the wallet.
+```
 ```
 """
 account_create("account_alice", account_master)
@@ -52,10 +69,14 @@ account_test.code()
 time.sleep(1)
 """
 ```
+```
 Execute actions on the contract account:
 
     * let eosio deposit an amount of 1000000000.0000 EOS there;
     * transfer some EOS to the ``alice`` account.
+
+Use the ``push_action`` method of the contract account:
+```
 ```
 """
 account_test.push_action(
@@ -73,7 +94,10 @@ account_test.push_action(
     permission=account_master)
 """
 ```
-Execute a series of transfers between accounts:
+```
+Execute a series of transfers between accounts. Use the ``push_action`` method
+of the contract account:
+```
 
 ```
 """
@@ -111,8 +135,10 @@ account_test.push_action(
 
 """
 ```
-See the records of the accounts:
-
+```
+To see the records of the accounts, use the ``table`` method of the contract
+account:
+```
 ```
 """
 table_alice = account_test.table("accounts", account_alice)
