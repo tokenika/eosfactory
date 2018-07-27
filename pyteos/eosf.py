@@ -384,4 +384,4 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         template = str(sys.argv[2])
 
-    teos.Template(str(sys.argv[1]), template, visual_studio_code=True)
+    teos.TemplateCreate(str(sys.argv[1]), template, visual_studio_code=True)

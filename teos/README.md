@@ -41,7 +41,7 @@ You can start development from a template, for example:
 $ $eosf bootstrap contract token eosio.token.cpp
 #     template contract: /mnt/c/Workspaces/EOS/contracts/token
 ```
-The second positional parameter name the template used. Templates are in directory `eosfactory/templates`. Currently, only one `cpp` template is available.
+The second positional parameter name the template used. TemplateCreates are in directory `eosfactory/templates`. Currently, only one `cpp` template is available.
 
 Now, let you open *Visual Studio Code* in the `token` contract directory. Do `CTR+SHIFT+P`, chose `Open Folder...` (or `#+SHIFT+P` chose `Open...` with Mac), browse to the directory. Please, be sure that you have installed the `C/C++` extension to the *VS code*.
 

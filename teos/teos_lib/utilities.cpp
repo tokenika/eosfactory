@@ -35,7 +35,7 @@ namespace teos
 
   struct InitGetJson {
     /*
-    Template function has to be used, in order to force compiler
+    TemplateCreate function has to be used, in order to force compiler
     to build specific forms needed elsewhere.
     */
     string strVal;

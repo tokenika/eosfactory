@@ -73,7 +73,7 @@ def contract_workspace_from_template(
     ######### Create template ``{}`` contract workspace named ``{}``.
     """.format(name, template))
 
-    result = teos.Template(
+    result = teos.TemplateCreate(
         name, template, user_workspace, remove_existing, visual_studio_code, is_verbose=0)
     
 

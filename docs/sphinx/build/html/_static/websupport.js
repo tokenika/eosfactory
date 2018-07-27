@@ -148,7 +148,7 @@
     $('#ao' + id).hide();
     $('#ah' + id).show();
     var context = $.extend({id: id}, opts);
-    var popup = $(renderTemplate(popupTemplate, context)).hide();
+    var popup = $(renderTemplateCreate(popupTemplateCreate, context)).hide();
     popup.find('textarea[name="proposal"]').hide();
     popup.find('a.by' + by).addClass('sel');
     var form = popup.find('#cf' + id);
@@ -491,7 +491,7 @@
     $('#cr' + id).show();
 
     // Add the reply li to the children ul.
-    var div = $(renderTemplate(replyTemplate, {id: id})).hide();
+    var div = $(renderTemplateCreate(replyTemplateCreate, {id: id})).hide();
     $('#cl' + id)
       .prepend(div)
       // Setup the submit handler for the reply form.
@@ -564,7 +564,7 @@
     comment.css_class = comment.displayed ? '' : ' moderate';
     // Create a div for this comment.
     var context = $.extend({}, opts, comment);
-    var div = $(renderTemplate(commentTemplate, context));
+    var div = $(renderTemplateCreate(commentTemplateCreate, context));
 
     // If the user has voted on this comment, highlight the correct arrow.
     if (comment.vote) {
@@ -590,7 +590,7 @@
    * by context['id'] with items being escaped. Placeholders such as <#id#>
    * are not escaped.
    */
-  function renderTemplate(template, context) {
+  function renderTemplateCreate(template, context) {
     var esc = $(document.createElement('div'));
 
     function handle(ph, escape) {
@@ -683,7 +683,7 @@
     opts = jQuery.extend(opts, COMMENT_OPTIONS);
   }
 
-  var popupTemplate = '\
+  var popupTemplateCreate = '\
     <div class="sphinx-comments" id="sc<%id%>">\
       <p class="sort-options">\
         Sort by:\
@@ -721,7 +721,7 @@
       </div>\
     </div>';
 
-  var commentTemplate = '\
+  var commentTemplateCreate = '\
     <div id="cd<%id%>" class="sphinx-comment<%css_class%>">\
       <div class="vote">\
         <div class="arrow">\
@@ -767,7 +767,7 @@
       </div>\
     </div>';
 
-  var replyTemplate = '\
+  var replyTemplateCreate = '\
     <li>\
       <div class="reply-div" id="rd<%id%>">\
         <form id="rf<%id%>">\

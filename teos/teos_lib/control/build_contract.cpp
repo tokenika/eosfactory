@@ -110,19 +110,19 @@ namespace teos {
 
     #define TEMPLATE_TOKEN string("CONTRACT_NAME")
 
-    void BootstrapContract::copy(
-      boost::filesystem::path inTemplate,
+    void TemplateCreate::copy(
+      boost::filesystem::path inTemplateCreate,
       boost::filesystem::path inContract,
       string name
       )
     {
       namespace bfs = boost::filesystem; 
 
-      if (bfs::is_regular_file(inTemplate) && !bfs::exists(inContract))
+      if (bfs::is_regular_file(inTemplateCreate) && !bfs::exists(inContract))
       {       
         string contents;        
         try{
-          bfs::ifstream in(inTemplate);
+          bfs::ifstream in(inTemplateCreate);
           stringstream ss;
           ss << in.rdbuf();
           in.close();
@@ -154,7 +154,7 @@ namespace teos {
       }
     }
 
-    void BootstrapContract::bootstrapContract(
+    void TemplateCreate::bootstrapContract(
       string name, string templateName, string workspace,
       bool removeExisting, bool vsc)
     {
@@ -181,7 +181,7 @@ namespace teos {
         = eosFactoryDir / templContractsDir / templateName;
       if(!bfs::exists(templContractPath))
       {
-        putError((boost::format("Template '%1%' does not exist.\n")
+        putError((boost::format("TemplateCreate '%1%' does not exist.\n")
               % templateName).str(), SPOT);
         return;
       }
@@ -218,13 +218,13 @@ namespace teos {
       for (const auto& dirEnt : bfs::recursive_directory_iterator{templContractPath})
       {
         try{
-          const auto& inTemplate = dirEnt.path();
-          auto relativePathStr = inTemplate.string();
+          const auto& inTemplateCreate = dirEnt.path();
+          auto relativePathStr = inTemplateCreate.string();
           boost::replace_first(relativePathStr, templContractPath.string(), "");
           boost::replace_all(relativePathStr, TEMPLATE_TOKEN, name);
 
           bfs::path dest = contractPath / relativePathStr;
-          copy(inTemplate, contractPath / relativePathStr, name);
+          copy(inTemplateCreate, contractPath / relativePathStr, name);
 
         } catch (exception &e){
           putError(e.what());

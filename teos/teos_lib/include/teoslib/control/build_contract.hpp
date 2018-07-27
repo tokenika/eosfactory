@@ -337,12 +337,12 @@ Usage: ./teos create key --jarg '{
     #define TEMPLATE "skeleton"
     /**
      * @ingroup teoslib_raw
-     * @brief BootstrapContract: produce contract workspace from a 
+     * @brief TemplateCreate: produce contract workspace from a 
      * given template.
      * 
      * If the template is not set, a default one is used.
      */
-    class BootstrapContract : public TeosControl
+    class TemplateCreate : public TeosControl
     {
       void bootstrapContract(
         string name, // contract name
@@ -352,7 +352,7 @@ Usage: ./teos create key --jarg '{
         bool vsc=false
       );
       void copy(
-        boost::filesystem::path inTemplate,
+        boost::filesystem::path inTemplateCreate,
         boost::filesystem::path inContract,
         string name);
 
@@ -363,7 +363,7 @@ Usage: ./teos create key --jarg '{
      * @param name name of the bootstrapped contract.
      * @param templateName chosen template.
      */
-      BootstrapContract(
+      TemplateCreate(
         string name, // contract name
         string templateName=TEMPLATE,
         string workspace="",
@@ -379,7 +379,7 @@ Usage: ./teos create key --jarg '{
         bootstrapContract(name, templateName, workspace, removeExisting, vsc);
       }
 
-      BootstrapContract(ptree reqJson) : TeosControl(reqJson)
+      TemplateCreate(ptree reqJson) : TeosControl(reqJson)
       {
         bootstrapContract(
           reqJson_.get<string>("name"),
@@ -393,12 +393,12 @@ Usage: ./teos create key --jarg '{
 
 
     /**
-     * Command-line driver for the BootstrapContract class.
+     * Command-line driver for the TemplateCreate class.
      */ 
-    class BootstrapContractOptions : public ControlOptions
+    class TemplateCreateOptions : public ControlOptions
     {
     public:
-      BootstrapContractOptions(int argc, const char **argv) 
+      TemplateCreateOptions(int argc, const char **argv) 
         : ControlOptions(argc, argv) {}
 
     protected:
@@ -427,7 +427,7 @@ Usage: ./teos create key --jarg '{
         od.add_options()
           ("name", value<string>(&name), "Contract name.")
           ("template", value<string>(&templateName)->default_value(TEMPLATE), 
-            "Template name.")
+            "TemplateCreate name.")
           ("workspace", value<string>(&workspace)->default_value(""),
             "User workspace where contract file-system is placed.")
           ("remove", "Remove existing contract path.")
@@ -465,7 +465,7 @@ Usage: ./teos create key --jarg '{
       }
 
       TeosControl executeCommand() {
-        return BootstrapContract(reqJson_);
+        return TemplateCreate(reqJson_);
       }
 
       void printout(TeosControl command, variables_map &vm) {

@@ -26,6 +26,6 @@ EOSFactory [v0.8](https://github.com/tokenika/eosfactory/releases/tag/v0.8) is c
 * Whereas the `nodeos` process runs in the background on MacOS, on other platforms (Windows & Ubuntu) it requires launching a separate terminal window (it's done automatically though). This might be a limitation for GUI-less systems like Ubuntu Server edition.
 * There are no utilities for debugging contracts, except for the "caveman" style, i.e. accessing the output stream produced by its `print()` method.
 * There is no easy way to instantiate smart-contracts stored outside of EOSFactory `contracts` folder or EOSIO `contracts` folder. If you want to do that, you need to refer to the contract's folder by supplying its full path.
-* The `Template` class constructor only accepts a folder name, not a path (this is different from the `Contract` constructor which accepts both).
+* The `TemplateCreate` class constructor only accepts a folder name, not a path (this is different from the `Contract` constructor which accepts both).
 * The `Contract` class `abi()` and `build()` methods are relying on the *EOSIO* ABI compiler which has an experimental status in the *EOSIO* repository. Thus the ABI output might be different than expected.
 * The `Contract` class `push_action()` and `show_action` methods accept only verbose input, i.e. all action's parameters must be named in the JSON syntax.

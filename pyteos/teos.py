@@ -129,7 +129,7 @@ def get_keosd_wallet_dir():
     return GetConfig(is_verbose=0).json["KEOSD_WALLET_DIR"]
 
 
-class Template(_Teos):
+class TemplateCreate(_Teos):
     def __init__(
             self, name, template="", user_workspace="", remove_existing=False, 
             visual_studio_code=False, is_verbose=1
