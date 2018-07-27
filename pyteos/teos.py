@@ -131,12 +131,14 @@ def get_keosd_wallet_dir():
 
 class Template(_Teos):
     def __init__(
-            self, name, template="", remove_existing=False, 
+            self, name, template="", user_workspace="", remove_existing=False, 
             visual_studio_code=False, is_verbose=1
         ):
 
         jarg = json_module.loads("{}")
         jarg["name"] = name
+        if not user_workspace is None:
+            jarg["workspace"] = user_workspace
         if template:
             jarg["template"] = template
         if remove_existing:

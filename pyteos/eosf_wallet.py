@@ -10,7 +10,6 @@ wallet = None
 
 class Wallet(eosf.Logger, cleos.WalletCreate):
     """ Create a new wallet locally and operate it.
-    Usage: WalletCreate(name="default", is_verbose=1)
 
     - **parameters**::
 

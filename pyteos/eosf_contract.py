@@ -9,7 +9,9 @@ import cleos
 import cleos_system
 import eosf
 
-class ContractBuilder():
+class ContractBuilder(eosf.Logger):
+    """
+    """
     def __init__(
             self, contract_dir,
             wast_file="", abi_file="",
@@ -21,38 +23,68 @@ class ContractBuilder():
         self.abi_file = abi_file
         self.is_mutable = is_mutable
 
+        eosf.Logger.__init__(self, verbosity)
+
     def path(self):
         return self.contract_dir
 
     def build_wast(self):
         if self.is_mutable:
-            wast = teos.WAST(
-                self.contract_dir, "",
-                is_verbose=-1)
+            result = teos.WAST( self.contract_dir, "", is_verbose=0)
+            if not self.ERROR(result):
+                self.EOSF_TRACE("""
+                * WAST file build and saved.
+                """)
         else:
-            if self.is_verbose > 0:
-                print("ERROR!")
-                print("Cannot modify system contracts.")
-        return wast
+            self.ERROR("Cannot modify system contracts.")
 
     def build_abi(self):
         if self.is_mutable:
-            abi = teos.ABI(
-                self.contract_dir, "",
-                is_verbose=-1)
+            result = teos.ABI(self.contract_dir, "", is_verbose=0)
+            if not self.ERROR(result):
+                self.EOSF_TRACE("""
+                * ABI file build and saved.
+                """)            
         else:
-            if self.is_verbose > 0:
-                print("ERROR!")
-                print("Cannot modify system contracts.")
-        return abi
+            self.ERROR("Cannot modify system contracts.")
 
     def build(self):
-        return not self.build_abi().error and not self.build_wast().error
+        self.build_abi()
+        self.build_wast()
 
-class ContractBuilderFromTemplate(ContractBuilder):
-    def __init__(self, name, template="", remove_existing=False, visual_studio_code=False, is_verbose=True):
-        t = teos.Template(name, template, remove_existing, visual_studio_code, is_verbose)
-        super().__init__(t.contract_path_absolute)
+def contract_workspace_from_template(
+        name, template="", user_workspace=None, remove_existing=False, 
+        visual_studio_code=False, verbosity=None):
+    """Given the template type and a name, create a contract workspace. 
+
+    - **parameters**::
+
+        name: The name of the new wallet, defaults to ``default``.
+        template: The name of the template used.
+        user_workspace: If set, the folder for the work-space. Defaults to the 
+            value of the ``EOSIO_CONTRACT_WORKSPACE`` env. variable.
+        remove_existing: If set, overwrite any existing workspace.
+        visual_studio_code: If set, open the ``VSCode``, if available.
+        verbosity: The logging configuration.
+    """
+    logger = eosf.Logger(verbosity)
+
+    logger.EOSF_TRACE("""
+    ######### Create template ``{}`` contract workspace named ``{}``.
+    """.format(name, template))
+
+    result = teos.Template(
+        name, template, user_workspace, remove_existing, visual_studio_code, is_verbose=0)
+    
+
+    if not logger.ERROR(result):
+        logger.EOSF("""
+        * The directory is
+            {}
+        """.format(result.contract_path_absolute))
+        return result.contract_path_absolute
+    else:
+        return None
 
 class Contract(eosf.Logger):
 
@@ -84,11 +116,9 @@ class Contract(eosf.Logger):
         self.error = self.account.error
 
         eosf.Logger.__init__(self, verbosity)
-
         self.EOSF_TRACE("""
                 ######### Create a `Contract` object.
                 """)
-        
         config = teos.GetConfig(self.contract_dir, is_verbose=0)
         self.EOSF("""
                 * Contract directory is
@@ -109,9 +139,21 @@ class Contract(eosf.Logger):
             is_verbose=-1
         )
         if not self.ERROR(result):
-            self.EOSF("""
-            * Contract deployed.
-            """)
+
+            code = cleos.GetCode(self.account.name, is_verbose=-1)
+            if code.code_hash == \
+            "0000000000000000000000000000000000000000000000000000000000000000":
+                self.ERROR("""
+Error in contract deployment:
+Despite the ``set contract`` command returned without any error,
+the code hash of the associated account is null:
+{}
+                """.format(code.code_hash))
+                return
+            else:
+                self.EOSF("""
+                * Contract deployed. Code hash is checked not null.
+                """)
             try:
                 result.json = json.loads(result.err_msg)
                 for action in result.json["actions"]:

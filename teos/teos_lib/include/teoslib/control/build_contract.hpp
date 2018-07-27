@@ -346,7 +346,8 @@ Usage: ./teos create key --jarg '{
     {
       void bootstrapContract(
         string name, // contract name
-        string templateName=TEMPLATE,
+        string templateName =TEMPLATE,
+        string workspace="",
         bool removeExisting=false,
         bool vsc=false
       );
@@ -365,15 +366,17 @@ Usage: ./teos create key --jarg '{
       BootstrapContract(
         string name, // contract name
         string templateName=TEMPLATE,
+        string workspace="",
         bool removeExisting=false,
         bool vsc=false
       )
       {
         reqJson_.put("name", name);
         reqJson_.put("template", templateName);
+        reqJson_.put("workspace", workspace);
         reqJson_.put("remove", removeExisting);
         reqJson_.put("vsc", vsc);
-        bootstrapContract(name, templateName, removeExisting, vsc);
+        bootstrapContract(name, templateName, workspace, removeExisting, vsc);
       }
 
       BootstrapContract(ptree reqJson) : TeosControl(reqJson)
@@ -381,6 +384,7 @@ Usage: ./teos create key --jarg '{
         bootstrapContract(
           reqJson_.get<string>("name"),
           reqJson_.get("template", TEMPLATE),
+          reqJson_.get("workspace", ""),
           reqJson_.get("remove", false),
           reqJson_.get("vsc", false)
         );
@@ -403,9 +407,10 @@ Usage: ./teos create key --jarg '{
 Produce contract workspace from a given template.
 Usage: ./teos bootstrap contract [Options] name template [Options]
 Usage: ./teos create key --jarg '{
-  "name":"<contract name>",
-  "template":"<template name>",
-  "removeExisting":"<true|false>"
+  "name": "<contract name>",
+  "template": "<template name>",
+  "workspace": "<user workspace dir>",
+  "removeExisting": "<true|false>"
   "vsc":"<true|false>"
   }' [OPTIONS]
 )";
@@ -413,6 +418,7 @@ Usage: ./teos create key --jarg '{
 
       string name;
       string templateName;
+      string workspace;
       bool removeExisting;
       bool vsc;
 
@@ -422,6 +428,8 @@ Usage: ./teos create key --jarg '{
           ("name", value<string>(&name), "Contract name.")
           ("template", value<string>(&templateName)->default_value(TEMPLATE), 
             "Template name.")
+          ("workspace", value<string>(&workspace)->default_value(""),
+            "User workspace where contract file-system is placed.")
           ("remove", "Remove existing contract path.")
           ("vsc,c", "Launch Visual Studio Code.")
           ;
@@ -443,6 +451,7 @@ Usage: ./teos create key --jarg '{
           ok = true;
           reqJson_.put("name", name);
           reqJson_.put("template", templateName);
+          reqJson_.put("workspace", workspace);
           if(vm.count("remove")){
             removeExisting = true;
           } 

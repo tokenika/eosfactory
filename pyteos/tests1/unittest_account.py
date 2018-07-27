@@ -75,35 +75,35 @@ NEXT TEST ====================================================================
     #     logger = account_master_create("account_master")
     #     self.assertTrue("Cannot find any `Wallet` object." in logger.error_buffer)
 
-    # def test_account_name_conflict(self):
-    #     if not_imputed:
-    #         return
-    #     _.SCENARIO("""
-    #     Check the condition that the given account object name is already 
-    #     ascribed to a physical account.
-    #     """)
-    #     eosf.use_keosd(False)
-    #     eosf.reset([eosf.Verbosity.TRACE]) 
-    #     wallet = Wallet()
-    #     account_master_create("account_master")
-    #     eosf.set_throw_error(False)
-    #     eosf.set_is_testing_errors()
-    #     ######################################################################
+    def test_account_name_conflict(self):
+        if not_imputed:
+            return
+        _.SCENARIO("""
+        Check the condition that the given account object name is already 
+        ascribed to a physical account.
+        """)
+        eosf.use_keosd(False)
+        eosf.reset([eosf.Verbosity.TRACE]) 
+        wallet = Wallet()
+        account_master_create("account_master")
+        eosf.set_throw_error(False)
+        eosf.set_is_testing_errors()
+        ######################################################################
 
-    #     _.COMMENT("""
-    #     With the ``account_master`` object is in the namespace, create two account
-    #     objects: ``account_alice`` and ``account_carrol``.
+        _.COMMENT("""
+        With the ``account_master`` object is in the namespace, create two account
+        objects: ``account_alice`` and ``account_carrol``.
         
-    #     Then try to create another account object called ``account_alice``. Although
-    #     this object is going to refer to a new blockchain account, it cannot accept
-    #     the given name: error is issued.
+        Then try to create another account object called ``account_alice``. Although
+        this object is going to refer to a new blockchain account, it cannot accept
+        the given name: error is issued.
 
-    #     You are prompted to change the blocking name. Change it to 
-    #     ``account_alice_b``.
-    #     """)
-    #     account_create("account_alice", account_master)
-    #     account_create("account_carrol", account_master)
-    #     account_create("account_alice", account_master)
+        You are prompted to change the blocking name. Change it to 
+        ``account_alice_b``.
+        """)
+        account_create("account_alice", account_master)
+        account_create("account_carrol", account_master)
+        account_create("account_alice", account_master)
 
     def tearDown(self):
         pass

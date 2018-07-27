@@ -851,11 +851,27 @@ Cannot determine the contract workspace.
       if(!reqJson_.get("contract-dir", "").empty())
       {
         respJson_.put("contract-dir", getContractDir(
-          this, reqJson_.get<string>("contract-dir")));
-        respJson_.put("contract-wast", getContractFile(
-          this, reqJson_.get<string>("contract-dir"), ".wast"));
-        respJson_.put("contract-abi", getContractFile(
-          this, reqJson_.get<string>("contract-dir"), ".abi"));
+          this, reqJson_.get<string>("contract-dir"))); 
+
+        string wastFile = getContractFile(
+          this, reqJson_.get<string>("contract-dir"), ".wast");
+        if(!this->isError_)
+        {
+          respJson_.put("contract-wast", wastFile);
+        } else
+        {
+          this->isError_ = false;
+        }
+        
+        string abiFile = getContractFile(
+          this, reqJson_.get<string>("contract-dir"), ".abi");
+        if(!this->isError_)
+        {
+          respJson_.put("contract-abi", abiFile);
+        } else
+        {
+          this->isError_ = false;
+        }           
       }
     }
   }

@@ -128,7 +128,6 @@ namespace teos {
           in.close();
           contents = ss.str();
           boost::replace_all(contents, "@" + TEMPLATE_TOKEN + "@", name);
-          boost::replace_all(contents, "${PYTHONPATH}", getenv("PYTHONPATH"));
         } catch(exception& e){
           putError(e.what());
           return;
@@ -156,13 +155,21 @@ namespace teos {
     }
 
     void BootstrapContract::bootstrapContract(
-      string name, string templateName, bool removeExisting, bool vsc)
+      string name, string templateName, string workspace,
+      bool removeExisting, bool vsc)
     {
       namespace bfs = boost::filesystem;
 
-      bfs::path workspacePath(getContractWorkspace(this));
-      if(isError_){
-        return;
+      bfs::path workspacePath(workspace);
+
+      if(workspacePath.empty() 
+          || !workspacePath.is_absolute()
+          || !bfs::exists(workspacePath))
+      {
+        workspacePath = getContractWorkspace(this);
+        if(isError_){
+          return;
+        }        
       }
 
       bfs::path eosFactoryDir(getEosFactoryDir(this));

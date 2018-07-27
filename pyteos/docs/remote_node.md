@@ -6,7 +6,7 @@ Go to the *python* interpreter:
 ```bash
 $ python3
 ```
-```python
+```
 >>> import setup
 >>> import cleos
 >>> import eosf
