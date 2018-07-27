@@ -42,7 +42,7 @@ class Verbosity(enum.Enum):
     OUT_INFO = ['magenta', 'on_green']
     DEBUG = ['yellow']
 
-_verbosity = [Verbosity.EOSF, Verbosity.OUT]
+_verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
 def set_verbosity(value=_verbosity):
     global _verbosity
     _verbosity = value

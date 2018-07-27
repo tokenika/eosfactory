@@ -407,9 +407,6 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                 return
 
             account_map_json[account_object.name] = account_object_name
-            self.DEBUG("""
-            {}
-            """.format(eosf.account_mapp_to_string(account_map_json)))
 
             with open(self.wallet_dir + setup.account_map, "w") as out:
                 out.write(eosf.account_mapp_to_string(account_map_json))

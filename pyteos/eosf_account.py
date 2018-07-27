@@ -611,18 +611,17 @@ def account_create(
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=-1)
-
+            is_verbose=-1, json=True)
         if not account_object.ERROR(result):
             account_object.EOSF_TRACE("""
             * Push action:
                 {}
             """.format(re.sub(' +',' ',data)))
-            account_object.OUT(result.out_msg)
+            #account_object.OUT(result.out_msg)
             account_object.action = result
             try:
                 account_object._console = result.console
-                logger.OUT(account_object._console)
+                account_object.DEBUG(account_object._console)
             except:
                 pass
         else:
