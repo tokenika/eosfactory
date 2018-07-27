@@ -2,8 +2,8 @@
 # Eosio Token Contract
 
 ## Cases
-```
-The structure of the `Cases` files is explained in the file `setup.md` in
+```md
+The structure of the ``Cases`` files is explained in the file ``setup.md`` in
 this file's directory.
 
 Note, that all case files are both ``Markdown`` and ``Python`` scripts. 
@@ -13,7 +13,7 @@ Code``).
 ```
 
 ## Set-up
-```
+```md
 """
 import unittest
 import setup
@@ -32,11 +32,11 @@ eosf.reset([eosf.Verbosity.TRACE]) # start the local test node, reset
 """
 ```
 #### The `Wallet` object
+```md
+Create the singleton wallet object. The object represents a physical wallet,
+managed with either the KEOSD or NODEOS Wallet Manager:
 ```
-Create the singleton wallet object. The object represent a physical wallet,
-managed for either the KEOSD or NODEOS Wallet Manager:
-```
-```
+```md
 """
 wallet = Wallet()
 
@@ -48,32 +48,30 @@ eosf.set_throw_error(False) # make the errors be printed
 ```
 
 ## Case
-```
+```md
 With the master account, create four accounts: ``account_alice``, 
 ``account_bob``, ``account_carrol`` and ``account_test``. Add the 
 ``eosio.token`` contract to the last account.
 ```
 #### The `account_create` factory
-```
+```md
 Note that the account-creation command places in the global namespace the
 account object named with the first argument. The object represent a physical
 account in the blockchain and in the wallet.
 ```
-```
+```md
 """
 account_create("account_alice", account_master)
 account_create("account_bob", account_master)
 account_create("account_carol", account_master)
 account_create("account_test", account_master)
-account_test.code()
 contract_test = Contract(account_test, "eosio.token")
 deploy = contract_test.deploy()
-account_test.code()
 
 time.sleep(1)
 """
 ```
-```
+```md
 Execute actions on the contract account:
 
     * let eosio deposit an amount of 1000000000.0000 EOS there;
@@ -81,7 +79,7 @@ Execute actions on the contract account:
 
 Use the ``push_action`` method of the contract account:
 ```
-```
+```md
 """
 account_test.push_action(
     "create", 
@@ -98,12 +96,12 @@ account_test.push_action(
     permission=account_master)
 """
 ```
-```
-Execute a series of transfers between accounts. Use the ``push_action`` method
-of the contract account:
+```md
+Execute a series of transfers between the accounts. Use the ``push_action`` 
+method of the contract account:
 ```
 
-```
+```md
 """
 account_test.push_action(
     "transfer",
@@ -139,11 +137,11 @@ account_test.push_action(
 
 """
 ```
-```
+```md
 To see the records of the accounts, use the ``table`` method of the contract
 account:
 ```
-```
+```md
 """
 table_alice = account_test.table("accounts", account_alice)
 table_bob = account_test.table("accounts", account_bob)

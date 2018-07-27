@@ -1,8 +1,8 @@
 """
 # Account name conflict
 ## Cases
-```
-The structure of the `Cases` files is explained in the file `setup.md` in
+```md
+The structure of the ``Cases`` files is explained in the file ``setup.md`` in
 this file's directory.
 
 Note, that all case files are both ``Markdown`` and ``Python`` scripts. 
@@ -12,7 +12,7 @@ Code``).
 ```
 
 ## Set-up
-```
+```md
 """
 import setup
 import eosf
@@ -28,7 +28,7 @@ eosf.set_throw_error(False)
 """
 ```
 ## Case
-```
+```md
 The ``EOSFactory`` wraps EOSIO accounts with objects. The symbolic name of an 
 account object, for example ``account_alice`` has to be unique in a program. 
 Moreover, it has be unique in a collection of scripts, especially if they 
@@ -52,7 +52,7 @@ editor opens. CTR+X, to save and exit.
 Change ``account_alice`` to ``account_alice_b``.
 ```
 
-```
+```md
 """
 account_create("account_alice", account_master)
 account_create("account_carrol", account_master)

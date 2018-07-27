@@ -405,7 +405,7 @@ Usage: ./teos create key --jarg '{
       const char* getUsage() {
         return R"(
 Produce contract workspace from a given template.
-Usage: ./teos bootstrap contract [Options] name template [Options]
+Usage: ./teos template create [Options] name template [Options]
 Usage: ./teos create key --jarg '{
   "name": "<contract name>",
   "template": "<template name>",
