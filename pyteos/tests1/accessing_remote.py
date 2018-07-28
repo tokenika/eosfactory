@@ -55,6 +55,7 @@ Set-up:
 
         wallet = Wallet(wallet_name)
         eosf_account.account_master_test = eosf_account.AccountMaster(
+            "account_master_test"
             "dgxo1uyhoytn", 
             "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
             "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"

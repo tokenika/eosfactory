@@ -40,7 +40,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
             return [eosf.Error.INVALID_PASS, \
                 eosf.Error.INVALID_PASS.value]
 
-       return [eosf.Error.ANY, err_msg]
+        return [eosf.Error.ANY, err_msg]
 
     wallet_keys = None
     

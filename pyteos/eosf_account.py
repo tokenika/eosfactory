@@ -142,7 +142,6 @@ class AccountMaster(eosf.Logger):
             owner_key_private=None, active_key_private=None, verbosity=None):
 
         eosf.Logger.__init__(self, verbosity)
-        import pdb; pdb.set_trace()
         if name is None: 
             name = cleos.account_name()
         self.name = name
@@ -153,14 +152,13 @@ class AccountMaster(eosf.Logger):
 
         account_object = cleos.GetAccount(
             name, json=True, is_verbose=-1)
-
         error_type = self.ERROR_TYPE(account_object)
         if not error_type == eosf.Error.NO_ERROR:
             if not error_type == eosf.Error.ACCOUNT_DOES_NOT_EXIST:
                 self.fatal_error = True
                 self.ERROR(account_object)
                 return
-                
+
         self.exists = True
 
         if owner_key_private is None:
@@ -388,7 +386,8 @@ def account_master_create(
         )
         
         if account_object.in_wallet \
-                or account_object.just_put_into_wallet:
+                or account_object.just_put_into_wallet \
+                or account_object.fatal_error:
             return
   
         if not account_object.exists:
