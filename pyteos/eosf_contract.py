@@ -126,7 +126,7 @@ class Contract(eosf.Logger):
                 """.format(config.json["contract-dir"]))
 
     def error_map(self, err_msg):
-        return err_msg        
+        return [eosf.Error.ANY, err_msg]
 
     def deploy(self, permission=""):
         result = cleos.SetContract(

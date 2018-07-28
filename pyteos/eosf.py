@@ -31,6 +31,21 @@ import cleos_system
 def restart():
     cleos.restart()
 
+class Error(enum.Enum):
+    NO_ERROR = ""
+    ACCOUNT_DOES_NOT_EXIST = """
+Account ``{}`` does not exist in the blockchain. It may be created.
+"""
+    WALLET_ALREADY_EXIST = """
+        Wallet `{}` already exists.
+        """
+    NONEXISTENT_WALLET = """
+        Wallet ``{}`` does not exist.
+        """
+    INVALID_PASS = "Invalid password"
+    ANY = ""
+
+
 
 class Verbosity(enum.Enum):
     COMMENT = ['green']
@@ -159,10 +174,11 @@ class Logger():
                 ", ".join(Verbosity.DEBUG.value))
 
     def error_map(self, err_msg):
-        return err_msg
+        return Error.NO_ERROR
 
     def switch(self, cleos_object):
-        cleos_object.err_msg = self.error_map(cleos_object.err_msg)
+        cleos_object.err_type = self.error_map(cleos_object.err_msg)[0]
+        cleos_object.err_msg = self.error_map(cleos_object.err_msg)[1]
         return cleos_object                
 
     def ERROR(self, err_msg):

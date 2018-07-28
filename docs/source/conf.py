@@ -82,10 +82,10 @@ pygments_style = 'sphinx'
 #
 # haiku classic sphinxdoc bizstyle sphinx_rtd_theme
 
-html_theme = "bizstyle"
-html_theme_options = {
-    'body_max_width': '650px' 
-}
+# html_theme = "bizstyle"
+# html_theme_options = {
+#     'body_max_width': '650px' 
+# }
 
 # html_theme = "alabaster"
 # html_theme_options = {
@@ -93,7 +93,10 @@ html_theme_options = {
 #     'sidebar_width': '220px'
 # }
 
-# html_theme = "classic"
+html_theme = "classic"
+html_theme_options = {
+    'body_max_width': '750px' 
+}
 
 # html_theme = "readable"
 # html_theme_path = sphinx_readable_theme.get_html_theme_path()

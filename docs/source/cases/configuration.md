@@ -1,17 +1,8 @@
 """
 # EOSFactory configuration
-```md
-The structure of the ``Cases`` files is explained in the file ``setup.md`` in
-this file's directory.
 
-Note, that all case files are both ``Markdown`` and ``Python` scripts. 
-Therefore, you can execute them with `python3 <file name>` bash command, or 
-you can view them, (RIGHT MOUSE -> Open Preview if you use the ``Visual Studio 
-Code``).
-```
 ```md
-Primarily, ``EOSFactory`` is configured when it is installed with the 
-``build.sh`` script in the root of the repository
+This file can be executed as a python script: ``python3 configuration.md``.
 ```
 
 ## Inspect the configuration

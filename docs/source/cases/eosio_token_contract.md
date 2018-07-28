@@ -2,14 +2,10 @@
 # Eosio Token Contract
 
 ## Cases
-```md
-The structure of the ``Cases`` files is explained in the file ``setup.md`` in
-this file's directory.
 
-Note, that all case files are both ``Markdown`` and ``Python`` scripts. 
-Therefore, you can execute them with `python3 <file name>` bash command, or 
-you can view them, (RIGHT MOUSE -> Open Preview if you use the ``Visual Studio 
-Code``).
+```md
+This file can be executed as a python script: ``python3 
+eosio_token_contract.md``.
 ```
 
 ## Set-up

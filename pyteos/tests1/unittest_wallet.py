@@ -4,9 +4,9 @@ import setup
 import eosf
 from eosf_wallet import Wallet
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, eosf.Verbosity.DEBUG])
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
+    eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
-#setup.set_command_line_mode()
 
 cryptolions = "88.99.97.30:38888"
 _ = eosf.Logger()
@@ -30,17 +30,16 @@ NEXT TEST ====================================================================
 
     def test_create_keosd_wallet(self):
         _.SCENARIO("""
-        Check creation of a wallet under the KEOSD Wallet Manager.
-        Set-up: 
-            * delete existing, if any, wallet named ``jungle_wallet`` using
-                a general procedure as the EOSFactory does not have any;
-            * set KEOSD as the Wallet Manager;
-            * set the URL of a remote testnet;
-            * stop the KEOSD Wallet Manager.
-        Tests:
-            * create a wallet named ``jungle_wallet``;
-                Expected result is that a keep password message is printed.
-
+Test creation of a wallet under the KEOSD Wallet Manager.
+Set-up: 
+    * delete existing, if any, wallet named ``jungle_wallet`` using
+        a general procedure as the EOSFactory does not have any;
+    * set KEOSD as the Wallet Manager;
+    * set the URL of a remote testnet;
+    * stop the KEOSD Wallet Manager.
+Tests:
+    * create a wallet named ``jungle_wallet``;
+        Expected result is that a password message is printed.
         """)        
         eosf.use_keosd(True)
         eosf.kill_keosd()

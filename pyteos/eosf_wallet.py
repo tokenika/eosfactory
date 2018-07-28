@@ -29,19 +29,18 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
     def error_map(self, err_msg):
 
         if "Wallet already exists" in err_msg:
-            return"""
-                Wallet `{}` already exists.
-                """.format(self.name)
+            return [eosf.Error.WALLET_ALREADY_EXIST, \
+                eosf.Error.WALLET_ALREADY_EXIST.value.format(self.name)]
 
         if "Error 3120002: Nonexistent wallet" in err_msg:
-            return """
-                Wallet ``{}`` does not exist.
-                """.format(self.name)
+            return [eosf.Error.NONEXISTENT_WALLET, \
+                eosf.Error.NONEXISTENT_WALLET.value.format(self.name)]
  
         if "Invalid wallet password" in err_msg:
-            return "Invalid password."
+            return [eosf.Error.INVALID_PASS, \
+                eosf.Error.INVALID_PASS.value]
 
-        return err_msg
+       return [eosf.Error.ANY, err_msg]
 
     wallet_keys = None
     
@@ -156,7 +155,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
         Returns `cleos.WalletLock` object.
         """
         result = cleos.WalletLock(is_verbose=-1)
-        if not self.ERROR(self.error_map(result)):
+        if not self.ERROR(result):
             self.EOSF("All wallet locked.")                        
 
     def unlock(self):

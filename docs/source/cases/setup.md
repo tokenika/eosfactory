@@ -1,21 +1,10 @@
 """
-# Setting-up cases
+# Setting-up EOSFactory tests
+
 ```md
-The structure of the most of the ``Cases`` files is explained in this file.
-
-Note, that all case files are both ``Markdown`` and ``Python` scripts. 
-Therefore, you can execute them with `python3 <file name>` bash command, or 
-you can view them, (RIGHT MOUSE -> Open Preview if you use the ``Visual Studio 
-Code``).
-
-Any test has two parts. At first, test staging goes. If a local testnode is 
-used, is set-up to meet conditions of the scenario of the test. Otherwise, 
-with a remote node, test staging involves probing the state of the node 
-whether it fulfils the assumptions of the scenario of the test.
-
-In this article, we show facilities the the `EOSFactory` provids for staging
-the tests.
+This file can be executed as a python script: ``python3 setup.md``.
 ```
+
 
 ## Set-up part
 
@@ -52,7 +41,7 @@ Default is [eosf.Verbosity.EOSF, eosf.Verbosity.OUT]
 ### Code excerpt
 
 ```md
-It follows a script that demonstates all the (almost) steering statements:
+The following script demonstrates steering statements:
 ```
 
 ```md

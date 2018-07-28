@@ -32,6 +32,8 @@ wallet_globals = None
 """The singleton ``Wallet`` object.
 """
 wallet_singleton = None
+account_master_test = None
+
 def is_wallet_defined(logger):
     """
     """
@@ -116,7 +118,7 @@ class Eosio():
     def __str__(self):
         return self.name
 
-class AccountMaster():
+class AccountMaster(eosf.Logger):
     """Look for the account of the given name, put it into the wallet.
 
     - **parameters**::
@@ -135,68 +137,75 @@ class AccountMaster():
         
     """    
     def __init__(
-        account_object_name, name, 
-        owner_key_private, active_key_private, verbosity=None):
+            self,
+            account_object_name, name=None, 
+            owner_key_private=None, active_key_private=None, verbosity=None):
 
-        if not name: 
+        eosf.Logger.__init__(self, verbosity)
+        import pdb; pdb.set_trace()
+        if name is None: 
             name = cleos.account_name()
         self.name = name
         self.exists = False
         self.in_wallet = False
         self.just_put_into_wallet = False
         self.fatal_error = False
-        self.logger = eosf.Logger(verbosity)
 
         account_object = cleos.GetAccount(
             name, json=True, is_verbose=-1)
-        if logger.ERROR(account_object):
+
+        error_type = self.ERROR_TYPE(account_object)
+        if not error_type == eosf.Error.NO_ERROR:
+            if not error_type == eosf.Error.ACCOUNT_DOES_NOT_EXIST:
                 self.fatal_error = True
-        else:
-            self.exists = True
+                self.ERROR(account_object)
+                return
+                
+        self.exists = True
 
-            if owner_key_private is None:
-                self.owner_key = cleos.CreateKey(
-                    "owner", 
-                    self.json["permissions"][1]["required_auth"]["keys"] \
-                    [0]["key"], 
-                    is_verbose=0)
-            else: # an orphan account, private key is restored from a safe
-                self.owner_key = cleos.CreateKey(
-                    "owner", 
-                    self.json["permissions"][1]["required_auth"]["keys"] \
-                    [0]["key"], owner_key_private,
-                    is_verbose=0) 
+        if owner_key_private is None:
+            self.owner_key = cleos.CreateKey(
+                "owner", 
+                self.json["permissions"][1]["required_auth"]["keys"] \
+                [0]["key"], 
+                is_verbose=0)
+        else: # an orphan account, private key is restored from a safe
+            self.owner_key = cleos.CreateKey(
+                "owner", 
+                self.json["permissions"][1]["required_auth"]["keys"] \
+                [0]["key"], owner_key_private,
+                is_verbose=0) 
 
-            if active_key_private is None:
-                self.owner_key = cleos.CreateKey(
-                    "owner", 
-                    self.json["permissions"][0]["required_auth"]["keys"] \
-                    [0]["key"], 
-                    is_verbose=0)
-            else: # an orphan account, private key is restored from a safe
-                self.active_key = cleos.CreateKey(
-                    "active", 
-                    self.json["permissions"][0]["required_auth"]["keys"] \
-                    [0]["key"], active_key_private,
-                    is_verbose=0)
+        if active_key_private is None:
+            self.owner_key = cleos.CreateKey(
+                "owner", 
+                self.json["permissions"][0]["required_auth"]["keys"] \
+                [0]["key"], 
+                is_verbose=0)
+        else: # an orphan account, private key is restored from a safe
+            self.active_key = cleos.CreateKey(
+                "active", 
+                self.json["permissions"][0]["required_auth"]["keys"] \
+                [0]["key"], active_key_private,
+                is_verbose=0)
 
-            logger.EOSF("""
-            Account ``{}`` exists in the blockchain. Checking whether the wallet
-            has keys to it ... 
-            """.format(self.name))
+        self.EOSF("""
+        Account ``{}`` exists in the blockchain. Checking whether the wallet
+        has keys to it ... 
+        """.format(self.name))
 
-            if put_account_to_wallet_and_on_stack(
-                    self, account_object_name, logger):
-                self.in_wallet = True
+        if put_account_to_wallet_and_on_stack(
+                self, account_object_name, self):
+            self.in_wallet = True
 
-            if self.in_wallet:
-                logger.EOSF("""
-                ... indeed, there are proper keys in the wallet.
-                """)
+        if self.in_wallet:
+            self.EOSF("""
+            ... indeed, there are proper keys in the wallet.
+            """)
 
     def info(self):
         result = cleos.GetAccount(self.name, is_verbose=-1)
-        if not logger.ERROR(result):
+        if not self.ERROR(result):
             print(ao.out_msg)
 
     def __str__(self):
@@ -248,7 +257,7 @@ class SystemNewaccount(cleos_system.SystemNewaccount, eosf.Logger):
         eosf.Logger.__init__(self, verbosity)
         
 def account_master_create(
-            account_object_name, account_name="", 
+            account_object_name, account_name=None, 
             owner_key=None, active_key=None,
             verbosity=None):
     """Create account object in caller's global namespace.
@@ -372,15 +381,14 @@ def account_master_create(
     whether it is in the wallets. If so, put the account object into the global 
     namespace of the caller. and **return**. 
     """
-    while True:
+    while True:     
         account_object = AccountMaster(
             account_object_name, account_name, 
             owner_key, active_key, verbosity
         )
         
         if account_object.in_wallet \
-                or account_object.just_put_into_wallet \
-                or account_object.fatal_error:
+                or account_object.just_put_into_wallet:
             return
   
         if not account_object.exists:
@@ -414,6 +422,12 @@ def account_master_create(
                 account_object.active_key.key_private
                 ))
 
+            global account_master_test
+            if not account_master_test is None:
+                account_name = account_master_test.name
+                owner_key = account_master_test.owner_key
+                active_key = account_master_test.active_key
+                
             while True:
                 is_ready = input("enter 'go' when ready or 'q' to quit <<< ")
                 if is_ready == "q":
@@ -539,14 +553,14 @@ def account_create(
     def error_map(account_object, err_msg):
 
         if "main.cpp:2888" in err_msg:
-            err_msg = """
-    Account ``{}`` does not exist in the blockchain. It may be created.
-    """.format(account_object.name)
-            return err_msg
-        if "transaction executed locally, but may not be" in err_msg:
-            return ""
+            return [eosf.Error.ACCOUNT_DOES_NOT_EXIST, \
+                eosf.Error.ACCOUNT_DOES_NOT_EXIST.value. \
+                    format(account_object.name)]
 
-        return err_msg
+        if "transaction executed locally, but may not be" in err_msg:
+            return [eosf.Error.NO_ERROR, ""]
+
+        return [eosf.Error.ANY, err_msg]
 
     account_object.error_map = types.MethodType(error_map, account_object)
 
