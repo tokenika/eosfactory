@@ -1,166 +1,148 @@
-import sys
+import unittest
 import setup
 import eosf
-import node
-import unittest
-from termcolor import cprint
+import time
 
-setup.set_verbose(False)
-setup.set_json(False)
-eosf.use_keosd(False)
+from eosf_wallet import Wallet
+from eosf_account import account_create, account_master_create
+from eosf_contract import Contract
+
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
+# eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
+eosf.set_throw_error(False)
+#setup.set_command_line_mode()
+
+_ = eosf.Logger()
 
 class Test1(unittest.TestCase):
 
     def run(self, result=None):
-        """ Stop after first error """
-        if not result.failures:
-            super().run(result)
+        super().run(result)
+        print("""
 
+NEXT TEST ====================================================================
+""")
 
     @classmethod
     def setUpClass(cls):
-        testnet = node.reset()
-        assert(not testnet.error)
-
-        wallet = eosf.Wallet()
-        assert(not wallet.error)
-
-        global account_master
-        account_master = eosf.AccountMaster()
-        wallet.import_key(account_master)
-        assert(not account_master.error)
-
-        global account_alice
-        account_alice = eosf.account(account_master)
-        wallet.import_key(account_alice)
-        assert(not account_alice.error)
-
-        global account_bob
-        account_bob = eosf.account(account_master)
-        wallet.import_key(account_bob)
-        assert(not account_bob.error)
-
-        global account_carol
-        account_carol = eosf.account(account_master)
-        wallet.import_key(account_carol)
-        assert(not account_carol.error)
-
-        account_deploy = eosf.account(account_master)
-        wallet.import_key(account_deploy)
-        assert(not account_deploy.error)
-
-        contract_eosio_bios = eosf.Contract(
-            account_master, "eosio.bios").deploy()
-        assert(not contract_eosio_bios.error)
-
-        global contract
-        contract = eosf.Contract(account_deploy, "eosio.token")
-        assert(not contract.error)
-
-        deployment = contract.deploy()
-        assert(not deployment.error)
-
+        print()
 
     def setUp(self):
-        pass
+        eosf.restart()
+        eosf.set_is_testing_errors(False)
+        eosf.set_throw_error(True)
 
+    def test_eosio_token_contract(self):
+        eosf.use_keosd(False)
+        eosf.reset([eosf.Verbosity.TRACE]) 
+        wallet = Wallet()
+        account_master_create("account_master")
+        eosf.set_throw_error(False)
+        eosf.set_is_testing_errors()
 
-    def test_01(self):
-        
-        cprint("""
-Action contract.push_action("create")
-        """, 'magenta')
-        self.assertFalse(contract.push_action(
-            "create",
-            '{"issuer":"'
-                + str(account_master)
-                + '", "maximum_supply":"1000000000.0000 EOS",\
-                "can_freeze":0, "can_recall":0, "can_whitelist":0}').error)
+        ######################################################################        
 
-        cprint("""
-Action contract.push_action("issue")
-        """, 'magenta')
-        self.assertFalse(contract.push_action(
+        _.SCENARIO("""
+        With the master account, create four accounts: ``account_alice``, 
+        ``account_bob``, account_carol`` and ``account_eosio_token``. Add the 
+        ``eosio.token`` contract to the last account.
+        """)
+
+        account_create("account_alice", account_master)
+        account_create("account_bob", account_master)
+        account_create("account_carol", account_master)
+        account_create("account_eosio_token", account_master)
+        contract_eosio_token = Contract(
+            account_eosio_token, sys.path[0] + "/../")
+        deploy = contract_eosio_token.deploy()
+
+        time.sleep(1)
+
+        _.COMMENT("""
+        Execute actions on the contract account:
+            * let eosio deposit an amount of 1000000000.0000 EOS there;
+            * transfer some EOS to the ``alice`` account.
+        """)
+
+        account_eosio_token.push_action(
+            "create", 
+            '{"issuer":"' 
+                + str(account_master) 
+                + '", "maximum_supply":"1000000000.0000 EOS", \
+                "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+        self.assertTrue(
+            '"issuer":"eosio","maximum_supply":"1000000000.0000 EOS"' \
+                in account_eosio_token.out_buffer)
+
+        account_eosio_token.push_action(
             "issue",
             '{"to":"' + str(account_alice)
-                + '", "quantity":"100.0000 EOS", "memo":"memo"}',
-                account_master).error)
+                + '", "quantity":"100.0000 EOS", '
+                + '"memo":"issue 100.0000 EOS from eosio to alice"}',
+            permission=account_master)
 
+        _.COMMENT("""
+        Execute a series of transfers between accounts:
+        """)
 
-    def test_02(self):
-
-        cprint("""
-Action contract.push_action("transfer", account_alice)
-        """, 'magenta')
-        self.assertFalse(contract.push_action(
+        account_eosio_token.push_action(
             "transfer",
             '{"from":"' + str(account_alice)
                 + '", "to":"' + str(account_carol)
-                + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
-            account_alice).error)
+                + '", "quantity":"25.0000 EOS", '
+                + '"memo":"transfer 25.0000 EOS from alice to carol"}',
+            permission=account_alice)
 
-        cprint("""
-Action contract.push_action("transfer", account_carol)
-        """, 'magenta')
-        self.assertFalse(contract.push_action(
+        account_eosio_token.push_action(
             "transfer",
             '{"from":"' + str(account_carol)
                 + '", "to":"' + str(account_bob)
-                + '", "quantity":"13.0000 EOS", "memo":"memo"}', 
-            account_carol).error)
+                + '", "quantity":"11.0000 EOS", '
+                + '"memo":"transfer 11.0000 EOS from carol to bob"}',
+            permission=account_carol)
 
-        cprint("""
-Action contract.push_action("transfer", account_bob)
-        """, 'magenta')
-        self.assertFalse(contract.push_action(
-            "transfer", 
+        account_eosio_token.push_action(
+            "transfer",
+            '{"from":"' + str(account_carol)
+                + '", "to":"' + str(account_bob)
+                + '", "quantity":"2.0000 EOS", '
+                + '"memo":"transfer 2.0000 EOS from carol to bob"}',
+            permission=account_carol)
+
+        account_eosio_token.push_action(
+            "transfer",
             '{"from":"' + str(account_bob)
                 + '", "to":"' + str(account_alice)
-                + '", "quantity":"2.0000 EOS", "memo":"memo"}', 
-            account_bob).error)
+                + '", "quantity":"2.0000 EOS", '
+                + '"memo":"transfer 2.0000 EOS from bob to alice"}',
+            permission=account_bob)                
 
+        _.COMMENT("""
+        See the records of the account:
+        """)
 
-    def test_03(self):
+        table_alice = account_eosio_token.table("accounts", account_alice)
+        table_bob = account_eosio_token.table("accounts", account_bob)
+        table_carol = account_eosio_token.table("accounts", account_carol)
 
-        cprint("""
-Assign t1 = contract.table("accounts", account_alice)
-        """, 'magenta')
-        t1 = contract.table("accounts", account_alice)
+        _.COMMENT("""
+        Check assertions:
+        * assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')
+        * assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')
+        * assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')
+        """)
 
-        cprint("""
-Assign t2 = contract.table("accounts", account_bob)
-        """, 'magenta')
-        t2 = contract.table("accounts", account_bob)
-        
-        cprint("""
-Assign t3 = contract.table("accounts", account_carol)
-        """, 'magenta')
-        t3 = contract.table("accounts", account_carol)
-
-        cprint("""
-Assert t1.json["rows"][0]["balance"] == '77.0000 EOS'
-        """, 'magenta')
-        self.assertEqual(t1.json["rows"][0]["balance"], '77.0000 EOS')
-
-        cprint("""
-Assert t2.json["rows"][0]["balance"] == '11.0000 EOS'
-        """, 'magenta')
-        self.assertEqual(t2.json["rows"][0]["balance"], '11.0000 EOS')
-
-        cprint("""
-Assert t3.json["rows"][0]["balance"] == '12.0000 EOS'
-        """, 'magenta')
-        self.assertEqual(t3.json["rows"][0]["balance"], '12.0000 EOS')
+        self.assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')
+        self.assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')
+        self.assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')
 
 
     def tearDown(self):
         pass
 
-
     @classmethod
     def tearDownClass(cls):
-        node.stop()
-
+        pass
 
 if __name__ == "__main__":
     unittest.main()

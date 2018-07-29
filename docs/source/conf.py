@@ -87,16 +87,16 @@ pygments_style = 'sphinx'
 #     'body_max_width': '650px' 
 # }
 
-# html_theme = "alabaster"
-# html_theme_options = {
-#     'page_width': '980px',
-#     'sidebar_width': '220px'
-# }
-
-html_theme = "classic"
+html_theme = "alabaster"
 html_theme_options = {
-    'body_max_width': '750px' 
+    'page_width': '980px',
+    'sidebar_width': '220px'
 }
+
+# html_theme = "classic"
+# html_theme_options = {
+#     'body_max_width': '760px' 
+# }
 
 # html_theme = "readable"
 # html_theme_path = sphinx_readable_theme.get_html_theme_path()

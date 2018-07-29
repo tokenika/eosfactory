@@ -40,6 +40,8 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
             return eosf.InvalidPassword(
                 eosf.InvalidPassword.msg_template.format(self.name))
 
+        if not err_msg:
+            return None
         return eosf.Error(err_msg)
 
     wallet_keys = None
@@ -242,7 +244,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
             account_name = account_or_key.name  
             key = account_or_key.owner_key
             imported_keys.append(key.key_public)
-
+            
             wallet_import = cleos.WalletImport(
                 key, self.name, is_verbose=-1)
             imported_keys.append(key.key_public)

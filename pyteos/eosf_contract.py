@@ -126,7 +126,9 @@ class Contract(eosf.Logger):
                 """.format(config.json["contract-dir"]))
 
     def error_map(self, err_msg):
-        return [eosf.Error.ANY, err_msg]
+        if not err_msg:
+            return None
+        return eosf.Error(err_msg)
 
     def deploy(self, permission=""):
         result = cleos.SetContract(
@@ -139,7 +141,6 @@ class Contract(eosf.Logger):
             is_verbose=-1
         )
         if not self.ERROR(result):
-
             code = cleos.GetCode(self.account.name, is_verbose=-1)
             if code.code_hash == \
             "0000000000000000000000000000000000000000000000000000000000000000":
@@ -148,7 +149,8 @@ Error in contract deployment:
 Despite the ``set contract`` command returned without any error,
 the code hash of the associated account is null:
 {}
-                """.format(code.code_hash))
+                """.format(code.code_hash))                
+
                 return
             else:
                 self.EOSF("""

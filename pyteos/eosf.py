@@ -106,6 +106,7 @@ class Logger():
 
         self.verbosity = verbosity
         self.cleos_object = None
+        self.eosf_buffer = ""
         self.out_buffer = ""
         self.out_info_buffer = ""
         self.error_buffer = ""
@@ -122,11 +123,13 @@ class Logger():
         self.COMMENT(msg)
 
     def EOSF(self, msg, do=False):
+        msg = cleos.heredoc(msg)
+        self.eosf_buffer = msg
         if msg and (Verbosity.EOSF in self.verbosity \
                 or Verbosity.EOSF in _verbosity_plus) \
                 or do:
             cprint(
-                cleos.heredoc(msg),
+                msg,
                 ", ".join(Verbosity.EOSF.value))
 
     def TRACE(self, msg, do=False):
@@ -189,54 +192,82 @@ class Logger():
                 ", ".join(Verbosity.DEBUG.value))
 
     def error_map(self, err_msg):
-        return eosf.Error(err_msg)
+        if "main.cpp:2888" in err_msg:
+            return AccountNotExist(
+                AccountNotExist.msg_template.format(self.name))
 
-    def switch(self, cleos_object):
-        cleos_object.error_object = self.error_map(cleos_object.err_msg)
-        return cleos_object                
+        if "transaction executed locally, but may not be" in err_msg:
+            return None
 
-    def ERROR(self, err_msg):
-        """Print an error message or throw 'Exception'.
-
-        The 'err_msg' argument may be a string error message or any object having
-        the string attribute `err_msg`.
-
-        If 'set_throw_error(True)', an `Exception object is thrown, otherwise the
-        message is printed.
-
-        arguments:
-        err_msg -- error message string or object having the attribute err_msg
-        """
         if not err_msg:
-            return False
+            return None
+        return Error(err_msg)
 
+    def switch(self, cleos_object_or_str):
         try:
-            cleos_object = self.switch(err_msg)
-            if cleos_object.error_object is None
-                return False
-            err_msg = cleos_object.err_msg
+            cleos_object_or_str.error_object = \
+                self.error_map(cleos_object_or_str.err_msg)
         except:
             pass
+
+        return cleos_object_or_str   
+                     
+    def ERROR_OBJECT(self, err_msg):
+        try:
+            cleos_object = self.switch(err_msg)
+            return cleos_object.error_object
+        except:
+            return None
+
+    def ERROR(self, cleos_or_str=None):
+        """Print an error message or throw 'Exception'.
+
+            The 'cleos_or_str' argument may be a string error message or any object having
+            the string attribute `err_msg`.
+
+            If 'set_throw_error(True)', an `Exception object is thrown, otherwise the
+            message is printed.
+
+            arguments:
+            cleos_or_str -- error message string or object having the attribute err_msg
+        """
+        if cleos_or_str is None:
+            cleos_or_str = self
+
+        if not isinstance(cleos_or_str, str):
+            if not cleos_or_str.error:
+                return False
+                            
+            cleos_object = self.switch(cleos_or_str)
+            if cleos_object.error_object is None:
+                return False
+
+            msg = cleos_object.err_msg
+        else:
+            msg = cleos_or_str
+
+        if not msg:
+            return False
 
         if _is_testing_error:
             color = ", ".join(Verbosity.ERROR_TESTING.value)
         else:
             color = ", ".join(Verbosity.ERROR.value)
 
-        err_msg = colored(
-            "ERROR:\n{}".format(cleos.heredoc(err_msg)), 
+        msg = colored(
+            "ERROR:\n{}".format(cleos.heredoc(msg)), 
             color)  + "\n"
 
-        self.error_buffer = err_msg
+        self.error_buffer = msg
         global _is_throw_error
         if _is_throw_error:
-            try:
-                cleos_object = self.switch(err_msg)
+            if not isinstance(cleos_or_str, str):
+                cleos_object = self.switch(cleos_or_str)
                 raise cleos_object.error_object
-            except:
-                raise Exception(err_msg)
+            else:
+                raise Exception(cleos_or_str)
         else:
-            print(err_msg)
+            print(msg)
 
         return True
 

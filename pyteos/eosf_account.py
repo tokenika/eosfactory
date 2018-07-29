@@ -85,7 +85,6 @@ def put_account_to_wallet_and_on_stack(
         wallet_singleton.map_account(account_object_name, account_object)
         # export the account object to the globals in the wallet module:
         wallet_globals[account_object_name] = account_object
-        account_object.in_wallet = True
         return True
     else:
         if wallet_singleton.import_key(account_object):
@@ -118,7 +117,7 @@ class Eosio():
     def __str__(self):
         return self.name
 
-class AccountMaster(eosf.Logger):
+class GetAccount(cleos.GetAccount, eosf.Logger):
     """Look for the account of the given name, put it into the wallet.
 
     - **parameters**::
@@ -143,26 +142,28 @@ class AccountMaster(eosf.Logger):
 
         eosf.Logger.__init__(self, verbosity)
         if name is None: 
-            name = cleos.account_name()
-        self.name = name
+            self.name = cleos.account_name()
+        else:
+            self.name = name
+            
+        if active_key_private is None:
+            active_key_private = owner_key_private
+
         self.exists = False
-        self.in_wallet = False
         self.just_put_into_wallet = False
         self.fatal_error = False
+        self.has_keys = not owner_key_private is None
+        
+        cleos.GetAccount.__init__(
+            self, self.name, json=True, is_verbose=-1)
 
-        account_object = cleos.GetAccount(
-            name, json=True, is_verbose=-1)
-            
-        if not account_object.error_object is None:
-            if not isinstance(
-                account_object.error_object,
-                eosf.AccountNotExist):
-                self.fatal_error = True
-                self.ERROR(account_object)
-                return
+        self.ERROR_OBJECT(self)
+        if not self.error_object is None:
+            if not isinstance(self.error_object, eosf.AccountNotExist):
+                self.fatal_error = True            
+            return
 
         self.exists = True
-
         if owner_key_private is None:
             self.owner_key = cleos.CreateKey(
                 "owner", 
@@ -190,18 +191,8 @@ class AccountMaster(eosf.Logger):
                 is_verbose=0)
 
         self.EOSF("""
-        Account ``{}`` exists in the blockchain. Checking whether the wallet
-        has keys to it ... 
-        """.format(self.name))
-
-        if put_account_to_wallet_and_on_stack(
-                self, account_object_name, self):
-            self.in_wallet = True
-
-        if self.in_wallet:
-            self.EOSF("""
-            ... indeed, there are proper keys in the wallet.
-            """)
+            * Account ``{}`` exists in the blockchain.
+            """.format(self.name))
 
     def info(self):
         result = cleos.GetAccount(self.name, is_verbose=-1)
@@ -381,18 +372,39 @@ def account_master_create(
     whether it is in the wallets. If so, put the account object into the global 
     namespace of the caller. and **return**. 
     """
-    while True:     
-        account_object = AccountMaster(
+    while True:
+        import pdb; pdb.set_trace()
+        account_object = GetAccount(
             account_object_name, account_name, 
-            owner_key, active_key, verbosity
-        )
+            owner_key, active_key, verbosity)
         
-        if account_object.in_wallet \
-                or account_object.just_put_into_wallet \
-                or account_object.fatal_error:
+        if account_object.fatal_error:
             return
-  
-        if not account_object.exists:
+
+        if account_object.exists:
+            if account_object.has_keys: # it is your account
+                self.EOSF("""
+                    * Checking whether the wallet has keys to the account ``{}``
+                    """.format(self.name))
+
+                if put_account_to_wallet_and_on_stack(
+                        self, account_object_name, self):
+                    self.EOSF("""
+                        * The account ``{}`` is in the wallet.
+                        """)
+                    return
+            else: # the name is taken by somebody else
+                logger.EOSF("""
+                ###
+                You can try another name. Do you wish to do this?
+                """)
+                decision = input("y/n <<< ")
+                if decision == "y":
+                    account_name = input(
+                        "enter the account name or nothing to make the name random <<< ")
+                else:
+                    return
+        else:
             if owner_key is None:
                 account_object.owner_key = cleos.CreateKey(
                     "owner", is_verbose=-1)
@@ -426,8 +438,8 @@ def account_master_create(
             global account_master_test
             if not account_master_test is None:
                 account_name = account_master_test.name
-                owner_key = account_master_test.owner_key
-                active_key = account_master_test.active_key
+                owner_key = account_master_test.owner_key.key_private
+                active_key = account_master_test.active_key.key_private
                 
             while True:
                 is_ready = input("enter 'go' when ready or 'q' to quit <<< ")
@@ -436,17 +448,7 @@ def account_master_create(
                 else: 
                     if is_ready == "go":
                         break
-        else:
-            logger.EOSF("""
-            ###
-            You can try another name. Do you wish to do this?
-            """)
-            decision = input("y/n <<< ")
-            if decision == "y":
-                account_name = input(
-                    "enter the account name or nothing to make the name random <<< ")
-            else:
-                return
+
 
 def account_create(
         account_object_name,
@@ -560,6 +562,8 @@ def account_create(
         if "transaction executed locally, but may not be" in err_msg:
             return None
 
+        if not err_msg:
+            return None
         return eosf.Error(err_msg)
 
     account_object.error_map = types.MethodType(error_map, account_object)

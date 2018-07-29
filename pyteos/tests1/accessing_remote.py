@@ -13,6 +13,15 @@ eosf.set_throw_error(False)
 cryptolions = "88.99.97.30:38888"
 _ = eosf.Logger()
 
+"""
+Accout Name: dgxo1uyhoytn
+Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
+Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
+
+Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
+Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA 
+"""
+
 class Test1(unittest.TestCase):
 
     def run(self, result=None):
@@ -54,25 +63,13 @@ Set-up:
             pass
 
         wallet = Wallet(wallet_name)
-        eosf_account.account_master_test = eosf_account.AccountMaster(
-            "account_master_test"
+        eosf_account.account_master_test = eosf_account.GetAccount(
+            "account_master_test",
             "dgxo1uyhoytn", 
             "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
             "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
         )
-        if(eosf_account.account_master_test.error):
-            print("""
-The test assumes that you kno an account on the testnet, that is, you know
-* account name;
-* account owner key private;
-* account active key private.
-
-The data that you have specified in the above definition of the 
-``AccountMaster`` object are wrong.
-
-Cannot continue.
-            """)
-            return
+        eosf_account.account_master_test.ERROR()
 
         eosf.set_throw_error(False)
         eosf.set_is_testing_errors()        
