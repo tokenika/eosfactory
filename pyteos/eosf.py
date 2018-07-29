@@ -429,8 +429,8 @@ def info():
     """
     Display EOS node status.
     """
-    get_info = cleos.GetInfo()
-    logger = Logger(verbosity)
+    get_info = cleos.GetInfo(is_verbose=-1)
+    logger = Logger(None)
     if not logger.ERROR(get_info):
         logger.OUT(str(logger))
 

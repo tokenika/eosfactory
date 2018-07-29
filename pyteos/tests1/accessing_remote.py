@@ -41,15 +41,15 @@ NEXT TEST ====================================================================
 
     def test_create_keosd_wallet(self):
         _.SCENARIO("""
-Test registering to a remote testnet.
-Set-up: 
-    * delete existing, if any, wallet named ``jungle_wallet`` using
-        a general procedure as the EOSFactory does not have any;
-    * set KEOSD as the Wallet Manager;
-    * set the URL of a remote testnet;
-    * stop the KEOSD Wallet Manager.
-    * create a wallet named ``jungle_wallet``;
-        Expected result is that a password message is printed.
+        Test registering to a remote testnet.
+        Set-up: 
+            * delete existing, if any, wallet named ``jungle_wallet`` using
+                a general procedure as the EOSFactory does not have any;
+            * set KEOSD as the Wallet Manager;
+            * set the URL of a remote testnet;
+            * stop the KEOSD Wallet Manager.
+            * create a wallet named ``jungle_wallet``;
+                Expected result is that a password message is printed.
         """)
 
         eosf.use_keosd(True)
@@ -63,6 +63,18 @@ Set-up:
             pass
 
         wallet = Wallet(wallet_name)
+
+        _.COMMENT("""
+        Use ``eosf.info()`` to check whether the remote testnet responces: it throws
+        an exception if the testnode is off. 
+        """)
+        eosf.info()
+
+        _.COMMENT("""
+        Use an active account, called ``account_master_test`` to simulate the 
+        registration procedure: in tests, this account substitutes one that would be
+        physically registered.
+        """)
         eosf_account.account_master_test = eosf_account.GetAccount(
             "account_master_test",
             "dgxo1uyhoytn", 
@@ -75,6 +87,10 @@ Set-up:
         eosf.set_is_testing_errors()        
         ######################################################################
 
+        _.COMMENT("""
+        In subsequent tests, you have to change the account object name, here 
+        ``account_master``, or you have to resolve name conflicts, if you are prompted.
+        """)
         account_master_create("account_master")
 
 

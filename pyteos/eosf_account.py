@@ -372,8 +372,7 @@ def account_master_create(
     whether it is in the wallets. If so, put the account object into the global 
     namespace of the caller. and **return**. 
     """
-    while True:
-        import pdb; pdb.set_trace()
+    while True:        
         account_object = GetAccount(
             account_object_name, account_name, 
             owner_key, active_key, verbosity)
@@ -383,15 +382,15 @@ def account_master_create(
 
         if account_object.exists:
             if account_object.has_keys: # it is your account
-                self.EOSF("""
+                account_object.EOSF("""
                     * Checking whether the wallet has keys to the account ``{}``
-                    """.format(self.name))
+                    """.format(account_object.name))
 
                 if put_account_to_wallet_and_on_stack(
-                        self, account_object_name, self):
-                    self.EOSF("""
+                       account_object, account_object_name, account_object):
+                    account_object.EOSF("""
                         * The account ``{}`` is in the wallet.
-                        """)
+                        """.format(account_object.name))
                     return
             else: # the name is taken by somebody else
                 logger.EOSF("""
