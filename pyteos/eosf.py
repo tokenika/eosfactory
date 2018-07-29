@@ -31,19 +31,37 @@ import cleos_system
 def restart():
     cleos.restart()
 
-class Error(enum.Enum):
-    NO_ERROR = ""
-    ACCOUNT_DOES_NOT_EXIST = """
+class AccountNotExist(Exception):
+    msg_template = """
 Account ``{}`` does not exist in the blockchain. It may be created.
 """
-    WALLET_ALREADY_EXIST = """
-        Wallet `{}` already exists.
-        """
-    NONEXISTENT_WALLET = """
-        Wallet ``{}`` does not exist.
-        """
-    INVALID_PASS = "Invalid password"
-    ANY = "general error"
+    def __init__(self, msg):
+        self.msg = cleos.heredoc(msg)
+
+class WalletExists(Exception):
+    msg_template = """
+Account ``{}`` does not exist in the blockchain. It may be created.
+"""
+    def __init__(self, msg):
+        self.msg = cleos.heredoc(msg)
+
+class WalletNotExist(Exception):
+    msg_template = """
+Wallet ``{}`` does not exist.
+"""
+    def __init__(self, msg):
+        self.msg = cleos.heredoc(msg)
+
+class InvalidPassword(Exception):
+    msg_template = """
+Invalid password for wallet {}.
+"""
+    def __init__(self, msg):
+        self.msg = cleos.heredoc(msg)
+
+class Error(Exception):
+    def __init__(self, msg):
+        self.msg = cleos.heredoc(msg)
 
 class Verbosity(enum.Enum):
     COMMENT = ['green']
@@ -81,18 +99,17 @@ def set_is_testing_errors(status=True):
 
 class Logger():
 
-    verbosity = []
-    out_buffer = ""
-    out_info_buffer = ""
-    error_buffer = ""
-    debug_buffer = ""
-
     def __init__(self, verbosity=None):
         if verbosity is None:
             global _verbosity
             verbosity = _verbosity
 
         self.verbosity = verbosity
+        self.cleos_object = None
+        self.out_buffer = ""
+        self.out_info_buffer = ""
+        self.error_buffer = ""
+        self.debug_buffer = ""
 
     def COMMENT(self, msg):
         frame = inspect.stack()[1][0]
@@ -172,23 +189,11 @@ class Logger():
                 ", ".join(Verbosity.DEBUG.value))
 
     def error_map(self, err_msg):
-        return [Error.ANY, err_msg]
+        return eosf.Error(err_msg)
 
     def switch(self, cleos_object):
-        err = self.error_map(cleos_object.err_msg)
-        cleos_object.err_type = err[0]
-        cleos_object.err_msg = err[1]
+        cleos_object.error_object = self.error_map(cleos_object.err_msg)
         return cleos_object                
-
-    def ERROR_TYPE(self, err_msg):
-        """Returns the error type.
-        """
-        error = True
-        try:
-            cleos_object = self.switch(err_msg)
-            return cleos_object.err_type
-        except:
-            return Error.NO_ERROR
 
     def ERROR(self, err_msg):
         """Print an error message or throw 'Exception'.
@@ -202,16 +207,16 @@ class Logger():
         arguments:
         err_msg -- error message string or object having the attribute err_msg
         """
-        error = True
+        if not err_msg:
+            return False
+
         try:
             cleos_object = self.switch(err_msg)
-            error = cleos_object.error
+            if cleos_object.error_object is None
+                return False
             err_msg = cleos_object.err_msg
         except:
             pass
-
-        if not error or not err_msg:
-            return False
 
         if _is_testing_error:
             color = ", ".join(Verbosity.ERROR_TESTING.value)
@@ -225,7 +230,11 @@ class Logger():
         self.error_buffer = err_msg
         global _is_throw_error
         if _is_throw_error:
-            raise Exception(err_msg)
+            try:
+                cleos_object = self.switch(err_msg)
+                raise cleos_object.error_object
+            except:
+                raise Exception(err_msg)
         else:
             print(err_msg)
 

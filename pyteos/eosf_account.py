@@ -152,9 +152,11 @@ class AccountMaster(eosf.Logger):
 
         account_object = cleos.GetAccount(
             name, json=True, is_verbose=-1)
-        error_type = self.ERROR_TYPE(account_object)
-        if not error_type == eosf.Error.NO_ERROR:
-            if not error_type == eosf.Error.ACCOUNT_DOES_NOT_EXIST:
+            
+        if not account_object.error_object is None:
+            if not isinstance(
+                account_object.error_object,
+                eosf.AccountNotExist):
                 self.fatal_error = True
                 self.ERROR(account_object)
                 return
@@ -552,14 +554,13 @@ def account_create(
     def error_map(account_object, err_msg):
 
         if "main.cpp:2888" in err_msg:
-            return [eosf.Error.ACCOUNT_DOES_NOT_EXIST, \
-                eosf.Error.ACCOUNT_DOES_NOT_EXIST.value. \
-                    format(account_object.name)]
+            return eosf.AccountNotExist(
+                eosf.AccountNotExist.msg_template.format(account_object.name))
 
         if "transaction executed locally, but may not be" in err_msg:
-            return [eosf.Error.NO_ERROR, ""]
+            return None
 
-        return [eosf.Error.ANY, err_msg]
+        return eosf.Error(err_msg)
 
     account_object.error_map = types.MethodType(error_map, account_object)
 
