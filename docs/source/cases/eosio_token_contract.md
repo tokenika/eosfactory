@@ -1,8 +1,6 @@
 """
 # Eosio Token Contract
 
-## Cases
-
 ```md
 This file can be executed as a python script: ``python3 
 eosio_token_contract.md``.

@@ -12,8 +12,7 @@ Makefile
 teos/teos/include/teos/config.h
 teos/teos_lib/include/teoslib/config.h
 
-!/docs/sphinx/build
-!/docs/sphinx/Makefile
+!/docs/source
 
 /contracts/*
 !/contracts/tic_tac_toe_jungle
@@ -27,8 +26,6 @@ teos/teos_lib/include/teoslib/config.h
 !/tests/unittest2.py
 !/tests/unittest3.py
 
-!/pyteos/docs/build
-
 **/Debug
 **/x64
 **/.vs
@@ -36,8 +33,6 @@ eosc/eosc_visual_studio/eoscLib.pdb
 *.lib
 eos_libraries/visual_studio/test.exp
 __pycache__
-pyteos/docs/Makefile
-pyteos/docs/.themes
 
 *.pyc
 

@@ -32,6 +32,11 @@ def set_nodeos_address(url):
     global _nodeos_address
     _nodeos_address = "http://" + url
 
+def nodeos_address():
+    global _nodeos_address
+    if _nodeos_address is None:
+        return None
+    return _nodeos_address
 
 def nodeos_address_arg():
     global _nodeos_address

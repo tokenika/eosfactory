@@ -43,7 +43,7 @@ Cases
     cases/account_name_conflict
     cases/configuration
     cases/eosio_token_contract
-    cases/cleos_system.py
+    cases/registering_to_testnode
 
 
 Roadmap

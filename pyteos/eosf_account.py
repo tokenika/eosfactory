@@ -318,7 +318,7 @@ def account_master_create(
 
     logger = eosf.Logger(verbosity)
     logger.EOSF_TRACE("""
-        ######### Create the master account object named `{}`...
+        ######### Create the master account object named ``{}``...
         """.format(account_object_name))
 
     """

@@ -263,7 +263,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
             imported_keys.append(account_or_key.key_public)            
 
         self.EOSF_TRACE("""
-            * Importing keys of the account ``{}`` into the wallet '{}'
+            * Importing keys of the account ``{}`` into the wallet ``{}``
             """.format(account_name, self.name)
                     )
         wallet_keys = cleos.WalletKeys(is_verbose=-1)
@@ -413,7 +413,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                 out.write(eosf.account_mapp_to_string(account_map_json))
 
             self.EOSF_TRACE("""
-                * Account ``{}`` mapped as '{}', stored in the file ``{}`` 
+                * Account ``{}`` mapped as ``{}``, stored in the file ``{}`` 
                     in the wallet directory:
                     {}
                 """.format(

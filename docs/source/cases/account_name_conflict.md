@@ -26,7 +26,7 @@ eosf.set_throw_error(False)
 ```md
 The ``EOSFactory`` wraps EOSIO accounts with objects. The symbolic name of an 
 account object, for example ``account_alice``, has to be unique in a program. 
-Moreover, it has be unique in a collection of scripts, especially if they 
+Moreover, it has be unique in a collection of scripts, especially, if they 
 execute real transactions.
 
 The ``EOSFactory`` uses mapping files that keep the uniqueness.

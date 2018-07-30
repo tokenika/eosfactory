@@ -31,35 +31,35 @@ import cleos_system
 def restart():
     cleos.restart()
 
-class AccountNotExist(Exception):
+class AccountNotExist:
     msg_template = """
 Account ``{}`` does not exist in the blockchain. It may be created.
 """
     def __init__(self, msg):
         self.msg = cleos.heredoc(msg)
 
-class WalletExists(Exception):
+class WalletExists:
     msg_template = """
 Account ``{}`` does not exist in the blockchain. It may be created.
 """
     def __init__(self, msg):
         self.msg = cleos.heredoc(msg)
 
-class WalletNotExist(Exception):
+class WalletNotExist:
     msg_template = """
 Wallet ``{}`` does not exist.
 """
     def __init__(self, msg):
         self.msg = cleos.heredoc(msg)
 
-class InvalidPassword(Exception):
+class InvalidPassword:
     msg_template = """
 Invalid password for wallet {}.
 """
     def __init__(self, msg):
         self.msg = cleos.heredoc(msg)
 
-class Error(Exception):
+class Error:
     def __init__(self, msg):
         self.msg = cleos.heredoc(msg)
 
@@ -234,6 +234,7 @@ class Logger():
         if cleos_or_str is None:
             cleos_or_str = self
 
+        cleos_object = None
         if not isinstance(cleos_or_str, str):
             if not cleos_or_str.error:
                 return False
@@ -257,15 +258,13 @@ class Logger():
         msg = colored(
             "ERROR:\n{}".format(cleos.heredoc(msg)), 
             color)  + "\n"
+        if not cleos_object is None:
+            cleos_object.error_object.msg = msg
 
         self.error_buffer = msg
         global _is_throw_error
         if _is_throw_error:
-            if not isinstance(cleos_or_str, str):
-                cleos_object = self.switch(cleos_or_str)
-                raise cleos_object.error_object
-            else:
-                raise Exception(cleos_or_str)
+            raise Exception(msg)
         else:
             print(msg)
 
@@ -432,7 +431,11 @@ def info():
     get_info = cleos.GetInfo(is_verbose=-1)
     logger = Logger(None)
     if not logger.ERROR(get_info):
-        logger.OUT(str(logger))
+        logger.EOSF_TRACE("""
+        ######### Node ``{}``, head block number ``{}``.
+        """.format(
+            setup.nodeos_address(),
+            get_info.json["head_block_num"]))
 
 def is_running():
     """
