@@ -100,7 +100,7 @@ eosf_account.account_master_test = eosf_account.GetAccount(
 eosf_account.account_master_test.ERROR()
 """
 ```
-#### End set-up conditions
+#### End the set-up part
 ```md
 """
 eosf.set_throw_error(False)         # on error, do not throw exception
@@ -111,8 +111,8 @@ eosf.set_is_testing_errors()        # make error messages less alarming
 ## Case
 
 ```md
-In subsequent tests, you have to change the account object name, here 
-``account_master``, or you have to resolve name conflicts, if you are prompted.
+In subsequent tests, you may have to change the account object name, here 
+``account_master``, or to resolve name conflicts, if you are prompted.
 ```
 #### Register to the testnode
 ```md
@@ -120,6 +120,20 @@ In subsequent tests, you have to change the account object name, here
 account_master_create("account_master")
 """
 ```
-<img src="registering.png" alt="registering" width="680px"/>
-
+#### Test run
+```md
+In an linux bash, change directory to where this file exists, it is the 
+directory ``docs/source/cases`` in the repository, and enter the following 
+command:
+```
+```md
+$ python3 registering_to_testnode.md
+```
+```md
+We hope that you get anything similar to this shown in the image below.
+```
+<img src="registering.png" 
+    onerror="this.src='../../../source/cases/registering.png'"   
+    alt="registering" width="640px"/>
+    
 """
