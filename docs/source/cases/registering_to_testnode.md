@@ -41,7 +41,7 @@ _ = eosf.Logger()
 
 """
 ```
-#### Set a remote testnode
+### Set a remote testnode
 ```md
 """
 eosf.use_keosd(True)        # use KEOSD Wallet Manager
@@ -49,7 +49,7 @@ setup.set_nodeos_address(cryptolions)
 eosf.kill_keosd()           # to have a clean start
 """
 ```
-#### Clean the 'jungle wallet'
+### Clean the 'jungle wallet'
 ```md
 Delete existing, if any, wallet named ``jungle_wallet``, and create a new, 
 fresh one:
@@ -69,7 +69,7 @@ eosf.set_throw_error(True)
 
 """
 ```
-#### Is the testnode ON?
+### Is the testnode ON?
 
 ```md
 Throw an exception if the testnode is off:
@@ -80,7 +80,7 @@ Throw an exception if the testnode is off:
 eosf.info()
 """
 ```
-#### Introduce a test trick
+### Introduce a test trick
 
 ```md
 Use an active account, named ``account_master_test`` to simulate the 
@@ -100,7 +100,7 @@ eosf_account.account_master_test = eosf_account.GetAccount(
 eosf_account.account_master_test.ERROR()
 """
 ```
-#### End the set-up part
+### End the set-up part
 ```md
 """
 eosf.set_throw_error(False)         # on error, do not throw exception
@@ -114,13 +114,13 @@ eosf.set_is_testing_errors()        # make error messages less alarming
 In subsequent tests, you may have to change the account object name, here 
 ``account_master``, or to resolve name conflicts, if you are prompted.
 ```
-#### Register to the testnode
+### Register to the testnode
 ```md
 """
 account_master_create("account_master")
 """
 ```
-#### Test run
+### Test run
 ```md
 In an linux bash, change directory to where this file exists, it is the 
 directory ``docs/source/cases`` in the repository, and enter the following 

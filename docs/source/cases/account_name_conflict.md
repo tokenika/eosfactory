@@ -54,4 +54,21 @@ account_create("account_carrol", account_master)
 account_create("account_alice", account_master)
 """
 ```
+
+### Test run
+```md
+In an linux bash, change directory to where this file exists, it is the 
+directory ``docs/source/cases`` in the repository, and enter the following 
+command:
+```
+```md
+$ python3 account_name_conflict.md
+```
+```md
+We hope that you get anything similar to this shown in the image below.
+```
+<img src="account_name_conflict.png" 
+    onerror="this.src='../../../source/cases/account_name_conflict.png'"   
+    alt="account name conflict" width="640px"/>
+    
 """
