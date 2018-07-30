@@ -25,7 +25,7 @@ eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE]) # start the local test node, reset
 """
 ```
-#### The `Wallet` object
+### The `Wallet` object
 ```md
 Create the singleton wallet object. The object represents a physical wallet,
 managed with either the KEOSD or NODEOS Wallet Manager:
@@ -47,7 +47,7 @@ With the master account, create four accounts: ``account_alice``,
 ``account_bob``, ``account_carrol`` and ``account_test``. Add the 
 ``eosio.token`` contract to the last account.
 ```
-#### The `account_create` factory
+### The `account_create` factory
 ```md
 Note that the account-creation command places in the global namespace the
 account object named with the first argument. The object represent a physical
@@ -142,4 +142,20 @@ table_bob = account_test.table("accounts", account_bob)
 table_carol = account_test.table("accounts", account_carol)
 """
 ```
+
+### Test run
+```md
+In an linux bash, change directory to where this file exists, it is the 
+directory ``docs/source/cases`` in the repository, and enter this command:
+```
+```md
+$ python3 eosio_token_contract.md
+```
+```md
+We hope that you get anything similar to this shown in the image below.
+```
+<img src="eosio_token.png" 
+    onerror="this.src='../../../source/cases/eosio_token.png'"   
+    alt="eosio token contract" width="680px"/>
+
 """

@@ -52,6 +52,6 @@ see the result.
 ```
 <img src="configuration.png" 
     onerror="this.src='../../../source/cases/configuration.png'"   
-    alt="configuration" width="640px"/>
+    alt="configuration" width="680px"/>
     
 """

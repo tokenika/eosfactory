@@ -7,8 +7,8 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
-# eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
+    eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
 #setup.set_command_line_mode()
 
@@ -30,7 +30,8 @@ def test():
         ######################################################################        
 
     _.SCENARIO("""
-With the master account, create four accounts: ``account_alice``, ``account_bob``, account_carol`` and ``account_eosio_token``. Add the 
+With the master account, create four accounts: ``account_alice``, 
+``account_bob``, account_carol`` and ``account_eosio_token``. Add the 
 ``eosio.token`` contract to the last account.
         """)
 
@@ -38,6 +39,7 @@ With the master account, create four accounts: ``account_alice``, ``account_bob`
     account_create("account_bob", account_master)
     account_create("account_carol", account_master)
     account_create("account_eosio_token", account_master)
+    
     contract_eosio_token = Contract(account_eosio_token, sys.path[0] + "/../")
     deploy = contract_eosio_token.deploy()
 

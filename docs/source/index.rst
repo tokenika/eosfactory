@@ -10,6 +10,19 @@ Welcome to EOSFactory documentation!
 With a single command-line interface you can create a private testnet and then compile, unit-test and deploy `EOS <https://eos.io/>`_ smart-contracts.
 All of this using simple yet powerful `Python3 <https://www.python.org/>`_ syntax.
 
+Cases
+-----
+
+.. toctree::
+    :maxdepth: 1
+
+    cases/ide
+    cases/setup
+    cases/account_name_conflict
+    cases/configuration
+    cases/eosio_token_contract
+    cases/registering_to_testnode
+
 Release Notes
 -------------
 
@@ -32,18 +45,6 @@ Tutorials
     tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory
     tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC
     tutorials/05.InteractingWithPublicTestnet
-
-Cases
------
-
-.. toctree::
-    :maxdepth: 1
-
-    cases/setup
-    cases/account_name_conflict
-    cases/configuration
-    cases/eosio_token_contract
-    cases/registering_to_testnode
 
 
 Roadmap

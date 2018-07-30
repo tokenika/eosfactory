@@ -1,3 +1,4 @@
+import sys
 import unittest
 import setup
 import eosf
@@ -7,8 +8,8 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
-# eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
+    eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
 #setup.set_command_line_mode()
 
@@ -70,9 +71,10 @@ NEXT TEST ====================================================================
                 + str(account_master) 
                 + '", "maximum_supply":"1000000000.0000 EOS", \
                 "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+                
         self.assertTrue(
-            '"issuer":"eosio","maximum_supply":"1000000000.0000 EOS"' \
-                in account_eosio_token.out_buffer)
+            '"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS"' \
+                in account_eosio_token.eosf_buffer)
 
         account_eosio_token.push_action(
             "issue",
