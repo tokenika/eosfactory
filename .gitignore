@@ -18,14 +18,6 @@ teos/teos_lib/include/teoslib/config.h
 !/contracts/tic_tac_toe_jungle
 !/contracts/tic_tac_toe_jungle/build
 
-/tests/*
-!/tests/test1.py
-!/tests/test2.py
-!/tests/test3.py
-!/tests/unittest1.py
-!/tests/unittest2.py
-!/tests/unittest3.py
-
 **/Debug
 **/x64
 **/.vs

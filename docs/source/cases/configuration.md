@@ -16,7 +16,7 @@ ok = teos.GetConfig()
 """
 ```
 ```md
-Note that the same result is available with a bash command:
+Note that the same result is available with this bash command:
 ```
 ```md
 $eosf get config
@@ -26,10 +26,10 @@ $eosf get config
 ## Override the installed configuration
 
 ```md
-There is the ``config.json`` file in the ``teos`` folder. The entries there 
-prevail the default setup.
+There is the ``config.json`` file in the ``teos`` folder of the repository. 
+The entries there prevail the default setup.
 ```
-### Test run
+## Test run
 
 ```md
 In an linux bash, change directory to where this file exists, it is the 

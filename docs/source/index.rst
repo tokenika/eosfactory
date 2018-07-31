@@ -23,16 +23,6 @@ Cases
     cases/eosio_token_contract
     cases/registering_to_testnode
 
-Release Notes
--------------
-
-.. toctree::
-    :maxdepth: 1
-
-    ../releases/ReleaseNotesVersion0.8
-    ../releases/ReleaseNotesVersion1.0
-    ../releases/ReleaseNotesVersion1.1
-
 Tutorials
 ---------
 
@@ -46,6 +36,15 @@ Tutorials
     tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC
     tutorials/05.InteractingWithPublicTestnet
 
+Release Notes
+-------------
+
+.. toctree::
+    :maxdepth: 1
+
+    ../releases/ReleaseNotesVersion0.8
+    ../releases/ReleaseNotesVersion1.0
+    ../releases/ReleaseNotesVersion1.1
 
 Roadmap
 -------
