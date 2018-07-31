@@ -7,8 +7,11 @@ Makefile
 teos/teos/include/teos/config.h
 teos/teos_lib/include/teoslib/config.h
 
-!/docs/source
-!/docs/build/html
+!docs/source
+!docs/build
+docs/build/doctrees
+!docs/build/html
+!docs/Makefile
 
 /contracts/*
 

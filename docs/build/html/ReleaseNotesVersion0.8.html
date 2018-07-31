@@ -1,0 +1,150 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>EOSFactory Release Notes - v0.8 &#8212; EOSFactory 2.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="EOSFactory Release Notes - v1.0" href="ReleaseNotesVersion1.0.html" />
+    <link rel="prev" title="Welcome to EOSFactory documentation!" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="eosfactory-release-notes-v0-8">
+<span id="eosfactory-release-notes-v0-8"></span><h1>EOSFactory Release Notes - v0.8<a class="headerlink" href="#eosfactory-release-notes-v0-8" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="compatibility">
+<span id="compatibility"></span><h2>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this headline">¶</a></h2>
+<p>EOSFactory <a class="reference external" href="https://github.com/tokenika/eosfactory/releases/tag/v0.8">v0.8</a> is compatible with EOS <a class="reference external" href="https://github.com/EOSIO/eos/releases/tag/dawn-v4.0.0">dawn-v4.0.0</a>.</p>
+</div>
+<div class="section" id="what-works-in-this-release">
+<span id="what-works-in-this-release"></span><h2>What works in this release<a class="headerlink" href="#what-works-in-this-release" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Launch a single-node private testnet and fully control it: stop it and then continue running it or completely reset it.</li>
+<li>Initialize a testnet with the <code class="docutils literal notranslate"><span class="pre">bios</span></code> contract and several test accounts (available as <code class="docutils literal notranslate"><span class="pre">sess.alice</span></code>, <code class="docutils literal notranslate"><span class="pre">sess.bob</span></code> and <code class="docutils literal notranslate"><span class="pre">sess.carol</span></code>).</li>
+<li>Create additional test accounts (their keys are automatically imported into the wallet).</li>
+<li>Manage the wallet (locking, unlocking etc).</li>
+<li>Have an easy access to demo contracts stored in the <code class="docutils literal notranslate"><span class="pre">contracts</span></code> folder of the <em>EOSIO</em> source code (you can instantiate them in EOSFactory by passing their folder name in the <code class="docutils literal notranslate"><span class="pre">Contract</span></code> class constructor).</li>
+<li>Compile a contract, both ABI &amp; WAST (but please note that the ABI compiler has an experimental status in <em>EOSIO</em> repository).</li>
+<li>Create a new contract from a pre-defined template (this includes the creation of its <em>CMake</em> files).</li>
+<li>Deploy a contract (the account holding the contract is created behind the scenes).</li>
+<li>Interact with a contract by pushing actions to it.</li>
+<li>Extract text messages logged by a contract (i.e. a contract’s output stream produced by its <code class="docutils literal notranslate"><span class="pre">print()</span></code> method).</li>
+<li>Extract data from a contract’s table.</li>
+<li>Run a simple unit-test utilizing all the above features.</li>
+</ul>
+</div>
+<div class="section" id="current-limitations">
+<span id="current-limitations"></span><h2>Current limitations<a class="headerlink" href="#current-limitations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Currently unit-tests in EOSFactory are just naïve demo examples. They don’t have proper assertions, don’t handle errors properly and they don’t have proper tear-down methods.</li>
+<li>You cannot connect EOSFactory to a testnet of your choice, only to a private one running a single node.</li>
+<li>Whereas the <code class="docutils literal notranslate"><span class="pre">nodeos</span></code> process runs in the background on MacOS, on other platforms (Windows &amp; Ubuntu) it requires launching a separate terminal window (it’s done automatically though). This might be a limitation for GUI-less systems like Ubuntu Server edition.</li>
+<li>There are no utilities for debugging contracts, except for the “caveman” style, i.e. accessing the output stream produced by its <code class="docutils literal notranslate"><span class="pre">print()</span></code> method.</li>
+<li>There is no easy way to instantiate smart-contracts stored outside of EOSFactory <code class="docutils literal notranslate"><span class="pre">contracts</span></code> folder or EOSIO <code class="docutils literal notranslate"><span class="pre">contracts</span></code> folder. If you want to do that, you need to refer to the contract’s folder by supplying its full path.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">TemplateCreate</span></code> class constructor only accepts a folder name, not a path (this is different from the <code class="docutils literal notranslate"><span class="pre">Contract</span></code> constructor which accepts both).</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">Contract</span></code> class <code class="docutils literal notranslate"><span class="pre">abi()</span></code> and <code class="docutils literal notranslate"><span class="pre">build()</span></code> methods are relying on the <em>EOSIO</em> ABI compiler which has an experimental status in the <em>EOSIO</em> repository. Thus the ABI output might be different than expected.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">Contract</span></code> class <code class="docutils literal notranslate"><span class="pre">push_action()</span></code> and <code class="docutils literal notranslate"><span class="pre">show_action</span></code> methods accept only verbose input, i.e. all action’s parameters must be named in the JSON syntax.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">EOSFactory</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">EOSFactory Release Notes - v0.8</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ReleaseNotesVersion1.1.html">EOSFactory Release Notes - v1.1</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cleos.html">cleos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleos_system.html">cleos_system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teos.html">teos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eosf.html">eosf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="node.html">node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sess.html">sess</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to EOSFactory documentation!</a></li>
+      <li>Next: <a href="ReleaseNotesVersion1.0.html" title="next chapter">EOSFactory Release Notes - v1.0</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Tokenika.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/ReleaseNotesVersion0.8.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

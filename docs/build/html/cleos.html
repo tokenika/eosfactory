@@ -1,0 +1,679 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>cleos &#8212; EOSFactory 2.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="cleos_system" href="cleos_system.html" />
+    <link rel="prev" title="Long-term EOSFactory Roadmap" href="roadmap/LongTermEOSFactoryRoadmap.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-cleos">
+<span id="cleos"></span><h1>cleos<a class="headerlink" href="#module-cleos" title="Permalink to this headline">¶</a></h1>
+<p>Python front-end for <cite>EOSIO cleos</cite>.</p>
+<span class="target" id="module-pyteos"></span><dl class="class">
+<dt id="cleos.CreateAccount">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">CreateAccount</code><span class="sig-paren">(</span><em>creator</em>, <em>name</em>, <em>owner_key</em>, <em>active_key=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.CreateAccount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Create an account, buy ram, stake for bandwidth for the account.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>creator: The name, of the account creating the new account. May be an 
+    object having the attribute `name`, like `CreateAccount`, 
+    or a string.
+name: The name of the new account.
+owner_key: The owner public key for the new account.
+active_key: The active public key for the new account.
+
+permission: An account and permission level to authorize, as in 
+    &#39;account@permission&#39;. May be a `CreateAccount` or `Account` object
+expiration: The time in seconds before a transaction expires, 
+    defaults to 30s
+skip_sign: Specify if unlocked wallet keys should be used to sign 
+    transaction.
+dont_broadcast: Don&#39;t broadcast transaction to the network (just print).
+forceUnique: Force the transaction to be unique. this will consume extra 
+    bandwidth and remove any protections against accidently issuing the 
+    same transaction multiple times.
+max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+    the execution of the transaction 
+    (defaults to 0 which means no limit).
+max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+    transaction (defaults to 0 which means no limit).
+ref_block: The reference block num or block id used for TAPOS 
+    (Transaction as Proof-of-Stake).
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">owner_key</span><span class="p">:</span> <span class="n">Owner</span> <span class="n">private</span> <span class="n">key</span><span class="o">.</span>
+<span class="n">active_key</span><span class="p">:</span> <span class="n">Active</span> <span class="n">private</span> <span class="n">key</span><span class="o">.</span>
+<span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>    
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.CreateKey">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">CreateKey</code><span class="sig-paren">(</span><em>key_name</em>, <em>key_public=''</em>, <em>key_private=''</em>, <em>r1=False</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.CreateKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Create a new keypair and print the public and private keys.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">key_name</span><span class="p">:</span> <span class="n">Key</span> <span class="n">name</span><span class="o">.</span>
+<span class="n">r1</span><span class="p">:</span> <span class="n">Generate</span> <span class="n">a</span> <span class="n">key</span> <span class="n">using</span> <span class="n">the</span> <span class="n">R1</span> <span class="n">curve</span> <span class="p">(</span><span class="n">iPhone</span><span class="p">),</span> <span class="n">instead</span> <span class="n">of</span> <span class="n">the</span> 
+    <span class="n">K1</span> <span class="n">curve</span> <span class="p">(</span><span class="n">Bitcoin</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>    
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.GetAccount">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">GetAccount</code><span class="sig-paren">(</span><em>account</em>, <em>is_verbose=1</em>, <em>json=False</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.GetAccount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Retrieve an account from the blockchain.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>account: The account object or the name of the account to retrieve.
+is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">name</span><span class="p">:</span> <span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">account</span><span class="o">.</span>
+<span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.GetAccounts">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">GetAccounts</code><span class="sig-paren">(</span><em>key</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.GetAccounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Retrieve accounts associated with a public key.</p>
+<ul>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.GetBlock">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">GetBlock</code><span class="sig-paren">(</span><em>block_number</em>, <em>block_id=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.GetBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Retrieve a full block from the blockchain.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>block_number: The number of the block to retrieve.
+block_id: The ID of the block to retrieve, if set, defaults to &quot;&quot;.
+is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>    
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.GetCode">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">GetCode</code><span class="sig-paren">(</span><em>account</em>, <em>code=''</em>, <em>abi=''</em>, <em>wasm=False</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.GetCode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Retrieve the code and ABI for an account.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>account: The name of an account whose code should be retrieved. 
+    May be an object having the  May be an object having the attribute 
+    `name`, like `CreateAccount`, or a string.
+code: The name of the file to save the contract .wast/wasm to.
+abi: The name of the file to save the contract .abi to.
+wasm: Save contract as wasm.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>    
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.GetInfo">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">GetInfo</code><span class="sig-paren">(</span><em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.GetInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Get current blockchain information.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.GetTable">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">GetTable</code><span class="sig-paren">(</span><em>contract</em>, <em>table</em>, <em>scope</em>, <em>binary=False</em>, <em>limit=10</em>, <em>key=''</em>, <em>lower=''</em>, <em>upper=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.GetTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Retrieve the contents of a database table</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>contract: The name, of the contract that owns the table. May be 
+    an object having the  May be an object having the attribute 
+    `name`, like `CreateAccount`, or a string.
+scope: The scope within the contract in which the table is found,
+    can be a `CreateAccount` or `Account` object, or a name.
+table: The name of the table as specified by the contract abi.
+binary: Return the value as BINARY rather than using abi to 
+    interpret as JSON
+limit: The maximum number of rows to return.
+key: The name of the key to index by as defined by the abi, 
+    defaults to primary key.
+lower: JSON representation of lower bound value of key, 
+    defaults to first.
+upper: JSON representation of upper bound value value of key, 
+    defaults to last.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.GetTransaction">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">GetTransaction</code><span class="sig-paren">(</span><em>transaction_id</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.GetTransaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Retrieve a transaction from the blockchain.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>transaction_id: ID of the transaction to retrieve.
+is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">transaction_id</span><span class="p">:</span> <span class="n">ID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">transaction</span> <span class="n">retrieved</span><span class="o">.</span>
+<span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.PushAction">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">PushAction</code><span class="sig-paren">(</span><em>account</em>, <em>action</em>, <em>data</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=''</em>, <em>is_verbose=1</em>, <em>json=False</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.PushAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Push a transaction with a single action</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>account: The account to publish a contract for.  May be an object 
+    having the  May be an object having the attribute `name`, like 
+    `CreateAccount`, or a string.
+action: A JSON string or filename defining the action to execute on 
+    the contract.
+data: The arguments to the contract.
+
+permission: An account and permission level to authorize, as in 
+    &#39;account@permission&#39;. May be a `CreateAccount` or `Account` object
+expiration: The time in seconds before a transaction expires, 
+    defaults to 30s
+skip_sign: Specify if unlocked wallet keys should be used to sign 
+    transaction.
+dont_broadcast: Don&#39;t broadcast transaction to the network (just print).
+forceUnique: Force the transaction to be unique. this will consume extra 
+    bandwidth and remove any protections against accidently issuing the 
+    same transaction multiple times.
+max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+    the execution of the transaction 
+    (defaults to 0 which means no limit).
+max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+    transaction (defaults to 0 which means no limit).
+ref_block: The reference block num or block id used for TAPOS 
+    (Transaction as Proof-of-Stake).
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.SetContract">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">SetContract</code><span class="sig-paren">(</span><em>account</em>, <em>contract_dir</em>, <em>wast_file=''</em>, <em>abi_file=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.SetContract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Create or update the contract on an account.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>account: The account to publish a contract for. May be an object 
+    having the  May be an object having the attribute `name`, like 
+    `CreateAccount`, or a string.
+contract_dir: The path containing the .wast and .abi. 
+wast_file: The file containing the contract WAST or WASM (absolute).
+abi_file: The ABI for the contract (absolute).
+
+permission: An account and permission level to authorize, as in 
+    &#39;account@permission&#39;. May be a `CreateAccount` or `Account` object
+expiration: The time in seconds before a transaction expires, 
+    defaults to 30s
+skip_sign: Specify if unlocked wallet keys should be used to sign 
+    transaction.
+dont_broadcast: Don&#39;t broadcast transaction to the network (just print).
+forceUnique: Force the transaction to be unique. this will consume extra 
+    bandwidth and remove any protections against accidently issuing the 
+    same transaction multiple times.
+max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+    the execution of the transaction 
+    (defaults to 0 which means no limit).
+max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+    transaction (defaults to 0 which means no limit).
+ref_block: The reference block num or block id used for TAPOS 
+    (Transaction as Proof-of-Stake).
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>    
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.WalletCreate">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">WalletCreate</code><span class="sig-paren">(</span><em>name='default'</em>, <em>password=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.WalletCreate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Create a new wallet locally.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>name: The name of the new wallet, defaults to `default`.
+is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">name</span><span class="p">:</span> <span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">wallet</span><span class="o">.</span>
+<span class="n">password</span><span class="p">:</span> <span class="n">The</span> <span class="n">password</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">wallet</span> <span class="n">create</span><span class="o">.</span>
+<span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.WalletImport">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">WalletImport</code><span class="sig-paren">(</span><em>key</em>, <em>wallet='default'</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.WalletImport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Import a private key into wallet.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>wallet: A wallet object or the name of the wallet to import key into.
+key: A key object or a private key in WIF format to import.
+is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.WalletKeys">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">WalletKeys</code><span class="sig-paren">(</span><em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.WalletKeys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>List of public keys from all unlocked wallets.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.WalletList">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">WalletList</code><span class="sig-paren">(</span><em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.WalletList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>List opened wallets, * marks unlocked.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.WalletLock">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">WalletLock</code><span class="sig-paren">(</span><em>wallet='default'</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.WalletLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Lock wallet.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>wallet: The name of the wallet to import key into. May be an object 
+    having the  May be an object having the attribute `name`, like 
+    `CreateAccount`, or a string. 
+is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.WalletLockAll">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">WalletLockAll</code><span class="sig-paren">(</span><em>wallet='default'</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.WalletLockAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Lock all unlocked wallets.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.WalletOpen">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">WalletOpen</code><span class="sig-paren">(</span><em>wallet='default'</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.WalletOpen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Open an existing wallet.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>wallet: The name of the wallet to import key into. May be an object 
+    having the  May be an object having the attribute `name`, like 
+    `CreateAccount`, or a string. 
+is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.WalletRemove_key">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">WalletRemove_key</code><span class="sig-paren">(</span><em>key</em>, <em>wallet</em>, <em>password</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.WalletRemove_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Remove key from wallet
+- <strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>wallet: A wallet object or the name of the wallet to import key into.
+password: The password returned by wallet create.
+key: A key object or a private key in WIF format to import.
+is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+<ul>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.WalletStop">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">WalletStop</code><span class="sig-paren">(</span><em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.WalletStop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Stop keosd (doesn’t work with nodeos).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.WalletUnlock">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">WalletUnlock</code><span class="sig-paren">(</span><em>wallet='default'</em>, <em>password=''</em>, <em>timeout=0</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.WalletUnlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<p>Unlock wallet.</p>
+<ul>
+<li><p class="first"><strong>parameters</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>wallet: The name of the wallet. May be an object 
+    having the  May be an object having the attribute `name`, 
+    like `CreateAccount`, or a string.
+password: If the wallet argument is not a wallet object, the password 
+    returned by wallet create, else anything, defaults to &quot;&quot;.
+is_verbose: If `0`, do not print unless on error; if `-1`, 
+    do not print. Default is `1`.
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>attributes</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">error</span><span class="p">:</span> <span class="n">Whether</span> <span class="nb">any</span> <span class="n">error</span> <span class="n">ocurred</span><span class="o">.</span>
+<span class="n">json</span><span class="p">:</span> <span class="n">The</span> <span class="n">json</span> <span class="n">representation</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">object</span><span class="o">.</span>
+<span class="n">is_verbose</span><span class="p">:</span> <span class="n">Verbosity</span> <span class="n">at</span> <span class="n">the</span> <span class="n">construction</span> <span class="n">time</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="cleos.set_wallet_url_arg">
+<code class="descclassname">cleos.</code><code class="descname">set_wallet_url_arg</code><span class="sig-paren">(</span><em>cleos_object</em>, <em>url=None</em>, <em>check_error=True</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.set_wallet_url_arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements the <cite>use_keosd</cite> flag in the <cite>setup</cite> module.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">EOSFactory</a></h1>
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion1.1.html">EOSFactory Release Notes - v1.1</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cases/setup.html">Setting-up EOSFactory tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cases/account_name_conflict.html">Account name conflict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cases/configuration.html">EOSFactory configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cases/eosio_token_contract.html">Eosio Token Contract</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">cleos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleos_system.html">cleos_system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="teos.html">teos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eosf.html">eosf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="node.html">node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sess.html">sess</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="roadmap/LongTermEOSFactoryRoadmap.html" title="previous chapter">Long-term EOSFactory Roadmap</a></li>
+      <li>Next: <a href="cleos_system.html" title="next chapter">cleos_system</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Tokenika.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/cleos.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
