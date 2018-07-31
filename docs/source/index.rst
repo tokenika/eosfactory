@@ -17,6 +17,7 @@ Cases
     :maxdepth: 1
 
     cases/ide
+    cases/account
     cases/configuration
     cases/eosio_token_contract    
     cases/setup
