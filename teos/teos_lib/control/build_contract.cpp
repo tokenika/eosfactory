@@ -160,6 +160,10 @@ namespace teos {
     {
       namespace bfs = boost::filesystem;
 
+      boost::algorithm::trim(name);
+      boost::algorithm::trim(templateName);
+      boost::algorithm::trim(workspace);
+
       bfs::path workspacePath(workspace);
 
       if(workspacePath.empty() 

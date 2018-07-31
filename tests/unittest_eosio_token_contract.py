@@ -7,8 +7,8 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
-# eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
+    eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
 #setup.set_command_line_mode()
 
