@@ -156,6 +156,6 @@ We hope that you get anything similar to this shown in the image below.
 ```
 <img src="eosio_token.png" 
     onerror="this.src='../../../source/cases/eosio_token.png'"   
-    alt="eosio token contract" width="680px"/>
+    alt="eosio token contract" width="640px"/>
 
 """

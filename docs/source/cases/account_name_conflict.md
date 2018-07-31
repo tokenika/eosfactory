@@ -69,7 +69,7 @@ We hope that you get anything similar to this shown in the image below.
 ```
 <img src="account_name_conflict.png" 
     onerror="this.src='../../../source/cases/account_name_conflict.png'"   
-    alt="account name conflict" width="680px"/>
+    alt="account name conflict" width="640px"/>
 
 """
     /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet/accounts.json

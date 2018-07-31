@@ -1,42 +1,29 @@
-install
 workdir
 *.exe
 b
 build
-build_gnu
-CMakeFiles
-cmake_install.cmake
-CMakeCache.txt
 Makefile
 
 teos/teos/include/teos/config.h
 teos/teos_lib/include/teoslib/config.h
 
 !/docs/source
+!/docs/build/html
 
 /contracts/*
-!/contracts/tic_tac_toe_jungle
-!/contracts/tic_tac_toe_jungle/build
 
-**/Debug
-**/x64
+
 **/.vs
-eosc/eosc_visual_studio/eoscLib.pdb
-*.lib
-eos_libraries/visual_studio/test.exp
-__pycache__
-
 *.pyc
 
 teos/config.json
-keosd.md
 teos/source/conf.py
 
-teos/teos_lib/eos_interface.1.cpp#
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/settings.json
 .vscode/tasks.json
+
 vsc_extension/vscode-extension-samples/
 pyteos/appJar
 trash

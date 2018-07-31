@@ -47,11 +47,11 @@ $ $eosf get config
 ```
 ```md
 We hope that you get anything similar to this shown in the image below.
-You can change something in the configuration file ``teos/config.json``, and
-see the result.
+You can change or add something in the configuration file ``teos/config.json`` 
+and see the result.
 ```
 <img src="configuration.png" 
     onerror="this.src='../../../source/cases/configuration.png'"   
-    alt="configuration" width="680px"/>
+    alt="configuration" width="640px"/>
     
 """
