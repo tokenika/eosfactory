@@ -14,8 +14,8 @@ the EOSIO smart contract.
 ## Smart contract templates
 
 ```md
-The Factory provides smart contract templates that may be used a start point 
-for development of your own task. For example, you can launch a smart contract 
+The Factory provides smart contract templates that may be used as a start point 
+to development of your own task. For example, you can launch a smart contract 
 named ``eosio_token_better``:
 
     * starting with the original EOSIO code of the ``eosio.token``, 

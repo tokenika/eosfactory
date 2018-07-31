@@ -17,10 +17,10 @@ Cases
     :maxdepth: 1
 
     cases/ide
+    cases/configuration
+    cases/eosio_token_contract    
     cases/setup
     cases/account_name_conflict
-    cases/configuration
-    cases/eosio_token_contract
     cases/registering_to_testnode
 
 Tutorials
