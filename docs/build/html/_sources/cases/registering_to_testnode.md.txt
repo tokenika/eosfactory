@@ -2,17 +2,17 @@
 # Registering to a remote testnet
 
 <pre><normal>
-This file can be executed as a python script: ``python3 
-registering_to_testnode.md``.
+This file can be executed as a python script: 'python3 
+registering_to_testnode.md'.
 
-The set-up statements are explained in the <a href="setup.html">elsewhere</a>.
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 </pre></normal>
 
 ## Set-up
 
 <pre><normal>
 The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is reffered to as the ``testing account``.
+this article, for testing. It is reffered to as the 'testing account'.
 </pre></normal>
 
 <pre><normal>
@@ -57,7 +57,7 @@ eosf.kill_keosd()           # to have a clean start
 ### Clean the 'jungle wallet'
 
 <pre><normal>
-Delete existing, if any, wallet named ``jungle_wallet``, and create a new, 
+Delete existing, if any, wallet named 'jungle_wallet', and create a new, 
 fresh one:
 </pre></normal>
 <pre><normal>
@@ -91,7 +91,7 @@ eosf.info()
 ### Introduce a test trick
 
 <pre><normal>
-Use an active account, named ``account_master_test`` to simulate the 
+Use an active account, named 'account_master_test' to simulate the 
 registration procedure: this account substitutes one that would be
 physically registered.
 
@@ -122,7 +122,7 @@ eosf.set_is_testing_errors()        # make error messages less alarming
 
 <pre><normal>
 In subsequent tests, you may have to change the account object name, here 
-``account_master``, or to resolve name conflicts, if you are prompted.
+'account_master', or to resolve name conflicts, if you are prompted.
 </pre></normal>
 
 ### Register to the testnode
@@ -137,7 +137,7 @@ account_master_create("account_master")
 
 <pre><normal>
 In an linux bash, change directory to where this file exists, it is the 
-directory ``docs/source/cases`` in the repository, and enter the following 
+directory 'docs/source/cases' in the repository, and enter the following 
 command:
 </pre></normal>
 <pre><normal>

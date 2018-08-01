@@ -2,9 +2,9 @@
 # EOSFactory configuration
 
 <pre><normal>
-This file can be executed as a python script: ``python3 configuration.md``.
+This file can be executed as a python script: 'python3 configuration.md'.
 
-The set-up statements are explained in the <a href="setup.html">elsewhere</a>.
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 </pre></normal>
 
 ## Inspect the configuration
@@ -28,7 +28,7 @@ $eosf get config
 ## Override the installed configuration
 
 <pre><normal>
-There is the ``config.json`` file in the ``teos`` folder of the repository. 
+There is the 'config.json' file in the 'teos' folder of the repository. 
 The entries there prevail the default setup.
 </pre></normal>
 
@@ -36,7 +36,7 @@ The entries there prevail the default setup.
 
 <pre><normal>
 In an linux bash, change directory to where this file exists, it is the 
-directory ``docs/source/cases`` in the repository, and enter the following 
+directory 'docs/source/cases' in the repository, and enter the following 
 command:
 </pre></normal>
 <pre><normal>
@@ -50,7 +50,7 @@ $ $eosf get config
 </pre></normal>
 <pre><normal>
 We hope that you get something similar to this shown in the image below.
-You can change or add something in the configuration file ``teos/config.json`` 
+You can change or add something in the configuration file 'teos/config.json' 
 and see the result.
 </pre></normal>
 <img src="configuration.png" 

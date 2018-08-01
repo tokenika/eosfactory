@@ -33,7 +33,7 @@
 <span id="contract-object"></span><h1>Contract object<a class="headerlink" href="#contract-object" title="Permalink to this headline">¶</a></h1>
 <pre><normal>
 This file can be executed as a python script: 
-``python3 contract.md``.<p>The set-up statements are explained in the <a href="setup.html">elsewhere</a>.</p>
+'python3 contract.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre></normal><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <pre><normal>
@@ -58,9 +58,9 @@ eosf.set_throw_error(False)
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
 <pre><normal>
-None ``Contract`` object can exist without an account object that keeps this
-contract. The account object is presented <a href="account.html">elsewhere</a>.<p>Create an account objects: <code class="docutils literal notranslate"><span class="pre">account_eosio_token</span></code>. Provide it with a contract
-of the class <code class="docutils literal notranslate"><span class="pre">eosio.token</span></code>. The code for the <code class="docutils literal notranslate"><span class="pre">eosio.token</span></code> class comes with
+None 'Contract' object can exist without an account object that keeps this
+contract. The account object is presented at <a href="account.html">cases/account</a>.<p>Create an account objects: ‘account_eosio_token’. Provide it with a contract
+of the class ‘eosio.token’. The code for the ‘eosio.token’ class comes with
 the EOSIO repository.</p>
 <p>Add three other account objects, and execute actions of the contract on them.</p>
 </pre></normal><div class="section" id="accounts">
@@ -76,8 +76,8 @@ account_create("account_carol", account_master)
 <div class="section" id="create-a-contract-object">
 <span id="create-a-contract-object"></span><h3>Create a Contract object<a class="headerlink" href="#create-a-contract-object" title="Permalink to this headline">¶</a></h3>
 <pre><normal>
-Create an instance of the ``Contract`` class, appending it to the account 
-``account_eosio_token``:
+Create an instance of the 'Contract' class, appending it to the account 
+'account_eosio_token':
 </pre></normal>
 <pre><normal>
 """
@@ -85,17 +85,17 @@ contract_eosio_token = Contract(account_eosio_token, "token")
 """
 </pre></normal>
 <pre><normal>
-The second argument of the creator of the ``Contract`` class identifies the 
+The second argument of the creator of the 'Contract' class identifies the 
 code source. The Factory tries to be smart, and searches the repository of the 
 Factory. If it fails, put the right path there, 
-``/mnt/c/Workspaces/EOS/eosfactory/contracts/eosio.token/``,
-for example.<p>Note that the <code class="docutils literal notranslate"><span class="pre">Contract</span></code> creator takes several default arguments that
+'/mnt/c/Workspaces/EOS/eosfactory/contracts/eosio.token/',
+for example.<p>Note that the ‘Contract’ creator takes several default arguments that
 sometimes have to be adjusted.</p>
 </pre></normal></div>
 <div class="section" id="methods-of-a-contract-objects">
 <span id="methods-of-a-contract-objects"></span><h3>Methods of a contract objects<a class="headerlink" href="#methods-of-a-contract-objects" title="Permalink to this headline">¶</a></h3>
 <pre><normal>
-Any ``Contract`` object can:<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">Build</span> <span class="n">itself</span><span class="o">.</span>
+Any 'Contract' object can:<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">Build</span> <span class="n">itself</span><span class="o">.</span>
     <span class="n">Build</span> <span class="n">abi</span> <span class="n">alone</span><span class="o">.</span>
     <span class="n">Build</span> <span class="n">wast</span> <span class="n">alone</span><span class="o">.</span>
 <span class="o">*</span> <span class="n">Deploy</span> <span class="n">itself</span><span class="o">.</span>
@@ -170,14 +170,14 @@ table_bob = account_eosio_token.table("accounts", account_bob)
 table_carol = account_eosio_token.table("accounts", account_carol)
 """
 </pre></normal><pre><normal>
-Besides the usual ``Hello`` message, you can see the result of a logging 
-facility, starting with ``INFO``.
+Besides the usual 'Hello' message, you can see the result of a logging 
+facility, starting with 'INFO'.
 </pre></normal></div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
 <pre><normal>
 In an linux bash, change directory to where this file exists, it is the 
-directory ``docs/source/cases`` in the repository, and enter the following 
+directory 'docs/source/cases' in the repository, and enter the following 
 command:
 </pre></normal>
 <pre><normal>

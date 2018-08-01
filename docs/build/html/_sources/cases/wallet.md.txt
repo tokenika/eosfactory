@@ -2,10 +2,9 @@
 # Wallet object
 
 <normal><pre>
-This file can be executed as a python script: 
-'python3 wallet.md'.
+This file can be executed as a python script: 'python3 wallet.md'.
 
-The set-up statements are explained in the <a href="setup.html">elsewhere</a>.
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 </pre></normal>
 
 ## Set-up
@@ -27,12 +26,12 @@ eosf.set_throw_error(False)
 ## Case
 
 <normal><pre>
-The 'Wallet` class wraps EOSIO wallets objects. 'Wallet' objects can keep 
-account objects, presented <a href="account.html">elsewhere</a>.
+The 'Wallet` class wraps EOSIO wallets. The 'Wallet' object keep account 
+objects, presented at <a href="account.html">cases/account</a>.
 
 The EOSIO physical wallet, if used with the Factory, can be managed either 
-with the 'KEOSD Wallet Manager' or with the 'NODEOS' wallet plugin, what is 
-controlled with the 'use_keosd' statement (default is 'False'):
+with the 'KEOSD Wallet Manager' or with the 'NODEOS' wallet plugin. The status 
+is controlled with the 'use_keosd' statement (default is 'False'):
 </pre></normal>
 
 <normal><pre>
@@ -40,14 +39,14 @@ eosf.use_keosd(True)
 </pre></normal>
 
 <normal><pre>
-However, the 'NODEOS' alternative' apply only if the local node is running.
+The 'NODEOS' alternative' apply only, if the local node is running.
 
-It can be exactly one 'Wallet' object in the namespace. If the 'Wallet' 
-singleton is created, it is transparent to the script: it can be never referred
-explicitly to.
+It can be exactly one 'Wallet' object in the namespace. After the 'Wallet' 
+singleton is created, it remains transparent to the script: usually, there 
+is no need to refer to it.
 
 If the 'Wallet' object is of the local testnet, its password is kept between 
-sessions and used automatically.
+sessions, and used automatically.
 
 Let us consider two cases: 'NODEOS` and 'KEOSD' subsequently.
 </pre></normal>
@@ -74,15 +73,14 @@ eosf.stop()                                 # stop the local testnet
 
 <normal><pre>
 What has happened?
-    * The local node has restarted, that is the local wallet file was deleted.
-    * The wallet object has been created.
-    * Its password has been stored to a file.
-    * An account object named 'account_master' has been created and placed in
-        the wallet.`
+* The local node has restarted, that is the local wallet file was deleted.
+* The wallet object has been created.
+* Its password has been stored to a file.
+* An account object named 'account_master' has been created and placed in
+    the wallet.`
 
-If we close the session now, then open it again and recreate the wallet, we
-expect that it opens without calling for password. And it should have the same
-key.
+If we close the session, then open it again, and recreate the wallet, we can
+expect that it opens without calling for password, having the same keys.
 </pre></normal>
 
 <normal><pre>
@@ -102,8 +100,8 @@ eosf.stop()                         # stop the local testnet
 ### KEOSD managed wallet
 
 <normal><pre>
-For the sake of this tutorial only we dare to treat a system wallet so rudely:
-we delete it:
+For the sake of this tutorial, we dare to treat a system wallet so rudely:
+we delete it.
 </pre></normal>
 
 <normal><pre>
@@ -122,7 +120,7 @@ except Exception as e:
 </pre></normal>
 
 <normal><pre>
-Let us create a 'KEOSD' wallet named 'wallet_name':
+Create a 'KEOSD' wallet named 'wallet_name':
 </pre></normal>
 
 <normal><pre>
@@ -141,13 +139,13 @@ wallet = Wallet(wallet_name)
 ### Methods of the 'Wallet' class
 
 <normal><pre>
-We plan the Factory so that the singular wallet object is never referred to in
+We plan the Factory so that the singular wallet object is never referred to, in
 usual scripts. However, the 'Wallet` class has several methods that are used
 internally. Some of them are obvious:
 * Open wallet.
 * Unlock wallet.
-* Keys in all open wallets
-    ..........
+* Keys in all open wallets.
+* etc.
 </pre></normal>
 
 """

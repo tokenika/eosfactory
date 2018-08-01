@@ -32,8 +32,8 @@
 <div class="section" id="eosio-token-contract">
 <span id="eosio-token-contract"></span><h1>Eosio Token Contract<a class="headerlink" href="#eosio-token-contract" title="Permalink to this headline">¶</a></h1>
 <pre><normal>
-This file can be executed as a python script: ``python3 
-eosio_token_contract.md``.<p>The set-up statements are explained in the <a href="setup.html">elsewhere</a>.</p>
+This file can be executed as a python script: 'python3 
+eosio_token_contract.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre></normal><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <pre><normal>
@@ -67,9 +67,9 @@ wallet = Wallet()</div>
 </pre></normal><div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
 <pre><normal>
-With the master account, create four accounts: ``account_alice``, 
-``account_bob``, ``account_carrol`` and ``account_test``. Add the 
-``eosio.token`` contract to the last account.
+With the master account, create four accounts: 'account_alice', 
+'account_bob', 'account_carrol' and 'account_test'. Add the 
+'eosio.token' contract to the last account.
 </pre></normal><div class="section" id="the-account-create-factory">
 <span id="the-account-create-factory"></span><h3>The <code class="docutils literal notranslate"><span class="pre">account_create</span></code> factory<a class="headerlink" href="#the-account-create-factory" title="Permalink to this headline">¶</a></h3>
 <pre><normal>
@@ -88,11 +88,11 @@ deploy = contract_test.deploy()<p>time.sleep(1)
 “”“</p>
 </pre></normal>
 <pre><normal>
-Execute actions on the contract account:<div class="highlight-default notranslate"><div class="highlight"><pre>* let eosio deposit an amount of 1000000000.0000 EOS there;
-* transfer some EOS to the ``alice`` account.
+Execute actions on the contract account:<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">let</span> <span class="n">eosio</span> <span class="n">deposit</span> <span class="n">an</span> <span class="n">amount</span> <span class="n">of</span> <span class="mf">1000000000.0000</span> <span class="n">EOS</span> <span class="n">there</span><span class="p">;</span>
+<span class="o">*</span> <span class="n">transfer</span> <span class="n">some</span> <span class="n">EOS</span> <span class="n">to</span> <span class="n">the</span> <span class="s1">&#39;alice&#39;</span> <span class="n">account</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>Use the <code class="docutils literal notranslate"><span class="pre">push_action</span></code> method of the contract account:</p>
+<p>Use the ‘push_action’ method of the contract account:</p>
 </pre></normal>
 <pre><normal>
 """
@@ -110,7 +110,7 @@ permission=account_master)
 “”“</p>
 </pre></normal>
 <pre><normal>
-Execute a series of transfers between the accounts. Use the ``push_action`` 
+Execute a series of transfers between the accounts. Use the 'push_action' 
 method of the contract account:
 </pre></normal><pre><normal>
 """
@@ -144,7 +144,7 @@ permission=account_bob)</p>
 <p>“”“</p>
 </pre></normal>
 <pre><normal>
-To see the records of the accounts, use the ``table`` method of the contract
+To see the records of the accounts, use the 'table' method of the contract
 account:
 </pre></normal>
 <pre><normal>
@@ -158,7 +158,7 @@ table_carol = account_test.table("accounts", account_carol)
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
 <pre><normal>
 In an linux bash, change directory to where this file exists, it is the 
-directory ``docs/source/cases`` in the repository, and enter this command:
+directory 'docs/source/cases' in the repository, and enter this command:
 </pre></normal>
 <pre><normal>
 $ python3 eosio_token_contract.md

@@ -405,8 +405,8 @@ def account_master_create(
                     * Checking whether the wallet has keys to the account ``{}``
                     """.format(account_object.name))
 
-                if put_account_to_wallet_and_on_stack(
-                       account_object, account_object_name, account_object):
+                if append_account_methods_and_finish(
+                    account_object_name, account_object, account_object):
                     account_object.EOSF("""
                         * The account ``{}`` is in the wallet.
                         """.format(account_object.name))
@@ -467,109 +467,8 @@ def account_master_create(
                     if is_ready == "go":
                         break
 
-
-def account_create(
-        account_object_name,
-        creator, 
-        stake_net="", stake_cpu="",
-        account_name="", 
-        owner_key="", active_key="",
-        permission = "",
-        buy_ram_kbytes=0, buy_ram="",
-        transfer=False,
-        expiration_sec=30,
-        skip_signature=0, dont_broadcast=0, forceUnique=0,
-        max_cpu_usage=0, max_net_usage=0,
-        ref_block="",
-        restore=False,
-        verbosity=None):
-
-    logger = eosf.Logger(verbosity)
-    logger.EOSF_TRACE("""
-        ######### Create the account object `{}` ...
-        """.format(account_object_name))
-
-    """
-    Check the following conditions:
-    * ``eosf.use_keosd(True)`` or the local testnet is running;
-    * a ``Wallet`` object is defined;
-    * the account object name is not in use, already.
-    """
-    if logger.ERROR(cleos.is_notrunningnotkeosd_error()):
-        return logger
-
-    is_wallet_defined(logger)
-    global wallet_singleton
-    if wallet_singleton is None:
-        return
-        
-    if wallet_singleton.is_name_taken(account_object_name, account_name):
-        return wallet_singleton
-
-    """
-    Create an account object.
-    """
-    account_object = None
-    if restore:
-        if creator:
-            account_name = creator
-        logger.EOSF_TRACE("""
-                        ... for the blockchain account `{}`.
-                        """.format(account_object_name, account_name)) 
-        account_object = RestoreAccount(account_name, verbosity)
-             
-    else:
-        if not account_name:
-            account_name = cleos.account_name()
-        if owner_key:
-            if not active_key:
-                active_key = owner_key
-        else:
-            owner_key = cleos.CreateKey("owner", is_verbose=-1)
-            active_key = cleos.CreateKey("active", is_verbose=-1)
-
-        if stake_net:
-            logger.EOSF_TRACE("""
-                        ... for the new, properly paid, 
-                        blockchain account `{}`.
-                        """.format(account_object_name, account_name))
-
-            account_object = SystemNewaccount(
-                    creator, account_name, owner_key, active_key,
-                    stake_net, stake_cpu,
-                    permission,
-                    buy_ram_kbytes, buy_ram,
-                    transfer,
-                    expiration_sec, 
-                    skip_signature, dont_broadcast, forceUnique,
-                    max_cpu_usage, max_net_usage,
-                    ref_block,
-                    verbosity
-                    )
-        else:
-            logger.EOSF_TRACE("""
-                            ... for the local testnet account.
-                        """)
-            account_object = CreateAccount(
-                    creator, account_name, 
-                    owner_key, active_key,
-                    permission,
-                    expiration_sec, skip_signature, dont_broadcast, forceUnique,
-                    max_cpu_usage, max_net_usage,
-                    ref_block,
-                    verbosity
-                    )
-            account_object
-
-
-        account_object.owner_key = owner_key
-        account_object.active_key = active_key
-        put_account_to_wallet_and_on_stack(
-            account_object, account_object_name, logger)
-
-    ##########################################################################
-    # append account methodes to the account_object
-    ##########################################################################
+def append_account_methods_and_finish(
+        account_object_name, account_object, logger):
 
     def error_map(account_object, err_msg):
 
@@ -697,5 +596,109 @@ def account_create(
 
     account_object.__str__ = types.MethodType(__str__, account_object)
 
+    return put_account_to_wallet_and_on_stack(
+            account_object, account_object_name, logger)
+
+
+
+def account_create(
+        account_object_name,
+        creator, 
+        stake_net="", stake_cpu="",
+        account_name="", 
+        owner_key="", active_key="",
+        permission = "",
+        buy_ram_kbytes=0, buy_ram="",
+        transfer=False,
+        expiration_sec=30,
+        skip_signature=0, dont_broadcast=0, forceUnique=0,
+        max_cpu_usage=0, max_net_usage=0,
+        ref_block="",
+        restore=False,
+        verbosity=None):
+
+    logger = eosf.Logger(verbosity)
+    logger.EOSF_TRACE("""
+        ######### Create the account object `{}` ...
+        """.format(account_object_name))
+
+    """
+    Check the following conditions:
+    * ``eosf.use_keosd(True)`` or the local testnet is running;
+    * a ``Wallet`` object is defined;
+    * the account object name is not in use, already.
+    """
+    if logger.ERROR(cleos.is_notrunningnotkeosd_error()):
+        return logger
+
+    is_wallet_defined(logger)
+    global wallet_singleton
+    if wallet_singleton is None:
+        return
+        
+    if wallet_singleton.is_name_taken(account_object_name, account_name):
+        return wallet_singleton
+
+    """
+    Create an account object.
+    """
+    account_object = None
+    if restore:
+        if creator:
+            account_name = creator
+        logger.EOSF_TRACE("""
+                        ... for the blockchain account `{}`.
+                        """.format(account_object_name, account_name)) 
+        account_object = RestoreAccount(account_name, verbosity)
+             
+    else:
+        if not account_name:
+            account_name = cleos.account_name()
+        if owner_key:
+            if not active_key:
+                active_key = owner_key
+        else:
+            owner_key = cleos.CreateKey("owner", is_verbose=-1)
+            active_key = cleos.CreateKey("active", is_verbose=-1)
+
+        if stake_net:
+            logger.EOSF_TRACE("""
+                        ... for the new, properly paid, 
+                        blockchain account `{}`.
+                        """.format(account_object_name, account_name))
+
+            account_object = SystemNewaccount(
+                    creator, account_name, owner_key, active_key,
+                    stake_net, stake_cpu,
+                    permission,
+                    buy_ram_kbytes, buy_ram,
+                    transfer,
+                    expiration_sec, 
+                    skip_signature, dont_broadcast, forceUnique,
+                    max_cpu_usage, max_net_usage,
+                    ref_block,
+                    verbosity
+                    )
+        else:
+            logger.EOSF_TRACE("""
+                            ... for the local testnet account.
+                        """)
+            account_object = CreateAccount(
+                    creator, account_name, 
+                    owner_key, active_key,
+                    permission,
+                    expiration_sec, skip_signature, dont_broadcast, forceUnique,
+                    max_cpu_usage, max_net_usage,
+                    ref_block,
+                    verbosity
+                    )
+            account_object
+
+
+        account_object.owner_key = owner_key
+        account_object.active_key = active_key
+
+    append_account_methods_and_finish(
+        account_object_name, account_object, logger)
 
 

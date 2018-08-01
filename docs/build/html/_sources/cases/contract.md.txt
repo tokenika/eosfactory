@@ -3,9 +3,9 @@
 
 <pre><normal>
 This file can be executed as a python script: 
-``python3 contract.md``.
+'python3 contract.md'.
 
-The set-up statements are explained in the <a href="setup.html">elsewhere</a>.
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 </pre></normal>
 
 ## Set-up
@@ -36,11 +36,11 @@ eosf.set_throw_error(False)
 ## Case
 
 <pre><normal>
-None ``Contract`` object can exist without an account object that keeps this
-contract. The account object is presented <a href="account.html">elsewhere</a>.
+None 'Contract' object can exist without an account object that keeps this
+contract. The account object is presented at <a href="account.html">cases/account</a>.
 
-Create an account objects: ``account_eosio_token``. Provide it with a contract 
-of the class ``eosio.token``. The code for the ``eosio.token`` class comes with 
+Create an account objects: 'account_eosio_token'. Provide it with a contract 
+of the class 'eosio.token'. The code for the 'eosio.token' class comes with 
 the EOSIO repository.
 
 Add three other account objects, and execute actions of the contract on them.
@@ -60,8 +60,8 @@ account_create("account_carol", account_master)
 ### Create a Contract object
 
 <pre><normal>
-Create an instance of the ``Contract`` class, appending it to the account 
-``account_eosio_token``:
+Create an instance of the 'Contract' class, appending it to the account 
+'account_eosio_token':
 </pre></normal>
 <pre><normal>
 """
@@ -69,20 +69,20 @@ contract_eosio_token = Contract(account_eosio_token, "token")
 """
 </pre></normal>
 <pre><normal>
-The second argument of the creator of the ``Contract`` class identifies the 
+The second argument of the creator of the 'Contract' class identifies the 
 code source. The Factory tries to be smart, and searches the repository of the 
 Factory. If it fails, put the right path there, 
-``/mnt/c/Workspaces/EOS/eosfactory/contracts/eosio.token/``,
+'/mnt/c/Workspaces/EOS/eosfactory/contracts/eosio.token/',
 for example.
 
-Note that the ``Contract`` creator takes several default arguments that 
+Note that the 'Contract' creator takes several default arguments that 
 sometimes have to be adjusted.
 </pre></normal>
 
 ### Methods of a contract objects
 
 <pre><normal>
-Any ``Contract`` object can:
+Any 'Contract' object can:
 
     * Build itself.
         Build abi alone.
@@ -168,15 +168,15 @@ table_carol = account_eosio_token.table("accounts", account_carol)
 </pre></normal>
 
 <pre><normal>
-Besides the usual ``Hello`` message, you can see the result of a logging 
-facility, starting with ``INFO``.
+Besides the usual 'Hello' message, you can see the result of a logging 
+facility, starting with 'INFO'.
 </pre></normal>
 
 ### Test run
 
 <pre><normal>
 In an linux bash, change directory to where this file exists, it is the 
-directory ``docs/source/cases`` in the repository, and enter the following 
+directory 'docs/source/cases' in the repository, and enter the following 
 command:
 </pre></normal>
 <pre><normal>

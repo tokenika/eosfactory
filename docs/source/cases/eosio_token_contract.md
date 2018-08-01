@@ -2,10 +2,9 @@
 # Eosio Token Contract
 
 <pre><normal>
-This file can be executed as a python script: ``python3 
-eosio_token_contract.md``.
+This file can be executed as a python script: 'python3 eosio_token_contract.md'.
 
-The set-up statements are explained in the <a href="setup.html">elsewhere</a>.
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 </pre></normal>
 
 ## Set-up
@@ -47,9 +46,9 @@ eosf.set_throw_error(False) # make the errors be printed
 ## Case
 
 <pre><normal>
-With the master account, create four accounts: ``account_alice``, 
-``account_bob``, ``account_carrol`` and ``account_test``. Add the 
-``eosio.token`` contract to the last account.
+With the master account, create four accounts: 'account_alice', 
+'account_bob', 'account_carrol' and 'account_test'. Add the 
+'eosio.token' contract to the last account.
 </pre></normal>
 
 ### The `account_create` factory
@@ -75,9 +74,9 @@ time.sleep(1)
 Execute actions on the contract account:
 
     * let eosio deposit an amount of 1000000000.0000 EOS there;
-    * transfer some EOS to the ``alice`` account.
+    * transfer some EOS to the 'alice' account.
 
-Use the ``push_action`` method of the contract account:
+Use the 'push_action' method of the contract account:
 </pre></normal>
 <pre><normal>
 """
@@ -97,7 +96,7 @@ account_test.push_action(
 """
 </pre></normal>
 <pre><normal>
-Execute a series of transfers between the accounts. Use the ``push_action`` 
+Execute a series of transfers between the accounts. Use the 'push_action' 
 method of the contract account:
 </pre></normal>
 
@@ -138,7 +137,7 @@ account_test.push_action(
 """
 </pre></normal>
 <pre><normal>
-To see the records of the accounts, use the ``table`` method of the contract
+To see the records of the accounts, use the 'table' method of the contract
 account:
 </pre></normal>
 <pre><normal>
@@ -153,7 +152,7 @@ table_carol = account_test.table("accounts", account_carol)
 
 <pre><normal>
 In an linux bash, change directory to where this file exists, it is the 
-directory ``docs/source/cases`` in the repository, and enter this command:
+directory 'docs/source/cases' in the repository, and enter this command:
 </pre></normal>
 <pre><normal>
 $ python3 eosio_token_contract.md

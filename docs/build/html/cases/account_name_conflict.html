@@ -33,8 +33,8 @@
 <span id="account-name-conflict"></span><h1>Account name conflict<a class="headerlink" href="#account-name-conflict" title="Permalink to this headline">¶</a></h1>
 <p><normal><pre>
 This file can be executed as a python script:
-<code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">account_name_conflict.md</span></code>.</p>
-<p>The set-up statements are explained in the <a href="setup.html">elsewhere</a>.</p>
+‘python3 account_name_conflict.md’.</p>
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre></normal><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <p><normal><pre>
@@ -52,20 +52,20 @@ eosf.set_throw_error(False)
 </pre></normal>
 ## Case
 <normal><pre>
-The ``EOSFactory`` wraps EOSIO accounts with objects. The symbolic name of an 
-account object, for example ``account_alice``, has to be unique in a program. 
+The 'EOSFactory' wraps EOSIO accounts with objects. The symbolic name of an 
+account object, for example 'account_alice', has to be unique in a program. 
 Moreover, it has be unique in a collection of scripts, especially, if they 
-execute real transactions.<p>The <code class="docutils literal notranslate"><span class="pre">EOSFactory</span></code> uses mapping files that keep the uniqueness.</p>
+execute real transactions.<p>The ‘EOSFactory’ uses mapping files that keep the uniqueness.</p>
 <p>However, what if a user wants to ascribe a previously used name to another
 physical account. Then, the only way to keep the previous physical account
 within the system is to change its mapping name.</p>
-<p>Create two account objects: <code class="docutils literal notranslate"><span class="pre">account_alice</span></code> and <code class="docutils literal notranslate"><span class="pre">account_carrol</span></code>.</p>
-<p>Then try to create another account object called <code class="docutils literal notranslate"><span class="pre">account_alice</span></code>. Although
+<p>Create two account objects: ‘account_alice’ and ‘account_carrol’.</p>
+<p>Then try to create another account object called ‘account_alice’. Although
 this object is going to refer to a new blockchain account, it cannot accept
 the given name: error is issued.</p>
-<p>You are prompted to change the blocking name. On acceptance, the <code class="docutils literal notranslate"><span class="pre">nano</span></code>
+<p>You are prompted to change the blocking name. On acceptance, the ‘nano’
 editor opens. CTR+X, to save and exit.</p>
-<p>Change <code class="docutils literal notranslate"><span class="pre">account_alice</span></code> to <code class="docutils literal notranslate"><span class="pre">account_alice_b</span></code>.</p>
+<p>Change ‘account_alice’ to ‘account_alice_b’.</p>
 </pre></normal><p><normal><pre>
 “”“
 account_create(“account_alice”, account_master)
@@ -76,7 +76,7 @@ account_create(“account_alice”, account_master)
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
 <p><normal><pre>
 In an linux bash, change directory to where this file exists, it is the
-directory <code class="docutils literal notranslate"><span class="pre">docs/source/cases</span></code> in the repository, and enter the following
+directory ‘docs/source/cases’ in the repository, and enter the following
 command:</p>
 </pre></normal>
 <normal><pre>

@@ -2,7 +2,7 @@
 # Setting-up EOSFactory tests
 
 <pre><normal>
-This file can be executed as a python script: ``python3 setup.md``.
+This file can be executed as a python script: 'python3 setup.md'.
 </pre></normal>
 
 ## Set-up part

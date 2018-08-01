@@ -32,13 +32,13 @@
 <div class="section" id="registering-to-a-remote-testnet">
 <span id="registering-to-a-remote-testnet"></span><h1>Registering to a remote testnet<a class="headerlink" href="#registering-to-a-remote-testnet" title="Permalink to this headline">¶</a></h1>
 <pre><normal>
-This file can be executed as a python script: ``python3 
-registering_to_testnode.md``.<p>The set-up statements are explained in the <a href="setup.html">elsewhere</a>.</p>
+This file can be executed as a python script: 'python3 
+registering_to_testnode.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre></normal><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <pre><normal>
 The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is reffered to as the ``testing account``.
+this article, for testing. It is reffered to as the 'testing account'.
 </pre></normal><pre><normal>
 Accout Name: dgxo1uyhoytn
 Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
@@ -69,7 +69,7 @@ eosf.kill_keosd()           # to have a clean start
 <div class="section" id="clean-the-jungle-wallet">
 <span id="clean-the-jungle-wallet"></span><h3>Clean the ‘jungle wallet’<a class="headerlink" href="#clean-the-jungle-wallet" title="Permalink to this headline">¶</a></h3>
 <pre><normal>
-Delete existing, if any, wallet named ``jungle_wallet``, and create a new, 
+Delete existing, if any, wallet named 'jungle_wallet', and create a new, 
 fresh one:
 </pre></normal>
 <pre><normal>
@@ -95,7 +95,7 @@ eosf.info()
 <div class="section" id="introduce-a-test-trick">
 <span id="introduce-a-test-trick"></span><h3>Introduce a test trick<a class="headerlink" href="#introduce-a-test-trick" title="Permalink to this headline">¶</a></h3>
 <pre><normal>
-Use an active account, named ``account_master_test`` to simulate the 
+Use an active account, named 'account_master_test' to simulate the 
 registration procedure: this account substitutes one that would be
 physically registered.</pre></normal><pre><normal>
 """
@@ -121,7 +121,7 @@ eosf.set_is_testing_errors()        # make error messages less alarming
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
 <pre><normal>
 In subsequent tests, you may have to change the account object name, here 
-``account_master``, or to resolve name conflicts, if you are prompted.
+'account_master', or to resolve name conflicts, if you are prompted.
 </pre></normal><div class="section" id="register-to-the-testnode">
 <span id="register-to-the-testnode"></span><h3>Register to the testnode<a class="headerlink" href="#register-to-the-testnode" title="Permalink to this headline">¶</a></h3>
 <pre><normal>
@@ -133,7 +133,7 @@ account_master_create("account_master")
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
 <pre><normal>
 In an linux bash, change directory to where this file exists, it is the 
-directory ``docs/source/cases`` in the repository, and enter the following 
+directory 'docs/source/cases' in the repository, and enter the following 
 command:
 </pre></normal>
 <pre><normal>

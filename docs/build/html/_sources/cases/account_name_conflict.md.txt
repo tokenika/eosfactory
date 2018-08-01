@@ -3,9 +3,9 @@
 
 <normal><pre>
 This file can be executed as a python script: 
-``python3 account_name_conflict.md``.
+'python3 account_name_conflict.md'.
 
-The set-up statements are explained in the <a href="setup.html">elsewhere</a>.
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 </pre></normal>
 
 ## Set-up
@@ -25,27 +25,27 @@ eosf.set_throw_error(False)
 </pre></normal>
 ## Case
 <normal><pre>
-The ``EOSFactory`` wraps EOSIO accounts with objects. The symbolic name of an 
-account object, for example ``account_alice``, has to be unique in a program. 
+The 'EOSFactory' wraps EOSIO accounts with objects. The symbolic name of an 
+account object, for example 'account_alice', has to be unique in a program. 
 Moreover, it has be unique in a collection of scripts, especially, if they 
 execute real transactions.
 
-The ``EOSFactory`` uses mapping files that keep the uniqueness.
+The 'EOSFactory' uses mapping files that keep the uniqueness.
 
 However, what if a user wants to ascribe a previously used name to another 
 physical account. Then, the only way to keep the previous physical account 
 within the system is to change its mapping name.
 
-Create two account objects: ``account_alice`` and ``account_carrol``.
+Create two account objects: 'account_alice' and 'account_carrol'.
 
-Then try to create another account object called ``account_alice``. Although
+Then try to create another account object called 'account_alice'. Although
 this object is going to refer to a new blockchain account, it cannot accept
 the given name: error is issued.
 
-You are prompted to change the blocking name. On acceptance, the ``nano`` 
+You are prompted to change the blocking name. On acceptance, the 'nano' 
 editor opens. CTR+X, to save and exit.
 
-Change ``account_alice`` to ``account_alice_b``.
+Change 'account_alice' to 'account_alice_b'.
 </pre></normal>
 
 <normal><pre>
@@ -59,7 +59,7 @@ account_create("account_alice", account_master)
 ### Test run
 <normal><pre>
 In an linux bash, change directory to where this file exists, it is the 
-directory ``docs/source/cases`` in the repository, and enter the following 
+directory 'docs/source/cases' in the repository, and enter the following 
 command:
 </pre></normal>
 <normal><pre>
