@@ -19,6 +19,7 @@ Cases
     cases/ide
     cases/account
     cases/contract
+    cases/wallet
     cases/configuration
     cases/eosio_token_contract    
     cases/setup

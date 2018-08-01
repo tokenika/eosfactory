@@ -235,6 +235,7 @@ class NodeProbe:
     def __init__(self, is_verbose=1):
         count = 15
         num = 5
+        block_num = None
        
         while True:
             time.sleep(1)
@@ -246,9 +247,12 @@ class NodeProbe:
             try:
                 head_block_num = int(self.get_info.json["head_block_num"])
             except:
-                head_block_num = -1
+                head_block_num = 0
 
-            if head_block_num >= num:
+            if block_num is None:
+                block_num = head_block_num
+
+            if head_block_num - block_num >= num:
                 self.error = False
                 break      
 

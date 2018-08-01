@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Eosio Token Contract" href="eosio_token_contract.html" />
-    <link rel="prev" title="Account name conflict" href="account_name_conflict.html" />
+    <link rel="prev" title="Wallet object" href="wallet.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -31,58 +31,51 @@
   <p>“”“</p>
 <div class="section" id="eosfactory-configuration">
 <span id="eosfactory-configuration"></span><h1>EOSFactory configuration<a class="headerlink" href="#eosfactory-configuration" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: ``python3 configuration.md``.
-</pre></div>
-</div>
-<div class="section" id="inspect-the-configuration">
+<pre><normal>
+This file can be executed as a python script: ``python3 configuration.md``.<p>The set-up statements are explained in the <a href="setup.html">elsewhere</a>.</p>
+</pre></normal><div class="section" id="inspect-the-configuration">
 <span id="inspect-the-configuration"></span><h2>Inspect the configuration<a class="headerlink" href="#inspect-the-configuration" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-import teos
-
-ok = teos.GetConfig()
-
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Note that the same result is available with this bash command:
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>$eosf get config
-</pre></div>
-</div>
-</div>
+<pre><normal>
+"""
+import teos<p>ok = teos.GetConfig()</p>
+<p>“”“</p>
+</pre></normal>
+<pre><normal>
+Note that the same result is available with this bash command:
+</pre></normal>
+<pre><normal>
+$eosf get config
+</pre></normal></div>
 <div class="section" id="override-the-installed-configuration">
 <span id="override-the-installed-configuration"></span><h2>Override the installed configuration<a class="headerlink" href="#override-the-installed-configuration" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>There is the ``config.json`` file in the ``teos`` folder of the repository. 
+<pre><normal>
+There is the ``config.json`` file in the ``teos`` folder of the repository. 
 The entries there prevail the default setup.
-</pre></div>
-</div>
-</div>
+</pre></normal></div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h2>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, it is the 
+<pre><normal>
+In an linux bash, change directory to where this file exists, it is the 
 directory ``docs/source/cases`` in the repository, and enter the following 
 command:
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 configuration.md
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>or
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>$ $eosf get config
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get anything similar to this shown in the image below.
+</pre></normal>
+<pre><normal>
+$ python3 configuration.md
+</pre></normal>
+<pre><normal>
+or
+</pre></normal>
+<pre><normal>
+$ $eosf get config
+</pre></normal>
+<pre><normal>
+We hope that you get something similar to this shown in the image below.
 You can change or add something in the configuration file ``teos/config.json`` 
 and see the result.
-</pre></div>
-</div>
-<p><img src="configuration.png" 
-onerror="this.src='../../../source/cases/configuration.png'"   
-alt="configuration" width="640px"/></p>
-<p>“”“</p>
+</pre></normal>
+<img src="configuration.png" 
+    onerror="this.src='../../../source/cases/configuration.png'"   
+    alt="configuration" width="640px"/><p>“”“</p>
 </div>
 </div>
 
@@ -109,10 +102,14 @@ alt="configuration" width="640px"/></p>
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="ide.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wallet.html">Wallet object</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">EOSFactory configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html">Eosio Token Contract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html#the-master-account-authorizes-actions-on-the-blockchain">the master account authorizes actions on the blockchain:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 </ul>
 <ul>
@@ -146,7 +143,7 @@ alt="configuration" width="640px"/></p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="account_name_conflict.html" title="previous chapter">Account name conflict</a></li>
+      <li>Previous: <a href="wallet.html" title="previous chapter">Wallet object</a></li>
       <li>Next: <a href="eosio_token_contract.html" title="next chapter">Eosio Token Contract</a></li>
   </ul></li>
 </ul>

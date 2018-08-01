@@ -1,15 +1,16 @@
 """
 # Account object
 
-```md
+<pre><normal>
 This file can be executed as a python script: 
 ``python3 account.md``.
 
-The set-up statements are explained in the ``setup.md`` case file.
-```
+The set-up statements are explained in the <a href="setup.html">elsewhere</a>.
+</pre></normal>
 
 ## Set-up
-```md
+
+<pre><normal>
 """
 import setup
 import eosf
@@ -17,21 +18,24 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.restart()
 eosf.set_throw_error(True)
 eosf.reset([eosf.Verbosity.TRACE])
 """
-```
-### Exactly one 'Wallet' object has to exist in the namespace:
-```md
+</pre></normal>
+
+### Exactly one 'Wallet' object has to exist in the namespace
+
+<pre><normal>
 """
 wallet = Wallet()   
 account_master_create("account_master")
 eosf.set_throw_error(False)
 """
-```
+</pre></normal>
+
 ## Case
-```md
+
+<pre><normal>
 The ``EOSFactory`` wraps EOSIO accounts with objects. Accounts can hold smart
 contracts. 
 
@@ -40,21 +44,23 @@ Create an account objects: ``account_hello``. Add a contract of the class
 repository.
 
 Add two other account objects and execute the action of the account on them.
-```
+</pre></normal>
+
 ### The 'account_create' factory function
-```md
+
+<pre><normal>
 """
 account_create("account_hello", account_master)
 """
-```
-```md
+</pre></normal>
+<pre><normal>
 The first argument is the name of the account object to be created, the second
 one points to the account master, authorizing the creation.
 
 Only the first argument is necessary, however there is several default 
 arguments that sometimes have to be adjusted.
-```
-```md
+</pre></normal>
+<pre><normal>
 The ``account_create`` does many tasks:
 
     * Check whether a ``Wallet`` object exist in the namespace.
@@ -67,30 +73,34 @@ The ``account_create`` does many tasks:
     * Update the statistics of the accounts.
 
 All the actions are logged to the terminal, if the verbosity is set default. 
-```
+</pre></normal>
+
 ### Methods of an account objects
-```md
+
+<pre><normal>
 Any (almost) account object can:
 
     * Load a smart contract.
     * Push an action on its contract.
     * Show its entry (a table) in the blockchain database,
 
-```
+</pre></normal>
+
 ### Create a Contract object
-```md
+
+<pre><normal>
 Now, you have to create a smart contract object instance, appending it to the 
-account ``account_hello``. The ``Contract`` class is presented elsewhere 
-(``account_name_conflict.md`` case).
-```
-```md
+account ``account_hello``. The ``Contract`` class is presented 
+<a href="contract.html">elsewhere</a>.
+</pre></normal>
+<pre><normal>
 """
 contract_hello = Contract(account_hello, "hello")
 contract_hello.build()
 contract_hello.deploy()
 """
-```
-```md
+</pre></normal>
+<pre><normal>
 The second argument of the creator of the ``Contract`` class identifies the 
 code source. The EOSFactort tries to be smart and searches the repository of the 
 Factory. If it fails, put the right path there, 
@@ -98,22 +108,24 @@ Factory. If it fails, put the right path there,
 for example.
 
 As the deployment succeeded, the contract can be executed.
-```
-### Try the contract
-```md
-For tests, create two contracts ``account_alice`` and ``account_carol``...
-```
+</pre></normal>
 
-```md
+### Try the contract
+
+<pre><normal>
+For tests, create two contracts ``account_alice`` and ``account_carol``...
+</pre></normal>
+
+<pre><normal>
 """
 account_create("account_alice", account_master)
 account_create("account_carol", account_master)
 """
-```
-```md
+</pre></normal>
+<pre><normal>
 ... and execute the action of the contract ``hello``:
-```
-```md
+</pre></normal>
+<pre><normal>
 """
 account_hello.push_action(
     "hi", '{"user":"' + str(account_alice) + '"}', account_alice)
@@ -121,24 +133,25 @@ account_hello.push_action(
 account_hello.push_action(
     "hi", '{"user":"' + str(account_carol) + '"}', account_carol)
 """
-```
-```md
+</pre></normal>
+<pre><normal>
 Besides the usual ``Hello`` message, you can see the result of a logging 
 facility, starting with ``INFO``.
-```
+</pre></normal>
 
 ### Test run
-```md
+
+<pre><normal>
 In an linux bash, change directory to where this file exists, it is the 
 directory ``docs/source/cases`` in the repository, and enter the following 
 command:
-```
-```md
+</pre></normal>
+<pre><normal>
 $ python3 account.md
-```
-```md
-We hope that you get anything similar to this shown in the image below.
-```
+</pre></normal>
+<pre><normal>
+We hope that you get something similar to this shown in the image below.
+</pre></normal>
 <img src="account.png" 
     onerror="this.src='../../../source/cases/account.png'"   
     alt="account object" width="720px"/>

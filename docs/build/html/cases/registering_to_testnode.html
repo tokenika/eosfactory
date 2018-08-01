@@ -31,147 +31,120 @@
   <p>“”“</p>
 <div class="section" id="registering-to-a-remote-testnet">
 <span id="registering-to-a-remote-testnet"></span><h1>Registering to a remote testnet<a class="headerlink" href="#registering-to-a-remote-testnet" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: ``python3 
-registering_to_testnode.md``.
-</pre></div>
-</div>
-<div class="section" id="set-up">
+<pre><normal>
+This file can be executed as a python script: ``python3 
+registering_to_testnode.md``.<p>The set-up statements are explained in the <a href="setup.html">elsewhere</a>.</p>
+</pre></normal><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The following account exists in the blockchain of the testnode. It is used, in
+<pre><normal>
+The following account exists in the blockchain of the testnode. It is used, in
 this article, for testing. It is reffered to as the ``testing account``.
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Accout Name: dgxo1uyhoytn
+</pre></normal><pre><normal>
+Accout Name: dgxo1uyhoytn
 Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
-Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
-
-Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
-Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA 
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv<p>Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
+Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA</p>
+</pre></normal><pre><normal>
+"""
 import os
 import unittest
 import setup
 import eosf
 import eosf_account
 from eosf_wallet import Wallet
-from eosf_account import account_master_create
-
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
-    eosf.Verbosity.DEBUG])
-eosf.set_throw_error(False)
-
-cryptolions = &quot;88.99.97.30:38888&quot;
-_ = eosf.Logger()
-
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="section" id="set-a-remote-testnode">
+from eosf_account import account_master_create<p>eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, eosf.Verbosity.DEBUG])
+eosf.set_throw_error(False)</p>
+<p>cryptolions = “88.99.97.30:38888”
+_ = eosf.Logger()</p>
+<p>“”“</p>
+</pre></normal><div class="section" id="set-a-remote-testnode">
 <span id="set-a-remote-testnode"></span><h3>Set a remote testnode<a class="headerlink" href="#set-a-remote-testnode" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<pre><normal>
+"""
 eosf.use_keosd(True)        # use KEOSD Wallet Manager
 setup.set_nodeos_address(cryptolions)
 eosf.kill_keosd()           # to have a clean start
-&quot;&quot;&quot;
-</pre></div>
-</div>
-</div>
+"""
+</pre></normal></div>
 <div class="section" id="clean-the-jungle-wallet">
 <span id="clean-the-jungle-wallet"></span><h3>Clean the ‘jungle wallet’<a class="headerlink" href="#clean-the-jungle-wallet" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Delete existing, if any, wallet named ``jungle_wallet``, and create a new, 
+<pre><normal>
+Delete existing, if any, wallet named ``jungle_wallet``, and create a new, 
 fresh one:
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-wallet_name = &quot;jungle_wallet&quot;
+</pre></normal>
+<pre><normal>
+"""
+wallet_name = "jungle_wallet"
 try:
-    os.remove(eosf.wallet_dir() + wallet_name + &quot;.wallet&quot;)
+    os.remove(eosf.wallet_dir() + wallet_name + ".wallet")
 except:
-    pass
-
-wallet = Wallet(wallet_name)
-
-eosf.set_is_testing_errors(False)
-eosf.set_throw_error(True)
-
-&quot;&quot;&quot;
-</pre></div>
-</div>
-</div>
+    pass<p>wallet = Wallet(wallet_name)</p>
+<p>eosf.set_is_testing_errors(False)
+eosf.set_throw_error(True)</p>
+<p>“”“</p>
+</pre></normal></div>
 <div class="section" id="is-the-testnode-on">
 <span id="is-the-testnode-on"></span><h3>Is the testnode ON?<a class="headerlink" href="#is-the-testnode-on" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Throw an exception if the testnode is off:
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<pre><normal>
+Throw an exception if the testnode is off:
+</pre></normal><pre><normal>
+"""
 eosf.info()
-&quot;&quot;&quot;
-</pre></div>
-</div>
-</div>
+"""
+</pre></normal></div>
 <div class="section" id="introduce-a-test-trick">
 <span id="introduce-a-test-trick"></span><h3>Introduce a test trick<a class="headerlink" href="#introduce-a-test-trick" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Use an active account, named ``account_master_test`` to simulate the 
+<pre><normal>
+Use an active account, named ``account_master_test`` to simulate the 
 registration procedure: this account substitutes one that would be
-physically registered.
-
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+physically registered.</pre></normal><pre><normal>
+"""
 eosf_account.account_master_test = eosf_account.GetAccount(
-    &quot;account_master_test&quot;,
-    &quot;dgxo1uyhoytn&quot;, 
-    &quot;5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY&quot;,
-    &quot;5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA&quot;
+    "account_master_test",
+    "dgxo1uyhoytn", 
+    "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
+    "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
 )
 eosf_account.account_master_test.ERROR()
-&quot;&quot;&quot;
-</pre></div>
-</div>
-</div>
+"""
+</pre></normal></div>
 <div class="section" id="end-the-set-up-part">
 <span id="end-the-set-up-part"></span><h3>End the set-up part<a class="headerlink" href="#end-the-set-up-part" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<pre><normal>
+"""
 eosf.set_throw_error(False)         # on error, do not throw exception
 eosf.set_is_testing_errors()        # make error messages less alarming
-&quot;&quot;&quot;
-</pre></div>
-</div>
-</div>
+"""
+</pre></normal></div>
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In subsequent tests, you may have to change the account object name, here 
+<pre><normal>
+In subsequent tests, you may have to change the account object name, here 
 ``account_master``, or to resolve name conflicts, if you are prompted.
-</pre></div>
-</div>
-<div class="section" id="register-to-the-testnode">
+</pre></normal><div class="section" id="register-to-the-testnode">
 <span id="register-to-the-testnode"></span><h3>Register to the testnode<a class="headerlink" href="#register-to-the-testnode" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-account_master_create(&quot;account_master&quot;)
-&quot;&quot;&quot;
-</pre></div>
-</div>
-</div>
+<pre><normal>
+"""
+account_master_create("account_master")
+"""
+</pre></normal></div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, it is the 
+<pre><normal>
+In an linux bash, change directory to where this file exists, it is the 
 directory ``docs/source/cases`` in the repository, and enter the following 
 command:
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 registering_to_testnode.md
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this shown in the image below.
-</pre></div>
-</div>
-<p><img src="registering.png" 
-onerror="this.src='../../../source/cases/registering.png'"   
-alt="registering" width="640px"/></p>
-<p>“”“</p>
+</pre></normal>
+<pre><normal>
+$ python3 registering_to_testnode.md
+</pre></normal>
+<pre><normal>
+We hope that you get something similar to this shown in the image below.
+</pre></normal>
+<img src="registering.png" 
+    onerror="this.src='../../../source/cases/registering.png'"   
+    alt="registering" width="640px"/><p>“”“</p>
 </div>
 </div>
 </div>
@@ -201,8 +174,10 @@ alt="registering" width="640px"/></p>
 <li class="toctree-l1"><a class="reference internal" href="ide.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wallet.html">Wallet object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">EOSFactory configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html">Eosio Token Contract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html#the-master-account-authorizes-actions-on-the-blockchain">the master account authorizes actions on the blockchain:</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Registering to a remote testnet</a></li>

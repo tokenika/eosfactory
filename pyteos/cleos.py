@@ -41,7 +41,8 @@ def wallet_url():
     return _wallet_address_arg
 
 def node_is_running():
-    return not teos.NodeIsRunning(is_verbose=0).daemon_pid == ""
+    result = teos.NodeIsRunning(is_verbose=0)
+    return not result.daemon_pid == ""
     
 def is_notrunningnotkeosd_error(cleos_object=None):
 

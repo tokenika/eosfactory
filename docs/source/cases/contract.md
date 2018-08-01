@@ -1,15 +1,16 @@
 """
 # Contract object
 
-```md
+<pre><normal>
 This file can be executed as a python script: 
 ``python3 contract.md``.
 
-The set-up statements are explained in the ``setup.md`` case file.
-```
+The set-up statements are explained in the <a href="setup.html">elsewhere</a>.
+</pre></normal>
 
 ## Set-up
-```md
+
+<pre><normal>
 """
 import setup
 import eosf
@@ -17,51 +18,57 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.restart()
 eosf.set_throw_error(True)
 eosf.reset([eosf.Verbosity.TRACE])
 """
-```
-### Exactly one 'Wallet' object has to exist in the namespace:
-```md
+</pre></normal>
+
+### Exactly one 'Wallet' object has to exist in the namespace
+
+<pre><normal>
 """
 wallet = Wallet()   
 account_master_create("account_master")
 eosf.set_throw_error(False)
 """
-```
+</pre></normal>
+
 ## Case
-```md
+
+<pre><normal>
 None ``Contract`` object can exist without an account object that keeps this
-contract. The account object is presented elsewhere (``account.md`` case).
+contract. The account object is presented <a href="account.html">elsewhere</a>.
 
 Create an account objects: ``account_eosio_token``. Provide it with a contract 
 of the class ``eosio.token``. The code for the ``eosio.token`` class comes with 
 the EOSIO repository.
 
 Add three other account objects, and execute actions of the contract on them.
-```
+</pre></normal>
+
 ### Accounts
-```md
+
+<pre><normal>
 """
 account_create("account_eosio_token", account_master)
 account_create("account_alice", account_master)
 account_create("account_bob", account_master)
 account_create("account_carol", account_master)
 """
-```
+</pre></normal>
 
 ### Create a Contract object
-```md
+
+<pre><normal>
 Create an instance of the ``Contract`` class, appending it to the account 
 ``account_eosio_token``:
-```
-```md
+</pre></normal>
+<pre><normal>
 """
 contract_eosio_token = Contract(account_eosio_token, "token")
 """
-```
-```md
+</pre></normal>
+<pre><normal>
 The second argument of the creator of the ``Contract`` class identifies the 
 code source. The Factory tries to be smart, and searches the repository of the 
 Factory. If it fails, put the right path there, 
@@ -70,11 +77,11 @@ for example.
 
 Note that the ``Contract`` creator takes several default arguments that 
 sometimes have to be adjusted.
-```
+</pre></normal>
 
 ### Methods of a contract objects
 
-```md
+<pre><normal>
 Any ``Contract`` object can:
 
     * Build itself.
@@ -84,22 +91,23 @@ Any ``Contract`` object can:
     * Push an action.
     * Show an action pushing it without broadcasting.
     * Show entry (a table) in the blockchain database of its account.
-```
+</pre></normal>
+
 ### Deploy and build the contract
 
-```md
+<pre><normal>
 """
 contract_eosio_token.build()
 contract_eosio_token.deploy()
 """
-```
+</pre></normal>
 
 ### Try the contract
 
-```md
+<pre><normal>
 Execute actions of the contract:
-```
-```md
+</pre></normal>
+<pre><normal>
 """
 contract_eosio_token.push_action(
     "create", 
@@ -147,35 +155,36 @@ contract_eosio_token.push_action(
         + '"memo":"transfer 2.0000 EOS from bob to alice"}',
     permission=account_bob)                
 """
-```
-```md
+</pre></normal>
+<pre><normal>
 Inspect the database of the blockchain:
-```
-```md
+</pre></normal>
+<pre><normal>
 """
 table_alice = account_eosio_token.table("accounts", account_alice)
 table_bob = account_eosio_token.table("accounts", account_bob)
 table_carol = account_eosio_token.table("accounts", account_carol)
 """
-```
+</pre></normal>
 
-```md
+<pre><normal>
 Besides the usual ``Hello`` message, you can see the result of a logging 
 facility, starting with ``INFO``.
-```
+</pre></normal>
 
 ### Test run
-```md
+
+<pre><normal>
 In an linux bash, change directory to where this file exists, it is the 
 directory ``docs/source/cases`` in the repository, and enter the following 
 command:
-```
-```md
+</pre></normal>
+<pre><normal>
 $ python3 contract.md
-```
-```md
+</pre></normal>
+<pre><normal>
 We hope that you get something similar to this shown in the image below.
-```
+</pre></normal>
 <img src="contract.png" 
     onerror="this.src='../../../source/cases/contract.png'"   
     alt="contract object" width="720px"/>

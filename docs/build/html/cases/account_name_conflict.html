@@ -15,7 +15,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="EOSFactory configuration" href="configuration.html" />
+    <link rel="next" title="Registering to a remote testnet" href="registering_to_testnode.html" />
     <link rel="prev" title="Setting-up EOSFactory tests" href="setup.html" />
    
   
@@ -31,77 +31,63 @@
   <p>“”“</p>
 <div class="section" id="account-name-conflict">
 <span id="account-name-conflict"></span><h1>Account name conflict<a class="headerlink" href="#account-name-conflict" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: 
-``python3 account_name_conflict.md``.
-</pre></div>
-</div>
-<div class="section" id="set-up">
+<p><normal><pre>
+This file can be executed as a python script:
+<code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">account_name_conflict.md</span></code>.</p>
+<p>The set-up statements are explained in the <a href="setup.html">elsewhere</a>.</p>
+</pre></normal><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<p><normal><pre>
+“”“
 import setup
 import eosf
 from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-
-eosf.restart()
-eosf.set_throw_error(True)
-eosf.reset([eosf.Verbosity.TRACE]) 
+from eosf_account import account_create, account_master_create</p>
+<p>eosf.set_throw_error(True)
+eosf.reset([eosf.Verbosity.TRACE])
 wallet = Wallet()
-account_master_create(&quot;account_master&quot;)
+account_master_create(“account_master”)
 eosf.set_throw_error(False)
-&quot;&quot;&quot;
-</pre></div>
-</div>
-</div>
-<div class="section" id="case">
-<span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The ``EOSFactory`` wraps EOSIO accounts with objects. The symbolic name of an 
+“”“</p>
+</pre></normal>
+## Case
+<normal><pre>
+The ``EOSFactory`` wraps EOSIO accounts with objects. The symbolic name of an 
 account object, for example ``account_alice``, has to be unique in a program. 
 Moreover, it has be unique in a collection of scripts, especially, if they 
-execute real transactions.
-
-The ``EOSFactory`` uses mapping files that keep the uniqueness.
-
-However, what if a user wants to ascribe a previously used name to another 
-physical account. Then, the only way to keep the previous physical account 
-within the system is to change its mapping name.
-
-Create two account objects: ``account_alice`` and ``account_carrol``.
-
-Then try to create another account object called ``account_alice``. Although
+execute real transactions.<p>The <code class="docutils literal notranslate"><span class="pre">EOSFactory</span></code> uses mapping files that keep the uniqueness.</p>
+<p>However, what if a user wants to ascribe a previously used name to another
+physical account. Then, the only way to keep the previous physical account
+within the system is to change its mapping name.</p>
+<p>Create two account objects: <code class="docutils literal notranslate"><span class="pre">account_alice</span></code> and <code class="docutils literal notranslate"><span class="pre">account_carrol</span></code>.</p>
+<p>Then try to create another account object called <code class="docutils literal notranslate"><span class="pre">account_alice</span></code>. Although
 this object is going to refer to a new blockchain account, it cannot accept
-the given name: error is issued.
-
-You are prompted to change the blocking name. On acceptance, the ``nano`` 
-editor opens. CTR+X, to save and exit.
-
-Change ``account_alice`` to ``account_alice_b``.
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-account_create(&quot;account_alice&quot;, account_master)
-account_create(&quot;account_carrol&quot;, account_master)
-account_create(&quot;account_alice&quot;, account_master)
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="section" id="test-run">
+the given name: error is issued.</p>
+<p>You are prompted to change the blocking name. On acceptance, the <code class="docutils literal notranslate"><span class="pre">nano</span></code>
+editor opens. CTR+X, to save and exit.</p>
+<p>Change <code class="docutils literal notranslate"><span class="pre">account_alice</span></code> to <code class="docutils literal notranslate"><span class="pre">account_alice_b</span></code>.</p>
+</pre></normal><p><normal><pre>
+“”“
+account_create(“account_alice”, account_master)
+account_create(“account_carrol”, account_master)
+account_create(“account_alice”, account_master)
+“”“</p>
+</pre></normal><div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, it is the 
-directory ``docs/source/cases`` in the repository, and enter the following 
-command:
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 account_name_conflict.md
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get anything similar to this shown in the image below.
-</pre></div>
-</div>
-<p><img src="account_name_conflict.png" 
-onerror="this.src='../../../source/cases/account_name_conflict.png'"   
-alt="account name conflict" width="640px"/></p>
-<p>“”“
+<p><normal><pre>
+In an linux bash, change directory to where this file exists, it is the
+directory <code class="docutils literal notranslate"><span class="pre">docs/source/cases</span></code> in the repository, and enter the following
+command:</p>
+</pre></normal>
+<normal><pre>
+$ python3 account_name_conflict.md
+</pre></normal>
+<normal><pre>
+We hope that you get something similar to this shown in the image below.
+</pre></normal>
+<img src="account_name_conflict.png" 
+    onerror="this.src='../../../source/cases/account_name_conflict.png'"   
+    alt="account name conflict" width="640px"/><p>“”“
 /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet/accounts.json</p>
 <ul class="simple">
 <li>The account object is created.</li>
@@ -133,10 +119,14 @@ alt="account name conflict" width="640px"/></p>
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="ide.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Account name conflict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wallet.html">Wallet object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">EOSFactory configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html">Eosio Token Contract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html#the-master-account-authorizes-actions-on-the-blockchain">the master account authorizes actions on the blockchain:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 </ul>
 <ul>
@@ -171,7 +161,7 @@ alt="account name conflict" width="640px"/></p>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="setup.html" title="previous chapter">Setting-up EOSFactory tests</a></li>
-      <li>Next: <a href="configuration.html" title="next chapter">EOSFactory configuration</a></li>
+      <li>Next: <a href="registering_to_testnode.html" title="next chapter">Registering to a remote testnet</a></li>
   </ul></li>
 </ul>
 </div>

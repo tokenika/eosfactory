@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Setting-up EOSFactory tests &#8212; EOSFactory 2.0 documentation</title>
+    <title>Wallet object &#8212; EOSFactory 2.0 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -15,8 +15,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Account name conflict" href="account_name_conflict.html" />
-    <link rel="prev" title="Eosio Token Contract" href="eosio_token_contract.html" />
+    <link rel="next" title="EOSFactory configuration" href="configuration.html" />
+    <link rel="prev" title="Contract object" href="contract.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -29,61 +29,124 @@
           <div class="body" role="main">
             
   <p>“”“</p>
-<div class="section" id="setting-up-eosfactory-tests">
-<span id="setting-up-eosfactory-tests"></span><h1>Setting-up EOSFactory tests<a class="headerlink" href="#setting-up-eosfactory-tests" title="Permalink to this headline">¶</a></h1>
-<pre><normal>
-This file can be executed as a python script: ``python3 setup.md``.
-</pre></normal><div class="section" id="set-up-part">
-<span id="set-up-part"></span><h2>Set-up part<a class="headerlink" href="#set-up-part" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="throw-exceptions-status">
-<span id="throw-exceptions-status"></span><h3>Throw exceptions status<a class="headerlink" href="#throw-exceptions-status" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
-The set-up part of a test does not involve testing specific assumptions.
-Instead, the `EOSFactory` is set then to throw fatal exceptions: the set-up
-block is enclosed within the following statements:
-</pre></normal><pre><normal>
-eosf.set_throw_error(True)
-#
-# set-up statements
-#
-eosf.set_throw_error(False)
-</pre></normal></div>
-<div class="section" id="verbosity-status">
-<span id="verbosity-status"></span><h3>Verbosity status<a class="headerlink" href="#verbosity-status" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
-You can determine the amount of the verbosity of the tested processes.
-The output of the commands is made with objects of the `eosf.Logger` class.<p>The verbosity can assume the following values:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">TRACE</span>      <span class="c1"># only main tasks are marked</span>
-<span class="o">*</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">EOSF</span>       <span class="c1"># subtasks are noted</span>
-<span class="o">*</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">OUT</span>        <span class="c1"># command output is printed</span>
-<span class="o">*</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">DEBUG</span>      <span class="c1"># debugging info is printed</span>
-</pre></div>
-</div>
-<p>Default is [eosf.Verbosity.EOSF, eosf.Verbosity.OUT]</p>
-</pre></normal></div>
-<div class="section" id="code-excerpt">
-<span id="code-excerpt"></span><h3>Code excerpt<a class="headerlink" href="#code-excerpt" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
-The following script demonstrates steering statements:
-</pre></normal><pre><normal>
-"""
+<div class="section" id="wallet-object">
+<span id="wallet-object"></span><h1>Wallet object<a class="headerlink" href="#wallet-object" title="Permalink to this headline">¶</a></h1>
+<p><normal><pre>
+This file can be executed as a python script:
+‘python3 wallet.md’.</p>
+<p>The set-up statements are explained in the <a href="setup.html">elsewhere</a>.</p>
+</pre></normal><div class="section" id="set-up">
+<span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
+<p><normal><pre>
+“”“
+import os
 import setup
 import eosf
+import eosf_account
 from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create<p>eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
-setup.set_command_line_mode(False) # print message sent to the cleos
-eosf.set_is_testing_errors(False) # make the error mesages alarming</p>
-<p>eosf.set_throw_error(True) # throw exception rather then print message
-eosf.restart()
-eosf.use_keosd(False) # nodeos vs keosd wallet management
-eosf.reset([eosf.Verbosity.TRACE]) # start local testnode
-wallet = Wallet() # create the singleton <code class="docutils literal notranslate"><span class="pre">Wallet</span></code> object
-account_master_create(“account_master”) # create local testnode <code class="docutils literal notranslate"><span class="pre">eosio</span></code> account
-eosf.set_throw_error(False) # print message rather then throw exception</p>
-<p>eosf.set_is_testing_errors() # make the error mesages less alarming
+from eosf_account import account_create, account_master_create
+from eosf_contract import Contract</p>
+<p>eosf.set_throw_error(False)
 “”“</p>
-</pre></normal>
-"""</div>
+</pre></normal></div>
+<div class="section" id="case">
+<span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
+<p><normal><pre>
+The ‘Wallet` class wraps EOSIO wallets objects. ‘Wallet’ objects can keep
+account objects, presented <a href="account.html">elsewhere</a>.</p>
+<p>The EOSIO physical wallet, if used with the Factory, can be managed either
+with the ‘KEOSD Wallet Manager’ or with the ‘NODEOS’ wallet plugin, what is
+controlled with the ‘use_keosd’ statement (default is ‘False’):</p>
+</pre></normal><p><normal><pre>
+eosf.use_keosd(True)</p>
+</pre></normal><p><normal><pre>
+However, the ‘NODEOS’ alternative’ apply only if the local node is running.</p>
+<p>It can be exactly one ‘Wallet’ object in the namespace. If the ‘Wallet’
+singleton is created, it is transparent to the script: it can be never referred
+explicitly to.</p>
+<p>If the ‘Wallet’ object is of the local testnet, its password is kept between
+sessions and used automatically.</p>
+<p>Let us consider two cases: ‘NODEOS` and ‘KEOSD’ subsequently.</p>
+</pre></normal><div class="section" id="nodeos-managed-wallet">
+<span id="nodeos-managed-wallet"></span><h3>NODEOS managed wallet<a class="headerlink" href="#nodeos-managed-wallet" title="Permalink to this headline">¶</a></h3>
+<p><normal><pre>
+“”“
+eosf.use_keosd(False)
+eosf.reset([eosf.Verbosity.TRACE])          # reset the local testnet
+wallet = Wallet()
+wallet.keys()
+account_master_create(“account_master”)     # account object is put to wallet
+wallet.keys()
+wallet.lock_all()</p>
+<p>eosf.stop()                                 # stop the local testnet
+“”“</p>
+</pre></normal><p><img src="wallet/reset_nodeos_wallet.png" 
+onerror="this.src='../../../source/cases/wallet/reset_nodeos_wallet.png'"   
+alt="nodeos wallet reset" width="720px"/></p>
+<p><normal><pre>
+What has happened?
+* The local node has restarted, that is the local wallet file was deleted.
+* The wallet object has been created.
+* Its password has been stored to a file.
+* An account object named ‘account_master’ has been created and placed in
+the wallet.`</p>
+<p>If we close the session now, then open it again and recreate the wallet, we
+expect that it opens without calling for password. And it should have the same
+key.</p>
+</pre></normal><p><normal><pre>
+“”“
+eosf_account.restart()                      # reset the Factory
+eosf.run([eosf.Verbosity.TRACE])    # restart the local testnet
+wallet = Wallet()
+wallet.keys()eosf.stop()                         # stop the local testnet
+“”“</p>
+</pre></normal><p><img src="wallet/run_nodeos_wallet.png" 
+onerror="this.src='../../../source/cases/wallet/run_nodeos_wallet.png'"   
+alt="nodeos wallet reset" width="720px"/></p>
+</div>
+<div class="section" id="keosd-managed-wallet">
+<span id="keosd-managed-wallet"></span><h3>KEOSD managed wallet<a class="headerlink" href="#keosd-managed-wallet" title="Permalink to this headline">¶</a></h3>
+<p><normal><pre>
+For the sake of this tutorial only we dare to treat a system wallet so rudely:
+we delete it:</p>
+</pre></normal><p><normal><pre>
+“”“
+eosf.use_keosd(True)    # to determine the directory of the wallet
+eosf.kill_keosd()       # otherwise, the manager protects the wallet file</p>
+<p>wallet_name = “jungle_wallet”
+try:
+wallet_file = eosf.wallet_dir() + wallet_name + “.wallet”
+os.remove(wallet_file)
+print(“The deleted wallet file:\n{}\n”.format(wallet_file))
+except Exception as e:
+print(“Cannot delete the wallet file:\n{}\n”.format(str(e)))
+“”“</p>
+</pre></normal><p><normal><pre>
+Let us create a ‘KEOSD’ wallet named ‘wallet_name’:</p>
+</pre></normal><p><normal><pre>
+“”“
+eosf_account.restart()                      # reset the Factory
+eosf.use_keosd(True)</p>
+<p>wallet = Wallet(wallet_name)
+“”“</p>
+</pre></normal><p><img src="wallet/keosd_wallet_create.png" 
+onerror="this.src='../../../source/cases/wallet/keosd_wallet_create.png'"   
+alt="nodeos wallet reset" width="720px"/></p>
+</div>
+<div class="section" id="methods-of-the-wallet-class">
+<span id="methods-of-the-wallet-class"></span><h3>Methods of the ‘Wallet’ class<a class="headerlink" href="#methods-of-the-wallet-class" title="Permalink to this headline">¶</a></h3>
+<p><normal><pre>
+We plan the Factory so that the singular wallet object is never referred to in
+usual scripts. However, the ‘Wallet` class has several methods that are used
+internally. Some of them are obvious:</p>
+<ul class="simple">
+<li>Open wallet.</li>
+<li>Unlock wallet.</li>
+<li>Keys in all open wallets
+……….</li>
+</ul>
+</pre></normal><p>“”“</p>
+</div>
 </div>
 </div>
 
@@ -112,11 +175,11 @@ eosf.set_throw_error(False) # print message rather then throw exception</p>
 <li class="toctree-l1"><a class="reference internal" href="ide.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wallet.html">Wallet object</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Wallet object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">EOSFactory configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html">Eosio Token Contract</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html#the-master-account-authorizes-actions-on-the-blockchain">the master account authorizes actions on the blockchain:</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting-up EOSFactory tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 </ul>
@@ -151,8 +214,8 @@ eosf.set_throw_error(False) # print message rather then throw exception</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="eosio_token_contract.html" title="previous chapter">Eosio Token Contract</a></li>
-      <li>Next: <a href="account_name_conflict.html" title="next chapter">Account name conflict</a></li>
+      <li>Previous: <a href="contract.html" title="previous chapter">Contract object</a></li>
+      <li>Next: <a href="configuration.html" title="next chapter">EOSFactory configuration</a></li>
   </ul></li>
 </ul>
 </div>
@@ -180,7 +243,7 @@ eosf.set_throw_error(False) # print message rather then throw exception</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
-      <a href="../_sources/cases/setup.md.txt"
+      <a href="../_sources/cases/wallet.md.txt"
           rel="nofollow">Page source</a>
     </div>
 

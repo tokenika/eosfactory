@@ -11,6 +11,25 @@ import cleos_system
 import eosf
 import eosf_wallet
 
+def restart():
+    eosf.restart()
+
+    eosf_wallet.wallet = None
+    try:
+        global wallet_singleton
+        del wallet_singleton
+    except:
+        pass
+    try:
+        global wallet_globals
+        del wallet_globals
+    except:
+        pass
+    try:
+        global account_master_test
+        del account_master_test
+    except:
+        pass
 
 def is_local_testnet_running():
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)

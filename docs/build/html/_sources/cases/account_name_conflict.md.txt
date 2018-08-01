@@ -1,29 +1,30 @@
 """
 # Account name conflict
 
-```md
+<normal><pre>
 This file can be executed as a python script: 
 ``python3 account_name_conflict.md``.
-```
+
+The set-up statements are explained in the <a href="setup.html">elsewhere</a>.
+</pre></normal>
 
 ## Set-up
-```md
+<normal><pre>
 """
 import setup
 import eosf
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 
-eosf.restart()
 eosf.set_throw_error(True)
 eosf.reset([eosf.Verbosity.TRACE]) 
 wallet = Wallet()
 account_master_create("account_master")
 eosf.set_throw_error(False)
 """
-```
+</pre></normal>
 ## Case
-```md
+<normal><pre>
 The ``EOSFactory`` wraps EOSIO accounts with objects. The symbolic name of an 
 account object, for example ``account_alice``, has to be unique in a program. 
 Moreover, it has be unique in a collection of scripts, especially, if they 
@@ -45,28 +46,28 @@ You are prompted to change the blocking name. On acceptance, the ``nano``
 editor opens. CTR+X, to save and exit.
 
 Change ``account_alice`` to ``account_alice_b``.
-```
+</pre></normal>
 
-```md
+<normal><pre>
 """
 account_create("account_alice", account_master)
 account_create("account_carrol", account_master)
 account_create("account_alice", account_master)
 """
-```
+</pre></normal>
 
 ### Test run
-```md
+<normal><pre>
 In an linux bash, change directory to where this file exists, it is the 
 directory ``docs/source/cases`` in the repository, and enter the following 
 command:
-```
-```md
+</pre></normal>
+<normal><pre>
 $ python3 account_name_conflict.md
-```
-```md
-We hope that you get anything similar to this shown in the image below.
-```
+</pre></normal>
+<normal><pre>
+We hope that you get something similar to this shown in the image below.
+</pre></normal>
 <img src="account_name_conflict.png" 
     onerror="this.src='../../../source/cases/account_name_conflict.png'"   
     alt="account name conflict" width="640px"/>

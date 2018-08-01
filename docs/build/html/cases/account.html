@@ -31,159 +31,133 @@
   <p>“”“</p>
 <div class="section" id="account-object">
 <span id="account-object"></span><h1>Account object<a class="headerlink" href="#account-object" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: 
-``python3 account.md``.
-
-The set-up statements are explained in the ``setup.md`` case file.
-</pre></div>
-</div>
-<div class="section" id="set-up">
+<pre><normal>
+This file can be executed as a python script: 
+``python3 account.md``.<p>The set-up statements are explained in the <a href="setup.html">elsewhere</a>.</p>
+</pre></normal><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<pre><normal>
+"""
 import setup
 import eosf
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
-
-eosf.restart()
-eosf.set_throw_error(True)
+from eosf_contract import Contract<p>eosf.set_throw_error(True)
 eosf.reset([eosf.Verbosity.TRACE])
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="section" id="exactly-one-wallet-object-has-to-exist-in-the-namespace">
-<span id="exactly-one-wallet-object-has-to-exist-in-the-namespace"></span><h3>Exactly one ‘Wallet’ object has to exist in the namespace:<a class="headerlink" href="#exactly-one-wallet-object-has-to-exist-in-the-namespace" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+“”“</p>
+</pre></normal><div class="section" id="exactly-one-wallet-object-has-to-exist-in-the-namespace">
+<span id="exactly-one-wallet-object-has-to-exist-in-the-namespace"></span><h3>Exactly one ‘Wallet’ object has to exist in the namespace<a class="headerlink" href="#exactly-one-wallet-object-has-to-exist-in-the-namespace" title="Permalink to this headline">¶</a></h3>
+<pre><normal>
+"""
 wallet = Wallet()   
-account_master_create(&quot;account_master&quot;)
+account_master_create("account_master")
 eosf.set_throw_error(False)
-&quot;&quot;&quot;
-</pre></div>
-</div>
-</div>
+"""
+</pre></normal></div>
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The ``EOSFactory`` wraps EOSIO accounts with objects. Accounts can hold smart
-contracts. 
-
-Create an account objects: ``account_hello``. Add a contract of the class
-``hello`` to it. The code for the ``hello`` class comes with the EOSIO 
-repository.
-
-Add two other account objects and execute the action of the account on them.
-</pre></div>
-</div>
-<div class="section" id="the-account-create-factory-function">
+<pre><normal>
+The ``EOSFactory`` wraps EOSIO accounts with objects. Accounts can hold smart
+contracts. <p>Create an account objects: <code class="docutils literal notranslate"><span class="pre">account_hello</span></code>. Add a contract of the class
+<code class="docutils literal notranslate"><span class="pre">hello</span></code> to it. The code for the <code class="docutils literal notranslate"><span class="pre">hello</span></code> class comes with the EOSIO
+repository.</p>
+<p>Add two other account objects and execute the action of the account on them.</p>
+</pre></normal><div class="section" id="the-account-create-factory-function">
 <span id="the-account-create-factory-function"></span><h3>The ‘account_create’ factory function<a class="headerlink" href="#the-account-create-factory-function" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-account_create(&quot;account_hello&quot;, account_master)
-&quot;&quot;&quot;
+<pre><normal>
+"""
+account_create("account_hello", account_master)
+"""
+</pre></normal>
+<pre><normal>
+The first argument is the name of the account object to be created, the second
+one points to the account master, authorizing the creation.<p>Only the first argument is necessary, however there is several default
+arguments that sometimes have to be adjusted.</p>
+</pre></normal>
+<pre><normal>
+The ``account_create`` does many tasks:<div class="highlight-default notranslate"><div class="highlight"><pre>* Check whether a ``Wallet`` object exist in the namespace.
+* Check whether its first argument is not the same as the name of any other
+    account objects in the Factory&#39;s statistics. If it is so, a correction
+    action is proposed - see the ``account_name_conflict.md`` case.
+* Create a global object named as the first argument, representing 
+    a physical account of a random name (however, the name cen be fixed).
+* Open the wallet, unlock it, put the physical account into it.
+* Update the statistics of the accounts.
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The first argument is the name of the account object to be created, the second
-one points to the account master, authorizing the creation.
-
-Only the first argument is necessary, however there is several default 
-arguments that sometimes have to be adjusted.
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The ``account_create`` does many tasks:
-
-    * Check whether a ``Wallet`` object exist in the namespace.
-    * Check whether its first argument is not the same as the name of any other
-        account objects in the Factory&#39;s statistics. If it is so, a correction
-        action is proposed - see the ``account_name_conflict.md`` case.
-    * Create a global object named as the first argument, representing 
-        a physical account of a random name (however, the name cen be fixed).
-    * Open the wallet, unlock it, put the physical account into it.
-    * Update the statistics of the accounts.
-
-All the actions are logged to the terminal, if the verbosity is set default. 
-</pre></div>
-</div>
-</div>
+<p>All the actions are logged to the terminal, if the verbosity is set default.</p>
+</pre></normal></div>
 <div class="section" id="methods-of-an-account-objects">
 <span id="methods-of-an-account-objects"></span><h3>Methods of an account objects<a class="headerlink" href="#methods-of-an-account-objects" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Any (almost) account object can:
-
-    * Load a smart contract.
-    * Push an action on its contract.
-    * Show its entry (a table) in the blockchain database,
-
+<pre><normal>
+Any (almost) account object can:<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">Load</span> <span class="n">a</span> <span class="n">smart</span> <span class="n">contract</span><span class="o">.</span>
+<span class="o">*</span> <span class="n">Push</span> <span class="n">an</span> <span class="n">action</span> <span class="n">on</span> <span class="n">its</span> <span class="n">contract</span><span class="o">.</span>
+<span class="o">*</span> <span class="n">Show</span> <span class="n">its</span> <span class="n">entry</span> <span class="p">(</span><span class="n">a</span> <span class="n">table</span><span class="p">)</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">blockchain</span> <span class="n">database</span><span class="p">,</span>
 </pre></div>
 </div>
-</div>
+</pre></normal></div>
 <div class="section" id="create-a-contract-object">
 <span id="create-a-contract-object"></span><h3>Create a Contract object<a class="headerlink" href="#create-a-contract-object" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Now, you have to create a smart contract object instance, appending it to the 
-account ``account_hello``. The ``Contract`` class is presented elsewhere 
-(``account_name_conflict.md`` case).
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-contract_hello = Contract(account_hello, &quot;hello&quot;)
+<pre><normal>
+Now, you have to create a smart contract object instance, appending it to the 
+account ``account_hello``. The ``Contract`` class is presented 
+<a href="contract.html">elsewhere</a>.
+</pre></normal>
+<pre><normal>
+"""
+contract_hello = Contract(account_hello, "hello")
 contract_hello.build()
 contract_hello.deploy()
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The second argument of the creator of the ``Contract`` class identifies the 
+"""
+</pre></normal>
+<pre><normal>
+The second argument of the creator of the ``Contract`` class identifies the 
 code source. The EOSFactort tries to be smart and searches the repository of the 
 Factory. If it fails, put the right path there, 
 ``/mnt/c/Workspaces/EOS/eosfactory/contracts/hello/``,
-for example.
-
-As the deployment succeeded, the contract can be executed.
-</pre></div>
-</div>
-</div>
+for example.<p>As the deployment succeeded, the contract can be executed.</p>
+</pre></normal></div>
 <div class="section" id="try-the-contract">
 <span id="try-the-contract"></span><h3>Try the contract<a class="headerlink" href="#try-the-contract" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>For tests, create two contracts ``account_alice`` and ``account_carol``...
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-account_create(&quot;account_alice&quot;, account_master)
-account_create(&quot;account_carol&quot;, account_master)
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>... and execute the action of the contract ``hello``:
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<pre><normal>
+For tests, create two contracts ``account_alice`` and ``account_carol``...
+</pre></normal><pre><normal>
+"""
+account_create("account_alice", account_master)
+account_create("account_carol", account_master)
+"""
+</pre></normal>
+<pre><normal>
+... and execute the action of the contract ``hello``:
+</pre></normal>
+<pre><normal>
+"""
 account_hello.push_action(
-    &quot;hi&quot;, &#39;{&quot;user&quot;:&quot;&#39; + str(account_alice) + &#39;&quot;}&#39;, account_alice)
-
-account_hello.push_action(
-    &quot;hi&quot;, &#39;{&quot;user&quot;:&quot;&#39; + str(account_carol) + &#39;&quot;}&#39;, account_carol)
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Besides the usual ``Hello`` message, you can see the result of a logging 
+    "hi", '{"user":"' + str(account_alice) + '"}', account_alice)<p>account_hello.push_action(
+“hi”, ‘{“user”:”’ + str(account_carol) + ‘”}’, account_carol)
+“”“</p>
+</pre></normal>
+<pre><normal>
+Besides the usual ``Hello`` message, you can see the result of a logging 
 facility, starting with ``INFO``.
-</pre></div>
-</div>
-</div>
+</pre></normal></div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, it is the 
+<pre><normal>
+In an linux bash, change directory to where this file exists, it is the 
 directory ``docs/source/cases`` in the repository, and enter the following 
 command:
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 account.md
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get anything similar to this shown in the image below.
-</pre></div>
-</div>
-<p><img src="account.png" 
-onerror="this.src='../../../source/cases/account.png'"   
-alt="account object" width="720px"/></p>
-<p>“”“</p>
+</pre></normal>
+<pre><normal>
+$ python3 account.md
+</pre></normal>
+<pre><normal>
+We hope that you get something similar to this shown in the image below.
+</pre></normal>
+<img src="account.png" 
+    onerror="this.src='../../../source/cases/account.png'"   
+    alt="account object" width="720px"/><p>“”“</p>
 </div>
 </div>
 </div>
@@ -213,8 +187,10 @@ alt="account object" width="720px"/></p>
 <li class="toctree-l1"><a class="reference internal" href="ide.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Account object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wallet.html">Wallet object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">EOSFactory configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html">Eosio Token Contract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html#the-master-account-authorizes-actions-on-the-blockchain">the master account authorizes actions on the blockchain:</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
