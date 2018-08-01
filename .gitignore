@@ -9,6 +9,9 @@ teos/teos_lib/include/teoslib/config.h
 
 !docs/Makefile
 !docs/source
+!docs/build
+docs/build/doctrees
+!docs/build/html
 
 /contracts/*
 

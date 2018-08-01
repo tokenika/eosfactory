@@ -39,7 +39,6 @@ class _Teos:
     error = False
     err_msg = ""
     is_verbose = True
-    _out = ""
     json = json_module.loads("{}")
 
     def __init__(

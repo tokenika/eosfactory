@@ -2,6 +2,7 @@ import json
 import inspect
 import types
 import time
+import re
 
 import setup
 import teos
@@ -44,7 +45,9 @@ class ContractBuilder(eosf.Logger):
             if not self.ERROR(result):
                 self.EOSF_TRACE("""
                 * ABI file build and saved.
-                """)            
+                """)
+                if "ABI exists in the source directory" in result.out_msg:
+                   self.EOSF(result.out_msg)            
         else:
             self.ERROR("Cannot modify system contracts.")
 
@@ -209,22 +212,28 @@ the code hash of the associated account is null:
             is_verbose = 0
             json = True
     
-        self.action = cleos.PushAction(
+        result = cleos.PushAction(
             self.account.name, action, data,
             permission, expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=-1)
-
-        if not self.action.error:
+            is_verbose=-1, json=True)
+            
+        if not self.ERROR(result):
+            self.EOSF_TRACE("""
+            * Push action:
+                {}
+            """.format(re.sub(' +',' ',data)))
+            #self.OUT(result.out_msg)
+            self.action = result
             try:
-                self._console = self.action.console
-                print(self._console + "\n") 
+                self._console = result.console
+                self.DEBUG(self._console)
             except:
                 pass
-
-        return self.action
+        else:
+            self.action = None
 
     def show_action(self, action, data, permission=""):
         """ Implements the `push action` command without broadcasting. 
