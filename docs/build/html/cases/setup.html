@@ -31,46 +31,45 @@
   <p>“”“</p>
 <div class="section" id="setting-up-eosfactory-tests">
 <span id="setting-up-eosfactory-tests"></span><h1>Setting-up EOSFactory tests<a class="headerlink" href="#setting-up-eosfactory-tests" title="Permalink to this headline">¶</a></h1>
-<pre><normal>
-This file can be executed as a python script: 'python3 setup.md'.
+<p><normal><pre>
+This file can be executed as a python script: ‘python3 setup.md’.</p>
 </pre></normal><div class="section" id="set-up-part">
 <span id="set-up-part"></span><h2>Set-up part<a class="headerlink" href="#set-up-part" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="throw-exceptions-status">
 <span id="throw-exceptions-status"></span><h3>Throw exceptions status<a class="headerlink" href="#throw-exceptions-status" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
+<p><normal><pre>
 The set-up part of a test does not involve testing specific assumptions.
-Instead, the `EOSFactory` is set then to throw fatal exceptions: the set-up
-block is enclosed within the following statements:
-</pre></normal><pre><normal>
+Instead, the <code class="docutils literal notranslate"><span class="pre">EOSFactory</span></code> is set then to throw fatal exceptions: the set-up
+block is enclosed within the following statements:</p>
+</pre></normal><p><normal><pre>
 eosf.set_throw_error(True)
-#
-# set-up statements
-#
-eosf.set_throw_error(False)
+eosf.set_throw_error(False)</p>
 </pre></normal></div>
 <div class="section" id="verbosity-status">
 <span id="verbosity-status"></span><h3>Verbosity status<a class="headerlink" href="#verbosity-status" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
+<p><normal><pre>
 You can determine the amount of the verbosity of the tested processes.
-The output of the commands is made with objects of the `eosf.Logger` class.<p>The verbosity can assume the following values:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">TRACE</span>      <span class="c1"># only main tasks are marked</span>
-<span class="o">*</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">EOSF</span>       <span class="c1"># subtasks are noted</span>
-<span class="o">*</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">OUT</span>        <span class="c1"># command output is printed</span>
-<span class="o">*</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">DEBUG</span>      <span class="c1"># debugging info is printed</span>
-</pre></div>
-</div>
+The output of the commands is made with objects of the <code class="docutils literal notranslate"><span class="pre">eosf.Logger</span></code> class.</p>
+<p>The verbosity can assume the following values:</p>
+<ul class="simple">
+<li>eosf.Verbosity.TRACE      # only main tasks are marked</li>
+<li>eosf.Verbosity.EOSF       # subtasks are noted</li>
+<li>eosf.Verbosity.OUT        # command output is printed</li>
+<li>eosf.Verbosity.DEBUG      # debugging info is printed</li>
+</ul>
 <p>Default is [eosf.Verbosity.EOSF, eosf.Verbosity.OUT]</p>
 </pre></normal></div>
 <div class="section" id="code-excerpt">
 <span id="code-excerpt"></span><h3>Code excerpt<a class="headerlink" href="#code-excerpt" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
-The following script demonstrates steering statements:
-</pre></normal><pre><normal>
-"""
+<p><normal><pre>
+The following script demonstrates steering statements:</p>
+</pre></normal><p><normal><pre>
+“”“
 import setup
 import eosf
 from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create<p>eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
+from eosf_account import account_create, account_master_create</p>
+<p>eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
 setup.set_command_line_mode(False) # print message sent to the cleos
 eosf.set_is_testing_errors(False) # make the error mesages alarming</p>
 <p>eosf.set_throw_error(True) # throw exception rather then print message

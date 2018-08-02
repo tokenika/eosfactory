@@ -31,44 +31,46 @@
   <p>“”“</p>
 <div class="section" id="eosfactory-configuration">
 <span id="eosfactory-configuration"></span><h1>EOSFactory configuration<a class="headerlink" href="#eosfactory-configuration" title="Permalink to this headline">¶</a></h1>
-<pre><normal>
-This file can be executed as a python script: 'python3 configuration.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+<p><normal><pre>
+This file can be executed as a python script: ‘python3 configuration.md’.</p>
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre></normal><div class="section" id="inspect-the-configuration">
 <span id="inspect-the-configuration"></span><h2>Inspect the configuration<a class="headerlink" href="#inspect-the-configuration" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-"""
-import teos<p>ok = teos.GetConfig()</p>
+<p><normal><pre>
+“”“
+import teos</p>
+<p>ok = teos.GetConfig()</p>
 <p>“”“</p>
 </pre></normal>
-<pre><normal>
+<normal><pre>
 Note that the same result is available with this bash command:
 </pre></normal>
-<pre><normal>
+<normal><pre>
 $eosf get config
 </pre></normal></div>
 <div class="section" id="override-the-installed-configuration">
 <span id="override-the-installed-configuration"></span><h2>Override the installed configuration<a class="headerlink" href="#override-the-installed-configuration" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-There is the 'config.json' file in the 'teos' folder of the repository. 
-The entries there prevail the default setup.
+<p><normal><pre>
+There is the ‘config.json’ file in the ‘teos’ folder of the repository.
+The entries there prevail the default settings.</p>
 </pre></normal></div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h2>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-In an linux bash, change directory to where this file exists, it is the 
-directory 'docs/source/cases' in the repository, and enter the following 
-command:
+<p><normal><pre>
+In an linux bash, change directory to where this file exists, it is the
+directory ‘docs/source/cases’ in the repository, and enter the following
+command:</p>
 </pre></normal>
-<pre><normal>
+<normal><pre>
 $ python3 configuration.md
 </pre></normal>
-<pre><normal>
+<normal><pre>
 or
 </pre></normal>
-<pre><normal>
+<normal><pre>
 $ $eosf get config
 </pre></normal>
-<pre><normal>
+<normal><pre>
 We hope that you get something similar to this shown in the image below.
 You can change or add something in the configuration file 'teos/config.json' 
 and see the result.
@@ -109,6 +111,9 @@ and see the result.
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html">Eosio Token Contract</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html#the-master-account-authorizes-actions-on-the-blockchain">the master account authorizes actions on the blockchain:</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#"></a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#set-up-statements">set-up statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#"></a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 </ul>

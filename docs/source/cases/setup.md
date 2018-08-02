@@ -1,7 +1,7 @@
 """
 # Setting-up EOSFactory tests
 
-<pre><normal>
+<normal><pre>
 This file can be executed as a python script: 'python3 setup.md'.
 </pre></normal>
 
@@ -9,43 +9,40 @@ This file can be executed as a python script: 'python3 setup.md'.
 
 ### Throw exceptions status
 
-<pre><normal>
+<normal><pre>
 The set-up part of a test does not involve testing specific assumptions.
 Instead, the `EOSFactory` is set then to throw fatal exceptions: the set-up
 block is enclosed within the following statements:
 </pre></normal>
 
-<pre><normal>
+<normal><pre>
 eosf.set_throw_error(True)
-#
-# set-up statements
-#
 eosf.set_throw_error(False)
 </pre></normal>
 
 ### Verbosity status
 
-<pre><normal>
+<normal><pre>
 You can determine the amount of the verbosity of the tested processes.
 The output of the commands is made with objects of the `eosf.Logger` class.
 
 The verbosity can assume the following values:
 
-    * eosf.Verbosity.TRACE      # only main tasks are marked
-    * eosf.Verbosity.EOSF       # subtasks are noted
-    * eosf.Verbosity.OUT        # command output is printed
-    * eosf.Verbosity.DEBUG      # debugging info is printed
+* eosf.Verbosity.TRACE      # only main tasks are marked
+* eosf.Verbosity.EOSF       # subtasks are noted
+* eosf.Verbosity.OUT        # command output is printed
+* eosf.Verbosity.DEBUG      # debugging info is printed
 
 Default is [eosf.Verbosity.EOSF, eosf.Verbosity.OUT]
 </pre></normal>
 
 ### Code excerpt
 
-<pre><normal>
+<normal><pre>
 The following script demonstrates steering statements:
 </pre></normal>
 
-<pre><normal>
+<normal><pre>
 """
 import setup
 import eosf

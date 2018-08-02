@@ -31,128 +31,129 @@
   <p>“”“</p>
 <div class="section" id="account-object">
 <span id="account-object"></span><h1>Account object<a class="headerlink" href="#account-object" title="Permalink to this headline">¶</a></h1>
-<pre><normal>
-This file can be executed as a python script: 
-'python3 account.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+<p><normal><pre>
+This file can be executed as a python script: ‘python3 account.md’.</p>
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre></normal><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-"""
+<p><normal><pre>
+“”“
 import setup
 import eosf
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
-from eosf_contract import Contract<p>eosf.set_throw_error(True)
+from eosf_contract import Contract</p>
+<p>eosf.set_throw_error(True)
 eosf.reset([eosf.Verbosity.TRACE])
 “”“</p>
 </pre></normal><div class="section" id="exactly-one-wallet-object-has-to-exist-in-the-namespace">
 <span id="exactly-one-wallet-object-has-to-exist-in-the-namespace"></span><h3>Exactly one ‘Wallet’ object has to exist in the namespace<a class="headerlink" href="#exactly-one-wallet-object-has-to-exist-in-the-namespace" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
-"""
-wallet = Wallet()   
-account_master_create("account_master")
+<p><normal><pre>
+“”“
+wallet = Wallet()account_master_create(“account_master”)
 eosf.set_throw_error(False)
-"""
+“”“</p>
 </pre></normal></div>
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-The 'EOSFactory' wraps EOSIO accounts with objects. Accounts can hold smart
-contracts. <p>Create an account objects: ‘account_hello’. Add a contract of the class
-‘hello’ to it. The code for the ‘hello’ class comes with the EOSIO
-repository.</p>
-<p>Add two other account objects and execute the action of the account on them.</p>
+<p><normal><pre>
+The ‘EOSFactory’ wraps EOSIO accounts with objects. Accounts can hold smart
+contracts.</p>
+<p>Create an account objects: ‘account_hello’. Add a contract of the class
+‘hello’ to it. The code for the ‘hello’ class is in the EOSIO repository.</p>
+<p>Add two other account objects, and execute the action of the contract on them
+subsequently.</p>
 </pre></normal><div class="section" id="the-account-create-factory-function">
 <span id="the-account-create-factory-function"></span><h3>The ‘account_create’ factory function<a class="headerlink" href="#the-account-create-factory-function" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
-"""
-account_create("account_hello", account_master)
-"""
+<p><normal><pre>
+“”“
+account_create(“account_hello”, account_master)
+“”“</p>
 </pre></normal>
-<pre><normal>
+<normal><pre>
 The first argument is the name of the account object to be created, the second
-one points to the account master, authorizing the creation.<p>Only the first argument is necessary, however there is several default
+one points to the account master, authorizing the creation.<p>Only this two arguments are necessary, however there is several default
 arguments that sometimes have to be adjusted.</p>
 </pre></normal>
-<pre><normal>
-The 'account_create' does many tasks:<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">Check</span> <span class="n">whether</span> <span class="n">a</span> <span class="s1">&#39;Wallet&#39;</span> <span class="nb">object</span> <span class="n">exist</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">namespace</span><span class="o">.</span>
-<span class="o">*</span> <span class="n">Check</span> <span class="n">whether</span> <span class="n">its</span> <span class="n">first</span> <span class="n">argument</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="nb">any</span> <span class="n">other</span>
+<normal><pre>
+The 'account_create' does many tasks:<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">Checks</span> <span class="n">whether</span> <span class="n">a</span> <span class="s1">&#39;Wallet&#39;</span> <span class="nb">object</span> <span class="n">exist</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">namespace</span><span class="o">.</span>
+<span class="o">*</span> <span class="n">Checks</span> <span class="n">whether</span> <span class="n">its</span> <span class="n">first</span> <span class="n">argument</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="nb">any</span> <span class="n">other</span>
     <span class="n">account</span> <span class="n">objects</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">Factory</span><span class="s1">&#39;s statistics. If it is so, a correction</span>
     <span class="n">action</span> <span class="ow">is</span> <span class="n">proposed</span> <span class="o">-</span> <span class="n">see</span> <span class="n">the</span> <span class="s1">&#39;account_name_conflict.md&#39;</span> <span class="n">case</span><span class="o">.</span>
-<span class="o">*</span> <span class="n">Create</span> <span class="n">a</span> <span class="k">global</span> <span class="nb">object</span> <span class="n">named</span> <span class="k">as</span> <span class="n">the</span> <span class="n">first</span> <span class="n">argument</span><span class="p">,</span> <span class="n">representing</span> 
+<span class="o">*</span> <span class="n">Creates</span> <span class="n">a</span> <span class="k">global</span> <span class="nb">object</span> <span class="n">named</span> <span class="k">as</span> <span class="n">the</span> <span class="n">first</span> <span class="n">argument</span><span class="p">,</span> <span class="n">representing</span> 
     <span class="n">a</span> <span class="n">physical</span> <span class="n">account</span> <span class="n">of</span> <span class="n">a</span> <span class="n">random</span> <span class="n">name</span> <span class="p">(</span><span class="n">however</span><span class="p">,</span> <span class="n">the</span> <span class="n">name</span> <span class="n">cen</span> <span class="n">be</span> <span class="n">fixed</span><span class="p">)</span><span class="o">.</span>
-<span class="o">*</span> <span class="n">Open</span> <span class="n">the</span> <span class="n">wallet</span><span class="p">,</span> <span class="n">unlock</span> <span class="n">it</span><span class="p">,</span> <span class="n">put</span> <span class="n">the</span> <span class="n">physical</span> <span class="n">account</span> <span class="n">into</span> <span class="n">it</span><span class="o">.</span>
-<span class="o">*</span> <span class="n">Update</span> <span class="n">the</span> <span class="n">statistics</span> <span class="n">of</span> <span class="n">the</span> <span class="n">accounts</span><span class="o">.</span>
+<span class="o">*</span> <span class="n">Opens</span> <span class="n">the</span> <span class="n">wallet</span><span class="p">,</span> <span class="n">unlock</span> <span class="n">it</span><span class="p">,</span> <span class="n">put</span> <span class="n">the</span> <span class="n">physical</span> <span class="n">account</span> <span class="n">into</span> <span class="n">it</span><span class="o">.</span>
+<span class="o">*</span> <span class="n">Updates</span> <span class="n">the</span> <span class="n">statistics</span> <span class="n">of</span> <span class="n">the</span> <span class="n">accounts</span><span class="o">.</span>
 </pre></div>
 </div>
 <p>All the actions are logged to the terminal, if the verbosity is set default.</p>
 </pre></normal></div>
 <div class="section" id="methods-of-an-account-objects">
 <span id="methods-of-an-account-objects"></span><h3>Methods of an account objects<a class="headerlink" href="#methods-of-an-account-objects" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
-Any (almost) account object can:<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">Load</span> <span class="n">a</span> <span class="n">smart</span> <span class="n">contract</span><span class="o">.</span>
-<span class="o">*</span> <span class="n">Push</span> <span class="n">an</span> <span class="n">action</span> <span class="n">on</span> <span class="n">its</span> <span class="n">contract</span><span class="o">.</span>
-<span class="o">*</span> <span class="n">Show</span> <span class="n">its</span> <span class="n">entry</span> <span class="p">(</span><span class="n">a</span> <span class="n">table</span><span class="p">)</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">blockchain</span> <span class="n">database</span><span class="p">,</span>
-</pre></div>
-</div>
+<p><normal><pre>
+Any account object can:</p>
+<ul class="simple">
+<li>Load a smart contract.</li>
+<li>Push an action on its contract.</li>
+<li>Show its entry (a table) in the blockchain database,</li>
+</ul>
 </pre></normal></div>
 <div class="section" id="create-a-contract-object">
 <span id="create-a-contract-object"></span><h3>Create a Contract object<a class="headerlink" href="#create-a-contract-object" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
-Now, you have to create a smart contract object instance, appending it to the 
-account 'account_hello'. The 'Contract' class is presented at
-<a href="contract.html">cases/contract</a>.
+<p><normal><pre>
+Create a smart contract object instance, appending it to the account
+‘account_hello’. The ‘Contract’ class is presented at <a href="contract.html">cases/contract</a>.</p>
 </pre></normal>
-<pre><normal>
+<normal><pre>
 """
 contract_hello = Contract(account_hello, "hello")
 contract_hello.build()
 contract_hello.deploy()
 """
 </pre></normal>
-<pre><normal>
+<normal><pre>
 The second argument of the creator of the 'Contract' class identifies the 
-code source. The EOSFactort tries to be smart and searches the repository of the 
-Factory. If it fails, put the right path there, 
+code source. The Factory tries to be smart therefore searches the repository. 
+If it fails, put the right path there, 
 '/mnt/c/Workspaces/EOS/eosfactory/contracts/hello/',
-for example.<p>As the deployment succeeded, the contract can be executed.</p>
+for example.<p>If the deployment succeeds, the contract can be executed.</p>
 </pre></normal></div>
 <div class="section" id="try-the-contract">
 <span id="try-the-contract"></span><h3>Try the contract<a class="headerlink" href="#try-the-contract" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
-For tests, create two contracts 'account_alice' and 'account_carol'...
-</pre></normal><pre><normal>
-"""
-account_create("account_alice", account_master)
-account_create("account_carol", account_master)
-"""
+<p><normal><pre>
+Create two contracts ‘account_alice’ and ‘account_carol’…</p>
+</pre></normal><p><normal><pre>
+“”“
+account_create(“account_alice”, account_master)
+account_create(“account_carol”, account_master)
+“”“</p>
 </pre></normal>
-<pre><normal>
+<normal><pre>
 ... and execute the action of the contract 'hello':
 </pre></normal>
-<pre><normal>
+<normal><pre>
 """
 account_hello.push_action(
     "hi", '{"user":"' + str(account_alice) + '"}', account_alice)<p>account_hello.push_action(
 “hi”, ‘{“user”:”’ + str(account_carol) + ‘”}’, account_carol)
 “”“</p>
 </pre></normal>
-<pre><normal>
+<normal><pre>
 Besides the usual 'Hello' message, you can see the result of a logging 
 facility, starting with 'INFO'.
 </pre></normal></div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<pre><normal>
-In an linux bash, change directory to where this file exists, it is the 
-directory 'docs/source/cases' in the repository, and enter the following 
-command:
+<p><normal><pre>
+In an linux bash, change directory to where this file exists, it is the
+directory ‘docs/source/cases’ in the repository, and enter the following
+command:</p>
 </pre></normal>
-<pre><normal>
+<normal><pre>
 $ python3 account.md
 </pre></normal>
-<pre><normal>
+<normal><pre>
 We hope that you get something similar to this shown in the image below.
 </pre></normal>
 <img src="account.png" 
@@ -192,6 +193,9 @@ We hope that you get something similar to this shown in the image below.
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html">Eosio Token Contract</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html#the-master-account-authorizes-actions-on-the-blockchain">the master account authorizes actions on the blockchain:</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#"></a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#set-up-statements">set-up statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html#"></a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 </ul>

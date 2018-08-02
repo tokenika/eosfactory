@@ -1,7 +1,7 @@
 """
 # Contract object
 
-<pre><normal>
+<normal><pre>
 This file can be executed as a python script: 'python3 contract.md'.
 
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
@@ -9,7 +9,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ## Set-up
 
-<pre><normal>
+<normal><pre>
 """
 import setup
 import eosf
@@ -24,7 +24,7 @@ eosf.reset([eosf.Verbosity.TRACE])
 
 ### Exactly one 'Wallet' object has to exist in the namespace
 
-<pre><normal>
+<normal><pre>
 """
 wallet = Wallet()   
 account_master_create("account_master")
@@ -34,20 +34,21 @@ eosf.set_throw_error(False)
 
 ## Case
 
-<pre><normal>
+<normal><pre>
 None 'Contract' object can exist without an account object that keeps this
 contract. The account object is presented at <a href="account.html">cases/account</a>.
 
 Create an account objects: 'account_eosio_token'. Provide it with a contract 
 of the class 'eosio.token'. The code for the 'eosio.token' class comes with 
-the EOSIO repository.
+the EOSIO repository, and it is copied, slightly modified to the Factory's. 
+We use the later copy.
 
-Add three other account objects, and execute actions of the contract on them.
+Make three other account objects, and execute actions of the contract on them.
 </pre></normal>
 
 ### Accounts
 
-<pre><normal>
+<normal><pre>
 """
 account_create("account_eosio_token", account_master)
 account_create("account_alice", account_master)
@@ -58,16 +59,16 @@ account_create("account_carol", account_master)
 
 ### Create a Contract object
 
-<pre><normal>
+<normal><pre>
 Create an instance of the 'Contract' class, appending it to the account 
 'account_eosio_token':
 </pre></normal>
-<pre><normal>
+<normal><pre>
 """
 contract_eosio_token = Contract(account_eosio_token, "token")
 """
 </pre></normal>
-<pre><normal>
+<normal><pre>
 The second argument of the creator of the 'Contract' class identifies the 
 code source. The Factory tries to be smart, and searches the repository of the 
 Factory. If it fails, put the right path there, 
@@ -80,21 +81,21 @@ sometimes have to be adjusted.
 
 ### Methods of a contract objects
 
-<pre><normal>
+<normal><pre>
 Any 'Contract' object can:
 
-    * Build itself.
-        Build abi alone.
-        Build wast alone.
-    * Deploy itself.
-    * Push an action.
-    * Show an action pushing it without broadcasting.
-    * Show entry (a table) in the blockchain database of its account.
+* Build itself.
+    * Build abi alone.
+    * Build wast alone.
+* Deploy itself.
+* Push an action.
+* Show an action pushing it without broadcasting.
+* Show entry (a table) in the blockchain database of its account.
 </pre></normal>
 
 ### Deploy and build the contract
 
-<pre><normal>
+<normal><pre>
 """
 contract_eosio_token.build()
 contract_eosio_token.deploy()
@@ -103,10 +104,10 @@ contract_eosio_token.deploy()
 
 ### Try the contract
 
-<pre><normal>
+<normal><pre>
 Execute actions of the contract:
 </pre></normal>
-<pre><normal>
+<normal><pre>
 """
 contract_eosio_token.push_action(
     "create", 
@@ -155,10 +156,10 @@ contract_eosio_token.push_action(
     permission=account_bob)                
 """
 </pre></normal>
-<pre><normal>
+<normal><pre>
 Inspect the database of the blockchain:
 </pre></normal>
-<pre><normal>
+<normal><pre>
 """
 table_alice = account_eosio_token.table("accounts", account_alice)
 table_bob = account_eosio_token.table("accounts", account_bob)
@@ -166,22 +167,22 @@ table_carol = account_eosio_token.table("accounts", account_carol)
 """
 </pre></normal>
 
-<pre><normal>
-Besides the usual 'Hello' message, you can see the result of a logging 
-facility, starting with 'INFO'.
+<normal><pre>
+You can see the result of a logging facility, printed in yellow, starting with 
+'INFO'.
 </pre></normal>
 
 ### Test run
 
-<pre><normal>
+<normal><pre>
 In an linux bash, change directory to where this file exists, it is the 
 directory 'docs/source/cases' in the repository, and enter the following 
 command:
 </pre></normal>
-<pre><normal>
+<normal><pre>
 $ python3 contract.md
 </pre></normal>
-<pre><normal>
+<normal><pre>
 We hope that you get something similar to this shown in the image below.
 </pre></normal>
 <img src="contract.png" 

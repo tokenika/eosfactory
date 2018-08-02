@@ -30,59 +30,59 @@
             
   <div class="section" id="visual-studio-code-ide-for-eosio-smart-contracts">
 <span id="visual-studio-code-ide-for-eosio-smart-contracts"></span><h1>Visual Studio Code IDE for EOSIO smart contracts<a class="headerlink" href="#visual-studio-code-ide-for-eosio-smart-contracts" title="Permalink to this headline">¶</a></h1>
-<pre><normal>
-The 'Visual Studio Code' is the base upon which we develop the 'EOSFactory'.
-Although you can use the Factory with a plain bash terminal, we strongly 
-recommend using the VScode instead: it can add new dimensions to your 
-experience with the Factory. <p>Let us assume that you have the VScode installed.</p>
-<p>For us, the ‘EOSFactory’ is about an Integrated Development Environment for
+<p><normal><pre>
+To us, the ‘EOSFactory’ is going to be an Integrated Development Environment for
 the EOSIO smart contract.</p>
+<p>The ‘Visual Studio Code’ is the base upon which we develop the ‘EOSFactory’.
+Although you can use the Factory with a plain bash terminal, we recommend using
+the VScode: it can add new dimensions to your experience with the Factory.</p>
+<p>Let us assume that you have the VScode installed.</p>
 </pre></normal><div class="section" id="smart-contract-templates">
 <span id="smart-contract-templates"></span><h2>Smart contract templates<a class="headerlink" href="#smart-contract-templates" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-The Factory provides smart contract templates that may be used as a start point 
-to development of your own task. For example, you can launch a smart contract 
-named 'eosio_token_better':<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">starting</span> <span class="k">with</span> <span class="n">the</span> <span class="n">original</span> <span class="n">EOSIO</span> <span class="n">code</span> <span class="n">of</span> <span class="n">the</span> <span class="s1">&#39;eosio.token&#39;</span><span class="p">,</span> 
-<span class="o">*</span> <span class="k">with</span> <span class="n">its</span> <span class="n">root</span> <span class="n">at</span> <span class="n">your</span> <span class="n">workspace</span> <span class="n">directory</span><span class="p">,</span> <span class="k">for</span> <span class="n">example</span><span class="p">,</span> 
-    <span class="s1">&#39;/mnt/c/Workspaces/EOS/contracts&#39;</span><span class="o">.</span>
-</pre></div>
-</div>
-<p>If you omit the workspace directory argument, this one set with the installation
-of the Factory will be used.</p>
+<p><normal><pre>
+The Factory provides smart contract templates that you could use as a start
+points to development of your own code. For example, you can launch a smart
+contract named ‘eosio_token_better’:</p>
+<ul class="simple">
+<li>starting with the original EOSIO code of the ‘eosio.token’,</li>
+<li>with its root at your workspace directory, for example,
+‘/mnt/c/Workspaces/EOS/contracts’.</li>
+</ul>
+<p>If you omit the workspace directory argument, it will be used one set with
+the installation of the Factory. See <a href="configuration.html">cases/configuration</a>
+to learn how to prevail the installation settings.</p>
 <p>Use a bash terminal, it can be one belonging to an instance of the VScode:</p>
-</pre></normal>
-<pre><normal>
-$ $eosf template create eosio_token_better eosio.token\
-    --workspace /mnt/c/Workspaces/EOS/contracts --vsc
-</pre></normal>
-<pre><normal>
-We hope that you see an instance of the VScode window now.
+</pre></normal><p><normal><pre>
+$ $eosf template create eosio_token_better eosio.token–workspace /mnt/c/Workspaces/EOS/contracts –vsc</p>
+</pre></normal><p><normal><pre>
+We hope that you see an instance of the VScode window, now.</p>
 </pre></normal></div>
 <div class="section" id="ide-workspace">
 <span id="ide-workspace"></span><h2>IDE workspace<a class="headerlink" href="#ide-workspace" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-If you cannot find in the workspace anything that you need for your work, we 
-will try to add it in the next editions. Now, you can see the following items:<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="s1">&#39;src&#39;</span> <span class="n">directory</span><span class="p">,</span> <span class="n">the</span> <span class="n">cpp</span> <span class="ow">and</span> <span class="n">hpp</span> <span class="n">files</span> <span class="n">are</span> <span class="n">there</span><span class="o">.</span>
-<span class="o">*</span> <span class="s1">&#39;test&#39;</span> <span class="n">directory</span><span class="p">,</span> <span class="n">test</span> <span class="n">scripts</span> <span class="n">are</span> <span class="n">there</span><span class="o">.</span>
-<span class="o">*</span> <span class="s1">&#39;resources&#39;</span> <span class="n">directory</span><span class="p">,</span> <span class="n">everything</span> <span class="n">that</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">fit</span> <span class="n">to</span> <span class="n">the</span> <span class="n">previous</span> <span class="n">two</span>
-    <span class="n">goes</span> <span class="n">there</span><span class="o">.</span> <span class="n">Now</span><span class="p">,</span> <span class="n">it</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">Ricardian</span> <span class="n">contract</span> <span class="n">files</span><span class="o">.</span>
-<span class="o">*</span> <span class="s1">&#39;.vscode&#39;</span> <span class="n">directory</span> <span class="n">that</span> <span class="n">contains</span> <span class="n">intellisense</span> <span class="n">definitions</span><span class="p">,</span> <span class="n">task</span> 
-    <span class="n">definitions</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span>
-<span class="o">*</span> <span class="s1">&#39;CMakeLists.txt&#39;</span> <span class="n">file</span><span class="p">,</span> <span class="n">CMake</span> <span class="n">definitions</span><span class="o">.</span>
-</pre></div>
-</div>
+<p><normal><pre>
+If you miss, in the workspace, anything that you need for your work, we
+will try to add it in the next editions. Now, you can see the following items:</p>
+<ul class="simple">
+<li>‘src’ directory, the cpp and hpp files are there.</li>
+<li>‘test’ directory, test scripts are there.</li>
+<li>‘resources’ directory, everything that does not fit to the previous two
+places goes there. It may contain the Ricardian contract files.</li>
+<li>‘.vscode’ directory that contains intellisense definitions, task
+definitions, etc.</li>
+<li>‘CMakeLists.txt’ file, CMake definitions.</li>
+</ul>
 <p>Also, you can see the ‘Tasks’ dialog window:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="s1">&#39;Build&#39;</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">building</span> <span class="n">the</span> <span class="n">contract</span><span class="p">,</span> <span class="n">resulting</span> <span class="s1">&#39;ABI&#39;</span> <span class="ow">and</span> <span class="s1">&#39;WAST&#39;</span>
-    <span class="n">files</span> <span class="n">go</span> <span class="n">to</span> <span class="n">the</span> <span class="s1">&#39;build&#39;</span> <span class="n">directory</span><span class="o">.</span>
-<span class="o">*</span> <span class="s1">&#39;Compile&#39;</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">compilation</span> <span class="n">of</span> <span class="n">the</span> <span class="n">contract</span><span class="p">,</span> <span class="n">without</span> <span class="n">building</span>
-    <span class="p">(</span><span class="n">neither</span> <span class="s1">&#39;ABI&#39;</span> <span class="n">nor</span> <span class="s1">&#39;WAST&#39;</span> <span class="n">are</span> <span class="n">produced</span><span class="p">),</span> <span class="n">but</span> <span class="n">code</span> <span class="n">errors</span><span class="p">,</span> <span class="k">if</span> <span class="nb">any</span><span class="p">,</span>
-    <span class="n">are</span> <span class="n">listed</span><span class="o">.</span>
-<span class="o">*</span> <span class="s1">&#39;EOSIO API&#39;</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">opening</span> <span class="p">(</span><span class="ow">in</span> <span class="n">the</span> <span class="n">default</span> <span class="n">browser</span><span class="p">)</span> <span class="n">of</span> <span class="n">the</span> <span class="n">EOSIO</span>
-    <span class="n">manual</span><span class="o">.</span>
-<span class="o">*</span> <span class="s1">&#39;Test&#39;</span> <span class="o">-</span> <span class="n">executes</span> <span class="n">the</span> <span class="s1">&#39;test1`.py&#39;</span> <span class="n">script</span><span class="o">.</span>
-<span class="o">*</span> <span class="s1">&#39;Unittest&#39;</span> <span class="o">-</span> <span class="n">executes</span> <span class="n">the</span> <span class="s1">&#39;unittest1`.py&#39;</span> <span class="n">script</span><span class="o">.</span>
-</pre></div>
-</div>
+<ul class="simple">
+<li>‘Build’ results in building the contract; resulting ‘ABI’ and ‘WAST’
+files go to the ‘build’ directory.</li>
+<li>‘Compile’ results in compilation of the contract, without building
+(neither ‘ABI’ nor ‘WAST’ are produced), but code errors, if any,
+are listed.</li>
+<li>‘EOSIO API’ results in opening (in the default browser) of the EOSIO
+manual.</li>
+<li>‘Test’ - executes the ‘test1`.py’ script.</li>
+<li>‘Unittest’ - executes the ‘unittest1`.py’ script.</li>
+</ul>
 <p>Note that you can edit the literals. For example, if you change the test
 name ‘test1’, you have to update both ‘CMakeLists.txt’ and
 ‘.vscode/tasks.json’ files.</p>
@@ -92,41 +92,46 @@ alt="smart contract IDE workspace" width="720px"/></p>
 </div>
 <div class="section" id="working-on-the-code">
 <span id="working-on-the-code"></span><h2>Working on the code<a class="headerlink" href="#working-on-the-code" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-The VScode provides the intelisense and easy access to the context. Especially,
-you can inspect any context code. The list of services is:
-    * Go to Definition.
-    * Pick Definition.
-    * Go to Declaration.
-    * Pick Declaration.<p>In the image below, you cen see a result of the ‘Pick Definition’ service.</p>
+<p><normal><pre>
+The VScode provides the C/CPP intelisense and easy access to the context.
+Especially, you can inspect any context code. The list of services is:</p>
+<ul class="simple">
+<li>Go to Definition.</li>
+<li>Pick Definition.</li>
+<li>Go to Declaration.</li>
+<li>Pick Declaration.</li>
+</ul>
+<p>In the image below, you cen see a result of the ‘Pick Definition’ service.</p>
 </pre></normal><p><img src="ide/pick_definition.png" 
 onerror="this.src='../../../source/cases/ide/pick_definition.png'"   
 alt="eosio token contract" width="720px"/></p>
 </div>
 <div class="section" id="developing-the-code-of-the-contract">
 <span id="developing-the-code-of-the-contract"></span><h2>Developing the code of the contract<a class="headerlink" href="#developing-the-code-of-the-contract" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-A very sophisticated C/CPP development environment is now at your disposal,
-however, you can write errors that can be found with the compiler. Use the 
-'Compile' task. See an exemplary result, in the image below.<p>There you can see a missing semicolon in the editor pane. (The shading is not
-automatic.) Also, you can see the error message in the task panel.
-(Again, the shading is not automatic.)</p>
+<p><normal><pre>
+The sophisticated C/CPP development environment is now at your disposal, helping
+to avoid mistakes, but the C/CPP to WASM cross-compiler can do more. Use the
+‘Compile’ task. In the image below, see an exemplary result.</p>
+<p>There you can see a missing semicolon in the editor pane. (The shading is not
+automatic.) Also, you can see the error message in the task panel. (Again, the
+shading is not automatic.)</p>
 </pre></normal>
 <img src="ide/compile.png" 
     onerror="this.src='../../../source/cases/ide/compile.png'"   
     alt="eosio token contract" width="720px"/></div>
 <div class="section" id="building-the-contract">
 <span id="building-the-contract"></span><h2>Building the contract<a class="headerlink" href="#building-the-contract" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-You can build the contract in two ways:<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">Use</span> <span class="n">the</span> <span class="n">task</span> <span class="s1">&#39;Build&#39;</span><span class="o">.</span>
-<span class="o">*</span> <span class="n">Use</span> <span class="n">the</span> <span class="n">CMake</span><span class="o">.</span>
-</pre></div>
-</div>
+<p><normal><pre>
+You can build the contract in two ways:</p>
+<ul class="simple">
+<li>Using the task ‘Build’.</li>
+<li>Using the CMake.</li>
+</ul>
 <p>The image below shows the CMake way. The result of the build process goes to
 the ‘build’ directory.</p>
-<p>However, you can do the same with any bash terminal, as well:</p>
+<p>You can do the same with any bash terminal, as well:</p>
 </pre></normal>
-<pre><normal>
+<normal><pre>
 $ cd build
 $ CMake ..
 $ make</pre></normal>
@@ -135,15 +140,16 @@ $ make</pre></normal>
     alt="eosio token contract" width="720px"/></div>
 <div class="section" id="running-tests">
 <span id="running-tests"></span><h2>Running tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
-<pre><normal>
-You can run tests in two ways:<div class="highlight-default notranslate"><div class="highlight"><pre><span class="o">*</span> <span class="n">Use</span> <span class="n">task</span> <span class="s1">&#39;Test&#39;</span> <span class="p">(</span><span class="ow">or</span> <span class="s1">&#39;Unittest&#39;</span><span class="p">)</span>
-<span class="o">*</span> <span class="n">Use</span> <span class="n">the</span> <span class="s1">&#39;ctest&#39;</span>
-</pre></div>
-</div>
+<p><normal><pre>
+You can run tests in two ways:</p>
+<ul class="simple">
+<li>Using task ‘Test’ (or ‘Unittest’)</li>
+<li>Using the ‘ctest’</li>
+</ul>
 <p>The images below show the CMake way.</p>
-<p>However, you can do the same with any bash terminal, as well:</p>
+<p>You can do the same with any bash terminal, as well:</p>
 </pre></normal>
-<pre><normal>
+<normal><pre>
 $ cd test
 $ python3 test1.py
 $ python3 unittest1.py

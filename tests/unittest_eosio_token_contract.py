@@ -52,7 +52,7 @@ NEXT TEST ====================================================================
         account_create("account_bob", account_master)
         account_create("account_carol", account_master)
         account_create("account_eosio_token", account_master)
-        contract_eosio_token = Contract(account_eosio_token, "eosio.token")
+        contract_eosio_token = Contract(account_eosio_token, "token")
         deploy = contract_eosio_token.deploy()
 
         time.sleep(1)

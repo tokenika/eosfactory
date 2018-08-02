@@ -32,9 +32,9 @@ execute real transactions.
 
 The 'EOSFactory' uses mapping files that keep the uniqueness.
 
-However, what if a user wants to ascribe a previously used name to another 
-physical account. Then, the only way to keep the previous physical account 
-within the system is to change its mapping name.
+But, what if the user wants to ascribe a previously used name to another 
+physical account: the only way to keep the previous physical account within the 
+system is to change its mapping name.
 
 Create two account objects: 'account_alice' and 'account_carrol'.
 
@@ -73,5 +73,3 @@ We hope that you get something similar to this shown in the image below.
     alt="account name conflict" width="640px"/>
 
 """
-    /mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet/accounts.json
-* The account object is created.

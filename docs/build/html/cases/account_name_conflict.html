@@ -56,9 +56,9 @@ The 'EOSFactory' wraps EOSIO accounts with objects. The symbolic name of an
 account object, for example 'account_alice', has to be unique in a program. 
 Moreover, it has be unique in a collection of scripts, especially, if they 
 execute real transactions.<p>The ‘EOSFactory’ uses mapping files that keep the uniqueness.</p>
-<p>However, what if a user wants to ascribe a previously used name to another
-physical account. Then, the only way to keep the previous physical account
-within the system is to change its mapping name.</p>
+<p>But, what if the user wants to ascribe a previously used name to another
+physical account: the only way to keep the previous physical account within the
+system is to change its mapping name.</p>
 <p>Create two account objects: ‘account_alice’ and ‘account_carrol’.</p>
 <p>Then try to create another account object called ‘account_alice’. Although
 this object is going to refer to a new blockchain account, it cannot accept
@@ -87,11 +87,7 @@ We hope that you get something similar to this shown in the image below.
 </pre></normal>
 <img src="account_name_conflict.png" 
     onerror="this.src='../../../source/cases/account_name_conflict.png'"   
-    alt="account name conflict" width="640px"/><p>“”“
-/mnt/c/Workspaces/EOS/eosfactory/build/daemon/data-dir/wallet/accounts.json</p>
-<ul class="simple">
-<li>The account object is created.</li>
-</ul>
+    alt="account name conflict" width="640px"/><p>“”“</p>
 </div>
 </div>
 </div>

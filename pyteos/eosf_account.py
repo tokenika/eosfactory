@@ -92,7 +92,10 @@ def is_local_testnet_running(account_eosio):
         return False
 
 def put_account_to_wallet_and_on_stack(
-        account_object, account_object_name, logger):
+        account_object_name, account_object, logger=None):
+
+    if logger is None:
+        logger = account_object
 
     global wallet_singleton
     global wallet_globals    
@@ -362,7 +365,7 @@ def account_master_create(
 
     if is_local_testnet_running(account_object):
         put_account_to_wallet_and_on_stack(
-            account_object, account_object_name, logger)
+            account_object_name, account_object, logger)
         return
 
     """
@@ -597,7 +600,7 @@ def append_account_methods_and_finish(
     account_object.__str__ = types.MethodType(__str__, account_object)
 
     return put_account_to_wallet_and_on_stack(
-            account_object, account_object_name, logger)
+            account_object_name, account_object)
 
 
 

@@ -39,7 +39,7 @@ eosf.use_keosd(True)
 </pre></normal>
 
 <normal><pre>
-The 'NODEOS' alternative' apply only, if the local node is running.
+The 'NODEOS' alternative apply if the local node is running.
 
 It can be exactly one 'Wallet' object in the namespace. After the 'Wallet' 
 singleton is created, it remains transparent to the script: usually, there 
@@ -73,6 +73,7 @@ eosf.stop()                                 # stop the local testnet
 
 <normal><pre>
 What has happened?
+
 * The local node has restarted, that is the local wallet file was deleted.
 * The wallet object has been created.
 * Its password has been stored to a file.
@@ -142,6 +143,7 @@ wallet = Wallet(wallet_name)
 We plan the Factory so that the singular wallet object is never referred to, in
 usual scripts. However, the 'Wallet` class has several methods that are used
 internally. Some of them are obvious:
+
 * Open wallet.
 * Unlock wallet.
 * Keys in all open wallets.
