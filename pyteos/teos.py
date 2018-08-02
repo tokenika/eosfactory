@@ -145,7 +145,7 @@ class TemplateCreate(_Teos):
         if visual_studio_code:
             jarg["vsc"] = 1
 
-        _Teos.__init__(self, jarg, "bootstrap", "contract", is_verbose)
+        _Teos.__init__(self, jarg, "template", "create", is_verbose)
         try:
             self.contract_path_absolute = self.json["contract_dir"] 
             self.contract_build_path = self.json["contract_build_path"]
