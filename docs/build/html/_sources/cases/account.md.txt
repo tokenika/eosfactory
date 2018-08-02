@@ -35,7 +35,7 @@ eosf.set_throw_error(False)
 ## Case
 
 <pre>
-The 'EOSFactory' wraps EOSIO accounts with objects. Accounts can hold smart
+The EOSFactory wraps EOSIO accounts with objects. Accounts can hold smart
 contracts. 
 
 Create an account objects: 'account_hello'. Add a contract of the class

@@ -42,7 +42,7 @@ Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
 ## Case
 
 <pre>
-The 'EOSFactory' wraps EOSIO accounts with objects. The 'account_create` 
+The EOSFactory wraps EOSIO accounts with objects. The 'account_create` 
 factory function produces account objects, it is explained in the article 
 <a href="account.html">cases/account</a>.
 

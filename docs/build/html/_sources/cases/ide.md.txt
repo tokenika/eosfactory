@@ -1,10 +1,10 @@
 # Visual Studio Code IDE for EOSIO smart contracts
 
 <pre>
-To us, the 'EOSFactory' is going to be an Integrated Development Environment for
+To us, the EOSFactory is going to be an Integrated Development Environment for
 the EOSIO smart contract.
 
-The 'Visual Studio Code' is the base upon which we develop the 'EOSFactory'.
+The 'Visual Studio Code' is the base upon which we develop the EOSFactory.
 Although you can use the Factory with a plain bash terminal, we recommend using 
 the VScode: it can add new dimensions to your experience with the Factory. 
 

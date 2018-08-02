@@ -11,7 +11,7 @@ This file can be executed as a python script: 'python3 setup.md'.
 
 <pre>
 The set-up part of a test does not involve testing specific assumptions.
-Instead, the `EOSFactory` is set then to throw fatal exceptions: the set-up
+Instead, the EOSFactory is set then to throw fatal exceptions: the set-up
 block is enclosed within the following statements:
 </pre>
 
