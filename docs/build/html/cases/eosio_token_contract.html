@@ -31,54 +31,49 @@
   <p>“”“</p>
 <div class="section" id="eosio-token-contract">
 <span id="eosio-token-contract"></span><h1>Eosio Token Contract<a class="headerlink" href="#eosio-token-contract" title="Permalink to this headline">¶</a></h1>
-<p><normal><pre>
-This file can be executed as a python script: ‘python3 eosio_token_contract.md’.</p>
-<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-</pre></normal><div class="section" id="set-up">
+<pre>
+This file can be executed as a python script: 'python3 eosio_token_contract.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+</pre><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-“”“
+<pre>
+"""
 import unittest
 import setup
 import eosf
-import time</p>
-<p>from eosf_wallet import Wallet
+import time<p>from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 eosf.set_throw_error(True) # make the errors be thrown as exceptions</p>
 <p>eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE]) # start the local test node, reset
 “”“</p>
-</pre></normal><div class="section" id="the-wallet-object">
+</pre><div class="section" id="the-wallet-object">
 <span id="the-wallet-object"></span><h3>The <code class="docutils literal notranslate"><span class="pre">Wallet</span></code> object<a class="headerlink" href="#the-wallet-object" title="Permalink to this headline">¶</a></h3>
-<p><normal><pre>
+<pre>
 Create the singleton wallet object. The object represents a physical wallet,
-managed with either the KEOSD or NODEOS Wallet Manager:</p>
-</pre></normal>
-<normal><pre>
+managed with either the KEOSD or NODEOS Wallet Manager:
+</pre>
+<pre>
 """
-wallet = Wallet()</div>
-</div>
-</div>
-<div class="section" id="the-master-account-authorizes-actions-on-the-blockchain">
-<span id="the-master-account-authorizes-actions-on-the-blockchain"></span><h1>the master account authorizes actions on the blockchain:<a class="headerlink" href="#the-master-account-authorizes-actions-on-the-blockchain" title="Permalink to this headline">¶</a></h1>
-<p>account_master_create(“account_master”)</p>
-<p>eosf.set_throw_error(False) # make the errors be printed
+wallet = Wallet()
+account_master_create("account_master")<p>eosf.set_throw_error(False) # make the errors be printed
 “”“</p>
-</pre></normal><div class="section" id="case">
+</pre></div>
+</div>
+<div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-With the master account, create four accounts: ‘account_alice’,
-‘account_bob’, ‘account_carrol’ and ‘account_test’. Add the
-‘eosio.token’ contract to the last account.</p>
-</pre></normal><div class="section" id="the-account-create-factory">
+<pre>
+With the master account, create four accounts: 'account_alice', 
+'account_bob', 'account_carrol' and 'account_test'. Add the 
+'eosio.token' contract to the last account.
+</pre><div class="section" id="the-account-create-factory">
 <span id="the-account-create-factory"></span><h3>The <code class="docutils literal notranslate"><span class="pre">account_create</span></code> factory<a class="headerlink" href="#the-account-create-factory" title="Permalink to this headline">¶</a></h3>
-<p><normal><pre>
+<pre>
 Note that the account-creation command places in the global namespace the
 account object named with the first argument. The object represent a physical
-account in the blockchain and in the wallet.</p>
-</pre></normal>
-<normal><pre>
+account in the blockchain and in the wallet.
+</pre>
+<pre>
 """
 account_create("account_alice", account_master)
 account_create("account_bob", account_master)
@@ -87,15 +82,15 @@ account_create("account_test", account_master)
 contract_test = Contract(account_test, "token")
 deploy = contract_test.deploy()<p>time.sleep(1)
 “”“</p>
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 Execute actions on the contract account:<ul class="simple">
 <li>let eosio deposit an amount of 1000000000.0000 EOS there;</li>
 <li>transfer some EOS to the ‘alice’ account.</li>
 </ul>
 <p>Use the ‘push_action’ method of the contract account:</p>
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 """
 account_test.push_action(
     "create", 
@@ -109,20 +104,19 @@ account_test.push_action(
 + ‘“memo”:”issue 100.0000 EOS from eosio to alice”}’,
 permission=account_master)
 “”“</p>
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 Execute a series of transfers between the accounts. Use the 'push_action' 
 method of the contract account:
-</pre></normal><p><normal><pre>
-“”“
+</pre><pre>
+"""
 account_test.push_action(
-“transfer”,
-‘{“from”:”’ + str(account_alice)
-+ ‘”, “to”:”’ + str(account_carol)
-+ ‘”, “quantity”:”25.0000 EOS”, ‘
-+ ‘“memo”:”transfer 25.0000 EOS from alice to carol”}’,
-permission=account_alice)</p>
-<p>account_test.push_action(
+    "transfer",
+    '{"from":"' + str(account_alice)
+        + '", "to":"' + str(account_carol)
+        + '", "quantity":"25.0000 EOS", '
+        + '"memo":"transfer 25.0000 EOS from alice to carol"}',
+    permission=account_alice)<p>account_test.push_action(
 “transfer”,
 ‘{“from”:”’ + str(account_carol)
 + ‘”, “to”:”’ + str(account_bob)
@@ -144,30 +138,30 @@ permission=account_carol)</p>
 + ‘“memo”:”transfer 2.0000 EOS from bob to alice”}’,
 permission=account_bob)</p>
 <p>“”“</p>
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 To see the records of the accounts, use the 'table' method of the contract
 account:
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 """
 table_alice = account_test.table("accounts", account_alice)
 table_bob = account_test.table("accounts", account_bob)
 table_carol = account_test.table("accounts", account_carol)
 """
-</pre></normal></div>
+</pre></div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<p><normal><pre>
-In an linux bash, change directory to where this file exists, it is the
-directory ‘docs/source/cases’ in the repository, and enter this command:</p>
-</pre></normal>
-<normal><pre>
+<pre>
+In an linux bash, change directory to where this file exists, it is the 
+directory 'docs/source/cases' in the repository, and enter this command:
+</pre>
+<pre>
 $ python3 eosio_token_contract.md
-</pre></normal>
-<normal><pre>
-We hope that you get something similar to this shown in the image below.
-</pre></normal>
+</pre>
+<pre>
+We hope that you get something similar to this one shown in the image below.
+</pre>
 <img src="eosio_token.png" 
     onerror="this.src='../../../source/cases/eosio_token.png'"   
     alt="eosio token contract" width="640px"/><p>“”“</p>
@@ -199,15 +193,12 @@ We hope that you get something similar to this shown in the image below.
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="ide.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="account_master.html">Account master object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wallet.html">Wallet object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">EOSFactory configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Eosio Token Contract</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#the-master-account-authorizes-actions-on-the-blockchain">the master account authorizes actions on the blockchain:</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html#"></a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html#set-up-statements">set-up statements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html#"></a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 </ul>

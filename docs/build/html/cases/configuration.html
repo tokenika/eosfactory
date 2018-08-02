@@ -31,50 +31,48 @@
   <p>“”“</p>
 <div class="section" id="eosfactory-configuration">
 <span id="eosfactory-configuration"></span><h1>EOSFactory configuration<a class="headerlink" href="#eosfactory-configuration" title="Permalink to this headline">¶</a></h1>
-<p><normal><pre>
-This file can be executed as a python script: ‘python3 configuration.md’.</p>
-<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-</pre></normal><div class="section" id="inspect-the-configuration">
+<pre>
+This file can be executed as a python script: 'python3 configuration.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+</pre><div class="section" id="inspect-the-configuration">
 <span id="inspect-the-configuration"></span><h2>Inspect the configuration<a class="headerlink" href="#inspect-the-configuration" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-“”“
-import teos</p>
-<p>ok = teos.GetConfig()</p>
+<pre>
+"""
+import teos<p>ok = teos.GetConfig()</p>
 <p>“”“</p>
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 Note that the same result is available with this bash command:
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 $eosf get config
-</pre></normal></div>
+</pre></div>
 <div class="section" id="override-the-installed-configuration">
 <span id="override-the-installed-configuration"></span><h2>Override the installed configuration<a class="headerlink" href="#override-the-installed-configuration" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-There is the ‘config.json’ file in the ‘teos’ folder of the repository.
-The entries there prevail the default settings.</p>
-</pre></normal></div>
+<pre>
+There is the 'config.json' file in the 'teos' folder of the repository. 
+The entries there prevail the default settings.
+</pre></div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h2>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-In an linux bash, change directory to where this file exists, it is the
-directory ‘docs/source/cases’ in the repository, and enter the following
-command:</p>
-</pre></normal>
-<normal><pre>
+<pre>
+In an linux bash, change directory to where this file exists, it is the 
+directory 'docs/source/cases' in the repository, and enter the following 
+command:
+</pre>
+<pre>
 $ python3 configuration.md
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 or
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 $ $eosf get config
-</pre></normal>
-<normal><pre>
-We hope that you get something similar to this shown in the image below.
+</pre>
+<pre>
+We hope that you get something similar to this one shown in the image below.
 You can change or add something in the configuration file 'teos/config.json' 
 and see the result.
-</pre></normal>
+</pre>
 <img src="configuration.png" 
     onerror="this.src='../../../source/cases/configuration.png'"   
     alt="configuration" width="640px"/><p>“”“</p>
@@ -105,15 +103,12 @@ and see the result.
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="ide.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="account_master.html">Account master object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wallet.html">Wallet object</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">EOSFactory configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html">Eosio Token Contract</a></li>
-<li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html#the-master-account-authorizes-actions-on-the-blockchain">the master account authorizes actions on the blockchain:</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html#"></a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html#set-up-statements">set-up statements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html#"></a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 </ul>

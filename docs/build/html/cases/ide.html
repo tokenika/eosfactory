@@ -30,20 +30,18 @@
             
   <div class="section" id="visual-studio-code-ide-for-eosio-smart-contracts">
 <span id="visual-studio-code-ide-for-eosio-smart-contracts"></span><h1>Visual Studio Code IDE for EOSIO smart contracts<a class="headerlink" href="#visual-studio-code-ide-for-eosio-smart-contracts" title="Permalink to this headline">¶</a></h1>
-<p><normal><pre>
-To us, the ‘EOSFactory’ is going to be an Integrated Development Environment for
-the EOSIO smart contract.</p>
-<p>The ‘Visual Studio Code’ is the base upon which we develop the ‘EOSFactory’.
+<pre>
+To us, the 'EOSFactory' is going to be an Integrated Development Environment for
+the EOSIO smart contract.<p>The ‘Visual Studio Code’ is the base upon which we develop the ‘EOSFactory’.
 Although you can use the Factory with a plain bash terminal, we recommend using
 the VScode: it can add new dimensions to your experience with the Factory.</p>
 <p>Let us assume that you have the VScode installed.</p>
-</pre></normal><div class="section" id="smart-contract-templates">
+</pre><div class="section" id="smart-contract-templates">
 <span id="smart-contract-templates"></span><h2>Smart contract templates<a class="headerlink" href="#smart-contract-templates" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-The Factory provides smart contract templates that you could use as a start
-points to development of your own code. For example, you can launch a smart
-contract named ‘eosio_token_better’:</p>
-<ul class="simple">
+<pre>
+The Factory provides smart contract templates that you could use as a start 
+points to development of your own code. For example, you can launch a smart 
+contract named 'eosio_token_better':<ul class="simple">
 <li>starting with the original EOSIO code of the ‘eosio.token’,</li>
 <li>with its root at your workspace directory, for example,
 ‘/mnt/c/Workspaces/EOS/contracts’.</li>
@@ -52,17 +50,17 @@ contract named ‘eosio_token_better’:</p>
 the installation of the Factory. See <a href="configuration.html">cases/configuration</a>
 to learn how to prevail the installation settings.</p>
 <p>Use a bash terminal, it can be one belonging to an instance of the VScode:</p>
-</pre></normal><p><normal><pre>
-$ $eosf template create eosio_token_better eosio.token–workspace /mnt/c/Workspaces/EOS/contracts –vsc</p>
-</pre></normal><p><normal><pre>
-We hope that you see an instance of the VScode window, now.</p>
-</pre></normal></div>
+</pre><pre>
+$ $eosf template create eosio_token_better eosio.token\
+    --workspace /mnt/c/Workspaces/EOS/contracts --vsc
+</pre><pre>
+We hope that you see an instance of the VScode window, now.
+</pre></div>
 <div class="section" id="ide-workspace">
 <span id="ide-workspace"></span><h2>IDE workspace<a class="headerlink" href="#ide-workspace" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-If you miss, in the workspace, anything that you need for your work, we
-will try to add it in the next editions. Now, you can see the following items:</p>
-<ul class="simple">
+<pre>
+If you miss, in the workspace, anything that you need for your work, we 
+will try to add it in the next editions. Now, you can see the following items:<ul class="simple">
 <li>‘src’ directory, the cpp and hpp files are there.</li>
 <li>‘test’ directory, test scripts are there.</li>
 <li>‘resources’ directory, everything that does not fit to the previous two
@@ -86,74 +84,70 @@ manual.</li>
 <p>Note that you can edit the literals. For example, if you change the test
 name ‘test1’, you have to update both ‘CMakeLists.txt’ and
 ‘.vscode/tasks.json’ files.</p>
-</pre></normal><p><img src="ide/workspace.png" 
+</pre><p><img src="ide/workspace.png" 
 onerror="this.src='../../../source/cases/ide/workspace.png'"   
 alt="smart contract IDE workspace" width="720px"/></p>
 </div>
 <div class="section" id="working-on-the-code">
 <span id="working-on-the-code"></span><h2>Working on the code<a class="headerlink" href="#working-on-the-code" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-The VScode provides the C/CPP intelisense and easy access to the context.
-Especially, you can inspect any context code. The list of services is:</p>
-<ul class="simple">
+<pre>
+The VScode provides the C/CPP intelisense and easy access to the context. 
+Especially, you can inspect any context code. The list of services is:<ul class="simple">
 <li>Go to Definition.</li>
 <li>Pick Definition.</li>
 <li>Go to Declaration.</li>
 <li>Pick Declaration.</li>
 </ul>
 <p>In the image below, you cen see a result of the ‘Pick Definition’ service.</p>
-</pre></normal><p><img src="ide/pick_definition.png" 
+</pre><p><img src="ide/pick_definition.png" 
 onerror="this.src='../../../source/cases/ide/pick_definition.png'"   
 alt="eosio token contract" width="720px"/></p>
 </div>
 <div class="section" id="developing-the-code-of-the-contract">
 <span id="developing-the-code-of-the-contract"></span><h2>Developing the code of the contract<a class="headerlink" href="#developing-the-code-of-the-contract" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
+<pre>
 The sophisticated C/CPP development environment is now at your disposal, helping
-to avoid mistakes, but the C/CPP to WASM cross-compiler can do more. Use the
-‘Compile’ task. In the image below, see an exemplary result.</p>
-<p>There you can see a missing semicolon in the editor pane. (The shading is not
+to avoid mistakes, but the C/CPP to WASM cross-compiler can do more. Use the 
+'Compile' task. In the image below, see an exemplary result.<p>There you can see a missing semicolon in the editor pane. (The shading is not
 automatic.) Also, you can see the error message in the task panel. (Again, the
 shading is not automatic.)</p>
-</pre></normal>
+</pre>
 <img src="ide/compile.png" 
     onerror="this.src='../../../source/cases/ide/compile.png'"   
     alt="eosio token contract" width="720px"/></div>
 <div class="section" id="building-the-contract">
 <span id="building-the-contract"></span><h2>Building the contract<a class="headerlink" href="#building-the-contract" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-You can build the contract in two ways:</p>
-<ul class="simple">
+<pre>
+You can build the contract in two ways:<ul class="simple">
 <li>Using the task ‘Build’.</li>
 <li>Using the CMake.</li>
 </ul>
 <p>The image below shows the CMake way. The result of the build process goes to
 the ‘build’ directory.</p>
 <p>You can do the same with any bash terminal, as well:</p>
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 $ cd build
 $ CMake ..
-$ make</pre></normal>
+$ make</pre>
 <img src="ide/cmake_build.png" 
     onerror="this.src='../../../source/cases/ide/cmake_build.png'"   
     alt="eosio token contract" width="720px"/></div>
 <div class="section" id="running-tests">
 <span id="running-tests"></span><h2>Running tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-You can run tests in two ways:</p>
-<ul class="simple">
+<pre>
+You can run tests in two ways:<ul class="simple">
 <li>Using task ‘Test’ (or ‘Unittest’)</li>
 <li>Using the ‘ctest’</li>
 </ul>
 <p>The images below show the CMake way.</p>
 <p>You can do the same with any bash terminal, as well:</p>
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 $ cd test
 $ python3 test1.py
 $ python3 unittest1.py
-</pre></normal><p><img src="ide/cmake_unittest.png" 
+</pre><p><img src="ide/cmake_unittest.png" 
 onerror="this.src='../../../source/cases/ide/cmake_unittest.png'"   
 alt="eosio token contract" width="720px"/></p>
 <p><img src="ide/logger.png" 

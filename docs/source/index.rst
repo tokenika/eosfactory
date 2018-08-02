@@ -18,6 +18,7 @@ Cases
 
     cases/ide
     cases/account
+    cases/account_master
     cases/contract
     cases/wallet
     cases/configuration

@@ -31,89 +31,83 @@
   <p>“”“</p>
 <div class="section" id="wallet-object">
 <span id="wallet-object"></span><h1>Wallet object<a class="headerlink" href="#wallet-object" title="Permalink to this headline">¶</a></h1>
-<p><normal><pre>
-This file can be executed as a python script: ‘python3 wallet.md’.</p>
-<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-</pre></normal><div class="section" id="set-up">
+<pre>
+This file can be executed as a python script: 'python3 wallet.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+</pre><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-“”“
+<pre>
+"""
 import os
 import setup
 import eosf
 import eosf_account
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
-from eosf_contract import Contract</p>
-<p>eosf.set_throw_error(False)
+from eosf_contract import Contract<p>eosf.set_throw_error(False)
 “”“</p>
-</pre></normal></div>
+</pre></div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<p><normal><pre>
-The ‘Wallet` class wraps EOSIO wallets. The ‘Wallet’ object keep account
-objects, presented at <a href="account.html">cases/account</a>.</p>
-<p>The EOSIO physical wallet, if used with the Factory, can be managed either
+<pre>
+The 'Wallet` class wraps EOSIO wallets. The 'Wallet' object keep account 
+objects, presented at <a href="account.html">cases/account</a>.<p>The EOSIO physical wallet, if used with the Factory, can be managed either
 with the ‘KEOSD Wallet Manager’ or with the ‘NODEOS’ wallet plugin. The status
 is controlled with the ‘use_keosd’ statement (default is ‘False’):</p>
-</pre></normal><p><normal><pre>
-eosf.use_keosd(True)</p>
-</pre></normal><p><normal><pre>
-The ‘NODEOS’ alternative apply if the local node is running.</p>
-<p>It can be exactly one ‘Wallet’ object in the namespace. After the ‘Wallet’
+</pre><pre>
+eosf.use_keosd(True)
+</pre><pre>
+The 'NODEOS' alternative apply if the local node is running.<p>It can be exactly one ‘Wallet’ object in the namespace. After the ‘Wallet’
 singleton is created, it remains transparent to the script: usually, there
 is no need to refer to it.</p>
 <p>If the ‘Wallet’ object is of the local testnet, its password is kept between
 sessions, and used automatically.</p>
 <p>Let us consider two cases: ‘NODEOS` and ‘KEOSD’ subsequently.</p>
-</pre></normal><div class="section" id="nodeos-managed-wallet">
+</pre><div class="section" id="nodeos-managed-wallet">
 <span id="nodeos-managed-wallet"></span><h3>NODEOS managed wallet<a class="headerlink" href="#nodeos-managed-wallet" title="Permalink to this headline">¶</a></h3>
-<p><normal><pre>
-“”“
+<pre>
+"""
 eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE])          # reset the local testnet
 wallet = Wallet()
 wallet.keys()
-account_master_create(“account_master”)     # account object is put to wallet
+account_master_create("account_master")     # account object is put to wallet
 wallet.keys()
-wallet.lock_all()</p>
-<p>eosf.stop()                                 # stop the local testnet
+wallet.lock_all()<p>eosf.stop()                                 # stop the local testnet
 “”“</p>
-</pre></normal><p><img src="wallet/reset_nodeos_wallet.png" 
+</pre><p><img src="wallet/reset_nodeos_wallet.png" 
 onerror="this.src='../../../source/cases/wallet/reset_nodeos_wallet.png'"   
 alt="nodeos wallet reset" width="720px"/></p>
-<p><normal><pre>
-What has happened?</p>
-<ul class="simple">
+<pre>
+What has happened?<ul class="simple">
 <li>The local node has restarted, that is the local wallet file was deleted.</li>
 <li>The wallet object has been created.</li>
 <li>Its password has been stored to a file.</li>
 <li>An account object named ‘account_master’ has been created and placed in
-the wallet.`</li>
+the wallet.</li>
 </ul>
 <p>If we close the session, then open it again, and recreate the wallet, we can
 expect that it opens without calling for password, having the same keys.</p>
-</pre></normal><p><normal><pre>
-“”“
+</pre><pre>
+"""
 eosf_account.restart()                      # reset the Factory
 eosf.run([eosf.Verbosity.TRACE])    # restart the local testnet
 wallet = Wallet()
-wallet.keys()eosf.stop()                         # stop the local testnet
-“”“</p>
-</pre></normal><p><img src="wallet/run_nodeos_wallet.png" 
+wallet.keys()   
+eosf.stop()                         # stop the local testnet
+"""
+</pre><p><img src="wallet/run_nodeos_wallet.png" 
 onerror="this.src='../../../source/cases/wallet/run_nodeos_wallet.png'"   
 alt="nodeos wallet reset" width="720px"/></p>
 </div>
 <div class="section" id="keosd-managed-wallet">
 <span id="keosd-managed-wallet"></span><h3>KEOSD managed wallet<a class="headerlink" href="#keosd-managed-wallet" title="Permalink to this headline">¶</a></h3>
-<p><normal><pre>
+<pre>
 For the sake of this tutorial, we dare to treat a system wallet so rudely:
-we delete it.</p>
-</pre></normal><p><normal><pre>
-“”“
+we delete it.
+</pre><pre>
+"""
 eosf.use_keosd(True)    # to determine the directory of the wallet
-eosf.kill_keosd()       # otherwise, the manager protects the wallet file</p>
-<p>wallet_name = “jungle_wallet”
+eosf.kill_keosd()       # otherwise, the manager protects the wallet file<p>wallet_name = “jungle_wallet”
 try:
 wallet_file = eosf.wallet_dir() + wallet_name + “.wallet”
 os.remove(wallet_file)
@@ -121,31 +115,29 @@ print(“The deleted wallet file:\n{}\n”.format(wallet_file))
 except Exception as e:
 print(“Cannot delete the wallet file:\n{}\n”.format(str(e)))
 “”“</p>
-</pre></normal><p><normal><pre>
-Create a ‘KEOSD’ wallet named ‘wallet_name’:</p>
-</pre></normal><p><normal><pre>
-“”“
+</pre><pre>
+Create a 'KEOSD' wallet named 'wallet_name':
+</pre><pre>
+"""
 eosf_account.restart()                      # reset the Factory
-eosf.use_keosd(True)</p>
-<p>wallet = Wallet(wallet_name)
+eosf.use_keosd(True)<p>wallet = Wallet(wallet_name)
 “”“</p>
-</pre></normal><p><img src="wallet/keosd_wallet_create.png" 
+</pre><p><img src="wallet/keosd_wallet_create.png" 
 onerror="this.src='../../../source/cases/wallet/keosd_wallet_create.png'"   
 alt="nodeos wallet reset" width="720px"/></p>
 </div>
 <div class="section" id="methods-of-the-wallet-class">
 <span id="methods-of-the-wallet-class"></span><h3>Methods of the ‘Wallet’ class<a class="headerlink" href="#methods-of-the-wallet-class" title="Permalink to this headline">¶</a></h3>
-<p><normal><pre>
+<pre>
 We plan the Factory so that the singular wallet object is never referred to, in
-usual scripts. However, the ‘Wallet` class has several methods that are used
-internally. Some of them are obvious:</p>
-<ul class="simple">
+usual scripts. However, the 'Wallet` class has several methods that are used
+internally. Some of them are obvious:<ul class="simple">
 <li>Open wallet.</li>
 <li>Unlock wallet.</li>
 <li>Keys in all open wallets.</li>
 <li>etc.</li>
 </ul>
-</pre></normal><p>“”“</p>
+</pre><p>“”“</p>
 </div>
 </div>
 </div>
@@ -180,9 +172,6 @@ internally. Some of them are obvious:</p>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html">Eosio Token Contract</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html#the-master-account-authorizes-actions-on-the-blockchain">the master account authorizes actions on the blockchain:</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html#"></a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html#set-up-statements">set-up statements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html#"></a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 </ul>

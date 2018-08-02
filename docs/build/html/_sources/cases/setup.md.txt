@@ -1,28 +1,28 @@
 """
 # Setting-up EOSFactory tests
 
-<normal><pre>
+<pre>
 This file can be executed as a python script: 'python3 setup.md'.
-</pre></normal>
+</pre>
 
 ## Set-up part
 
 ### Throw exceptions status
 
-<normal><pre>
+<pre>
 The set-up part of a test does not involve testing specific assumptions.
 Instead, the `EOSFactory` is set then to throw fatal exceptions: the set-up
 block is enclosed within the following statements:
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 eosf.set_throw_error(True)
 eosf.set_throw_error(False)
-</pre></normal>
+</pre>
 
 ### Verbosity status
 
-<normal><pre>
+<pre>
 You can determine the amount of the verbosity of the tested processes.
 The output of the commands is made with objects of the `eosf.Logger` class.
 
@@ -34,15 +34,15 @@ The verbosity can assume the following values:
 * eosf.Verbosity.DEBUG      # debugging info is printed
 
 Default is [eosf.Verbosity.EOSF, eosf.Verbosity.OUT]
-</pre></normal>
+</pre>
 
 ### Code excerpt
 
-<normal><pre>
+<pre>
 The following script demonstrates steering statements:
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 """
 import setup
 import eosf
@@ -63,5 +63,5 @@ eosf.set_throw_error(False) # print message rather then throw exception
 
 eosf.set_is_testing_errors() # make the error mesages less alarming
 """
-</pre></normal>
+</pre>
 """

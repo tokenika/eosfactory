@@ -1,15 +1,15 @@
 """
 # Eosio Token Contract
 
-<normal><pre>
+<pre>
 This file can be executed as a python script: 'python3 eosio_token_contract.md'.
 
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre></normal>
+</pre>
 
 ## Set-up
 
-<normal><pre>
+<pre>
 """
 import unittest
 import setup
@@ -24,41 +24,39 @@ eosf.set_throw_error(True) # make the errors be thrown as exceptions
 eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE]) # start the local test node, reset
 """
-</pre></normal>
+</pre>
 
 ### The `Wallet` object
 
-<normal><pre>
+<pre>
 Create the singleton wallet object. The object represents a physical wallet,
 managed with either the KEOSD or NODEOS Wallet Manager:
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 """
 wallet = Wallet()
-
-# the master account authorizes actions on the blockchain:
-account_master_create("account_master") 
+account_master_create("account_master")
 
 eosf.set_throw_error(False) # make the errors be printed
 """
-</pre></normal>
+</pre>
 
 ## Case
 
-<normal><pre>
+<pre>
 With the master account, create four accounts: 'account_alice', 
 'account_bob', 'account_carrol' and 'account_test'. Add the 
 'eosio.token' contract to the last account.
-</pre></normal>
+</pre>
 
 ### The `account_create` factory
 
-<normal><pre>
+<pre>
 Note that the account-creation command places in the global namespace the
 account object named with the first argument. The object represent a physical
 account in the blockchain and in the wallet.
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 """
 account_create("account_alice", account_master)
 account_create("account_bob", account_master)
@@ -69,16 +67,16 @@ deploy = contract_test.deploy()
 
 time.sleep(1)
 """
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 Execute actions on the contract account:
 
 * let eosio deposit an amount of 1000000000.0000 EOS there;
 * transfer some EOS to the 'alice' account.
 
 Use the 'push_action' method of the contract account:
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 """
 account_test.push_action(
     "create", 
@@ -94,13 +92,13 @@ account_test.push_action(
         + '"memo":"issue 100.0000 EOS from eosio to alice"}',
     permission=account_master)
 """
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 Execute a series of transfers between the accounts. Use the 'push_action' 
 method of the contract account:
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 """
 account_test.push_action(
     "transfer",
@@ -135,31 +133,31 @@ account_test.push_action(
     permission=account_bob)
 
 """
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 To see the records of the accounts, use the 'table' method of the contract
 account:
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 """
 table_alice = account_test.table("accounts", account_alice)
 table_bob = account_test.table("accounts", account_bob)
 table_carol = account_test.table("accounts", account_carol)
 """
-</pre></normal>
+</pre>
 
 ### Test run
 
-<normal><pre>
+<pre>
 In an linux bash, change directory to where this file exists, it is the 
 directory 'docs/source/cases' in the repository, and enter this command:
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 $ python3 eosio_token_contract.md
-</pre></normal>
-<normal><pre>
-We hope that you get something similar to this shown in the image below.
-</pre></normal>
+</pre>
+<pre>
+We hope that you get something similar to this one shown in the image below.
+</pre>
 <img src="eosio_token.png" 
     onerror="this.src='../../../source/cases/eosio_token.png'"   
     alt="eosio token contract" width="640px"/>

@@ -1,6 +1,6 @@
 # Visual Studio Code IDE for EOSIO smart contracts
 
-<normal><pre>
+<pre>
 To us, the 'EOSFactory' is going to be an Integrated Development Environment for
 the EOSIO smart contract.
 
@@ -9,11 +9,11 @@ Although you can use the Factory with a plain bash terminal, we recommend using
 the VScode: it can add new dimensions to your experience with the Factory. 
 
 Let us assume that you have the VScode installed.
-</pre></normal>
+</pre>
 
 ## Smart contract templates
 
-<normal><pre>
+<pre>
 The Factory provides smart contract templates that you could use as a start 
 points to development of your own code. For example, you can launch a smart 
 contract named 'eosio_token_better':
@@ -27,20 +27,20 @@ the installation of the Factory. See <a href="configuration.html">cases/configur
 to learn how to prevail the installation settings.
 
 Use a bash terminal, it can be one belonging to an instance of the VScode: 
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 $ $eosf template create eosio_token_better eosio.token\
     --workspace /mnt/c/Workspaces/EOS/contracts --vsc
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 We hope that you see an instance of the VScode window, now.
-</pre></normal>
+</pre>
 
 ## IDE workspace
 
-<normal><pre>
+<pre>
 If you miss, in the workspace, anything that you need for your work, we 
 will try to add it in the next editions. Now, you can see the following items:
 
@@ -67,7 +67,7 @@ Also, you can see the 'Tasks' dialog window:
 Note that you can edit the literals. For example, if you change the test
 name 'test1', you have to update both 'CMakeLists.txt' and 
 '.vscode/tasks.json' files.
-</pre></normal>
+</pre>
 
 <img src="ide/workspace.png" 
     onerror="this.src='../../../source/cases/ide/workspace.png'"   
@@ -75,7 +75,7 @@ name 'test1', you have to update both 'CMakeLists.txt' and
 
 ## Working on the code
 
-<normal><pre>
+<pre>
 The VScode provides the C/CPP intelisense and easy access to the context. 
 Especially, you can inspect any context code. The list of services is:
 
@@ -85,7 +85,7 @@ Especially, you can inspect any context code. The list of services is:
 * Pick Declaration.
 
 In the image below, you cen see a result of the 'Pick Definition' service. 
-</pre></normal>
+</pre>
 
 <img src="ide/pick_definition.png" 
     onerror="this.src='../../../source/cases/ide/pick_definition.png'"   
@@ -93,7 +93,7 @@ In the image below, you cen see a result of the 'Pick Definition' service.
 
 ## Developing the code of the contract
 
-<normal><pre>
+<pre>
 The sophisticated C/CPP development environment is now at your disposal, helping
 to avoid mistakes, but the C/CPP to WASM cross-compiler can do more. Use the 
 'Compile' task. In the image below, see an exemplary result.
@@ -101,14 +101,14 @@ to avoid mistakes, but the C/CPP to WASM cross-compiler can do more. Use the
 There you can see a missing semicolon in the editor pane. (The shading is not
 automatic.) Also, you can see the error message in the task panel. (Again, the 
 shading is not automatic.) 
-</pre></normal>
+</pre>
 <img src="ide/compile.png" 
     onerror="this.src='../../../source/cases/ide/compile.png'"   
     alt="eosio token contract" width="720px"/>
 
 ## Building the contract
 
-<normal><pre>
+<pre>
 You can build the contract in two ways:
 
 * Using the task 'Build'.
@@ -118,20 +118,20 @@ The image below shows the CMake way. The result of the build process goes to
 the 'build' directory.
 
 You can do the same with any bash terminal, as well:
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 $ cd build
 $ CMake ..
 $ make
 
-</pre></normal>
+</pre>
 <img src="ide/cmake_build.png" 
     onerror="this.src='../../../source/cases/ide/cmake_build.png'"   
     alt="eosio token contract" width="720px"/>
 
 ## Running tests
 
-<normal><pre>
+<pre>
 You can run tests in two ways:
 
 * Using task 'Test' (or 'Unittest')
@@ -140,12 +140,12 @@ You can run tests in two ways:
 The images below show the CMake way.
 
 You can do the same with any bash terminal, as well:
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 $ cd test
 $ python3 test1.py
 $ python3 unittest1.py
-</pre></normal>
+</pre>
 
 <img src="ide/cmake_unittest.png" 
     onerror="this.src='../../../source/cases/ide/cmake_unittest.png'"   

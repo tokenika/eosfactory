@@ -15,21 +15,12 @@ def restart():
     eosf.restart()
 
     eosf_wallet.wallet = None
-    try:
-        global wallet_singleton
-        del wallet_singleton
-    except:
-        pass
-    try:
-        global wallet_globals
-        del wallet_globals
-    except:
-        pass
-    try:
-        global account_master_test
-        del account_master_test
-    except:
-        pass
+    global wallet_singleton
+    wallet_singleton = None
+    global wallet_globals
+    wallet_globals = None
+    global account_master_test
+    account_master_test = None
 
 def is_local_testnet_running():
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
@@ -350,7 +341,7 @@ def account_master_create(
     """  
     if logger.ERROR(cleos.is_notrunningnotkeosd_error()):
         return logger
-    
+
     is_wallet_defined(logger)
     global wallet_singleton
     if wallet_singleton is None:

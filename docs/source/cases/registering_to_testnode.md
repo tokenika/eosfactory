@@ -1,30 +1,30 @@
 """
 # Registering to a remote testnet
 
-<normal><pre>
+<pre>
 This file can be executed as a python script: 'python3 
 registering_to_testnode.md'.
 
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre></normal>
+</pre>
 
 ## Set-up
 
-<normal><pre>
+<pre>
 The following account exists in the blockchain of the testnode. It is used, in
 this article, for testing. It is reffered to as the 'testing account'.
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 Accout Name: dgxo1uyhoytn
 Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
 Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
 
 Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
 Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA 
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 """
 import os
 import unittest
@@ -42,25 +42,25 @@ cryptolions = "88.99.97.30:38888"
 _ = eosf.Logger()
 
 """
-</pre></normal>
+</pre>
 
 ### Set a remote testnode
 
-<normal><pre>
+<pre>
 """
 eosf.use_keosd(True)        # use KEOSD Wallet Manager
 setup.set_nodeos_address(cryptolions)
 """
-</pre></normal>
+</pre>
 
 ### Clean the 'jungle wallet'
 
-<normal><pre>
+<pre>
 For the sake of this tutorial, we dare to treat a system wallet so rudely:
 we delete it.
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 """
 eosf.use_keosd(True)    # to determine the directory of the wallet
 eosf.kill_keosd()       # otherwise, the manager protects the wallet file
@@ -73,9 +73,9 @@ try:
 except Exception as e:
     print("Cannot delete the wallet file:\n{}\n".format(str(e)))
 """
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 """
 wallet = Wallet(wallet_name)
 
@@ -83,30 +83,30 @@ eosf.set_is_testing_errors(False)
 eosf.set_throw_error(True)
 
 """
-</pre></normal>
+</pre>
 
 ### Is the testnode ON?
 
-<normal><pre>
+<pre>
 Throw an exception if the testnode is off:
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 """
 eosf.info()
 """
-</pre></normal>
+</pre>
 
 ### Introduce a test trick
 
-<normal><pre>
+<pre>
 Use an active account, named 'account_master_test' to simulate the 
 registration procedure: if set, this account substitutes one that would be
 physically registered.
 
-</pre></normal>
+</pre>
 
-<normal><pre>
+<pre>
 """
 eosf_account.account_master_test = eosf_account.GetAccount(
     "account_master_test",
@@ -116,45 +116,45 @@ eosf_account.account_master_test = eosf_account.GetAccount(
 )
 eosf_account.account_master_test.ERROR()
 """
-</pre></normal>
+</pre>
 
 ### End the set-up part
 
-<normal><pre>
+<pre>
 """
 eosf.set_throw_error(False)         # on error, do not throw exception
 eosf.set_is_testing_errors()        # make error messages less alarming
 """
-</pre></normal>
+</pre>
 
 ## Case
 
-<normal><pre>
+<pre>
 In subsequent tests, you may have to change the account object name, here 
 'account_master', or to resolve name conflicts, if you are prompted.
-</pre></normal>
+</pre>
 
 ### Register to the testnode
 
-<normal><pre>
+<pre>
 """
 account_master_create("account_master")
 """
-</pre></normal>
+</pre>
 
 ### Test run
 
-<normal><pre>
+<pre>
 In an linux bash, change directory to where this file exists, it is the 
 directory 'docs/source/cases' in the repository, and enter the following 
 command:
-</pre></normal>
-<normal><pre>
+</pre>
+<pre>
 $ python3 registering_to_testnode.md
-</pre></normal>
-<normal><pre>
-We hope that you get something similar to this shown in the image below.
-</pre></normal>
+</pre>
+<pre>
+We hope that you get something similar to this one shown in the image below.
+</pre>
 <img src="registering.png" 
     onerror="this.src='../../../source/cases/registering.png'"   
     alt="registering" width="640px"/>
