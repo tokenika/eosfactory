@@ -1,8 +1,29 @@
 {
-   "files.associations": {
+"files.associations": {
       "functional": "cpp",
       "__config": "cpp",
-      "*.ipp": "cpp"
+      "*.ipp": "cpp",
+      "__split_buffer": "cpp",
+      "array": "cpp",
+      "deque": "cpp",
+      "any": "cpp",
+      "dynarray": "cpp",
+      "filesystem": "cpp",
+      "string_view": "cpp",
+      "hash_map": "cpp",
+      "hash_set": "cpp",
+      "forward_list": "cpp",
+      "iterator": "cpp",
+      "list": "cpp",
+      "map": "cpp",
+      "queue": "cpp",
+      "regex": "cpp",
+      "set": "cpp",
+      "stack": "cpp",
+      "string": "cpp",
+      "unordered_map": "cpp",
+      "unordered_set": "cpp",
+      "vector": "cpp"
 },
 "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }

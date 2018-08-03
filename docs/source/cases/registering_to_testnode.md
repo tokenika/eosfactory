@@ -12,11 +12,11 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 <pre>
 The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is reffered to as the 'testing account'.
+this article, for testing. It is referred to as the 'testing account'.
 </pre>
 
 <pre>
-Accout Name: dgxo1uyhoytn
+Account Name: dgxo1uyhoytn
 Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
 Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
 

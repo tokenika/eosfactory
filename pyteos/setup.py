@@ -22,11 +22,9 @@ def set_is_local_address(status):
     global _is_local_address
     _is_local_address = status
 
-
 def is_local_address():
     global _is_local_address
     return _is_local_address
-
 
 def set_nodeos_address(url):
     global _nodeos_address
@@ -43,7 +41,6 @@ def nodeos_address_arg():
     if _nodeos_address is None:
         return None
     return ["--url", _nodeos_address]
-
 
 def use_keosd(status=False):
     """ Do use `keosd` Wallet Manager.

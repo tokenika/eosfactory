@@ -57,6 +57,7 @@ NEXT TEST ====================================================================
         ######################################################################  
 
         contract_tic_tac_toe = Contract(account_tic_tac_toe, "tic_tac_toe")
+        contract_tic_tac_toe.build()
         deploy = contract_tic_tac_toe.deploy()
 
         account_tic_tac_toe.push_action(

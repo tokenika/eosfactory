@@ -14,13 +14,60 @@ import eosf_wallet
 def restart():
     eosf.restart()
 
+    try:
+        del eosf_wallet.wallet
+    except:
+        pass
     eosf_wallet.wallet = None
+
     global wallet_singleton
+    try:
+        del wallet_singleton
+    except:
+        pass
     wallet_singleton = None
+
     global wallet_globals
     wallet_globals = None
+
     global account_master_test
+    try:
+        del account_master_test
+    except:
+        pass
     account_master_test = None
+
+_is_translating = True
+def set_is_translating(status=True):
+    global _is_translating
+    _is_translating = status
+
+def translate(sentence, keys=False):
+    global _is_translating
+    if not _is_translating:
+        return sentence
+
+    account_map = eosf.account_map()
+    global wallet_globals
+    for name in account_map:
+        account_object_name = account_map[name]
+        sentence = sentence.replace(name, account_object_name)
+        if keys:
+            account_object = wallet_globals[account_object_name]
+            try:
+                key = account_object.owner_key.key_public
+                sentence = sentence.replace(key, account_object_name + "_owner")
+            except:
+                pass
+
+            try:
+                key = account_object.active_key.key_public
+                sentence = \
+                    sentence.replace(owner_key, account_object_name + "_active")
+            except:
+                pass
+
+    return sentence
 
 def is_local_testnet_running():
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
@@ -525,7 +572,7 @@ def append_account_methods_and_finish(
             permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block=""):
+            ref_block="", json=False):
         if not permission:
             permission = account_object.name
         else:
@@ -541,18 +588,26 @@ def append_account_methods_and_finish(
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=-1, json=True)
+
         if not account_object.ERROR(result):
             account_object.EOSF_TRACE("""
             * Push action:
                 {}
-            """.format(re.sub(' +',' ',data)))
-            #account_object.OUT(result.out_msg)
+            """.format(re.sub(' +',' ', translate(data))))
             account_object.action = result
             try:
                 account_object._console = result.console
-                account_object.DEBUG(account_object._console)
+                account_object.DEBUG(translate(account_object._console), True)
             except:
                 pass
+
+            if json:
+                account_object.OUT("""
+                push action responce:
+
+                {}
+                """.format(translate(result.out_msg, keys=True)))
+                
         else:
             account_object.action = None
 
@@ -592,8 +647,6 @@ def append_account_methods_and_finish(
 
     return put_account_to_wallet_and_on_stack(
             account_object_name, account_object)
-
-
 
 def account_create(
         account_object_name,

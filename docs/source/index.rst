@@ -17,6 +17,7 @@ Cases
     :maxdepth: 1
 
     cases/ide
+    cases/symbolic_names
     cases/account
     cases/account_master
     cases/contract
@@ -26,6 +27,7 @@ Cases
     cases/setup
     cases/account_name_conflict
     cases/registering_to_testnode
+    cases/remote_tic_tac_toe
 
 Tutorials
 ---------

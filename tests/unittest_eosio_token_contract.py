@@ -71,7 +71,7 @@ NEXT TEST ====================================================================
                 "can_freeze":0, "can_recall":0, "can_whitelist":0}')
                 
         self.assertTrue(
-            '"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS"' \
+            '"issuer":"account_master", "maximum_supply":"1000000000.0000 EOS"' \
                 in account_eosio_token.eosf_buffer)
 
         account_eosio_token.push_action(

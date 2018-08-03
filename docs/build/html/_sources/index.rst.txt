@@ -17,6 +17,7 @@ Cases
     :maxdepth: 1
 
     cases/ide
+    cases/symbolic_names
     cases/account
     cases/account_master
     cases/contract

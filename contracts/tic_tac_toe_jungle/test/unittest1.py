@@ -1,90 +1,73 @@
+import sys
+import unittest
 import setup
 import eosf
-import unittest
-import sys
-from termcolor import cprint
 
-wallet_name = "" # Enter wallet name
-wallet_pass = "" # Enter wallet password
+from eosf_wallet import Wallet
+from eosf_account import account_create, account_master_create
+from eosf_contract import Contract
 
-"""
-This flag needs to be set to `True` only for the initial run
-or after the contract is changed and re-built
-"""
-deployment = True
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
+# eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
+eosf.set_throw_error(False)
+#setup.set_command_line_mode()
 
-setup.set_verbose(True)
-eosf.use_keosd(True)
-setup.set_nodeos_address("88.99.97.30:38888") # CryptoLions endpoint
+_ = eosf.Logger()
 
 class Test1(unittest.TestCase):
 
-    global account_master
-    global account_alice
-    global account_carol
-
-    wallet = eosf.Wallet(wallet_name, wallet_pass)
-    assert(not wallet.error)
-    
-    restored = wallet.restore_accounts(globals())
-
-    assert("account_master" in restored)
-
-    if (not "account_alice" in restored):
-        account_alice = eosf.account(
-            account_master,
-            stake_net="100 EOS",
-            stake_cpu="100 EOS",
-            buy_ram_kbytes="80",
-            transfer=True)
-        assert(not account_alice.error)
-        wallet.import_key(account_alice)
-
-    if (not "account_carol" in restored):
-        account_carol = eosf.account(
-            account_master,
-            stake_net="1000 EOS",
-            stake_cpu="1000 EOS",
-            buy_ram_kbytes="1200",
-            transfer=True)
-        assert(not account_carol.error)
-        wallet.import_key(account_carol)
-
-
     def run(self, result=None):
-        """ Stop after first error """
-        if not result.failures:
-            super().run(result)
+        super().run(result)
+        print("""
 
+NEXT TEST ====================================================================
+""")
 
     @classmethod
     def setUpClass(cls):
-        global contract
-
-        contract = eosf.Contract(
-            account_master, sys.path[0] + "/../build")
-
-        if deployment:
-            assert(not contract.deploy().error)
-
+        print()
 
     def setUp(self):
-        pass
+        eosf.restart()
+        eosf.set_is_testing_errors(False)
+        eosf.set_throw_error(True)
 
+    def test_tic_tac_toe(self):
+        _.SCENARIO("""
+        Use the local test net.
+        Create the ``account_tic_tac_toe`` account that will keep the ``tic_tac_toe`` 
+        contract. Note that the contract assumes that its account's name is 
+        ``tic.tac.toe``. 
+        Create two player accounts: ``account_alice`` and ``account_carol``.
+        Deploy the Contract
+        Run games.
+        """)        
+        eosf.use_keosd(False)
+        eosf.reset([eosf.Verbosity.TRACE]) 
+        wallet = Wallet()
+        account_master_create("account_master")
 
-    def test_01(self):
+        account_create(
+            "account_tic_tac_toe", account_master, account_name="tic.tac.toe")
+        account_create("account_alice", account_master)
+        account_create("account_carol", account_master)
 
-        cprint("""
-Action contract.push_action("create")
-        """, 'magenta')
-        action = contract.push_action(
+        eosf.set_throw_error(False)
+        eosf.set_is_testing_errors()
+
+        ######################################################################  
+
+        contract_tic_tac_toe = Contract(
+            account_tic_tac_toe, sys.path[0] + "/../")
+        deploy = contract_tic_tac_toe.deploy()
+
+        account_tic_tac_toe.push_action(
             "create", 
             '{"challenger":"' 
             + str(account_alice) +'", "host":"' 
             + str(account_carol) + '"}', account_carol)
-        self.assertFalse(action.error)
-        
-        t = contract.table("games", account_carol)
+
+        t = account_tic_tac_toe.table("games", account_carol)
         self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -97,30 +80,22 @@ Action contract.push_action("create")
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        cprint("""
-Action contract.push_action("move")
-        """, 'magenta')
-        action = contract.push_action(
+        account_tic_tac_toe.push_action(
             "move", 
             '{"challenger":"' 
             + str(account_alice) + '", "host":"' 
             + str(account_carol) + '", "by":"' 
             + str(account_carol) + '", "mvt":{"row":0, "column":0} }', account_carol)
-        self.assertFalse(action.error)
 
-        cprint("""
-Action contract.push_action("move")
-        """, 'magenta')
-        action = contract.push_action(
+        account_tic_tac_toe.push_action(
             "move", 
             '{"challenger":"' 
             + str(account_alice) + '", "host":"' 
             + str(account_carol) + '", "by":"' 
             + str(account_alice) + '", "mvt":{"row":1, "column":1} }', account_alice)
-        self.assertFalse(action.error)
 
-        t = contract.table("games", account_carol)
-        self.assertFalse(t.error)
+
+        t = account_tic_tac_toe.table("games", account_carol)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 1)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
@@ -132,17 +107,13 @@ Action contract.push_action("move")
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        cprint("""
-Action contract.push_action("restart")
-        """, 'magenta')
-        action = contract.push_action(
+        account_tic_tac_toe.push_action(
                 "restart", 
                 '{"challenger":"' 
                 + str(account_alice) + '", "host":"' 
                 + str(account_carol) + '", "by":"' + str(account_carol) + '"}', account_carol)
-        self.assertFalse(action.error)
 
-        t = contract.table("games", account_carol)
+        t = account_tic_tac_toe.table("games", account_carol)
         self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -155,23 +126,17 @@ Action contract.push_action("restart")
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        cprint("""
-Action contract.push_action("close")
-        """, 'magenta')
-        action = contract.push_action(
+        account_tic_tac_toe.push_action(
                 "close", 
                 '{"challenger":"' 
                 + str(account_alice) + '", "host":"' + str(account_carol) + '"}', account_carol)
-        self.assertFalse(action.error)
-
 
     def tearDown(self):
         pass
 
-
     @classmethod
     def tearDownClass(cls):
-        pass
+        eosf.stop()
 
 
 if __name__ == "__main__":
