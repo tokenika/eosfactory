@@ -14,6 +14,7 @@ Python front-end for `EOSIO cleos`.
 import sys
 import os
 import json
+pjson = json  # For usage inside functions that take a `json` parameter
 import inspect
 import types
 import node
@@ -617,6 +618,9 @@ class Contract():
         if output:
             is_verbose = 0
             json = True
+
+        if not isinstance(data, str):
+            data = pjson.dumps(data)
     
         self.action = cleos.PushAction(
             self.account.name, action, data,
