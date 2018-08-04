@@ -634,7 +634,7 @@ def append_account_methods_and_finish(
             account_object.EOSF_TRACE("""
             * Table ''{}'' for ``{}``
             """.format(table_name, scope))
-            account_object.OUT(result.out_msg)
+            account_object.OUT(translate(result.out_msg))
             return result
         return None
 

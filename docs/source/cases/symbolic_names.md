@@ -29,7 +29,7 @@ eosf.set_throw_error(False)
 <pre>
 The EOSIO accounts are indexed by their names, therefore the names have to be 
 unique in the blockchain have the specific format. Then it is not possible to
-grasp any association betwin the account name and its function specified in the
+grasp any association between the account name and its function specified in the
 Ricardian Contract. 
 
 For example, if there is, in the Contract, a notion of an account keeping a 
@@ -40,7 +40,7 @@ A natural solution to the problem is to have aliasses to the physical names.
 Perhaps, the structure of the native EOSIO account should have a field for that, 
 it is not sow, now, therefore the EOSFactory uses its own system.
 
-In EOSFactory, the physical accounts are wrapped with account object produced 
+With EOSFactory, the physical accounts are wrapped in account object produced 
 with the 'account_create' factory function. (see <a href="account.html">cases/account</a>). The physical name 
 of an EOSIO account is then aliased with the name of the account object.
 
@@ -48,19 +48,22 @@ In a script, the aliasing is made with the following statement:
 
 account_create("school_fund_2018", ...)
 
-resulting with the account object named 'school_fund_2018' representing the 
-physical account in the blockchain, featuring a random, jet defined name. 
-Moreover, the physical account has its keys imported to the wallet, already.
+The result is an account object named 'school_fund_2018', representing a 
+physical account of a random name. Moreover, account keys are already imported 
+to the wallet.
 
+The established correspondence between physical accounts and object 
+representations of them is kept between sessions with a mapping file in the 
+wallet directory.
 </pre>
 
-### Physical name to aliass translation
+### Physical name translation
 
 <pre>
 
-All the responces from the blockchain refer to the physical names of the 
-accounts involved. With the aliass mapping, EOSFactory can translate the to the
-aliasses.
+All the responses from the blockchain refer to the physical names of the 
+accounts involved. With the alias mapping, EOSFactory can translate the to the
+aliases.
 
 The current case demonstrates this facility.
 
