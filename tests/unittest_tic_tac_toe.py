@@ -56,7 +56,7 @@ NEXT TEST ====================================================================
 
         ######################################################################  
 
-        contract_tic_tac_toe = Contract(account_tic_tac_toe, "tic_tac_toe")
+        contract_tic_tac_toe = Contract(account_tic_tac_toe, "tic_tac_toe_jungle")
         #contract_tic_tac_toe.build()
         deploy = contract_tic_tac_toe.deploy()
 
@@ -79,22 +79,21 @@ NEXT TEST ====================================================================
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        # account_tic_tac_toe.push_action(
-        #     "move", 
-        #     '{"challenger":"' + str(account_alice) 
-        #         + '", "host":"' + str(account_carol) 
-        #         + '", "by":"' + str(account_carol) 
-        #         + '", "mvt":{"row":0, "column":0} }', 
-        #     account_carol)
-        
+        account_tic_tac_toe.push_action(
+            "move", 
+            '{"challenger":"' + str(account_alice) 
+                + '", "host":"' + str(account_carol) 
+                + '", "by":"' + str(account_carol) 
+                + '", "row":0, "column":0 }', 
+            account_carol)
+
         account_tic_tac_toe.push_action(
             "move", 
             '{"challenger":"' + str(account_alice) 
                 + '", "host":"' + str(account_carol) 
                 + '", "by":"' + str(account_alice) 
-                + '", "mvt":{"row":1, "column":1} }', 
+                + '", "row":1, "column":1 }', 
             account_alice)
-        return
 
         t = account_tic_tac_toe.table("games", account_carol)
 
@@ -110,9 +109,10 @@ NEXT TEST ====================================================================
 
         account_tic_tac_toe.push_action(
                 "restart", 
-                '{"challenger":"' 
-                + str(account_alice) + '", "host":"' 
-                + str(account_carol) + '", "by":"' + str(account_carol) + '"}', account_carol)
+                '{"challenger":"' + str(account_alice) 
+                    + '", "host":"' + str(account_carol) 
+                    + '", "by":"' + str(account_carol) + '"}', 
+                account_carol)
 
         t = account_tic_tac_toe.table("games", account_carol)
         self.assertFalse(t.error)
@@ -129,8 +129,9 @@ NEXT TEST ====================================================================
 
         account_tic_tac_toe.push_action(
                 "close", 
-                '{"challenger":"' 
-                + str(account_alice) + '", "host":"' + str(account_carol) + '"}', account_carol)
+                '{"challenger":"' + str(account_alice) 
+                    + '", "host":"' + str(account_carol) + '"}', 
+                account_carol)
 
     def tearDown(self):
         pass
@@ -138,7 +139,6 @@ NEXT TEST ====================================================================
     @classmethod
     def tearDownClass(cls):
         eosf.stop()
-
 
 if __name__ == "__main__":
     unittest.main()
