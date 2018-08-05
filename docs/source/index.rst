@@ -16,7 +16,7 @@ Cases
 .. toctree::
     :maxdepth: 1
 
-    cases/ide
+    cases/IDE
     cases/symbolic_names
     cases/account
     cases/account_master

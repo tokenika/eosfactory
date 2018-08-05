@@ -61,7 +61,7 @@ class _Teos:
             print("")   
 
         if setup.is_print_command_line():
-            print("command line sent to cleos:")
+            print("command line sent to teos:")
             print(" ".join(cl))
             print("")
 

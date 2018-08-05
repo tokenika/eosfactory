@@ -32,7 +32,7 @@
 <div class="section" id="account-master-object">
 <span id="account-master-object"></span><h1>Account master object<a class="headerlink" href="#account-master-object" title="Permalink to this headline">¶</a></h1>
 <pre>
-This file can be executed as a python script: 'python3 account_master.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+This file can be executed as a python script: 'python3 account_master_images.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <pre>
@@ -48,9 +48,9 @@ _ = eosf.Logger()
 “”“</p>
 </pre><pre>
 The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is reffered to as the 'testing account'.
+this article, for testing. It is referred to as the 'testing account'.
 </pre><pre>
-Accout Name: dgxo1uyhoytn
+Account Name: dgxo1uyhoytn
 Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
 Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv<p>Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
 Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA</p>
@@ -75,19 +75,19 @@ show them.</p>
 """
 eosf.reset([eosf.Verbosity.TRACE])
 wallet = Wallet()
-account_master_create("account_master")
-account_master.info()
+account_master_create("account_master_images")
+account_master_images.info()
 eosf.stop([eosf.Verbosity.TRACE])
 """
 </pre><pre>
-The result of the script is the account object 'account_master' in the global
+The result of the script is the account object 'account_master_images' in the global
 namespace.<p>The object wraps the ‘eosio` account. It is a special one in the sense that it
 does not have all the functionality of plain orders.</p>
 </pre><pre>
 We hope that you get something similar to this one shown in the image below.
 </pre>
-<img src="account_master/account_master_eosio.png" 
-    onerror="this.src='../../../source/cases/account_master/account_master_eosio.png'"   
+<img src="account_master_images/account_master_eosio.png" 
+    onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'"   
     alt="local testnet account master" width="720px"/></div>
 <div class="section" id="remote-testnet-registration">
 <span id="remote-testnet-registration"></span><h3>Remote testnet registration<a class="headerlink" href="#remote-testnet-registration" title="Permalink to this headline">¶</a></h3>
@@ -119,18 +119,18 @@ eosf_account.restart()    # reset the Factory
 eosf.use_keosd(True)
 setup.set_nodeos_address(cryptolions)<p>wallet = Wallet(wallet_name)
 account_master_create(
-“account_master”,
+“account_master_images”,
 “dgxo1uyhoytn”,
 “5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY”,
 “5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA”
 )
-account_master.info()
+account_master_images.info()
 “”“</p>
 </pre><pre>
 We hope that you get something similar to this one shown in the image below.
 </pre>
-<img src="account_master/account_master_add.png" 
-    onerror="this.src='../../../source/cases/account_master/account_master_add.png'"   
+<img src="account_master_images/account_master_add.png" 
+    onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'"   
     alt="local testnet account master" width="720px"/><p>“”“</p>
 </div>
 </div>
@@ -158,7 +158,7 @@ We hope that you get something similar to this one shown in the image below.
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="ide.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symbolic_names.html">Symbolic names</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Account master object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
@@ -168,6 +168,7 @@ We hope that you get something similar to this one shown in the image below.
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>

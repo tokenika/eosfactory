@@ -35,8 +35,7 @@ NEXT TEST ====================================================================
         _.SCENARIO("""
         Use the local test net.
         Create the ``account_tic_tac_toe`` account that will keep the ``tic_tac_toe`` 
-        contract. Note that the contract assumes that its account's name is 
-        ``tic.tac.toe``. 
+        contract.
         Create two player accounts: ``account_alice`` and ``account_carol``.
         Deploy the Contract
         Run games.
@@ -46,8 +45,7 @@ NEXT TEST ====================================================================
         wallet = Wallet()
         account_master_create("account_master")
 
-        account_create(
-            "account_tic_tac_toe", account_master, account_name="tic.tac.toe")
+        account_create("account_tic_tac_toe", account_master)
         account_create("account_alice", account_master)
         account_create("account_carol", account_master)
 
@@ -57,8 +55,8 @@ NEXT TEST ====================================================================
         ######################################################################  
 
         contract_tic_tac_toe = Contract(account_tic_tac_toe, "tic_tac_toe_jungle")
-        #contract_tic_tac_toe.build()
-        deploy = contract_tic_tac_toe.deploy()
+        contract_tic_tac_toe.build_abi()
+        contract_tic_tac_toe.deploy()
 
         account_tic_tac_toe.push_action(
             "create", 

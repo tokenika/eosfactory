@@ -67,8 +67,8 @@ eosf.stop()                                 # stop the local testnet
 """
 </pre>
 
-<img src="wallet/reset_nodeos_wallet.png" 
-    onerror="this.src='../../../source/cases/wallet/reset_nodeos_wallet.png'"   
+<img src="wallet_images/reset_nodeos_wallet.png" 
+    onerror="this.src='../../../source/cases/wallet_images/reset_nodeos_wallet.png'"   
     alt="nodeos wallet reset" width="720px"/>
 
 <pre>
@@ -94,8 +94,8 @@ eosf.stop()                         # stop the local testnet
 """
 </pre>
 
-<img src="wallet/run_nodeos_wallet.png" 
-    onerror="this.src='../../../source/cases/wallet/run_nodeos_wallet.png'"   
+<img src="wallet_images/run_nodeos_wallet.png" 
+    onerror="this.src='../../../source/cases/wallet_images/run_nodeos_wallet.png'"   
     alt="nodeos wallet reset" width="720px"/>
 
 ### KEOSD managed wallet
@@ -133,8 +133,8 @@ wallet = Wallet(wallet_name)
 """
 </pre>
 
-<img src="wallet/keosd_wallet_create.png" 
-    onerror="this.src='../../../source/cases/wallet/keosd_wallet_create.png'"   
+<img src="wallet_images/keosd_wallet_create.png" 
+    onerror="this.src='../../../source/cases/wallet_images/keosd_wallet_create.png'"   
     alt="nodeos wallet reset" width="720px"/>
 
 ### Methods of the 'Wallet' class

@@ -2,7 +2,7 @@
 # Account master object
 
 <pre>
-This file can be executed as a python script: 'python3 account_master.md'.
+This file can be executed as a python script: 'python3 account_master_images.md'.
 
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 </pre>
@@ -66,14 +66,14 @@ show them.
 """
 eosf.reset([eosf.Verbosity.TRACE])
 wallet = Wallet()
-account_master_create("account_master")
-account_master.info()
+account_master_create("account_master_images")
+account_master_images.info()
 eosf.stop([eosf.Verbosity.TRACE])
 """
 </pre>
 
 <pre>
-The result of the script is the account object 'account_master' in the global
+The result of the script is the account object 'account_master_images' in the global
 namespace.
 
 The object wraps the 'eosio` account. It is a special one in the sense that it 
@@ -83,8 +83,8 @@ does not have all the functionality of plain orders.
 <pre>
 We hope that you get something similar to this one shown in the image below.
 </pre>
-<img src="account_master/account_master_eosio.png" 
-    onerror="this.src='../../../source/cases/account_master/account_master_eosio.png'"   
+<img src="account_master_images/account_master_eosio.png" 
+    onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'"   
     alt="local testnet account master" width="720px"/>
 
 ### Remote testnet registration
@@ -128,20 +128,20 @@ setup.set_nodeos_address(cryptolions)
 
 wallet = Wallet(wallet_name)
 account_master_create(
-    "account_master",
+    "account_master_images",
     "dgxo1uyhoytn",
     "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
     "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
     )
-account_master.info()
+account_master_images.info()
 """
 </pre>
 
 <pre>
 We hope that you get something similar to this one shown in the image below.
 </pre>
-<img src="account_master/account_master_add.png" 
-    onerror="this.src='../../../source/cases/account_master/account_master_add.png'"   
+<img src="account_master_images/account_master_add.png" 
+    onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'"   
     alt="local testnet account master" width="720px"/>
 
 """

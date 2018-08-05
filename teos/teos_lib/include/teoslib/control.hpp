@@ -163,6 +163,10 @@ namespace teos
         if(command.errorMsg().length() > string(teos_ERROR).length() + 1){      
           cout << teos_ERROR << endl << command.errorMsg() << endl;
         }
+        if (vm.count("json"))
+        {
+          cout << command.responseToString(false) << endl;
+        }
         return;
       }
 

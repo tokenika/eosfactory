@@ -28,39 +28,42 @@ eosf.set_throw_error(False)
 ## Case
 <pre>
 The EOSIO accounts are indexed by their names, therefore the names have to be 
-unique in the blockchain have the specific format. Then it is not possible to
-grasp any association betwin the account name and its function specified in the
-Ricardian Contract. 
+unique in the blockchain, and to have the specific format. Then it is not 
+possible to grasp any intuitive association between the account name and its 
+role specified in the Ricardian Contract. 
 
-For example, if there is, in the Contract, a notion of an account keeping a 
-'school fund 2018'. We can try the name 'school.fund1'. It is not only very far 
-to a satisfactory name, but it can be already taken.
+For example, if there is in the Contract a notion of an account keeping a 
+'school fund 2018', we can try the name 'school.fund1'. It is not only far to
+a satisfactory name, but it can be taken already.
 
 A natural solution to the problem is to have aliasses to the physical names. 
-Perhaps, the structure of the native EOSIO account should have a field for that, 
-it is not sow, now, therefore the EOSFactory uses its own system.
+Perhaps, the structure of the native EOSIO account should have a field and 
+method for this, it is not so now, therefore the EOSFactory uses its own system.
 
-In EOSFactory, the physical accounts are wrapped with account object produced 
-with the 'account_create' factory function. (see <a href="account.html">cases/account</a>). The physical name 
-of an EOSIO account is then aliased with the name of the account object.
+With EOSFactory, the physical accounts are wrapped in objects produced with the
+'account_create' factory function. (see <a href="account.html">cases/account</a>). The physical name 
+of an EOSIO account is then aliased with the name of the corresponding account 
+object.
 
-In a script, the aliasing is made with the following statement:
+In a script, the aliasing is made with a statement like the following one:
 
 account_create("school_fund_2018", ...)
 
-resulting with the account object named 'school_fund_2018' representing the 
-physical account in the blockchain, featuring a random, jet defined name. 
-Moreover, the physical account has its keys imported to the wallet, already.
+The result is a new object in the global namespace, named 'school_fund_2018', 
+representing a physical account of a random name. Moreover, account's keys are 
+automatically imported to the wallet.
 
+Once established correspondence between physical accounts and their object 
+representations is kept between sessions.
 </pre>
 
-### Physical name to aliass translation
+### Physical name translation
 
 <pre>
 
-All the responces from the blockchain refer to the physical names of the 
-accounts involved. With the aliass mapping, EOSFactory can translate the to the
-aliasses.
+All the responses from the blockchain refer to the physical names of the 
+accounts involved. With the alias mapping, EOSFactory can translate the to the
+aliases.
 
 The current case demonstrates this facility.
 
@@ -105,8 +108,8 @@ account_eosio_token.push_action(
 """
 </pre>
 
-<img src="symbolic_names/symbolic_names_false.png" 
-    onerror="this.src='../../../source/cases/symbolic_names/symbolic_names_false.png'"   
+<img src="symbolic_names_images/symbolic_names_false.png" 
+    onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_false.png'"   
     alt="symbolic names translation off" width="720px"/>
 
 #### Translation is on
@@ -148,8 +151,8 @@ account_eosio_token.push_action(
 """
 </pre>
 
-<img src="symbolic_names/symbolic_names_true.png" 
-    onerror="this.src='../../../source/cases/symbolic_names/symbolic_names_true.png'"   
+<img src="symbolic_names_images/symbolic_names_true.png" 
+    onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
     alt="symbolic names translation on" width="720px"/>
 
 

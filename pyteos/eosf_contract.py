@@ -29,17 +29,19 @@ class ContractBuilder(eosf.Logger):
     def path(self):
         return self.contract_dir
 
-    def build_wast(self):
+    def build_wast(self, json=False):
         if self.is_mutable:
             result = teos.WAST( self.contract_dir, "", is_verbose=0)
             if not self.ERROR(result):
                 self.EOSF_TRACE("""
                 * WAST file build and saved.
                 """)
+                if json:
+                    return result.json
         else:
             self.ERROR("Cannot modify system contracts.")
 
-    def build_abi(self):
+    def build_abi(self, json=False):
         if self.is_mutable:
             result = teos.ABI(self.contract_dir, "", is_verbose=0)
             if not self.ERROR(result):
@@ -47,7 +49,9 @@ class ContractBuilder(eosf.Logger):
                 * ABI file build and saved.
                 """)
                 if "ABI exists in the source directory" in result.out_msg:
-                   self.EOSF(result.out_msg)            
+                   self.EOSF(result.out_msg) 
+                if json:
+                    return result.json           
         else:
             self.ERROR("Cannot modify system contracts.")
 
@@ -175,15 +179,15 @@ the code hash of the associated account is null:
             return False
         return not self.contract.error
 
-    def build_wast(self):
+    def build_wast(self, json=False):
         return ContractBuilder(
             self.contract_dir, "", "",
-            self.is_mutable, self.verbosity).build_wast()
+            self.is_mutable, self.verbosity).build_wast(json)
 
-    def build_abi(self):
+    def build_abi(self, json=False):
         return ContractBuilder(
             self.contract_dir, "", "", 
-            self.is_mutable, self.verbosity).build_abi()
+            self.is_mutable, self.verbosity).build_abi(json)
 
     def build(self):
         return ContractBuilder(

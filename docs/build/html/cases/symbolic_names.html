@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Account object" href="account.html" />
-    <link rel="prev" title="Visual Studio Code IDE for EOSIO smart contracts" href="ide.html" />
+    <link rel="prev" title="Welcome to EOSFactory documentation!" href="../index.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -51,27 +51,30 @@ eosf.set_throw_error(False)
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
 <pre>
 The EOSIO accounts are indexed by their names, therefore the names have to be 
-unique in the blockchain have the specific format. Then it is not possible to
-grasp any association betwin the account name and its function specified in the
-Ricardian Contract. <p>For example, if there is, in the Contract, a notion of an account keeping a
-‘school fund 2018’. We can try the name ‘school.fund1’. It is not only very far
-to a satisfactory name, but it can be already taken.</p>
+unique in the blockchain, and to have the specific format. Then it is not 
+possible to grasp any intuitive association between the account name and its 
+role specified in the Ricardian Contract. <p>For example, if there is in the Contract a notion of an account keeping a
+‘school fund 2018’, we can try the name ‘school.fund1’. It is not only far to
+a satisfactory name, but it can be taken already.</p>
 <p>A natural solution to the problem is to have aliasses to the physical names.
-Perhaps, the structure of the native EOSIO account should have a field for that,
-it is not sow, now, therefore the EOSFactory uses its own system.</p>
-<p>In EOSFactory, the physical accounts are wrapped with account object produced
-with the ‘account_create’ factory function. (see <a href="account.html">cases/account</a>). The physical name
-of an EOSIO account is then aliased with the name of the account object.</p>
-<p>In a script, the aliasing is made with the following statement:</p>
+Perhaps, the structure of the native EOSIO account should have a field and
+method for this, it is not so now, therefore the EOSFactory uses its own system.</p>
+<p>With EOSFactory, the physical accounts are wrapped in objects produced with the
+‘account_create’ factory function. (see <a href="account.html">cases/account</a>). The physical name
+of an EOSIO account is then aliased with the name of the corresponding account
+object.</p>
+<p>In a script, the aliasing is made with a statement like the following one:</p>
 <p>account_create(“school_fund_2018”, …)</p>
-<p>resulting with the account object named ‘school_fund_2018’ representing the
-physical account in the blockchain, featuring a random, jet defined name.
-Moreover, the physical account has its keys imported to the wallet, already.</p>
-</pre><div class="section" id="physical-name-to-aliass-translation">
-<span id="physical-name-to-aliass-translation"></span><h3>Physical name to aliass translation<a class="headerlink" href="#physical-name-to-aliass-translation" title="Permalink to this headline">¶</a></h3>
-<pre><p>All the responces from the blockchain refer to the physical names of the
-accounts involved. With the aliass mapping, EOSFactory can translate the to the
-aliasses.</p>
+<p>The result is a new object in the global namespace, named ‘school_fund_2018’,
+representing a physical account of a random name. Moreover, account’s keys are
+automatically imported to the wallet.</p>
+<p>Once established correspondence between physical accounts and their object
+representations is kept between sessions.</p>
+</pre><div class="section" id="physical-name-translation">
+<span id="physical-name-translation"></span><h3>Physical name translation<a class="headerlink" href="#physical-name-translation" title="Permalink to this headline">¶</a></h3>
+<pre><p>All the responses from the blockchain refer to the physical names of the
+accounts involved. With the alias mapping, EOSFactory can translate the to the
+aliases.</p>
 <p>The current case demonstrates this facility.</p>
 </pre><div class="section" id="translation-is-off">
 <span id="translation-is-off"></span><h4>Translation is off<a class="headerlink" href="#translation-is-off" title="Permalink to this headline">¶</a></h4>
@@ -103,8 +106,8 @@ deploy = contract_eosio_token.deploy()</p>
 + ‘“memo”:”issue 100.0000 EOS from eosio to alice”}’,
 permission=account_master)
 “”“</p>
-</pre><p><img src="symbolic_names/symbolic_names_false.png" 
-onerror="this.src='../../../source/cases/symbolic_names/symbolic_names_false.png'"   
+</pre><p><img src="symbolic_names_images/symbolic_names_false.png" 
+onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_false.png'"   
 alt="symbolic names translation off" width="720px"/></p>
 </div>
 <div class="section" id="translation-is-on">
@@ -137,8 +140,8 @@ deploy = contract_eosio_token.deploy()</p>
 + ‘“memo”:”issue 100.0000 EOS from eosio to alice”}’,
 permission=account_master)
 “”“</p>
-</pre><p><img src="symbolic_names/symbolic_names_true.png" 
-onerror="this.src='../../../source/cases/symbolic_names/symbolic_names_true.png'"   
+</pre><p><img src="symbolic_names_images/symbolic_names_true.png" 
+onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
 alt="symbolic names translation on" width="720px"/></p>
 </div>
 </div>
@@ -167,7 +170,6 @@ alt="symbolic names translation on" width="720px"/></p>
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="ide.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Symbolic names</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_master.html">Account master object</a></li>
@@ -178,6 +180,7 @@ alt="symbolic names translation on" width="720px"/></p>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
@@ -210,7 +213,7 @@ alt="symbolic names translation on" width="720px"/></p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="ide.html" title="previous chapter">Visual Studio Code IDE for EOSIO smart contracts</a></li>
+      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to EOSFactory documentation!</a></li>
       <li>Next: <a href="account.html" title="next chapter">Account object</a></li>
   </ul></li>
 </ul>

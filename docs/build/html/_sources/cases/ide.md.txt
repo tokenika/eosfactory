@@ -126,7 +126,7 @@ $ make
 
 </pre>
 <img src="ide/cmake_build.png" 
-    onerror="this.src='../../../source/cases/ide/cmake_build.png'"   
+    onerror="this.src='../../../source/cases/ide_images/cmake_build.png'"   
     alt="eosio token contract" width="720px"/>
 
 ## Running tests

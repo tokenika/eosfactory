@@ -48,7 +48,7 @@ NEXT TEST ====================================================================
         account_master_create("account_master")
 
         account_create(
-            "account_tic_tac_toe", account_master, account_name="tic.tac.toe")
+            "account_tic_tac_toe", account_master)
         account_create("account_alice", account_master)
         account_create("account_carol", account_master)
 
@@ -59,13 +59,15 @@ NEXT TEST ====================================================================
 
         contract_tic_tac_toe = Contract(
             account_tic_tac_toe, sys.path[0] + "/../")
-        deploy = contract_tic_tac_toe.deploy()
+
+        contract_tic_tac_toe.build()
+        contract_tic_tac_toe.deploy()
 
         account_tic_tac_toe.push_action(
             "create", 
-            '{"challenger":"' 
-            + str(account_alice) +'", "host":"' 
-            + str(account_carol) + '"}', account_carol)
+            '{"challenger":"' + str(account_alice) 
+                +'", "host":"' + str(account_carol) + '"}', 
+            account_carol)
 
         t = account_tic_tac_toe.table("games", account_carol)
         self.assertFalse(t.error)
@@ -82,17 +84,19 @@ NEXT TEST ====================================================================
 
         account_tic_tac_toe.push_action(
             "move", 
-            '{"challenger":"' 
-            + str(account_alice) + '", "host":"' 
-            + str(account_carol) + '", "by":"' 
-            + str(account_carol) + '", "mvt":{"row":0, "column":0} }', account_carol)
+            '{"challenger":"' + str(account_alice) 
+                + '", "host":"' + str(account_carol) 
+                + '", "by":"' + str(account_carol) 
+                + '", "row":0, "column":0 }', 
+            account_carol)
 
         account_tic_tac_toe.push_action(
             "move", 
-            '{"challenger":"' 
-            + str(account_alice) + '", "host":"' 
-            + str(account_carol) + '", "by":"' 
-            + str(account_alice) + '", "mvt":{"row":1, "column":1} }', account_alice)
+            '{"challenger":"' + str(account_alice) 
+                + '", "host":"' + str(account_carol) 
+                + '", "by":"' + str(account_alice) 
+                + '", "row":1, "column":1 }', 
+            account_alice)
 
 
         t = account_tic_tac_toe.table("games", account_carol)
@@ -109,9 +113,10 @@ NEXT TEST ====================================================================
 
         account_tic_tac_toe.push_action(
                 "restart", 
-                '{"challenger":"' 
-                + str(account_alice) + '", "host":"' 
-                + str(account_carol) + '", "by":"' + str(account_carol) + '"}', account_carol)
+                '{"challenger":"' + str(account_alice) 
+                    + '", "host":"' + str(account_carol) 
+                    + '", "by":"' + str(account_carol) + '"}', 
+                account_carol)
 
         t = account_tic_tac_toe.table("games", account_carol)
         self.assertFalse(t.error)
@@ -128,8 +133,9 @@ NEXT TEST ====================================================================
 
         account_tic_tac_toe.push_action(
                 "close", 
-                '{"challenger":"' 
-                + str(account_alice) + '", "host":"' + str(account_carol) + '"}', account_carol)
+                '{"challenger":"' + str(account_alice) 
+                    + '", "host":"' + str(account_carol) + '"}', 
+                account_carol)
 
     def tearDown(self):
         pass

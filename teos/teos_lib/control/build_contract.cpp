@@ -331,7 +331,8 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
     void GenerateAbi::generateAbi(
       string sourceDir,
       string include_dir, // comma separated list of include dirs
-      string codeName
+      string codeName,
+      uint verbose
     )
     {
       namespace bfs = boost::filesystem;
@@ -356,7 +357,7 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
         }
       }
       if(srcs.empty()){
-        putError((boost::format("The source is empty. The imput is:\n%1%\n")
+        putError((boost::format("The source is empty. The input is:\n%1%\n")
               % sourceDir).str(), SPOT);
         return;
       }
@@ -369,12 +370,12 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
         + "/build/programs/eosio-abigen/eosio-abigen"
         + " -extra-arg=-c -extra-arg=--std=c++14 -extra-arg=--target=wasm32"
         + " -extra-arg=-nostdinc -extra-arg=-nostdinc++ -extra-arg=-DABIGEN"
-        + " -extra-arg=-I" + getEOSIO_BOOST_INCLUDE_DIR(this)
-        + " -extra-arg=-I" + getSourceDir(this) + "/externals/magic_get/include"
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts/musl/upstream/include"
+        + " -extra-arg=-I" + getSourceDir(this) + "/externals/magic_get/include"
+        + " -extra-arg=-I" + getEOSIO_BOOST_INCLUDE_DIR(this)
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts"
-        + " -extra-arg=-I" + sourcePath.string();
+        + " -extra-arg=-I" + sourceDir;
 
       if(!include_dir.empty())
       {
@@ -388,19 +389,23 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
       command_line = command_line
         + " -extra-arg=-fparse-all-comments"
         + " -destination-file=" + targetPath.string()
-        + " -verbose=0"
-        + " -context=" + sourcePath.string()
-        + " " + sourcePath.string() + " --";
-      
-      //cout << command_line << endl;
+        + " -verbose=" + to_string(verbose)
+        + " -context=" + sourceDir
+        + " " + sourcePath.string()
+        + " --";
+
+      respJson_.put("output", targetPath.string());
+      respJson_.put("command_line", command_line);
 
       if(process(command_line, this)){  
         boost::property_tree::ptree abi;
-        boost::property_tree::read_json(targetPath.string(), abi);
-        respJson_.add_child("ABI", abi);
-        respJson_.put("output", targetPath.string());
-          //cout << responseToString();        
+        if(bfs::exists(targetPath))
+        {
+          boost::property_tree::read_json(targetPath.string(), abi);
+          respJson_.add_child("ABI", abi);          
+        }
       }
+
     }
 
     void wasmClangHelp()
@@ -458,13 +463,13 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
         command_line += getEOSIO_WASM_CLANG(this)
           + " -emit-llvm -O3 --std=c++14 --target=wasm32 -nostdinc -nostdlib"
           + " -nostdlibinc -ffreestanding -nostdlib -fno-threadsafe-statics"
-          + " -fno-rtti -fno-exceptions"
-          + " -I" + getEOSIO_BOOST_INCLUDE_DIR(this)          
-          + " -I" + getSourceDir(this) + "/externals/magic_get/include"
+          + " -fno-rtti -fno-exceptions"  
           + " -I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
           + " -I" + getSourceDir(this) + "/contracts/musl/upstream/include"
+          + " -I" + getSourceDir(this) + "/externals/magic_get/include"
+          + " -I" + getEOSIO_BOOST_INCLUDE_DIR(this)
           + " -I" + getSourceDir(this) + "/contracts"
-          + " -I" + src_file.parent_path().string();
+          + " -I" + sourceDir;
 
         if(!include_dir.empty())
         {

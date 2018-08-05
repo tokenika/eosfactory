@@ -95,7 +95,9 @@ Action contract.push_action("move")
         '{"challenger":"' 
         + str(account_alice) + '", "host":"' 
         + str(account_carol) + '", "by":"' 
-        + str(account_alice) + '", "mvt":{"row":1, "column":1} }', account_alice)
+        + str(account_alice) 
+        + '", row":1, "column":1}', 
+        account_alice)
     assert(not action.error)
 
     t = contract.table("games", account_carol)
@@ -116,9 +118,10 @@ Action contract.push_action("restart")
     """, 'magenta')
     action = contract.push_action(
             "restart", 
-            '{"challenger":"' 
-            + str(account_alice) + '", "host":"' 
-            + str(account_carol) + '", "by":"' + str(account_carol) + '"}', account_carol)
+            '{"challenger":"' + str(account_alice) 
+                + '", "host":"' + str(account_carol) 
+                + '", "by":"' + str(account_carol) + '"}', 
+            account_carol)
     assert(not action.error)
 
     t = contract.table("games", account_carol)
@@ -139,12 +142,10 @@ Action contract.push_action("close")
     """, 'magenta')
     action = contract.push_action(
             "close", 
-            '{"challenger":"' 
-            + str(account_alice) + '", "host":"' + str(account_carol) + '"}', account_carol)
+            '{"challenger":"' + str(account_alice) 
+                + '", "host":"' + str(account_carol) + '"}', 
+            account_carol)
     assert(not action.error)
-
-    cprint("OK OK OK OK OK OK OK OK 0K 0K 0K 0K", 'green')
-
 
 if __name__ == "__main__":
     test()

@@ -196,7 +196,8 @@ Usage: ./teos create key --jarg '{
       void generateAbi(
         string sourceDir, 
         string includeDir = "", // comma separated list of include dirs
-        string codeName = ""
+        string codeName = "",
+        uint verbose = 0
       );
 
     public:
@@ -213,7 +214,8 @@ Usage: ./teos create key --jarg '{
       GenerateAbi(
         string sourceDir,
         string includeDir = "",
-        string codeName = ""
+        string codeName = "",
+        uint verbose = 0
       )
       {
         generateAbi(sourceDir, includeDir, codeName);
@@ -237,7 +239,8 @@ Usage: ./teos create key --jarg '{
         generateAbi(
           reqJson_.get<string>("sourceDir"),  
           reqJson_.get("includeDir", ""),
-          reqJson_.get("codeName", "")
+          reqJson_.get("codeName", ""),
+          reqJson_.get("verbose", 0)
         );
       }
     };
@@ -249,9 +252,10 @@ Usage: ./teos create key --jarg '{
      * 
      \verbatim
 Usage: ./teos create key --jarg '{
-  "sourceDir":"<source dir>",
-  "includeDir":"<comma separated list of include dirs, optional>",
-  "codeName":"<name of the ABI file, optional>"
+  "sourceDir": "<source dir>",
+  "includeDir": "<comma separated list of include dirs, optional>",
+  "codeName": "<name of the ABI file, optional>",
+  "verbose:": <0|1>
   }' [OPTIONS]
 
 Options:
@@ -319,6 +323,10 @@ Usage: ./teos create key --jarg '{
           reqJson_.put("sourceDir", sourceDir);
           reqJson_.put("includeDir", includeDir);
           reqJson_.put("codeName", codeName);
+          if(vm.count("verbose"))
+          {
+            reqJson_.put("verbose", 1);
+          }
         }
         return ok;
       }
