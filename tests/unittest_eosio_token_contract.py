@@ -78,7 +78,7 @@ NEXT TEST ====================================================================
             "issue",
             '{"to":"' + str(account_alice)
                 + '", "quantity":"100.0000 EOS", '
-                + '"memo":"issue 100.0000 EOS from eosio to alice"}',
+                + '"memo":""}',
             permission=account_master)
 
         _.COMMENT("""
@@ -90,7 +90,7 @@ NEXT TEST ====================================================================
             '{"from":"' + str(account_alice)
                 + '", "to":"' + str(account_carol)
                 + '", "quantity":"25.0000 EOS", '
-                + '"memo":"transfer 25.0000 EOS from alice to carol"}',
+                + '"memo":""}',
             permission=account_alice)
 
         account_eosio_token.push_action(
@@ -98,7 +98,7 @@ NEXT TEST ====================================================================
             '{"from":"' + str(account_carol)
                 + '", "to":"' + str(account_bob)
                 + '", "quantity":"11.0000 EOS", '
-                + '"memo":"transfer 11.0000 EOS from carol to bob"}',
+                + '"memo":""}',
             permission=account_carol)
 
         account_eosio_token.push_action(
@@ -106,7 +106,7 @@ NEXT TEST ====================================================================
             '{"from":"' + str(account_carol)
                 + '", "to":"' + str(account_bob)
                 + '", "quantity":"2.0000 EOS", '
-                + '"memo":"transfer 2.0000 EOS from carol to bob"}',
+                + '"memo":""}',
             permission=account_carol)
 
         account_eosio_token.push_action(
@@ -114,7 +114,7 @@ NEXT TEST ====================================================================
             '{"from":"' + str(account_bob)
                 + '", "to":"' + str(account_alice)
                 + '", "quantity":"2.0000 EOS", '
-                + '"memo":"transfer 2.0000 EOS from bob to alice"}',
+                + '"memo":""}',
             permission=account_bob)                
 
         _.COMMENT("""

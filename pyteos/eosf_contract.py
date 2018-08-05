@@ -196,52 +196,18 @@ the code hash of the associated account is null:
 
     def push_action(
             self, action, data,
-            permission="", expiration_sec=30,
+            permission="", expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block="",
-            is_verbose=1,
-            json=False,
-            output=False
-        ):
-        if not permission:
-            permission = self.account.name
-        else:
-            try: # permission is an account:
-                permission = permission.name
-            except: # permission is the name of an account:
-                permission = permission
-
-        if output:
-            is_verbose = 0
-            json = True
-    
-        result = cleos.PushAction(
-            self.account.name, action, data,
+            ref_block="", json=False):
+        self.account.push_action(action, data,
             permission, expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
-            ref_block,
-            is_verbose=-1, json=True)
-            
-        if not self.ERROR(result):
-            self.EOSF_TRACE("""
-            * Push action:
-                {}
-            """.format(re.sub(' +',' ',data)))
-            #self.OUT(result.out_msg)
-            self.action = result
-            try:
-                self._console = result.console
-                self.DEBUG(self._console)
-            except:
-                pass
-        else:
-            self.action = None
+            ref_block, json)
 
     def show_action(self, action, data, permission=""):
         """ Implements the `push action` command without broadcasting. 
-
         """
         return self.push_action(action, data, permission, dont_broadcast=1)
 
@@ -249,19 +215,15 @@ the code hash of the associated account is null:
             self, table_name, scope="",
             binary=False, 
             limit=10, key="", lower="", upper=""):
-        """ Return a contract's table object.
+        """ Return contract's table object.
         """
-        self._table = cleos.GetTable(
-                    self.account.name, table_name, scope,
-                    binary=False, 
-                    limit=10, key="", lower="", upper="", 
-                    is_verbose=-1)
-
-        return self._table
+        return self.account.table(
+            table_name, scope,
+            binary, 
+            limit, key, lower, upper)
 
     def code(self, code="", abi="", wasm=False):
-        return cleos.GetCode(
-            self.account.name, code, abi, wasm, is_verbose=-1)
+        return self.account.code(code, abi, wasm)
 
     def console(self):
         return self._console
