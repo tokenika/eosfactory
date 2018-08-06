@@ -36,7 +36,6 @@ from eosf_account import account_master_create
 
 eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
     eosf.Verbosity.DEBUG])
-eosf.set_throw_error(False)
 
 cryptolions = "88.99.97.30:38888"
 _ = eosf.Logger()
@@ -50,6 +49,18 @@ _ = eosf.Logger()
 """
 eosf.use_keosd(True)        # use KEOSD Wallet Manager
 setup.set_nodeos_address(cryptolions)
+"""
+</pre>
+
+<pre>
+Throw an exception if the testnode is off:
+</pre>
+
+<pre>
+"""
+eosf.set_throw_error(True)
+eosf.info()
+eosf.set_throw_error(False)
 """
 </pre>
 
@@ -82,18 +93,6 @@ wallet = Wallet(wallet_name)
 eosf.set_is_testing_errors(False)
 eosf.set_throw_error(True)
 
-"""
-</pre>
-
-### Is the testnode ON?
-
-<pre>
-Throw an exception if the testnode is off:
-</pre>
-
-<pre>
-"""
-eosf.info()
 """
 </pre>
 

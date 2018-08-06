@@ -35,54 +35,173 @@
 This file can be executed as a python script: 'python3 account_master.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import os
 import setup
 import eosf
 import eosf_account
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
-from eosf_contract import Contract<p>cryptolions = “88.99.97.30:38888”
-_ = eosf.Logger()
-“”“</p>
-</pre><pre>
-The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is referred to as the 'testing account'.
-</pre><pre>
-Account Name: dgxo1uyhoytn
+from eosf_contract import Contract
+
+cryptolions = &quot;88.99.97.30:38888&quot;
+
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Throw an exception if the testnode is off:
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+eosf.use_keosd(True)
+setup.set_nodeos_address(cryptolions)
+eosf.set_throw_error(True)
+eosf.info()
+eosf.set_throw_error(False)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>The following account exists in the blockchain of the testnode. It is used, in
+this article, for testing. It is referred to as the &#39;testing account&#39;.
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Account Name: dgxo1uyhoytn
 Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
-Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv<p>Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
-Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA</p>
-</pre><pre>
-For the sake of this tutorial, to make it reproducible without the need of 
+Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
+
+Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
+Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA 
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>For the sake of this tutorial, to make it reproducible without the need of 
 keeping the password of the system wallet, we delete the test wallet 
 (if exists) and recreate it.
-</pre><pre>
-"""
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.use_keosd(True)    # to determine the directory of the wallet
-eosf.kill_keosd()       # otherwise, the manager protects the wallet file<p>wallet_name = “jungle_wallet”
+eosf.kill_keosd()       # otherwise, the manager protects the wallet file
+
+wallet_name = &quot;jungle_wallet&quot;
 try:
-wallet_file = eosf.wallet_dir() + wallet_name + “.wallet”
-os.remove(wallet_file)
-print(“The deleted wallet file:\n{}\n”.format(wallet_file))
+    wallet_file = eosf.wallet_dir() + wallet_name + &quot;.wallet&quot;
+    os.remove(wallet_file)
+    print(&quot;The deleted wallet file:\n{}\n&quot;.format(wallet_file))
 except Exception as e:
-print(“Cannot delete the wallet file:\n{}\n”.format(str(e)))
-“”“</p>
-</pre><pre>
-"""
+    print(&quot;Cannot delete the wallet file:\n{}\n&quot;.format(str(e)))
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.restart()    # reset the Factory
 eosf.use_keosd(True)
-setup.set_nodeos_address(cryptolions)<p>wallet = Wallet(wallet_name)
+setup.set_nodeos_address(cryptolions)
+
+ACCOUNT_MASTER = &quot;account_master&quot;
+ACCOUNT_TTT = ACCOUNT_MASTER
+
+wallet = Wallet(wallet_name)
 account_master_create(
-“account_master”,
-“dgxo1uyhoytn”,
-“5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY”,
-“5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA”
-)
-account_master.info()</p>
-<p>“”“
-“”“</p>
+    ACCOUNT_MASTER,
+    &quot;dgxo1uyhoytn&quot;,
+    &quot;5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY&quot;,
+    &quot;5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA&quot;
+    )
+account_master.info()
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+contract_tic_tac_toe = Contract(account_master, &quot;tic_tac_toe_jungle&quot;)
+contract_tic_tac_toe.build_abi()
+contract_tic_tac_toe.deploy()
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+import unittest
+import setup
+import eosf
+
+from eosf_wallet import Wallet
+from eosf_account import account_create, account_master_create
+from eosf_contract import Contract
+
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
+    eosf.Verbosity.DEBUG])
+eosf.set_throw_error(False)
+
+class Test1(unittest.TestCase):
+    def test_tic_tac_toe(self):
+        
+        account_master = globals()[ACCOUNT_MASTER]
+        account_tic_tac_toe = globals()[ACCOUNT_TTT]
+
+        account_create(&quot;account_alice&quot;, account_master)
+        account_create(&quot;account_carol&quot;, account_master)
+
+        eosf.set_throw_error(False)
+        eosf.set_is_testing_errors()
+
+        ######################################################################  
+
+        account_tic_tac_toe.push_action(
+            &quot;create&quot;, 
+            &#39;{&quot;challenger&quot;:&quot;&#39; + str(account_alice) 
+                +&#39;&quot;, &quot;host&quot;:&quot;&#39; + str(account_carol) + &#39;&quot;}&#39;,
+            account_carol)
+
+        t = account_tic_tac_toe.table(&quot;games&quot;, account_carol)
+        self.assertFalse(t.error)
+
+        self.assertEqual(t.json[&quot;rows&quot;][0][&quot;board&quot;][0], 0)
+
+        account_tic_tac_toe.push_action(
+            &quot;move&quot;, 
+            &#39;{&quot;challenger&quot;:&quot;&#39; + str(account_alice) 
+                + &#39;&quot;, &quot;host&quot;:&quot;&#39; + str(account_carol) 
+                + &#39;&quot;, &quot;by&quot;:&quot;&#39; + str(account_carol) 
+                + &#39;&quot;, &quot;row&quot;:0, &quot;column&quot;:0 }&#39;, 
+            account_carol)
+
+        account_tic_tac_toe.push_action(
+            &quot;move&quot;, 
+            &#39;{&quot;challenger&quot;:&quot;&#39; + str(account_alice) 
+                + &#39;&quot;, &quot;host&quot;:&quot;&#39; + str(account_carol) 
+                + &#39;&quot;, &quot;by&quot;:&quot;&#39; + str(account_alice) 
+                + &#39;&quot;, &quot;row&quot;:1, &quot;column&quot;:1 }&#39;, 
+            account_alice)
+
+        t = account_tic_tac_toe.table(&quot;games&quot;, account_carol)
+
+        self.assertEqual(t.json[&quot;rows&quot;][0][&quot;board&quot;][0], 1)
+
+        account_tic_tac_toe.push_action(
+                &quot;restart&quot;, 
+                &#39;{&quot;challenger&quot;:&quot;&#39; + str(account_alice) 
+                    + &#39;&quot;, &quot;host&quot;:&quot;&#39; + str(account_carol) 
+                    + &#39;&quot;, &quot;by&quot;:&quot;&#39; + str(account_carol) + &#39;&quot;}&#39;, 
+                account_carol)
+
+        t = account_tic_tac_toe.table(&quot;games&quot;, account_carol)
+        self.assertFalse(t.error)
+
+        self.assertEqual(t.json[&quot;rows&quot;][0][&quot;board&quot;][0], 0)
+
+        account_tic_tac_toe.push_action(
+                &quot;close&quot;, 
+                &#39;{&quot;challenger&quot;:&quot;&#39; + str(account_alice) 
+                    + &#39;&quot;, &quot;host&quot;:&quot;&#39; + str(account_carol) + &#39;&quot;}&#39;, 
+                account_carol)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">unittest.main()</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>“”“</p>
 </div>
 </div>
 
@@ -108,6 +227,7 @@ account_master.info()</p>
 
 <h3>Navigation</h3>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="IDE.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="symbolic_names.html">Symbolic names</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_master.html">Account master object</a></li>

@@ -976,7 +976,7 @@ class CreateAccount(_Cleos):
             args.extend(["--max-net-usage", max_net_usage])
         if  ref_block:
             args.extend(["--ref-block", ref_block])
-        
+
         _Cleos.__init__(
             self, args, "create", "account", is_verbose)
             

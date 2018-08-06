@@ -446,6 +446,11 @@ def account_master_create(
                     * Checking whether the wallet has keys to the account ``{}``
                     """.format(account_object.name))
 
+                if not account_object.ERROR():
+                    account_object.EOSF("""
+                        * The account object is created.
+                        """)  
+
                 if append_account_methods_and_finish(
                     account_object_name, account_object, account_object):
                     account_object.EOSF("""
@@ -524,12 +529,7 @@ def append_account_methods_and_finish(
             return None
         return eosf.Error(err_msg)
 
-    account_object.error_map = types.MethodType(error_map, account_object)
-
-    if not logger.ERROR(account_object):
-        logger.EOSF("""
-            * The account object is created.
-            """)    
+    account_object.error_map = types.MethodType(error_map, account_object)  
 
     def code(account_object, code="", abi="", wasm=False):
         result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
@@ -677,7 +677,6 @@ def account_create(
     """
     if logger.ERROR(cleos.is_notrunningnotkeosd_error()):
         return logger
-
     is_wallet_defined(logger)
     global wallet_singleton
     if wallet_singleton is None:
@@ -744,6 +743,11 @@ def account_create(
 
         account_object.owner_key = owner_key
         account_object.active_key = active_key
+
+    if not account_object.ERROR():
+        account_object.EOSF("""
+            * The account object is created.
+            """)
 
     append_account_methods_and_finish(
         account_object_name, account_object, logger)

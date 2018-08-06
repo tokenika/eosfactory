@@ -1,3 +1,4 @@
+import sys
 import unittest
 import setup
 import eosf
@@ -6,46 +7,30 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
-# eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
+    eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
-#setup.set_command_line_mode()
-
 _ = eosf.Logger()
+
+ACCOUNT_MASTER = None
+ACCOUNT_TTT = None
 
 class Test1(unittest.TestCase):
 
-    def run(self, result=None):
-        super().run(result)
-        print("""
-
-NEXT TEST ====================================================================
-""")
-
-    @classmethod
-    def setUpClass(cls):
-        print()
-
-    def setUp(self):
-        eosf.restart()
-        eosf.set_is_testing_errors(False)
-        eosf.set_throw_error(True)
-
     def test_tic_tac_toe(self):
         _.SCENARIO("""
-        Use the local test net.
-        Create the ``account_tic_tac_toe`` account that will keep the ``tic_tac_toe`` 
-        contract.
-        Create two player accounts: ``account_alice`` and ``account_carol``.
-        Deploy the Contract
+        Given a ``Wallet`` class object in the global namespace; an account 
+        master object named ``account_master`` in the global namespace;
+        given an account object named ``account_tic_tac_toe`` account that keeps 
+        the ``tic_tac_toe`` contract 
+        -- create two player accounts: ``account_alice`` and ``account_carol``.
+        
         Run games.
-        """)        
-        eosf.use_keosd(False)
-        eosf.reset([eosf.Verbosity.TRACE]) 
-        wallet = Wallet()
-        account_master_create("account_master")
+        """)
+        
+        account_master = globals()[ACCOUNT_MASTER]
+        account_tic_tac_toe = globals()[ACCOUNT_TTT]
 
-        account_create("account_tic_tac_toe", account_master)
         account_create("account_alice", account_master)
         account_create("account_carol", account_master)
 
@@ -54,9 +39,6 @@ NEXT TEST ====================================================================
 
         ######################################################################  
 
-        contract_tic_tac_toe = Contract(account_tic_tac_toe, "tic_tac_toe_jungle")
-        contract_tic_tac_toe.build_abi()
-        contract_tic_tac_toe.deploy()
 
         account_tic_tac_toe.push_action(
             "create", 
@@ -131,12 +113,39 @@ NEXT TEST ====================================================================
                     + '", "host":"' + str(account_carol) + '"}', 
                 account_carol)
 
-    def tearDown(self):
-        pass
-
-    @classmethod
-    def tearDownClass(cls):
-        eosf.stop()
-
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        if len(sys.argv) == 5:
+            print(
+                "Usage: python3 unittest_tic_tac_toe.1.py " \
+                + "<wallet name> <password> <account master> <account ttt>")
+        else:
+            exit()
+
+    if len(sys.argv) == 1:
+        eosf.use_keosd(False)
+        eosf.kill_keosd()
+        eosf.reset([eosf.Verbosity.TRACE])
+
+        wallet = Wallet()
+        ACCOUNT_MASTER = "account_master"
+        account_master_create(ACCOUNT_MASTER)
+
+        ACCOUNT_TTT = "account_tic_tac_toe"
+        account_create(ACCOUNT_TTT, account_master)
+
+        contract_tic_tac_toe = Contract(
+            globals()[ACCOUNT_TTT], "tic_tac_toe_jungle")
+        contract_tic_tac_toe.build_abi()
+        contract_tic_tac_toe.deploy()
+    else:
+        eosf.stop([eosf.Verbosity.TRACE])
+        eosf.use_keosd(True)
+        WALLET_NAME = sys.argv[1]
+        PASSWORD = sys.argv[2]
+        ACCOUNT_MASTER = sys.argv[3]
+        ACCOUNT_TTT = sys.argv[4]
+        eosf.use_keosd(True)
+        wallet = Wallet(WALLET_NAME, PASSWORD)
+
     unittest.main()

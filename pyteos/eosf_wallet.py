@@ -45,10 +45,10 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
         return eosf.Error(err_msg)
 
     wallet_keys = None
-    
+  
     def __init__(self, name="default", password="", verbosity=None):
         eosf.Logger.__init__(self, verbosity)
-
+        
         global wallet
         if not wallet is None:
             self.ERROR("""
@@ -59,7 +59,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
 
         wallet = self
         self.wallet_dir = eosf.wallet_dir()
-        
+
         if setup.is_use_keosd():
             self.EOSF_TRACE("""
                 ######### Create a `Wallet` object with the KEOSD Wallet Manager.

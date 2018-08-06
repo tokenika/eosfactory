@@ -125,16 +125,15 @@ NEXT TEST ====================================================================
         table_bob = account_eosio_token.table("accounts", account_bob)
         table_carol = account_eosio_token.table("accounts", account_carol)
 
-        _.COMMENT("""
-        Check assertions:
-        * assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')
-        * assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')
-        * assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')
-        """)
-
-        self.assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')
-        self.assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')
-        self.assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')
+        self.assertEqual(
+            table_alice.json["rows"][0]["balance"], '77.0000 EOS',
+            """assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')""")
+        self.assertEqual(
+            table_bob.json["rows"][0]["balance"], '11.0000 EOS',
+            """assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')""")
+        self.assertEqual(
+            table_carol.json["rows"][0]["balance"], '12.0000 EOS',
+            """assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')""")
 
 
     def tearDown(self):
