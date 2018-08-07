@@ -9,7 +9,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ## Set-up
 
-<pre>
+```md
 """
 import setup
 import eosf
@@ -20,21 +20,21 @@ from eosf_contract import Contract
 eosf.set_throw_error(True)
 eosf.reset([eosf.Verbosity.TRACE])
 """
-</pre>
+```
 
 ### Exactly one 'Wallet' object has to exist in the namespace
 
-<pre>
+```md
 """
 wallet = Wallet()   
 account_master_create("account_master")
 eosf.set_throw_error(False)
 """
-</pre>
+```
 
 ## Case
 
-<pre>
+```md
 The EOSFactory wraps EOSIO accounts with objects. Accounts can hold smart
 contracts. 
 
@@ -43,23 +43,23 @@ Create an account objects: 'account_hello'. Add a contract of the class
 
 Add two other account objects, and execute the action of the contract on them 
 subsequently.
-</pre>
+```
 
 ### The 'account_create' factory function
 
-<pre>
+```md
 """
 account_create("account_hello", account_master)
 """
-</pre>
-<pre>
+```
+```md
 The first argument is the name of the account object to be created, the second
 one points to the account master, authorizing the creation.
 
 Only this two arguments are necessary, however there is several default 
 arguments that sometimes have to be adjusted.
-</pre>
-<pre>
+```
+```md
 The 'account_create' does many tasks:
 
 * Checks whether a 'Wallet' object exist in the namespace.
@@ -72,18 +72,18 @@ The 'account_create' does many tasks:
 * Updates the statistics of the accounts.
 
 All the actions are logged to the terminal, if the verbosity is set default. 
-</pre>
+```
 
 ### Methods of an account objects
 
-<pre>
+```md
 Any account object can:
 
 * Load a smart contract.
 * Push an action on its contract.
 * Show its entry (a table) in the blockchain database,
 
-</pre>
+```
 
 ### Create a Contract object
 
@@ -91,14 +91,14 @@ Any account object can:
 Create a smart contract object instance, appending it to the account 
 'account_hello'. The 'Contract' class is presented at <a href="contract.html">cases/contract</a>.
 </pre>
-<pre>
+```md
 """
 contract_hello = Contract(account_hello, "hello")
 contract_hello.build()
 contract_hello.deploy()
 """
-</pre>
-<pre>
+```
+```md
 The second argument of the creator of the 'Contract' class identifies the 
 code source. The Factory tries to be smart therefore searches the repository. 
 If it fails, put the right path there, 
@@ -106,24 +106,24 @@ If it fails, put the right path there,
 for example.
 
 If the deployment succeeds, the contract can be executed.
-</pre>
+```
 
 ### Try the contract
 
-<pre>
+```md
 Create two contracts 'account_alice' and 'account_carol'...
-</pre>
+```
 
-<pre>
+```md
 """
 account_create("account_alice", account_master)
 account_create("account_carol", account_master)
 """
-</pre>
-<pre>
+```
+```md
 ... and execute the action of the contract 'hello':
-</pre>
-<pre>
+```
+```md
 """
 account_hello.push_action(
     "hi", '{"user":"' + str(account_alice) + '"}', account_alice)
@@ -131,25 +131,25 @@ account_hello.push_action(
 account_hello.push_action(
     "hi", '{"user":"' + str(account_carol) + '"}', account_carol)
 """
-</pre>
-<pre>
+```
+```md
 Besides the usual 'Hello' message, you can see the result of a logging 
 facility, starting with 'INFO'.
-</pre>
+```
 
 ### Test run
 
-<pre>
+```md
 In an linux bash, change directory to where this file exists, it is the 
 directory 'docs/source/cases' in the repository, and enter the following 
 command:
-</pre>
-<pre>
+```
+```md
 $ python3 account.md
-</pre>
-<pre>
+```
+```md
 We hope that you get something similar to this one shown in the image below.
-</pre>
+```
 <img src="account.png" 
     onerror="this.src='../../../source/cases/account.png'"   
     alt="account object" width="720px"/>

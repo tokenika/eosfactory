@@ -35,26 +35,33 @@
 This file can be executed as a python script: 'python3 account_master_images.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import os
 import setup
 import eosf
 import eosf_account
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
-from eosf_contract import Contract<p>cryptolions = “88.99.97.30:38888”
+from eosf_contract import Contract
+
+cryptolions = &quot;88.99.97.30:38888&quot;
 _ = eosf.Logger()
-“”“</p>
-</pre><pre>
-The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is referred to as the 'testing account'.
-</pre><pre>
-Account Name: dgxo1uyhoytn
-Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
-Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv<p>Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
-Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA</p>
+&quot;&quot;&quot;
 </pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>The following account exists in the blockchain of the testnode. It is used, in
+this article, for testing. It is referred to as the &#39;testing account&#39;.
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Account Name: dgxo1uyhoytn
+Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
+Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
+
+Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
+Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA 
+</pre></div>
+</div>
+</div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
 <pre>
@@ -71,67 +78,83 @@ name of the account object to be created, as its first obligatory argument.</p>
 show them.</p>
 </pre><div class="section" id="local-testnet-case">
 <span id="local-testnet-case"></span><h3>Local testnet case<a class="headerlink" href="#local-testnet-case" title="Permalink to this headline">¶</a></h3>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.reset([eosf.Verbosity.TRACE])
 wallet = Wallet()
-account_master_create("account_master_images")
+account_master_create(&quot;account_master_images&quot;)
 account_master_images.info()
 eosf.stop([eosf.Verbosity.TRACE])
-"""
-</pre><pre>
-The result of the script is the account object 'account_master_images' in the global
-namespace.<p>The object wraps the ‘eosio` account. It is a special one in the sense that it
-does not have all the functionality of plain orders.</p>
-</pre><pre>
-We hope that you get something similar to this one shown in the image below.
-</pre>
-<img src="account_master_images/account_master_eosio.png" 
-    onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'"   
-    alt="local testnet account master" width="720px"/></div>
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>The result of the script is the account object &#39;account_master_images&#39; in the global
+namespace.
+
+The object wraps the &#39;eosio` account. It is a special one in the sense that it 
+does not have all the functionality of plain orders.
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
+</pre></div>
+</div>
+<p><img src="account_master_images/account_master_eosio.png" 
+onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'"   
+alt="local testnet account master" width="720px"/></p>
+</div>
 <div class="section" id="remote-testnet-registration">
 <span id="remote-testnet-registration"></span><h3>Remote testnet registration<a class="headerlink" href="#remote-testnet-registration" title="Permalink to this headline">¶</a></h3>
-<pre>
-This case is shown at <a href="setup.html">cases/registering_to_testnode</a>. There the account object is 
+<div class="highlight-md notranslate"><div class="highlight"><pre>This case is shown at &lt;a href=&quot;setup.html&quot;&gt;cases/registering_to_testnode&lt;/a&gt;. There the account object is 
 produced by manual interaction with the registration form of a testnet. There 
 the resulting account object is fully functional.
 </pre></div>
+</div>
+</div>
 <div class="section" id="adding-a-physical-account">
 <span id="adding-a-physical-account"></span><h3>Adding a physical account<a class="headerlink" href="#adding-a-physical-account" title="Permalink to this headline">¶</a></h3>
-<pre>
-If the user posses an account, that is, knows the account name and private keys,
-they can add it to the Factory.<p>In order to show a clean and reproducible example, we will delete a testing
-wallet in the KEOSD-managed wallet directory, and recreate it.</p>
-</pre><pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>If the user posses an account, that is, knows the account name and private keys,
+they can add it to the Factory.
+
+In order to show a clean and reproducible example, we will delete a testing 
+wallet in the KEOSD-managed wallet directory, and recreate it.
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.use_keosd(True)    # to determine the directory of the wallet
-eosf.kill_keosd()       # otherwise, the manager protects the wallet file<p>wallet_name = “jungle_wallet”
+eosf.kill_keosd()       # otherwise, the manager protects the wallet file
+
+wallet_name = &quot;jungle_wallet&quot;
 try:
-wallet_file = eosf.wallet_dir() + wallet_name + “.wallet”
-os.remove(wallet_file)
-print(“The deleted wallet file:\n{}\n”.format(wallet_file))
+    wallet_file = eosf.wallet_dir() + wallet_name + &quot;.wallet&quot;
+    os.remove(wallet_file)
+    print(&quot;The deleted wallet file:\n{}\n&quot;.format(wallet_file))
 except Exception as e:
-print(“Cannot delete the wallet file:\n{}\n”.format(str(e)))
-“”“</p>
-</pre><pre>
-"""
+    print(&quot;Cannot delete the wallet file:\n{}\n&quot;.format(str(e)))
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.restart()    # reset the Factory
 eosf.use_keosd(True)
-setup.set_nodeos_address(cryptolions)<p>wallet = Wallet(wallet_name)
+setup.set_nodeos_address(cryptolions)
+
+wallet = Wallet(wallet_name)
 account_master_create(
-“account_master_images”,
-“dgxo1uyhoytn”,
-“5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY”,
-“5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA”
-)
+    &quot;account_master_images&quot;,
+    &quot;dgxo1uyhoytn&quot;,
+    &quot;5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY&quot;,
+    &quot;5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA&quot;
+    )
 account_master_images.info()
-“”“</p>
-</pre><pre>
-We hope that you get something similar to this one shown in the image below.
-</pre>
-<img src="account_master_images/account_master_add.png" 
-    onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'"   
-    alt="local testnet account master" width="720px"/><p>“”“</p>
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
+</pre></div>
+</div>
+<p><img src="account_master_images/account_master_add.png" 
+onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'"   
+alt="local testnet account master" width="720px"/></p>
+<p>“”“</p>
 </div>
 </div>
 </div>

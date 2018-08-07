@@ -36,56 +36,70 @@ This file can be executed as a python script:
 'python3 account_name_conflict.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import setup
 import eosf
 from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create<p>eosf.set_throw_error(True)
-eosf.reset([eosf.Verbosity.TRACE])
+from eosf_account import account_create, account_master_create
+
+eosf.set_throw_error(True)
+eosf.reset([eosf.Verbosity.TRACE]) 
 wallet = Wallet()
-account_master_create(“account_master”)
+account_master_create(&quot;account_master&quot;)
 eosf.set_throw_error(False)
-“”“</p>
-</pre>
-## Case
-<pre>
-The EOSFactory wraps EOSIO accounts with objects. The symbolic name of an 
-account object, for example 'account_alice', has to be unique in a program. 
+&quot;&quot;&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="case">
+<span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-md notranslate"><div class="highlight"><pre>The EOSFactory wraps EOSIO accounts with objects. The symbolic name of an 
+account object, for example &#39;account_alice&#39;, has to be unique in a program. 
 Moreover, it has be unique in a collection of scripts, especially, if they 
-execute real transactions.<p>The EOSFactory uses mapping files that keep the uniqueness.</p>
-<p>But, what if the user wants to ascribe a previously used name to another
-physical account: the only way to keep the previous physical account within the
-system is to change its mapping name.</p>
-<p>Create two account objects: ‘account_alice’ and ‘account_carrol’.</p>
-<p>Then try to create another account object called ‘account_alice’. Although
+execute real transactions.
+
+The EOSFactory uses mapping files that keep the uniqueness.
+
+But, what if the user wants to ascribe a previously used name to another 
+physical account: the only way to keep the previous physical account within the 
+system is to change its mapping name.
+
+Create two account objects: &#39;account_alice&#39; and &#39;account_carrol&#39;.
+
+Then try to create another account object called &#39;account_alice&#39;. Although
 this object is going to refer to a new blockchain account, it cannot accept
-the given name: error is issued.</p>
-<p>You are prompted to change the blocking name. On acceptance, the ‘nano’
-editor opens. CTR+X, to save and exit.</p>
-<p>Change ‘account_alice’ to ‘account_alice_b’.</p>
-</pre><pre>
-"""
-account_create("account_alice", account_master)
-account_create("account_carrol", account_master)
-account_create("account_alice", account_master)
-"""
-</pre><div class="section" id="test-run">
+the given name: error is issued.
+
+You are prompted to change the blocking name. On acceptance, the &#39;nano&#39; 
+editor opens. CTR+X, to save and exit.
+
+Change &#39;account_alice&#39; to &#39;account_alice_b&#39;.
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+account_create(&quot;account_alice&quot;, account_master)
+account_create(&quot;account_carrol&quot;, account_master)
+account_create(&quot;account_alice&quot;, account_master)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<pre>
-In an linux bash, change directory to where this file exists, it is the 
-directory 'docs/source/cases' in the repository, and enter the following 
+<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, it is the 
+directory &#39;docs/source/cases&#39; in the repository, and enter the following 
 command:
-</pre>
-<pre>
-$ python3 account_name_conflict.md
-</pre>
-<pre>
-We hope that you get something similar to this one shown in the image below.
-</pre>
-<img src="account_name_conflict.png" 
-    onerror="this.src='../../../source/cases/account_name_conflict.png'"   
-    alt="account name conflict" width="640px"/><p>“”“</p>
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 account_name_conflict.md
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
+</pre></div>
+</div>
+<p><img src="account_name_conflict.png" 
+onerror="this.src='../../../source/cases/account_name_conflict.png'"   
+alt="account name conflict" width="640px"/></p>
+<p>“”“</p>
 </div>
 </div>
 </div>

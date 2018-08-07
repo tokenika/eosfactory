@@ -35,18 +35,23 @@
 This file can be executed as a python script: 'python3 wallet.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import setup
 import eosf
 import time
-import eosf_account<p>from eosf_wallet import Wallet
+import eosf_account
+
+from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
-from eosf_contract import Contract</p>
-<p>eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, eosf.Verbosity.DEBUG])
+from eosf_contract import Contract
+
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
+    eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
-“”“</p>
+&quot;&quot;&quot;
 </pre></div>
+</div>
+</div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
 <pre>
@@ -72,75 +77,96 @@ automatically imported to the wallet.</p>
 representations is kept between sessions.</p>
 </pre><div class="section" id="physical-name-translation">
 <span id="physical-name-translation"></span><h3>Physical name translation<a class="headerlink" href="#physical-name-translation" title="Permalink to this headline">¶</a></h3>
-<pre><p>All the responses from the blockchain refer to the physical names of the
+<div class="highlight-md notranslate"><div class="highlight"><pre>
+All the responses from the blockchain refer to the physical names of the 
 accounts involved. With the alias mapping, EOSFactory can translate the to the
-aliases.</p>
-<p>The current case demonstrates this facility.</p>
-</pre><div class="section" id="translation-is-off">
+aliases.
+
+The current case demonstrates this facility.
+
+</pre></div>
+</div>
+<div class="section" id="translation-is-off">
 <span id="translation-is-off"></span><h4>Translation is off<a class="headerlink" href="#translation-is-off" title="Permalink to this headline">¶</a></h4>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.restart()
-eosf_account.set_is_translating(False)<p>eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE])
+eosf_account.set_is_translating(False)
+
+eosf.use_keosd(False)
+eosf.reset([eosf.Verbosity.TRACE]) 
 wallet = Wallet()
-account_master_create(“account_master”)
+account_master_create(&quot;account_master&quot;)
 eosf.set_throw_error(False)
-eosf.set_is_testing_errors()</p>
-<p>account_create(“account_alice”, account_master)
-account_create(“account_bob”, account_master)
-account_create(“account_carol”, account_master)
-account_create(“account_eosio_token”, account_master)
-contract_eosio_token = Contract(account_eosio_token, “token”)
-deploy = contract_eosio_token.deploy()</p>
-<p>time.sleep(1)</p>
-<p>account_eosio_token.push_action(
-“create”,
-‘{“issuer”:”’
-+ str(account_master)
-+ ‘”, “maximum_supply”:”1000000000.0000 EOS”, “can_freeze”:0, “can_recall”:0, “can_whitelist”:0}’)</p>
-<p>account_eosio_token.push_action(
-“issue”,
-‘{“to”:”’ + str(account_alice)
-+ ‘”, “quantity”:”100.0000 EOS”, ‘
-+ ‘“memo”:”issue 100.0000 EOS from eosio to alice”}’,
-permission=account_master)
-“”“</p>
-</pre><p><img src="symbolic_names_images/symbolic_names_false.png" 
+eosf.set_is_testing_errors()
+
+account_create(&quot;account_alice&quot;, account_master)
+account_create(&quot;account_bob&quot;, account_master)
+account_create(&quot;account_carol&quot;, account_master)
+account_create(&quot;account_eosio_token&quot;, account_master)
+contract_eosio_token = Contract(account_eosio_token, &quot;token&quot;)
+deploy = contract_eosio_token.deploy()
+
+time.sleep(1)
+
+account_eosio_token.push_action(
+    &quot;create&quot;, 
+    &#39;{&quot;issuer&quot;:&quot;&#39; 
+        + str(account_master) 
+        + &#39;&quot;, &quot;maximum_supply&quot;:&quot;1000000000.0000 EOS&quot;, \
+        &quot;can_freeze&quot;:0, &quot;can_recall&quot;:0, &quot;can_whitelist&quot;:0}&#39;)
+
+account_eosio_token.push_action(
+    &quot;issue&quot;,
+    &#39;{&quot;to&quot;:&quot;&#39; + str(account_alice)
+        + &#39;&quot;, &quot;quantity&quot;:&quot;100.0000 EOS&quot;, &#39;
+        + &#39;&quot;memo&quot;:&quot;issue 100.0000 EOS from eosio to alice&quot;}&#39;,
+    permission=account_master)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<p><img src="symbolic_names_images/symbolic_names_false.png" 
 onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_false.png'"   
 alt="symbolic names translation off" width="720px"/></p>
 </div>
 <div class="section" id="translation-is-on">
 <span id="translation-is-on"></span><h4>Translation is on<a class="headerlink" href="#translation-is-on" title="Permalink to this headline">¶</a></h4>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.restart()
-eosf_account.set_is_translating(True)<p>eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE])
+eosf_account.set_is_translating(True)
+
+eosf.use_keosd(False)
+eosf.reset([eosf.Verbosity.TRACE]) 
 wallet = Wallet()
-account_master_create(“account_master”)
+account_master_create(&quot;account_master&quot;)
 eosf.set_throw_error(False)
-eosf.set_is_testing_errors()</p>
-<p>account_create(“account_alice”, account_master)
-account_create(“account_bob”, account_master)
-account_create(“account_carol”, account_master)
-account_create(“account_eosio_token”, account_master)
-contract_eosio_token = Contract(account_eosio_token, “token”)
-deploy = contract_eosio_token.deploy()</p>
-<p>time.sleep(1)</p>
-<p>account_eosio_token.push_action(
-“create”,
-‘{“issuer”:”’
-+ str(account_master)
-+ ‘”, “maximum_supply”:”1000000000.0000 EOS”, “can_freeze”:0, “can_recall”:0, “can_whitelist”:0}’)</p>
-<p>account_eosio_token.push_action(
-“issue”,
-‘{“to”:”’ + str(account_alice)
-+ ‘”, “quantity”:”100.0000 EOS”, ‘
-+ ‘“memo”:”issue 100.0000 EOS from eosio to alice”}’,
-permission=account_master)
-“”“</p>
-</pre><p><img src="symbolic_names_images/symbolic_names_true.png" 
+eosf.set_is_testing_errors()
+
+account_create(&quot;account_alice&quot;, account_master)
+account_create(&quot;account_bob&quot;, account_master)
+account_create(&quot;account_carol&quot;, account_master)
+account_create(&quot;account_eosio_token&quot;, account_master)
+contract_eosio_token = Contract(account_eosio_token, &quot;token&quot;)
+deploy = contract_eosio_token.deploy()
+
+time.sleep(1)
+
+account_eosio_token.push_action(
+    &quot;create&quot;, 
+    &#39;{&quot;issuer&quot;:&quot;&#39; 
+        + str(account_master) 
+        + &#39;&quot;, &quot;maximum_supply&quot;:&quot;1000000000.0000 EOS&quot;, \
+        &quot;can_freeze&quot;:0, &quot;can_recall&quot;:0, &quot;can_whitelist&quot;:0}&#39;)
+
+account_eosio_token.push_action(
+    &quot;issue&quot;,
+    &#39;{&quot;to&quot;:&quot;&#39; + str(account_alice)
+        + &#39;&quot;, &quot;quantity&quot;:&quot;100.0000 EOS&quot;, &#39;
+        + &#39;&quot;memo&quot;:&quot;issue 100.0000 EOS from eosio to alice&quot;}&#39;,
+    permission=account_master)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<p><img src="symbolic_names_images/symbolic_names_true.png" 
 onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
 alt="symbolic names translation on" width="720px"/></p>
 </div>

@@ -9,7 +9,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ## Set-up
 
-<pre>
+```md
 """
 import setup
 import eosf
@@ -20,17 +20,17 @@ from eosf_contract import Contract
 eosf.set_throw_error(True)
 eosf.reset([eosf.Verbosity.TRACE])
 """
-</pre>
+```
 
 ### Exactly one 'Wallet' object has to exist in the namespace
 
-<pre>
+```md
 """
 wallet = Wallet()   
 account_master_create("account_master")
 eosf.set_throw_error(False)
 """
-</pre>
+```
 
 ## Case
 
@@ -48,27 +48,27 @@ Make three other account objects, and execute actions of the contract on them.
 
 ### Accounts
 
-<pre>
+```md
 """
 account_create("account_eosio_token", account_master)
 account_create("account_alice", account_master)
 account_create("account_bob", account_master)
 account_create("account_carol", account_master)
 """
-</pre>
+```
 
 ### Create a Contract object
 
-<pre>
+```md
 Create an instance of the 'Contract' class, appending it to the account 
 'account_eosio_token':
-</pre>
-<pre>
+```
+```md
 """
 contract_eosio_token = Contract(account_eosio_token, "token")
 """
-</pre>
-<pre>
+```
+```md
 The second argument of the creator of the 'Contract' class identifies the 
 code source. The Factory tries to be smart, and searches the repository of the 
 Factory. If it fails, put the right path there, 
@@ -77,11 +77,11 @@ for example.
 
 Note that the 'Contract' creator takes several default arguments that 
 sometimes have to be adjusted.
-</pre>
+```
 
 ### Methods of a contract objects
 
-<pre>
+```md
 Any 'Contract' object can:
 
 * Build itself.
@@ -91,23 +91,23 @@ Any 'Contract' object can:
 * Push an action.
 * Show an action pushing it without broadcasting.
 * Show entry (a table) in the blockchain database of its account.
-</pre>
+```
 
 ### Deploy and build the contract
 
-<pre>
+```md
 """
 contract_eosio_token.build()
 contract_eosio_token.deploy()
 """
-</pre>
+```
 
 ### Try the contract
 
-<pre>
+```md
 Execute actions of the contract:
-</pre>
-<pre>
+```
+```md
 """
 contract_eosio_token.push_action(
     "create", 
@@ -155,36 +155,36 @@ contract_eosio_token.push_action(
         + '"memo":"transfer 2.0000 EOS from bob to alice"}',
     permission=account_bob)                
 """
-</pre>
-<pre>
+```
+```md
 Inspect the database of the blockchain:
-</pre>
-<pre>
+```
+```md
 """
 table_alice = account_eosio_token.table("accounts", account_alice)
 table_bob = account_eosio_token.table("accounts", account_bob)
 table_carol = account_eosio_token.table("accounts", account_carol)
 """
-</pre>
+```
 
-<pre>
+```md
 You can see the result of a logging facility, printed in yellow, starting with 
 'INFO'.
-</pre>
+```
 
 ### Test run
 
-<pre>
+```md
 In an linux bash, change directory to where this file exists, it is the 
 directory 'docs/source/cases' in the repository, and enter the following 
 command:
-</pre>
-<pre>
+```
+```md
 $ python3 contract.md
-</pre>
-<pre>
+```
+```md
 We hope that you get something similar to this one shown in the image below.
-</pre>
+```
 <img src="contract.png" 
     onerror="this.src='../../../source/cases/contract.png'"   
     alt="contract object" width="720px"/>

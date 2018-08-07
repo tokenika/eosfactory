@@ -36,117 +36,152 @@ This file can be executed as a python script: 'python3
 registering_to_testnode.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is referred to as the 'testing account'.
-</pre><pre>
-Account Name: dgxo1uyhoytn
-Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
-Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv<p>Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
-Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA</p>
-</pre><pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>The following account exists in the blockchain of the testnode. It is used, in
+this article, for testing. It is referred to as the &#39;testing account&#39;.
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
+Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
+
+Owner Private Key: OWNER_KEY
+Active Private Key: ACTIVE_KEY 
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import os
 import unittest
 import setup
 import eosf
 import eosf_account
 from eosf_wallet import Wallet
-from eosf_account import account_master_create<p>eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, eosf.Verbosity.DEBUG])</p>
-<p>cryptolions = “88.99.97.30:38888”
-_ = eosf.Logger()</p>
-<p>“”“</p>
-</pre><div class="section" id="set-a-remote-testnode">
+from eosf_account import account_master_create
+from user_data import *
+
+eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
+    eosf.Verbosity.DEBUG])
+
+cryptolions = &quot;88.99.97.30:38888&quot;
+_ = eosf.Logger()
+
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="section" id="set-a-remote-testnode">
 <span id="set-a-remote-testnode"></span><h3>Set a remote testnode<a class="headerlink" href="#set-a-remote-testnode" title="Permalink to this headline">¶</a></h3>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.use_keosd(True)        # use KEOSD Wallet Manager
 setup.set_nodeos_address(cryptolions)
-"""
-</pre><pre>
-Throw an exception if the testnode is off:
-</pre><pre>
-"""
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Throw an exception if the testnode is off:
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.set_throw_error(True)
 eosf.info()
 eosf.set_throw_error(False)
-"""
+&quot;&quot;&quot;
 </pre></div>
+</div>
+</div>
 <div class="section" id="clean-the-jungle-wallet">
 <span id="clean-the-jungle-wallet"></span><h3>Clean the ‘jungle wallet’<a class="headerlink" href="#clean-the-jungle-wallet" title="Permalink to this headline">¶</a></h3>
-<pre>
-For the sake of this tutorial, we dare to treat a system wallet so rudely:
+<div class="highlight-md notranslate"><div class="highlight"><pre>For the sake of this tutorial, we dare to treat a system wallet so rudely:
 we delete it.
-</pre><pre>
-"""
-eosf.use_keosd(True)    # to determine the directory of the wallet
-eosf.kill_keosd()       # otherwise, the manager protects the wallet file<p>wallet_name = “jungle_wallet”
-try:
-wallet_file = eosf.wallet_dir() + wallet_name + “.wallet”
-os.remove(wallet_file)
-print(“The deleted wallet file:\n{}\n”.format(wallet_file))
-except Exception as e:
-print(“Cannot delete the wallet file:\n{}\n”.format(str(e)))
-“”“</p>
-</pre><pre>
-"""
-wallet = Wallet(wallet_name)<p>eosf.set_is_testing_errors(False)
-eosf.set_throw_error(True)</p>
-<p>“”“</p>
 </pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+eosf.use_keosd(True)    # to determine the directory of the wallet
+eosf.kill_keosd()       # otherwise, the manager protects the wallet file
+
+wallet_name = &quot;jungle_wallet&quot;
+try:
+    wallet_file = eosf.wallet_dir() + wallet_name + &quot;.wallet&quot;
+    os.remove(wallet_file)
+    print(&quot;The deleted wallet file:\n{}\n&quot;.format(wallet_file))
+except Exception as e:
+    print(&quot;Cannot delete the wallet file:\n{}\n&quot;.format(str(e)))
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+wallet = Wallet(wallet_name)
+
+eosf.set_is_testing_errors(False)
+eosf.set_throw_error(True)
+
+&quot;&quot;&quot;
+</pre></div>
+</div>
+</div>
 <div class="section" id="introduce-a-test-trick">
 <span id="introduce-a-test-trick"></span><h3>Introduce a test trick<a class="headerlink" href="#introduce-a-test-trick" title="Permalink to this headline">¶</a></h3>
-<pre>
-Use an active account, named 'account_master_test' to simulate the 
+<div class="highlight-md notranslate"><div class="highlight"><pre>We use an active account, named &#39;account_master_test&#39; to simulate the 
 registration procedure: if set, this account substitutes one that would be
-physically registered.</pre><pre>
-"""
+physically registered.
+
+In the following definitions, we use real data obtained with a real registration
+session executed with the procedure that is shown in this article.
+
+The constants &#39;ACCOUNT_NAME&#39;, &#39;OWNER_KEY&#39;, &#39;ACTIVE_KEY&#39; are defined in the 
+script &#39;user_data.py`. We hope, that you will replace them with your own 
+data, as they are used in other articles.
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.account_master_test = eosf_account.GetAccount(
-    "account_master_test",
-    "dgxo1uyhoytn", 
-    "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
-    "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
+    &quot;account_master_test&quot;,
+    ACCOUNT_NAME, 
+    OWNER_KEY,
+    ACTIVE_KEY
 )
 eosf_account.account_master_test.ERROR()
-"""
+&quot;&quot;&quot;
 </pre></div>
+</div>
+</div>
 <div class="section" id="end-the-set-up-part">
 <span id="end-the-set-up-part"></span><h3>End the set-up part<a class="headerlink" href="#end-the-set-up-part" title="Permalink to this headline">¶</a></h3>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.set_throw_error(False)         # on error, do not throw exception
 eosf.set_is_testing_errors()        # make error messages less alarming
-"""
+&quot;&quot;&quot;
 </pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<pre>
-In subsequent tests, you may have to change the account object name, here 
-'account_master', or to resolve name conflicts, if you are prompted.
-</pre><div class="section" id="register-to-the-testnode">
-<span id="register-to-the-testnode"></span><h3>Register to the testnode<a class="headerlink" href="#register-to-the-testnode" title="Permalink to this headline">¶</a></h3>
-<pre>
-"""
-account_master_create("account_master")
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>In subsequent tests, you may have to change the account object name, here 
+&#39;account_master&#39;, or to resolve name conflicts, if you are prompted.
 </pre></div>
+</div>
+<div class="section" id="register-to-the-testnode">
+<span id="register-to-the-testnode"></span><h3>Register to the testnode<a class="headerlink" href="#register-to-the-testnode" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+account_master_create(&quot;account_master&quot;)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+</div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<pre>
-In an linux bash, change directory to where this file exists, it is the 
-directory 'docs/source/cases' in the repository, and enter the following 
+<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, it is the 
+directory &#39;docs/source/cases&#39; in the repository, and enter the following 
 command:
-</pre>
-<pre>
-$ python3 registering_to_testnode.md
-</pre>
-<pre>
-We hope that you get something similar to this one shown in the image below.
-</pre>
-<img src="registering.png" 
-    onerror="this.src='../../../source/cases/registering.png'"   
-    alt="registering" width="640px"/><p>“”“</p>
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 registering_to_testnode.md
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
+</pre></div>
+</div>
+<p><img src="registering.png" 
+onerror="this.src='../../../source/cases/registering.png'"   
+alt="registering" width="640px"/></p>
+<p>“”“</p>
 </div>
 </div>
 </div>

@@ -35,17 +35,20 @@
 This file can be executed as a python script: 'python3 wallet.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import os
 import setup
 import eosf
 import eosf_account
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
-from eosf_contract import Contract<p>eosf.set_throw_error(False)
-“”“</p>
+from eosf_contract import Contract
+
+eosf.set_throw_error(False)
+&quot;&quot;&quot;
 </pre></div>
+</div>
+</div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
 <pre>
@@ -53,91 +56,112 @@ The 'Wallet` class wraps EOSIO wallets. The 'Wallet' object keep account
 objects, presented at <a href="account.html">cases/account</a>.<p>The EOSIO physical wallet, if used with the Factory, can be managed either
 with the ‘KEOSD Wallet Manager’ or with the ‘NODEOS’ wallet plugin. The status
 is controlled with the ‘use_keosd’ statement (default is ‘False’):</p>
-</pre><pre>
-eosf.use_keosd(True)
-</pre><pre>
-The 'NODEOS' alternative apply if the local node is running.<p>It can be exactly one ‘Wallet’ object in the namespace. After the ‘Wallet’
-singleton is created, it remains transparent to the script: usually, there
-is no need to refer to it.</p>
-<p>If the ‘Wallet’ object is of the local testnet, its password is kept between
-sessions, and used automatically.</p>
-<p>Let us consider two cases: ‘NODEOS` and ‘KEOSD’ subsequently.</p>
-</pre><div class="section" id="nodeos-managed-wallet">
+</pre><div class="highlight-md notranslate"><div class="highlight"><pre>eosf.use_keosd(True)
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>The &#39;NODEOS&#39; alternative apply if the local node is running.
+
+It can be exactly one &#39;Wallet&#39; object in the namespace. After the &#39;Wallet&#39; 
+singleton is created, it remains transparent to the script: usually, there 
+is no need to refer to it.
+
+If the &#39;Wallet&#39; object is of the local testnet, its password is kept between 
+sessions, and used automatically.
+
+Let us consider two cases: &#39;NODEOS` and &#39;KEOSD&#39; subsequently.
+</pre></div>
+</div>
+<div class="section" id="nodeos-managed-wallet">
 <span id="nodeos-managed-wallet"></span><h3>NODEOS managed wallet<a class="headerlink" href="#nodeos-managed-wallet" title="Permalink to this headline">¶</a></h3>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE])          # reset the local testnet
 wallet = Wallet()
 wallet.keys()
-account_master_create("account_master")     # account object is put to wallet
+account_master_create(&quot;account_master&quot;)     # account object is put to wallet
 wallet.keys()
-wallet.lock_all()<p>eosf.stop()                                 # stop the local testnet
-“”“</p>
-</pre><p><img src="wallet_images/reset_nodeos_wallet.png" 
+wallet.lock_all()
+
+eosf.stop()                                 # stop the local testnet
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<p><img src="wallet_images/reset_nodeos_wallet.png" 
 onerror="this.src='../../../source/cases/wallet_images/reset_nodeos_wallet.png'"   
 alt="nodeos wallet reset" width="720px"/></p>
-<pre>
-What has happened?<ul class="simple">
-<li>The local node has restarted, that is the local wallet file was deleted.</li>
-<li>The wallet object has been created.</li>
-<li>Its password has been stored to a file.</li>
-<li>An account object named ‘account_master’ has been created and placed in
-the wallet.</li>
-</ul>
-<p>If we close the session, then open it again, and recreate the wallet, we can
-expect that it opens without calling for password, having the same keys.</p>
-</pre><pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>What has happened?
+
+* The local node has restarted, that is the local wallet file was deleted.
+* The wallet object has been created.
+* Its password has been stored to a file.
+* An account object named &#39;account_master&#39; has been created and placed in
+    the wallet.
+
+If we close the session, then open it again, and recreate the wallet, we can
+expect that it opens without calling for password, having the same keys.
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.restart()                      # reset the Factory
 eosf.run([eosf.Verbosity.TRACE])    # restart the local testnet
 wallet = Wallet()
 wallet.keys()   
 eosf.stop()                         # stop the local testnet
-"""
-</pre><p><img src="wallet_images/run_nodeos_wallet.png" 
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<p><img src="wallet_images/run_nodeos_wallet.png" 
 onerror="this.src='../../../source/cases/wallet_images/run_nodeos_wallet.png'"   
 alt="nodeos wallet reset" width="720px"/></p>
 </div>
 <div class="section" id="keosd-managed-wallet">
 <span id="keosd-managed-wallet"></span><h3>KEOSD managed wallet<a class="headerlink" href="#keosd-managed-wallet" title="Permalink to this headline">¶</a></h3>
-<pre>
-For the sake of this tutorial, we dare to treat a system wallet so rudely:
+<div class="highlight-md notranslate"><div class="highlight"><pre>For the sake of this tutorial, we dare to treat a system wallet so rudely:
 we delete it.
-</pre><pre>
-"""
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.use_keosd(True)    # to determine the directory of the wallet
-eosf.kill_keosd()       # otherwise, the manager protects the wallet file<p>wallet_name = “jungle_wallet”
+eosf.kill_keosd()       # otherwise, the manager protects the wallet file
+
+wallet_name = &quot;jungle_wallet&quot;
 try:
-wallet_file = eosf.wallet_dir() + wallet_name + “.wallet”
-os.remove(wallet_file)
-print(“The deleted wallet file:\n{}\n”.format(wallet_file))
+    wallet_file = eosf.wallet_dir() + wallet_name + &quot;.wallet&quot;
+    os.remove(wallet_file)
+    print(&quot;The deleted wallet file:\n{}\n&quot;.format(wallet_file))
 except Exception as e:
-print(“Cannot delete the wallet file:\n{}\n”.format(str(e)))
-“”“</p>
-</pre><pre>
-Create a 'KEOSD' wallet named 'wallet_name':
-</pre><pre>
-"""
+    print(&quot;Cannot delete the wallet file:\n{}\n&quot;.format(str(e)))
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Create a &#39;KEOSD&#39; wallet named &#39;wallet_name&#39;:
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.restart()                      # reset the Factory
-eosf.use_keosd(True)<p>wallet = Wallet(wallet_name)
-“”“</p>
-</pre><p><img src="wallet_images/keosd_wallet_create.png" 
+eosf.use_keosd(True)
+
+wallet = Wallet(wallet_name)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<p><img src="wallet_images/keosd_wallet_create.png" 
 onerror="this.src='../../../source/cases/wallet_images/keosd_wallet_create.png'"   
 alt="nodeos wallet reset" width="720px"/></p>
 </div>
 <div class="section" id="methods-of-the-wallet-class">
 <span id="methods-of-the-wallet-class"></span><h3>Methods of the ‘Wallet’ class<a class="headerlink" href="#methods-of-the-wallet-class" title="Permalink to this headline">¶</a></h3>
-<pre>
-We plan the Factory so that the singular wallet object is never referred to, in
-usual scripts. However, the 'Wallet` class has several methods that are used
-internally. Some of them are obvious:<ul class="simple">
-<li>Open wallet.</li>
-<li>Unlock wallet.</li>
-<li>Keys in all open wallets.</li>
-<li>etc.</li>
-</ul>
-</pre><p>“”“</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>We plan the Factory so that the singular wallet object is never referred to, in
+usual scripts. However, the &#39;Wallet` class has several methods that are used
+internally. Some of them are obvious:
+
+* Open wallet.
+* Unlock wallet.
+* Keys in all open wallets.
+* etc.
+</pre></div>
+</div>
+<p>“”“</p>
 </div>
 </div>
 </div>

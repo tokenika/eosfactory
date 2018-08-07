@@ -9,6 +9,7 @@ import teos
 import cleos
 import cleos_system
 import eosf
+import eosf_account
 
 class ContractBuilder(eosf.Logger):
     """
@@ -137,39 +138,43 @@ class Contract(eosf.Logger):
             return None
         return eosf.Error(err_msg)
 
-    def deploy(self, permission=""):
+    def deploy(self, permission="", dont_broadcast=None):
+        if dont_broadcast is None:
+            dont_broadcast = self.dont_broadcast
+
         result = cleos.SetContract(
             self.account, self.contract_dir, 
             self.wast_file, self.abi_file, 
             permission, self.expiration_sec, 
-            self.skip_signature, self.dont_broadcast, self.forceUnique,
+            self.skip_signature, dont_broadcast, self.forceUnique,
             self.max_cpu_usage, self.max_net_usage,
             self.ref_block,
-            is_verbose=-1
+            is_verbose=-1,
+            json=True
         )
         if not self.ERROR(result):
-            code = cleos.GetCode(self.account.name, is_verbose=-1)
-            if code.code_hash == \
-            "0000000000000000000000000000000000000000000000000000000000000000":
-                self.ERROR("""
-Error in contract deployment:
-Despite the ``set contract`` command returned without any error,
-the code hash of the associated account is null:
-{}
-                """.format(code.code_hash))                
+            if not dont_broadcast:
+                code = cleos.GetCode(self.account.name, is_verbose=-1)
+                if code.code_hash == \
+                "0000000000000000000000000000000000000000000000000000000000000000":
+                    self.ERROR("""
+    Error in contract deployment:
+    Despite the ``set contract`` command returned without any error,
+    the code hash of the associated account is null:
+    {}
+                    """.format(code.code_hash))                
 
-                return
-            else:
-                self.EOSF("""
-                * Contract deployed. Code hash is checked not null.
-                """)
+                    return
+                else:
+                    self.EOSF("""
+                    * Contract deployed. Code hash is checked not null.
+                    """)
             try:
-                result.json = json.loads(result.err_msg)
                 for action in result.json["actions"]:
                     action["data"] = "contract code data, deleted for readability ..................."
             except:
                 pass
-
+            # print(eosf_account.translate(json.dumps(result.json, indent=3)))
             self.contract = result
         else:
             self.contract = None

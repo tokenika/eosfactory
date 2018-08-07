@@ -1047,7 +1047,8 @@ class SetContract(_Cleos):
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block="",
-            is_verbose=1
+            is_verbose=1,
+            json=False
             ):
 
         try:
@@ -1072,7 +1073,7 @@ class SetContract(_Cleos):
             return
 
         args = [self.account_name, self.contract_path_absolute]
-        if setup.is_json():
+        if setup.is_json() or json:
             args.append("--json")
         if permission:
             try:
@@ -1102,6 +1103,8 @@ class SetContract(_Cleos):
             self, args, "set", "contract", is_verbose)
 
         if not self.error:
+            if setup.is_json() or json:
+                self.json = json_module.loads(self.out_msg)
             self.transaction = get_transaction_id(self)
             self.printself()
 

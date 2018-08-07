@@ -531,13 +531,16 @@ def append_account_methods_and_finish(
 
     account_object.error_map = types.MethodType(error_map, account_object)  
 
-    def code(account_object, code="", abi="", wasm=False):
+    def code(account_object, code="", abi="", wasm=False, json=False):
         result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
         if not account_object.ERROR(result):
-            account_object.EOSF_TRACE("""
-            * code()
-            """)
-            account_object.OUT(result.out_msg)
+            if json:
+                return result.json
+            else:
+                account_object.EOSF_TRACE("""
+                * code()
+                """)
+                account_object.OUT(result.out_msg)
 
     account_object.code = types.MethodType(code, account_object)
 

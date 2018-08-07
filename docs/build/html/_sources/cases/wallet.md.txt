@@ -9,7 +9,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ## Set-up
 
-<pre>
+```md
 """
 import os
 import setup
@@ -21,7 +21,7 @@ from eosf_contract import Contract
 
 eosf.set_throw_error(False)
 """
-</pre>
+```
 
 ## Case
 
@@ -34,11 +34,11 @@ with the 'KEOSD Wallet Manager' or with the 'NODEOS' wallet plugin. The status
 is controlled with the 'use_keosd' statement (default is 'False'):
 </pre>
 
-<pre>
+```md
 eosf.use_keosd(True)
-</pre>
+```
 
-<pre>
+```md
 The 'NODEOS' alternative apply if the local node is running.
 
 It can be exactly one 'Wallet' object in the namespace. After the 'Wallet' 
@@ -49,11 +49,11 @@ If the 'Wallet' object is of the local testnet, its password is kept between
 sessions, and used automatically.
 
 Let us consider two cases: 'NODEOS` and 'KEOSD' subsequently.
-</pre>
+```
 
 ### NODEOS managed wallet
 
-<pre>
+```md
 """
 eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE])          # reset the local testnet
@@ -65,13 +65,13 @@ wallet.lock_all()
 
 eosf.stop()                                 # stop the local testnet
 """
-</pre>
+```
 
 <img src="wallet_images/reset_nodeos_wallet.png" 
     onerror="this.src='../../../source/cases/wallet_images/reset_nodeos_wallet.png'"   
     alt="nodeos wallet reset" width="720px"/>
 
-<pre>
+```md
 What has happened?
 
 * The local node has restarted, that is the local wallet file was deleted.
@@ -82,9 +82,9 @@ What has happened?
 
 If we close the session, then open it again, and recreate the wallet, we can
 expect that it opens without calling for password, having the same keys.
-</pre>
+```
 
-<pre>
+```md
 """
 eosf_account.restart()                      # reset the Factory
 eosf.run([eosf.Verbosity.TRACE])    # restart the local testnet
@@ -92,7 +92,7 @@ wallet = Wallet()
 wallet.keys()   
 eosf.stop()                         # stop the local testnet
 """
-</pre>
+```
 
 <img src="wallet_images/run_nodeos_wallet.png" 
     onerror="this.src='../../../source/cases/wallet_images/run_nodeos_wallet.png'"   
@@ -100,12 +100,12 @@ eosf.stop()                         # stop the local testnet
 
 ### KEOSD managed wallet
 
-<pre>
+```md
 For the sake of this tutorial, we dare to treat a system wallet so rudely:
 we delete it.
-</pre>
+```
 
-<pre>
+```md
 """
 eosf.use_keosd(True)    # to determine the directory of the wallet
 eosf.kill_keosd()       # otherwise, the manager protects the wallet file
@@ -118,20 +118,20 @@ try:
 except Exception as e:
     print("Cannot delete the wallet file:\n{}\n".format(str(e)))
 """
-</pre>
+```
 
-<pre>
+```md
 Create a 'KEOSD' wallet named 'wallet_name':
-</pre>
+```
 
-<pre>
+```md
 """
 eosf_account.restart()                      # reset the Factory
 eosf.use_keosd(True)
 
 wallet = Wallet(wallet_name)
 """
-</pre>
+```
 
 <img src="wallet_images/keosd_wallet_create.png" 
     onerror="this.src='../../../source/cases/wallet_images/keosd_wallet_create.png'"   
@@ -139,7 +139,7 @@ wallet = Wallet(wallet_name)
 
 ### Methods of the 'Wallet' class
 
-<pre>
+```md
 We plan the Factory so that the singular wallet object is never referred to, in
 usual scripts. However, the 'Wallet` class has several methods that are used
 internally. Some of them are obvious:
@@ -148,7 +148,7 @@ internally. Some of them are obvious:
 * Unlock wallet.
 * Keys in all open wallets.
 * etc.
-</pre>
+```
 
 """
 

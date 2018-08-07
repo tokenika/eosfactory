@@ -9,7 +9,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ## Set-up
 
-<pre>
+```md
 """
 import os
 import setup
@@ -22,21 +22,21 @@ from eosf_contract import Contract
 cryptolions = "88.99.97.30:38888"
 _ = eosf.Logger()
 """
-</pre>
+```
 
-<pre>
+```md
 The following account exists in the blockchain of the testnode. It is used, in
 this article, for testing. It is referred to as the 'testing account'.
-</pre>
+```
 
-<pre>
+```md
 Account Name: dgxo1uyhoytn
 Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
 Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
 
 Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
 Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA 
-</pre>
+```
 
 
 ## Case
@@ -62,7 +62,7 @@ show them.
 
 ### Local testnet case
 
-<pre>
+```md
 """
 eosf.reset([eosf.Verbosity.TRACE])
 wallet = Wallet()
@@ -70,42 +70,42 @@ account_master_create("account_master_images")
 account_master_images.info()
 eosf.stop([eosf.Verbosity.TRACE])
 """
-</pre>
+```
 
-<pre>
+```md
 The result of the script is the account object 'account_master_images' in the global
 namespace.
 
 The object wraps the 'eosio` account. It is a special one in the sense that it 
 does not have all the functionality of plain orders.
-</pre>
+```
 
-<pre>
+```md
 We hope that you get something similar to this one shown in the image below.
-</pre>
+```
 <img src="account_master_images/account_master_eosio.png" 
     onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'"   
     alt="local testnet account master" width="720px"/>
 
 ### Remote testnet registration
 
-<pre>
+```md
 This case is shown at <a href="setup.html">cases/registering_to_testnode</a>. There the account object is 
 produced by manual interaction with the registration form of a testnet. There 
 the resulting account object is fully functional.
-</pre>
+```
 
 ### Adding a physical account
 
-<pre>
+```md
 If the user posses an account, that is, knows the account name and private keys,
 they can add it to the Factory.
 
 In order to show a clean and reproducible example, we will delete a testing 
 wallet in the KEOSD-managed wallet directory, and recreate it.
-</pre>
+```
 
-<pre>
+```md
 """
 eosf.use_keosd(True)    # to determine the directory of the wallet
 eosf.kill_keosd()       # otherwise, the manager protects the wallet file
@@ -118,9 +118,9 @@ try:
 except Exception as e:
     print("Cannot delete the wallet file:\n{}\n".format(str(e)))
 """
-</pre>
+```
 
-<pre>
+```md
 """
 eosf_account.restart()    # reset the Factory
 eosf.use_keosd(True)
@@ -135,11 +135,11 @@ account_master_create(
     )
 account_master_images.info()
 """
-</pre>
+```
 
-<pre>
+```md
 We hope that you get something similar to this one shown in the image below.
-</pre>
+```
 <img src="account_master_images/account_master_add.png" 
     onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'"   
     alt="local testnet account master" width="720px"/>

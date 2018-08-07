@@ -1,5 +1,6 @@
 """
 # Symbolic names
+
 <pre>
 This file can be executed as a python script: 'python3 wallet.md'.
 
@@ -8,7 +9,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ## Set-up
 
-<pre>
+```md
 """
 import setup
 import eosf
@@ -23,9 +24,10 @@ eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
     eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
 """
-</pre>
+```
 
 ## Case
+
 <pre>
 The EOSIO accounts are indexed by their names, therefore the names have to be 
 unique in the blockchain, and to have the specific format. Then it is not 
@@ -59,7 +61,7 @@ representations is kept between sessions.
 
 ### Physical name translation
 
-<pre>
+```md
 
 All the responses from the blockchain refer to the physical names of the 
 accounts involved. With the alias mapping, EOSFactory can translate the to the
@@ -67,11 +69,11 @@ aliases.
 
 The current case demonstrates this facility.
 
-</pre>
+```
 
 #### Translation is off
 
-<pre>
+```md
 """
 eosf_account.restart()
 eosf_account.set_is_translating(False)
@@ -106,7 +108,7 @@ account_eosio_token.push_action(
         + '"memo":"issue 100.0000 EOS from eosio to alice"}',
     permission=account_master)
 """
-</pre>
+```
 
 <img src="symbolic_names_images/symbolic_names_false.png" 
     onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_false.png'"   
@@ -114,7 +116,7 @@ account_eosio_token.push_action(
 
 #### Translation is on
 
-<pre>
+```md
 """
 eosf_account.restart()
 eosf_account.set_is_translating(True)
@@ -149,7 +151,7 @@ account_eosio_token.push_action(
         + '"memo":"issue 100.0000 EOS from eosio to alice"}',
     permission=account_master)
 """
-</pre>
+```
 
 <img src="symbolic_names_images/symbolic_names_true.png" 
     onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   

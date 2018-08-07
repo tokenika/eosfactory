@@ -35,47 +35,53 @@
 This file can be executed as a python script: 'python3 configuration.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre><div class="section" id="inspect-the-configuration">
 <span id="inspect-the-configuration"></span><h2>Inspect the configuration<a class="headerlink" href="#inspect-the-configuration" title="Permalink to this headline">¶</a></h2>
-<pre>
-"""
-import teos<p>ok = teos.GetConfig()</p>
-<p>“”“</p>
-</pre>
-<pre>
-Note that the same result is available with this bash command:
-</pre>
-<pre>
-$eosf get config
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+import teos
+
+ok = teos.GetConfig()
+
+&quot;&quot;&quot;
 </pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Note that the same result is available with this bash command:
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>$eosf get config
+</pre></div>
+</div>
+</div>
 <div class="section" id="override-the-installed-configuration">
 <span id="override-the-installed-configuration"></span><h2>Override the installed configuration<a class="headerlink" href="#override-the-installed-configuration" title="Permalink to this headline">¶</a></h2>
-<pre>
-There is the 'config.json' file in the 'teos' folder of the repository. 
+<div class="highlight-md notranslate"><div class="highlight"><pre>There is the &#39;config.json&#39; file in the &#39;teos&#39; folder of the repository. 
 The entries there prevail the default settings.
 </pre></div>
+</div>
+</div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h2>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h2>
-<pre>
-In an linux bash, change directory to where this file exists, it is the 
-directory 'docs/source/cases' in the repository, and enter the following 
+<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, it is the 
+directory &#39;docs/source/cases&#39; in the repository, and enter the following 
 command:
-</pre>
-<pre>
-$ python3 configuration.md
-</pre>
-<pre>
-or
-</pre>
-<pre>
-$ $eosf get config
-</pre>
-<pre>
-We hope that you get something similar to this one shown in the image below.
-You can change or add something in the configuration file 'teos/config.json' 
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 configuration.md
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>or
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>$ $eosf get config
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
+You can change or add something in the configuration file &#39;teos/config.json&#39; 
 and see the result.
-</pre>
-<img src="configuration.png" 
-    onerror="this.src='../../../source/cases/configuration.png'"   
-    alt="configuration" width="640px"/><p>“”“</p>
+</pre></div>
+</div>
+<p><img src="configuration.png" 
+onerror="this.src='../../../source/cases/configuration.png'"   
+alt="configuration" width="640px"/></p>
+<p>“”“</p>
 </div>
 </div>
 

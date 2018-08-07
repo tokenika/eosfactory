@@ -412,7 +412,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
             with open(self.wallet_dir + setup.account_map, "w") as out:
                 out.write(eosf.account_mapp_to_string(account_map_json))
 
-            self.EOSF_TRACE("""
+            self.EOSF("""
                 * Account ``{}`` mapped as ``{}``, stored in the file ``{}`` 
                     in the wallet directory:
                     {}

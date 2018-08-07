@@ -1,3 +1,4 @@
+import os
 import sys
 import unittest
 import setup
@@ -6,36 +7,52 @@ import eosf
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
+from user_data import *
 
 eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
     eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
 _ = eosf.Logger()
-cryptolions = "88.99.97.30:38888"
 
-ACCOUNT_MASTER = "account_master"
-ACCOUNT_TTT = None
-WALLET_NAME = "VhZNXMGZ48Ti7u84nDnyq87rv"
 IS_USE_KEOSD = False
 
-ACCOUNT_NAME = "dgxo1uyhoytn"
-OWNER_KEY = "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY"
-ACTIVE_KEY = "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
+ACCOUNT_MASTER = "account_master"
+ACCOUNT_TTT = "account_tic_tac_toe"
 
 class Test1(unittest.TestCase):
 
     def setUp(self):
+        eosf.kill_keosd()
+
+        global ACCOUNT_MASTER
+        global ACCOUNT_TTT
+
+        eosf.set_throw_error(True)
+        eosf.use_keosd(False)
+        eosf.reset([eosf.Verbosity.TRACE])
+
+        wallet = Wallet()
+        account_master_create(ACCOUNT_MASTER)
+        account_create(ACCOUNT_TTT, globals()[ACCOUNT_MASTER])
+        global account_master
+        account_master = globals()[ACCOUNT_MASTER]
+        global account_tic_tac_toe
+        account_tic_tac_toe = globals()[ACCOUNT_TTT] 
+
+        contract_tic_tac_toe = Contract(
+            account_tic_tac_toe, "tic_tac_toe_jungle")        
+        contract_tic_tac_toe.build()
+        contract_tic_tac_toe.deploy()
+        code_hash = account_tic_tac_toe.code(json=True)["code_hash"]
+
         if IS_USE_KEOSD:
             eosf.stop([eosf.Verbosity.TRACE])
+            eosf_account.restart()
             eosf.use_keosd(True)
-            eosf.stop()
-
+            
             setup.set_nodeos_address(cryptolions)
             eosf.info()
 
-            ACCOUNT_TTT = ACCOUNT_MASTER
-            eosf.use_keosd(True)
-            eosf.kill_keosd()
             try:
                 wallet_file = eosf.wallet_dir() + WALLET_NAME + ".wallet"
                 os.remove(wallet_file)
@@ -43,52 +60,39 @@ class Test1(unittest.TestCase):
             except Exception as e:
                 print("Cannot delete the wallet file:\n{}\n".format(str(e))) 
 
-            wallet = Wallet(WALLET_NAME)
+            wallet = Wallet(
+                WALLET_NAME, 
+                verbosity=[eosf.Verbosity.TRACE, eosf.Verbosity.OUT]) 
+            ACCOUNT_MASTER = ACCOUNT_TTT
 
             account_master_create(
-                ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY)
-        else:
-            eosf.use_keosd(False)
-            eosf.kill_keosd()
-            eosf.reset([eosf.Verbosity.TRACE])
+                ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
+                verbosity=[eosf.Verbosity.TRACE, eosf.Verbosity.OUT])
 
-            wallet = Wallet()
-            ACCOUNT_MASTER = "account_master"
-            account_master_create(ACCOUNT_MASTER)
+            global account_master
+            account_master = globals()[ACCOUNT_MASTER]
+            global account_tic_tac_toe
+            account_tic_tac_toe = globals()[ACCOUNT_TTT] 
 
-            ACCOUNT_TTT = "account_tic_tac_toe"
-            account_create(ACCOUNT_TTT, account_master)
+            contract_tic_tac_toe = Contract(
+                account_tic_tac_toe, "tic_tac_toe_jungle")        
+            if not account_tic_tac_toe.code(json=True) == code_hash:
+                contract_tic_tac_toe.deploy()
 
-        global account_master
-        account_master = globals()[ACCOUNT_MASTER]
-        global account_tic_tac_toe
-        account_tic_tac_toe = globals()[ACCOUNT_TTT] 
+        account_create("account_alice", account_master)
+        account_create("account_carol", account_master)
 
-        contract_tic_tac_toe = Contract(
-            account_tic_tac_toe, "tic_tac_toe_jungle")
-        contract_tic_tac_toe.build_abi()
-        contract_tic_tac_toe.deploy()        
-        eosf.set_throw_error(False)            
+        eosf.set_throw_error(False)
+        eosf.set_is_testing_errors()            
 
     def test_tic_tac_toe(self):
         _.SCENARIO("""
         Given a ``Wallet`` class object in the global namespace; an account 
         master object named ``account_master`` in the global namespace;
         given an account object named ``account_tic_tac_toe`` account that keeps 
-        the ``tic_tac_toe`` contract 
-        -- create two player accounts: ``account_alice`` and ``account_carol``.
-        
-        Run games.
+        the ``tic_tac_toe`` contract; and given two player accounts: 
+        ``account_alice`` and ``account_carol`` -- run games.
         """)
-        
-        account_create("account_alice", account_master)
-        account_create("account_carol", account_master)
-
-        eosf.set_throw_error(False)
-        eosf.set_is_testing_errors()
-
-        ######################################################################  
-
 
         account_tic_tac_toe.push_action(
             "create", 
@@ -167,15 +171,17 @@ class Test1(unittest.TestCase):
         eosf.stop()
 
 if __name__ == "__main__":
+    """Test the ``tic_tac_toe`` contract either locally or remotely.
+    """
+    IS_USE_KEOSD = False
     if len(sys.argv) > 1:
-        if not isinstance(sys.argv[1], bool) :
-            print(
-                "Usage: python3 unittest_tic_tac_toe.1.py <is use keosd>")
-            exit()            
-
-    if len(sys.argv) == 1 or not sys.argv[1]:
-        IS_USE_KEOSD = False
-    else:
-        IS_USE_KEOSD = True
+        case = sys.argv.pop()
+        if case.upper() == "REMOTE":
+            IS_USE_KEOSD = True
+        else:
+            if not case.upper() == "LOCAL":
+                print(
+                    "Usage: python3 {} <remote | local>".format(sys.argv[0]))
+                exit()
 
     unittest.main()

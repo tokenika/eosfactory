@@ -35,136 +35,157 @@
 This file can be executed as a python script: 'python3 eosio_token_contract.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 </pre><div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-"""
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import unittest
 import setup
 import eosf
-import time<p>from eosf_wallet import Wallet
+import time
+
+from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
-eosf.set_throw_error(True) # make the errors be thrown as exceptions</p>
-<p>eosf.use_keosd(False)
+eosf.set_throw_error(True) # make the errors be thrown as exceptions
+
+eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE]) # start the local test node, reset
-“”“</p>
-</pre><div class="section" id="the-wallet-object">
-<span id="the-wallet-object"></span><h3>The <code class="docutils literal notranslate"><span class="pre">Wallet</span></code> object<a class="headerlink" href="#the-wallet-object" title="Permalink to this headline">¶</a></h3>
-<pre>
-Create the singleton wallet object. The object represents a physical wallet,
-managed with either the KEOSD or NODEOS Wallet Manager:
-</pre>
-<pre>
-"""
-wallet = Wallet()
-account_master_create("account_master")<p>eosf.set_throw_error(False) # make the errors be printed
-“”“</p>
+&quot;&quot;&quot;
 </pre></div>
+</div>
+<div class="section" id="the-wallet-object">
+<span id="the-wallet-object"></span><h3>The <code class="docutils literal notranslate"><span class="pre">Wallet</span></code> object<a class="headerlink" href="#the-wallet-object" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Create the singleton wallet object. The object represents a physical wallet,
+managed with either the KEOSD or NODEOS Wallet Manager:
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+wallet = Wallet()
+account_master_create(&quot;account_master&quot;)
+
+eosf.set_throw_error(False) # make the errors be printed
+&quot;&quot;&quot;
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<pre>
-With the master account, create four accounts: 'account_alice', 
-'account_bob', 'account_carrol' and 'account_test'. Add the 
-'eosio.token' contract to the last account.
-</pre><div class="section" id="the-account-create-factory">
+<div class="highlight-md notranslate"><div class="highlight"><pre>With the master account, create four accounts: &#39;account_alice&#39;, 
+&#39;account_bob&#39;, &#39;account_carrol&#39; and &#39;account_test&#39;. Add the 
+&#39;eosio.token&#39; contract to the last account.
+</pre></div>
+</div>
+<div class="section" id="the-account-create-factory">
 <span id="the-account-create-factory"></span><h3>The <code class="docutils literal notranslate"><span class="pre">account_create</span></code> factory<a class="headerlink" href="#the-account-create-factory" title="Permalink to this headline">¶</a></h3>
-<pre>
-Note that the account-creation command places in the global namespace the
+<div class="highlight-md notranslate"><div class="highlight"><pre>Note that the account-creation command places in the global namespace the
 account object named with the first argument. The object represent a physical
 account in the blockchain and in the wallet.
-</pre>
-<pre>
-"""
-account_create("account_alice", account_master)
-account_create("account_bob", account_master)
-account_create("account_carol", account_master)
-account_create("account_test", account_master)
-contract_test = Contract(account_test, "token")
-deploy = contract_test.deploy()<p>time.sleep(1)
-“”“</p>
-</pre>
-<pre>
-Execute actions on the contract account:<ul class="simple">
-<li>let eosio deposit an amount of 1000000000.0000 EOS there;</li>
-<li>transfer some EOS to the ‘alice’ account.</li>
-</ul>
-<p>Use the ‘push_action’ method of the contract account:</p>
-</pre>
-<pre>
-"""
-account_test.push_action(
-    "create", 
-    '{"issuer":"' 
-        + str(account_master) 
-        + '", "maximum_supply":"1000000000.0000 EOS", \
-        "can_freeze":0, "can_recall":0, "can_whitelist":0}')<p>account_test.push_action(
-“issue”,
-‘{“to”:”’ + str(account_alice)
-+ ‘”, “quantity”:”100.0000 EOS”, ‘
-+ ‘“memo”:”issue 100.0000 EOS from eosio to alice”}’,
-permission=account_master)
-“”“</p>
-</pre>
-<pre>
-Execute a series of transfers between the accounts. Use the 'push_action' 
-method of the contract account:
-</pre><pre>
-"""
-account_test.push_action(
-    "transfer",
-    '{"from":"' + str(account_alice)
-        + '", "to":"' + str(account_carol)
-        + '", "quantity":"25.0000 EOS", '
-        + '"memo":"transfer 25.0000 EOS from alice to carol"}',
-    permission=account_alice)<p>account_test.push_action(
-“transfer”,
-‘{“from”:”’ + str(account_carol)
-+ ‘”, “to”:”’ + str(account_bob)
-+ ‘”, “quantity”:”11.0000 EOS”, ‘
-+ ‘“memo”:”transfer 11.0000 EOS from carol to bob”}’,
-permission=account_carol)</p>
-<p>account_test.push_action(
-“transfer”,
-‘{“from”:”’ + str(account_carol)
-+ ‘”, “to”:”’ + str(account_bob)
-+ ‘”, “quantity”:”2.0000 EOS”, ‘
-+ ‘“memo”:”transfer 2.0000 EOS from carol to bob”}’,
-permission=account_carol)</p>
-<p>account_test.push_action(
-“transfer”,
-‘{“from”:”’ + str(account_bob)
-+ ‘”, “to”:”’ + str(account_alice)
-+ ‘”, “quantity”:”2.0000 EOS”, ‘
-+ ‘“memo”:”transfer 2.0000 EOS from bob to alice”}’,
-permission=account_bob)</p>
-<p>“”“</p>
-</pre>
-<pre>
-To see the records of the accounts, use the 'table' method of the contract
-account:
-</pre>
-<pre>
-"""
-table_alice = account_test.table("accounts", account_alice)
-table_bob = account_test.table("accounts", account_bob)
-table_carol = account_test.table("accounts", account_carol)
-"""
 </pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+account_create(&quot;account_alice&quot;, account_master)
+account_create(&quot;account_bob&quot;, account_master)
+account_create(&quot;account_carol&quot;, account_master)
+account_create(&quot;account_test&quot;, account_master)
+contract_test = Contract(account_test, &quot;token&quot;)
+deploy = contract_test.deploy()
+
+time.sleep(1)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Execute actions on the contract account:
+
+* let eosio deposit an amount of 1000000000.0000 EOS there;
+* transfer some EOS to the &#39;alice&#39; account.
+
+Use the &#39;push_action&#39; method of the contract account:
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+account_test.push_action(
+    &quot;create&quot;, 
+    &#39;{&quot;issuer&quot;:&quot;&#39; 
+        + str(account_master) 
+        + &#39;&quot;, &quot;maximum_supply&quot;:&quot;1000000000.0000 EOS&quot;, \
+        &quot;can_freeze&quot;:0, &quot;can_recall&quot;:0, &quot;can_whitelist&quot;:0}&#39;)
+
+account_test.push_action(
+    &quot;issue&quot;,
+    &#39;{&quot;to&quot;:&quot;&#39; + str(account_alice)
+        + &#39;&quot;, &quot;quantity&quot;:&quot;100.0000 EOS&quot;, &#39;
+        + &#39;&quot;memo&quot;:&quot;issue 100.0000 EOS from eosio to alice&quot;}&#39;,
+    permission=account_master)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Execute a series of transfers between the accounts. Use the &#39;push_action&#39; 
+method of the contract account:
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+account_test.push_action(
+    &quot;transfer&quot;,
+    &#39;{&quot;from&quot;:&quot;&#39; + str(account_alice)
+        + &#39;&quot;, &quot;to&quot;:&quot;&#39; + str(account_carol)
+        + &#39;&quot;, &quot;quantity&quot;:&quot;25.0000 EOS&quot;, &#39;
+        + &#39;&quot;memo&quot;:&quot;transfer 25.0000 EOS from alice to carol&quot;}&#39;,
+    permission=account_alice)
+
+account_test.push_action(
+    &quot;transfer&quot;,
+    &#39;{&quot;from&quot;:&quot;&#39; + str(account_carol)
+        + &#39;&quot;, &quot;to&quot;:&quot;&#39; + str(account_bob)
+        + &#39;&quot;, &quot;quantity&quot;:&quot;11.0000 EOS&quot;, &#39;
+        + &#39;&quot;memo&quot;:&quot;transfer 11.0000 EOS from carol to bob&quot;}&#39;,
+    permission=account_carol)
+
+account_test.push_action(
+    &quot;transfer&quot;,
+    &#39;{&quot;from&quot;:&quot;&#39; + str(account_carol)
+        + &#39;&quot;, &quot;to&quot;:&quot;&#39; + str(account_bob)
+        + &#39;&quot;, &quot;quantity&quot;:&quot;2.0000 EOS&quot;, &#39;
+        + &#39;&quot;memo&quot;:&quot;transfer 2.0000 EOS from carol to bob&quot;}&#39;,
+    permission=account_carol)
+
+account_test.push_action(
+    &quot;transfer&quot;,
+    &#39;{&quot;from&quot;:&quot;&#39; + str(account_bob)
+        + &#39;&quot;, &quot;to&quot;:&quot;&#39; + str(account_alice)
+        + &#39;&quot;, &quot;quantity&quot;:&quot;2.0000 EOS&quot;, &#39;
+        + &#39;&quot;memo&quot;:&quot;transfer 2.0000 EOS from bob to alice&quot;}&#39;,
+    permission=account_bob)
+
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>To see the records of the accounts, use the &#39;table&#39; method of the contract
+account:
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+table_alice = account_test.table(&quot;accounts&quot;, account_alice)
+table_bob = account_test.table(&quot;accounts&quot;, account_bob)
+table_carol = account_test.table(&quot;accounts&quot;, account_carol)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+</div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<pre>
-In an linux bash, change directory to where this file exists, it is the 
-directory 'docs/source/cases' in the repository, and enter this command:
-</pre>
-<pre>
-$ python3 eosio_token_contract.md
-</pre>
-<pre>
-We hope that you get something similar to this one shown in the image below.
-</pre>
-<img src="eosio_token.png" 
-    onerror="this.src='../../../source/cases/eosio_token.png'"   
-    alt="eosio token contract" width="640px"/><p>“”“</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, it is the 
+directory &#39;docs/source/cases&#39; in the repository, and enter this command:
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 eosio_token_contract.md
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
+</pre></div>
+</div>
+<p><img src="eosio_token.png" 
+onerror="this.src='../../../source/cases/eosio_token.png'"   
+alt="eosio token contract" width="640px"/></p>
+<p>“”“</p>
 </div>
 </div>
 </div>
