@@ -115,7 +115,7 @@ eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
     eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
 
-class Test1(unittest.TestCase):
+class Test(unittest.TestCase):
     def test_tic_tac_toe(self):
         
         account_master = globals()[ACCOUNT_MASTER]

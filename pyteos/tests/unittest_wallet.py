@@ -11,7 +11,7 @@ eosf.set_throw_error(False)
 cryptolions = "88.99.97.30:38888"
 _ = eosf.Logger()
 
-class Test1(unittest.TestCase):
+class Test(unittest.TestCase):
 
     def run(self, result=None):
         super().run(result)

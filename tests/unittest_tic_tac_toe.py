@@ -18,8 +18,9 @@ IS_USE_KEOSD = False
 
 ACCOUNT_MASTER = "account_master"
 ACCOUNT_TTT = "account_tic_tac_toe"
+_ = eosf.Logger()
 
-class Test1(unittest.TestCase):
+class Test(unittest.TestCase):
 
     def setUp(self):
         eosf.kill_keosd()
@@ -28,26 +29,9 @@ class Test1(unittest.TestCase):
         global ACCOUNT_TTT
 
         eosf.set_throw_error(True)
-        eosf.use_keosd(False)
-        eosf.reset([eosf.Verbosity.TRACE])
-
-        wallet = Wallet()
-        account_master_create(ACCOUNT_MASTER)
-        account_create(ACCOUNT_TTT, globals()[ACCOUNT_MASTER])
-        global account_master
-        account_master = globals()[ACCOUNT_MASTER]
-        global account_tic_tac_toe
-        account_tic_tac_toe = globals()[ACCOUNT_TTT] 
-
-        contract_tic_tac_toe = Contract(
-            account_tic_tac_toe, "tic_tac_toe_jungle")        
-        contract_tic_tac_toe.build()
-        contract_tic_tac_toe.deploy()
-        code_hash = account_tic_tac_toe.code(json=True)["code_hash"]
 
         if IS_USE_KEOSD:
             eosf.stop([eosf.Verbosity.TRACE])
-            eosf_account.restart()
             eosf.use_keosd(True)
             
             setup.set_nodeos_address(cryptolions)
@@ -56,35 +40,48 @@ class Test1(unittest.TestCase):
             try:
                 wallet_file = eosf.wallet_dir() + WALLET_NAME + ".wallet"
                 os.remove(wallet_file)
-                print("The deleted wallet file:\n{}\n".format(wallet_file))
+                _.TRACE("The deleted wallet file:\n{}\n".format(wallet_file))
             except Exception as e:
-                print("Cannot delete the wallet file:\n{}\n".format(str(e))) 
+                _.ERROR("Cannot delete the wallet file:\n{}\n".format(str(e))) 
 
             wallet = Wallet(
                 WALLET_NAME, 
-                verbosity=[eosf.Verbosity.TRACE, eosf.Verbosity.OUT]) 
+                verbosity=[eosf.Verbosity.TRACE]) 
             ACCOUNT_MASTER = ACCOUNT_TTT
 
-            account_master_create(
-                ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
-                verbosity=[eosf.Verbosity.TRACE, eosf.Verbosity.OUT])
+            if not ACCOUNT_MASTER in globals:
+                account_master_create(
+                    ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
+                    verbosity=[eosf.Verbosity.TRACE, eosf.Verbosity.OUT])
 
-            global account_master
-            account_master = globals()[ACCOUNT_MASTER]
-            global account_tic_tac_toe
-            account_tic_tac_toe = globals()[ACCOUNT_TTT] 
+        else:
+            eosf.use_keosd(False)
+            eosf.reset([eosf.Verbosity.TRACE])
 
-            contract_tic_tac_toe = Contract(
-                account_tic_tac_toe, "tic_tac_toe_jungle")        
-            if not account_tic_tac_toe.code(json=True) == code_hash:
-                contract_tic_tac_toe.deploy()
+            wallet = Wallet()
+            account_master_create(ACCOUNT_MASTER)
+            account_create(ACCOUNT_TTT, globals()[ACCOUNT_MASTER])
 
-        account_create("account_alice", account_master)
-        account_create("account_carol", account_master)
+        global account_master
+        account_master = globals()[ACCOUNT_MASTER]
+        global account_tic_tac_toe
+        account_tic_tac_toe = globals()[ACCOUNT_TTT] 
+
+        contract_tic_tac_toe = Contract(
+            account_tic_tac_toe, "tic_tac_toe_jungle")        
+        contract_tic_tac_toe.build()
+        if not account_tic_tac_toe.is_code():            
+            contract_tic_tac_toe.deploy()
+
+        if not "account_alice" in globals:
+            account_create("account_alice", account_master)
+        if not "account_carol" in globals:
+            account_create("account_carol", account_master)
 
         eosf.set_throw_error(False)
-        eosf.set_is_testing_errors()            
+        eosf.set_is_testing_errors()
 
+        exit()
     def test_tic_tac_toe(self):
         _.SCENARIO("""
         Given a ``Wallet`` class object in the global namespace; an account 

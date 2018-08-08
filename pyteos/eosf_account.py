@@ -200,6 +200,7 @@ class GetAccount(cleos.GetAccount, eosf.Logger):
             account_object_name, name=None, 
             owner_key_private=None, active_key_private=None, verbosity=None):
 
+        self.account_object_name = account_object_name
         eosf.Logger.__init__(self, verbosity)
         if name is None: 
             self.name = cleos.account_name()
@@ -255,9 +256,10 @@ class GetAccount(cleos.GetAccount, eosf.Logger):
             """.format(self.name))
 
     def info(self):
-        result = cleos.GetAccount(self.name, is_verbose=-1)
-        if not self.ERROR(result):
-            print(ao.out_msg)
+        get_account = cleos.GetAccount(self.name, is_verbose=-1)
+        if not self.ERROR(get_account):
+            print("account object name: {}\n{}".format(
+                self.account_object_name, get_account))
 
     def __str__(self):
         return self.name
@@ -531,18 +533,28 @@ def append_account_methods_and_finish(
 
     account_object.error_map = types.MethodType(error_map, account_object)  
 
-    def code(account_object, code="", abi="", wasm=False, json=False):
+    def code(account_object, code="", abi="", wasm=False):
         result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
         if not account_object.ERROR(result):
-            if json:
-                return result.json
-            else:
-                account_object.EOSF_TRACE("""
-                * code()
-                """)
-                account_object.OUT(result.out_msg)
+            account_object.EOSF_TRACE("""
+            * code()
+            """)
+            account_object.OUT(result.out_msg)
 
     account_object.code = types.MethodType(code, account_object)
+
+    def is_code(account_object):
+        get_code = cleos.GetCode(account_object.name, is_verbose=-1)
+        if not account_object.ERROR(get_code):
+            if get_code.code_hash == \
+            "0000000000000000000000000000000000000000000000000000000000000000":
+                return ""
+            else:
+                return get_code.code_hash
+        else:
+            return None
+
+    account_object.is_code = types.MethodType(is_code, account_object)        
 
     def set_contract(
             account_object, contract_dir, 

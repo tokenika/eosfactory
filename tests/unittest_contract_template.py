@@ -17,7 +17,7 @@ eosf.set_throw_error(False)
 _ = eosf.Logger()
 CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
 
-class Test1(unittest.TestCase):
+class Test(unittest.TestCase):
 
     def run(self, result=None):
         super().run(result)

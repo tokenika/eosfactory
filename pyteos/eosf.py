@@ -416,7 +416,6 @@ def stop(verbosity=None):
     is empty, otherwise `False`.
     """
     stop = teos.NodeStop(is_verbose=0)
-    cleos.set_wallet_url_arg(stop, "")
     logger = Logger(verbosity)
     if not logger.ERROR(stop):
         logger.EOSF_TRACE("""

@@ -128,10 +128,19 @@ class Contract(eosf.Logger):
                 ######### Create a `Contract` object.
                 """)
         config = teos.GetConfig(self.contract_dir, is_verbose=0)
+        self.contract_dir = config.json["contract-dir"]
+        self.contract_abi = None
+        self.contract_wast = None
+        try:
+            self.contract_abi = config.json["contract-abi"]
+            self.contract_wast = config.json["contract-wast"]
+        except:
+            pass
+
         self.EOSF("""
                 * Contract directory is
                     {}
-                """.format(config.json["contract-dir"]))
+                """.format(self.contract_dir))
 
     def error_map(self, err_msg):
         if not err_msg:
@@ -153,27 +162,20 @@ class Contract(eosf.Logger):
             json=True
         )
         if not self.ERROR(result):
+            import pdb; pdb.set_trace()
             if not dont_broadcast:
-                code = cleos.GetCode(self.account.name, is_verbose=-1)
-                if code.code_hash == \
-                "0000000000000000000000000000000000000000000000000000000000000000":
+                is_code = self.account.is_code()
+                if not is_code:
                     self.ERROR("""
-    Error in contract deployment:
-    Despite the ``set contract`` command returned without any error,
-    the code hash of the associated account is null:
-    {}
-                    """.format(code.code_hash))                
-
+                Error in contract deployment:
+                Despite the ``set contract`` command returned without any error,
+                the code hash of the associated account is null
+                    """)                
                     return
                 else:
                     self.EOSF("""
                     * Contract deployed. Code hash is checked not null.
                     """)
-            try:
-                for action in result.json["actions"]:
-                    action["data"] = "contract code data, deleted for readability ..................."
-            except:
-                pass
             # print(eosf_account.translate(json.dumps(result.json, indent=3)))
             self.contract = result
         else:

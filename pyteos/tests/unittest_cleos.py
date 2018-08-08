@@ -7,7 +7,7 @@ import teos
 import eosf
 
 
-class Test1(unittest.TestCase):
+class Test(unittest.TestCase):
 
     def run(self, result=None):
         """ Stop after first error """      

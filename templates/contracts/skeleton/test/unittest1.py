@@ -9,7 +9,7 @@ setup.set_verbose(True)
 eosf.use_keosd(False)
 setup.set_json(False)
 
-class Test1(unittest.TestCase):
+class Test(unittest.TestCase):
 
     def run(self, result=None):
         """ Stop after first error """
