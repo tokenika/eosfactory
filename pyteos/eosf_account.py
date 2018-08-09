@@ -1,4 +1,4 @@
-import json
+import json as json_module
 import inspect
 import types
 import time
@@ -42,7 +42,7 @@ def set_is_translating(status=True):
     global _is_translating
     _is_translating = status
 
-def translate(sentence, keys=False):
+def decodeObjectNames(sentence, keys=False):
     global _is_translating
     if not _is_translating:
         return sentence
@@ -66,6 +66,15 @@ def translate(sentence, keys=False):
                     sentence.replace(owner_key, account_object_name + "_active")
             except:
                 pass
+
+    return sentence
+
+def codeObjectNames(sentence, keys=False):
+    account_map = eosf.account_map()
+    global wallet_globals
+    for name in account_map:
+        account_object_name = account_map[name]
+        sentence = sentence.replace(account_object_name, name)
 
     return sentence
 
@@ -596,6 +605,9 @@ def append_account_methods_and_finish(
             except: # permission is the name of an account:
                 permission = permission
 
+        data = re.sub("\s+|\n+|\t+", " ", data)
+        data = codeObjectNames(data)
+
         result = cleos.PushAction(
             account_object, action, data,
             permission, expiration_sec, 
@@ -608,11 +620,11 @@ def append_account_methods_and_finish(
             account_object.EOSF_TRACE("""
             * Push action:
                 {}
-            """.format(re.sub(' +',' ', translate(data))))
+            """.format(re.sub(' +',' ', decodeObjectNames(data))))
             account_object.action = result
             try:
                 account_object._console = result.console
-                account_object.DEBUG(translate(account_object._console), True)
+                account_object.DEBUG(decodeObjectNames(account_object._console), True)
             except:
                 pass
 
@@ -621,7 +633,7 @@ def append_account_methods_and_finish(
                 push action responce:
 
                 {}
-                """.format(translate(result.out_msg, keys=True)))
+                """.format(decodeObjectNames(result.out_msg, keys=True)))
                 
         else:
             account_object.action = None
@@ -649,7 +661,7 @@ def append_account_methods_and_finish(
             account_object.EOSF_TRACE("""
             * Table ''{}'' for ``{}``
             """.format(table_name, scope))
-            account_object.OUT(translate(result.out_msg))
+            account_object.OUT(decodeObjectNames(result.out_msg))
             return result
         return None
 
@@ -660,7 +672,8 @@ def append_account_methods_and_finish(
 
     account_object.__str__ = types.MethodType(__str__, account_object)
 
-    return put_account_to_wallet_and_on_stack(
+    if account_object.owner_key:
+        put_account_to_wallet_and_on_stack(
             account_object_name, account_object)
 
 def account_create(
@@ -678,6 +691,10 @@ def account_create(
         ref_block="",
         restore=False,
         verbosity=None):
+
+    if restore:
+        if creator:
+            account_name = creator
 
     logger = eosf.Logger(verbosity)
     logger.EOSF_TRACE("""
@@ -705,13 +722,10 @@ def account_create(
     """
     account_object = None
     if restore:
-        if creator:
-            account_name = creator
         logger.EOSF_TRACE("""
                         ... for the blockchain account `{}`.
                         """.format(account_object_name, account_name)) 
         account_object = RestoreAccount(account_name, verbosity)
-             
     else:
         if not account_name:
             account_name = cleos.account_name()

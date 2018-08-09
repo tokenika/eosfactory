@@ -47,7 +47,7 @@ registration forms. These definitions are stored in the 'user_data.py' script:
 from user_data import *
 """
 ```
-#### Unittest test class definition begins
+#### Unittest test class definition begins here
 ```md
 """
 class Test(unittest.TestCase):
@@ -148,7 +148,6 @@ account dgxo1uyhoytn has insufficient ram; needs 138233 bytes has 64789 bytes
 ```
 ```md
         """
-
         if not "account_alice" in globals():
             account_create("account_alice", account_master)
         else:

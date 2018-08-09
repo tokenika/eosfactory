@@ -68,10 +68,10 @@ it is: the ``hello`` contract.
         contract_hello.deploy()
 
         account_hello.push_action(
-            "hi", '{"user":"' + str(account_alice) + '"}', account_alice)
+            "hi", '{"user":"account_alice"}', account_alice)
 
         account_hello.push_action(
-            "hi", '{"user":"' + str(account_carol) + '"}', account_carol)
+            "hi", '{"user":"account_carol"}', account_carol)
 
     def tearDown(self):
         pass

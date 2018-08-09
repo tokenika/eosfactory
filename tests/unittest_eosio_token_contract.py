@@ -65,21 +65,24 @@ NEXT TEST ====================================================================
 
         account_eosio_token.push_action(
             "create", 
-            '{"issuer":"' 
-                + str(account_master) 
-                + '", "maximum_supply":"1000000000.0000 EOS", \
-                "can_freeze":0, "can_recall":0, "can_whitelist":0}')
-                
+            '''{
+                "issuer": "account_master",
+                "maximum_supply": "1000000000.0000 EOS",
+                "can_freeze": "0", 
+                "can_recall": "0", 
+                "can_whitelist": "0"
+            }''')
+
         self.assertTrue(
-            '"issuer":"account_master", "maximum_supply":"1000000000.0000 EOS"' \
-                in account_eosio_token.eosf_buffer)
+            '"issuer": "account_master", "maximum_supply": "1000000000.0000 EOS"' \
+                in account_eosio_token.eosf_buffer)        
 
         account_eosio_token.push_action(
             "issue",
-            '{"to":"' + str(account_alice)
-                + '", "quantity":"100.0000 EOS", '
-                + '"memo":""}',
-            permission=account_master)
+            '''{
+                "to": "account_alice", "quantity": "100.0000 EOS", "memo": ""
+            }''',
+            permission=account_master)        
 
         _.COMMENT("""
         Execute a series of transfers between accounts:
@@ -87,35 +90,35 @@ NEXT TEST ====================================================================
 
         account_eosio_token.push_action(
             "transfer",
-            '{"from":"' + str(account_alice)
-                + '", "to":"' + str(account_carol)
-                + '", "quantity":"25.0000 EOS", '
-                + '"memo":""}',
+            '''{
+                "from": "account_alice", "to": "account_carol",
+                "quantity": "25.0000 EOS", "memo":""
+            }''',
             permission=account_alice)
 
         account_eosio_token.push_action(
             "transfer",
-            '{"from":"' + str(account_carol)
-                + '", "to":"' + str(account_bob)
-                + '", "quantity":"11.0000 EOS", '
-                + '"memo":""}',
+            '''{
+                "from": "account_carol", "to": "account_bob", 
+                "quantity": "11.0000 EOS", "memo": ""
+            }''',
             permission=account_carol)
 
         account_eosio_token.push_action(
             "transfer",
-            '{"from":"' + str(account_carol)
-                + '", "to":"' + str(account_bob)
-                + '", "quantity":"2.0000 EOS", '
-                + '"memo":""}',
+            '''{
+                "from": "account_carol", "to": "account_bob", 
+                "quantity": "2.0000 EOS", "memo": ""
+            }''',
             permission=account_carol)
 
         account_eosio_token.push_action(
             "transfer",
-            '{"from":"' + str(account_bob)
-                + '", "to":"' + str(account_alice)
-                + '", "quantity":"2.0000 EOS", '
-                + '"memo":""}',
-            permission=account_bob)                
+            '''{
+                "from": "account_bob", "to": "account_alice", \
+                "quantity": "2.0000 EOS", "memo":""
+            }''',
+            permission=account_bob)                    
 
         _.COMMENT("""
         See the records of the account:

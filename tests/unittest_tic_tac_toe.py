@@ -3,6 +3,7 @@ import sys
 import unittest
 import setup
 import eosf
+import eosf_account
 
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
@@ -49,7 +50,7 @@ class Test(unittest.TestCase):
                 verbosity=[eosf.Verbosity.TRACE]) 
             ACCOUNT_MASTER = ACCOUNT_TTT
 
-            if not ACCOUNT_MASTER in globals:
+            if not ACCOUNT_MASTER in globals():
                 account_master_create(
                     ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
                     verbosity=[eosf.Verbosity.TRACE, eosf.Verbosity.OUT])
@@ -73,15 +74,14 @@ class Test(unittest.TestCase):
         if not account_tic_tac_toe.is_code():            
             contract_tic_tac_toe.deploy()
 
-        if not "account_alice" in globals:
+        if not "account_alice" in globals():
             account_create("account_alice", account_master)
-        if not "account_carol" in globals:
+        if not "account_carol" in globals():
             account_create("account_carol", account_master)
 
         eosf.set_throw_error(False)
         eosf.set_is_testing_errors()
 
-        exit()
     def test_tic_tac_toe(self):
         _.SCENARIO("""
         Given a ``Wallet`` class object in the global namespace; an account 
@@ -93,8 +93,10 @@ class Test(unittest.TestCase):
 
         account_tic_tac_toe.push_action(
             "create", 
-            '{"challenger":"' + str(account_alice) 
-                +'", "host":"' + str(account_carol) + '"}',
+            '''{
+                "challenger": "account_alice",
+                "host":"account_carol"
+            }''',
             account_carol)
 
         t = account_tic_tac_toe.table("games", account_carol)
@@ -112,18 +114,22 @@ class Test(unittest.TestCase):
 
         account_tic_tac_toe.push_action(
             "move", 
-            '{"challenger":"' + str(account_alice) 
-                + '", "host":"' + str(account_carol) 
-                + '", "by":"' + str(account_carol) 
-                + '", "row":0, "column":0 }', 
+            '''{
+                "challenger": "account_alice", 
+                "host": "account_carol",
+                "by": "account_carol", 
+                "row": 0, "column": 0 
+            }''', 
             account_carol)
 
         account_tic_tac_toe.push_action(
             "move", 
-            '{"challenger":"' + str(account_alice) 
-                + '", "host":"' + str(account_carol) 
-                + '", "by":"' + str(account_alice) 
-                + '", "row":1, "column":1 }', 
+            '''{
+                "challenger": "account_alice", 
+                "host": "account_carol",
+                "by": "account_alice", 
+                "row": 1, "column": 1 
+            }''', 
             account_alice)
 
         t = account_tic_tac_toe.table("games", account_carol)
@@ -140,9 +146,11 @@ class Test(unittest.TestCase):
 
         account_tic_tac_toe.push_action(
                 "restart", 
-                '{"challenger":"' + str(account_alice) 
-                    + '", "host":"' + str(account_carol) 
-                    + '", "by":"' + str(account_carol) + '"}', 
+                '''{
+                    "challenger": "account_alice", 
+                    "host": "account_carol",
+                    "by": "account_carol"
+                }''', 
                 account_carol)
 
         t = account_tic_tac_toe.table("games", account_carol)
@@ -160,8 +168,10 @@ class Test(unittest.TestCase):
 
         account_tic_tac_toe.push_action(
                 "close", 
-                '{"challenger":"' + str(account_alice) 
-                    + '", "host":"' + str(account_carol) + '"}', 
+                '''{
+                    "challenger": "account_alice",
+                    "host": "account_carol"
+                }''', 
                 account_carol)
 
     def tearDown(self):

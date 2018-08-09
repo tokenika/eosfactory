@@ -124,6 +124,8 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                 if not password: # new password
                     self.OUT(self.out_msg)
 
+                self.restore_accounts()
+
         else: # wallet.error:
             self.ERROR(self)
 
@@ -298,7 +300,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                 return False
         return True
 
-    def restore_accounts(self, namespace):
+    def restore_accounts(self):
         """
         """
         account_names = set() # accounts in wallets
@@ -309,24 +311,21 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
             for acc in accounts.json["account_names"]:
                 account_names.add(acc)
 
-        self.EOSF("""
-                Restored accounts as global variables:
-                """)
-
         restored = dict()
         if len(account_names) > 0:
-            try:
-                with open(self.wallet_dir + setup.account_map, "r") as input:    
-                    account_map = json.load(input)
-            except:
-                account_map = {}
-            
+            self.EOSF("""
+                    ######### Restored accounts as global variables:
+                    """)
+                        
+            account_map = eosf.account_map()           
             object_names = set()
 
-            for name in account_names:
-                try:
+            # account_names: {'vqodjjlemsc5', 'cgecc2d4pgvm', 'tlb54yedjgzq'}
+            for name in account_names: 
+                try: 
                     object_name = account_map[name]
-                    if object_name in object_names:
+                    # one object name with the another account
+                    if object_name in object_names: 
                         object_name = object_name + "_" + name
                 except:
                     object_name = name
@@ -336,14 +335,13 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                     self.EOSF("""
                          {} ({})
                     """.format(object_name, name))
-                    restored[object_name] = account(name, restore=True)
+                    from eosf_account import account_create
+                    restored[object_name] = account_create(
+                        object_name, name, restore=True, verbosity=[])
         else:
             self.EOSF("""
                  empty list
             """)
-
-        namespace.update(restored)
-        return restored
 
     def keys(self):
         """ Lists public keys from all unlocked wallets.
@@ -367,7 +365,8 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
             is_taken = False
             for name, object_name in account_map_json.items():
                 if object_name == account_object_name:
-                    if not name == account_name:                        
+                    if not name == account_name:
+                        #import pdb; pdb.set_trace()                        
                         self.ERROR("""
                 The given account object name
                 `{}`({})
