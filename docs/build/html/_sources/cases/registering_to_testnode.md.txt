@@ -37,7 +37,7 @@ from user_data import *
 eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
     eosf.Verbosity.DEBUG])
 
-cryptolions = "88.99.97.30:38888"
+remote_testnet = "88.99.97.30:38888"
 _ = eosf.Logger()
 
 """
@@ -48,7 +48,7 @@ _ = eosf.Logger()
 ```md
 """
 eosf.use_keosd(True)        # use KEOSD Wallet Manager
-setup.set_nodeos_address(cryptolions)
+setup.set_nodeos_address(remote_testnet)
 """
 ```
 

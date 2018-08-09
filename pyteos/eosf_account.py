@@ -605,8 +605,15 @@ def append_account_methods_and_finish(
             except: # permission is the name of an account:
                 permission = permission
 
-        data = re.sub("\s+|\n+|\t+", " ", data)
-        data = codeObjectNames(data)
+        if isinstance(data, dict):
+            # data = json_module.dumps(data)
+            d = {}
+            for key, value in data.items():
+                d[key] = str(value)
+            data = json_module.dumps(d)
+        else:
+            data = re.sub("\s+|\n+|\t+", " ", data)
+            data = codeObjectNames(data)
 
         result = cleos.PushAction(
             account_object, action, data,

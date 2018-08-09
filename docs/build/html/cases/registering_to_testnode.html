@@ -60,7 +60,7 @@ from user_data import *
 eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
     eosf.Verbosity.DEBUG])
 
-cryptolions = &quot;88.99.97.30:38888&quot;
+remote_testnet = &quot;88.99.97.30:38888&quot;
 _ = eosf.Logger()
 
 &quot;&quot;&quot;
@@ -70,7 +70,7 @@ _ = eosf.Logger()
 <span id="set-a-remote-testnode"></span><h3>Set a remote testnode<a class="headerlink" href="#set-a-remote-testnode" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.use_keosd(True)        # use KEOSD Wallet Manager
-setup.set_nodeos_address(cryptolions)
+setup.set_nodeos_address(remote_testnet)
 &quot;&quot;&quot;
 </pre></div>
 </div>

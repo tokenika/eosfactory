@@ -144,3 +144,89 @@ class SystemNewaccount(cleos._Cleos):
             
     def __str__(self):
         self.name
+
+class SystemBuyram(cleos._Cleos):
+    """ Buy RAM.
+
+    - **parameters**::
+
+        payer: The account paying for RAM.
+        receiver: The account receiving bought RAM.
+        amount: The amount of EOS to pay for RAM, or number of kbytes of RAM if 
+            --kbytes is set.
+        buy_ram_kbytes: If set, buy ram in number of kbytes.
+        expiration: The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign: Specify if unlocked wallet keys should be used to sign 
+            transaction.
+        dont_broadcast: Don't broadcast transaction to the network (just print).
+        forceUnique: Force the transaction to be unique. this will consume extra 
+            bandwidth and remove any protections against accidently issuing the 
+            same transaction multiple times.
+        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+            the execution of the transaction 
+            (defaults to 0 which means no limit).
+        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+            transaction (defaults to 0 which means no limit).
+        ref_block: The reference block num or block id used for TAPOS 
+            (Transaction as Proof-of-Stake).
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the constraction time.
+    """
+    def __init__(
+            self, payer, receiver, amount,
+            buy_ram_kbytes=0, 
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block="",
+            is_verbose=1
+            ):
+        try:
+            payer_name = payer.name
+        except:
+            payer_name = payer
+        
+        try:
+            receiver_name = receiver.name
+        except:
+            receiver_name = receiver
+
+        args = [payer_name, receiver_name, amount]
+        if buy_ram_kbytes:
+            args.extend(["--kbytes", str(buy_ram_kbytes)])
+
+        if skip_signature:
+            args.append("--skip-sign")
+        if dont_broadcast:
+            args.append("--dont-broadcast")
+        if forceUnique:
+            args.append("--force-unique")
+        if max_cpu_usage:
+            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
+        if  max_net_usage:
+            args.extend(["--max-net-usage", max_net_usage])
+        if  ref_block:
+            args.extend(["--ref-block", ref_block])
+
+        self.name = name
+
+        cleos._Cleos.__init__(
+            self, args, "system", "byram", is_verbose)
+            
+        if not self.error and setup.is_json():
+            self.json = cleos.GetAccount(
+                self.name, is_verbose=0, json=True).json
+
+            if self.is_verbose:
+                print(self.__str__())
+
+    def info(self):
+        print(str(cleos.GetAccount(self.name, is_verbose=1)))
+            
+    def __str__(self):
+        self.name

@@ -30,7 +30,7 @@
             
   <div class="section" id="interacting-with-public-testnet">
 <span id="interacting-with-public-testnet"></span><h1>Interacting with Public Testnet<a class="headerlink" href="#interacting-with-public-testnet" title="Permalink to this headline">¶</a></h1>
-<p>The purpose of this tutorial is to demonstrate how EOSFactory can be used to deploy and test EOS smart-contracts on a public testnet, e.g. <a class="reference external" href="http://dev.cryptolions.io">Jungle Testnet</a>.</p>
+<p>The purpose of this tutorial is to demonstrate how EOSFactory can be used to deploy and test EOS smart-contracts on a public testnet, e.g. <a class="reference external" href="http://dev.remote_testnet.io">Jungle Testnet</a>.</p>
 <div class="section" id="prerequisites">
 <span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <ul>
@@ -68,7 +68,7 @@
 <span class="n">wallet</span> <span class="o">=</span> <span class="n">eosf</span><span class="o">.</span><span class="n">Wallet</span><span class="p">(</span><span class="s2">&quot;jungle_wallet&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>NOTE:</strong> The <code class="docutils literal notranslate"><span class="pre">88.99.97.30:38888</span></code> URL is a <a class="reference external" href="https://cryptolions.io/">CryptoLions</a> endpoint to the <a class="reference external" href="http://dev.cryptolions.io/">Jungle Testnet</a>. For public testnet we need to rely on the <code class="docutils literal notranslate"><span class="pre">keosd</span></code> toolset for wallet management, which means that your wallet will be stored in the <code class="docutils literal notranslate"><span class="pre">~/eosio-wallet</span></code> folder. The name <code class="docutils literal notranslate"><span class="pre">jungle_wallet</span></code> can be replaced by any name you prefer - just make sure there is no naming conflict with any an existing wallet.</p>
+<p><strong>NOTE:</strong> The <code class="docutils literal notranslate"><span class="pre">88.99.97.30:38888</span></code> URL is a <a class="reference external" href="https://remote_testnet.io/">CryptoLions</a> endpoint to the <a class="reference external" href="http://dev.remote_testnet.io/">Jungle Testnet</a>. For public testnet we need to rely on the <code class="docutils literal notranslate"><span class="pre">keosd</span></code> toolset for wallet management, which means that your wallet will be stored in the <code class="docutils literal notranslate"><span class="pre">~/eosio-wallet</span></code> folder. The name <code class="docutils literal notranslate"><span class="pre">jungle_wallet</span></code> can be replaced by any name you prefer - just make sure there is no naming conflict with any an existing wallet.</p>
 <p>This is the outcome you should get:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre>Created wallet `jungle_wallet` with the `keosd` Wallet Manager.
 Save password to use in the future to unlock this wallet.
@@ -91,7 +91,7 @@ PW5KDRWrMAev57rfJ8z9FXpRA1tEG4EJ6nsnpVAfYdHRe5WDMnnLz
 </pre></div>
 </div>
 <p><strong>NOTE:</strong> As both the account name and it keys are generated randomly (to ensure their uniqueness on a public testnet) the above values will obviously be different each time you run the command.</p>
-<p>Next, open the <a class="reference external" href="http://dev.cryptolions.io/">Jungle Testnet monitor</a> in your web browser and create a new account there (select the <code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">Account</span></code> menu option) using the above data for account name, owner public key and active public key. Then use the testnet faucet (select the <code class="docutils literal notranslate"><span class="pre">Faucet</span></code> menu option) to send some funds into the newly created account.</p>
+<p>Next, open the <a class="reference external" href="http://dev.remote_testnet.io/">Jungle Testnet monitor</a> in your web browser and create a new account there (select the <code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">Account</span></code> menu option) using the above data for account name, owner public key and active public key. Then use the testnet faucet (select the <code class="docutils literal notranslate"><span class="pre">Faucet</span></code> menu option) to send some funds into the newly created account.</p>
 <p>Next, navigate back to your Python terminal and run these commands:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">wallet</span><span class="o">.</span><span class="n">unlock</span><span class="p">()</span>
 <span class="n">wallet</span><span class="o">.</span><span class="n">import_key</span><span class="p">(</span><span class="n">account_master</span><span class="p">)</span>

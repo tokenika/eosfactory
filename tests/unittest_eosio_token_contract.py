@@ -65,13 +65,13 @@ NEXT TEST ====================================================================
 
         account_eosio_token.push_action(
             "create", 
-            '''{
-                "issuer": "account_master",
+            {
+                "issuer": account_master,
                 "maximum_supply": "1000000000.0000 EOS",
                 "can_freeze": "0", 
                 "can_recall": "0", 
                 "can_whitelist": "0"
-            }''')
+            })
 
         self.assertTrue(
             '"issuer": "account_master", "maximum_supply": "1000000000.0000 EOS"' \
@@ -79,9 +79,9 @@ NEXT TEST ====================================================================
 
         account_eosio_token.push_action(
             "issue",
-            '''{
-                "to": "account_alice", "quantity": "100.0000 EOS", "memo": ""
-            }''',
+            {
+                "to": account_alice, "quantity": "100.0000 EOS", "memo": ""
+            },
             permission=account_master)        
 
         _.COMMENT("""
@@ -90,34 +90,34 @@ NEXT TEST ====================================================================
 
         account_eosio_token.push_action(
             "transfer",
-            '''{
-                "from": "account_alice", "to": "account_carol",
+            {
+                "from": account_alice, "to": account_carol,
                 "quantity": "25.0000 EOS", "memo":""
-            }''',
+            },
             permission=account_alice)
 
         account_eosio_token.push_action(
             "transfer",
-            '''{
-                "from": "account_carol", "to": "account_bob", 
+            {
+                "from": account_carol, "to": account_bob, 
                 "quantity": "11.0000 EOS", "memo": ""
-            }''',
+            },
             permission=account_carol)
 
         account_eosio_token.push_action(
             "transfer",
-            '''{
-                "from": "account_carol", "to": "account_bob", 
+            {
+                "from": account_carol, "to": account_bob, 
                 "quantity": "2.0000 EOS", "memo": ""
-            }''',
+            },
             permission=account_carol)
 
         account_eosio_token.push_action(
             "transfer",
-            '''{
-                "from": "account_bob", "to": "account_alice", \
+            {
+                "from": account_bob, "to": account_alice, \
                 "quantity": "2.0000 EOS", "memo":""
-            }''',
+            },
             permission=account_bob)                    
 
         _.COMMENT("""

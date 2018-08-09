@@ -19,7 +19,7 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-cryptolions = "88.99.97.30:38888"
+remote_testnet = "88.99.97.30:38888"
 
 """
 ```
@@ -31,7 +31,7 @@ Throw an exception if the testnode is off:
 ```md
 """
 eosf.use_keosd(True)
-setup.set_nodeos_address(cryptolions)
+setup.set_nodeos_address(remote_testnet)
 eosf.set_throw_error(True)
 eosf.info()
 eosf.set_throw_error(False)
@@ -77,7 +77,7 @@ except Exception as e:
 """
 eosf_account.restart()    # reset the Factory
 eosf.use_keosd(True)
-setup.set_nodeos_address(cryptolions)
+setup.set_nodeos_address(remote_testnet)
 
 ACCOUNT_MASTER = "account_master"
 ACCOUNT_TTT = ACCOUNT_MASTER

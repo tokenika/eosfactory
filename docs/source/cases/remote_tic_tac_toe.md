@@ -62,7 +62,7 @@ class Test(unittest.TestCase):
         eosf.stop([eosf.Verbosity.TRACE])
         eosf.use_keosd(True)
         
-        setup.set_nodeos_address(cryptolions)
+        setup.set_nodeos_address(remote_testnet)
         eosf.info()
         
         """

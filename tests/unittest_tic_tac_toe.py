@@ -35,7 +35,7 @@ class Test(unittest.TestCase):
             eosf.stop([eosf.Verbosity.TRACE])
             eosf.use_keosd(True)
             
-            setup.set_nodeos_address(cryptolions)
+            setup.set_nodeos_address(remote_testnet)
             eosf.info()
 
             try:
@@ -114,22 +114,22 @@ class Test(unittest.TestCase):
 
         account_tic_tac_toe.push_action(
             "move", 
-            '''{
-                "challenger": "account_alice", 
-                "host": "account_carol",
-                "by": "account_carol", 
+            {
+                "challenger": account_alice,                 
+                "host": account_carol,
+                "by": account_carol, 
                 "row": 0, "column": 0 
-            }''', 
+            }, 
             account_carol)
 
         account_tic_tac_toe.push_action(
             "move", 
-            '''{
-                "challenger": "account_alice", 
-                "host": "account_carol",
-                "by": "account_alice", 
+            {
+                "challenger": account_alice, 
+                "host": account_carol,
+                "by": account_alice, 
                 "row": 1, "column": 1 
-            }''', 
+            }, 
             account_alice)
 
         t = account_tic_tac_toe.table("games", account_carol)
@@ -146,11 +146,11 @@ class Test(unittest.TestCase):
 
         account_tic_tac_toe.push_action(
                 "restart", 
-                '''{
-                    "challenger": "account_alice", 
-                    "host": "account_carol",
-                    "by": "account_carol"
-                }''', 
+                {
+                    "challenger": account_alice, 
+                    "host": account_carol,
+                    "by": account_carol
+                }, 
                 account_carol)
 
         t = account_tic_tac_toe.table("games", account_carol)
@@ -168,10 +168,10 @@ class Test(unittest.TestCase):
 
         account_tic_tac_toe.push_action(
                 "close", 
-                '''{
-                    "challenger": "account_alice",
-                    "host": "account_carol"
-                }''', 
+                {
+                    "challenger": account_alice,
+                    "host": account_carol
+                }, 
                 account_carol)
 
     def tearDown(self):

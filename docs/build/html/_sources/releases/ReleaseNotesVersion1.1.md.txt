@@ -24,7 +24,7 @@ EOSFactory [v1.1](https://github.com/tokenika/eosfactory/releases/tag/v1.1) is c
 
 ## New features available in v1.1
 * Full compatibility with production version of EOS ([v1.0.8](https://github.com/EOSIO/eos/releases/tag/v1.0.8) or higher).
-* Ability to interact with a public testnet (e.g. [Jungle Testnet](http://dev.cryptolions.io/)).
+* Ability to interact with a public testnet (e.g. [Jungle Testnet](http://dev.remote_testnet.io/)).
 * Support for `keosd`, the official wallet management tool.
 * Built-in mechanism for mapping random account names to fixed names needed for smart-contract testing.
 * Color differentiation in console output.

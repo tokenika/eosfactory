@@ -14,7 +14,7 @@ eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
 eosf.set_throw_error(False)
 # setup.set_command_line_mode()
 
-cryptolions = "88.99.97.30:38888"
+remote_testnet = "88.99.97.30:38888"
 not_imputed = True
 _ = eosf.Logger()
 
@@ -152,7 +152,7 @@ NEXT TEST ====================================================================
     #     of the caller.
     #     """)
     #     eosf.use_keosd(True)
-    #     setup.set_nodeos_address(cryptolions)
+    #     setup.set_nodeos_address(remote_testnet)
     #     wallet = Wallet(
     #         "default",
     #         "PW5J5KW7erKzqJmn9gMrvzev4pLxR3Vt9BRkx94BqdfHkw4z4bNTd"
@@ -199,7 +199,7 @@ NEXT TEST ====================================================================
         Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA        
         """)
         eosf.use_keosd(True)
-        setup.set_nodeos_address(cryptolions)
+        setup.set_nodeos_address(remote_testnet)
         wallet = Wallet(
             "default",
             "PW5J5KW7erKzqJmn9gMrvzev4pLxR3Vt9BRkx94BqdfHkw4z4bNTd"

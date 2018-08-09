@@ -44,7 +44,7 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-cryptolions = &quot;88.99.97.30:38888&quot;
+remote_testnet = &quot;88.99.97.30:38888&quot;
 _ = eosf.Logger()
 &quot;&quot;&quot;
 </pre></div>
@@ -135,7 +135,7 @@ except Exception as e:
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.restart()    # reset the Factory
 eosf.use_keosd(True)
-setup.set_nodeos_address(cryptolions)
+setup.set_nodeos_address(remote_testnet)
 
 wallet = Wallet(wallet_name)
 account_master_create(

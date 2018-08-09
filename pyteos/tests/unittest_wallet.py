@@ -8,7 +8,7 @@ eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
     eosf.Verbosity.DEBUG])
 eosf.set_throw_error(False)
 
-cryptolions = "88.99.97.30:38888"
+remote_testnet = "88.99.97.30:38888"
 _ = eosf.Logger()
 
 class Test(unittest.TestCase):
@@ -50,7 +50,7 @@ Tests:
             pass
         eosf.set_throw_error(False)
         eosf.set_is_testing_errors()
-        setup.set_nodeos_address(cryptolions)
+        setup.set_nodeos_address(remote_testnet)
         ######################################################################
 
         wallet = Wallet(wallet_name)

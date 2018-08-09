@@ -1,6 +1,6 @@
 # Interacting with Public Testnet
 
-The purpose of this tutorial is to demonstrate how EOSFactory can be used to deploy and test EOS smart-contracts on a public testnet, e.g. [Jungle Testnet](http://dev.cryptolions.io).
+The purpose of this tutorial is to demonstrate how EOSFactory can be used to deploy and test EOS smart-contracts on a public testnet, e.g. [Jungle Testnet](http://dev.remote_testnet.io).
 
 ## Prerequisites
 
@@ -46,7 +46,7 @@ eosf.clear_account_mapp([])
 wallet = eosf.Wallet("jungle_wallet")
 ```
 
-**NOTE:** The `88.99.97.30:38888` URL is a [CryptoLions](https://cryptolions.io/) endpoint to the [Jungle Testnet](http://dev.cryptolions.io/). For public testnet we need to rely on the `keosd` toolset for wallet management, which means that your wallet will be stored in the `~/eosio-wallet` folder. The name `jungle_wallet` can be replaced by any name you prefer - just make sure there is no naming conflict with any an existing wallet.
+**NOTE:** The `88.99.97.30:38888` URL is a [CryptoLions](https://remote_testnet.io/) endpoint to the [Jungle Testnet](http://dev.remote_testnet.io/). For public testnet we need to rely on the `keosd` toolset for wallet management, which means that your wallet will be stored in the `~/eosio-wallet` folder. The name `jungle_wallet` can be replaced by any name you prefer - just make sure there is no naming conflict with any an existing wallet.
 
 This is the outcome you should get:
 
@@ -78,7 +78,7 @@ Active Private Key: 5KU4eMGPSw8z9UJfTc5pRBhkkXNEdVpKAQd9sCbeEFdVdXhBHAH
 
 **NOTE:** As both the account name and it keys are generated randomly (to ensure their uniqueness on a public testnet) the above values will obviously be different each time you run the command.
 
-Next, open the [Jungle Testnet monitor](http://dev.cryptolions.io/) in your web browser and create a new account there (select the `Create Account` menu option) using the above data for account name, owner public key and active public key. Then use the testnet faucet (select the `Faucet` menu option) to send some funds into the newly created account.
+Next, open the [Jungle Testnet monitor](http://dev.remote_testnet.io/) in your web browser and create a new account there (select the `Create Account` menu option) using the above data for account name, owner public key and active public key. Then use the testnet faucet (select the `Faucet` menu option) to send some funds into the newly created account.
 
 Next, navigate back to your Python terminal and run these commands:
 
