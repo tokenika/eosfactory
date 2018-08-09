@@ -17,7 +17,7 @@ With remote node tests, we assume the following restrictions.
 
     * Accounts have to be reused between test sessions.
     * Contract deployment occurs only if contract changes.
-    * Wallet passwords are not stored in an open file.
+    * Wallet passwords are not stored in a plain file.
 ```
 ### Imports and set-up definitions
 
@@ -179,8 +179,10 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
         """
         account_tic_tac_toe.push_action(
             "create", 
-            '{"challenger":"' + str(account_alice) 
-                +'", "host":"' + str(account_carol) + '"}',
+            {
+                "challenger": account_alice, 
+                "host": account_carol
+            },
             account_carol)
 
         t = account_tic_tac_toe.table("games", account_carol)
@@ -198,18 +200,22 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
 
         account_tic_tac_toe.push_action(
             "move", 
-            '{"challenger":"' + str(account_alice) 
-                + '", "host":"' + str(account_carol) 
-                + '", "by":"' + str(account_carol) 
-                + '", "row":0, "column":0 }', 
+            {
+                "challenger": account_alice, 
+                "host": account_carol, 
+                "by": account_carol,  
+                "row":0, "column":0 
+            }, 
             account_carol)
 
         account_tic_tac_toe.push_action(
             "move", 
-            '{"challenger":"' + str(account_alice) 
-                + '", "host":"' + str(account_carol) 
-                + '", "by":"' + str(account_alice) 
-                + '", "row":1, "column":1 }', 
+            {
+                "challenger" account_alice,  
+                "host": account_carol,  
+                "by": account_alice, 
+                "row":1, "column":1 
+            }, 
             account_alice)
 
         t = account_tic_tac_toe.table("games", account_carol)
@@ -226,9 +232,11 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
 
         account_tic_tac_toe.push_action(
                 "restart", 
-                '{"challenger":"' + str(account_alice) 
-                    + '", "host":"' + str(account_carol) 
-                    + '", "by":"' + str(account_carol) + '"}', 
+                {
+                    "challenger": account_alice, 
+                    "host": account_carol, 
+                    "by": account_carol
+                }, 
                 account_carol)
 
         t = account_tic_tac_toe.table("games", account_carol)
@@ -246,8 +254,10 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
 
         account_tic_tac_toe.push_action(
                 "close", 
-                '{"challenger":"' + str(account_alice) 
-                    + '", "host":"' + str(account_carol) + '"}', 
+                {
+                    "challenger": account_alice,  
+                    "host": account_carol 
+                }, 
                 account_carol)
 
     def tearDown(self):

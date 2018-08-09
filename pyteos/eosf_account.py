@@ -166,9 +166,12 @@ def put_account_to_wallet_and_on_stack(
             logger.EOSF("""
             Wrong or missing keys for the account ``{}`` in the wallets.
             """.format(account_object.name))
-            return False        
+            return False
 
-class Eosio():
+class Account:
+    pass
+
+class Eosio(Account):
     def __init__(self):
         self.name = "eosio"
         config = teos.GetConfig(is_verbose=0)
@@ -186,7 +189,7 @@ class Eosio():
     def __str__(self):
         return self.name
 
-class GetAccount(cleos.GetAccount, eosf.Logger):
+class GetAccount(Account, cleos.GetAccount, eosf.Logger):
     """Look for the account of the given name, put it into the wallet.
 
     - **parameters**::
@@ -273,12 +276,12 @@ class GetAccount(cleos.GetAccount, eosf.Logger):
     def __str__(self):
         return self.name
 
-class RestoreAccount(cleos.RestoreAccount, eosf.Logger):
+class RestoreAccount(Account, cleos.RestoreAccount, eosf.Logger):
     def __init__(self, name, verbosity=None):
         cleos.RestoreAccount.__init__(self, name, is_verbose=-1)
         eosf.Logger.__init__(self, verbosity)
 
-class CreateAccount(cleos.CreateAccount, eosf.Logger):
+class CreateAccount(Account, cleos.CreateAccount, eosf.Logger):
     def __init__(
             self, creator, name, owner_key, 
             active_key="",
@@ -299,7 +302,7 @@ class CreateAccount(cleos.CreateAccount, eosf.Logger):
             )
         eosf.Logger.__init__(self, verbosity)
 
-class SystemNewaccount(cleos_system.SystemNewaccount, eosf.Logger):
+class SystemNewaccount(Account, cleos_system.SystemNewaccount, eosf.Logger):
     def __init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
@@ -605,12 +608,15 @@ def append_account_methods_and_finish(
             except: # permission is the name of an account:
                 permission = permission
 
+        class Encoder(json_module.JSONEncoder):
+            def default(self, o):
+                if isinstance(o, Account):
+                    return str(o)
+                else:
+                    json_module.JSONEncoder.default(self, o) 
+
         if isinstance(data, dict):
-            # data = json_module.dumps(data)
-            d = {}
-            for key, value in data.items():
-                d[key] = str(value)
-            data = json_module.dumps(d)
+            data = json_module.dumps(data, cls=Encoder)
         else:
             data = re.sub("\s+|\n+|\t+", " ", data)
             data = codeObjectNames(data)
@@ -678,6 +684,21 @@ def append_account_methods_and_finish(
         return account_object.name
 
     account_object.__str__ = types.MethodType(__str__, account_object)
+
+    def buy_ram(account_object, amount_kbytes, receiver=None):
+        if receiver is None:
+            receiver = account_object
+        result = cleos_system.BuyRam(
+            account_object, receiver, amount_kbytes,
+            buy_ram_kbytes=1,
+            expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=0
+            )
+
+    account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
     if account_object.owner_key:
         put_account_to_wallet_and_on_stack(

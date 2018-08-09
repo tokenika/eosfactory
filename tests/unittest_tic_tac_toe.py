@@ -93,10 +93,10 @@ class Test(unittest.TestCase):
 
         account_tic_tac_toe.push_action(
             "create", 
-            '''{
-                "challenger": "account_alice",
-                "host":"account_carol"
-            }''',
+            {
+                "challenger": account_alice,
+                "host": account_carol
+            },
             account_carol)
 
         t = account_tic_tac_toe.table("games", account_carol)
