@@ -154,13 +154,14 @@ def put_account_to_wallet_and_on_stack(
         wallet_singleton.map_account(account_object_name, account_object)
         # export the account object to the globals in the wallet module:
         wallet_globals[account_object_name] = account_object
+        account_object.in_wallet_on_stack = True
         return True
     else:
         if wallet_singleton.import_key(account_object):
             wallet_singleton.map_account(account_object_name, account_object)
             # export the account object to the globals in the wallet module:
             wallet_globals[account_object_name] = account_object
-            account_object.just_put_into_wallet = True
+            account_object.in_wallet_on_stack = True
             return True
         else:
             logger.EOSF("""
@@ -223,7 +224,7 @@ class GetAccount(Account, cleos.GetAccount, eosf.Logger):
             active_key_private = owner_key_private
 
         self.exists = False
-        self.just_put_into_wallet = False
+        self.in_wallet_on_stack = False
         self.fatal_error = False
         self.has_keys = not owner_key_private is None
         
@@ -450,7 +451,7 @@ def account_master_create(
         account_object = GetAccount(
             account_object_name, account_name, 
             owner_key, active_key, verbosity)
-        
+
         if account_object.fatal_error:
             return
 
@@ -528,22 +529,7 @@ def account_master_create(
                         break
 
 def append_account_methods_and_finish(
-        account_object_name, account_object, logger):
-
-    def error_map(account_object, err_msg):
-
-        if "main.cpp:2888" in err_msg:
-            return eosf.AccountNotExist(
-                eosf.AccountNotExist.msg_template.format(account_object.name))
-
-        if "transaction executed locally, but may not be" in err_msg:
-            return None
-
-        if not err_msg:
-            return None
-        return eosf.Error(err_msg)
-
-    account_object.error_map = types.MethodType(error_map, account_object)  
+        account_object_name, account_object, logger): 
 
     def code(account_object, code="", abi="", wasm=False):
         result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
@@ -688,9 +674,11 @@ def append_account_methods_and_finish(
     def buy_ram(account_object, amount_kbytes, receiver=None):
         if receiver is None:
             receiver = account_object
+        buy_ram_kbytes = 1
+
         result = cleos_system.BuyRam(
             account_object, receiver, amount_kbytes,
-            buy_ram_kbytes=1,
+            buy_ram_kbytes,
             expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
@@ -698,11 +686,15 @@ def append_account_methods_and_finish(
             is_verbose=0
             )
 
+        logger.ERROR(result)
+
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
     if account_object.owner_key:
-        put_account_to_wallet_and_on_stack(
+        return put_account_to_wallet_and_on_stack(
             account_object_name, account_object)
+    else:
+        return True
 
 def account_create(
         account_object_name,

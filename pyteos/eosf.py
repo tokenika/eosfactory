@@ -59,16 +59,25 @@ Invalid password for wallet {}.
     def __init__(self, msg):
         self.msg = cleos.heredoc(msg)
 
+class LowRam:
+    msg_template = """
+Ram needed is {}kB, deficiency is {}kB.
+"""
+    def __init__(self, needs, deficiency):
+        self.needs = needs
+        self.deficiency = deficiency
+        self.msg = cleos.heredoc(msg_template.format(needs, deficiency))    
+
 class Error:
     def __init__(self, msg):
         self.msg = cleos.heredoc(msg)
 
 class Verbosity(enum.Enum):
     COMMENT = ['green']
-    TRACE = ['magenta']
+    TRACE = ['cyan']
     EOSF = ['cyan']
     ERROR = ['red']
-    ERROR_TESTING = ['blue']
+    ERROR_TESTING = ['magenta']
     OUT = ['']
     OUT_INFO = ['magenta', 'on_green']
     DEBUG = ['yellow']
@@ -195,6 +204,11 @@ class Logger():
         if "main.cpp:2888" in err_msg:
             return AccountNotExist(
                 AccountNotExist.msg_template.format(self.name))
+
+        if "Error 3080001: Account using more than allotted RAM" in err_msg:
+            needs = int(re.search('needs\s(.*)\sbytes\shas', err_msg).group(1))
+            has = int(re.search('bytes\shas\s(.*)\sbytes', err_msg).group(1))
+            return LowRam(needs//1024, (needs - has) // 1024)
 
         if "transaction executed locally, but may not be" in err_msg:
             return None
@@ -429,6 +443,10 @@ def info():
     """
     get_info = cleos.GetInfo(is_verbose=-1)
     logger = Logger(None)
+    get_info.err_msg = """
+    {}
+    THE NODE {} IS NOT OPERATIVE.
+    """.format(get_info.err_msg, setup.nodeos_address())
     if not logger.ERROR(get_info):
         logger.EOSF_TRACE("""
         ######### Node ``{}``, head block number ``{}``.
@@ -452,3 +470,4 @@ if __name__ == "__main__":
         template = str(sys.argv[2])
 
     teos.TemplateCreate(str(sys.argv[1]), template, visual_studio_code=True)
+

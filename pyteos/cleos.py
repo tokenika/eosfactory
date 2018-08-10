@@ -57,8 +57,7 @@ Cannot use the local node Wallet Manager if the node is not running.
             return ""
     else:
         if is_error:
-            cleos_object.error = True
-            cleos_object.err_msg = err_msg
+            cleos_object.set_error(err_msg)
             return True
         else:
             return False
@@ -89,16 +88,15 @@ def heredoc(msg):
     msg.replace("<br>", "\n")
     return msg
 
+class Named:
+    """Having the ``name`` attribute.
+    """    
+    pass
+
 class _Cleos:
     """A prototype for the `cleos` command classes.
     """
     global setup_setup
-
-    error = False
-    is_verbose = 1
-    json = {}
-    err_msg = ""
-    _out = ""
 
     def copy_to(self, to_object):
         to_object.error = self.error
@@ -116,18 +114,21 @@ class _Cleos:
             else:
                 self.is_verbose = 0
 
-    def __init__(self, args, first, second, is_verbose=1):
-        
-        cl = [setup_setup.cleos_exe]
+    def set_error(self, err_msg):
+        if not self.error:
+            self.error = True
+            self.err_msg = err_msg
 
+    def __init__(self, args, first, second, is_verbose=1):
         if setup.nodeos_address_arg() is None:
             set_local_nodeos_address()
-        cl.extend(setup.nodeos_address_arg())
-
+        
         set_wallet_url_arg(self) # this may set self.error ON
+
         global _wallet_address_arg
         if not self.error:
-            cl.extend(_wallet_address_arg)
+            cl = [setup_setup.cleos_exe, setup.nodeos_address_arg(), \
+                _wallet_address_arg]
 
             if setup.is_print_request():
                 cl.append("--print-request")
@@ -187,6 +188,56 @@ class _Cleos:
 
     def __repr__(self):
         return ""
+
+    def account_to_string(self, account):
+        logger = eosf.Logger()
+        if isinstance(account, str):
+            return account
+        if isinstance(account, Account):
+            return account.name
+
+        self.set_error(heredoc("""
+                creator_to_string(account):
+                    wrong argument type.
+            """))
+
+    def permission_to_string(self, permission):
+        if isinstance(permission, str):
+            return permission
+        if isinstance(permission, Account):
+            return permission.name
+        if isinstance(permission, tuple):
+            retval = None
+            if isinstance(permission[0], str):
+                retval = permission[0]
+            if isinstance(permission[0], Account):
+                retval = permission[0].name
+            if retval is None:
+                self.set_error("""
+                permission_to_string(permission):
+                    not isinstance(permission[0], Account)
+                    and
+                    not isinstance(permission[0], str)
+                """)
+                return None
+
+            if isinstance(permission[1], str):
+                if permission[1][0] = "@":
+                    retval = retval + permission[1]
+                else:
+                    retval = retval + "@" + permission[1]
+                return retval
+            else:
+                self.set_error("""
+                permission_to_string(permission):
+                    not isinstance(permission[1], str)
+                """)  
+                return None          
+
+        self.set_error("""
+                permission_to_string(permission):
+                    wrong argument type.
+            """)
 
 def get_transaction_id(cleos_object):
     transaction_id = ""
@@ -1068,8 +1119,7 @@ class SetContract(_Cleos):
             wast_file = config.json["contract-wast"]
             abi_file = config.json["contract-abi"]
         except:
-            self.error = True
-            self.json["ERROR"] = "cannot find the contract directory."
+            self.set_error("cannot find the contract directory.")
             return
 
         args = [self.account_name, self.contract_path_absolute]

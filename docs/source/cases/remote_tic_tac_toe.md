@@ -28,6 +28,9 @@ import unittest
 import setup
 import eosf
 import eosf_account
+import eosf_wallet
+from user_data import *
+
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
@@ -69,22 +72,39 @@ class Test(unittest.TestCase):
 ```
 #### Wallet passwords are not stored in an open file automatically
 ```md
-For tests, we use volatile wallets of improbable names. At the beginning of
-a test, its wallet is recreated with a new password.
+For tests, we use wallets of improbable names. On creation, its password is 
+stored in a file, with local code, and can be automatically reused between 
+sessions.
+
+If the test wallet has to be deleted, use the following code:
+
+import os
+import eosf
+from user_data import *
+
+eosf.use_keosd(True)
+eosf.kill_keosd()
+
+try:
+    wallet_file = eosf.wallet_dir() + WALLET_NAME + ".wallet"
+    os.remove(wallet_file)
+    print("The deleted wallet file:\n{}\n".format(wallet_file))
+except Exception as e:
+    print("Cannot delete the wallet file:\n{}\n".format(str(e))) 
 ```
 ```md
         """
-        eosf.kill_keosd()      # Active KEOSD Wallet manager blocks wallet files
-        try:
-            wallet_file = eosf.wallet_dir() + WALLET_NAME + ".wallet"
-            os.remove(wallet_file)
-            _.TRACE("The deleted wallet file:\n{}\n".format(wallet_file))
-        except Exception as e:
-            _.ERROR("Cannot delete the wallet file:\n{}\n".format(str(e))) 
-
-        wallet = Wallet(
-            WALLET_NAME, 
-            verbosity=[eosf.Verbosity.TRACE])
+        eosf.kill_keosd()
+        wallet_json = eosf_wallet.wallet_json_read()
+        import pdb; pdb.set_trace()
+        if not WALLET_NAME in wallet_json:
+            wallet = Wallet(WALLET_NAME, verbosity=[eosf.Verbosity.TRACE])
+            wallet_json[WALLET_NAME] = wallet.password
+            eosf_wallet.wallet_json_write(wallet_json)
+        else:
+            wallet = Wallet(
+                WALLET_NAME, wallet_json[WALLET_NAME],
+                verbosity=[eosf.Verbosity.TRACE])
         """
 ```
 #### Accounts are reused between test sessions
@@ -104,7 +124,6 @@ The factory function puts the created account object into the wallet.
 ```md
         """
         ACCOUNT_MASTER = ACCOUNT_TTT
-
         if not ACCOUNT_MASTER in globals():
             account_master_create(
                 ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
@@ -113,7 +132,8 @@ The factory function puts the created account object into the wallet.
             _.TRACE("""
             ######## {} account object restored from the blockchain.
             """.format(ACCOUNT_MASTER))
-
+        
+        
         global account_master
         account_master = globals()[ACCOUNT_MASTER]
         global account_tic_tac_toe
@@ -211,7 +231,7 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
         account_tic_tac_toe.push_action(
             "move", 
             {
-                "challenger" account_alice,  
+                "challenger": account_alice,  
                 "host": account_carol,  
                 "by": account_alice, 
                 "row":1, "column":1 

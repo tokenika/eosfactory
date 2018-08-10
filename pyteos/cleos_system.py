@@ -145,7 +145,7 @@ class SystemNewaccount(cleos._Cleos):
     def __str__(self):
         self.name
 
-class SystemBuyram(cleos._Cleos):
+class BuyRam(cleos._Cleos):
     """ Buy RAM.
 
     - **parameters**::

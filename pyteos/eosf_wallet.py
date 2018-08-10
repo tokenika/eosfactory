@@ -8,6 +8,17 @@ import eosf
 
 wallet = None
 
+def wallet_json_read():
+    try:
+        with open(eosf.wallet_dir() + setup.password_map, "r") as input:    
+            return json.load(input)
+    except:
+        return {}
+
+def wallet_json_write(wallet_json):
+    with open(eosf.wallet_dir() + setup.password_map, "w+")  as out:
+        json.dump(wallet_json, out)
+
 class Wallet(eosf.Logger, cleos.WalletCreate):
     """ Create a new wallet locally and operate it.
 
@@ -70,20 +81,17 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                 """)
 
         self.EOSF("""
-                * Wallet directory is
+                * Wallet name is {}, wallet directory is
                     {}.
-                """.format(self.wallet_dir))
+                """.format(name, self.wallet_dir))
 
         if self.ERROR(cleos.is_notrunningnotkeosd_error()):
             return
 
         if not password and not setup.is_use_keosd(): # look for password:
+            password_map = wallet_json_read()
             try:
-                with open(self.wallet_dir + setup.password_map, "r") \
-                        as input:    
-                    password_map = json.load(input)
-                    password = password_map[name]
-
+                password = password_map[name]
                 self.loggerelf.EOSF("""
                     The pasword is restored from the file:
                     {}
@@ -94,18 +102,11 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
         cleos.WalletCreate.__init__(self, name, password, is_verbose=-1)
             
         if not self.error:
-            if not setup.is_use_keosd(): 
-                try:
-                    with open(self.wallet_dir + setup.password_map, "r") \
-                            as input:
-                        password_map = json.load(input)
-                except:
-                    password_map = {}
+            if not setup.is_use_keosd():
+                password_map = wallet_json_read()
+    
                 password_map[name] = self.password
-
-                with open(self.wallet_dir + setup.password_map, "w+") \
-                        as out:
-                    json.dump(password_map, out)
+                wallet_json_write(password_map)
 
                 if not password: # new password
                     self.EOSF_TRACE("""
@@ -340,7 +341,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                         object_name, name, restore=True, verbosity=[])
         else:
             self.EOSF("""
-                 empty list
+                 * The wallet is empty.
             """)
 
     def keys(self):
@@ -420,7 +421,6 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                     account_object_name,
                     setup.account_map,
                     self.wallet_dir + setup.account_map))
-
 
     def info(self):
         retval = json.dumps(self.json, indent=4) + "\n"

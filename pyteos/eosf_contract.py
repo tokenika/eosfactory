@@ -142,11 +142,6 @@ class Contract(eosf.Logger):
                     {}
                 """.format(self.contract_dir))
 
-    def error_map(self, err_msg):
-        if not err_msg:
-            return None
-        return eosf.Error(err_msg)
-
     def deploy(self, permission="", dont_broadcast=None):
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
@@ -161,6 +156,7 @@ class Contract(eosf.Logger):
             is_verbose=-1,
             json=True
         )
+        import pdb; pdb.set_trace()
         if not self.ERROR(result):
             if not dont_broadcast:
                 is_code = self.account.is_code()
