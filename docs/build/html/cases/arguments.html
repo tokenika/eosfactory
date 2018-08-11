@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Account master object &#8212; EOSFactory 2.0 documentation</title>
+    <title>Arguments &#8212; EOSFactory 2.0 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -15,8 +15,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contract object" href="contract.html" />
-    <link rel="prev" title="Account object" href="account.html" />
+    <link rel="next" title="Account object" href="account.html" />
+    <link rel="prev" title="Symbolic names" href="symbolic_names.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
@@ -29,131 +29,135 @@
           <div class="body" role="main">
             
   <p>“”“</p>
-<div class="section" id="account-master-object">
-<span id="account-master-object"></span><h1>Account master object<a class="headerlink" href="#account-master-object" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="arguments">
+<span id="arguments"></span><h1>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 contract.md&#39;.
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Arguments of the EOSFactory statements are polymorphic. For example, a 
+&#39;permission` argument can have the following forms:
+
+    * &lt;account object&gt;
+    * &lt;the name of an account object&gt;
+    * (&lt;account object&gt;, &lt;permission level&gt;), that is a tuple of two items
+    * &lt;the name of an account object&gt;@&lt;permission level&gt;
+    * [(&lt;account object&gt;, &lt;permission level&gt;), ...] that is a list of tuples
+    * combinations of the above
+
+The polymorphism results from the origin of the EOSFactory, started as a wrapper 
+for the &#39;CLEOS&#39; commands. We have not decided yet, whether it is a value: a 
+disadvantage is that type errors are not detected by the compiler. An advantage 
+may be that users like it.
+</pre></div>
+</div>
+<div class="section" id="setup">
+<span id="setup"></span><h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <pre>
-This file can be executed as a python script: 'python3 account_master_images.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-</pre><div class="section" id="set-up">
-<span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-import os
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.<p>Local test node reset, wallet started, master account object created.</p>
+</pre><div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import setup
+import cleos
 import eosf
-import eosf_account
+
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
-
-remote_testnet = &quot;88.99.97.30:38888&quot;
 _ = eosf.Logger()
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is referred to as the &#39;testing account&#39;.
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Account Name: dgxo1uyhoytn
-Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
-Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
 
-Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
-Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA 
+eosf.use_keosd(False)
+eosf.reset([eosf.Verbosity.TRACE]) 
+wallet = Wallet()
+account_master_create(&quot;account_master&quot;)
+&quot;&quot;&quot;
 </pre></div>
 </div>
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<pre>
-The EOSFactory wraps EOSIO accounts with objects. The 'account_create` 
-factory function produces account objects, it is explained in the article 
-<a href="account.html">cases/account</a>.<p>EOSIO needs that any action changing the blockchain, especially account creation
-is authorized. Usually, an existing account provides the authorization, and
-therefore the ‘account_create` factory take this account as its second argument.</p>
-<p>But at the very beginning there is no account, and the very first one has to be
-produced. The ‘account_master_create’ factory function can do this.</p>
-<p>The ‘account_master_create’ function takes the
-name of the account object to be created, as its first obligatory argument.</p>
-<p>There are three cases where the ‘account_master_create’ factory can do. We will
-show them.</p>
-</pre><div class="section" id="local-testnet-case">
-<span id="local-testnet-case"></span><h3>Local testnet case<a class="headerlink" href="#local-testnet-case" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.reset([eosf.Verbosity.TRACE])
-wallet = Wallet()
-account_master_create(&quot;account_master_images&quot;)
-account_master_images.info()
-eosf.stop([eosf.Verbosity.TRACE])
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The result of the script is the account object &#39;account_master_images&#39; in the global
-namespace.
-
-The object wraps the &#39;eosio` account. It is a special one in the sense that it 
-does not have all the functionality of plain orders.
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
-</pre></div>
-</div>
-<p><img src="account_master_images/account_master_eosio.png" 
-onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'"   
-alt="local testnet account master" width="720px"/></p>
-</div>
-<div class="section" id="remote-testnet-registration">
-<span id="remote-testnet-registration"></span><h3>Remote testnet registration<a class="headerlink" href="#remote-testnet-registration" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This case is shown at &lt;a href=&quot;setup.html&quot;&gt;cases/registering_to_testnode&lt;/a&gt;. There the account object is 
-produced by manual interaction with the registration form of a testnet. There 
-the resulting account object is fully functional.
-</pre></div>
-</div>
-</div>
-<div class="section" id="adding-a-physical-account">
-<span id="adding-a-physical-account"></span><h3>Adding a physical account<a class="headerlink" href="#adding-a-physical-account" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>If the user posses an account, that is, knows the account name and private keys,
-they can add it to the Factory.
-
-In order to show a clean and reproducible example, we will delete a testing 
-wallet in the KEOSD-managed wallet directory, and recreate it.
+<div class="section" id="account-arguments">
+<span id="account-arguments"></span><h3>Account arguments<a class="headerlink" href="#account-arguments" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Accounts are represented either as blockchain names or as account objects. In
+the following test, the &#39;account_master&#39; object enters, at first, as itself ...
 </pre></div>
 </div>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.use_keosd(True)    # to determine the directory of the wallet
-eosf.kill_keosd()       # otherwise, the manager protects the wallet file
-
-wallet_name = &quot;jungle_wallet&quot;
-try:
-    wallet_file = eosf.wallet_dir() + wallet_name + &quot;.wallet&quot;
-    os.remove(wallet_file)
-    print(&quot;The deleted wallet file:\n{}\n&quot;.format(wallet_file))
-except Exception as e:
-    print(&quot;Cannot delete the wallet file:\n{}\n&quot;.format(str(e)))
+account_create(&quot;account_alice&quot;, account_master)
 &quot;&quot;&quot;
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>... next, the &#39;account_master&#39; is represented as a string, &#39;eosio` in this case:
 </pre></div>
 </div>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf_account.restart()    # reset the Factory
-eosf.use_keosd(True)
-setup.set_nodeos_address(remote_testnet)
-
-wallet = Wallet(wallet_name)
-account_master_create(
-    &quot;account_master_images&quot;,
-    &quot;dgxo1uyhoytn&quot;,
-    &quot;5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY&quot;,
-    &quot;5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA&quot;
-    )
-account_master_images.info()
+account_create(&quot;account_bob&quot;, str(account_master))
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
+<div class="highlight-md notranslate"><div class="highlight"><pre>If an account argument is neither an account object nor a string, an error 
+message is printed, or an error exception is thrown. For example, let the 
+account argument be of the &#39;cleos.CreateKey&#39; type:
 </pre></div>
 </div>
-<p><img src="account_master_images/account_master_add.png" 
-onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'"   
-alt="local testnet account master" width="720px"/></p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+account_create(&quot;account_jimmy&quot;, cleos.CreateKey(&quot;xxx&quot;, is_verbose=0))
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<p><img src="arguments/accounts.png" 
+onerror="this.src='../../../source/cases/arguments/accounts.png'"   
+alt="account arguments" width="720px"/></p>
+</div>
+<div class="section" id="permission-arguments">
+<span id="permission-arguments"></span><h3>Permission arguments<a class="headerlink" href="#permission-arguments" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-md notranslate"><div class="highlight"><pre>In the simpest form, permissions are like accounts: account objects or account 
+names.
+
+If an account name is used, it can be decorated with a permission level: 
+&#39;eosio@permission&#39;, for example.
+
+Using the object oriented style, a permission may be a tuple enclosing an 
+account object and 
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+from cleos import Permission 
+
+account_create(
+    &quot;account_carol&quot;, account_master, 
+    permission=[
+        (account_master, Permission.OWNER), 
+        (account_master, Permission.ACTIVE)])
+&quot;&quot;&quot;
+```md
+equivalent forms:
+permission=[ (&quot;eosio&quot;, &quot;owner&quot;), (&quot;eosio&quot;, &quot;active&quot;)])
+    or
+permission=[ &quot;eosio@owner&quot;, &quot;eosio@active&quot;])
+
+If a permission argument type is not supported, an error message is printed, or 
+an error exception is thrown. For example, let the account argument be of the 
+&#39;cleos.CreateKey&#39; type:
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+account_create(
+    &quot;account_carol_b&quot;, account_master, 
+    permission=cleos.CreateKey(&quot;xxx&quot;, is_verbose=0))
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<p><img src="arguments/permissions.png" 
+onerror="this.src='../../../source/cases/arguments/permissions.png'"   
+alt="permission arguments" width="720px"/></p>
+</div>
+<div class="section" id="data-arguments">
+<span id="data-arguments"></span><h3>Data arguments<a class="headerlink" href="#data-arguments" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-md notranslate"><div class="highlight"><pre>
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>
+</pre></div>
+</div>
 <p>“”“</p>
 </div>
 </div>
@@ -183,9 +187,9 @@ alt="local testnet account master" width="720px"/></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="IDE.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="symbolic_names.html">Symbolic names</a></li>
-<li class="toctree-l1"><a class="reference internal" href="arguments.html">Arguments</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Arguments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Account master object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="account_master.html">Account master object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wallet.html">Wallet object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">EOSFactory configuration</a></li>
@@ -226,8 +230,8 @@ alt="local testnet account master" width="720px"/></p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="account.html" title="previous chapter">Account object</a></li>
-      <li>Next: <a href="contract.html" title="next chapter">Contract object</a></li>
+      <li>Previous: <a href="symbolic_names.html" title="previous chapter">Symbolic names</a></li>
+      <li>Next: <a href="account.html" title="next chapter">Account object</a></li>
   </ul></li>
 </ul>
 </div>
@@ -255,7 +259,7 @@ alt="local testnet account master" width="720px"/></p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
-      <a href="../_sources/cases/account_master.md.txt"
+      <a href="../_sources/cases/arguments.md.txt"
           rel="nofollow">Page source</a>
     </div>
 

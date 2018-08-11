@@ -18,6 +18,7 @@ Cases
 
     cases/IDE
     cases/symbolic_names
+    cases/arguments
     cases/account
     cases/account_master
     cases/contract

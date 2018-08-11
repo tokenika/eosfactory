@@ -169,10 +169,7 @@ def put_account_to_wallet_and_on_stack(
             """.format(account_object.name))
             return False
 
-class Account:
-    pass
-
-class Eosio(Account):
+class Eosio(cleos.Account):
     def __init__(self):
         self.name = "eosio"
         config = teos.GetConfig(is_verbose=0)
@@ -190,7 +187,7 @@ class Eosio(Account):
     def __str__(self):
         return self.name
 
-class GetAccount(Account, cleos.GetAccount, eosf.Logger):
+class GetAccount(cleos.GetAccount, eosf.Logger):
     """Look for the account of the given name, put it into the wallet.
 
     - **parameters**::
@@ -265,7 +262,7 @@ class GetAccount(Account, cleos.GetAccount, eosf.Logger):
                 is_verbose=0)
 
         self.EOSF("""
-            * Account ``{}`` exists in the blockchain.
+            * cleos.Account ``{}`` exists in the blockchain.
             """.format(self.name))
 
     def info(self):
@@ -277,12 +274,12 @@ class GetAccount(Account, cleos.GetAccount, eosf.Logger):
     def __str__(self):
         return self.name
 
-class RestoreAccount(Account, cleos.RestoreAccount, eosf.Logger):
+class RestoreAccount(cleos.Account, cleos.RestoreAccount, eosf.Logger):
     def __init__(self, name, verbosity=None):
         cleos.RestoreAccount.__init__(self, name, is_verbose=-1)
         eosf.Logger.__init__(self, verbosity)
 
-class CreateAccount(Account, cleos.CreateAccount, eosf.Logger):
+class CreateAccount(cleos.CreateAccount, eosf.Logger):
     def __init__(
             self, creator, name, owner_key, 
             active_key="",
@@ -303,7 +300,7 @@ class CreateAccount(Account, cleos.CreateAccount, eosf.Logger):
             )
         eosf.Logger.__init__(self, verbosity)
 
-class SystemNewaccount(Account, cleos_system.SystemNewaccount, eosf.Logger):
+class SystemNewaccount(cleos_system.SystemNewaccount, eosf.Logger):
     def __init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
@@ -596,7 +593,7 @@ def append_account_methods_and_finish(
 
         class Encoder(json_module.JSONEncoder):
             def default(self, o):
-                if isinstance(o, Account):
+                if isinstance(o, cleos.Account):
                     return str(o)
                 else:
                     json_module.JSONEncoder.default(self, o) 
@@ -691,6 +688,11 @@ def append_account_methods_and_finish(
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
     if account_object.owner_key:
+        get_account = cleos.GetAccount(account_object, is_verbose=0)
+        if not logger.ERROR(get_account):
+            logger.EOSF("""
+            * Cross-checked: account {}({}) is in the blockchain.
+            """.format(account_object_name, account_object.name))
         return put_account_to_wallet_and_on_stack(
             account_object_name, account_object)
     else:
@@ -787,7 +789,6 @@ def account_create(
                     ref_block,
                     verbosity
                     )
-            account_object
 
 
         account_object.owner_key = owner_key
@@ -797,8 +798,7 @@ def account_create(
         account_object.EOSF("""
             * The account object is created.
             """)
-
-    append_account_methods_and_finish(
-        account_object_name, account_object, logger)
+        append_account_methods_and_finish(
+            account_object_name, account_object, logger)
 
 

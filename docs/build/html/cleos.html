@@ -32,9 +32,16 @@
 <span id="cleos"></span><h1>cleos<a class="headerlink" href="#module-cleos" title="Permalink to this headline">¶</a></h1>
 <p>Python front-end for <cite>EOSIO cleos</cite>.</p>
 <span class="target" id="module-pyteos"></span><dl class="class">
+<dt id="cleos.Account">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>name</em>, <em>owner_key=None</em>, <em>active_key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.Account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Having the <code class="docutils literal notranslate"><span class="pre">name</span></code> attribute.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="cleos.CreateAccount">
 <em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">CreateAccount</code><span class="sig-paren">(</span><em>creator</em>, <em>name</em>, <em>owner_key</em>, <em>active_key=''</em>, <em>permission=''</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.CreateAccount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#cleos.Account" title="cleos.Account"><code class="xref py py-class docutils literal notranslate"><span class="pre">cleos.Account</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
 <p>Create an account, buy ram, stake for bandwidth for the account.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
@@ -103,7 +110,7 @@ ref_block: The reference block num or block id used for TAPOS
 <dl class="class">
 <dt id="cleos.GetAccount">
 <em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">GetAccount</code><span class="sig-paren">(</span><em>account</em>, <em>is_verbose=1</em>, <em>json=False</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.GetAccount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#cleos.Account" title="cleos.Account"><code class="xref py py-class docutils literal notranslate"><span class="pre">cleos.Account</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
 <p>Retrieve an account from the blockchain.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
@@ -214,15 +221,15 @@ wasm: Save contract as wasm.
 
 <dl class="class">
 <dt id="cleos.GetTable">
-<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">GetTable</code><span class="sig-paren">(</span><em>contract</em>, <em>table</em>, <em>scope</em>, <em>binary=False</em>, <em>limit=10</em>, <em>key=''</em>, <em>lower=''</em>, <em>upper=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.GetTable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">GetTable</code><span class="sig-paren">(</span><em>account</em>, <em>table</em>, <em>scope</em>, <em>binary=False</em>, <em>limit=10</em>, <em>key=''</em>, <em>lower=''</em>, <em>upper=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.GetTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
 <p>Retrieve the contents of a database table</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre>contract: The name, of the contract that owns the table. May be 
+<div class="highlight-default notranslate"><div class="highlight"><pre>account: The name of the account that owns the table. May be 
     an object having the  May be an object having the attribute 
     `name`, like `CreateAccount`, or a string.
-scope: The scope within the contract in which the table is found,
+scope: The scope within the account in which the table is found,
     can be a `CreateAccount` or `Account` object, or a name.
 table: The name of the table as specified by the contract abi.
 binary: Return the value as BINARY rather than using abi to 
@@ -269,6 +276,13 @@ is_verbose: If `0`, do not print unless on error; if `-1`,
 </div>
 </li>
 </ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="cleos.Permission">
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">Permission</code><a class="headerlink" href="#cleos.Permission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
 </dd></dl>
 
 <dl class="class">
@@ -605,6 +619,7 @@ is_verbose: If `0`, do not print unless on error; if `-1`,
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cases/IDE.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cases/symbolic_names.html">Symbolic names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cases/arguments.html">Arguments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cases/account.html">Account object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cases/account_master.html">Account master object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cases/contract.html">Contract object</a></li>

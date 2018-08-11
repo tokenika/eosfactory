@@ -413,8 +413,8 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                 out.write(eosf.account_mapp_to_string(account_map_json))
 
             self.EOSF("""
-                * Account ``{}`` mapped as ``{}``, stored in the file ``{}`` 
-                    in the wallet directory:
+                * Account ``{}`` mapped as ``{}``, stored in the file 
+                    ``{}`` in the wallet directory:
                     {}
                 """.format(
                     account_object.name,

@@ -21,7 +21,7 @@ def reload():
 setup_setup = setup.Setup()
 
 
-class SystemNewaccount(cleos._Cleos):
+class SystemNewaccount(cleos.Account, cleos._Cleos):
     """ Create an account, buy ram, stake for bandwidth for the account.
 
     - **parameters**::
@@ -74,10 +74,11 @@ class SystemNewaccount(cleos._Cleos):
             ref_block = "",
             is_verbose = 1
             ):
-        try:
-            creator_name = creator.name
-        except:
-            creator_name = creator
+
+        creator_name = cleos._account(creator)
+        if name is None: 
+            name = account_name()
+        cleos.Account.__init__(self, name)
 
         self.owner_key = None # private keys
         self.active_key = None
@@ -97,7 +98,7 @@ class SystemNewaccount(cleos._Cleos):
         except:
             active_key_public = active_key
 
-        args = [creator_name, name, owner_key_public, active_key_public]
+        args = [creator_name, self.name, owner_key_public, active_key_public]
         if setup.is_json():
             args.append("--json")
         args.extend(["--stake-net", stake_net, "--stake-cpu", stake_cpu])
@@ -126,8 +127,6 @@ class SystemNewaccount(cleos._Cleos):
             args.extend(["--max-net-usage", max_net_usage])
         if  ref_block:
             args.extend(["--ref-block", ref_block])
-
-        self.name = name
 
         cleos._Cleos.__init__(
             self, args, "system", "newaccount", is_verbose)
