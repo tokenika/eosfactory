@@ -299,14 +299,14 @@ class CreateAccount(cleos.CreateAccount, eosf.Logger):
     def __init__(
             self, creator, name, owner_key, 
             active_key="",
-            permission="",
+            permission=None,
             expiration_sec=30, 
             skip_signature=0, 
             dont_broadcast=0,
             forceUnique=0,
             max_cpu_usage=0,
             max_net_usage=0,
-            ref_block="",
+            ref_block=None,
             verbosity=None):
         cleos.CreateAccount.__init__(
             self, creator, name, owner_key, active_key, permission,
@@ -320,13 +320,13 @@ class SystemNewaccount(cleos_system.SystemNewaccount, eosf.Logger):
     def __init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
-            permission="",
+            permission=None,
             buy_ram_kbytes=0, buy_ram="",
             transfer=False,
             expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block="",
+            ref_block=None,
             verbosity=None):
         cleos_system.__init__(
             self, creator, name, owner_key, active_key,
@@ -570,10 +570,10 @@ def append_account_methods_and_finish(
     def set_contract(
             account_object, contract_dir, 
             wast_file="", abi_file="", 
-            permission="", expiration_sec=30, 
+            permission=None, expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block=""):
+            ref_block=None):
 
         result = cleos.SetContract(
             account_object, contract_dir, 
@@ -595,10 +595,10 @@ def append_account_methods_and_finish(
 
     def push_action(
             account_object, action, data,
-            permission="", expiration_sec=30, 
+            permission=None, expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block="", json=False):
+            ref_block=None, json=False):
         if not permission:
             permission = account_object.name
         else:
@@ -708,13 +708,13 @@ def account_create(
         stake_net="", stake_cpu="",
         account_name="", 
         owner_key="", active_key="",
-        permission = "",
+        permission=None,
         buy_ram_kbytes=0, buy_ram="",
         transfer=False,
         expiration_sec=30,
         skip_signature=0, dont_broadcast=0, forceUnique=0,
         max_cpu_usage=0, max_net_usage=0,
-        ref_block="",
+        ref_block=None,
         restore=False,
         verbosity=None):
 

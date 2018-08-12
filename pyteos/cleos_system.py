@@ -65,13 +65,13 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
     def __init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
-            permission = "",
-            buy_ram_kbytes = 0, buy_ram = "",
-            transfer = False,
-            expiration_sec = 30, 
-            skip_signature = 0, dont_broadcast = 0, forceUnique = 0,
-            max_cpu_usage = 0, max_net_usage = 0,
-            ref_block = "",
+            permission=None,
+            buy_ram_kbytes=0, buy_ram="",
+            transfer=False,
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
             is_verbose = 1
             ):
 
@@ -108,13 +108,8 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
             args.extend(["buy-ram", buy_ram])
         if transfer:
             args.extend(["--transfer"])
-        if permission:
-            try:
-                permission_name = permission.name
-            except:
-                permission_name = permission
-
-            args.extend(["--permission", permission_name])
+        if not permission is None:
+            args.extend(["--permission", self._permission(permission)])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -125,7 +120,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
             args.extend(["--max-cpu-usage-ms", max_cpu_usage])
         if  max_net_usage:
             args.extend(["--max-net-usage", max_net_usage])
-        if  ref_block:
+        if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
         cleos._Cleos.__init__(
@@ -182,7 +177,7 @@ class BuyRam(cleos._Cleos):
             expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block="",
+            ref_block=None,
             is_verbose=1
             ):
         try:
@@ -209,7 +204,7 @@ class BuyRam(cleos._Cleos):
             args.extend(["--max-cpu-usage-ms", max_cpu_usage])
         if  max_net_usage:
             args.extend(["--max-net-usage", max_net_usage])
-        if  ref_block:
+        if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
         self.name = name

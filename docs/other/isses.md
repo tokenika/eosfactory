@@ -221,4 +221,31 @@ account_tic_tac_toe (1ja5ifnilhsg)
 account_alice (xdmmfyfcatqy)
 ```
 
+## EOSFactory Testnet Error 
+https://eosio.stackexchange.com/questions/1852/eosfactory-testnet-error
+
+Problem results from a change of the nodeos command line arguments.
+
+EOSFactory v1.1 is compatible with EOS v1.0.8.
+
+Our message in the release notes: 'is compatible with EOS v1.0.8 (or higher)' was over-optimistic.
+
+## Can you pls publish a step by step guide on how to set up VS Code to be able 
+to debug nodeos?
+
+We were able to debug cleos then, very probably, it is possible to debug nodeos,
+as well. However, it has to be difficult and annoying. And even it you start the 
+debugger, you will probably be disappointed with what you find out: EOS code 
+is over-complicated, spaghetti-like. Additionally, I expect that it crashes if 
+it is stopped.
+
+To start, you have to compile EOS in 'debug' mode. You have to change  
+'eosio_build.sh' accordingly. 
+
+Also, you have to change the compiler there in 'eosio_build.sh' because there 
+is no 'clang' debugger for VS Code for Windows. You have to use the highest 
+'gnu' compiler, version 7.
+
+If you have it compiled, please, let me know it, and I will pass you further 
+instructions, promptly.
 

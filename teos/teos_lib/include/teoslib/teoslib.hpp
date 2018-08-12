@@ -259,7 +259,7 @@ namespace teoslib
 
     SetContract setContract(
         string contract_dir, string wast_file="", string abi_file="", 
-        string permission="", 
+        string permission=None, 
         int expiration_sec=30, int force_unique=0,
         int max_cpu_usage=0, int max_net_usage=0)
     {

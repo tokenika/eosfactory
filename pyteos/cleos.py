@@ -205,6 +205,43 @@ class _Cleos:
     def __repr__(self):
         return ""
 
+    def _key(self, key, is_owner_key=True, is_private_key=True):
+        if isinstance(key, Account):
+            if is_owner_key:
+                key = key.owner_key
+            else:
+                key = key.active_key
+            if is_private_key:
+                key = key.key_private
+            else:
+                key = key.key_public
+
+            if not key:
+                self.set_error(heredoc("""
+                Key is_owner_key: {}, is_private_key: {} is not defined.
+                """.format(is_owner_key, is_private_key)))
+                return None
+            return key
+
+        if isinstance(key, CreateKey):
+            if is_private_key:
+                key = key.key_private
+            else:
+                key = key.key_public
+            if not key:
+                self.set_error(heredoc("""
+                Key is_private_key: {} is not defined.
+                """.format(is_private_key)))
+                return None
+            return key
+        if isinstance(key, str):
+            return key
+
+        self.set_error(heredoc("""
+        The class of the 'key' argument may be 
+        {} or {} or {} while it is {}.
+        """.format(str, CreateKey, Account, type(permission))))
+        
     def _account_name(self, account):
         if isinstance(account, str):
             return account
@@ -212,7 +249,7 @@ class _Cleos:
             return account.name
 
         self.set_error(heredoc("""
-            The class of the account argument may be 
+            The class of the 'account' argument may be 
             either {} or {}, while it is {}.
             """.format(str, Account, type(account))))
 
@@ -229,7 +266,7 @@ class _Cleos:
                 retval = permission[0].name
             if retval is None:
                 self.set_error(heredoc("""
-        The class of te first item of a permission tuple may be 
+        The class of te first item of a 'permission' tuple may be 
         either {} or {}, while it is {}.
         """.format(str, Account, type(permission[0]))))
                 return None
@@ -247,16 +284,11 @@ class _Cleos:
                 return retval
             else:
                 self.set_error(heredoc("""
-        The class of the second item of a permission tuple may be 
+        The class of the second item of a 'permission' tuple may be 
         either {} or {}, while it is {}.
         """.format(str, Permission, type(permission[1]))))
                 return None
 
-                self.set_error("""
-                _permission(permission):
-                    not isinstance(permission[1], str)
-                """)  
-                return None
         if isinstance(permission, list):
             retval = []
             while len(permission) > 0:
@@ -267,7 +299,7 @@ class _Cleos:
             return retval
 
         self.set_error(heredoc("""
-        The class of the permission argument may be 
+        The class of the 'permission' argument may be 
         {} or {} or {} or {}, while it is {}.
         """.format(str, Account, (), [], type(permission))))
 
@@ -337,13 +369,9 @@ class GetAccounts(_Cleos):
         is_verbose: Verbosity at the construction time.
     """
     def __init__(self, key, is_verbose=1):
-        try:
-            key_public = key.key_public
-        except:
-            key_public = key
-
+        public_key = self._key(key, is_owner_key=True, is_private_key=False)
         _Cleos.__init__(
-            self, [key_public], "get", "accounts", is_verbose)
+            self, [public_key], "get", "accounts", is_verbose)
 
         if not self.error:
             self.json = json_module.loads(self.out_msg)
@@ -486,18 +514,15 @@ class WalletImport(_Cleos):
 
         self.set_is_verbose(is_verbose)
 
-        try: # is the key a key object?
-            key_private = key.key_private
-        except: # key is a string:
-            key_private = key 
-
         try: # is the wallet an Wallet object?
             wallet_name = wallet.name
         except: # wallet is a string
             wallet_name = wallet
 
+        key_private = self._key(key, is_owner_key=True, is_private_key=True)
         _Cleos.__init__(
-            self, ["--private-key", key_private, "--name", wallet_name],
+            self, 
+            ["--private-key", key_private, "--name", wallet_name],
             "wallet", "import", is_verbose)
 
         if not self.error:
@@ -524,18 +549,16 @@ class WalletRemove_key(_Cleos):
 
         self.set_is_verbose(is_verbose)
 
-        try: # is the key a key object?
-            key_public = key.key_public
-        except: # key is a string:
-            key_public = key 
-
         try: # is the wallet an Wallet object?
             wallet_name = wallet.name
         except: # wallet is a string
             wallet_name = wallet
 
+        key_public = self._key(key, is_owner_key=True, is_private_key=False)
+
         _Cleos.__init__(
-            self, [key_public, "--name", wallet_name, "--password", password], 
+            self, 
+            [key_public, "--name", wallet_name, "--password", password], 
             "wallet", "remove_key", is_verbose)
 
         if not self.error:
@@ -861,11 +884,9 @@ class GetTable(_Cleos):
         if limit:
             args.extend(["--limit", str(limit)])
         if key:
-            try:
-                key_public = key.active_key_public
-            except:
-                key_public = key
-            args.extend(["--key", key_public])
+            args.extend(
+                ["--key", 
+                self._key(key, is_owner_key=False, is_private_key=False)])
         if lower:
             args.extend(["--lower", lower])
         if upper:
@@ -989,18 +1010,17 @@ class CreateAccount(Account, _Cleos):
     """
     def __init__(
             self, creator, name, owner_key, 
-            active_key="",
-            permission="",
+            active_key=None,
+            permission=None,
             expiration_sec=30, 
             skip_signature=0, 
             dont_broadcast=0,
             forceUnique=0,
             max_cpu_usage=0,
             max_net_usage=0,
-            ref_block="",
+            ref_block=None,
             is_verbose=1
             ):
-
         self.owner_key = None # private keys
         self.active_key = None
 
@@ -1008,19 +1028,13 @@ class CreateAccount(Account, _Cleos):
             name = account_name()
         Account.__init__(self, name)
 
-        try:
-            owner_key_public = owner_key.key_public
-            self.owner_key = owner_key.key_private
-        except:
-            owner_key_public = owner_key
+        if active_key is None:
+            active_key = owner_key        
 
-        if not active_key:
-            active_key = owner_key
-        try:
-            active_key_public = active_key.key_public
-            self.active_key = active_key.key_private
-        except:
-            active_key_public = active_key
+        owner_key_public = self._key(
+            owner_key, is_owner_key=True, is_private_key=False)
+        active_key_public = self._key(
+            active_key, is_owner_key=False, is_private_key=False)
 
         args = [
                 self._account_name(creator), self.name, 
@@ -1028,7 +1042,7 @@ class CreateAccount(Account, _Cleos):
             ]
         if setup.is_json():
             args.append("--json")
-        if permission:
+        if not permission is None:
             p = self._permission(permission)
             if isinstance(permission,list):
                 for perm in p:
@@ -1047,7 +1061,7 @@ class CreateAccount(Account, _Cleos):
             args.extend(["--max-cpu-usage-ms", max_cpu_usage])
         if  max_net_usage:
             args.extend(["--max-net-usage", max_net_usage])
-        if  ref_block:
+        if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
         _Cleos.__init__(
@@ -1115,24 +1129,14 @@ class SetContract(_Cleos):
     """
     def __init__(
             self, account, contract_dir, 
-            wast_file="", abi_file="", 
-            permission="", expiration_sec=30, 
+            wast_file=None, abi_file=None, 
+            permission=None, expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block="",
+            ref_block=None,
             is_verbose=1,
             json=False
             ):
-
-        try:
-            self.account_name = account.name
-        except:
-            self.account_name = account
-
-        try:
-            permission_name = permission.name
-        except:
-             permission_name = permission
 
         import teos
         config = teos.GetConfig(contract_dir, is_verbose=0)
@@ -1144,10 +1148,11 @@ class SetContract(_Cleos):
             self.set_error("cannot find the contract directory.")
             return
 
+        self.account_name = self._account_name(account)
         args = [self.account_name, self.contract_path_absolute]
         if setup.is_json() or json:
             args.append("--json")
-        if permission:
+        if not permission is None:
             p = self._permission(permission)
             if isinstance(permission,list):
                 for perm in p:
@@ -1166,7 +1171,7 @@ class SetContract(_Cleos):
             args.extend(["--max-cpu-usage-ms", max_cpu_usage])
         if  max_net_usage:
             args.extend(["--max-net-usage", max_net_usage])
-        if  ref_block:
+        if  not ref_block is None:
             args.extend(["--ref-block", ref_block]) 
         if wast_file:
             args.append(wast_file)
@@ -1224,10 +1229,10 @@ class PushAction(_Cleos):
     """
     def __init__(
             self, account, action, data,
-            permission="", expiration_sec=30, 
+            permission=None, expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block="",
+            ref_block=None,
             is_verbose=1,
             json=False
         ):
@@ -1236,7 +1241,7 @@ class PushAction(_Cleos):
         args = [self.account_name, action, data]
         if setup.is_json() or json:
             args.append("--json")
-        if permission:
+        if not permission is None:
             p = self._permission(permission)
             if isinstance(permission,list):
                 for perm in p:
@@ -1255,7 +1260,7 @@ class PushAction(_Cleos):
             args.extend(["--max-cpu-usage-ms", max_cpu_usage])
         if  max_net_usage:
             args.extend(["--max-net-usage", max_net_usage])
-        if  ref_block:
+        if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
                         
         self.console = None

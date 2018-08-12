@@ -99,11 +99,11 @@ class Contract(eosf.Logger):
     def __init__(
             self, account, contract_dir,
             wast_file="", abi_file="",
-            permission="",
+            permission=None,
             expiration_sec=30,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block="",
+            ref_block=None,
             verbosity=None):
 
         self.account = account
@@ -142,7 +142,7 @@ class Contract(eosf.Logger):
                     {}
                 """.format(self.contract_dir))
 
-    def deploy(self, permission="", dont_broadcast=None):
+    def deploy(self, permission=None, dont_broadcast=None):
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
 
@@ -200,17 +200,17 @@ class Contract(eosf.Logger):
 
     def push_action(
             self, action, data,
-            permission="", expiration_sec=30, 
+            permission=None, expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block="", json=False):
+            ref_block=None, json=False):
         self.account.push_action(action, data,
             permission, expiration_sec, 
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block, json)
 
-    def show_action(self, action, data, permission=""):
+    def show_action(self, action, data, permission=None):
         """ Implements the `push action` command without broadcasting. 
         """
         return self.push_action(action, data, permission, dont_broadcast=1)
