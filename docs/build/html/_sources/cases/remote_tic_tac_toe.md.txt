@@ -1,13 +1,16 @@
 """
 # Tic-tac-toe contract on a remote testnet
 
-<pre>
+```md
 This file can be executed as a python script: 'python3 account_master.md'.
+```
 
+## Set-up
+
+<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 </pre>
 
-## Set-up
 ```md
 Test with a local node are perfectly reproducible and forgivable. It is not so
 with remote test nodes because such tests have to -- otherwise they are 
@@ -96,7 +99,6 @@ except Exception as e:
         """
         eosf.kill_keosd()
         wallet_json = eosf_wallet.wallet_json_read()
-        import pdb; pdb.set_trace()
         if not WALLET_NAME in wallet_json:
             wallet = Wallet(WALLET_NAME, verbosity=[eosf.Verbosity.TRACE])
             wallet_json[WALLET_NAME] = wallet.password

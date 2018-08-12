@@ -1,14 +1,17 @@
 """
 # Account name conflict
 
-<pre>
+```md
 This file can be executed as a python script: 
 'python3 account_name_conflict.md'.
+```
 
+## Set-up
+
+<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 </pre>
 
-## Set-up
 ```md
 """
 import setup

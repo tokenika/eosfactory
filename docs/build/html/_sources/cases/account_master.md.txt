@@ -1,14 +1,15 @@
 """
 # Account master object
 
-<pre>
+```md
 This file can be executed as a python script: 'python3 account_master_images.md'.
-
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
+```
 
 ## Set-up
 
+<pre>
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
+</pre>
 ```md
 """
 import os

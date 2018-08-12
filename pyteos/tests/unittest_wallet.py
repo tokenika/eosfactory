@@ -2,10 +2,11 @@ import os
 import unittest
 import setup
 import eosf
+
+from eosf import Verbosity
 from eosf_wallet import Wallet
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
-    eosf.Verbosity.DEBUG])
+eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
 eosf.set_throw_error(False)
 
 remote_testnet = "88.99.97.30:38888"

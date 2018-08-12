@@ -1,13 +1,15 @@
 """
 # Symbolic names
 
-<pre>
+```md
 This file can be executed as a python script: 'python3 wallet.md'.
-
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
+```
 
 ## Set-up
+
+<pre>
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
+</pre>
 
 ```md
 """
@@ -16,12 +18,12 @@ import eosf
 import time
 import eosf_account
 
+from eosf import Verbosity
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
-    eosf.Verbosity.DEBUG])
+eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
 eosf.set_throw_error(False)
 """
 ```

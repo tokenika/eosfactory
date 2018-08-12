@@ -49,7 +49,7 @@ import eosf
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
+eosf.Logger.verbosity = [eosf.Verbosity.EOSF, eosf.Verbosity.OUT]
 setup.set_command_line_mode(False) # print message sent to the cleos
 eosf.set_is_testing_errors(False) # make the error mesages alarming
 

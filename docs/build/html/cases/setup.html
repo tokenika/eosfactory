@@ -75,7 +75,7 @@ import eosf
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
+eosf.Logger.verbosity = [eosf.Verbosity.EOSF, eosf.Verbosity.OUT]
 setup.set_command_line_mode(False) # print message sent to the cleos
 eosf.set_is_testing_errors(False) # make the error mesages alarming
 
@@ -120,6 +120,7 @@ eosf.set_is_testing_errors() # make the error mesages less alarming
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="IDE.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="symbolic_names.html">Symbolic names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arguments.html">Arguments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_master.html">Account master object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>

@@ -31,25 +31,28 @@
   <p>“”“</p>
 <div class="section" id="account-master-object">
 <span id="account-master-object"></span><h1>Account master object<a class="headerlink" href="#account-master-object" title="Permalink to this headline">¶</a></h1>
-<pre>
-This file can be executed as a python script: 'python3 account_master_images.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-</pre><div class="section" id="set-up">
+<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 account_master_images.md&#39;.
+</pre></div>
+</div>
+<div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<pre>
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
+</pre>
+```md
+"""
 import os
 import setup
 import eosf
 import eosf_account
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
-
-remote_testnet = &quot;88.99.97.30:38888&quot;
+from eosf_contract import Contract<p>remote_testnet = “88.99.97.30:38888”
 _ = eosf.Logger()
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The following account exists in the blockchain of the testnode. It is used, in
+“”“</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre>
+```md
+The following account exists in the blockchain of the testnode. It is used, in
 this article, for testing. It is referred to as the &#39;testing account&#39;.
 </pre></div>
 </div>

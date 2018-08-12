@@ -92,6 +92,21 @@ def is_local_testnet_running():
         else:
             return False
 
+def _data_json(data):
+    class Encoder(json_module.JSONEncoder):
+        def default(self, o):
+            if isinstance(o, cleos.Account):
+                return str(o)
+            else:
+                json_module.JSONEncoder.default(self, o) 
+
+    if isinstance(data, dict):
+        data_json = json_module.dumps(data, cls=Encoder)
+    else:
+        data_json = re.sub("\s+|\n+|\t+", " ", data)
+        data_json = codeObjectNames(data_json)
+    return data_json
+
 """The namespace where account objects go.
 """
 wallet_globals = None
@@ -103,12 +118,13 @@ account_master_test = None
 def is_wallet_defined(logger):
     """
     """
+    global wallet_singleton
+    global wallet_globals    
     if not wallet_globals is None:
         return
     inspect_stack = inspect.stack()
     size = len(inspect_stack)
-    global wallet_singleton
-    global wallet_globals
+
     for index in range(size):
         locals = inspect_stack[index][0].f_locals
         globals = inspect_stack[index][0].f_globals
@@ -591,18 +607,7 @@ def append_account_methods_and_finish(
             except: # permission is the name of an account:
                 permission = permission
 
-        class Encoder(json_module.JSONEncoder):
-            def default(self, o):
-                if isinstance(o, cleos.Account):
-                    return str(o)
-                else:
-                    json_module.JSONEncoder.default(self, o) 
-
-        if isinstance(data, dict):
-            data = json_module.dumps(data, cls=Encoder)
-        else:
-            data = re.sub("\s+|\n+|\t+", " ", data)
-            data = codeObjectNames(data)
+        data = _data_json(data)
 
         result = cleos.PushAction(
             account_object, action, data,
@@ -620,7 +625,7 @@ def append_account_methods_and_finish(
             account_object.action = result
             try:
                 account_object._console = result.console
-                account_object.DEBUG(decodeObjectNames(account_object._console), True)
+                account_object.DEBUG(decodeObjectNames(account_object._console))
             except:
                 pass
 
@@ -630,7 +635,6 @@ def append_account_methods_and_finish(
 
                 {}
                 """.format(decodeObjectNames(result.out_msg, keys=True)))
-                
         else:
             account_object.action = None
 
@@ -746,7 +750,7 @@ def account_create(
     if restore:
         logger.EOSF_TRACE("""
                         ... for the blockchain account `{}`.
-                        """.format(account_object_name, account_name)) 
+                        """.format(account_name)) 
         account_object = RestoreAccount(account_name, verbosity)
     else:
         if not account_name:
@@ -778,7 +782,7 @@ def account_create(
                     )
         else:
             logger.EOSF_TRACE("""
-                            ... for the local testnet account.
+                            ... for a local testnet account.
                         """)
             account_object = CreateAccount(
                     creator, account_name, 

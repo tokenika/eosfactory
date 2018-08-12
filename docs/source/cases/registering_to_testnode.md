@@ -30,12 +30,13 @@ import unittest
 import setup
 import eosf
 import eosf_account
+
+from eosf import Verbosity
 from eosf_wallet import Wallet
 from eosf_account import account_master_create
 from user_data import *
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
-    eosf.Verbosity.DEBUG])
+eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
 
 remote_testnet = "88.99.97.30:38888"
 _ = eosf.Logger()

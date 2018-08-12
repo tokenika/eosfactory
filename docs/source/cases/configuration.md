@@ -1,11 +1,9 @@
 """
 # EOSFactory configuration
 
-<pre>
+```md
 This file can be executed as a python script: 'python3 configuration.md'.
-
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
+```
 
 ## Inspect the configuration
 

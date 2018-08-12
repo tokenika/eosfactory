@@ -15,7 +15,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Account object" href="account.html" />
+    <link rel="next" title="Arguments" href="arguments.html" />
     <link rel="prev" title="Visual Studio Code IDE for EOSIO smart contracts" href="IDE.html" />
    
   
@@ -31,22 +31,25 @@
   <p>“”“</p>
 <div class="section" id="symbolic-names">
 <span id="symbolic-names"></span><h1>Symbolic names<a class="headerlink" href="#symbolic-names" title="Permalink to this headline">¶</a></h1>
-<pre>
-This file can be executed as a python script: 'python3 wallet.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-</pre><div class="section" id="set-up">
+<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 wallet.md&#39;.
+</pre></div>
+</div>
+<div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<pre>
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
+</pre><div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import setup
 import eosf
 import time
 import eosf_account
 
+from eosf import Verbosity
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT, \
-    eosf.Verbosity.DEBUG])
+eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
 eosf.set_throw_error(False)
 &quot;&quot;&quot;
 </pre></div>
@@ -198,6 +201,7 @@ alt="symbolic names translation on" width="720px"/></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="IDE.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Symbolic names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arguments.html">Arguments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="account_master.html">Account master object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
@@ -241,7 +245,7 @@ alt="symbolic names translation on" width="720px"/></p>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="IDE.html" title="previous chapter">Visual Studio Code IDE for EOSIO smart contracts</a></li>
-      <li>Next: <a href="account.html" title="next chapter">Account object</a></li>
+      <li>Next: <a href="arguments.html" title="next chapter">Arguments</a></li>
   </ul></li>
 </ul>
 </div>

@@ -55,16 +55,19 @@ may be that users like it.
 <pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.<p>Local test node reset, wallet started, master account object created.</p>
 </pre><div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+import time
 import setup
 import cleos
 import eosf
+from eosf import Verbosity
 
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
-_ = eosf.Logger()
 
 eosf.use_keosd(False)
+eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
+_ = eosf.Logger()
 eosf.reset([eosf.Verbosity.TRACE]) 
 wallet = Wallet()
 account_master_create(&quot;account_master&quot;)
@@ -105,7 +108,7 @@ account_create(&quot;account_jimmy&quot;, cleos.CreateKey(&quot;xxx&quot;, is_ve
 </div>
 <p><img src="arguments/accounts.png" 
 onerror="this.src='../../../source/cases/arguments/accounts.png'"   
-alt="account arguments" width="720px"/></p>
+width="720px"/></p>
 </div>
 <div class="section" id="permission-arguments">
 <span id="permission-arguments"></span><h3>Permission arguments<a class="headerlink" href="#permission-arguments" title="Permalink to this headline">¶</a></h3>
@@ -148,17 +151,80 @@ account_create(
 </div>
 <p><img src="arguments/permissions.png" 
 onerror="this.src='../../../source/cases/arguments/permissions.png'"   
-alt="permission arguments" width="720px"/></p>
+width="720px"/></p>
 </div>
 <div class="section" id="data-arguments">
 <span id="data-arguments"></span><h3>Data arguments<a class="headerlink" href="#data-arguments" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Data arguments control the contract actions. Let us deploy an instance of the 
+&#39;eosio.token&#39; contract in order to show varies forms of the data argument of 
+the action &#39;transfer&#39;. 
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+account_create(&quot;account_eosio_token&quot;, account_master)
+contract_eosio_token = Contract(account_eosio_token, &quot;token&quot;)
+deploy = contract_eosio_token.deploy()
+time.sleep(1)
+
+account_eosio_token.push_action(
+    &quot;create&quot;, 
+    {
+        &quot;issuer&quot;: account_master,
+        &quot;maximum_supply&quot;: &quot;1000000000.0000 EOS&quot;,
+        &quot;can_freeze&quot;: &quot;0&quot;, 
+        &quot;can_recall&quot;: &quot;0&quot;, 
+        &quot;can_whitelist&quot;: &quot;0&quot;
+    })
+
+account_eosio_token.push_action(
+    &quot;issue&quot;,
+    {
+        &quot;to&quot;: account_alice, &quot;quantity&quot;: &quot;100.0000 EOS&quot;, &quot;memo&quot;: &quot;&quot;
+    },
+    permission=account_master) 
+&quot;&quot;&quot;
 </pre></div>
 </div>
-<p>“”“</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>The data argument can be of the puthon &#39;dict` type, as in the first example.
+The second example presents a &#39;heredoc` form. The third version is the &#39;CLEOS&#39; 
+origin.
+
+Note that the last version only maches the data arguments used in of the 
+&#39;cleos&#39; and &#39;cleos_system&#39; modules.
+</pre></div>
+</div>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+account_eosio_token.push_action(
+    &quot;transfer&quot;,
+    {
+        &quot;from&quot;: account_alice, &quot;to&quot;: account_carol,
+        &quot;quantity&quot;: &quot;5.0000 EOS&quot;, &quot;memo&quot;:&quot;&quot;
+    },
+    permission=account_alice)
+
+account_eosio_token.push_action(
+    &quot;transfer&quot;,
+    &quot;&quot;&quot;{
+        &quot;from&quot;: account_alice, &quot;to&quot;: account_carol,
+        &quot;quantity&quot;: &quot;5.1000 EOS&quot;, &quot;memo&quot;:&quot;&quot;
+    }&quot;&quot;&quot;,
+    permission=account_alice)
+
+account_eosio_token.push_action(
+    &quot;transfer&quot;,
+    &#39;{&#39; 
+        + &#39;&quot;from&quot;:&#39; + str(account_alice) 
+        + &#39;, &quot;to&quot;: &#39; + str(account_carol)
+        + &#39;, &quot;quantity&quot;: &quot;5.2000 EOS&quot;, &quot;memo&quot;:&quot;&quot;&#39;
+        + &#39;}&#39;,
+    permission=account_alice)    
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<p><img src="arguments/data.png" 
+onerror="this.src='../../../source/cases/arguments/data.png'"   
+width="720px"/>
+“”“</p>
 </div>
 </div>
 </div>

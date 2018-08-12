@@ -73,24 +73,14 @@ class Error:
         self.msg = cleos.heredoc(msg)
 
 class Verbosity(enum.Enum):
-    COMMENT = ['green']
-    TRACE = ['cyan']
-    EOSF = ['cyan']
-    ERROR = ['red']
-    ERROR_TESTING = ['magenta']
+    COMMENT = ['green', None, []]
+    TRACE = ['blue', None, ['bold']]
+    EOSF = ['blue', None, []]
+    ERROR = ['red', None, []]
+    ERROR_TESTING = ['magenta', None, []]
     OUT = ['']
-    OUT_INFO = ['magenta', 'on_green']
-    DEBUG = ['yellow']
-
-_verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
-def set_verbosity(value=_verbosity):
-    global _verbosity
-    _verbosity = value
-
-_verbosity_plus = []
-def set_verbosity_plus(value=[]):
-    global _verbosity_plus
-    _verbosity_plus = value
+    OUT_INFO = ['magenta', 'on_green', []]
+    DEBUG = ['yellow', None, []]
 
 _is_throw_error = False
 def set_throw_error(status=False):
@@ -107,13 +97,14 @@ def set_is_testing_errors(status=True):
     _is_testing_error = status
 
 class Logger():
+    verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
 
     def __init__(self, verbosity=None):
         if verbosity is None:
-            global _verbosity
-            verbosity = _verbosity
+            self._verbosity = Logger.verbosity
+        else:
+            self._verbosity = verbosity
 
-        self.verbosity = verbosity
         self.cleos_object = None
         self.eosf_buffer = ""
         self.out_buffer = ""
@@ -124,9 +115,10 @@ class Logger():
     def COMMENT(self, msg):
         frame = inspect.stack()[1][0]
         test_name = inspect.getframeinfo(frame).function
+        color = Verbosity.COMMENT.value
         cprint(
             "\n###  " + test_name + ":\n" + cleos.heredoc(msg) + "\n",
-            ", ".join(Verbosity.COMMENT.value))
+            color[0], color[1], attrs=color[2])
 
     def SCENARIO(self, msg):
         self.COMMENT(msg)
@@ -134,24 +126,17 @@ class Logger():
     def EOSF(self, msg, do=False):
         msg = cleos.heredoc(msg)
         self.eosf_buffer = msg
-        if msg and (Verbosity.EOSF in self.verbosity \
-                or Verbosity.EOSF in _verbosity_plus) \
-                or do:
-            cprint(
-                msg,
-                ", ".join(Verbosity.EOSF.value))
+        if msg and (Verbosity.EOSF in self._verbosity or do):
+            color = Verbosity.EOSF.value
+            cprint(msg, color[0], color[1], attrs=color[2])
 
     def TRACE(self, msg, do=False):
-        if msg and (Verbosity.TRACE in self.verbosity \
-                or Verbosity.TRACE in _verbosity_plus) \
-                or do:
-            cprint(
-                cleos.heredoc(msg),
-                ", ".join(Verbosity.TRACE.value))
+        if msg and (Verbosity.TRACE in self._verbosity or do):
+            color = Verbosity.TRACE.value
+            cprint(cleos.heredoc(msg), color[0], color[1], attrs=color[2])
 
     def EOSF_TRACE(self, msg, do=False):
-        if msg and Verbosity.EOSF in self.verbosity \
-                or Verbosity.EOSF in _verbosity_plus:
+        if msg and Verbosity.EOSF in self._verbosity:
             self.EOSF(msg, do)
         else:
             self.TRACE(msg, do)
@@ -171,20 +156,15 @@ class Logger():
         except:
             pass
 
-        if msg and (Verbosity.OUT_INFO in self.verbosity \
-                or Verbosity.OUT_INFO in _verbosity_plus) \
-                or do:
-            cprint(
-                msg,
-                ", ".join(Verbosity.OUT_INFO.value))
+        if msg and (Verbosity.OUT_INFO in self._verbosity or do):
+            color = Verbosity.OUT_INFO.value
+            cprint(msg, color[0], color[1], attrs=color[2])            
 
     def OUT(self, msg, do=False):
         msg = cleos.heredoc(msg)
         self.out_buffer = msg
 
-        if msg and (Verbosity.OUT in self.verbosity \
-                or Verbosity.OUT in _verbosity_plus) \
-                or do:
+        if msg and (Verbosity.OUT in self._verbosity or do):
             print(msg + "\n")
 
         self.OUT_INFO(msg, do)
@@ -193,12 +173,9 @@ class Logger():
         msg = cleos.heredoc(msg)
         self.debug_buffer = msg
 
-        if msg and (Verbosity.DEBUG in self.verbosity \
-                or Verbosity.DEBUG in _verbosity_plus) \
-                or do:
-            cprint(
-                msg,
-                ", ".join(Verbosity.DEBUG.value))
+        if msg and (Verbosity.DEBUG in self._verbosity or do):
+            color = Verbosity.DEBUG.value
+            cprint(msg, color[0], color[1], attrs=color[2])
 
     def error_map(self, err_msg):
         if "main.cpp:2888" in err_msg:
@@ -265,13 +242,15 @@ class Logger():
             return False
 
         if _is_testing_error:
-            color = ", ".join(Verbosity.ERROR_TESTING.value)
+            color = Verbosity.ERROR_TESTING.value
         else:
-            color = ", ".join(Verbosity.ERROR.value)
+            color = Verbosity.ERROR.value
+
+        
 
         msg = colored(
             "ERROR:\n{}".format(cleos.heredoc(msg)), 
-            color)  + "\n"
+            color[0], color[1], attrs=color[2])  + "\n"
         if not cleos_object is None:
             cleos_object.error_object.msg = msg
 

@@ -156,7 +156,6 @@ class Contract(eosf.Logger):
             is_verbose=-1,
             json=True
         )
-        import pdb; pdb.set_trace()
         if not self.ERROR(result):
             if not dont_broadcast:
                 is_code = self.account.is_code()
@@ -168,8 +167,11 @@ class Contract(eosf.Logger):
                     """)                
                     return
                 else:
+                    self.EOSF_TRACE("""
+                    * The contract {} deployed. 
+                    """.format(self.contract_dir))
                     self.EOSF("""
-                    * Contract deployed. Code hash is checked not null.
+                    * Code hash is cross-checked not null.
                     """)
             # print(eosf_account.decodeObjectNames(json.dumps(result.json, indent=3)))
             self.contract = result

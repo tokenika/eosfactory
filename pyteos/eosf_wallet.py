@@ -109,17 +109,17 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
                 wallet_json_write(password_map)
 
                 if not password: # new password
-                    self.EOSF_TRACE("""
+                    self.EOSF("""
                         * Created wallet ``{}`` with the local testnet.
                         * Password is saved to the file ``{}`` in the wallet directory.
                         """.format(self.name, setup.password_map)
                     )
 
                 else: # password taken from file
-                    self.EOSF_TRACE("Opened wallet `{}`.".format(self.name))
+                    self.EOSF("Opened wallet `{}`.".format(self.name))
 
             else: # KEOSD Wallet Manager
-                self.EOSF_TRACE("""
+                self.EOSF("""
                         Opened wallet ``{}``
                         """.format(self.name))
                 if not password: # new password
@@ -207,13 +207,13 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
 
         if account_name is None:
             if len(removed_keys) > 0:
-                self.EOSF_TRACE("""
+                self.EOSF("""
                     Removing key '{}' 
                     from the wallet '{}'
                     """.format(removed_keys[0], self.name)
                             )
         else:            
-            self.EOSF_TRACE("""
+            self.EOSF("""
                 Removing keys of the account '{}' from the wallet '{}'
                 """.format(account_name, self.name)
                         )        
@@ -265,7 +265,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
             cleos.WalletImport(account_or_key, self.name, is_verbose=-1)
             imported_keys.append(account_or_key.key_public)            
 
-        self.EOSF_TRACE("""
+        self.EOSF("""
             * Importing keys of the account ``{}`` into the wallet ``{}``
             """.format(account_name, self.name)
                     )
@@ -366,8 +366,7 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
             is_taken = False
             for name, object_name in account_map_json.items():
                 if object_name == account_object_name:
-                    if not name == account_name:
-                        #import pdb; pdb.set_trace()                        
+                    if not name == account_name:                    
                         self.ERROR("""
                 The given account object name
                 `{}`({})

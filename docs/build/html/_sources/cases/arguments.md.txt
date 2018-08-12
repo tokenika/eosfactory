@@ -32,16 +32,19 @@ Local test node reset, wallet started, master account object created.
 
 ```md
 """
+import time
 import setup
 import cleos
 import eosf
+from eosf import Verbosity
 
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
-_ = eosf.Logger()
 
 eosf.use_keosd(False)
+eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
+_ = eosf.Logger()
 eosf.reset([eosf.Verbosity.TRACE]) 
 wallet = Wallet()
 account_master_create("account_master")
@@ -80,7 +83,7 @@ account_create("account_jimmy", cleos.CreateKey("xxx", is_verbose=0))
 ```
 <img src="arguments/accounts.png" 
     onerror="this.src='../../../source/cases/arguments/accounts.png'"   
-    alt="account arguments" width="720px"/>
+    width="720px"/>
 
 ### Permission arguments
 
@@ -124,13 +127,77 @@ account_create(
 ```
 <img src="arguments/permissions.png" 
     onerror="this.src='../../../source/cases/arguments/permissions.png'"   
-    alt="permission arguments" width="720px"/>
+    width="720px"/>
 
 ### Data arguments
 
 ```md
+Data arguments control the contract actions. Let us deploy an instance of the 
+'eosio.token' contract in order to show varies forms of the data argument of 
+the action 'transfer'. 
 ```
 ```md
+"""
+account_create("account_eosio_token", account_master)
+contract_eosio_token = Contract(account_eosio_token, "token")
+deploy = contract_eosio_token.deploy()
+time.sleep(1)
 
+account_eosio_token.push_action(
+    "create", 
+    {
+        "issuer": account_master,
+        "maximum_supply": "1000000000.0000 EOS",
+        "can_freeze": "0", 
+        "can_recall": "0", 
+        "can_whitelist": "0"
+    })
+
+account_eosio_token.push_action(
+    "issue",
+    {
+        "to": account_alice, "quantity": "100.0000 EOS", "memo": ""
+    },
+    permission=account_master) 
+"""
 ```
+```md
+The data argument can be of the puthon 'dict` type, as in the first example.
+The second example presents a 'heredoc` form. The third version is the 'CLEOS' 
+origin.
+
+Note that the last version only maches the data arguments used in of the 
+'cleos' and 'cleos_system' modules.
+```
+```md
+"""
+account_eosio_token.push_action(
+    "transfer",
+    {
+        "from": account_alice, "to": account_carol,
+        "quantity": "5.0000 EOS", "memo":""
+    },
+    permission=account_alice)
+
+account_eosio_token.push_action(
+    "transfer",
+    """{
+        "from": account_alice, "to": account_carol,
+        "quantity": "5.1000 EOS", "memo":""
+    }""",
+    permission=account_alice)
+
+account_eosio_token.push_action(
+    "transfer",
+    '{' 
+        + '"from":' + str(account_alice) 
+        + ', "to": ' + str(account_carol)
+        + ', "quantity": "5.2000 EOS", "memo":""'
+        + '}',
+    permission=account_alice)    
+"""
+```
+<img src="arguments/data.png" 
+    onerror="this.src='../../../source/cases/arguments/data.png'"   
+    width="720px"/>
 """

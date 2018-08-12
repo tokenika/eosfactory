@@ -31,11 +31,14 @@
   <p>“”“</p>
 <div class="section" id="tic-tac-toe-contract-on-a-remote-testnet">
 <span id="tic-tac-toe-contract-on-a-remote-testnet"></span><h1>Tic-tac-toe contract on a remote testnet<a class="headerlink" href="#tic-tac-toe-contract-on-a-remote-testnet" title="Permalink to this headline">¶</a></h1>
-<pre>
-This file can be executed as a python script: 'python3 account_master.md'.<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-</pre><div class="section" id="set-up">
+<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 account_master.md&#39;.
+</pre></div>
+</div>
+<div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Test with a local node are perfectly reproducible and forgivable. It is not so
+<pre>
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
+</pre><div class="highlight-md notranslate"><div class="highlight"><pre>Test with a local node are perfectly reproducible and forgivable. It is not so
 with remote test nodes because such tests have to -- otherwise they are 
 useless -- mimic real uses when blockchain changes are to be paid.
 
@@ -127,7 +130,6 @@ except Exception as e:
 <div class="highlight-md notranslate"><div class="highlight"><pre>        &quot;&quot;&quot;
         eosf.kill_keosd()
         wallet_json = eosf_wallet.wallet_json_read()
-        import pdb; pdb.set_trace()
         if not WALLET_NAME in wallet_json:
             wallet = Wallet(WALLET_NAME, verbosity=[eosf.Verbosity.TRACE])
             wallet_json[WALLET_NAME] = wallet.password
