@@ -74,7 +74,7 @@ NEXT TEST ====================================================================
             })
 
         self.assertTrue(
-            '"issuer": "account_master", "maximum_supply": "1000000000.0000 EOS"' \
+            '"maximum_supply": "1000000000.0000 EOS"' \
                 in account_eosio_token.eosf_buffer)        
 
         account_eosio_token.push_action(

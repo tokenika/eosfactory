@@ -109,7 +109,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         if transfer:
             args.extend(["--transfer"])
         if not permission is None:
-            args.extend(["--permission", self._permission(permission)])
+            args.extend(["--permission", self._permission_arg(permission)])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:

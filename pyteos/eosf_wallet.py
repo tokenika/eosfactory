@@ -179,31 +179,28 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
         """
         removed_keys = []
         account_name = None
-        try: # whether account_or_key is an account:
-            account_name = account_or_key.name
-            key = account_or_key.owner_key
-            removed_keys.append(key.key_public)
 
-            remove_key = cleos.WalletRemove_key(
-                key, self.name, self.password, is_verbose=-1)
-            removed_keys.append(key.key_public)
+        if isinstance(account_or_key, cleos.Account):
+            cleos.WalletRemove_key(
+                self._key_arg(
+                    account_or_key, is_owner_key=True, is_private_key=True), 
+                self.name, is_verbose=-1)
+            removed_keys.append(self._key_arg(
+                    account_or_key, is_owner_key=True, is_private_key=False))
 
-            try: # the account may have active key, as well:
-                key = account_or_key.active_key
-                remove_key = cleos.WalletRemove_key(
-                    key, self.name, self.password, is_verbose=-1)
-                removed_keys.append(key.key_public)
-            except:
-                pass                    
-        except:
-            try:
-                cleos.WalletRemove_key(
-                    account_or_key, self.name, self.password, is_verbose=-1)
-                removed_keys.append(account_or_key.key_public)
-            except: # account_or_key is string
-                remove_key = cleos.WalletRemove_key(
-                    account_or_key, self.name, self.password, is_verbose=-1)
-                removed_keys.append(account_or_key)
+            cleos.WalletRemove_key(
+                self._key_arg(
+                    account_or_key, is_owner_key=False, is_private_key=True), 
+                self.name, is_verbose=-1)
+            removed_keys.append(self._key_arg(
+                    account_or_key, is_owner_key=False, is_private_key=False))
+        else:
+            cleos.WalletRemove_key(
+                self._key_arg(
+                    account_or_key, is_private_key=True), 
+                self.name, is_verbose=-1)
+            removed_keys.append(self._key_arg(
+                    account_or_key, is_private_key=False))
 
         if account_name is None:
             if len(removed_keys) > 0:
@@ -243,27 +240,27 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
         """
         imported_keys = []
         account_name = None
-        try: # whether account_or_key is an account:
-            account_name = account_or_key.name  
-            key = account_or_key.owner_key
-            imported_keys.append(key.key_public)
-            
-            wallet_import = cleos.WalletImport(
-                key, self.name, is_verbose=-1)
-            imported_keys.append(key.key_public)
+        if isinstance(account_or_key, cleos.Account):
+            cleos.WalletImport(
+                self._key_arg(
+                    account_or_key, is_owner_key=True, is_private_key=True), 
+                self.name, is_verbose=-1)
+            imported_keys.append(self._key_arg(
+                    account_or_key, is_owner_key=True, is_private_key=False))
 
-            try:
-                key = account_or_key.active_key
-                imported_keys.append(key.key_public)
-
-                wallet_import = cleos.WalletImport(
-                    key, self.name, is_verbose=-1)
-                
-            except:
-                pass                    
-        except:
-            cleos.WalletImport(account_or_key, self.name, is_verbose=-1)
-            imported_keys.append(account_or_key.key_public)            
+            cleos.WalletImport(
+                self._key_arg(
+                    account_or_key, is_owner_key=False, is_private_key=True), 
+                self.name, is_verbose=-1)
+            imported_keys.append(self._key_arg(
+                    account_or_key, is_owner_key=False, is_private_key=False))
+        else:
+            cleos.WalletImport(
+                self._key_arg(
+                    account_or_key, is_private_key=True), 
+                self.name, is_verbose=-1)
+            imported_keys.append(self._key_arg(
+                    account_or_key, is_private_key=False))
 
         self.EOSF("""
             * Importing keys of the account ``{}`` into the wallet ``{}``

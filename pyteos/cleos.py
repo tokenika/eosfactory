@@ -93,13 +93,27 @@ class Permission(enum.Enum):
     OWNER = '@owner'
     ACTIVE = '@active'
 
+class Key:
+    """Having the ``name`` and 'Key' attributes.
+    """    
+    def __init__(self, name, key_public, key_private):
+        self.name = name
+        self.key_public = key_public
+        self.key_private = key_private
+
 class Account:
-    """Having the ``name`` attribute.
+    """Having the ``name`` and 'Key' attributes.
     """    
     def __init__(self, name, owner_key=None, active_key=None):
         self.name = name
         self.owner_key = owner_key
         self.active_key = active_key
+
+class Wallet:
+    """Having the ``name`` attribute.
+    """    
+    def __init__(self, name):
+        self.name = name
 
 class _Cleos:
     """A prototype for the `cleos` command classes.
@@ -205,7 +219,18 @@ class _Cleos:
     def __repr__(self):
         return ""
 
-    def _key(self, key, is_owner_key=True, is_private_key=True):
+    def _wallet_arg(self, wallet):
+        if isinstance(wallet, Wallet):
+            return wallet.name
+        if isinstance(wallet, str):
+            return wallet
+
+        self.set_error(heredoc("""
+            The class of the 'wallet' argument may be 
+            either {} or {}, while it is {}.
+            """.format(str, Wallet, type(account))))
+
+    def _key_arg(self, key, is_owner_key=True, is_private_key=True):
         if isinstance(key, Account):
             if is_owner_key:
                 key = key.owner_key
@@ -223,7 +248,7 @@ class _Cleos:
                 return None
             return key
 
-        if isinstance(key, CreateKey):
+        if isinstance(key, Key):
             if is_private_key:
                 key = key.key_private
             else:
@@ -240,9 +265,9 @@ class _Cleos:
         self.set_error(heredoc("""
         The class of the 'key' argument may be 
         {} or {} or {} while it is {}.
-        """.format(str, CreateKey, Account, type(permission))))
+        """.format(str, Key, Account, type(permission))))
         
-    def _account_name(self, account):
+    def _account_arg(self, account):
         if isinstance(account, str):
             return account
         if isinstance(account, Account):
@@ -253,7 +278,7 @@ class _Cleos:
             either {} or {}, while it is {}.
             """.format(str, Account, type(account))))
 
-    def _permission(self, permission):
+    def _permission_arg(self, permission):
         if isinstance(permission, str):
             return permission
         if isinstance(permission, Account):
@@ -292,7 +317,7 @@ class _Cleos:
         if isinstance(permission, list):
             retval = []
             while len(permission) > 0:
-                p = self._permission(permission.pop())
+                p = self._permission_arg(permission.pop())
                 if p is None:
                     return None
                 retval.append(p)
@@ -337,7 +362,7 @@ class GetAccount(Account, _Cleos):
         is_verbose: Verbosity at the construction time.
     """
     def __init__(self, account, is_verbose=1, json=False):
-        Account.__init__(self, self._account_name(account))
+        Account.__init__(self, self._account_arg(account))
         args = [self.name]
         if setup.is_json() or json:
             args.append("--json")
@@ -369,7 +394,7 @@ class GetAccounts(_Cleos):
         is_verbose: Verbosity at the construction time.
     """
     def __init__(self, key, is_verbose=1):
-        public_key = self._key(key, is_owner_key=True, is_private_key=False)
+        public_key = self._key_arg(key, is_owner_key=True, is_private_key=False)
         _Cleos.__init__(
             self, [public_key], "get", "accounts", is_verbose)
 
@@ -406,7 +431,7 @@ class GetTransaction(_Cleos):
             self.printself()
 
 
-class WalletCreate(_Cleos):
+class WalletCreate(Wallet, _Cleos):
     """Create a new wallet locally.
 
     - **parameters**::
@@ -424,7 +449,7 @@ class WalletCreate(_Cleos):
         is_verbose: Verbosity at the construction time.
     """
     def __init__(self, name="default", password="", is_verbose=1):
-        self.name = name
+        Wallet.__init__(self, name)
         self.password = None
         self.set_is_verbose(is_verbose)
 
@@ -514,15 +539,10 @@ class WalletImport(_Cleos):
 
         self.set_is_verbose(is_verbose)
 
-        try: # is the wallet an Wallet object?
-            wallet_name = wallet.name
-        except: # wallet is a string
-            wallet_name = wallet
-
-        key_private = self._key(key, is_owner_key=True, is_private_key=True)
+        key_private = self._key_arg(key, is_owner_key=True, is_private_key=True)
         _Cleos.__init__(
             self, 
-            ["--private-key", key_private, "--name", wallet_name],
+            ["--private-key", key_private, "--name", self._wallet_arg(wallet)],
             "wallet", "import", is_verbose)
 
         if not self.error:
@@ -549,16 +569,12 @@ class WalletRemove_key(_Cleos):
 
         self.set_is_verbose(is_verbose)
 
-        try: # is the wallet an Wallet object?
-            wallet_name = wallet.name
-        except: # wallet is a string
-            wallet_name = wallet
-
-        key_public = self._key(key, is_owner_key=True, is_private_key=False)
+        key_public = self._key_arg(key, is_owner_key=True, is_private_key=False)
 
         _Cleos.__init__(
             self, 
-            [key_public, "--name", wallet_name, "--password", password], 
+            [key_public, "--name", self._wallet_arg(wallet), 
+                "--password", password], 
             "wallet", "remove_key", is_verbose)
 
         if not self.error:
@@ -814,7 +830,7 @@ class GetCode(_Cleos):
             self, account, code="", abi="", 
             wasm=False, is_verbose=1):
 
-        account_name = self._account_name(account)
+        account_name = self._account_arg(account)
 
         args = [account_name]
         if code:
@@ -866,7 +882,7 @@ class GetTable(_Cleos):
             limit=10, key="", lower="", upper="",
             is_verbose=1
             ):
-        args = [self._account_name(account)]
+        args = [self._account_arg(account)]
 
         if not scope:
             scope=self.name
@@ -886,7 +902,7 @@ class GetTable(_Cleos):
         if key:
             args.extend(
                 ["--key", 
-                self._key(key, is_owner_key=False, is_private_key=False)])
+                self._key_arg(key, is_owner_key=False, is_private_key=False)])
         if lower:
             args.extend(["--lower", lower])
         if upper:
@@ -903,7 +919,7 @@ class GetTable(_Cleos):
             self.printself()
 
 
-class CreateKey(_Cleos):
+class CreateKey(Key, _Cleos):
     """Create a new keypair and print the public and private keys.
 
     - **parameters**::
@@ -920,13 +936,14 @@ class CreateKey(_Cleos):
     """
     def __init__(
             self, key_name, key_public="", key_private="", r1=False, is_verbose=1):
+        Key.__init__(self, key_name, key_public, key_private)
 
-        if key_public or key_private:
+        if self.key_public or self.key_private:
             self.json = {}
-            self.json["publicKey"] = self.key_public = key_public           
-            self.json["privateKey"] = self.key_private = key_private
+            self.json["publicKey"] = self.key_public           
+            self.json["privateKey"] = self.key_private
             self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
-                .format(key_private,key_public)
+                .format(self.key_private, self.key_public)
         else:
             args = []
             if r1:
@@ -948,8 +965,6 @@ class CreateKey(_Cleos):
                 self.key_public = self.json["publicKey"]
 
         self.name = key_name
-
-
 
 class RestoreAccount():
 
@@ -1031,19 +1046,19 @@ class CreateAccount(Account, _Cleos):
         if active_key is None:
             active_key = owner_key        
 
-        owner_key_public = self._key(
+        owner_key_public = self._key_arg(
             owner_key, is_owner_key=True, is_private_key=False)
-        active_key_public = self._key(
+        active_key_public = self._key_arg(
             active_key, is_owner_key=False, is_private_key=False)
 
         args = [
-                self._account_name(creator), self.name, 
+                self._account_arg(creator), self.name, 
                 owner_key_public, active_key_public
             ]
         if setup.is_json():
             args.append("--json")
         if not permission is None:
-            p = self._permission(permission)
+            p = self._permission_arg(permission)
             if isinstance(permission,list):
                 for perm in p:
                     args.extend(["--permission", perm])
@@ -1148,12 +1163,12 @@ class SetContract(_Cleos):
             self.set_error("cannot find the contract directory.")
             return
 
-        self.account_name = self._account_name(account)
+        self.account_name = self._account_arg(account)
         args = [self.account_name, self.contract_path_absolute]
         if setup.is_json() or json:
             args.append("--json")
         if not permission is None:
-            p = self._permission(permission)
+            p = self._permission_arg(permission)
             if isinstance(permission,list):
                 for perm in p:
                     args.extend(["--permission", perm])
@@ -1236,13 +1251,13 @@ class PushAction(_Cleos):
             is_verbose=1,
             json=False
         ):
-        self.account_name = self._account_name(account)
+        self.account_name = self._account_arg(account)
 
         args = [self.account_name, action, data]
         if setup.is_json() or json:
             args.append("--json")
         if not permission is None:
-            p = self._permission(permission)
+            p = self._permission_arg(permission)
             if isinstance(permission,list):
                 for perm in p:
                     args.extend(["--permission", perm])
