@@ -83,7 +83,7 @@ account_create("account_jimmy", cleos.CreateKey("xxx", is_verbose=0))
 ```
 <img src="arguments/accounts.png" 
     onerror="this.src='../../../source/cases/arguments/accounts.png'"   
-    width="680px"/>
+    width="720px"/>
 
 ### Permission arguments
 
@@ -127,7 +127,7 @@ account_create(
 ```
 <img src="arguments/permissions.png" 
     onerror="this.src='../../../source/cases/arguments/permissions.png'"   
-    width="680px"/>
+    width="720px"/>
 
 ### Data arguments
 
@@ -199,5 +199,5 @@ account_eosio_token.push_action(
 ```
 <img src="arguments/data.png" 
     onerror="this.src='../../../source/cases/arguments/data.png'"   
-    width="680px"/>
+    width="720px"/>
 """

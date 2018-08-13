@@ -71,7 +71,7 @@ name 'test1', you have to update both 'CMakeLists.txt' and
 
 <img src="ide/workspace.png" 
     onerror="this.src='../../../source/cases/ide/workspace.png'"   
-    alt="smart contract IDE workspace" width="680px"/>
+    alt="smart contract IDE workspace" width="720px"/>
 
 ## Working on the code
 
@@ -89,7 +89,7 @@ In the image below, you cen see a result of the 'Pick Definition' service.
 
 <img src="ide/pick_definition.png" 
     onerror="this.src='../../../source/cases/ide/pick_definition.png'"   
-    alt="eosio token contract" width="680px"/>
+    alt="eosio token contract" width="720px"/>
 
 ## Developing the code of the contract
 
@@ -104,7 +104,7 @@ shading is not automatic.)
 ```
 <img src="ide/compile.png" 
     onerror="this.src='../../../source/cases/ide/compile.png'"   
-    alt="eosio token contract" width="680px"/>
+    alt="eosio token contract" width="720px"/>
 
 ## Building the contract
 
@@ -127,7 +127,7 @@ $ make
 ```
 <img src="ide/cmake_build.png" 
     onerror="this.src='../../../source/cases/ide_images/cmake_build.png'"   
-    alt="eosio token contract" width="680px"/>
+    alt="eosio token contract" width="720px"/>
 
 ## Running tests
 
@@ -149,8 +149,8 @@ $ python3 unittest1.py
 
 <img src="ide/cmake_unittest.png" 
     onerror="this.src='../../../source/cases/ide/cmake_unittest.png'"   
-    alt="eosio token contract" width="680px"/>
+    alt="eosio token contract" width="720px"/>
 
 <img src="ide/logger.png" 
     onerror="this.src='../../../source/cases/ide/logger.png'"   
-    alt="eosio token contract" width="680px"/>
+    alt="eosio token contract" width="720px"/>

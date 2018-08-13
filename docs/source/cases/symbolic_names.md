@@ -114,7 +114,7 @@ account_eosio_token.push_action(
 
 <img src="symbolic_names_images/symbolic_names_false.png" 
     onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_false.png'"   
-    alt="symbolic names translation off" width="680px"/>
+    alt="symbolic names translation off" width="720px"/>
 
 #### Translation is on
 
@@ -157,6 +157,6 @@ account_eosio_token.push_action(
 
 <img src="symbolic_names_images/symbolic_names_true.png" 
     onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
-    alt="symbolic names translation on" width="680px"/>
+    alt="symbolic names translation on" width="720px"/>
 
 

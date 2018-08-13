@@ -189,6 +189,6 @@ We hope that you get something similar to this one shown in the image below.
 ```
 <img src="contract.png" 
     onerror="this.src='../../../source/cases/contract.png'"   
-    alt="contract object" width="680px"/>
+    alt="contract object" width="720px"/>
 
 """

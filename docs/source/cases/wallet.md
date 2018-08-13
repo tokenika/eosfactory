@@ -71,7 +71,7 @@ eosf.stop()                                 # stop the local testnet
 
 <img src="wallet_images/reset_nodeos_wallet.png" 
     onerror="this.src='../../../source/cases/wallet_images/reset_nodeos_wallet.png'"   
-    alt="nodeos wallet reset" width="680px"/>
+    alt="nodeos wallet reset" width="720px"/>
 
 ```md
 What has happened?
@@ -98,7 +98,7 @@ eosf.stop()                         # stop the local testnet
 
 <img src="wallet_images/run_nodeos_wallet.png" 
     onerror="this.src='../../../source/cases/wallet_images/run_nodeos_wallet.png'"   
-    alt="nodeos wallet reset" width="680px"/>
+    alt="nodeos wallet reset" width="720px"/>
 
 ### KEOSD managed wallet
 
@@ -137,7 +137,7 @@ wallet = Wallet(wallet_name)
 
 <img src="wallet_images/keosd_wallet_create.png" 
     onerror="this.src='../../../source/cases/wallet_images/keosd_wallet_create.png'"   
-    alt="nodeos wallet reset" width="680px"/>
+    alt="nodeos wallet reset" width="720px"/>
 
 ### Methods of the 'Wallet' class
 
