@@ -154,6 +154,6 @@ We hope that you get something similar to this one shown in the image below.
 ```
 <img src="account.png" 
     onerror="this.src='../../../source/cases/account.png'"   
-    alt="account object" width="720px"/>
+    alt="account object" width="680px"/>
 
 """

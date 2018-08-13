@@ -21,3 +21,5 @@ that the branch 'dev' is not consistent yet. Especially, the tutorials are not
 updated. But you can rely the articles in the 'docs/source/cases/' directory 
 (most of them can be run as python scripts), and on tests in the 'tests/' 
 directory.
+
+See https://rawgit.com/tokenika/eosfactory/dev/docs/build/html/cases/arguments.html
