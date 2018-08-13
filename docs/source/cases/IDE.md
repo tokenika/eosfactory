@@ -69,9 +69,9 @@ name 'test1', you have to update both 'CMakeLists.txt' and
 '.vscode/tasks.json' files.
 ```
 
-<img src="ide/workspace.png" 
-    onerror="this.src='../../../source/cases/ide/workspace.png'"   
-    alt="smart contract IDE workspace" width="720px"/>
+<img src="ide_images/workspace.png" 
+    onerror="this.src='../../../source/cases/ide_images/workspace.png'"   
+    width="720px"/>
 
 ## Working on the code
 
@@ -87,9 +87,9 @@ Especially, you can inspect any context code. The list of services is:
 In the image below, you cen see a result of the 'Pick Definition' service. 
 ```
 
-<img src="ide/pick_definition.png" 
-    onerror="this.src='../../../source/cases/ide/pick_definition.png'"   
-    alt="eosio token contract" width="720px"/>
+<img src="ide_images/pick_definition.png" 
+    onerror="this.src='../../../source/cases/ide_images/pick_definition.png'"   
+    width="720px"/>
 
 ## Developing the code of the contract
 
@@ -102,9 +102,9 @@ There you can see a missing semicolon in the editor pane. (The shading is not
 automatic.) Also, you can see the error message in the task panel. (Again, the 
 shading is not automatic.) 
 ```
-<img src="ide/compile.png" 
-    onerror="this.src='../../../source/cases/ide/compile.png'"   
-    alt="eosio token contract" width="720px"/>
+<img src="ide_images/compile.png" 
+    onerror="this.src='../../../source/cases/ide_images/compile.png'"   
+    width="720px"/>
 
 ## Building the contract
 
@@ -125,9 +125,9 @@ $ CMake ..
 $ make
 
 ```
-<img src="ide/cmake_build.png" 
+<img src="ide_images/cmake_build.png" 
     onerror="this.src='../../../source/cases/ide_images/cmake_build.png'"   
-    alt="eosio token contract" width="720px"/>
+    width="720px"/>
 
 ## Running tests
 
@@ -147,10 +147,10 @@ $ python3 test1.py
 $ python3 unittest1.py
 ```
 
-<img src="ide/cmake_unittest.png" 
-    onerror="this.src='../../../source/cases/ide/cmake_unittest.png'"   
-    alt="eosio token contract" width="720px"/>
+<img src="ide_images/cmake_unittest.png" 
+    onerror="this.src='../../../source/cases/ide_images/cmake_unittest.png'"   
+    width="720px"/>
 
-<img src="ide/logger.png" 
-    onerror="this.src='../../../source/cases/ide/logger.png'"   
-    alt="eosio token contract" width="720px"/>
+<img src="ide_images/logger.png" 
+    onerror="this.src='../../../source/cases/ide_images/logger.png'"   
+    width="720px"/>
