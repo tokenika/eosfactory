@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>cleos_system &#8212; EOSFactory 2.0 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -16,12 +16,26 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="setup" href="setup.html" />
-    <link rel="prev" title="cleos" href="cleos.html" />
-   
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>  
+    <link rel="prev" title="cleos" href="cleos.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="setup.html" title="setup"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cleos.html" title="cleos"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">EOSFactory 2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -33,7 +47,7 @@
 <p>Python front-end for <cite>EOSIO cleos system</cite>.</p>
 <span class="target" id="module-pyteos"></span><dl class="class">
 <dt id="cleos_system.BuyRam">
-<em class="property">class </em><code class="descclassname">cleos_system.</code><code class="descname">BuyRam</code><span class="sig-paren">(</span><em>payer</em>, <em>receiver</em>, <em>amount</em>, <em>buy_ram_kbytes=0</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos_system.BuyRam" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cleos_system.</code><code class="descname">BuyRam</code><span class="sig-paren">(</span><em>payer</em>, <em>receiver</em>, <em>amount</em>, <em>buy_ram_kbytes=0</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=None</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos_system.BuyRam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
 <p>Buy RAM.</p>
 <ul>
@@ -73,7 +87,7 @@
 
 <dl class="class">
 <dt id="cleos_system.SystemNewaccount">
-<em class="property">class </em><code class="descclassname">cleos_system.</code><code class="descname">SystemNewaccount</code><span class="sig-paren">(</span><em>creator</em>, <em>name</em>, <em>owner_key</em>, <em>active_key</em>, <em>stake_net</em>, <em>stake_cpu</em>, <em>permission=''</em>, <em>buy_ram_kbytes=0</em>, <em>buy_ram=''</em>, <em>transfer=False</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=''</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos_system.SystemNewaccount" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cleos_system.</code><code class="descname">SystemNewaccount</code><span class="sig-paren">(</span><em>creator</em>, <em>name</em>, <em>owner_key</em>, <em>active_key</em>, <em>stake_net</em>, <em>stake_cpu</em>, <em>permission=None</em>, <em>buy_ram_kbytes=0</em>, <em>buy_ram=''</em>, <em>transfer=False</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=None</em>, <em>is_verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos_system.SystemNewaccount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="cleos.html#cleos.Account" title="cleos.Account"><code class="xref py py-class docutils literal notranslate"><span class="pre">cleos.Account</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
 <p>Create an account, buy ram, stake for bandwidth for the account.</p>
 <ul>
@@ -128,72 +142,19 @@ ref_block: The reference block num or block id used for TAPOS
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">EOSFactory</a></h1>
-
-
-
-
-
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
-
-
-
-<h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="cases/IDE.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/symbolic_names.html">Symbolic names</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/arguments.html">Arguments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/account.html">Account object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/account_master.html">Account master object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/contract.html">Contract object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/wallet.html">Wallet object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/configuration.html">EOSFactory configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/eosio_token_contract.html">Eosio Token Contract</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/setup.html">Setting-up EOSFactory tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/account_name_conflict.html">Account name conflict</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/registering_to_testnode.html">Registering to a remote testnet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cases/remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
-<li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
-<li class="toctree-l1"><a class="reference internal" href="releases/ReleaseNotesVersion1.1.html">EOSFactory Release Notes - v1.1</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="cleos.html">cleos</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">cleos_system</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="teos.html">teos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="eosf.html">eosf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="node.html">node</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sess.html">sess</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="cleos.html" title="previous chapter">cleos</a></li>
-      <li>Next: <a href="setup.html" title="next chapter">setup</a></li>
-  </ul></li>
-</ul>
-</div>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cleos.html"
+                        title="previous chapter">cleos</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="setup.html"
+                        title="next chapter">setup</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cleos_system.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <div class="searchformwrapper">
@@ -210,20 +171,27 @@ ref_block: The reference block num or block id used for TAPOS
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2018, Tokenika.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
-      
-      |
-      <a href="_sources/cleos_system.rst.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="setup.html" title="setup"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cleos.html" title="cleos"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">EOSFactory 2.0 documentation</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
   </body>
 </html>

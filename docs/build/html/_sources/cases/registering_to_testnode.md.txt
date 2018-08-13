@@ -1,14 +1,16 @@
 """
 # Registering to a remote testnet
 
-<pre>
+```md
 This file can be executed as a python script: 'python3 
 registering_to_testnode.md'.
-
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
+```
 
 ## Set-up
+
+<pre>
+The set-up statements are explained at <a href="setup.html">cases/setup</a>.
+</pre>
 
 ```md
 The following account exists in the blockchain of the testnode. It is used, in
