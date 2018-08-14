@@ -30,19 +30,6 @@ Cases
     cases/registering_to_testnode
     cases/remote_tic_tac_toe
 
-Tutorials
----------
-
-.. toctree::
-    :maxdepth: 1
-
-    tutorials/00.IntroductionToEOSFactory
-    tutorials/01.InstallingEOSFactory
-    tutorials/02.InteractingWithEOSContractsInEOSFactory
-    tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory
-    tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC
-    tutorials/05.InteractingWithPublicTestnet
-
 Release Notes
 -------------
 

@@ -10,8 +10,6 @@ from eosf_contract import Contract
 
 eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
 eosf.set_throw_error(False)
-#setup.set_command_line_mode()
-
 _ = eosf.Logger()
 
 class Test(unittest.TestCase):

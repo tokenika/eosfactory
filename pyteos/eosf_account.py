@@ -100,7 +100,7 @@ def _data_json(data):
             else:
                 json_module.JSONEncoder.default(self, o) 
 
-    if isinstance(data, dict):
+    if isinstance(data, dict) or isinstance(data, list):
         data_json = json_module.dumps(data, cls=Encoder)
     else:
         data_json = re.sub("\s+|\n+|\t+", " ", data)
@@ -599,14 +599,7 @@ def append_account_methods_and_finish(
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
-        if not permission:
-            permission = account_object.name
-        else:
-            try: # permission is an account:
-                permission = permission.name
-            except: # permission is the name of an account:
-                permission = permission
-
+       
         data = _data_json(data)
 
         result = cleos.PushAction(
@@ -635,8 +628,8 @@ def append_account_methods_and_finish(
 
                 {}
                 """.format(decodeObjectNames(result.out_msg, keys=True)))
-        else:
-            account_object.action = None
+
+        account_object.action = result
 
     account_object.push_action = types.MethodType(
                                     push_action , account_object)

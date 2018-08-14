@@ -154,7 +154,8 @@ namespace teos {
           + " --config-dir " + reqJson_.get<string>("config-dir")
           + " --wallet-dir " + reqJson_.get<string>("wallet-dir")
           + " --chain-state-db-size-mb " + getMemorySizeMb()
-          + " --contracts-console "
+          + " --contracts-console"
+          + " --verbose-http-errors"
           ;
         if(reqJson_.get("delete-all-blocks", false)) {
           args += " --genesis-json " + reqJson_.get<string>("genesis-json")
