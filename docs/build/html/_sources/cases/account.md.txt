@@ -93,6 +93,7 @@ Any account object can:
 Create a smart contract object instance, appending it to the account 
 'account_hello'. The 'Contract' class is presented at <a href="contract.html">cases/contract</a>.
 </pre>
+
 ```md
 """
 contract_hello = Contract(account_hello, "hello")
@@ -100,6 +101,7 @@ contract_hello.build()
 contract_hello.deploy()
 """
 ```
+
 ```md
 The second argument of the creator of the 'Contract' class identifies the 
 code source. The Factory tries to be smart therefore searches the repository. 

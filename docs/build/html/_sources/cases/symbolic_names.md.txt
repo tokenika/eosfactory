@@ -40,7 +40,7 @@ For example, if there is in the Contract a notion of an account keeping a
 'school fund 2018', we can try the name 'school.fund1'. It is not only far to
 a satisfactory name, but it can be taken already.
 
-A natural solution to the problem is to have aliasses to the physical names. 
+A natural solution to the problem is to have aliases to the physical names. 
 Perhaps, the structure of the native EOSIO account should have a field and 
 method for this, it is not so now, therefore the EOSFactory uses its own system.
 

@@ -145,34 +145,7 @@ cleos. Of course directly writing JSON strings would still be supported.
 What do you think?
 
 ### A
-Thank you for your message. It prompted us to improve the EOSFactory.
-
-The problem is that EOS has their own concept of the JSON: the order of 
-items is meaningful for them. (Perhaps, it is still more ridiculous that they
-use their original, 4000 lines long, implementation of the std::string.)
-Hence, we cannot use the python dict without 'improving' the Python.
-
-But, I agree with the message from you: current implementation is ugly. We 
-change it (in the next edition, soon). As it was something like this ...
-
-account_tic_tac_toe.push_action(
-    "create", 
-    '{"challenger":"' + str(account_alice) 
-        +'", "host":"' + str(account_carol) + '"}',
-    account_carol)
-
-
-... now it is like this
-
-account_tic_tac_toe.push_action(
-    "create", 
-    '''{
-        "challenger": "account_alice",
-        "host":"account_carol"
-    }''',
-    account_carol)
-
-Of course, directly writing JSON strings is still supported.
+Thank you for your message. We take your advice.
 
 # Documentation Update #40
 
