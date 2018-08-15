@@ -153,7 +153,7 @@ account_master_create("account_master")
 ### Test run
 
 ```md
-In an linux bash, change directory to where this file exists, it is the 
+In an linux bash, change directory to where this file exists, that is the 
 directory 'docs/source/cases' in the repository, and enter the following 
 command:
 ```

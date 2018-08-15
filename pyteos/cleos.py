@@ -326,7 +326,7 @@ class _Cleos:
         self.set_error(heredoc("""
         The class of the 'permission' argument may be 
         {} or {} or {} or {}, while it is {}.
-        """.format(str, Account, (), [], type(permission))))
+        """.format(str, Account, tuple, list, type(permission))))
 
 def get_transaction_id(cleos_object):
     transaction_id = ""

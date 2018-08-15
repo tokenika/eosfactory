@@ -29,6 +29,7 @@ Cases
     cases/account_name_conflict
     cases/registering_to_testnode
     cases/remote_tic_tac_toe
+    cases/debugging
 
 Release Notes
 -------------

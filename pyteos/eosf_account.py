@@ -652,7 +652,7 @@ def append_account_methods_and_finish(
                 pass
 
             account_object.EOSF_TRACE("""
-            * Table ''{}'' for ``{}``
+            * Table ``{}`` for ``{}``
             """.format(table_name, scope))
             account_object.OUT(decodeObjectNames(result.out_msg))
             return result
@@ -717,7 +717,7 @@ def account_create(
 
     logger = eosf.Logger(verbosity)
     logger.EOSF_TRACE("""
-        ######### Create the account object `{}` ...
+        ######### Create the account object ``{}`` ...
         """.format(account_object_name))
 
     """
@@ -742,7 +742,7 @@ def account_create(
     account_object = None
     if restore:
         logger.EOSF_TRACE("""
-                        ... for the blockchain account `{}`.
+                        ... for the blockchain account ``{}``.
                         """.format(account_name)) 
         account_object = RestoreAccount(account_name, verbosity)
     else:
@@ -758,7 +758,7 @@ def account_create(
         if stake_net:
             logger.EOSF_TRACE("""
                         ... for the new, properly paid, 
-                        blockchain account `{}`.
+                        blockchain account ``{}``.
                         """.format(account_object_name, account_name))
 
             account_object = SystemNewaccount(
