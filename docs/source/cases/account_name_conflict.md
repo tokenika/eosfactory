@@ -1,16 +1,12 @@
 """
 # Account name conflict
 
-```md
 This file can be executed as a python script: 
 'python3 account_name_conflict.md'.
-```
 
 ## Set-up
 
-<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
 
 ```md
 """
@@ -27,7 +23,7 @@ eosf.set_throw_error(False)
 """
 ```
 ## Case
-```md
+
 The EOSFactory wraps EOSIO accounts with objects. The symbolic name of an 
 account object, for example 'account_alice', has to be unique in a program. 
 Moreover, it has be unique in a collection of scripts, especially, if they 
@@ -49,7 +45,6 @@ You are prompted to change the blocking name. On acceptance, the 'nano'
 editor opens. CTR+X, to save and exit.
 
 Change 'account_alice' to 'account_alice_b'.
-```
 
 ```md
 """
@@ -60,11 +55,11 @@ account_create("account_alice", account_master)
 ```
 
 ### Test run
-```md
+
 In an linux bash, change directory to where this file exists, that is the 
 directory 'docs/source/cases' in the repository, and enter the following 
 command:
-```
+
 ```md
 $ python3 account_name_conflict.md
 ```

@@ -31,58 +31,44 @@
   <p>“”“</p>
 <div class="section" id="eosfactory-configuration">
 <span id="eosfactory-configuration"></span><h1>EOSFactory configuration<a class="headerlink" href="#eosfactory-configuration" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 configuration.md&#39;.
-</pre></div>
-</div>
+<p>This file can be executed as a python script: ‘python3 configuration.md’.</p>
 <div class="section" id="inspect-the-configuration">
 <span id="inspect-the-configuration"></span><h2>Inspect the configuration<a class="headerlink" href="#inspect-the-configuration" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import teos
-
-ok = teos.GetConfig()
-
+ok = teos.get_config()
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Note that the same result is available with this bash command:
-</pre></div>
-</div>
+<p>Note that the same result is available with this bash command:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>$eosf get config
 </pre></div>
 </div>
 </div>
 <div class="section" id="override-the-installed-configuration">
 <span id="override-the-installed-configuration"></span><h2>Override the installed configuration<a class="headerlink" href="#override-the-installed-configuration" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>There is the &#39;config.json&#39; file in the &#39;teos&#39; folder of the repository. 
-The entries there prevail the default settings.
-</pre></div>
-</div>
+<p>There is the ‘config.json’ file in the ‘teos’ folder of the repository.
+The entries there prevail the default settings.</p>
 </div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h2>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, that is the 
-directory &#39;docs/source/cases&#39; in the repository, and enter the following 
-command:
-</pre></div>
-</div>
+<p>With a linux bash, change directory to where this file exists, that is the
+directory ‘docs/source/cases’ in the repository, and enter the following
+command:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 configuration.md
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>or
+<p>or</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>$ $eosf get config -j
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>$ $eosf get config
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
-You can change or add something in the configuration file &#39;teos/config.json&#39; 
-and see the result.
-</pre></div>
-</div>
+<p>The flag <code class="docutils literal notranslate"><span class="pre">-j</span></code> makes json output. We expect that you get something similar to
+this one shown in the image below.
+You can change or add something in the configuration file ‘teos/config.json’
+and see the result.</p>
 <p><img src="configuration.png" 
-onerror="this.src='../../../source/cases/configuration.png'"   
-alt="configuration" width="640px"/></p>
-<p>“”“</p>
+onerror="this.src='../../../source/cases/configuration.png'" width="720px"/>
+“”“</p>
 </div>
 </div>
 
@@ -121,14 +107,7 @@ alt="configuration" width="640px"/></p>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging smart contracts</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>

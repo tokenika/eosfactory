@@ -1,15 +1,11 @@
 """
 # Wallet object
 
-```md
 This file can be executed as a python script: 'python3 wallet.md'.
-```
 
 ## Set-up
 
-<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
 
 ```md
 """
@@ -27,20 +23,17 @@ eosf.set_throw_error(False)
 
 ## Case
 
-<pre>
 The 'Wallet` class wraps EOSIO wallets. The 'Wallet' object keep account 
 objects, presented at <a href="account.html">cases/account</a>.
 
 The EOSIO physical wallet, if used with the Factory, can be managed either 
 with the 'KEOSD Wallet Manager' or with the 'NODEOS' wallet plugin. The status 
 is controlled with the 'use_keosd' statement (default is 'False'):
-</pre>
 
 ```md
 eosf.use_keosd(True)
 ```
 
-```md
 The 'NODEOS' alternative apply if the local node is running.
 
 It can be exactly one 'Wallet' object in the namespace. After the 'Wallet' 
@@ -51,7 +44,6 @@ If the 'Wallet' object is of the local testnet, its password is kept between
 sessions, and used automatically.
 
 Let us consider two cases: 'NODEOS` and 'KEOSD' subsequently.
-```
 
 ### NODEOS managed wallet
 
@@ -73,7 +65,6 @@ eosf.stop()                                 # stop the local testnet
     onerror="this.src='../../../source/cases/wallet_images/reset_nodeos_wallet.png'"   
     alt="nodeos wallet reset" width="720px"/>
 
-```md
 What has happened?
 
 * The local node has restarted, that is the local wallet file was deleted.
@@ -84,7 +75,6 @@ What has happened?
 
 If we close the session, then open it again, and recreate the wallet, we can
 expect that it opens without calling for password, having the same keys.
-```
 
 ```md
 """
@@ -102,10 +92,8 @@ eosf.stop()                         # stop the local testnet
 
 ### KEOSD managed wallet
 
-```md
 For the sake of this tutorial, we dare to treat a system wallet so rudely:
 we delete it.
-```
 
 ```md
 """
@@ -122,9 +110,7 @@ except Exception as e:
 """
 ```
 
-```md
 Create a 'KEOSD' wallet named 'wallet_name':
-```
 
 ```md
 """
@@ -141,7 +127,6 @@ wallet = Wallet(wallet_name)
 
 ### Methods of the 'Wallet' class
 
-```md
 We plan the Factory so that the singular wallet object is never referred to, in
 usual scripts. However, the 'Wallet` class has several methods that are used
 internally. Some of them are obvious:
@@ -150,7 +135,6 @@ internally. Some of them are obvious:
 * Unlock wallet.
 * Keys in all open wallets.
 * etc.
-```
 
 """
 

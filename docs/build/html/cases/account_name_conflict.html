@@ -31,15 +31,12 @@
   <p>“”“</p>
 <div class="section" id="account-name-conflict">
 <span id="account-name-conflict"></span><h1>Account name conflict<a class="headerlink" href="#account-name-conflict" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: 
-&#39;python3 account_name_conflict.md&#39;.
-</pre></div>
-</div>
+<p>This file can be executed as a python script:
+‘python3 account_name_conflict.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre><div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import setup
 import eosf
 from eosf_wallet import Wallet
@@ -56,29 +53,21 @@ eosf.set_throw_error(False)
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The EOSFactory wraps EOSIO accounts with objects. The symbolic name of an 
-account object, for example &#39;account_alice&#39;, has to be unique in a program. 
-Moreover, it has be unique in a collection of scripts, especially, if they 
-execute real transactions.
-
-The EOSFactory uses mapping files that keep the uniqueness.
-
-But, what if the user wants to ascribe a previously used name to another 
-physical account: the only way to keep the previous physical account within the 
-system is to change its mapping name.
-
-Create two account objects: &#39;account_alice&#39; and &#39;account_carrol&#39;.
-
-Then try to create another account object called &#39;account_alice&#39;. Although
+<p>The EOSFactory wraps EOSIO accounts with objects. The symbolic name of an
+account object, for example ‘account_alice’, has to be unique in a program.
+Moreover, it has be unique in a collection of scripts, especially, if they
+execute real transactions.</p>
+<p>The EOSFactory uses mapping files that keep the uniqueness.</p>
+<p>But, what if the user wants to ascribe a previously used name to another
+physical account: the only way to keep the previous physical account within the
+system is to change its mapping name.</p>
+<p>Create two account objects: ‘account_alice’ and ‘account_carrol’.</p>
+<p>Then try to create another account object called ‘account_alice’. Although
 this object is going to refer to a new blockchain account, it cannot accept
-the given name: error is issued.
-
-You are prompted to change the blocking name. On acceptance, the &#39;nano&#39; 
-editor opens. CTR+X, to save and exit.
-
-Change &#39;account_alice&#39; to &#39;account_alice_b&#39;.
-</pre></div>
-</div>
+the given name: error is issued.</p>
+<p>You are prompted to change the blocking name. On acceptance, the ‘nano’
+editor opens. CTR+X, to save and exit.</p>
+<p>Change ‘account_alice’ to ‘account_alice_b’.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 account_create(&quot;account_alice&quot;, account_master)
 account_create(&quot;account_carrol&quot;, account_master)
@@ -88,11 +77,9 @@ account_create(&quot;account_alice&quot;, account_master)
 </div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, that is the 
-directory &#39;docs/source/cases&#39; in the repository, and enter the following 
-command:
-</pre></div>
-</div>
+<p>In an linux bash, change directory to where this file exists, that is the
+directory ‘docs/source/cases’ in the repository, and enter the following
+command:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 account_name_conflict.md
 </pre></div>
 </div>
@@ -101,8 +88,8 @@ command:
 </div>
 <p><img src="account_name_conflict.png" 
 onerror="this.src='../../../source/cases/account_name_conflict.png'"   
-alt="account name conflict" width="640px"/></p>
-<p>“”“</p>
+width="720px"/>
+“”“</p>
 </div>
 </div>
 </div>
@@ -142,14 +129,7 @@ alt="account name conflict" width="640px"/></p>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging smart contracts</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>

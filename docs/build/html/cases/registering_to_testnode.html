@@ -31,18 +31,13 @@
   <p>“”“</p>
 <div class="section" id="registering-to-a-remote-testnet">
 <span id="registering-to-a-remote-testnet"></span><h1>Registering to a remote testnet<a class="headerlink" href="#registering-to-a-remote-testnet" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 
-registering_to_testnode.md&#39;.
-</pre></div>
-</div>
+<p>This file can be executed as a python script: ‘python3
+registering_to_testnode.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre><div class="highlight-md notranslate"><div class="highlight"><pre>The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is referred to as the &#39;testing account&#39;.
-</pre></div>
-</div>
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+<p>The following account exists in the blockchain of the testnode. It is used, in
+this article, for testing. It is referred to as the ‘testing account’.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
 Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
 
@@ -78,9 +73,7 @@ setup.set_nodeos_address(remote_testnet)
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Throw an exception if the testnode is off:
-</pre></div>
-</div>
+<p>Throw an exception if the testnode is off:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.set_throw_error(True)
 eosf.info()
@@ -91,10 +84,7 @@ eosf.set_throw_error(False)
 </div>
 <div class="section" id="clean-the-jungle-wallet">
 <span id="clean-the-jungle-wallet"></span><h3>Clean the ‘jungle wallet’<a class="headerlink" href="#clean-the-jungle-wallet" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>For the sake of this tutorial, we dare to treat a system wallet so rudely:
-we delete it.
-</pre></div>
-</div>
+<p>For the sake of this tutorial, we treat a system wallet so rudely: we delete it.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.use_keosd(True)    # to determine the directory of the wallet
 eosf.kill_keosd()       # otherwise, the manager protects the wallet file
@@ -121,18 +111,14 @@ eosf.set_throw_error(True)
 </div>
 <div class="section" id="introduce-a-test-trick">
 <span id="introduce-a-test-trick"></span><h3>Introduce a test trick<a class="headerlink" href="#introduce-a-test-trick" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We use an active account, named &#39;account_master_test&#39; to simulate the 
+<p>We use an active account, named ‘account_master_test’ to simulate the
 registration procedure: if set, this account substitutes one that would be
-physically registered.
-
-In the following definitions, we use real data obtained with a real registration
-session executed with the procedure that is shown in this article.
-
-The constants &#39;ACCOUNT_NAME&#39;, &#39;OWNER_KEY&#39;, &#39;ACTIVE_KEY&#39; are defined in the 
-script &#39;user_data.py`. We hope, that you will replace them with your own 
-data, as they are used in other articles.
-</pre></div>
-</div>
+physically registered.</p>
+<p>In the following definitions, we use real data obtained with a real registration
+session executed with the procedure that is shown in this article.</p>
+<p>The constants ‘ACCOUNT_NAME’, ‘OWNER_KEY’, ‘ACTIVE_KEY’ are defined in the
+script ‘user_data.py`. We hope, that you will replace them with your own
+data, as they are used in other articles.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.account_master_test = eosf_account.GetAccount(
     &quot;account_master_test&quot;,
@@ -157,10 +143,8 @@ eosf.set_is_testing_errors()        # make error messages less alarming
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In subsequent tests, you may have to change the account object name, here 
-&#39;account_master&#39;, or to resolve name conflicts, if you are prompted.
-</pre></div>
-</div>
+<p>In subsequent tests, you may have to change the account object name, here
+‘account_master’, or to resolve name conflicts, if you are prompted.</p>
 <div class="section" id="register-to-the-testnode">
 <span id="register-to-the-testnode"></span><h3>Register to the testnode<a class="headerlink" href="#register-to-the-testnode" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
@@ -171,17 +155,13 @@ account_master_create(&quot;account_master&quot;)
 </div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, that is the 
-directory &#39;docs/source/cases&#39; in the repository, and enter the following 
-command:
-</pre></div>
-</div>
+<p>With a linux bash, change directory to where this file exists, that is the
+directory ‘docs/source/cases’ in the repository, and enter the following
+command:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 registering_to_testnode.md
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
-</pre></div>
-</div>
+<p>We hope that you get something similar to this one shown in the image below.</p>
 <p><img src="registering.png" 
 onerror="this.src='../../../source/cases/registering.png'"   
 alt="registering" width="640px"/></p>
@@ -225,14 +205,7 @@ alt="registering" width="640px"/></p>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Registering to a remote testnet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging smart contracts</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>

@@ -1,15 +1,12 @@
 """
 # Contract object
 
-```md
 This file can be executed as a python script: 'python3 contract.md'.
-```
+
 
 ## Set-up
 
-<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
 
 ```md
 """
@@ -43,7 +40,6 @@ eosf.set_throw_error(False)
 
 ## Case
 
-<pre>
 None 'Contract' object can exist without an account object that keeps this
 contract. The account object is presented at <a href="account.html">cases/account</a>.
 
@@ -53,7 +49,6 @@ the EOSIO repository, and it is copied, slightly modified to the Factory's.
 We use the later copy.
 
 Make three other account objects, and execute actions of the contract on them.
-</pre>
 
 ### Accounts
 
@@ -68,16 +63,15 @@ account_create("account_carol", account_master)
 
 ### Create a Contract object
 
-```md
 Create an instance of the 'Contract' class, appending it to the account 
 'account_eosio_token':
-```
+
 ```md
 """
 contract_eosio_token = Contract(account_eosio_token, "token")
 """
 ```
-```md
+
 The second argument of the creator of the 'Contract' class identifies the 
 code source. The Factory tries to be smart, and searches the repository of the 
 Factory. If it fails, put the right path there, 
@@ -86,11 +80,9 @@ for example.
 
 Note that the 'Contract' creator takes several default arguments that 
 sometimes have to be adjusted.
-```
 
 ### Methods of a contract objects
 
-```md
 Any 'Contract' object can:
 
 * Build itself.
@@ -100,7 +92,6 @@ Any 'Contract' object can:
 * Push an action.
 * Show an action pushing it without broadcasting.
 * Show entry (a table) in the blockchain database of its account.
-```
 
 ### Deploy and build the contract
 
@@ -113,9 +104,8 @@ contract_eosio_token.deploy()
 
 ### Try the contract
 
-```md
 Execute actions of the contract:
-```
+
 ```md
 """
 contract_eosio_token.push_action(
@@ -167,9 +157,8 @@ contract_eosio_token.push_action(
     account_bob)                
 """
 ```
-```md
 Inspect the database of the blockchain:
-```
+
 ```md
 """
 table_alice = account_eosio_token.table("accounts", account_alice)
@@ -185,11 +174,10 @@ You can see the result of a logging facility, printed in yellow, starting with
 
 ### Test run
 
-```md
-In an linux bash, change directory to where this file exists, that is the 
+With a linux bash, change directory to where this file exists, that is the 
 directory 'docs/source/cases' in the repository, and enter the following 
 command:
-```
+
 ```md
 $ python3 contract.md
 ```
@@ -198,5 +186,4 @@ We hope that you get something similar to this one shown in the image below.
 ```
 <img src="contract.png" 
     onerror="this.src='../../../source/cases/contract.png'" width="720px"/>
-
 """

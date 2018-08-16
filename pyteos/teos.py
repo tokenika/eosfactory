@@ -109,6 +109,12 @@ class GetConfig(_Teos):
         jarg["contract-dir"] = contract_dir
         _Teos.__init__(self, jarg, "get", "config", is_verbose) 
 
+def get_config(json=False):
+    result = GetConfig(is_verbose=0)
+    if json:
+        print(json_module.dumps(result.json, indent=3))
+    else:
+        print(result.out_msg)
 
 def get_node_wallet_dir():
     """

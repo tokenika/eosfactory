@@ -31,14 +31,11 @@
   <p>“”“</p>
 <div class="section" id="symbolic-names">
 <span id="symbolic-names"></span><h1>Symbolic names<a class="headerlink" href="#symbolic-names" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 wallet.md&#39;.
-</pre></div>
-</div>
+<p>This file can be executed as a python script: ‘python3 wallet.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre><div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import setup
 import eosf
 import time
@@ -57,11 +54,11 @@ eosf.set_throw_error(False)
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<pre>
-The EOSIO accounts are indexed by their names, therefore the names have to be 
-unique in the blockchain, and to have the specific format. Then it is not 
-possible to grasp any intuitive association between the account name and its 
-role specified in the Ricardian Contract. <p>For example, if there is in the Contract a notion of an account keeping a
+<p>The EOSIO accounts are indexed by their names, therefore the names have to be
+unique in the blockchain, and to have the specific format. Then it is not
+possible to grasp any intuitive association between the account name and its
+role specified in the Ricardian Contract.</p>
+<p>For example, if there is in the Contract a notion of an account keeping a
 ‘school fund 2018’, we can try the name ‘school.fund1’. It is not only far to
 a satisfactory name, but it can be taken already.</p>
 <p>A natural solution to the problem is to have aliases to the physical names.
@@ -78,17 +75,12 @@ representing a physical account of a random name. Moreover, account’s keys are
 automatically imported to the wallet.</p>
 <p>Once established correspondence between physical accounts and their object
 representations is kept between sessions.</p>
-</pre><div class="section" id="physical-name-translation">
+<div class="section" id="physical-name-translation">
 <span id="physical-name-translation"></span><h3>Physical name translation<a class="headerlink" href="#physical-name-translation" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>
-All the responses from the blockchain refer to the physical names of the 
+<p>All the responses from the blockchain refer to the physical names of the
 accounts involved. With the alias mapping, EOSFactory can translate the to the
-aliases.
-
-The current case demonstrates this facility.
-
-</pre></div>
-</div>
+aliases.</p>
+<p>The current case demonstrates this facility.</p>
 <div class="section" id="translation-is-off">
 <span id="translation-is-off"></span><h4>Translation is off<a class="headerlink" href="#translation-is-off" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
@@ -171,7 +163,7 @@ account_eosio_token.push_action(
 </div>
 <p><img src="symbolic_names_images/symbolic_names_true.png" 
 onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
-alt="symbolic names translation on" width="720px"/></p>
+width="720px"/></p>
 </div>
 </div>
 </div>
@@ -212,6 +204,7 @@ alt="symbolic names translation on" width="720px"/></p>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging smart contracts</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>

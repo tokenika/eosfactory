@@ -31,14 +31,11 @@
   <p>“”“</p>
 <div class="section" id="eosio-token-contract">
 <span id="eosio-token-contract"></span><h1>Eosio Token Contract<a class="headerlink" href="#eosio-token-contract" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 eosio_token_contract.md&#39;.
-</pre></div>
-</div>
+<p>This file can be executed as a python script: ‘python3 eosio_token_contract.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre><div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import unittest
 import setup
 import eosf
@@ -56,10 +53,8 @@ eosf.reset([eosf.Verbosity.TRACE]) # start the local test node, reset
 </div>
 <div class="section" id="the-wallet-object">
 <span id="the-wallet-object"></span><h3>The <code class="docutils literal notranslate"><span class="pre">Wallet</span></code> object<a class="headerlink" href="#the-wallet-object" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Create the singleton wallet object. The object represents a physical wallet,
-managed with either the KEOSD or NODEOS Wallet Manager:
-</pre></div>
-</div>
+<p>Create the singleton wallet object. The object represents a physical wallet,
+managed with either the KEOSD or NODEOS Wallet Manager:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 wallet = Wallet()
 account_master_create(&quot;account_master&quot;)
@@ -72,18 +67,14 @@ eosf.set_throw_error(False) # make the errors be printed
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>With the master account, create four accounts: &#39;account_alice&#39;, 
-&#39;account_bob&#39;, &#39;account_carrol&#39; and &#39;account_test&#39;. Add the 
-&#39;eosio.token&#39; contract to the last account.
-</pre></div>
-</div>
+<p>With the master account, create four accounts: ‘account_alice’,
+‘account_bob’, ‘account_carrol’ and ‘account_test’. Add the
+‘eosio.token’ contract to the last account.</p>
 <div class="section" id="the-account-create-factory">
 <span id="the-account-create-factory"></span><h3>The <code class="docutils literal notranslate"><span class="pre">account_create</span></code> factory<a class="headerlink" href="#the-account-create-factory" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Note that the account-creation command places in the global namespace the
+<p>Note that the account-creation command places in the global namespace the
 account object named with the first argument. The object represent a physical
-account in the blockchain and in the wallet.
-</pre></div>
-</div>
+account in the blockchain and in the wallet.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 account_create(&quot;account_alice&quot;, account_master)
 account_create(&quot;account_bob&quot;, account_master)
@@ -96,14 +87,12 @@ time.sleep(1)
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Execute actions on the contract account:
-
-* let eosio deposit an amount of 1000000000.0000 EOS there;
-* transfer some EOS to the &#39;alice&#39; account.
-
-Use the &#39;push_action&#39; method of the contract account:
-</pre></div>
-</div>
+<p>Execute actions on the contract account:</p>
+<ul class="simple">
+<li>let eosio deposit an amount of 1000000000.0000 EOS there;</li>
+<li>transfer some EOS to the ‘alice’ account.</li>
+</ul>
+<p>Use the ‘push_action’ method of the contract account:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 account_test.push_action(
     &quot;create&quot;, 
@@ -121,10 +110,8 @@ account_test.push_action(
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Execute a series of transfers between the accounts. Use the &#39;push_action&#39; 
-method of the contract account:
-</pre></div>
-</div>
+<p>Execute a series of transfers between the accounts. Use the ‘push_action’
+method of the contract account:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 account_test.push_action(
     &quot;transfer&quot;,
@@ -161,10 +148,8 @@ account_test.push_action(
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>To see the records of the accounts, use the &#39;table&#39; method of the contract
-account:
-</pre></div>
-</div>
+<p>To see the records of the accounts, use the ‘table’ method of the contract
+account:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 table_alice = account_test.table(&quot;accounts&quot;, account_alice)
 table_bob = account_test.table(&quot;accounts&quot;, account_bob)
@@ -175,20 +160,15 @@ table_carol = account_test.table(&quot;accounts&quot;, account_carol)
 </div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, that is the 
-directory &#39;docs/source/cases&#39; in the repository, and enter this command:
-</pre></div>
-</div>
+<p>In an linux bash, change directory to where this file exists, that is the
+directory ‘docs/source/cases’ in the repository, and enter this command:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 eosio_token_contract.md
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
-</pre></div>
-</div>
+<p>We expect that you get something similar to this one shown in the image below.</p>
 <p><img src="eosio_token.png" 
-onerror="this.src='../../../source/cases/eosio_token.png'"   
-alt="eosio token contract" width="640px"/></p>
-<p>“”“</p>
+onerror="this.src='../../../source/cases/eosio_token.png'" width="640px"/>
+“”“</p>
 </div>
 </div>
 </div>
@@ -228,14 +208,7 @@ alt="eosio token contract" width="640px"/></p>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging smart contracts</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>

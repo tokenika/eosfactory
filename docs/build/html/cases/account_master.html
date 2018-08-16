@@ -31,31 +31,26 @@
   <p>“”“</p>
 <div class="section" id="account-master-object">
 <span id="account-master-object"></span><h1>Account master object<a class="headerlink" href="#account-master-object" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 account_master_images.md&#39;.
-</pre></div>
-</div>
+<p>This file can be executed as a python script: ‘python3 account_master_images.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
-```md
-"""
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import os
 import setup
 import eosf
 import eosf_account
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
-from eosf_contract import Contract<p>remote_testnet = “88.99.97.30:38888”
+from eosf_contract import Contract
+
+remote_testnet = &quot;88.99.97.30:38888&quot;
 _ = eosf.Logger()
-“”“</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre>
-```md
-The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is referred to as the &#39;testing account&#39;.
+&quot;&quot;&quot;
 </pre></div>
 </div>
+<p>The following account exists in the blockchain of the testnode. It is used, in
+this article, for testing. It is referred to as the ‘testing account’.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>Account Name: dgxo1uyhoytn
 Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
 Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
@@ -67,10 +62,10 @@ Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<pre>
-The EOSFactory wraps EOSIO accounts with objects. The 'account_create` 
-factory function produces account objects, it is explained in the article 
-<a href="account.html">cases/account</a>.<p>EOSIO needs that any action changing the blockchain, especially account creation
+<p>The EOSFactory wraps EOSIO accounts with objects. The ‘account_create`
+factory function produces account objects, it is explained in the article
+<a href="account.html">cases/account</a>.</p>
+<p>EOSIO needs that any action changing the blockchain, especially account creation
 is authorized. Usually, an existing account provides the authorization, and
 therefore the ‘account_create` factory take this account as its second argument.</p>
 <p>But at the very beginning there is no account, and the very first one has to be
@@ -79,7 +74,7 @@ produced. The ‘account_master_create’ factory function can do this.</p>
 name of the account object to be created, as its first obligatory argument.</p>
 <p>There are three cases where the ‘account_master_create’ factory can do. We will
 show them.</p>
-</pre><div class="section" id="local-testnet-case">
+<div class="section" id="local-testnet-case">
 <span id="local-testnet-case"></span><h3>Local testnet case<a class="headerlink" href="#local-testnet-case" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.reset([eosf.Verbosity.TRACE])
@@ -90,19 +85,14 @@ eosf.stop([eosf.Verbosity.TRACE])
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The result of the script is the account object &#39;account_master_images&#39; in the global
-namespace.
-
-The object wraps the &#39;eosio` account. It is a special one in the sense that it 
-does not have all the functionality of plain orders.
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
-</pre></div>
-</div>
+<p>The result of the script is the account object ‘account_master_images’ in the global
+namespace.</p>
+<p>The object wraps the ‘eosio` account. It is a special one in the sense that it
+does not have all the functionality of plain orders.</p>
+<p>We hope that you get something similar to this one shown in the image below.</p>
 <p><img src="account_master_images/account_master_eosio.png" 
-onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'"   
-alt="local testnet account master" width="720px"/></p>
+onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'" 
+width="720px"/></p>
 </div>
 <div class="section" id="remote-testnet-registration">
 <span id="remote-testnet-registration"></span><h3>Remote testnet registration<a class="headerlink" href="#remote-testnet-registration" title="Permalink to this headline">¶</a></h3>
@@ -155,9 +145,8 @@ account_master_images.info()
 </pre></div>
 </div>
 <p><img src="account_master_images/account_master_add.png" 
-onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'"   
-alt="local testnet account master" width="720px"/></p>
-<p>“”“</p>
+onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'" width="720px"/>
+“”“</p>
 </div>
 </div>
 </div>
@@ -197,14 +186,7 @@ alt="local testnet account master" width="720px"/></p>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging smart contracts</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>

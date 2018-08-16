@@ -1,15 +1,11 @@
 """
 # Symbolic names
 
-```md
 This file can be executed as a python script: 'python3 wallet.md'.
-```
 
 ## Set-up
 
-<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
 
 ```md
 """
@@ -30,7 +26,6 @@ eosf.set_throw_error(False)
 
 ## Case
 
-<pre>
 The EOSIO accounts are indexed by their names, therefore the names have to be 
 unique in the blockchain, and to have the specific format. Then it is not 
 possible to grasp any intuitive association between the account name and its 
@@ -59,19 +54,14 @@ automatically imported to the wallet.
 
 Once established correspondence between physical accounts and their object 
 representations is kept between sessions.
-</pre>
 
 ### Physical name translation
-
-```md
 
 All the responses from the blockchain refer to the physical names of the 
 accounts involved. With the alias mapping, EOSFactory can translate the to the
 aliases.
 
 The current case demonstrates this facility.
-
-```
 
 #### Translation is off
 
@@ -157,6 +147,6 @@ account_eosio_token.push_action(
 
 <img src="symbolic_names_images/symbolic_names_true.png" 
     onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
-    alt="symbolic names translation on" width="720px"/>
+    width="720px"/>
 
 

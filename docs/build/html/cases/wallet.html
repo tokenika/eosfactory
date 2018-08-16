@@ -31,14 +31,11 @@
   <p>“”“</p>
 <div class="section" id="wallet-object">
 <span id="wallet-object"></span><h1>Wallet object<a class="headerlink" href="#wallet-object" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 wallet.md&#39;.
-</pre></div>
-</div>
+<p>This file can be executed as a python script: ‘python3 wallet.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre><div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import os
 import setup
 import eosf
@@ -54,26 +51,21 @@ eosf.set_throw_error(False)
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<pre>
-The 'Wallet` class wraps EOSIO wallets. The 'Wallet' object keep account 
-objects, presented at <a href="account.html">cases/account</a>.<p>The EOSIO physical wallet, if used with the Factory, can be managed either
+<p>The ‘Wallet` class wraps EOSIO wallets. The ‘Wallet’ object keep account
+objects, presented at <a href="account.html">cases/account</a>.</p>
+<p>The EOSIO physical wallet, if used with the Factory, can be managed either
 with the ‘KEOSD Wallet Manager’ or with the ‘NODEOS’ wallet plugin. The status
 is controlled with the ‘use_keosd’ statement (default is ‘False’):</p>
-</pre><div class="highlight-md notranslate"><div class="highlight"><pre>eosf.use_keosd(True)
+<div class="highlight-md notranslate"><div class="highlight"><pre>eosf.use_keosd(True)
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The &#39;NODEOS&#39; alternative apply if the local node is running.
-
-It can be exactly one &#39;Wallet&#39; object in the namespace. After the &#39;Wallet&#39; 
-singleton is created, it remains transparent to the script: usually, there 
-is no need to refer to it.
-
-If the &#39;Wallet&#39; object is of the local testnet, its password is kept between 
-sessions, and used automatically.
-
-Let us consider two cases: &#39;NODEOS` and &#39;KEOSD&#39; subsequently.
-</pre></div>
-</div>
+<p>The ‘NODEOS’ alternative apply if the local node is running.</p>
+<p>It can be exactly one ‘Wallet’ object in the namespace. After the ‘Wallet’
+singleton is created, it remains transparent to the script: usually, there
+is no need to refer to it.</p>
+<p>If the ‘Wallet’ object is of the local testnet, its password is kept between
+sessions, and used automatically.</p>
+<p>Let us consider two cases: ‘NODEOS` and ‘KEOSD’ subsequently.</p>
 <div class="section" id="nodeos-managed-wallet">
 <span id="nodeos-managed-wallet"></span><h3>NODEOS managed wallet<a class="headerlink" href="#nodeos-managed-wallet" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
@@ -92,18 +84,16 @@ eosf.stop()                                 # stop the local testnet
 <p><img src="wallet_images/reset_nodeos_wallet.png" 
 onerror="this.src='../../../source/cases/wallet_images/reset_nodeos_wallet.png'"   
 alt="nodeos wallet reset" width="720px"/></p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>What has happened?
-
-* The local node has restarted, that is the local wallet file was deleted.
-* The wallet object has been created.
-* Its password has been stored to a file.
-* An account object named &#39;account_master&#39; has been created and placed in
-    the wallet.
-
-If we close the session, then open it again, and recreate the wallet, we can
-expect that it opens without calling for password, having the same keys.
-</pre></div>
-</div>
+<p>What has happened?</p>
+<ul class="simple">
+<li>The local node has restarted, that is the local wallet file was deleted.</li>
+<li>The wallet object has been created.</li>
+<li>Its password has been stored to a file.</li>
+<li>An account object named ‘account_master’ has been created and placed in
+the wallet.</li>
+</ul>
+<p>If we close the session, then open it again, and recreate the wallet, we can
+expect that it opens without calling for password, having the same keys.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.restart()                      # reset the Factory
 eosf.run([eosf.Verbosity.TRACE])    # restart the local testnet
@@ -119,10 +109,8 @@ alt="nodeos wallet reset" width="720px"/></p>
 </div>
 <div class="section" id="keosd-managed-wallet">
 <span id="keosd-managed-wallet"></span><h3>KEOSD managed wallet<a class="headerlink" href="#keosd-managed-wallet" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>For the sake of this tutorial, we dare to treat a system wallet so rudely:
-we delete it.
-</pre></div>
-</div>
+<p>For the sake of this tutorial, we dare to treat a system wallet so rudely:
+we delete it.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf.use_keosd(True)    # to determine the directory of the wallet
 eosf.kill_keosd()       # otherwise, the manager protects the wallet file
@@ -137,9 +125,7 @@ except Exception as e:
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Create a &#39;KEOSD&#39; wallet named &#39;wallet_name&#39;:
-</pre></div>
-</div>
+<p>Create a ‘KEOSD’ wallet named ‘wallet_name’:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 eosf_account.restart()                      # reset the Factory
 eosf.use_keosd(True)
@@ -154,16 +140,15 @@ alt="nodeos wallet reset" width="720px"/></p>
 </div>
 <div class="section" id="methods-of-the-wallet-class">
 <span id="methods-of-the-wallet-class"></span><h3>Methods of the ‘Wallet’ class<a class="headerlink" href="#methods-of-the-wallet-class" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We plan the Factory so that the singular wallet object is never referred to, in
-usual scripts. However, the &#39;Wallet` class has several methods that are used
-internally. Some of them are obvious:
-
-* Open wallet.
-* Unlock wallet.
-* Keys in all open wallets.
-* etc.
-</pre></div>
-</div>
+<p>We plan the Factory so that the singular wallet object is never referred to, in
+usual scripts. However, the ‘Wallet` class has several methods that are used
+internally. Some of them are obvious:</p>
+<ul class="simple">
+<li>Open wallet.</li>
+<li>Unlock wallet.</li>
+<li>Keys in all open wallets.</li>
+<li>etc.</li>
+</ul>
 <p>“”“</p>
 </div>
 </div>
@@ -204,14 +189,7 @@ internally. Some of them are obvious:
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging smart contracts</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>

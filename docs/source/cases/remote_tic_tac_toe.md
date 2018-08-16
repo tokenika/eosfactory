@@ -1,15 +1,11 @@
 """
 # Tic-tac-toe contract on a remote testnet
 
-```md
 This file can be executed as a python script: 'python3 account_master.md'.
-```
 
 ## Set-up
 
-<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
 
 ```md
 Test with a local node are perfectly reproducible and forgivable. It is not so
@@ -62,13 +58,14 @@ class Test(unittest.TestCase):
         """
 ```
 #### Wallet passwords are not stored in an open file automatically
-```md
+
 For tests, we use wallets of improbable names. On creation, its password is 
 stored in a file, with local code, and can be automatically reused between 
 sessions.
 
 If the test wallet has to be deleted, use the following code:
 
+```md
 import os
 import eosf
 from user_data import *
@@ -99,8 +96,9 @@ except Exception as e:
         exit()
         """
 ```
+
 #### Accounts are reused between test sessions
-```md
+
 When the singleton 'Wallet' object is created, it reads the EOSFactory account 
 mapping file (kept in the wallet directory) and attempts to create account 
 objects, in the global namespace, wrapping all the physical accounts listed 
@@ -112,7 +110,7 @@ constant, in the global namespace. Other arguments of the factory are defined
 in the 'user_data.py' script.
 
 The factory function puts the created account object into the wallet.
-```
+
 ```md
         """
         ACCOUNT_MASTER = ACCOUNT_TTT
@@ -145,10 +143,10 @@ The factory function puts the created account object into the wallet.
         """
 ```
 #### The 'insufficient ram` error
-```md
+
 As the remote node takes quasi-money (but we test the real-money case), you can
 expect a message like this one:
-```
+
 ```md
 ERROR:
 Reading WAST/WASM from eosfactory/contracts/tic_tac_toe_jungle/build/tic_tac_toe.wast...
@@ -180,13 +178,13 @@ account dgxo1uyhoytn has insufficient ram; needs 138233 bytes has 64789 bytes
         """
 ```
 ## Case
-```md
+
 Given a ``Wallet`` class object in the global namespace; an account  master 
 object named ``account_master`` in the global namespace; given an account 
 object named ``account_tic_tac_toe`` account that keeps the ``tic_tac_toe`` 
 contract; and given two player accounts: ``account_alice`` and ``account_carol`` 
 -- run games.
-```
+
 ```md
         """
         account_tic_tac_toe.push_action(
@@ -277,6 +275,7 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
 """
 ```
 #### Run the unittest
+
 ```md
 """
 unittest.main()

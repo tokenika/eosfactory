@@ -1,15 +1,11 @@
 """
 # Eosio Token Contract
 
-```md
 This file can be executed as a python script: 'python3 eosio_token_contract.md'.
-```
 
 ## Set-up
 
-<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
 
 ```md
 """
@@ -30,10 +26,9 @@ eosf.reset([eosf.Verbosity.TRACE]) # start the local test node, reset
 
 ### The `Wallet` object
 
-```md
 Create the singleton wallet object. The object represents a physical wallet,
 managed with either the KEOSD or NODEOS Wallet Manager:
-```
+
 ```md
 """
 wallet = Wallet()
@@ -45,19 +40,16 @@ eosf.set_throw_error(False) # make the errors be printed
 
 ## Case
 
-```md
 With the master account, create four accounts: 'account_alice', 
 'account_bob', 'account_carrol' and 'account_test'. Add the 
 'eosio.token' contract to the last account.
-```
 
 ### The `account_create` factory
 
-```md
 Note that the account-creation command places in the global namespace the
 account object named with the first argument. The object represent a physical
 account in the blockchain and in the wallet.
-```
+
 ```md
 """
 account_create("account_alice", account_master)
@@ -70,14 +62,14 @@ deploy = contract_test.deploy()
 time.sleep(1)
 """
 ```
-```md
+
 Execute actions on the contract account:
 
 * let eosio deposit an amount of 1000000000.0000 EOS there;
 * transfer some EOS to the 'alice' account.
 
 Use the 'push_action' method of the contract account:
-```
+
 ```md
 """
 account_test.push_action(
@@ -95,10 +87,9 @@ account_test.push_action(
     permission=account_master)
 """
 ```
-```md
+
 Execute a series of transfers between the accounts. Use the 'push_action' 
 method of the contract account:
-```
 
 ```md
 """
@@ -136,10 +127,10 @@ account_test.push_action(
 
 """
 ```
-```md
+
 To see the records of the accounts, use the 'table' method of the contract
 account:
-```
+
 ```md
 """
 table_alice = account_test.table("accounts", account_alice)
@@ -150,18 +141,15 @@ table_carol = account_test.table("accounts", account_carol)
 
 ### Test run
 
-```md
 In an linux bash, change directory to where this file exists, that is the 
 directory 'docs/source/cases' in the repository, and enter this command:
-```
+
 ```md
 $ python3 eosio_token_contract.md
 ```
-```md
-We hope that you get something similar to this one shown in the image below.
-```
-<img src="eosio_token.png" 
-    onerror="this.src='../../../source/cases/eosio_token.png'"   
-    alt="eosio token contract" width="640px"/>
 
+We expect that you get something similar to this one shown in the image below.
+
+<img src="eosio_token.png" 
+    onerror="this.src='../../../source/cases/eosio_token.png'" width="640px"/>
 """

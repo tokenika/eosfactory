@@ -31,21 +31,25 @@
   <p>“”“</p>
 <div class="section" id="contract-object">
 <span id="contract-object"></span><h1>Contract object<a class="headerlink" href="#contract-object" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 contract.md&#39;.
-</pre></div>
-</div>
+<p>This file can be executed as a python script: ‘python3 contract.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre><div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+import unittest
 import setup
 import eosf
+import time
+
+from eosf import Verbosity
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
+eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
 eosf.set_throw_error(True)
+
+eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE])
 &quot;&quot;&quot;
 </pre></div>
@@ -63,14 +67,14 @@ eosf.set_throw_error(False)
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<pre>
-None 'Contract' object can exist without an account object that keeps this
-contract. The account object is presented at <a href="account.html">cases/account</a>.<p>Create an account objects: ‘account_eosio_token’. Provide it with a contract
+<p>None ‘Contract’ object can exist without an account object that keeps this
+contract. The account object is presented at <a href="account.html">cases/account</a>.</p>
+<p>Create an account objects: ‘account_eosio_token’. Provide it with a contract
 of the class ‘eosio.token’. The code for the ‘eosio.token’ class comes with
 the EOSIO repository, and it is copied, slightly modified to the Factory’s.
 We use the later copy.</p>
 <p>Make three other account objects, and execute actions of the contract on them.</p>
-</pre><div class="section" id="accounts">
+<div class="section" id="accounts">
 <span id="accounts"></span><h3>Accounts<a class="headerlink" href="#accounts" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 account_create(&quot;account_eosio_token&quot;, account_master)
@@ -83,39 +87,35 @@ account_create(&quot;account_carol&quot;, account_master)
 </div>
 <div class="section" id="create-a-contract-object">
 <span id="create-a-contract-object"></span><h3>Create a Contract object<a class="headerlink" href="#create-a-contract-object" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Create an instance of the &#39;Contract&#39; class, appending it to the account 
-&#39;account_eosio_token&#39;:
-</pre></div>
-</div>
+<p>Create an instance of the ‘Contract’ class, appending it to the account
+‘account_eosio_token’:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 contract_eosio_token = Contract(account_eosio_token, &quot;token&quot;)
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>The second argument of the creator of the &#39;Contract&#39; class identifies the 
-code source. The Factory tries to be smart, and searches the repository of the 
-Factory. If it fails, put the right path there, 
-&#39;/mnt/c/Workspaces/EOS/eosfactory/contracts/eosio.token/&#39;,
-for example.
-
-Note that the &#39;Contract&#39; creator takes several default arguments that 
-sometimes have to be adjusted.
-</pre></div>
-</div>
+<p>The second argument of the creator of the ‘Contract’ class identifies the
+code source. The Factory tries to be smart, and searches the repository of the
+Factory. If it fails, put the right path there,
+‘/mnt/c/Workspaces/EOS/eosfactory/contracts/eosio.token/’,
+for example.</p>
+<p>Note that the ‘Contract’ creator takes several default arguments that
+sometimes have to be adjusted.</p>
 </div>
 <div class="section" id="methods-of-a-contract-objects">
 <span id="methods-of-a-contract-objects"></span><h3>Methods of a contract objects<a class="headerlink" href="#methods-of-a-contract-objects" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Any &#39;Contract&#39; object can:
-
-* Build itself.
-    * Build abi alone.
-    * Build wast alone.
-* Deploy itself.
-* Push an action.
-* Show an action pushing it without broadcasting.
-* Show entry (a table) in the blockchain database of its account.
-</pre></div>
-</div>
+<p>Any ‘Contract’ object can:</p>
+<ul class="simple">
+<li>Build itself.<ul>
+<li>Build abi alone.</li>
+<li>Build wast alone.</li>
+</ul>
+</li>
+<li>Deploy itself.</li>
+<li>Push an action.</li>
+<li>Show an action pushing it without broadcasting.</li>
+<li>Show entry (a table) in the blockchain database of its account.</li>
+</ul>
 </div>
 <div class="section" id="deploy-and-build-the-contract">
 <span id="deploy-and-build-the-contract"></span><h3>Deploy and build the contract<a class="headerlink" href="#deploy-and-build-the-contract" title="Permalink to this headline">¶</a></h3>
@@ -128,23 +128,23 @@ contract_eosio_token.deploy()
 </div>
 <div class="section" id="try-the-contract">
 <span id="try-the-contract"></span><h3>Try the contract<a class="headerlink" href="#try-the-contract" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Execute actions of the contract:
-</pre></div>
-</div>
+<p>Execute actions of the contract:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 contract_eosio_token.push_action(
     &quot;create&quot;, 
     &#39;{&quot;issuer&quot;:&quot;&#39; 
         + str(account_master) 
         + &#39;&quot;, &quot;maximum_supply&quot;:&quot;1000000000.0000 EOS&quot;, \
-        &quot;can_freeze&quot;:0, &quot;can_recall&quot;:0, &quot;can_whitelist&quot;:0}&#39;)
+        &quot;can_freeze&quot;:0, &quot;can_recall&quot;:0, &quot;can_whitelist&quot;:0}&#39;,
+        [account_master, account_eosio_token])
+    
 
 contract_eosio_token.push_action(
     &quot;issue&quot;,
     &#39;{&quot;to&quot;:&quot;&#39; + str(account_alice)
         + &#39;&quot;, &quot;quantity&quot;:&quot;100.0000 EOS&quot;, &#39;
         + &#39;&quot;memo&quot;:&quot;issue 100.0000 EOS from eosio to alice&quot;}&#39;,
-    permission=account_master)
+    account_master)
 
 contract_eosio_token.push_action(
     &quot;transfer&quot;,
@@ -152,7 +152,7 @@ contract_eosio_token.push_action(
         + &#39;&quot;, &quot;to&quot;:&quot;&#39; + str(account_carol)
         + &#39;&quot;, &quot;quantity&quot;:&quot;25.0000 EOS&quot;, &#39;
         + &#39;&quot;memo&quot;:&quot;transfer 25.0000 EOS from alice to carol&quot;}&#39;,
-    permission=account_alice)
+    account_alice)
 
 contract_eosio_token.push_action(
     &quot;transfer&quot;,
@@ -160,7 +160,7 @@ contract_eosio_token.push_action(
         + &#39;&quot;, &quot;to&quot;:&quot;&#39; + str(account_bob)
         + &#39;&quot;, &quot;quantity&quot;:&quot;11.0000 EOS&quot;, &#39;
         + &#39;&quot;memo&quot;:&quot;transfer 11.0000 EOS from carol to bob&quot;}&#39;,
-    permission=account_carol)
+    account_carol)
 
 contract_eosio_token.push_action(
     &quot;transfer&quot;,
@@ -168,7 +168,7 @@ contract_eosio_token.push_action(
         + &#39;&quot;, &quot;to&quot;:&quot;&#39; + str(account_bob)
         + &#39;&quot;, &quot;quantity&quot;:&quot;2.0000 EOS&quot;, &#39;
         + &#39;&quot;memo&quot;:&quot;transfer 2.0000 EOS from carol to bob&quot;}&#39;,
-    permission=account_carol)
+    account_carol)
 
 contract_eosio_token.push_action(
     &quot;transfer&quot;,
@@ -176,13 +176,11 @@ contract_eosio_token.push_action(
         + &#39;&quot;, &quot;to&quot;:&quot;&#39; + str(account_alice)
         + &#39;&quot;, &quot;quantity&quot;:&quot;2.0000 EOS&quot;, &#39;
         + &#39;&quot;memo&quot;:&quot;transfer 2.0000 EOS from bob to alice&quot;}&#39;,
-    permission=account_bob)                
+    account_bob)                
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Inspect the database of the blockchain:
-</pre></div>
-</div>
+<p>Inspect the database of the blockchain:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 table_alice = account_eosio_token.table(&quot;accounts&quot;, account_alice)
 table_bob = account_eosio_token.table(&quot;accounts&quot;, account_bob)
@@ -197,11 +195,9 @@ table_carol = account_eosio_token.table(&quot;accounts&quot;, account_carol)
 </div>
 <div class="section" id="test-run">
 <span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>In an linux bash, change directory to where this file exists, that is the 
-directory &#39;docs/source/cases&#39; in the repository, and enter the following 
-command:
-</pre></div>
-</div>
+<p>With a linux bash, change directory to where this file exists, that is the
+directory ‘docs/source/cases’ in the repository, and enter the following
+command:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>$ python3 contract.md
 </pre></div>
 </div>
@@ -209,9 +205,8 @@ command:
 </pre></div>
 </div>
 <p><img src="contract.png" 
-onerror="this.src='../../../source/cases/contract.png'"   
-alt="contract object" width="720px"/></p>
-<p>“”“</p>
+onerror="this.src='../../../source/cases/contract.png'" width="720px"/>
+“”“</p>
 </div>
 </div>
 </div>
@@ -251,14 +246,7 @@ alt="contract object" width="720px"/></p>
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 <li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging smart contracts</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>

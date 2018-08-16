@@ -15,7 +15,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Introduction to EOSFactory" href="../tutorials/00.IntroductionToEOSFactory.html" />
+    <link rel="next" title="Debugging smart contracts" href="debugging.html" />
     <link rel="prev" title="Registering to a remote testnet" href="registering_to_testnode.html" />
    
   
@@ -31,14 +31,11 @@
   <p>“”“</p>
 <div class="section" id="tic-tac-toe-contract-on-a-remote-testnet">
 <span id="tic-tac-toe-contract-on-a-remote-testnet"></span><h1>Tic-tac-toe contract on a remote testnet<a class="headerlink" href="#tic-tac-toe-contract-on-a-remote-testnet" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This file can be executed as a python script: &#39;python3 account_master.md&#39;.
-</pre></div>
-</div>
+<p>This file can be executed as a python script: ‘python3 account_master.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
-<pre>
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre><div class="highlight-md notranslate"><div class="highlight"><pre>Test with a local node are perfectly reproducible and forgivable. It is not so
+<p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>Test with a local node are perfectly reproducible and forgivable. It is not so
 with remote test nodes because such tests have to -- otherwise they are 
 useless -- mimic real uses when blockchain changes are to be paid.
 
@@ -53,6 +50,7 @@ With remote node tests, we assume the following restrictions.
 <span id="imports-and-set-up-definitions"></span><h3>Imports and set-up definitions<a class="headerlink" href="#imports-and-set-up-definitions" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import os
+import re
 import unittest
 import setup
 import eosf
@@ -64,23 +62,14 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
+setup.remote_testnet_setup(&quot;88.99.97.30:38888&quot;)
+WALLET_NAME = setup.wallet_default_name
+
 ACCOUNT_MASTER = &quot;account_master&quot;
 ACCOUNT_TTT = &quot;account_tic_tac_toe&quot;
 _ = eosf.Logger()
 &quot;&quot;&quot;
 </pre></div>
-</div>
-<div class="section" id="remote-node-registration-data">
-<span id="remote-node-registration-data"></span><h4>Remote node registration data<a class="headerlink" href="#remote-node-registration-data" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Experiments with remote nodes depend on definitions, set in relevant 
-registration forms. These definitions are stored in the &#39;user_data.py&#39; script:
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-from user_data import *
-&quot;&quot;&quot;
-</pre></div>
-</div>
 </div>
 <div class="section" id="unittest-test-class-definition-begins-here">
 <span id="unittest-test-class-definition-begins-here"></span><h4>Unittest test class definition begins here<a class="headerlink" href="#unittest-test-class-definition-begins-here" title="Permalink to this headline">¶</a></h4>
@@ -88,31 +77,22 @@ from user_data import *
 class Test(unittest.TestCase):
 
     def setUp(self):
-
-        global ACCOUNT_MASTER
-        global ACCOUNT_TTT
-
         eosf.set_throw_error(True)
-
         eosf.stop([eosf.Verbosity.TRACE])
         eosf.use_keosd(True)
-        
-        setup.set_nodeos_address(remote_testnet)
         eosf.info()
-        
+        exit()
         &quot;&quot;&quot;
 </pre></div>
 </div>
 </div>
 <div class="section" id="wallet-passwords-are-not-stored-in-an-open-file-automatically">
 <span id="wallet-passwords-are-not-stored-in-an-open-file-automatically"></span><h4>Wallet passwords are not stored in an open file automatically<a class="headerlink" href="#wallet-passwords-are-not-stored-in-an-open-file-automatically" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-md notranslate"><div class="highlight"><pre>For tests, we use wallets of improbable names. On creation, its password is 
-stored in a file, with local code, and can be automatically reused between 
-sessions.
-
-If the test wallet has to be deleted, use the following code:
-
-import os
+<p>For tests, we use wallets of improbable names. On creation, its password is
+stored in a file, with local code, and can be automatically reused between
+sessions.</p>
+<p>If the test wallet has to be deleted, use the following code:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>import os
 import eosf
 from user_data import *
 
@@ -138,25 +118,23 @@ except Exception as e:
             wallet = Wallet(
                 WALLET_NAME, wallet_json[WALLET_NAME],
                 verbosity=[eosf.Verbosity.TRACE])
+
+        exit()
         &quot;&quot;&quot;
 </pre></div>
 </div>
 </div>
 <div class="section" id="accounts-are-reused-between-test-sessions">
 <span id="accounts-are-reused-between-test-sessions"></span><h4>Accounts are reused between test sessions<a class="headerlink" href="#accounts-are-reused-between-test-sessions" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-md notranslate"><div class="highlight"><pre>When the singleton &#39;Wallet&#39; object is created, it reads the EOSFactory account 
-mapping file (kept in the wallet directory) and attempts to create account 
-objects, in the global namespace, wrapping all the physical accounts listed 
-there. Therefore, an account object is to be created only if it does not exist.
-
-We use the registration account as the contract holder. The factory function 
-&#39;account_master_create&#39; creates the object, named for the &#39;ACCOUNT_MASTER&#39; 
-constant, in the global namespace. Other arguments of the factory are defined 
-in the &#39;user_data.py&#39; script.
-
-The factory function puts the created account object into the wallet.
-</pre></div>
-</div>
+<p>When the singleton ‘Wallet’ object is created, it reads the EOSFactory account
+mapping file (kept in the wallet directory) and attempts to create account
+objects, in the global namespace, wrapping all the physical accounts listed
+there. Therefore, an account object is to be created only if it does not exist.</p>
+<p>We use the registration account as the contract holder. The factory function
+‘account_master_create’ creates the object, named for the ‘ACCOUNT_MASTER’
+constant, in the global namespace. Other arguments of the factory are defined
+in the ‘user_data.py’ script.</p>
+<p>The factory function puts the created account object into the wallet.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>        &quot;&quot;&quot;
         ACCOUNT_MASTER = ACCOUNT_TTT
         if not ACCOUNT_MASTER in globals():
@@ -191,10 +169,8 @@ The factory function puts the created account object into the wallet.
 </div>
 <div class="section" id="the-insufficient-ram-error">
 <span id="the-insufficient-ram-error"></span><h4>The ‘insufficient ram` error<a class="headerlink" href="#the-insufficient-ram-error" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-md notranslate"><div class="highlight"><pre>As the remote node takes quasi-money (but we test the real-money case), you can
-expect a message like this one:
-</pre></div>
-</div>
+<p>As the remote node takes quasi-money (but we test the real-money case), you can
+expect a message like this one:</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>ERROR:
 Reading WAST/WASM from eosfactory/contracts/tic_tac_toe_jungle/build/tic_tac_toe.wast...
 Assembling WASM...
@@ -230,13 +206,11 @@ account dgxo1uyhoytn has insufficient ram; needs 138233 bytes has 64789 bytes
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Given a ``Wallet`` class object in the global namespace; an account  master 
-object named ``account_master`` in the global namespace; given an account 
-object named ``account_tic_tac_toe`` account that keeps the ``tic_tac_toe`` 
-contract; and given two player accounts: ``account_alice`` and ``account_carol`` 
--- run games.
-</pre></div>
-</div>
+<p>Given a <code class="docutils literal notranslate"><span class="pre">Wallet</span></code> class object in the global namespace; an account  master
+object named <code class="docutils literal notranslate"><span class="pre">account_master</span></code> in the global namespace; given an account
+object named <code class="docutils literal notranslate"><span class="pre">account_tic_tac_toe</span></code> account that keeps the <code class="docutils literal notranslate"><span class="pre">tic_tac_toe</span></code>
+contract; and given two player accounts: <code class="docutils literal notranslate"><span class="pre">account_alice</span></code> and <code class="docutils literal notranslate"><span class="pre">account_carol</span></code>
+– run games.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>        &quot;&quot;&quot;
         account_tic_tac_toe.push_action(
             &quot;create&quot;, 
@@ -373,14 +347,7 @@ unittest.main()
 <li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="registering_to_testnode.html">Registering to a remote testnet</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tic-tac-toe contract on a remote testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging smart contracts</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
@@ -406,7 +373,7 @@ unittest.main()
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="registering_to_testnode.html" title="previous chapter">Registering to a remote testnet</a></li>
-      <li>Next: <a href="../tutorials/00.IntroductionToEOSFactory.html" title="next chapter">Introduction to EOSFactory</a></li>
+      <li>Next: <a href="debugging.html" title="next chapter">Debugging smart contracts</a></li>
   </ul></li>
 </ul>
 </div>

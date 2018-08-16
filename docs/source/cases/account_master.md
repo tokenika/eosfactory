@@ -1,15 +1,12 @@
 """
 # Account master object
 
-```md
 This file can be executed as a python script: 'python3 account_master_images.md'.
-```
 
 ## Set-up
 
-<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
+
 ```md
 """
 import os
@@ -25,10 +22,8 @@ _ = eosf.Logger()
 """
 ```
 
-```md
 The following account exists in the blockchain of the testnode. It is used, in
 this article, for testing. It is referred to as the 'testing account'.
-```
 
 ```md
 Account Name: dgxo1uyhoytn
@@ -42,7 +37,6 @@ Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
 
 ## Case
 
-<pre>
 The EOSFactory wraps EOSIO accounts with objects. The 'account_create` 
 factory function produces account objects, it is explained in the article 
 <a href="account.html">cases/account</a>.
@@ -59,7 +53,6 @@ name of the account object to be created, as its first obligatory argument.
 
 There are three cases where the 'account_master_create' factory can do. We will
 show them. 
-</pre>
 
 ### Local testnet case
 
@@ -73,20 +66,17 @@ eosf.stop([eosf.Verbosity.TRACE])
 """
 ```
 
-```md
 The result of the script is the account object 'account_master_images' in the global
 namespace.
 
 The object wraps the 'eosio` account. It is a special one in the sense that it 
 does not have all the functionality of plain orders.
-```
 
-```md
 We hope that you get something similar to this one shown in the image below.
-```
+
 <img src="account_master_images/account_master_eosio.png" 
-    onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'"   
-    alt="local testnet account master" width="720px"/>
+    onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'" 
+    width="720px"/>
 
 ### Remote testnet registration
 

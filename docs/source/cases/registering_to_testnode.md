@@ -1,21 +1,15 @@
 """
 # Registering to a remote testnet
 
-```md
 This file can be executed as a python script: 'python3 
 registering_to_testnode.md'.
-```
 
 ## Set-up
 
-<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
-</pre>
 
-```md
 The following account exists in the blockchain of the testnode. It is used, in
 this article, for testing. It is referred to as the 'testing account'.
-```
 
 ```md
 Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
@@ -55,9 +49,7 @@ setup.set_nodeos_address(remote_testnet)
 """
 ```
 
-```md
 Throw an exception if the testnode is off:
-```
 
 ```md
 """
@@ -69,10 +61,7 @@ eosf.set_throw_error(False)
 
 ### Clean the 'jungle wallet'
 
-```md
-For the sake of this tutorial, we dare to treat a system wallet so rudely:
-we delete it.
-```
+For the sake of this tutorial, we treat a system wallet so rudely: we delete it.
 
 ```md
 """
@@ -101,7 +90,6 @@ eosf.set_throw_error(True)
 
 ### Introduce a test trick
 
-```md
 We use an active account, named 'account_master_test' to simulate the 
 registration procedure: if set, this account substitutes one that would be
 physically registered.
@@ -112,7 +100,6 @@ session executed with the procedure that is shown in this article.
 The constants 'ACCOUNT_NAME', 'OWNER_KEY', 'ACTIVE_KEY' are defined in the 
 script 'user_data.py`. We hope, that you will replace them with your own 
 data, as they are used in other articles.
-```
 
 ```md
 """
@@ -137,10 +124,8 @@ eosf.set_is_testing_errors()        # make error messages less alarming
 
 ## Case
 
-```md
 In subsequent tests, you may have to change the account object name, here 
 'account_master', or to resolve name conflicts, if you are prompted.
-```
 
 ### Register to the testnode
 
@@ -152,17 +137,16 @@ account_master_create("account_master")
 
 ### Test run
 
-```md
-In an linux bash, change directory to where this file exists, that is the 
+With a linux bash, change directory to where this file exists, that is the 
 directory 'docs/source/cases' in the repository, and enter the following 
 command:
-```
+
 ```md
 $ python3 registering_to_testnode.md
 ```
-```md
+
 We hope that you get something similar to this one shown in the image below.
-```
+
 <img src="registering.png" 
     onerror="this.src='../../../source/cases/registering.png'"   
     alt="registering" width="640px"/>
