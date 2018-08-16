@@ -308,10 +308,10 @@ def accout_names_2_object_names(sentence, keys=False):
     if not _is_translating:
         return sentence
 
-    account_map = account_map()
+    map = account_map()
     global wallet_globals
-    for name in account_map:
-        account_object_name = account_map[name]
+    for name in map:
+        account_object_name = map[name]
         sentence = sentence.replace(name, account_object_name)
         if keys:
             account_object = wallet_globals[account_object_name]
@@ -331,10 +331,10 @@ def accout_names_2_object_names(sentence, keys=False):
     return sentence
 
 def object_names_2_accout_names(sentence, keys=False):
-    account_map = account_map()
+    map = account_map()
     global wallet_globals
-    for name in account_map:
-        account_object_name = account_map[name]
+    for name in map:
+        account_object_name = map[name]
         sentence = sentence.replace(account_object_name, name)
 
     return sentence
@@ -342,6 +342,11 @@ def object_names_2_accout_names(sentence, keys=False):
 def edit_account_map(text_editor="nano"):
     import subprocess
     subprocess.run([text_editor, wallet_dir() + setup.account_map])
+
+_is_translating = True
+def set_is_translating(status=True):
+    global _is_translating
+    _is_translating = status
 
 def account_mapp_to_string(account_map):
     sort = sorted(account_map, key=account_map.get, reverse=False)

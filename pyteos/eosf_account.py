@@ -37,11 +37,6 @@ def restart():
         pass
     account_master_test = None
 
-_is_translating = True
-def set_is_translating(status=True):
-    global _is_translating
-    _is_translating = status
-
 def is_local_testnet_running():
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
         if not account_.error and \

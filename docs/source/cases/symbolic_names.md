@@ -68,7 +68,7 @@ The current case demonstrates this facility.
 ```md
 """
 eosf_account.restart()
-eosf_account.set_is_translating(False)
+eosf.set_is_translating(False)
 
 eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE]) 
@@ -111,7 +111,7 @@ account_eosio_token.push_action(
 ```md
 """
 eosf_account.restart()
-eosf_account.set_is_translating(True)
+eosf.set_is_translating(True)
 
 eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE]) 
