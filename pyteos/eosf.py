@@ -246,8 +246,7 @@ class Logger():
         else:
             color = Verbosity.ERROR.value
 
-        from eosf_account import decodeObjectNames
-        msg = decodeObjectNames(msg)
+        msg = accout_names_2_object_names(msg)
         msg = colored(
             "ERROR:\n{}".format(cleos.heredoc(msg)), 
             color[0], color[1], attrs=color[2])  + "\n"
@@ -303,6 +302,42 @@ def account_map(logger=None):
             class to edit the file.
                         """)                    
                         return None
+
+def accout_names_2_object_names(sentence, keys=False):
+    global _is_translating
+    if not _is_translating:
+        return sentence
+
+    account_map = account_map()
+    global wallet_globals
+    for name in account_map:
+        account_object_name = account_map[name]
+        sentence = sentence.replace(name, account_object_name)
+        if keys:
+            account_object = wallet_globals[account_object_name]
+            try:
+                key = account_object.owner_key.key_public
+                sentence = sentence.replace(key, account_object_name + "_owner")
+            except:
+                pass
+
+            try:
+                key = account_object.active_key.key_public
+                sentence = \
+                    sentence.replace(owner_key, account_object_name + "_active")
+            except:
+                pass
+
+    return sentence
+
+def object_names_2_accout_names(sentence, keys=False):
+    account_map = account_map()
+    global wallet_globals
+    for name in account_map:
+        account_object_name = account_map[name]
+        sentence = sentence.replace(account_object_name, name)
+
+    return sentence
 
 def edit_account_map(text_editor="nano"):
     import subprocess

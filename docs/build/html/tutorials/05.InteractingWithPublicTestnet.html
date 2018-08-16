@@ -7,21 +7,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Interacting with Public Testnet &#8212; EOSFactory 2.0 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="EOSFactory Release Notes - v0.8" href="../releases/ReleaseNotesVersion0.8.html" />
-    <link rel="prev" title="Working with EOS Contracts using EOSFactory in Visual Studio Code" href="04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html" />
-   
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>  
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -203,72 +209,27 @@ PW5KDRWrMAev57rfJ8z9FXpRA1tEG4EJ6nsnpVAfYdHRe5WDMnnLz
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">EOSFactory</a></h1>
-
-
-
-
-
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
-
-
-
-<h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../cases/IDE.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/symbolic_names.html">Symbolic names</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/arguments.html">Arguments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/account.html">Account object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/account_master.html">Account master object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/contract.html">Contract object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/wallet.html">Wallet object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/configuration.html">EOSFactory configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/eosio_token_contract.html">Eosio Token Contract</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/setup.html">Setting-up EOSFactory tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/account_name_conflict.html">Account name conflict</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/registering_to_testnode.html">Registering to a remote testnet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cases/remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Interacting with Public Testnet</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#the-problems-with-public-testnet">The problems with public testnet</a></li>
+<li><a class="reference internal" href="#create-a-new-account-on-a-public-testnet">Create a new account on a public testnet</a></li>
+<li><a class="reference internal" href="#build-the-smart-contract">Build the smart-contract</a></li>
+<li><a class="reference internal" href="#prepare-unit-tests">Prepare unit tests</a></li>
+<li><a class="reference internal" href="#run-unit-tests">Run unit tests</a></li>
+<li><a class="reference internal" href="#run-unit-tests-using-cmake">Run unit tests using <em>CMake</em></a></li>
 </ul>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="00.IntroductionToEOSFactory.html">Introduction to EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01.InstallingEOSFactory.html">Installing EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using EOSFactory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Interacting with Public Testnet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.1.html">EOSFactory Release Notes - v1.1</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../cleos.html">cleos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cleos_system.html">cleos_system</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../setup.html">setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../teos.html">teos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../eosf.html">eosf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../node.html">node</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sess.html">sess</a></li>
+</li>
 </ul>
 
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html" title="previous chapter">Working with EOS Contracts using EOSFactory in <em>Visual Studio Code</em></a></li>
-      <li>Next: <a href="../releases/ReleaseNotesVersion0.8.html" title="next chapter">EOSFactory Release Notes - v0.8</a></li>
-  </ul></li>
-</ul>
-</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorials/05.InteractingWithPublicTestnet.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <div class="searchformwrapper">
@@ -285,20 +246,21 @@ PW5KDRWrMAev57rfJ8z9FXpRA1tEG4EJ6nsnpVAfYdHRe5WDMnnLz
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2018, Tokenika.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
-      
-      |
-      <a href="../_sources/tutorials/05.InteractingWithPublicTestnet.md.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 2.0 documentation</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
   </body>
 </html>

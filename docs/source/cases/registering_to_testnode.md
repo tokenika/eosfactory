@@ -8,7 +8,42 @@ registering_to_testnode.md'.
 
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
-The following account exists in the blockchain of the testnode. It is used, in
+### Switching between testnodes
+
+There is many testnodes: all we know are volatile: the one that you are 
+prepared to use is stopped just when you need it. Therefore we have provision 
+for easy change of the used testnode:
+
+```md
+"""
+import setup
+file_prefix = setup.remote_testnet_setup("88.99.97.30:38888")
+"""
+```
+Where the argument is the url of a testnode. The statement makes the following
+arrangements:
+
+* sets the url of the remote node;
+* sets the default name of the singleton wallet object, for example here
+    `88_99_97_30_38888_default.wallet`;
+* sets accordingly the names of the files that map passwords and account 
+    names (note that passwords for real-money wallets are never stored 
+    automatically)
+
+We do not want to reserve this default naming system for the current test, 
+then we use an option of the function `setup.remote_testnet_setup(...)` --
+
+```md
+"""
+file_prefix = setup.remote_testnet_setup(
+    "88.99.97.30:38888", "registering_to_testnode")
+"""
+```
+-- resulting with a specific naming prefix, for example, the wallet name is `registering_to_testnode_default.wallet`, now.
+
+### A test trick
+
+The following account exists in the blockchain of a testnode. It is used, in
 this article, for testing. It is referred to as the 'testing account'.
 
 ```md
@@ -18,6 +53,9 @@ Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
 Owner Private Key: OWNER_KEY
 Active Private Key: ACTIVE_KEY 
 ```
+### The header of the test
+
+Note the statement put above, namely `setup.remote_testnet_setup("88.99.97.30:38888")`.
 
 ```md
 """
@@ -32,24 +70,27 @@ from eosf_wallet import Wallet
 from eosf_account import account_master_create
 from user_data import *
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
-
-remote_testnet = "88.99.97.30:38888"
+eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT]
 _ = eosf.Logger()
 
 """
 ```
 
-### Set a remote testnode
+### Specify that the KEOSD Wallet Manager is used
 
 ```md
 """
-eosf.use_keosd(True)        # use KEOSD Wallet Manager
-setup.set_nodeos_address(remote_testnet)
+eosf.use_keosd(True)
 """
 ```
 
-Throw an exception if the testnode is off:
+### Throw an exception if the testnode is off:
+
+Now make sure that the chosen testnode is operative. The 
+`eosf.set_throw_error(...)` statement below switches between error management 
+modes: an error may either throw a fatal exception or it may print a message. 
+
+We dedicate the former way to the setup phase of a test.
 
 ```md
 """
@@ -59,28 +100,23 @@ eosf.set_throw_error(False)
 """
 ```
 
-### Clean the 'jungle wallet'
-
-For the sake of this tutorial, we treat a system wallet so rudely: we delete it.
+### Clean the results of a possible previous use of the current script.
 
 ```md
 """
-eosf.use_keosd(True)    # to determine the directory of the wallet
-eosf.kill_keosd()       # otherwise, the manager protects the wallet file
+eosf.kill_keosd()   # otherwise, the manager may protects the wallet files
 
-wallet_name = "jungle_wallet"
-try:
-    wallet_file = eosf.wallet_dir() + wallet_name + ".wallet"
-    os.remove(wallet_file)
-    print("The deleted wallet file:\n{}\n".format(wallet_file))
-except Exception as e:
-    print("Cannot delete the wallet file:\n{}\n".format(str(e)))
+dir = eosf.wallet_dir()
+files = os.listdir(dir)
+for file in files:
+    if file.startswith(file_prefix):
+        os.remove(os.path.join(dir,file))
 """
 ```
 
 ```md
 """
-wallet = Wallet(wallet_name)
+wallet = Wallet()
 
 eosf.set_is_testing_errors(False)
 eosf.set_throw_error(True)
@@ -103,6 +139,7 @@ data, as they are used in other articles.
 
 ```md
 """
+exit()
 eosf_account.account_master_test = eosf_account.GetAccount(
     "account_master_test",
     ACCOUNT_NAME, 

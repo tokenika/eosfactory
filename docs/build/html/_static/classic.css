@@ -28,7 +28,7 @@ div.document {
 
 div.documentwrapper {
     float: left;
-    width: 1020px;
+    width: 100%;
 }
 
 div.bodywrapper {
@@ -43,7 +43,7 @@ div.body {
 
 div.footer {
     color: #ffffff;
-    width: 850px;
+    width: 100%;
     padding: 9px 0 9px 0;
     text-align: center;
     font-size: 75%;

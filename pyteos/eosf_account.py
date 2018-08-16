@@ -42,42 +42,6 @@ def set_is_translating(status=True):
     global _is_translating
     _is_translating = status
 
-def decodeObjectNames(sentence, keys=False):
-    global _is_translating
-    if not _is_translating:
-        return sentence
-
-    account_map = eosf.account_map()
-    global wallet_globals
-    for name in account_map:
-        account_object_name = account_map[name]
-        sentence = sentence.replace(name, account_object_name)
-        if keys:
-            account_object = wallet_globals[account_object_name]
-            try:
-                key = account_object.owner_key.key_public
-                sentence = sentence.replace(key, account_object_name + "_owner")
-            except:
-                pass
-
-            try:
-                key = account_object.active_key.key_public
-                sentence = \
-                    sentence.replace(owner_key, account_object_name + "_active")
-            except:
-                pass
-
-    return sentence
-
-def codeObjectNames(sentence, keys=False):
-    account_map = eosf.account_map()
-    global wallet_globals
-    for name in account_map:
-        account_object_name = account_map[name]
-        sentence = sentence.replace(account_object_name, name)
-
-    return sentence
-
 def is_local_testnet_running():
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
         if not account_.error and \
@@ -104,7 +68,7 @@ def _data_json(data):
         data_json = json_module.dumps(data, cls=Encoder)
     else:
         data_json = re.sub("\s+|\n+|\t+", " ", data)
-        data_json = codeObjectNames(data_json)
+        data_json = eosf.object_names_2_accout_names(data_json)
     return data_json
 
 """The namespace where account objects go.
@@ -614,11 +578,12 @@ def append_account_methods_and_finish(
             account_object.EOSF_TRACE("""
             * Push action:
                 {}
-            """.format(re.sub(' +',' ', decodeObjectNames(data))))
+            """.format(re.sub(' +',' ', eosf.accout_names_2_object_names(data))))
             account_object.action = result
             try:
                 account_object._console = result.console
-                account_object.DEBUG(decodeObjectNames(account_object._console))
+                account_object.DEBUG(eosf.accout_names_2_object_names(
+                    account_object._console))
             except:
                 pass
 
@@ -627,7 +592,8 @@ def append_account_methods_and_finish(
                 push action responce:
 
                 {}
-                """.format(decodeObjectNames(result.out_msg, keys=True)))
+                """.format(eosf.accout_names_2_object_names(
+                        result.out_msg, keys=True)))
 
         account_object.action = result
 
@@ -654,7 +620,7 @@ def append_account_methods_and_finish(
             account_object.EOSF_TRACE("""
             * Table ``{}`` for ``{}``
             """.format(table_name, scope))
-            account_object.OUT(decodeObjectNames(result.out_msg))
+            account_object.OUT(eosf.accout_names_2_object_names(result.out_msg))
             return result
         return None
 

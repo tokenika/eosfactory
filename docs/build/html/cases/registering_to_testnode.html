@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Registering to a remote testnet &#8212; EOSFactory 2.0 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -16,12 +16,26 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Tic-tac-toe contract on a remote testnet" href="remote_tic_tac_toe.html" />
-    <link rel="prev" title="Account name conflict" href="account_name_conflict.html" />
-   
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>  
+    <link rel="prev" title="Account name conflict" href="account_name_conflict.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="remote_tic_tac_toe.html" title="Tic-tac-toe contract on a remote testnet"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="account_name_conflict.html" title="Account name conflict"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -36,7 +50,40 @@ registering_to_testnode.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-<p>The following account exists in the blockchain of the testnode. It is used, in
+<div class="section" id="switching-between-testnodes">
+<span id="switching-between-testnodes"></span><h3>Switching between testnodes<a class="headerlink" href="#switching-between-testnodes" title="Permalink to this headline">¶</a></h3>
+<p>There is many testnodes: all we know are volatile: the one that you are
+prepared to use is stopped just when you need it. Therefore we have provision
+for easy change of the used testnode:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+import setup
+file_prefix = setup.remote_testnet_setup(&quot;88.99.97.30:38888&quot;)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<p>Where the argument is the url of a testnode. The statement makes the following
+arrangements:</p>
+<ul class="simple">
+<li>sets the url of the remote node;</li>
+<li>sets the default name of the singleton wallet object, for example here
+<code class="docutils literal notranslate"><span class="pre">88_99_97_30_38888_default.wallet</span></code>;</li>
+<li>sets accordingly the names of the files that map passwords and account
+names (note that passwords for real-money wallets are never stored
+automatically)</li>
+</ul>
+<p>We do not want to reserve this default naming system for the current test,
+then we use an option of the function <code class="docutils literal notranslate"><span class="pre">setup.remote_testnet_setup(...)</span></code> –</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+file_prefix = setup.remote_testnet_setup(
+    &quot;88.99.97.30:38888&quot;, &quot;registering_to_testnode&quot;)
+&quot;&quot;&quot;
+</pre></div>
+</div>
+<p>– resulting with a specific naming prefix, for example, the wallet name is <code class="docutils literal notranslate"><span class="pre">registering_to_testnode_default.wallet</span></code>, now.</p>
+</div>
+<div class="section" id="a-test-trick">
+<span id="a-test-trick"></span><h3>A test trick<a class="headerlink" href="#a-test-trick" title="Permalink to this headline">¶</a></h3>
+<p>The following account exists in the blockchain of a testnode. It is used, in
 this article, for testing. It is referred to as the ‘testing account’.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
 Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
@@ -45,6 +92,10 @@ Owner Private Key: OWNER_KEY
 Active Private Key: ACTIVE_KEY 
 </pre></div>
 </div>
+</div>
+<div class="section" id="the-header-of-the-test">
+<span id="the-header-of-the-test"></span><h3>The header of the test<a class="headerlink" href="#the-header-of-the-test" title="Permalink to this headline">¶</a></h3>
+<p>Note the statement put above, namely <code class="docutils literal notranslate"><span class="pre">setup.remote_testnet_setup(&quot;88.99.97.30:38888&quot;)</span></code>.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 import os
 import unittest
@@ -57,45 +108,45 @@ from eosf_wallet import Wallet
 from eosf_account import account_master_create
 from user_data import *
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
-
-remote_testnet = &quot;88.99.97.30:38888&quot;
+eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT]
 _ = eosf.Logger()
 
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<div class="section" id="set-a-remote-testnode">
-<span id="set-a-remote-testnode"></span><h3>Set a remote testnode<a class="headerlink" href="#set-a-remote-testnode" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="specify-that-the-keosd-wallet-manager-is-used">
+<span id="specify-that-the-keosd-wallet-manager-is-used"></span><h3>Specify that the KEOSD Wallet Manager is used<a class="headerlink" href="#specify-that-the-keosd-wallet-manager-is-used" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.use_keosd(True)        # use KEOSD Wallet Manager
-setup.set_nodeos_address(remote_testnet)
+eosf.use_keosd(True)
 &quot;&quot;&quot;
 </pre></div>
 </div>
-<p>Throw an exception if the testnode is off:</p>
+</div>
+<div class="section" id="throw-an-exception-if-the-testnode-is-off">
+<span id="throw-an-exception-if-the-testnode-is-off"></span><h3>Throw an exception if the testnode is off:<a class="headerlink" href="#throw-an-exception-if-the-testnode-is-off" title="Permalink to this headline">¶</a></h3>
+<p>Now make sure that the chosen testnode is operative. The
+<code class="docutils literal notranslate"><span class="pre">eosf.set_throw_error(...)</span></code> statement below switches between error management
+modes: an error may either throw a fatal exception or it may print a message.</p>
+<p>We dedicate the former way to the setup phase of a test.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.set_throw_error(True)
+eosf.set_throw_error(True
 eosf.info()
 eosf.set_throw_error(False)
 &quot;&quot;&quot;
 </pre></div>
 </div>
 </div>
-<div class="section" id="clean-the-jungle-wallet">
-<span id="clean-the-jungle-wallet"></span><h3>Clean the ‘jungle wallet’<a class="headerlink" href="#clean-the-jungle-wallet" title="Permalink to this headline">¶</a></h3>
-<p>For the sake of this tutorial, we treat a system wallet so rudely: we delete it.</p>
+<div class="section" id="clean-the-results-of-a-possible-previous-use-of-the-current-script">
+<span id="clean-the-results-of-a-possible-previous-use-of-the-current-script"></span><h3>Clean the results of a possible previous use of the current script.<a class="headerlink" href="#clean-the-results-of-a-possible-previous-use-of-the-current-script" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.use_keosd(True)    # to determine the directory of the wallet
-eosf.kill_keosd()       # otherwise, the manager protects the wallet file
+eosf.kill_keosd()   # otherwise, the manager may protects the wallet files
 
-wallet_name = &quot;jungle_wallet&quot;
-try:
-    wallet_file = eosf.wallet_dir() + wallet_name + &quot;.wallet&quot;
-    os.remove(wallet_file)
-    print(&quot;The deleted wallet file:\n{}\n&quot;.format(wallet_file))
-except Exception as e:
-    print(&quot;Cannot delete the wallet file:\n{}\n&quot;.format(str(e)))
+dir = eosf.wallet_dir()
+files = os.listdir(dir)
+for file in files:
+    if file.startswith(file_prefix):
+        os.remove(os.path.join(dir,file))
 &quot;&quot;&quot;
 </pre></div>
 </div>
@@ -120,6 +171,7 @@ session executed with the procedure that is shown in this article.</p>
 script ‘user_data.py`. We hope, that you will replace them with your own
 data, as they are used in other articles.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+exit()
 eosf_account.account_master_test = eosf_account.GetAccount(
     &quot;account_master_test&quot;,
     ACCOUNT_NAME, 
@@ -176,65 +228,42 @@ alt="registering" width="640px"/></p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">EOSFactory</a></h1>
-
-
-
-
-
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=&repo=&type=watch&count=true&size=large"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="IDE.html">Visual Studio Code IDE for EOSIO smart contracts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="symbolic_names.html">Symbolic names</a></li>
-<li class="toctree-l1"><a class="reference internal" href="arguments.html">Arguments</a></li>
-<li class="toctree-l1"><a class="reference internal" href="account.html">Account object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="account_master.html">Account master object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contract.html">Contract object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wallet.html">Wallet object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="configuration.html">EOSFactory configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="eosio_token_contract.html">Eosio Token Contract</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting-up EOSFactory tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="account_name_conflict.html">Account name conflict</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Registering to a remote testnet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="remote_tic_tac_toe.html">Tic-tac-toe contract on a remote testnet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging smart contracts</a></li>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Registering to a remote testnet</a><ul>
+<li><a class="reference internal" href="#set-up">Set-up</a><ul>
+<li><a class="reference internal" href="#switching-between-testnodes">Switching between testnodes</a></li>
+<li><a class="reference internal" href="#a-test-trick">A test trick</a></li>
+<li><a class="reference internal" href="#the-header-of-the-test">The header of the test</a></li>
+<li><a class="reference internal" href="#specify-that-the-keosd-wallet-manager-is-used">Specify that the KEOSD Wallet Manager is used</a></li>
+<li><a class="reference internal" href="#throw-an-exception-if-the-testnode-is-off">Throw an exception if the testnode is off:</a></li>
+<li><a class="reference internal" href="#clean-the-results-of-a-possible-previous-use-of-the-current-script">Clean the results of a possible previous use of the current script.</a></li>
+<li><a class="reference internal" href="#introduce-a-test-trick">Introduce a test trick</a></li>
+<li><a class="reference internal" href="#end-the-set-up-part">End the set-up part</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.1.html">EOSFactory Release Notes - v1.1</a></li>
+</li>
+<li><a class="reference internal" href="#case">Case</a><ul>
+<li><a class="reference internal" href="#register-to-the-testnode">Register to the testnode</a></li>
+<li><a class="reference internal" href="#test-run">Test run</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
+</li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../cleos.html">cleos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cleos_system.html">cleos_system</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../setup.html">setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../teos.html">teos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../eosf.html">eosf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../node.html">node</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sess.html">sess</a></li>
+</li>
 </ul>
 
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="account_name_conflict.html" title="previous chapter">Account name conflict</a></li>
-      <li>Next: <a href="remote_tic_tac_toe.html" title="next chapter">Tic-tac-toe contract on a remote testnet</a></li>
-  </ul></li>
-</ul>
-</div>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="account_name_conflict.html"
+                        title="previous chapter">Account name conflict</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="remote_tic_tac_toe.html"
+                        title="next chapter">Tic-tac-toe contract on a remote testnet</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/cases/registering_to_testnode.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <div class="searchformwrapper">
@@ -251,20 +280,27 @@ alt="registering" width="640px"/></p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2018, Tokenika.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
-      
-      |
-      <a href="../_sources/cases/registering_to_testnode.md.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="remote_tic_tac_toe.html" title="Tic-tac-toe contract on a remote testnet"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="account_name_conflict.html" title="Account name conflict"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 2.0 documentation</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
   </body>
 </html>

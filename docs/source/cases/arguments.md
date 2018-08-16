@@ -1,11 +1,8 @@
 """
 # Arguments
 
-```md
 This file can be executed as a python script: 'python3 contract.md'.
-```
 
-```md
 Arguments of the EOSFactory statements are polymorphic. For example, a 
 'permission` argument can have the following forms:
 
@@ -20,15 +17,12 @@ The polymorphism results from the origin of the EOSFactory, started as a wrapper
 for the 'CLEOS' commands. We have not decided yet, whether it is a value: a 
 disadvantage is that type errors are not detected by the compiler. An advantage 
 may be that users like it.
-```
 
 ## Setup
 
-<pre>
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
-Local test node reset, wallet started, master account object created.
-</pre>
+Local test node reset, wallet started, master account object created:
 
 ```md
 """
@@ -54,28 +48,27 @@ account_master_create("account_master")
 
 ### Account arguments
 
-```md
 Accounts are represented either as blockchain names or as account objects. In
 the following test, the 'account_master' object enters, at first, as itself ...
-```
+
 ```md
 """
 account_create("account_alice", account_master)
 """
 ```
-```md
+
 ... next, the 'account_master' is represented as a string, 'eosio` in this case:
-```
+
 ```md
 """
 account_create("account_bob", str(account_master))
 """
 ```
-```md
+
 If an account argument is neither an account object nor a string, an error 
 message is printed, or an error exception is thrown. For example, let the 
 account argument be of the 'cleos.CreateKey' type:
-```
+
 ```md
 """
 account_create("account_jimmy", cleos.CreateKey("xxx", is_verbose=0))
@@ -87,7 +80,6 @@ account_create("account_jimmy", cleos.CreateKey("xxx", is_verbose=0))
 
 ### Permission arguments
 
-```md
 In the simpest form, permissions are like accounts: account objects or account 
 names.
 
@@ -96,7 +88,6 @@ If an account name is used, it can be decorated with a permission level:
 
 Using the object oriented style, a permission may be a tuple enclosing an 
 account object and 
-```
 
 ```md
 """
@@ -108,7 +99,8 @@ account_create(
         (account_master, Permission.OWNER), 
         (account_master, Permission.ACTIVE)])
 """
-```md
+```
+
 equivalent forms:
 permission=[ ("eosio", "owner"), ("eosio", "active")])
     or
@@ -117,7 +109,7 @@ permission=[ "eosio@owner", "eosio@active"])
 If a permission argument type is not supported, an error message is printed, or 
 an error exception is thrown. For example, let the account argument be of the 
 'cleos.CreateKey' type:
-```
+
 ```md
 """
 account_create(
@@ -131,11 +123,10 @@ account_create(
 
 ### Data arguments
 
-```md
 Data arguments control the contract actions. Let us deploy an instance of the 
 'eosio.token' contract in order to show varies forms of the data argument of 
 the action 'transfer'. 
-```
+
 ```md
 """
 account_create("account_eosio_token", account_master)
@@ -161,14 +152,14 @@ account_eosio_token.push_action(
     permission=account_master) 
 """
 ```
-```md
+
 The data argument can be of the puthon 'dict` type, as in the first example.
 The second example presents a 'heredoc` form. The third version is the 'CLEOS' 
 origin.
 
 Note that the last version only maches the data arguments used in of the 
 'cleos' and 'cleos_system' modules.
-```
+
 ```md
 """
 account_eosio_token.push_action(

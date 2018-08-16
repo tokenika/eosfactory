@@ -16,15 +16,18 @@ account_map = "accounts.json"
 password_map = "passwords.json"
 wallet_default_name = "default"
 
-def remote_testnet_setup(remote_testnet):
+def remote_testnet_setup(remote_testnet, prefix=None):
     set_nodeos_address(remote_testnet)
-    prefix = re.sub("\.|\:|-", "_", remote_testnet) + "_"
+    if prefix is None:
+        prefix = re.sub("\.|\:|-", "_", remote_testnet) + "_"
     global account_map
     account_map = prefix + account_map
     global password_map
     password_map = prefix + password_map
     global wallet_default_name
     wallet_default_name = prefix + wallet_default_name
+
+    return prefix
 
 def restart():
     global _nodeos_address

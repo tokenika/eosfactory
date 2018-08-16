@@ -175,7 +175,7 @@ class Contract(eosf.Logger):
                     self.EOSF("""
                     * Code hash is cross-checked not null.
                     """)
-            # print(eosf_account.decodeObjectNames(json.dumps(result.json, indent=3)))
+            # print(eosf.accout_names_2_object_names(json.dumps(result.json, indent=3)))
             self.contract = result
         else:
             self.contract = None
