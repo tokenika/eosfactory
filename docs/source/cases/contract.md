@@ -13,13 +13,20 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ```md
 """
+import unittest
 import setup
 import eosf
+import time
+
+from eosf import Verbosity
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
+eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
 eosf.set_throw_error(True)
+
+eosf.use_keosd(False)
 eosf.reset([eosf.Verbosity.TRACE])
 """
 ```
@@ -116,14 +123,16 @@ contract_eosio_token.push_action(
     '{"issuer":"' 
         + str(account_master) 
         + '", "maximum_supply":"1000000000.0000 EOS", \
-        "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+        "can_freeze":0, "can_recall":0, "can_whitelist":0}',
+        [account_master, account_eosio_token])
+    
 
 contract_eosio_token.push_action(
     "issue",
     '{"to":"' + str(account_alice)
         + '", "quantity":"100.0000 EOS", '
         + '"memo":"issue 100.0000 EOS from eosio to alice"}',
-    permission=account_master)
+    account_master)
 
 contract_eosio_token.push_action(
     "transfer",
@@ -131,7 +140,7 @@ contract_eosio_token.push_action(
         + '", "to":"' + str(account_carol)
         + '", "quantity":"25.0000 EOS", '
         + '"memo":"transfer 25.0000 EOS from alice to carol"}',
-    permission=account_alice)
+    account_alice)
 
 contract_eosio_token.push_action(
     "transfer",
@@ -139,7 +148,7 @@ contract_eosio_token.push_action(
         + '", "to":"' + str(account_bob)
         + '", "quantity":"11.0000 EOS", '
         + '"memo":"transfer 11.0000 EOS from carol to bob"}',
-    permission=account_carol)
+    account_carol)
 
 contract_eosio_token.push_action(
     "transfer",
@@ -147,7 +156,7 @@ contract_eosio_token.push_action(
         + '", "to":"' + str(account_bob)
         + '", "quantity":"2.0000 EOS", '
         + '"memo":"transfer 2.0000 EOS from carol to bob"}',
-    permission=account_carol)
+    account_carol)
 
 contract_eosio_token.push_action(
     "transfer",
@@ -155,7 +164,7 @@ contract_eosio_token.push_action(
         + '", "to":"' + str(account_alice)
         + '", "quantity":"2.0000 EOS", '
         + '"memo":"transfer 2.0000 EOS from bob to alice"}',
-    permission=account_bob)                
+    account_bob)                
 """
 ```
 ```md
@@ -188,7 +197,6 @@ $ python3 contract.md
 We hope that you get something similar to this one shown in the image below.
 ```
 <img src="contract.png" 
-    onerror="this.src='../../../source/cases/contract.png'"   
-    alt="contract object" width="720px"/>
+    onerror="this.src='../../../source/cases/contract.png'" width="720px"/>
 
 """

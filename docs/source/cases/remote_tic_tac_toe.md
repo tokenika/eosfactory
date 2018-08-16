@@ -27,6 +27,7 @@ With remote node tests, we assume the following restrictions.
 ```md
 """
 import os
+import re
 import unittest
 import setup
 import eosf
@@ -38,39 +39,26 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
+setup.remote_testnet_setup("88.99.97.30:38888")
+WALLET_NAME = setup.wallet_default_name
+
 ACCOUNT_MASTER = "account_master"
 ACCOUNT_TTT = "account_tic_tac_toe"
 _ = eosf.Logger()
 """
 ```
-#### Remote node registration data
-```md
-Experiments with remote nodes depend on definitions, set in relevant 
-registration forms. These definitions are stored in the 'user_data.py' script:
-```
-```md
-"""
-from user_data import *
-"""
-```
 #### Unittest test class definition begins here
+
 ```md
 """
 class Test(unittest.TestCase):
 
     def setUp(self):
-
-        global ACCOUNT_MASTER
-        global ACCOUNT_TTT
-
         eosf.set_throw_error(True)
-
         eosf.stop([eosf.Verbosity.TRACE])
         eosf.use_keosd(True)
-        
-        setup.set_nodeos_address(remote_testnet)
         eosf.info()
-        
+        exit()
         """
 ```
 #### Wallet passwords are not stored in an open file automatically
@@ -107,6 +95,8 @@ except Exception as e:
             wallet = Wallet(
                 WALLET_NAME, wallet_json[WALLET_NAME],
                 verbosity=[eosf.Verbosity.TRACE])
+
+        exit()
         """
 ```
 #### Accounts are reused between test sessions

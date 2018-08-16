@@ -32,13 +32,15 @@ class ContractBuilder(eosf.Logger):
 
     def build_wast(self, json=False):
         if self.is_mutable:
-            result = teos.WAST( self.contract_dir, "", is_verbose=0)
+            result = teos.WAST( 
+                self.contract_dir, "", is_verbose=0, json=json)
+            
             if not self.ERROR(result):
                 self.EOSF_TRACE("""
                 * WAST file build and saved.
                 """)
-                if json:
-                    return result.json
+            if json:
+                return result.json
         else:
             self.ERROR("Cannot modify system contracts.")
 

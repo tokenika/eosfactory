@@ -246,8 +246,8 @@ class Logger():
         else:
             color = Verbosity.ERROR.value
 
-        
-
+        from eosf_account import decodeObjectNames
+        msg = decodeObjectNames(msg)
         msg = colored(
             "ERROR:\n{}".format(cleos.heredoc(msg)), 
             color[0], color[1], attrs=color[2])  + "\n"

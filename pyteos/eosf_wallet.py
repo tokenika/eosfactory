@@ -57,9 +57,11 @@ class Wallet(eosf.Logger, cleos.WalletCreate):
 
     wallet_keys = None
   
-    def __init__(self, name="default", password="", verbosity=None):
+    def __init__(self, name=None, password="", verbosity=None):
         eosf.Logger.__init__(self, verbosity)
-        
+        if name is None:
+            name = setup.wallet_default_name
+
         global wallet
         if not wallet is None:
             self.ERROR("""

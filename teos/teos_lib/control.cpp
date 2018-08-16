@@ -127,6 +127,8 @@ namespace teos
   }
 
   void TeosControl::putError(string message, string sender) {
-    errorRespJson(sender, message);
+    if(!message.empty()){
+      errorRespJson(sender, message);
+    }
   }
 }

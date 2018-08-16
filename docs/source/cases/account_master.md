@@ -142,7 +142,5 @@ account_master_images.info()
 We hope that you get something similar to this one shown in the image below.
 ```
 <img src="account_master_images/account_master_add.png" 
-    onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'"   
-    alt="local testnet account master" width="720px"/>
-
+    onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'" width="720px"/>
 """

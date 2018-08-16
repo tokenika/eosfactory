@@ -734,7 +734,7 @@ def account_create(
         return
         
     if wallet_singleton.is_name_taken(account_object_name, account_name):
-        return wallet_singleton
+        return
 
     """
     Create an account object.

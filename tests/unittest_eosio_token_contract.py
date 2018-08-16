@@ -8,7 +8,7 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
+eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT]
 eosf.set_throw_error(False)
 _ = eosf.Logger()
 
@@ -51,6 +51,7 @@ NEXT TEST ====================================================================
         account_create("account_carol", account_master)
         account_create("account_eosio_token", account_master)
         contract_eosio_token = Contract(account_eosio_token, "token")
+        contract_eosio_token.build()
         deploy = contract_eosio_token.deploy()
 
         time.sleep(1)
@@ -69,7 +70,7 @@ NEXT TEST ====================================================================
                 "can_freeze": "0", 
                 "can_recall": "0", 
                 "can_whitelist": "0"
-            })
+            }, [account_master, account_eosio_token])
 
         self.assertTrue(
             '"maximum_supply": "1000000000.0000 EOS"' \
@@ -80,7 +81,7 @@ NEXT TEST ====================================================================
             {
                 "to": account_alice, "quantity": "100.0000 EOS", "memo": ""
             },
-            permission=account_master)        
+            account_master)        
 
         _.COMMENT("""
         Execute a series of transfers between accounts:
@@ -92,7 +93,7 @@ NEXT TEST ====================================================================
                 "from": account_alice, "to": account_carol,
                 "quantity": "25.0000 EOS", "memo":""
             },
-            permission=account_alice)
+            account_alice)
 
         account_eosio_token.push_action(
             "transfer",
@@ -100,7 +101,7 @@ NEXT TEST ====================================================================
                 "from": account_carol, "to": account_bob, 
                 "quantity": "11.0000 EOS", "memo": ""
             },
-            permission=account_carol)
+            account_carol)
 
         account_eosio_token.push_action(
             "transfer",
@@ -108,7 +109,7 @@ NEXT TEST ====================================================================
                 "from": account_carol, "to": account_bob, 
                 "quantity": "2.0000 EOS", "memo": ""
             },
-            permission=account_carol)
+            account_carol)
 
         account_eosio_token.push_action(
             "transfer",
@@ -116,7 +117,7 @@ NEXT TEST ====================================================================
                 "from": account_bob, "to": account_alice, \
                 "quantity": "2.0000 EOS", "memo":""
             },
-            permission=account_bob)                    
+            account_bob)                    
 
         _.COMMENT("""
         See the records of the account:

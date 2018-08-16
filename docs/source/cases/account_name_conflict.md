@@ -73,6 +73,5 @@ We hope that you get something similar to this one shown in the image below.
 ```
 <img src="account_name_conflict.png" 
     onerror="this.src='../../../source/cases/account_name_conflict.png'"   
-    alt="account name conflict" width="640px"/>
-
+    width="720px"/>
 """

@@ -34,18 +34,14 @@ class _Teos:
     Each control class represents a call to a Tokenika `teos` instance that
     is launched to responce just the call. 
     """
-    global setup_setup
-
-    error = False
-    err_msg = ""
-    is_verbose = True
-    json = json_module.loads("{}")
-
     def __init__(
                 self, jarg, first, second, 
                 is_verbose_arg=True):
 
-        self.jarg = jarg     
+        self.jarg = jarg
+        self.json = {}
+        self.error = False
+        self.err_msg = ""     
 
         cl = [setup_setup.teos_exe, first, second,
             "--jarg", str(self.jarg).replace("'", '"'), "--both"]
@@ -183,7 +179,8 @@ class ABI(_Teos):
 
 class WAST(_Teos):
     def __init__(
-            self, source, code_name="", include_dir="", is_verbose=1):
+            self, source, code_name="", include_dir="", is_verbose=1, 
+            json=False):
 
         try:
             source = source.contract_dir
@@ -195,7 +192,8 @@ class WAST(_Teos):
         jarg["includeDir"] = include_dir
         jarg["codeName"] = code_name
         jarg["compileOnly"] = "0"
-
+        if json:
+            jarg["json"] = "1"
         _Teos.__init__(self, jarg, "build", "contract", is_verbose)        
 
 class NodeStart(_Teos):

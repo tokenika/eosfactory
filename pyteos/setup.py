@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import re
 import os
 import json
 
@@ -13,6 +14,17 @@ _is_local_address = False
 _is_use_keosd = False
 account_map = "accounts.json"
 password_map = "passwords.json"
+wallet_default_name = "default"
+
+def remote_testnet_setup(remote_testnet):
+    set_nodeos_address(remote_testnet)
+    prefix = re.sub("\.|\:|-", "_", remote_testnet) + "_"
+    global account_map
+    account_map = prefix + account_map
+    global password_map
+    password_map = prefix + password_map
+    global wallet_default_name
+    wallet_default_name = prefix + wallet_default_name
 
 def restart():
     global _nodeos_address

@@ -153,7 +153,7 @@ NEXT TEST ====================================================================
     #     eosf.use_keosd(True)
     #     setup.set_nodeos_address(remote_testnet)
     #     wallet = Wallet(
-    #         "default",
+    #         None,
     #         "PW5J5KW7erKzqJmn9gMrvzev4pLxR3Vt9BRkx94BqdfHkw4z4bNTd"
     #         )
 
@@ -200,7 +200,7 @@ NEXT TEST ====================================================================
         eosf.use_keosd(True)
         setup.set_nodeos_address(remote_testnet)
         wallet = Wallet(
-            "default",
+            None,
             "PW5J5KW7erKzqJmn9gMrvzev4pLxR3Vt9BRkx94BqdfHkw4z4bNTd"
             )
 

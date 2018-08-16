@@ -440,11 +440,20 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
       bfs::path targetPath;
       bfs::path workdir;
       bfs::path workdir_build;
+      string extensions = ".h.hpp.hxx.c.cpp.cxx.c++";
 
       for (string file : srcs)
-      {  
+      { 
         bfs::path src_file(file);
+        string extension = src_file.extension().string();
+        boost::algorithm::to_lower(extension);
+        
+        if(extensions.find(extension) == string::npos){
+          continue;
+        }
+
         string name = codeName.empty() ? src_file.stem().string() : codeName;
+        
 
         if(targetPath.empty()) 
         { // Define target path once.
@@ -469,6 +478,7 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
           + " -I" + getSourceDir(this) + "/externals/magic_get/include"
           + " -I" + getEOSIO_BOOST_INCLUDE_DIR(this)
           + " -I" + getSourceDir(this) + "/contracts"
+          + " -I" + getSourceDir(this) + "/build/contracts"
           + " -I" + sourceDir;
 
         if(!include_dir.empty())
@@ -481,9 +491,11 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
         }        
 
         command_line += " -c " + file + " -o " + output.string();
-
-        //cout << "command line clang:" << endl << command_line << endl;
-
+        string decoration = string("_") + src_file.filename().string();
+        respJson_.put("command_line" + decoration, command_line);
+        // cout << command_line.c_str() << endl;
+        // cout << respJson_.get("command_line" + decoration, "ERROR") << endl;
+        // cout << responseToString(false) << endl;
         if(!process(command_line, this)){
           bfs::remove_all(workdir);
           return;
