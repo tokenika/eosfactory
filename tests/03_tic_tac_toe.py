@@ -1,26 +1,13 @@
-import os
-import sys
 import unittest
-import setup
-import logger
-import eosf
-import eosf_account
+from  xxx import *
 
-from logger import Verbosity
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
-
-
-logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-logger.set_throw_error(False)
-_ = logger.Logger()
-
+Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+set_throw_error(False)
+_ = Logger()
 
 CONTRACT_NAME = "03_tic_tac_toe"
 ACCOUNT_MASTER = "account_master"
 ACCOUNT_HOST = "account_host"
-
 
 class Test(unittest.TestCase):
 
@@ -29,16 +16,16 @@ class Test(unittest.TestCase):
         global ACCOUNT_MASTER
         global ACCOUNT_HOST
 
-        logger.set_throw_error(True)
+        set_throw_error(True)
 
         if IS_USE_KEOSD:
-            eosf.stop([logger.Verbosity.INFO])
+            stop([Verbosity.INFO])
             
             setup.set_nodeos_address(remote_testnet)
-            eosf.info()
+            info()
 
             try:
-                wallet_file = eosf.wallet_dir() + WALLET_NAME + ".wallet"
+                wallet_file = wallet_dir() + WALLET_NAME + ".wallet"
                 os.remove(wallet_file)
                 _.INFO("The deleted wallet file:\n{}\n".format(wallet_file))
             except Exception as e:
@@ -46,16 +33,16 @@ class Test(unittest.TestCase):
 
             wallet = Wallet(
                 WALLET_NAME,
-                verbosity=[logger.Verbosity.INFO])
+                verbosity=[Verbosity.INFO])
             ACCOUNT_MASTER = ACCOUNT_HOST
 
             if not ACCOUNT_MASTER in globals():
                 account_master_create(
                     ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
-                    verbosity=[logger.Verbosity.INFO, logger.Verbosity.OUT])
+                    verbosity=[Verbosity.INFO, Verbosity.OUT])
 
         else:
-            eosf.reset([logger.Verbosity.INFO])
+            reset([Verbosity.INFO])
 
             wallet = Wallet()
             account_master_create(ACCOUNT_MASTER)
@@ -77,8 +64,8 @@ class Test(unittest.TestCase):
         if not "account_carol" in globals():
             account_create("account_carol", account_master)
 
-        logger.set_throw_error(False)
-        logger.set_is_testing_errors()
+        set_throw_error(False)
+        set_is_testing_errors()
 
 
     def test_tic_tac_toe(self):
@@ -173,14 +160,13 @@ class Test(unittest.TestCase):
                 }, 
                 account_carol)
 
-
     def tearDown(self):
-        eosf.stop()
-
+        stop()
 
 if __name__ == "__main__":
     '''Test the ``tic-tac-toe`` contract either locally or remotely.
     '''
+    import sys
     IS_USE_KEOSD = False
     if len(sys.argv) > 1:
         case = sys.argv.pop()

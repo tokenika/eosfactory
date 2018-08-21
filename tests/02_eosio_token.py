@@ -1,18 +1,9 @@
 import unittest
-import setup
-import logger
-import eosf
-import time
+from  xxx import *
 
-from logger import Verbosity
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
-
-
-logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
-logger.set_throw_error(False)
-_ = logger.Logger()
+Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
+set_throw_error(False)
+_ = Logger()
 
 
 CONTRACT_NAME = "02_eosio_token"
@@ -29,17 +20,17 @@ class Test(unittest.TestCase):
         print()
 
     def setUp(self):
-        eosf.restart()
-        logger.set_is_testing_errors(False)
-        logger.set_throw_error(True)
+        restart()
+        set_is_testing_errors(False)
+        set_throw_error(True)
 
     def test_eosio_token_contract(self):
-        eosf.reset([logger.Verbosity.INFO])
+        reset([Verbosity.INFO])
 
         wallet = Wallet()
         account_master_create("account_master")
-        logger.set_throw_error(False)
-        logger.set_is_testing_errors()
+        set_throw_error(False)
+        set_is_testing_errors()
 
         _.SCENARIO('''
         First we create a series of accounts and delpoy the ``eosio.token`` contract
@@ -136,15 +127,12 @@ class Test(unittest.TestCase):
             table_carol.json["rows"][0]["balance"], '12.0000 EOS',
             '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
 
-
     def tearDown(self):
         pass
 
-
     @classmethod
     def tearDownClass(cls):
-        eosf.stop()
-
+        stop()
 
 if __name__ == "__main__":
     unittest.main()

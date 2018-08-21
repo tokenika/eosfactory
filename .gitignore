@@ -26,3 +26,6 @@ teos/source/conf.py
 .vscode/launch.json
 .vscode/settings.json
 .vscode/tasks.json
+
+pyteos/appJar
+pyteos/appJar1

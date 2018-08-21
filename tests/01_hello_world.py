@@ -1,47 +1,32 @@
 import unittest
-import setup
-import logger
-import eosf
-import time
+from  xxx import *
 
-from logger import Verbosity
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract, contract_workspace_from_template
-
-
-logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-logger.set_throw_error(False)
-_ = logger.Logger()
-
+set_throw_error(False)
+_ = Logger([Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG])
 
 CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
-
 
 class Test(unittest.TestCase):
 
     def run(self, result=None):
         super().run(result)
 
-
     @classmethod
     def setUpClass(cls):
         print()
 
-
     def setUp(self):
-        eosf.restart()
-        logger.set_is_testing_errors(False)
-        logger.set_throw_error(True)
-
+        restart()
+        set_is_testing_errors(False)
+        set_throw_error(True)
 
     def test_contract_template(self):
-        eosf.reset([logger.Verbosity.INFO]) 
+        reset([Verbosity.INFO]) 
         
         wallet = Wallet()
         account_master_create("account_master")
-        logger.set_throw_error(False)
-        logger.set_is_testing_errors()
+        set_throw_error(False)
+        set_is_testing_errors()
 
         _.SCENARIO('''
         This is a test of creating a contract from a pre-defined template,
@@ -66,15 +51,12 @@ class Test(unittest.TestCase):
         account_host.push_action(
             "hi", {"user":account_carol}, account_carol)
 
-
     def tearDown(self):
         pass
 
-
     @classmethod
     def tearDownClass(cls):
-        eosf.stop()
-
+        stop()
 
 if __name__ == "__main__":
     unittest.main()
