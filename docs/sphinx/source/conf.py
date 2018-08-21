@@ -17,7 +17,7 @@ import sys
 import sphinx_readable_theme
 import sphinx_bootstrap_theme
 
-sys.path.insert(0, os.path.abspath('../../pyteos'))
+sys.path.insert(0, os.path.abspath('../../../'))
 
 
 # -- Project information -----------------------------------------------------
@@ -27,9 +27,9 @@ copyright = u'2018, Tokenika'
 author = u'Tokenika'
 
 # The short X.Y version
-version = u''
+version = u'v1.1'
 # The full version, including alpha/beta/rc tags
-release = u'2.0'
+release = u'0.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -41,19 +41,21 @@ release = u'2.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.githubpages',
 #    'sphinx.ext.intersphinx',
 #    'sphinx.ext.viewcode',
+#    'sphinx.ext.githubpages'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ['.templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
+# source_suffix = ['.rst', '.md']
 source_suffix = ['.rst', '.md']
 
 # The master toctree document.
@@ -83,20 +85,8 @@ pygments_style = 'sphinx'
 # haiku classic sphinxdoc bizstyle sphinx_rtd_theme
 
 # html_theme = "bizstyle"
-# html_theme_options = {
-#     'body_max_width': '650px' 
-# }
-
 # html_theme = "alabaster"
-# html_theme_options = {
-#     'page_width': '1000px',
-#     'sidebar_width': '220px'
-# }
-
-html_theme = "classic"
-html_theme_options = {
-    'body_max_width': '700px'
-}
+# html_theme = "classic"
 
 # html_theme = "readable"
 # html_theme_path = sphinx_readable_theme.get_html_theme_path()
@@ -104,23 +94,26 @@ html_theme_options = {
 # html_theme = "sphinx-theme-graphite"
 # html_theme_path = [.]
 
-# html_theme = "bootstrap"
-# html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+html_theme = "bootstrap"
+html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
-# Theme options are theme-specific and customize the look and feel of a theme
-# further.  For a list of options available for each theme, see the
-# documentation.
-#
+
 # html_theme_options = {
 #     "rightsidebar": "true",
 #     "relbarbgcolor": "black",
 #     "stickysidebar": "true"
 #}
 
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
+#
+# html_theme_options = {}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = []
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -191,9 +184,7 @@ texinfo_documents = [
 
 
 # -- Extension configuration -------------------------------------------------
-# Render these files as indicated
+
 source_parsers = {
-    '.md': 'recommonmark.parser.CommonMarkParser'
+   '.md': 'recommonmark.parser.CommonMarkParser',
 }
-
-
