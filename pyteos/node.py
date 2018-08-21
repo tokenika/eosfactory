@@ -3,7 +3,7 @@
 '''
 Private testnet set-up and tear-down.
 
-.. module:: node
+.. module:: pyteos
     :platform: Unix, Windows
     :synopsis: Private testnet set-up and tear-down.
 

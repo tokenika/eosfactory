@@ -86,7 +86,7 @@ pygments_style = 'sphinx'
 
 # html_theme = "bizstyle"
 # html_theme = "alabaster"
-# html_theme = "classic"
+html_theme = "classic"
 
 # html_theme = "readable"
 # html_theme_path = sphinx_readable_theme.get_html_theme_path()
@@ -94,8 +94,8 @@ pygments_style = 'sphinx'
 # html_theme = "sphinx-theme-graphite"
 # html_theme_path = [.]
 
-html_theme = "bootstrap"
-html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+# html_theme = "bootstrap"
+# html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 
 # html_theme_options = {

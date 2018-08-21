@@ -3,7 +3,7 @@
 '''
 Session initiation and storage for session elements.
 
-.. module:: sess
+.. module:: pyteos
     :platform: Unix, Windows
     :synopsis: Session initiation and storage for session elements.
 
