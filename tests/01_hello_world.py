@@ -1,5 +1,5 @@
 import unittest
-from  xxx import *
+from  eosfactory import *
 
 set_throw_error(False)
 _ = Logger([Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG])

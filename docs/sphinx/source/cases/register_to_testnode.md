@@ -6,7 +6,7 @@ This file can be executed as a python script:
 
 Registering to a public testnet involves three steps:
 
-* `setup.set_nodeos_address(testnode.url)` # set the url of the testnode;
+* `set_nodeos_address(testnode.url)` # set the url of the testnode;
 * `wallet = Wallet(file=True)` # create the wallet singleton (`file=True` means password to file);
 * `account_master_create("account_master")` # create an account object, named as the argument of the factory function.
 
@@ -32,25 +32,17 @@ The current article tests this registration procedure.
 
 ## Set-up
 
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
+The set-up statements are explained at <a href="html">cases/setup</a>.
 
 ### The header of the test
 
 ```md
 '''
-import setup
-import logger
-import eosf
-import eosf_account
-import testnet_data
+from  eosfactory import *
 
-from logger import Verbosity
-from eosf_wallet import Wallet
-from eosf_account import account_master_create
-
-_ = logger.Logger([Verbosity.INFO, Verbosity.OUT])
-logger.set_is_testing_errors(False)
-logger.set_throw_error(True)
+_ = Logger([Verbosity.INFO, Verbosity.OUT])
+set_is_testing_errors(False)
+set_throw_error(True)
 '''
 ```
 
@@ -64,8 +56,9 @@ In the `testnet_data` module, there is a pair of prefabricated testnode objects:
 
 ```md
 '''
+import testnet_data
 testnode = testnet_data.kylin
-setup.set_nodeos_address(testnode.url)
+set_nodeos_address(testnode.url)
 '''
 ```
 The second line statement makes the following arrangements:
@@ -74,11 +67,11 @@ The second line statement makes the following arrangements:
 * sets a prefix differentiating system files used in currently, for example, the default name of the wallet is `88_99_97_30_38888_default.wallet`;
 
 We do not want to use this default naming system for the current test, 
-therefore we use an option of the function `setup.set_nodeos_address(...)` --
+therefore we use an option of the function `set_nodeos_address(...)` --
 
 ```md
 '''
-setup.set_nodeos_address(testnode.url, "registering_to_testnode")
+set_nodeos_address(testnode.url, "registering_to_testnode")
 '''
 ```
 -- now the default name of the wallet is `registering_to_testnode_default.wallet`.
@@ -111,7 +104,7 @@ At the beginning, the 'Wallet` singleton has to be created:
 
 ```md
 '''
-logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
+Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
 wallet = Wallet(file=True)
 '''
 ```

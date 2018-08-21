@@ -1,18 +1,9 @@
-import sys
-import unittest
-import setup
-import eosf
-import time
+from  eosfactory import *
 
-from eosf import Verbosity
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
+Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+set_throw_error(False)
 
-logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-logger.set_throw_error(False)
-
-_ = logger.Logger()
+_ = Logger()
 
 class Test(unittest.TestCase):
 
@@ -29,15 +20,15 @@ NEXT TEST ====================================================================
 
     def setUp(self):
         eosf.restart()
-        logger.set_is_testing_errors(False)
-        logger.set_throw_error(True)
+        set_is_testing_errors(False)
+        set_throw_error(True)
 
     def test_eosio_token_contract(self):
-        eosf.reset([logger.Verbosity.INFO]) 
+        eosf.reset([Verbosity.INFO]) 
         wallet = Wallet()
         account_master_create("account_master")
-        logger.set_throw_error(False)
-        logger.set_is_testing_errors()
+        set_throw_error(False)
+        set_is_testing_errors()
 
         ######################################################################        
 
@@ -51,11 +42,11 @@ NEXT TEST ====================================================================
         account_create("account_bob", account_master)
         account_create("account_carol", account_master)
         account_create("account_eosio_token", account_master)
+
+        import sys
         contract_eosio_token = Contract(
             account_eosio_token, sys.path[0] + "/../")
         deploy = contract_eosio_token.deploy()
-
-        time.sleep(1)
 
         _.COMMENT('''
         Execute actions on the contract account:
@@ -135,10 +126,6 @@ NEXT TEST ====================================================================
         self.assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')
         self.assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')
         self.assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')
-
-
-    def tearDown(self):
-        pass
 
     @classmethod
     def tearDownClass(cls):

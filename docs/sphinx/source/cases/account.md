@@ -9,15 +9,10 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ```md
 '''
-import setup
-import logger
-import eosf
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
+from  eosfactory import *
 
-logger.set_throw_error(True)
-eosf.reset([logger.Verbosity.INFO])
+set_throw_error(True)
+reset([Verbosity.INFO])
 '''
 ```
 
@@ -27,7 +22,7 @@ eosf.reset([logger.Verbosity.INFO])
 '''
 wallet = Wallet()   
 account_master_create("account_master")
-logger.set_throw_error(False)
+set_throw_error(False)
 '''
 ```
 

@@ -5,25 +5,19 @@ This file can be executed as a python script: 'python3 account_master.md'.
 
 ## Set-up
 
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
+The set-up statements are explained at <a href="html">cases/setup</a>.
 
 ```md
 '''
-import os
-import setup
-import testnet_data
-import eosf
-import eosf_account
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
+from  eosfactory import *
 
-_ = logger.Logger([logger.Verbosity.INFO, logger.Verbosity.OUT])
+_ = Logger([Verbosity.INFO, Verbosity.OUT])
 '''
 ```
 
 ```md
 '''
+import testnet_data
 testnet = testnet_data.kylin
 '''
 ```
@@ -47,11 +41,11 @@ show them.
 
 ```md
 '''
-eosf.reset([logger.Verbosity.INFO])
+reset([Verbosity.INFO])
 wallet = Wallet()
 account_master_create("account_master_images")
 account_master_images.info()
-eosf.stop([logger.Verbosity.INFO])
+stop([Verbosity.INFO])
 '''
 ```
 
@@ -68,7 +62,7 @@ We expect that you get something similar to this one shown in the image below.
 
 ### Remote testnet registration
 
-This case is shown at <a href="setup.html">cases/registering_to_testnode</a>. 
+This case is shown at <a href="html">cases/registering_to_testnode</a>. 
 There the account object is produced by manual interaction with the registration form of a testnet. There the resulting account object is fully functional.
 
 ### Adding a physical account
@@ -81,13 +75,13 @@ they can add it to the Factory. In this show, we use an real account represented
 ```md
 '''
 eosf_account.restart()    # reset the Factory
-setup.set_nodeos_address(testnet.url, "account_master_test")
+set_nodeos_address(testnet.url, "account_master_test")
 '''
 ```
 Delete files possibly created previously:
 ```md
 '''
-eosf.remove_files()
+remove_files()
 '''
 ```
 First, the 'Wallet` singleton has to be created:

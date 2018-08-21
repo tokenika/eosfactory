@@ -1,3 +1,4 @@
+import setup
 import logger
 import eosf
 import eosf_wallet
@@ -19,3 +20,6 @@ set_throw_error = logger.set_throw_error
 restart = eosf.restart
 reset = eosf.reset
 stop = eosf.stop
+remove_files = eosf.remove_files
+
+set_nodeos_address = setup.set_nodeos_address
