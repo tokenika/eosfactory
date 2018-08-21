@@ -11,13 +11,15 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
+
 logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
 logger.set_throw_error(False)
 _ = logger.Logger()
 
+
 ACCOUNT_MASTER = "account_master"
 ACCOUNT_TTT = "account_tic_tac_toe"
-_ = logger.Logger()
+
 
 class Test(unittest.TestCase):
 
@@ -64,9 +66,9 @@ class Test(unittest.TestCase):
         account_tic_tac_toe = globals()[ACCOUNT_TTT] 
 
         contract_tic_tac_toe = Contract(
-            account_tic_tac_toe, "tic_tac_toe_jungle")        
+            account_tic_tac_toe, "tic_tac_toe_jungle")
         contract_tic_tac_toe.build()
-        if not account_tic_tac_toe.is_code():            
+        if not account_tic_tac_toe.is_code():
             contract_tic_tac_toe.deploy()
 
         if not "account_alice" in globals():
@@ -76,6 +78,7 @@ class Test(unittest.TestCase):
 
         logger.set_throw_error(False)
         logger.set_is_testing_errors()
+
 
     def test_tic_tac_toe(self):
         _.SCENARIO('''
@@ -162,15 +165,17 @@ class Test(unittest.TestCase):
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
         account_tic_tac_toe.push_action(
-                "close", 
+                "close",
                 {
                     "challenger": account_alice,
                     "host": account_carol
                 }, 
                 account_carol)
 
+
     def tearDown(self):
         eosf.stop()
+
 
 if __name__ == "__main__":
     '''Test the ``tic_tac_toe`` contract either locally or remotely.
