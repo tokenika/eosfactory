@@ -3,11 +3,12 @@
 def register(testnode_url, account_object_name):
 
     import setup
+    import logger
     import eosf
     import eosf_account
     import testnet_data
 
-    from eosf import Verbosity
+    from logger import Verbosity
     from eosf_wallet import Wallet
     from eosf_account import account_master_create
 

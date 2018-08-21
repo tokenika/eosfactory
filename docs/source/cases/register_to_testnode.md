@@ -2,7 +2,7 @@
 # Registering to a remote testnode
 
 This file can be executed as a python script: 
-'python3 registering_to_testnode.md'.
+'python3 register_to_testnode.md'.
 
 Registering to a public testnet involves three steps:
 

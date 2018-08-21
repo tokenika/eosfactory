@@ -14,7 +14,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Visual Studio Code IDE for EOSIO smart contracts" href="IDE.html" />
+    <link rel="prev" title="Account master object" href="account_master.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -25,6 +27,12 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="IDE.html" title="Visual Studio Code IDE for EOSIO smart contracts"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="account_master.html" title="Account master object"
+             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 2.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
@@ -146,7 +154,7 @@ wallet = Wallet(file=True)
 <p>We usually name <code class="docutils literal notranslate"><span class="pre">account_master</span></code> any, yet single in the namespace, object that has resources necessary for creation of child accounts.</p>
 <p>The factory function <code class="docutils literal notranslate"><span class="pre">account_master_create</span></code> executed with a single argument meaning the name of the created account object (or with a second one, fixing the name of the physical account), conducts a registration process.</p>
 <p>Just testing the system we do not want to polute the public testnet with dummy accounts, therefore, we expect you to responce <code class="docutils literal notranslate"><span class="pre">q</span></code> to the query of the script.</p>
-<p>The script will then continue with the prefabricated account wrapped with the object <code class="docutils literal notranslate"><span class="pre">testnet</span></code>.</p>
+<p>The script will then continue with the prefabricated account in the object <code class="docutils literal notranslate"><span class="pre">testnet</span></code>.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_master_create(&quot;account_master&quot;)
 &#39;&#39;&#39;
@@ -203,6 +211,12 @@ onerror="this.src='../../../source/cases/registering.png'" width="640px"/></p>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="account_master.html"
+                        title="previous chapter">Account master object</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="IDE.html"
+                        title="next chapter">Visual Studio Code IDE for EOSIO smart contracts</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -235,6 +249,12 @@ onerror="this.src='../../../source/cases/registering.png'" width="640px"/></p>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="IDE.html" title="Visual Studio Code IDE for EOSIO smart contracts"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="account_master.html" title="Account master object"
+             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 2.0 documentation</a> &#187;</li> 
       </ul>
     </div>

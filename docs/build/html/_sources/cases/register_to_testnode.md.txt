@@ -124,7 +124,7 @@ The factory function `account_master_create` executed with a single argument mea
 
 Just testing the system we do not want to polute the public testnet with dummy accounts, therefore, we expect you to responce `q` to the query of the script.
 
-The script will then continue with the prefabricated account wrapped with the object `testnet`.
+The script will then continue with the prefabricated account in the object `testnet`.
 ```md
 '''
 account_master_create("account_master")

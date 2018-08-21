@@ -45,17 +45,18 @@
   <p>‘’‘</p>
 <div class="section" id="symbolic-names">
 <span id="symbolic-names"></span><h1>Symbolic names<a class="headerlink" href="#symbolic-names" title="Permalink to this headline">¶</a></h1>
-<p>This file can be executed as a python script: ‘python3 wallet.md’.</p>
+<p>This file can be executed as a python script: ‘python3 symbolic_names.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 import setup
+import logger
 import eosf
 import time
 import eosf_account
 
-from eosf import Verbosity
+from logger import Verbosity
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
@@ -175,7 +176,8 @@ account_eosio_token.push_action(
 </div>
 <p><img src="symbolic_names_images/symbolic_names_true.png" 
 onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
-width="720px"/></p>
+width="720px"/>
+‘’‘</p>
 </div>
 </div>
 </div>

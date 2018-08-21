@@ -10,6 +10,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 ```md
 '''
 import setup
+import logger
 import eosf
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create

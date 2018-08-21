@@ -1,7 +1,7 @@
 '''
 # Symbolic names
 
-This file can be executed as a python script: 'python3 wallet.md'.
+This file can be executed as a python script: 'python3 symbolic_names.md'.
 
 ## Set-up
 
@@ -10,11 +10,12 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 ```md
 '''
 import setup
+import logger
 import eosf
 import time
 import eosf_account
 
-from eosf import Verbosity
+from logger import Verbosity
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
@@ -146,5 +147,5 @@ account_eosio_token.push_action(
 <img src="symbolic_names_images/symbolic_names_true.png" 
     onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
     width="720px"/>
-
+'''
 

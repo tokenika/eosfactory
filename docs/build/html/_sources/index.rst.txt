@@ -16,18 +16,20 @@ Cases
 .. toctree::
     :maxdepth: 1
 
+    cases/account
+    cases/account_name_conflict
+    cases/account_master
+    cases/register_to_testnode
+
     cases/IDE
     cases/symbolic_names
     cases/arguments
-    cases/account
-    cases/account_master
+
     cases/contract
     cases/wallet
     cases/configuration
     cases/eosio_token_contract    
     cases/setup
-    cases/account_name_conflict
-    cases/registering_to_testnode
     cases/remote_tic_tac_toe
     cases/debugging
 

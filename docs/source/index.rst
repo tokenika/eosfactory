@@ -22,13 +22,12 @@ Cases
     cases/register_to_testnode
 
     cases/IDE
-    cases/symbolic_names
     cases/arguments
-
+    cases/symbolic_names
     cases/contract
     cases/wallet
     cases/configuration
-    cases/eosio_token_contract    
+    cases/eosio_token_contract
     cases/setup
     cases/remote_tic_tac_toe
     cases/debugging
