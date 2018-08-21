@@ -33,7 +33,6 @@ WSL_ROOT_DIR__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_
 WSL_ROOT_DIR1804__="%LocalAppData%\\Packages\\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\\LocalState\\rootfs"
 
 
-EOSIO_SHARED_MEMORY_SIZE_MB__=200
 CMAKE_VERBOSE__=0
 
 
@@ -177,10 +176,6 @@ while getopts ":e:w:c:C:X:i:t:s:rvh" opt; do
         fi
         ;;
 
-    s)
-        EOSIO_SHARED_MEMORY_SIZE_MB__="$OPTARG"
-        ;;
-
     r)
         RESET__=RESET
         ;;
@@ -267,7 +262,6 @@ printf "%s\n" "Sets environment variables, if not set already:"
 
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
 setLinuxVariable "EOSIO_EOSFACTORY_DIR" "$EOSIO_EOSFACTORY_DIR__"
-setLinuxVariable "EOSIO_SHARED_MEMORY_SIZE_MB" "$EOSIO_SHARED_MEMORY_SIZE_MB__"
 setLinuxVariable "U_HOME" "$HOME"
 
 setLinuxVariable "eosf" "$EOSIO_EOSFACTORY_DIR__/$teos_exe"
