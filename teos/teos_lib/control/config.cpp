@@ -47,7 +47,6 @@ namespace teos {
       //genesis-json: relative to EOSIO_SOURCE_DIR
     arg EOSIO_DATA_DIR = { "EOSIO_DATA_DIR", "build/daemon/data-dir/" };
     arg EOSIO_CONFIG_DIR = { "EOSIO_CONFIG_DIR", "build/daemon/data-dir/" };
-    arg EOSIO_WALLET_DIR = { "EOSIO_WALLET_DIR", "wallet/"}; // relative to data-dir
     arg EOSIO_DAEMON_NAME = { "EOSIO_DAEMON_NAME", "nodeos" };
     arg EOSIO_CLI_NAME = { "EOSIO_CLI_NAME", "cleos" };
     arg EOSIO_EOSFACTORY_DIR = { "EOSIO_EOSFACTORY_DIR" };
@@ -72,6 +71,12 @@ namespace teos {
     arg EOSIO_WASM_LLC = { "EOSIO_WASM_LLC"
       , "${U_HOME}/opt/wasm/bin/llc", "/usr/local/wasm/bin/llc" };
       // EOSIO_WASM_LLC: relative to U_HOME dir
+
+    arg EOSIO_S2WASM = { "EOSIO_S2WASM"
+      , "/usr/local/bin/eosio-s2wasm", "/usr/local/eosio/bin/eosio-s2wasm" };
+
+    arg EOSIO_WAST2WASM = { "EOSIO_WAST2WASM"
+      , "/usr/local/bin/eosio-wast2wasm", "/usr/local/eosio/bin/eosio-wast2wasm" };
 
     namespace bfs = boost::filesystem;
 
@@ -729,32 +734,6 @@ Cannot determine the contract workspace.
       return "";  
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // getWalletDir
-    ///////////////////////////////////////////////////////////////////////////
-    string getWalletDir(TeosControl* teosControl)
-    {
-      try
-      {
-        bfs::path wantedPath(configValue(teosControl, EOSIO_WALLET_DIR));
-        if(!wantedPath.is_absolute()) {
-            wantedPath = getDataDir(teosControl) / wantedPath;
-        }
-
-        if(bfs::is_directory(wantedPath) && bfs::exists(wantedPath)) {
-          return wantedPath.string();
-        }  
-
-        onError(teosControl, 
-          (boost::format("Cannot find the 'wallet-dir' directory:\n%1%\n")
-            % wantedPath.string()).str(), SPOT);
-
-      } catch (std::exception& e) {
-          onError(teosControl, e.what(), SPOT);
-      }
-      return "";        
-    }
-
     string getKeosdWalletDir()
     {
       return "${HOME}/eosio-wallet/";
@@ -812,6 +791,14 @@ Cannot determine the contract workspace.
       return getValidPath(teosControl, EOSIO_WASM_LLVM_LINK, "");      
     }
 
+    string getEOSIO_S2WASM(TeosControl* teosControl){
+      return getValidPath(teosControl, EOSIO_S2WASM, "");
+    }
+
+    string getEOSIO_WAST2WASM(TeosControl* teosControl){
+      return getValidPath(teosControl, EOSIO_WAST2WASM, "");
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // getEOSIO_WASM_LLC
     ///////////////////////////////////////////////////////////////////////////
@@ -824,7 +811,6 @@ Cannot determine the contract workspace.
       respJson_.put("EOSIO_EOSFACTORY_DIR", getEosFactoryDir(this));
       respJson_.put("EOSIO_DATA_DIR", getDataDir(this));
       respJson_.put("EOSIO_CONFIG_DIR", getConfigDir(this));
-      respJson_.put("EOSIO_WALLET_DIR", getWalletDir(this));
       respJson_.put("KEOSD_WALLET_DIR", getKeosdWalletDir());
       respJson_.put("nodeExe", getDaemonExe(this));
       respJson_.put("cleosExe", getCleosExe(this));
@@ -843,31 +829,51 @@ Cannot determine the contract workspace.
       respJson_.put("EOSIO_BOOST_INCLUDE_DIR", getEOSIO_BOOST_INCLUDE_DIR(this));
       respJson_.put("EOSIO_WASM_LLVM_LINK", getEOSIO_WASM_LLVM_LINK(this));
       respJson_.put("EOSIO_WASM_LLC", getEOSIO_WASM_LLC(this));
+      respJson_.put("EOSIO_S2WASM", getEOSIO_S2WASM(this));
+      respJson_.put("EOSIO_WAST2WASM", getEOSIO_WAST2WASM(this));     
       respJson_.put("sharedMemory", getMemorySizeMb());
       respJson_.put(
         "contractWorkspace", configValue(this, EOSIO_CONTRACT_WORKSPACE));
       respJson_.put(
         "workspaceEosio", getSourceDir(this) + "/" EOSIO_CONTRACT_DIR );
+      
       if(!reqJson_.get("contract-dir", "").empty())
       {
-        respJson_.put("contract-dir", getContractDir(
-          this, reqJson_.get<string>("contract-dir"))); 
+        string contractDir = getContractDir(
+          this, reqJson_.get<string>("contract-dir"));
+        respJson_.put("contract-dir", contractDir); 
 
         string wastFile = getContractFile(
           this, reqJson_.get<string>("contract-dir"), ".wast");
         if(!this->isError_)
         {
-          respJson_.put("contract-wast", wastFile);
+          respJson_.put(
+            "contract-wast", 
+            bfs::relative(wastFile, contractDir).string());
         } else
         {
           this->isError_ = false;
         }
-        
-        string abiFile = getContractFile(
-          this, reqJson_.get<string>("contract-dir"), ".abi");
+
+        string wasmFile = getContractFile(
+          this, reqJson_.get<string>("contract-dir"), ".wasm");
         if(!this->isError_)
         {
-          respJson_.put("contract-abi", abiFile);
+          respJson_.put(
+            "contract-wasm", 
+            bfs::relative(wasmFile, contractDir).string());
+        } else
+        {
+          this->isError_ = false;
+        }        
+        
+        string abiFile = getContractFile(
+          this, reqJson_.get<string>("contract-dir"), ".abi");        
+        if(!this->isError_)
+        {
+          respJson_.put(
+            "contract-abi", 
+            bfs::relative(abiFile, contractDir).string());
         } else
         {
           this->isError_ = false;

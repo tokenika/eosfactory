@@ -1,4 +1,4 @@
-"""
+'''
 # Contract object
 
 This file can be executed as a python script: 'python3 contract.md'.
@@ -9,7 +9,7 @@ This file can be executed as a python script: 'python3 contract.md'.
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ```md
-"""
+'''
 import unittest
 import setup
 import eosf
@@ -20,22 +20,21 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
-eosf.set_throw_error(True)
+logger.Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+logger.set_throw_error(True)
 
-eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE])
-"""
+eosf.reset([logger.Verbosity.INFO])
+'''
 ```
 
 ### Exactly one 'Wallet' object has to exist in the namespace
 
 ```md
-"""
+'''
 wallet = Wallet()   
 account_master_create("account_master")
-eosf.set_throw_error(False)
-"""
+logger.set_throw_error(False)
+'''
 ```
 
 ## Case
@@ -53,12 +52,12 @@ Make three other account objects, and execute actions of the contract on them.
 ### Accounts
 
 ```md
-"""
+'''
 account_create("account_eosio_token", account_master)
 account_create("account_alice", account_master)
 account_create("account_bob", account_master)
 account_create("account_carol", account_master)
-"""
+'''
 ```
 
 ### Create a Contract object
@@ -67,9 +66,9 @@ Create an instance of the 'Contract' class, appending it to the account
 'account_eosio_token':
 
 ```md
-"""
+'''
 contract_eosio_token = Contract(account_eosio_token, "token")
-"""
+'''
 ```
 
 The second argument of the creator of the 'Contract' class identifies the 
@@ -96,10 +95,10 @@ Any 'Contract' object can:
 ### Deploy and build the contract
 
 ```md
-"""
+'''
 contract_eosio_token.build()
 contract_eosio_token.deploy()
-"""
+'''
 ```
 
 ### Try the contract
@@ -107,7 +106,7 @@ contract_eosio_token.deploy()
 Execute actions of the contract:
 
 ```md
-"""
+'''
 contract_eosio_token.push_action(
     "create", 
     '{"issuer":"' 
@@ -155,16 +154,16 @@ contract_eosio_token.push_action(
         + '", "quantity":"2.0000 EOS", '
         + '"memo":"transfer 2.0000 EOS from bob to alice"}',
     account_bob)                
-"""
+'''
 ```
 Inspect the database of the blockchain:
 
 ```md
-"""
+'''
 table_alice = account_eosio_token.table("accounts", account_alice)
 table_bob = account_eosio_token.table("accounts", account_bob)
 table_carol = account_eosio_token.table("accounts", account_carol)
-"""
+'''
 ```
 
 ```md
@@ -186,4 +185,4 @@ We hope that you get something similar to this one shown in the image below.
 ```
 <img src="contract.png" 
     onerror="this.src='../../../source/cases/contract.png'" width="720px"/>
-"""
+'''

@@ -48,8 +48,6 @@ namespace teos {
 
     string getConfigDir(TeosControl* teosControl);
 
-    string getWalletDir(TeosControl* teosControl);
-
     string getDaemonExe(TeosControl* teosControl);
 
     string getCleosExe(TeosControl* teosControl);
@@ -69,6 +67,10 @@ namespace teos {
     string getEOSIO_WASM_LLVM_LINK(TeosControl* teosControl);
 
     string getEOSIO_WASM_LLC(TeosControl* teosControl);
+
+    string getEOSIO_S2WASM(TeosControl* teosControl);
+
+    string getEOSIO_WAST2WASM(TeosControl* teosControl);
 
     string getMemorySizeMb();
 

@@ -108,8 +108,8 @@ from eosf_wallet import Wallet
 from eosf_account import account_master_create
 from user_data import *
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT]
-_ = eosf.Logger()
+logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
+_ = logger.Logger()
 
 &quot;&quot;&quot;
 </pre></div>
@@ -126,13 +126,13 @@ eosf.use_keosd(True)
 <div class="section" id="throw-an-exception-if-the-testnode-is-off">
 <span id="throw-an-exception-if-the-testnode-is-off"></span><h3>Throw an exception if the testnode is off:<a class="headerlink" href="#throw-an-exception-if-the-testnode-is-off" title="Permalink to this headline">¶</a></h3>
 <p>Now make sure that the chosen testnode is operative. The
-<code class="docutils literal notranslate"><span class="pre">eosf.set_throw_error(...)</span></code> statement below switches between error management
+<code class="docutils literal notranslate"><span class="pre">logger.set_throw_error(...)</span></code> statement below switches between error management
 modes: an error may either throw a fatal exception or it may print a message.</p>
 <p>We dedicate the former way to the setup phase of a test.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.set_throw_error(True
+logger.set_throw_error(True
 eosf.info()
-eosf.set_throw_error(False)
+logger.set_throw_error(False)
 &quot;&quot;&quot;
 </pre></div>
 </div>
@@ -153,8 +153,8 @@ for file in files:
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
 wallet = Wallet(wallet_name)
 
-eosf.set_is_testing_errors(False)
-eosf.set_throw_error(True)
+logger.set_is_testing_errors(False)
+logger.set_throw_error(True)
 
 &quot;&quot;&quot;
 </pre></div>
@@ -186,8 +186,8 @@ eosf_account.account_master_test.ERROR()
 <div class="section" id="end-the-set-up-part">
 <span id="end-the-set-up-part"></span><h3>End the set-up part<a class="headerlink" href="#end-the-set-up-part" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.set_throw_error(False)         # on error, do not throw exception
-eosf.set_is_testing_errors()        # make error messages less alarming
+logger.set_throw_error(False)         # on error, do not throw exception
+logger.set_is_testing_errors()        # make error messages less alarming
 &quot;&quot;&quot;
 </pre></div>
 </div>

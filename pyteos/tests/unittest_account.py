@@ -8,13 +8,12 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.Logger.verbosity = [eosf.Verbosity.EOSF, eosf.Verbosity.OUT]
-eosf.set_throw_error(False)
-#setup.set_command_line_mode()
+logger.Logger.verbosity = [logger.Verbosity.TRACE, logger.Verbosity.OUT]
+logger.set_throw_error(False)
 
-remote_testnet = "88.99.97.30:38888"
+remote_testnet = "http://88.99.97.30:38888"
 not_imputed = False
-_ = eosf.Logger()
+_ = logger.Logger()
 
 class Test(unittest.TestCase):
 
@@ -31,8 +30,8 @@ NEXT TEST ====================================================================
 
     def setUp(self):
         eosf.restart()
-        eosf.set_is_testing_errors(False)
-        eosf.set_throw_error(True)
+        logger.set_is_testing_errors(False)
+        logger.set_throw_error(True)
 
     # def test_too_many_wallets(self):
     #     _.SCENARIO("""
@@ -42,17 +41,16 @@ NEXT TEST ====================================================================
         
     #     Make a second wallet, expecting an error message.
     #     """)        
-    #     eosf.use_keosd(False)
-    #     eosf.reset([eosf.Verbosity.TRACE])
+    #     eosf.reset([logger.Verbosity.INFO])
     #     wallet = Wallet()
-    #     eosf.set_throw_error(False)
-    #     eosf.set_is_testing_errors()
+    #     logger.set_throw_error(False)
+    #     logger.set_is_testing_errors()
     #     ######################################################################
     #     _.COMMENT("""
     #     Added second wallet, named "second". Calling the ``account_master_create(...)`` 
     #     function should result in an error message:
     #     """)
-    #     eosf.set_throw_error(False)  
+    #     logger.set_throw_error(False)  
     #     wallet1 = Wallet("second")
     #     self.assertTrue("It can be only one" in wallet1.error_buffer)
 
@@ -64,14 +62,13 @@ NEXT TEST ====================================================================
 
     #     Attempt account creation without any wallet in the scope.
     #     """)
-    #     eosf.set_is_testing_errors()
-    #     eosf.use_keosd(False)
-    #     eosf.reset([eosf.Verbosity.TRACE])
-    #     eosf.set_throw_error(False)
-    #     eosf.set_is_testing_errors()
+    #     logger.set_is_testing_errors()
+    #     eosf.reset([logger.Verbosity.INFO])
+    #     logger.set_throw_error(False)
+    #     logger.set_is_testing_errors()
     #     ######################################################################
 
-    #     logger = account_master_create("account_master")
+    #     logg =account_master_create("account_master")
     #     self.assertTrue("Cannot find any `Wallet` object." in logger.error_buffer)
 
     def test_account_name_conflict(self):
@@ -81,12 +78,11 @@ NEXT TEST ====================================================================
         Check the condition that the given account object name is already 
         ascribed to a physical account.
         """)
-        eosf.use_keosd(False)
-        eosf.reset([eosf.Verbosity.TRACE]) 
+        eosf.reset([logger.Verbosity.INFO]) 
         wallet = Wallet()
         account_master_create("account_master")
-        eosf.set_throw_error(False)
-        eosf.set_is_testing_errors()
+        logger.set_throw_error(False)
+        logger.set_is_testing_errors()
         ######################################################################
 
         _.COMMENT("""

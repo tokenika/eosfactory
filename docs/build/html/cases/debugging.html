@@ -42,7 +42,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <p>“”“</p>
+  <p>‘’‘</p>
 <div class="section" id="debugging-smart-contracts">
 <span id="debugging-smart-contracts"></span><h1>Debugging smart contracts<a class="headerlink" href="#debugging-smart-contracts" title="Permalink to this headline">¶</a></h1>
 <p>This file can be executed as a python script:
@@ -63,7 +63,7 @@ directory. Contract directories there can be accessed simply by their names.</p>
 <p>The set-up for the debugging test involves the wallet, ‘account master’ account,
 an account for holding the tested contract, and to working accounts (here,
 ‘account_alice’ and ‘account_carol’).</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 import sys
 import unittest
 import setup
@@ -75,20 +75,19 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-eosf.use_keosd(False)
+logger.Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 
 eosf.restart()
-eosf.set_is_testing_errors(False)
-eosf.set_throw_error(True)
-eosf.reset([eosf.Verbosity.TRACE]) 
+logger.set_is_testing_errors(False)
+logger.set_throw_error(True)
+eosf.reset([logger.Verbosity.INFO]) 
 
 wallet = Wallet()
 account_master_create(&quot;account_master&quot;)
 account_create(&quot;account_hello&quot;, account_master)
 account_create(&quot;account_alice&quot;, account_master)
 account_create(&quot;account_carol&quot;, account_master)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <div class="section" id="include-logger-hpp">
@@ -126,7 +125,7 @@ EOSIO_ABI( hello, (hi) )
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
 <p>Build and deploy the contract. Push contract actions:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 contract_hello = Contract(account_hello, &quot;hello&quot;)
 contract_hello.build()
 contract_hello.deploy()
@@ -136,7 +135,7 @@ account_hello.push_action(
 
 account_hello.push_action(
     &quot;hi&quot;, {&quot;user&quot;:account_carol}, account_carol)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <div class="section" id="test-run">
@@ -150,7 +149,7 @@ command:</p>
 <p>We hope that you have something similar to what is shown in the image below.</p>
 <p><img src="debugging.png" 
 onerror="this.src='../../../source/cases/debugging.png'" width="720px"/></p>
-<p>“”“</p>
+<p>‘’‘</p>
 </div>
 </div>
 </div>

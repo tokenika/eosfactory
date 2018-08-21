@@ -42,14 +42,14 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <p>“”“</p>
+  <p>‘’‘</p>
 <div class="section" id="contract-object">
 <span id="contract-object"></span><h1>Contract object<a class="headerlink" href="#contract-object" title="Permalink to this headline">¶</a></h1>
 <p>This file can be executed as a python script: ‘python3 contract.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 import unittest
 import setup
 import eosf
@@ -60,21 +60,20 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
-eosf.set_throw_error(True)
+logger.Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+logger.set_throw_error(True)
 
-eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE])
-&quot;&quot;&quot;
+eosf.reset([logger.Verbosity.INFO])
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <div class="section" id="exactly-one-wallet-object-has-to-exist-in-the-namespace">
 <span id="exactly-one-wallet-object-has-to-exist-in-the-namespace"></span><h3>Exactly one ‘Wallet’ object has to exist in the namespace<a class="headerlink" href="#exactly-one-wallet-object-has-to-exist-in-the-namespace" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 wallet = Wallet()   
 account_master_create(&quot;account_master&quot;)
-eosf.set_throw_error(False)
-&quot;&quot;&quot;
+logger.set_throw_error(False)
+&#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
@@ -90,12 +89,12 @@ We use the later copy.</p>
 <p>Make three other account objects, and execute actions of the contract on them.</p>
 <div class="section" id="accounts">
 <span id="accounts"></span><h3>Accounts<a class="headerlink" href="#accounts" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_create(&quot;account_eosio_token&quot;, account_master)
 account_create(&quot;account_alice&quot;, account_master)
 account_create(&quot;account_bob&quot;, account_master)
 account_create(&quot;account_carol&quot;, account_master)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
@@ -103,9 +102,9 @@ account_create(&quot;account_carol&quot;, account_master)
 <span id="create-a-contract-object"></span><h3>Create a Contract object<a class="headerlink" href="#create-a-contract-object" title="Permalink to this headline">¶</a></h3>
 <p>Create an instance of the ‘Contract’ class, appending it to the account
 ‘account_eosio_token’:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 contract_eosio_token = Contract(account_eosio_token, &quot;token&quot;)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>The second argument of the creator of the ‘Contract’ class identifies the
@@ -133,17 +132,17 @@ sometimes have to be adjusted.</p>
 </div>
 <div class="section" id="deploy-and-build-the-contract">
 <span id="deploy-and-build-the-contract"></span><h3>Deploy and build the contract<a class="headerlink" href="#deploy-and-build-the-contract" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 contract_eosio_token.build()
 contract_eosio_token.deploy()
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
 <div class="section" id="try-the-contract">
 <span id="try-the-contract"></span><h3>Try the contract<a class="headerlink" href="#try-the-contract" title="Permalink to this headline">¶</a></h3>
 <p>Execute actions of the contract:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 contract_eosio_token.push_action(
     &quot;create&quot;, 
     &#39;{&quot;issuer&quot;:&quot;&#39; 
@@ -191,15 +190,15 @@ contract_eosio_token.push_action(
         + &#39;&quot;, &quot;quantity&quot;:&quot;2.0000 EOS&quot;, &#39;
         + &#39;&quot;memo&quot;:&quot;transfer 2.0000 EOS from bob to alice&quot;}&#39;,
     account_bob)                
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>Inspect the database of the blockchain:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 table_alice = account_eosio_token.table(&quot;accounts&quot;, account_alice)
 table_bob = account_eosio_token.table(&quot;accounts&quot;, account_bob)
 table_carol = account_eosio_token.table(&quot;accounts&quot;, account_carol)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <div class="highlight-md notranslate"><div class="highlight"><pre>You can see the result of a logging facility, printed in yellow, starting with 
@@ -220,7 +219,7 @@ command:</p>
 </div>
 <p><img src="contract.png" 
 onerror="this.src='../../../source/cases/contract.png'" width="720px"/>
-“”“</p>
+‘’‘</p>
 </div>
 </div>
 </div>

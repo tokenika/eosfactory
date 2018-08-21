@@ -42,14 +42,14 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <p>“”“</p>
+  <p>‘’‘</p>
 <div class="section" id="symbolic-names">
 <span id="symbolic-names"></span><h1>Symbolic names<a class="headerlink" href="#symbolic-names" title="Permalink to this headline">¶</a></h1>
 <p>This file can be executed as a python script: ‘python3 wallet.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 import setup
 import eosf
 import time
@@ -60,9 +60,9 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
-eosf.set_throw_error(False)
-&quot;&quot;&quot;
+logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+logger.set_throw_error(False)
+&#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
@@ -97,16 +97,15 @@ aliases.</p>
 <p>The current case demonstrates this facility.</p>
 <div class="section" id="translation-is-off">
 <span id="translation-is-off"></span><h4>Translation is off<a class="headerlink" href="#translation-is-off" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 eosf_account.restart()
 eosf.set_is_translating(False)
 
-eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE]) 
+eosf.reset([logger.Verbosity.INFO]) 
 wallet = Wallet()
 account_master_create(&quot;account_master&quot;)
-eosf.set_throw_error(False)
-eosf.set_is_testing_errors()
+logger.set_throw_error(False)
+logger.set_is_testing_errors()
 
 account_create(&quot;account_alice&quot;, account_master)
 account_create(&quot;account_bob&quot;, account_master)
@@ -130,7 +129,7 @@ account_eosio_token.push_action(
         + &#39;&quot;, &quot;quantity&quot;:&quot;100.0000 EOS&quot;, &#39;
         + &#39;&quot;memo&quot;:&quot;issue 100.0000 EOS from eosio to alice&quot;}&#39;,
     permission=account_master)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p><img src="symbolic_names_images/symbolic_names_false.png" 
@@ -139,16 +138,15 @@ alt="symbolic names translation off" width="720px"/></p>
 </div>
 <div class="section" id="translation-is-on">
 <span id="translation-is-on"></span><h4>Translation is on<a class="headerlink" href="#translation-is-on" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 eosf_account.restart()
 eosf.set_is_translating(True)
 
-eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE]) 
+eosf.reset([logger.Verbosity.INFO]) 
 wallet = Wallet()
 account_master_create(&quot;account_master&quot;)
-eosf.set_throw_error(False)
-eosf.set_is_testing_errors()
+logger.set_throw_error(False)
+logger.set_is_testing_errors()
 
 account_create(&quot;account_alice&quot;, account_master)
 account_create(&quot;account_bob&quot;, account_master)
@@ -172,7 +170,7 @@ account_eosio_token.push_action(
         + &#39;&quot;, &quot;quantity&quot;:&quot;100.0000 EOS&quot;, &#39;
         + &#39;&quot;memo&quot;:&quot;issue 100.0000 EOS from eosio to alice&quot;}&#39;,
     permission=account_master)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p><img src="symbolic_names_images/symbolic_names_true.png" 

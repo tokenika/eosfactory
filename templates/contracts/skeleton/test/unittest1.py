@@ -5,14 +5,13 @@ import node
 import unittest
 from termcolor import cprint
 
-setup.set_verbose(True)
-eosf.use_keosd(False)
-setup.set_json(False)
+setup.is_verbose = True
+setup.is_json = False
 
 class Test(unittest.TestCase):
 
     def run(self, result=None):
-        """ Stop after first error """
+        ''' Stop after first error '''
         if not result.failures:
             super().run(result)
 
@@ -62,12 +61,12 @@ class Test(unittest.TestCase):
     def test_01(self):
 
         cprint(
-            """contract.push_action("hi", '{"user":"' + str(account_alice) + '"}', account_alice)""", 'magenta')
+            '''contract.push_action("hi", '{"user":"' + str(account_alice) + '"}', account_alice)''', 'magenta')
         self.assertFalse(contract.push_action(
             "hi", '{"user":"' + str(account_alice) + '"}', account_alice).error)
 
         cprint(
-            """contract.push_action("hi", '{"user":"' + str(account_carol) + '"}', account_carol)""", 'magenta')
+            '''contract.push_action("hi", '{"user":"' + str(account_carol) + '"}', account_carol)''', 'magenta')
         self.assertFalse(contract.push_action(
             "hi", '{"user":"' + str(account_carol) + '"}', account_carol).error)
 

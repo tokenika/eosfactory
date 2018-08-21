@@ -1,29 +1,29 @@
 import unittest
 import setup
+import logger
 import eosf
 import time
 
-from eosf import Verbosity
+from logger import Verbosity
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract, contract_workspace_from_template
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
-eosf.set_throw_error(False)
-#setup.set_command_line_mode()
+logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+logger.set_throw_error(False)
 
 
-_ = eosf.Logger()
+_ = logger.Logger()
 CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
 
 class Test(unittest.TestCase):
 
     def run(self, result=None):
         super().run(result)
-        print("""
+        print('''
 
 NEXT TEST ====================================================================
-""")
+''')
 
     @classmethod
     def setUpClass(cls):
@@ -31,19 +31,18 @@ NEXT TEST ====================================================================
 
     def setUp(self):
         eosf.restart()
-        eosf.set_is_testing_errors(False)
-        eosf.set_throw_error(True)
+        logger.set_is_testing_errors(False)
+        logger.set_throw_error(True)
 
     def test_contract_template(self):
-        eosf.use_keosd(False)
-        eosf.reset([eosf.Verbosity.TRACE]) 
+        eosf.reset([logger.Verbosity.INFO]) 
         wallet = Wallet()
         account_master_create("account_master")
-        eosf.set_throw_error(False)
-        eosf.set_is_testing_errors()
+        logger.set_throw_error(False)
+        logger.set_is_testing_errors()
 
         ######################################################################  
-        _.SCENARIO("""
+        _.SCENARIO('''
 Suppose, you are going to develop a smart contract. With the ``EOSFactory``, 
 you do it within a specialized work-space, with the ``Visual Studio Code``.
 
@@ -54,7 +53,7 @@ Create a work-space file system in the ``EOSIO_CONTRACT_WORKSPACE`` folder.
 In practice, you will work on the sources of the contract but now, take it as
 it is: the ``hello`` contract.
 
-        """)
+        ''')
         contract_dir = contract_workspace_from_template(
                 CONTRACT_NAME, remove_existing=True, visual_studio_code=False)
 

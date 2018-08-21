@@ -4,9 +4,8 @@ import eosf
 import node
 from termcolor import cprint
 
-setup.set_verbose(False)
-eosf.use_keosd(False)
-setup.set_json(False)
+setup.is_verbose = False
+setup.is_json = False
 
 def test():
     testnet = node.reset(is_verbose=False)
@@ -41,7 +40,7 @@ def test():
     account_deploy = eosf.account(account_master)
     wallet.import_key(account_deploy)
 
-    cprint("""contract = eosf.Contract(account_deploy, sys.path[0] + "/../")""", 'magenta')
+    cprint('''contract = eosf.Contract(account_deploy, sys.path[0] + "/../")''', 'magenta')
     contract = eosf.Contract(account_deploy, sys.path[0] + "/../")
 
     cprint("contract.deploy()", 'magenta')
@@ -62,12 +61,12 @@ def test():
     wallet.import_key(account_carol) 
 
     cprint(
-        """contract.push_action("hi", '{"user":"' + str(account_alice) + '"}', account_alice)""", 'magenta')
+        '''contract.push_action("hi", '{"user":"' + str(account_alice) + '"}', account_alice)''', 'magenta')
     assert(not contract.push_action(
         "hi", '{"user":"' + str(account_alice) + '"}', account_alice, output=True).error)
 
     cprint(
-        """contract.push_action("hi", '{"user":"' + str(account_carol) + '"}', account_carol)""", 'magenta')
+        '''contract.push_action("hi", '{"user":"' + str(account_carol) + '"}', account_carol)''', 'magenta')
     assert(not contract.push_action(
         "hi", '{"user":"' + str(account_carol) + '"}', account_carol, output=True).error)
 

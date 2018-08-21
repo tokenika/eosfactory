@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""
+'''
 Python front-end for C++ `teos` controll classes, which implement functionality 
 needed for EOSIO smart-contract development process, yet not available form the
 EOSIO `cleos`.
@@ -13,7 +13,7 @@ EOSIO `cleos`.
 
 .. moduleauthor:: Tokenika
 
-"""
+'''
 
 import os
 import subprocess
@@ -29,11 +29,11 @@ import shutil
 setup_setup = setup.Setup()
 
 class _Teos:
-    """ A prototype for the control classes.
+    ''' A prototype for the control classes.
 
     Each control class represents a call to a Tokenika `teos` instance that
     is launched to responce just the call. 
-    """
+    '''
     def __init__(
                 self, jarg, first, second, 
                 is_verbose_arg=True):
@@ -46,17 +46,17 @@ class _Teos:
         cl = [setup_setup.teos_exe, first, second,
             "--jarg", str(self.jarg).replace("'", '"'), "--both"]
 
-        if setup.is_verbose() and is_verbose_arg:
+        if setup.is_verbose and is_verbose_arg:
             cl.append("-V")
 
-        if setup.is_print_request():
+        if setup.is_print_request:
             print("REQUEST:")
             print("---------------------")
             print(json_module.dumps(jarg))
             print("---------------------")
             print("")   
 
-        if setup.is_print_command_line():
+        if setup.is_print_command_line:
             print("command line sent to teos:")
             print(" ".join(cl))
             print("")
@@ -73,9 +73,9 @@ class _Teos:
         # With "--both", json output is passed with stderr: 
         json_resp = process.stderr.decode("utf-8")
 
-        self.is_verbose = setup.is_verbose() and is_verbose_arg
+        self.is_verbose = setup.is_verbose and is_verbose_arg
 
-        if setup.is_print_response():
+        if setup.is_print_response:
             print("RESPONSE:")
             print("---------------------")
             print(json_module.dumps(json_module.loads(json_resp), indent=4))
@@ -87,7 +87,7 @@ class _Teos:
      
         if re.match(r'^ERROR', self.out_msg):
             self.error = True
-            if is_verbose_arg >= 0 and setup.is_verbose() >= 0:
+            if is_verbose_arg >= 0 and setup.is_verbose >= 0:
                 print(self.out_msg)
         try:
             self.json = json_module.loads(json_resp)
@@ -101,9 +101,9 @@ class _Teos:
         return repr(self.json)
 
 class GetConfig(_Teos):
-    """
+    '''
     Get the configurationt of the teos executable.
-    """
+    '''
     def __init__(self, contract_dir="", is_verbose=1):
         jarg = json_module.loads("{}")
         jarg["contract-dir"] = contract_dir
@@ -117,16 +117,16 @@ def get_config(json=False):
         print(result.out_msg)
 
 def get_node_wallet_dir():
-    """
+    '''
     Get the directory of the `nodeos` local wallet.
-    """
+    '''
     return GetConfig(is_verbose=0).json["EOSIO_WALLET_DIR"]
 
 
 def get_keosd_wallet_dir():
-    """
+    '''
     Get the directory of the `nodeos` local wallet.
-    """
+    '''
     return GetConfig(is_verbose=0).json["KEOSD_WALLET_DIR"]
 
 
@@ -208,7 +208,6 @@ class NodeStart(_Teos):
         jarg["delete-all-blocks"] = clear
         jarg["DO_NOT_LAUNCH"] = 1
         _Teos.__init__(self, jarg, "daemon", "start", is_verbose)
-
         self.command_line = ""
 
         if not self.error:
@@ -261,9 +260,9 @@ class NodeProbe:
                 break      
 
             if count <= 0:
-                self.err_msg = """
+                self.err_msg = '''
                 The local node do not response. 
-                """
+                '''
                 if is_verbose >= 0:
                     print("ERROR:")
                     print(self.err_msg)

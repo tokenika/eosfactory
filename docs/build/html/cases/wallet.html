@@ -42,14 +42,14 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <p>“”“</p>
+  <p>‘’‘</p>
 <div class="section" id="wallet-object">
 <span id="wallet-object"></span><h1>Wallet object<a class="headerlink" href="#wallet-object" title="Permalink to this headline">¶</a></h1>
 <p>This file can be executed as a python script: ‘python3 wallet.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 import os
 import setup
 import eosf
@@ -58,8 +58,8 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.set_throw_error(False)
-&quot;&quot;&quot;
+logger.set_throw_error(False)
+&#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
@@ -67,13 +67,6 @@ eosf.set_throw_error(False)
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
 <p>The ‘Wallet` class wraps EOSIO wallets. The ‘Wallet’ object keep account
 objects, presented at <a href="account.html">cases/account</a>.</p>
-<p>The EOSIO physical wallet, if used with the Factory, can be managed either
-with the ‘KEOSD Wallet Manager’ or with the ‘NODEOS’ wallet plugin. The status
-is controlled with the ‘use_keosd’ statement (default is ‘False’):</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>eosf.use_keosd(True)
-</pre></div>
-</div>
-<p>The ‘NODEOS’ alternative apply if the local node is running.</p>
 <p>It can be exactly one ‘Wallet’ object in the namespace. After the ‘Wallet’
 singleton is created, it remains transparent to the script: usually, there
 is no need to refer to it.</p>
@@ -82,9 +75,8 @@ sessions, and used automatically.</p>
 <p>Let us consider two cases: ‘NODEOS` and ‘KEOSD’ subsequently.</p>
 <div class="section" id="nodeos-managed-wallet">
 <span id="nodeos-managed-wallet"></span><h3>NODEOS managed wallet<a class="headerlink" href="#nodeos-managed-wallet" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE])          # reset the local testnet
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
+eosf.reset([logger.Verbosity.INFO])          # reset the local testnet
 wallet = Wallet()
 wallet.keys()
 account_master_create(&quot;account_master&quot;)     # account object is put to wallet
@@ -92,7 +84,7 @@ wallet.keys()
 wallet.lock_all()
 
 eosf.stop()                                 # stop the local testnet
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p><img src="wallet_images/reset_nodeos_wallet.png" 
@@ -108,13 +100,13 @@ the wallet.</li>
 </ul>
 <p>If we close the session, then open it again, and recreate the wallet, we can
 expect that it opens without calling for password, having the same keys.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 eosf_account.restart()                      # reset the Factory
-eosf.run([eosf.Verbosity.TRACE])    # restart the local testnet
+eosf.run([logger.Verbosity.INFO])    # restart the local testnet
 wallet = Wallet()
 wallet.keys()   
 eosf.stop()                         # stop the local testnet
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p><img src="wallet_images/run_nodeos_wallet.png" 
@@ -125,8 +117,7 @@ alt="nodeos wallet reset" width="720px"/></p>
 <span id="keosd-managed-wallet"></span><h3>KEOSD managed wallet<a class="headerlink" href="#keosd-managed-wallet" title="Permalink to this headline">¶</a></h3>
 <p>For the sake of this tutorial, we dare to treat a system wallet so rudely:
 we delete it.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.use_keosd(True)    # to determine the directory of the wallet
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 eosf.kill_keosd()       # otherwise, the manager protects the wallet file
 
 wallet_name = &quot;jungle_wallet&quot;
@@ -136,16 +127,15 @@ try:
     print(&quot;The deleted wallet file:\n{}\n&quot;.format(wallet_file))
 except Exception as e:
     print(&quot;Cannot delete the wallet file:\n{}\n&quot;.format(str(e)))
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>Create a ‘KEOSD’ wallet named ‘wallet_name’:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 eosf_account.restart()                      # reset the Factory
-eosf.use_keosd(True)
 
 wallet = Wallet(wallet_name)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p><img src="wallet_images/keosd_wallet_create.png" 
@@ -163,7 +153,7 @@ internally. Some of them are obvious:</p>
 <li>Keys in all open wallets.</li>
 <li>etc.</li>
 </ul>
-<p>“”“</p>
+<p>‘’‘</p>
 </div>
 </div>
 </div>

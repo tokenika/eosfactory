@@ -1,4 +1,4 @@
-"""
+'''
 # Tic-tac-toe contract on a remote testnet
 
 This file can be executed as a python script: 'python3 account_master.md'.
@@ -21,7 +21,7 @@ With remote node tests, we assume the following restrictions.
 ### Imports and set-up definitions
 
 ```md
-"""
+'''
 import os
 import re
 import unittest
@@ -35,27 +35,26 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-setup.remote_testnet_setup("88.99.97.30:38888")
+setup.set_nodeos_address("88.99.97.30:38888")
 WALLET_NAME = setup.wallet_default_name
 
 ACCOUNT_MASTER = "account_master"
 ACCOUNT_TTT = "account_tic_tac_toe"
-_ = eosf.Logger()
-"""
+_ = logger.Logger()
+'''
 ```
 #### Unittest test class definition begins here
 
 ```md
-"""
+'''
 class Test(unittest.TestCase):
 
     def setUp(self):
-        eosf.set_throw_error(True)
-        eosf.stop([eosf.Verbosity.TRACE])
-        eosf.use_keosd(True)
+        logger.set_throw_error(True)
+        eosf.stop([logger.Verbosity.INFO])
         eosf.info()
         exit()
-        """
+        '''
 ```
 #### Wallet passwords are not stored in an open file automatically
 
@@ -69,8 +68,6 @@ If the test wallet has to be deleted, use the following code:
 import os
 import eosf
 from user_data import *
-
-eosf.use_keosd(True)
 eosf.kill_keosd()
 
 try:
@@ -81,20 +78,20 @@ except Exception as e:
     print("Cannot delete the wallet file:\n{}\n".format(str(e))) 
 ```
 ```md
-        """
+        '''
         eosf.kill_keosd()
         wallet_json = eosf_wallet.wallet_json_read()
         if not WALLET_NAME in wallet_json:
-            wallet = Wallet(WALLET_NAME, verbosity=[eosf.Verbosity.TRACE])
+            wallet = Wallet(WALLET_NAME, verbosity=[logger.Verbosity.INFO])
             wallet_json[WALLET_NAME] = wallet.password
             eosf_wallet.wallet_json_write(wallet_json)
         else:
             wallet = Wallet(
                 WALLET_NAME, wallet_json[WALLET_NAME],
-                verbosity=[eosf.Verbosity.TRACE])
+                verbosity=[logger.Verbosity.INFO])
 
         exit()
-        """
+        '''
 ```
 
 #### Accounts are reused between test sessions
@@ -112,16 +109,16 @@ in the 'user_data.py' script.
 The factory function puts the created account object into the wallet.
 
 ```md
-        """
+        '''
         ACCOUNT_MASTER = ACCOUNT_TTT
         if not ACCOUNT_MASTER in globals():
             account_master_create(
                 ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
-                verbosity=[eosf.Verbosity.TRACE, eosf.Verbosity.OUT])
+                verbosity=[logger.Verbosity.INFO, logger.Verbosity.OUT])
         else:
-            _.TRACE("""
+            _.INFO('''
             ######## {} account object restored from the blockchain.
-            """.format(ACCOUNT_MASTER))
+            '''.format(ACCOUNT_MASTER))
         
         
         global account_master
@@ -136,11 +133,11 @@ The factory function puts the created account object into the wallet.
         if not account_tic_tac_toe.is_code():            
             contract_tic_tac_toe.deploy()
         else:
-            _.TRACE("""
+            _.INFO('''
             * Contract cannot be deployed as the account already has a code.
                 The current test is protected against overwriting the code.
-            """)
-        """
+            ''')
+        '''
 ```
 #### The 'insufficient ram` error
 
@@ -157,25 +154,25 @@ Error Details:
 account dgxo1uyhoytn has insufficient ram; needs 138233 bytes has 64789 bytes
 ```
 ```md
-        """
+        '''
         if not "account_alice" in globals():
             account_create("account_alice", account_master)
         else:
-            _.TRACE("""
+            _.INFO('''
             ######## {} account object restored from the blockchain.
-            """.format("account_alice"))
+            '''.format("account_alice"))
         if not "account_carol" in globals():    
             account_create("account_carol", account_master)
         else:
-            _.TRACE("""
+            _.INFO('''
             ######## {} account object restored from the blockchain.
-            """.format("account_carol"))
+            '''.format("account_carol"))
 
-        eosf.set_throw_error(False)
-        eosf.set_is_testing_errors()            
+        logger.set_throw_error(False)
+        logger.set_is_testing_errors()            
         exit()
     def test_tic_tac_toe(self):
-        """
+        '''
 ```
 ## Case
 
@@ -186,7 +183,7 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
 -- run games.
 
 ```md
-        """
+        '''
         account_tic_tac_toe.push_action(
             "create", 
             {
@@ -272,14 +269,14 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
 
     def tearDown(self):
         eosf.stop()
-"""
+'''
 ```
 #### Run the unittest
 
 ```md
-"""
+'''
 unittest.main()
-"""
+'''
 ```
-"""
+'''
 

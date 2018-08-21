@@ -67,7 +67,6 @@
 <p>The prompt should change to <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span></code> signifying that it’s ready for Python commands.</p>
 <p>Then run the following set of commands.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">setup</span><span class="o">,</span> <span class="nn">eosf</span>
-<span class="n">eosf</span><span class="o">.</span><span class="n">use_keosd</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">setup</span><span class="o">.</span><span class="n">set_nodeos_address</span><span class="p">(</span><span class="s2">&quot;88.99.97.30:38888&quot;</span><span class="p">)</span>
 <span class="n">eosf</span><span class="o">.</span><span class="n">kill_keosd</span><span class="p">()</span>
 <span class="n">eosf</span><span class="o">.</span><span class="n">clear_account_mapp</span><span class="p">([])</span>

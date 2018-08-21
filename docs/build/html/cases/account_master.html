@@ -42,125 +42,114 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <p>“”“</p>
+  <p>‘’‘</p>
 <div class="section" id="account-master-object">
 <span id="account-master-object"></span><h1>Account master object<a class="headerlink" href="#account-master-object" title="Permalink to this headline">¶</a></h1>
-<p>This file can be executed as a python script: ‘python3 account_master_images.md’.</p>
+<p>This file can be executed as a python script: ‘python3 account_master.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 import os
 import setup
+import testnet_data
 import eosf
 import eosf_account
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-remote_testnet = &quot;88.99.97.30:38888&quot;
-_ = eosf.Logger()
-&quot;&quot;&quot;
+_ = logger.Logger([logger.Verbosity.INFO, logger.Verbosity.OUT])
+&#39;&#39;&#39;
 </pre></div>
 </div>
-<p>The following account exists in the blockchain of the testnode. It is used, in
-this article, for testing. It is referred to as the ‘testing account’.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>Account Name: dgxo1uyhoytn
-Owner Public Key: EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959
-Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
-
-Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
-Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA 
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
+testnet = testnet_data.kylin
+&#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
 <div class="section" id="case">
 <span id="case"></span><h2>Case<a class="headerlink" href="#case" title="Permalink to this headline">¶</a></h2>
-<p>The EOSFactory wraps EOSIO accounts with objects. The ‘account_create`
-factory function produces account objects, it is explained in the article
-<a href="account.html">cases/account</a>.</p>
-<p>EOSIO needs that any action changing the blockchain, especially account creation
-is authorized. Usually, an existing account provides the authorization, and
-therefore the ‘account_create` factory take this account as its second argument.</p>
-<p>But at the very beginning there is no account, and the very first one has to be
-produced. The ‘account_master_create’ factory function can do this.</p>
-<p>The ‘account_master_create’ function takes the
-name of the account object to be created, as its first obligatory argument.</p>
+<p>The EOSFactory wraps EOSIO accounts with objects. The ‘account_create` factory function produces account objects, it is explained in the article <a href="account.html">cases/account</a>.</p>
+<p>EOSIO needs that any action changing the blockchain, especially account
+creation, is authorized by an existing account, therefore the ‘account_create`
+factory takes this account as its second argument.</p>
+<p>At the very beginning the very first one has to be produced. The ‘account_master_create’ factory function is to do this.</p>
+<p>The function ‘account_master_create’ takes, as its first obligatory argument, the name of the account object to be created.</p>
 <p>There are three cases where the ‘account_master_create’ factory can do. We will
 show them.</p>
 <div class="section" id="local-testnet-case">
 <span id="local-testnet-case"></span><h3>Local testnet case<a class="headerlink" href="#local-testnet-case" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.reset([eosf.Verbosity.TRACE])
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
+eosf.reset([logger.Verbosity.INFO])
 wallet = Wallet()
 account_master_create(&quot;account_master_images&quot;)
 account_master_images.info()
-eosf.stop([eosf.Verbosity.TRACE])
-&quot;&quot;&quot;
+eosf.stop([logger.Verbosity.INFO])
+&#39;&#39;&#39;
 </pre></div>
 </div>
-<p>The result of the script is the account object ‘account_master_images’ in the global
-namespace.</p>
-<p>The object wraps the ‘eosio` account. It is a special one in the sense that it
+<p>The result of the script is the account object ‘account_master_images’ in the global namespace.</p>
+<p>The object wraps the ‘eosio` account as a special one in the sense that it
 does not have all the functionality of plain orders.</p>
-<p>We hope that you get something similar to this one shown in the image below.</p>
+<p>We expect that you get something similar to this one shown in the image below.</p>
 <p><img src="account_master_images/account_master_eosio.png" 
 onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'" 
 width="720px"/></p>
 </div>
 <div class="section" id="remote-testnet-registration">
 <span id="remote-testnet-registration"></span><h3>Remote testnet registration<a class="headerlink" href="#remote-testnet-registration" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>This case is shown at &lt;a href=&quot;setup.html&quot;&gt;cases/registering_to_testnode&lt;/a&gt;. There the account object is 
-produced by manual interaction with the registration form of a testnet. There 
-the resulting account object is fully functional.
-</pre></div>
-</div>
+<p>This case is shown at <a href="setup.html">cases/registering_to_testnode</a>.
+There the account object is produced by manual interaction with the registration form of a testnet. There the resulting account object is fully functional.</p>
 </div>
 <div class="section" id="adding-a-physical-account">
 <span id="adding-a-physical-account"></span><h3>Adding a physical account<a class="headerlink" href="#adding-a-physical-account" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>If the user posses an account, that is, knows the account name and private keys,
-they can add it to the Factory.
-
-In order to show a clean and reproducible example, we will delete a testing 
-wallet in the KEOSD-managed wallet directory, and recreate it.
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
-eosf.use_keosd(True)    # to determine the directory of the wallet
-eosf.kill_keosd()       # otherwise, the manager protects the wallet file
-
-wallet_name = &quot;jungle_wallet&quot;
-try:
-    wallet_file = eosf.wallet_dir() + wallet_name + &quot;.wallet&quot;
-    os.remove(wallet_file)
-    print(&quot;The deleted wallet file:\n{}\n&quot;.format(wallet_file))
-except Exception as e:
-    print(&quot;Cannot delete the wallet file:\n{}\n&quot;.format(str(e)))
-&quot;&quot;&quot;
-</pre></div>
-</div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<p>If the user posses an account, that is, knows the account name and private keys,
+they can add it to the Factory. In this show, we use an real account represented with the <code class="docutils literal notranslate"><span class="pre">testnet</span></code> object.</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 eosf_account.restart()    # reset the Factory
-eosf.use_keosd(True)
-setup.set_nodeos_address(remote_testnet)
-
-wallet = Wallet(wallet_name)
+setup.set_nodeos_address(testnet.url, &quot;account_master_test&quot;)
+&#39;&#39;&#39;
+</pre></div>
+</div>
+<p>Delete files possibly created previously:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
+eosf.remove_files()
+&#39;&#39;&#39;
+</pre></div>
+</div>
+<p>First, the ‘Wallet` singleton has to be created:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
+wallet = Wallet()
 account_master_create(
-    &quot;account_master_images&quot;,
-    &quot;dgxo1uyhoytn&quot;,
-    &quot;5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY&quot;,
-    &quot;5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA&quot;
+    &quot;account_master&quot;,
+    testnet.account_name,
+    testnet.owner_key,
+    testnet.active_key
     )
 account_master_images.info()
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>We hope that you get something similar to this one shown in the image below.
+<p>Adding one orphan account programmatically is not practical, therefore we have a script that can help. For example:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre>python3 add_account.py https://api.kylin-testnet.eospace.io \
+account_master \
+dgxo1uyhoytn \
+5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
+5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
 </pre></div>
 </div>
+<p><img src="account_master_images/add_account.png" 
+onerror="this.src='../../../source/cases/account_master_images/add_account.png'" width="720px"/></p>
+</div>
+<div class="section" id="test-run">
+<span id="test-run"></span><h3>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h3>
+<p>If you execute this script with the command <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">account_master.md</span></code>,
+you may epect to get something similar to what we show shown in the image below.</p>
 <p><img src="account_master_images/account_master_add.png" 
 onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'" width="720px"/>
-“”“</p>
+‘’‘</p>
 </div>
 </div>
 </div>
@@ -179,6 +168,7 @@ onerror="this.src='../../../source/cases/account_master_images/account_master_ad
 <li><a class="reference internal" href="#local-testnet-case">Local testnet case</a></li>
 <li><a class="reference internal" href="#remote-testnet-registration">Remote testnet registration</a></li>
 <li><a class="reference internal" href="#adding-a-physical-account">Adding a physical account</a></li>
+<li><a class="reference internal" href="#test-run">Test run</a></li>
 </ul>
 </li>
 </ul>

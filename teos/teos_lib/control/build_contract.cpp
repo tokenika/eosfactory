@@ -243,40 +243,18 @@ namespace teos {
         namespace bp = boost::process;
 
         if(isWindowsUbuntu()) 
-        {            
-          bp::ipstream pipe_stream;
-          string cl = string(
-R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command /ve)");
-          bp::child c(cl, bp::std_out > pipe_stream);
-
-          string line;
-          stringstream ss;
-          while (pipe_stream && getline(pipe_stream, line) && !line.empty()) {
-            ss << line;
-          }
-          c.wait();
-          
-          string value = ss.str();
-          if( value.find("Code.exe") != string::npos)
-          {
-            size_t pos = value.find("\"");
-            value = value.substr(pos + 1);
-            pos = value.find("\\Code");
-            string codePath = value.substr(0, pos);
-            cout << "VSCode path: " << value << endl;
-
-            string commandLine 
-              = string("cmd.exe /c start /D \"") + codePath + "\" Code.exe "
-              + wslMapLinuxWindows(contractPath.string());
-            cout << "commandLine\n" << commandLine << endl;
-            bp::spawn(commandLine);
-          }else
-          {
-            cout << 
-            "NOTE!\n"
-            "Cannot find the Visual Studio Code in the Registry."
-            "Is it installed?" << endl;
-          }
+        { 
+          string commandLine 
+            = string("cmd.exe /c start /D ") 
+            + "\"" 
+            + wslMapLinuxWindows(contractPath.string())
+            + "\" "
+            + "Code.exe "
+            + "\"" 
+            + wslMapLinuxWindows(contractPath.string())
+            + "\"";
+          cout << "commandLine\n" << commandLine << endl;
+          bp::spawn(commandLine);
         } else 
         {
           if(uname() == DARWIN){
@@ -375,6 +353,7 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
         + " -extra-arg=-I" + getSourceDir(this) + "/externals/magic_get/include"
         + " -extra-arg=-I" + getEOSIO_BOOST_INCLUDE_DIR(this)
         + " -extra-arg=-I" + getSourceDir(this) + "/contracts"
+        + " -extra-arg=-I" + getSourceDir(this) + "/build/contracts"
         + " -extra-arg=-I" + sourceDir;
 
       if(!include_dir.empty())
@@ -397,22 +376,7 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
       respJson_.put("output", targetPath.string());
       respJson_.put("command_line", command_line);
 
-      if(process(command_line, this)){  
-        boost::property_tree::ptree abi;
-        if(bfs::exists(targetPath))
-        {
-          boost::property_tree::read_json(targetPath.string(), abi);
-          respJson_.add_child("ABI", abi);          
-        }
-      }
-
-    }
-
-    void wasmClangHelp()
-    {
-      string command_line;
-      command_line += getEOSIO_WASM_CLANG(nullptr) + " --help";
-      boostProcessSystem(command_line);
+      process(command_line, this);
     }
 
     /*
@@ -437,7 +401,8 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
 
       string objectFileList;
       bfs::path target_dir_path;
-      bfs::path targetPath;
+      bfs::path targetPathWast;
+      bfs::path targetPathWasm;
       bfs::path workdir;
       bfs::path workdir_build;
       string extensions = ".h.hpp.hxx.c.cpp.cxx.c++";
@@ -454,10 +419,10 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
 
         string name = codeName.empty() ? src_file.stem().string() : codeName;
         
-
-        if(targetPath.empty()) 
+        if(targetPathWast.empty()) 
         { // Define target path once.
-          targetPath = getTargetDirPath(sourceDir) / (name + ".wast");
+          targetPathWast = getTargetDirPath(sourceDir) / (name + ".wast");
+          targetPathWasm = getTargetDirPath(sourceDir) / (name + ".wasm");
 
           workdir = target_dir_path / "working_dir";
           bfs::create_directories(workdir);
@@ -493,9 +458,6 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
         command_line += " -c " + file + " -o " + output.string();
         string decoration = string("_") + src_file.filename().string();
         respJson_.put("command_line" + decoration, command_line);
-        // cout << command_line.c_str() << endl;
-        // cout << respJson_.get("command_line" + decoration, "ERROR") << endl;
-        // cout << responseToString(false) << endl;
         if(!process(command_line, this)){
           bfs::remove_all(workdir);
           return;
@@ -536,8 +498,8 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
 
         {
           string command_line;
-          command_line += getSourceDir(this) + "/build/externals/binaryen/bin/eosio-s2wasm"
-            + " -o " + targetPath.string()
+          command_line += getEOSIO_S2WASM(this) 
+            + " -o " + targetPathWast.string()
             + " -s 16384"
             + " " + workdir.string() + "/assembly.s";
 
@@ -547,13 +509,23 @@ R"(reg.exe query HKLM\Software\Classes\Applications\Code.exe\shell\open\command 
             return;
           } 
         }
-        bfs::remove_all(workdir);
 
-        ifstream ifs(targetPath.string());
-        stringstream ss;
-        ss << ifs.rdbuf();
-        respJson_.put("WAST", ss.str());
-        respJson_.put("output", targetPath.string());
+        {
+          string command_line;
+          command_line += getEOSIO_WAST2WASM(this) 
+            + " " + targetPathWast.string()
+            + " " + targetPathWasm.string()
+            + " -n";
+
+          //cout << "command line eosio-s2wasm:" << endl << command_line << endl;
+
+          if(!process(command_line, this)){
+            return;
+          } 
+        }
+
+
+        bfs::remove_all(workdir);
       }
     }
   }

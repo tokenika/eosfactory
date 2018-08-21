@@ -42,32 +42,32 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <p>“”“</p>
+  <p>‘’‘</p>
 <div class="section" id="account-object">
 <span id="account-object"></span><h1>Account object<a class="headerlink" href="#account-object" title="Permalink to this headline">¶</a></h1>
 <p>This file can be executed as a python script: ‘python3 account.md’.</p>
 <div class="section" id="set-up">
 <span id="set-up"></span><h2>Set-up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
 <p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 import setup
 import eosf
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.set_throw_error(True)
-eosf.reset([eosf.Verbosity.TRACE])
-&quot;&quot;&quot;
+logger.set_throw_error(True)
+eosf.reset([logger.Verbosity.INFO])
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <div class="section" id="exactly-one-wallet-object-has-to-exist-in-the-namespace">
 <span id="exactly-one-wallet-object-has-to-exist-in-the-namespace"></span><h3>Exactly one ‘Wallet’ object has to exist in the namespace<a class="headerlink" href="#exactly-one-wallet-object-has-to-exist-in-the-namespace" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 wallet = Wallet()   
 account_master_create(&quot;account_master&quot;)
-eosf.set_throw_error(False)
-&quot;&quot;&quot;
+logger.set_throw_error(False)
+&#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
@@ -82,9 +82,9 @@ contracts.</p>
 subsequently.</p>
 <div class="section" id="the-account-create-factory-function">
 <span id="the-account-create-factory-function"></span><h3>The ‘account_create’ factory function<a class="headerlink" href="#the-account-create-factory-function" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_create(&quot;account_hello&quot;, account_master)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>The first argument is the name of the account object to be created, the second
@@ -117,11 +117,11 @@ a physical account of a random name (however, the name cen be fixed).</li>
 <span id="create-a-contract-object"></span><h3>Create a Contract object<a class="headerlink" href="#create-a-contract-object" title="Permalink to this headline">¶</a></h3>
 <p>Create a smart contract object instance, appending it to the account
 ‘account_hello’. The ‘Contract’ class is presented at <a href="contract.html">cases/contract</a>.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 contract_hello = Contract(account_hello, &quot;hello&quot;)
 contract_hello.build()
 contract_hello.deploy()
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>The second argument of the creator of the ‘Contract’ class identifies the
@@ -134,20 +134,20 @@ for example.</p>
 <div class="section" id="try-the-contract">
 <span id="try-the-contract"></span><h3>Try the contract<a class="headerlink" href="#try-the-contract" title="Permalink to this headline">¶</a></h3>
 <p>Create two contracts ‘account_alice’ and ‘account_carol’…</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_create(&quot;account_alice&quot;, account_master)
 account_create(&quot;account_carol&quot;, account_master)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>… and execute the action of the contract ‘hello’:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_hello.push_action(
     &quot;hi&quot;, &#39;{&quot;user&quot;:&quot;&#39; + str(account_alice) + &#39;&quot;}&#39;, account_alice)
 
 account_hello.push_action(
     &quot;hi&quot;, &#39;{&quot;user&quot;:&quot;&#39; + str(account_carol) + &#39;&quot;}&#39;, account_carol)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>Besides the usual ‘Hello’ message, you can see the result of a logging
@@ -167,7 +167,7 @@ command:
 <p><img src="account.png" 
 onerror="this.src='../../../source/cases/account.png'"   
 width="720px"/>
-“”“</p>
+‘’‘</p>
 </div>
 </div>
 </div>

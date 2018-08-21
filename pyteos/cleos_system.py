@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""
+'''
 Python front-end for `EOSIO cleos system`.
 
 .. module:: pyteos
@@ -9,7 +9,7 @@ Python front-end for `EOSIO cleos system`.
 
 .. moduleauthor:: Tokenika
 
-"""
+'''
 
 import setup
 import cleos
@@ -22,7 +22,7 @@ setup_setup = setup.Setup()
 
 
 class SystemNewaccount(cleos.Account, cleos._Cleos):
-    """ Create an account, buy ram, stake for bandwidth for the account.
+    ''' Create an account, buy ram, stake for bandwidth for the account.
 
     - **parameters**::
 
@@ -61,7 +61,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.
-    """
+    '''
     def __init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
@@ -99,7 +99,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
             active_key_public = active_key
 
         args = [creator_name, self.name, owner_key_public, active_key_public]
-        if setup.is_json():
+        if setup.is_json:
             args.append("--json")
         args.extend(["--stake-net", stake_net, "--stake-cpu", stake_cpu])
         if buy_ram_kbytes:
@@ -126,7 +126,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         cleos._Cleos.__init__(
             self, args, "system", "newaccount", is_verbose)
             
-        if not self.error and setup.is_json():
+        if not self.error and setup.is_json:
             self.json = cleos.GetAccount(
                 self.name, is_verbose=0, json=True).json
 
@@ -140,7 +140,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         self.name
 
 class BuyRam(cleos._Cleos):
-    """ Buy RAM.
+    ''' Buy RAM.
 
     - **parameters**::
 
@@ -170,7 +170,7 @@ class BuyRam(cleos._Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the constraction time.
-    """
+    '''
     def __init__(
             self, payer, receiver, amount,
             buy_ram_kbytes=0, 
@@ -212,7 +212,7 @@ class BuyRam(cleos._Cleos):
         cleos._Cleos.__init__(
             self, args, "system", "byram", is_verbose)
             
-        if not self.error and setup.is_json():
+        if not self.error and setup.is_json:
             self.json = cleos.GetAccount(
                 self.name, is_verbose=0, json=True).json
 

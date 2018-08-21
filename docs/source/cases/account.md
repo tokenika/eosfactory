@@ -1,4 +1,4 @@
-"""
+'''
 # Account object
 
 This file can be executed as a python script: 'python3 account.md'.
@@ -8,26 +8,27 @@ This file can be executed as a python script: 'python3 account.md'.
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ```md
-"""
+'''
 import setup
+import logger
 import eosf
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.set_throw_error(True)
-eosf.reset([eosf.Verbosity.TRACE])
-"""
+logger.set_throw_error(True)
+eosf.reset([logger.Verbosity.INFO])
+'''
 ```
 
 ### Exactly one 'Wallet' object has to exist in the namespace
 
 ```md
-"""
+'''
 wallet = Wallet()   
 account_master_create("account_master")
-eosf.set_throw_error(False)
-"""
+logger.set_throw_error(False)
+'''
 ```
 
 ## Case
@@ -44,9 +45,9 @@ subsequently.
 ### The 'account_create' factory function
 
 ```md
-"""
+'''
 account_create("account_hello", account_master)
-"""
+'''
 ```
 
 The first argument is the name of the account object to be created, the second
@@ -82,11 +83,11 @@ Create a smart contract object instance, appending it to the account
 'account_hello'. The 'Contract' class is presented at <a href="contract.html">cases/contract</a>.
 
 ```md
-"""
+'''
 contract_hello = Contract(account_hello, "hello")
 contract_hello.build()
 contract_hello.deploy()
-"""
+'''
 ```
 
 The second argument of the creator of the 'Contract' class identifies the 
@@ -102,22 +103,22 @@ If the deployment succeeds, the contract can be executed.
 Create two contracts 'account_alice' and 'account_carol'...
 
 ```md
-"""
+'''
 account_create("account_alice", account_master)
 account_create("account_carol", account_master)
-"""
+'''
 ```
 
 ... and execute the action of the contract 'hello':
 
 ```md
-"""
+'''
 account_hello.push_action(
     "hi", '{"user":"' + str(account_alice) + '"}', account_alice)
 
 account_hello.push_action(
     "hi", '{"user":"' + str(account_carol) + '"}', account_carol)
-"""
+'''
 ```
 
 Besides the usual 'Hello' message, you can see the result of a logging 
@@ -139,4 +140,4 @@ We expect that you get something similar to this one shown in the image:
 <img src="account.png" 
     onerror="this.src='../../../source/cases/account.png'"   
     width="720px"/>
-"""
+'''

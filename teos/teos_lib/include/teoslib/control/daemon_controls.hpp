@@ -102,8 +102,6 @@ Usage: ./teos node kill
       void launch();
       void wait();
       void action();
-      void deleteWallets();
-      void deleteDaemonData();
     public:
       static const string DO_NOT_LAUNCH;
 
@@ -165,8 +163,6 @@ Usage: ./teos node start [Options]
           , command.reqJson_.get<string>("http-server-address").c_str());
         output("config directory", "%s"
           , command.reqJson_.get<string>("config-dir").c_str());
-        output("wallet directory", "%s"
-          , command.reqJson_.get<string>("wallet-dir").c_str());
         if(command.reqJson_.count(DaemonStart::DO_NOT_LAUNCH) == 0) {
           output("head block number", "%s", command.get<string>("head_block_num").c_str());
           output("head block time", "%s", command.get<string>("head_block_time").c_str());

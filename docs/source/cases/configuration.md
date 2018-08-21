@@ -1,4 +1,4 @@
-"""
+'''
 # EOSFactory configuration
 
 This file can be executed as a python script: 'python3 configuration.md'.
@@ -6,10 +6,10 @@ This file can be executed as a python script: 'python3 configuration.md'.
 ## Inspect the configuration
 
 ```md
-"""
+'''
 import teos
 ok = teos.get_config()
-"""
+'''
 ```
 Note that the same result is available with this bash command:
 
@@ -46,4 +46,4 @@ and see the result.
 
 <img src="configuration.png" 
     onerror="this.src='../../../source/cases/configuration.png'" width="720px"/>
-"""
+'''

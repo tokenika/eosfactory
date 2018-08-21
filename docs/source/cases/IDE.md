@@ -7,7 +7,8 @@ The 'Visual Studio Code' is the base upon which we develop the EOSFactory.
 Although you can use the Factory with a plain bash terminal, we recommend using 
 the VScode: it can add new dimensions to your experience with the Factory. 
 
-Let us assume that you have the VScode installed.
+Let us assume that you have the VScode installed, and -- if it is a Windows installation -- the `Code.exe` is on the system path. (The VSCode installer is [promised](https://code.visualstudio.com/docs/setup/windows) to 
+make arrangements.)
 
 ## Smart contract templates
 
@@ -31,6 +32,7 @@ $ $eosf template create eosio_token_better eosio.token\
 ```
 
 We hope that you see an instance of the VScode window, now.
+
 
 ## IDE workspace
 

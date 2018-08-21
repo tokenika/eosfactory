@@ -8,32 +8,30 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
-eosf.set_throw_error(False)
-#setup.set_command_line_mode()
+logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+logger.set_throw_error(False)
 
-_ = eosf.Logger()
+_ = logger.Logger()
 
 def test():
 
     eosf.restart()
-    eosf.set_is_testing_errors(False)
-    eosf.set_throw_error(True)
+    logger.set_is_testing_errors(False)
+    logger.set_throw_error(True)
 
-    eosf.use_keosd(False)
-    eosf.reset([eosf.Verbosity.TRACE]) 
+    eosf.reset([logger.Verbosity.INFO]) 
     wallet = Wallet()
     account_master_create("account_master")
-    eosf.set_throw_error(False)
-    eosf.set_is_testing_errors()
+    logger.set_throw_error(False)
+    logger.set_is_testing_errors()
 
         ######################################################################        
 
-    _.SCENARIO("""
+    _.SCENARIO('''
 With the master account, create four accounts: ``account_alice``, 
 ``account_bob``, account_carol`` and ``account_eosio_token``. Add the 
 ``eosio.token`` contract to the last account.
-        """)
+        ''')
 
     account_create("account_alice", account_master)
     account_create("account_bob", account_master)
@@ -45,11 +43,11 @@ With the master account, create four accounts: ``account_alice``,
 
     time.sleep(1)
 
-    _.COMMENT("""
+    _.COMMENT('''
     Execute actions on the contract account:
         * let eosio deposit an amount of 1000000000.0000 EOS there;
         * transfer some EOS to the ``alice`` account.
-    """)
+    ''')
 
     account_eosio_token.push_action(
         "create", 
@@ -65,9 +63,9 @@ With the master account, create four accounts: ``account_alice``,
             + '"memo":"issue 100.0000 EOS from eosio to alice"}',
         permission=account_master)
 
-    _.COMMENT("""
+    _.COMMENT('''
     Execute a series of transfers between accounts:
-    """)
+    ''')
 
     account_eosio_token.push_action(
         "transfer",
@@ -101,9 +99,9 @@ With the master account, create four accounts: ``account_alice``,
             + '"memo":"transfer 2.0000 EOS from bob to alice"}',
         permission=account_bob)                
 
-    _.COMMENT("""
+    _.COMMENT('''
     See the records of the account:
-    """)
+    ''')
 
     table_alice = account_eosio_token.table("accounts", account_alice)
     table_bob = account_eosio_token.table("accounts", account_bob)

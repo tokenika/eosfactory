@@ -7,13 +7,13 @@ import eosf_account
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
-eosf.set_throw_error(False)
+logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+logger.set_throw_error(False)
 
-remote_testnet = "88.99.97.30:38888"
-_ = eosf.Logger()
+remote_testnet = "http://88.99.97.30:38888"
+_ = logger.Logger()
 
-"""
+'''
 The following account exists in the blockchain of the testnode. It is used, in
 this article, for testing.
 
@@ -23,12 +23,12 @@ Active Public Key: EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv
 
 Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
 Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA 
-"""
+'''
 
-eosf.set_is_testing_errors(False)
-eosf.set_throw_error(True)
+logger.set_is_testing_errors(False)
+logger.set_throw_error(True)
 
-_.SCENARIO("""
+_.SCENARIO('''
 Test registering to a remote testnet.
 Set-up: 
     * Delete existing, if any, wallet named ``jungle_wallet`` using
@@ -45,9 +45,8 @@ Test:
     You can add the second argument that is a desired
     name of the physical account (if not set the name argument is random).
     If the given name is not available, the factory loops.
-""")
+''')
 
-eosf.use_keosd(True)
 setup.set_nodeos_address(remote_testnet)
 eosf.kill_keosd()
 
@@ -59,18 +58,18 @@ except:
 
 wallet = Wallet(wallet_name)
 
-_.COMMENT("""
+_.COMMENT('''
 Use ``eosf.info()`` to check whether the remote testnet responces: it throws
 an exception if the testnode is off. 
-""")
+''')
 
 eosf.info()
 
-_.COMMENT("""
+_.COMMENT('''
 Use an active account, called ``account_master_test`` to simulate the 
 registration procedure: in tests, this account substitutes one that would be
 physically registered.
-""")
+''')
 eosf_account.account_master_test = eosf_account.GetAccount(
     "account_master_test",
     "dgxo1uyhoytn", 
@@ -79,12 +78,12 @@ eosf_account.account_master_test = eosf_account.GetAccount(
 )
 eosf_account.account_master_test.ERROR()
 
-eosf.set_throw_error(False)
-eosf.set_is_testing_errors()        
+logger.set_throw_error(False)
+logger.set_is_testing_errors()        
 ######################################################################
 
-_.COMMENT("""
+_.COMMENT('''
 In subsequent tests, you have to change the account object name, here 
 ``account_master``, or you have to resolve name conflicts, if you are prompted.
-""")
+''')
 account_master_create("account_master")

@@ -2,38 +2,34 @@ import os
 import sys
 import unittest
 import setup
+import logger
 import eosf
 import eosf_account
 
-from eosf import Verbosity
+from logger import Verbosity
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
-from user_data import *
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
-eosf.set_throw_error(False)
-_ = eosf.Logger()
-
-IS_USE_KEOSD = False
+logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+logger.set_throw_error(False)
+_ = logger.Logger()
 
 ACCOUNT_MASTER = "account_master"
 ACCOUNT_TTT = "account_tic_tac_toe"
-_ = eosf.Logger()
+_ = logger.Logger()
 
 class Test(unittest.TestCase):
 
     def setUp(self):
-        eosf.kill_keosd()
 
         global ACCOUNT_MASTER
         global ACCOUNT_TTT
 
-        eosf.set_throw_error(True)
+        logger.set_throw_error(True)
 
         if IS_USE_KEOSD:
-            eosf.stop([eosf.Verbosity.TRACE])
-            eosf.use_keosd(True)
+            eosf.stop([logger.Verbosity.INFO])
             
             setup.set_nodeos_address(remote_testnet)
             eosf.info()
@@ -41,23 +37,22 @@ class Test(unittest.TestCase):
             try:
                 wallet_file = eosf.wallet_dir() + WALLET_NAME + ".wallet"
                 os.remove(wallet_file)
-                _.TRACE("The deleted wallet file:\n{}\n".format(wallet_file))
+                _.INFO("The deleted wallet file:\n{}\n".format(wallet_file))
             except Exception as e:
                 _.ERROR("Cannot delete the wallet file:\n{}\n".format(str(e))) 
 
             wallet = Wallet(
                 WALLET_NAME, 
-                verbosity=[eosf.Verbosity.TRACE]) 
+                verbosity=[logger.Verbosity.INFO]) 
             ACCOUNT_MASTER = ACCOUNT_TTT
 
             if not ACCOUNT_MASTER in globals():
                 account_master_create(
                     ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
-                    verbosity=[eosf.Verbosity.TRACE, eosf.Verbosity.OUT])
+                    verbosity=[logger.Verbosity.INFO, logger.Verbosity.OUT])
 
         else:
-            eosf.use_keosd(False)
-            eosf.reset([eosf.Verbosity.TRACE])
+            eosf.reset([logger.Verbosity.INFO])
 
             wallet = Wallet()
             account_master_create(ACCOUNT_MASTER)
@@ -79,17 +74,17 @@ class Test(unittest.TestCase):
         if not "account_carol" in globals():
             account_create("account_carol", account_master)
 
-        eosf.set_throw_error(False)
-        eosf.set_is_testing_errors()
+        logger.set_throw_error(False)
+        logger.set_is_testing_errors()
 
     def test_tic_tac_toe(self):
-        _.SCENARIO("""
+        _.SCENARIO('''
         Given a ``Wallet`` class object in the global namespace; an account 
         master object named ``account_master`` in the global namespace;
         given an account object named ``account_tic_tac_toe`` account that keeps 
         the ``tic_tac_toe`` contract; and given two player accounts: 
         ``account_alice`` and ``account_carol`` -- run games.
-        """)
+        ''')
 
         account_tic_tac_toe.push_action(
             "create", 
@@ -178,8 +173,8 @@ class Test(unittest.TestCase):
         eosf.stop()
 
 if __name__ == "__main__":
-    """Test the ``tic_tac_toe`` contract either locally or remotely.
-    """
+    '''Test the ``tic_tac_toe`` contract either locally or remotely.
+    '''
     IS_USE_KEOSD = False
     if len(sys.argv) > 1:
         case = sys.argv.pop()

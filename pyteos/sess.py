@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""
+'''
 Session initiation and storage for session elements.
 
 .. module:: sess
@@ -9,14 +9,14 @@ Session initiation and storage for session elements.
 
 .. moduleauthor:: Tokenika
 
-"""
+'''
 
 import setup
 import eosf
 
 
 def init():
-    """
+    '''
     Initialise a test session.
 
     - **global variables**::
@@ -30,7 +30,7 @@ def init():
         wallet: The wallet holding keys.
 
         On error, return False.
-    """
+    '''
 
     global wallet
     global eosio
@@ -54,7 +54,7 @@ def init():
 
     eosf.Contract(eosio, "eosio.bios").deploy()
 
-    if setup.is_verbose():
+    if setup.is_verbose:
         print("#  Available test accounts: " 
             + eosio.name + ", "  
             + alice.name + ", " + carol.name + ", " + bob.name + "\n")

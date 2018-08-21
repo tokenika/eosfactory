@@ -3,47 +3,52 @@
 import re
 import os
 import json
+from textwrap import dedent
 
-_is_verbose = 1
-_is_json = 0
-_is_command_line_mode = False
-_print_request = False
-_print_response = False
-_nodeos_address = None
-_is_local_address = False
-_is_use_keosd = False
+is_verbose = 1
+is_json = 0
+is_print_command_line = False
+is_print_request = False
+is_print_response = False
+
 account_map = "accounts.json"
 password_map = "passwords.json"
 wallet_default_name = "default"
 
-def remote_testnet_setup(remote_testnet, prefix=None):
-    set_nodeos_address(remote_testnet)
-    if prefix is None:
-        prefix = re.sub("\.|\:|-", "_", remote_testnet) + "_"
-    global account_map
-    account_map = prefix + account_map
-    global password_map
-    password_map = prefix + password_map
-    global wallet_default_name
-    wallet_default_name = prefix + wallet_default_name
+is_local_address = False
+_nodeos_address = None
+_file_prefix = None
 
-    return prefix
+def set_nodeos_address(address, prefix=None):
+    global _nodeos_address
+    _nodeos_address = address
+
+    if prefix is None:
+        prefix = re.sub("\.|\:|-|https|http|\/", "_", address)
+        prefix = re.sub("_+", "_", prefix) + "_"
+    else:
+        prefix = prefix + "_"
+    global account_map
+    account_map = prefix + "accounts.json"
+    global password_map
+    password_map = prefix + "passwords.json"
+    global wallet_default_name
+    wallet_default_name = prefix + "default"
+
+    global _file_prefix
+    _file_prefix = prefix
+
+def file_prefix():
+    global _file_prefix
+    return _file_prefix
 
 def restart():
+    global is_local_address
+    is_local_address = False
     global _nodeos_address
     _nodeos_address = None
-
-def set_is_local_address(status):
-    global _is_local_address
-    _is_local_address = status
-
-def is_local_address():
-    global _is_local_address
-    return _is_local_address
-
-def set_nodeos_address(url):
-    global _nodeos_address
-    _nodeos_address = "http://" + url
+    global _file_prefix
+    _file_prefix = None
 
 def nodeos_address():
     global _nodeos_address
@@ -51,117 +56,11 @@ def nodeos_address():
         return None
     return _nodeos_address
 
-def nodeos_address_arg():
-    global _nodeos_address
-    if _nodeos_address is None:
-        return None
-    return ["--url", _nodeos_address]
-
-def use_keosd(status=False):
-    """ Do use `keosd` Wallet Manager.
-
-    Or use `nodeos`. See https://github.com/EOSIO/eos/wiki/CLI-Wallet
-    for explanations.
-
-    If wallets are not managed by `keosd`, they can be reset with the
-    `eosf.reset([eosf.Verbosity.TRACE])` function, what is desired when testing smart contracts
-    locally.
-    """    
-    global _is_use_keosd
-    _is_use_keosd = status
-
-
-def is_use_keosd():
-    global _is_use_keosd
-    return _is_use_keosd
-    
-
-def set_verbose(status=1):
-    """ If set `False`, print error messages only.
-    """
-    global _is_verbose
-    _is_verbose = status
-    if status:
-        print("##### verbose mode is set!")
-
-def is_verbose():
-    """ If `False`, print error messages only.
-    """
-    global _is_verbose
-    return _is_verbose
-
-
-def set_json(status=1):
-    global _is_json
-    _is_json = status
-    if status:
-        print("##### json mode is set!")
-
-def is_json():
-    """ If `True`, output json.
-    """
-    global _is_json
-    return _is_json
-
-
-def set_print_request(status=True):
-    """If set `True`, print html request sent to the node.
-    """
-    global _print_request
-    _print_request = status
-    if status:
-        print("##### print request mode is set!")
-        set_json()
-
-def is_print_request():
-    """If `True`, print html request sent to the node.
-    """
-    global _print_request
-    return _print_request
-
-
-def set_print_response(status=True):
-    """If set `True`, print html response of the node.
-    """
-    global _print_response
-    _print_response = status
-    if status:
-        print("##### print response mode is set!")
-        set_json()
-
-def is_print_response():
-    """If `True`, print html response of the node.
-    """
-    global _print_response
-    return _print_response
-
-
-def set_command_line_mode(status=True):
-    """If set `True`, print html communication with the node.
-    Also, be super-verbose.
-    """
-    global _is_command_line_mode
-    _is_command_line_mode = status
-    if status:
-        print("##### command line mode is set!")
-
-def is_print_command_line():
-    """If `True`, print html communication with the node.
-    Also, be super-verbose.
-    """
-    global _is_command_line_mode
-    return _is_command_line_mode    
-
-
-# def output(msg):
-#     if _is_verbose:
-#         print("#  " + msg.replace("\n", "\n#  "))
-
 class Setup:
-    """ Interface to the json configuration file.
+    ''' Interface to the json configuration file.
 
     The configuration file is expected in the same folder as the current file.
-    """
+    '''
     __setupFile = os.path.dirname(os.path.abspath(__file__)) + "/../teos/config.json"
     __CLEOS_EXE = "cleos_executable"    
     __TEOS_EXE = "teos_executable"
@@ -242,3 +141,7 @@ as {{"{2}":"absolute-path-to-teos-executable"}}
                     )
                 )
 
+def heredoc(msg):
+    msg = dedent(msg).strip()
+    msg.replace("<br>", "\n")
+    return msg

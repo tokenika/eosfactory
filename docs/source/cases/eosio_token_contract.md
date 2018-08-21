@@ -1,4 +1,4 @@
-"""
+'''
 # Eosio Token Contract
 
 This file can be executed as a python script: 'python3 eosio_token_contract.md'.
@@ -8,7 +8,7 @@ This file can be executed as a python script: 'python3 eosio_token_contract.md'.
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ```md
-"""
+'''
 import unittest
 import setup
 import eosf
@@ -17,11 +17,10 @@ import time
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
-eosf.set_throw_error(True) # make the errors be thrown as exceptions
+logger.set_throw_error(True) # make the errors be thrown as exceptions
 
-eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE]) # start the local test node, reset
-"""
+eosf.reset([logger.Verbosity.INFO]) # start the local test node, reset
+'''
 ```
 
 ### The `Wallet` object
@@ -30,12 +29,12 @@ Create the singleton wallet object. The object represents a physical wallet,
 managed with either the KEOSD or NODEOS Wallet Manager:
 
 ```md
-"""
+'''
 wallet = Wallet()
 account_master_create("account_master")
 
-eosf.set_throw_error(False) # make the errors be printed
-"""
+logger.set_throw_error(False) # make the errors be printed
+'''
 ```
 
 ## Case
@@ -51,7 +50,7 @@ account object named with the first argument. The object represent a physical
 account in the blockchain and in the wallet.
 
 ```md
-"""
+'''
 account_create("account_alice", account_master)
 account_create("account_bob", account_master)
 account_create("account_carol", account_master)
@@ -60,7 +59,7 @@ contract_test = Contract(account_test, "token")
 deploy = contract_test.deploy()
 
 time.sleep(1)
-"""
+'''
 ```
 
 Execute actions on the contract account:
@@ -71,7 +70,7 @@ Execute actions on the contract account:
 Use the 'push_action' method of the contract account:
 
 ```md
-"""
+'''
 account_test.push_action(
     "create", 
     '{"issuer":"' 
@@ -85,14 +84,14 @@ account_test.push_action(
         + '", "quantity":"100.0000 EOS", '
         + '"memo":"issue 100.0000 EOS from eosio to alice"}',
     permission=account_master)
-"""
+'''
 ```
 
 Execute a series of transfers between the accounts. Use the 'push_action' 
 method of the contract account:
 
 ```md
-"""
+'''
 account_test.push_action(
     "transfer",
     '{"from":"' + str(account_alice)
@@ -125,18 +124,18 @@ account_test.push_action(
         + '"memo":"transfer 2.0000 EOS from bob to alice"}',
     permission=account_bob)
 
-"""
+'''
 ```
 
 To see the records of the accounts, use the 'table' method of the contract
 account:
 
 ```md
-"""
+'''
 table_alice = account_test.table("accounts", account_alice)
 table_bob = account_test.table("accounts", account_bob)
 table_carol = account_test.table("accounts", account_carol)
-"""
+'''
 ```
 
 ### Test run
@@ -152,4 +151,4 @@ We expect that you get something similar to this one shown in the image below.
 
 <img src="eosio_token.png" 
     onerror="this.src='../../../source/cases/eosio_token.png'" width="640px"/>
-"""
+'''

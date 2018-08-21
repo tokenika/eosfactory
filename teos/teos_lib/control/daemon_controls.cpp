@@ -124,11 +124,6 @@ namespace teos {
       if(isError_){
         return false;
       }      
-      
-      reqJson_.put("wallet-dir", getWalletDir(this));
-      if(isError_){
-        return false;
-      }
 
       reqJson_.put("daemon_exe", getDaemonExe(this));
       if(isError_){
@@ -137,9 +132,7 @@ namespace teos {
       
       try{
         if(reqJson_.get("delete-all-blocks", false)){
-          DaemonStop();
-          //deleteDaemonData();
-          deleteWallets();          
+          DaemonStop(); 
         } else if(!getPid().empty()){
           reqJson_.put(DO_NOT_LAUNCH, 1);
           respJson_.put(DO_NOT_LAUNCH, 1);
@@ -152,7 +145,6 @@ namespace teos {
           + reqJson_.get<string>("http-server-address")
           + " --data-dir " + reqJson_.get<string>("data-dir")
           + " --config-dir " + reqJson_.get<string>("config-dir")
-          + " --wallet-dir " + reqJson_.get<string>("wallet-dir")
           + " --chain-state-db-size-mb " + getMemorySizeMb()
           + " --contracts-console"
           + " --verbose-http-errors"
@@ -234,47 +226,6 @@ namespace teos {
           break;
         }
       }
-    }
-
-    void DaemonStart::deleteDaemonData(){
-      namespace bfs = boost::filesystem;  
-
-      bfs::path dataDir(getDataDir(this));
-      int count = 10;
-      while (true)
-      {
-        try{
-          count--;
-          bfs::remove_all(dataDir / "blocks");
-          bfs::remove_all(dataDir / "shared_mem");
-          break;
-        } catch (std::exception& e) {
-          if(count){
-            putError(e.what());
-            break;
-          }
-          sleep_for(seconds(1));
-        }
-      }
-    }
-
-    void DaemonStart::deleteWallets()
-    {
-      namespace bfs = boost::filesystem;      
-      try{
-        bfs::path walletDir(getWalletDir(this));
-
-        for (bfs::directory_entry& entry 
-            : boost::make_iterator_range(
-              bfs::directory_iterator(walletDir), {})) 
-        {
-          if (bfs::is_regular_file(entry.path())){
-            bfs::remove(entry.path());
-          }
-        }
-      } catch (std::exception& e) {
-        putError(e.what());
-      }  
     }
   }
 }

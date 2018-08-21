@@ -352,7 +352,7 @@ ref_block: The reference block num or block id used for TAPOS
 
 <dl class="class">
 <dt id="cleos.SetContract">
-<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">SetContract</code><span class="sig-paren">(</span><em>account</em>, <em>contract_dir</em>, <em>wast_file=None</em>, <em>abi_file=None</em>, <em>permission=None</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=None</em>, <em>is_verbose=1</em>, <em>json=False</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.SetContract" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cleos.</code><code class="descname">SetContract</code><span class="sig-paren">(</span><em>account</em>, <em>contract_dir</em>, <em>wasm_file=None</em>, <em>abi_file=None</em>, <em>permission=None</em>, <em>expiration_sec=30</em>, <em>skip_signature=0</em>, <em>dont_broadcast=0</em>, <em>forceUnique=0</em>, <em>max_cpu_usage=0</em>, <em>max_net_usage=0</em>, <em>ref_block=None</em>, <em>is_verbose=1</em>, <em>json=False</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.SetContract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cleos._Cleos</span></code></p>
 <p>Create or update the contract on an account.</p>
 <ul>
@@ -361,8 +361,9 @@ ref_block: The reference block num or block id used for TAPOS
     having the  May be an object having the attribute `name`, like 
     `CreateAccount`, or a string.
 contract_dir: The path containing the .wast and .abi. 
-wast_file: The file containing the contract WAST or WASM (absolute).
-abi_file: The ABI for the contract (absolute).
+wasm_file: The file containing the contract WASM relative 
+    to contract_dir.
+abi_file: The ABI for the contract relative to contract-dir.
 
 permission: An account and permission level to authorize, as in 
     &#39;account@permission&#39;. May be a `CreateAccount` or `Account` object
@@ -408,9 +409,10 @@ ref_block: The reference block num or block id used for TAPOS
 <p>Create a new wallet locally.</p>
 <ul>
 <li><p class="first"><strong>parameters</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre>name: The name of the new wallet, defaults to `default`.
-is_verbose: If `0`, do not print unless on error; if `-1`, 
-    do not print. Default is `1`.
+<div class="highlight-default notranslate"><div class="highlight"><pre>name: The name of the new wallet, defaults to ``default``.
+password: The password to the wallet, if the wallet exists. Default is None.
+is_verbose: If ``0``, do not print unless on error; if ``-1``, do not print. 
+    Default is ``1``.
 </pre></div>
 </div>
 </li>
@@ -613,12 +615,6 @@ is_verbose: If `0`, do not print unless on error; if `-1`,
 </div>
 </li>
 </ul>
-</dd></dl>
-
-<dl class="function">
-<dt id="cleos.set_wallet_url_arg">
-<code class="descclassname">cleos.</code><code class="descname">set_wallet_url_arg</code><span class="sig-paren">(</span><em>cleos_object</em>, <em>url=None</em>, <em>check_error=True</em><span class="sig-paren">)</span><a class="headerlink" href="#cleos.set_wallet_url_arg" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implements the <cite>use_keosd</cite> flag in the <cite>setup</cite> module.</p>
 </dd></dl>
 
 </div>

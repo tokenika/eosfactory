@@ -42,7 +42,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <p>“”“</p>
+  <p>‘’‘</p>
 <div class="section" id="arguments">
 <span id="arguments"></span><h1>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h1>
 <p>This file can be executed as a python script: ‘python3 contract.md’.</p>
@@ -64,7 +64,7 @@ may be that users like it.</p>
 <span id="setup"></span><h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <p>The set-up statements are explained at <a href="setup.html">cases/setup</a>.</p>
 <p>Local test node reset, wallet started, master account object created:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 import time
 import setup
 import cleos
@@ -75,13 +75,12 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.use_keosd(False)
-eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
-_ = eosf.Logger()
-eosf.reset([eosf.Verbosity.TRACE]) 
+logger.Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+_ = logger.Logger()
+eosf.reset([logger.Verbosity.INFO]) 
 wallet = Wallet()
 account_master_create(&quot;account_master&quot;)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
@@ -91,23 +90,23 @@ account_master_create(&quot;account_master&quot;)
 <span id="account-arguments"></span><h3>Account arguments<a class="headerlink" href="#account-arguments" title="Permalink to this headline">¶</a></h3>
 <p>Accounts are represented either as blockchain names or as account objects. In
 the following test, the ‘account_master’ object enters, at first, as itself …</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_create(&quot;account_alice&quot;, account_master)
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>… next, the ‘account_master’ is represented as a string, ‘eosio` in this case:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_create(&quot;account_bob&quot;, str(account_master))
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>If an account argument is neither an account object nor a string, an error
 message is printed, or an error exception is thrown. For example, let the
 account argument be of the ‘cleos.CreateKey’ type:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_create(&quot;account_jimmy&quot;, cleos.CreateKey(&quot;xxx&quot;, is_verbose=0))
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p><img src="arguments/accounts.png" 
@@ -122,7 +121,7 @@ names.</p>
 ‘eosio&#64;permission’, for example.</p>
 <p>Using the object oriented style, a permission may be a tuple enclosing an
 account object and</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 from cleos import Permission 
 
 account_create(
@@ -130,7 +129,7 @@ account_create(
     permission=[
         (account_master, Permission.OWNER), 
         (account_master, Permission.ACTIVE)])
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>equivalent forms:
@@ -140,11 +139,11 @@ permission=[ “eosio&#64;owner”, “eosio&#64;active”])</p>
 <p>If a permission argument type is not supported, an error message is printed, or
 an error exception is thrown. For example, let the account argument be of the
 ‘cleos.CreateKey’ type:</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_create(
     &quot;account_carol_b&quot;, account_master, 
     permission=cleos.CreateKey(&quot;xxx&quot;, is_verbose=0))
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p><img src="arguments/permissions.png" 
@@ -156,7 +155,7 @@ width="720px"/></p>
 <p>Data arguments control the contract actions. Let us deploy an instance of the
 ‘eosio.token’ contract in order to show varies forms of the data argument of
 the action ‘transfer’.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_create(&quot;account_eosio_token&quot;, account_master)
 contract_eosio_token = Contract(account_eosio_token, &quot;token&quot;)
 deploy = contract_eosio_token.deploy()
@@ -178,14 +177,14 @@ account_eosio_token.push_action(
         &quot;to&quot;: account_alice, &quot;quantity&quot;: &quot;100.0000 EOS&quot;, &quot;memo&quot;: &quot;&quot;
     },
     permission=account_master) 
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p>The data argument can be of the puthon ‘dict<code class="docutils literal notranslate"><span class="pre">type,</span> <span class="pre">as</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">first</span> <span class="pre">example.</span> <span class="pre">The</span> <span class="pre">second</span> <span class="pre">example</span> <span class="pre">presents</span> <span class="pre">a</span> <span class="pre">'heredoc</span></code> form. The third version is the ‘CLEOS’
 origin.</p>
 <p>Note that the last version only maches the data arguments used in of the
 ‘cleos’ and ‘cleos_system’ modules.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 account_eosio_token.push_action(
     &quot;transfer&quot;,
     {
@@ -196,10 +195,10 @@ account_eosio_token.push_action(
 
 account_eosio_token.push_action(
     &quot;transfer&quot;,
-    &quot;&quot;&quot;{
+    &#39;&#39;&#39;{
         &quot;from&quot;: account_alice, &quot;to&quot;: account_carol,
         &quot;quantity&quot;: &quot;5.1000 EOS&quot;, &quot;memo&quot;:&quot;&quot;
-    }&quot;&quot;&quot;,
+    }&#39;&#39;&#39;,
     permission=account_alice)
 
 account_eosio_token.push_action(
@@ -210,13 +209,13 @@ account_eosio_token.push_action(
         + &#39;, &quot;quantity&quot;: &quot;5.2000 EOS&quot;, &quot;memo&quot;:&quot;&quot;&#39;
         + &#39;}&#39;,
     permission=account_alice)    
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <p><img src="arguments/data.png" 
 onerror="this.src='../../../source/cases/arguments/data.png'"   
 width="720px"/>
-“”“</p>
+‘’‘</p>
 </div>
 </div>
 </div>

@@ -15,8 +15,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Debugging smart contracts" href="debugging.html" />
-    <link rel="prev" title="Registering to a remote testnet" href="registering_to_testnode.html" /> 
+    <link rel="next" title="Debugging smart contracts" href="debugging.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,9 +29,6 @@
         <li class="right" >
           <a href="debugging.html" title="Debugging smart contracts"
              accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="registering_to_testnode.html" title="Registering to a remote testnet"
-             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 2.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
@@ -42,7 +38,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <p>“”“</p>
+  <p>‘’‘</p>
 <div class="section" id="tic-tac-toe-contract-on-a-remote-testnet">
 <span id="tic-tac-toe-contract-on-a-remote-testnet"></span><h1>Tic-tac-toe contract on a remote testnet<a class="headerlink" href="#tic-tac-toe-contract-on-a-remote-testnet" title="Permalink to this headline">¶</a></h1>
 <p>This file can be executed as a python script: ‘python3 account_master.md’.</p>
@@ -62,7 +58,7 @@ With remote node tests, we assume the following restrictions.
 </div>
 <div class="section" id="imports-and-set-up-definitions">
 <span id="imports-and-set-up-definitions"></span><h3>Imports and set-up definitions<a class="headerlink" href="#imports-and-set-up-definitions" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 import os
 import re
 import unittest
@@ -76,27 +72,26 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-setup.remote_testnet_setup(&quot;88.99.97.30:38888&quot;)
+setup.set_nodeos_address(&quot;88.99.97.30:38888&quot;)
 WALLET_NAME = setup.wallet_default_name
 
 ACCOUNT_MASTER = &quot;account_master&quot;
 ACCOUNT_TTT = &quot;account_tic_tac_toe&quot;
-_ = eosf.Logger()
-&quot;&quot;&quot;
+_ = logger.Logger()
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <div class="section" id="unittest-test-class-definition-begins-here">
 <span id="unittest-test-class-definition-begins-here"></span><h4>Unittest test class definition begins here<a class="headerlink" href="#unittest-test-class-definition-begins-here" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 class Test(unittest.TestCase):
 
     def setUp(self):
-        eosf.set_throw_error(True)
-        eosf.stop([eosf.Verbosity.TRACE])
-        eosf.use_keosd(True)
+        logger.set_throw_error(True)
+        eosf.stop([logger.Verbosity.INFO])
         eosf.info()
         exit()
-        &quot;&quot;&quot;
+        &#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
@@ -109,8 +104,6 @@ sessions.</p>
 <div class="highlight-md notranslate"><div class="highlight"><pre>import os
 import eosf
 from user_data import *
-
-eosf.use_keosd(True)
 eosf.kill_keosd()
 
 try:
@@ -121,20 +114,20 @@ except Exception as e:
     print(&quot;Cannot delete the wallet file:\n{}\n&quot;.format(str(e))) 
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>        &quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>        &#39;&#39;&#39;
         eosf.kill_keosd()
         wallet_json = eosf_wallet.wallet_json_read()
         if not WALLET_NAME in wallet_json:
-            wallet = Wallet(WALLET_NAME, verbosity=[eosf.Verbosity.TRACE])
+            wallet = Wallet(WALLET_NAME, verbosity=[logger.Verbosity.INFO])
             wallet_json[WALLET_NAME] = wallet.password
             eosf_wallet.wallet_json_write(wallet_json)
         else:
             wallet = Wallet(
                 WALLET_NAME, wallet_json[WALLET_NAME],
-                verbosity=[eosf.Verbosity.TRACE])
+                verbosity=[logger.Verbosity.INFO])
 
         exit()
-        &quot;&quot;&quot;
+        &#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
@@ -149,16 +142,16 @@ there. Therefore, an account object is to be created only if it does not exist.<
 constant, in the global namespace. Other arguments of the factory are defined
 in the ‘user_data.py’ script.</p>
 <p>The factory function puts the created account object into the wallet.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>        &quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>        &#39;&#39;&#39;
         ACCOUNT_MASTER = ACCOUNT_TTT
         if not ACCOUNT_MASTER in globals():
             account_master_create(
                 ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
-                verbosity=[eosf.Verbosity.TRACE, eosf.Verbosity.OUT])
+                verbosity=[logger.Verbosity.INFO, logger.Verbosity.OUT])
         else:
-            _.TRACE(&quot;&quot;&quot;
+            _.INFO(&#39;&#39;&#39;
             ######## {} account object restored from the blockchain.
-            &quot;&quot;&quot;.format(ACCOUNT_MASTER))
+            &#39;&#39;&#39;.format(ACCOUNT_MASTER))
         
         
         global account_master
@@ -173,11 +166,11 @@ in the ‘user_data.py’ script.</p>
         if not account_tic_tac_toe.is_code():            
             contract_tic_tac_toe.deploy()
         else:
-            _.TRACE(&quot;&quot;&quot;
+            _.INFO(&#39;&#39;&#39;
             * Contract cannot be deployed as the account already has a code.
                 The current test is protected against overwriting the code.
-            &quot;&quot;&quot;)
-        &quot;&quot;&quot;
+            &#39;&#39;&#39;)
+        &#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
@@ -194,25 +187,25 @@ Error Details:
 account dgxo1uyhoytn has insufficient ram; needs 138233 bytes has 64789 bytes
 </pre></div>
 </div>
-<div class="highlight-md notranslate"><div class="highlight"><pre>        &quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>        &#39;&#39;&#39;
         if not &quot;account_alice&quot; in globals():
             account_create(&quot;account_alice&quot;, account_master)
         else:
-            _.TRACE(&quot;&quot;&quot;
+            _.INFO(&#39;&#39;&#39;
             ######## {} account object restored from the blockchain.
-            &quot;&quot;&quot;.format(&quot;account_alice&quot;))
+            &#39;&#39;&#39;.format(&quot;account_alice&quot;))
         if not &quot;account_carol&quot; in globals():    
             account_create(&quot;account_carol&quot;, account_master)
         else:
-            _.TRACE(&quot;&quot;&quot;
+            _.INFO(&#39;&#39;&#39;
             ######## {} account object restored from the blockchain.
-            &quot;&quot;&quot;.format(&quot;account_carol&quot;))
+            &#39;&#39;&#39;.format(&quot;account_carol&quot;))
 
-        eosf.set_throw_error(False)
-        eosf.set_is_testing_errors()            
+        logger.set_throw_error(False)
+        logger.set_is_testing_errors()            
         exit()
     def test_tic_tac_toe(self):
-        &quot;&quot;&quot;
+        &#39;&#39;&#39;
 </pre></div>
 </div>
 </div>
@@ -225,7 +218,7 @@ object named <code class="docutils literal notranslate"><span class="pre">accoun
 object named <code class="docutils literal notranslate"><span class="pre">account_tic_tac_toe</span></code> account that keeps the <code class="docutils literal notranslate"><span class="pre">tic_tac_toe</span></code>
 contract; and given two player accounts: <code class="docutils literal notranslate"><span class="pre">account_alice</span></code> and <code class="docutils literal notranslate"><span class="pre">account_carol</span></code>
 – run games.</p>
-<div class="highlight-md notranslate"><div class="highlight"><pre>        &quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>        &#39;&#39;&#39;
         account_tic_tac_toe.push_action(
             &quot;create&quot;, 
             {
@@ -311,17 +304,17 @@ contract; and given two player accounts: <code class="docutils literal notransla
 
     def tearDown(self):
         eosf.stop()
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
 <div class="section" id="run-the-unittest">
 <span id="run-the-unittest"></span><h3>Run the unittest<a class="headerlink" href="#run-the-unittest" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-md notranslate"><div class="highlight"><pre>&quot;&quot;&quot;
+<div class="highlight-md notranslate"><div class="highlight"><pre>&#39;&#39;&#39;
 unittest.main()
-&quot;&quot;&quot;
+&#39;&#39;&#39;
 </pre></div>
 </div>
-<p>“”“</p>
+<p>‘’‘</p>
 </div>
 </div>
 </div>
@@ -353,9 +346,6 @@ unittest.main()
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="registering_to_testnode.html"
-                        title="previous chapter">Registering to a remote testnet</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="debugging.html"
                         title="next chapter">Debugging smart contracts</a></p>
@@ -394,9 +384,6 @@ unittest.main()
         <li class="right" >
           <a href="debugging.html" title="Debugging smart contracts"
              >next</a> |</li>
-        <li class="right" >
-          <a href="registering_to_testnode.html" title="Registering to a remote testnet"
-             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 2.0 documentation</a> &#187;</li> 
       </ul>
     </div>

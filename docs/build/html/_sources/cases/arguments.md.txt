@@ -1,4 +1,4 @@
-"""
+'''
 # Arguments
 
 This file can be executed as a python script: 'python3 contract.md'.
@@ -25,7 +25,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 Local test node reset, wallet started, master account object created:
 
 ```md
-"""
+'''
 import time
 import setup
 import cleos
@@ -36,13 +36,12 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.use_keosd(False)
-eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
-_ = eosf.Logger()
-eosf.reset([eosf.Verbosity.TRACE]) 
+logger.Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+_ = logger.Logger()
+eosf.reset([logger.Verbosity.INFO]) 
 wallet = Wallet()
 account_master_create("account_master")
-"""
+'''
 ```
 ## Case
 
@@ -52,17 +51,17 @@ Accounts are represented either as blockchain names or as account objects. In
 the following test, the 'account_master' object enters, at first, as itself ...
 
 ```md
-"""
+'''
 account_create("account_alice", account_master)
-"""
+'''
 ```
 
 ... next, the 'account_master' is represented as a string, 'eosio` in this case:
 
 ```md
-"""
+'''
 account_create("account_bob", str(account_master))
-"""
+'''
 ```
 
 If an account argument is neither an account object nor a string, an error 
@@ -70,9 +69,9 @@ message is printed, or an error exception is thrown. For example, let the
 account argument be of the 'cleos.CreateKey' type:
 
 ```md
-"""
+'''
 account_create("account_jimmy", cleos.CreateKey("xxx", is_verbose=0))
-"""
+'''
 ```
 <img src="arguments/accounts.png" 
     onerror="this.src='../../../source/cases/arguments/accounts.png'"   
@@ -90,7 +89,7 @@ Using the object oriented style, a permission may be a tuple enclosing an
 account object and 
 
 ```md
-"""
+'''
 from cleos import Permission 
 
 account_create(
@@ -98,7 +97,7 @@ account_create(
     permission=[
         (account_master, Permission.OWNER), 
         (account_master, Permission.ACTIVE)])
-"""
+'''
 ```
 
 equivalent forms:
@@ -111,11 +110,11 @@ an error exception is thrown. For example, let the account argument be of the
 'cleos.CreateKey' type:
 
 ```md
-"""
+'''
 account_create(
     "account_carol_b", account_master, 
     permission=cleos.CreateKey("xxx", is_verbose=0))
-"""
+'''
 ```
 <img src="arguments/permissions.png" 
     onerror="this.src='../../../source/cases/arguments/permissions.png'"   
@@ -128,7 +127,7 @@ Data arguments control the contract actions. Let us deploy an instance of the
 the action 'transfer'. 
 
 ```md
-"""
+'''
 account_create("account_eosio_token", account_master)
 contract_eosio_token = Contract(account_eosio_token, "token")
 deploy = contract_eosio_token.deploy()
@@ -150,7 +149,7 @@ account_eosio_token.push_action(
         "to": account_alice, "quantity": "100.0000 EOS", "memo": ""
     },
     permission=account_master) 
-"""
+'''
 ```
 
 The data argument can be of the puthon 'dict` type, as in the first example.
@@ -161,7 +160,7 @@ Note that the last version only maches the data arguments used in of the
 'cleos' and 'cleos_system' modules.
 
 ```md
-"""
+'''
 account_eosio_token.push_action(
     "transfer",
     {
@@ -172,10 +171,10 @@ account_eosio_token.push_action(
 
 account_eosio_token.push_action(
     "transfer",
-    """{
+    '''{
         "from": account_alice, "to": account_carol,
         "quantity": "5.1000 EOS", "memo":""
-    }""",
+    }''',
     permission=account_alice)
 
 account_eosio_token.push_action(
@@ -186,9 +185,9 @@ account_eosio_token.push_action(
         + ', "quantity": "5.2000 EOS", "memo":""'
         + '}',
     permission=account_alice)    
-"""
+'''
 ```
 <img src="arguments/data.png" 
     onerror="this.src='../../../source/cases/arguments/data.png'"   
     width="720px"/>
-"""
+'''

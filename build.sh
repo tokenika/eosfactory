@@ -413,14 +413,13 @@ Makes the file structure:
         ${BUILD_DIR}  # binary dir
             daemon  # local EOSIO node documents
                 data-dir  # the EOSIO node data-dir
-                    wallet  # local wallets
                     genesis.json
                     config.in
 "
 
 cd ${EOSIO_EOSFACTORY_DIR__}
 mkdir -p ${BUILD_DIR}
-mkdir -p ${BUILD_DIR}/daemon/data-dir/wallet
+mkdir -p ${BUILD_DIR}/daemon/data-dir
 
 cp ${EOSIO_EOSFACTORY_DIR__}/resources/genesis.json \
     ${BUILD_DIR}/daemon/data-dir/genesis.json

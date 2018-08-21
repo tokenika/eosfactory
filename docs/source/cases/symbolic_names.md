@@ -1,27 +1,28 @@
-"""
+'''
 # Symbolic names
 
-This file can be executed as a python script: 'python3 wallet.md'.
+This file can be executed as a python script: 'python3 symbolic_names.md'.
 
 ## Set-up
 
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ```md
-"""
+'''
 import setup
+import logger
 import eosf
 import time
 import eosf_account
 
-from eosf import Verbosity
+from logger import Verbosity
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
-eosf.set_throw_error(False)
-"""
+logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+logger.set_throw_error(False)
+'''
 ```
 
 ## Case
@@ -66,16 +67,15 @@ The current case demonstrates this facility.
 #### Translation is off
 
 ```md
-"""
+'''
 eosf_account.restart()
 eosf.set_is_translating(False)
 
-eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE]) 
+eosf.reset([logger.Verbosity.INFO]) 
 wallet = Wallet()
 account_master_create("account_master")
-eosf.set_throw_error(False)
-eosf.set_is_testing_errors()
+logger.set_throw_error(False)
+logger.set_is_testing_errors()
 
 account_create("account_alice", account_master)
 account_create("account_bob", account_master)
@@ -99,7 +99,7 @@ account_eosio_token.push_action(
         + '", "quantity":"100.0000 EOS", '
         + '"memo":"issue 100.0000 EOS from eosio to alice"}',
     permission=account_master)
-"""
+'''
 ```
 
 <img src="symbolic_names_images/symbolic_names_false.png" 
@@ -109,16 +109,15 @@ account_eosio_token.push_action(
 #### Translation is on
 
 ```md
-"""
+'''
 eosf_account.restart()
 eosf.set_is_translating(True)
 
-eosf.use_keosd(False)
-eosf.reset([eosf.Verbosity.TRACE]) 
+eosf.reset([logger.Verbosity.INFO]) 
 wallet = Wallet()
 account_master_create("account_master")
-eosf.set_throw_error(False)
-eosf.set_is_testing_errors()
+logger.set_throw_error(False)
+logger.set_is_testing_errors()
 
 account_create("account_alice", account_master)
 account_create("account_bob", account_master)
@@ -142,11 +141,11 @@ account_eosio_token.push_action(
         + '", "quantity":"100.0000 EOS", '
         + '"memo":"issue 100.0000 EOS from eosio to alice"}',
     permission=account_master)
-"""
+'''
 ```
 
 <img src="symbolic_names_images/symbolic_names_true.png" 
     onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
     width="720px"/>
-
+'''
 

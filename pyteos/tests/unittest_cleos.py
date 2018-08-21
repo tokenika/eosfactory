@@ -10,23 +10,22 @@ import eosf
 class Test(unittest.TestCase):
 
     def run(self, result=None):
-        """ Stop after first error """      
+        ''' Stop after first error '''      
         if not result.failures:
             super().run(result)
         print("-------------------------------------------\n")
 
     @classmethod
     def setUpClass(cls):
-        setup.set_verbose(True)
-        setup.set_json(False)
-        setup.use_keosd(False)
+        setup.is_verbose = True
+        setup.is_json = False
 
     def setUp(self):
         pass
                 
 
     def test_05(self):
-        node_reset = eosf.reset([eosf.Verbosity.TRACE])
+        node_reset = eosf.reset([logger.Verbosity.INFO])
         self.assertTrue(node_reset)
 
     def test_10(self):

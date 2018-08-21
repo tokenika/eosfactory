@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""
+'''
 Python front-end for `EOSIO cleos`.
 
 .. module:: pyteos
@@ -9,7 +9,7 @@ Python front-end for `EOSIO cleos`.
 
 .. moduleauthor:: Tokenika
 
-"""
+'''
 
 import random
 import os
@@ -19,8 +19,8 @@ import subprocess
 import json as json_module
 import pathlib
 import setup
+import logger
 import teos
-from textwrap import dedent
 
 setup_setup = setup.Setup()
 _wallet_address_arg = None
@@ -34,90 +34,42 @@ def restart():
 
 def set_local_nodeos_address():
     config = teos.GetConfig(is_verbose=0)       
-    setup.set_nodeos_address(config.json["EOSIO_DAEMON_ADDRESS"])
-    setup.set_is_local_address(True)
-
-def wallet_url():
-    global _wallet_address_arg
-    return _wallet_address_arg
+    setup.set_nodeos_address("http://" + config.json["EOSIO_DAEMON_ADDRESS"])
+    setup.is_local_address = True
 
 def node_is_running():
     result = teos.NodeIsRunning(is_verbose=0)
     return not result.daemon_pid == ""
-    
-def is_notrunningnotkeosd_error(cleos_object=None):
-
-    is_error = not setup.is_use_keosd() and not node_is_running()
-    err_msg = heredoc("""
-Cannot use the local node Wallet Manager if the node is not running.
-            """)
-    if cleos_object is None:
-        if is_error:
-            return err_msg
-        else:
-            return ""
-    else:
-        if is_error:
-            cleos_object.set_error(err_msg)
-            return True
-        else:
-            return False
-
-def set_wallet_url_arg(cleos_object, url=None, check_error=True):
-    """Implements the `use_keosd` flag in the `setup` module.
-    """
-    global _wallet_address_arg
-    if not _wallet_address_arg is None:
-        return
-
-    if check_error and is_notrunningnotkeosd_error(cleos_object):
-        _wallet_address_arg = None
-        return        
-
-    if not url is None:
-        if not url:
-            _wallet_address_arg = []
-        else:
-            _wallet_address_arg = ["--wallet-url", "http://" + url]
-        return
-
-    if _wallet_address_arg is None:
-        _wallet_address_arg = []
-
-def heredoc(msg):
-    msg = dedent(msg).strip()
-    msg.replace("<br>", "\n")
-    return msg
 
 class Permission(enum.Enum):
     OWNER = '@owner'
     ACTIVE = '@active'
 
 class Key:
-    """Having the ``name`` and 'Key' attributes.
-    """    
+    '''Having the ``name`` and 'Key' attributes.
+    '''    
     def __init__(self, name, key_public, key_private):
         self.name = name
         self.key_public = key_public
         self.key_private = key_private
 
 class Account:
-    """Having the ``name`` and 'Key' attributes.
-    """    
+    '''Having the ``name`` and 'Key' attributes.
+    '''    
     def __init__(self, name, owner_key=None, active_key=None):
         self.name = name
         self.owner_key = owner_key
         self.active_key = active_key
 
 class Wallet:
-    """Having the ``name`` attribute.
-    """    
+    '''Having the ``name`` attribute.
+    '''    
     def __init__(self, name):
         self.name = name
 
-class _Cleos:
-    """A prototype for the `cleos` command classes.
-    """
+class _Cleos(logger.Logger):
+    '''A prototype for the `cleos` command classes.
+    '''
     def copy_to(self, to_object):
         to_object.error = self.error
         to_object.is_verbose = self.is_verbose
@@ -125,8 +77,10 @@ class _Cleos:
         to_object.err_msg = self.err_msg
         to_object.out_msg = self.out_msg
 
-    def set_is_verbose(self, is_verbose):
-        if setup.is_verbose() and is_verbose > 0:
+    def set_is_verbose(self, is_verbose, verbosity=None):
+        logger.Logger.__init__(self, verbosity)
+
+        if setup.is_verbose and is_verbose > 0:
             self.is_verbose = 1
         else:
             if is_verbose < 0:
@@ -146,30 +100,26 @@ class _Cleos:
         if not hasattr(self, "error"):
             self.error = False
             self.err_msg = ""
-        
-        set_wallet_url_arg(self) # this may set self.error ON
 
         global _wallet_address_arg
         global setup_setup
         if not self.error:
             cl = [setup_setup.cleos_exe]
 
-            if setup.nodeos_address_arg() is None:
+            if not setup.nodeos_address():
                 set_local_nodeos_address()
-            cl.extend(setup.nodeos_address_arg())
+            cl.extend(["--url", setup.nodeos_address()])
 
-            cl.extend(_wallet_address_arg)
-
-            if setup.is_print_request():
+            if setup.is_print_request:
                 cl.append("--print-request")
-            if setup.is_print_response():
+            if setup.is_print_response:
                 cl.append("--print-response")
 
             cl.extend([first, second])
             cl.extend(args)
             self.args = args
 
-            if setup.is_print_command_line():
+            if setup.is_print_command_line:
                 print("command line sent to cleos:")
                 print(" ".join(cl))
                 print("")
@@ -186,7 +136,7 @@ class _Cleos:
         self.set_is_verbose(is_verbose)
         self.json = {}
 
-        if setup.is_print_response() or setup.is_print_response():
+        if setup.is_print_response or setup.is_print_response:
             print(self.err_msg)
             print("")
 
@@ -225,10 +175,10 @@ class _Cleos:
         if isinstance(wallet, str):
             return wallet
 
-        self.set_error(heredoc("""
+        self.set_error(heredoc('''
             The class of the 'wallet' argument may be 
             either {} or {}, while it is {}.
-            """.format(str, Wallet, type(account))))
+            '''.format(str, Wallet, type(account))))
 
     def _key_arg(self, key, is_owner_key=True, is_private_key=True):
         if isinstance(key, Account):
@@ -242,9 +192,9 @@ class _Cleos:
                 key = key.key_public
 
             if not key:
-                self.set_error(heredoc("""
+                self.set_error(heredoc('''
                 Key is_owner_key: {}, is_private_key: {} is not defined.
-                """.format(is_owner_key, is_private_key)))
+                '''.format(is_owner_key, is_private_key)))
                 return None
             return key
 
@@ -254,18 +204,18 @@ class _Cleos:
             else:
                 key = key.key_public
             if not key:
-                self.set_error(heredoc("""
+                self.set_error(heredoc('''
                 Key is_private_key: {} is not defined.
-                """.format(is_private_key)))
+                '''.format(is_private_key)))
                 return None
             return key
         if isinstance(key, str):
             return key
 
-        self.set_error(heredoc("""
+        self.set_error(heredoc('''
         The class of the 'key' argument may be 
         {} or {} or {} while it is {}.
-        """.format(str, Key, Account, type(permission))))
+        '''.format(str, Key, Account, type(permission))))
         
     def _account_arg(self, account):
         if isinstance(account, str):
@@ -273,10 +223,10 @@ class _Cleos:
         if isinstance(account, Account):
             return account.name
 
-        self.set_error(heredoc("""
+        self.set_error(heredoc('''
             The class of the 'account' argument may be 
             either {} or {}, while it is {}.
-            """.format(str, Account, type(account))))
+            '''.format(str, Account, type(account))))
 
     def _permission_arg(self, permission):
         if isinstance(permission, str):
@@ -290,10 +240,10 @@ class _Cleos:
             if isinstance(permission[0], Account):
                 retval = permission[0].name
             if retval is None:
-                self.set_error(heredoc("""
+                self.set_error(heredoc('''
         The class of te first item of a 'permission' tuple may be 
         either {} or {}, while it is {}.
-        """.format(str, Account, type(permission[0]))))
+        '''.format(str, Account, type(permission[0]))))
                 return None
             permission_value = None
             if isinstance(permission[1], Permission):
@@ -308,10 +258,10 @@ class _Cleos:
                     retval = retval + "@" + permission_value
                 return retval
             else:
-                self.set_error(heredoc("""
+                self.set_error(heredoc('''
         The class of the second item of a 'permission' tuple may be 
         either {} or {}, while it is {}.
-        """.format(str, Permission, type(permission[1]))))
+        '''.format(str, Permission, type(permission[1]))))
                 return None
 
         if isinstance(permission, list):
@@ -323,10 +273,10 @@ class _Cleos:
                 retval.append(p)
             return retval
 
-        self.set_error(heredoc("""
+        self.set_error(heredoc('''
         The class of the 'permission' argument may be 
         {} or {} or {} or {}, while it is {}.
-        """.format(str, Account, tuple, list, type(permission))))
+        '''.format(str, Account, tuple, list, type(permission))))
 
 def get_transaction_id(cleos_object):
     transaction_id = ""
@@ -346,7 +296,7 @@ def get_transaction_id(cleos_object):
     return transaction_id
 
 class GetAccount(Account, _Cleos):
-    """Retrieve an account from the blockchain.
+    '''Retrieve an account from the blockchain.
 
     - **parameters**::
 
@@ -360,11 +310,11 @@ class GetAccount(Account, _Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, account, is_verbose=1, json=False):
         Account.__init__(self, self._account_arg(account))
         args = [self.name]
-        if setup.is_json() or json:
+        if setup.is_json or json:
             args.append("--json")
 
         _Cleos.__init__(
@@ -385,14 +335,14 @@ class GetAccount(Account, _Cleos):
         return out
 
 class GetAccounts(_Cleos):
-    """Retrieve accounts associated with a public key.
+    '''Retrieve accounts associated with a public key.
 
     - **attributes**::
 
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, key, is_verbose=1):
         public_key = self._key_arg(key, is_owner_key=True, is_private_key=False)
         _Cleos.__init__(
@@ -404,7 +354,7 @@ class GetAccounts(_Cleos):
             self.printself()
 
 class GetTransaction(_Cleos):
-    """Retrieve a transaction from the blockchain.
+    '''Retrieve a transaction from the blockchain.
 
     - **parameters**::
 
@@ -418,7 +368,7 @@ class GetTransaction(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, transaction_id, is_verbose=1):
         
         self.transaction_id = transaction_id
@@ -432,13 +382,14 @@ class GetTransaction(_Cleos):
 
 
 class WalletCreate(Wallet, _Cleos):
-    """Create a new wallet locally.
+    '''Create a new wallet locally.
 
     - **parameters**::
 
-        name: The name of the new wallet, defaults to `default`.
-        is_verbose: If `0`, do not print unless on error; if `-1`, 
-            do not print. Default is `1`.
+        name: The name of the new wallet, defaults to ``default``.
+        password: The password to the wallet, if the wallet exists. Default is None.
+        is_verbose: If ``0``, do not print unless on error; if ``-1``, do not print. 
+            Default is ``1``.
 
     - **attributes**::
 
@@ -447,7 +398,7 @@ class WalletCreate(Wallet, _Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, name="default", password="", is_verbose=1):
         Wallet.__init__(self, name)
         self.password = None
@@ -455,39 +406,37 @@ class WalletCreate(Wallet, _Cleos):
 
         if not password: # try to create a wallet
             _Cleos.__init__(
-                self, ["--name", self.name], "wallet", "create", is_verbose)
+                self, ["--name", self.name, "--to-console"], 
+                "wallet", "create", is_verbose)
             self.json["name"] = name
             msg = self.out_msg
-            if not self.error:
+
+            if not self.ERROR():
                 self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
                 self.json["password"] = self.password
+                self.is_created = True
             else:
                 return
         else: # try to open an existing wallet
             WalletOpen(name, is_verbose=-1)
             wallet_unlock = WalletUnlock(name, password, is_verbose=-1)
-            self.err_msg = wallet_unlock.err_msg  
-
-            if not wallet_unlock.error:
+            self.set_error(wallet_unlock.err_msg )
+            if not self.ERROR():
+                self.json = {} 
                 self.name = name
                 self.password = password
-                self.json["password"] = self.password
+                self.is_created = False
+                self.json["name"] = name
+                self.json["password"] = password
                 self.out_msg = "Restored wallet: {}".format(self.name)
-            else:
-                if "Nonexistent wallet" in self.err_msg:
-                    _Cleos.__init__(
-                        self, ["--name", self.name], "wallet", "create",
-                        is_verbose)
-                    self.json["name"] = name
-                self.error = True
 
         if not self.error:
             self.printself()
 
 
 class WalletStop(_Cleos):
-    """Stop keosd (doesn't work with nodeos).
-    """
+    '''Stop keosd (doesn't work with nodeos).
+    '''
     def __init__(self, is_verbose=1):
         _Cleos.__init__(self, [], "wallet", "stop", is_verbose)
 
@@ -496,7 +445,7 @@ class WalletStop(_Cleos):
 
 
 class WalletList(_Cleos):
-    """List opened wallets, * marks unlocked.
+    '''List opened wallets, * marks unlocked.
 
     - **parameters**::
 
@@ -508,7 +457,7 @@ class WalletList(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, is_verbose=1):
         _Cleos.__init__(
             self, [], "wallet", "list", is_verbose)
@@ -520,7 +469,7 @@ class WalletList(_Cleos):
 
 
 class WalletImport(_Cleos):
-    """Import a private key into wallet.
+    '''Import a private key into wallet.
 
     - **parameters**::
 
@@ -534,7 +483,7 @@ class WalletImport(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, key, wallet="default", is_verbose=1):
 
         self.set_is_verbose(is_verbose)
@@ -545,13 +494,13 @@ class WalletImport(_Cleos):
             ["--private-key", key_private, "--name", self._wallet_arg(wallet)],
             "wallet", "import", is_verbose)
 
-        if not self.error:
+        if not self.ERROR():
             self.json["key_private"] = key_private
             self.key_private = key_private
             self.printself()
 
 class WalletRemove_key(_Cleos):
-    """Remove key from wallet
+    '''Remove key from wallet
     - **parameters**::
 
         wallet: A wallet object or the name of the wallet to import key into.
@@ -564,7 +513,7 @@ class WalletRemove_key(_Cleos):
 
         error: Whether any error ocurred.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, key, wallet, password, is_verbose=1):
 
         self.set_is_verbose(is_verbose)
@@ -584,7 +533,7 @@ class WalletRemove_key(_Cleos):
 
 
 class WalletKeys(_Cleos):
-    """List of public keys from all unlocked wallets.
+    '''List of public keys from all unlocked wallets.
 
     - **parameters**::
 
@@ -602,7 +551,7 @@ class WalletKeys(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, is_verbose=1):
         _Cleos.__init__(
             self, [], "wallet", "keys", is_verbose)
@@ -624,7 +573,7 @@ class WalletKeys(_Cleos):
 
 
 class WalletOpen(_Cleos):
-    """Open an existing wallet.
+    '''Open an existing wallet.
 
     - **parameters**::
 
@@ -639,7 +588,7 @@ class WalletOpen(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, wallet="default", is_verbose=1):
         try:
             wallet_name = wallet.name
@@ -654,8 +603,8 @@ class WalletOpen(_Cleos):
 
 
 class WalletLockAll(_Cleos):
-    """Lock all unlocked wallets.
-    """
+    '''Lock all unlocked wallets.
+    '''
     def __init__(self, wallet="default", is_verbose=1):
         _Cleos.__init__(
             self, [], "wallet", "lock_all", is_verbose)
@@ -665,7 +614,7 @@ class WalletLockAll(_Cleos):
 
 
 class WalletLock(_Cleos):
-    """Lock wallet.
+    '''Lock wallet.
 
     - **parameters**::
 
@@ -680,7 +629,7 @@ class WalletLock(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, wallet="default", is_verbose=1):
         try:
             wallet_name = wallet.name
@@ -695,7 +644,7 @@ class WalletLock(_Cleos):
 
 
 class WalletUnlock(_Cleos):
-    """Unlock wallet.
+    '''Unlock wallet.
 
     - **parameters**::
 
@@ -712,7 +661,7 @@ class WalletUnlock(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(
             self, wallet="default", password="", timeout=0, is_verbose=1):
         try:
@@ -726,12 +675,12 @@ class WalletUnlock(_Cleos):
             ["--name", wallet_name, "--password", password], 
             "wallet", "unlock", is_verbose)
 
-        if not self.error:
+        if not self.ERROR():
             self.printself()
 
 
 class GetInfo(_Cleos):
-    """Get current blockchain information.
+    '''Get current blockchain information.
 
     - **parameters**::
 
@@ -743,10 +692,11 @@ class GetInfo(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(self, is_verbose=1):
         _Cleos.__init__(
             self, [], "get", "info", is_verbose)
+
         if not self.error:
             self.json = json_module.loads(str(self.out_msg))
             self.head_block = self.json["head_block_num"]
@@ -775,7 +725,7 @@ def get_block_trx_cout(block_num):
 
 
 class GetBlock(_Cleos):
-    """Retrieve a full block from the blockchain.
+    '''Retrieve a full block from the blockchain.
 
     - **parameters**::
     
@@ -789,7 +739,7 @@ class GetBlock(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.    
-    """
+    '''
     def __init__(self, block_number, block_id="", is_verbose=1):
         args = []
         if(block_id == ""):
@@ -809,7 +759,7 @@ class GetBlock(_Cleos):
 
 
 class GetCode(_Cleos):
-    """Retrieve the code and ABI for an account.
+    '''Retrieve the code and ABI for an account.
 
     - **parameters**::
 
@@ -825,7 +775,7 @@ class GetCode(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.    
-    """
+    '''
     def __init__(
             self, account, code="", abi="", 
             wasm=False, is_verbose=1):
@@ -850,7 +800,7 @@ class GetCode(_Cleos):
 
 
 class GetTable(_Cleos):
-    """Retrieve the contents of a database table
+    '''Retrieve the contents of a database table
 
     - **parameters**::
 
@@ -875,7 +825,7 @@ class GetTable(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(
             self, account, table, scope,
             binary=False, 
@@ -920,7 +870,7 @@ class GetTable(_Cleos):
 
 
 class CreateKey(Key, _Cleos):
-    """Create a new keypair and print the public and private keys.
+    '''Create a new keypair and print the public and private keys.
 
     - **parameters**::
 
@@ -933,7 +883,7 @@ class CreateKey(Key, _Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.    
-    """
+    '''
     def __init__(
             self, key_name, key_public="", key_private="", r1=False, is_verbose=1):
         Key.__init__(self, key_name, key_public, key_private)
@@ -945,7 +895,7 @@ class CreateKey(Key, _Cleos):
             self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
                 .format(self.key_private, self.key_public)
         else:
-            args = []
+            args = ["--to-console"]
             if r1:
                 args.append("--r1")
 
@@ -976,7 +926,7 @@ class RestoreAccount():
             self.name = self.json["account_name"]
             self.owner_key = ""
             self.active_key = ""
-            self.is_verbose = setup.is_verbose() and is_verbose > 0
+            self.is_verbose = setup.is_verbose and is_verbose > 0
 
     def info(self):
         print(str(GetAccount(self.name, is_verbose=0)))
@@ -986,7 +936,7 @@ class RestoreAccount():
 
 
 class CreateAccount(Account, _Cleos):
-    """Create an account, buy ram, stake for bandwidth for the account.
+    '''Create an account, buy ram, stake for bandwidth for the account.
 
     - **parameters**::
 
@@ -1022,7 +972,7 @@ class CreateAccount(Account, _Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.    
-    """
+    '''
     def __init__(
             self, creator, name, owner_key, 
             active_key=None,
@@ -1055,7 +1005,7 @@ class CreateAccount(Account, _Cleos):
                 self._account_arg(creator), self.name, 
                 owner_key_public, active_key_public
             ]
-        if setup.is_json():
+        if setup.is_json:
             args.append("--json")
         if not permission is None:
             p = self._permission_arg(permission)
@@ -1107,7 +1057,7 @@ def account_name():
 
 
 class SetContract(_Cleos):
-    """Create or update the contract on an account.
+    '''Create or update the contract on an account.
 
     - **parameters**:: 
 
@@ -1115,8 +1065,9 @@ class SetContract(_Cleos):
             having the  May be an object having the attribute `name`, like 
             `CreateAccount`, or a string.
         contract_dir: The path containing the .wast and .abi. 
-        wast_file: The file containing the contract WAST or WASM (absolute).
-        abi_file: The ABI for the contract (absolute).
+        wasm_file: The file containing the contract WASM relative 
+            to contract_dir.
+        abi_file: The ABI for the contract relative to contract-dir.
 
         permission: An account and permission level to authorize, as in 
             'account@permission'. May be a `CreateAccount` or `Account` object
@@ -1141,10 +1092,10 @@ class SetContract(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.    
-    """
+    '''
     def __init__(
             self, account, contract_dir, 
-            wast_file=None, abi_file=None, 
+            wasm_file=None, abi_file=None, 
             permission=None, expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
@@ -1157,15 +1108,17 @@ class SetContract(_Cleos):
         config = teos.GetConfig(contract_dir, is_verbose=0)
         try:
             self.contract_path_absolute = config.json["contract-dir"]
-            wast_file = config.json["contract-wast"]
-            abi_file = config.json["contract-abi"]
+            if not wasm_file:
+                wasm_file = config.json["contract-wasm"]
+            if not abi_file:
+                abi_file = config.json["contract-abi"]
         except:
-            self.set_error("cannot find the contract directory.")
-            return
+            pass
 
         self.account_name = self._account_arg(account)
         args = [self.account_name, self.contract_path_absolute]
-        if setup.is_json() or json:
+
+        if setup.is_json or json:
             args.append("--json")
         if not permission is None:
             p = self._permission_arg(permission)
@@ -1188,8 +1141,8 @@ class SetContract(_Cleos):
             args.extend(["--max-net-usage", max_net_usage])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block]) 
-        if wast_file:
-            args.append(wast_file)
+        if wasm_file:
+            args.append(wasm_file)
         if abi_file:
             args.append(abi_file)
 
@@ -1197,7 +1150,7 @@ class SetContract(_Cleos):
             self, args, "set", "contract", is_verbose)
 
         if not self.error:
-            if setup.is_json() or json:
+            if setup.is_json or json:
                 self.json = json_module.loads(self.out_msg)
             self.transaction = get_transaction_id(self)
             self.printself()
@@ -1207,7 +1160,7 @@ class SetContract(_Cleos):
 
 
 class PushAction(_Cleos):
-    """Push a transaction with a single action
+    '''Push a transaction with a single action
 
     - **parameters**::
 
@@ -1241,7 +1194,7 @@ class PushAction(_Cleos):
         error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.
-    """
+    '''
     def __init__(
             self, account, action, data,
             permission=None, expiration_sec=30, 
@@ -1254,7 +1207,7 @@ class PushAction(_Cleos):
         self.account_name = self._account_arg(account)
 
         args = [self.account_name, action, data]
-        if setup.is_json() or json:
+        if setup.is_json or json:
             args.append("--json")
         if not permission is None:
             p = self._permission_arg(permission)

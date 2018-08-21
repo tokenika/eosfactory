@@ -35,7 +35,7 @@
             {
                 "command": "extension.sayHello",
                 "title": "Hello World",
-                "category": "EOSF"
+                "category": "TRACE"
             }
         ],
         "menus": {

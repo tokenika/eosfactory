@@ -1,4 +1,4 @@
-"""
+'''
 # Registering to a remote testnet
 
 This file can be executed as a python script: 'python3 
@@ -15,10 +15,10 @@ prepared to use is stopped just when you need it. Therefore we have provision
 for easy change of the used testnode:
 
 ```md
-"""
+'''
 import setup
 file_prefix = setup.remote_testnet_setup("88.99.97.30:38888")
-"""
+'''
 ```
 Where the argument is the url of a testnode. The statement makes the following
 arrangements:
@@ -34,10 +34,10 @@ We do not want to reserve this default naming system for the current test,
 then we use an option of the function `setup.remote_testnet_setup(...)` --
 
 ```md
-"""
+'''
 file_prefix = setup.remote_testnet_setup(
     "88.99.97.30:38888", "registering_to_testnode")
-"""
+'''
 ```
 -- resulting with a specific naming prefix, for example, the wallet name is `registering_to_testnode_default.wallet`, now.
 
@@ -58,7 +58,7 @@ Active Private Key: ACTIVE_KEY
 Note the statement put above, namely `setup.remote_testnet_setup("88.99.97.30:38888")`.
 
 ```md
-"""
+'''
 import os
 import unittest
 import setup
@@ -70,40 +70,32 @@ from eosf_wallet import Wallet
 from eosf_account import account_master_create
 from user_data import *
 
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT]
-_ = eosf.Logger()
+logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
+_ = logger.Logger()
 
-"""
-```
-
-### Specify that the KEOSD Wallet Manager is used
-
-```md
-"""
-eosf.use_keosd(True)
-"""
+'''
 ```
 
 ### Throw an exception if the testnode is off:
 
 Now make sure that the chosen testnode is operative. The 
-`eosf.set_throw_error(...)` statement below switches between error management 
+`logger.set_throw_error(...)` statement below switches between error management 
 modes: an error may either throw a fatal exception or it may print a message. 
 
 We dedicate the former way to the setup phase of a test.
 
 ```md
-"""
-eosf.set_throw_error(True
+'''
+logger.set_throw_error(True
 eosf.info()
-eosf.set_throw_error(False)
-"""
+logger.set_throw_error(False)
+'''
 ```
 
 ### Clean the results of a possible previous use of the current script.
 
 ```md
-"""
+'''
 eosf.kill_keosd()   # otherwise, the manager may protects the wallet files
 
 dir = eosf.wallet_dir()
@@ -111,17 +103,17 @@ files = os.listdir(dir)
 for file in files:
     if file.startswith(file_prefix):
         os.remove(os.path.join(dir,file))
-"""
+'''
 ```
 
 ```md
-"""
+'''
 wallet = Wallet(wallet_name)
 
-eosf.set_is_testing_errors(False)
-eosf.set_throw_error(True)
+logger.set_is_testing_errors(False)
+logger.set_throw_error(True)
 
-"""
+'''
 ```
 
 ### Introduce a test trick
@@ -138,7 +130,7 @@ script 'user_data.py`. We hope, that you will replace them with your own
 data, as they are used in other articles.
 
 ```md
-"""
+'''
 exit()
 eosf_account.account_master_test = eosf_account.GetAccount(
     "account_master_test",
@@ -147,16 +139,16 @@ eosf_account.account_master_test = eosf_account.GetAccount(
     ACTIVE_KEY
 )
 eosf_account.account_master_test.ERROR()
-"""
+'''
 ```
 
 ### End the set-up part
 
 ```md
-"""
-eosf.set_throw_error(False)         # on error, do not throw exception
-eosf.set_is_testing_errors()        # make error messages less alarming
-"""
+'''
+logger.set_throw_error(False)         # on error, do not throw exception
+logger.set_is_testing_errors()        # make error messages less alarming
+'''
 ```
 
 ## Case
@@ -167,9 +159,9 @@ In subsequent tests, you may have to change the account object name, here
 ### Register to the testnode
 
 ```md
-"""
+'''
 account_master_create("account_master")
-"""
+'''
 ```
 
 ### Test run
@@ -188,4 +180,4 @@ We hope that you get something similar to this one shown in the image below.
     onerror="this.src='../../../source/cases/registering.png'"   
     alt="registering" width="640px"/>
     
-"""
+'''

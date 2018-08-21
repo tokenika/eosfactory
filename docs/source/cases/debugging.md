@@ -1,4 +1,4 @@
-"""
+'''
 # Debugging smart contracts
 
 This file can be executed as a python script: 
@@ -28,7 +28,7 @@ an account for holding the tested contract, and to working accounts (here,
 'account_alice' and 'account_carol').
 
 ```md
-"""
+'''
 import sys
 import unittest
 import setup
@@ -40,20 +40,19 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-eosf.use_keosd(False)
+logger.Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 
 eosf.restart()
-eosf.set_is_testing_errors(False)
-eosf.set_throw_error(True)
-eosf.reset([eosf.Verbosity.TRACE]) 
+logger.set_is_testing_errors(False)
+logger.set_throw_error(True)
+eosf.reset([logger.Verbosity.INFO]) 
 
 wallet = Wallet()
 account_master_create("account_master")
 account_create("account_hello", account_master)
 account_create("account_alice", account_master)
 account_create("account_carol", account_master)
-"""
+'''
 ```
 ### Include logger.hpp
 
@@ -92,7 +91,7 @@ EOSIO_ABI( hello, (hi) )
 Build and deploy the contract. Push contract actions:
 
 ```md
-"""
+'''
 contract_hello = Contract(account_hello, "hello")
 contract_hello.build()
 contract_hello.deploy()
@@ -102,7 +101,7 @@ account_hello.push_action(
 
 account_hello.push_action(
     "hi", {"user":account_carol}, account_carol)
-"""
+'''
 ```
 
 ### Test run
@@ -120,4 +119,4 @@ We hope that you have something similar to what is shown in the image below.
 <img src="debugging.png" 
     onerror="this.src='../../../source/cases/debugging.png'" width="720px"/>
 
-"""
+'''
