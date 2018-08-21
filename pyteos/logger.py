@@ -219,7 +219,7 @@ message is printed.
 arguments:
 cleos_or_str -- error message string or object having the attribute err_msg
         '''
-        if not verbosity:
+        if not self.verbosity:
             return
 
         if cleos_or_str is None:
