@@ -80,7 +80,7 @@ class Test(unittest.TestCase):
             {
                 "to": account_alice, "quantity": "100.0000 EOS", "memo": ""
             },
-            account_master)        
+            account_master)
 
         _.COMMENT('''
         Execute a series of transfers between the accounts:
