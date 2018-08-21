@@ -5,15 +5,12 @@ Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
 set_throw_error(False)
 _ = Logger()
 
-
 CONTRACT_NAME = "02_eosio_token"
-
 
 class Test(unittest.TestCase):
 
     def run(self, result=None):
         super().run(result)
-
 
     @classmethod
     def setUpClass(cls):
@@ -46,7 +43,6 @@ class Test(unittest.TestCase):
         contract = Contract(account_host, CONTRACT_NAME)
         contract.build()
         contract.deploy()
-
 
         _.COMMENT('''
         Initialize the contract and send some tokens to one of the accounts:
