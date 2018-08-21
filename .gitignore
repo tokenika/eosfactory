@@ -10,9 +10,6 @@ teos/teos_lib/include/teoslib/config.h
 /docs/sphinx/build
 !/docs/sphinx/Makefile
 
-/contracts/*
-
-
 **/.vs
 *.pyc
 
