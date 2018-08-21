@@ -44,7 +44,6 @@ namespace eosio {
         uint64_t primary_key()const { return balance.symbol.name(); }
       };
 
-      ///@abi table currency_stats i64
       struct currency_stats {
         asset          supply;
         asset          max_supply;

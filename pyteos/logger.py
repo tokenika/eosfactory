@@ -209,15 +209,19 @@ class Logger():
     def ERROR(self, cleos_or_str=None):
         '''Print an error message or throw 'Exception'.
 
-            The 'cleos_or_str' argument may be a string error message or any object having
-            the string attribute `err_msg`.
+If the ``verbosity`` parameter is empty list, do nothing.
 
-            If 'set_throw_error(True)', an `Exception object is thrown, otherwise the
-            message is printed.
+The 'cleos_or_str' argument may be a string error message or any object having the string attribute ``err_msg``.
 
-            arguments:
-            cleos_or_str -- error message string or object having the attribute err_msg
+If 'set_throw_error(True)', an `Exception object is thrown, otherwise the
+message is printed.
+
+arguments:
+cleos_or_str -- error message string or object having the attribute err_msg
         '''
+        if not verbosity:
+            return
+
         if cleos_or_str is None:
             cleos_or_str = self
 
@@ -250,6 +254,7 @@ class Logger():
 
         self.error_buffer = msg
         global _is_throw_error
+
         if _is_throw_error:
             raise Exception(msg)
         else:

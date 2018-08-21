@@ -1,19 +1,18 @@
 import unittest
 import setup
-import logger
 import eosf
 import time
 
-from logger import Verbosity
+from logger import *
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract, contract_workspace_from_template
 
-logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-logger.set_throw_error(False)
+Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+set_throw_error(False)
 
 
-_ = logger.Logger()
+_ = Logger()
 CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
 
 class Test(unittest.TestCase):
@@ -31,15 +30,15 @@ NEXT TEST ====================================================================
 
     def setUp(self):
         eosf.restart()
-        logger.set_is_testing_errors(False)
-        logger.set_throw_error(True)
+        set_is_testing_errors(False)
+        set_throw_error(True)
 
     def test_contract_template(self):
-        eosf.reset([logger.Verbosity.INFO]) 
+        eosf.reset([Verbosity.INFO]) 
         wallet = Wallet()
         account_master_create("account_master")
-        logger.set_throw_error(False)
-        logger.set_is_testing_errors()
+        set_throw_error(False)
+        set_is_testing_errors()
 
         ######################################################################  
         _.SCENARIO('''
