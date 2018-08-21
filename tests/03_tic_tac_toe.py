@@ -17,8 +17,9 @@ logger.set_throw_error(False)
 _ = logger.Logger()
 
 
+CONTRACT_NAME = "03_tic_tac_toe"
 ACCOUNT_MASTER = "account_master"
-ACCOUNT_TTT = "account_tic_tac_toe"
+ACCOUNT_HOST = "account_host"
 
 
 class Test(unittest.TestCase):
@@ -26,7 +27,7 @@ class Test(unittest.TestCase):
     def setUp(self):
 
         global ACCOUNT_MASTER
-        global ACCOUNT_TTT
+        global ACCOUNT_HOST
 
         logger.set_throw_error(True)
 
@@ -46,7 +47,7 @@ class Test(unittest.TestCase):
             wallet = Wallet(
                 WALLET_NAME, 
                 verbosity=[logger.Verbosity.INFO]) 
-            ACCOUNT_MASTER = ACCOUNT_TTT
+            ACCOUNT_MASTER = ACCOUNT_HOST
 
             if not ACCOUNT_MASTER in globals():
                 account_master_create(
@@ -58,15 +59,15 @@ class Test(unittest.TestCase):
 
             wallet = Wallet()
             account_master_create(ACCOUNT_MASTER)
-            account_create(ACCOUNT_TTT, globals()[ACCOUNT_MASTER])
+            account_create(ACCOUNT_HOST, globals()[ACCOUNT_MASTER])
 
         global account_master
         account_master = globals()[ACCOUNT_MASTER]
         global account_tic_tac_toe
-        account_tic_tac_toe = globals()[ACCOUNT_TTT] 
+        account_tic_tac_toe = globals()[ACCOUNT_HOST] 
 
         contract_tic_tac_toe = Contract(
-            account_tic_tac_toe, "tic_tac_toe_jungle")
+            account_tic_tac_toe, CONTRACT_NAME)
         contract_tic_tac_toe.build()
         if not account_tic_tac_toe.is_code():
             contract_tic_tac_toe.deploy()
@@ -113,7 +114,7 @@ class Test(unittest.TestCase):
         account_tic_tac_toe.push_action(
             "move", 
             {
-                "challenger": account_alice,                 
+                "challenger": account_alice,
                 "host": account_carol,
                 "by": account_carol, 
                 "row": 0, "column": 0 

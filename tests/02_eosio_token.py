@@ -15,6 +15,9 @@ logger.set_throw_error(False)
 _ = logger.Logger()
 
 
+CONTRACT_NAME = "02_eosio_token"
+
+
 class Test(unittest.TestCase):
 
     def run(self, result=None):
@@ -48,7 +51,7 @@ class Test(unittest.TestCase):
         account_create("account_bob", account_master)
         account_create("account_carol", account_master)
         
-        contract = Contract(account_host, "token")
+        contract = Contract(account_host, CONTRACT_NAME)
         contract.build()
         contract.deploy()
 
@@ -64,14 +67,14 @@ class Test(unittest.TestCase):
             {
                 "issuer": account_master,
                 "maximum_supply": "1000000000.0000 EOS",
-                "can_freeze": "0", 
-                "can_recall": "0", 
+                "can_freeze": "0",
+                "can_recall": "0",
                 "can_whitelist": "0"
             }, [account_master, account_host])
 
         self.assertTrue(
             '"maximum_supply": "1000000000.0000 EOS"' \
-                in account_host.eosf_buffer)        
+                in account_host.eosf_buffer)
 
         account_host.push_action(
             "issue",

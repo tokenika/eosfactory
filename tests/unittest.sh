@@ -1,3 +1,3 @@
-python3 unittest_contract_template.py
-python3 unittest_eosio_token_contract.py
-python3 unittest_tic_tac_toe.py
+python3 01_hello_world.py
+python3 02_eosio_token.py
+python3 03_tic_tac_toe.py

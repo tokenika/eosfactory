@@ -12,9 +12,9 @@ teos/teos_lib/include/teoslib/config.h
 /docs/sphinx/build
 !/docs/sphinx/Makefile
 
-!/contracts/hello/build
-!/contracts/tic_tac_toe_jungle/build
-!/contracts/token/build
+!/contracts/01_hello_world/build
+!/contracts/02_eosio_token/build
+!/contracts/03_tic_tac_toe/build
 
 **/.vs
 *.pyc
