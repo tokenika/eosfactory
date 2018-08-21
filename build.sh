@@ -33,7 +33,7 @@ WSL_ROOT_DIR__="%LocalAppData%\\Packages\\CanonicalGroupLimited.UbuntuonWindows_
 WSL_ROOT_DIR1804__="%LocalAppData%\\Packages\\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\\LocalState\\rootfs"
 
 
-EOSIO_SHARED_MEMORY_SIZE_MB__=100
+EOSIO_SHARED_MEMORY_SIZE_MB__=200
 CMAKE_VERBOSE__=0
 
 
