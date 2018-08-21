@@ -28,5 +28,4 @@ teos/source/conf.py
 .vscode/tasks.json
 
 pyteos/appJar
-vsc_extensions
-vsc_extensions1
+vsc_extension
