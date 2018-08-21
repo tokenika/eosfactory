@@ -42,11 +42,11 @@ class Test(unittest.TestCase):
                 os.remove(wallet_file)
                 _.INFO("The deleted wallet file:\n{}\n".format(wallet_file))
             except Exception as e:
-                _.ERROR("Cannot delete the wallet file:\n{}\n".format(str(e))) 
+                _.ERROR("Cannot delete the wallet file:\n{}\n".format(str(e)))
 
             wallet = Wallet(
-                WALLET_NAME, 
-                verbosity=[logger.Verbosity.INFO]) 
+                WALLET_NAME,
+                verbosity=[logger.Verbosity.INFO])
             ACCOUNT_MASTER = ACCOUNT_HOST
 
             if not ACCOUNT_MASTER in globals():
@@ -83,11 +83,11 @@ class Test(unittest.TestCase):
 
     def test_tic_tac_toe(self):
         _.SCENARIO('''
-        Given a ``Wallet`` class object in the global namespace; an account 
-        master object named ``account_master`` in the global namespace;
-        given an account object named ``account_tic_tac_toe`` account that keeps 
-        the ``tic_tac_toe`` contract; and given two player accounts: 
-        ``account_alice`` and ``account_carol`` -- run games.
+        Run the ``tic-tac-toe`` game with the following prerequisites:
+        * an instance of the Wallet class,
+        * an instance of an AccountMaster class, named ``account_master``,
+        * an instance of an Account class, named ``account_host``, which stores the contract,
+        * and two player accounts named ``account_alice`` and ``account_carol``.
         ''')
 
         account_tic_tac_toe.push_action(
@@ -179,7 +179,7 @@ class Test(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    '''Test the ``tic_tac_toe`` contract either locally or remotely.
+    '''Test the ``tic-tac-toe`` contract either locally or remotely.
     '''
     IS_USE_KEOSD = False
     if len(sys.argv) > 1:

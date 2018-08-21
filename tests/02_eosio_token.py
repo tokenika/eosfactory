@@ -34,16 +34,17 @@ class Test(unittest.TestCase):
         logger.set_throw_error(True)
 
     def test_eosio_token_contract(self):
-        eosf.reset([logger.Verbosity.INFO]) 
+        eosf.reset([logger.Verbosity.INFO])
+
         wallet = Wallet()
         account_master_create("account_master")
         logger.set_throw_error(False)
         logger.set_is_testing_errors()
 
         _.SCENARIO('''
-        With the master account, create four accounts: ``account_alice``, 
-        ``account_bob``, account_carol`` and ``account_host``. Add the 
-        ``eosio.token`` contract to the last account.
+        First we create a series of accounts and delpoy the ``eosio.token`` contract
+        to one of them. Then we initialize the token, and run a couple of transfers
+        between those accounts.
         ''')
 
         account_create("account_host", account_master)
@@ -57,9 +58,7 @@ class Test(unittest.TestCase):
 
 
         _.COMMENT('''
-        Execute actions on the contract account:
-            * let eosio deposit an amount of 1000000000.0000 EOS there;
-            * transfer some EOS to the ``alice`` account.
+        Initialize the contract and send some tokens to one of the accounts:
         ''')
 
         account_host.push_action(
@@ -84,7 +83,7 @@ class Test(unittest.TestCase):
             account_master)        
 
         _.COMMENT('''
-        Execute a series of transfers between accounts:
+        Execute a series of transfers between the accounts:
         ''')
 
         account_host.push_action(

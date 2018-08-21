@@ -37,21 +37,16 @@ class Test(unittest.TestCase):
 
     def test_contract_template(self):
         eosf.reset([logger.Verbosity.INFO]) 
+        
         wallet = Wallet()
         account_master_create("account_master")
         logger.set_throw_error(False)
         logger.set_is_testing_errors()
 
         _.SCENARIO('''
-        Suppose, you are going to develop a smart contract. With the ``EOSFactory``, 
-        you do it within a specialized work-space, with the ``Visual Studio Code``.
-
-        The system provides means for creating a template work-space. This unittest 
-        tests them.
-
-        Create a work-space file system in the ``EOSIO_CONTRACT_WORKSPACE`` folder.
-        In practice, you will work on the sources of the contract but now, take it as
-        it is: the ``hello`` contract.
+        This is a test of creating a contract from a pre-defined template,
+        then building and deploying it.
+        Finnally, a couple of basic methods are tested.
         ''')
 
         contract_dir = contract_workspace_from_template(
