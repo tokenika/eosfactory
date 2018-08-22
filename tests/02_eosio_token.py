@@ -1,7 +1,7 @@
 import unittest
 from  eosfactory import *
 
-Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 set_throw_error(False)
 _ = Logger()
 
@@ -12,22 +12,15 @@ class Test(unittest.TestCase):
     def run(self, result=None):
         super().run(result)
 
+
     @classmethod
     def setUpClass(cls):
-        print()
-
-    def setUp(self):
-        restart()
-        set_is_testing_errors(False)
-        set_throw_error(True)
-
-    def test_eosio_token_contract(self):
         reset([Verbosity.INFO])
+        set_throw_error(True)
+        set_is_testing_errors(False)
 
         wallet = Wallet()
         account_master_create("account_master")
-        set_throw_error(False)
-        set_is_testing_errors()
 
         _.SCENARIO('''
         First we create a series of accounts and delpoy the ``eosio.token`` contract
@@ -35,14 +28,27 @@ class Test(unittest.TestCase):
         between those accounts.
         ''')
 
+        _.COMMENT('''
+        Create a contract's hosting account, then build & deploy the contract:
+        ''')
         account_create("account_host", account_master)
+        contract = Contract(account_host, CONTRACT_NAME)
+        # contract.build()
+        contract.deploy()
+
+        _.COMMENT('''
+        Create accounts "alice", "bob" and "carol":
+        ''')
         account_create("account_alice", account_master)
         account_create("account_bob", account_master)
         account_create("account_carol", account_master)
-        
-        contract = Contract(account_host, CONTRACT_NAME)
-        contract.build()
-        contract.deploy()
+
+
+    def setUp(self):
+        pass
+
+
+    def test_01(self):
 
         _.COMMENT('''
         Initialize the contract and send some tokens to one of the accounts:
@@ -58,9 +64,9 @@ class Test(unittest.TestCase):
                 "can_whitelist": "0"
             }, [account_master, account_host])
 
-        self.assertTrue(
-            '"maximum_supply": "1000000000.0000 EOS"' \
-                in account_host.eosf_buffer)
+        # self.assertTrue(
+        #     '"maximum_supply": "1000000000.0000 EOS"' \
+        #         in account_host.eosf_buffer)
 
         account_host.push_action(
             "issue",
@@ -123,9 +129,15 @@ class Test(unittest.TestCase):
             table_carol.json["rows"][0]["balance"], '12.0000 EOS',
             '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
 
+
+    def tearDown(self):
+        pass
+
+
     @classmethod
     def tearDownClass(cls):
         stop()
+
 
 if __name__ == "__main__":
     unittest.main()
