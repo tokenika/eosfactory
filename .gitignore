@@ -1,5 +1,6 @@
 *.exe
 build
+b
 
 Makefile
 CMakeFiles
