@@ -42,8 +42,8 @@ def remove_files():
             if file.startswith(setup.file_prefix()):
                 os.remove(os.path.join(dir,file)) 
     except Exception as e:
-        logg = logger.Logger()
-        logg.ERROR('''
+        logger = front_end.Logger()
+        logger.ERROR('''
         Cannot remove nodeos address files. The error message is
         {}
         '''.format(str(e)))   
@@ -66,7 +66,7 @@ def account_map(logger=None):
                 return {}
             else: 
                 if not logger is None:
-                    logg.ERROR('''
+                    logger.ERROR('''
                 The account mapping file is misformed. The error message is:
                 {}
                 
@@ -78,7 +78,7 @@ def account_map(logger=None):
                         edit_account_map()
                         continue
                     else:
-                        logg.ERROR('''
+                        logger.ERROR('''
             Use the function 'eosf.edit_account_map(text_editor="nano")'
             or the corresponding method of any object of the 'eosf_wallet.Wallet` 
             class to edit the file.
@@ -192,9 +192,9 @@ def is_local_address():
 def reset(verbosity=None):
     ''' Start clean the EOSIO local node.
     '''
-    logg = logger.Logger(verbosity) 
+    logger = front_end.Logger(verbosity) 
     if not is_local_address():   
-        logg.TRACE_INFO('''
+        logger.TRACE_INFO('''
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()))
 
@@ -202,26 +202,26 @@ def reset(verbosity=None):
 
     node = teos.NodeStart(1, is_verbose=0)
     probe = teos.NodeProbe(is_verbose=-1)
-    if not logg.ERROR(probe):
-        logg.TRACE_INFO('''
+    if not logger.ERROR(probe):
+        logger.TRACE_INFO('''
         ######### Local test node is reset and is running.
         ''')
-        logg.OUT(str(node))
+        logger.OUT(str(node))
 
 def run(verbosity=None):
     ''' Restart the EOSIO local node.
     ''' 
-    logg = logger.Logger(verbosity) 
+    logger = front_end.Logger(verbosity) 
     if not is_local_address():   
-        logg.TRACE_INFO('''
+        logger.TRACE_INFO('''
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()))
 
     node = teos.NodeStart(0, is_verbose=0)
     probe = teos.NodeProbe(is_verbose=-1)
-    logg = logger.Logger(verbosity)
-    if not logg.ERROR(probe):
-        logg.TRACE_INFO('''
+    logger = front_end.Logger(verbosity)
+    if not logger.ERROR(probe):
+        logger.TRACE_INFO('''
         ######### Local test node is started and is running.
         ''')
         logger.OUT(str(node))
@@ -234,9 +234,9 @@ def stop(verbosity=None):
     is empty, otherwise `False`.
     '''
     stop = teos.NodeStop(is_verbose=0)
-    logg = logger.Logger(verbosity)
-    if not logg.ERROR(stop):
-        logg.TRACE_INFO('''
+    logger = front_end.Logger(verbosity)
+    if not logger.ERROR(stop):
+        logger.TRACE_INFO('''
         ######### Local test node is stopped.
         ''')
 
@@ -245,13 +245,13 @@ def info():
     Display EOS node status.
     '''
     get_info = cleos.GetInfo(is_verbose=-1)
-    logg = logger.Logger(None)
+    logger = front_end.Logger(None)
     get_info.err_msg = '''
     {}
     THE NODE {} IS NOT OPERATIVE.
     '''.format(get_info.err_msg, setup.nodeos_address())
-    if not logg.ERROR(get_info):
-        logg.TRACE_INFO('''
+    if not logger.ERROR(get_info):
+        logger.TRACE_INFO('''
         ######### Node ``{}``, head block number ``{}``.
         '''.format(
             setup.nodeos_address(),

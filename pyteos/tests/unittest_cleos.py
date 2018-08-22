@@ -25,7 +25,7 @@ class Test(unittest.TestCase):
                 
 
     def test_05(self):
-        node_reset = eosf.reset([logger.Verbosity.INFO])
+        node_reset = eosf.reset([front_end.Verbosity.INFO])
         self.assertTrue(node_reset)
 
     def test_10(self):

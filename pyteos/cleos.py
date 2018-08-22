@@ -67,7 +67,7 @@ class Wallet:
     def __init__(self, name):
         self.name = name
 
-class _Cleos(logger.Logger):
+class _Cleos(front_end.Logger):
     '''A prototype for the `cleos` command classes.
     '''
     def copy_to(self, to_object):
@@ -78,7 +78,7 @@ class _Cleos(logger.Logger):
         to_object.out_msg = self.out_msg
 
     def set_is_verbose(self, is_verbose, verbosity=None):
-        logger.Logger.__init__(self, verbosity)
+        front_end.Logger.__init__(self, verbosity)
 
         if setup.is_verbose and is_verbose > 0:
             self.is_verbose = 1
@@ -601,7 +601,7 @@ class WalletOpen(_Cleos):
 class WalletLockAll(_Cleos):
     '''Lock all unlocked wallets.
     '''
-    def __init__(self, wallet="default", is_verbose=1):
+    def __init__(self, is_verbose=1):
         _Cleos.__init__(
             self, [], "wallet", "lock_all", is_verbose)
 

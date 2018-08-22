@@ -12,7 +12,7 @@ import cleos_system
 import eosf
 import eosf_account
 
-class ContractBuilder(logger.Logger):
+class ContractBuilder(front_end.Logger):
     '''
     '''
     def __init__(
@@ -23,7 +23,7 @@ class ContractBuilder(logger.Logger):
         self.contract_dir = contract_dir
         self.is_mutable = is_mutable
 
-        logger.Logger.__init__(self, verbosity)
+        front_end.Logger.__init__(self, verbosity)
 
     def path(self):
         return self.contract_dir
@@ -75,9 +75,9 @@ def contract_workspace_from_template(
         visual_studio_code: If set, open the ``VSCode``, if available.
         verbosity: The logging configuration.
     '''
-    logg = logger.Logger(verbosity)
+    logger = front_end.Logger(verbosity)
 
-    logg.TRACE_INFO('''
+    logger.TRACE_INFO('''
     ######### Create template ``{}`` contract workspace named ``{}``.
     '''.format(name, template))
 
@@ -85,8 +85,8 @@ def contract_workspace_from_template(
         name, template, user_workspace, remove_existing, visual_studio_code, is_verbose=0)
     
 
-    if not logg.ERROR(result):
-        logg.TRACE('''
+    if not logger.ERROR(result):
+        logger.TRACE('''
         * The directory is
             {}
         '''.format(result.contract_path_absolute))
@@ -94,7 +94,7 @@ def contract_workspace_from_template(
     else:
         return None
 
-class Contract(logger.Logger):
+class Contract(front_end.Logger):
 
     def __init__(
             self, account, contract_dir,
@@ -121,7 +121,7 @@ class Contract(logger.Logger):
         self._console = None
         self.error = self.account.error
 
-        logger.Logger.__init__(self, verbosity)
+        front_end.Logger.__init__(self, verbosity)
         self.TRACE_INFO('''
                 ######### Create a ``Contract`` object.
                 ''')

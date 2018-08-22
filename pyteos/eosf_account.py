@@ -67,7 +67,7 @@ wallet_globals = None
 '''
 wallet_singleton = None
 
-def is_wallet_defined(logg):
+def is_wallet_defined(logger):
     '''
     '''
     global wallet_singleton
@@ -90,7 +90,7 @@ def is_wallet_defined(logg):
             break
 
     if wallet_singleton is None:
-        logg.ERROR('''
+        logger.ERROR('''
             Cannot find any `Wallet` object.
             Add the definition of an `Wallet` object, for example:
             `wallet = eosf.Wallet()`
@@ -109,10 +109,10 @@ def is_local_testnet_running(account_eosio):
             False        
 
 def put_account_to_wallet_and_on_stack(
-        account_object_name, account_object, logg=None):
+        account_object_name, account_object, logger=None):
 
-    if logg is None:
-        logg =account_object
+    if logger is None:
+        logger =account_object
 
     global wallet_singleton
     global wallet_globals    
@@ -134,7 +134,7 @@ def put_account_to_wallet_and_on_stack(
             account_object.in_wallet_on_stack = True
             return True
         else:
-            logg.TRACE('''
+            logger.TRACE('''
             Wrong or missing keys for the account ``{}`` in the wallets.
             '''.format(account_object.name))
             return False
@@ -199,7 +199,7 @@ class GetAccount(cleos.GetAccount):
 
         self.ERROR_OBJECT(self)
         if not self.error_object is None:
-            if not isinstance(self.error_object, logger.AccountNotExist):
+            if not isinstance(self.error_object, front_end.AccountNotExist):
                 self.fatal_error = True            
             return
 
@@ -243,10 +243,10 @@ class GetAccount(cleos.GetAccount):
     def __str__(self):
         return self.name
 
-class RestoreAccount(logger.Logger, cleos.Account, cleos.RestoreAccount):
+class RestoreAccount(front_end.Logger, cleos.Account, cleos.RestoreAccount):
     def __init__(self, name, verbosity=None):
         cleos.RestoreAccount.__init__(self, name, is_verbose=-1)
-        logger.Logger.__init__(self, verbosity)
+        front_end.Logger.__init__(self, verbosity)
 
 class CreateAccount(cleos.CreateAccount):
     def __init__(
@@ -354,15 +354,15 @@ def account_master_create(
     finishes successfully.
     '''
 
-    logg =logger.Logger(verbosity)
-    logg.TRACE_INFO('''
+    logger =front_end.Logger(verbosity)
+    logger.TRACE_INFO('''
         ######### Create the master account object named ``{}``...
         '''.format(account_object_name))
     '''
     Check the following conditions:
     * a ``Wallet`` object is defined.
     '''  
-    is_wallet_defined(logg)
+    is_wallet_defined(logger)
     global wallet_singleton
     if wallet_singleton is None:
         return
@@ -375,7 +375,7 @@ def account_master_create(
     account_object = Eosio()
     if is_local_testnet_running(account_object):
         put_account_to_wallet_and_on_stack(
-            account_object_name, account_object, logg)
+            account_object_name, account_object, logger)
         return
 
     '''
@@ -384,7 +384,7 @@ def account_master_create(
     '''
 
     if setup.is_local_address:
-        logg.ERROR('''
+        logger.ERROR('''
         If the local testnet is not running, an outer testnet has to be 
         defined with `setup.set_nodeos_address(<url>)`.
         Use 'setup.set_nodeos_address(<URL>)'
@@ -403,7 +403,7 @@ def account_master_create(
             owner_key, active_key, verbosity)
 
         if account_object.fatal_error:
-            logg.ERROR(account_object)
+            logger.ERROR(account_object)
             return
 
         if account_object.exists:
@@ -424,7 +424,7 @@ def account_master_create(
                         '''.format(account_object.name))
                     return
             else: # the name is taken by somebody else
-                logg.TRACE('''
+                logger.TRACE('''
                 ###
                 You can try another name. Do you wish to do this?
                 ''')
@@ -449,7 +449,7 @@ def account_master_create(
                 account_object.active_key = cleos.CreateKey(
                     "active", "", active_key, is_verbose=-1)
 
-            logg.OUT('''
+            logger.OUT('''
             Use the following data to register a new account on a public testnet:
             Accout Name: {}
             Owner Public Key: {}
@@ -474,7 +474,7 @@ def account_master_create(
                         break
 
 def append_account_methods_and_finish(
-        account_object_name, account_object, logg): 
+        account_object_name, account_object, logger): 
 
     def code(account_object, code="", abi="", wasm=False):
         result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
@@ -516,8 +516,8 @@ def append_account_methods_and_finish(
             ref_block,
             is_verbose=-1
             )
-        if not logg.ERROR(result):
-            logg.OUT(result)
+        if not logger.ERROR(result):
+            logger.OUT(result)
             account_object.set_contract = result
         else:
             account_object.set_contract = None
@@ -614,14 +614,14 @@ def append_account_methods_and_finish(
             is_verbose=0
             )
 
-        logg.ERROR(result)
+        logger.ERROR(result)
 
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
     if account_object.owner_key:
         get_account = cleos.GetAccount(account_object, is_verbose=0)
-        if not logg.ERROR(get_account):
-            logg.TRACE('''
+        if not logger.ERROR(get_account):
+            logger.TRACE('''
             * Cross-checked: account {}({}) is in the blockchain.
             '''.format(account_object_name, account_object.name))
         return put_account_to_wallet_and_on_stack(
@@ -649,8 +649,8 @@ def account_create(
         if creator:
             account_name = creator
 
-    logg =logger.Logger(verbosity)
-    logg.TRACE_INFO('''
+    logger =front_end.Logger(verbosity)
+    logger.TRACE_INFO('''
         ######### Create the account object ``{}`` ...
         '''.format(account_object_name))
 
@@ -659,7 +659,7 @@ def account_create(
     * a ``Wallet`` object is defined;
     * the account object name is not in use, already.
     '''
-    is_wallet_defined(logg)
+    is_wallet_defined(logger)
     global wallet_singleton
     if wallet_singleton is None:
         return
@@ -672,7 +672,7 @@ def account_create(
     '''
     account_object = None
     if restore:
-        logg.TRACE_INFO('''
+        logger.TRACE_INFO('''
                         ... for the blockchain account ``{}``.
                         '''.format(account_name)) 
         account_object = RestoreAccount(account_name, verbosity)
@@ -687,7 +687,7 @@ def account_create(
             active_key = cleos.CreateKey("active", is_verbose=-1)
 
         if stake_net:
-            logg.TRACE_INFO('''
+            logger.TRACE_INFO('''
                         ... for the new, properly paid, 
                         blockchain account ``{}``.
                         '''.format(account_object_name, account_name))
@@ -705,7 +705,7 @@ def account_create(
                     verbosity
                     )
         else:
-            logg.TRACE_INFO('''
+            logger.TRACE_INFO('''
                             ... for a local testnet account.
                         ''')
             account_object = CreateAccount(
@@ -727,6 +727,6 @@ def account_create(
             * The account object is created.
             ''')
         append_account_methods_and_finish(
-            account_object_name, account_object, logg)
+            account_object_name, account_object, logger)
 
 

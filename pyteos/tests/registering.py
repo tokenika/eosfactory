@@ -7,11 +7,11 @@ import eosf_account
 from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 
-logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-logger.set_throw_error(False)
+front_end.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+front_end.set_throw_error(False)
 
 remote_testnet = "http://88.99.97.30:38888"
-_ = logger.Logger()
+_ = front_end.Logger()
 
 '''
 The following account exists in the blockchain of the testnode. It is used, in
@@ -25,8 +25,8 @@ Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
 Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA 
 '''
 
-logger.set_is_testing_errors(False)
-logger.set_throw_error(True)
+front_end.set_is_testing_errors(False)
+front_end.set_throw_error(True)
 
 _.SCENARIO('''
 Test registering to a remote testnet.
@@ -78,8 +78,8 @@ eosf_account.account_master_test = eosf_account.GetAccount(
 )
 eosf_account.account_master_test.ERROR()
 
-logger.set_throw_error(False)
-logger.set_is_testing_errors()        
+front_end.set_throw_error(False)
+front_end.set_is_testing_errors()        
 ######################################################################
 
 _.COMMENT('''

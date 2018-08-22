@@ -6,11 +6,11 @@ import eosf
 from eosf import Verbosity
 from eosf_wallet import Wallet
 
-logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-logger.set_throw_error(False)
+front_end.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+front_end.set_throw_error(False)
 
 remote_testnet = "http://88.99.97.30:38888"
-_ = logger.Logger()
+_ = front_end.Logger()
 
 class Test(unittest.TestCase):
 
@@ -26,8 +26,8 @@ NEXT TEST ====================================================================
         pass
 
     def setUp(self):
-        logger.set_is_testing_errors(False)
-        logger.set_throw_error(True)
+        front_end.set_is_testing_errors(False)
+        front_end.set_throw_error(True)
 
     def test_create_keosd_wallet(self):
         _.SCENARIO('''
@@ -47,8 +47,8 @@ Tests:
             os.remove(eosf.wallet_dir() + wallet_name + ".wallet")
         except:
             pass
-        logger.set_throw_error(False)
-        logger.set_is_testing_errors()
+        front_end.set_throw_error(False)
+        front_end.set_is_testing_errors()
         setup.set_nodeos_address(remote_testnet)
         ######################################################################
 
@@ -76,7 +76,7 @@ Tests:
 
 
     # def test_reopen_with_stored_password(self): 
-    #     eosf.reset([logger.Verbosity.INFO])
+    #     eosf.reset([front_end.Verbosity.INFO])
     #     eosf.Wallet()
     #     eosf.stop(is_verbose=0)
     #     eosf.run(is_verbose=0)
@@ -86,7 +86,7 @@ Tests:
 
 
     # def test_invalid_password(self): 
-    #     eosf.reset([logger.Verbosity.INFO])
+    #     eosf.reset([front_end.Verbosity.INFO])
     #     wallet = eosf.Wallet()
     #     eosf.stop(is_verbose=0)
     #     eosf.run(is_verbose=0)        

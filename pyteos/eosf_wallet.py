@@ -45,10 +45,10 @@ class Wallet(cleos.WalletCreate):
         else:
             name = setup.file_prefix() + name
 
-        logg = logger.Logger(verbosity)
+        logger = front_end.Logger(verbosity)
         global wallet
         if not wallet is None:
-            logg.ERROR('''
+            logger.ERROR('''
             It can be only one ``Wallet`` object in the script; there is one
             named ``{}``.
             '''.format(wallet.name))
@@ -57,7 +57,7 @@ class Wallet(cleos.WalletCreate):
         wallet = self
         self.wallet_dir = eosf.wallet_dir()
 
-        logg.TRACE('''
+        logger.TRACE('''
                 * Wallet name is {}, wallet directory is
                     {}.
                 '''.format(name, self.wallet_dir))
@@ -65,7 +65,7 @@ class Wallet(cleos.WalletCreate):
         if not password: # look for password:
             try:
                 password = wallet_json_read()[name]
-                logg.TRACE('''
+                logger.TRACE('''
                     The pasword is restored from the file:
                     {}
                     '''.format(self.wallet_dir + setup.password_map))
@@ -125,7 +125,7 @@ class Wallet(cleos.WalletCreate):
         ''' Lock the wallet.
         Returns `cleos.WalletLock` object.
         '''
-        result = cleos.WalletLock(is_verbose=-1)
+        result = cleos.WalletLockAll(is_verbose=-1)
         if not self.ERROR(result):
             self.TRACE("All wallet locked.")                        
 
@@ -307,8 +307,8 @@ class Wallet(cleos.WalletCreate):
 
                 if object_name:
                     self.TRACE('''
-                         {} ({})
-                    '''.format(object_name, name))
+                         {}
+                    '''.format(object_name))
                     from eosf_account import account_create
                     restored[object_name] = account_create(
                         object_name, name, restore=True, verbosity=[])

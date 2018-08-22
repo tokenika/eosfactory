@@ -9,12 +9,12 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 
 
-logger.Logger.verbosity = [logger.Verbosity.TRACE, logger.Verbosity.OUT]
-logger.set_throw_error(False)
+front_end.Logger.verbosity = [front_end.Verbosity.TRACE, front_end.Verbosity.OUT]
+front_end.set_throw_error(False)
 
 remote_testnet = "http://88.99.97.30:38888"
 not_imputed = True
-_ = logger.Logger()
+_ = front_end.Logger()
 
 class Test(unittest.TestCase):
 
@@ -30,8 +30,8 @@ NEXT TEST ====================================================================
         print()
 
     def setUp(self):
-        logger.set_is_testing_errors(False)
-        logger.set_throw_error(True)
+        front_end.set_is_testing_errors(False)
+        front_end.set_throw_error(True)
 
     # def test_too_many_wallets(self):
     #     _.COMMENT('''
@@ -39,10 +39,10 @@ NEXT TEST ====================================================================
     #     precisely one ``Wallet`` object is defined when calling the 
     #         ``account_master_create(...)`` function.
     #     ''')
-    #     eosf.reset([logger.Verbosity.INFO])
+    #     eosf.reset([front_end.Verbosity.INFO])
     #     wallet = Wallet()
-    #     logger.set_throw_error(False)
-    #     logger.set_is_testing_errors()
+    #     front_end.set_throw_error(False)
+    #     front_end.set_is_testing_errors()
     #     ######################################################################
 
         # wallet1 = Wallet("second")
@@ -51,7 +51,7 @@ NEXT TEST ====================================================================
         # function should result in an error message:
         # ''')        
         # wallet1 = Wallet("second")
-        # self.assertTrue("It can be only one" in wallet1.logger.err_msg)
+        # self.assertTrue("It can be only one" in wallet1.front_end.err_msg)
 
     def test_there_is_no_wallet(self):
         _.COMMENT('''
@@ -59,18 +59,18 @@ NEXT TEST ====================================================================
         precisely one ``Wallet`` object is defined when calling the 
             ``account_master_create(...)`` function.
         ''')
-        eosf.reset([logger.Verbosity.INFO])
-        logger.set_throw_error(False)
-        logger.set_is_testing_errors()
+        eosf.reset([front_end.Verbosity.INFO])
+        front_end.set_throw_error(False)
+        front_end.set_is_testing_errors()
         ######################################################################
 
         _.COMMENT('''
         There is not any ``Wallet`` object. Calling the ``account_master_create(...)`` 
         function should result in an error message:
         ''')
-        logger.set_is_testing_errors()
-        logg =account_master_create("account_master")        
-        self.assertTrue("Cannot find any `Wallet` object." in logger.err_msg)
+        front_end.set_is_testing_errors()
+        logger =account_master_create("account_master")        
+        self.assertTrue("Cannot find any `Wallet` object." in front_end.err_msg)
 
     # def test_testnet_create_account(self):
     #     _.COMMENT('''
@@ -81,10 +81,10 @@ NEXT TEST ====================================================================
     #     With the local testnet, the name of the master account is ``eosio``.
     #     ''')
 
-    #     eosf.reset([logger.Verbosity.INFO])
+    #     eosf.reset([front_end.Verbosity.INFO])
     #     wallet = Wallet()
 
-    #     logger.set_throw_error(False)
+    #     front_end.set_throw_error(False)
     #     ######################################################################
         
     #     _.COMMENT('''
@@ -134,7 +134,7 @@ NEXT TEST ====================================================================
     #         "PW5J5KW7erKzqJmn9gMrvzev4pLxR3Vt9BRkx94BqdfHkw4z4bNTd"
     #         )
 
-    #     logger.set_throw_error(False)
+    #     front_end.set_throw_error(False)
     #     ######################################################################
         
     #     account_master_create("account_master")
@@ -144,8 +144,8 @@ NEXT TEST ====================================================================
     #     The cleos ``get account`` command returns a not specific error responce when
     #     the given name is found. Probably, it may change, therefore is to be tested. 
     #     ''')
-    #     eosf.reset([logger.Verbosity.INFO])
-    #     logger.set_throw_error(False)
+    #     eosf.reset([front_end.Verbosity.INFO])
+    #     front_end.set_throw_error(False)
     #     ######################################################################
     #     get_account = cleos.GetAccount("hwtsfwytrwty")
     #     _.TRACE('''
@@ -182,7 +182,7 @@ NEXT TEST ====================================================================
         wallet.remove_key("EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959")
         wallet.remove_key("EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv")
         wallet.keys()
-        logger.set_throw_error(False)
+        front_end.set_throw_error(False)
         ######################################################################
         
         account_master_create("account_master", "dgxo1uyhoytn",
