@@ -1,139 +1,69 @@
-# python3 ./tests/unittest3.py
-
-import sys
 import unittest
-import setup
-import eosf
-from termcolor import colored, cprint #sudo python3 -m pip install termcolor
+from  eosfactory import *
 
-setup.set_verbose(True)
-setup.set_json(False)
-
-contract_dir = sys.path[0] + "/../"
+set_throw_error(False)
+_ = Logger([Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG])
 
 
-class Test1(unittest.TestCase):
+class Test(unittest.TestCase):
 
-    def run(self, result=None):
-        """ Stop after first error """      
-        if not result.failures:
-            super().run(result)
-
-    
     @classmethod
     def setUpClass(cls):
-        pass
+        _.SCENARIO('''
+Set-up is that the local testnet is runnuning, after reseting, and it contains 
+the "hello" account that has power of returning greetings after pushed any 
+account.
+
+Test is to demonstrate Factory's facility for debugging smart contracts.
+
+Note the "logger_info("user: ", name{user});" statement in the code of the 
+contract in the file "hello.cpp":
+
+        #define DEBUG
+        #include "logger.hpp"
+
+        using namespace eosio;
+
+        class hello : public eosio::contract {
+        public:
+            using contract::contract; 
+
+            /// @abi action 
+            void hi( account_name user ) {
+
+            logger_info("user: ", name{user});
+        ..............................................................
+
+The test verifies the contents of the "DEBUG" channel of the Factory's logger.
+""
+        ''')
+        reset([Verbosity.INFO])
+        wallet = Wallet()
+        account_master_create("account_master")
+        account_create("hello", account_master)
+        import sys
+        contract = Contract(hello, sys.path[0] + "/../")
+        contract.build()
+        contract.deploy()
         
-    def setUp(self):
-        pass
+        set_throw_error(False)
+        set_is_testing_errors()        
 
+    def test_debugging_printout(self):
 
-    def test_04(self):
-        global wallet
-        global account_master
+        account_create("alice", account_master)
+        hello.push_action(
+            "hi", {"user":alice}, alice)
+        self.assertTrue("alice" in hello.debug_buffer)
 
-        cprint("""eosf.reset()""", 'magenta')
-        reset = eosf.reset()
-        self.assertTrue(reset)
-
-        cprint("""eosf.Wallet()""", 'magenta')
-        
-        wallet = eosf.Wallet()
-        self.assertTrue(not wallet.error)
-
-        cprint("""account_master = eosf.AccountMaster()""", 'magenta')
-
-        account_master = eosf.AccountMaster(is_verbose=False)
-        wallet.import_key(account_master)
-
-        cprint(
-                "Contract( account_master, 'eosio.bios').deploy()", 
-                'magenta')
-        
-        contract_eosio_bios = eosf.Contract( 
-                account_master, "eosio.bios").deploy()
-        self.assertTrue(not contract_eosio_bios.error)
-
-
-    def test_10(self):
-        global template
-        global account_test
-        global contract_test
-
-        cprint("""account_test = eosf.account():""", 'magenta')
-
-
-        account_test = eosf.account()
-        self.assertTrue(not account_test.error)
-
-        cprint("""wallet.import_key(account_test)""", 'magenta')
-
-        wallet.import_key(account_test)
-
-        cprint(
-                """contract_test = eosf.Contract(
-                                account_test, contract_dir):""", 
-                'magenta')
-
-        contract_test = eosf.Contract(account_test, contract_dir)
-
-        cprint("""contract_test.deploy():""", 'magenta')
-
-        self.assertTrue(not contract_test.deploy().error)
-    
-        cprint("""code = account_test.code()""", 'magenta')
-
-        code = account_test.code()
-        print("""code hash: {}""".format(code.code_hash))
-
-
-    def test_15(self):
-
-        cprint("""`alice`and `carol`""", 'magenta')
-
-        global alice
-        alice = eosf.account()
-        self.assertTrue(not alice.error)
-        wallet.import_key(alice)
-
-        global carol
-        carol = eosf.account()
-        self.assertTrue(not carol.error)
-        wallet.import_key(carol) 
-
-        cprint("""alice.info():""", 'magenta')
-
-        alice.info()
-
-
-    def test_20(self):
-
-        global contract_test
-        global alice
-        global carol
-
-        cprint("""contract_test.push_action("hi", :""", 'magenta')
-
-        action_hi = contract_test.push_action(
-            "hi", '{"user":"' + str(alice) + '"}', alice)
-
-        self.assertTrue(not action_hi.error)
-
-        action_hi = contract_test.push_action(
-            "hi", 
-            '{"user":"' + str(carol) + '"}', carol)
-
-        self.assertTrue(not action_hi.error)
-        
-        
-    def tearDown(self):
-        pass
-
-
+        account_create("carol", account_master)
+        hello.push_action(
+            "hi", {"user":carol}, carol)
+        self.assertTrue("carol" in hello.debug_buffer)
+            
     @classmethod
     def tearDownClass(cls):
-        eosf.stop()
-
+        stop()
 
 if __name__ == "__main__":
     unittest.main()

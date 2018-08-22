@@ -1,24 +1,11 @@
 import unittest
 from  eosfactory import *
 
-set_throw_error(False)
 _ = Logger([Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG])
 
 CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
 
 class Test(unittest.TestCase):
-
-    def run(self, result=None):
-        super().run(result)
-
-    @classmethod
-    def setUpClass(cls):
-        print()
-
-    def setUp(self):
-        restart()
-        set_is_testing_errors(False)
-        set_throw_error(True)
 
     def test_contract_template(self):
         reset([Verbosity.INFO]) 
@@ -50,9 +37,6 @@ class Test(unittest.TestCase):
 
         account_host.push_action(
             "hi", {"user":account_carol}, account_carol)
-
-    def tearDown(self):
-        pass
 
     @classmethod
     def tearDownClass(cls):

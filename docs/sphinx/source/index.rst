@@ -16,13 +16,14 @@ Cases
 .. toctree::
     :maxdepth: 1
 
+    cases/IDE
     cases/account
     cases/account_name_conflict
     cases/account_master
     cases/register_to_testnode
-
-    cases/IDE
     cases/arguments
+
+
     cases/symbolic_names
     cases/contract
     cases/wallet

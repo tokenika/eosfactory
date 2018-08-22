@@ -92,14 +92,13 @@ to avoid mistakes, but the C/CPP to WASM cross-compiler can do more. Use the
 There you can see a missing semicolon in the editor pane. (The shading is not
 automatic.) Also, you can see the error message in the task panel. (Again, the 
 shading is not automatic.) 
-```
+
 <img src="ide_images/compile.png" 
     onerror="this.src='../../../source/cases/ide_images/compile.png'"   
     width="720px"/>
 
 ## Building the contract
 
-```md
 You can build the contract in two ways:
 
 * Using the task 'Build'.
@@ -109,12 +108,10 @@ The image below shows the CMake way. The result of the build process goes to
 the 'build' directory.
 
 You can do the same with any bash terminal, as well:
-```
 ```md
 $ cd build
 $ CMake ..
 $ make
-
 ```
 <img src="ide_images/cmake_build.png" 
     onerror="this.src='../../../source/cases/ide_images/cmake_build.png'"   
@@ -137,10 +134,10 @@ $ python3 test1.py
 $ python3 unittest1.py
 ```
 
-<img src="ide_images/cmake_unittest.png" 
-    onerror="this.src='../../../source/cases/ide_images/cmake_unittest.png'"   
+<img src="ide_images/ctest.png" 
+    onerror="this.src='../../../source/cases/ide_images/ctesrt.png'"   
     width="720px"/>
 
-<img src="ide_images/logger.png" 
-    onerror="this.src='../../../source/cases/ide_images/logger.png'"   
+<img src="ide_images/unittest1.py.png" 
+    onerror="this.src='../../../source/cases/ide_images/unittest1.py.png'"   
     width="720px"/>

@@ -175,7 +175,7 @@ class _Cleos(logger.Logger):
         if isinstance(wallet, str):
             return wallet
 
-        self.set_error(heredoc('''
+        self.set_error(setup.heredoc('''
             The class of the 'wallet' argument may be 
             either {} or {}, while it is {}.
             '''.format(str, Wallet, type(account))))
@@ -192,7 +192,7 @@ class _Cleos(logger.Logger):
                 key = key.key_public
 
             if not key:
-                self.set_error(heredoc('''
+                self.set_error(setup.heredoc('''
                 Key is_owner_key: {}, is_private_key: {} is not defined.
                 '''.format(is_owner_key, is_private_key)))
                 return None
@@ -204,7 +204,7 @@ class _Cleos(logger.Logger):
             else:
                 key = key.key_public
             if not key:
-                self.set_error(heredoc('''
+                self.set_error(setup.heredoc('''
                 Key is_private_key: {} is not defined.
                 '''.format(is_private_key)))
                 return None
@@ -212,7 +212,7 @@ class _Cleos(logger.Logger):
         if isinstance(key, str):
             return key
 
-        self.set_error(heredoc('''
+        self.set_error(setup.heredoc('''
         The class of the 'key' argument may be 
         {} or {} or {} while it is {}.
         '''.format(str, Key, Account, type(permission))))
@@ -223,7 +223,7 @@ class _Cleos(logger.Logger):
         if isinstance(account, Account):
             return account.name
 
-        self.set_error(heredoc('''
+        self.set_error(setup.heredoc('''
             The class of the 'account' argument may be 
             either {} or {}, while it is {}.
             '''.format(str, Account, type(account))))
@@ -240,7 +240,7 @@ class _Cleos(logger.Logger):
             if isinstance(permission[0], Account):
                 retval = permission[0].name
             if retval is None:
-                self.set_error(heredoc('''
+                self.set_error(setup.heredoc('''
         The class of te first item of a 'permission' tuple may be 
         either {} or {}, while it is {}.
         '''.format(str, Account, type(permission[0]))))
@@ -258,7 +258,7 @@ class _Cleos(logger.Logger):
                     retval = retval + "@" + permission_value
                 return retval
             else:
-                self.set_error(heredoc('''
+                self.set_error(setup.heredoc('''
         The class of the second item of a 'permission' tuple may be 
         either {} or {}, while it is {}.
         '''.format(str, Permission, type(permission[1]))))
@@ -273,7 +273,7 @@ class _Cleos(logger.Logger):
                 retval.append(p)
             return retval
 
-        self.set_error(heredoc('''
+        self.set_error(setup.heredoc('''
         The class of the 'permission' argument may be 
         {} or {} or {} or {}, while it is {}.
         '''.format(str, Account, tuple, list, type(permission))))

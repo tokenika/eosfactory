@@ -1,215 +1,122 @@
-# python3 ./tests/unittest1.py
-
-import sys
-import setup
-import eosf
 import unittest
-import time
-from termcolor import colored, cprint #sudo python3 -m pip install termcolor
-import setup
-import eosf
+from  eosfactory import *
 
-contract_dir = sys.path[0] + "/../"
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+set_throw_error(False)
+_ = Logger()
 
-setup.set_verbose(False)
-
-class Test1(unittest.TestCase):
+class Test(unittest.TestCase):
 
     def run(self, result=None):
-        """ Stop after first error """      
-        if not result.failures:
-            super().run(result)
+        super().run(result)
 
     @classmethod
     def setUpClass(cls):
-        pass
+        _.SCENARIO('''
+Set-up is that the local testnet is runnuning, after reseting, and it contains 
+the "eosio_account" account that implements operations on tokens.
+
+        ''')
+        reset([Verbosity.INFO])
+        wallet = Wallet()
+        account_master_create("account_master")
+        account_create("eosio_token", account_master)
+        import sys
+        contract = Contract(eosio_token, sys.path[0] + "/../")
+        contract.build()
+        contract.deploy()
         
-    def setUp(self):
-        pass
+        set_throw_error(False)
+        set_is_testing_errors()         
 
+    def test_eosio_token_contract(self):
 
-    def test_04(self):
-        global wallet
-        global account_master
-        global alice
-        global bob
-        global carol
+        _.COMMENT('''
+Create accounts "alice", "bob" and "carol":
+        ''')
 
-        cprint("""eosf.reset():""", 'magenta')
-        reset = eosf.reset()
-        self.assertTrue(not reset.error)
-        
-        cprint("""wallet = eosf.Wallet():""", 'magenta')
-        wallet = eosf.Wallet()
-        self.assertTrue(not wallet.error)
+        account_create("alice", account_master)
+        account_create("bob", account_master)
+        account_create("carol", account_master)
 
-        cprint("""eosf.AccountMaster()""", 'magenta')
-        account_master = eosf.AccountMaster()
-        wallet.import_key(account_master)
+        _.COMMENT('''
+Initialize the contract and send some tokens to one of the accounts:
+        ''')
 
-        cprint("""contract_eosio_bios = eosf.Contract(""", 'magenta')
-
-        contract_eosio_bios = eosf.Contract(
-                account_master, "eosio.bios").deploy()
-        self.assertTrue(not contract_eosio_bios.error)
-
-        cprint("""
-Create accounts `alice`, `bob` and `carol`:
-        """, 'magenta')
-        
-        alice = eosf.account()
-        self.assertTrue(not alice.error)
-        wallet.import_key(alice)
-
-        bob = eosf.account()
-        self.assertTrue(not bob.error)
-        wallet.import_key(bob)        
-
-        carol = eosf.account()
-        self.assertTrue(not carol.error)
-        wallet.import_key(carol) 
-
-        cprint("""bob.info() :""", 'magenta')
-        print(bob.info())   
-
-
-    def test_05(self):
-        global wallet
-        global alice
-        global bob
-        global carol
-        global account_master
-        global contract_test
-
-        account_test = eosf.account()
-        wallet.import_key(account_test)
-        
-
-        contract_test = eosf.Contract(account_test, contract_dir)
-        self.assertTrue(not contract_test.error)
-
-        cprint("""
-test contract_test.code():
-        """, 'magenta')
-        self.assertTrue(not contract_test.code().error)
-
-        cprint("""
-test contract_test.deploy():
-        """, 'magenta')
-        self.assertTrue(contract_test.deploy())
-
-        cprint("""
-test contract_test.get_code():
-        """, 'magenta')
-        self.assertTrue(not contract_test.code().error)
-
-        cprint("""
-test contract_test.push_action("create"):
-        """, 'magenta')
-        self.assertTrue(not contract_test.push_action(
+        eosio_token.push_action(
             "create", 
-            '{"issuer":"' 
-                + str(account_master) 
-                + '", "maximum_supply":"1000000000.0000 EOS", \
-                "can_freeze":0, "can_recall":0, "can_whitelist":0}').error)
+            {
+                "issuer": account_master,
+                "maximum_supply": "1000000000.0000 EOS",
+                "can_freeze": "0",
+                "can_recall": "0",
+                "can_whitelist": "0"
+            }, [account_master, eosio_token])
 
-        cprint("""
-test contract_test.push_action("issue"):
-        """, 'magenta')
-        self.assertTrue(not contract_test.push_action(
-            "issue", 
-            '{"to":"' + str(alice)
-                + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
-                account_master).error)
+        eosio_token.push_action(
+            "issue",
+            {
+                "to": alice, "quantity": "100.0000 EOS", "memo": ""
+            },
+            account_master)
 
+        _.COMMENT('''
+        Execute a series of transfers between the accounts:
+        ''')
 
+        eosio_token.push_action(
+            "transfer",
+            {
+                "from": alice, "to": carol,
+                "quantity": "25.0000 EOS", "memo":""
+            },
+            alice)
 
-        cprint("""
-test contract_test.push_action("transfer", alice):
-        """, 'magenta')
-        self.assertTrue(not contract_test.push_action(
-            "transfer", 
-            '{"from":"' 
-                + str(alice)
-                + '", "to":"' + str(carol)
-                + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
-            alice).error)
+        eosio_token.push_action(
+            "transfer",
+            {
+                "from": carol, "to": bob, 
+                "quantity": "11.0000 EOS", "memo": ""
+            },
+            carol)
 
-        time.sleep(1)
+        eosio_token.push_action(
+            "transfer",
+            {
+                "from": carol, "to": bob, 
+                "quantity": "2.0000 EOS", "memo": ""
+            },
+            carol)
 
-        cprint("""
-test contract_test.push_action("transfer", carol):
-        """, 'magenta')
-        self.assertTrue(not contract_test.push_action(
-            "transfer", 
-            '{"from":"' 
-                + str(carol)
-                + '", "to":"' + str(bob)
-                + '", "quantity":"13.0000 EOS", "memo":"memo"}', 
-            carol).error)
+        eosio_token.push_action(
+            "transfer",
+            {
+                "from": bob, "to": alice, \
+                "quantity": "2.0000 EOS", "memo":""
+            },
+            bob)
 
-        cprint("""
-test contract_test.push_action("transfer" bob):
-        """, 'magenta')
-        self.assertTrue(not contract_test.push_action(
-            "transfer", 
-            '{"from":"' 
-                + str(bob)
-                + '", "to":"' 
-                + str(alice)
-                + '", "quantity":"2.0000 EOS", "memo":"memo"}', 
-            bob).error)
+        _.COMMENT('''
+        Verify the outcome:
+        ''')
 
-        cprint("""
-Get database table, use `contract_test.table("accounts", alice)`:
-        """, 'magenta')
+        table_alice = eosio_token.table("accounts", alice)
+        table_bob = eosio_token.table("accounts", bob)
+        table_carol = eosio_token.table("accounts", carol)
 
-        t1 = contract_test.table("accounts", alice)
-        
-        cprint("""
-Get database table, use `contract_test.table("accounts", bob)`:
-        """, 'magenta')
-
-        t2 = contract_test.table("accounts", bob)
-        
-        cprint("""
-Get database table, use `contract_test.table("accounts", carol)`:
-        """, 'magenta')
-        
-        t3 = contract_test.table("accounts", carol)
-
-        cprint("""
-self.assertTrue(t1.json["rows"][0]["balance"] == "77.0000 EOS":
-        """, 'magenta')
-
-        self.assertTrue(t1.json["rows"][0]["balance"] == '77.0000 EOS')
-        
-        cprint("""
-self.assertTrue(t2.json["rows"][0]["balance"] == "11.0000 EOS":
-        """, 'magenta')
-
-        self.assertTrue(t2.json["rows"][0]["balance"] == '11.0000 EOS')
-        
-        cprint("""
-self.assertTrue(t3.json["rows"][0]["balance"] == "12.0000 EOS":
-        """, 'magenta')
-
-        self.assertTrue(t3.json["rows"][0]["balance"] == '12.0000 EOS')
-
-        cprint("""
-test node.stop():
-        """, 'magenta')
-        eosf.stop()
-
-
-    def tearDown(self):
-        pass
-
+        self.assertEqual(
+            table_alice.json["rows"][0]["balance"], '77.0000 EOS',
+            '''assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')''')
+        self.assertEqual(
+            table_bob.json["rows"][0]["balance"], '11.0000 EOS',
+            '''assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')''')
+        self.assertEqual(
+            table_carol.json["rows"][0]["balance"], '12.0000 EOS',
+            '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
 
     @classmethod
     def tearDownClass(cls):
-        pass
-
+        stop()
 
 if __name__ == "__main__":
     unittest.main()

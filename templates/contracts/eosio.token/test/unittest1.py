@@ -1,135 +1,122 @@
+import unittest
 from  eosfactory import *
 
-Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 set_throw_error(False)
-
 _ = Logger()
 
 class Test(unittest.TestCase):
 
     def run(self, result=None):
         super().run(result)
-        print('''
-
-NEXT TEST ====================================================================
-''')
 
     @classmethod
     def setUpClass(cls):
-        print()
+        _.SCENARIO('''
+Set-up is that the local testnet is runnuning, after reseting, and it contains 
+the "eosio_account" account that implements operations on tokens.
 
-    def setUp(self):
-        eosf.restart()
-        set_is_testing_errors(False)
-        set_throw_error(True)
-
-    def test_eosio_token_contract(self):
-        eosf.reset([Verbosity.INFO]) 
+        ''')
+        reset([Verbosity.INFO])
         wallet = Wallet()
         account_master_create("account_master")
-        set_throw_error(False)
-        set_is_testing_errors()
-
-        ######################################################################        
-
-        _.SCENARIO('''
-        With the master account, create four accounts: ``account_alice``, 
-        ``account_bob``, account_carol`` and ``account_eosio_token``. Add the 
-        ``eosio.token`` contract to the last account.
-        ''')
-
-        account_create("account_alice", account_master)
-        account_create("account_bob", account_master)
-        account_create("account_carol", account_master)
-        account_create("account_eosio_token", account_master)
-
+        account_create("eosio_token", account_master)
         import sys
-        contract_eosio_token = Contract(
-            account_eosio_token, sys.path[0] + "/../")
-        deploy = contract_eosio_token.deploy()
+        contract = Contract(eosio_token, sys.path[0] + "/../")
+        contract.build()
+        contract.deploy()
+        
+        set_throw_error(False)
+        set_is_testing_errors()         
+
+    def test_eosio_token_contract(self):
 
         _.COMMENT('''
-        Execute actions on the contract account:
-            * let eosio deposit an amount of 1000000000.0000 EOS there;
-            * transfer some EOS to the ``alice`` account.
+Create accounts "alice", "bob" and "carol":
         ''')
 
-        account_eosio_token.push_action(
+        account_create("alice", account_master)
+        account_create("bob", account_master)
+        account_create("carol", account_master)
+
+        _.COMMENT('''
+Initialize the contract and send some tokens to one of the accounts:
+        ''')
+
+        eosio_token.push_action(
             "create", 
-            '{"issuer":"' 
-                + str(account_master) 
-                + '", "maximum_supply":"1000000000.0000 EOS", \
-                "can_freeze":0, "can_recall":0, "can_whitelist":0}')
-                
-        self.assertTrue(
-            '"issuer":"eosio", "maximum_supply":"1000000000.0000 EOS"' \
-                in account_eosio_token.eosf_buffer)
+            {
+                "issuer": account_master,
+                "maximum_supply": "1000000000.0000 EOS",
+                "can_freeze": "0",
+                "can_recall": "0",
+                "can_whitelist": "0"
+            }, [account_master, eosio_token])
 
-        account_eosio_token.push_action(
+        eosio_token.push_action(
             "issue",
-            '{"to":"' + str(account_alice)
-                + '", "quantity":"100.0000 EOS", '
-                + '"memo":"issue 100.0000 EOS from eosio to alice"}',
-            permission=account_master)
+            {
+                "to": alice, "quantity": "100.0000 EOS", "memo": ""
+            },
+            account_master)
 
         _.COMMENT('''
-        Execute a series of transfers between accounts:
+        Execute a series of transfers between the accounts:
         ''')
 
-        account_eosio_token.push_action(
+        eosio_token.push_action(
             "transfer",
-            '{"from":"' + str(account_alice)
-                + '", "to":"' + str(account_carol)
-                + '", "quantity":"25.0000 EOS", '
-                + '"memo":"transfer 25.0000 EOS from alice to carol"}',
-            permission=account_alice)
+            {
+                "from": alice, "to": carol,
+                "quantity": "25.0000 EOS", "memo":""
+            },
+            alice)
 
-        account_eosio_token.push_action(
+        eosio_token.push_action(
             "transfer",
-            '{"from":"' + str(account_carol)
-                + '", "to":"' + str(account_bob)
-                + '", "quantity":"11.0000 EOS", '
-                + '"memo":"transfer 11.0000 EOS from carol to bob"}',
-            permission=account_carol)
+            {
+                "from": carol, "to": bob, 
+                "quantity": "11.0000 EOS", "memo": ""
+            },
+            carol)
 
-        account_eosio_token.push_action(
+        eosio_token.push_action(
             "transfer",
-            '{"from":"' + str(account_carol)
-                + '", "to":"' + str(account_bob)
-                + '", "quantity":"2.0000 EOS", '
-                + '"memo":"transfer 2.0000 EOS from carol to bob"}',
-            permission=account_carol)
+            {
+                "from": carol, "to": bob, 
+                "quantity": "2.0000 EOS", "memo": ""
+            },
+            carol)
 
-        account_eosio_token.push_action(
+        eosio_token.push_action(
             "transfer",
-            '{"from":"' + str(account_bob)
-                + '", "to":"' + str(account_alice)
-                + '", "quantity":"2.0000 EOS", '
-                + '"memo":"transfer 2.0000 EOS from bob to alice"}',
-            permission=account_bob)                
+            {
+                "from": bob, "to": alice, \
+                "quantity": "2.0000 EOS", "memo":""
+            },
+            bob)
 
         _.COMMENT('''
-        See the records of the account:
+        Verify the outcome:
         ''')
 
-        table_alice = account_eosio_token.table("accounts", account_alice)
-        table_bob = account_eosio_token.table("accounts", account_bob)
-        table_carol = account_eosio_token.table("accounts", account_carol)
+        table_alice = eosio_token.table("accounts", alice)
+        table_bob = eosio_token.table("accounts", bob)
+        table_carol = eosio_token.table("accounts", carol)
 
-        _.COMMENT('''
-        Check assertions:
-        * assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')
-        * assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')
-        * assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')
-        ''')
-
-        self.assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')
-        self.assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')
-        self.assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')
+        self.assertEqual(
+            table_alice.json["rows"][0]["balance"], '77.0000 EOS',
+            '''assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')''')
+        self.assertEqual(
+            table_bob.json["rows"][0]["balance"], '11.0000 EOS',
+            '''assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')''')
+        self.assertEqual(
+            table_carol.json["rows"][0]["balance"], '12.0000 EOS',
+            '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
 
     @classmethod
     def tearDownClass(cls):
-        pass
+        stop()
 
 if __name__ == "__main__":
     unittest.main()

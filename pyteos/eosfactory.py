@@ -1,9 +1,13 @@
 import setup
 import logger
+import cleos
 import eosf
 import eosf_wallet
 import eosf_account
 import eosf_contract
+
+Permission = cleos.Permission
+CreateKey = cleos.CreateKey
 
 Logger = logger.Logger
 Verbosity = logger.Verbosity

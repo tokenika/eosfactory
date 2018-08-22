@@ -1,84 +1,69 @@
-import sys
-import setup
-import eosf
-import node
 import unittest
-from termcolor import cprint
+from  eosfactory import *
 
-setup.is_verbose = True
-setup.is_json = False
+set_throw_error(False)
+_ = Logger([Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG])
+
 
 class Test(unittest.TestCase):
 
-    def run(self, result=None):
-        ''' Stop after first error '''
-        if not result.failures:
-            super().run(result)
-
-
     @classmethod
     def setUpClass(cls):
-        testnet = node.reset()
-        assert(not testnet.error)
+        _.SCENARIO('''
+Set-up is that the local testnet is runnuning, after reseting, and it contains 
+the "hello" account that has power of returning greetings after pushed any 
+account.
 
-        wallet = eosf.Wallet()
-        assert(not wallet.error)
+Test is to demonstrate Factory's facility for debugging smart contracts.
 
-        account_master = eosf.AccountMaster()
-        wallet.import_key(account_master)
-        assert(not account_master.error)
+Note the "logger_info("user: ", name{user});" statement in the code of the 
+contract in the file "hello.cpp":
 
-        global account_alice
-        account_alice = eosf.account(account_master)
-        wallet.import_key(account_alice)
-        assert(not account_alice.error)
+        #define DEBUG
+        #include "logger.hpp"
 
-        global account_carol
-        account_carol = eosf.account(account_master)
-        wallet.import_key(account_carol)
-        assert(not account_carol.error)
+        using namespace eosio;
 
-        account_deploy = eosf.account(account_master)
-        wallet.import_key(account_deploy)
-        assert(not account_deploy.error)
+        class hello : public eosio::contract {
+        public:
+            using contract::contract; 
 
-        contract_eosio_bios = eosf.Contract(
-            account_master, "eosio.bios").deploy()
-        assert(not contract_eosio_bios.error)
+            /// @abi action 
+            void hi( account_name user ) {
 
-        global contract
-        contract = eosf.Contract(account_deploy, sys.path[0] + "/../")
-        assert(not contract.error)
+            logger_info("user: ", name{user});
+        ..............................................................
 
-        deployment = contract.deploy()
-        assert(not deployment.error)
+The test verifies the contents of the "DEBUG" channel of the Factory's logger.
+""
+        ''')
+        reset([Verbosity.INFO])
+        wallet = Wallet()
+        account_master_create("account_master")
+        account_create("hello", account_master)
+        import sys
+        contract = Contract(hello, sys.path[0] + "/../")
+        contract.build()
+        contract.deploy()
+        
+        set_throw_error(False)
+        set_is_testing_errors()        
 
+    def test_debugging_printout(self):
 
-    def setUp(self):
-        pass
+        account_create("alice", account_master)
+        hello.push_action(
+            "hi", {"user":alice}, alice)
+        self.assertTrue("alice" in hello.debug_buffer)
 
-
-    def test_01(self):
-
-        cprint(
-            '''contract.push_action("hi", '{"user":"' + str(account_alice) + '"}', account_alice)''', 'magenta')
-        self.assertFalse(contract.push_action(
-            "hi", '{"user":"' + str(account_alice) + '"}', account_alice).error)
-
-        cprint(
-            '''contract.push_action("hi", '{"user":"' + str(account_carol) + '"}', account_carol)''', 'magenta')
-        self.assertFalse(contract.push_action(
-            "hi", '{"user":"' + str(account_carol) + '"}', account_carol).error)
-
-
-    def tearDown(self):
-        pass
-
-
+        account_create("carol", account_master)
+        hello.push_action(
+            "hi", {"user":carol}, carol)
+        self.assertTrue("carol" in hello.debug_buffer)
+            
     @classmethod
     def tearDownClass(cls):
-        node.stop()
-
+        stop()
 
 if __name__ == "__main__":
     unittest.main()

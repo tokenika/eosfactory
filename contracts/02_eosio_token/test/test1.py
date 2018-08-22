@@ -1,172 +1,102 @@
-# python3 ./tests/unittest1.py
+from  eosfactory import *
 
-import sys
-import setup
-import eosf
-import time
-from termcolor import colored, cprint #sudo python3 -m pip install termcolor
-
-setup.set_verbose(False)
-setup.set_json(False)
-
-
-contract_dir = sys.path[0] + "/../"
-
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+set_throw_error(False)
+_ = Logger()
 
 def test():
-    ok = eosf.reset(is_verbose=False)    
-    cprint(
-        "Started the local test EOSIO node: {}".format(ok), 
-        'magenta')
 
-    wallet = eosf.Wallet()
-    cprint(
-        "The wallet is OK: {}".format(not wallet.error), 
-        'magenta')
+    _.SCENARIO('''
+Set-up is that the local testnet is runnuning, after reseting, and it contains 
+the "eosio_account" account that implements operations on tokens.
 
-    account_master = eosf.AccountMaster(is_verbose=False)
-    ok = wallet.import_key(account_master)
-    cprint(
-        "The account_master is in the wallet: {}" \
-            .format(ok), 
-        'magenta')
-
-    contract_eosio_bios = eosf.Contract(
-        account_master, "eosio.bios", is_verbose=False).deploy()
-    cprint(
-        "The contract_eosio_bios is deployed: {}" \
-            .format(not contract_eosio_bios.error), 
-         'magenta')   
-
-    account_test = eosf.account()
-    cprint(
-        "The name of the contract account is: {}" \
-            .format(account_test.name), 
-         'magenta')
-         
-    ok = wallet.import_key(account_test)    
-    cprint(
-        "The contract account is put into the wallet: {}" \
-            .format(ok), 
-        'magenta')
-
-    contract_test = eosf.Contract(account_test, contract_dir)
-    cprint(
-        "The contract is created: {}".format(not contract_test.error), 
-        'magenta')
-
-    deployed = contract_test.deploy(is_verbose=0)
-    cprint(
-        "The contract is deployed: {}".format(not deployed.error), 
-        'magenta')
-                
-    cprint("""
-Confirm that the account `account_test` contains the contract code:
-    """, 'magenta')
-
-    code = contract_test.code()
-    print("code hash: {}".format(code.code_hash))
-
-##############################################################################
-#
-##############################################################################
-
-    cprint("""
-Create accounts `alice`, `bob` and `carol`and put them into the wallet:
-    """, 'magenta')
+    ''')
+    reset([Verbosity.INFO])
+    wallet = Wallet()
+    account_master_create("account_master")
+    account_create("eosio_token", account_master)
+    import sys
+    contract = Contract(eosio_token, sys.path[0] + "/../")
+    contract.build()
+    contract.deploy()
     
-    alice = eosf.account()
-    wallet.import_key(alice)
+    set_throw_error(False)
+    set_is_testing_errors()         
 
-    bob = eosf.account()
-    wallet.import_key(bob)        
+    _.COMMENT('''
+Create accounts "alice", "bob" and "carol":
+    ''')
 
-    carol = eosf.account()
-    wallet.import_key(carol) 
+    account_create("alice", account_master)
+    account_create("bob", account_master)
+    account_create("carol", account_master)
 
-    cprint("""
-contract_test.push_action("create", ...):
-    """, 'magenta')
-    
-    action = contract_test.push_action(
+    _.COMMENT('''
+Initialize the contract and send some tokens to one of the accounts:
+    ''')
+
+    eosio_token.push_action(
         "create", 
-        '{"issuer":"' 
-            + str(account_master) 
-            + '", "maximum_supply":"1000000000.0000 EOS", \
-            "can_freeze":0, "can_recall":0, "can_whitelist":0}',
-        console=True)
-        
+        {
+            "issuer": account_master,
+            "maximum_supply": "1000000000.0000 EOS",
+            "can_freeze": "0",
+            "can_recall": "0",
+            "can_whitelist": "0"
+        }, [account_master, eosio_token])
 
-    cprint("""
-contract_test.push_action("issue"):
-    """, 'magenta')
+    eosio_token.push_action(
+        "issue",
+        {
+            "to": alice, "quantity": "100.0000 EOS", "memo": ""
+        },
+        account_master)
 
-    action = contract_test.push_action(
-        "issue", 
-        '{"to":"' + str(alice)
-            + '", "quantity":"100.0000 EOS", "memo":"memo"}', \
-            account_master, console=True)
+    _.COMMENT('''
+    Execute a series of transfers between the accounts:
+    ''')
 
-    cprint("""
-contract_test.push_action("transfer", alice):
-        """, 'magenta')
-        
-    action = contract_test.push_action(
-        "transfer", 
-        '{"from":"' 
-            + str(alice)
-            + '", "to":"' + str(carol)
-            + '", "quantity":"25.0000 EOS", "memo":"memo"}', 
-        alice, console=True)
+    eosio_token.push_action(
+        "transfer",
+        {
+            "from": alice, "to": carol,
+            "quantity": "25.0000 EOS", "memo":""
+        },
+        alice)
 
-    time.sleep(1)
+    eosio_token.push_action(
+        "transfer",
+        {
+            "from": carol, "to": bob, 
+            "quantity": "11.0000 EOS", "memo": ""
+        },
+        carol)
 
-    cprint("""
-contract_test.push_action("transfer", carol):
-    """, 'magenta')
-        
-    action = contract_test.push_action(
-        "transfer", 
-        '{"from":"' 
-            + str(carol)
-            + '", "to":"' + str(bob)
-            + '", "quantity":"13.0000 EOS", "memo":"memo"}', 
-        carol, console=True)
+    eosio_token.push_action(
+        "transfer",
+        {
+            "from": carol, "to": bob, 
+            "quantity": "2.0000 EOS", "memo": ""
+        },
+        carol)
 
-    cprint("""
-contract_test.push_action("transfer" bob):
-    """, 'magenta')
-        
-    action = contract_test.push_action(
-        "transfer", 
-        '{"from":"' 
-            + str(bob)
-            + '", "to":"' 
-            + str(alice)
-            + '", "quantity":"2.0000 EOS", "memo":"memo"}', 
-        bob, console=True)
+    eosio_token.push_action(
+        "transfer",
+        {
+            "from": bob, "to": alice, \
+            "quantity": "2.0000 EOS", "memo":""
+        },
+        bob)
 
-    cprint("""
-contract_test.table("accounts", alice):
-    """, 'magenta')
+    _.COMMENT('''
+    Verify the outcome:
+    ''')
 
-    t1 = contract_test.table("accounts", alice)
-    
-    cprint("""
-contract_test.table("accounts", bob):
-    """, 'magenta')
+    table_alice = eosio_token.table("accounts", alice)
+    table_bob = eosio_token.table("accounts", bob)
+    table_carol = eosio_token.table("accounts", carol)
 
-    t2 = contract_test.table("accounts", bob)
-    
-    cprint("""
-contract_test.table("accounts", carol):
-    """, 'magenta')
-    
-    t3 = contract_test.table("accounts", carol)
-
-
-    cprint(""" eosf.stop(): """, 'magenta')
-    eosf.stop()
+    stop()
 
 if __name__ == "__main__":
     test()

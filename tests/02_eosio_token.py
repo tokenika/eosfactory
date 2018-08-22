@@ -123,9 +123,6 @@ class Test(unittest.TestCase):
             table_carol.json["rows"][0]["balance"], '12.0000 EOS',
             '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
 
-    def tearDown(self):
-        pass
-
     @classmethod
     def tearDownClass(cls):
         stop()

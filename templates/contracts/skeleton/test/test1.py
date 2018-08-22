@@ -1,80 +1,60 @@
-import sys
-import setup
-import eosf
-import node
-from termcolor import cprint
+from  eosfactory import *
 
-setup.is_verbose = False
-setup.is_json = False
+set_throw_error(False)
+_ = Logger([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
+
 
 def test():
-    testnet = node.reset(is_verbose=False)
-    assert(not testnet.error)
-    cprint(
-        "Started a local testnet: {}".format(not testnet.error), 
-        'magenta')
 
-    wallet = eosf.Wallet()
-    assert(not wallet.error)
-    cprint(
-        "The wallet is unlocked: {}".format(not wallet.error), 
-        'magenta')
+    _.SCENARIO('''
+Set-up is that the local testnet is runnuning, after reseting, and it contains 
+the "hello" account that has power of returning greetings after pushed any 
+account.
 
-    account_master = eosf.AccountMaster(is_verbose=False)
-    assert(not account_master.error)
-    cprint(
-        "The account_master is in the wallet: {}" \
-            .format(not account_master.error), 
-        'magenta')
-    wallet.import_key(account_master)
+Test is to demonstrate Factory's facility for debugging smart contracts.
 
-    contract_eosio_bios = eosf.Contract(
-        account_master, "eosio.bios", is_verbose=False).deploy()
-    assert(not contract_eosio_bios.error)
-    cprint(
-        "The contract_eosio_bios is deployed: {}" \
-            .format(not contract_eosio_bios.error), 
-         'magenta') 
+Note the "logger_info("user: ", name{user});" statement in the code of the 
+contract in the file "hello.cpp":
 
-    cprint("account_deploy = eosf.account(account_master)", 'magenta')
-    account_deploy = eosf.account(account_master)
-    wallet.import_key(account_deploy)
+        #define DEBUG
+        #include "logger.hpp"
 
-    cprint('''contract = eosf.Contract(account_deploy, sys.path[0] + "/../")''', 'magenta')
-    contract = eosf.Contract(account_deploy, sys.path[0] + "/../")
+        using namespace eosio;
 
-    cprint("contract.deploy()", 'magenta')
-    assert(not contract.deploy(is_verbose=0).error)
+        class hello : public eosio::contract {
+        public:
+            using contract::contract; 
 
-    cprint("contract.code()", 'magenta')
-    code = contract.code()
-    print("code hash: {}".format(code.code_hash))
+            /// @abi action 
+            void hi( account_name user ) {
 
-    cprint("account_alice = eosf.account(account_master)", 'magenta')
-    account_alice = eosf.account(account_master)
-    assert(not account_alice.error)
-    wallet.import_key(account_alice)
+            logger_info("user: ", name{user});
+        ..............................................................
 
-    cprint("account_carol = eosf.account(account_master)", 'magenta')
-    account_carol = eosf.account(account_master)
-    assert(not account_carol.error)
-    wallet.import_key(account_carol) 
+Observe the yellow printout starting with "INFO".
+""
+        ''')
+    reset([Verbosity.INFO])
+    wallet = Wallet()
+    account_master_create("account_master")
+    account_create("hello", account_master)
+    import sys
+    contract = Contract(hello, sys.path[0] + "/../")
+    contract.build()
+    contract.deploy()
+    
+    set_throw_error(False)
+    set_is_testing_errors()        
 
-    cprint(
-        '''contract.push_action("hi", '{"user":"' + str(account_alice) + '"}', account_alice)''', 'magenta')
-    assert(not contract.push_action(
-        "hi", '{"user":"' + str(account_alice) + '"}', account_alice, output=True).error)
+    account_create("alice", account_master)
+    hello.push_action(
+        "hi", {"user":alice}, alice)
 
-    cprint(
-        '''contract.push_action("hi", '{"user":"' + str(account_carol) + '"}', account_carol)''', 'magenta')
-    assert(not contract.push_action(
-        "hi", '{"user":"' + str(account_carol) + '"}', account_carol, output=True).error)
+    account_create("carol", account_master)
+    hello.push_action(
+        "hi", {"user":carol}, carol)
 
-    testnet = node.stop()
-    assert(not testnet.error)
-    cprint(
-        "Closed the local testnet: {}".format(not testnet.error), 'magenta')
-
+    stop()
 
 if __name__ == "__main__":
     test()

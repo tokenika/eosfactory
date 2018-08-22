@@ -1,7 +1,7 @@
 '''
 # Arguments
 
-This file can be executed as a python script: 'python3 contract.md'.
+This file can be executed as a python script: 'python3 arguments.md'.
 
 Arguments of the EOSFactory statements are polymorphic. For example, a 
 'permission` argument can have the following forms:
@@ -26,19 +26,10 @@ Local test node reset, wallet started, master account object created:
 
 ```md
 '''
-import time
-import setup
-import cleos
-import eosf
-from eosf import Verbosity
+from  eosfactory import *
 
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
-
-logger.Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-_ = logger.Logger()
-eosf.reset([logger.Verbosity.INFO]) 
+_ = Logger([Verbosity.INFO, Verbosity.OUT])
+reset([Verbosity.INFO]) 
 wallet = Wallet()
 account_master_create("account_master")
 '''
@@ -52,7 +43,7 @@ the following test, the 'account_master' object enters, at first, as itself ...
 
 ```md
 '''
-account_create("account_alice", account_master)
+account_create("alice", account_master)
 '''
 ```
 
@@ -60,17 +51,17 @@ account_create("account_alice", account_master)
 
 ```md
 '''
-account_create("account_bob", str(account_master))
+account_create("bob", str(account_master))
 '''
 ```
 
 If an account argument is neither an account object nor a string, an error 
 message is printed, or an error exception is thrown. For example, let the 
-account argument be of the 'cleos.CreateKey' type:
+account argument be of the 'CreateKey' type:
 
 ```md
 '''
-account_create("account_jimmy", cleos.CreateKey("xxx", is_verbose=0))
+account_create("jimmy", CreateKey("xxx", is_verbose=0))
 '''
 ```
 <img src="arguments/accounts.png" 
@@ -90,10 +81,8 @@ account object and
 
 ```md
 '''
-from cleos import Permission 
-
 account_create(
-    "account_carol", account_master, 
+    "carol", account_master, 
     permission=[
         (account_master, Permission.OWNER), 
         (account_master, Permission.ACTIVE)])
@@ -107,13 +96,13 @@ permission=[ "eosio@owner", "eosio@active"])
 
 If a permission argument type is not supported, an error message is printed, or 
 an error exception is thrown. For example, let the account argument be of the 
-'cleos.CreateKey' type:
+'CreateKey' type:
 
 ```md
 '''
 account_create(
     "account_carol_b", account_master, 
-    permission=cleos.CreateKey("xxx", is_verbose=0))
+    permission=CreateKey("xxx", is_verbose=0))
 '''
 ```
 <img src="arguments/permissions.png" 
@@ -128,12 +117,11 @@ the action 'transfer'.
 
 ```md
 '''
-account_create("account_eosio_token", account_master)
-contract_eosio_token = Contract(account_eosio_token, "token")
+account_create("eosio_token", account_master)
+contract_eosio_token = Contract(eosio_token, "token")
 deploy = contract_eosio_token.deploy()
-time.sleep(1)
 
-account_eosio_token.push_action(
+eosio_token.push_action(
     "create", 
     {
         "issuer": account_master,
@@ -141,13 +129,14 @@ account_eosio_token.push_action(
         "can_freeze": "0", 
         "can_recall": "0", 
         "can_whitelist": "0"
-    })
+    }, 
+    [account_master, eosio_token]) 
 
-account_eosio_token.push_action(
+eosio_token.push_action(
     "issue",
     {
-        "to": account_alice, "quantity": "100.0000 EOS", "memo": ""
-    },
+        "to": alice, "quantity": "100.0000 EOS", "memo": ""
+    }, 
     permission=account_master) 
 '''
 ```
@@ -161,30 +150,30 @@ Note that the last version only maches the data arguments used in of the
 
 ```md
 '''
-account_eosio_token.push_action(
+eosio_token.push_action(
     "transfer",
     {
-        "from": account_alice, "to": account_carol,
+        "from": alice, "to": carol,
         "quantity": "5.0000 EOS", "memo":""
     },
-    permission=account_alice)
+    permission=alice)
 
-account_eosio_token.push_action(
+eosio_token.push_action(
     "transfer",
     '''{
-        "from": account_alice, "to": account_carol,
+        "from": alice, "to": carol,
         "quantity": "5.1000 EOS", "memo":""
     }''',
-    permission=account_alice)
+    permission=alice)
 
-account_eosio_token.push_action(
+eosio_token.push_action(
     "transfer",
     '{' 
-        + '"from":' + str(account_alice) 
-        + ', "to": ' + str(account_carol)
+        + '"from":' + str(alice) 
+        + ', "to": ' + str(carol)
         + ', "quantity": "5.2000 EOS", "memo":""'
         + '}',
-    permission=account_alice)    
+    permission=alice)    
 '''
 ```
 <img src="arguments/data.png" 
