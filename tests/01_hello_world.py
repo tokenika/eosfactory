@@ -1,7 +1,8 @@
 import unittest
 from  eosfactory import *
 
-_ = Logger([Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG])
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
+_ = Logger()
 
 CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
 

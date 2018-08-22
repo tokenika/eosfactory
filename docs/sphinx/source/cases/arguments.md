@@ -28,6 +28,7 @@ Local test node reset, wallet started, master account object created:
 '''
 from  eosfactory import *
 
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 _ = Logger([Verbosity.INFO, Verbosity.OUT])
 reset([Verbosity.INFO]) 
 wallet = Wallet()

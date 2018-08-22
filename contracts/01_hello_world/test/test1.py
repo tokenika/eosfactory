@@ -1,8 +1,8 @@
 from  eosfactory import *
 
 set_throw_error(False)
-_ = Logger([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
-
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
+_ = Logger()
 
 def test():
 

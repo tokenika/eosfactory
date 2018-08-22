@@ -2,8 +2,8 @@ import unittest
 from  eosfactory import *
 
 set_throw_error(False)
-_ = Logger([Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG])
-
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
+_ = Logger()
 
 class Test(unittest.TestCase):
 

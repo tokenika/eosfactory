@@ -10,8 +10,8 @@ The set-up statements are explained at <a href="html">cases/setup</a>.
 ```md
 '''
 from  eosfactory import *
-
-_ = Logger([Verbosity.INFO, Verbosity.OUT])
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+_ = Logger()
 '''
 ```
 
