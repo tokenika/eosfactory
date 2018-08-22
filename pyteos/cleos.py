@@ -1114,8 +1114,16 @@ class SetContract(_Cleos):
                 abi_file = config.json["contract-abi"]
         except:
             pass
+        
+        if not config.json["contract-dir"]:
+            self.ERROR("""
+            Cannot determine the contract directory. The clue is 
+            {}.
+            """.format(contract_dir))
+            return
 
         self.account_name = self._account_arg(account)
+
         args = [self.account_name, self.contract_path_absolute]
 
         if setup.is_json or json:

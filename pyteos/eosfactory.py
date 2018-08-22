@@ -9,6 +9,7 @@ import eosf_contract
 Permission = cleos.Permission
 CreateKey = cleos.CreateKey
 
+
 Logger = logger.Logger
 Verbosity = logger.Verbosity
 Wallet = eosf_wallet.Wallet
@@ -25,5 +26,6 @@ restart = eosf.restart
 reset = eosf.reset
 stop = eosf.stop
 remove_files = eosf.remove_files
+set_is_translating = eosf.set_is_translating
 
 set_nodeos_address = setup.set_nodeos_address

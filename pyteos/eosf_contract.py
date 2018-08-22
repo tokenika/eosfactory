@@ -105,7 +105,7 @@ class Contract(logger.Logger):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             verbosity=None):
-
+        
         self.account = account
         self.contract_dir = contract_dir
         self.expiration_sec = expiration_sec
@@ -123,10 +123,16 @@ class Contract(logger.Logger):
 
         logger.Logger.__init__(self, verbosity)
         self.TRACE_INFO('''
-                ######### Create a `Contract` object.
+                ######### Create a ``Contract`` object.
                 ''')
         config = teos.GetConfig(self.contract_dir, is_verbose=0)
         self.contract_dir = config.json["contract-dir"]
+        if not self.contract_dir:
+            self.ERROR("""
+                Cannot determine the contract directory. The clue is 
+                ``{}``.
+                """.format(contract_dir))
+            return
         self.abi_file = abi_file
         self.wasm_file = wasm_file
 

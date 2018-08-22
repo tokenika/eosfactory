@@ -59,8 +59,8 @@ class Verbosity(enum.Enum):
     OUT_INFO = ['magenta', 'on_green', []]
     DEBUG = ['yellow', None, []]
 
-_is_throw_error = False
-def set_throw_error(status=False):
+_is_throw_error = True
+def set_throw_error(status=True):
     global _is_throw_error
     _is_throw_error = status
 
@@ -219,7 +219,7 @@ message is printed.
 arguments:
 cleos_or_str -- error message string or object having the attribute err_msg
         '''
-        if not self.verbosity:
+        if not self._verbosity:
             return
 
         if cleos_or_str is None:

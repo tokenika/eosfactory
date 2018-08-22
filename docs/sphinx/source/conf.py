@@ -97,7 +97,7 @@ pygments_style = 'sphinx'
 
 html_theme = "classic"
 html_theme_options = {
-    'body_max_width': '750px'
+    'body_max_width': '730px'
 }
 
 # html_theme = "readable"

@@ -135,7 +135,7 @@ $ python3 unittest1.py
 ```
 
 <img src="ide_images/ctest.png" 
-    onerror="this.src='../../../source/cases/ide_images/ctesrt.png'"   
+    onerror="this.src='../../../source/cases/ide_images/ctest.png'"   
     width="720px"/>
 
 <img src="ide_images/unittest1.py.png" 

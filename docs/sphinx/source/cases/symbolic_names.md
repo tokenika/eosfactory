@@ -9,19 +9,11 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ```md
 '''
-import setup
-import logger
-import eosf
-import time
-import eosf_account
+from  eosfactory import *
 
-from logger import Verbosity
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
+CONTRACT_DIR = "02_eosio_token"
 
-logger.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-logger.set_throw_error(False)
+Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
 '''
 ```
 
@@ -69,78 +61,80 @@ The current case demonstrates this facility.
 ```md
 '''
 eosf_account.restart()
-eosf.set_is_translating(False)
+set_is_translating(False)
 
-eosf.reset([logger.Verbosity.INFO]) 
+reset([Verbosity.INFO]) 
 wallet = Wallet()
 account_master_create("account_master")
-logger.set_throw_error(False)
-logger.set_is_testing_errors()
+set_throw_error(False)
+set_is_testing_errors()
 
-account_create("account_alice", account_master)
-account_create("account_bob", account_master)
-account_create("account_carol", account_master)
-account_create("account_eosio_token", account_master)
-contract_eosio_token = Contract(account_eosio_token, "token")
-deploy = contract_eosio_token.deploy()
+account_create("alice", account_master)
+account_create("bob", account_master)
+account_create("carol", account_master)
+account_create("eosio_token", account_master)
+contract = Contract(eosio_token, CONTRACT_DIR)
+deploy = contract.deploy()
 
-time.sleep(1)
-
-account_eosio_token.push_action(
+eosio_token.push_action(
     "create", 
-    '{"issuer":"' 
-        + str(account_master) 
-        + '", "maximum_supply":"1000000000.0000 EOS", \
-        "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+    {
+        "issuer": account_master,
+        "maximum_supply": "1000000000.0000 EOS",
+        "can_freeze": "0",
+        "can_recall": "0",
+        "can_whitelist": "0"
+    }, [account_master, eosio_token])
 
-account_eosio_token.push_action(
-    "issue",
-    '{"to":"' + str(account_alice)
-        + '", "quantity":"100.0000 EOS", '
-        + '"memo":"issue 100.0000 EOS from eosio to alice"}',
-    permission=account_master)
+eosio_token.push_action(
+        "issue",
+        {
+            "to": alice, "quantity": "100.0000 EOS", "memo": ""
+        },
+        account_master)
 '''
 ```
 
 <img src="symbolic_names_images/symbolic_names_false.png" 
     onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_false.png'"   
-    alt="symbolic names translation off" width="720px"/>
+    width="720px"/>
 
 #### Translation is on
 
 ```md
 '''
 eosf_account.restart()
-eosf.set_is_translating(True)
+set_is_translating()
 
-eosf.reset([logger.Verbosity.INFO]) 
+reset([Verbosity.INFO]) 
 wallet = Wallet()
 account_master_create("account_master")
-logger.set_throw_error(False)
-logger.set_is_testing_errors()
+set_throw_error(False)
+set_is_testing_errors()
 
-account_create("account_alice", account_master)
-account_create("account_bob", account_master)
-account_create("account_carol", account_master)
-account_create("account_eosio_token", account_master)
-contract_eosio_token = Contract(account_eosio_token, "token")
-deploy = contract_eosio_token.deploy()
+account_create("alice", account_master)
+account_create("bob", account_master)
+account_create("carol", account_master)
+account_create("eosio_token", account_master)
+contract = Contract(eosio_token, CONTRACT_DIR)
+deploy = contract.deploy()
 
-time.sleep(1)
-
-account_eosio_token.push_action(
+eosio_token.push_action(
     "create", 
-    '{"issuer":"' 
-        + str(account_master) 
-        + '", "maximum_supply":"1000000000.0000 EOS", \
-        "can_freeze":0, "can_recall":0, "can_whitelist":0}')
+    {
+        "issuer": account_master,
+        "maximum_supply": "1000000000.0000 EOS",
+        "can_freeze": "0",
+        "can_recall": "0",
+        "can_whitelist": "0"
+    }, [account_master, eosio_token])
 
-account_eosio_token.push_action(
+eosio_token.push_action(
     "issue",
-    '{"to":"' + str(account_alice)
-        + '", "quantity":"100.0000 EOS", '
-        + '"memo":"issue 100.0000 EOS from eosio to alice"}',
-    permission=account_master)
+    {
+        "to": alice, "quantity": "100.0000 EOS", "memo": ""
+    },
+    account_master)
 '''
 ```
 

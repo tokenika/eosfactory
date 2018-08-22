@@ -29,7 +29,10 @@ Local test node reset, wallet started, master account object created:
 from  eosfactory import *
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-_ = Logger([Verbosity.INFO, Verbosity.OUT])
+_ = Logger()
+
+CONTRACT_DIR = "02_eosio_token"
+
 reset([Verbosity.INFO]) 
 wallet = Wallet()
 account_master_create("account_master")
@@ -62,7 +65,11 @@ account argument be of the 'CreateKey' type:
 
 ```md
 '''
+set_throw_error(False)
+
 account_create("jimmy", CreateKey("xxx", is_verbose=0))
+
+set_throw_error()
 '''
 ```
 <img src="arguments/accounts.png" 
@@ -101,9 +108,13 @@ an error exception is thrown. For example, let the account argument be of the
 
 ```md
 '''
+set_throw_error(False)
+
 account_create(
     "account_carol_b", account_master, 
     permission=CreateKey("xxx", is_verbose=0))
+
+set_throw_error()
 '''
 ```
 <img src="arguments/permissions.png" 
@@ -119,7 +130,7 @@ the action 'transfer'.
 ```md
 '''
 account_create("eosio_token", account_master)
-contract_eosio_token = Contract(eosio_token, "token")
+contract_eosio_token = Contract(eosio_token, CONTRACT_DIR)
 deploy = contract_eosio_token.deploy()
 
 eosio_token.push_action(

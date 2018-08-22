@@ -22,10 +22,9 @@ Cases
     cases/account_master
     cases/register_to_testnode
     cases/arguments
-
-
     cases/symbolic_names
     cases/contract
+
     cases/wallet
     cases/configuration
     cases/eosio_token_contract

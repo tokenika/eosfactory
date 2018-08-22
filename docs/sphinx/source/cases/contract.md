@@ -10,20 +10,11 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ```md
 '''
-import unittest
-import setup
-import eosf
-import time
+from  eosfactory import *
 
-from eosf import Verbosity
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
-
-logger.Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-logger.set_throw_error(True)
-
-eosf.reset([logger.Verbosity.INFO])
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
+CONTRACT_DIR = "02_eosio_token"
+reset([Verbosity.INFO])
 '''
 ```
 
@@ -33,7 +24,7 @@ eosf.reset([logger.Verbosity.INFO])
 '''
 wallet = Wallet()   
 account_master_create("account_master")
-logger.set_throw_error(False)
+set_throw_error(False)
 '''
 ```
 
@@ -42,7 +33,7 @@ logger.set_throw_error(False)
 None 'Contract' object can exist without an account object that keeps this
 contract. The account object is presented at <a href="account.html">cases/account</a>.
 
-Create an account objects: 'account_eosio_token'. Provide it with a contract 
+Create an account objects: 'eosio_token'. Provide it with a contract 
 of the class 'eosio.token'. The code for the 'eosio.token' class comes with 
 the EOSIO repository, and it is copied, slightly modified to the Factory's. 
 We use the later copy.
@@ -53,21 +44,21 @@ Make three other account objects, and execute actions of the contract on them.
 
 ```md
 '''
-account_create("account_eosio_token", account_master)
-account_create("account_alice", account_master)
-account_create("account_bob", account_master)
-account_create("account_carol", account_master)
+account_create("eosio_token", account_master)
+account_create("alice", account_master)
+account_create("bob", account_master)
+account_create("carol", account_master)
 '''
 ```
 
 ### Create a Contract object
 
 Create an instance of the 'Contract' class, appending it to the account 
-'account_eosio_token':
+'eosio_token':
 
 ```md
 '''
-contract_eosio_token = Contract(account_eosio_token, "token")
+contract = Contract(eosio_token, CONTRACT_DIR)
 '''
 ```
 
@@ -96,8 +87,8 @@ Any 'Contract' object can:
 
 ```md
 '''
-contract_eosio_token.build()
-contract_eosio_token.deploy()
+contract.build()
+contract.deploy()
 '''
 ```
 
@@ -107,62 +98,63 @@ Execute actions of the contract:
 
 ```md
 '''
-contract_eosio_token.push_action(
+contract.push_action(
     "create", 
-    '{"issuer":"' 
-        + str(account_master) 
-        + '", "maximum_supply":"1000000000.0000 EOS", \
-        "can_freeze":0, "can_recall":0, "can_whitelist":0}',
-        [account_master, account_eosio_token])
+    {
+        "issuer": account_master,
+        "maximum_supply": "1000000000.0000 EOS",
+        "can_freeze": "0",
+        "can_recall": "0",
+        "can_whitelist": "0"
+    }, [account_master, eosio_token])
     
-
-contract_eosio_token.push_action(
+contract.push_action(
     "issue",
-    '{"to":"' + str(account_alice)
-        + '", "quantity":"100.0000 EOS", '
-        + '"memo":"issue 100.0000 EOS from eosio to alice"}',
+    {
+        "to": alice, "quantity": "100.0000 EOS", "memo": ""
+    },
     account_master)
 
-contract_eosio_token.push_action(
+contract.push_action(
     "transfer",
-    '{"from":"' + str(account_alice)
-        + '", "to":"' + str(account_carol)
-        + '", "quantity":"25.0000 EOS", '
-        + '"memo":"transfer 25.0000 EOS from alice to carol"}',
-    account_alice)
+    {
+        "from": alice, "to": carol,
+        "quantity": "25.0000 EOS", "memo":""
+    },
+    alice)
 
-contract_eosio_token.push_action(
+contract.push_action(
     "transfer",
-    '{"from":"' + str(account_carol)
-        + '", "to":"' + str(account_bob)
-        + '", "quantity":"11.0000 EOS", '
-        + '"memo":"transfer 11.0000 EOS from carol to bob"}',
-    account_carol)
+    {
+        "from": carol, "to": bob, 
+        "quantity": "11.0000 EOS", "memo": ""
+    },
+    carol)
 
-contract_eosio_token.push_action(
+contract.push_action(
     "transfer",
-    '{"from":"' + str(account_carol)
-        + '", "to":"' + str(account_bob)
-        + '", "quantity":"2.0000 EOS", '
-        + '"memo":"transfer 2.0000 EOS from carol to bob"}',
-    account_carol)
+    {
+        "from": carol, "to": bob, 
+        "quantity": "2.0000 EOS", "memo": ""
+    },
+    carol)
 
-contract_eosio_token.push_action(
+contract.push_action(
     "transfer",
-    '{"from":"' + str(account_bob)
-        + '", "to":"' + str(account_alice)
-        + '", "quantity":"2.0000 EOS", '
-        + '"memo":"transfer 2.0000 EOS from bob to alice"}',
-    account_bob)                
+    {
+        "from": bob, "to": alice, \
+        "quantity": "2.0000 EOS", "memo":""
+    },
+    bob)            
 '''
 ```
 Inspect the database of the blockchain:
 
 ```md
 '''
-table_alice = account_eosio_token.table("accounts", account_alice)
-table_bob = account_eosio_token.table("accounts", account_bob)
-table_carol = account_eosio_token.table("accounts", account_carol)
+table_alice = eosio_token.table("accounts", alice)
+table_bob = eosio_token.table("accounts", bob)
+table_carol = eosio_token.table("accounts", carol)
 '''
 ```
 
