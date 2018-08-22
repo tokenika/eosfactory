@@ -15,7 +15,6 @@ class Test(unittest.TestCase):
         _.SCENARIO('''
 Set-up is that the local testnet is runnuning, after reseting, and it contains 
 the "eosio_account" account that implements operations on tokens.
-
         ''')
         reset([Verbosity.INFO])
         wallet = Wallet()

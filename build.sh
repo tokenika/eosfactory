@@ -127,7 +127,6 @@ Usage: ./build.sh [OPTIONS]
             Default is 'secp256k1'.
     -t  Build type: 'Debug' or 'Release'. Default is 'Release'.
     -r  Reset the build.
-    -s  EOSIO node shared memory size (in MB). Default is 100 
     -o  Path to the Windows WSL root, if applicable. Default is 
             $WSL_ROOT_DIR__ or $WSL_ROOT_DIR1804__
     -v  CMake verbose. Default is OFF.
