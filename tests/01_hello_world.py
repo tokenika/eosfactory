@@ -58,14 +58,14 @@ class Test(unittest.TestCase):
         account_host.push_action(
             "hi", {"user":account_carol}, account_carol)
 
-        # _.COMMENT('''
-        # WARNING: This action should fail due to authority mismatch!
-        # ''')
-        # set_throw_error(False)
-        # set_is_testing_errors(True)
-        # action = account_host.push_action(
-        #     "hi", {"user":account_carol}, account_alice)
-        # self.assertTrue(action.error)
+        _.COMMENT('''
+        WARNING: This action should fail due to authority mismatch!
+        ''')
+        set_throw_error(False)
+        set_is_testing_errors(True)
+        action = account_host.push_action(
+            "hi", {"user":account_carol})
+        self.assertTrue(account_host.action.error)
 
 
     def tearDown(self):

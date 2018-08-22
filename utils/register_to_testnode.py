@@ -3,7 +3,7 @@
 def register(testnode_url, account_object_name):
 
     import setup
-    import logger
+    import front_end
     import eosf
     import eosf_account
     import testnet_data

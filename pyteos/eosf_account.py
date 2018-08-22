@@ -6,7 +6,7 @@ import re
 
 import setup
 import teos
-import logger
+import front_end
 import cleos
 import cleos_system
 import eosf

@@ -19,7 +19,7 @@ import subprocess
 import json as json_module
 import pathlib
 import setup
-import logger
+import front_end
 import teos
 
 setup_setup = setup.Setup()
@@ -590,13 +590,9 @@ class WalletOpen(_Cleos):
         is_verbose: Verbosity at the construction time.
     '''
     def __init__(self, wallet="default", is_verbose=1):
-        try:
-            wallet_name = wallet.name
-        except:
-            wallet_name = wallet
-        
         _Cleos.__init__(
-            self, ["--name", wallet_name], "wallet", "open", is_verbose)
+            self, ["--name", self._wallet_arg(wallet)], 
+            "wallet", "open", is_verbose)
 
         if not self.error:
             self.printself()
@@ -631,13 +627,9 @@ class WalletLock(_Cleos):
         is_verbose: Verbosity at the construction time.
     '''
     def __init__(self, wallet="default", is_verbose=1):
-        try:
-            wallet_name = wallet.name
-        except:
-            wallet_name = wallet
-        
         _Cleos.__init__(
-            self, ["--name", wallet_name], "wallet", "lock", is_verbose)
+            self, ["--name", self._wallet_arg(wallet)], 
+            "wallet", "lock", is_verbose)
 
         if not self.error:
             self.printself()
@@ -664,15 +656,13 @@ class WalletUnlock(_Cleos):
     '''
     def __init__(
             self, wallet="default", password="", timeout=0, is_verbose=1):
-        try:
-            wallet_name = wallet.name
+ 
+        if isinstance(wallet, Wallet):
             password = wallet.password
-        except:
-            wallet_name = wallet
 
         _Cleos.__init__(
             self, 
-            ["--name", wallet_name, "--password", password], 
+            ["--name", self._wallet_arg(wallet), "--password", password], 
             "wallet", "unlock", is_verbose)
 
         if not self.ERROR():

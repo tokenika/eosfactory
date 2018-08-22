@@ -5,7 +5,7 @@ def add_account(
     account_name, owner_key, active_key):
 
     import setup
-    import logger
+    import front_end
     import eosf
     import eosf_account
     import testnet_data

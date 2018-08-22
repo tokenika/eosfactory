@@ -3,7 +3,7 @@ import json
 
 import setup
 import teos
-import logger
+import front_end
 import cleos
 import eosf
 

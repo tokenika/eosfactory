@@ -24,8 +24,8 @@ Cases
     cases/arguments
     cases/symbolic_names
     cases/contract
-
     cases/wallet
+
     cases/configuration
     cases/eosio_token_contract
     cases/setup

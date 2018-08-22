@@ -9,15 +9,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 ```md
 '''
-import os
-import setup
-import eosf
-import eosf_account
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
-
-logger.set_throw_error(False)
+from  eosfactory import *
 '''
 ```
 
@@ -30,23 +22,20 @@ It can be exactly one 'Wallet' object in the namespace. After the 'Wallet'
 singleton is created, it remains transparent to the script: usually, there 
 is no need to refer to it.
 
-If the 'Wallet' object is of the local testnet, its password is kept between 
-sessions, and used automatically.
-
-Let us consider two cases: 'NODEOS` and 'KEOSD' subsequently.
-
-### NODEOS managed wallet
-
+Although the Factory manages only one 'Wallet` object at a time, it produces numerous wallet files in the wallet directory, that is where the KEOSD Wallet Manager keeps wallets. The wallet files are marked with prefixes -- either arbitrary, set by a particular test script -- or encoding the URL of the testnet active at the creation time. For example, let us try with the local testnet.
 ```md
 '''
-eosf.reset([logger.Verbosity.INFO])          # reset the local testnet
+reset([Verbosity.INFO])
 wallet = Wallet()
 wallet.keys()
-account_master_create("account_master")     # account object is put to wallet
+account_master_create("account_master")
 wallet.keys()
+import pdb; pdb.set_trace()
 wallet.lock_all()
 
-eosf.stop()                                 # stop the local testnet
+stop()
+
+exit()
 '''
 ```
 
@@ -68,10 +57,10 @@ expect that it opens without calling for password, having the same keys.
 ```md
 '''
 eosf_account.restart()                      # reset the Factory
-eosf.run([logger.Verbosity.INFO])    # restart the local testnet
+run([Verbosity.INFO])    # restart the local testnet
 wallet = Wallet()
 wallet.keys()   
-eosf.stop()                         # stop the local testnet
+stop()                         # stop the local testnet
 '''
 ```
 
@@ -86,11 +75,11 @@ we delete it.
 
 ```md
 '''
-eosf.kill_keosd()       # otherwise, the manager protects the wallet file
+kill_keosd()       # otherwise, the manager protects the wallet file
 
 wallet_name = "jungle_wallet"
 try:
-    wallet_file = eosf.wallet_dir() + wallet_name + ".wallet"
+    wallet_file = wallet_dir() + wallet_name + ".wallet"
     os.remove(wallet_file)
     print("The deleted wallet file:\n{}\n".format(wallet_file))
 except Exception as e:

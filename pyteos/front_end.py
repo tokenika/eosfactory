@@ -83,7 +83,7 @@ class Logger():
             self._verbosity = verbosity
 
         self.cleos_object = None
-        self.eosf_buffer = ""
+        self.trace_buffer = ""
         self.out_buffer = ""
         self.out_info_buffer = ""
         self.error_buffer = ""
@@ -102,7 +102,7 @@ class Logger():
 
     def TRACE(self, msg, do=False):
         msg = translate(msg)
-        self.eosf_buffer = msg
+        self.trace_buffer = msg
         if msg and (Verbosity.TRACE in self._verbosity or do):
             color = Verbosity.TRACE.value
             cprint(msg, color[0], color[1], attrs=color[2])

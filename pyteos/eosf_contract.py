@@ -5,7 +5,7 @@ import time
 import re
 
 import setup
-import logger
+import front_end
 import teos
 import cleos
 import cleos_system

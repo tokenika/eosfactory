@@ -1,5 +1,5 @@
 import setup
-import logger
+import front_end
 import cleos
 import eosf
 import eosf_wallet

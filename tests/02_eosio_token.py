@@ -66,7 +66,7 @@ class Test(unittest.TestCase):
 
         # self.assertTrue(
         #     '"maximum_supply": "1000000000.0000 EOS"' \
-        #         in account_host.eosf_buffer)
+        #         in account_host.trace_buffer)
 
         account_host.push_action(
             "issue",
