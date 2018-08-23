@@ -25,13 +25,12 @@ Cases
     cases/symbolic_names
     cases/contract
     cases/wallet
-
+    cases/debugging    
     cases/configuration
     cases/eosio_token_contract
+
     cases/setup
     cases/remote_tic_tac_toe
-    cases/debugging
-
 
 Release Notes
 -------------

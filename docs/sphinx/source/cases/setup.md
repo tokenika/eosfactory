@@ -48,7 +48,7 @@ logger.set_is_testing_errors(False) # make the error mesages alarming
 logger.set_throw_error(True) # throw exception rather then print message
 eosf.restart()
 eosf.reset([logger.Verbosity.INFO]) # start local testnode
-wallet = Wallet() # create the singleton `Wallet` object
+create_wallet() # create the singleton `Wallet` object
 account_master_create("account_master") # create local testnode `eosio` account
 logger.set_throw_error(False) # print message rather then throw exception
 

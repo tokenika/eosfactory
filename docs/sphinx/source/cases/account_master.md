@@ -42,7 +42,7 @@ show them.
 ```md
 '''
 reset([Verbosity.INFO])
-wallet = Wallet()
+create_wallet()
 account_master_create("account_master_images")
 account_master_images.info()
 stop([Verbosity.INFO])
@@ -87,7 +87,7 @@ remove_files()
 First, the 'Wallet` singleton has to be created:
 ```md
 '''
-wallet = Wallet()
+create_wallet()
 account_master_create(
     "account_master",
     testnet.account_name,

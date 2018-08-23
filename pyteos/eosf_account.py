@@ -74,20 +74,9 @@ def is_wallet_defined(logger):
     global wallet_globals    
     if not wallet_globals is None:
         return
-    inspect_stack = inspect.stack()
-    size = len(inspect_stack)
 
-    for index in range(size):
-        locals = inspect_stack[index][0].f_locals
-        globals = inspect_stack[index][0].f_globals
-        
-        objects = {**globals, **locals}
-        for name in objects:
-            if isinstance(objects[name], eosf_wallet.Wallet):
-                wallet_singleton = objects[name] 
-                wallet_globals = globals
-        if not wallet_singleton is None:
-            break
+    wallet_globals = eosf_wallet.Wallet.globals
+    wallet_singleton = eosf_wallet.wallet
 
     if wallet_singleton is None:
         logger.ERROR('''
@@ -110,34 +99,33 @@ def is_local_testnet_running(account_eosio):
 
 def put_account_to_wallet_and_on_stack(
         account_object_name, account_object, logger=None):
-
     if logger is None:
-        logger =account_object
+        logger = account_object
 
     global wallet_singleton
     global wallet_globals    
     wallet_singleton.open()
     wallet_singleton.unlock()
 
-    if wallet_singleton.keys_in_wallets([account_object.owner_key.key_private, \
-            account_object.active_key.key_private]):
-        wallet_singleton.map_account(account_object_name, account_object)
-        # export the account object to the globals in the wallet module:
-        wallet_globals[account_object_name] = account_object
-        account_object.in_wallet_on_stack = True
-        return True
-    else:
-        if wallet_singleton.import_key(account_object):
+    if account_object.owner_key:
+        if wallet_singleton.keys_in_wallets([account_object.owner_key.key_private, \
+                account_object.active_key.key_private]):
             wallet_singleton.map_account(account_object_name, account_object)
-            # export the account object to the globals in the wallet module:
-            wallet_globals[account_object_name] = account_object
-            account_object.in_wallet_on_stack = True
-            return True
         else:
-            logger.TRACE('''
-            Wrong or missing keys for the account ``{}`` in the wallets.
-            '''.format(account_object.name))
-            return False
+            if wallet_singleton.import_key(account_object):
+                wallet_singleton.map_account(account_object_name, 
+                account_object)
+            else:
+                logger.TRACE('''
+                Wrong or missing keys for the account ``{}`` in the wallets.
+                '''.format(account_object.name))
+                return False
+
+    # export the account object to the globals in the wallet module:
+    wallet_globals[account_object_name] = account_object
+    account_object.in_wallet_on_stack = True
+    return True
+
 
 class Eosio(cleos.Account):
     def __init__(self):
@@ -354,7 +342,7 @@ def account_master_create(
     finishes successfully.
     '''
 
-    logger =front_end.Logger(verbosity)
+    logger = front_end.Logger(verbosity)
     logger.TRACE_INFO('''
         ######### Create the master account object named ``{}``...
         '''.format(account_object_name))
@@ -618,16 +606,13 @@ def append_account_methods_and_finish(
 
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
-    if account_object.owner_key:
-        get_account = cleos.GetAccount(account_object, is_verbose=0)
-        if not logger.ERROR(get_account):
-            logger.TRACE('''
-            * Cross-checked: account {}({}) is in the blockchain.
-            '''.format(account_object_name, account_object.name))
-        return put_account_to_wallet_and_on_stack(
-            account_object_name, account_object)
-    else:
-        return True
+    get_account = cleos.GetAccount(account_object, is_verbose=0)
+    if not logger.ERROR(get_account):
+        logger.TRACE('''
+        * Cross-checked: account {}({}) is in the blockchain.
+        '''.format(account_object_name, account_object.name))
+    return put_account_to_wallet_and_on_stack(
+        account_object_name, account_object)
 
 def account_create(
         account_object_name,
@@ -726,6 +711,7 @@ def account_create(
         account_object.TRACE('''
             * The account object is created.
             ''')
+
         append_account_methods_and_finish(
             account_object_name, account_object, logger)
 

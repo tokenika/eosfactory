@@ -42,7 +42,7 @@ NEXT TEST ====================================================================
     #     Make a second wallet, expecting an error message.
     #     """)        
     #     eosf.reset([front_end.Verbosity.INFO])
-    #     wallet = Wallet()
+    #     create_wallet()
     #     front_end.set_throw_error(False)
     #     front_end.set_is_testing_errors()
     #     ######################################################################
@@ -79,7 +79,7 @@ NEXT TEST ====================================================================
         ascribed to a physical account.
         """)
         eosf.reset([front_end.Verbosity.INFO]) 
-        wallet = Wallet()
+        create_wallet()
         account_master_create("account_master")
         front_end.set_throw_error(False)
         front_end.set_is_testing_errors()

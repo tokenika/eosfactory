@@ -14,7 +14,7 @@ from  eosfactory import *
 
 set_throw_error(True)
 reset([Verbosity.INFO]) 
-wallet = Wallet()
+create_wallet()
 account_master_create("account_master")
 set_throw_error(False)
 '''

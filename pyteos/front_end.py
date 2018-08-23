@@ -71,7 +71,12 @@ def set_is_testing_errors(status=True):
     Makes it less alarming.
     '''
     global _is_testing_error
-    _is_testing_error = status
+    if status:
+        _is_testing_error = True
+        set_throw_error(False)
+    else:
+        _is_testing_error = False
+        set_throw_error(True)
 
 class Logger():
     verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
@@ -168,16 +173,16 @@ class Logger():
             return None
 
         if "Wallet already exists" in err_msg:
-            return logger.WalletExists(
-                logger.WalletExists.msg_template.format(self.name))
+            return WalletExists(
+                WalletExists.msg_template.format(self.name))
 
         if "Error 3120002: Nonexistent wallet" in err_msg:
-            return logger.WalletNotExist(
-                logger.WalletNotExist.msg_template.format(self.name))
+            return WalletNotExist(
+                WalletNotExist.msg_template.format(self.name))
  
         if "Invalid wallet password" in err_msg:
-            return logger.InvalidPassword(
-                logger.InvalidPassword.msg_template.format(self.name))
+            return InvalidPassword(
+                InvalidPassword.msg_template.format(self.name))
         
         #######################################################################
         # NOT ERRORS
@@ -229,7 +234,7 @@ cleos_or_str -- error message string or object having the attribute err_msg
         if not isinstance(cleos_or_str, str):
             if not cleos_or_str.error:
                 return False
-                            
+
             cleos_object = self.switch(cleos_or_str)
             if cleos_object.error_object is None:
                 return False

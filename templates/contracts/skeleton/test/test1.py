@@ -1,6 +1,4 @@
 from  eosfactory import *
-
-set_throw_error(False)
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 _ = Logger()
 
@@ -35,7 +33,7 @@ Observe the yellow printout starting with "INFO".
 ""
         ''')
     reset([Verbosity.INFO])
-    wallet = Wallet()
+    create_wallet()
     account_master_create("account_master")
     account_create("hello", account_master)
     import sys

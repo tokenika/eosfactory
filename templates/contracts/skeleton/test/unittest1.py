@@ -38,7 +38,7 @@ The test verifies the contents of the "DEBUG" channel of the Factory's logger.
 ""
         ''')
         reset([Verbosity.INFO])
-        wallet = Wallet()
+        create_wallet()
         account_master_create("account_master")
         account_create("hello", account_master)
         import sys

@@ -12,7 +12,7 @@ utilize the printing functionality to inspect the value of a variable and check
 the flow of the contract.''
 
 We attempt to make it more refined, introducing a logging utility implemented 
-in the 'logger.hpp` header file.
+in the 'hpp` header file.
 </pre>
 
 ## Set-up
@@ -25,36 +25,27 @@ directory. Contract directories there can be accessed simply by their names.
 
 The set-up for the debugging test involves the wallet, 'account master' account, 
 an account for holding the tested contract, and to working accounts (here, 
-'account_alice' and 'account_carol').
+'alice' and 'carol').
 
 ```md
 '''
-import sys
-import unittest
-import setup
-import eosf
-import time
+from  eosfactory import *
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
+CONTRACT_DIR = "01_hello_world"
 
-from eosf import Verbosity
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
+restart()
+set_is_testing_errors(False)
+set_throw_error(True)
+reset([Verbosity.INFO]) 
 
-logger.Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
-
-eosf.restart()
-logger.set_is_testing_errors(False)
-logger.set_throw_error(True)
-eosf.reset([logger.Verbosity.INFO]) 
-
-wallet = Wallet()
+create_wallet()
 account_master_create("account_master")
-account_create("account_hello", account_master)
-account_create("account_alice", account_master)
-account_create("account_carol", account_master)
+account_create("greeter", account_master)
+account_create("alice", account_master)
+account_create("carol", account_master)
 '''
 ```
-### Include logger.hpp
+### Include hpp
 
 Let us have the header #include, and a 'logger_info' line in the source 
 code of the contract that is the 'contracts/hello/src.hello.cpp' file:
@@ -64,7 +55,7 @@ code of the contract that is the 'contracts/hello/src.hello.cpp' file:
 #include <eosiolib/print.hpp>
 
 #define DEBUG
-#include "logger.hpp"
+#include "hpp"
 #include "hello.hpp" 
 
 using namespace eosio;
@@ -92,15 +83,15 @@ Build and deploy the contract. Push contract actions:
 
 ```md
 '''
-contract_hello = Contract(account_hello, "hello")
-contract_hello.build()
-contract_hello.deploy()
+contract = Contract(greeter, CONTRACT_DIR)
+contract.build()
+contract.deploy()
 
-account_hello.push_action(
-    "hi", {"user":account_alice}, account_alice)
+greeter.push_action(
+    "hi", {"user":alice}, alice)
 
-account_hello.push_action(
-    "hi", {"user":account_carol}, account_carol)
+greeter.push_action(
+    "hi", {"user":carol}, carol)
 '''
 ```
 

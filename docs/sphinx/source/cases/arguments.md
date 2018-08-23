@@ -29,12 +29,11 @@ Local test node reset, wallet started, master account object created:
 from  eosfactory import *
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-_ = Logger()
 
 CONTRACT_DIR = "02_eosio_token"
 
 reset([Verbosity.INFO]) 
-wallet = Wallet()
+create_wallet()
 account_master_create("account_master")
 '''
 ```

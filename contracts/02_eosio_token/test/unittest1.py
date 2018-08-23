@@ -2,7 +2,6 @@ import unittest, sys
 from  eosfactory import *
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-set_throw_error(False)
 _ = Logger()
 
 CONTRACT_NAME = sys.path[0] + "/../"
@@ -19,7 +18,7 @@ class Test(unittest.TestCase):
         set_throw_error(True)
         set_is_testing_errors(False)
 
-        wallet = Wallet()
+        create_wallet()
         account_master_create("account_master")
 
         _.SCENARIO('''

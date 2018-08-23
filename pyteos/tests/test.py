@@ -1,3 +1,3 @@
 from eosf_wallet import Wallet
 
-wallet = Wallet()
+create_wallet()

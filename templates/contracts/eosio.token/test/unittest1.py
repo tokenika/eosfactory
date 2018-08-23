@@ -18,7 +18,7 @@ the "eosio_account" account that implements operations on tokens.
 
         ''')
         reset([Verbosity.INFO])
-        wallet = Wallet()
+        create_wallet()
         account_master_create("account_master")
         account_create("eosio_token", account_master)
         import sys

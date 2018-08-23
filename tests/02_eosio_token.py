@@ -19,7 +19,7 @@ class Test(unittest.TestCase):
         set_throw_error(True)
         set_is_testing_errors(False)
 
-        wallet = Wallet()
+        create_wallet()
         account_master_create("account_master")
 
         _.SCENARIO('''

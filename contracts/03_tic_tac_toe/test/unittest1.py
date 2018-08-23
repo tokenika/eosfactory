@@ -9,7 +9,6 @@ from eosf_contract import Contract
 
 eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
 # eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
-eosf.set_throw_error(False)
 #setup.set_command_line_mode()
 
 _ = eosf.Logger()
@@ -44,7 +43,7 @@ NEXT TEST ====================================================================
         """)        
         eosf.use_keosd(False)
         eosf.reset([eosf.Verbosity.TRACE]) 
-        wallet = Wallet()
+        create_wallet()
         account_master_create("account_master")
 
         account_create(
@@ -52,7 +51,6 @@ NEXT TEST ====================================================================
         account_create("account_alice", account_master)
         account_create("account_carol", account_master)
 
-        eosf.set_throw_error(False)
         eosf.set_is_testing_errors()
 
         ######################################################################  

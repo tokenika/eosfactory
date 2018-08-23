@@ -8,7 +8,6 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 
 front_end.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-front_end.set_throw_error(False)
 
 remote_testnet = "http://88.99.97.30:38888"
 _ = front_end.Logger()
@@ -78,7 +77,6 @@ eosf_account.account_master_test = eosf_account.GetAccount(
 )
 eosf_account.account_master_test.ERROR()
 
-front_end.set_throw_error(False)
 front_end.set_is_testing_errors()        
 ######################################################################
 

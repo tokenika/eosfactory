@@ -22,7 +22,7 @@ reset([Verbosity.INFO])
 
 ```md
 '''
-wallet = Wallet()   
+create_wallet()   
 account_master_create("account_master")
 set_throw_error(False)
 '''

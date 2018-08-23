@@ -44,7 +44,7 @@ class Test(unittest.TestCase):
         else:
             reset([Verbosity.INFO])
 
-            wallet = Wallet()
+            create_wallet()
             account_master_create(ACCOUNT_MASTER)
             account_create(ACCOUNT_HOST, globals()[ACCOUNT_MASTER])
 

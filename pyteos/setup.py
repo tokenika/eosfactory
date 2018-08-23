@@ -52,8 +52,6 @@ def restart():
 
 def nodeos_address():
     global _nodeos_address
-    if _nodeos_address is None:
-        return None
     return _nodeos_address
 
 class Setup:

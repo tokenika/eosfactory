@@ -1,7 +1,6 @@
 from  eosfactory import *
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-set_throw_error(False)
 _ = Logger()
 
 def test():
@@ -12,7 +11,7 @@ the "eosio_account" account that implements operations on tokens.
 
     ''')
     reset([Verbosity.INFO])
-    wallet = Wallet()
+    create_wallet()
     account_master_create("account_master")
     account_create("eosio_token", account_master)
     import sys
@@ -20,7 +19,6 @@ the "eosio_account" account that implements operations on tokens.
     contract.build()
     contract.deploy()
     
-    set_throw_error(False)
     set_is_testing_errors()         
 
     _.COMMENT('''

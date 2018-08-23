@@ -185,15 +185,14 @@ class Transaction():
         pass
 
 def is_local_address():
-    if not setup.nodeos_address():
-        cleos.set_local_nodeos_address()
+    cleos.set_local_nodeos_address_if_none()
     return setup.is_local_address
 
 def reset(verbosity=None):
     ''' Start clean the EOSIO local node.
     '''
     logger = front_end.Logger(verbosity) 
-    if not is_local_address():   
+    if not cleos.set_local_nodeos_address_if_none():   
         logger.TRACE_INFO('''
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()))
@@ -212,7 +211,7 @@ def run(verbosity=None):
     ''' Restart the EOSIO local node.
     ''' 
     logger = front_end.Logger(verbosity) 
-    if not is_local_address():   
+    if not cleos.set_local_nodeos_address_if_none():   
         logger.TRACE_INFO('''
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()))

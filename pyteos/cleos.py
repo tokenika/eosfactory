@@ -32,10 +32,14 @@ def restart():
     global _wallet_address_arg
     _wallet_address_arg = None
 
-def set_local_nodeos_address():
-    config = teos.GetConfig(is_verbose=0)       
-    setup.set_nodeos_address("http://" + config.json["EOSIO_DAEMON_ADDRESS"])
-    setup.is_local_address = True
+def set_local_nodeos_address_if_none():
+    if not setup.nodeos_address():
+        config = teos.GetConfig(is_verbose=0)       
+        setup.set_nodeos_address(
+            "http://" + config.json["EOSIO_DAEMON_ADDRESS"])
+        setup.is_local_address = True
+
+    return setup.is_local_address
 
 def node_is_running():
     result = teos.NodeIsRunning(is_verbose=0)
@@ -106,8 +110,7 @@ class _Cleos(front_end.Logger):
         if not self.error:
             cl = [setup_setup.cleos_exe]
 
-            if not setup.nodeos_address():
-                set_local_nodeos_address()
+            set_local_nodeos_address_if_none()
             cl.extend(["--url", setup.nodeos_address()])
 
             if setup.is_print_request:

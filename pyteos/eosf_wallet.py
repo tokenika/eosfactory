@@ -1,5 +1,6 @@
 import os
 import json
+import inspect
 
 import setup
 import teos
@@ -20,6 +21,10 @@ def wallet_json_write(wallet_json):
     with open(eosf.wallet_dir() + setup.password_map, "w+")  as out:
         json.dump(wallet_json, out)
 
+def create_wallet(name=None, password="", verbosity=None, file=False):
+    Wallet.globals = inspect.stack()[1][0].f_globals
+    return Wallet(name, password, verbosity, file)
+
 class Wallet(cleos.WalletCreate):
     ''' Create a new wallet locally and operate it.
 
@@ -38,8 +43,11 @@ class Wallet(cleos.WalletCreate):
         is_verbose: Verbosity at the constraction time.  
     '''
     wallet_keys = None
+    globals = None
   
     def __init__(self, name=None, password="", verbosity=None, file=False):
+        cleos.set_local_nodeos_address_if_none()
+
         if name is None:
             name = setup.wallet_default_name
         else:
@@ -57,25 +65,24 @@ class Wallet(cleos.WalletCreate):
         wallet = self
         self.wallet_dir = eosf.wallet_dir()
 
-        logger.TRACE('''
-                * Wallet name is {}, wallet directory is
+        logger.TRACE_INFO('''
+                * Wallet name is ``{}``, wallet directory is
                     {}.
                 '''.format(name, self.wallet_dir))
 
         if not password: # look for password:
-            try:
-                password = wallet_json_read()[name]
-                logger.TRACE('''
+            passwords = wallet_json_read()
+            if name in passwords:
+                password = passwords[name]
+                logger.TRACE_INFO('''
                     The pasword is restored from the file:
                     {}
                     '''.format(self.wallet_dir + setup.password_map))
-            except:
-                pass
 
         cleos.WalletCreate.__init__(self, name, password, is_verbose=-1)
 
         if self.is_created: # new password
-            self.TRACE('''
+            self.TRACE_INFO('''
                 * Created wallet ``{}``.
                 '''.format(self.name)
             )            
@@ -83,7 +90,7 @@ class Wallet(cleos.WalletCreate):
                 password_map = wallet_json_read()
                 password_map[name] = self.password
                 wallet_json_write(password_map)
-                self.TRACE('''
+                self.TRACE_INFO('''
                     * Password is saved to the file ``{}`` in the wallet directory.
                     '''.format(setup.password_map)
                 )
@@ -287,7 +294,7 @@ class Wallet(cleos.WalletCreate):
 
         restored = dict()
         if len(account_names) > 0:
-            self.TRACE('''
+            self.TRACE_INFO('''
                     ######### Restored accounts as global variables:
                     ''')
                         
@@ -306,14 +313,14 @@ class Wallet(cleos.WalletCreate):
                 object_names.add(object_name)
 
                 if object_name:
-                    self.TRACE('''
+                    self.TRACE_INFO('''
                          {}
                     '''.format(object_name))
                     from eosf_account import account_create
                     restored[object_name] = account_create(
                         object_name, name, restore=True, verbosity=[])
         else:
-            self.TRACE('''
+            self.TRACE_INFO('''
                  * The wallet is empty.
             ''')
 

@@ -40,7 +40,7 @@ NEXT TEST ====================================================================
     #         ``account_master_create(...)`` function.
     #     ''')
     #     eosf.reset([front_end.Verbosity.INFO])
-    #     wallet = Wallet()
+    #     create_wallet()
     #     front_end.set_throw_error(False)
     #     front_end.set_is_testing_errors()
     #     ######################################################################
@@ -82,7 +82,7 @@ NEXT TEST ====================================================================
     #     ''')
 
     #     eosf.reset([front_end.Verbosity.INFO])
-    #     wallet = Wallet()
+    #     create_wallet()
 
     #     front_end.set_throw_error(False)
     #     ######################################################################
@@ -105,7 +105,7 @@ NEXT TEST ====================================================================
 
     #     eosf.stop(is_verbose=0)
     #     eosf.run(is_verbose=0)
-    #     wallet = Wallet()
+    #     create_wallet()
     #     _.COMMENT('''
     #     Wallet keys:
     #     ''')           
