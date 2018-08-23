@@ -308,7 +308,7 @@ Usage: ./teos create key --jarg '{
           ("codeName,n", value<string>(&codeName)->default_value("")
             , "The name of the ABI file. If not set, it equals to the name "
               "of the contract project.");
-            
+
         return od;
       }
 
@@ -339,10 +339,10 @@ Usage: ./teos create key --jarg '{
         if(!command.respJson_.get("output", "").empty()) {
           output("ABI", "%s", GET_STRING(command, "output"));
         }
-      }        
+      }
     };
 
-    #define TEMPLATE "skeleton"
+    #define TEMPLATE "01_hello_world"
     /**
      * @ingroup teoslib_raw
      * @brief TemplateCreate: produce contract workspace from a 

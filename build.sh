@@ -538,7 +538,7 @@ To verify EOSFactory installation navigate to the 'eosfactory' folder and run
 these tests:
 "
 printf "%s\n" "    
-    $ python3 ./tests/unittest_contract_template.py
-    $ python3 ./tests/unittest_eosio_token_contract.py
-    $ python3 ./tests/unittest_tic_tac_toe.py
+    $ python3 ./tests/01_hello_world.py
+    $ python3 ./tests/02_eosio_token.py
+    $ python3 ./tests/03_tic_tac_toe.py
 "

@@ -4,7 +4,7 @@ from  eosfactory import *
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 _ = Logger()
 
-CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
+CONTRACT_FOLDER = "_e4b2ffc804529ce9c6fae258197648cc2"
 
 class Test(unittest.TestCase):
 
@@ -14,25 +14,13 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        _.SCENARIO('''
+        This is a test of creating, building and deploying a contract.
+        Also, testing debug buffer and authority mismatch detection.
+        ''')
         reset([Verbosity.INFO])
-        set_throw_error(True)
-        set_is_testing_errors(False)
-
         create_wallet()
         account_master_create("account_master")
-
-        _.SCENARIO('''
-        This is a test of creating a contract from a pre-defined template,
-        then building and deploying it.
-        Finnally, a couple of basic methods are tested.
-        ''')
-
-        _.COMMENT('''
-        Create accounts "host", alice" and "carol":
-        ''')
-        account_create("account_host", account_master)
-        account_create("account_alice", account_master)
-        account_create("account_carol", account_master)
 
 
     def setUp(self):
@@ -40,29 +28,38 @@ class Test(unittest.TestCase):
 
 
     def test_01(self):
-
-        contract_dir = contract_workspace_from_template(
-                CONTRACT_NAME, remove_existing=True, visual_studio_code=False)
-
-        contract = Contract(account_host, contract_dir)
+        _.COMMENT('''
+        Create, build and deploy the contract:
+        ''')
+        account_create("account_host", account_master)
+        contract = Contract(account_host, contract_workspace_from_template(
+            CONTRACT_FOLDER, remove_existing=True))
         contract.build()
         contract.deploy()
 
         _.COMMENT('''
-        Testing simple actions:
+        Test an action for Alice, including the debug buffer:
         ''')
+        account_create("account_alice", account_master)
         account_host.push_action(
             "hi", {"user":account_alice}, account_alice)
+        self.assertTrue("account_alice" in account_host.debug_buffer)
 
+        _.COMMENT('''
+        Test an action for Carol, including the debug buffer:
+        ''')
+        account_create("account_carol", account_master)
         account_host.push_action(
             "hi", {"user":account_carol}, account_carol)
+        self.assertTrue("account_carol" in account_host.debug_buffer)
 
         _.COMMENT('''
         WARNING: This action should fail due to authority mismatch!
         ''')
-        set_is_testing_errors()
+        set_is_testing_errors(True)
         action = account_host.push_action(
             "hi", {"user":account_carol})
+        set_is_testing_errors(False)
         self.assertTrue(account_host.action.error)
 
 

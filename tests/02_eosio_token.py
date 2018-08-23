@@ -4,7 +4,7 @@ from  eosfactory import *
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 _ = Logger()
 
-CONTRACT_NAME = "02_eosio_token"
+CONTRACT_WORKSPACE = "02_eosio_token"
 
 class Test(unittest.TestCase):
 
@@ -14,25 +14,21 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        reset([Verbosity.INFO])
-        set_throw_error(True)
-        set_is_testing_errors(False)
-
-        create_wallet()
-        account_master_create("account_master")
-
         _.SCENARIO('''
         First we create a series of accounts and delpoy the ``eosio.token`` contract
         to one of them. Then we initialize the token, and run a couple of transfers
         between those accounts.
         ''')
+        reset([Verbosity.INFO])
+        create_wallet()
+        account_master_create("account_master")
 
         _.COMMENT('''
         Create a contract's hosting account, then build & deploy the contract:
         ''')
         account_create("account_host", account_master)
-        contract = Contract(account_host, CONTRACT_NAME)
-        # contract.build()
+        contract = Contract(account_host, CONTRACT_WORKSPACE)
+        contract.build()
         contract.deploy()
 
         _.COMMENT('''
@@ -62,10 +58,6 @@ class Test(unittest.TestCase):
                 "can_recall": "0",
                 "can_whitelist": "0"
             }, [account_master, account_host])
-
-        # self.assertTrue(
-        #     '"maximum_supply": "1000000000.0000 EOS"' \
-        #         in account_host.trace_buffer)
 
         account_host.push_action(
             "issue",
