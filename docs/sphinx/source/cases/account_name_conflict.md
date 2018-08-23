@@ -12,7 +12,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 '''
 from  eosfactory import *
 
-set_throw_error(True)
+set_throw_error(False)
 reset([Verbosity.INFO]) 
 create_wallet()
 account_master_create("account_master")

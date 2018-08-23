@@ -36,7 +36,7 @@ For example, let us try with the local testnet:
 '''
 restart()
 reset([Verbosity.INFO])
-create_wallet()
+wallet = create_wallet()
 wallet.keys()
 account_master_create("account_master")
 account_create("alice", account_master)

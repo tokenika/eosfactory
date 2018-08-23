@@ -106,7 +106,7 @@ At the beginning, the 'Wallet` singleton has to be created:
 ```md
 '''
 Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
-wallet = Wallet(file=True)
+wallet = create_wallet(file=True)
 '''
 ```
 

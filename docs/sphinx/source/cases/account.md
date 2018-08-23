@@ -10,8 +10,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 ```md
 '''
 from  eosfactory import *
-
-set_throw_error(True)
+CONTRACT_DIR = "01_hello_world"
 reset([Verbosity.INFO])
 '''
 ```
@@ -78,7 +77,7 @@ Create a smart contract object instance, appending it to the account
 
 ```md
 '''
-contract_hello = Contract(account_hello, "hello")
+contract_hello = Contract(account_hello, CONTRACT_DIR)
 contract_hello.build()
 contract_hello.deploy()
 '''

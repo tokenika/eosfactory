@@ -17,14 +17,14 @@ Cases
     :maxdepth: 1
 
     cases/IDE
+    cases/symbolic_names    
+    cases/wallet      
     cases/account
-    cases/account_name_conflict
     cases/account_master
+    cases/account_name_conflict
+    cases/contract     
+    cases/arguments       
     cases/register_to_testnode
-    cases/arguments
-    cases/symbolic_names
-    cases/contract
-    cases/wallet
     cases/debugging    
     cases/configuration
     cases/eosio_token_contract

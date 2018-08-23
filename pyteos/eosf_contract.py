@@ -136,7 +136,7 @@ class Contract(front_end.Logger):
         self.abi_file = abi_file
         self.wasm_file = wasm_file
 
-        self.TRACE('''
+        self.TRACE_INFO('''
                 * Contract directory is
                     {}
                 '''.format(self.contract_dir))

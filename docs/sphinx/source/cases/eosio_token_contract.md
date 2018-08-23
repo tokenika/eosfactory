@@ -15,7 +15,7 @@ CONTRACT_DIR = "02_eosio_token"
 '''
 ```
 
-### The `Wallet` object
+### `Wallet` object
 
 Create the singleton wallet object. The object represents a physical wallet,
 managedby  the KEOSD:
@@ -25,26 +25,29 @@ managedby  the KEOSD:
 reset([Verbosity.INFO])
 create_wallet()
 '''
+```
+### `account master` object
 
+Create the `account_master` account that has the authority of making changes in the blockchain:
+
+```md
 '''
 account_master_create("account_master")
-
-account_create("banker", account_master)
-contract = Contract(banker, CONTRACT_DIR).deploy()
-'''
-
 '''
 ```
+### Contract managing account
 
-## Case
+Any smart contract has to have its owner account that executes its actions. Create the "banker" account, and deploy a contract derived from the `eosio.token` code:
 
-With the master account, create four accounts: 'alice', 'bob', 'carol' and 'banker'. Add the 'eosio.token' contract to the last account.
+```md
+'''
+account_create("banker", account_master)
+Contract(banker, CONTRACT_DIR).deploy()
+'''
+```
+### Acting accounts
 
-### The `account_create` factory
-
-Note that the account-creation command places in the global namespace the
-account object named with the first argument. The object represent a physical
-account in the blockchain and in the wallet.
+Create accounts named `alice`, `bob` and `carol` that can interact with the `banker`:
 
 ```md
 '''
@@ -54,12 +57,12 @@ account_create("carol", account_master)
 '''
 ```
 
-Execute actions on the contract account:
+## Case
+
+Use the `push_action` method of the `banker account to execute actions of the contract:
 
 * let eosio deposit an amount of 1000000000.0000 EOS there;
 * transfer some EOS to the 'alice' account.
-
-Use the 'push_action' method of the contract account:
 
 ```md
 '''
@@ -142,8 +145,8 @@ directory 'docs/source/cases' in the repository, and enter this command:
 $ python3 eosio_token_contract.md
 ```
 
-We expect that you get something similar to this one shown in the image below.
+We expect that you get something similar to what is shown in the image below.
 
-<img src="banker.png" 
-    onerror="this.src='../../../source/cases/banker.png'" width="640px"/>
+<img src="eosio_token.png" 
+    onerror="this.src='../../../source/cases/eosio_token.png'" width="720px"/>
 '''
