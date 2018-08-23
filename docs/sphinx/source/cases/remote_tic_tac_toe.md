@@ -7,90 +7,65 @@ This file can be executed as a python script: 'python3 account_master.md'.
 
 The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
-```md
 Test with a local node are perfectly reproducible and forgivable. It is not so
 with remote test nodes because such tests have to -- otherwise they are 
 useless -- mimic real uses when blockchain changes are to be paid.
 
 With remote node tests, we assume the following restrictions.
 
-    * Accounts have to be reused between test sessions.
-    * Contract deployment occurs only if contract changes.
-    * Wallet passwords are not stored in a plain file.
-```
+* Accounts have to be reused between test sessions.
+* Contract deployment occurs only if contract changes.
+* Wallet passwords are not stored in a plain file.
+
 ### Imports and set-up definitions
 
 ```md
 '''
-import os
-import re
-import unittest
-import setup
-import eosf
-import eosf_account
-import eosf_wallet
-from user_data import *
+from  eosfactory import *
+verbosity = [Verbosity.INFO, Verbosity.OUT]
+CONTRACT_DIR = "03_tic_tac_toe"
 
-from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
-from eosf_contract import Contract
-
-setup.set_nodeos_address("88.99.97.30:38888")
+set_nodeos_address("88.99.97.30:38888")
 WALLET_NAME = setup.wallet_default_name
 
 ACCOUNT_MASTER = "account_master"
 ACCOUNT_TTT = "account_tic_tac_toe"
-_ = logger.Logger()
+
+import testnet_data
+testnode = testnet_data.cryptolion
+set_nodeos_address(testnode.url, "tic_tac_toe")
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+_ = Logger()
 '''
 ```
-#### Unittest test class definition begins here
+
 
 ```md
 '''
 class Test(unittest.TestCase):
 
-    def setUp(self):
-        logger.set_throw_error(True)
-        eosf.stop([logger.Verbosity.INFO])
-        eosf.info()
-        exit()
+    @classmethod
+    def setUpClass(cls):
         '''
 ```
-#### Wallet passwords are not stored in an open file automatically
+### Stop if the testnode is off
 
-For tests, we use wallets of improbable names. On creation, its password is 
-stored in a file, with local code, and can be automatically reused between 
-sessions.
-
-If the test wallet has to be deleted, use the following code:
-
-```md
-import os
-import eosf
-from user_data import *
-eosf.kill_keosd()
-
-try:
-    wallet_file = eosf.wallet_dir() + WALLET_NAME + ".wallet"
-    os.remove(wallet_file)
-    print("The deleted wallet file:\n{}\n".format(wallet_file))
-except Exception as e:
-    print("Cannot delete the wallet file:\n{}\n".format(str(e))) 
-```
+Be sure that the chosen testnode is operative:  
+    
 ```md
         '''
-        eosf.kill_keosd()
-        wallet_json = eosf_wallet.wallet_json_read()
-        if not WALLET_NAME in wallet_json:
-            wallet = Wallet(WALLET_NAME, verbosity=[logger.Verbosity.INFO])
-            wallet_json[WALLET_NAME] = wallet.password
-            eosf_wallet.wallet_json_write(wallet_json)
-        else:
-            wallet = Wallet(
-                WALLET_NAME, wallet_json[WALLET_NAME],
-                verbosity=[logger.Verbosity.INFO])
+        if not eosf.is_running():
+            _.ERROR('''
+            This test needs the testnode {} running, but it does not answer.
+            '''.format(testnode.url))
+        '''
+```
+### Remove results of a possible previous use of the current script.
 
-        exit()
+Make sure that the chosen testnode is operative:    
+```md
+        '''
+        remove_files()
         '''
 ```
 
@@ -114,7 +89,7 @@ The factory function puts the created account object into the wallet.
         if not ACCOUNT_MASTER in globals():
             account_master_create(
                 ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
-                verbosity=[logger.Verbosity.INFO, logger.Verbosity.OUT])
+                verbosity=[Verbosity.INFO, Verbosity.OUT])
         else:
             _.INFO('''
             ######## {} account object restored from the blockchain.
@@ -128,7 +103,7 @@ The factory function puts the created account object into the wallet.
         account_tic_tac_toe.info()
 
         contract_tic_tac_toe = Contract(
-            account_tic_tac_toe, "tic_tac_toe_jungle")        
+            account_tic_tac_toe, CONTRACT_DIR)        
         contract_tic_tac_toe.build()
         if not account_tic_tac_toe.is_code():            
             contract_tic_tac_toe.deploy()
@@ -169,7 +144,7 @@ account dgxo1uyhoytn has insufficient ram; needs 138233 bytes has 64789 bytes
             '''.format("account_carol"))
 
 
-        logger.set_is_testing_errors()            
+        set_is_testing_errors()            
         exit()
     def test_tic_tac_toe(self):
         '''
@@ -268,7 +243,7 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
                 account_carol)
 
     def tearDown(self):
-        eosf.stop()
+        stop()
 '''
 ```
 #### Run the unittest

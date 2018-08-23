@@ -19,3 +19,13 @@ kylin = Testnet(
     "5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67",
     "5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX"
 )
+
+import eosf_account
+eosio = eosf_account.Eosio()
+
+local = Testnet(
+    "https://api.kylin-testnet.eospace.io",
+    "eosio",
+    "5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67",
+    "5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX"
+)
