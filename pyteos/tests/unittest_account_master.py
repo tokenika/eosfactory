@@ -6,7 +6,7 @@ import time
 import eosf_account
 
 from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
+from eosf_account import create_account, create_master_account
 
 
 front_end.Logger.verbosity = [front_end.Verbosity.TRACE, front_end.Verbosity.OUT]
@@ -36,7 +36,7 @@ NEXT TEST ====================================================================
     #     _.COMMENT('''
     #     Check the condition that
     #     precisely one ``Wallet`` object is defined when calling the 
-    #         ``account_master_create(...)`` function.
+    #         ``create_master_account(...)`` function.
     #     ''')
     #     eosf.reset([front_end.Verbosity.INFO])
     #     create_wallet()
@@ -46,7 +46,7 @@ NEXT TEST ====================================================================
 
         # wallet1 = Wallet("second")
         # _.COMMENT('''
-        # Added second wallet, named "second". Calling the ``account_master_create(...)`` 
+        # Added second wallet, named "second". Calling the ``create_master_account(...)`` 
         # function should result in an error message:
         # ''')        
         # wallet1 = Wallet("second")
@@ -56,23 +56,23 @@ NEXT TEST ====================================================================
         _.COMMENT('''
         Check the condition that
         precisely one ``Wallet`` object is defined when calling the 
-            ``account_master_create(...)`` function.
+            ``create_master_account(...)`` function.
         ''')
         eosf.reset([front_end.Verbosity.INFO])
         front_end.set_is_testing_errors()
         ######################################################################
 
         _.COMMENT('''
-        There is not any ``Wallet`` object. Calling the ``account_master_create(...)`` 
+        There is not any ``Wallet`` object. Calling the ``create_master_account(...)`` 
         function should result in an error message:
         ''')
         front_end.set_is_testing_errors()
-        logger =account_master_create("account_master")        
+        logger =create_master_account("account_master")        
         self.assertTrue("Cannot find any `Wallet` object." in front_end.err_msg)
 
     # def test_testnet_create_account(self):
     #     _.COMMENT('''
-    #     If the local testnet is running, ``account_master_create(<test object name>)``
+    #     If the local testnet is running, ``create_master_account(<test object name>)``
     #     puts the created account object into the global namespace, and puts the
     #     account into the wallet.
 
@@ -88,7 +88,7 @@ NEXT TEST ====================================================================
     #     _.COMMENT('''
     #     With the local testnet, the name of the master account is ``eosio``:
     #     ''')        
-    #     account_master_create("account_master")
+    #     create_master_account("account_master")
     #     self.assertTrue(account_master.name == "eosio")
     #     _.COMMENT('''
     #     Wallet keys:
@@ -135,7 +135,7 @@ NEXT TEST ====================================================================
     #     front_end.set_throw_error(False)
     #     ######################################################################
         
-    #     account_master_create("account_master")
+    #     create_master_account("account_master")
 
     # def test_is_do_not_exist_error(self):
     #     _.COMMENT('''
@@ -183,7 +183,7 @@ NEXT TEST ====================================================================
         front_end.set_throw_error(False)
         ######################################################################
         
-        account_master_create("account_master", "dgxo1uyhoytn",
+        create_master_account("account_master", "dgxo1uyhoytn",
                 "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
                 "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
             )

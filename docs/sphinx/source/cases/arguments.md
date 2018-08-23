@@ -34,7 +34,7 @@ CONTRACT_DIR = "02_eosio_token"
 
 reset([Verbosity.INFO]) 
 create_wallet()
-account_master_create("account_master")
+create_master_account("account_master")
 '''
 ```
 ## Case
@@ -46,7 +46,7 @@ the following test, the 'account_master' object enters, at first, as itself ...
 
 ```md
 '''
-account_create("alice", account_master)
+create_account("alice", account_master)
 '''
 ```
 
@@ -54,7 +54,7 @@ account_create("alice", account_master)
 
 ```md
 '''
-account_create("bob", str(account_master))
+create_account("bob", str(account_master))
 '''
 ```
 
@@ -66,7 +66,7 @@ account argument be of the 'CreateKey' type:
 '''
 set_throw_error(False)
 
-account_create("jimmy", CreateKey("xxx", is_verbose=0))
+create_account("jimmy", CreateKey("xxx", is_verbose=0))
 
 set_throw_error()
 '''
@@ -88,7 +88,7 @@ account object and
 
 ```md
 '''
-account_create(
+create_account(
     "carol", account_master, 
     permission=[
         (account_master, Permission.OWNER), 
@@ -109,7 +109,7 @@ an error exception is thrown. For example, let the account argument be of the
 '''
 set_throw_error(False)
 
-account_create(
+create_account(
     "account_carol_b", account_master, 
     permission=CreateKey("xxx", is_verbose=0))
 
@@ -128,7 +128,7 @@ the action 'transfer'.
 
 ```md
 '''
-account_create("eosio_token", account_master)
+create_account("eosio_token", account_master)
 contract_eosio_token = Contract(eosio_token, CONTRACT_DIR)
 deploy = contract_eosio_token.deploy()
 

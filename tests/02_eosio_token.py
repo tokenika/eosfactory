@@ -21,12 +21,12 @@ class Test(unittest.TestCase):
         ''')
         reset([Verbosity.INFO])
         create_wallet()
-        account_master_create("account_master")
+        create_master_account("account_master")
 
         _.COMMENT('''
         Create a contract's hosting account, then build & deploy the contract:
         ''')
-        account_create("account_host", account_master)
+        create_account("account_host", account_master)
         contract = Contract(account_host, CONTRACT_WORKSPACE)
         contract.build()
         contract.deploy()
@@ -34,9 +34,9 @@ class Test(unittest.TestCase):
         _.COMMENT('''
         Create accounts "alice", "bob" and "carol":
         ''')
-        account_create("account_alice", account_master)
-        account_create("account_bob", account_master)
-        account_create("account_carol", account_master)
+        create_account("account_alice", account_master)
+        create_account("account_bob", account_master)
+        create_account("account_carol", account_master)
 
 
     def setUp(self):

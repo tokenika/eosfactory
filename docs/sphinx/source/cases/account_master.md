@@ -24,17 +24,17 @@ testnet = testnet_data.kylin
 
 ## Case
 
-The EOSFactory wraps EOSIO accounts with objects. The 'account_create` factory function produces account objects, it is explained in the article <a href="account.html">cases/account</a>.
+The EOSFactory wraps EOSIO accounts with objects. The 'create_account` factory function produces account objects, it is explained in the article <a href="account.html">cases/account</a>.
 
 EOSIO needs that any action changing the blockchain, especially account 
-creation, is authorized by an existing account, therefore the 'account_create` 
+creation, is authorized by an existing account, therefore the 'create_account` 
 factory takes this account as its second argument.
 
-At the very beginning the very first one has to be produced. The 'account_master_create' factory function is to do this.
+At the very beginning the very first one has to be produced. The 'create_master_account' factory function is to do this.
 
-The function 'account_master_create' takes, as its first obligatory argument, the name of the account object to be created.
+The function 'create_master_account' takes, as its first obligatory argument, the name of the account object to be created.
 
-There are three cases where the 'account_master_create' factory can do. We will
+There are three cases where the 'create_master_account' factory can do. We will
 show them. 
 
 ### Local testnet case
@@ -43,7 +43,7 @@ show them.
 '''
 reset([Verbosity.INFO])
 create_wallet()
-account_master_create("account_master_images")
+create_master_account("account_master_images")
 account_master_images.info()
 stop([Verbosity.INFO])
 '''
@@ -88,7 +88,7 @@ First, the 'Wallet` singleton has to be created:
 ```md
 '''
 create_wallet()
-account_master_create(
+create_master_account(
     "account_master",
     testnet.account_name,
     testnet.owner_key,

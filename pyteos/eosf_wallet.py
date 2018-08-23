@@ -316,8 +316,8 @@ class Wallet(cleos.WalletCreate):
                     self.TRACE_INFO('''
                          {}
                     '''.format(object_name))
-                    from eosf_account import account_create
-                    restored[object_name] = account_create(
+                    from eosf_account import create_account
+                    restored[object_name] = create_account(
                         object_name, name, restore=True, verbosity=[])
         else:
             self.TRACE_INFO('''

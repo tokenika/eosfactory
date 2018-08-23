@@ -8,7 +8,7 @@ Registering to a public testnet involves three steps:
 
 * `set_nodeos_address(testnode.url)` # set the url of the testnode;
 * `wallet = Wallet(file=True)` # create the wallet singleton (`file=True` means password to file);
-* `account_master_create("account_master")` # create an account object, named as the argument of the factory function.
+* `create_master_account("account_master")` # create an account object, named as the argument of the factory function.
 
 The last step prints data to be entered into the registration form of the testnet.
 
@@ -113,19 +113,19 @@ wallet = create_wallet(file=True)
 
 We usually name `account_master` any, yet single in the namespace, object that has resources necessary for creation of child accounts. 
 
-The factory function `account_master_create` executed with a single argument meaning the name of the created account object (or with a second one, fixing the name of the physical account), conducts a registration process.
+The factory function `create_master_account` executed with a single argument meaning the name of the created account object (or with a second one, fixing the name of the physical account), conducts a registration process.
 
 Just testing the system we do not want to polute the public testnet with dummy accounts, therefore, we expect you to responce `q` to the query of the script.
 
 The script will then continue with the prefabricated account in the object `testnet`.
 ```md
 '''
-account_master_create("account_master")
+create_master_account("account_master")
 '''
 ```
 ```md
 '''
-account_master_create(
+create_master_account(
     "account_master",
     testnode.account_name, 
     testnode.owner_key,

@@ -38,10 +38,10 @@ set_throw_error(True)
 reset([Verbosity.INFO]) 
 
 create_wallet()
-account_master_create("account_master")
-account_create("greeter", account_master)
-account_create("alice", account_master)
-account_create("carol", account_master)
+create_master_account("account_master")
+create_account("greeter", account_master)
+create_account("alice", account_master)
+create_account("carol", account_master)
 '''
 ```
 ### Include hpp

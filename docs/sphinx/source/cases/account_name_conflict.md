@@ -15,7 +15,7 @@ from  eosfactory import *
 set_throw_error(False)
 reset([Verbosity.INFO]) 
 create_wallet()
-account_master_create("account_master")
+create_master_account("account_master")
 '''
 ```
 ## Case
@@ -44,9 +44,9 @@ Change 'account_alice' to 'account_alice_b'.
 
 ```md
 '''
-account_create("account_alice", account_master)
-account_create("account_carrol", account_master)
-account_create("account_alice", account_master)
+create_account("account_alice", account_master)
+create_account("account_carrol", account_master)
+create_account("account_alice", account_master)
 '''
 ```
 

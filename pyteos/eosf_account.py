@@ -274,7 +274,7 @@ class SystemNewaccount(cleos_system.SystemNewaccount):
             transfer, expiration_sec, skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage, ref_block, is_verbose=-1)
         
-def account_master_create(
+def create_master_account(
             account_object_name, account_name=None, 
             owner_key=None, active_key=None,
             verbosity=None):
@@ -614,7 +614,7 @@ def append_account_methods_and_finish(
     return put_account_to_wallet_and_on_stack(
         account_object_name, account_object)
 
-def account_create(
+def create_account(
         account_object_name,
         creator, 
         stake_net="", stake_cpu="",

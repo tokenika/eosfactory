@@ -39,7 +39,7 @@ The following script demonstrates steering statements:
 import setup
 import eosf
 from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
+from eosf_account import create_account, create_master_account
 
 logger.Logger.verbosity = [logger.Verbosity.TRACE, logger.Verbosity.OUT]
 setup.set_command_line_mode(False) # print message sent to the cleos
@@ -49,7 +49,7 @@ logger.set_throw_error(True) # throw exception rather then print message
 eosf.restart()
 eosf.reset([logger.Verbosity.INFO]) # start local testnode
 create_wallet() # create the singleton `Wallet` object
-account_master_create("account_master") # create local testnode `eosio` account
+create_master_account("account_master") # create local testnode `eosio` account
 logger.set_throw_error(False) # print message rather then throw exception
 
 logger.set_is_testing_errors() # make the error mesages less alarming

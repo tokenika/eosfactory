@@ -36,7 +36,7 @@ class Test(unittest.TestCase):
             ACCOUNT_MASTER = ACCOUNT_HOST
 
             if not ACCOUNT_MASTER in globals():
-                account_master_create(
+                create_master_account(
                     ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
                     verbosity=[Verbosity.INFO, Verbosity.OUT])
 
@@ -44,8 +44,8 @@ class Test(unittest.TestCase):
             reset([Verbosity.INFO])
 
             create_wallet()
-            account_master_create(ACCOUNT_MASTER)
-            account_create(ACCOUNT_HOST, globals()[ACCOUNT_MASTER])
+            create_master_account(ACCOUNT_MASTER)
+            create_account(ACCOUNT_HOST, globals()[ACCOUNT_MASTER])
 
         global account_master
         account_master = globals()[ACCOUNT_MASTER]
@@ -59,9 +59,9 @@ class Test(unittest.TestCase):
             contract_tic_tac_toe.deploy()
 
         if not "account_alice" in globals():
-            account_create("account_alice", account_master)
+            create_account("account_alice", account_master)
         if not "account_carol" in globals():
-            account_create("account_carol", account_master)
+            create_account("account_carol", account_master)
 
         set_is_testing_errors()
 

@@ -32,7 +32,7 @@ Create the `account_master` account that has the authority of making changes in 
 
 ```md
 '''
-account_master_create("account_master")
+create_master_account("account_master")
 '''
 ```
 ### Contract managing account
@@ -41,7 +41,7 @@ Any smart contract has to have its owner account that executes its actions. Crea
 
 ```md
 '''
-account_create("banker", account_master)
+create_account("banker", account_master)
 Contract(banker, CONTRACT_DIR).deploy()
 '''
 ```
@@ -51,9 +51,9 @@ Create accounts named `alice`, `bob` and `carol` that can interact with the `ban
 
 ```md
 '''
-account_create("alice", account_master)
-account_create("bob", account_master)
-account_create("carol", account_master)
+create_account("alice", account_master)
+create_account("bob", account_master)
+create_account("carol", account_master)
 '''
 ```
 

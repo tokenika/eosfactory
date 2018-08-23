@@ -14,12 +14,12 @@ def test():
     ''')
     reset([Verbosity.INFO])
     create_wallet()
-    account_master_create("account_master")
+    create_master_account("account_master")
 
     _.COMMENT('''
     Create a contract's hosting account, then build & deploy the contract:
     ''')
-    account_create("account_host", account_master)
+    create_account("account_host", account_master)
     contract = Contract(account_host, CONTRACT_WORKSPACE)
     contract.build()
     contract.deploy()
@@ -27,9 +27,9 @@ def test():
     _.COMMENT('''
     Create accounts "alice", "bob" and "carol":
     ''')
-    account_create("alice", account_master)
-    account_create("bob", account_master)
-    account_create("carol", account_master)
+    create_account("alice", account_master)
+    create_account("bob", account_master)
+    create_account("carol", account_master)
 
     _.COMMENT('''
     Initialize the contract and send some tokens to one of the accounts:

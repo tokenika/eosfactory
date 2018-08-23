@@ -4,7 +4,7 @@ from  eosfactory import *
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 _ = Logger()
 
-CONTRACT_WORKSPACE = sys.path[0] + "/../"
+CONTRACT_NAME = sys.path[0] + "/../"
 
 class Test(unittest.TestCase):
 
@@ -14,29 +14,31 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        reset([Verbosity.INFO])
+
+        create_wallet()
+        create_master_account("account_master")
+
         _.SCENARIO('''
         First we create a series of accounts and delpoy the ``eosio.token`` contract
         to one of them. Then we initialize the token, and run a couple of transfers
         between those accounts.
         ''')
-        reset([Verbosity.INFO])
-        create_wallet()
-        account_master_create("account_master")
 
         _.COMMENT('''
         Create a contract's hosting account, then build & deploy the contract:
         ''')
-        account_create("account_host", account_master)
-        contract = Contract(account_host, CONTRACT_WORKSPACE)
-        contract.build()
+        create_account("account_host", account_master)
+        contract = Contract(account_host, CONTRACT_NAME)
+        # contract.build()
         contract.deploy()
 
         _.COMMENT('''
         Create accounts "alice", "bob" and "carol":
         ''')
-        account_create("account_alice", account_master)
-        account_create("account_bob", account_master)
-        account_create("account_carol", account_master)
+        create_account("account_alice", account_master)
+        create_account("account_bob", account_master)
+        create_account("account_carol", account_master)
 
 
     def setUp(self):
@@ -58,6 +60,10 @@ class Test(unittest.TestCase):
                 "can_recall": "0",
                 "can_whitelist": "0"
             }, [account_master, account_host])
+
+        # self.assertTrue(
+        #     '"maximum_supply": "1000000000.0000 EOS"' \
+        #         in account_host.trace_buffer)
 
         account_host.push_action(
             "issue",

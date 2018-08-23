@@ -12,7 +12,7 @@ def add_account(
 
     from logger import Verbosity
     from eosf_wallet import Wallet
-    from eosf_account import account_master_create
+    from eosf_account import create_master_account
 
     _ = logger.Logger([Verbosity.TRACE, Verbosity.OUT])
     logger.set_is_testing_errors(False)
@@ -26,7 +26,7 @@ def add_account(
         return
 
     wallet = Wallet(file=True)
-    account_master_create(
+    create_master_account(
         account_object_name,
         account_name,
         owner_key,

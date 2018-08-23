@@ -23,7 +23,7 @@ reset([Verbosity.INFO])
 ```md
 '''
 create_wallet()   
-account_master_create("account_master")
+create_master_account("account_master")
 set_throw_error(False)
 '''
 ```
@@ -44,10 +44,10 @@ Make three other account objects, and execute actions of the contract on them.
 
 ```md
 '''
-account_create("eosio_token", account_master)
-account_create("alice", account_master)
-account_create("bob", account_master)
-account_create("carol", account_master)
+create_account("eosio_token", account_master)
+create_account("alice", account_master)
+create_account("bob", account_master)
+create_account("carol", account_master)
 '''
 ```
 

@@ -77,7 +77,7 @@ objects, in the global namespace, wrapping all the physical accounts listed
 there. Therefore, an account object is to be created only if it does not exist.
 
 We use the registration account as the contract holder. The factory function 
-'account_master_create' creates the object, named for the 'ACCOUNT_MASTER' 
+'create_master_account' creates the object, named for the 'ACCOUNT_MASTER' 
 constant, in the global namespace. Other arguments of the factory are defined 
 in the 'user_data.py' script.
 
@@ -87,7 +87,7 @@ The factory function puts the created account object into the wallet.
         '''
         ACCOUNT_MASTER = ACCOUNT_TTT
         if not ACCOUNT_MASTER in globals():
-            account_master_create(
+            create_master_account(
                 ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
                 verbosity=[Verbosity.INFO, Verbosity.OUT])
         else:
@@ -131,13 +131,13 @@ account dgxo1uyhoytn has insufficient ram; needs 138233 bytes has 64789 bytes
 ```md
         '''
         if not "account_alice" in globals():
-            account_create("account_alice", account_master)
+            create_account("account_alice", account_master)
         else:
             _.INFO('''
             ######## {} account object restored from the blockchain.
             '''.format("account_alice"))
         if not "account_carol" in globals():    
-            account_create("account_carol", account_master)
+            create_account("account_carol", account_master)
         else:
             _.INFO('''
             ######## {} account object restored from the blockchain.

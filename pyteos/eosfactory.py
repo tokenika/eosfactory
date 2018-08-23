@@ -14,8 +14,8 @@ Logger = front_end.Logger
 Verbosity = front_end.Verbosity
 create_wallet = eosf_wallet.create_wallet
 
-account_create = eosf_account.account_create
-account_master_create = eosf_account.account_master_create
+create_account = eosf_account.create_account
+create_master_account = eosf_account.create_master_account
 restart = eosf_account.restart
 
 Contract = eosf_contract.Contract

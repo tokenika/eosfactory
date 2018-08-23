@@ -5,7 +5,7 @@ import time
 import eosf_account
 
 from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
+from eosf_account import create_account, create_master_account
 from eosf_contract import Contract
 
 front_end.Logger.verbosity = [front_end.Verbosity.TRACE, front_end.Verbosity.OUT]
@@ -37,7 +37,7 @@ NEXT TEST ====================================================================
     #     _.SCENARIO("""
     #     Check the condition that
     #     precisely one ``Wallet`` object is defined when calling the 
-    #         ``account_master_create(...)`` function.
+    #         ``create_master_account(...)`` function.
         
     #     Make a second wallet, expecting an error message.
     #     """)        
@@ -47,7 +47,7 @@ NEXT TEST ====================================================================
     #     front_end.set_is_testing_errors()
     #     ######################################################################
     #     _.COMMENT("""
-    #     Added second wallet, named "second". Calling the ``account_master_create(...)`` 
+    #     Added second wallet, named "second". Calling the ``create_master_account(...)`` 
     #     function should result in an error message:
     #     """)
     #     front_end.set_throw_error(False)  
@@ -58,7 +58,7 @@ NEXT TEST ====================================================================
     #     _.COMMENT("""
     #     Check the condition that
     #     precisely one ``Wallet`` object is defined when calling the 
-    #         ``account_master_create(...)`` function.
+    #         ``create_master_account(...)`` function.
 
     #     Attempt account creation without any wallet in the scope.
     #     """)
@@ -68,7 +68,7 @@ NEXT TEST ====================================================================
     #     front_end.set_is_testing_errors()
     #     ######################################################################
 
-    #     logger =account_master_create("account_master")
+    #     logger =create_master_account("account_master")
     #     self.assertTrue("Cannot find any `Wallet` object." in front_end.error_buffer)
 
     def test_account_name_conflict(self):
@@ -80,7 +80,7 @@ NEXT TEST ====================================================================
         """)
         eosf.reset([front_end.Verbosity.INFO]) 
         create_wallet()
-        account_master_create("account_master")
+        create_master_account("account_master")
         front_end.set_is_testing_errors()
         ######################################################################
 
@@ -95,9 +95,9 @@ NEXT TEST ====================================================================
         You are prompted to change the blocking name. Change it to 
         ``account_alice_b``.
         """)
-        account_create("account_alice", account_master)
-        account_create("account_carrol", account_master)
-        account_create("account_alice", account_master)
+        create_account("account_alice", account_master)
+        create_account("account_carrol", account_master)
+        create_account("account_alice", account_master)
 
     def tearDown(self):
         pass

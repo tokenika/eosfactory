@@ -4,7 +4,7 @@ import setup
 import eosf
 
 from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
+from eosf_account import create_account, create_master_account
 from eosf_contract import Contract
 
 eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
@@ -44,12 +44,12 @@ NEXT TEST ====================================================================
         eosf.use_keosd(False)
         eosf.reset([eosf.Verbosity.TRACE]) 
         create_wallet()
-        account_master_create("account_master")
+        create_master_account("account_master")
 
-        account_create(
+        create_account(
             "account_tic_tac_toe", account_master)
-        account_create("account_alice", account_master)
-        account_create("account_carol", account_master)
+        create_account("account_alice", account_master)
+        create_account("account_carol", account_master)
 
         eosf.set_is_testing_errors()
 

@@ -20,7 +20,7 @@ reset([Verbosity.INFO])
 ```md
 '''
 create_wallet()   
-account_master_create("account_master")
+create_master_account("account_master")
 '''
 ```
 
@@ -35,11 +35,11 @@ Create an account objects: 'account_hello'. Add a contract of the class
 Add two other account objects, and execute the action of the contract on them 
 subsequently.
 
-### The 'account_create' factory function
+### The 'create_account' factory function
 
 ```md
 '''
-account_create("account_hello", account_master)
+create_account("account_hello", account_master)
 '''
 ```
 
@@ -49,7 +49,7 @@ one points to the account master, authorizing the creation.
 Only this two arguments are necessary, however there is several default 
 arguments that sometimes have to be adjusted.
 
-The 'account_create' does many tasks:
+The 'create_account' does many tasks:
 
 * Checks whether a 'Wallet' object exist in the namespace.
 * Checks whether its first argument is not the same as the name of any other
@@ -97,8 +97,8 @@ Create two contracts 'account_alice' and 'account_carol'...
 
 ```md
 '''
-account_create("account_alice", account_master)
-account_create("account_carol", account_master)
+create_account("account_alice", account_master)
+create_account("account_carol", account_master)
 '''
 ```
 

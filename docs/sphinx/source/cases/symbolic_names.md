@@ -33,13 +33,13 @@ Perhaps, the structure of the native EOSIO account should have a field and
 method for this, it is not so now, therefore the EOSFactory uses its own system.
 
 With EOSFactory, the physical accounts are wrapped in objects produced with the
-'account_create' factory function. (see <a href="account.html">cases/account</a>). The physical name 
+'create_account' factory function. (see <a href="account.html">cases/account</a>). The physical name 
 of an EOSIO account is then aliased with the name of the corresponding account 
 object.
 
 In a script, the aliasing is made with a statement like the following one:
 
-account_create("school_fund_2018", ...)
+create_account("school_fund_2018", ...)
 
 The result is a new object in the global namespace, named 'school_fund_2018', 
 representing a physical account of a random name. Moreover, account's keys are 
@@ -65,14 +65,14 @@ set_is_translating(False)
 
 reset([Verbosity.INFO]) 
 create_wallet()
-account_master_create("account_master")
+create_master_account("account_master")
 set_throw_error(False)
 set_is_testing_errors()
 
-account_create("alice", account_master)
-account_create("bob", account_master)
-account_create("carol", account_master)
-account_create("eosio_token", account_master)
+create_account("alice", account_master)
+create_account("bob", account_master)
+create_account("carol", account_master)
+create_account("eosio_token", account_master)
 contract = Contract(eosio_token, CONTRACT_DIR)
 deploy = contract.deploy()
 
@@ -108,14 +108,14 @@ set_is_translating()
 
 reset([Verbosity.INFO]) 
 create_wallet()
-account_master_create("account_master")
+create_master_account("account_master")
 set_throw_error(False)
 set_is_testing_errors()
 
-account_create("alice", account_master)
-account_create("bob", account_master)
-account_create("carol", account_master)
-account_create("eosio_token", account_master)
+create_account("alice", account_master)
+create_account("bob", account_master)
+create_account("carol", account_master)
+create_account("eosio_token", account_master)
 contract = Contract(eosio_token, CONTRACT_DIR)
 deploy = contract.deploy()
 

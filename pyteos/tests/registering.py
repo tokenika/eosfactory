@@ -5,7 +5,7 @@ import eosf
 from eosf import Verbosity
 import eosf_account
 from eosf_wallet import Wallet
-from eosf_account import account_create, account_master_create
+from eosf_account import create_account, create_master_account
 
 front_end.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
 
@@ -84,4 +84,4 @@ _.COMMENT('''
 In subsequent tests, you have to change the account object name, here 
 ``account_master``, or you have to resolve name conflicts, if you are prompted.
 ''')
-account_master_create("account_master")
+create_master_account("account_master")
