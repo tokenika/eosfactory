@@ -41,7 +41,6 @@ Observe the yellow printout starting with "INFO".
     contract.build()
     contract.deploy()
     
-    set_throw_error(False)
     set_is_testing_errors()        
 
     account_create("alice", account_master)

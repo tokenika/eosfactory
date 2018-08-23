@@ -16,7 +16,6 @@ set_throw_error(True)
 reset([Verbosity.INFO]) 
 create_wallet()
 account_master_create("account_master")
-set_throw_error(False)
 '''
 ```
 ## Case

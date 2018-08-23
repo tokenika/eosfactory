@@ -81,7 +81,6 @@ NEXT TEST ====================================================================
         eosf.reset([front_end.Verbosity.INFO]) 
         create_wallet()
         account_master_create("account_master")
-        front_end.set_throw_error(False)
         front_end.set_is_testing_errors()
         ######################################################################
 

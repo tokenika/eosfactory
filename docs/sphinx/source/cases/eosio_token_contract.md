@@ -22,18 +22,23 @@ managedby  the KEOSD:
 
 ```md
 '''
-#reset([Verbosity.INFO])
+reset([Verbosity.INFO])
 create_wallet()
+'''
 
+'''
 account_master_create("account_master")
-print(account_master.info())
-exit()
+
+account_create("banker", account_master)
+contract = Contract(banker, CONTRACT_DIR).deploy()
+'''
+
 '''
 ```
 
 ## Case
 
-With the master account, create four accounts: 'alice', 'bob', 'carol' and 'eosio_token'. Add the 'eosio.token' contract to the last account.
+With the master account, create four accounts: 'alice', 'bob', 'carol' and 'banker'. Add the 'eosio.token' contract to the last account.
 
 ### The `account_create` factory
 
@@ -43,10 +48,6 @@ account in the blockchain and in the wallet.
 
 ```md
 '''
-
-account_create("eosio_token", account_master)
-contract = Contract(eosio_token, CONTRACT_DIR).deploy()
-
 account_create("alice", account_master)
 account_create("bob", account_master)
 account_create("carol", account_master)
@@ -62,7 +63,7 @@ Use the 'push_action' method of the contract account:
 
 ```md
 '''
-eosio_token.push_action(
+banker.push_action(
     "create", 
     {
         "issuer": account_master,
@@ -70,9 +71,9 @@ eosio_token.push_action(
         "can_freeze": "0",
         "can_recall": "0",
         "can_whitelist": "0"
-    }, [account_master, eosio_token])
+    }, [account_master, banker])
 
-eosio_token.push_action(
+banker.push_action(
     "issue",
     {
         "to": alice, "quantity": "100.0000 EOS", "memo": ""
@@ -86,7 +87,7 @@ method of the contract account:
 
 ```md
 '''
-eosio_token.push_action(
+banker.push_action(
     "transfer",
     {
         "from": alice, "to": carol,
@@ -94,7 +95,7 @@ eosio_token.push_action(
     },
     alice)
 
-eosio_token.push_action(
+banker.push_action(
     "transfer",
     {
         "from": carol, "to": bob, 
@@ -102,7 +103,7 @@ eosio_token.push_action(
     },
     carol)
 
-eosio_token.push_action(
+banker.push_action(
     "transfer",
     {
         "from": carol, "to": bob, 
@@ -110,7 +111,7 @@ eosio_token.push_action(
     },
     carol)
 
-eosio_token.push_action(
+banker.push_action(
     "transfer",
     {
         "from": bob, "to": alice, \
@@ -126,9 +127,9 @@ account:
 
 ```md
 '''
-table_alice = eosio_token.table("accounts", alice)
-table_bob = eosio_token.table("accounts", bob)
-table_carol = eosio_token.table("accounts", carol)
+table_alice = banker.table("accounts", alice)
+table_bob = banker.table("accounts", bob)
+table_carol = banker.table("accounts", carol)
 '''
 ```
 
@@ -143,6 +144,6 @@ $ python3 eosio_token_contract.md
 
 We expect that you get something similar to this one shown in the image below.
 
-<img src="eosio_token.png" 
-    onerror="this.src='../../../source/cases/eosio_token.png'" width="640px"/>
+<img src="banker.png" 
+    onerror="this.src='../../../source/cases/banker.png'" width="640px"/>
 '''

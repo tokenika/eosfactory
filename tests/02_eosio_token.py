@@ -2,7 +2,6 @@ import unittest
 from  eosfactory import *
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-set_throw_error(False)
 _ = Logger()
 
 CONTRACT_NAME = "02_eosio_token"

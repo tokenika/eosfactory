@@ -10,7 +10,6 @@ from eosf_account import account_create, account_master_create
 
 
 front_end.Logger.verbosity = [front_end.Verbosity.TRACE, front_end.Verbosity.OUT]
-front_end.set_throw_error(False)
 
 remote_testnet = "http://88.99.97.30:38888"
 not_imputed = True
@@ -60,7 +59,6 @@ NEXT TEST ====================================================================
             ``account_master_create(...)`` function.
         ''')
         eosf.reset([front_end.Verbosity.INFO])
-        front_end.set_throw_error(False)
         front_end.set_is_testing_errors()
         ######################################################################
 

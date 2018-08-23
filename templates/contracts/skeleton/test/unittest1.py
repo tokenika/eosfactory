@@ -1,7 +1,6 @@
 import unittest
 from  eosfactory import *
 
-set_throw_error(False)
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 _ = Logger()
 
@@ -46,7 +45,6 @@ The test verifies the contents of the "DEBUG" channel of the Factory's logger.
         contract.build()
         contract.deploy()
         
-        set_throw_error(False)
         set_is_testing_errors()        
 
     def test_debugging_printout(self):

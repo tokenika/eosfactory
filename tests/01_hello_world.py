@@ -2,7 +2,6 @@ import unittest
 from  eosfactory import *
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
-set_throw_error(False)
 _ = Logger()
 
 CONTRACT_NAME = "_e4b2ffc804529ce9c6fae258197648cc2"
@@ -61,8 +60,7 @@ class Test(unittest.TestCase):
         _.COMMENT('''
         WARNING: This action should fail due to authority mismatch!
         ''')
-        set_throw_error(False)
-        set_is_testing_errors(True)
+        set_is_testing_errors()
         action = account_host.push_action(
             "hi", {"user":account_carol})
         self.assertTrue(account_host.action.error)

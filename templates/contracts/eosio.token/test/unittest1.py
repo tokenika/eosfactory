@@ -2,7 +2,6 @@ import unittest
 from  eosfactory import *
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-set_throw_error(False)
 _ = Logger()
 
 class Test(unittest.TestCase):
@@ -26,7 +25,6 @@ the "eosio_account" account that implements operations on tokens.
         contract.build()
         contract.deploy()
         
-        set_throw_error(False)
         set_is_testing_errors()         
 
     def test_eosio_token_contract(self):

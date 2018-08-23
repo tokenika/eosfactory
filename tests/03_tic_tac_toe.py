@@ -2,7 +2,6 @@ import unittest
 from  eosfactory import *
 
 Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-set_throw_error(False)
 _ = Logger()
 
 CONTRACT_NAME = "03_tic_tac_toe"
@@ -64,7 +63,6 @@ class Test(unittest.TestCase):
         if not "account_carol" in globals():
             account_create("account_carol", account_master)
 
-        set_throw_error(False)
         set_is_testing_errors()
 
 

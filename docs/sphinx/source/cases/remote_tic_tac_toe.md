@@ -168,7 +168,7 @@ account dgxo1uyhoytn has insufficient ram; needs 138233 bytes has 64789 bytes
             ######## {} account object restored from the blockchain.
             '''.format("account_carol"))
 
-        logger.set_throw_error(False)
+
         logger.set_is_testing_errors()            
         exit()
     def test_tic_tac_toe(self):
