@@ -1,10 +1,13 @@
 import enum
+import re
 import inspect
 from termcolor import cprint, colored
 import setup
 
 def translate(msg):
     import eosf
+    ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+    msg = ansi_escape.sub('', msg)
     return eosf.accout_names_2_object_names(setup.heredoc(msg))
 
 class AccountNotExist:
