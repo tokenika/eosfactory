@@ -26,16 +26,16 @@ def test():
     _.COMMENT('''
     Create test accounts:
     ''')
-    create_account("alice", account_master)
-    create_account("bob", account_master)
-    create_account("carol", account_master)
+    create_account("account_alice", account_master)
+    create_account("account_bob", account_master)
+    create_account("account_carol", account_master)
 
     _.COMMENT('''
     Initialize the token and send some tokens to one of the accounts:
     ''')
 
     account_host.push_action(
-        "create", 
+        "create",
         {
             "issuer": account_master,
             "maximum_supply": "1000000000.0000 EOS",
@@ -47,7 +47,7 @@ def test():
     account_host.push_action(
         "issue",
         {
-            "to": alice, "quantity": "100.0000 EOS", "memo": ""
+            "to": account_alice, "quantity": "100.0000 EOS", "memo": ""
         },
         account_master)
 
@@ -58,42 +58,42 @@ def test():
     account_host.push_action(
         "transfer",
         {
-            "from": alice, "to": carol,
+            "from": account_alice, "to": account_carol,
             "quantity": "25.0000 EOS", "memo":""
         },
-        alice)
+        account_alice)
 
     account_host.push_action(
         "transfer",
         {
-            "from": carol, "to": bob, 
+            "from": account_carol, "to": account_bob, 
             "quantity": "11.0000 EOS", "memo": ""
         },
-        carol)
+        account_carol)
 
     account_host.push_action(
         "transfer",
         {
-            "from": carol, "to": bob, 
+            "from": account_carol, "to": account_bob, 
             "quantity": "2.0000 EOS", "memo": ""
         },
-        carol)
+        account_carol)
 
     account_host.push_action(
         "transfer",
         {
-            "from": bob, "to": alice, \
+            "from": account_bob, "to": account_alice, \
             "quantity": "2.0000 EOS", "memo":""
         },
-        bob)
+        account_bob)
 
     _.COMMENT('''
     Verify the outcome:
     ''')
 
-    table_alice = account_host.table("accounts", alice)
-    table_bob = account_host.table("accounts", bob)
-    table_carol = account_host.table("accounts", carol)
+    table_alice = account_host.table("accounts", account_alice)
+    table_bob = account_host.table("accounts", account_bob)
+    table_carol = account_host.table("accounts", account_carol)
 
     assert(table_alice.json["rows"][0]["balance"] == '77.0000 EOS')
     assert(table_bob.json["rows"][0]["balance"] == '11.0000 EOS')

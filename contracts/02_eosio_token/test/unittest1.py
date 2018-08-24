@@ -49,7 +49,7 @@ class Test(unittest.TestCase):
         ''')
 
         account_host.push_action(
-            "create", 
+            "create",
             {
                 "issuer": account_master,
                 "maximum_supply": "1000000000.0000 EOS",
