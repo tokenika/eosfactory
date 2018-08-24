@@ -15,24 +15,23 @@ class Test(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         _.SCENARIO('''
-        First we create a series of accounts and delpoy the ``eosio.token`` contract
-        to one of them. Then we initialize the token, and run a couple of transfers
-        between those accounts.
+        Initialize the token and run a couple of transfers between different accounts.
         ''')
         reset([Verbosity.INFO])
         create_wallet()
         create_master_account("account_master")
 
         _.COMMENT('''
-        Create a contract's hosting account, then build & deploy the contract:
+        Build & deploy the contract:
         ''')
         create_account("account_host", account_master)
         contract = Contract(account_host, CONTRACT_WORKSPACE)
-        contract.build()
+        if not contract.is_built()
+            contract.build()
         contract.deploy()
 
         _.COMMENT('''
-        Create accounts "alice", "bob" and "carol":
+        Create test accounts:
         ''')
         create_account("account_alice", account_master)
         create_account("account_bob", account_master)
@@ -46,7 +45,7 @@ class Test(unittest.TestCase):
     def test_01(self):
 
         _.COMMENT('''
-        Initialize the contract and send some tokens to one of the accounts:
+        Initialize the token and send some tokens to one of the accounts:
         ''')
 
         account_host.push_action(

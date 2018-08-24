@@ -8,8 +8,7 @@ CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
 def test():
     _.SCENARIO('''
-    This is a test of building and deploying a contract.
-    Also, testing debug buffer and authority mismatch detection.
+    Execute simple actions, debug buffer and authority mismatch detection.
     ''')
     reset([Verbosity.INFO])
     create_wallet()
@@ -20,13 +19,19 @@ def test():
     ''')
     create_account("account_host", account_master)
     contract = Contract(account_host, CONTRACT_WORKSPACE)
-    contract.build()
+    if not contract.is_built()
+        contract.build()
     contract.deploy()
+
+    _.COMMENT('''
+    Create test accounts:
+    ''')
+    create_account("account_alice", account_master)
+    create_account("account_carol", account_master)
 
     _.COMMENT('''
     Test an action for Alice, including the debug buffer:
     ''')
-    create_account("account_alice", account_master)
     account_host.push_action(
         "hi", {"user":account_alice}, account_alice)
     assert("account_alice" in account_host.debug_buffer)
@@ -34,7 +39,6 @@ def test():
     _.COMMENT('''
     Test an action for Carol, including the debug buffer:
     ''')
-    create_account("account_carol", account_master)
     account_host.push_action(
         "hi", {"user":account_carol}, account_carol)
     assert("account_carol" in account_host.debug_buffer)
