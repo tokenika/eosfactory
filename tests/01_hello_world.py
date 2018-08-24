@@ -34,7 +34,10 @@ class Test(unittest.TestCase):
         create_account("account_host", account_master)
         contract = Contract(account_host, contract_workspace_from_template(
             CONTRACT_FOLDER, remove_existing=True))
-        contract.build()
+
+        if not contract_is_built(CONTRACT_FOLDER):
+            contract.build()
+        
         contract.deploy()
 
         _.COMMENT('''

@@ -55,7 +55,7 @@ try:
 except:
     pass
 
-wallet = Wallet(wallet_name)
+create_wallet(wallet_name)
 
 _.COMMENT('''
 Use ``eosf.info()`` to check whether the remote testnet responces: it throws

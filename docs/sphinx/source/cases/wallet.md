@@ -10,6 +10,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 ```md
 '''
 from  eosfactory import *
+from eosf_wallet import Wallet
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 '''
 ```
@@ -36,14 +37,14 @@ For example, let us try with the local testnet:
 '''
 restart()
 reset([Verbosity.INFO])
-wallet = create_wallet()
-wallet.keys()
+create_wallet()
+Wallet.wallet.keys()
 create_master_account("account_master")
 create_account("alice", account_master)
 create_account("bob", account_master)
 create_account("carol", account_master)
-wallet.keys()
-wallet.lock_all()
+Wallet.wallet.keys()
+Wallet.wallet.lock_all()
 
 stop()
 '''
@@ -68,7 +69,7 @@ expect that it opens without calling for password, having the same keys.
 restart()
 run([Verbosity.INFO])
 create_wallet()
-wallet.keys()   
+Wallet.wallet.keys()   
 stop()
 exit()
 '''

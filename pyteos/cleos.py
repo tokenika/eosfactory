@@ -1086,6 +1086,33 @@ class SetContract(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.    
     '''
+    def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
+        import teos
+        config = teos.GetConfig(contract_dir, is_verbose=0)
+        contract_path_absolute = config.json["contract-dir"]
+        if not contract_path_absolute:
+            return []
+
+        if not wasm_file:
+            wasm_file = config.json["contract-wasm"]
+            if not wasm_file:
+                return []
+        else:
+            if not os.path.isfile(
+                    os.path.join(contract_path_absolute, wasm_file)):
+                return []
+
+        if not abi_file:
+            abi_file = config.json["contract-abi"]
+            if not abi_file:
+                return []
+        else:
+            if not os.path.isfile(
+                    os.path.join(contract_path_absolute, abi_file)):
+                return []
+
+        return [contract_path_absolute, wasm_file, abi_file]
+
     def __init__(
             self, account, contract_dir, 
             wasm_file=None, abi_file=None, 
@@ -1097,23 +1124,17 @@ class SetContract(_Cleos):
             json=False
             ):
 
-        import teos
-        config = teos.GetConfig(contract_dir, is_verbose=0)
-        try:
-            self.contract_path_absolute = config.json["contract-dir"]
-            if not wasm_file:
-                wasm_file = config.json["contract-wasm"]
-            if not abi_file:
-                abi_file = config.json["contract-abi"]
-        except:
-            pass
-        
-        if not config.json["contract-dir"]:
+        files = SetContract.contract_is_built(contract_dir, wasm_file, abi_file)
+        if not files:
             self.ERROR("""
             Cannot determine the contract directory. The clue is 
             {}.
             """.format(contract_dir))
             return
+
+        self.contract_path_absolute = files[0]
+        wasm_file = files[1]
+        abi_file = files[2]            
 
         self.account_name = self._account_arg(account)
 

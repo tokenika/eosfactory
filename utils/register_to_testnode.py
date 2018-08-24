@@ -23,7 +23,7 @@ def register(testnode_url, account_object_name):
                 .format(testnode_url))
         return
 
-    wallet = Wallet(file=True)
+    create_wallet(file=True)
     create_master_account(account_object_name)
 
 import argparse

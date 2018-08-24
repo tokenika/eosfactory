@@ -4,7 +4,7 @@ from  eosfactory import *
 Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
 _ = Logger()
 
-CONTRACT_NAME = "03_tic_tac_toe"
+CONTRACT_WORKSPACE = "03_tic_tac_toe"
 ACCOUNT_MASTER = "account_master"
 ACCOUNT_HOST = "account_host"
 
@@ -30,7 +30,7 @@ class Test(unittest.TestCase):
             except Exception as e:
                 _.ERROR("Cannot delete the wallet file:\n{}\n".format(str(e)))
 
-            wallet = Wallet(
+            create_wallet(
                 WALLET_NAME,
                 verbosity=[Verbosity.INFO])
             ACCOUNT_MASTER = ACCOUNT_HOST
@@ -53,8 +53,11 @@ class Test(unittest.TestCase):
         account_tic_tac_toe = globals()[ACCOUNT_HOST] 
 
         contract_tic_tac_toe = Contract(
-            account_tic_tac_toe, CONTRACT_NAME)
-        contract_tic_tac_toe.build()
+            account_tic_tac_toe, CONTRACT_WORKSPACE)
+
+        if not contract_is_built(CONTRACT_WORKSPACE):
+            contract_tic_tac_toe.build()
+
         if not account_tic_tac_toe.is_code():
             contract_tic_tac_toe.deploy()
 

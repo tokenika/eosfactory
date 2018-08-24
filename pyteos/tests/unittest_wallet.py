@@ -50,26 +50,26 @@ Tests:
         setup.set_nodeos_address(remote_testnet)
         ######################################################################
 
-        wallet = Wallet(wallet_name)
+        create_wallet(wallet_name)
         self.assertTrue("keys will not be retrievable." in wallet.out_buffer )
 
         _.COMMENT("wallet.index()")
-        wallet.index()
+        Wallet.wallet.index()
 
         _.COMMENT(" wallet.open()")
-        wallet.open()
+        Wallet.wallet.open()
 
         _.COMMENT("wallet.lock()")
-        wallet.lock()
+        Wallet.wallet.lock()
 
         _.COMMENT("wallet.lock_all()")
-        wallet.lock_all()
+        Wallet.wallet.lock_all()
 
         _.COMMENT("wallet.unlock()")
-        wallet.unlock()
+        Wallet.wallet.unlock()
 
         _.COMMENT("wallet.keys()")
-        wallet.keys()
+        Wallet.wallet.keys()
 
 
 

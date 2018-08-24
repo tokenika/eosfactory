@@ -28,7 +28,10 @@ class Test(unittest.TestCase):
         ''')
         create_account("account_host", account_master)
         contract = Contract(account_host, CONTRACT_WORKSPACE)
-        contract.build()
+
+        if not contract_is_built(CONTRACT_WORKSPACE):
+            contract.build()
+
         contract.deploy()
 
         _.COMMENT('''

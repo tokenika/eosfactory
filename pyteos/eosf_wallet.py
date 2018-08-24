@@ -23,7 +23,7 @@ def wallet_json_write(wallet_json):
 
 def create_wallet(name=None, password="", verbosity=None, file=False):
     Wallet.globals = inspect.stack()[1][0].f_globals
-    return Wallet(name, password, verbosity, file)
+    Wallet.wallet = Wallet(name, password, verbosity, file)
 
 class Wallet(cleos.WalletCreate):
     ''' Create a new wallet locally and operate it.
@@ -43,6 +43,7 @@ class Wallet(cleos.WalletCreate):
         is_verbose: Verbosity at the constraction time.  
     '''
     wallet_keys = None
+    wallet = None
     globals = None
   
     def __init__(self, name=None, password="", verbosity=None, file=False):
@@ -54,15 +55,13 @@ class Wallet(cleos.WalletCreate):
             name = setup.file_prefix() + name
 
         logger = front_end.Logger(verbosity)
-        global wallet
-        if not wallet is None:
+        if not self.wallet is None:
             logger.ERROR('''
             It can be only one ``Wallet`` object in the script; there is one
             named ``{}``.
             '''.format(wallet.name))
             return
 
-        wallet = self
         self.wallet_dir = eosf.wallet_dir()
 
         logger.TRACE_INFO('''

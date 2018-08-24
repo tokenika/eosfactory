@@ -8,7 +8,7 @@ import eosf_contract
 
 Permission = cleos.Permission
 CreateKey = cleos.CreateKey
-
+contract_is_built = cleos.SetContract.contract_is_built
 
 Logger = front_end.Logger
 Verbosity = front_end.Verbosity

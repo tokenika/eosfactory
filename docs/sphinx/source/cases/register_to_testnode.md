@@ -7,7 +7,7 @@ This file can be executed as a python script:
 Registering to a public testnet involves three steps:
 
 * `set_nodeos_address(testnode.url)` # set the url of the testnode;
-* `wallet = Wallet(file=True)` # create the wallet singleton (`file=True` means password to file);
+* `create_wallet(file=True)` # create the wallet singleton (`file=True` means password to file);
 * `create_master_account("account_master")` # create an account object, named as the argument of the factory function.
 
 The last step prints data to be entered into the registration form of the testnet.
@@ -105,7 +105,7 @@ At the beginning, the 'Wallet` singleton has to be created:
 ```md
 '''
 Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
-wallet = create_wallet(file=True)
+create_wallet(file=True)
 '''
 ```
 

@@ -25,7 +25,7 @@ def add_account(
                 .format(testnode_url))
         return
 
-    wallet = Wallet(file=True)
+    create_wallet(file=True)
     create_master_account(
         account_object_name,
         account_name,

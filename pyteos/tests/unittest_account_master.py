@@ -172,14 +172,14 @@ NEXT TEST ====================================================================
         Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA        
         ''')
         setup.set_nodeos_address(remote_testnet)
-        wallet = Wallet(
+        create_wallet(
             None,
             "PW5J5KW7erKzqJmn9gMrvzev4pLxR3Vt9BRkx94BqdfHkw4z4bNTd"
             )
 
-        wallet.remove_key("EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959")
-        wallet.remove_key("EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv")
-        wallet.keys()
+        Wallet.wallet.remove_key("EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959")
+        Wallet.wallet.remove_key("EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv")
+        Wallet.wallet.keys()
         front_end.set_throw_error(False)
         ######################################################################
         

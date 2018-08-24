@@ -14,12 +14,7 @@ import eosf_wallet
 
 def restart():
     eosf.restart()
-
-    try:
-        del eosf_wallet.wallet
-    except:
-        pass
-    eosf_wallet.wallet = None
+    eosf_wallet.Wallet.wallet = None
 
     global wallet_singleton
     try:
@@ -76,7 +71,7 @@ def is_wallet_defined(logger):
         return
 
     wallet_globals = eosf_wallet.Wallet.globals
-    wallet_singleton = eosf_wallet.wallet
+    wallet_singleton = eosf_wallet.Wallet.wallet
 
     if wallet_singleton is None:
         logger.ERROR('''
