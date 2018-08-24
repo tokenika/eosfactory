@@ -239,7 +239,7 @@ def stop(verbosity=None):
         ######### Local test node is stopped.
         ''')
 
-def info():
+def status():
     '''
     Display EOS node status.
     '''
@@ -255,6 +255,14 @@ def info():
         '''.format(
             setup.nodeos_address(),
             get_info.json["head_block_num"]))
+
+def info():
+    '''
+    Display EOS node info.
+    '''
+    get_info = cleos.GetInfo(is_verbose=-1)
+    logger = front_end.Logger(None)
+    logger.TRACE_INFO(str(get_info))
 
 def node_is_operative():
     '''
