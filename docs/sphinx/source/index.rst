@@ -17,15 +17,15 @@ Cases
     :maxdepth: 1
 
     cases/IDE
-    cases/symbolic_names    
-    cases/wallet      
+    cases/symbolic_names
+    cases/wallet
     cases/account
     cases/account_master
     cases/account_name_conflict
-    cases/contract     
-    cases/arguments       
+    cases/contract
+    cases/arguments
     cases/register_to_testnode
-    cases/debugging    
+    cases/debugging
     cases/configuration
     cases/eosio_token_contract
 
@@ -79,7 +79,6 @@ Python Documentation
     teos
     eosf
     node
-    sess
 
 
 Metadata
