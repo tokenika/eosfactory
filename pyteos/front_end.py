@@ -54,12 +54,12 @@ class Error:
 
 class Verbosity(enum.Enum):
     COMMENT = ['green', None, []]
-    INFO = ['blue', None, ['bold']]
+    INFO = ['blue', None, []]
     TRACE = ['blue', None, []]
-    ERROR = ['red', None, []]
-    ERROR_TESTING = [None, None, []]
+    ERROR = ['red', None, ['reverse']]
+    ERROR_TESTING = ['green', None, ['reverse']]
     OUT = ['']
-    OUT_INFO = ['magenta', 'on_green', []]
+    OUT_INFO = ['white', None, ['reverse']]
     DEBUG = ['yellow', None, []]
 
 _is_throw_error = True

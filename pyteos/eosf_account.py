@@ -613,7 +613,7 @@ def create_account(
         account_object_name,
         creator, 
         stake_net="", stake_cpu="",
-        account_name="", 
+        account_name="",
         owner_key="", active_key="",
         permission=None,
         buy_ram_kbytes=0, buy_ram="",
@@ -629,7 +629,7 @@ def create_account(
         if creator:
             account_name = creator
 
-    logger =front_end.Logger(verbosity)
+    logger = front_end.Logger(verbosity)
     logger.TRACE_INFO('''
         ######### Create the account object ``{}`` ...
         '''.format(account_object_name))

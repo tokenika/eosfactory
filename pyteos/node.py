@@ -12,6 +12,7 @@ Private testnet set-up and tear-down.
 '''
 
 import eosf
+import cleos
 
 def reset(verbosity=None):
     ''' Start clean the EOSIO local node.
