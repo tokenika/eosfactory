@@ -55,7 +55,7 @@ class Test(unittest.TestCase):
         contract_tic_tac_toe = Contract(
             croupier, CONTRACT_WORKSPACE)
 
-        if not contract.is_built():
+        if not contract_tic_tac_toe.is_built():
             contract_tic_tac_toe.build()
 
         if not croupier.is_code():
