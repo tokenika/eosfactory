@@ -31,8 +31,6 @@ CONTRACT_DIR = "03_tic_tac_toe"
 import testnet_data
 testnode = testnet_data.LocalTestnet()
 set_nodeos_address(testnode.url, "tic_tac_toe")
-
-#ACCOUNT_TTT = "croupier"
 '''
 ```
 
@@ -62,7 +60,7 @@ Be sure that the chosen testnode is operative:
 Make sure that the chosen testnode is operative:    
 ```md
         '''
-        remove_files()
+        #remove_files()
         '''
 ```
 
@@ -95,21 +93,21 @@ there. Therefore, an account object is to be created only if it does not exist.
             create_account("croupier", account_master)
         else:
             _.INFO('''
-            * The account {} restored from the wallet.
+            ######## {} account object restored from the blockchain.
             '''.format("croupier"))
 
         if not "alice" in globals():
             create_account("alice", account_master)
         else:
             _.INFO('''
-            * The account {} restored from the wallet.
+            ######## {} account object restored from the blockchain.
             '''.format("alice"))
 
         if not "carol" in globals():
             create_account("carol", account_master)
         else:
             _.INFO('''
-            * The account {} restored from the wallet.
+            ######## {} account object restored from the blockchain.
             '''.format("carol"))
             
         if not croupier.is_code():

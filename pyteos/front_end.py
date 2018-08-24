@@ -57,7 +57,7 @@ class Verbosity(enum.Enum):
     INFO = ['blue', None, ['bold']]
     TRACE = ['blue', None, []]
     ERROR = ['red', None, []]
-    ERROR_TESTING = ['magenta', None, []]
+    ERROR_TESTING = [None, None, []]
     OUT = ['']
     OUT_INFO = ['magenta', 'on_green', []]
     DEBUG = ['yellow', None, []]
