@@ -21,10 +21,17 @@ _file_prefix = None
 
 def set_nodeos_address(address, prefix=None):
     global _nodeos_address
-    _nodeos_address = address
+    if address:
+        _nodeos_address = address
+
+    if not _nodeos_address:
+        print('''
+ERROR in setup.set_nodeos_address(...)!
+nodeos address is not set.
+        ''')
 
     if prefix is None:
-        prefix = re.sub("\.|\:|-|https|http|\/", "_", address)
+        prefix = re.sub("\.|\:|-|https|http|\/", "_", _nodeos_address)
         prefix = re.sub("_+", "_", prefix) + "_"
     else:
         prefix = prefix + "_"

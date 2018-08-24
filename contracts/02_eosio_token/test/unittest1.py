@@ -41,11 +41,7 @@ class Test(unittest.TestCase):
         create_account("account_carol", account_master)
 
 
-    def setUp(self):
-        pass
-
-
-    def test_01(self):
+    def test_game(self):
 
         _.COMMENT('''
         Initialize the contract and send some tokens to one of the accounts:
@@ -60,10 +56,6 @@ class Test(unittest.TestCase):
                 "can_recall": "0",
                 "can_whitelist": "0"
             }, [account_master, account_host])
-
-        # self.assertTrue(
-        #     '"maximum_supply": "1000000000.0000 EOS"' \
-        #         in account_host.trace_buffer)
 
         account_host.push_action(
             "issue",

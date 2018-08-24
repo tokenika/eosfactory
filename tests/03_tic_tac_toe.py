@@ -49,22 +49,22 @@ class Test(unittest.TestCase):
 
         global account_master
         account_master = globals()[ACCOUNT_MASTER]
-        global account_tic_tac_toe
-        account_tic_tac_toe = globals()[ACCOUNT_HOST] 
+        global croupier
+        croupier = globals()[ACCOUNT_HOST] 
 
         contract_tic_tac_toe = Contract(
-            account_tic_tac_toe, CONTRACT_WORKSPACE)
+            croupier, CONTRACT_WORKSPACE)
 
-        if not contract_is_built(CONTRACT_WORKSPACE):
+        if not contract.is_built():
             contract_tic_tac_toe.build()
 
-        if not account_tic_tac_toe.is_code():
+        if not croupier.is_code():
             contract_tic_tac_toe.deploy()
 
-        if not "account_alice" in globals():
-            create_account("account_alice", account_master)
-        if not "account_carol" in globals():
-            create_account("account_carol", account_master)
+        if not "alice" in globals():
+            create_account("alice", account_master)
+        if not "carol" in globals():
+            create_account("carol", account_master)
 
         set_is_testing_errors()
 
@@ -75,18 +75,18 @@ class Test(unittest.TestCase):
         * an instance of the Wallet class,
         * an instance of an AccountMaster class, named ``account_master``,
         * an instance of an Account class, named ``account_host``, which stores the contract,
-        * and two player accounts named ``account_alice`` and ``account_carol``.
+        * and two player accounts named ``alice`` and ``carol``.
         ''')
 
-        account_tic_tac_toe.push_action(
+        croupier.push_action(
             "create", 
             {
-                "challenger": account_alice,
-                "host": account_carol
+                "challenger": alice,
+                "host": carol
             },
-            account_carol)
+            carol)
 
-        t = account_tic_tac_toe.table("games", account_carol)
+        t = croupier.table("games", carol)
         self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -99,27 +99,27 @@ class Test(unittest.TestCase):
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        account_tic_tac_toe.push_action(
+        croupier.push_action(
             "move", 
             {
-                "challenger": account_alice,
-                "host": account_carol,
-                "by": account_carol, 
+                "challenger": alice,
+                "host": carol,
+                "by": carol, 
                 "row": 0, "column": 0 
             }, 
-            account_carol)
+            carol)
 
-        account_tic_tac_toe.push_action(
+        croupier.push_action(
             "move", 
             {
-                "challenger": account_alice, 
-                "host": account_carol,
-                "by": account_alice, 
+                "challenger": alice, 
+                "host": carol,
+                "by": alice, 
                 "row": 1, "column": 1 
             }, 
-            account_alice)
+            alice)
 
-        t = account_tic_tac_toe.table("games", account_carol)
+        t = croupier.table("games", carol)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 1)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
@@ -131,16 +131,16 @@ class Test(unittest.TestCase):
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        account_tic_tac_toe.push_action(
-                "restart", 
-                {
-                    "challenger": account_alice, 
-                    "host": account_carol,
-                    "by": account_carol
-                }, 
-                account_carol)
+        croupier.push_action(
+            "restart", 
+            {
+                "challenger": alice, 
+                "host": carol,
+                "by": carol
+            }, 
+            carol)
 
-        t = account_tic_tac_toe.table("games", account_carol)
+        t = croupier.table("games", carol)
         self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -153,13 +153,13 @@ class Test(unittest.TestCase):
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        account_tic_tac_toe.push_action(
-                "close",
-                {
-                    "challenger": account_alice,
-                    "host": account_carol
-                }, 
-                account_carol)
+        croupier.push_action(
+            "close",
+            {
+                "challenger": alice,
+                "host": carol
+            }, 
+            carol)
 
     def tearDown(self):
         stop()

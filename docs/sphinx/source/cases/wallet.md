@@ -20,7 +20,7 @@ Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 The 'Wallet` class wraps EOSIO wallets. The 'Wallet' object keep account 
 objects, presented at <a href="account.html">cases/account</a>.
 
-It can be exactly one 'Wallet' object in the namespace. After the 'Wallet' 
+It has to be exactly one 'Wallet' object in the namespace. After the 'Wallet' 
 singleton is created, it remains transparent to the script: usually, there 
 is no need to refer to it.
 

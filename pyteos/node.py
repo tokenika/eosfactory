@@ -42,7 +42,7 @@ def info():
     '''
     return cleos.GetInfo()
 
-def is_running():
+def node_is_operative():
     '''
     Check if testnet is running.
     '''

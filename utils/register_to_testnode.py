@@ -17,7 +17,7 @@ def register(testnode_url, account_object_name):
     logger.set_throw_error(True)
     setup.set_nodeos_address(testnode_url)
 
-    if not eosf.is_running():
+    if not eosf.node_is_operative():
         print(
             "This test needs the testnode {} running, but it does not answer." \
                 .format(testnode_url))

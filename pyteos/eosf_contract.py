@@ -141,6 +141,10 @@ class Contract(front_end.Logger):
                     {}
                 '''.format(self.contract_dir))
 
+    def is_built(self):
+        return cleos.contract_is_built(
+            self.contract_dir, self.wasm_file, self.abi_file)
+
     def deploy(self, permission=None, dont_broadcast=None):
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast

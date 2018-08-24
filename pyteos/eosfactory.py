@@ -8,7 +8,6 @@ import eosf_contract
 
 Permission = cleos.Permission
 CreateKey = cleos.CreateKey
-contract_is_built = cleos.SetContract.contract_is_built
 
 Logger = front_end.Logger
 Verbosity = front_end.Verbosity
@@ -30,5 +29,6 @@ reset = eosf.reset
 stop = eosf.stop
 remove_files = eosf.remove_files
 set_is_translating = eosf.set_is_translating
+node_is_operative = eosf.node_is_operative
 
 set_nodeos_address = setup.set_nodeos_address

@@ -210,7 +210,7 @@ def reset(verbosity=None):
 def run(verbosity=None):
     ''' Restart the EOSIO local node.
     ''' 
-    logger = front_end.Logger(verbosity) 
+    logger = front_end.Logger(verbosity)
     if not cleos.set_local_nodeos_address_if_none():   
         logger.TRACE_INFO('''
             Not local nodeos is set: {}
@@ -256,7 +256,7 @@ def info():
             setup.nodeos_address(),
             get_info.json["head_block_num"]))
 
-def is_running():
+def node_is_operative():
     '''
     Check if testnet is running.
     '''

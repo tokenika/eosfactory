@@ -41,7 +41,7 @@ def set_local_nodeos_address_if_none():
 
     return setup.is_local_address
 
-def node_is_running():
+def node_is_operative():
     result = teos.NodeIsRunning(is_verbose=0)
     return not result.daemon_pid == ""
 
@@ -1048,6 +1048,32 @@ def account_name():
 
     return name
 
+def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
+    import teos
+    config = teos.GetConfig(contract_dir, is_verbose=0)
+    contract_path_absolute = config.json["contract-dir"]
+    if not contract_path_absolute:
+        return []
+
+    if not wasm_file:
+        wasm_file = config.json["contract-wasm"]
+        if not wasm_file:
+            return []
+    else:
+        if not os.path.isfile(
+                os.path.join(contract_path_absolute, wasm_file)):
+            return []
+
+    if not abi_file:
+        abi_file = config.json["contract-abi"]
+        if not abi_file:
+            return []
+    else:
+        if not os.path.isfile(
+                os.path.join(contract_path_absolute, abi_file)):
+            return []
+
+    return [contract_path_absolute, wasm_file, abi_file]
 
 class SetContract(_Cleos):
     '''Create or update the contract on an account.
@@ -1086,33 +1112,6 @@ class SetContract(_Cleos):
         json: The json representation of the object.
         is_verbose: Verbosity at the construction time.    
     '''
-    def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
-        import teos
-        config = teos.GetConfig(contract_dir, is_verbose=0)
-        contract_path_absolute = config.json["contract-dir"]
-        if not contract_path_absolute:
-            return []
-
-        if not wasm_file:
-            wasm_file = config.json["contract-wasm"]
-            if not wasm_file:
-                return []
-        else:
-            if not os.path.isfile(
-                    os.path.join(contract_path_absolute, wasm_file)):
-                return []
-
-        if not abi_file:
-            abi_file = config.json["contract-abi"]
-            if not abi_file:
-                return []
-        else:
-            if not os.path.isfile(
-                    os.path.join(contract_path_absolute, abi_file)):
-                return []
-
-        return [contract_path_absolute, wasm_file, abi_file]
-
     def __init__(
             self, account, contract_dir, 
             wasm_file=None, abi_file=None, 
@@ -1124,7 +1123,7 @@ class SetContract(_Cleos):
             json=False
             ):
 
-        files = SetContract.contract_is_built(contract_dir, wasm_file, abi_file)
+        files = contract_is_built(contract_dir, wasm_file, abi_file)
         if not files:
             self.ERROR("""
             Cannot determine the contract directory. The clue is 

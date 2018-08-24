@@ -26,7 +26,6 @@ class Test(unittest.TestCase):
     def setUp(self):
         pass
 
-
     def test_01(self):
         _.COMMENT('''
         Create, build and deploy the contract:
@@ -34,8 +33,8 @@ class Test(unittest.TestCase):
         create_account("account_host", account_master)
         contract = Contract(account_host, contract_workspace_from_template(
             CONTRACT_FOLDER, remove_existing=True))
-
-        if not contract_is_built(CONTRACT_FOLDER):
+        
+        if not contract.is_built():
             contract.build()
         
         contract.deploy()

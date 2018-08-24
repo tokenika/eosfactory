@@ -1,7 +1,7 @@
 '''
 # Tic-tac-toe contract on a remote testnet
 
-This file can be executed as a python script: 'python3 account_master.md'.
+This file can be executed as a python script: 'python3 remote_tic_tac_toe.md'.
 
 ## Set-up
 
@@ -21,21 +21,18 @@ With remote node tests, we assume the following restrictions.
 
 ```md
 '''
+import unittest
 from  eosfactory import *
-verbosity = [Verbosity.INFO, Verbosity.OUT]
-CONTRACT_DIR = "03_tic_tac_toe"
 
-set_nodeos_address("88.99.97.30:38888")
-WALLET_NAME = setup.wallet_default_name
-
-ACCOUNT_MASTER = "account_master"
-ACCOUNT_TTT = "account_tic_tac_toe"
-
-import testnet_data
-testnode = testnet_data.cryptolion
-set_nodeos_address(testnode.url, "tic_tac_toe")
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 _ = Logger()
+CONTRACT_DIR = "03_tic_tac_toe"
+
+import testnet_data
+testnode = testnet_data.LocalTestnet()
+set_nodeos_address(testnode.url, "tic_tac_toe")
+
+#ACCOUNT_TTT = "croupier"
 '''
 ```
 
@@ -54,18 +51,27 @@ Be sure that the chosen testnode is operative:
     
 ```md
         '''
-        if not eosf.is_running():
+        if not node_is_operative():
             _.ERROR('''
             This test needs the testnode {} running, but it does not answer.
             '''.format(testnode.url))
         '''
 ```
-### Remove results of a possible previous use of the current script.
+### Remove results of a possible previous use of the current script
 
 Make sure that the chosen testnode is operative:    
 ```md
         '''
         remove_files()
+        '''
+```
+
+### Exactly one 'Wallet' object in the namespace
+
+It has to be exactly one 'Wallet' object in the namespace. 
+```md
+        '''
+        create_wallet()
         '''
 ```
 
@@ -76,42 +82,49 @@ mapping file (kept in the wallet directory) and attempts to create account
 objects, in the global namespace, wrapping all the physical accounts listed 
 there. Therefore, an account object is to be created only if it does not exist.
 
-We use the registration account as the contract holder. The factory function 
-'create_master_account' creates the object, named for the 'ACCOUNT_MASTER' 
-constant, in the global namespace. Other arguments of the factory are defined 
-in the 'user_data.py' script.
-
-The factory function puts the created account object into the wallet.
-
 ```md
         '''
-        ACCOUNT_MASTER = ACCOUNT_TTT
-        if not ACCOUNT_MASTER in globals():
+        if not "account_master" in globals():
             create_master_account(
-                ACCOUNT_MASTER, ACCOUNT_NAME, OWNER_KEY, ACTIVE_KEY,
-                verbosity=[Verbosity.INFO, Verbosity.OUT])
-        else:
-            _.INFO('''
-            ######## {} account object restored from the blockchain.
-            '''.format(ACCOUNT_MASTER))
-        
-        
-        global account_master
-        account_master = globals()[ACCOUNT_MASTER]
-        global account_tic_tac_toe
-        account_tic_tac_toe = globals()[ACCOUNT_TTT]
-        account_tic_tac_toe.info()
+                "account_master",
+                testnode.account_name, 
+                testnode.owner_key, 
+                testnode.active_key)
 
-        contract_tic_tac_toe = Contract(
-            account_tic_tac_toe, CONTRACT_DIR)        
-        contract_tic_tac_toe.build()
-        if not account_tic_tac_toe.is_code():            
-            contract_tic_tac_toe.deploy()
+        if not "croupier" in globals():
+            create_account("croupier", account_master)
         else:
             _.INFO('''
-            * Contract cannot be deployed as the account already has a code.
-                The current test is protected against overwriting the code.
-            ''')
+            * The account {} restored from the wallet.
+            '''.format("croupier"))
+
+        if not "alice" in globals():
+            create_account("alice", account_master)
+        else:
+            _.INFO('''
+            * The account {} restored from the wallet.
+            '''.format("alice"))
+
+        if not "carol" in globals():
+            create_account("carol", account_master)
+        else:
+            _.INFO('''
+            * The account {} restored from the wallet.
+            '''.format("carol"))
+            
+        if not croupier.is_code():
+            contract = Contract(
+                croupier, CONTRACT_DIR)
+
+            if not contract.is_built():
+                contract.build()
+            contract.deploy()  
+        else:
+            _.INFO('''
+            * The account {} has code.
+            '''.format("croupier"))            
+
+        exit()
         '''
 ```
 #### The 'insufficient ram` error
@@ -130,44 +143,28 @@ account dgxo1uyhoytn has insufficient ram; needs 138233 bytes has 64789 bytes
 ```
 ```md
         '''
-        if not "account_alice" in globals():
-            create_account("account_alice", account_master)
-        else:
-            _.INFO('''
-            ######## {} account object restored from the blockchain.
-            '''.format("account_alice"))
-        if not "account_carol" in globals():    
-            create_account("account_carol", account_master)
-        else:
-            _.INFO('''
-            ######## {} account object restored from the blockchain.
-            '''.format("account_carol"))
-
-
-        set_is_testing_errors()            
-        exit()
     def test_tic_tac_toe(self):
         '''
 ```
 ## Case
 
-Given a ``Wallet`` class object in the global namespace; an account  master 
-object named ``account_master`` in the global namespace; given an account 
-object named ``account_tic_tac_toe`` account that keeps the ``tic_tac_toe`` 
-contract; and given two player accounts: ``account_alice`` and ``account_carol`` 
+Given a ``Wallet`` class object in the global namespace, an account  master 
+object named ``account_master`` in the global namespace, given an account 
+object named ``croupier`` account that keeps the ``tic_tac_toe`` 
+contract, and two player accounts: ``alice`` and ``carol`` 
 -- run games.
 
 ```md
         '''
-        account_tic_tac_toe.push_action(
+        croupier.push_action(
             "create", 
             {
-                "challenger": account_alice, 
-                "host": account_carol
+                "challenger": alice, 
+                "host": carol
             },
-            account_carol)
+            carol)
 
-        t = account_tic_tac_toe.table("games", account_carol)
+        t = croupier.table("games", carol)
         self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -180,27 +177,27 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        account_tic_tac_toe.push_action(
+        croupier.push_action(
             "move", 
             {
-                "challenger": account_alice, 
-                "host": account_carol, 
-                "by": account_carol,  
+                "challenger": alice, 
+                "host": carol, 
+                "by": carol,  
                 "row":0, "column":0 
             }, 
-            account_carol)
+            carol)
 
-        account_tic_tac_toe.push_action(
+        croupier.push_action(
             "move", 
             {
-                "challenger": account_alice,  
-                "host": account_carol,  
-                "by": account_alice, 
+                "challenger": alice,  
+                "host": carol,  
+                "by": alice, 
                 "row":1, "column":1 
             }, 
-            account_alice)
+            alice)
 
-        t = account_tic_tac_toe.table("games", account_carol)
+        t = croupier.table("games", carol)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 1)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
@@ -212,16 +209,16 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        account_tic_tac_toe.push_action(
-                "restart", 
-                {
-                    "challenger": account_alice, 
-                    "host": account_carol, 
-                    "by": account_carol
-                }, 
-                account_carol)
+        croupier.push_action(
+            "restart", 
+            {
+                "challenger": alice, 
+                "host": carol, 
+                "by": carol
+            }, 
+            carol)
 
-        t = account_tic_tac_toe.table("games", account_carol)
+        t = croupier.table("games", carol)
         self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -234,15 +231,16 @@ contract; and given two player accounts: ``account_alice`` and ``account_carol``
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        account_tic_tac_toe.push_action(
-                "close", 
-                {
-                    "challenger": account_alice,  
-                    "host": account_carol 
-                }, 
-                account_carol)
+        croupier.push_action(
+            "close", 
+            {
+                "challenger": alice,  
+                "host": carol 
+            }, 
+            carol)
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
         stop()
 '''
 ```

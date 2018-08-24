@@ -1,74 +1,46 @@
-import sys
-import unittest
-import setup
-import eosf
+import unittest, sys
+from  eosfactory import *
 
-from eosf_wallet import Wallet
-from eosf_account import create_account, create_master_account
-from eosf_contract import Contract
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+_ = Logger()
 
-eosf.set_verbosity([eosf.Verbosity.EOSF, eosf.Verbosity.OUT])
-# eosf.set_verbosity_plus([eosf.Verbosity.DEBUG])
-#setup.set_command_line_mode()
+CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
-_ = eosf.Logger()
-
-class Test1(unittest.TestCase):
-
-    def run(self, result=None):
-        super().run(result)
-        print("""
-
-NEXT TEST ====================================================================
-""")
+class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        print()
+        reset([Verbosity.INFO])
 
-    def setUp(self):
-        eosf.restart()
-        eosf.set_is_testing_errors(False)
-        eosf.set_throw_error(True)
-
-    def test_tic_tac_toe(self):
-        _.SCENARIO("""
-        Use the local test net.
-        Create the ``account_tic_tac_toe`` account that will keep the ``tic_tac_toe`` 
-        contract. Note that the contract assumes that its account's name is 
-        ``tic.tac.toe``. 
-        Create two player accounts: ``account_alice`` and ``account_carol``.
-        Deploy the Contract
-        Run games.
-        """)        
-        eosf.use_keosd(False)
-        eosf.reset([eosf.Verbosity.TRACE]) 
         create_wallet()
         create_master_account("account_master")
+        create_account("croupier", account_master)
+        create_account("alice", account_master)
+        create_account("carol", account_master)
+        contract = Contract(
+            croupier, sys.path[0] + "/../")
 
-        create_account(
-            "account_tic_tac_toe", account_master)
-        create_account("account_alice", account_master)
-        create_account("account_carol", account_master)
+        if not contract.is_built():
+            contract.build()
+        contract.deploy()        
 
-        eosf.set_is_testing_errors()
+        _.SCENARIO("""
+Having created the ``croupier`` account that keeps the ``tic_tac_toe`` contract 
+from the EOSIO distribution, and two players: ``alice`` and ``carol``, Run 
+games.
+        """)
 
-        ######################################################################  
+    def test_tic_tac_toe(self):
 
-        contract_tic_tac_toe = Contract(
-            account_tic_tac_toe, sys.path[0] + "/../")
-
-        contract_tic_tac_toe.build()
-        contract_tic_tac_toe.deploy()
-
-        account_tic_tac_toe.push_action(
+        croupier.push_action(
             "create", 
-            '{"challenger":"' + str(account_alice) 
-                +'", "host":"' + str(account_carol) + '"}', 
-            account_carol)
+            {
+                "challenger": alice,
+                "host": carol
+            },
+            carol)
 
-        t = account_tic_tac_toe.table("games", account_carol)
-        self.assertFalse(t.error)
+        t = croupier.table("games", carol)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
@@ -80,24 +52,27 @@ NEXT TEST ====================================================================
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        account_tic_tac_toe.push_action(
+        croupier.push_action(
             "move", 
-            '{"challenger":"' + str(account_alice) 
-                + '", "host":"' + str(account_carol) 
-                + '", "by":"' + str(account_carol) 
-                + '", "row":0, "column":0 }', 
-            account_carol)
+            {
+                "challenger": alice,
+                "host": carol,
+                "by": carol, 
+                "row": 0, "column": 0 
+            }, 
+            carol)
 
-        account_tic_tac_toe.push_action(
+        croupier.push_action(
             "move", 
-            '{"challenger":"' + str(account_alice) 
-                + '", "host":"' + str(account_carol) 
-                + '", "by":"' + str(account_alice) 
-                + '", "row":1, "column":1 }', 
-            account_alice)
+            {
+                "challenger": alice, 
+                "host": carol,
+                "by": alice, 
+                "row": 1, "column": 1 
+            }, 
+            alice)
 
-
-        t = account_tic_tac_toe.table("games", account_carol)
+        t = croupier.table("games", carol)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 1)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
@@ -109,15 +84,16 @@ NEXT TEST ====================================================================
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        account_tic_tac_toe.push_action(
-                "restart", 
-                '{"challenger":"' + str(account_alice) 
-                    + '", "host":"' + str(account_carol) 
-                    + '", "by":"' + str(account_carol) + '"}', 
-                account_carol)
+        croupier.push_action(
+            "restart", 
+            {
+                "challenger": alice, 
+                "host": carol,
+                "by": carol
+            }, 
+            carol)
 
-        t = account_tic_tac_toe.table("games", account_carol)
-        self.assertFalse(t.error)
+        t = croupier.table("games", carol)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
@@ -129,19 +105,17 @@ NEXT TEST ====================================================================
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        account_tic_tac_toe.push_action(
-                "close", 
-                '{"challenger":"' + str(account_alice) 
-                    + '", "host":"' + str(account_carol) + '"}', 
-                account_carol)
-
-    def tearDown(self):
-        pass
+        croupier.push_action(
+            "close",
+            {
+                "challenger": alice,
+                "host": carol
+            }, 
+            carol)
 
     @classmethod
     def tearDownClass(cls):
-        eosf.stop()
-
+        stop()
 
 if __name__ == "__main__":
     unittest.main()

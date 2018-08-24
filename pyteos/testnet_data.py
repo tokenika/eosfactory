@@ -1,3 +1,6 @@
+import eosf
+import front_end
+import eosf_account
 
 class Testnet:
     def __init__(self, url, name, owner_key, active_key):
@@ -5,6 +8,16 @@ class Testnet:
         self.account_name = name
         self.owner_key = owner_key
         self.active_key = active_key
+
+class LocalTestnet(Testnet):
+    def __init__(self):
+        eosf.run(verbosity=[front_end.Verbosity.ERROR])
+        eosio = eosf_account.Eosio()
+        Testnet.__init__(
+            self, 
+            None, 
+            eosio.name,
+            eosio.owner_key.key_private, eosio.active_key.key_private)
 
 cryptolion = Testnet(
     "https://88.99.97.30:38888",
@@ -19,9 +32,6 @@ kylin = Testnet(
     "5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67",
     "5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX"
 )
-
-import eosf_account
-eosio = eosf_account.Eosio()
 
 local = Testnet(
     "https://api.kylin-testnet.eospace.io",
