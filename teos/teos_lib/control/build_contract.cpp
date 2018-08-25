@@ -412,7 +412,7 @@ namespace teos {
         bfs::path src_file(file);
         string extension = src_file.extension().string();
         boost::algorithm::to_lower(extension);
-        
+
         if(extensions.find(extension) == string::npos){
           continue;
         }
@@ -437,7 +437,7 @@ namespace teos {
         command_line += getEOSIO_WASM_CLANG(this)
           + " -emit-llvm -O3 --std=c++14 --target=wasm32 -nostdinc -nostdlib"
           + " -nostdlibinc -ffreestanding -nostdlib -fno-threadsafe-statics"
-          + " -fno-rtti -fno-exceptions"  
+          + " -fno-rtti -fno-exceptions"
           + " -I" + getSourceDir(this) + "/contracts/libc++/upstream/include"
           + " -I" + getSourceDir(this) + "/contracts/musl/upstream/include"
           + " -I" + getSourceDir(this) + "/externals/magic_get/include"
