@@ -29,6 +29,7 @@ def set_nodeos_address(address, prefix=None):
 ERROR in setup.set_nodeos_address(...)!
 nodeos address is not set.
         ''')
+        return
 
     if prefix is None:
         prefix = re.sub("\.|\:|-|https|http|\/", "_", _nodeos_address)

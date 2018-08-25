@@ -9,13 +9,12 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 
 Test with a local node are perfectly reproducible and forgivable. It is not so
 with remote test nodes because such tests have to -- otherwise they are 
-useless -- mimic real uses when blockchain changes are to be paid.
+useless -- mimic real cases when blockchain changes are to be paid.
 
-With remote node tests, we assume the following restrictions.
+With remote node tests, we assume two restrictions:
 
 * Accounts have to be reused between test sessions.
 * Contract deployment occurs only if contract changes.
-* Wallet passwords are not stored in a plain file.
 
 ### Imports and set-up definitions
 
@@ -30,6 +29,7 @@ CONTRACT_DIR = "03_tic_tac_toe"
 
 import testnet_data
 testnode = testnet_data.LocalTestnet()
+import pdb; pdb.set_trace()
 set_nodeos_address(testnode.url, "tic_tac_toe")
 '''
 ```
@@ -55,12 +55,21 @@ Be sure that the chosen testnode is operative:
         set_is_testing_errors()
         '''
 ```
-### Remove results of a possible previous use of the current script
+### Test files
 
+The Factory produces three files for each testnet used:
+
+* wallet file (may be more than wallet files),
+* wallet password mapping file,
+* account mapping file.
+
+The files are marked with a prefix that is set as the second argument in the statement `set_nodeos_address(...)` above.
+
+These files should be edited rather, than being deleted. However if the testnode is set to be `testnet_data.LocalTestnet()`, and the local testnet is reset, the contents of them is useles, then remove them:
  
 ```md
         '''
-        #remove_files()
+        remove_files()
         '''
 ```
 
@@ -124,7 +133,7 @@ there. Therefore, an account object is to be created only if it does not exist.
             '''.format("croupier"))            
         '''
 ```
-#### The 'insufficient ram` error
+#### The `insufficient ram` error
 
 As the remote node takes quasi-money (but we test the real-money case), you can
 expect a message like this one:

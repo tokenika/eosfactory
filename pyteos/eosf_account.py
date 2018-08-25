@@ -539,10 +539,11 @@ def append_account_methods_and_finish(
             '''.format(action))
 
         if not account_object.ERROR(result):
-                account_object.INFO('''
-                    {}
-                '''.format(re.sub(
-                    ' +',' ', eosf.accout_names_2_object_names(data))))
+            account_object.INFO('''
+                {}
+            '''.format(re.sub(
+                ' +',' ', eosf.accout_names_2_object_names(data))))
+
             account_object.action = result
             try:
                 account_object._console = result.console
@@ -581,7 +582,6 @@ def append_account_methods_and_finish(
         account_object.INFO('''
         * Table ``{}`` for ``{}``
         '''.format(table_name, scope))
-        account_object.OUT(eosf.accout_names_2_object_names(result.out_msg))
 
         wallet_singleton.open_unlock()
         
