@@ -1,7 +1,7 @@
 import sys
 from  eosfactory import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 _ = Logger()
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
@@ -62,6 +62,7 @@ def test():
             "quantity": "25.0000 EOS", "memo":""
         },
         account_alice)
+    assert("250000" in account_host.debug_buffer)
 
     account_host.push_action(
         "transfer",
@@ -70,6 +71,7 @@ def test():
             "quantity": "11.0000 EOS", "memo": ""
         },
         account_carol)
+    assert("110000" in account_host.debug_buffer)
 
     account_host.push_action(
         "transfer",
@@ -78,6 +80,7 @@ def test():
             "quantity": "2.0000 EOS", "memo": ""
         },
         account_carol)
+    assert("20000" in account_host.debug_buffer)
 
     account_host.push_action(
         "transfer",
@@ -86,6 +89,7 @@ def test():
             "quantity": "2.0000 EOS", "memo":""
         },
         account_bob)
+    assert("20000" in account_host.debug_buffer)
 
     _.COMMENT('''
     Verify the outcome:

@@ -1,7 +1,7 @@
 import unittest
 from  eosfactory import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 _ = Logger()
 
 CONTRACT_WORKSPACE = "_iqhgcqllgnpkirjwwkms"
@@ -76,6 +76,7 @@ class Test(unittest.TestCase):
                 "quantity": "25.0000 EOS", "memo":""
             },
             account_alice)
+        self.assertTrue("250000" in account_host.debug_buffer)
 
         account_host.push_action(
             "transfer",
@@ -84,6 +85,7 @@ class Test(unittest.TestCase):
                 "quantity": "11.0000 EOS", "memo": ""
             },
             account_carol)
+        self.assertTrue("110000" in account_host.debug_buffer)
 
         account_host.push_action(
             "transfer",
@@ -92,6 +94,7 @@ class Test(unittest.TestCase):
                 "quantity": "2.0000 EOS", "memo": ""
             },
             account_carol)
+        self.assertTrue("20000" in account_host.debug_buffer)
 
         account_host.push_action(
             "transfer",
@@ -100,6 +103,7 @@ class Test(unittest.TestCase):
                 "quantity": "2.0000 EOS", "memo":""
             },
             account_bob)
+        self.assertTrue("20000" in account_host.debug_buffer)
 
         _.COMMENT('''
         Verify the outcome:

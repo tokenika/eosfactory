@@ -1,7 +1,7 @@
 import unittest, sys
 from  eosfactory import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 _ = Logger()
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
@@ -47,14 +47,12 @@ class Test(unittest.TestCase):
         ''')
         account_host.push_action(
             "hi", {"user":account_alice}, account_alice)
-        self.assertTrue("account_alice" in account_host.debug_buffer)
 
         _.COMMENT('''
         Test an action for Carol, including the debug buffer:
         ''')
         account_host.push_action(
             "hi", {"user":account_carol}, account_carol)
-        self.assertTrue("account_carol" in account_host.debug_buffer)
 
         _.COMMENT('''
         WARNING: This action should fail due to authority mismatch!
