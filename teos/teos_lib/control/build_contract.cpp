@@ -18,8 +18,8 @@ using namespace std;
 
 namespace teos {
   namespace control {
-  
-    // File structure relative to the context dir   
+
+    // File structure relative to the context dir
     static const string templContractsDir = "templates/contracts";
     static const string contractsDir = "contracts";
 
@@ -45,7 +45,7 @@ namespace teos {
       } catch (exception &e){
         teos_control->putError(e.what());
         return false;
-      }  
+      }
 
       return true;
     }
@@ -53,28 +53,28 @@ namespace teos {
     vector<string> files(string comma_list, set<string> extensions)
     {
       namespace bfs = boost::filesystem;
-            
+
       vector<string> srcs;
       try{
         bfs::path src_path(wslMapWindowsLinux(comma_list));
         if(bfs::is_directory(src_path)) {
           for (bfs::directory_entry& entry 
             : boost::make_iterator_range(
-              bfs::directory_iterator(src_path), {})) 
+              bfs::directory_iterator(src_path), {}))
             {
             if (bfs::exists(entry.path()) 
-              && bfs::is_regular_file(entry.path())) 
+              && bfs::is_regular_file(entry.path()))
             {
               bfs::path file = entry.path();
               if(extensions.count(file.extension().string())){
                 srcs.push_back(file.string());
               }
             }
-          } 
+          }
         }
       } catch(...){}
 
-      if(srcs.empty()) 
+      if(srcs.empty())
       {
         vector<string> temp;
         boost::split(temp, comma_list, boost::algorithm::is_any_of(","));
@@ -84,9 +84,9 @@ namespace teos {
           if(extensions.count(file.extension().string())){
             srcs.push_back(wslMapWindowsLinux(comp));
           }
-        }  
+        }
       }
-      return srcs;      
+      return srcs;
     }
 
     void DeleteContract::deleteContract(string contract_dir)
@@ -116,11 +116,11 @@ namespace teos {
       string name
       )
     {
-      namespace bfs = boost::filesystem; 
+      namespace bfs = boost::filesystem;
 
       if (bfs::is_regular_file(inTemplateCreate) && !bfs::exists(inContract))
-      {       
-        string contents;        
+      {
+        string contents;
         try{
           bfs::ifstream in(inTemplateCreate);
           stringstream ss;
@@ -136,21 +136,21 @@ namespace teos {
           bfs::ofstream ofs (inContract);
           ofs << contents << endl;
           ofs.flush();
-          ofs.close();          
+          ofs.close();
         } catch (bfs::filesystem_error &e){
           putError(e.what());
           return;
-        }         
+        }
       } else
-      {    
+      {
         try{
           if(!bfs::exists(inContract)) {
-            bfs::create_directory(inContract);          
+            bfs::create_directory(inContract);
           }
         } catch (bfs::filesystem_error &e){
           putError(e.what());
           return;
-        }  
+        }
       }
     }
 
@@ -173,14 +173,14 @@ namespace teos {
         workspacePath = getContractWorkspace(this);
         if(isError_){
           return;
-        }        
+        }
       }
 
       bfs::path eosFactoryDir(getEosFactoryDir(this));
       if(isError_){
         return;
       }
-      
+
       bfs::path templContractPath 
         = eosFactoryDir / templContractsDir / templateName;
       if(!bfs::exists(templContractPath))
@@ -189,7 +189,7 @@ namespace teos {
               % templateName).str(), SPOT);
         return;
       }
-      
+
       bfs::path contractPath = workspacePath / name;
       if(bfs::exists(contractPath)){
         if(removeExisting)
@@ -199,7 +199,7 @@ namespace teos {
         {
           cout << (boost::format(
             "NOTE:\n"
-            "Contract \n%1%\n workspace already exists. Cannot owerwrite it.") 
+            "Contract \n%1%\n workspace already exists. Cannot owerwrite it.")
               % contractPath.string()).str() << endl;
           putError("");
           return;
@@ -217,7 +217,7 @@ namespace teos {
         }
       }
 
-      respJson_.put("contract_dir", contractPath.string());           
+      respJson_.put("contract_dir", contractPath.string());
 
       for (const auto& dirEnt : bfs::recursive_directory_iterator{templContractPath})
       {
@@ -242,24 +242,24 @@ namespace teos {
       {
         namespace bp = boost::process;
 
-        if(isWindowsUbuntu()) 
-        { 
+        if(isWindowsUbuntu())
+        {
           string commandLine 
-            = string("cmd.exe /c start /D ") 
-            + "\"" 
+            = string("cmd.exe /c start /D ")
+            + "\""
             + wslMapLinuxWindows(contractPath.string())
             + "\" "
-            + "Code.exe "
-            + "\"" 
+            + "code "
+            + "\""
             + wslMapLinuxWindows(contractPath.string())
             + "\"";
           cout << "commandLine\n" << commandLine << endl;
           bp::spawn(commandLine);
-        } else 
+        } else
         {
           if(uname() == DARWIN){
             bp::spawn(
-              string("open -n -b com.microsoft.VSCode --args ") 
+              string("open -n -b com.microsoft.VSCode --args ")
                 + contractPath.string());
           } else{
             bp::spawn(
@@ -284,7 +284,7 @@ namespace teos {
       namespace bfs = boost::filesystem;
       bfs::path sourceDirPath(sourceDir);
       bfs::path targetPath;
-      
+
       if(targetPath.empty())
       {
         bfs::path td = sourceDirPath / ("../build");
@@ -302,7 +302,7 @@ namespace teos {
       if(targetPath.empty())
       {
         targetPath = sourceDirPath;
-      } 
+      }
       return targetPath;
     }
 
@@ -408,7 +408,7 @@ namespace teos {
       string extensions = ".h.hpp.hxx.c.cpp.cxx.c++";
 
       for (string file : srcs)
-      { 
+      {
         bfs::path src_file(file);
         string extension = src_file.extension().string();
         boost::algorithm::to_lower(extension);
@@ -453,7 +453,7 @@ namespace teos {
           for (string dir : include_dirs) {
             command_line += " -I " + dir;
           }
-        }        
+        }
 
         command_line += " -c " + file + " -o " + output.string();
         string decoration = string("_") + src_file.filename().string();
@@ -480,7 +480,7 @@ namespace teos {
 
           if(!process(command_line, this)){
             return;
-          }   
+          }
         }
         
         {
@@ -493,12 +493,12 @@ namespace teos {
 
           if(!process(command_line, this)){
             return;
-          } 
+          }
         }
 
         {
           string command_line;
-          command_line += getEOSIO_S2WASM(this) 
+          command_line += getEOSIO_S2WASM(this)
             + " -o " + targetPathWast.string()
             + " -s 16384"
             + " " + workdir.string() + "/assembly.s";
@@ -507,7 +507,7 @@ namespace teos {
 
           if(!process(command_line, this)){
             return;
-          } 
+          }
         }
 
         {
@@ -521,7 +521,7 @@ namespace teos {
 
           if(!process(command_line, this)){
             return;
-          } 
+          }
         }
 
 
