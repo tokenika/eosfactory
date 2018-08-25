@@ -19,7 +19,7 @@ def test():
     ''')
     create_account("account_host", account_master)
     contract = Contract(account_host, CONTRACT_WORKSPACE)
-    iif not contract.is_built()
+    if not contract.is_built():
         contract.build()
     contract.deploy()
 

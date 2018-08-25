@@ -66,6 +66,8 @@ class Test(unittest.TestCase):
         set_is_testing_errors(False)
         self.assertTrue(account_host.action.error)
 
+        contract.delete()
+
 
     def tearDown(self):
         pass
