@@ -2,7 +2,7 @@
 #include <eosiolib/print.hpp>
 
 #include "logger.hpp"
-#include "hello_world.hpp" 
+#include "hello_world.hpp"
 
 #define DEBUG
 
@@ -10,11 +10,11 @@ using namespace eosio;
 
 class hello : public eosio::contract {
   public:
-    using contract::contract; 
+    using contract::contract;
 
-    /// @abi action 
+    /// @abi action
     void hi( account_name user ) {
-      logger_info( "user: ", name{user} );
+      logger_info( "debug user name: ", name{user} );
       require_auth( user );
       print( "Hello, ", name{user} );
     }
