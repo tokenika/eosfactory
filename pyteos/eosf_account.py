@@ -100,9 +100,7 @@ def put_account_to_wallet_and_on_stack(
         logger = account_object
 
     global wallet_singleton
-    global wallet_globals    
-    wallet_singleton.open()
-    wallet_singleton.unlock()
+    global wallet_globals
 
     if account_object.owner_key:
         if wallet_singleton.keys_in_wallets([account_object.owner_key.key_private, \
@@ -356,6 +354,8 @@ def create_master_account(
     if wallet_singleton is None:
         return
 
+    wallet_singleton.open_unlock()
+
     '''
     If the local testnet is running, create an account object representing 
     the ``eosio`` account. Put the account into the wallet. Put the account
@@ -496,6 +496,8 @@ def append_account_methods_and_finish(
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
 
+        wallet_singleton.open_unlock()
+
         result = cleos.SetContract(
             account_object, contract_dir, 
             wast_file, abi_file, 
@@ -522,6 +524,8 @@ def append_account_methods_and_finish(
             ref_block=None, json=False):
         data = _data_json(data)
 
+        wallet_singleton.open_unlock()
+        
         result = cleos.PushAction(
             account_object, action, data,
             permission, expiration_sec, 
@@ -530,12 +534,15 @@ def append_account_methods_and_finish(
             ref_block,
             is_verbose=-1, json=True)
 
+        account_object.INFO('''
+            * Push action ``{}``:
+            '''.format(action))
+
         if not account_object.ERROR(result):
-            d = '''
-            * Push action:
-                {}
-            '''.format(re.sub(' +',' ', eosf.accout_names_2_object_names(data)))
-            account_object.INFO(d)
+                account_object.INFO('''
+                    {}
+                '''.format(re.sub(
+                    ' +',' ', eosf.accout_names_2_object_names(data))))
             account_object.action = result
             try:
                 account_object._console = result.console
@@ -571,11 +578,19 @@ def append_account_methods_and_finish(
             binary=False, 
             limit=10, key="", lower="", upper=""):
 
+        account_object.INFO('''
+        * Table ``{}`` for ``{}``
+        '''.format(table_name, scope))
+        account_object.OUT(eosf.accout_names_2_object_names(result.out_msg))
+
+        wallet_singleton.open_unlock()
+        
         result = cleos.GetTable(
                     account_object, table_name, scope,
                     binary, 
                     limit, key, lower, upper,
                     is_verbose=-1)
+
         if not account_object.ERROR(result):
             try:
                 account_map = eosf.account_map()
@@ -583,9 +598,6 @@ def append_account_methods_and_finish(
             except:
                 pass
 
-            account_object.INFO('''
-            * Table ``{}`` for ``{}``
-            '''.format(table_name, scope))
             account_object.OUT(eosf.accout_names_2_object_names(result.out_msg))
             return result
         return None
@@ -602,6 +614,8 @@ def append_account_methods_and_finish(
             receiver = account_object
         buy_ram_kbytes = 1
 
+        wallet_singleton.open_unlock()
+        
         result = cleos_system.BuyRam(
             account_object, receiver, amount_kbytes,
             buy_ram_kbytes,
@@ -661,6 +675,8 @@ def create_account(
         
     if wallet_singleton.is_name_taken(account_object_name, account_name):
         return
+
+    wallet_singleton.open_unlock()
 
     '''
     Create an account object.

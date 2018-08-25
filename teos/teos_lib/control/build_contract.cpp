@@ -243,9 +243,9 @@ namespace teos {
         namespace bp = boost::process;
 
         if(isWindowsUbuntu())
-        {
+        {       
           string commandLine 
-            = string("cmd.exe /c start /D ")
+            = string("cmd.exe /c start /B /D ")
             + "\""
             + wslMapLinuxWindows(contractPath.string())
             + "\" "

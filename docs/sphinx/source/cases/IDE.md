@@ -27,12 +27,11 @@ to learn how to prevail the installation settings.
 Use a bash terminal, it can be one belonging to an instance of the VScode: 
 
 ```md
-$ $eosf template create eosio_token_better eosio.token\
+$ $eosf template create eosio_token_better 02_eosio_token\
     --workspace /mnt/c/Workspaces/EOS/contracts --vsc
 ```
 
 We hope that you see an instance of the VScode window, now.
-
 
 ## IDE workspace
 

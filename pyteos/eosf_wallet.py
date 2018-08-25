@@ -145,6 +145,17 @@ class Wallet(cleos.WalletCreate):
             * Wallet ``{}`` unlocked.
             '''.format(self.name))
 
+    def open_unlock(self):
+        ''' Open&Unlock automatics.
+        '''
+        result = cleos.WalletOpen(self.name, is_verbose=-1)
+        if not result.error:
+            result = cleos.WalletUnlock(
+                self.name, self.password, is_verbose=-1)
+            if not result.error:
+                return
+        self.ERROR(result)
+
     def remove_key(self, account_or_key):
         '''
         '''
