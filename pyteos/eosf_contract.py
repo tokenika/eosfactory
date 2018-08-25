@@ -61,22 +61,22 @@ class ContractBuilder(front_end.Logger):
 
         front_end.Logger.__init__(self, verbosity)
 
-        self.INFO('''
-                ######### Create a ``ContractBuilder`` object.
-                ''')
-        config = teos.GetConfig(self.contract_dir, is_verbose=0)
-        self.contract_dir = config.json["contract-dir"]
-        if not self.contract_dir:
-            self.ERROR("""
-                Cannot determine the contract directory. The clue is 
-                ``{}``.
-                """.format(contract_dir))
-            return
-
-        self.INFO('''
-        * Contract directory is
-            {}
-        '''.format(self.contract_dir))
+        if (not verbosity):
+            self.INFO('''
+                    ######### Create a ``ContractBuilder`` object.
+                    ''')
+            config = teos.GetConfig(self.contract_dir, is_verbose=0)
+            self.contract_dir = config.json["contract-dir"]
+            if not self.contract_dir:
+                self.ERROR("""
+                    Cannot determine the contract directory. The clue is 
+                    ``{}``.
+                    """.format(contract_dir))
+                return
+            self.INFO('''
+            * Contract directory is
+                {}
+            '''.format(self.contract_dir))
 
     def path(self):
         return self.contract_dir
