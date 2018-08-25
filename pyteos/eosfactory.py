@@ -18,6 +18,7 @@ create_master_account = eosf_account.create_master_account
 restart = eosf_account.restart
 
 Contract = eosf_contract.Contract
+ContractBuilder = eosf_contract.ContractBuilder
 contract_workspace_from_template = \
      eosf_contract.contract_workspace_from_template
 

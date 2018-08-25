@@ -12,6 +12,42 @@ import cleos_system
 import eosf
 import eosf_account
 
+
+def contract_workspace_from_template(
+        name, template="", user_workspace=None, remove_existing=False, 
+        visual_studio_code=False, verbosity=None):
+    '''Given the template type and a name, create a contract workspace. 
+
+    - **parameters**::
+
+        name: The name of the new wallet, defaults to ``default``.
+        template: The name of the template used.
+        user_workspace: If set, the folder for the work-space. Defaults to the 
+            value of the ``EOSIO_CONTRACT_WORKSPACE`` env. variable.
+        remove_existing: If set, overwrite any existing workspace.
+        visual_studio_code: If set, open the ``VSCode``, if available.
+        verbosity: The logging configuration.
+    '''
+    logger = front_end.Logger(verbosity)
+
+    logger.INFO('''
+    ######### Create template ``{}`` contract workspace named ``{}``.
+    '''.format(name, template))
+
+    result = teos.TemplateCreate(
+        name, template, user_workspace, remove_existing, visual_studio_code, is_verbose=0)
+
+
+    if not logger.ERROR(result):
+        logger.TRACE('''
+        * The directory is
+            {}
+        '''.format(result.contract_path_absolute))
+        return result.contract_path_absolute
+    else:
+        return None
+
+
 class ContractBuilder(front_end.Logger):
     '''
     '''
@@ -24,6 +60,23 @@ class ContractBuilder(front_end.Logger):
         self.is_mutable = is_mutable
 
         front_end.Logger.__init__(self, verbosity)
+
+        self.INFO('''
+                ######### Create a ``ContractBuilder`` object.
+                ''')
+        config = teos.GetConfig(self.contract_dir, is_verbose=0)
+        self.contract_dir = config.json["contract-dir"]
+        if not self.contract_dir:
+            self.ERROR("""
+                Cannot determine the contract directory. The clue is 
+                ``{}``.
+                """.format(contract_dir))
+            return
+
+        self.INFO('''
+        * Contract directory is
+            {}
+        '''.format(self.contract_dir))
 
     def path(self):
         return self.contract_dir
@@ -50,9 +103,9 @@ class ContractBuilder(front_end.Logger):
                 * ABI file build and saved.
                 ''')
                 if "ABI exists in the source directory" in result.out_msg:
-                   self.TRACE(result.out_msg) 
+                   self.TRACE(result.out_msg)
                 if json:
-                    return result.json           
+                    return result.json
         else:
             self.ERROR("Cannot modify system contracts.")
 
@@ -60,39 +113,6 @@ class ContractBuilder(front_end.Logger):
         self.build_abi()
         self.build_wast()
 
-def contract_workspace_from_template(
-        name, template="", user_workspace=None, remove_existing=False, 
-        visual_studio_code=False, verbosity=None):
-    '''Given the template type and a name, create a contract workspace. 
-
-    - **parameters**::
-
-        name: The name of the new wallet, defaults to ``default``.
-        template: The name of the template used.
-        user_workspace: If set, the folder for the work-space. Defaults to the 
-            value of the ``EOSIO_CONTRACT_WORKSPACE`` env. variable.
-        remove_existing: If set, overwrite any existing workspace.
-        visual_studio_code: If set, open the ``VSCode``, if available.
-        verbosity: The logging configuration.
-    '''
-    logger = front_end.Logger(verbosity)
-
-    logger.INFO('''
-    ######### Create template ``{}`` contract workspace named ``{}``.
-    '''.format(name, template))
-
-    result = teos.TemplateCreate(
-        name, template, user_workspace, remove_existing, visual_studio_code, is_verbose=0)
-    
-
-    if not logger.ERROR(result):
-        logger.TRACE('''
-        * The directory is
-            {}
-        '''.format(result.contract_path_absolute))
-        return result.contract_path_absolute
-    else:
-        return None
 
 class Contract(front_end.Logger):
 
@@ -105,7 +125,7 @@ class Contract(front_end.Logger):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             verbosity=None):
-        
+
         self.account = account
         self.contract_dir = contract_dir
         self.expiration_sec = expiration_sec
@@ -166,7 +186,7 @@ class Contract(front_end.Logger):
                 Error in contract deployment:
                 Despite the ``set contract`` command returned without any error,
                 the code hash of the associated account is null
-                    ''')                
+                    ''')
                     return
                 else:
                     self.INFO('''
@@ -207,7 +227,7 @@ class Contract(front_end.Logger):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
         self.account.push_action(action, data,
-            permission, expiration_sec, 
+            permission, expiration_sec,
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block, json)
