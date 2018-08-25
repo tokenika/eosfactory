@@ -58,11 +58,11 @@ except:
 create_wallet(wallet_name)
 
 _.COMMENT('''
-Use ``eosf.info()`` to check whether the remote testnet responces: it throws
+Use ``eosf.status()`` to check whether the remote testnet responces: it throws
 an exception if the testnode is off. 
 ''')
 
-eosf.info()
+eosf.status()
 
 _.COMMENT('''
 Use an active account, called ``account_master_test`` to simulate the 

@@ -24,7 +24,7 @@ With remote node tests, we assume the following restrictions.
 import unittest
 from  eosfactory import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
 _ = Logger()
 CONTRACT_DIR = "03_tic_tac_toe"
 
@@ -33,7 +33,6 @@ testnode = testnet_data.LocalTestnet()
 set_nodeos_address(testnode.url, "tic_tac_toe")
 '''
 ```
-
 
 ```md
 '''
@@ -53,11 +52,12 @@ Be sure that the chosen testnode is operative:
             _.ERROR('''
             This test needs the testnode {} running, but it does not answer.
             '''.format(testnode.url))
+        set_is_testing_errors()
         '''
 ```
 ### Remove results of a possible previous use of the current script
 
-Make sure that the chosen testnode is operative:    
+ 
 ```md
         '''
         #remove_files()
@@ -69,6 +69,7 @@ Make sure that the chosen testnode is operative:
 It has to be exactly one 'Wallet' object in the namespace. 
 ```md
         '''
+
         create_wallet()
         '''
 ```
@@ -108,8 +109,8 @@ there. Therefore, an account object is to be created only if it does not exist.
         else:
             _.INFO('''
             ######## {} account object restored from the blockchain.
-            '''.format("carol"))
-            
+            '''.format("carol"))        
+        
         if not croupier.is_code():
             contract = Contract(
                 croupier, CONTRACT_DIR)
@@ -121,8 +122,6 @@ there. Therefore, an account object is to be created only if it does not exist.
             _.INFO('''
             * The account {} has code.
             '''.format("croupier"))            
-
-        exit()
         '''
 ```
 #### The 'insufficient ram` error
@@ -161,9 +160,24 @@ contract, and two player accounts: ``alice`` and ``carol``
                 "host": carol
             },
             carol)
+        if "game already exists" in croupier.action.err_msg:
+            croupier.push_action(
+                "close", 
+                {
+                    "challenger": alice,  
+                    "host": carol 
+                }, 
+                carol)
 
+            croupier.push_action(
+                "create", 
+                {
+                    "challenger": alice, 
+                    "host": carol
+                },
+                carol)
+        
         t = croupier.table("games", carol)
-        self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)

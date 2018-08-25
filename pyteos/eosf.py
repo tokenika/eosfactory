@@ -193,7 +193,7 @@ def reset(verbosity=None):
     '''
     logger = front_end.Logger(verbosity) 
     if not cleos.set_local_nodeos_address_if_none():   
-        logger.TRACE_INFO('''
+        logger.INFO('''
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()))
 
@@ -202,7 +202,7 @@ def reset(verbosity=None):
     node = teos.NodeStart(1, is_verbose=0)
     probe = teos.NodeProbe(is_verbose=-1)
     if not logger.ERROR(probe):
-        logger.TRACE_INFO('''
+        logger.INFO('''
         ######### Local test node is reset and is running.
         ''')
         logger.OUT(str(node))
@@ -212,7 +212,7 @@ def run(verbosity=None):
     ''' 
     logger = front_end.Logger(verbosity)
     if not cleos.set_local_nodeos_address_if_none():   
-        logger.TRACE_INFO('''
+        logger.INFO('''
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()))
 
@@ -220,7 +220,7 @@ def run(verbosity=None):
     probe = teos.NodeProbe(is_verbose=-1)
     logger = front_end.Logger(verbosity)
     if not logger.ERROR(probe):
-        logger.TRACE_INFO('''
+        logger.INFO('''
         ######### Local test node is started and is running.
         ''')
         logger.OUT(str(node))
@@ -235,7 +235,7 @@ def stop(verbosity=None):
     stop = teos.NodeStop(is_verbose=0)
     logger = front_end.Logger(verbosity)
     if not logger.ERROR(stop):
-        logger.TRACE_INFO('''
+        logger.INFO('''
         ######### Local test node is stopped.
         ''')
 
@@ -249,8 +249,9 @@ def status():
     {}
     THE NODE {} IS NOT OPERATIVE.
     '''.format(get_info.err_msg, setup.nodeos_address())
+    
     if not logger.ERROR(get_info):
-        logger.TRACE_INFO('''
+        logger.INFO('''
         ######### Node ``{}``, head block number ``{}``.
         '''.format(
             setup.nodeos_address(),
@@ -262,7 +263,7 @@ def info():
     '''
     get_info = cleos.GetInfo(is_verbose=-1)
     logger = front_end.Logger(None)
-    logger.TRACE_INFO(str(get_info))
+    logger.INFO(str(get_info))
 
 def node_is_operative():
     '''

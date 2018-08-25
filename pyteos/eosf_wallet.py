@@ -8,8 +8,6 @@ import front_end
 import cleos
 import eosf
 
-wallet = None
-
 def wallet_json_read():
     try:
         with open(eosf.wallet_dir() + setup.password_map, "r") as input:    
@@ -24,6 +22,8 @@ def wallet_json_write(wallet_json):
 def create_wallet(name=None, password="", verbosity=None, file=False):
     Wallet.globals = inspect.stack()[1][0].f_globals
     Wallet.wallet = Wallet(name, password, verbosity, file)
+    Wallet.wallet.restore_accounts()
+
 
 class Wallet(cleos.WalletCreate):
     ''' Create a new wallet locally and operate it.
@@ -64,7 +64,7 @@ class Wallet(cleos.WalletCreate):
 
         self.wallet_dir = eosf.wallet_dir()
 
-        logger.TRACE_INFO('''
+        logger.INFO('''
                 * Wallet name is ``{}``, wallet directory is
                     {}.
                 '''.format(name, self.wallet_dir))
@@ -73,15 +73,16 @@ class Wallet(cleos.WalletCreate):
             passwords = wallet_json_read()
             if name in passwords:
                 password = passwords[name]
-                logger.TRACE_INFO('''
+                logger.INFO('''
                     The pasword is restored from the file:
                     {}
-                    '''.format(self.wallet_dir + setup.password_map))
+                    '''.format(
+                        os.path.join(self.wallet_dir, setup.password_map)))
 
         cleos.WalletCreate.__init__(self, name, password, is_verbose=-1)
 
         if self.is_created: # new password
-            self.TRACE_INFO('''
+            self.INFO('''
                 * Created wallet ``{}``.
                 '''.format(self.name)
             )            
@@ -89,7 +90,7 @@ class Wallet(cleos.WalletCreate):
                 password_map = wallet_json_read()
                 password_map[name] = self.password
                 wallet_json_write(password_map)
-                self.TRACE_INFO('''
+                self.INFO('''
                     * Password is saved to the file ``{}`` in the wallet directory.
                     '''.format(setup.password_map)
                 )
@@ -99,8 +100,6 @@ class Wallet(cleos.WalletCreate):
             self.TRACE('''
                     Opened wallet ``{}``
                     '''.format(self.name))            
-
-        self.restore_accounts()
 
     def index(self):
         ''' Lists opened wallets, * marks unlocked.
@@ -293,7 +292,7 @@ class Wallet(cleos.WalletCreate):
 
         restored = dict()
         if len(account_names) > 0:
-            self.TRACE_INFO('''
+            self.INFO('''
                     ######### Restored accounts as global variables:
                     ''')
                         
@@ -312,14 +311,14 @@ class Wallet(cleos.WalletCreate):
                 object_names.add(object_name)
 
                 if object_name:
-                    self.TRACE_INFO('''
+                    self.INFO('''
                          {}
                     '''.format(object_name))
                     from eosf_account import create_account
-                    restored[object_name] = create_account(
-                        object_name, name, restore=True, verbosity=[])
+                    create_account(
+                        object_name, name, restore=True, verbosity=None)
         else:
-            self.TRACE_INFO('''
+            self.INFO('''
                  * The wallet is empty.
             ''')
 
@@ -348,16 +347,16 @@ class Wallet(cleos.WalletCreate):
                     if not name == account_name:                    
                         self.ERROR('''
                 The given account object name
-                `{}`({})
+                ``{}``
                 points to an existing account, of the name {},
                 mapped in a file in directory:
-                `{}`
+                {}
                 Cannot overwrite it.
 
                 However, you can free the name by changing the mapping. 
                 Do you want to edit the file?
                 '''.format(
-                    account_object_name, account_name, name, self.wallet_dir))
+                    account_object_name, name, self.wallet_dir))
                         is_taken = True
                         break
 

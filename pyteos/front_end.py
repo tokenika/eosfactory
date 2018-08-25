@@ -54,12 +54,11 @@ class Error:
 
 class Verbosity(enum.Enum):
     COMMENT = ['green', None, []]
-    INFO = ['blue', None, []]
+    INFO = ['blue', None, ['bold']] # has to differ from TRACE! (enum!!!)
     TRACE = ['blue', None, []]
     ERROR = ['red', None, ['reverse']]
     ERROR_TESTING = ['green', None, ['reverse']]
-    OUT = ['']
-    OUT_INFO = ['white', None, ['reverse']]
+    OUT = [None, None, []]
     DEBUG = ['yellow', None, []]
 
 _is_throw_error = True
@@ -116,43 +115,18 @@ class Logger():
             cprint(msg, color[0], color[1], attrs=color[2])
 
     def INFO(self, msg, do=False):
-        if msg and (Verbosity.INFO in self._verbosity or do):
+        if msg and (
+                Verbosity.TRACE in self._verbosity or
+                Verbosity.INFO in self._verbosity or
+                do
+            ):
             color = Verbosity.INFO.value
-            cprint(translate(msg), color[0], color[1], attrs=color[2])
-
-    def TRACE_INFO(self, msg, do=False):
-        if msg and Verbosity.TRACE in self._verbosity:
-            self.TRACE(msg, do)
-        else:
-            self.INFO(msg, do)
-
-    def OUT_INFO(self, msg, do=False):
-        msg = translate(msg)
-        self.out_info_buffer = msg
-
-        error = False
-        try:
-            error = msg.error
-        except:
-            pass
-
-        try:
-            msg = err_msg.err_msg
-        except:
-            pass
-
-        if msg and (Verbosity.OUT_INFO in self._verbosity or do):
-            color = Verbosity.OUT_INFO.value
-            cprint(msg, color[0], color[1], attrs=color[2])            
+            cprint(translate(msg), color[0], color[1], attrs=color[2])        
 
     def OUT(self, msg, do=False):
-        msg = translate(msg)
-        self.out_buffer = msg
-
         if msg and (Verbosity.OUT in self._verbosity or do):
-            print(msg + "\n")
-
-        self.OUT_INFO(msg, do)
+            color = Verbosity.OUT.value
+            cprint(translate(msg), color[0], color[1], attrs=color[2])
 
     def DEBUG(self, msg, do=False):
         msg = translate(msg)

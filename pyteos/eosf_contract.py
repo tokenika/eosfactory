@@ -34,7 +34,7 @@ class ContractBuilder(front_end.Logger):
                 self.contract_dir, "", is_verbose=0, json=json)
             
             if not self.ERROR(result):
-                self.TRACE_INFO('''
+                self.INFO('''
                 * WAST file build and saved.
                 ''')
             if json:
@@ -46,7 +46,7 @@ class ContractBuilder(front_end.Logger):
         if self.is_mutable:
             result = teos.ABI(self.contract_dir, "", is_verbose=0)
             if not self.ERROR(result):
-                self.TRACE_INFO('''
+                self.INFO('''
                 * ABI file build and saved.
                 ''')
                 if "ABI exists in the source directory" in result.out_msg:
@@ -77,7 +77,7 @@ def contract_workspace_from_template(
     '''
     logger = front_end.Logger(verbosity)
 
-    logger.TRACE_INFO('''
+    logger.INFO('''
     ######### Create template ``{}`` contract workspace named ``{}``.
     '''.format(name, template))
 
@@ -122,7 +122,7 @@ class Contract(front_end.Logger):
         self.error = self.account.error
 
         front_end.Logger.__init__(self, verbosity)
-        self.TRACE_INFO('''
+        self.INFO('''
                 ######### Create a ``Contract`` object.
                 ''')
         config = teos.GetConfig(self.contract_dir, is_verbose=0)
@@ -136,7 +136,7 @@ class Contract(front_end.Logger):
         self.abi_file = abi_file
         self.wasm_file = wasm_file
 
-        self.TRACE_INFO('''
+        self.INFO('''
                 * Contract directory is
                     {}
                 '''.format(self.contract_dir))
@@ -169,7 +169,7 @@ class Contract(front_end.Logger):
                     ''')                
                     return
                 else:
-                    self.TRACE_INFO('''
+                    self.INFO('''
                     * The contract {} deployed. 
                     '''.format(self.contract_dir))
                     self.TRACE('''
@@ -215,7 +215,7 @@ class Contract(front_end.Logger):
     def show_action(self, action, data, permission=None):
         ''' Implements the `push action` command without broadcasting. 
         '''
-        return self.push_action(action, data, permission, dont_broadcast=1)
+        self.account.show_action(self, action, data, permission)
 
     def table(
             self, table_name, scope="",

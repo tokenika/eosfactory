@@ -20,7 +20,7 @@ def restart():
     try:
         del wallet_singleton
     except:
-        pass
+        pass    
     wallet_singleton = None
 
     global wallet_globals
@@ -65,10 +65,12 @@ wallet_singleton = None
 def is_wallet_defined(logger):
     '''
     '''
-    global wallet_singleton
     global wallet_globals    
     if not wallet_globals is None:
         return
+    wallet_globals = eosf_wallet.Wallet.globals
+    
+    global wallet_singleton        
 
     wallet_globals = eosf_wallet.Wallet.globals
     wallet_singleton = eosf_wallet.Wallet.wallet
@@ -77,7 +79,7 @@ def is_wallet_defined(logger):
         logger.ERROR('''
             Cannot find any `Wallet` object.
             Add the definition of an `Wallet` object, for example:
-            `wallet = eosf.Wallet()`
+            `create_wallet()`
             ''')
     
 def is_local_testnet_running(account_eosio):
@@ -117,14 +119,16 @@ def put_account_to_wallet_and_on_stack(
                 return False
 
     # export the account object to the globals in the wallet module:
+    global wallet_globals      
     wallet_globals[account_object_name] = account_object
     account_object.in_wallet_on_stack = True
     return True
 
 
 class Eosio(cleos.Account):
-    def __init__(self):
+    def __init__(self, account_object_name):
         self.name = "eosio"
+        self.account_object_name = account_object_name
         config = teos.GetConfig(is_verbose=0)
         self.owner_key = cleos.CreateKey(
             "owner",
@@ -134,8 +138,10 @@ class Eosio(cleos.Account):
         self.active_key = self.owner_key
 
     def info(self):
-        print(cleos.GetAccount(
-            self.name, is_verbose=-1).out_msg)
+        print("account object name: {}\nname: {}\n{}".format(
+                self.account_object_name, 
+                self.name,
+                cleos.GetAccount(self.name, is_verbose=-1).out_msg))
 
     def __str__(self):
         return self.name
@@ -338,7 +344,7 @@ def create_master_account(
     '''
 
     logger = front_end.Logger(verbosity)
-    logger.TRACE_INFO('''
+    logger.INFO('''
         ######### Create the master account object named ``{}``...
         '''.format(account_object_name))
     '''
@@ -355,7 +361,7 @@ def create_master_account(
     the ``eosio`` account. Put the account into the wallet. Put the account
     object into the global namespace of the caller, and **return**.
     '''
-    account_object = Eosio()
+    account_object = Eosio(account_object_name)
     if is_local_testnet_running(account_object):
         put_account_to_wallet_and_on_stack(
             account_object_name, account_object, logger)
@@ -462,7 +468,7 @@ def append_account_methods_and_finish(
     def code(account_object, code="", abi="", wasm=False):
         result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
         if not account_object.ERROR(result):
-            account_object.TRACE_INFO('''
+            account_object.INFO('''
             * code()
             ''')
             account_object.OUT(result.out_msg)
@@ -514,7 +520,6 @@ def append_account_methods_and_finish(
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
-       
         data = _data_json(data)
 
         result = cleos.PushAction(
@@ -526,10 +531,11 @@ def append_account_methods_and_finish(
             is_verbose=-1, json=True)
 
         if not account_object.ERROR(result):
-            account_object.TRACE_INFO('''
+            d = '''
             * Push action:
                 {}
-            '''.format(re.sub(' +',' ', eosf.accout_names_2_object_names(data))))
+            '''.format(re.sub(' +',' ', eosf.accout_names_2_object_names(data)))
+            account_object.INFO(d)
             account_object.action = result
             try:
                 account_object._console = result.console
@@ -551,6 +557,15 @@ def append_account_methods_and_finish(
     account_object.push_action = types.MethodType(
                                     push_action , account_object)
 
+    def show_action(self, action, data, permission=None):
+        ''' Implements the `push action` command without broadcasting. 
+        '''
+        import pdb; pdb.set_trace()
+        return self.push_action(action, data, permission, dont_broadcast=1)
+
+    account_object.show_action = types.MethodType(
+                                    show_action , account_object)
+
     def table(
             account_object, table_name, scope="", 
             binary=False, 
@@ -568,7 +583,7 @@ def append_account_methods_and_finish(
             except:
                 pass
 
-            account_object.TRACE_INFO('''
+            account_object.INFO('''
             * Table ``{}`` for ``{}``
             '''.format(table_name, scope))
             account_object.OUT(eosf.accout_names_2_object_names(result.out_msg))
@@ -630,7 +645,7 @@ def create_account(
             account_name = creator
 
     logger = front_end.Logger(verbosity)
-    logger.TRACE_INFO('''
+    logger.INFO('''
         ######### Create the account object ``{}`` ...
         '''.format(account_object_name))
 
@@ -652,9 +667,9 @@ def create_account(
     '''
     account_object = None
     if restore:
-        logger.TRACE_INFO('''
+        logger.INFO('''
                         ... for the blockchain account ``{}``.
-                        '''.format(account_name)) 
+                        '''.format(account_name))                       
         account_object = RestoreAccount(account_name, verbosity)
     else:
         if not account_name:
@@ -667,7 +682,7 @@ def create_account(
             active_key = cleos.CreateKey("active", is_verbose=-1)
 
         if stake_net:
-            logger.TRACE_INFO('''
+            logger.INFO('''
                         ... for the new, properly paid, 
                         blockchain account ``{}``.
                         '''.format(account_object_name, account_name))
@@ -685,7 +700,7 @@ def create_account(
                     verbosity
                     )
         else:
-            logger.TRACE_INFO('''
+            logger.INFO('''
                             ... for a local testnet account.
                         ''')
             account_object = CreateAccount(

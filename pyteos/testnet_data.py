@@ -12,7 +12,7 @@ class Testnet:
 class LocalTestnet(Testnet):
     def __init__(self):
         eosf.run(verbosity=[front_end.Verbosity.ERROR])
-        eosio = eosf_account.Eosio()
+        eosio = eosf_account.Eosio("account_master")
         Testnet.__init__(
             self, 
             None, 
