@@ -1,10 +1,10 @@
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/print.hpp>
 
+#define DEBUG
+
 #include "logger.hpp"
 #include "hello_world.hpp"
-
-#define DEBUG
 
 using namespace eosio;
 
