@@ -97,7 +97,7 @@
             "command": "sensible-browser"
         },
         "args": [
-            "https://eosio.github.io/eos/group__contractdev.html"
+            "https://developers.eos.io/eosio-cpp/reference"
         ],
         "presentation": {
             "reveal": "always",
