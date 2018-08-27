@@ -1,27 +1,15 @@
-
+from  eosfactory import *
+import argparse
 
 def add_account(
     testnode_url, account_object_name,
     account_name, owner_key, active_key):
 
-    import setup
-    import front_end
-    import eosf
-    import eosf_account
-    import testnet_data
+    set_nodeos_address(testnode_url)
 
-    from logger import Verbosity
-    from eosf_wallet import Wallet
-    from eosf_account import create_master_account
-
-    _ = logger.Logger([Verbosity.TRACE, Verbosity.OUT])
-    logger.set_is_testing_errors(False)
-    logger.set_throw_error(True)
-    setup.set_nodeos_address(testnode_url)
-
-    if not eosf.node_is_operative():
+    if not node_is_operative():
         print(
-            "This test needs the testnode {} running, but it does not answer." \
+            "This test needs the testnode {} running, but it does not respond." \
                 .format(testnode_url))
         return
 
@@ -32,7 +20,6 @@ def add_account(
         owner_key,
         active_key)
 
-import argparse
 
 parser = argparse.ArgumentParser(description='''
 Given an testnet url, the account object name, account name, private owner and 
@@ -41,7 +28,8 @@ associated with the url.
 
 Example:
     python3 add_account.py https://api.kylin-testnet.eospace.io \
-    account_master dgxo1uyhoytn \
+    account_master \
+    dgxo1uyhoytn \
     5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
     5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
 ''')

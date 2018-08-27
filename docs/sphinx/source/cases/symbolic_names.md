@@ -10,10 +10,6 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 ```md
 '''
 from  eosfactory import *
-
-CONTRACT_DIR = "02_eosio_token"
-
-Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
 '''
 ```
 
@@ -60,38 +56,35 @@ The current case demonstrates this facility.
 
 ```md
 '''
-eosf_account.restart()
 set_is_translating(False)
 
-reset([Verbosity.INFO]) 
+reset()
 create_wallet()
-create_master_account("account_master")
-set_throw_error(False)
-set_is_testing_errors()
+create_master_account("master")
+create_account("host", master)
 
-create_account("alice", account_master)
-create_account("bob", account_master)
-create_account("carol", account_master)
-create_account("eosio_token", account_master)
-contract = Contract(eosio_token, CONTRACT_DIR)
-deploy = contract.deploy()
+contract = Contract(host, "02_eosio_token")
+if not contract.is_built():
+    contract.build()
+contract.deploy()
 
-eosio_token.push_action(
+host.push_action(
     "create", 
     {
-        "issuer": account_master,
+        "issuer": master,
         "maximum_supply": "1000000000.0000 EOS",
         "can_freeze": "0",
         "can_recall": "0",
         "can_whitelist": "0"
-    }, [account_master, eosio_token])
+    }, [master, host])
 
-eosio_token.push_action(
-        "issue",
-        {
-            "to": alice, "quantity": "100.0000 EOS", "memo": ""
-        },
-        account_master)
+create_account("alice", master)
+host.push_action(
+    "issue",
+    {
+        "to": alice, "quantity": "100.0000 EOS", "memo": ""
+    },
+    master)
 '''
 ```
 
@@ -103,38 +96,38 @@ eosio_token.push_action(
 
 ```md
 '''
-eosf_account.restart()
-set_is_translating()
+restart()
+set_is_translating(True)
 
-reset([Verbosity.INFO]) 
+reset()
 create_wallet()
-create_master_account("account_master")
-set_throw_error(False)
-set_is_testing_errors()
+create_master_account("master")
+create_account("host", master)
 
-create_account("alice", account_master)
-create_account("bob", account_master)
-create_account("carol", account_master)
-create_account("eosio_token", account_master)
-contract = Contract(eosio_token, CONTRACT_DIR)
-deploy = contract.deploy()
+contract = Contract(host, "02_eosio_token")
+if not contract.is_built():
+    contract.build()
+contract.deploy()
 
-eosio_token.push_action(
+host.push_action(
     "create", 
     {
-        "issuer": account_master,
+        "issuer": master,
         "maximum_supply": "1000000000.0000 EOS",
         "can_freeze": "0",
         "can_recall": "0",
         "can_whitelist": "0"
-    }, [account_master, eosio_token])
+    }, [master, host])
 
-eosio_token.push_action(
+create_account("alice", master)
+host.push_action(
     "issue",
     {
         "to": alice, "quantity": "100.0000 EOS", "memo": ""
     },
-    account_master)
+    master)
+
+stop()
 '''
 ```
 
@@ -142,4 +135,3 @@ eosio_token.push_action(
     onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
     width="720px"/>
 '''
-

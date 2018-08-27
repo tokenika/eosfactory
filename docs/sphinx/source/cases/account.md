@@ -10,8 +10,6 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 ```md
 '''
 from  eosfactory import *
-CONTRACT_DIR = "01_hello_world"
-reset([Verbosity.INFO])
 '''
 ```
 
@@ -19,8 +17,10 @@ reset([Verbosity.INFO])
 
 ```md
 '''
+reset()
 create_wallet()   
-create_master_account("account_master")
+create_master_account("master")
+
 '''
 ```
 
@@ -39,7 +39,7 @@ subsequently.
 
 ```md
 '''
-create_account("account_hello", account_master)
+create_account("host", master)
 '''
 ```
 
@@ -77,9 +77,10 @@ Create a smart contract object instance, appending it to the account
 
 ```md
 '''
-contract_hello = Contract(account_hello, CONTRACT_DIR)
-contract_hello.build()
-contract_hello.deploy()
+contract = Contract(host, "01_hello_world")
+if not contract.is_built():
+    contract.build()
+contract.deploy()
 '''
 ```
 
@@ -97,8 +98,8 @@ Create two contracts 'account_alice' and 'account_carol'...
 
 ```md
 '''
-create_account("account_alice", account_master)
-create_account("account_carol", account_master)
+create_account("alice", master)
+create_account("carol", master)
 '''
 ```
 
@@ -106,11 +107,11 @@ create_account("account_carol", account_master)
 
 ```md
 '''
-account_hello.push_action(
-    "hi", '{"user":"' + str(account_alice) + '"}', account_alice)
+host.push_action(
+    "hi", '{"user":"' + str(alice) + '"}', alice)
 
-account_hello.push_action(
-    "hi", '{"user":"' + str(account_carol) + '"}', account_carol)
+host.push_action(
+    "hi", '{"user":"' + str(carol) + '"}', carol)
 '''
 ```
 

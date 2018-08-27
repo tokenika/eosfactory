@@ -11,7 +11,6 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 '''
 from  eosfactory import *
 from eosf_wallet import Wallet
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 '''
 ```
 
@@ -24,7 +23,7 @@ It has to be exactly one 'Wallet' object in the namespace. After the 'Wallet'
 singleton is created, it remains transparent to the script: usually, there 
 is no need to refer to it.
 
-Although the Factory manages only one 'Wallet` object at a time, it produces umerous wallet files in the wallet directory, that is where the KEOSD Wallet Manager keeps wallets. The wallet files are marked with prefixes -- either arbitrary, set by a particular test script -- or encoding the URL of the testnet active at the creation time.
+Although the Factory manages only one 'Wallet` object at a time, it produces numerous wallet files in the wallet directory, that is where the KEOSD Wallet Manager keeps wallets. The wallet files are marked with prefixes -- either arbitrary, set by a particular test script -- or encoding the URL of the testnet active at the creation time.
 
 *   Arbitrary prefixes mark wallets used for one-time tests; they are erased before repeating their tests.
 
@@ -35,14 +34,13 @@ Although the Factory manages only one 'Wallet` object at a time, it produces ume
 For example, let us try with the local testnet:
 ```md
 '''
-restart()
-reset([Verbosity.INFO])
+reset()
 create_wallet()
 Wallet.wallet.keys()
-create_master_account("account_master")
-create_account("alice", account_master)
-create_account("bob", account_master)
-create_account("carol", account_master)
+
+create_master_account("master")
+create_account("alice", master)
+create_account("carol", master)
 Wallet.wallet.keys()
 Wallet.wallet.lock_all()
 
@@ -67,11 +65,12 @@ expect that it opens without calling for password, having the same keys.
 ```md
 '''
 restart()
-run([Verbosity.INFO])
+run()
+
 create_wallet()
-Wallet.wallet.keys()   
+Wallet.wallet.keys()
+
 stop()
-exit()
 '''
 ```
 
@@ -91,4 +90,3 @@ internally. Some of them are obvious:
 * etc.
 
 '''
-

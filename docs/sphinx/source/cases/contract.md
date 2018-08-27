@@ -11,10 +11,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 ```md
 '''
 from  eosfactory import *
-
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
-CONTRACT_DIR = "02_eosio_token"
-reset([Verbosity.INFO])
 '''
 ```
 
@@ -22,9 +19,9 @@ reset([Verbosity.INFO])
 
 ```md
 '''
+reset()
 create_wallet()   
-create_master_account("account_master")
-set_throw_error(False)
+create_master_account("master")
 '''
 ```
 
@@ -44,10 +41,10 @@ Make three other account objects, and execute actions of the contract on them.
 
 ```md
 '''
-create_account("eosio_token", account_master)
-create_account("alice", account_master)
-create_account("bob", account_master)
-create_account("carol", account_master)
+create_account("host", master)
+create_account("alice", master)
+create_account("bob", master)
+create_account("carol", master)
 '''
 ```
 
@@ -58,7 +55,7 @@ Create an instance of the 'Contract' class, appending it to the account
 
 ```md
 '''
-contract = Contract(eosio_token, CONTRACT_DIR)
+contract = Contract(host, "02_eosio_token")
 '''
 ```
 
@@ -87,7 +84,8 @@ Any 'Contract' object can:
 
 ```md
 '''
-contract.build()
+if not contract.is_built():
+    contract.build()
 contract.deploy()
 '''
 ```
@@ -101,19 +99,19 @@ Execute actions of the contract:
 contract.push_action(
     "create", 
     {
-        "issuer": account_master,
+        "issuer": master,
         "maximum_supply": "1000000000.0000 EOS",
         "can_freeze": "0",
         "can_recall": "0",
         "can_whitelist": "0"
-    }, [account_master, eosio_token])
+    }, [master, host])
     
 contract.push_action(
     "issue",
     {
         "to": alice, "quantity": "100.0000 EOS", "memo": ""
     },
-    account_master)
+    master)
 
 contract.push_action(
     "transfer",
@@ -145,16 +143,16 @@ contract.push_action(
         "from": bob, "to": alice, \
         "quantity": "2.0000 EOS", "memo":""
     },
-    bob)            
+    bob)
 '''
 ```
 Inspect the database of the blockchain:
 
 ```md
 '''
-table_alice = eosio_token.table("accounts", alice)
-table_bob = eosio_token.table("accounts", bob)
-table_carol = eosio_token.table("accounts", carol)
+table_alice = host.table("accounts", alice)
+table_bob = host.table("accounts", bob)
+table_carol = host.table("accounts", carol)
 '''
 ```
 

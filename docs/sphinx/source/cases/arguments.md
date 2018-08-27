@@ -28,13 +28,9 @@ Local test node reset, wallet started, master account object created:
 '''
 from  eosfactory import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-
-CONTRACT_DIR = "02_eosio_token"
-
-reset([Verbosity.INFO]) 
+reset() 
 create_wallet()
-create_master_account("account_master")
+create_master_account("master")
 '''
 ```
 ## Case
@@ -46,7 +42,7 @@ the following test, the 'account_master' object enters, at first, as itself ...
 
 ```md
 '''
-create_account("alice", account_master)
+create_account("alice", master)
 '''
 ```
 
@@ -54,7 +50,7 @@ create_account("alice", account_master)
 
 ```md
 '''
-create_account("bob", str(account_master))
+create_account("bob", str(master))
 '''
 ```
 
@@ -65,10 +61,8 @@ account argument be of the 'CreateKey' type:
 ```md
 '''
 set_throw_error(False)
-
-create_account("jimmy", CreateKey("xxx", is_verbose=0))
-
-set_throw_error()
+create_account("charlie", CreateKey("xxx", is_verbose=0))
+set_throw_error(True)
 '''
 ```
 <img src="arguments/accounts.png" 
@@ -89,10 +83,10 @@ account object and
 ```md
 '''
 create_account(
-    "carol", account_master, 
+    "carol", master, 
     permission=[
-        (account_master, Permission.OWNER), 
-        (account_master, Permission.ACTIVE)])
+        (master, Permission.OWNER), 
+        (master, Permission.ACTIVE)])
 '''
 ```
 
@@ -108,12 +102,10 @@ an error exception is thrown. For example, let the account argument be of the
 ```md
 '''
 set_throw_error(False)
-
 create_account(
-    "account_carol_b", account_master, 
+    "eve", master, 
     permission=CreateKey("xxx", is_verbose=0))
-
-set_throw_error()
+set_throw_error(True)
 '''
 ```
 <img src="arguments/permissions.png" 
@@ -128,65 +120,73 @@ the action 'transfer'.
 
 ```md
 '''
-create_account("eosio_token", account_master)
-contract_eosio_token = Contract(eosio_token, CONTRACT_DIR)
-deploy = contract_eosio_token.deploy()
+create_account("host", master)
+contract = Contract(host, "02_eosio_token")
+contract.deploy()
 
-eosio_token.push_action(
-    "create", 
+
+host.push_action(
+    "create",
     {
-        "issuer": account_master,
+        "issuer": master,
         "maximum_supply": "1000000000.0000 EOS",
         "can_freeze": "0", 
         "can_recall": "0", 
         "can_whitelist": "0"
     }, 
-    [account_master, eosio_token]) 
+    [master, host]) 
 
-eosio_token.push_action(
+host.push_action(
     "issue",
     {
         "to": alice, "quantity": "100.0000 EOS", "memo": ""
     }, 
-    permission=account_master) 
+    permission=master)
 '''
 ```
 
-The data argument can be of the puthon 'dict` type, as in the first example.
-The second example presents a 'heredoc` form. The third version is the 'CLEOS' 
-origin.
-
-Note that the last version only maches the data arguments used in of the 
-'cleos' and 'cleos_system' modules.
+The data argument can be of the Python `dict` type, for example:
 
 ```md
 '''
-eosio_token.push_action(
+host.push_action(
     "transfer",
     {
         "from": alice, "to": carol,
         "quantity": "5.0000 EOS", "memo":""
     },
     permission=alice)
-
-eosio_token.push_action(
+'''
+```
+The second example presents a `heredoc` form:
+```md
+'''
+host.push_action(
     "transfer",
     '''{
         "from": alice, "to": carol,
         "quantity": "5.1000 EOS", "memo":""
     }''',
     permission=alice)
-
-eosio_token.push_action(
+'''
+```
+The third example is the `cleos` origininal format:
+```md
+'''
+host.push_action(
     "transfer",
     '{' 
         + '"from":' + str(alice) 
         + ', "to": ' + str(carol)
         + ', "quantity": "5.2000 EOS", "memo":""'
         + '}',
-    permission=alice)    
+    permission=alice)  
 '''
 ```
+
+Note that the last version only maches the data arguments used in of the 
+'cleos' and 'cleos_system' modules.
+
 <img src="arguments/data.png" 
     onerror="this.src='../../../source/cases/arguments/data.png'"   
     width="720px"/>

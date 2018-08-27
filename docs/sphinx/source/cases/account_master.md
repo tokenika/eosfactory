@@ -10,15 +10,7 @@ The set-up statements are explained at <a href="html">cases/setup</a>.
 ```md
 '''
 from  eosfactory import *
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-_ = Logger()
-'''
-```
-
-```md
-'''
 import testnet_data
-testnet = testnet_data.kylin
 '''
 ```
 
@@ -41,11 +33,11 @@ show them.
 
 ```md
 '''
-reset([Verbosity.INFO])
+reset()
 create_wallet()
-create_master_account("account_master_images")
-account_master_images.info()
-stop([Verbosity.INFO])
+create_master_account("master_local")
+master_local.info()
+stop()
 '''
 ```
 
@@ -74,8 +66,9 @@ they can add it to the Factory. In this show, we use an real account represented
 
 ```md
 '''
-eosf_account.restart()    # reset the Factory
-set_nodeos_address(testnet.url, "account_master_test")
+restart()
+testnet = testnet_data.kylin
+set_nodeos_address(testnet.url, prefix="temp")
 '''
 ```
 Delete files possibly created previously:
@@ -89,19 +82,19 @@ First, the 'Wallet` singleton has to be created:
 '''
 create_wallet()
 create_master_account(
-    "account_master",
+    "master_remote",
     testnet.account_name,
     testnet.owner_key,
     testnet.active_key
     )
-account_master_images.info()
+master_remote.info()
 '''
 ```
 Adding one orphan account programmatically is not practical, therefore we have a script that can help. For example:
 
 ```md
 python3 add_account.py https://api.kylin-testnet.eospace.io \
-account_master \
+master_remote \
 dgxo1uyhoytn \
 5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
 5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX

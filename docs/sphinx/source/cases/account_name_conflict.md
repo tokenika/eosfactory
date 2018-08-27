@@ -11,11 +11,6 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 ```md
 '''
 from  eosfactory import *
-
-set_throw_error(False)
-reset([Verbosity.INFO]) 
-create_wallet()
-create_master_account("account_master")
 '''
 ```
 ## Case
@@ -44,9 +39,14 @@ Change 'account_alice' to 'account_alice_b'.
 
 ```md
 '''
-create_account("account_alice", account_master)
-create_account("account_carrol", account_master)
-create_account("account_alice", account_master)
+reset() 
+create_wallet()
+create_master_account("master")
+
+create_account("alice", master)
+create_account("carrol", master)
+
+create_account("alice", master)
 '''
 ```
 
