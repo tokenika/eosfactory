@@ -367,7 +367,7 @@ class Wallet(cleos.WalletCreate):
                 However, you can free the name by changing the mapping. 
                 Do you want to edit the file?
                 '''.format(
-                    account_object_name, name, self.wallet_dir))
+                    account_object_name, name, self.wallet_dir), is_fatal=False)
                         is_taken = True
                         break
 

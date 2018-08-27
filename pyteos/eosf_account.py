@@ -144,6 +144,7 @@ class Eosio(cleos.Account):
     def __str__(self):
         return self.name
 
+
 class GetAccount(cleos.GetAccount):
     '''Look for the account of the given name, put it into the wallet.
 
@@ -230,10 +231,12 @@ class GetAccount(cleos.GetAccount):
     def __str__(self):
         return self.name
 
+
 class RestoreAccount(front_end.Logger, cleos.Account, cleos.RestoreAccount):
     def __init__(self, name, verbosity=None):
         cleos.RestoreAccount.__init__(self, name, is_verbose=-1)
         front_end.Logger.__init__(self, verbosity)
+
 
 class CreateAccount(cleos.CreateAccount):
     def __init__(
@@ -255,6 +258,7 @@ class CreateAccount(cleos.CreateAccount):
             ref_block, is_verbose=-1
             )
 
+
 class SystemNewaccount(cleos_system.SystemNewaccount):
     def __init__(
             self, creator, name, owner_key, active_key,
@@ -267,12 +271,14 @@ class SystemNewaccount(cleos_system.SystemNewaccount):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             verbosity=None):
-        cleos_system.__init__(
+            
+        cleos_system.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
             transfer, expiration_sec, skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage, ref_block, is_verbose=-1)
         
+
 def create_master_account(
             account_object_name, account_name=None, 
             owner_key=None, active_key=None,
@@ -521,7 +527,7 @@ def append_account_methods_and_finish(
             permission=None, expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block=None, json=False):
+            ref_block=None, json=False, payer=None):
         data = _data_json(data)
 
         wallet_singleton.open_unlock()
@@ -533,6 +539,37 @@ def append_account_methods_and_finish(
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=-1, json=True)
+
+        if account_object.ERROR(result, is_silent=True, is_fatal=False):
+            if isinstance(result.error_object, front_end.LowRam):
+                account_object.TRACE('''
+                * RAM needed is {}.kByte, buying RAM {}.kByte.
+                '''.format(
+                    result.error_object.needs_kbyte,
+                    result.error_object.deficiency_kbyte))
+                import pdb; pdb.set_trace()
+                buy_ram_kbytes = str(
+                    result.error_object.deficiency_kbyte + 1)
+                if not payer:
+                    payer = account_object
+
+                receiver = None
+                if not permission is None:
+                    receiver = result._permission_arg(permission)[0]
+                    if not receiver.find("@") == -1:
+                        receiver = receiver[:receiver.find("@")]
+                    receiver = account_object
+
+                payer.buy_ram(buy_ram_kbytes, receiver)
+            
+                result = cleos.PushAction(
+                    account_object, action, data,
+                    permission, expiration_sec, 
+                    skip_signature, dont_broadcast, forceUnique,
+                    max_cpu_usage, max_net_usage,
+                    ref_block,
+                    is_verbose=-1, json=True)    
+
 
         account_object.INFO('''
             * Push action ``{}``:
@@ -568,7 +605,6 @@ def append_account_methods_and_finish(
     def show_action(self, action, data, permission=None):
         ''' Implements the `push action` command without broadcasting. 
         '''
-        import pdb; pdb.set_trace()
         return self.push_action(action, data, permission, dont_broadcast=1)
 
     account_object.show_action = types.MethodType(
@@ -609,7 +645,13 @@ def append_account_methods_and_finish(
 
     account_object.__str__ = types.MethodType(__str__, account_object)
 
-    def buy_ram(account_object, amount_kbytes, receiver=None):
+    def buy_ram(
+            account_object, amount_kbytes, receiver=None,
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None):
+            
         if receiver is None:
             receiver = account_object
         buy_ram_kbytes = 1
@@ -626,17 +668,25 @@ def append_account_methods_and_finish(
             is_verbose=0
             )
 
-        logger.ERROR(result)
+        account_object.ERROR(result)
 
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
+    def info(account_object):
+        print("account object name: {}\n{}".format(
+            account_object_name,
+            str(cleos.GetAccount(account_object.name, is_verbose=0))))
+
+    account_object.info = types.MethodType(info, account_object)
+
     get_account = cleos.GetAccount(account_object, is_verbose=0)
-    if not logger.ERROR(get_account):
-        logger.TRACE('''
+    if not account_object.ERROR(get_account):
+        account_object.TRACE('''
         * Cross-checked: account {}({}) is in the blockchain.
         '''.format(account_object_name, account_object.name))
     return put_account_to_wallet_and_on_stack(
         account_object_name, account_object)
+
 
 def create_account(
         account_object_name,
@@ -645,7 +695,7 @@ def create_account(
         account_name="",
         owner_key="", active_key="",
         permission=None,
-        buy_ram_kbytes=0, buy_ram="",
+        buy_ram_kbytes=1, buy_ram="",
         transfer=False,
         expiration_sec=30,
         skip_signature=0, dont_broadcast=0, forceUnique=0,
@@ -699,10 +749,8 @@ def create_account(
 
         if stake_net:
             logger.INFO('''
-                        ... for the new, properly paid, 
-                        blockchain account ``{}``.
-                        '''.format(account_object_name, account_name))
-
+                        ... paying stake for a new blockchain account ``{}``.
+                        '''.format(account_name))
             account_object = SystemNewaccount(
                     creator, account_name, owner_key, active_key,
                     stake_net, stake_cpu,
@@ -715,10 +763,33 @@ def create_account(
                     ref_block,
                     verbosity
                     )
+
+            if account_object.ERROR(is_silent=True, is_fatal=False):
+                if isinstance(account_object.error_object, front_end.LowRam):
+                    account_object.TRACE('''
+                    * RAM needed is {}.kByte, buying RAM {}.kByte.
+                    '''.format(
+                        account_object.error_object.needs_kbyte,
+                        account_object.error_object.deficiency_kbyte))
+
+                    buy_ram_kbytes = str(
+                        account_object.error_object.deficiency_kbyte + 1)
+                    account_object = SystemNewaccount(
+                            creator, account_name, owner_key, active_key,
+                            stake_net, stake_cpu,
+                            permission,
+                            buy_ram_kbytes, buy_ram,
+                            transfer,
+                            expiration_sec, 
+                            skip_signature, dont_broadcast, forceUnique,
+                            max_cpu_usage, max_net_usage,
+                            ref_block,
+                            verbosity
+                            )
         else:
             logger.INFO('''
-                            ... for a local testnet account.
-                        ''')
+                        ... for a new blockchain account ``{}``.
+                        '''.format(account_name))
             account_object = CreateAccount(
                     creator, account_name, 
                     owner_key, active_key,
@@ -737,8 +808,8 @@ def create_account(
         account_object.TRACE('''
             * The account object is created.
             ''')
-
         append_account_methods_and_finish(
             account_object_name, account_object, logger)
+
 
 

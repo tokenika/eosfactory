@@ -19,6 +19,7 @@ is_local_address = False
 _nodeos_address = None
 _file_prefix = None
 
+
 def set_nodeos_address(address, prefix=None):
     global _nodeos_address
     if address:
@@ -31,24 +32,27 @@ nodeos address is not set.
         ''')
         return
 
-    if prefix is None:
-        prefix = re.sub("\.|\:|-|https|http|\/", "_", _nodeos_address)
-        prefix = re.sub("_+", "_", prefix) + "_"
-    else:
-        prefix = prefix + "_"
-    global account_map
-    account_map = prefix + "accounts.json"
-    global password_map
-    password_map = prefix + "passwords.json"
-    global wallet_default_name
-    wallet_default_name = prefix + "default"
+    p = re.sub("\.|\:|-|https|http|\/", "_", _nodeos_address)
+    p = re.sub("_+", "_", p) + "_"
+
+    if not prefix is None:
+        p = prefix + "_" + p
 
     global _file_prefix
-    _file_prefix = prefix
+    _file_prefix = p
+
+    global account_map
+    account_map = _file_prefix + "accounts.json"
+    global password_map
+    password_map = _file_prefix + "passwords.json"
+    global wallet_default_name
+    wallet_default_name = _file_prefix + "default"
+
 
 def file_prefix():
     global _file_prefix
     return _file_prefix
+
 
 def restart():
     global is_local_address
@@ -58,9 +62,11 @@ def restart():
     global _file_prefix
     _file_prefix = None
 
+
 def nodeos_address():
     global _nodeos_address
     return _nodeos_address
+
 
 class Setup:
     ''' Interface to the json configuration file.
@@ -146,6 +152,7 @@ as {{"{2}":"absolute-path-to-teos-executable"}}
                     self.__TEOS_EXE,
                     )
                 )
+
 
 def heredoc(msg):
     msg = dedent(msg).strip()

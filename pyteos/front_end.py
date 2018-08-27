@@ -10,47 +10,54 @@ def translate(msg):
     msg = ansi_escape.sub('', msg)
     return eosf.accout_names_2_object_names(setup.heredoc(msg))
 
-class AccountNotExist:
+
+class Error:
+    def __init__(self, msg, is_fatal=True):
+        self.msg = translate(msg)
+        self.is_fatal = is_fatal
+
+
+class AccountNotExist(Error):
     msg_template = '''
 Account ``{}`` does not exist in the blockchain. It may be created.
 '''
     def __init__(self, msg):
-        self.msg = translate(msg)
+        Error.__init__(self, msg, True)
+
 
 class WalletExists:
     msg_template = '''
 Account ``{}`` does not exist in the blockchain. It may be created.
 '''
     def __init__(self, msg):
-        self.msg = translate(msg)
+        Error.__init__(self, msg, True)
+
 
 class WalletNotExist:
     msg_template = '''
 Wallet ``{}`` does not exist.
 '''
     def __init__(self, msg):
-        self.msg = translate(msg)
+        Error.__init__(self, msg, True)
+
 
 class InvalidPassword:
     msg_template = '''
 Invalid password for wallet {}.
 '''
     def __init__(self, msg):
-        self.msg = translate(msg)
+        Error.__init__(self, msg, True)
+
 
 class LowRam:
     msg_template = '''
 Ram needed is {}kB, deficiency is {}kB.
 '''
-    def __init__(self, needs, deficiency):
-        self.needs = needs
-        self.deficiency = deficiency
-        self.msg = translate(msg_template.format(needs, deficiency))    
-
-class Error:
-    def __init__(self, msg):
-        self.msg = translate(msg)
-
+    def __init__(self, needs_byte, deficiency_byte):
+        self.needs_kbyte =  needs_byte// 1024 + 1
+        self.deficiency_kbyte = deficiency_byte // 1024 + 1
+        Error.__init__(self, self.msg_template.format(
+            self.needs_kbyte, self.deficiency_kbyte), True)   
 
 class Verbosity(enum.Enum):
     COMMENT = ['green', None, []]
@@ -82,6 +89,7 @@ def set_is_testing_errors(status=True):
 
 class Logger():
     verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+    RECENT_ERROR = None
 
     def __init__(self, verbosity=None):
         if verbosity is None:
@@ -144,7 +152,7 @@ class Logger():
         if "Error 3080001: Account using more than allotted RAM" in err_msg:
             needs = int(re.search('needs\s(.*)\sbytes\shas', err_msg).group(1))
             has = int(re.search('bytes\shas\s(.*)\sbytes', err_msg).group(1))
-            return LowRam(needs//1024, (needs - has) // 1024)
+            return LowRam(needs, (needs - has))
 
         if "transaction executed locally, but may not be" in err_msg:
             return None
@@ -172,12 +180,9 @@ class Logger():
             return None
         return Error(err_msg)
 
-    def switch(self, cleos_object_or_str):
-        try:
-            cleos_object_or_str.error_object = \
-                self.error_map(cleos_object_or_str.err_msg)
-        except:
-            pass
+    def switch(self, cleos_object_or_str):       
+        cleos_object_or_str.error_object = \
+            self.error_map(cleos_object_or_str.err_msg)
 
         return cleos_object_or_str   
                      
@@ -188,7 +193,7 @@ class Logger():
         except:
             return None
 
-    def ERROR(self, cleos_or_str=None):
+    def ERROR(self, cleos_or_str=None, is_silent=False, is_fatal=True):
         '''Print an error message or throw 'Exception'.
 
 If the ``verbosity`` parameter is empty list, do nothing.
@@ -201,8 +206,7 @@ message is printed.
 arguments:
 cleos_or_str -- error message string or object having the attribute err_msg
         '''
-        if not self._verbosity:
-            return
+        Logger.RECENT_ERROR = None
 
         if cleos_or_str is None:
             cleos_or_str = self
@@ -215,14 +219,15 @@ cleos_or_str -- error message string or object having the attribute err_msg
             cleos_object = self.switch(cleos_or_str)
             if cleos_object.error_object is None:
                 return False
-
-            msg = cleos_object.err_msg
+                
+            Logger.RECENT_ERROR = cleos_object.error_object           
+            msg = cleos_object.error_object.msg
         else:
             msg = cleos_or_str
 
-        if not msg:
-            return False
-
+        if not msg or not self._verbosity or is_silent:
+            return True
+        
         if _is_testing_error:
             color = Verbosity.ERROR_TESTING.value
         else:
@@ -237,7 +242,7 @@ cleos_or_str -- error message string or object having the attribute err_msg
         self.error_buffer = msg
         global _is_throw_error
 
-        if _is_throw_error:
+        if _is_throw_error and is_fatal:
             raise Exception(msg)
         else:
             print(msg)

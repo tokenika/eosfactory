@@ -143,7 +143,7 @@ class _Cleos(front_end.Logger):
             print(self.err_msg)
             print("")
 
-        error_key_words = ["Error", "error", "Failed"]
+        error_key_words = ["ERROR", "Error", "error", "Failed"]
         for word in error_key_words:
             if word in self.err_msg:
                 self.error = True
@@ -233,9 +233,9 @@ class _Cleos(front_end.Logger):
 
     def _permission_arg(self, permission):
         if isinstance(permission, str):
-            return permission
+            return [permission]
         if isinstance(permission, Account):
-            return permission.name
+            return [permission.name]
         if isinstance(permission, tuple):
             retval = None
             if isinstance(permission[0], str):
@@ -259,7 +259,7 @@ class _Cleos(front_end.Logger):
                     retval = retval + permission_value
                 else:
                     retval = retval + "@" + permission_value
-                return retval
+                return [retval]
             else:
                 self.set_error(setup.heredoc('''
         The class of the second item of a 'permission' tuple may be 
@@ -979,13 +979,14 @@ class CreateAccount(Account, _Cleos):
             ref_block=None,
             is_verbose=1
             ):
-        self.owner_key = None # private keys
-        self.active_key = None
 
         if name is None: 
             name = account_name()
         Account.__init__(self, name)
 
+        self.owner_key = None # private keys
+        self.active_key = None
+        
         if active_key is None:
             active_key = owner_key        
 
@@ -1002,11 +1003,8 @@ class CreateAccount(Account, _Cleos):
             args.append("--json")
         if not permission is None:
             p = self._permission_arg(permission)
-            if isinstance(permission,list):
-                for perm in p:
-                    args.extend(["--permission", perm])
-            else:
-                args.extend(["--permission", p])
+            for perm in p:
+                args.extend(["--permission", perm])
 
         args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:
@@ -1143,11 +1141,8 @@ class SetContract(_Cleos):
             args.append("--json")
         if not permission is None:
             p = self._permission_arg(permission)
-            if isinstance(permission,list):
-                for perm in p:
-                    args.extend(["--permission", perm])
-            else:
-                args.extend(["--permission", p])
+            for perm in p:
+                args.extend(["--permission", perm])
 
         args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:
@@ -1232,11 +1227,8 @@ class PushAction(_Cleos):
             args.append("--json")
         if not permission is None:
             p = self._permission_arg(permission)
-            if isinstance(permission,list):
-                for perm in p:
-                    args.extend(["--permission", perm])
-            else:
-                args.extend(["--permission", p])
+            for perm in p:
+                args.extend(["--permission", perm])
 
         args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:

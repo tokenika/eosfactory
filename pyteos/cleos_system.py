@@ -75,7 +75,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
             is_verbose = 1
             ):
 
-        creator_name = cleos._account(creator)
+        creator_name = self._account_arg(creator)
         if name is None: 
             name = account_name()
         cleos.Account.__init__(self, name)
@@ -83,29 +83,24 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         self.owner_key = None # private keys
         self.active_key = None
         
-        try:
-            owner_key_public = owner_key.key_public
-            self.owner_key = owner_key.key_private
-        except:
-            owner_key_public = owner_key
+        if active_key is None:
+            active_key = owner_key        
 
-        if not active_key:
-            active_key = owner_key
-
-        try:
-            active_key_public = active_key.key_public
-            self.active_key = active_key.key_private
-        except:
-            active_key_public = active_key
+        owner_key_public = self._key_arg(
+            owner_key, is_owner_key=True, is_private_key=False)
+        active_key_public = self._key_arg(
+            active_key, is_owner_key=False, is_private_key=False)
 
         args = [creator_name, self.name, owner_key_public, active_key_public]
         if setup.is_json:
             args.append("--json")
-        args.extend(["--stake-net", stake_net, "--stake-cpu", stake_cpu])
+        args.extend([
+            "--stake-net", stake_net, 
+            "--stake-cpu", stake_cpu])
         if buy_ram_kbytes:
             args.extend(["--buy-ram-kbytes", str(buy_ram_kbytes)])
         if buy_ram:
-            args.extend(["buy-ram", buy_ram])
+            args.extend(["--buy-ram", str(buy_ram)])
         if transfer:
             args.extend(["--transfer"])
         if not permission is None:
@@ -180,19 +175,10 @@ class BuyRam(cleos._Cleos):
             ref_block=None,
             is_verbose=1
             ):
-        try:
-            payer_name = payer.name
-        except:
-            payer_name = payer
-        
-        try:
-            receiver_name = receiver.name
-        except:
-            receiver_name = receiver
 
-        args = [payer_name, receiver_name, amount]
+        args = [self._account_arg(payer), self._account_arg(receiver), amount]
         if buy_ram_kbytes:
-            args.extend(["--kbytes", str(buy_ram_kbytes)])
+            args.extend(["--kbytes"])
 
         if skip_signature:
             args.append("--skip-sign")
@@ -207,20 +193,5 @@ class BuyRam(cleos._Cleos):
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
-        self.name = name
-
         cleos._Cleos.__init__(
-            self, args, "system", "byram", is_verbose)
-            
-        if not self.error and setup.is_json:
-            self.json = cleos.GetAccount(
-                self.name, is_verbose=0, json=True).json
-
-            if self.is_verbose:
-                print(self.__str__())
-
-    def info(self):
-        print(str(cleos.GetAccount(self.name, is_verbose=1)))
-            
-    def __str__(self):
-        self.name
+            self, args, "system", "buyram", is_verbose)

@@ -22,14 +22,14 @@ With remote node tests, we assume two restrictions:
 '''
 import unittest
 from  eosfactory import *
+import testnet_data
 
 Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
 _ = Logger()
 CONTRACT_DIR = "03_tic_tac_toe"
-
-import testnet_data
-testnode = testnet_data.LocalTestnet()
-import pdb; pdb.set_trace()
+stake_net = "0.2 EOS" 
+stake_cpu = "0.2 EOS"
+testnode = testnet_data.cryptolion #  LocalTestnet() kylin
 set_nodeos_address(testnode.url, "tic_tac_toe")
 '''
 ```
@@ -50,9 +50,10 @@ Be sure that the chosen testnode is operative:
         '''
         if not node_is_operative():
             _.ERROR('''
-            This test needs the testnode {} running, but it does not answer.
+            The testnode does not answer.
+            Is Internet connected?
+            Is the testnode operative?
             '''.format(testnode.url))
-        set_is_testing_errors()
         '''
 ```
 ### Test files
@@ -69,7 +70,7 @@ These files should be edited rather, than being deleted. However if the testnode
  
 ```md
         '''
-        remove_files()
+        #remove_files()
         '''
 ```
 
@@ -78,17 +79,18 @@ These files should be edited rather, than being deleted. However if the testnode
 It has to be exactly one 'Wallet' object in the namespace. 
 ```md
         '''
-
-        create_wallet()
+        create_wallet(file=True)
         '''
 ```
+The parameter `file=True` causes that the password of the created walled is persisted between sessions.
 
-#### Accounts are reused between test sessions
+### Accounts are reused between test sessions
 
-When the singleton 'Wallet' object is created, it reads the EOSFactory account 
-mapping file (kept in the wallet directory) and attempts to create account 
-objects, in the global namespace, wrapping all the physical accounts listed 
-there. Therefore, an account object is to be created only if it does not exist.
+When the singleton 'Wallet' object is opened or created, it reads the EOSFactory account mapping file (kept in the wallet directory) and attempts to create account objects for all the physical accounts listed there. Therefore, an account object is created only if it does not have its entry in the map. 
+
+### Newly created accounts get RAM according to their needs
+
+If a new account is created, the system precisely determines its need for the RAM, economizing the expenses. 
 
 ```md
         '''
@@ -100,75 +102,61 @@ there. Therefore, an account object is to be created only if it does not exist.
                 testnode.active_key)
 
         if not "croupier" in globals():
-            create_account("croupier", account_master)
+            create_account(
+                "croupier", account_master, stake_net, stake_cpu)
         else:
             _.INFO('''
             ######## {} account object restored from the blockchain.
             '''.format("croupier"))
 
         if not "alice" in globals():
-            create_account("alice", account_master)
+            create_account(
+                "alice", account_master, stake_net, stake_cpu)  
         else:
             _.INFO('''
             ######## {} account object restored from the blockchain.
             '''.format("alice"))
 
         if not "carol" in globals():
-            create_account("carol", account_master)
+            create_account(
+                "carol", account_master, stake_net, stake_cpu)
         else:
             _.INFO('''
             ######## {} account object restored from the blockchain.
             '''.format("carol"))        
         
-        if not croupier.is_code():
-            contract = Contract(
-                croupier, CONTRACT_DIR)
+        # if not croupier.is_code():
+        contract = Contract(croupier, CONTRACT_DIR)
 
-            if not contract.is_built():
-                contract.build()
-            contract.deploy()  
-        else:
-            _.INFO('''
-            * The account {} has code.
-            '''.format("croupier"))            
+        if not contract.is_built():
+            contract.build()
+        contract.deploy(payer=account_master)  
+        # else:
+        #     _.INFO('''
+        #     * The account {} has code.
+        #     '''.format("croupier"))                    
         '''
 ```
-#### The `insufficient ram` error
 
-As the remote node takes quasi-money (but we test the real-money case), you can
-expect a message like this one:
+## Case
 
-```md
-ERROR:
-Reading WAST/WASM from eosfactory/contracts/tic_tac_toe_jungle/build/tic_tac_toe.wast...
-Assembling WASM...
-Publishing contract...
-Error 3080001: Account using more than allotted RAM usage
-Error Details:
-account dgxo1uyhoytn has insufficient ram; needs 138233 bytes has 64789 bytes
-```
+Given the ``Wallet`` class object in the global namespace and account  master 
+object named ``account_master`` in the global namespace, given the account 
+object named ``croupier`` that keeps the ``tic_tac_toe`` contract and two player accounts: ``alice`` and ``carol`` -- run games.
+
+Gambling involves making the croupier to push acctions at the expense of the player that permits the action. The Factory feeds the paying accounts automatically if it is the first one in the permission list.
 ```md
         '''
     def test_tic_tac_toe(self):
-        '''
-```
-## Case
-
-Given a ``Wallet`` class object in the global namespace, an account  master 
-object named ``account_master`` in the global namespace, given an account 
-object named ``croupier`` account that keeps the ``tic_tac_toe`` 
-contract, and two player accounts: ``alice`` and ``carol`` 
--- run games.
-
-```md
-        '''
+        set_is_testing_errors()       
         croupier.push_action(
             "create", 
             {
                 "challenger": alice, 
                 "host": carol
             },
-            carol)
+            carol, payer=account_master)
+        set_is_testing_errors(False)
         if "game already exists" in croupier.action.err_msg:
             croupier.push_action(
                 "close", 
@@ -176,7 +164,7 @@ contract, and two player accounts: ``alice`` and ``carol``
                     "challenger": alice,  
                     "host": carol 
                 }, 
-                carol)
+                carol, payer=account_master)
 
             croupier.push_action(
                 "create", 
@@ -184,7 +172,7 @@ contract, and two player accounts: ``alice`` and ``carol``
                     "challenger": alice, 
                     "host": carol
                 },
-                carol)
+                carol, payer=account_master)
         
         t = croupier.table("games", carol)
 
@@ -206,7 +194,7 @@ contract, and two player accounts: ``alice`` and ``carol``
                 "by": carol,  
                 "row":0, "column":0 
             }, 
-            carol)
+            carol, payer=account_master)
 
         croupier.push_action(
             "move", 
@@ -216,7 +204,7 @@ contract, and two player accounts: ``alice`` and ``carol``
                 "by": alice, 
                 "row":1, "column":1 
             }, 
-            alice)
+            alice, payer=account_master)
 
         t = croupier.table("games", carol)
 
@@ -237,7 +225,7 @@ contract, and two player accounts: ``alice`` and ``carol``
                 "host": carol, 
                 "by": carol
             }, 
-            carol)
+            carol, payer=account_master)
 
         t = croupier.table("games", carol)
         self.assertFalse(t.error)
@@ -258,11 +246,12 @@ contract, and two player accounts: ``alice`` and ``carol``
                 "challenger": alice,  
                 "host": carol 
             }, 
-            carol)
+            carol, payer=account_master)
 
     @classmethod
     def tearDownClass(cls):
-        stop()
+        if is_local_address:
+            stop()
 '''
 ```
 #### Run the unittest
