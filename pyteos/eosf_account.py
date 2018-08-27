@@ -531,7 +531,7 @@ def append_account_methods_and_finish(
         data = _data_json(data)
 
         wallet_singleton.open_unlock()
-        
+
         result = cleos.PushAction(
             account_object, action, data,
             permission, expiration_sec, 
@@ -547,7 +547,7 @@ def append_account_methods_and_finish(
                 '''.format(
                     result.error_object.needs_kbyte,
                     result.error_object.deficiency_kbyte))
-                import pdb; pdb.set_trace()
+
                 buy_ram_kbytes = str(
                     result.error_object.deficiency_kbyte + 1)
                 if not payer:

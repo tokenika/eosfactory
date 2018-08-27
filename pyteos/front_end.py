@@ -49,6 +49,14 @@ Invalid password for wallet {}.
         Error.__init__(self, msg, True)
 
 
+class ContractRunning:
+    def __init__(self):
+        Error.__init__(
+            self, 
+            "Contract is already running this version of code", 
+            True)
+
+
 class LowRam:
     msg_template = '''
 Ram needed is {}kB, deficiency is {}kB.
@@ -59,19 +67,22 @@ Ram needed is {}kB, deficiency is {}kB.
         Error.__init__(self, self.msg_template.format(
             self.needs_kbyte, self.deficiency_kbyte), True)   
 
+
 class Verbosity(enum.Enum):
     COMMENT = ['green', None, []]
-    INFO = ['blue', None, ['bold']]
-    TRACE = ['cyan', None, ['bold']]
-    ERROR = ['red', None, ['reverse','bold']]
+    INFO = ['blue', None, ['bold']] # has to differ from TRACE! (enum!!!)
+    TRACE = ['blue', None, []]
+    ERROR = ['red', None, ['reverse']]
     ERROR_TESTING = ['green', None, ['reverse']]
     OUT = [None, None, []]
     DEBUG = ['yellow', None, []]
+
 
 _is_throw_error = True
 def set_throw_error(status=True):
     global _is_throw_error
     _is_throw_error = status
+
 
 _is_testing_error = False
 def set_is_testing_errors(status=True):
@@ -86,6 +97,7 @@ def set_is_testing_errors(status=True):
     else:
         _is_testing_error = False
         set_throw_error(True)
+
 
 class Logger():
     verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
@@ -168,6 +180,9 @@ class Logger():
         if "Invalid wallet password" in err_msg:
             return InvalidPassword(
                 InvalidPassword.msg_template.format(self.name))
+
+        if "Contract is already running this version of code" in err_msg:
+            return ContractRunning()
         
         #######################################################################
         # NOT ERRORS

@@ -130,7 +130,7 @@ class Contract(ContractBuilder):
         return cleos.contract_is_built(
             self.contract_dir, self.wasm_file, self.abi_file)
 
-    def deploy(self, permission=None, dont_broadcast=None):
+    def deploy(self, permission=None, dont_broadcast=None, payer=None):
         if not self.is_built():
             self.ERROR('''
             Contract needs to be built before deployment.
@@ -146,8 +146,38 @@ class Contract(ContractBuilder):
             self.max_cpu_usage, self.max_net_usage,
             self.ref_block,
             is_verbose=-1,
-            json=True
-        )
+            json=True)
+
+        if self.ERROR(result, is_silent=True, is_fatal=False):
+            if isinstance(result.error_object, front_end.ContractRunning):
+                self.TRACE('''
+                * Contract is already running this version of code.
+                ''')
+                return
+                
+            if isinstance(result.error_object, front_end.LowRam):
+                self.TRACE('''
+                * RAM needed is {}.kByte, buying RAM {}.kByte.
+                '''.format(
+                    result.error_object.needs_kbyte,
+                    result.error_object.deficiency_kbyte))
+
+                buy_ram_kbytes = str(
+                    result.error_object.deficiency_kbyte + 1)
+                if not payer:
+                    payer = self.account
+
+                payer.buy_ram(buy_ram_kbytes, self.account)
+            
+                result = cleos.SetContract(
+                    self.account, self.contract_dir, 
+                    self.wasm_file, self.abi_file, 
+                    permission, self.expiration_sec, 
+                    self.skip_signature, dont_broadcast, self.forceUnique,
+                    self.max_cpu_usage, self.max_net_usage,
+                    self.ref_block,
+                    is_verbose=-1,
+                    json=True)
         if not self.ERROR(result):
             if not dont_broadcast:
                 is_code = self.account.is_code()

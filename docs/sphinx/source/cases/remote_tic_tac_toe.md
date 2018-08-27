@@ -125,16 +125,10 @@ If a new account is created, the system precisely determines its need for the RA
             ######## {} account object restored from the blockchain.
             '''.format("carol"))        
         
-        # if not croupier.is_code():
         contract = Contract(croupier, CONTRACT_DIR)
-
         if not contract.is_built():
             contract.build()
-        contract.deploy(payer=account_master)  
-        # else:
-        #     _.INFO('''
-        #     * The account {} has code.
-        #     '''.format("croupier"))                    
+        contract.deploy(payer=account_master)                   
         '''
 ```
 

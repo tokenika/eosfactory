@@ -231,6 +231,7 @@ class _Cleos(front_end.Logger):
             either {} or {}, while it is {}.
             '''.format(str, Account, type(account))))
 
+
     def _permission_arg(self, permission):
         if isinstance(permission, str):
             return [permission]
@@ -271,9 +272,7 @@ class _Cleos(front_end.Logger):
             retval = []
             while len(permission) > 0:
                 p = self._permission_arg(permission.pop())
-                if p is None:
-                    return None
-                retval.append(p)
+                retval.append(p[0])
             return retval
 
         self.set_error(setup.heredoc('''
