@@ -1,21 +1,9 @@
-
+from  eosfactory import *
+import argparse
 
 def register(testnode_url, account_object_name):
 
-    import setup
-    import front_end
-    import eosf
-    import eosf_account
-    import testnet_data
-
-    from logger import Verbosity
-    from eosf_wallet import Wallet
-    from eosf_account import create_master_account
-
-    _ = logger.Logger([Verbosity.TRACE, Verbosity.OUT])
-    logger.set_is_testing_errors(False)
-    logger.set_throw_error(True)
-    setup.set_nodeos_address(testnode_url)
+    set_nodeos_address(testnode_url)
 
     if not eosf.node_is_operative():
         print(
