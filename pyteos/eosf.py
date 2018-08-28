@@ -27,8 +27,10 @@ import teos
 import cleos
 import cleos_system
 
+
 def restart():
     cleos.restart()
+
 
 def remove_files():
     if not setup.file_prefix():
@@ -47,13 +49,14 @@ def remove_files():
         {}
         '''.format(str(e)))   
 
+
 def wallet_dir():
     return os.path.expandvars(teos.get_keosd_wallet_dir())
 
-'''Return json account map
-'''
-def account_map(logger=None):
 
+def account_map(logger=None):
+    '''Return json account map
+    '''
     wallet_dir_ = wallet_dir()
     while True:
         try: # whether the setup map file exists:
@@ -84,50 +87,40 @@ def account_map(logger=None):
                         ''')                    
                         return None
 
-def accout_names_2_object_names(sentence, keys=False):
-    global _is_translating
-    if not _is_translating:
+
+def accout_names_2_object_names(sentence):
+    global is_translating
+    if not is_translating:
         return sentence
+        
+    exceptions = ["eosio"]
 
     map = account_map()
-    global wallet_globals
     for name in map:
         account_object_name = map[name]
+        if name in exceptions:
+            continue
         sentence = sentence.replace(name, account_object_name)
-        if keys:
-            account_object = wallet_globals[account_object_name]
-            try:
-                key = account_object.owner_key.key_public
-                sentence = sentence.replace(key, account_object_name + "_owner")
-            except:
-                pass
-
-            try:
-                key = account_object.active_key.key_public
-                sentence = \
-                    sentence.replace(owner_key, account_object_name + "_active")
-            except:
-                pass
 
     return sentence
 
-def object_names_2_accout_names(sentence, keys=False):
+
+def object_names_2_accout_names(sentence):
     map = account_map()
-    global wallet_globals
     for name in map:
         account_object_name = map[name]
         sentence = sentence.replace(account_object_name, name)
 
     return sentence
 
+
 def edit_account_map(text_editor="nano"):
     import subprocess
     subprocess.run([text_editor, wallet_dir() + setup.account_map])
 
-_is_translating = True
-def set_is_translating(status=True):
-    global _is_translating
-    _is_translating = status
+
+is_translating = True
+
 
 def account_mapp_to_string(account_map):
     sort = sorted(account_map, key=account_map.get, reverse=False)
@@ -141,6 +134,7 @@ def account_mapp_to_string(account_map):
     retval = retval + "\n}\n"
 
     return retval
+
 
 def clear_account_mapp(exclude=["account_master"]):
     wallet_dir_ = wallet_dir()
@@ -160,11 +154,14 @@ def clear_account_mapp(exclude=["account_master"]):
     with open(wallet_dir_ + setup.account_map, "w") as out:
         out.write(account_mapp_to_string(account_map))
 
+
 def stop_keosd():
     cleos.WalletStop(is_verbose=-1)
 
+
 def kill_keosd():
     os.system("pkill keosd")
+
 
 class Transaction():
     def __init__(self, msg):
@@ -183,9 +180,11 @@ class Transaction():
     def get_transaction(self):
         pass
 
+
 def is_local_address():
     cleos.set_local_nodeos_address_if_none()
     return setup.is_local_address
+
 
 def reset(verbosity=None):
     ''' Start clean the EOSIO local node.
@@ -206,6 +205,7 @@ def reset(verbosity=None):
         ''')
         logger.OUT(str(node))
 
+
 def run(verbosity=None):
     ''' Restart the EOSIO local node.
     ''' 
@@ -224,6 +224,7 @@ def run(verbosity=None):
         ''')
         logger.OUT(str(node))
 
+
 def stop(verbosity=None):
     ''' Stops all running EOSIO nodes and empties the local `nodeos` wallet 
     directory.
@@ -237,6 +238,7 @@ def stop(verbosity=None):
         logger.INFO('''
         ######### Local test node is stopped.
         ''')
+
 
 def status():
     '''
@@ -256,6 +258,7 @@ def status():
             setup.nodeos_address(),
             get_info.json["head_block_num"]))
 
+
 def info():
     '''
     Display EOS node info.
@@ -263,6 +266,7 @@ def info():
     get_info = cleos.GetInfo(is_verbose=-1)
     logger = front_end.Logger(None)
     logger.INFO(str(get_info))
+
 
 def node_is_operative():
     '''
@@ -274,6 +278,7 @@ def node_is_operative():
     except:
         head_block_num = -1
     return head_block_num > 0
+
 
 if __name__ == "__main__":
     template = ""

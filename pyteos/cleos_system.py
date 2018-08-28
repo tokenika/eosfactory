@@ -75,7 +75,6 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
             is_verbose = 1
             ):
 
-        creator_name = self._account_arg(creator)
         if name is None: 
             name = account_name()
         cleos.Account.__init__(self, name)
@@ -84,16 +83,14 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         self.active_key = None
         
         if active_key is None:
-            active_key = owner_key        
+            active_key = owner_key
 
-        owner_key_public = self._key_arg(
-            owner_key, is_owner_key=True, is_private_key=False)
-        active_key_public = self._key_arg(
-            active_key, is_owner_key=False, is_private_key=False)
+        args = [
+            self._account_arg(creator), self.name, 
+            self._key_arg(owner_key, is_owner_key=True, is_private_key=False), self._key_arg(active_key, is_owner_key=False, is_private_key=False)
+            ]
 
-        args = [creator_name, self.name, owner_key_public, active_key_public]
-        if setup.is_json:
-            args.append("--json")
+        args.append("--json")
         args.extend([
             "--stake-net", stake_net, 
             "--stake-cpu", stake_cpu])
@@ -104,7 +101,9 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         if transfer:
             args.extend(["--transfer"])
         if not permission is None:
-            args.extend(["--permission", self._permission_arg(permission)])
+            p = self._permission_arg(permission)
+            for perm in p:
+                args.extend(["--permission", perm])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -195,3 +194,69 @@ class BuyRam(cleos._Cleos):
 
         cleos._Cleos.__init__(
             self, args, "system", "buyram", is_verbose)
+
+    
+    class DelegateBw(cleos._Cleos):
+        '''Delegate bandwidth.
+
+        - **parameters**::
+
+            payer: The account to delegate bandwidth from.
+            receiver: The account to receive the delegated bandwidth.
+            stake_net_quantity: The amount of EOS to stake for network bandwidth.
+            stake_cpu_quantity: The amount of EOS to stake for CPU bandwidth.
+            permission: An account and permission level to authorize.
+            transfer: Transfer voting power and right to unstake EOS to receiver.
+            expiration: The time in seconds before a transaction expires, 
+                defaults to 30s
+            skip_sign: Specify if unlocked wallet keys should be used to sign 
+                transaction.
+            dont_broadcast: Don't broadcast transaction to the network (just print).
+            forceUnique: Force the transaction to be unique. this will consume extra 
+                bandwidth and remove any protections against accidently issuing the 
+                same transaction multiple times.
+            max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+                the execution of the transaction 
+                (defaults to 0 which means no limit).
+            max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+                transaction (defaults to 0 which means no limit).
+            ref_block: The reference block num or block id used for TAPOS 
+                (Transaction as Proof-of-Stake).            
+        '''
+    def __init__(
+            self, payer, receiver, stake_net_quantity, stake_cpu_quantity,
+            permission=None,
+            transfer=False,
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            is_verbose=1
+        ):
+        args = [
+            self._account_arg(payer), self._account_arg(receiver), 
+            stake_net_quantity, stake_cpu_quantity,
+            "--expiration", expiration_sec,
+            "--json"]
+        if not permission is None:
+            p = self._permission_arg(permission)
+            for perm in p:
+                args.extend(["--permission", perm])
+        if transfer:
+            args.append("--transfer")
+        if skip_signature:
+            args.append("--skip-sign")
+        if dont_broadcast:
+            args.append("--dont-broadcast")
+        if forceUnique:
+            args.append("--force-unique")
+        if max_cpu_usage:
+            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
+        if  max_net_usage:
+            args.extend(["--max-net-usage", max_net_usage])
+        if  not ref_block is None:
+            args.extend(["--ref-block", ref_block])
+    
+        cleos._Cleos.__init__(
+            self, args, "system", "bandwidth", is_verbose)
+

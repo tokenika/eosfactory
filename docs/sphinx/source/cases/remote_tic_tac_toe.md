@@ -80,7 +80,6 @@ It has to be exactly one 'Wallet' object in the namespace.
 ```md
         '''
         create_wallet(file=True)
-        import pdb; pdb.set_trace()
         '''
 ```
 The parameter `file=True` causes that the password of the created walled is persisted between sessions.
@@ -139,7 +138,6 @@ Gambling involves making the croupier to push acctions at the expense of the pla
 ```md
         '''
     def test_tic_tac_toe(self):
-        import pdb; pdb.set_trace()
         set_is_testing_errors()       
         croupier.push_action(
             "create", 
@@ -149,6 +147,7 @@ Gambling involves making the croupier to push acctions at the expense of the pla
             },
             carol, payer=account_master)
         set_is_testing_errors(False)
+        import pdb; pdb.set_trace()
         if "game already exists" in croupier.action.err_msg:
             croupier.push_action(
                 "close", 
@@ -157,7 +156,8 @@ Gambling involves making the croupier to push acctions at the expense of the pla
                     "host": carol 
                 }, 
                 carol, payer=account_master)
-
+            set_is_testing_errors()
+            
             croupier.push_action(
                 "create", 
                 {

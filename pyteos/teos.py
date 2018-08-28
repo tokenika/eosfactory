@@ -146,7 +146,7 @@ class TemplateCreate(_Teos):
             jarg["remove"] = 1
         if visual_studio_code:
             jarg["vsc"] = 1
-
+        setup.is_print_command_line = True
         _Teos.__init__(self, jarg, "template", "create", is_verbose)
         try:
             self.contract_path_absolute = self.json["contract_dir"] 

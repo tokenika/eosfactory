@@ -588,24 +588,22 @@ def append_account_methods_and_finish(
                     account_object._console))
             except:
                 pass
-
             if json:
                 account_object.OUT('''
-                push action responce:
-
+                push action response:
                 {}
-                '''.format(eosf.accout_names_2_object_names(
-                        result.out_msg, keys=True)))
+                '''.format(eosf.accout_names_2_object_names(result.out_msg)))
 
         account_object.action = result
 
     account_object.push_action = types.MethodType(
                                     push_action , account_object)
 
-    def show_action(self, action, data, permission=None):
+    def show_action(account_object, action, data, permission=None):
         ''' Implements the `push action` command without broadcasting. 
         '''
-        return self.push_action(action, data, permission, dont_broadcast=1)
+        account_object.push_action(
+            action, data, permission, dont_broadcast=1, json=True)
 
     account_object.show_action = types.MethodType(
                                     show_action , account_object)

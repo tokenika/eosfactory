@@ -51,6 +51,7 @@ class ContractBuilder(front_end.Logger):
                 ''')
         config = teos.GetConfig(contract_dir, is_verbose=0)
         self.contract_dir = config.json["contract-dir"]
+        
         if not self.contract_dir:
             self.ERROR("""
                 Cannot determine the contract directory. The path is 
