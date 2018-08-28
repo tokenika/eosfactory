@@ -125,11 +125,7 @@ create_master_account("account_master")
 ```
 ```md
 '''
-create_master_account(
-    "account_master",
-    testnode.account_name, 
-    testnode.owner_key,
-    testnode.active_key)
+testnode.create_master_account("account_master")
 '''
 ```
 

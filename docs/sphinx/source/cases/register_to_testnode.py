@@ -14,8 +14,5 @@ if not node_is_operative():
 create_wallet(file=True)
 create_master_account("master")
 
-create_master_account(
-    "master",
-    testnode.account_name, 
-    testnode.owner_key,
-    testnode.active_key)
+testnode.create_master_account("master")
+

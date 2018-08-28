@@ -80,6 +80,7 @@ It has to be exactly one 'Wallet' object in the namespace.
 ```md
         '''
         create_wallet(file=True)
+        import pdb; pdb.set_trace()
         '''
 ```
 The parameter `file=True` causes that the password of the created walled is persisted between sessions.
@@ -95,11 +96,7 @@ If a new account is created, the system precisely determines its need for the RA
 ```md
         '''
         if not "account_master" in globals():
-            create_master_account(
-                "account_master",
-                testnode.account_name, 
-                testnode.owner_key, 
-                testnode.active_key)
+            testnode.create_master_account("account_master")
 
         if not "croupier" in globals():
             create_account(
@@ -142,6 +139,7 @@ Gambling involves making the croupier to push acctions at the expense of the pla
 ```md
         '''
     def test_tic_tac_toe(self):
+        import pdb; pdb.set_trace()
         set_is_testing_errors()       
         croupier.push_action(
             "create", 
@@ -222,7 +220,6 @@ Gambling involves making the croupier to push acctions at the expense of the pla
             carol, payer=account_master)
 
         t = croupier.table("games", carol)
-        self.assertFalse(t.error)
 
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
