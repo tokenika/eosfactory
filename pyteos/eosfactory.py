@@ -34,5 +34,5 @@ remove_files = eosf.remove_files
 is_translating = eosf.is_translating
 node_is_operative = eosf.node_is_operative
 
-set_nodeos_address = setup.set_nodeos_address
+configure_testnet = setup.configure_testnet
 is_local_address = setup.is_local_address

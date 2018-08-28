@@ -2,8 +2,8 @@ from  eosfactory import *
 import testnet_data
 
 testnode = testnet_data.kylin
-set_nodeos_address(testnode.url)
-set_nodeos_address(testnode.url, prefix="registering_to_testnode")
+configure_testnet(testnode.url)
+configure_testnet(testnode.url, prefix="registering_to_testnode")
 remove_files()
 
 if not node_is_operative():

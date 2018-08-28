@@ -5,7 +5,7 @@ def add_account(
     testnode_url, account_object_name,
     account_name, owner_key, active_key):
 
-    set_nodeos_address(testnode_url)
+    configure_testnet(testnode_url)
 
     if not node_is_operative():
         print(

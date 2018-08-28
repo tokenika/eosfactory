@@ -4,7 +4,7 @@ import argparse
 def register_account(
     testnode_url, account_object_name):
 
-    set_nodeos_address(testnode_url)
+    configure_testnet(testnode_url)
 
     if not eosf.node_is_operative():
         print(

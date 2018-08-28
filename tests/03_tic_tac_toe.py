@@ -20,7 +20,7 @@ class Test(unittest.TestCase):
         if IS_USE_KEOSD:
             stop([Verbosity.INFO])
             
-            setup.set_nodeos_address(remote_testnet)
+            setup.configure_testnet(remote_testnet)
             info()
 
             try:

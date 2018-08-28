@@ -6,7 +6,7 @@ This file can be executed as a python script:
 
 Registering to a public testnet involves three steps:
 
-* `set_nodeos_address(testnode.url)` # set the url of the testnode;
+* `configure_testnet(testnode.url)` # set the url of the testnode;
 * `create_wallet(file=True)` # create the wallet singleton (`file=True` means password to file);
 * `create_master_account("account_master")` # create an account object, named as the argument of the factory function.
 
@@ -59,7 +59,7 @@ In the `testnet_data` module, there is a pair of prefabricated testnode objects:
 '''
 import testnet_data
 testnode = testnet_data.kylin
-set_nodeos_address(testnode.url)
+configure_testnet(testnode.url)
 '''
 ```
 The second line statement makes the following arrangements:
@@ -68,11 +68,11 @@ The second line statement makes the following arrangements:
 * sets a prefix differentiating system files used in currently, for example, the default name of the wallet is `88_99_97_30_38888_default.wallet`;
 
 We do not want to use this default naming system for the current test, 
-therefore we use an option of the function `set_nodeos_address(...)` --
+therefore we use an option of the function `configure_testnet(...)` --
 
 ```md
 '''
-set_nodeos_address(testnode.url, "registering_to_testnode")
+configure_testnet(testnode.url, "registering_to_testnode")
 '''
 ```
 -- now the default name of the wallet is `registering_to_testnode_default.wallet`.

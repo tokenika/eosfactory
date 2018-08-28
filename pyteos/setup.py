@@ -20,14 +20,14 @@ _nodeos_address = None
 _file_prefix = None
 
 
-def set_nodeos_address(address, prefix=None):
+def configure_testnet(address, prefix=None):
     global _nodeos_address
     if address:
         _nodeos_address = address
 
     if not _nodeos_address:
         print('''
-ERROR in setup.set_nodeos_address(...)!
+ERROR in setup.configure_testnet(...)!
 nodeos address is not set.
         ''')
         return

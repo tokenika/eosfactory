@@ -30,7 +30,7 @@ CONTRACT_DIR = "03_tic_tac_toe"
 stake_net = "0.2 EOS" 
 stake_cpu = "0.2 EOS"
 testnode = testnet_data.cryptolion #  LocalTestnet() kylin
-set_nodeos_address(testnode.url, "tic_tac_toe")
+configure_testnet(testnode.url, "tic_tac_toe")
 '''
 ```
 
@@ -64,7 +64,7 @@ The Factory produces three files for each testnet used:
 * wallet password mapping file,
 * account mapping file.
 
-The files are marked with a prefix that is set as the second argument in the statement `set_nodeos_address(...)` above.
+The files are marked with a prefix that is set as the second argument in the statement `configure_testnet(...)` above.
 
 These files should be edited rather, than being deleted. However if the testnode is set to be `testnet_data.LocalTestnet()`, and the local testnet is reset, the contents of them is useles, then remove them:
  

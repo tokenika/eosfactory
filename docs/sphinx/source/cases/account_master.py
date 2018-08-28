@@ -11,7 +11,7 @@ restart()
 
 testnet = testnet_data.kylin
 
-set_nodeos_address(testnet.url, prefix="temp")
+configure_testnet(testnet.url, prefix="temp")
 remove_files()
 #set_testnet_configuration(testnet.url, prefix="temp")
 #remove_testnet_files()

@@ -35,7 +35,7 @@ def restart():
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
         config = teos.GetConfig(is_verbose=0)       
-        setup.set_nodeos_address(
+        setup.configure_testnet(
             "http://" + config.json["EOSIO_DAEMON_ADDRESS"])
         setup.is_local_address = True
 
