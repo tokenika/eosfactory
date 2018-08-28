@@ -32,7 +32,7 @@ info = eosf.info
 status = eosf.status
 remove_testnet_files = eosf.remove_testnet_files
 is_translating = eosf.is_translating
-node_is_operative = eosf.node_is_operative
+verify_testnet = eosf.verify_testnet
 
 configure_testnet = setup.configure_testnet
 is_local_address = setup.is_local_address

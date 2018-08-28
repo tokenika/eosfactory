@@ -5,11 +5,7 @@ def register_account(
     testnode_url, account_object_name):
 
     configure_testnet(testnode_url)
-
-    if not eosf.node_is_operative():
-        print(
-            "This test needs the testnode {} running, but it does not answer." \
-                .format(testnode_url))
+    if not verify_testnet():
         return
 
     create_wallet(file=True)

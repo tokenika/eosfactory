@@ -83,10 +83,7 @@ Make sure that the chosen testnode is operative:
 
 ```md
 '''
-if not eosf.node_is_operative():
-    _.ERROR('''
-        This test needs the testnode {} running, but it does not answer.
-        '''.format(testnode.url))
+verify_testnet()
 '''
 ```
 
@@ -94,7 +91,7 @@ if not eosf.node_is_operative():
 
 ```md
 '''
-eosf.remove_testnet_files()
+remove_testnet_files()
 '''
 ```
 

@@ -6,11 +6,7 @@ def add_account(
     account_name, owner_key, active_key):
 
     configure_testnet(testnode_url)
-
-    if not node_is_operative():
-        print(
-            "This test needs the testnode {} running, but it does not respond." \
-                .format(testnode_url))
+    if not verify_testnet():
         return
 
     create_wallet(file=True)

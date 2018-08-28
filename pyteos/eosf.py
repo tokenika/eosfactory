@@ -268,7 +268,7 @@ def info():
     logger.INFO(str(get_info))
 
 
-def node_is_operative():
+def is_head_block_num():
     '''
     Check if testnet is running.
     '''
@@ -278,6 +278,14 @@ def node_is_operative():
     except:
         head_block_num = -1
     return head_block_num > 0
+
+def verify_testnet():
+    if not self.is_head_block_num():
+        logger.ERROR('''
+        Testnet is not running or is not responding.
+        ''')
+        return False
+    return True
 
 
 if __name__ == "__main__":

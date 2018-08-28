@@ -47,14 +47,9 @@ class Test(unittest.TestCase):
 Be sure that the chosen testnode is operative:  
     
 ```md
-        '''
-        if not node_is_operative():
-            _.ERROR('''
-            The testnode does not answer.
-            Is Internet connected?
-            Is the testnode operative?
-            '''.format(testnode.url))
-        '''
+'''
+verify_testnet()
+'''
 ```
 ### Test files
 

@@ -41,9 +41,9 @@ def set_local_nodeos_address_if_none():
 
     return setup.is_local_address
 
-def node_is_operative():
-    result = teos.NodeIsRunning(is_verbose=0)
-    return not result.daemon_pid == ""
+# def node_is_operative():
+#     result = teos.NodeIsRunning(is_verbose=0)
+#     return not result.daemon_pid == ""
 
 class Permission(enum.Enum):
     OWNER = '@owner'
