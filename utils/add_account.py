@@ -28,7 +28,7 @@ associated with the url.
 
 Example:
     python3 add_account.py https://api.kylin-testnet.eospace.io \
-    account_master \
+    master \
     dgxo1uyhoytn \
     5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
     5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
@@ -42,7 +42,7 @@ parser.add_argument("active_key")
 
 args = parser.parse_args()
 add_account(
-    args.testnode_url, args.account_object_name,
-    args.account_name, 
-    args.owner_key, args.active_key
-    )
+    args.testnode_url,
+    args.account_object_name,
+    args.account_name,
+    args.owner_key, args.active_key)
