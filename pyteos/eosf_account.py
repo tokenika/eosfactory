@@ -348,6 +348,14 @@ def create_master_account(
     '''
 
     logger = front_end.Logger(verbosity)
+
+    globals = inspect.stack()[1][0].f_globals
+    if account_object_name in globals:
+        logger.INFO('''
+            ######## {} account object restored from the blockchain.
+            '''.format(account_object_name)) 
+        return
+
     logger.INFO('''
         ######### Create the master account object named ``{}``...
         '''.format(account_object_name))
@@ -702,11 +710,19 @@ def create_account(
         restore=False,
         verbosity=None):
 
+    logger = front_end.Logger(verbosity)
+
+    globals = inspect.stack()[1][0].f_globals
+    if account_object_name in globals:
+        logger.INFO('''
+            ######## {} account object restored from the blockchain.
+            '''.format(account_object_name)) 
+        return
+
     if restore:
         if creator:
             account_name = creator
 
-    logger = front_end.Logger(verbosity)
     logger.INFO('''
         ######### Create the account object ``{}`` ...
         '''.format(account_object_name))
@@ -732,7 +748,7 @@ def create_account(
     account_object = None
     if restore:
         logger.INFO('''
-                        ... for the blockchain account ``{}``.
+                        ... for the existing blockchain account ``{}``.
                         '''.format(account_name))                       
         account_object = RestoreAccount(account_name, verbosity)
     else:
@@ -745,7 +761,7 @@ def create_account(
             owner_key = cleos.CreateKey("owner", is_verbose=-1)
             active_key = cleos.CreateKey("active", is_verbose=-1)
 
-        if stake_net:
+        if stake_net and not setup.is_local_address:
             logger.INFO('''
                         ... paying stake for a new blockchain account ``{}``.
                         '''.format(account_name))

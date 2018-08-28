@@ -13,6 +13,7 @@ Python front-end for `EOSIO cleos`.
 
 import random
 import os
+import re
 import enum
 import time
 import subprocess
@@ -319,15 +320,19 @@ class GetAccount(Account, _Cleos):
         if setup.is_json or json:
             args.append("--json")
 
-        _Cleos.__init__(
-            self, args, "get", "account", is_verbose)
-
-        if not self.error:
-            try:
-                j = json_module.loads(self.out_msg)
-                self.json = j
-            except:
-                pass
+        _Cleos.__init__(self, args, "get", "account", is_verbose)
+        if not self.error:        
+            if json:
+                self.json = json_module.loads(self.out_msg)
+                self.owner_key = self.json["permissions"][1]["required_auth"] \
+                    ["keys"][0]["key"]
+                self.active_key = self.json["permissions"][0]["required_auth"] \
+                    ["keys"][0]["key"]
+            else:
+                self.owner_key = re.search(
+                    'owner\s+1\:\s+1\s(.*)\n', self.out_msg).group(1)
+                self.active_key = re.search(
+                    'active\s+1\:\s+1\s(.*)\n', self.out_msg).group(1)
 
             self.printself()
 

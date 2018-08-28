@@ -43,8 +43,7 @@ def remove_testnet_files():
             if file.startswith(setup.file_prefix()):
                 os.remove(os.path.join(dir,file)) 
     except Exception as e:
-        logger = front_end.Logger()
-        logger.ERROR('''
+        front_end.Logger().ERROR('''
         Cannot remove nodeos address files. The error message is
         {}
         '''.format(str(e)))   
@@ -136,23 +135,17 @@ def account_mapp_to_string(account_map):
     return retval
 
 
-def clear_account_mapp(exclude=["account_master"]):
+def save_account_mapp(account_map):
     wallet_dir_ = wallet_dir()
-    account_map = {}
 
     try: # whether the setup map file exists:
         with open(wallet_dir_ + setup.account_map, "r") as input:
             account_map = json.load(input)
-    except:
-        pass
-        
-    clear_map = {}
-    for account_name in account_map:
-        if account_map[account_name] in exclude:
-            clear_map[account_name] = account_map[account_name]
-        
-    with open(wallet_dir_ + setup.account_map, "w") as out:
-        out.write(account_mapp_to_string(account_map))
+
+        with open(wallet_dir_ + setup.account_map, "w") as out:
+            out.write(account_mapp_to_string(account_map))            
+    except Exception as e:
+        front_end.Logger().ERROR(str(e))
 
 
 def stop_keosd():
@@ -264,7 +257,7 @@ def info():
     Display EOS node info.
     '''
     get_info = cleos.GetInfo(is_verbose=-1)
-    logger = front_end.Logger(None)
+    logger = front_end.Logger()
     logger.INFO(str(get_info))
 
 
@@ -280,9 +273,11 @@ def is_head_block_num():
     return head_block_num > 0
 
 def verify_testnet():
-    if not self.is_head_block_num():
+    if not is_head_block_num():
+        logger = front_end.Logger()
         logger.ERROR('''
         Testnet is not running or is not responding.
+        Is Internet connected?
         ''')
         return False
     return True

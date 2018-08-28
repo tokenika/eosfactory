@@ -288,46 +288,30 @@ class Wallet(cleos.WalletCreate):
     def restore_accounts(self):
         '''
         '''
-        account_names = set() # accounts in wallets
+        account_map = eosf.account_map()
+        new_map = {}
         wallet_keys = cleos.WalletKeys(is_verbose=0)
-        if self.ERROR(wallet_keys):
-            return
 
-        for key in wallet_keys.json[""]:
-            accounts = cleos.GetAccounts(key, is_verbose=0)
-            if self.ERROR(accounts):
-                return
-
-            for acc in accounts.json["account_names"]:
-                account_names.add(acc)
-
-        restored = dict()
-        if len(account_names) > 0:
+        if len(account_map) > 0:
             self.INFO('''
                     ######### Restored accounts as global variables:
-                    ''')
-                        
-            account_map = eosf.account_map()           
-            object_names = set()
+                    ''') 
 
-            # account_names: {'vqodjjlemsc5', 'cgecc2d4pgvm', 'tlb54yedjgzq'}
-            for name in account_names: 
-                try: 
-                    object_name = account_map[name]
-                    # one object name with the another account
-                    if object_name in object_names: 
-                        object_name = object_name + "_" + name
-                except:
-                    object_name = name
-                object_names.add(object_name)
+            for name, object_name in account_map.items():
+                account_ = cleos.GetAccount(name, json=True, is_verbose=-1)
+                if not account_.error:
+                    if account_.owner_key in wallet_keys.json[""] and \
+                            account_.active_key in wallet_keys.json[""]:
+                        new_map[name] = object_name
+                        from eosf_account import create_account
+                        create_account(
+                            object_name, name, restore=True, verbosity=None)
 
-                if object_name:
                     self.INFO('''
                          {}
                     '''.format(object_name))
-                    from eosf_account import create_account
-                    create_account(
-                        object_name, name, restore=True, verbosity=None)
+
+            eosf.save_account_mapp(new_map)
         else:
             self.INFO('''
                  * The wallet is empty.

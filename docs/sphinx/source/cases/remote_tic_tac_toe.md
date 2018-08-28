@@ -29,7 +29,8 @@ _ = Logger()
 CONTRACT_DIR = "03_tic_tac_toe"
 stake_net = "0.2 EOS" 
 stake_cpu = "0.2 EOS"
-testnode = testnet_data.cryptolion #  LocalTestnet() kylin
+reset = False
+testnode = testnet_data.LocalTestnet(reset=reset) #  kylin cryptolion 
 configure_testnet(testnode.url, "tic_tac_toe")
 '''
 ```
@@ -47,9 +48,9 @@ class Test(unittest.TestCase):
 Be sure that the chosen testnode is operative:  
     
 ```md
-'''
-verify_testnet()
-'''
+        '''
+        verify_testnet()
+        '''
 ```
 ### Test files
 
@@ -65,7 +66,8 @@ These files should be edited rather, than being deleted. However if the testnode
  
 ```md
         '''
-        #remove_testnet_files()
+        if reset:
+            remove_testnet_files()
         '''
 ```
 
@@ -89,32 +91,10 @@ If a new account is created, the system precisely determines its need for the RA
 
 ```md
         '''
-        if not "account_master" in globals():
-            testnode.create_master_account("account_master")
-
-        if not "croupier" in globals():
-            create_account(
-                "croupier", account_master, stake_net, stake_cpu)
-        else:
-            _.INFO('''
-            ######## {} account object restored from the blockchain.
-            '''.format("croupier"))
-
-        if not "alice" in globals():
-            create_account(
-                "alice", account_master, stake_net, stake_cpu)  
-        else:
-            _.INFO('''
-            ######## {} account object restored from the blockchain.
-            '''.format("alice"))
-
-        if not "carol" in globals():
-            create_account(
-                "carol", account_master, stake_net, stake_cpu)
-        else:
-            _.INFO('''
-            ######## {} account object restored from the blockchain.
-            '''.format("carol"))        
+        testnode.create_master_account("account_master")     
+        create_account("croupier", account_master, stake_net, stake_cpu)
+        create_account("alice", account_master, stake_net, stake_cpu)  
+        create_account("carol", account_master, stake_net, stake_cpu)     
         
         contract = Contract(croupier, CONTRACT_DIR)
         if not contract.is_built():
@@ -142,7 +122,7 @@ Gambling involves making the croupier to push acctions at the expense of the pla
             },
             carol, payer=account_master)
         set_is_testing_errors(False)
-        import pdb; pdb.set_trace()
+
         if "game already exists" in croupier.action.err_msg:
             croupier.push_action(
                 "close", 
@@ -151,7 +131,6 @@ Gambling involves making the croupier to push acctions at the expense of the pla
                     "host": carol 
                 }, 
                 carol, payer=account_master)
-            set_is_testing_errors()
             
             croupier.push_action(
                 "create", 
@@ -236,6 +215,7 @@ Gambling involves making the croupier to push acctions at the expense of the pla
 
     @classmethod
     def tearDownClass(cls):
+        import pdb; pdb.set_trace()
         if is_local_address:
             stop()
 '''
