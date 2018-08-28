@@ -4,7 +4,7 @@ import testnet_data
 testnode = testnet_data.kylin
 configure_testnet(testnode.url)
 configure_testnet(testnode.url, prefix="registering_to_testnode")
-remove_files()
+remove_testnet_files()
 
 if not node_is_operative():
     _.ERROR('''

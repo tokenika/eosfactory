@@ -12,7 +12,7 @@ restart()
 testnet = testnet_data.kylin
 
 configure_testnet(testnet.url, prefix="temp")
-remove_files()
+remove_testnet_files()
 #set_testnet_configuration(testnet.url, prefix="temp")
 #remove_testnet_files()
 

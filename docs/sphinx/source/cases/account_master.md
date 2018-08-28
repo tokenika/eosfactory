@@ -74,7 +74,7 @@ configure_testnet(testnet.url, prefix="temp")
 Delete files possibly created previously:
 ```md
 '''
-remove_files()
+remove_testnet_files()
 '''
 ```
 First, the 'Wallet` singleton has to be created:

@@ -30,7 +30,7 @@ reset = eosf.reset
 stop = eosf.stop
 info = eosf.info
 status = eosf.status
-remove_files = eosf.remove_files
+remove_testnet_files = eosf.remove_testnet_files
 is_translating = eosf.is_translating
 node_is_operative = eosf.node_is_operative
 

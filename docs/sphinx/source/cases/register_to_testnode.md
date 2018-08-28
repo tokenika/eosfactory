@@ -94,7 +94,7 @@ if not eosf.node_is_operative():
 
 ```md
 '''
-eosf.remove_files()
+eosf.remove_testnet_files()
 '''
 ```
 

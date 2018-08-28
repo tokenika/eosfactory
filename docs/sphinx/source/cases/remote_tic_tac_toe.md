@@ -70,7 +70,7 @@ These files should be edited rather, than being deleted. However if the testnode
  
 ```md
         '''
-        #remove_files()
+        #remove_testnet_files()
         '''
 ```
 

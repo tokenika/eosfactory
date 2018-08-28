@@ -32,7 +32,7 @@ def restart():
     cleos.restart()
 
 
-def remove_files():
+def remove_testnet_files():
     if not setup.file_prefix():
         return
     kill_keosd()   # otherwise, the manager may protects the wallet files
@@ -195,7 +195,7 @@ def reset(verbosity=None):
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()))
 
-    remove_files()
+    remove_testnet_files()
 
     node = teos.NodeStart(1, is_verbose=0)
     probe = teos.NodeProbe(is_verbose=-1)
