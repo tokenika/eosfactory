@@ -26,6 +26,7 @@ import front_end
 import teos
 import cleos
 import cleos_system
+import eosf_contract
 
 
 def restart():
@@ -262,27 +263,23 @@ def is_head_block_num():
     Check if testnet is running.
     '''
     get_info = cleos.GetInfo(is_verbose=-1)
-    try: # if running, produces json
+    try: # if running, json is produced
         head_block_num = int(get_info.json["head_block_num"])
     except:
         head_block_num = -1
     return head_block_num > 0
 
 def verify_testnet():
-    if not is_head_block_num():
-        logger = front_end.Logger()
+    logger = front_end.Logger(None)
+    result = is_head_block_num()
+    front_end.set_throw_error(False)
+    if not result:
         logger.ERROR('''
         Testnet is not running or is not responding.
-        Is Internet connected?
         ''')
-        return False
-    return True
-
-
-if __name__ == "__main__":
-    template = ""
-    if len(sys.argv) > 2:
-        template = str(sys.argv[2])
-
-    teos.TemplateCreate(str(sys.argv[1]), template, visual_studio_code=True)
-
+    else:
+        logger.INFO('''
+        Testnet is OK.
+        ''')
+    front_end.set_throw_error(True)
+    return result
