@@ -151,13 +151,17 @@ import argparse
 
 parser = argparse.ArgumentParser(description='''
 Unittest for the ``tic-tac-toe`` smart contract.
+Default testnet is the local node.
 ''')
 
 parser.add_argument("-r", "--restore", default=False)
 parser.add_argument("-n", "--stake_net", default=0.1, help="in EOS")
 parser.add_argument("-p", "--stake_cpu", default=0.1, help="in EOS")
-parser.add_argument("-c", "--cryptolion", action="store_true")
-parser.add_argument("-k", "--kylin", action="store_true")
+parser.add_argument(
+    "-c", "--cryptolion", action="store_true", 
+    help="Using the cryptolion testnet")
+parser.add_argument(
+    "-k", "--kylin", action="store_true", help="Using the kylin testnet")
 parser.add_argument(
     "-t", "--testnet", nargs=4, help="<url> <name> <owner key> <active key>")
     
