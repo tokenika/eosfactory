@@ -24,6 +24,9 @@ def create_wallet(name=None, password="", verbosity=None, file=False):
     Wallet.wallet = Wallet(name, password, verbosity, file)
     Wallet.wallet.restore_accounts()
 
+def get_wallet():
+    return Wallet.wallet
+
 
 class Wallet(cleos.WalletCreate):
     ''' Create a new wallet locally and operate it.
@@ -132,7 +135,7 @@ class Wallet(cleos.WalletCreate):
         '''
         result = cleos.WalletLockAll(is_verbose=-1)
         if not self.ERROR(result):
-            self.TRACE("All wallet locked.")                        
+            self.TRACE("All wallets locked.")
 
     def unlock(self):
         ''' Unlock the wallet.

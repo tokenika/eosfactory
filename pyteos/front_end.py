@@ -70,9 +70,9 @@ Ram needed is {}kB, deficiency is {}kB.
 
 class Verbosity(enum.Enum):
     COMMENT = ['green', None, []]
-    INFO = ['blue', None, ['bold']] # has to differ from TRACE! (enum!!!)
-    TRACE = ['blue', None, []]
-    ERROR = ['red', None, ['reverse']]
+    INFO = ['blue', None, ['bold']]
+    TRACE = ['cyan', None, ['bold']]
+    ERROR = ['red', None, ['reverse','bold']]
     ERROR_TESTING = ['green', None, ['reverse']]
     OUT = [None, None, []]
     DEBUG = ['yellow', None, []]

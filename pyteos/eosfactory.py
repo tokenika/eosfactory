@@ -8,7 +8,6 @@ import eosf_contract
 
 Permission = cleos.Permission
 CreateKey = cleos.CreateKey
-
 Logger = front_end.Logger
 Verbosity = front_end.Verbosity
 
@@ -16,6 +15,7 @@ create_wallet = eosf_wallet.create_wallet
 create_account = eosf_account.create_account
 create_master_account = eosf_account.create_master_account
 
+get_wallet = eosf_wallet.get_wallet
 restart = eosf_account.restart
 
 Contract = eosf_contract.Contract

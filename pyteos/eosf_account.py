@@ -602,7 +602,7 @@ def append_account_methods_and_finish(
                     skip_signature, dont_broadcast, forceUnique,
                     max_cpu_usage, max_net_usage,
                     ref_block,
-                    is_verbose=-1, json=True)    
+                    is_verbose=-1, json=True)
 
 
         account_object.INFO('''
@@ -623,15 +623,13 @@ def append_account_methods_and_finish(
             except:
                 pass
             if json:
-                account_object.OUT('''
-                push action response:
-                {}
-                '''.format(eosf.accout_names_2_object_names(result.out_msg)))
+                account_object.OUT(
+                    eosf.accout_names_2_object_names(result.out_msg))
 
         account_object.action = result
 
     account_object.push_action = types.MethodType(
-                                    push_action , account_object)
+                                    push_action, account_object)
 
     def show_action(account_object, action, data, permission=None):
         ''' Implements the `push action` command without broadcasting. 
@@ -640,7 +638,7 @@ def append_account_methods_and_finish(
             action, data, permission, dont_broadcast=1, json=True)
 
     account_object.show_action = types.MethodType(
-                                    show_action , account_object)
+                                    show_action, account_object)
 
     def table(
             account_object, table_name, scope="", 
@@ -818,7 +816,7 @@ def create_account(
     if restore:
         logger.INFO('''
                         ... for the existing blockchain account ``{}``.
-                        '''.format(account_name))                       
+                        '''.format(account_name))
         account_object = RestoreAccount(account_name, verbosity)
     else:
         if not account_name:
@@ -893,6 +891,3 @@ def create_account(
             ''')
         append_account_methods_and_finish(
             account_object_name, account_object, logger)
-
-
-

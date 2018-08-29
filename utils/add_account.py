@@ -18,7 +18,7 @@ def add_account(
 
 
 parser = argparse.ArgumentParser(description='''
-Given an testnet url, the account object name, account name, private owner and 
+Given a testnet url, the account object name, account name, private owner and 
 active keys, create an account object, and put it into the wallet that is 
 associated with the url.
 
