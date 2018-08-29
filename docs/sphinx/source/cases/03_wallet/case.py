@@ -1,21 +1,21 @@
-from  eosfactory import *
-from eosf_wallet import Wallet
+from eosfactory import *
 
 reset()
 create_wallet()
-Wallet.wallet.keys()
+get_wallet().keys()
 
 create_master_account("master")
 create_account("alice", master)
 create_account("carol", master)
-Wallet.wallet.keys()
-Wallet.wallet.lock_all()
+
+get_wallet().keys()
+get_wallet().lock_all()
 
 stop()
 restart()
 run()
 
 create_wallet()
-Wallet.wallet.keys()
+get_wallet().keys()
 
 stop()

@@ -16,9 +16,9 @@ Cases
 .. toctree::
     :maxdepth: 1
 
-    cases/IDE
-    cases/symbolic_names
-    cases/wallet
+    cases/01_ide/case
+    cases/02_symbolic_names/case
+    cases/03_wallet/case
     cases/account
     cases/account_master
     cases/account_name_conflict
@@ -78,7 +78,6 @@ Python Documentation
     setup
     teos
     eosf
-    node
 
 
 Metadata
