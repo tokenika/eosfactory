@@ -30,7 +30,7 @@ CONTRACT_DIR = "03_tic_tac_toe"
 stake_net = "0.2 EOS" 
 stake_cpu = "0.2 EOS"
 reset = False
-testnode = testnet_data.LocalTestnet(reset=reset) #  kylin cryptolion 
+testnode = testnet_data.cryptolion #LocalTestnet(reset=reset)  kylin  
 configure_testnet(testnode.url, "tic_tac_toe")
 '''
 ```
@@ -91,8 +91,19 @@ If a new account is created, the system precisely determines its need for the RA
 
 ```md
         '''
-        testnode.create_master_account("account_master")     
+        testnode.create_master_account("account_master")
+        account_master.info()
+        # import pdb; pdb.set_trace()
+        # import cleos_system
+        # 
+        #     
+        # account_master.info()
+    
         create_account("croupier", account_master, stake_net, stake_cpu)
+        cleos_system.DelegateBw(
+            account_master, account_master, 
+            "0.1 EOS", "0.1 EOS")
+            
         create_account("alice", account_master, stake_net, stake_cpu)  
         create_account("carol", account_master, stake_net, stake_cpu)     
         
@@ -215,8 +226,7 @@ Gambling involves making the croupier to push acctions at the expense of the pla
 
     @classmethod
     def tearDownClass(cls):
-        import pdb; pdb.set_trace()
-        if is_local_address:
+        if setup.is_local_address:
             stop()
 '''
 ```

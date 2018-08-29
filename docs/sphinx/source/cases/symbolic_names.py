@@ -1,6 +1,6 @@
 from  eosfactory import *
 
-is_translating = False
+setup.is_translating = False
 
 reset()
 create_wallet()
@@ -31,7 +31,7 @@ host.push_action(
     master)
 
 restart()
-is_translating = True
+setup.is_translating = True
 
 reset()
 create_wallet()

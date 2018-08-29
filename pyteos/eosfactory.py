@@ -11,10 +11,11 @@ CreateKey = cleos.CreateKey
 
 Logger = front_end.Logger
 Verbosity = front_end.Verbosity
-create_wallet = eosf_wallet.create_wallet
 
+create_wallet = eosf_wallet.create_wallet
 create_account = eosf_account.create_account
 create_master_account = eosf_account.create_master_account
+
 restart = eosf_account.restart
 
 Contract = eosf_contract.Contract
@@ -31,8 +32,6 @@ stop = eosf.stop
 info = eosf.info
 status = eosf.status
 remove_testnet_files = eosf.remove_testnet_files
-is_translating = eosf.is_translating
 verify_testnet = eosf.verify_testnet
 
 configure_testnet = setup.configure_testnet
-is_local_address = setup.is_local_address

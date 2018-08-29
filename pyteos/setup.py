@@ -10,6 +10,7 @@ is_json = 0
 is_print_command_line = False
 is_print_request = False
 is_print_response = False
+is_translating = True
 
 account_map = "accounts.json"
 password_map = "passwords.json"

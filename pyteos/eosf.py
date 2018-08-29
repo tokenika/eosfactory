@@ -88,8 +88,7 @@ def account_map(logger=None):
 
 
 def accout_names_2_object_names(sentence):
-    global is_translating
-    if not is_translating:
+    if not setup.is_translating:
         return sentence
         
     exceptions = ["eosio"]
@@ -116,9 +115,6 @@ def object_names_2_accout_names(sentence):
 def edit_account_map(text_editor="nano"):
     import subprocess
     subprocess.run([text_editor, wallet_dir() + setup.account_map])
-
-
-is_translating = True
 
 
 def account_mapp_to_string(account_map):

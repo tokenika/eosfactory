@@ -351,6 +351,13 @@ def create_master_account(
 
     globals = inspect.stack()[1][0].f_globals
     if account_object_name in globals:
+
+        if not isinstance(globals[account_object_name], cleos.Account):
+            logger.ERROR('''
+            The global variable {} type is not ``Account``.
+            '''.format(account_object_name))
+            return
+
         logger.INFO('''
             ######## {} account object restored from the blockchain.
             '''.format(account_object_name)) 
@@ -714,6 +721,13 @@ def create_account(
 
     globals = inspect.stack()[1][0].f_globals
     if account_object_name in globals:
+
+        if not isinstance(globals[account_object_name], cleos.Account):
+            logger.ERROR('''
+            The global variable {} type is not ``Account``.
+            '''.format(account_object_name))
+            return
+
         logger.INFO('''
             ######## {} account object restored from the blockchain.
             '''.format(account_object_name)) 

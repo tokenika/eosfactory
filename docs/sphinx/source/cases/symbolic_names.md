@@ -56,7 +56,7 @@ The current case demonstrates this facility.
 
 ```md
 '''
-is_translating = False
+setup.is_translating = False
 
 reset()
 create_wallet()
@@ -97,7 +97,7 @@ host.push_action(
 ```md
 '''
 restart()
-is_translating = True
+setup.is_translating = True
 
 reset()
 create_wallet()
