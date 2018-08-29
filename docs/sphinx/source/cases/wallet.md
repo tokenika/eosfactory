@@ -27,7 +27,7 @@ Although the Factory manages only one 'Wallet` object at a time, it produces num
 
 *   Arbitrary prefixes mark wallets used for one-time tests; they are erased before repeating their tests.
 
-*   Testnode prefixes are consequently used in context of their nodes; they keep Factory state between sessions.
+*   testnet prefixes are consequently used in context of their nodes; they keep Factory state between sessions.
 
 *   Empty prefix (not implemented yet) marks wallets used with real EOSIO nodes.
 

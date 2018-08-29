@@ -144,6 +144,25 @@ class Eosio(cleos.Account):
     def __str__(self):
         return self.name
 
+    def delegate_bw(
+            self, receiver, stake_net_quantity, stake_cpu_quantity,
+            permission=None,
+            transfer=False,
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            is_verbose=1):
+        pass
+
+    def buy_ram(
+            account_object, amount_kbytes, receiver=None,
+            expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None):
+        pass
+
 
 class GetAccount(cleos.GetAccount):
     '''Look for the account of the given name, put it into the wallet.
@@ -685,6 +704,42 @@ def append_account_methods_and_finish(
 
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
+    def delegate_bw(
+        account_object, receiver, stake_net_quantity, stake_cpu_quantity,
+        permission=None,
+        transfer=False,
+        expiration_sec=30, 
+        skip_signature=0, dont_broadcast=0, forceUnique=0,
+        max_cpu_usage=0, max_net_usage=0,
+        ref_block=None,
+        is_verbose=1):
+
+        if setup.is_local_address:
+            return
+
+        if receiver is None:
+            receiver = account_object
+
+        delegate_bw = cleos_system.DelegateBw(
+            account_object, receiver, 
+            stake_net_quantity, stake_cpu_quantity,
+            permission,
+            transfer,
+            expiration_sec, 
+            skip_signature, dont_broadcast, forceUnique,
+            max_cpu_usage, max_net_usage,
+            ref_block,
+            is_verbose=0
+            )
+        if not delegate_bw.error:
+            account_object.INFO('''
+            * Transfered from {} to {} net: {} cpu: {}
+            '''.format(
+                delegate_bw.payer, delegate_bw.receiver,
+                delegate_bw.stake_net_quantity, delegate_bw.stake_cpu_quantity))
+
+    account_object.delegate_bw = types.MethodType(delegate_bw, account_object)
+
     def info(account_object):
         print("account object name: {}\n{}".format(
             account_object_name,
@@ -695,8 +750,8 @@ def append_account_methods_and_finish(
     get_account = cleos.GetAccount(account_object, is_verbose=0)
     if not account_object.ERROR(get_account):
         account_object.TRACE('''
-        * Cross-checked: account {}({}) is in the blockchain.
-        '''.format(account_object_name, account_object.name))
+        * Cross-checked: account {} is in the blockchain.
+        '''.format(account_object_name))
     return put_account_to_wallet_and_on_stack(
         account_object_name, account_object)
 

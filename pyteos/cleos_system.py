@@ -232,9 +232,13 @@ class DelegateBw(cleos._Cleos):
         ref_block=None,
         is_verbose=1):
 
+        self.payer = self._account_arg(payer)
+        self.receiver = self._account_arg(receiver)
+        self.stake_net_quantity = stake_net_quantity
+        self.stake_cpu_quantity = stake_cpu_quantity
         args = [
-            self._account_arg(payer), self._account_arg(receiver), 
-            stake_net_quantity, stake_cpu_quantity,
+            self.payer, self.receiver, 
+            self.stake_net_quantity, self.stake_cpu_quantity,
             "--expiration", str(expiration_sec),
             "--json"]
         if not permission is None:
@@ -255,7 +259,9 @@ class DelegateBw(cleos._Cleos):
             args.extend(["--max-net-usage", max_net_usage])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
-        setup.is_print_command_line = True
+
         cleos._Cleos.__init__(
             self, args, "system", "delegatebw", is_verbose)
 
+        self.ERROR()
+            

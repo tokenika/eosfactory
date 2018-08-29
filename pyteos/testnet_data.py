@@ -1,3 +1,4 @@
+import setup
 import eosf
 import front_end
 import eosf_account
@@ -17,14 +18,20 @@ class Testnet:
                 self.active_key)
 
 class LocalTestnet(Testnet):
-    def __init__(self):
-        eosf.run(verbosity=[front_end.Verbosity.ERROR])
+    def __init__(self, reset=False):
+        if reset:
+            eosf.reset(verbosity=[front_end.Verbosity.ERROR])
+        else:
+            eosf.run(verbosity=[front_end.Verbosity.ERROR])
         eosio = eosf_account.Eosio("account_master")
+
+        setup.is_local_address = True
         Testnet.__init__(
             self, 
             None, 
             eosio.name,
             eosio.owner_key.key_private, eosio.active_key.key_private)
+
 
 # /mnt/c/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://88.99.97.30:38888 get info
 cryptolion = Testnet(

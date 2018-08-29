@@ -13,7 +13,7 @@ remote_testnet = "http://88.99.97.30:38888"
 _ = front_end.Logger()
 
 '''
-The following account exists in the blockchain of the testnode. It is used, in
+The following account exists in the blockchain of the testnet. It is used, in
 this article, for testing.
 
 Accout Name: dgxo1uyhoytn
@@ -59,7 +59,7 @@ create_wallet(wallet_name)
 
 _.COMMENT('''
 Use ``eosf.status()`` to check whether the remote testnet responces: it throws
-an exception if the testnode is off. 
+an exception if the testnet is off. 
 ''')
 
 eosf.status()

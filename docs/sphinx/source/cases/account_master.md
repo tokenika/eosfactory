@@ -10,7 +10,7 @@ The set-up statements are explained at <a href="html">cases/setup</a>.
 ```md
 '''
 from  eosfactory import *
-import testnet_data
+import testnode_data
 '''
 ```
 
@@ -67,7 +67,7 @@ they can add it to the Factory. In this show, we use an real account represented
 ```md
 '''
 restart()
-testnet = testnet_data.kylin
+testnet = testnode_data.kylin
 configure_testnet(testnet.url, prefix="temp")
 '''
 ```

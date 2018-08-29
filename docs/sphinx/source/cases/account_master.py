@@ -1,5 +1,5 @@
 from  eosfactory import *
-import testnet_data
+import testnode_data
 
 reset()
 create_wallet()
@@ -9,7 +9,7 @@ stop()
 
 restart()
 
-testnet = testnet_data.kylin
+testnet = testnode_data.kylin
 
 configure_testnet(testnet.url, prefix="temp")
 remove_testnet_files()

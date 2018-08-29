@@ -1,12 +1,12 @@
 '''
-# Registering to a remote testnode
+# Registering to a remote testnet
 
 This file can be executed as a python script: 
 'python3 register_to_testnode.md'.
 
 Registering to a public testnet involves three steps:
 
-* `configure_testnet(testnode.url)` # set the url of the testnode;
+* `configure_testnet(testnet.url)` # set the url of the testnet;
 * `create_wallet(file=True)` # create the wallet singleton (`file=True` means password to file);
 * `create_master_account("account_master")` # create an account object, named as the argument of the factory function.
 
@@ -47,24 +47,24 @@ set_throw_error(True)
 '''
 ```
 
-### The testnode
+### The testnet
 
 There is many public testnodes: all we know are volatile: the one that you are 
 prepared to use is stopped just when you need it. Therefore we have provision 
-for easy change of the used testnode. 
+for easy change of the used testnet. 
 
-In the `testnet_data` module, there is a pair of prefabricated testnode objects: `cryptolion` and `kylin`. Here we set one:
+In the `testnode_data` module, there is a pair of prefabricated testnet objects: `cryptolion` and `kylin`. Here we set one:
 
 ```md
 '''
-import testnet_data
-testnode = testnet_data.kylin
-configure_testnet(testnode.url)
+import testnode_data
+testnet = testnode_data.kylin
+configure_testnet(testnet.url)
 '''
 ```
 The second line statement makes the following arrangements:
 
-* sets the url of the testnode as the working endpoint;
+* sets the url of the testnet as the working endpoint;
 * sets a prefix differentiating system files used in currently, for example, the default name of the wallet is `88_99_97_30_38888_default.wallet`;
 
 We do not want to use this default naming system for the current test, 
@@ -72,14 +72,14 @@ therefore we use an option of the function `configure_testnet(...)` --
 
 ```md
 '''
-configure_testnet(testnode.url, "registering_to_testnode")
+configure_testnet(testnet.url, "registering_to_testnode")
 '''
 ```
 -- now the default name of the wallet is `registering_to_testnode_default.wallet`.
 
-### Stop if the testnode is off
+### Stop if the testnet is off
 
-Make sure that the chosen testnode is operative:
+Make sure that the chosen testnet is operative:
 
 ```md
 '''
@@ -106,7 +106,7 @@ create_wallet(file=True)
 '''
 ```
 
-### Register to the testnode
+### Register to the testnet
 
 We usually name `account_master` any, yet single in the namespace, object that has resources necessary for creation of child accounts. 
 
@@ -122,7 +122,7 @@ create_master_account("account_master")
 ```
 ```md
 '''
-testnode.create_master_account("account_master")
+testnet.create_master_account("account_master")
 '''
 ```
 

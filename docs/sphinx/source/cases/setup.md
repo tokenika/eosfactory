@@ -47,9 +47,9 @@ logger.set_is_testing_errors(False) # make the error mesages alarming
 
 logger.set_throw_error(True) # throw exception rather then print message
 eosf.restart()
-eosf.reset([logger.Verbosity.INFO]) # start local testnode
+eosf.reset([logger.Verbosity.INFO]) # start local testnet
 create_wallet() # create the singleton `Wallet` object
-create_master_account("account_master") # create local testnode `eosio` account
+create_master_account("account_master") # create local testnet `eosio` account
 logger.set_throw_error(False) # print message rather then throw exception
 
 logger.set_is_testing_errors() # make the error mesages less alarming
