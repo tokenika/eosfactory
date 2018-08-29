@@ -10,7 +10,6 @@ start_stake_net = "0.2 EOS"
 start_stake_cpu = "0.2 EOS"
 game_stake_net = "0.1 EOS" 
 game_stake_cpu = "0.1 EOS"
-testnet = testnet_data.LocalTestnet(reset=reset) # cryptolion kylin 
 
 class Test(unittest.TestCase):
 
