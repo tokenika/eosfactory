@@ -5,6 +5,7 @@ import eosf
 import eosf_wallet
 import eosf_account
 import eosf_contract
+import testnet_data
 
 Permission = cleos.Permission
 CreateKey = cleos.CreateKey

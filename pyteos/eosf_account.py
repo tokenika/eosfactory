@@ -145,10 +145,11 @@ class Eosio(cleos.Account):
         return self.name
 
     def delegate_bw(
-            self, receiver, stake_net_quantity, stake_cpu_quantity,
+            self, stake_net_quantity, stake_cpu_quantity,
+            receiver=None,
             permission=None,
             transfer=False,
-            expiration_sec=30, 
+            expiration_sec=30,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -157,7 +158,7 @@ class Eosio(cleos.Account):
 
     def buy_ram(
             account_object, amount_kbytes, receiver=None,
-            expiration_sec=30, 
+            expiration_sec=30,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
@@ -691,7 +692,7 @@ def append_account_methods_and_finish(
         result = cleos_system.BuyRam(
             account_object, receiver, amount_kbytes,
             buy_ram_kbytes,
-            expiration_sec, 
+            expiration_sec,
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
@@ -703,7 +704,8 @@ def append_account_methods_and_finish(
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
     def delegate_bw(
-        account_object, receiver, stake_net_quantity, stake_cpu_quantity,
+        account_object, stake_net_quantity, stake_cpu_quantity,
+        receiver=None,
         permission=None,
         transfer=False,
         expiration_sec=30, 
@@ -719,11 +721,11 @@ def append_account_methods_and_finish(
             receiver = account_object
 
         delegate_bw = cleos_system.DelegateBw(
-            account_object, receiver, 
+            account_object, receiver,
             stake_net_quantity, stake_cpu_quantity,
             permission,
             transfer,
-            expiration_sec, 
+            expiration_sec,
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
@@ -894,7 +896,7 @@ def create_account(
             account_object_name, account_object, logger)
 
 
-def stat(
+def stats(
         accounts, params, 
         last_col="%s", col="%15s"
     ):

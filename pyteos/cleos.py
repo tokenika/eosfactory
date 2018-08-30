@@ -317,8 +317,8 @@ class GetAccount(Account, _Cleos):
     - **output json**::
 
         {
-            "ram_usage": 6614,            
-            "ram_quota": 290972,            
+            "ram_usage": 6614,
+            "ram_quota": 290972,
             "core_liquid_balance": "29866.4394 EOS",
             "cpu_limit": {
                 "used": 461316,

@@ -1,12 +1,13 @@
 
 import unittest
+import argparse
+import sys
 from  eosfactory import *
-import testnet_data
 
 class Test(unittest.TestCase):
 
-    def stat():
-        eosf_account.stat(
+    def stats():
+        eosf_account.stats(
             [grandpa, alice, carol],
             [
                 # "ram_usage", 
@@ -31,8 +32,6 @@ the games are correctly stored in the blockchain database.
         ''')
 
         verify_testnet()
-        if reset:
-            remove_testnet_files()
         
         create_wallet(file=True)
 
@@ -46,9 +45,11 @@ the games are correctly stored in the blockchain database.
         # grandpa.buy_ram(20, alice)
         # grandpa.buy_ram(20, carol)
 
-        grandpa.delegate_bw(carol, game_stake_net, game_stake_cpu)
-        grandpa.delegate_bw(alice, game_stake_net, game_stake_cpu)
-        Test.stat()
+        # grandpa.delegate_bw(game_stake_net, game_stake_cpu, tic_tac_toe_machine)
+        # grandpa.delegate_bw(game_stake_net, game_stake_cpu, alice)
+        # grandpa.delegate_bw(game_stake_net, game_stake_cpu, carol)
+        
+        Test.stats()
 
         contract = Contract(tic_tac_toe_machine, CONTRACT_DIR)
         if not contract.is_built():
@@ -85,7 +86,7 @@ the games are correctly stored in the blockchain database.
                 },
                 carol, payer=grandpa)
         else: 
-            tic_tac_toe_machine.ERROR()
+            tic_tac_toe_machine.action.ERROR()
         
         t = tic_tac_toe_machine.table("games", carol)
 
@@ -162,12 +163,10 @@ the games are correctly stored in the blockchain database.
 
     @classmethod
     def tearDownClass(cls):
-        Test.stat()
+        Test.stats()
         if setup.is_local_address:
             stop()
 
-import argparse
-import sys
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 _ = Logger()
@@ -177,7 +176,6 @@ start_stake_net = "0.2 EOS"
 start_stake_cpu = "0.2 EOS"
 game_stake_net = None
 game_stake_cpu = None
-reset = False
 testnet = None
 
 if __name__ == '__main__':
@@ -201,7 +199,6 @@ if __name__ == '__main__':
         "-t", "--testnet", nargs=4, help="<url> <name> <owner key> <active key>")
         
     args = parser.parse_args()
-    reset = args.reset
     if args.testnet:
         testnet = testnet_data.Testnet(
             args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3]
@@ -213,7 +210,9 @@ if __name__ == '__main__':
             if args.kylin:
                 testnet = testnet_data.kylin
             else:
-                testnet = testnet_data.LocalTestnet(reset=reset)
+                testnet = testnet_data.LocalTestnet(reset=args.reset)
+                if args.reset:
+                    remove_testnet_files()
 
     game_stake_net = "{} EOS".format(args.stake_net)
     game_stake_cpu = "{} EOS".format(args.stake_cpu)

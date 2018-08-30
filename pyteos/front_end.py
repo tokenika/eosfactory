@@ -59,7 +59,7 @@ class ContractRunning:
 
 class LowRam:
     msg_template = '''
-Ram needed is {}kB, deficiency is {}kB.
+RAM needed is {}kB, deficiency is {}kB.
 '''
     def __init__(self, needs_byte, deficiency_byte):
         self.needs_kbyte =  needs_byte// 1024 + 1
