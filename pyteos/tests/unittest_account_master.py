@@ -87,12 +87,12 @@ NEXT TEST ====================================================================
         
     #     _.COMMENT('''
     #     With the local testnet, the name of the master account is ``eosio``:
-    #     ''')        
+    #     ''')
     #     create_master_account("account_master")
     #     self.assertTrue(account_master.name == "eosio")
     #     _.COMMENT('''
     #     Wallet keys:
-    #     ''')         
+    #     ''')
     #     wallet.keys()
     #     keys1 = wallet.wallet_keys.json
 
@@ -102,11 +102,11 @@ NEXT TEST ====================================================================
     #     ''')
 
     #     eosf.stop(is_verbose=0)
-    #     eosf.run(is_verbose=0)
+    #     eosf.resume(is_verbose=0)
     #     create_wallet()
     #     _.COMMENT('''
     #     Wallet keys:
-    #     ''')           
+    #     ''')
     #     wallet.keys()
     #     keys2 = wallet.wallet_keys.json
 
@@ -119,7 +119,7 @@ NEXT TEST ====================================================================
     # def test_testnet_create_account(self):
     #     if not_imputed:
     #         return
-    
+
     #     _.COMMENT('''
     #     If the ``name`` argument is set, check the testnet for presence of the 
     #     account. If present, create the corresponding object and see whether it

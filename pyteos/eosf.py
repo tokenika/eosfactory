@@ -29,10 +29,6 @@ import cleos_system
 import eosf_contract
 
 
-def restart():
-    cleos.restart()
-
-
 def remove_testnet_files():
     if not setup.file_prefix():
         return
@@ -193,8 +189,8 @@ def reset(verbosity=None):
         logger.OUT(str(node))
 
 
-def run(verbosity=None):
-    ''' Restart the EOSIO local node.
+def resume(verbosity=None):
+    ''' Resume the EOSIO local node.
     ''' 
     logger = front_end.Logger(verbosity)
     if not cleos.set_local_nodeos_address_if_none():   
@@ -213,10 +209,9 @@ def run(verbosity=None):
 
 
 def stop(verbosity=None):
-    ''' Stops all running EOSIO nodes and empties the local `nodeos` wallet 
-    directory.
+    ''' Stops all running EOSIO nodes.
 
-    Return: True if no running nodes and the local `nodeos` wallet directory 
+    Return: `True` if no running nodes and the local `nodeos` wallet directory 
     is empty, otherwise `False`.
     '''
     stop = teos.NodeStop(is_verbose=0)

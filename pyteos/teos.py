@@ -261,18 +261,18 @@ class NodeProbe:
 
             if count <= 0:
                 self.err_msg = '''
-                The local node do not response. 
+                The local node does not respond.
                 '''
                 if is_verbose >= 0:
                     print("ERROR:")
                     print(self.err_msg)
-                    print()                    
+                    print()
                 break
         
 class NodeStop(_Teos):
     def __init__(self, is_verbose=1):
         jarg = json_module.loads("{}")
-        _Teos.__init__(self, jarg, "daemon", "stop", is_verbose)                    
+        _Teos.__init__(self, jarg, "daemon", "stop", is_verbose)
     
 class NodeIsRunning(_Teos):
     daemon_pid = ""

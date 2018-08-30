@@ -13,14 +13,14 @@ import eosf
 import eosf_wallet
 
 def restart():
-    eosf.restart()
+    cleos.restart()
     eosf_wallet.Wallet.wallet = None
 
     global wallet_singleton
     try:
         del wallet_singleton
     except:
-        pass    
+        pass
     wallet_singleton = None
 
     global wallet_globals

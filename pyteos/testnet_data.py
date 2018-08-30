@@ -22,7 +22,7 @@ class LocalTestnet(Testnet):
         if reset:
             eosf.reset(verbosity=[front_end.Verbosity.ERROR])
         else:
-            eosf.run(verbosity=[front_end.Verbosity.ERROR])
+            eosf.resume(verbosity=[front_end.Verbosity.ERROR])
         eosio = eosf_account.Eosio("account_master")
 
         setup.is_local_address = True

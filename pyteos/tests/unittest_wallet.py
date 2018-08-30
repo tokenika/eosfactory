@@ -77,7 +77,7 @@ Tests:
     #     eosf.reset([front_end.Verbosity.INFO])
     #     eosf.Wallet()
     #     eosf.stop(is_verbose=0)
-    #     eosf.run(is_verbose=0)
+    #     eosf.resume(is_verbose=0)
         
     #     wallet = eosf.Wallet()
     #     self.assertTrue(wallet.error)
@@ -87,7 +87,7 @@ Tests:
     #     eosf.reset([front_end.Verbosity.INFO])
     #     wallet = eosf.Wallet()
     #     eosf.stop(is_verbose=0)
-    #     eosf.run(is_verbose=0)        
+    #     eosf.resume(is_verbose=0)
         
     #     wallet = eosf.Wallet(
     #         None, "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV")
