@@ -1,17 +1,14 @@
+import unittest, argparse, sys
+from eosfactory import *
 
-import unittest
-import argparse
-import sys
-from  eosfactory import *
-
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]#, Verbosity.TRACE]
 _ = Logger()
-CONTRACT_DIR = "03_tic_tac_toe"
 
-extra_ram = 20
-initial_stake_net = "1.0 EOS"
-initial_stake_cpu = "1.0 EOS"
+CONTRACT_WORKSPACE = "03_tic_tac_toe"
 
+INITIAL_RAM_KBYTES = 12
+INITIAL_STAKE_NET = "10.0 EOS"
+INITIAL_STAKE_CPU = "10.0 EOS"
 
 class Test(unittest.TestCase):
 
@@ -23,13 +20,18 @@ class Test(unittest.TestCase):
                 "ram_usage",
                 "ram_quota",
                 "total_resources.ram_bytes",
+                "self_delegated_bandwidth.net_weight",
                 "self_delegated_bandwidth.cpu_weight",
+                "total_resources.net_weight",
                 "total_resources.cpu_weight",
+                "net_limit.available",
+                "net_limit.max",
+                "net_limit.used",
                 "cpu_limit.available",
                 "cpu_limit.max",
                 "cpu_limit.used"
             ]
-            )
+        )
 
     @classmethod
     def setUpClass(cls):
@@ -41,25 +43,30 @@ class Test(unittest.TestCase):
         ''')
 
         verify_testnet()
-
         create_wallet(file=True)
-
         testnet.create_master_account("master")
-        create_account("alice", master, initial_stake_net, initial_stake_cpu)
-        create_account("carol", master, initial_stake_net, initial_stake_cpu)
-        create_account("host", master, initial_stake_net, initial_stake_cpu)
 
-        # master.buy_ram(extra_ram, host)
-        # master.buy_ram(extra_ram, alice)
-        # master.buy_ram(extra_ram, carol)
+        create_account("host", master,
+            buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+        create_account("alice", master,
+            buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+        create_account("carol", master,
+            buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
-        # master.delegate_bw(extra_stake_net, extra_stake_cpu, host)
-        # master.delegate_bw(extra_stake_net, extra_stake_cpu, alice)
-        # master.delegate_bw(extra_stake_net, extra_stake_cpu, carol)
+
+        if (extra_ram > 0):
+            master.buy_ram(extra_ram, host)
+            master.buy_ram(extra_ram, alice)
+            master.buy_ram(extra_ram, carol)
+
+        if (extra_stake_net != "0 EOS" or extra_stake_cpu != "0 EOS"):
+            master.delegate_bw(extra_stake_net, extra_stake_cpu, host)
+            master.delegate_bw(extra_stake_net, extra_stake_cpu, alice)
+            master.delegate_bw(extra_stake_net, extra_stake_cpu, carol)
 
         cls.stats()
 
-        contract = Contract(host, CONTRACT_DIR)
+        contract = Contract(host, CONTRACT_WORKSPACE)
         if not contract.is_built():
             contract.build()
 
@@ -71,16 +78,15 @@ class Test(unittest.TestCase):
 
 
     def test_01(self):
-
         _.COMMENT('''
         Attempting to create a new game.
         This might fail if the previous game has not been closes properly:
         ''')
         set_is_testing_errors(True)
         host.push_action(
-            "create", 
+            "create",
             {
-                "challenger": alice, 
+                "challenger": alice,
                 "host": carol
             },
             carol, payer=master)
@@ -95,7 +101,7 @@ class Test(unittest.TestCase):
                     "close",
                     {
                         "challenger": alice,
-                        "host": carol 
+                        "host": carol
                     }, 
                     carol, payer=master)
 
@@ -210,24 +216,26 @@ class Test(unittest.TestCase):
             stop()
 
 
+testnet = None
+extra_ram = None
 extra_stake_net = None
 extra_stake_cpu = None
-testnet = None
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='''
-    Unit test for the ``tic-tac-toe`` smart contract.
-    It works both on a local private testnet and remote public testnet.
-    The default option is a local private testnet.
+    This is a unit test for the ``tic-tac-toe`` smart contract.
+    It works both on a local testnet and remote testnet.
+    The default option is local testnet.
     ''')
 
-    parser.add_argument("-net", "--stake_net", default=10.0, help="net stake in EOS")
-    parser.add_argument("-cpu", "--stake_cpu", default=10.0, help="cpu stake in EOS")
+    parser.add_argument("-ram", "--ram_kbytes", default=0, help="extra RAM in kbytes")
+    parser.add_argument("-net", "--stake_net", default=0, help="extra NET stake in EOS")
+    parser.add_argument("-cpu", "--stake_cpu", default=0, help="extra CPU stake in EOS")
 
     parser.add_argument(
         "-r", "--reset", action="store_true",
-        help="Reset the local testnet")
+        help="Reset testnet cache")
     parser.add_argument(
         "-c", "--cryptolion", action="store_true",
         help="Using the cryptolion testnet")
@@ -251,12 +259,15 @@ if __name__ == '__main__':
                 testnet = testnet_data.kylin
             else:
                 testnet = testnet_data.LocalTestnet(reset=args.reset)
-                if args.reset:
-                    remove_testnet_files()
 
+    if args.reset:
+        remove_testnet_files()
+
+    extra_ram = int(args.ram_kbytes)
     extra_stake_net = "{} EOS".format(args.stake_net)
     extra_stake_cpu = "{} EOS".format(args.stake_cpu)
-    configure_testnet(testnet.url, "tic_tac_toe")
+
+    configure_testnet(testnet.url, CONTRACT_WORKSPACE )
 
     sys.argv[1:] = []
     unittest.main()
