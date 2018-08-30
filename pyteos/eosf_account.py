@@ -763,7 +763,7 @@ def create_account(
         account_name="",
         owner_key="", active_key="",
         permission=None,
-        buy_ram_kbytes=1, buy_ram="",
+        buy_ram_kbytes=8, buy_ram="",
         transfer=False,
         expiration_sec=30,
         skip_signature=0, dont_broadcast=0, forceUnique=0,
