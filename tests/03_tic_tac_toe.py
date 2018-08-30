@@ -165,6 +165,7 @@ the games are correctly stored in the blockchain database.
             stop()
 
 import argparse
+import sys
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 _ = Logger()
@@ -172,44 +173,49 @@ CONTRACT_DIR = "03_tic_tac_toe"
 
 start_stake_net = "0.2 EOS" 
 start_stake_cpu = "0.2 EOS"
+game_stake_net = None
+game_stake_cpu = None
 reset = False
+testnet = None
 
-parser = argparse.ArgumentParser(description='''
-Unittest for the ``tic-tac-toe`` smart contract.
-Default testnet is the local node.
-''')
+if __name__ == '__main__':
 
-parser.add_argument(
-    "-r", "--reset", action="store_true", 
-    help="Reset wallet files.")
-parser.add_argument("-n", "--stake_net", default=0.1, help="in EOS")
-parser.add_argument("-p", "--stake_cpu", default=0.1, help="in EOS")
-parser.add_argument(
-    "-d", "--cryptolion", action="store_true", 
-    help="Using the cryptolion testnet")
-parser.add_argument(
-    "-k", "--kylin", action="store_true", help="Using the kylin testnet")
-parser.add_argument(
-    "-t", "--testnet", nargs=4, help="<url> <name> <owner key> <active key>")
-    
-args = parser.parse_args()
-print(args.reset)
-# reset = args.reset
-if args.testnet:
-    testnet = testnet_data.Testnet(
-        args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3]
-    )
-else:
-    if args.cryptolion:
-        testnet = testnet_data.cryptolion
+    parser = argparse.ArgumentParser(description='''
+    Unittest for the ``tic-tac-toe`` smart contract.
+    Default testnet is the local node.
+    ''')
+
+    parser.add_argument(
+        "-r", "--reset", action="store_true", 
+        help="Reset wallet files.")
+    parser.add_argument("-n", "--stake_net", default=0.1, help="in EOS")
+    parser.add_argument("-p", "--stake_cpu", default=0.1, help="in EOS")
+    parser.add_argument(
+        "-c", "--cryptolion", action="store_true", 
+        help="Using the cryptolion testnet")
+    parser.add_argument(
+        "-k", "--kylin", action="store_true", help="Using the kylin testnet")
+    parser.add_argument(
+        "-t", "--testnet", nargs=4, help="<url> <name> <owner key> <active key>")
+        
+    args = parser.parse_args()
+    reset = args.reset
+    if args.testnet:
+        testnet = testnet_data.Testnet(
+            args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3]
+        )
     else:
-        if args.kylin:
-            testnet = testnet_data.kylin
+        if args.cryptolion:
+            testnet = testnet_data.cryptolion
         else:
-            testnet = testnet_data.LocalTestnet(reset=reset)
+            if args.kylin:
+                testnet = testnet_data.kylin
+            else:
+                testnet = testnet_data.LocalTestnet(reset=reset)
 
-game_stake_net = "{} EOS".format(args.stake_net)
-game_stake_cpu = "{} EOS".format(args.stake_cpu)
-configure_testnet(testnet.url, "tic_tac_toe")
+    game_stake_net = "{} EOS".format(args.stake_net)
+    game_stake_cpu = "{} EOS".format(args.stake_cpu)
+    configure_testnet(testnet.url, "tic_tac_toe")
 
-unittest.main(args)
+    sys.argv[1:] = []
+    unittest.main()
