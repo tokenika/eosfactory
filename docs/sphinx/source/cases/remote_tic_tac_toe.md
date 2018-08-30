@@ -93,10 +93,31 @@ If a new account is created, the system precisely determines its need for the RA
 ```md
         '''
         testnet.create_master_account("grandpa")
+        
         create_account("alice", grandpa, start_stake_net, start_stake_cpu)  
         create_account("carol", grandpa, start_stake_net, start_stake_cpu) 
         create_account(
             "tic_tac_toe_machine", grandpa, start_stake_net, start_stake_cpu)
+
+        eosf_account.stat(
+            [grandpa, alice, carol],
+            [
+                "ram_usage", 
+                "ram_quota",
+                "core_liquid_balance",
+
+                "cpu_limit.available", 
+                "cpu_limit.max",
+                "cpu_limit.used",
+                "total_resources.ram_bytes"
+            ]
+            )
+
+        # grandpa.buy_ram(20, tic_tac_toe_machine)
+        # grandpa.buy_ram(20, alice)
+        # grandpa.buy_ram(20, carol)
+        # exit()
+
         '''
 ```
 Grandpa pays for the game:
@@ -228,6 +249,19 @@ Gaming involves making the tic_tac_toe_machine to push acctions at the expense o
 
     @classmethod
     def tearDownClass(cls):
+        eosf_account.stat(
+            [grandpa, alice, carol],
+            [
+                "ram_usage", 
+                "ram_quota",
+                "core_liquid_balance",
+
+                "cpu_limit.available", 
+                "cpu_limit.max",
+                "cpu_limit.used",
+                "total_resources.ram_bytes"
+            ]
+            )
         if setup.is_local_address:
             stop()
 '''

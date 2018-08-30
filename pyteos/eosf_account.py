@@ -818,6 +818,7 @@ def create_account(
                         ... for the existing blockchain account ``{}``.
                         '''.format(account_name))
         account_object = RestoreAccount(account_name, verbosity)
+        account_object.account_object_name = account_object_name
     else:
         if not account_name:
             account_name = cleos.account_name()
@@ -891,3 +892,37 @@ def create_account(
             ''')
         append_account_methods_and_finish(
             account_object_name, account_object, logger)
+
+
+def stat(
+        accounts, params, 
+        first_col="%35s", col="%18s"
+    ):
+    def find(element, json):
+        try:
+            keys = element.split('.')
+            rv = json
+            for key in keys:
+                rv = rv[key]
+        except:
+            rv = "n/a"
+        return rv
+
+    jsons = []
+    for account in accounts:
+        json = cleos.GetAccount(account, json=True, is_verbose=0).json
+        json["account_object_name"] = account.account_object_name
+        jsons.append(json)
+
+    header = first_col % ("")
+    for json in jsons:
+        header = header + col % (json["account_object_name"])
+    output = header + "\n\n"
+
+    for param in params:
+        output = output + first_col % (param)
+        for json in jsons:
+            output = output + col % find(param, json)
+        output = output + "\n"
+
+    front_end.Logger().OUT(output, verbatim=True)

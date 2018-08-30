@@ -174,7 +174,8 @@ class BuyRam(cleos._Cleos):
             is_verbose=1
             ):
 
-        args = [self._account_arg(payer), self._account_arg(receiver), amount]
+        args = [self._account_arg(payer), self._account_arg(receiver), 
+                str(amount)]
         if buy_ram_kbytes:
             args.extend(["--kbytes"])
 
@@ -264,4 +265,8 @@ class DelegateBw(cleos._Cleos):
             self, args, "system", "delegatebw", is_verbose)
 
         self.ERROR()
+
+
+
+
             

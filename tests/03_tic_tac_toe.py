@@ -1,8 +1,9 @@
+
 import unittest
 from  eosfactory import *
 import testnet_data
 
-Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 _ = Logger()
 CONTRACT_DIR = "03_tic_tac_toe"
 
@@ -11,8 +12,27 @@ start_stake_cpu = "0.2 EOS"
 game_stake_net = "0.1 EOS" 
 game_stake_cpu = "0.1 EOS"
 
+reset = False
+testnet = testnet_data.cryptolion #LocalTestnet(reset=reset)  kylin  
+configure_testnet(testnet.url, "tic_tac_toe")
+
 class Test(unittest.TestCase):
 
+    def stat(self):
+        eosf_account.stat(
+            [grandpa, alice, carol],
+            [
+                # "ram_usage", 
+                # "ram_quota",
+                "core_liquid_balance",
+                "self_delegated_bandwidth.cpu_weight",
+                "total_resources.cpu_weight",
+                "cpu_limit.available", 
+                "cpu_limit.max",
+                "cpu_limit.used",
+                "total_resources.ram_bytes"
+            ]
+            )
 
     @classmethod
     def setUpClass(cls):
@@ -22,26 +42,35 @@ account equipped with an instance of the ``tic_tac_toe`` smart contract. There
 are two players ``alice`` and ``carol`` that play games. Test that the moves of 
 the games are correctly stored in the blockchain database.
         ''')
-        verify_testnet()
 
+        verify_testnet()
         if reset:
             remove_testnet_files()
-
+        
         create_wallet(file=True)
+
         testnet.create_master_account("grandpa")
         create_account("alice", grandpa, start_stake_net, start_stake_cpu)  
-        create_account("carol", grandpa, start_stake_net, start_stake_cpu)
+        create_account("carol", grandpa, start_stake_net, start_stake_cpu) 
         create_account(
             "tic_tac_toe_machine", grandpa, start_stake_net, start_stake_cpu)
 
+        # grandpa.buy_ram(20, tic_tac_toe_machine)
+        # grandpa.buy_ram(20, alice)
+        # grandpa.buy_ram(20, carol)
+
         grandpa.delegate_bw(carol, game_stake_net, game_stake_cpu)
+        grandpa.delegate_bw(alice, game_stake_net, game_stake_cpu)
 
         contract = Contract(tic_tac_toe_machine, CONTRACT_DIR)
         if not contract.is_built():
             contract.build()
-        contract.deploy(payer=grandpa) 
+           
+        # contract.deploy(payer=grandpa)                   
 
     def test_tic_tac_toe(self):
+        self.stat()
+
         set_is_testing_errors()       
         tic_tac_toe_machine.push_action(
             "create", 
@@ -141,6 +170,8 @@ the games are correctly stored in the blockchain database.
                 "host": carol 
             }, 
             carol, payer=grandpa)
+
+        self.stat()
 
     @classmethod
     def tearDownClass(cls):

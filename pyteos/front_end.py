@@ -142,10 +142,12 @@ class Logger():
             color = Verbosity.INFO.value
             cprint(translate(msg), color[0], color[1], attrs=color[2])        
 
-    def OUT(self, msg):
+    def OUT(self, msg, verbatim=False):
         if msg and (Verbosity.OUT in self._verbosity):
             color = Verbosity.OUT.value
-            cprint(translate(msg), color[0], color[1], attrs=color[2])
+            if not verbatim:
+                msg = translate(msg)
+            cprint(msg, color[0], color[1], attrs=color[2])
 
     def DEBUG(self, msg):
         msg = translate(msg)
