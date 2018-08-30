@@ -3,22 +3,9 @@ import unittest
 from  eosfactory import *
 import testnet_data
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-_ = Logger()
-CONTRACT_DIR = "03_tic_tac_toe"
-
-start_stake_net = "0.2 EOS" 
-start_stake_cpu = "0.2 EOS"
-game_stake_net = "0.1 EOS" 
-game_stake_cpu = "0.1 EOS"
-
-reset = False
-testnet = testnet_data.cryptolion #LocalTestnet(reset=reset)  kylin  
-configure_testnet(testnet.url, "tic_tac_toe")
-
 class Test(unittest.TestCase):
 
-    def stat(self):
+    def stat():
         eosf_account.stat(
             [grandpa, alice, carol],
             [
@@ -49,7 +36,7 @@ the games are correctly stored in the blockchain database.
         
         create_wallet(file=True)
 
-        testnet.create_master_account("grandpa")
+        testnet.create_master_account("grandpa")        
         create_account("alice", grandpa, start_stake_net, start_stake_cpu)  
         create_account("carol", grandpa, start_stake_net, start_stake_cpu) 
         create_account(
@@ -61,15 +48,15 @@ the games are correctly stored in the blockchain database.
 
         grandpa.delegate_bw(carol, game_stake_net, game_stake_cpu)
         grandpa.delegate_bw(alice, game_stake_net, game_stake_cpu)
+        Test.stat()
 
         contract = Contract(tic_tac_toe_machine, CONTRACT_DIR)
         if not contract.is_built():
             contract.build()
            
-        # contract.deploy(payer=grandpa)                   
+        contract.deploy(payer=grandpa)                   
 
     def test_tic_tac_toe(self):
-        self.stat()
 
         set_is_testing_errors()       
         tic_tac_toe_machine.push_action(
@@ -171,21 +158,30 @@ the games are correctly stored in the blockchain database.
             }, 
             carol, payer=grandpa)
 
-        self.stat()
-
     @classmethod
     def tearDownClass(cls):
+        Test.stat()
         if setup.is_local_address:
             stop()
 
 import argparse
+
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+_ = Logger()
+CONTRACT_DIR = "03_tic_tac_toe"
+
+start_stake_net = "0.2 EOS" 
+start_stake_cpu = "0.2 EOS"
+reset = False
 
 parser = argparse.ArgumentParser(description='''
 Unittest for the ``tic-tac-toe`` smart contract.
 Default testnet is the local node.
 ''')
 
-parser.add_argument("-r", "--restore", default=False)
+parser.add_argument(
+    "-r", "--reset", action="store_true", 
+    help="Reset wallet files.")
 parser.add_argument("-n", "--stake_net", default=0.1, help="in EOS")
 parser.add_argument("-p", "--stake_cpu", default=0.1, help="in EOS")
 parser.add_argument(
@@ -197,6 +193,8 @@ parser.add_argument(
     "-t", "--testnet", nargs=4, help="<url> <name> <owner key> <active key>")
     
 args = parser.parse_args()
+print(args.reset)
+# reset = args.reset
 if args.testnet:
     testnet = testnet_data.Testnet(
         args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3]
@@ -208,7 +206,7 @@ else:
         if args.kylin:
             testnet = testnet_data.kylin
         else:
-            testnet = testnet_data.LocalTestnet(reset=args.restore)
+            testnet = testnet_data.cryptolion #testnet_data.LocalTestnet(reset=reset)
 
 game_stake_net = "{} EOS".format(args.stake_net)
 game_stake_cpu = "{} EOS".format(args.stake_cpu)

@@ -400,7 +400,6 @@ class GetAccount(Account, _Cleos):
 
         _Cleos.__init__(self, args, "get", "account", is_verbose)
         if not self.error:        
-            # import pdb; pdb.set_trace()
             if json:
                 self.json = json_module.loads(self.out_msg)
                 self.owner_key = self.json["permissions"][1]["required_auth"] \

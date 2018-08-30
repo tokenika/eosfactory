@@ -89,7 +89,7 @@ def is_local_testnet_running(account_eosio):
     else:
         try: # remote eosio may have the ["keys"] array empty.
             return account_eosio.owner_key.key_public == \
-                account_.json["permissions"][0]["required_auth"]["keys"] \
+                account_.json["permissions"][1]["required_auth"]["keys"] \
                     [0]["key"]
         except:
             False        
@@ -400,7 +400,7 @@ def create_master_account(
     If the local testnet is running, create an account object representing 
     the ``eosio`` account. Put the account into the wallet. Put the account
     object into the global namespace of the caller, and **return**.
-    '''
+    '''   
     account_object = Eosio(account_object_name)
     if is_local_testnet_running(account_object):
         put_account_to_wallet_and_on_stack(
@@ -882,7 +882,7 @@ def create_account(
                     verbosity
                     )
 
-
+        account_object.account_object_name = account_object_name
         account_object.owner_key = owner_key
         account_object.active_key = active_key
 

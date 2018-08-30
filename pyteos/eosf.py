@@ -136,9 +136,6 @@ def save_account_mapp(account_map):
     wallet_dir_ = wallet_dir()
 
     try: # whether the setup map file exists:
-        with open(wallet_dir_ + setup.account_map, "r") as input:
-            account_map = json.load(input)
-
         with open(wallet_dir_ + setup.account_map, "w") as out:
             out.write(account_mapp_to_string(account_map))            
     except Exception as e:

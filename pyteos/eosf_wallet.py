@@ -294,7 +294,6 @@ class Wallet(cleos.WalletCreate):
         account_map = eosf.account_map()
         new_map = {}
         wallet_keys = cleos.WalletKeys(is_verbose=0)
-
         if len(account_map) > 0:
             self.INFO('''
                     ######### Restored accounts as global variables:

@@ -56,7 +56,6 @@ def file_prefix():
 
 
 def restart():
-    import pdb; pdb.set_trace()
     global is_local_address
     is_local_address = False
     global _nodeos_address
