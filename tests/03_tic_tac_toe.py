@@ -185,7 +185,7 @@ parser.add_argument(
 parser.add_argument("-n", "--stake_net", default=0.1, help="in EOS")
 parser.add_argument("-p", "--stake_cpu", default=0.1, help="in EOS")
 parser.add_argument(
-    "-c", "--cryptolion", action="store_true", 
+    "-d", "--cryptolion", action="store_true", 
     help="Using the cryptolion testnet")
 parser.add_argument(
     "-k", "--kylin", action="store_true", help="Using the kylin testnet")
@@ -206,10 +206,10 @@ else:
         if args.kylin:
             testnet = testnet_data.kylin
         else:
-            testnet = testnet_data.cryptolion #testnet_data.LocalTestnet(reset=reset)
+            testnet = testnet_data.LocalTestnet(reset=reset)
 
 game_stake_net = "{} EOS".format(args.stake_net)
 game_stake_cpu = "{} EOS".format(args.stake_cpu)
 configure_testnet(testnet.url, "tic_tac_toe")
 
-unittest.main()
+unittest.main(args)

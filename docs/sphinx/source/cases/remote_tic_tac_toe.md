@@ -40,6 +40,22 @@ configure_testnet(testnet.url, "tic_tac_toe")
 '''
 class Test(unittest.TestCase):
 
+    def stat():
+        eosf_account.stat(
+            [grandpa, alice, carol],
+            [
+                # "ram_usage", 
+                # "ram_quota",
+                "core_liquid_balance",
+                "self_delegated_bandwidth.cpu_weight",
+                "total_resources.cpu_weight",
+                "cpu_limit.available", 
+                "cpu_limit.max",
+                "cpu_limit.used",
+                "total_resources.ram_bytes"
+            ]
+            )
+
     @classmethod
     def setUpClass(cls):
         '''
@@ -92,38 +108,23 @@ If a new account is created, the system precisely determines its need for the RA
 
 ```md
         '''
-        testnet.create_master_account("grandpa")
-        
+        testnet.create_master_account("grandpa")        
         create_account("alice", grandpa, start_stake_net, start_stake_cpu)  
         create_account("carol", grandpa, start_stake_net, start_stake_cpu) 
         create_account(
             "tic_tac_toe_machine", grandpa, start_stake_net, start_stake_cpu)
 
-        eosf_account.stat(
-            [grandpa, alice, carol],
-            [
-                "ram_usage", 
-                "ram_quota",
-                "core_liquid_balance",
-
-                "cpu_limit.available", 
-                "cpu_limit.max",
-                "cpu_limit.used",
-                "total_resources.ram_bytes"
-            ]
-            )
-
         # grandpa.buy_ram(20, tic_tac_toe_machine)
         # grandpa.buy_ram(20, alice)
         # grandpa.buy_ram(20, carol)
-        # exit()
-
         '''
 ```
 Grandpa pays for the game:
 ```md
         '''
         grandpa.delegate_bw(carol, game_stake_net, game_stake_cpu)
+        grandpa.delegate_bw(alice, game_stake_net, game_stake_cpu)
+        Test.stat()
 
         contract = Contract(tic_tac_toe_machine, CONTRACT_DIR)
         if not contract.is_built():
@@ -249,19 +250,7 @@ Gaming involves making the tic_tac_toe_machine to push acctions at the expense o
 
     @classmethod
     def tearDownClass(cls):
-        eosf_account.stat(
-            [grandpa, alice, carol],
-            [
-                "ram_usage", 
-                "ram_quota",
-                "core_liquid_balance",
-
-                "cpu_limit.available", 
-                "cpu_limit.max",
-                "cpu_limit.used",
-                "total_resources.ram_bytes"
-            ]
-            )
+        Test.stat()
         if setup.is_local_address:
             stop()
 '''
