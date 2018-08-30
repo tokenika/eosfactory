@@ -896,7 +896,7 @@ def create_account(
 
 def stat(
         accounts, params, 
-        first_col="%35s", col="%18s"
+        last_col="%s", col="%15s"
     ):
     def find(element, json):
         try:
@@ -914,15 +914,14 @@ def stat(
         json["account_object_name"] = account.account_object_name
         jsons.append(json)
 
-    header = first_col % ("")
+    header = ""
     for json in jsons:
         header = header + col % (json["account_object_name"])
     output = header + "\n\n"
 
     for param in params:
-        output = output + first_col % (param)
         for json in jsons:
             output = output + col % find(param, json)
-        output = output + "\n"
+        output = output + "  " + last_col % (param) + "\n" 
 
     front_end.Logger().OUT(output, verbatim=True)
