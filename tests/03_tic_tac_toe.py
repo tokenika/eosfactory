@@ -84,6 +84,8 @@ the games are correctly stored in the blockchain database.
                     "host": carol
                 },
                 carol, payer=grandpa)
+        else: 
+            tic_tac_toe_machine.ERROR()
         
         t = tic_tac_toe_machine.table("games", carol)
 
