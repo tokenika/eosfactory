@@ -329,7 +329,7 @@ def create_master_account(
     ##############
 
     Otherwise, an outer testnet has to be defined with 
-    ``setup.configure_testnet(<url>)``.
+    ``setup.set_nodeos_address(<url>)``.
 
     Existing account
     ****************
@@ -418,14 +418,14 @@ def create_master_account(
 
     '''
     Otherwise, an outer testnet has to be defined with 
-    ``setup.configure_testnet(<url>)``.
+    ``setup.set_nodeos_address(<url>)``.
     '''
 
     if setup.is_local_address:
         logger.ERROR('''
         If the local testnet is not running, an outer testnet has to be 
-        defined with `setup.configure_testnet(<url>)`.
-        Use 'setup.configure_testnet(<URL>)'
+        defined with `setup.set_nodeos_address(<url>)`.
+        Use 'setup.set_nodeos_address(<URL>)'
         ''')
         return
 

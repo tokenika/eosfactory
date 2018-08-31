@@ -11,7 +11,7 @@ class Testnet:
         self.active_key = active_key
 
     def configure(self, prefix):
-        setup.configure_testnet(self.url, prefix)
+        setup.set_nodeos_address(self.url, prefix)
 
 
 class LocalTestnet(Testnet):

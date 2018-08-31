@@ -68,7 +68,7 @@ they can add it to the Factory. In this show, we use an real account represented
 '''
 restart()
 testnet = testnode_data.kylin
-configure_testnet(testnet.url, prefix="temp")
+set_nodeos_address(testnet.url, prefix="temp")
 '''
 ```
 Delete files possibly created previously:

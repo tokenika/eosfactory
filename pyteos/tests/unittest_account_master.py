@@ -126,7 +126,7 @@ NEXT TEST ====================================================================
     #     is in the wallets. If so, put the account object into the global namespace 
     #     of the caller.
     #     ''')
-    #     setup.configure_testnet(remote_testnet)
+    #     setup.set_nodeos_address(remote_testnet)
     #     wallet = Wallet(
     #         None,
     #         "PW5J5KW7erKzqJmn9gMrvzev4pLxR3Vt9BRkx94BqdfHkw4z4bNTd"
@@ -171,7 +171,7 @@ NEXT TEST ====================================================================
         Owner Private Key: 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY
         Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA        
         ''')
-        setup.configure_testnet(remote_testnet)
+        setup.set_nodeos_address(remote_testnet)
         create_wallet(
             None,
             "PW5J5KW7erKzqJmn9gMrvzev4pLxR3Vt9BRkx94BqdfHkw4z4bNTd"

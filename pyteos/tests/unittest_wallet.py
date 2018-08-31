@@ -47,7 +47,7 @@ Tests:
         except:
             pass
         front_end.set_is_testing_errors()
-        setup.configure_testnet(remote_testnet)
+        setup.set_nodeos_address(remote_testnet)
         ######################################################################
 
         create_wallet(wallet_name)

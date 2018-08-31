@@ -4,7 +4,7 @@ import argparse
 def register_account(
     testnode_url, account_object_name):
 
-    configure_testnet(testnode_url)
+    set_nodeos_address(testnode_url)
     if not verify_testnet():
         return
 

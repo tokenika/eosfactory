@@ -39,4 +39,4 @@ status = eosf.status
 remove_testnet_cache = eosf.remove_testnet_cache
 verify_testnet = eosf.verify_testnet
 
-configure_testnet = setup.configure_testnet
+set_nodeos_address = setup.set_nodeos_address

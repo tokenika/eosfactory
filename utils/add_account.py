@@ -5,7 +5,7 @@ def add_account(
     testnode_url, account_object_name,
     account_name, owner_key, active_key):
 
-    configure_testnet(testnode_url)
+    set_nodeos_address(testnode_url)
     if not verify_testnet():
         return
 

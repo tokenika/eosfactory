@@ -46,7 +46,7 @@ Test:
     If the given name is not available, the factory loops.
 ''')
 
-setup.configure_testnet(remote_testnet)
+setup.set_nodeos_address(remote_testnet)
 eosf.kill_keosd()
 
 wallet_name = "jungle_wallet"

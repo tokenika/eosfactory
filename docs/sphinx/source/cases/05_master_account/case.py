@@ -11,7 +11,7 @@ restart()
 
 testnet = testnode_data.kylin
 
-configure_testnet(testnet.url, prefix="temp")
+set_nodeos_address(testnet.url, prefix="temp")
 remove_testnet_cache()
 #set_testnet_configuration(testnet.url, prefix="temp")
 #remove_testnet_cache()

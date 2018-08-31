@@ -32,7 +32,7 @@ game_stake_cpu = 0.1
 
 reset = False
 testnet = testnet_data.LocalTestnet(reset=reset) # cryptolion kylin  
-configure_testnet(testnet.url, "tic_tac_toe")
+set_nodeos_address(testnet.url, "tic_tac_toe")
 '''
 ```
 
@@ -77,7 +77,7 @@ The Factory produces three files for each testnet used:
 * wallet password mapping file,
 * account mapping file.
 
-The files are marked with a prefix that is set as the second argument in the statement `configure_testnet(...)` above.
+The files are marked with a prefix that is set as the second argument in the statement `set_nodeos_address(...)` above.
 
 These files should be edited rather, than being deleted. However if the testnet is set to be `testnet_data.LocalTestnet()`, and the local testnet is reset, the contents of them is useles, then remove them:
  
