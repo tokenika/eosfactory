@@ -24,13 +24,10 @@ class LocalTestnet(Testnet):
 
         setup.is_local_address = True
         Testnet.__init__(
-            self, 
-            None, 
-            eosio.name,
+            self, None, eosio.name,
             eosio.owner_key.key_private, eosio.active_key.key_private)
 
 
-# /mnt/c/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://88.99.97.30:38888 get info
 cryptolion = Testnet(
     "http://88.99.97.30:38888",
     "dgxo1uyhoytn",
@@ -45,9 +42,4 @@ kylin = Testnet(
     "5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX"
 )
 
-local = Testnet(
-    "https://api.kylin-testnet.eospace.io",
-    "eosio",
-    "5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67",
-    "5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX"
-)
+# /mnt/c/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://88.99.97.30:38888 get info

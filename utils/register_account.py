@@ -21,8 +21,8 @@ Example:
     python3 register_to_testnode.py https://api.kylin-testnet.eospace.io master
 ''')
 
-parser.add_argument("testnode_url")
-parser.add_argument("account_object_name")
+parser.add_argument("testnode_url", help="An URL of a public node offering access to the testnet, e.g. http://88.99.97.30:38888")
+parser.add_argument("account_object_name", help="The name of a Python variable which will hold reference the new account, e.g. master")
 
 args = parser.parse_args()
 register_account(
