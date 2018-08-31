@@ -18,7 +18,7 @@ class Test(unittest.TestCase):
         Create a contract from template, then build and deploy it.
         Also, initialize the token and run a couple of transfers between different accounts.
         ''')
-        reset([Verbosity.INFO])
+        reset()
         create_wallet()
         create_master_account("account_master")
 

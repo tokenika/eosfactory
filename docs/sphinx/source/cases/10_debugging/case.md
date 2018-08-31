@@ -35,7 +35,7 @@ CONTRACT_DIR = "01_hello_world"
 restart()
 set_is_testing_errors(False)
 set_throw_error(True)
-reset([Verbosity.INFO]) 
+reset() 
 
 create_wallet()
 create_master_account("account_master")

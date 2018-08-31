@@ -22,7 +22,7 @@ managedby  the KEOSD:
 
 ```md
 '''
-reset([Verbosity.INFO])
+reset()
 create_wallet()
 '''
 ```

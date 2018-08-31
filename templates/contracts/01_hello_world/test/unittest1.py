@@ -17,7 +17,7 @@ class Test(unittest.TestCase):
         _.SCENARIO('''
         Execute simple actions, debug buffer and authority mismatch detection.
         ''')
-        reset([Verbosity.INFO])
+        reset()
         create_wallet()
         create_master_account("account_master")
 
@@ -26,8 +26,7 @@ class Test(unittest.TestCase):
         ''')
         create_account("account_host", account_master)
         contract = Contract(account_host, CONTRACT_WORKSPACE)
-        if not contract.is_built():
-            contract.build()
+        contract.build(force=False)
         contract.deploy()
 
         _.COMMENT('''

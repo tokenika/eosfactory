@@ -10,7 +10,7 @@ def test():
     _.SCENARIO('''
     Initialize the token and run a couple of transfers between different accounts.
     ''')
-    reset([Verbosity.INFO])
+    reset()
     create_wallet()
     create_master_account("account_master")
 
@@ -19,8 +19,7 @@ def test():
     ''')
     create_account("account_host", account_master)
     contract = Contract(account_host, CONTRACT_WORKSPACE)
-    if not contract.is_built():
-        contract.build()
+    contract.build(force=False)
     contract.deploy()
 
     _.COMMENT('''
