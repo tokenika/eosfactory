@@ -60,40 +60,6 @@ def wallet_dir():
     return os.path.expandvars(teos.get_keosd_wallet_dir())
 
 
-def account_map(logger=None):
-    '''Return json account map
-    '''
-    wallet_dir_ = wallet_dir()
-    while True:
-        try: # whether the setup map file exists:
-            with open(wallet_dir_ + setup.account_map, "r") as input_file:
-                return json.load(input_file)
-
-        except Exception as e:
-            if isinstance(e, FileNotFoundError):
-                return {}
-            else: 
-                if not logger is None:
-                    logger.ERROR('''
-                The account mapping file is misformed. The error message is:
-                {}
-                
-                Do you want to edit the file?
-                '''.format(str(e)))
-                        
-                    answer = input("y/n <<< ")
-                    if answer == "y":
-                        edit_account_map()
-                        continue
-                    else:
-                        logger.ERROR('''
-            Use the function 'eosf.edit_account_map(text_editor="nano")'
-            or the corresponding method of any object of the 'eosf_wallet.Wallet` 
-            class to edit the file.
-                        ''')                    
-                        return None
-
-
 def accout_names_2_object_names(sentence):
     if not setup.is_translating:
         return sentence
@@ -117,35 +83,6 @@ def object_names_2_accout_names(sentence):
         sentence = sentence.replace(account_object_name, name)
 
     return sentence
-
-
-def edit_account_map(text_editor="nano"):
-    import subprocess
-    subprocess.run([text_editor, wallet_dir() + setup.account_map])
-
-
-def account_mapp_to_string(account_map):
-    sort = sorted(account_map, key=account_map.get, reverse=False)
-    retval = "{\n"
-    next = False
-    for k in sort:
-        if next:
-            retval = retval + ",\n"
-        next = True
-        retval = retval + '    "{}": "{}"'.format(k, account_map[k])
-    retval = retval + "\n}\n"
-
-    return retval
-
-
-def save_account_mapp(account_map):
-    wallet_dir_ = wallet_dir()
-
-    try: # whether the setup map file exists:
-        with open(wallet_dir_ + setup.account_map, "w") as out:
-            out.write(account_mapp_to_string(account_map))            
-    except Exception as e:
-        front_end.Logger().ERROR(str(e))
 
 
 def stop_keosd():
@@ -285,3 +222,73 @@ def verify_testnet():
         ''')
     front_end.set_throw_error(True)
     return result
+
+
+def account_map(logger=None):
+    '''Return json account map
+
+Attempt to open the account map file named ``setup.account_map``, located 
+in the wallet directory ``wallet_dir()``, to return its json contents. If the 
+file does not exist, return an empty json.
+
+If the file is corrupted, offer editing the file with the ``nano`` linux 
+editor. Return ``None`` if the the offer is rejected.
+    '''
+    wallet_dir_ = wallet_dir()
+    while True:
+        try: # whether the setup map file exists:
+            with open(wallet_dir_ + setup.account_map, "r") as input_file:
+                return json.load(input_file)
+
+        except Exception as e:
+            if isinstance(e, FileNotFoundError):
+                return {}
+            else: 
+                if not logger is None:
+                    logger.ERROR('''
+                The account mapping file is misformed. The error message is:
+                {}
+                
+                Do you want to edit the file?
+                '''.format(str(e)))
+                        
+                    answer = input("y/n <<< ")
+                    if answer == "y":
+                        edit_account_map()
+                        continue
+                    else:
+                        logger.ERROR('''
+            Use the function 'eosf.edit_account_map(text_editor="nano")'
+            or the corresponding method of any object of the 'eosf_wallet.Wallet` 
+            class to edit the file.
+                        ''')                    
+                        return None
+
+
+def save_account_mapp(account_map):
+    wallet_dir_ = wallet_dir()
+
+    try: # whether the setup map file exists:
+        with open(wallet_dir_ + setup.account_map, "w") as out:
+            out.write(account_mapp_to_string(account_map))            
+    except Exception as e:
+        front_end.Logger().ERROR(str(e))
+
+
+def account_mapp_to_string(account_map):
+    sort = sorted(account_map, key=account_map.get, reverse=False)
+    retval = "{\n"
+    next = False
+    for k in sort:
+        if next:
+            retval = retval + ",\n"
+        next = True
+        retval = retval + '    "{}": "{}"'.format(k, account_map[k])
+    retval = retval + "\n}\n"
+
+    return retval
+
+
+def edit_account_map(text_editor="nano"):
+    import subprocess
+    subprocess.run([text_editor, wallet_dir() + setup.account_map])
