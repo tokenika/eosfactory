@@ -129,7 +129,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         print(str(cleos.GetAccount(self.name, is_verbose=1)))
             
     def __str__(self):
-        self.name
+        return self.name
 
 
 class BuyRam(cleos._Cleos):

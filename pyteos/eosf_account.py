@@ -410,6 +410,7 @@ def create_master_account(
     object into the global namespace of the caller, and **return**.
     '''   
     account_object = Eosio(account_object_name)
+    import pdb; pdb.set_trace()
     if is_local_testnet_running(account_object):
         put_account_to_wallet_and_on_stack(
             account_object_name, account_object, logger)
@@ -770,7 +771,7 @@ def create_account(
         account_name="",
         owner_key="", active_key="",
         permission=None,
-        buy_ram_kbytes=1, buy_ram="",
+        buy_ram_kbytes=8, buy_ram="",
         transfer=False,
         expiration_sec=30,
         skip_signature=0, dont_broadcast=0, forceUnique=0,
