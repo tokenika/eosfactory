@@ -19,8 +19,14 @@ def wallet_json_write(wallet_json):
     with open(eosf.wallet_dir() + setup.password_map, "w+")  as out:
         json.dump(wallet_json, out)
 
-def create_wallet(name=None, password="", verbosity=None, file=False):
-    Wallet.globals = inspect.stack()[1][0].f_globals
+def create_wallet(
+        name=None, password="", verbosity=None, file=False,
+        globals=None):
+    if globals:
+        Wallet.globals = globals
+    else:
+        Wallet.globals = inspect.stack()[1][0].f_globals
+
     Wallet.wallet = Wallet(name, password, verbosity, file)
     Wallet.wallet.restore_accounts()
 
@@ -50,8 +56,8 @@ class Wallet(cleos.WalletCreate):
     globals = None
   
     def __init__(self, name=None, password="", verbosity=None, file=False):
-        cleos.set_local_nodeos_address_if_none()
 
+        cleos.set_local_nodeos_address_if_none()
         if name is None:
             name = setup.wallet_default_name
         else:

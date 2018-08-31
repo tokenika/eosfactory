@@ -63,25 +63,28 @@ wallet_globals = None
 '''
 wallet_singleton = None
 
-def is_wallet_defined(logger):
+def is_wallet_defined(logger, globals=None):
     '''
     '''
-    global wallet_globals    
+    global wallet_globals   
     if not wallet_globals is None:
         return
-    wallet_globals = eosf_wallet.Wallet.globals
     
-    global wallet_singleton        
-
-    wallet_globals = eosf_wallet.Wallet.globals
+    global wallet_singleton
     wallet_singleton = eosf_wallet.Wallet.wallet
 
     if wallet_singleton is None:
-        logger.ERROR('''
-            Cannot find any `Wallet` object.
-            Add the definition of an `Wallet` object, for example:
-            `create_wallet()`
-            ''')
+        eosf_wallet.create_wallet(globals=globals)
+        wallet_singleton = eosf_wallet.Wallet.wallet
+
+        if wallet_singleton is None:
+            logger.ERROR('''
+                Cannot find any `Wallet` object.
+                Add the definition of an `Wallet` object, for example:
+                `create_wallet()`
+                ''')
+
+    wallet_globals = eosf_wallet.Wallet.globals
     
 def is_local_testnet_running(account_eosio):
     account_ = cleos.GetAccount(account_eosio.name, json=True, is_verbose=-1)
@@ -397,7 +400,8 @@ def create_master_account(
     Check the following conditions:
     * a ``Wallet`` object is defined.
     '''  
-    is_wallet_defined(logger)
+    is_wallet_defined(logger, globals)
+
     global wallet_singleton
     if wallet_singleton is None:
         return
