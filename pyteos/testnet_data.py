@@ -10,6 +10,9 @@ class Testnet:
         self.owner_key = owner_key
         self.active_key = active_key
 
+    def configure(self, prefix):
+        setup.configure_testnet(self.url, prefix)
+
 
 class LocalTestnet(Testnet):
     def __init__(self, reset=False):

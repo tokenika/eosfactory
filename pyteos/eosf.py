@@ -31,7 +31,7 @@ import eosf_contract
 def remove_testnet_cache(verbosity=None):
     ''' Remove wallet files associated with the current testnet.
     '''
-    
+
     if not setup.file_prefix():
         return
     logger = front_end.Logger(verbosity)
@@ -39,7 +39,7 @@ def remove_testnet_cache(verbosity=None):
     Removing testnet cache for prefix `{}`
     '''.format(setup.file_prefix()))
 
-    kill_keosd()# otherwise the manager may protects the wallet files
+    kill_keosd() # otherwise the manager may protects the wallet files
     dir = wallet_dir()
     files = os.listdir(dir)
     try:

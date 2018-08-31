@@ -261,7 +261,7 @@ if __name__ == '__main__':
             else:
                 testnet = testnet_data.LocalTestnet(reset=args.reset)
 
-    configure_testnet(testnet.url, CONTRACT_WORKSPACE)
+    testnet.configure(prefix=CONTRACT_WORKSPACE)
 
     if args.reset and not setup.is_local_address:
         remove_testnet_cache()
@@ -270,5 +270,5 @@ if __name__ == '__main__':
     extra_stake_net = "{} EOS".format(args.stake_net)
     extra_stake_cpu = "{} EOS".format(args.stake_cpu)
 
-    sys.argv[1:] = []
+    sys.argv[1:] = [] #needed to prevent passing `argv` to `unittest`.
     unittest.main()
