@@ -583,37 +583,6 @@ def append_account_methods_and_finish(
             ref_block,
             is_verbose=-1, json=True)
 
-        if account_object.ERROR(result, is_silent=True, is_fatal=False):
-            if isinstance(result.error_object, front_end.LowRam):
-                account_object.TRACE('''
-                * RAM needed is {}.kByte, buying RAM {}.kByte.
-                '''.format(
-                    result.error_object.needs_kbyte,
-                    result.error_object.deficiency_kbyte))
-
-                buy_ram_kbytes = str(
-                    result.error_object.deficiency_kbyte + 1)
-                if not payer:
-                    payer = account_object
-
-                receiver = None
-                if not permission is None:
-                    receiver = result._permission_arg(permission)[0]
-                    if not receiver.find("@") == -1:
-                        receiver = receiver[:receiver.find("@")]
-                    receiver = account_object
-
-                payer.buy_ram(buy_ram_kbytes, receiver)
-            
-                result = cleos.PushAction(
-                    account_object, action, data,
-                    permission, expiration_sec, 
-                    skip_signature, dont_broadcast, forceUnique,
-                    max_cpu_usage, max_net_usage,
-                    ref_block,
-                    is_verbose=-1, json=True)
-
-
         account_object.INFO('''
             * Push action ``{}``:
             '''.format(action))
