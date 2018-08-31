@@ -31,7 +31,7 @@ game_stake_net = "0.1 EOS"
 game_stake_cpu = "0.1 EOS"
 
 reset = False
-testnet = testnet_data.cryptolion #LocalTestnet(reset=reset)  kylin  
+testnet = testnet_data.LocalTestnet(reset=reset) # cryptolion kylin  
 configure_testnet(testnet.url, "tic_tac_toe")
 '''
 ```
@@ -108,7 +108,7 @@ If a new account is created, the system precisely determines its need for the RA
 
 ```md
         '''
-        testnet.create_master_account("grandpa")        
+        create_master_account("grandpa", testnet)        
         create_account("alice", grandpa, start_stake_net, start_stake_cpu)  
         create_account("carol", grandpa, start_stake_net, start_stake_cpu) 
         create_account(

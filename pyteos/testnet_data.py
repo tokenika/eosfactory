@@ -9,13 +9,7 @@ class Testnet:
         self.account_name = name
         self.owner_key = owner_key
         self.active_key = active_key
-    
-    def create_master_account(self, account_object_name):
-        eosf_account.create_master_account(
-                account_object_name,
-                self.account_name, 
-                self.owner_key, 
-                self.active_key)
+
 
 class LocalTestnet(Testnet):
     def __init__(self, reset=False):

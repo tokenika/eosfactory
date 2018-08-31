@@ -35,7 +35,7 @@ the games are correctly stored in the blockchain database.
         
         create_wallet(file=True)
 
-        testnet.create_master_account("grandpa")        
+        create_master_account("grandpa", testnet)        
         create_account("alice", grandpa, start_stake_net, start_stake_cpu)  
         create_account("carol", grandpa, start_stake_net, start_stake_cpu) 
         create_account(
@@ -45,9 +45,10 @@ the games are correctly stored in the blockchain database.
         # grandpa.buy_ram(20, alice)
         # grandpa.buy_ram(20, carol)
 
-        # grandpa.delegate_bw(game_stake_net, game_stake_cpu, tic_tac_toe_machine)
-        # grandpa.delegate_bw(game_stake_net, game_stake_cpu, alice)
-        # grandpa.delegate_bw(game_stake_net, game_stake_cpu, carol)
+        grandpa.delegate_bw(
+           game_stake_net, game_stake_cpu, tic_tac_toe_machine)
+        grandpa.delegate_bw(game_stake_net, game_stake_cpu, alice)
+        grandpa.delegate_bw(game_stake_net, game_stake_cpu, carol)
         
         Test.stats()
 
@@ -217,6 +218,7 @@ if __name__ == '__main__':
     game_stake_net = "{} EOS".format(args.stake_net)
     game_stake_cpu = "{} EOS".format(args.stake_cpu)
     configure_testnet(testnet.url, "tic_tac_toe")
+    # testnet.configure("tic_tac_toe")
 
     sys.argv[1:] = []
     unittest.main()

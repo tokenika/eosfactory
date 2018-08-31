@@ -44,7 +44,7 @@ class Test(unittest.TestCase):
 
         create_wallet(file=True)
 
-        testnet.create_master_account("master")
+        create_master_account("master", testnet)
         create_account("alice", master, initial_stake_net, initial_stake_cpu)
         create_account("carol", master, initial_stake_net, initial_stake_cpu)
         create_account("host", master, initial_stake_net, initial_stake_cpu)
