@@ -270,7 +270,7 @@ if __name__ == '__main__':
     extra_stake_net = "{} EOS".format(args.stake_net)
     extra_stake_cpu = "{} EOS".format(args.stake_cpu)
 
-    configure_testnet(testnet.url, CONTRACT_WORKSPACE )
+    configure_testnet(testnet.url, CONTRACT_WORKSPACE)
 
     sys.argv[1:] = []
     unittest.main()
