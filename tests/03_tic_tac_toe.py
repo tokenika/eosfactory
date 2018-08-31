@@ -1,96 +1,128 @@
+import unittest, argparse, sys
+from eosfactory import *
 
-import unittest
-import argparse
-import sys
-from  eosfactory import *
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+_ = Logger()
+
+CONTRACT_WORKSPACE = "03_tic_tac_toe"
+
+INITIAL_RAM_KBYTES = 12
+INITIAL_STAKE_NET = "10.0 EOS"
+INITIAL_STAKE_CPU = "10.0 EOS"
 
 class Test(unittest.TestCase):
 
     def stats():
         eosf_account.stats(
-            [grandpa, alice, carol],
+            [master, host, alice, carol],
             [
-                # "ram_usage", 
-                # "ram_quota",
                 "core_liquid_balance",
+                "ram_usage",
+                "ram_quota",
+                "total_resources.ram_bytes",
+                "self_delegated_bandwidth.net_weight",
                 "self_delegated_bandwidth.cpu_weight",
+                "total_resources.net_weight",
                 "total_resources.cpu_weight",
-                "cpu_limit.available", 
+                "net_limit.available",
+                "net_limit.max",
+                "net_limit.used",
+                "cpu_limit.available",
                 "cpu_limit.max",
-                "cpu_limit.used",
-                "total_resources.ram_bytes"
+                "cpu_limit.used"
             ]
-            )
+        )
 
     @classmethod
     def setUpClass(cls):
         _.SCENARIO('''
-There is the ``grandpa`` account that sponsors the ``tic_tac_toe_machine`` 
-account equipped with an instance of the ``tic_tac_toe`` smart contract. There 
-are two players ``alice`` and ``carol`` that play games. Test that the moves of 
-the games are correctly stored in the blockchain database.
+        There is the ``master`` account that sponsors the ``host``
+        account equipped with an instance of the ``tic_tac_toe`` smart contract. There
+        are two players ``alice`` and ``carol``. We are testing that the moves of
+        the game are correctly stored in the blockchain database.
         ''')
 
         verify_testnet()
         
         create_wallet(file=True)
+        create_master_account("master", testnet)
+        create_account("host", master,
+            buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+        create_account("alice", master,
+            buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+        create_account("carol", master,
+            buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
-        create_master_account("grandpa", testnet)        
-        create_account("alice", grandpa, start_stake_net, start_stake_cpu)  
-        create_account("carol", grandpa, start_stake_net, start_stake_cpu) 
-        create_account(
-            "tic_tac_toe_machine", grandpa, start_stake_net, start_stake_cpu)
 
-        # grandpa.buy_ram(20, tic_tac_toe_machine)
-        # grandpa.buy_ram(20, alice)
-        # grandpa.buy_ram(20, carol)
+        if (extra_ram > 0):
+            master.buy_ram(extra_ram, host)
+            master.buy_ram(extra_ram, alice)
+            master.buy_ram(extra_ram, carol)
 
-        grandpa.delegate_bw(
-           game_stake_net, game_stake_cpu, tic_tac_toe_machine)
-        grandpa.delegate_bw(game_stake_net, game_stake_cpu, alice)
-        grandpa.delegate_bw(game_stake_net, game_stake_cpu, carol)
-        
-        Test.stats()
+        if (extra_stake_net != "0 EOS" or extra_stake_cpu != "0 EOS"):
+            master.delegate_bw(extra_stake_net, extra_stake_cpu, host)
+            master.delegate_bw(extra_stake_net, extra_stake_cpu, alice)
+            master.delegate_bw(extra_stake_net, extra_stake_cpu, carol)
 
-        contract = Contract(tic_tac_toe_machine, CONTRACT_DIR)
+        cls.stats()
+
+        contract = Contract(host, CONTRACT_WORKSPACE)
         if not contract.is_built():
             contract.build()
-           
-        contract.deploy(payer=grandpa)                   
 
-    def test_tic_tac_toe(self):
+        contract.deploy(payer=master)
 
-        set_is_testing_errors()       
-        tic_tac_toe_machine.push_action(
-            "create", 
+
+    def setUp(self):
+        pass
+
+
+    def test_01(self):
+        _.COMMENT('''
+        Attempting to create a new game.
+        This might fail if the previous game has not been closes properly:
+        ''')
+        set_is_testing_errors(True)
+        host.push_action(
+            "create",
             {
-                "challenger": alice, 
+                "challenger": alice,
                 "host": carol
             },
-            carol, payer=grandpa)
+            carol, payer=master)
         set_is_testing_errors(False)
 
-        if "game already exists" in tic_tac_toe_machine.action.err_msg:
-            tic_tac_toe_machine.push_action(
-                "close", 
-                {
-                    "challenger": alice,  
-                    "host": carol 
-                }, 
-                carol, payer=grandpa)
-            
-            tic_tac_toe_machine.push_action(
-                "create", 
-                {
-                    "challenger": alice, 
-                    "host": carol
-                },
-                carol, payer=grandpa)
-        else: 
-            tic_tac_toe_machine.action.ERROR()
-        
-        t = tic_tac_toe_machine.table("games", carol)
+        if host.action.err_msg:
+            if "game already exists" in host.action.err_msg:
+                _.COMMENT('''
+                We need to close the previous game before creating a new one:
+                ''')
+                host.push_action(
+                    "close",
+                    {
+                        "challenger": alice,
+                        "host": carol
+                    },
+                    carol, payer=master)
 
+                _.COMMENT('''
+                Second attempt to create a new game:
+                ''')
+                host.push_action(
+                    "create",
+                    {
+                        "challenger": alice, 
+                        "host": carol
+                    },
+                    carol, payer=master)
+            else:
+                _.COMMENT('''
+                The error is different than expected.
+                ''')
+                host.action.ERROR()
+                return
+
+        t = host.table("games", carol)
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
         self.assertEqual(t.json["rows"][0]["board"][2], 0)
@@ -101,28 +133,33 @@ the games are correctly stored in the blockchain database.
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        tic_tac_toe_machine.push_action(
-            "move", 
+        _.COMMENT('''
+        First move is by carol:
+        ''')
+        host.push_action(
+            "move",
             {
-                "challenger": alice, 
-                "host": carol, 
-                "by": carol,  
-                "row":0, "column":0 
-            }, 
-            carol, payer=grandpa)
+                "challenger": alice,
+                "host": carol,
+                "by": carol,
+                "row":0, "column":0
+            },
+            carol, payer=master)
 
-        tic_tac_toe_machine.push_action(
-            "move", 
+        _.COMMENT('''
+        Second move is by alice:
+        ''')
+        host.push_action(
+            "move",
             {
-                "challenger": alice,  
-                "host": carol,  
-                "by": alice, 
-                "row":1, "column":1 
-            }, 
-            alice, payer=grandpa)
+                "challenger": alice,
+                "host": carol,
+                "by": alice,
+                "row":1, "column":1
+            },
+            alice, payer=master)
 
-        t = tic_tac_toe_machine.table("games", carol)
-
+        t = host.table("games", carol)
         self.assertEqual(t.json["rows"][0]["board"][0], 1)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
         self.assertEqual(t.json["rows"][0]["board"][2], 0)
@@ -133,17 +170,19 @@ the games are correctly stored in the blockchain database.
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        tic_tac_toe_machine.push_action(
-            "restart", 
+        _.COMMENT('''
+        Restarting the game:
+        ''')
+        host.push_action(
+            "restart",
             {
-                "challenger": alice, 
-                "host": carol, 
+                "challenger": alice,
+                "host": carol,
                 "by": carol
             }, 
-            carol, payer=grandpa)
+            carol, payer=master)
 
-        t = tic_tac_toe_machine.table("games", carol)
-
+        t = host.table("games", carol)
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
         self.assertEqual(t.json["rows"][0]["board"][1], 0)
         self.assertEqual(t.json["rows"][0]["board"][2], 0)
@@ -154,51 +193,62 @@ the games are correctly stored in the blockchain database.
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        tic_tac_toe_machine.push_action(
-            "close", 
+        _.COMMENT('''
+        Closing the game:
+        ''')
+        host.push_action(
+            "close",
             {
-                "challenger": alice,  
+                "challenger": alice,
                 "host": carol 
-            }, 
-            carol, payer=grandpa)
+            },
+            carol, payer=master)
+
+
+    def tearDown(self):
+        pass
+
 
     @classmethod
     def tearDownClass(cls):
-        Test.stats()
+        cls.stats()
         if setup.is_local_address:
             stop()
 
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-_ = Logger()
-CONTRACT_DIR = "03_tic_tac_toe"
-
-start_stake_net = "0.2 EOS" 
-start_stake_cpu = "0.2 EOS"
-game_stake_net = None
-game_stake_cpu = None
 testnet = None
+extra_ram = None
+extra_stake_net = None
+extra_stake_cpu = None
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='''
-    Unittest for the ``tic-tac-toe`` smart contract.
-    Default testnet is the local node.
+    This is a unit test for the ``tic-tac-toe`` smart contract.
+    It works both on a local testnet and remote testnet.
+    The default option is local testnet.
     ''')
 
     parser.add_argument(
-        "-r", "--reset", action="store_true", 
-        help="Reset wallet files.")
-    parser.add_argument("-n", "--stake_net", default=0.1, help="in EOS")
-    parser.add_argument("-p", "--stake_cpu", default=0.1, help="in EOS")
+        "-ram", "--ram_kbytes", default=0, help="extra RAM in kbytes")
     parser.add_argument(
-        "-c", "--cryptolion", action="store_true", 
+        "-net", "--stake_net", default=0, help="extra NET stake in EOS")
+    parser.add_argument(
+        "-cpu", "--stake_cpu", default=0, help="extra CPU stake in EOS")
+
+    parser.add_argument(
+        "-r", "--reset", action="store_true",
+        help="Reset testnet cache")
+    parser.add_argument(
+        "-c", "--cryptolion", action="store_true",
         help="Using the cryptolion testnet")
     parser.add_argument(
-        "-k", "--kylin", action="store_true", help="Using the kylin testnet")
+        "-k", "--kylin", action="store_true",
+        help="Using the kylin testnet")
     parser.add_argument(
-        "-t", "--testnet", nargs=4, help="<url> <name> <owner key> <active key>")
-        
+        "-t", "--testnet", nargs=4,
+        help="<url> <name> <owner key> <active key>")
+
     args = parser.parse_args()
     if args.testnet:
         testnet = testnet_data.Testnet(
@@ -212,13 +262,15 @@ if __name__ == '__main__':
                 testnet = testnet_data.kylin
             else:
                 testnet = testnet_data.LocalTestnet(reset=args.reset)
-                if args.reset:
-                    remove_testnet_files()
 
-    game_stake_net = "{} EOS".format(args.stake_net)
-    game_stake_cpu = "{} EOS".format(args.stake_cpu)
-    configure_testnet(testnet.url, "tic_tac_toe")
-    # testnet.configure("tic_tac_toe")
+    if args.reset:
+        remove_testnet_files()
+
+    extra_ram = int(args.ram_kbytes)
+    extra_stake_net = "{} EOS".format(args.stake_net)
+    extra_stake_cpu = "{} EOS".format(args.stake_cpu)
+
+    configure_testnet(testnet.url, CONTRACT_WORKSPACE )
 
     sys.argv[1:] = []
     unittest.main()
