@@ -44,7 +44,9 @@ class ContractBuilder(front_end.Logger):
     '''
     def __init__(
             self, contract_dir,
-            verbosity=None):
+            verbosity=None,
+            abi_file=None,
+            wasm_file=None):
         super().__init__(verbosity)
         self.INFO('''
                 ######### Create a ``Contract`` object.
@@ -62,6 +64,9 @@ class ContractBuilder(front_end.Logger):
             * Contract directory is
                 {}
             '''.format(self.contract_dir))
+
+        self.abi_file = abi_file
+        self.wasm_file = wasm_file
 
     def path(self):
         return self.contract_dir
@@ -88,9 +93,14 @@ class ContractBuilder(front_end.Logger):
             if json:
                 return result.json
 
-    def build(self):
-        self.build_abi()
-        self.build_wast()
+    def build(self, force=True):
+        if force or not self.is_built():
+            self.build_abi()
+            self.build_wast()
+
+    def is_built(self):
+        return cleos.contract_is_built(
+            self.contract_dir, self.wasm_file, self.abi_file)
 
     def delete(self):
         try:
@@ -104,14 +114,14 @@ class Contract(ContractBuilder):
 
     def __init__(
             self, account, contract_dir,
-            wasm_file=None, abi_file=None,
+            abi_file=None, wasm_file=None,
             permission=None,
             expiration_sec=30,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             verbosity=None):
-        super().__init__(contract_dir, verbosity)
+        super().__init__(contract_dir, verbosity=verbosity, abi_file=abi_file, wasm_file=wasm_file)
         self.account = account
         self.expiration_sec = expiration_sec
         self.skip_signature = skip_signature
@@ -124,14 +134,8 @@ class Contract(ContractBuilder):
         self.contract = None
         self._console = None
         self.error = self.account.error
-        self.abi_file = abi_file
-        self.wasm_file = wasm_file
 
-    def is_built(self):
-        return cleos.contract_is_built(
-            self.contract_dir, self.wasm_file, self.abi_file)
-
-    def deploy(self, permission=None, dont_broadcast=None, payer=None):
+    def deploy(self, force=True, permission=None, dont_broadcast=None, payer=None):
         if not self.is_built():
             self.ERROR('''
             Contract needs to be built before deployment.
@@ -150,7 +154,7 @@ class Contract(ContractBuilder):
             json=True)
 
         if self.ERROR(result, is_silent=True, is_fatal=False):
-            if isinstance(result.error_object, front_end.ContractRunning):
+            if isinstance(result.error_object, front_end.ContractRunning) and not force:
                 self.TRACE('''
                 * Contract is already running this version of code.
                 ''')
@@ -179,13 +183,14 @@ class Contract(ContractBuilder):
                     self.ref_block,
                     is_verbose=-1,
                     json=True)
+
         if not self.ERROR(result):
             if not dont_broadcast:
                 is_code = self.account.is_code()
                 if not is_code:
                     self.ERROR('''
                     Error in contract deployment:
-                    Despite the ``set contract`` command returned without any error,
+                    Despite the ``set contract`` command returning without any error,
                     the code hash of the associated account is null.
                     ''')
                     return

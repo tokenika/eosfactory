@@ -36,7 +36,7 @@ stop = eosf.stop
 info = eosf.info
 status = eosf.status
 
-remove_testnet_files = eosf.remove_testnet_files
+remove_testnet_cache = eosf.remove_testnet_cache
 verify_testnet = eosf.verify_testnet
 
 configure_testnet = setup.configure_testnet

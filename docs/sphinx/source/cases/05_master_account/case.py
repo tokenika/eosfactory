@@ -12,9 +12,9 @@ restart()
 testnet = testnode_data.kylin
 
 configure_testnet(testnet.url, prefix="temp")
-remove_testnet_files()
+remove_testnet_cache()
 #set_testnet_configuration(testnet.url, prefix="temp")
-#remove_testnet_files()
+#remove_testnet_cache()
 
 create_wallet()
 create_master_account(

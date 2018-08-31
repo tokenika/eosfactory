@@ -28,22 +28,32 @@ import cleos
 import cleos_system
 import eosf_contract
 
-
-def remove_testnet_files():
+def remove_testnet_cache(verbosity=None):
+    ''' Remove wallet files associated with the current testnet.
+    '''
+    
     if not setup.file_prefix():
         return
-    kill_keosd()   # otherwise, the manager may protects the wallet files
+    logger = front_end.Logger(verbosity)
+    logger.TRACE('''
+    Removing testnet cache for prefix `{}`
+    '''.format(setup.file_prefix()))
+
+    kill_keosd()# otherwise the manager may protects the wallet files
     dir = wallet_dir()
     files = os.listdir(dir)
     try:
         for file in files:
             if file.startswith(setup.file_prefix()):
-                os.remove(os.path.join(dir,file)) 
+                os.remove(os.path.join(dir,file))
     except Exception as e:
-        front_end.Logger().ERROR('''
-        Cannot remove nodeos address files. The error message is
+        logger.ERROR('''
+        Cannot remove testnet cache. The error message is:
         {}
-        '''.format(str(e)))   
+        '''.format(str(e)))
+    logger.TRACE('''
+    Testnet cache removed
+    ''')
 
 
 def wallet_dir():
@@ -172,13 +182,13 @@ def is_local_address():
 def reset(verbosity=None):
     ''' Start clean the EOSIO local node.
     '''
-    logger = front_end.Logger(verbosity) 
-    if not cleos.set_local_nodeos_address_if_none():   
+    logger = front_end.Logger(verbosity)
+    if not cleos.set_local_nodeos_address_if_none():
         logger.INFO('''
-            Not local nodeos is set: {}
+        No local nodeos is set: {}
         '''.format(setup.nodeos_address()))
 
-    remove_testnet_files()
+    remove_testnet_cache()
 
     node = teos.NodeStart(1, is_verbose=0)
     probe = teos.NodeProbe(is_verbose=-1)

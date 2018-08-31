@@ -1,7 +1,7 @@
 import unittest, argparse, sys
 from eosfactory import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
 _ = Logger()
 
 CONTRACT_WORKSPACE = "03_tic_tac_toe"
@@ -67,10 +67,8 @@ class Test(unittest.TestCase):
         cls.stats()
 
         contract = Contract(host, CONTRACT_WORKSPACE)
-        if not contract.is_built():
-            contract.build()
-
-        contract.deploy(payer=master)
+        contract.build(force=False)
+        contract.deploy(force=False, payer=master)
 
 
     def setUp(self):
@@ -200,7 +198,7 @@ class Test(unittest.TestCase):
             "close",
             {
                 "challenger": alice,
-                "host": carol 
+                "host": carol
             },
             carol, payer=master)
 
@@ -263,14 +261,14 @@ if __name__ == '__main__':
             else:
                 testnet = testnet_data.LocalTestnet(reset=args.reset)
 
-    if args.reset:
-        remove_testnet_files()
+    configure_testnet(testnet.url, CONTRACT_WORKSPACE)
+
+    if args.reset and not setup.is_local_address:
+        remove_testnet_cache()
 
     extra_ram = int(args.ram_kbytes)
     extra_stake_net = "{} EOS".format(args.stake_net)
     extra_stake_cpu = "{} EOS".format(args.stake_cpu)
-
-    configure_testnet(testnet.url, CONTRACT_WORKSPACE)
 
     sys.argv[1:] = []
     unittest.main()
