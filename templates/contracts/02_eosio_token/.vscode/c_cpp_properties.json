@@ -20,7 +20,7 @@
                     "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
                     "${U_HOME}/opt/boost/include",
                     "/usr/local/include/",
-                    "${EOSIO_SOURCE_DIR}/externals/magic_get/include",                    
+                    "${EOSIO_SOURCE_DIR}/externals/magic_get/include",
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
