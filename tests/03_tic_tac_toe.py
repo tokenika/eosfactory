@@ -5,6 +5,7 @@ Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
 _ = Logger()
 
 CONTRACT_WORKSPACE = "03_tic_tac_toe"
+CACHE_ID = "tic-tac-toe"
 
 INITIAL_RAM_KBYTES = 12
 INITIAL_STAKE_NET = 10.0
@@ -261,7 +262,7 @@ if __name__ == '__main__':
             else:
                 testnet = testnet_data.LocalTestnet(reset=args.reset)
 
-    testnet.configure(prefix=CONTRACT_WORKSPACE)
+    testnet.configure(prefix=CACHE_ID)
 
     if args.reset and not setup.is_local_address:
         remove_testnet_cache()
