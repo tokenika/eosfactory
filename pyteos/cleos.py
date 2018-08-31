@@ -399,18 +399,21 @@ class GetAccount(Account, _Cleos):
             args.append("--json")
 
         _Cleos.__init__(self, args, "get", "account", is_verbose)
-        if not self.error:        
+        if not self.error:
+            self.owner_key = None       
             if json:
                 self.json = json_module.loads(self.out_msg)
-                self.owner_key = self.json["permissions"][1]["required_auth"] \
-                    ["keys"][0]["key"]
-                self.active_key = self.json["permissions"][0]["required_auth"] \
-                    ["keys"][0]["key"]
+                if self.json["permissions"][1]["required_auth"]["keys"]:
+                    self.owner_key = self.json["permissions"][1] \
+                        ["required_auth"]["keys"][0]["key"]
+                    self.active_key = self.json["permissions"][0] \
+                     ["required_auth"]["keys"][0]["key"]                     
             else:
-                self.owner_key = re.search(
-                    'owner\s+1\:\s+1\s(.*)\n', self.out_msg).group(1)
-                self.active_key = re.search(
-                    'active\s+1\:\s+1\s(.*)\n', self.out_msg).group(1)
+                owner = re.search('owner\s+1\:\s+1\s(.*)\n', self.out_msg)
+                active = re.search('active\s+1\:\s+1\s(.*)\n', self.out_msg)
+                if owner and active:
+                    self.owner_key = owner.group(1)
+                    self.active_key = active.group(1)                
 
             self.printself()
 
