@@ -60,7 +60,7 @@ class Test(unittest.TestCase):
             master.buy_ram(extra_ram, alice)
             master.buy_ram(extra_ram, carol)
 
-        if (extra_stake_net != 0 or extra_stake_cpu != 0):
+        if (extra_stake_net > 0 or extra_stake_cpu > 0):
             master.delegate_bw(extra_stake_net, extra_stake_cpu, host)
             master.delegate_bw(extra_stake_net, extra_stake_cpu, alice)
             master.delegate_bw(extra_stake_net, extra_stake_cpu, carol)
