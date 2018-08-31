@@ -73,6 +73,9 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
             is_verbose = 1
             ):
 
+        stake_net = "{} EOS".format(stake_net)
+        stake_cpu = "{} EOS".format(stake_cpu)
+        
         if name is None: 
             name = account_name()
         cleos.Account.__init__(self, name)

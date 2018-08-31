@@ -25,10 +25,10 @@ Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
 _ = Logger()
 CONTRACT_DIR = "03_tic_tac_toe"
 
-start_stake_net = "0.2 EOS" 
-start_stake_cpu = "0.2 EOS"
-game_stake_net = "0.1 EOS" 
-game_stake_cpu = "0.1 EOS"
+start_stake_net = 0.2
+start_stake_cpu = 0.2
+game_stake_net = 0.1
+game_stake_cpu = 0.1
 
 reset = False
 testnet = testnet_data.LocalTestnet(reset=reset) # cryptolion kylin  

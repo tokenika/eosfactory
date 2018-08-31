@@ -7,8 +7,8 @@ _ = Logger()
 CONTRACT_WORKSPACE = "03_tic_tac_toe"
 
 INITIAL_RAM_KBYTES = 12
-INITIAL_STAKE_NET = "10.0 EOS"
-INITIAL_STAKE_CPU = "10.0 EOS"
+INITIAL_STAKE_NET = 10.0
+INITIAL_STAKE_CPU = 10.0
 
 class Test(unittest.TestCase):
 
@@ -59,7 +59,7 @@ class Test(unittest.TestCase):
             master.buy_ram(extra_ram, alice)
             master.buy_ram(extra_ram, carol)
 
-        if (extra_stake_net != "0 EOS" or extra_stake_cpu != "0 EOS"):
+        if (extra_stake_net != 0 or extra_stake_cpu != 0):
             master.delegate_bw(extra_stake_net, extra_stake_cpu, host)
             master.delegate_bw(extra_stake_net, extra_stake_cpu, alice)
             master.delegate_bw(extra_stake_net, extra_stake_cpu, carol)
@@ -267,8 +267,8 @@ if __name__ == '__main__':
         remove_testnet_cache()
 
     extra_ram = int(args.ram_kbytes)
-    extra_stake_net = "{} EOS".format(args.stake_net)
-    extra_stake_cpu = "{} EOS".format(args.stake_cpu)
+    extra_stake_net = args.stake_net
+    extra_stake_cpu = args.stake_cpu
 
     sys.argv[1:] = [] #needed to prevent passing `argv` to `unittest`.
     unittest.main()
