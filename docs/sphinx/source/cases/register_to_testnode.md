@@ -16,7 +16,8 @@ The procedure results are following:
 
 * the wallet file named like `88_99_97_30_38888_default.wallet` (exactly, if the testnet url is `https://88.99.97.30:38888`) in the directory manager by the KOSD Wallet Manager;
 * an entry in the Factory's account maping file (named like `88_99_97_30_38888_accounts.json`) that cause that the account object is available between sessions;
-* an entry in the Factory's password maping file (named like `88_99_97_30_38888_password.json`) that cause that the wallet object is opened automatically between sessions.
+* an entry in the Factory's password maping file (named like `88_99_97_30_38888_password.json`) that cause that the wallet object is opened automatically between sessions;
+* an custom named entry in the testnet mapping file.
 
 The registration can be simply done with the command issued in a bash terminal:
 ```md
@@ -27,6 +28,7 @@ for example
 ```md
 $ python3 utlis/register_account.py https://88.99.97.30:38888 jungle
 ```
+where 'jungle' is the name of the testnet mapping file entry.
 
 The current article tests this registration procedure.
 
@@ -42,6 +44,7 @@ from  eosfactory import *
 import testnet_data
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+testnet_pseudo = "jungle1"
 '''
 ```
 
@@ -56,6 +59,23 @@ In the `testnode_data` module, there is a pair of prefabricated testnet objects:
 ```md
 '''
 testnet = testnet_data.cryptolion
+'''
+```
+The testnet object can be taken from the testnet map. We can list available entries in this map, in our computer...
+```md
+'''
+testnet_data.mapped()
+'''
+```
+...and use one of the listed possibilities:
+```md
+'''
+testnet = testnet_data.GetTestnet("jungle")
+'''
+```
+Having the testnet chosen, introduce it to the test:
+```md
+'''
 set_nodeos_address(testnet.url)
 '''
 ```
@@ -89,6 +109,7 @@ verify_testnet()
 ```md
 '''
 remove_testnet_cache()
+testnet_data.remove_from_map(testnet_pseudo)
 '''
 ```
 
@@ -120,11 +141,12 @@ create_master_account("account_master")
 ```md
 '''
 create_master_account("account_master", testnet)
-import pdb; pdb.set_trace()
 testnet_data.add_to_map(
     testnet.url, account_master.name, 
     account_master.owner_key.key_private,
-    account_master.active_key.key_private, alias="jungle")
+    account_master.active_key.key_private, alias=testnet_pseudo)
+
+testnet_data.mapped()
 '''
 ```
 

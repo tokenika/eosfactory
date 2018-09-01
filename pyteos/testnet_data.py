@@ -17,7 +17,7 @@ class Testnet:
 class GetTestnet(Testnet):
     def __init__(self, testnet):
         map = testnet_map()
-        if map[testnet]:
+        if testnet in map:
             Testnet.__init__(
             self, map[testnet]["url"], map[testnet]["name"],
             map[testnet]["owner_key"], map[testnet]["active_key"])
@@ -29,7 +29,7 @@ class GetTestnet(Testnet):
 
             front_end.Logger().ERROR('''
             Testnet ``{}`` is not defined in the testnet map.
-            ''')
+            '''.format(testnet))
 
 class LocalTestnet(Testnet):
     def __init__(self, reset=False):
@@ -56,6 +56,13 @@ def add_to_map(url, name, owner_key, active_key, alias=None):
         alias = setup.url_prefix(url)
     map[alias] = testnet
     save_testnet_map(map)
+
+
+def remove_from_map(testnet):
+    map = testnet_map()
+    if testnet in map:
+        del map[testnet]
+        save_testnet_map(map)
 
 
 cryptolion = Testnet(
