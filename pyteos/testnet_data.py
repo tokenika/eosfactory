@@ -5,11 +5,11 @@ import front_end
 import eosf_account
 
 class Testnet:
-    def __init__(self, url, name, key_owner, key_active):
+    def __init__(self, url, name, owner_key, active_key):
         self.url = url
         self.account_name = name
-        self.key_owner = key_owner
-        self.key_active = key_active
+        self.owner_key = owner_key
+        self.active_key = active_key
 
     def configure(self, prefix):
         setup.set_nodeos_address(self.url, prefix)
@@ -20,8 +20,13 @@ class GetTestnet(Testnet):
         if map[testnet]:
             Testnet.__init__(
             self, map[testnet]["url"], map[testnet]["name"],
-            map[testnet]["key_owner"], map[testnet]["key_active"])
+            map[testnet]["owner_key"], map[testnet]["active_key"])
         else:
+            if testnet == "cryptolion":
+                return cryptolion
+            if testnet == "kylin":
+                return kylin
+
             front_end.Logger().ERROR('''
             Testnet ``{}`` is not defined in the testnet map.
             ''')
@@ -40,13 +45,13 @@ class LocalTestnet(Testnet):
             eosio.owner_key.key_private, eosio.active_key.key_private)
 
 
-def add_to_map(url, name, key_owner, key_active, alias=None):
+def add_to_map(url, name, owner_key, active_key, alias=None):
     map = testnet_map()
     testnet = {}
     testnet["url"] = url
     testnet["name"] = name
-    testnet["key_owner"] = key_owner
-    testnet["key_active"] = key_active
+    testnet["owner_key"] = owner_key
+    testnet["active_key"] = active_key
     if not alias:
         alias = setup.url_prefix(url)
     map[alias] = testnet
@@ -70,15 +75,22 @@ kylin = Testnet(
 # /mnt/c/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://88.99.97.30:38888 get info
 
 testnet_file = "testnet.json"
-
 def testnet_map():
     return eosf.read_map(testnet_file)
+
 
 def save_testnet_map(map):
     eosf.save_map(map, testnet_file)
 
+
 def edit_testnet_map():
     eosf.edit_map(testnet_file)
+
+
+def mapped():
+    map = eosf.read_map(testnet_file)
+    for pseudo, testnet in map.items():
+        print("%20s: %13s @ %s" % (pseudo, testnet["name"], testnet["url"]))
 
 
 {
@@ -86,15 +98,15 @@ def edit_testnet_map():
     {
         "url": "http://88.99.97.30:38888",
         "name": "dgxo1uyhoytn",
-        "key_owner": "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
-        "key_active": "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
+        "owner_key": "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
+        "active_key": "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
     },
     "kylin":
     {
         "url": "https://api.kylin-testnet.eospace.io",
         "name": "dgxo1uyhoytn",
-        "key_owner": "5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67",
-        "key_active": "5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX"     
+        "owner_key": "5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67",
+        "active_key": "5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX"     
     }
 }
     

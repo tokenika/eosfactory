@@ -32,14 +32,14 @@ The current article tests this registration procedure.
 
 ## Set-up
 
-The set-up statements are explained at <a href="html">cases/setup</a>.
+""
 
 ### The header of the test
 
 ```md
 '''
 from  eosfactory import *
-import testnode_data
+import testnet_data
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 '''
@@ -55,7 +55,7 @@ In the `testnode_data` module, there is a pair of prefabricated testnet objects:
 
 ```md
 '''
-testnet = testnode_data.cryptolion
+testnet = testnet_data.cryptolion
 set_nodeos_address(testnet.url)
 '''
 ```
@@ -88,7 +88,7 @@ verify_testnet()
 
 ```md
 '''
-remove_testnet_files()
+remove_testnet_cache()
 '''
 ```
 
@@ -122,7 +122,7 @@ create_master_account("account_master")
 create_master_account("account_master", testnet)
 import pdb; pdb.set_trace()
 testnet_data.add_to_map(
-    testnode_url, account_master.name, 
+    testnet.url, account_master.name, 
     account_master.owner_key.key_private,
     account_master.active_key.key_private, alias="jungle")
 '''

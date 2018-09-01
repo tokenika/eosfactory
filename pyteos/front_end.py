@@ -148,7 +148,6 @@ class Logger():
     def OUT(self, msg, translate=True):
         if msg and (Verbosity.OUT in self._verbosity):
             color = Verbosity.OUT.value
-            if not verbatim:
             msg = condition(msg, translate)
             cprint(msg, color[0], color[1], attrs=color[2])
 
@@ -213,8 +212,8 @@ class Logger():
             return None
 
     def ERROR(self, cleos_or_str=None, 
-        is_silent=False, is_fatal=True, translate=True):
-                '''Print an error message or throw 'Exception'.
+            is_silent=False, is_fatal=True, translate=True):
+        '''Print an error message or throw 'Exception'.
 
 If the ``verbosity`` parameter is empty list, do nothing.
 

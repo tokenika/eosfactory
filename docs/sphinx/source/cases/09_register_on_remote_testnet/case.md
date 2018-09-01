@@ -32,7 +32,7 @@ The current article tests this registration procedure.
 
 ## Set-up
 
-The set-up statements are explained at <a href="html">cases/setup</a>.
+""
 
 ### The header of the test
 
