@@ -907,4 +907,4 @@ def stats(
             output = output + col % find(param, json)
         output = output + "  " + last_col % (param) + "\n" 
 
-    front_end.Logger().OUT(output, verbatim=True)
+    front_end.Logger().OUT(output, translate=False)
