@@ -1,16 +1,20 @@
 from  eosfactory import *
+import testnet_data
 import argparse
 
-def register_account(
-    testnode_url, account_object_name):
+def register_account(testnode_url, alias=None):
 
     set_nodeos_address(testnode_url)
     if not verify_testnet():
         return
 
     create_wallet(file=True)
-    create_master_account(account_object_name)
+    create_master_account("account_master")
 
+    testnet_data.add_to_map(
+        testnode_url, account_master.name, 
+        account_master.owner_key.key_private,
+        account_master.active_key.key_private, alias)
 
 parser = argparse.ArgumentParser(description='''
 Given an url and the account object name, get registration data.

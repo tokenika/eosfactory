@@ -319,7 +319,7 @@ class Wallet(cleos.WalletCreate):
                          {}
                     '''.format(object_name))
 
-            eosf.save_account_mapp(new_map)
+            eosf.save_account_map(new_map)
         else:
             self.INFO('''
                  * The wallet is empty.
@@ -390,7 +390,8 @@ class Wallet(cleos.WalletCreate):
             account_map_json[account_object.name] = account_object_name
 
             with open(self.wallet_dir + setup.account_map, "w") as out:
-                out.write(eosf.account_mapp_to_string(account_map_json))
+                out.write(json.dumps(
+                    account_map_json, indent=3, sort_keys=True))
 
             self.TRACE('''
                 * Account ``{}`` stored in the file 

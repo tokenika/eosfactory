@@ -4,16 +4,19 @@ import inspect
 from termcolor import cprint, colored
 import setup
 
-def translate(msg):
+def condition(msg, translate=True):
     import eosf
     ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-    msg = ansi_escape.sub('', msg)
-    return eosf.accout_names_2_object_names(setup.heredoc(msg))
+    msg = setup.heredoc(ansi_escape.sub('', msg))
+    if translate:
+        return eosf.accout_names_2_object_names(msg)
+    else:
+        return msg
 
 
 class Error:
     def __init__(self, msg, is_fatal=True):
-        self.msg = translate(msg)
+        self.msg = condition(msg)
         self.is_fatal = is_fatal
 
 
@@ -121,14 +124,14 @@ class Logger():
         test_name = inspect.getframeinfo(frame).function
         color = Verbosity.COMMENT.value
         cprint(
-            "\n###  " + test_name + ":\n" + translate(msg) + "\n",
+            "\n###  " + test_name + ":\n" + condition(msg) + "\n",
             color[0], color[1], attrs=color[2])
 
     def SCENARIO(self, msg):
         self.COMMENT(msg)
 
     def TRACE(self, msg):
-        msg = translate(msg)
+        msg = condition(msg)
         self.trace_buffer = msg
         if msg and (Verbosity.TRACE in self._verbosity):
             color = Verbosity.TRACE.value
@@ -140,17 +143,17 @@ class Logger():
                 Verbosity.INFO in self._verbosity
             ):
             color = Verbosity.INFO.value
-            cprint(translate(msg), color[0], color[1], attrs=color[2])        
+            cprint(condition(msg), color[0], color[1], attrs=color[2])        
 
-    def OUT(self, msg, verbatim=False):
+    def OUT(self, msg, translate=True):
         if msg and (Verbosity.OUT in self._verbosity):
             color = Verbosity.OUT.value
             if not verbatim:
-                msg = translate(msg)
+            msg = condition(msg, translate)
             cprint(msg, color[0], color[1], attrs=color[2])
 
     def DEBUG(self, msg):
-        msg = translate(msg)
+        msg = condition(msg)
         self.debug_buffer = msg
 
         if msg and (Verbosity.DEBUG in self._verbosity):
@@ -209,8 +212,9 @@ class Logger():
         except:
             return None
 
-    def ERROR(self, cleos_or_str=None, is_silent=False, is_fatal=True):
-        '''Print an error message or throw 'Exception'.
+    def ERROR(self, cleos_or_str=None, 
+        is_silent=False, is_fatal=True, translate=True):
+                '''Print an error message or throw 'Exception'.
 
 If the ``verbosity`` parameter is empty list, do nothing.
 
@@ -250,7 +254,7 @@ cleos_or_str -- error message string or object having the attribute err_msg
             color = Verbosity.ERROR.value
 
         msg = colored(
-            "ERROR:\n{}".format(translate(msg)), 
+            "ERROR:\n{}".format(condition(msg, translate)),  
             color[0], color[1], attrs=color[2])  + "\n"
         if not cleos_object is None:
             cleos_object.error_object.msg = msg

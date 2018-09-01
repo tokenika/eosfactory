@@ -45,7 +45,7 @@ def remove_testnet_cache(verbosity=None):
     try:
         for file in files:
             if file.startswith(setup.file_prefix()):
-                os.remove(os.path.join(dir,file))
+                os.remove(os.path.join(dir, file))
     except Exception as e:
         logger.ERROR('''
         Cannot remove testnet cache. The error message is:
@@ -65,7 +65,6 @@ def accout_names_2_object_names(sentence):
         return sentence
         
     exceptions = ["eosio"]
-
     map = account_map()
     for name in map:
         account_object_name = map[name]
@@ -235,15 +234,16 @@ If the file is corrupted, offer editing the file with the ``nano`` linux
 editor. Return ``None`` if the the offer is rejected.
     '''
     wallet_dir_ = wallet_dir()
+    path = os.path.join(wallet_dir_, setup.account_map)
     while True:
         try: # whether the setup map file exists:
-            with open(wallet_dir_ + setup.account_map, "r") as input_file:
+            with open(path, "r") as input_file:
                 return json.load(input_file)
 
         except Exception as e:
             if isinstance(e, FileNotFoundError):
                 return {}
-            else: 
+            else:
                 if not logger is None:
                     logger.ERROR('''
                 The account mapping file is misformed. The error message is:
@@ -265,30 +265,68 @@ editor. Return ``None`` if the the offer is rejected.
                         return None
 
 
-def save_account_mapp(account_map):
-    wallet_dir_ = wallet_dir()
+def save_account_map(map):
+    save_map(map, setup.account_map)
 
+
+def edit_account_map():
+    edit_map(setup.account_map)
+
+
+def save_map(map, file_name):
     try: # whether the setup map file exists:
-        with open(wallet_dir_ + setup.account_map, "w") as out:
-            out.write(account_mapp_to_string(account_map))            
+        map = json.dumps(map, indent=3, sort_keys=True)
+        with open(os.path.join(wallet_dir(), file_name), "w") as out:
+            out.write(map)            
     except Exception as e:
         front_end.Logger().ERROR(str(e))
 
 
-def account_mapp_to_string(account_map):
-    sort = sorted(account_map, key=account_map.get, reverse=False)
-    retval = "{\n"
-    next = False
-    for k in sort:
-        if next:
-            retval = retval + ",\n"
-        next = True
-        retval = retval + '    "{}": "{}"'.format(k, account_map[k])
-    retval = retval + "\n}\n"
-
-    return retval
-
-
-def edit_account_map(text_editor="nano"):
+def edit_map(file_name, text_editor="nano"):
     import subprocess
-    subprocess.run([text_editor, wallet_dir() + setup.account_map])
+    subprocess.run([text_editor, os.path.join(wallet_dir(), file_name)])
+
+
+def read_map(file_name, text_editor="nano"):
+    '''Return json account map
+
+Attempt to open the account map file named ``setup.account_map``, located 
+in the wallet directory ``wallet_dir()``, to return its json contents. If the 
+file does not exist, return an empty json.
+
+If the file is corrupted, offer editing the file with the ``nano`` linux 
+editor. Return ``None`` if the the offer is rejected.
+    '''
+    wallet_dir_ = wallet_dir()
+    logger = front_end.Logger()
+    path = os.path.join(wallet_dir_, file_name)
+    while True:
+        try: # whether the setup map file exists:
+            with open(path, "r") as input_file:
+                return json.load(input_file)
+
+        except Exception as e:
+            if isinstance(e, FileNotFoundError):
+                return {}
+            else:
+                logger.ERROR('''
+            The json file 
+            {}
+            is misformed. The error message is:
+            {}
+            
+            Do you want to edit the file?
+            '''.format(str(path), str(e)), is_fatal=False, translate=False)
+                    
+                answer = input("y/n <<< ")
+                if answer == "y":
+                    import subprocess
+                    subprocess.run([text_editor, path])
+                    continue
+                else:
+                    logger.ERROR('''
+        Use the function 'eosf.edit_account_map(text_editor="nano")'
+        or the corresponding method of any object of the 'eosf_wallet.Wallet` 
+        class to edit the file.
+                    ''', translate=False)                    
+                    return None

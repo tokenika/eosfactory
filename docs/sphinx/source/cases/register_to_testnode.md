@@ -20,12 +20,12 @@ The procedure results are following:
 
 The registration can be simply done with the command issued in a bash terminal:
 ```md
-python3 utlis/register_account.py <test node url> <account object name>
+python3 utlis/register_account.py <test node url> <testnet pseudo>
 ```
  
 for example
 ```md
-$ python3 utlis/register_account.py https://88.99.97.30:38888 account_master
+$ python3 utlis/register_account.py https://88.99.97.30:38888 jungle
 ```
 
 The current article tests this registration procedure.
@@ -39,11 +39,9 @@ The set-up statements are explained at <a href="html">cases/setup</a>.
 ```md
 '''
 from  eosfactory import *
+import testnode_data
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-_ = Logger()
-set_is_testing_errors(False)
-set_throw_error(True)
 '''
 ```
 
@@ -57,15 +55,14 @@ In the `testnode_data` module, there is a pair of prefabricated testnet objects:
 
 ```md
 '''
-import testnode_data
-testnet = testnode_data.kylin
+testnet = testnode_data.cryptolion
 set_nodeos_address(testnet.url)
 '''
 ```
 The second line statement makes the following arrangements:
 
 * sets the url of the testnet as the working endpoint;
-* sets a prefix differentiating system files used in currently, for example, the default name of the wallet is `88_99_97_30_38888_default.wallet`;
+* sets a prefix differentiating system files currently used, for example, the default name of the wallet is `88_99_97_30_38888_default.wallet`;
 
 We do not want to use this default naming system for the current test, 
 therefore we use an option of the function `set_nodeos_address(...)` --
@@ -123,6 +120,11 @@ create_master_account("account_master")
 ```md
 '''
 create_master_account("account_master", testnet)
+import pdb; pdb.set_trace()
+testnet_data.add_to_map(
+    testnode_url, account_master.name, 
+    account_master.owner_key.key_private,
+    account_master.active_key.key_private, alias="jungle")
 '''
 ```
 

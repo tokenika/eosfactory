@@ -21,6 +21,11 @@ _nodeos_address = None
 _file_prefix = None
 
 
+def url_prefix(address):
+    p = re.sub("\.|\:|-|https|http|\/", "_", _nodeos_address)
+    return re.sub("_+", "_", p) + "_"
+
+
 def set_nodeos_address(address, prefix=None):
     global _nodeos_address
     if address:
@@ -33,8 +38,7 @@ nodeos address is not set.
         ''')
         return
 
-    p = re.sub("\.|\:|-|https|http|\/", "_", _nodeos_address)
-    p = re.sub("_+", "_", p) + "_"
+    p = url_prefix(address)
 
     if not prefix is None:
         p = prefix + "_" + p
