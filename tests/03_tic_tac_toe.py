@@ -8,8 +8,8 @@ CONTRACT_WORKSPACE = "03_tic_tac_toe"
 CACHE_ID = "tic-tac-toe"
 
 INITIAL_RAM_KBYTES = 12
-INITIAL_STAKE_NET = 10.0
-INITIAL_STAKE_CPU = 10.0
+INITIAL_STAKE_NET = 10
+INITIAL_STAKE_CPU = 10
 
 class Test(unittest.TestCase):
 
@@ -53,7 +53,6 @@ class Test(unittest.TestCase):
             buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
         create_account("carol", master,
             buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-
 
         if (extra_ram > 0):
             master.buy_ram(extra_ram, host)
@@ -229,11 +228,11 @@ if __name__ == '__main__':
     ''')
 
     parser.add_argument(
-        "-ram", "--ram_kbytes", default=0, help="extra RAM in kbytes")
+        "--ram", default=0, help="extra RAM in kbytes")
     parser.add_argument(
-        "-net", "--stake_net", default=0, help="extra NET stake in EOS")
+        "--net", default=0, help="extra NET stake in EOS")
     parser.add_argument(
-        "-cpu", "--stake_cpu", default=0, help="extra CPU stake in EOS")
+        "--cpu", default=0, help="extra CPU stake in EOS")
 
     parser.add_argument(
         "-r", "--reset", action="store_true",
@@ -267,9 +266,9 @@ if __name__ == '__main__':
     if args.reset and not setup.is_local_address:
         remove_testnet_cache()
 
-    extra_ram = int(args.ram_kbytes)
-    extra_stake_net = args.stake_net
-    extra_stake_cpu = args.stake_cpu
+    extra_ram = int(args.ram)
+    extra_stake_net = int(args.net)
+    extra_stake_cpu = int(args.cpu)
 
     sys.argv[1:] = [] #needed to prevent passing `argv` to `unittest`.
     unittest.main()
