@@ -245,11 +245,7 @@ namespace teos {
         if(isWindowsUbuntu())
         {       
           string commandLine 
-            = string("cmd.exe /c start /B /D ")
-            + "\""
-            + wslMapLinuxWindows(contractPath.string())
-            + "\" "
-            + "code "
+            = string("code ")
             + "\""
             + wslMapLinuxWindows(contractPath.string())
             + "\"";
