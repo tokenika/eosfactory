@@ -46,7 +46,7 @@ stop()
 
 Here is the expected outcome:
 
-![local_wallet](./img/untitled2.png)
+![local_wallet](./img/Untitled2.png)
 
 What has happened?
 
