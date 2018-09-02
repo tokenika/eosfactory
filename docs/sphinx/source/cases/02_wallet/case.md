@@ -1,17 +1,13 @@
+'''
 # Wallet Object
 
-This file can be executed as a python script:
-```
-cd docs/sphinx/source/cases
-python3 03_wallet/case.py
-```
 
 ## Set-up
 
-The set-up statements are explained at [cases/01_setup](../cases/01_setup/case.html).
-
-```
+```md
+'''
 from eosfactory import *
+'''
 ```
 
 ## Case
@@ -32,7 +28,8 @@ There is an important distinction regarding prefixes:
 
 Let's create a wallet and a couple of accounts with a local testnet:
 
-```
+```md
+'''
 from eosfactory import *
 reset()
 info()
@@ -42,11 +39,12 @@ create_account("alice", master)
 create_account("carol", master)
 get_wallet().keys()
 stop()
+'''
 ```
 
 Here is the expected outcome:
 
-![local_wallet](./img/Untitled2.png)
+![local_wallet](./img/01.png)
 
 What has happened?
 
@@ -60,13 +58,15 @@ What has happened?
 
 If we exit the Python session, then create a new session, and resume the testnet, *EOSFactory* will recreate the wallet, including the private keys we created in the previous session:
 
-```
+```md
+'''
 from eosfactory import *
 resume()
 info()
 create_wallet()
 get_wallet().keys()
 stop()
+'''
 ```
 
 Here is the expected outcome:
@@ -75,13 +75,15 @@ Here is the expected outcome:
 
 Access an existing wallet
 
-```
+```md
+'''
 from eosfactory import *
 reset()
 info()
 create_wallet()
 get_wallet().keys()
 stop()
+'''
 ```
 
 
@@ -94,3 +96,16 @@ We plan the Factory so that the singular wallet object is never referred to, in 
 * Unlock wallet.
 * Keys in all open wallets.
 * etc.
+
+## Test run
+
+This file can be executed as a Python script:
+
+```md
+python3 docs/sphinx/source/cases/03_wallet/case.md
+```
+We expect that you get something similar to this one shown in the image:
+
+![local_wallet](./img/Untitled2.png)
+
+'''
