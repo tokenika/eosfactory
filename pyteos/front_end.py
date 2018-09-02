@@ -81,25 +81,25 @@ class Verbosity(enum.Enum):
     DEBUG = ['yellow', None, []]
 
 
-_is_throw_error = True
-def set_throw_error(status=True):
-    global _is_throw_error
-    _is_throw_error = status
+_is_throwing_errors = True
+def set_is_throwing_errors(status=True):
+    global _is_throwing_errors
+    _is_throwing_errors = status
 
 
-_is_testing_error = False
+_is_testing_errors = False
 def set_is_testing_errors(status=True):
     '''Changes the color of the ``ERROR`` logger printout.
 
     Makes it less alarming.
     '''
-    global _is_testing_error
+    global _is_testing_errors
     if status:
-        _is_testing_error = True
-        set_throw_error(False)
+        _is_testing_errors = True
+        set_is_throwing_errors(False)
     else:
-        _is_testing_error = False
-        set_throw_error(True)
+        _is_testing_errors = False
+        set_is_throwing_errors(True)
 
 
 class Logger():
@@ -219,7 +219,7 @@ If the ``verbosity`` parameter is empty list, do nothing.
 
 The 'cleos_or_str' argument may be a string error message or any object having the string attribute ``err_msg``.
 
-If 'set_throw_error(True)', an `Exception object is thrown, otherwise the
+If 'set_is_throwing_errors(True)', an `Exception object is thrown, otherwise the
 message is printed.
 
 arguments:
@@ -247,7 +247,7 @@ cleos_or_str -- error message string or object having the attribute err_msg
         if not msg or not self._verbosity or is_silent:
             return True
         
-        if _is_testing_error:
+        if _is_testing_errors:
             color = Verbosity.ERROR_TESTING.value
         else:
             color = Verbosity.ERROR.value
@@ -259,9 +259,9 @@ cleos_or_str -- error message string or object having the attribute err_msg
             cleos_object.error_object.msg = msg
 
         self.error_buffer = msg
-        global _is_throw_error
+        global _is_throwing_errors
 
-        if _is_throw_error and is_fatal:
+        if _is_throwing_errors and is_fatal:
             raise Exception(msg)
         else:
             print(msg)

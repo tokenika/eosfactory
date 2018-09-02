@@ -210,7 +210,7 @@ def is_head_block_num():
 def verify_testnet_production():
     logger = front_end.Logger(None)
     result = is_head_block_num()
-    front_end.set_throw_error(False)
+    front_end.set_is_throwing_errors(False)
     if not result:
         logger.ERROR('''
         Testnet is not running or is not responding.
@@ -219,7 +219,7 @@ def verify_testnet_production():
         logger.INFO('''
         Testnet is OK.
         ''')
-    front_end.set_throw_error(True)
+    front_end.set_is_throwing_errors(True)
     return result
 
 

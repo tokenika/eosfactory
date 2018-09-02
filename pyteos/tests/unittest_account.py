@@ -9,7 +9,7 @@ from eosf_account import create_account, create_master_account
 from eosf_contract import Contract
 
 front_end.Logger.verbosity = [front_end.Verbosity.TRACE, front_end.Verbosity.OUT]
-front_end.set_throw_error(False)
+front_end.set_is_throwing_errors(False)
 
 remote_testnet = "http://88.99.97.30:38888"
 not_imputed = False
@@ -31,7 +31,7 @@ NEXT TEST ====================================================================
     def setUp(self):
         eosf.restart()
         front_end.set_is_testing_errors(False)
-        front_end.set_throw_error(True)
+        front_end.set_is_throwing_errors(True)
 
     # def test_too_many_wallets(self):
     #     _.SCENARIO("""
@@ -43,14 +43,14 @@ NEXT TEST ====================================================================
     #     """)        
     #     eosf.reset([front_end.Verbosity.INFO])
     #     create_wallet()
-    #     front_end.set_throw_error(False)
+    #     front_end.set_is_throwing_errors(False)
     #     front_end.set_is_testing_errors()
     #     ######################################################################
     #     _.COMMENT("""
     #     Added second wallet, named "second". Calling the ``create_master_account(...)`` 
     #     function should result in an error message:
     #     """)
-    #     front_end.set_throw_error(False)  
+    #     front_end.set_is_throwing_errors(False)  
     #     wallet1 = Wallet("second")
     #     self.assertTrue("It can be only one" in wallet1.error_buffer)
 
@@ -64,7 +64,7 @@ NEXT TEST ====================================================================
     #     """)
     #     front_end.set_is_testing_errors()
     #     eosf.reset([front_end.Verbosity.INFO])
-    #     front_end.set_throw_error(False)
+    #     front_end.set_is_throwing_errors(False)
     #     front_end.set_is_testing_errors()
     #     ######################################################################
 

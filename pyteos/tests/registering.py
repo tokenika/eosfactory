@@ -25,7 +25,7 @@ Active Private Key: 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
 '''
 
 front_end.set_is_testing_errors(False)
-front_end.set_throw_error(True)
+front_end.set_is_throwing_errors(True)
 
 _.SCENARIO('''
 Test registering to a remote testnet.

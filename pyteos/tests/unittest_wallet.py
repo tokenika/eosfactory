@@ -26,7 +26,7 @@ NEXT TEST ====================================================================
 
     def setUp(self):
         front_end.set_is_testing_errors(False)
-        front_end.set_throw_error(True)
+        front_end.set_is_throwing_errors(True)
 
     def test_create_keosd_wallet(self):
         _.SCENARIO('''

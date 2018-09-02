@@ -8,9 +8,9 @@ create_account("alice", master)
 create_account("bob", str(master))
 
 
-set_throw_error(False)
+set_is_throwing_errors(False)
 create_account("charlie", CreateKey("xxx", is_verbose=0))
-set_throw_error(True)
+set_is_throwing_errors(True)
 
 
 create_account(
@@ -19,11 +19,11 @@ create_account(
         (master, Permission.OWNER), 
         (master, Permission.ACTIVE)])
 
-set_throw_error(False)
+set_is_throwing_errors(False)
 create_account(
     "eve", master, 
     permission=CreateKey("xxx", is_verbose=0))
-set_throw_error(True)
+set_is_throwing_errors(True)
 
 
 create_account("host", master)

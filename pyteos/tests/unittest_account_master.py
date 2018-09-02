@@ -30,7 +30,7 @@ NEXT TEST ====================================================================
 
     def setUp(self):
         front_end.set_is_testing_errors(False)
-        front_end.set_throw_error(True)
+        front_end.set_is_throwing_errors(True)
 
     # def test_too_many_wallets(self):
     #     _.COMMENT('''
@@ -40,7 +40,7 @@ NEXT TEST ====================================================================
     #     ''')
     #     eosf.reset([front_end.Verbosity.INFO])
     #     create_wallet()
-    #     front_end.set_throw_error(False)
+    #     front_end.set_is_throwing_errors(False)
     #     front_end.set_is_testing_errors()
     #     ######################################################################
 
@@ -82,7 +82,7 @@ NEXT TEST ====================================================================
     #     eosf.reset([front_end.Verbosity.INFO])
     #     create_wallet()
 
-    #     front_end.set_throw_error(False)
+    #     front_end.set_is_throwing_errors(False)
     #     ######################################################################
         
     #     _.COMMENT('''
@@ -132,7 +132,7 @@ NEXT TEST ====================================================================
     #         "PW5J5KW7erKzqJmn9gMrvzev4pLxR3Vt9BRkx94BqdfHkw4z4bNTd"
     #         )
 
-    #     front_end.set_throw_error(False)
+    #     front_end.set_is_throwing_errors(False)
     #     ######################################################################
         
     #     create_master_account("account_master")
@@ -143,7 +143,7 @@ NEXT TEST ====================================================================
     #     the given name is found. Probably, it may change, therefore is to be tested. 
     #     ''')
     #     eosf.reset([front_end.Verbosity.INFO])
-    #     front_end.set_throw_error(False)
+    #     front_end.set_is_throwing_errors(False)
     #     ######################################################################
     #     get_account = cleos.GetAccount("hwtsfwytrwty")
     #     _.TRACE('''
@@ -180,7 +180,7 @@ NEXT TEST ====================================================================
         Wallet.wallet.remove_key("EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959")
         Wallet.wallet.remove_key("EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv")
         Wallet.wallet.keys()
-        front_end.set_throw_error(False)
+        front_end.set_is_throwing_errors(False)
         ######################################################################
         
         create_master_account("account_master", "dgxo1uyhoytn",

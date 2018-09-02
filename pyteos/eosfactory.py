@@ -7,10 +7,12 @@ import eosf_account
 import eosf_contract
 import testnet_data
 
-Permission = cleos.Permission
-CreateKey = cleos.CreateKey
+
 Logger = front_end.Logger
 Verbosity = front_end.Verbosity
+
+CreateKey = cleos.CreateKey
+Permission = cleos.Permission
 
 create_wallet = eosf_wallet.create_wallet
 create_account = eosf_account.create_account
@@ -18,14 +20,13 @@ create_master_account = eosf_account.create_master_account
 
 get_wallet = eosf_wallet.get_wallet
 
-
 Contract = eosf_contract.Contract
 ContractBuilder = eosf_contract.ContractBuilder
 contract_workspace_from_template = \
      eosf_contract.contract_workspace_from_template
 
 set_is_testing_errors = front_end.set_is_testing_errors
-set_throw_error = front_end.set_throw_error
+set_is_throwing_errors = front_end.set_is_throwing_errors
 
 restart = eosf_account.restart
 
@@ -37,7 +38,6 @@ info = eosf.info
 status = eosf.status
 
 verify_testnet_production = eosf.verify_testnet_production
-
 set_nodeos_address = setup.set_nodeos_address
 
 Testnet = testnet_data.Testnet
