@@ -1,135 +1,131 @@
-'''
-# Account object
+# The Account Class
 
-This file can be executed as a python script: `python3 account.md`.
+This case demonstrates how the `Account` class works. We present how to create an account object, associate it with a contract and then execute some actions of this contract.
 
 ## Set-up
 
-The set-up statements are explained at <a href="setup.html">cases/setup</a>.
+Open a bash terminal and run Python CLI:
 
-```md
-'''
-from  eosfactory import *
-'''
+```
+$ python3
 ```
 
-### Exactly one 'Wallet' object has to exist in the namespace
+Once in the Python shell, import the *EOSFactory* library:
 
-```md
-'''
-reset()
-create_wallet()   
-create_master_account("master")
-
-'''
 ```
+from eosfactory import *
+```
+
+## Context
+
+*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. What's more, account objects can be associated with smart-contracts and then manage them.
 
 ## Case
 
-The EOSFactory wraps EOSIO accounts with objects. Accounts can hold smart
-contracts. 
+Start a local testnet, create a wallet and then create a master account referenced by a global variable called `master`:
 
-Create an account objects: 'account_hello'. Add a contract of the class
-'hello' to it. The code for the 'hello' class is in the EOSIO repository.
+```
+reset()
+create_wallet()   
+create_master_account("master")
+```
 
-Add two other account objects, and execute the action of the contract on them 
-subsequently.
-
-### The 'create_account' factory function
+Next, use the `master` account to create another account referenced by a global variable called `host`:
 
 ```md
-'''
 create_account("host", master)
-'''
 ```
 
-The first argument is the name of the account object to be created, the second
-one points to the account master, authorizing the creation.
+The first argument is the name of variable to be created, the second one points to the master account, which we created in the previous step.
 
-Only this two arguments are necessary, however there is several default 
-arguments that sometimes have to be adjusted.
+You can verify that the variable exists and its methods can be invoked, for example:
 
-The 'create_account' does many tasks:
+```
+host.info()
+```
 
-* Checks whether a 'Wallet' object exist in the namespace.
-* Checks whether its first argument is not the same as the name of any other
-    account objects in the Factory's statistics. If it is so, a correction
-    action is proposed - see the 'account_name_conflict.md' case.
-* Creates a global object named as the first argument, representing 
-    a physical account of a random name (however, the name cen be fixed).
-* Opens the wallet, unlock it, put the physical account into it.
-* Updates the statistics of the accounts.
+The `create_account` command performs several tasks:
 
-All the actions are logged to the terminal, if the verbosity is set default. 
+* verifies that a `Wallet` object exist in the namespace,
+* verifies that the proposed variable name is not already taken,
+* using that name, creates a global variable referencing an actual account on the testnet - this account has its own name generated randomly,
+* opens the wallet, unlocks it, and stores the account's private keys into it,
+* and finally, updates its internal statistics tracking all accounts created in a similar way.
 
-### Methods of an account objects
+All the above actions are logged to the terminal, which can be visible provided the verbosity is set to its default value.
 
-Any account object can:
+#### Methods of an account objects
 
-* Load a smart contract.
-* Push an action on its contract.
-* Show its entry (a table) in the blockchain database.
+An instance of the `Account` class has the following methods:
 
-### Create a Contract object
+* `info()` - list the account's information,
+* `push_action()` - push an action to the smart-contract,
+* `show_action()` - display a `JSON` file of a transaction without sending it to the blockchain,
+* `table()` - list the content of the local database associated with the smart-contract.
 
-Create a smart contract object instance, appending it to the account 
-'account_hello'. The 'Contract' class is presented at <a href="contract.html">cases/contract</a>.
+**NOTE:** the `master` account is an instance of a different class (i.e. the `AccountMaster` class) which does not implement the above methods. As a consequence, you cannot associate a smart-contract with an instance of the `AccountMaster` class.
+
+#### Create a contract object
+
+Create an instance of the `Contract` class and associate it with the `host` account:
 
 ```md
-'''
 contract = Contract(host, "01_hello_world")
-if not contract.is_built():
-    contract.build()
-contract.deploy()
-'''
 ```
 
-The second argument of the creator of the 'Contract' class identifies the 
-code source. The Factory tries to be smart therefore searches the repository. 
-If it fails, put the right path there, 
-'/mnt/c/Workspaces/EOS/eosfactory/contracts/hello/',
-for example.
+The second argument of the creator of the `Contract` class identifies the location of the contract's source code (you can supply the entire path, but in case of standard locations, e.g. *EOSFactory* demo contracts or your predefined workspace, you can just specify the folder name).
+
+Next, let's build and deploy the contract:
+
+```
+contract.build()
+contract.deploy()
+```
+
+#### Execute the contract
 
 If the deployment succeeds, the contract can be executed.
 
-### Try the contract
-
-Create two contracts 'account_alice' and 'account_carol'...
+First, create two accounts - `alice` and `carol`:
 
 ```md
-'''
 create_account("alice", master)
 create_account("carol", master)
-'''
 ```
 
-... and execute the action of the contract 'hello':
+And then you can push actions of the contract stored at the `host` account, using those two other accounts as arguments:
 
 ```md
-'''
-host.push_action(
-    "hi", '{"user":"' + str(alice) + '"}', alice)
-
-host.push_action(
-    "hi", '{"user":"' + str(carol) + '"}', carol)
-'''
+host.push_action("hi", {"user":alice}, alice)
+host.push_action("hi", {"user":carol}, carol)
 ```
 
-Besides the usual 'Hello' message, you can see the result of a logging 
-facility, starting with 'INFO'.
+You can also try the `show_action` method:
+
+```
+host.show_action("hi", {"user":alice}, alice)
+```
+
+**NOTE:** As the `01_hello_world` does not define any tables, in this case the `table` method will not work.
+
+You can now stop the local testnet and exit Python CLI:
+
+```
+stop()
+```
+
+```
+exit()
+```
 
 ### Test run
 
-In an linux bash, change directory to where this file exists, that is the 
-directory 'docs/source/cases' in the repository, and enter the following 
-command:
+The examples presented in this document can be executed as a Python script:
 
-```md
-$ python3 account.md
+```
+python3 docs/sphinx/source/cases/04_account/case.py
 ```
 
-We expect that you get something similar to this one shown in the image:
+You should get output similar to this:
 
-![account](./img/account.png)
-
-'''
+![](./case.png)

@@ -1,6 +1,6 @@
 # The Wallet Class
 
-This case demonstrates how the `Wallet` class works.
+This case demonstrates how the `Wallet` class works. We present how account objects can be preserved across separate Python sessions. Also, we discuss the `Wallet` class methods.
 
 ## Set-up
 
