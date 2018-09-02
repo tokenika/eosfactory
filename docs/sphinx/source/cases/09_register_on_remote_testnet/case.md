@@ -20,12 +20,12 @@ The procedure results are following:
 
 The registration can be simply done with the command issued in a bash terminal:
 ```md
-python3 utlis/register_account.py <test node url> <account object name>
+python3 utlis/register_testnet.py <test node url> <account object name>
 ```
  
 for example
 ```md
-$ python3 utlis/register_account.py https://88.99.97.30:38888 account_master
+$ python3 utlis/register_testnet.py https://88.99.97.30:38888 jungle
 ```
 
 The current article tests this registration procedure.

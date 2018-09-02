@@ -168,9 +168,10 @@ class Wallet(cleos.WalletCreate):
     def remove_key(self, account_or_key):
         '''
         '''
+        self.open_unlock()
+
         removed_keys = []
         account_name = None
-
         if isinstance(account_or_key, cleos.Account):
             cleos.WalletRemove_key(
                 self._key_arg(
@@ -229,7 +230,10 @@ class Wallet(cleos.WalletCreate):
         ''' Imports private keys of an account into wallet.
         Returns list of `cleos.WalletImport` objects
         '''
+        self.open_unlock()
+
         imported_keys = []
+        account_name = None
         if isinstance(account_or_key, cleos.Account):
             account_name = account_or_key.name
             wallet_import = cleos.WalletImport(
@@ -248,20 +252,20 @@ class Wallet(cleos.WalletCreate):
             self.TRACE('''
                 * Importing keys of the account ``{}`` into the wallet ``{}``
                 '''.format(account_name, self.name)
-                        )            
-        else:
-            cleos.WalletImport(
-                self._key_arg(
-                    account_or_key, is_private_key=True), 
+                )
+        else:           
+            wallet_import = cleos.WalletImport(
+                self._key_arg(account_or_key, is_private_key=True), 
                 self.name, is_verbose=-1)
-            imported_keys.append(self._key_arg(
-                    account_or_key, is_private_key=False))
-
-            self.TRACE('''
-                * Importing keys into the wallet ``{}``
-                '''.format(self.name)
-                        )
-
+            if self.ERROR(wallet_import):
+                return False
+            else:
+                self.TRACE('''
+                    * Importing keys into the wallet ``{}``
+                    '''.format(self.name)
+                            )
+                return True
+        
         wallet_keys = cleos.WalletKeys(is_verbose=-1)
 
         if len(imported_keys) == 0:
@@ -277,7 +281,8 @@ class Wallet(cleos.WalletCreate):
                 ok = False
                 err_msg = '''
                 Failed to import keys of the account '{}' into the wallet '{}'
-                '''.format(account_name, self.name)
+                '''.format(
+                    account_name if account_name else "n/a", self.name)
 
                 self.ERROR(err_msg)
                 return False
@@ -288,6 +293,8 @@ class Wallet(cleos.WalletCreate):
         return True
 
     def keys_in_wallets(self, keys):
+        self.open_unlock()
+
         result = cleos.WalletKeys(is_verbose=-1)
         for key in keys:
             if not key in result.json[""]:
@@ -297,6 +304,8 @@ class Wallet(cleos.WalletCreate):
     def restore_accounts(self):
         '''
         '''
+        self.open_unlock()
+
         account_map = eosf.account_map()
         new_map = {}
         wallet_keys = cleos.WalletKeys(is_verbose=0)
@@ -329,6 +338,8 @@ class Wallet(cleos.WalletCreate):
         ''' Lists public keys from all unlocked wallets.
         Returns `cleos.WalletKeys` object.
         '''
+        self.open_unlock()
+
         self.wallet_keys = cleos.WalletKeys(is_verbose=-1)
         self.TRACE('''
             Keys in all open walets:
@@ -382,6 +393,8 @@ class Wallet(cleos.WalletCreate):
             
 
     def map_account(self, account_object_name, account_object):
+        '''
+        '''
         if not self.is_name_taken(account_object_name, account_object.name):
             account_map_json = eosf.account_map(self)
             if account_map_json is None:
@@ -402,8 +415,4 @@ class Wallet(cleos.WalletCreate):
                     setup.account_map,
                     self.wallet_dir + setup.account_map))
 
-    def info(self):
-        retval = json.dumps(self.json, indent=4) + "\n"
-        retval = retval + json.dumps(self.keys().json, indent=4) + "\n"
-        print(retval + json.dumps(self.list().json, indent=4) + "\n")
 

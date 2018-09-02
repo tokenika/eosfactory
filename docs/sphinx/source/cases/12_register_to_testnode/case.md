@@ -21,12 +21,12 @@ The procedure results are following:
 
 The registration can be simply done with the command issued in a bash terminal:
 ```md
-python3 utlis/register_account.py <test node url> <testnet pseudo>
+python3 utlis/register_testnet.py <test node url> <testnet pseudo>
 ```
  
 for example
 ```md
-$ python3 utlis/register_account.py https://88.99.97.30:38888 jungle
+$ python3 utlis/register_testnet.py https://88.99.97.30:38888 jungle
 ```
 where 'jungle' is the name of the testnet mapping file entry.
 
@@ -64,7 +64,7 @@ testnet = testnet_data.cryptolion
 The testnet object can be taken from the testnet map. We can list available entries in this map, in our computer...
 ```md
 '''
-testnet_data.list()
+testnet_data.testnets()
 '''
 ```
 ...and use one of the listed possibilities:
@@ -146,7 +146,7 @@ testnet_data.add_to_map(
     account_master.owner_key.key_private,
     account_master.active_key.key_private, alias=testnet_pseudo)
 
-testnet_data.list()
+testnet_data.testnets()
 '''
 ```
 

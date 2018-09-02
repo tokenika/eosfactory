@@ -107,7 +107,7 @@ def put_account_to_wallet_and_on_stack(
     global wallet_globals
 
     if account_object.owner_key:
-        if wallet_singleton.keys_in_wallets([account_object.owner_key.key_private, \
+        if wallet_singleton.keys_in_wallets(                [account_object.owner_key.key_private, \
                 account_object.active_key.key_private]):
             wallet_singleton.map_account(account_object_name, account_object)
         else:
@@ -128,7 +128,7 @@ def put_account_to_wallet_and_on_stack(
 
 
 class Eosio(cleos.Account):
-    def __init__(self, account_object_name):
+    def __init__(self, account_object_name):    
         self.name = "eosio"
         self.account_object_name = account_object_name
         config = teos.GetConfig(is_verbose=0)

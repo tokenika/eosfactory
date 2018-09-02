@@ -20,6 +20,8 @@ class Test(unittest.TestCase):
         ''')
         reset()
         create_wallet()
+        get_wallet().import_key("5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3")
+        exit()
         create_master_account("account_master")
 
         _.COMMENT('''

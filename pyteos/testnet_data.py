@@ -92,7 +92,7 @@ def save_map(map):
 def edit_map():
     eosf.edit_map(testnet_file)
 
-def list():
+def testnets():
     map = eosf.read_map(testnet_file)
     for pseudo, testnet in map.items():
         print("%20s: %13s @ %s" % (pseudo, testnet["name"], testnet["url"]))

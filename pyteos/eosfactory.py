@@ -40,3 +40,5 @@ remove_testnet_cache = eosf.remove_testnet_cache
 verify_testnet = eosf.verify_testnet
 
 set_nodeos_address = setup.set_nodeos_address
+
+testnets = testnet_data.testnets

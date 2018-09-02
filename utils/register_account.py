@@ -2,14 +2,14 @@ from  eosfactory import *
 import testnet_data
 import argparse
 
-def register_account(
+def register_testnet(
     testnode_url, alias, account_name, owner_key, active_key):
 
     set_nodeos_address(testnode_url)
     if not verify_testnet():
         return
 
-    testnet_data.list()
+    testnet_data.testnets()
 
     create_wallet(file=True)
     account_object_name = "account"
@@ -26,7 +26,7 @@ def register_account(
             active_key if active_key else account.active_key.key_private,
             alias)
 
-    testnet_data.list()
+    testnet_data.testnets()
 
 parser = argparse.ArgumentParser(description='''
 Given an url and an testnet pseudo (not obligatory), get registration data.
@@ -34,7 +34,7 @@ Apply the data to the registration form of the testnet.
 Enter 'go' when ready.
 
 Example:
-    python3 register_account.py https://api.kylin-testnet.eospace.io
+    python3 register_testnet.py https://api.kylin-testnet.eospace.io
 
 If additional, flagged ``--orphan``, arguments are given then the completely 
 defined account is checked for existence, and possibly added as a testnet entry.
@@ -56,7 +56,9 @@ if args.orphan:
     owner_key = args.orphan[1]
     active_key = args.orphan[2]
 
-register_account(
+register_testnet(
     args.testnode_url, args.pseudo, account_name, owner_key, active_key)
 
-# python3 register_account.py https://api.kylin-testnet.eospace.io --pseudo kylin2 --orphan dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
+# python3 register_testnet.py https://api.kylin-testnet.eospace.io --pseudo kylin2 --orphan dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
+
+register_testnet
