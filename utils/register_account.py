@@ -21,7 +21,10 @@ def register_account(
 
     if account_object_name in globals():
         testnet_data.add_to_map(
-            testnode_url, account_name, owner_key, active_key, alias)
+            testnode_url, account_name, 
+            owner_key if owner_key else account_master.owner_key.key_private, 
+            active_key if active_key else account_master.active_key.key_private,
+            alias)
 
     testnet_data.mapped()
 
