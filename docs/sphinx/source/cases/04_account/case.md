@@ -22,6 +22,8 @@ from eosfactory import *
 
 ## Case
 
+#### Create a new account
+
 Start a local testnet, create a wallet and then create a master account referenced by a global variable called `master`:
 
 ```
@@ -32,7 +34,7 @@ create_master_account("master")
 
 Next, use the `master` account to create another account referenced by a global variable called `host`:
 
-```md
+```
 create_account("host", master)
 ```
 
@@ -54,7 +56,7 @@ The `create_account` command performs several tasks:
 
 All the above actions are logged to the terminal, which can be visible provided the verbosity is set to its default value.
 
-#### Methods of an account objects
+#### Methods of the Account class
 
 An instance of the `Account` class has the following methods:
 
@@ -69,7 +71,7 @@ An instance of the `Account` class has the following methods:
 
 Create an instance of the `Contract` class and associate it with the `host` account:
 
-```md
+```
 contract = Contract(host, "01_hello_world")
 ```
 
@@ -88,14 +90,14 @@ If the deployment succeeds, the contract can be executed.
 
 First, create two accounts - `alice` and `carol`:
 
-```md
+```
 create_account("alice", master)
 create_account("carol", master)
 ```
 
 And then you can push actions of the contract stored at the `host` account, using those two other accounts as arguments:
 
-```md
+```
 host.push_action("hi", {"user":alice}, alice)
 host.push_action("hi", {"user":carol}, carol)
 ```
