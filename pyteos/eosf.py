@@ -28,7 +28,7 @@ import cleos
 import cleos_system
 import eosf_contract
 
-def remove_testnet_cache(verbosity=None):
+def clear_testnet_cache(verbosity=None):
     ''' Remove wallet files associated with the current testnet.
     '''
 
@@ -52,7 +52,7 @@ def remove_testnet_cache(verbosity=None):
         {}
         '''.format(str(e)))
     logger.TRACE('''
-    Testnet cache removed
+    Testnet cache successfully removed.
     ''')
 
 
@@ -124,7 +124,7 @@ def reset(verbosity=None):
         No local nodeos is set: {}
         '''.format(setup.nodeos_address()))
 
-    remove_testnet_cache()
+    clear_testnet_cache()
 
     node = teos.NodeStart(1, is_verbose=0)
     probe = teos.NodeProbe(is_verbose=-1)
@@ -207,7 +207,7 @@ def is_head_block_num():
         head_block_num = -1
     return head_block_num > 0
 
-def verify_testnet():
+def verify_testnet_production():
     logger = front_end.Logger(None)
     result = is_head_block_num()
     front_end.set_throw_error(False)

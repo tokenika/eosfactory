@@ -13,8 +13,8 @@ restart()
 testnet = Testnet("http://88.99.97.30:38888", "dgxo1uyhoytn", "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY", "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA")
 
 testnet.configure()
-verify_testnet()
-remove_testnet_cache()
+testnet.verify_production()
+testnet.clear_cache()
 
 create_wallet()
 create_master_account("master", testnet)

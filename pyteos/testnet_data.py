@@ -13,6 +13,12 @@ class Testnet:
     def configure(self, prefix=None):
         setup.set_nodeos_address(self.url, prefix)
 
+    def verify_production(self):
+        eosf.verify_testnet_production()
+
+    def clear_cache(self):
+        eosf.clear_testnet_cache()
+
 class GetTestnet(Testnet):
     def __init__(self, testnet):
         map = map()

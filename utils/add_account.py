@@ -6,7 +6,7 @@ def add_account(
     account_name, owner_key, active_key):
 
     set_nodeos_address(testnode_url)
-    if not verify_testnet():
+    if not verify_testnet_production():
         return
 
     create_wallet(file=True)

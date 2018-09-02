@@ -43,7 +43,7 @@ class Test(unittest.TestCase):
         the game are correctly stored in the blockchain database.
         ''')
 
-        verify_testnet()
+        testnet.verify_production()
         
         create_wallet(file=True)
         create_master_account("master", testnet)
@@ -264,7 +264,7 @@ if __name__ == '__main__':
     testnet.configure(prefix=CACHE_ID)
 
     if args.reset and not setup.is_local_address:
-        remove_testnet_cache()
+        testnet.clear_cache()
 
     extra_ram = int(args.ram)
     extra_stake_net = int(args.net)

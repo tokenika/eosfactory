@@ -36,8 +36,7 @@ stop = eosf.stop
 info = eosf.info
 status = eosf.status
 
-remove_testnet_cache = eosf.remove_testnet_cache
-verify_testnet = eosf.verify_testnet
+verify_testnet_production = eosf.verify_testnet_production
 
 set_nodeos_address = setup.set_nodeos_address
 

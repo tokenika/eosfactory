@@ -6,7 +6,7 @@ def register_testnet(
     testnode_url, alias, account_name, owner_key, active_key):
 
     set_nodeos_address(testnode_url)
-    if not verify_testnet():
+    if not verify_testnet_production():
         return
 
     testnet_data.testnets()
