@@ -234,7 +234,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     if args.testnet:
-        testnet = testnet_data.Testnet(
+        testnet = Testnet(
             args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3]
         )
     else:
@@ -244,7 +244,7 @@ if __name__ == '__main__':
             if args.kylin:
                 testnet = testnet_data.kylin
             else:
-                testnet = testnet_data.LocalTestnet(reset=args.reset)
+                testnet = LocalTestnet(reset=args.reset)
 
     testnet.configure(prefix=CACHE_ID)
 

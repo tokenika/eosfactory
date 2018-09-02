@@ -10,7 +10,7 @@ class Testnet:
         self.owner_key = owner_key
         self.active_key = active_key
 
-    def configure(self, prefix):
+    def configure(self, prefix=None):
         setup.set_nodeos_address(self.url, prefix)
 
 class GetTestnet(Testnet):

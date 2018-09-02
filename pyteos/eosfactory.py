@@ -41,4 +41,6 @@ verify_testnet = eosf.verify_testnet
 
 set_nodeos_address = setup.set_nodeos_address
 
+Testnet = testnet_data.Testnet
+LocalTestnet = testnet_data.LocalTestnet
 testnets = testnet_data.testnets
