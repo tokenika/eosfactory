@@ -12,7 +12,7 @@ def register_account(
     testnet_data.mapped()
 
     create_wallet(file=True)
-    account_object_name = "account_master"   
+    account_object_name = "account"
     create_master_account(
         account_object_name,
         account_name=account_name,
@@ -22,8 +22,8 @@ def register_account(
     if account_object_name in globals():
         testnet_data.add_to_map(
             testnode_url, account_name, 
-            owner_key if owner_key else account_master.owner_key.key_private, 
-            active_key if active_key else account_master.active_key.key_private,
+            owner_key if owner_key else account.owner_key.key_private, 
+            active_key if active_key else account.active_key.key_private,
             alias)
 
     testnet_data.mapped()
@@ -36,9 +36,8 @@ Enter 'go' when ready.
 Example:
     python3 register_account.py https://api.kylin-testnet.eospace.io
 
-If additional -- flagged ``--orphan`` -- arguments are given, the completely 
-defined account is checked for existence, and possibly added as any other 
-testnet entry.
+If additional, flagged ``--orphan``, arguments are given then the completely 
+defined account is checked for existence, and possibly added as a testnet entry.
 ''')
 
 parser.add_argument("testnode_url", help="An URL of a public node offering access to the testnet, e.g. http://88.99.97.30:38888")
