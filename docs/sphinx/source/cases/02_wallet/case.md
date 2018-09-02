@@ -152,11 +152,32 @@ You can now stop the local testnet:
 stop()
 ```
 
+And exit Python CLI:
+
+```
+exit()
+```
+
 #### Methods of the Wallet class
 
 As we mentioned before, when working with unit tests you should never need to access the `Wallet` object directedly. 
 
-However, if you do, here is a list of methods available in the `Wallet` class: 
+However, if you do, below there is a list of methods available in the `Wallet` class.
+
+Let's now create a new Python session:
+
+```
+$ python3
+```
+
+Then create a `Wallet` object:
+
+```
+from eosfactory import *
+create_wallet()
+```
+
+And execute the following methods of the `Wallet` class:
 
 ```
 get_wallet().index()
@@ -181,7 +202,7 @@ exit()
 
 The examples presented in this document can be executed as a Python script:
 ```
-python3 docs/sphinx/source/cases/03_wallet/case.py
+python3 docs/sphinx/source/cases/02_wallet/case.py
 ```
 You should get output similar to this:
 

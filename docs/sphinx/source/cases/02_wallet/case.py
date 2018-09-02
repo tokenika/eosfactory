@@ -23,7 +23,7 @@ stop()
 
 restart()
 
-resset()
+reset()
 info()
 
 create_wallet()
@@ -31,6 +31,9 @@ get_wallet().keys()
 
 stop()
 
+restart()
+
+create_wallet()
 get_wallet().index()
 get_wallet().open()
 get_wallet().unlock()
