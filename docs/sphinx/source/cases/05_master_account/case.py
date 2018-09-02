@@ -1,26 +1,21 @@
 from  eosfactory import *
-import testnode_data
 
 reset()
+
 create_wallet()
-create_master_account("master_local")
-master_local.info()
+create_master_account("master")
+master.info()
+
 stop()
 
 restart()
 
-testnet = testnode_data.kylin
+testnet = Testnet("http://88.99.97.30:38888", "dgxo1uyhoytn", "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY", "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA")
 
-set_nodeos_address(testnet.url, prefix="temp")
+testnet.configure()
+verify_testnet()
 remove_testnet_cache()
-#set_testnet_configuration(testnet.url, prefix="temp")
-#remove_testnet_cache()
 
 create_wallet()
-create_master_account(
-    "master_remote",
-    testnet.account_name,
-    testnet.owner_key,
-    testnet.active_key
-    )
-master_remote.info()
+create_master_account("master", testnet)
+master.info()

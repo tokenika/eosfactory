@@ -18,13 +18,13 @@ from eosfactory import *
 
 ## Context
 
-*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. What's more, account objects can be associated with smart-contracts and then manage them.
+*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. What's more, an account object can be associated with a smart-contract and then manage it.
 
 ## Case
 
 #### Create a new account
 
-Start a local testnet, create a wallet and then create a master account referenced by a global variable called `master`:
+Start a local testnet, create a wallet and then create a special master account referenced by a global variable called `master`:
 
 ```
 reset()
@@ -38,7 +38,7 @@ Next, use the `master` account to create another account referenced by a global 
 create_account("host", master)
 ```
 
-The first argument is the name of variable to be created, the second one points to the master account, which we created in the previous step.
+The first argument is the name of variable to be created, the second one points to the `master` account, which we created in the previous step.
 
 You can verify that the variable exists and its methods can be invoked, for example:
 
@@ -50,11 +50,12 @@ The `create_account` command performs several tasks:
 
 * verifies that a `Wallet` object exist in the namespace,
 * verifies that the proposed variable name is not already taken,
-* using that name, creates a global variable referencing an actual account on the testnet - this account has its own name generated randomly,
-* opens the wallet, unlocks it, and stores the account's private keys into it,
+* registers a new account on the testnet - this account has its own name generated randomly,
+* using the proposed name, creates a global variable referencing the actual account on the testnet,
+* opens the wallet, unlocks it and stores the account's private keys into it,
 * and finally, updates its internal statistics tracking all accounts created in a similar way.
 
-All the above actions are logged to the terminal, which can be visible provided the verbosity is set to its default value.
+All the above actions are logged to the terminal, which can be visible, provided the verbosity is set to its default value.
 
 #### Methods of the Account class
 
