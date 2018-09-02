@@ -63,13 +63,11 @@ What has happened?
 * An account object named `master` is created and its keys are stored in the wallet.
 * Similarly, account objects named `alice` and `carol` are created and their keys are stored in the wallet.
 
-You can now stop the local testnet:
+You can now stop the local testnet and exit Python CLI:
 
 ```
 stop()
 ```
-
-And exit Python CLI:
 
 ```
 exit()
@@ -105,13 +103,11 @@ Here is the expected outcome:
 
 ![](./img/02.png)
 
-You can now stop the local testnet:
+You can now stop the local testnet and exit Python CLI:
 
 ```
 stop()
 ```
-
-And exit Python CLI:
 
 ```
 exit()
@@ -146,13 +142,11 @@ You should get output similar to this:
 
 ![](./img/03.png)
 
-You can now stop the local testnet:
+You can now stop the local testnet and exit Python CLI:
 
 ```
 stop()
 ```
-
-And exit Python CLI:
 
 ```
 exit()
