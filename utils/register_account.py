@@ -9,7 +9,7 @@ def register_account(
     if not verify_testnet():
         return
 
-    testnet_data.mapped()
+    testnet_data.list()
 
     create_wallet(file=True)
     account_object_name = "account"
@@ -26,7 +26,7 @@ def register_account(
             active_key if active_key else account.active_key.key_private,
             alias)
 
-    testnet_data.mapped()
+    testnet_data.list()
 
 parser = argparse.ArgumentParser(description='''
 Given an url and an testnet pseudo (not obligatory), get registration data.

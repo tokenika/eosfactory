@@ -64,7 +64,7 @@ testnet = testnet_data.cryptolion
 The testnet object can be taken from the testnet map. We can list available entries in this map, in our computer...
 ```md
 '''
-testnet_data.mapped()
+testnet_data.list()
 '''
 ```
 ...and use one of the listed possibilities:
@@ -146,7 +146,7 @@ testnet_data.add_to_map(
     account_master.owner_key.key_private,
     account_master.active_key.key_private, alias=testnet_pseudo)
 
-testnet_data.mapped()
+testnet_data.list()
 '''
 ```
 
