@@ -285,6 +285,7 @@ def save_map(map, file_name):
 def edit_map(file_name, text_editor="nano"):
     import subprocess
     subprocess.run([text_editor, os.path.join(wallet_dir(), file_name)])
+    read_map(file_name, text_editor)
 
 
 def read_map(file_name, text_editor="nano"):

@@ -1,4 +1,3 @@
-import os
 import setup
 import eosf
 import front_end
@@ -92,7 +91,6 @@ def save_map(map):
 
 def edit_map():
     eosf.edit_map(testnet_file)
-
 
 def list():
     map = eosf.read_map(testnet_file)
