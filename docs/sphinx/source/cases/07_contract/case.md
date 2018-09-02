@@ -1,7 +1,7 @@
 '''
 # Contract object
 
-This file can be executed as a python script: 'python3 contract.md'.
+This file can be executed as a python script: `python3 contract.md`.
 
 
 ## Set-up
@@ -173,6 +173,7 @@ $ python3 contract.md
 ```md
 We hope that you get something similar to this one shown in the image below.
 ```
-<img src="contract.png" 
-    onerror="this.src='../../../source/cases/contract.png'" width="720px"/>
+
+![contract](./img/contract.png)
+
 '''

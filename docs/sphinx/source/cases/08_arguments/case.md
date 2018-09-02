@@ -1,7 +1,7 @@
 '''
 # Arguments
 
-This file can be executed as a python script: 'python3 arguments.md'.
+This file can be executed as a python script: `python3 arguments.md`.
 
 Arguments of the EOSFactory statements are polymorphic. For example, a 
 'permission` argument can have the following forms:
@@ -65,9 +65,8 @@ create_account("charlie", CreateKey("xxx", is_verbose=0))
 set_throw_error(True)
 '''
 ```
-<img src="arguments/accounts.png" 
-    onerror="this.src='../../../source/cases/arguments/accounts.png'"   
-    width="720px"/>
+
+![accounts](./img/accounts.png)
 
 ### Permission arguments
 
@@ -108,9 +107,7 @@ create_account(
 set_throw_error(True)
 '''
 ```
-<img src="arguments/permissions.png" 
-    onerror="this.src='../../../source/cases/arguments/permissions.png'"   
-    width="720px"/>
+![permissions](./img/permissions.png)
 
 ### Data arguments
 
@@ -187,7 +184,6 @@ host.push_action(
 Note that the last version only maches the data arguments used in of the 
 'cleos' and 'cleos_system' modules.
 
-<img src="arguments/data.png" 
-    onerror="this.src='../../../source/cases/arguments/data.png'"   
-    width="720px"/>
+![data](./img/data.png)
+
 '''

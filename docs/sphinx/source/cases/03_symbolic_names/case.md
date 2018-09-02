@@ -1,7 +1,7 @@
 '''
 # Symbolic names
 
-This file can be executed as a python script: 'python3 symbolic_names.md'.
+This file can be executed as a python script: `python3 symbolic_names.md`.
 
 ## Set-up
 
@@ -87,10 +87,7 @@ host.push_action(
     master)
 '''
 ```
-
-<img src="symbolic_names_images/symbolic_names_false.png" 
-    onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_false.png'"   
-    width="720px"/>
+![symbolic_names_false](./img/symbolic_names_false.png)
 
 #### Translation is on
 
@@ -130,8 +127,6 @@ host.push_action(
 stop()
 '''
 ```
+![symbolic_names_true](./img/symbolic_names_true.png)
 
-<img src="symbolic_names_images/symbolic_names_true.png" 
-    onerror="this.src='../../../source/cases/symbolic_names_images/symbolic_names_true.png'"   
-    width="720px"/>
 '''

@@ -1,7 +1,7 @@
 '''
 # Account master object
 
-This file can be executed as a python script: 'python3 account_master.md'.
+This file can be executed as a python script: `python3 account_master.md`.
 
 ## Set-up
 
@@ -48,9 +48,7 @@ does not have all the functionality of plain orders.
 
 We expect that you get something similar to this one shown in the image below.
 
-<img src="account_master_images/account_master_eosio.png" 
-    onerror="this.src='../../../source/cases/account_master_images/account_master_eosio.png'" 
-    width="720px"/>
+![account_master_eosio](./img/account_master_eosio.png)
 
 ### Remote testnet registration
 
@@ -68,7 +66,7 @@ they can add it to the Factory. In this show, we use an real account represented
 '''
 restart()
 testnet = testnode_data.kylin
-set_nodeos_address(testnet.url, prefix="temp")
+nodeos_address(testnet.url, prefix="temp")
 '''
 ```
 Delete files possibly created previously:
@@ -99,8 +97,7 @@ dgxo1uyhoytn \
 5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
 5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
 ```
-<img src="account_master_images/add_account.png" 
-    onerror="this.src='../../../source/cases/account_master_images/add_account.png'" width="720px"/>
+![add_account](./img/add_account.png)
 
 
 ### Test run
@@ -108,6 +105,6 @@ dgxo1uyhoytn \
 If you execute this script with the command `python3 account_master.md`,
 you may epect to get something similar to what we show shown in the image below.
 
-<img src="account_master_images/account_master_add.png" 
-    onerror="this.src='../../../source/cases/account_master_images/account_master_add.png'" width="720px"/>
+![account_master_add](./img/account_master_add.png)
+
 '''

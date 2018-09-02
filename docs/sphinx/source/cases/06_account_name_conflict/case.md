@@ -2,7 +2,7 @@
 # Account name conflict
 
 This file can be executed as a python script: 
-'python3 account_name_conflict.md'.
+`python3 account_name_conflict.md`.
 
 ## Set-up
 
@@ -62,7 +62,7 @@ $ python3 account_name_conflict.md
 ```md
 We hope that you get something similar to this one shown in the image below.
 ```
-<img src="account_name_conflict.png" 
-    onerror="this.src='../../../source/cases/account_name_conflict.png'"   
-    width="720px"/>
+
+![account_name_conflict](./img/account_name_conflict.png)
+
 '''

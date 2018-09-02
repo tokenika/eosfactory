@@ -147,6 +147,6 @@ $ python3 eosio_token_contract.md
 
 We expect that you get something similar to what is shown in the image below.
 
-<img src="eosio_token.png" 
-    onerror="this.src='../../../source/cases/eosio_token.png'" width="720px"/>
+![eosio_token](./img/eosio_token.png)
+
 '''

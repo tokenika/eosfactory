@@ -1,7 +1,7 @@
 '''
 # EOSFactory configuration
 
-This file can be executed as a python script: 'python3 configuration.md'.
+This file can be executed as a python script: `python3 configuration.md`.
 
 ## Inspect the configuration
 
@@ -44,6 +44,6 @@ this one shown in the image below.
 You can change or add something in the configuration file 'teos/config.json' 
 and see the result.
 
-<img src="configuration.png" 
-    onerror="this.src='../../../source/cases/configuration.png'" width="720px"/>
+![configuration](./img/configuration.png)
+
 '''

@@ -2,7 +2,7 @@
 # Registering to a remote testnet
 
 This file can be executed as a python script: 
-'python3 register_to_testnode.md'.
+`python3 register_to_testnode.md`.
 
 Registering to a public testnet involves three steps:
 
@@ -138,7 +138,6 @@ $ python3 register_to_testnode.md
 
 We hope that you get something similar to this one shown in the image below.
 
-<img src="register.png" 
-    onerror="this.src='../../../source/cases/registering.png'" width="640px"/>
+![register](./img/register.png)
     
 '''

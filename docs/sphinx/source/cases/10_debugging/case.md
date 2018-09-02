@@ -2,7 +2,7 @@
 # Debugging smart contracts
 
 This file can be executed as a python script: 
-'python3 debugging.md'.
+`python3 debugging.md`.
 
 The EOSIO documentation <a href="https://eosio-cpp.readme.io/docs/debugging">advertises</a> the proposed debugging method as 'Caveman Debugging':
 
@@ -106,7 +106,6 @@ $ python3 debugging.md
 
 We hope that you have something similar to what is shown in the image below.
 
-<img src="debugging.png" 
-    onerror="this.src='../../../source/cases/debugging.png'" width="720px"/>
+![debugging](./img/debugging.png)
 
 '''

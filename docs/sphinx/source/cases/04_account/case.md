@@ -1,7 +1,7 @@
 '''
 # Account object
 
-This file can be executed as a python script: 'python3 account.md'.
+This file can be executed as a python script: `python3 account.md`.
 
 ## Set-up
 
@@ -131,7 +131,6 @@ $ python3 account.md
 
 We expect that you get something similar to this one shown in the image:
 
-<img src="account.png" 
-    onerror="this.src='../../../source/cases/account.png'"   
-    width="720px"/>
+![account](./img/account.png)
+
 '''
