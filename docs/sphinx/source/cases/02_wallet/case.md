@@ -30,7 +30,6 @@ Let's create a wallet and a couple of accounts with a local testnet:
 
 ```md
 '''
-from eosfactory import *
 reset()
 info()
 create_wallet()
@@ -60,8 +59,8 @@ If we exit the Python session, then create a new session, and resume the testnet
 
 ```md
 '''
-from eosfactory import *
 resume()
+restart()
 info()
 create_wallet()
 get_wallet().keys()
@@ -77,16 +76,14 @@ Access an existing wallet
 
 ```md
 '''
-from eosfactory import *
 reset()
+restart()
 info()
 create_wallet()
 get_wallet().keys()
 stop()
 '''
 ```
-
-
 
 ### Methods of the `Wallet` class
 

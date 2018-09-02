@@ -13,7 +13,7 @@ get_wallet().lock_all()
 
 stop()
 restart()
-run()
+resume()
 
 create_wallet()
 get_wallet().keys()
