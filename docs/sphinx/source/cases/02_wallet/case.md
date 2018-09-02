@@ -4,7 +4,7 @@
 
 ## Set-up
 
-```md
+```
 '''
 from eosfactory import *
 '''
@@ -28,7 +28,7 @@ There is an important distinction regarding prefixes:
 
 Let's create a wallet and a couple of accounts with a local testnet:
 
-```md
+```
 '''
 reset()
 info()
@@ -57,7 +57,7 @@ What has happened?
 
 If we exit the Python session, then create a new session, and resume the testnet, *EOSFactory* will recreate the wallet, including the private keys we created in the previous session:
 
-```md
+```
 '''
 resume()
 restart()
@@ -74,7 +74,7 @@ Here is the expected outcome:
 
 Access an existing wallet
 
-```md
+```
 '''
 reset()
 restart()
@@ -98,7 +98,7 @@ We plan the Factory so that the singular wallet object is never referred to, in 
 
 This file can be executed as a Python script:
 
-```md
+```
 python3 docs/sphinx/source/cases/03_wallet/case.md
 ```
 We expect that you get something similar to this one shown in the image:
