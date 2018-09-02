@@ -406,8 +406,6 @@ def create_master_account(
     if wallet_singleton is None:
         return
 
-    wallet_singleton.open_unlock()
-
     '''
     If the local testnet is running, create an account object representing 
     the ``eosio`` account. Put the account into the wallet. Put the account
@@ -549,8 +547,6 @@ def append_account_methods_and_finish(
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
 
-        wallet_singleton.open_unlock()
-
         result = cleos.SetContract(
             account_object, contract_dir, 
             wast_file, abi_file, 
@@ -576,8 +572,6 @@ def append_account_methods_and_finish(
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False, payer=None):
         data = _data_json(data)
-
-        wallet_singleton.open_unlock()
 
         result = cleos.PushAction(
             account_object, action, data,
@@ -630,8 +624,6 @@ def append_account_methods_and_finish(
         account_object.INFO('''
         * Table ``{}`` for ``{}``
         '''.format(table_name, scope))
-
-        wallet_singleton.open_unlock()
         
         result = cleos.GetTable(
                     account_object, table_name, scope,
@@ -667,8 +659,6 @@ def append_account_methods_and_finish(
         if receiver is None:
             receiver = account_object
         buy_ram_kbytes = 1
-
-        wallet_singleton.open_unlock()
         
         result = cleos_system.BuyRam(
             account_object, receiver, amount_kbytes,
@@ -789,8 +779,6 @@ def create_account(
         
     if wallet_singleton.is_name_taken(account_object_name, account_name):
         return
-
-    wallet_singleton.open_unlock()
 
     '''
     Create an account object.
