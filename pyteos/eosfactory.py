@@ -5,7 +5,7 @@ import eosf
 import eosf_wallet
 import eosf_account
 import eosf_contract
-import 
+import testnet_data
 
 
 Logger = front_end.Logger
@@ -40,6 +40,6 @@ status = eosf.status
 verify_testnet_production = eosf.verify_testnet_production #to be removed
 set_nodeos_address = setup.set_nodeos_address #to be removed
 
-Testnet = .Testnet
-LocalTestnet = .LocalTestnet
-testnets = .testnets
+Testnet = testnet_data.Testnet
+LocalTestnet = testnet_data.LocalTestnet
+testnets = testnet_data.testnets

@@ -1,5 +1,5 @@
 from  eosfactory import *
-import 
+import testnet_data
 import argparse
 
 def register_testnet(
@@ -9,7 +9,7 @@ def register_testnet(
     if not verify_testnet_production():
         return
 
-    .testnets()
+    testnet_data.testnets()
 
     create_wallet(file=True)
     account_object_name = "account"
@@ -20,13 +20,13 @@ def register_testnet(
         active_key=active_key)
 
     if account_object_name in globals():
-        .add_to_map(
+        testnet_data.add_to_map(
             url, account_name, 
             owner_key if owner_key else account.owner_key.key_private, 
             active_key if active_key else account.active_key.key_private,
             alias)
 
-    .testnets()
+    testnet_data.testnets()
 
 parser = argparse.ArgumentParser(description='''
 Given an url and an testnet pseudo (not obligatory), get registration data.

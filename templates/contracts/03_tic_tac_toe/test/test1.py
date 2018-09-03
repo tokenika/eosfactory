@@ -239,10 +239,10 @@ if __name__ == '__main__':
         )
     else:
         if args.cryptolion:
-            testnet = .cryptolion
+            testnet = testnet_data.cryptolion
         else:
             if args.kylin:
-                testnet = .kylin
+                testnet = testnet_data.kylin
             else:
                 testnet = LocalTestnet(reset=args.reset)
 
