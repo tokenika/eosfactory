@@ -24,11 +24,9 @@ $ python3
 from eosfactory import *
 ```
 
-Then run this code to initialize a couple of accounts and a smart-contract:
+Then run this code to initialize a local testnet, register a couple of accounts and deploy a smart-contract to one of them:
 
 ```
-from eosfactory import *
-
 reset()
 create_wallet()
 create_master_account("master")
