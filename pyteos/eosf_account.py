@@ -730,9 +730,9 @@ def append_account_methods_and_finish(
 def create_account(
         account_object_name,
         creator, 
-        stake_net="", stake_cpu="",
         account_name="",
         owner_key="", active_key="",
+        stake_net=3, stake_cpu=3,
         permission=None,
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
