@@ -6,10 +6,10 @@ reset()
 create_wallet()
 create_master_account("master")
 create_account("host", master)
+create_account("alice", master)
 
 contract = Contract(host, "02_eosio_token")
-if not contract.is_built():
-    contract.build()
+contract.build(force=False)
 contract.deploy()
 
 host.push_action(
@@ -22,7 +22,6 @@ host.push_action(
         "can_whitelist": "0"
     }, [master, host])
 
-create_account("alice", master)
 host.push_action(
     "issue",
     {
@@ -37,10 +36,10 @@ reset()
 create_wallet()
 create_master_account("master")
 create_account("host", master)
+create_account("alice", master)
 
 contract = Contract(host, "02_eosio_token")
-if not contract.is_built():
-    contract.build()
+contract.build(force=False)
 contract.deploy()
 
 host.push_action(
@@ -53,7 +52,6 @@ host.push_action(
         "can_whitelist": "0"
     }, [master, host])
 
-create_account("alice", master)
 host.push_action(
     "issue",
     {
