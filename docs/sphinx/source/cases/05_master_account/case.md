@@ -17,7 +17,7 @@ We consider two scenarios: first a local (private) testnet, and then a more comp
 
 #### Local testnet
 
-Create a new Python session:
+Create a new Python session and import *EOSFactory* API:
 
 ```
 $ python3
@@ -61,7 +61,7 @@ exit()
 
 #### Remote testnet
 
-Create a new Python session:
+Create a new Python session and import *EOSFactory* API:
 
 ```
 $ python3

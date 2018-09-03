@@ -10,7 +10,7 @@ This case demonstrates how the `Account` class works. We present how to create a
 
 #### Create a new account
 
-Create a new Python session:
+Create a new Python session and import *EOSFactory* API:
 
 ```
 $ python3

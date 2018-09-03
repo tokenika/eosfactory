@@ -14,11 +14,7 @@ What's more, *EOSFactory* translates *EOSIO* logger messages, so that the random
 
 ## Case
 
-To demonstrate how *EOSFactory* converts logger messages, let's consider two scenarios: first with translation feature turned off and then with this feature turned on.
-
-#### Symbolic translation is OFF
-
-Create a new Python session:
+Create a new Python session and import *EOSFactory* API:
 
 ```
 $ python3
@@ -28,20 +24,17 @@ $ python3
 from eosfactory import *
 ```
 
-Next, turn symbolic translation OFF:
+Then run this code to initialize a couple of accounts and a smart-contract:
 
-```md
-setup.is_translating = False
 ```
+from eosfactory import *
 
-And then run this code:
-
-```md
 reset()
 create_wallet()
 create_master_account("master")
 create_account("host", master)
 create_account("alice", master)
+create_account("carol", master)
 
 contract = Contract(host, "02_eosio_token")
 contract.build(force=False)
@@ -56,7 +49,19 @@ host.push_action(
         "can_recall": "0",
         "can_whitelist": "0"
     }, [master, host])
+```
 
+#### Symbolic translation disabled
+
+Next, turn symbolic translation OFF:
+
+```md
+setup.is_translating = False
+```
+
+And push an action to the smart-contract:
+
+```md
 host.push_action(
     "issue",
     {
@@ -68,57 +73,22 @@ Here is the expected outcome:
 
 ![](./img/01.png)
 
-Finally, stop the local testnet and exit Python CLI:
+Please note the name `x32uuciixv4p` used in the logger output. This is the actual account name of the account object referenced by the `alice` global variable.
 
-```
-stop()
-exit()
-```
+#### Symbolic translation enabled
 
-#### Symbolic names are ON
-
-Create a new Python session:
-
-```
-$ python3
-```
-
-```
-from eosfactory import *
-```
-
-Next, turn symbolic translation ON:
+Now, turn symbolic translation ON:
 
 ```md
 setup.is_translating = True
 ```
-And then run the same code:
+And push another action to the same smart-contract:
 
 ```md
-reset()
-create_wallet()
-create_master_account("master")
-create_account("host", master)
-create_account("alice", master)
-
-contract = Contract(host, "02_eosio_token")
-contract.build(force=False)
-contract.deploy()
-
-host.push_action(
-    "create", 
-    {
-        "issuer": master,
-        "maximum_supply": "1000000000.0000 EOS",
-        "can_freeze": "0",
-        "can_recall": "0",
-        "can_whitelist": "0"
-    }, [master, host])
-
 host.push_action(
     "issue",
     {
-        "to": alice, "quantity": "100.0000 EOS", "memo": ""
+        "to": carol, "quantity": "100.0000 EOS", "memo": ""
     },
     master)
 ```
@@ -126,6 +96,8 @@ host.push_action(
 Here is the expected outcome:
 
 ![](./img/02.png)
+
+Please note the name `carol` used in the logger output, even though the actual name of this account is `d4okdmdcqt4w`.
 
 Finally, stop the local testnet and exit Python CLI:
 
@@ -142,3 +114,6 @@ The examples presented in this document can be executed as a Python script:
 python3 docs/sphinx/source/cases/03_symbolic_names/case.py
 ```
 
+You should get output similar to this:
+
+![](./case.png)

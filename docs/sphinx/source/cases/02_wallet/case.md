@@ -23,7 +23,7 @@ There is an important distinction regarding wallet prefixes:
 
 #### Create a new wallet
 
-Create a new Python session:
+Create a new Python session and import *EOSFactory* API:
 
 ```
 $ python3
@@ -69,7 +69,7 @@ exit()
 
 #### Resume the testnet
 
-Create a new Python session:
+Create a new Python session and import *EOSFactory* API:
 
 ```
 $ python3
@@ -106,7 +106,7 @@ exit()
 
 #### Reset the testnet
 
-Create a new Python session:
+Create a new Python session and import *EOSFactory* API:
 
 ```
 $ python3
@@ -146,7 +146,7 @@ As we mentioned before, when working with unit tests you should never need to ac
 
 However, if you do, below there is a list of methods available in the `Wallet` class.
 
-Create a new Python session:
+Create a new Python session and import *EOSFactory* API:
 
 ```
 $ python3
