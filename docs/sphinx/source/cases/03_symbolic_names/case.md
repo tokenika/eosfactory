@@ -2,11 +2,13 @@
 
 This document demonstrates how *EOSFactory* uses symbolic names to handle *EOSIO* accounts and display logger messages.
 
+## Context
+
 *EOSIO* accounts are indexed by their names, thus those names have to be unique within the blockchain namespace and have to follow specific restrictions. As a result, most of the human readable combinations are already taken, even in a testnet environment, so we need to resort to random names when registering new accounts on the blockchain.
 
 With *EOSFactory*, the actual accounts registered on a blockchain are wrapped in Python objects initialized via the `create_account` command. This allows us to hide the actual name of an *EOSIO* account behind an alias equal to the name of a Python variable referencing the account object.
 
-The mapping between actual accounts and their *EOSFactory* representations is cached in a file. As a result, what we achieve is consistent testing environment across separate Python sessions.
+The mapping between actual accounts and their *EOSFactory* representations is cached locally in a file. As a result, what we achieve is consistent testing environment across separate Python sessions.
 
 What's more, *EOSFactory* translates *EOSIO* logger messages, so that the random account names are replaced with human-readable *EOSFactory* aliases.
 
