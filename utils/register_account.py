@@ -3,9 +3,9 @@ import testnet_data
 import argparse
 
 def register_testnet(
-    testnode_url, alias, account_name, owner_key, active_key):
+    url, alias, account_name, owner_key, active_key):
 
-    set_nodeos_address(testnode_url)
+    set_nodeos_address(url)
     if not verify_testnet_production():
         return
 
@@ -21,7 +21,7 @@ def register_testnet(
 
     if account_object_name in globals():
         testnet_data.add_to_map(
-            testnode_url, account_name, 
+            url, account_name, 
             owner_key if owner_key else account.owner_key.key_private, 
             active_key if active_key else account.active_key.key_private,
             alias)
@@ -40,7 +40,7 @@ If additional, flagged ``--orphan``, arguments are given then the completely
 defined account is checked for existence, and possibly added as a testnet entry.
 ''')
 
-parser.add_argument("testnode_url", help="An URL of a public node offering access to the testnet, e.g. http://88.99.97.30:38888")
+parser.add_argument("url", help="An URL of a public node offering access to the testnet, e.g. http://88.99.97.30:38888")
 parser.add_argument("-p", "--pseudo", default=None, help="Testnet pseudo")
 parser.add_argument(
             "-o", "--orphan", nargs=3,
@@ -57,7 +57,7 @@ if args.orphan:
     active_key = args.orphan[2]
 
 register_testnet(
-    args.testnode_url, args.pseudo, account_name, owner_key, active_key)
+    args.url, args.pseudo, account_name, owner_key, active_key)
 
 # python3 register_testnet.py https://api.kylin-testnet.eospace.io --pseudo kylin2 --orphan dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
 

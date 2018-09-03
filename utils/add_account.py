@@ -2,10 +2,10 @@ from  eosfactory import *
 import argparse
 
 def add_account(
-    testnode_url, account_object_name,
+    url, account_object_name,
     account_name, owner_key, active_key):
 
-    set_nodeos_address(testnode_url)
+    set_nodeos_address(url)
     if not verify_testnet_production():
         return
 
@@ -30,7 +30,7 @@ Example:
     5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
 ''')
 
-parser.add_argument("testnode_url")
+parser.add_argument("url")
 parser.add_argument("account_object_name")
 parser.add_argument("account_name")
 parser.add_argument("owner_key")
@@ -38,7 +38,7 @@ parser.add_argument("active_key")
 
 args = parser.parse_args()
 add_account(
-    args.testnode_url,
+    args.url,
     args.account_object_name,
     args.account_name,
     args.owner_key, args.active_key)

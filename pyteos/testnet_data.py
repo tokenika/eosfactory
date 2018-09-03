@@ -3,8 +3,28 @@ import eosf
 import front_end
 import eosf_account
 
+
 class Testnet:
-    def __init__(self, url, name, owner_key, active_key):
+    def __init__(
+            self, url=None, 
+            name=None, owner_key=None, active_key=None, 
+            reset=False):
+
+        if not url:
+            if reset:
+                eosf.reset(verbosity=[front_end.Verbosity.ERROR])
+            else:
+                eosf.resume(verbosity=[front_end.Verbosity.ERROR])
+            eosio = eosf_account.Eosio("account_master")
+            setup.is_local_address = True
+            name = eosio.name
+            owner_key = eosio.owner_key.key_private
+            active_key = eosio.active_key.key_private
+
+        if not name or not owner_key or not active_key:
+            front_end.Logger().ERROR('''
+        If the ``url`` is set, the ``name`` and keys have to be set, as well.
+            ''')
         self.url = url
         self.account_name = name
         self.owner_key = owner_key
@@ -18,6 +38,7 @@ class Testnet:
 
     def clear_cache(self):
         eosf.clear_testnet_cache()
+
 
 class GetTestnet(Testnet):
     def __init__(self, testnet):
@@ -36,22 +57,14 @@ class GetTestnet(Testnet):
             Testnet ``{}`` is not defined in the testnet map.
             '''.format(testnet))
 
+
 class LocalTestnet(Testnet):
     def __init__(self, reset=False):
-        if reset:
-            eosf.reset(verbosity=[front_end.Verbosity.ERROR])
-        else:
-            eosf.resume(verbosity=[front_end.Verbosity.ERROR])
-        eosio = eosf_account.Eosio("account_master")
-
-        setup.is_local_address = True
-        Testnet.__init__(
-            self, None, eosio.name,
-            eosio.owner_key.key_private, eosio.active_key.key_private)
+        Testnet.__init__( self, reset=reset)
 
 
 def add_to_map(url, name, owner_key, active_key, alias=None):
-    map = map()
+    map_ = map()
     testnet = {}
     testnet["url"] = url
     testnet["name"] = name
@@ -59,15 +72,8 @@ def add_to_map(url, name, owner_key, active_key, alias=None):
     testnet["active_key"] = active_key
     if not alias:
         alias = setup.url_prefix(url)
-    map[alias] = testnet
-    save_map(map)
-
-
-def remove_from_map(testnet):
-    map = map()
-    if testnet in map:
-        del map[testnet]
-        save_map(map)
+    map_[alias] = testnet
+    save_map(map_)
 
 
 cryptolion = Testnet(
@@ -98,10 +104,19 @@ def save_map(map):
 def edit_map():
     eosf.edit_map(testnet_file)
 
+
 def testnets():
     map = eosf.read_map(testnet_file)
     for pseudo, testnet in map.items():
         print("%20s: %13s @ %s" % (pseudo, testnet["name"], testnet["url"]))
+
+
+def remove_from_map(testnet):
+    map = map()
+    if testnet in map:
+        del map[testnet]
+        save_map(map)
+
 
     
 
