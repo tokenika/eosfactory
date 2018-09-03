@@ -1,4 +1,4 @@
-from  eosfactory import *
+from eosfactory import *
 
 setup.is_translating = False
 

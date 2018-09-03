@@ -2,27 +2,23 @@
 
 This case demonstrates how the `Account` class works. We present how to create an account object, associate it with a contract and then execute some actions of this contract.
 
-## Set-up
+## Context
 
-Open a bash terminal and run Python CLI:
+*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. The mapping between actual accounts and their *EOSFactory* representations is cached locally in a file. As a result, what we achieve is consistent testing environment across separate Python sessions.
+
+## Case
+
+#### Create a new account
+
+Create a new Python session:
 
 ```
 $ python3
 ```
 
-Once in the Python shell, import the *EOSFactory* library:
-
 ```
 from eosfactory import *
 ```
-
-## Context
-
-*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. What's more, an account object can be associated with a smart-contract and then manage it.
-
-## Case
-
-#### Create a new account
 
 Start a local testnet, create a wallet and then create a special master account referenced by a global variable called `master`:
 
@@ -111,17 +107,14 @@ host.show_action("hi", {"user":alice}, alice)
 
 **NOTE:** As the `01_hello_world` does not define any tables, in this case the `table` method will not work.
 
-You can now stop the local testnet and exit Python CLI:
+Finally, stop the local testnet and exit Python CLI:
 
 ```
 stop()
-```
-
-```
 exit()
 ```
 
-### Test run
+#### Test run
 
 The examples presented in this document can be executed as a Python script:
 

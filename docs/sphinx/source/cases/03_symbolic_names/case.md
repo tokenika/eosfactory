@@ -1,54 +1,38 @@
 # Symbolic Names
 
-This case demonstrates how symbolic names are used in *EOSFactory* for handling and displaying  information about account objects.
+This document demonstrates how *EOSFactory* uses symbolic names to handle *EOSIO* accounts and display logger messages.
 
-## Set-up
+*EOSIO* accounts are indexed by their names, thus those names have to be unique within the blockchain namespace and have to follow specific restrictions. As a result, most of the human readable combinations are already taken, even in a testnet environment, so we need to resort to random names when registering new accounts on the blockchain.
 
-Open a bash terminal and run Python CLI:
+With *EOSFactory*, the actual accounts registered on a blockchain are wrapped in Python objects initialized via the `create_account` command. This allows us to hide the actual name of an *EOSIO* account behind an alias equal to the name of a Python variable referencing the account object.
+
+The mapping between actual accounts and their *EOSFactory* representations is cached in a file. As a result, what we achieve is consistent testing environment across separate Python sessions.
+
+What's more, *EOSFactory* translates *EOSIO* logger messages, so that the random account names are replaced with human-readable *EOSFactory* aliases.
+
+## Case
+
+To demonstrate how *EOSFactory* converts logger messages, let's consider two scenarios: first with translation feature turned off and then with this feature turned on.
+
+#### Symbolic translation is OFF
+
+Create a new Python session:
 
 ```
 $ python3
 ```
 
-Once in the Python shell, import the *EOSFactory* library:
-
 ```
 from eosfactory import *
 ```
 
-## Context
+Next, turn symbolic translation OFF:
 
-The EOSIO accounts are indexed by their names, therefore the names have to be unique in the blockchain, and to have the specific format. Then it is not possible to grasp any intuitive association between the account name and its role specified in the Ricardian Contract. 
+```md
+setup.is_translating = False
+```
 
-For example, if there is in the Contract a notion of an account keeping a 'school fund 2018', we can try the name 'school.fund1'. It is not only far to a satisfactory name, but it can be taken already.
-
-A natural solution to the problem is to have aliases to the physical names. Perhaps, the structure of the native EOSIO account should have a field and method for this, it is not so now, therefore the EOSFactory uses its own system.
-
-With EOSFactory, the physical accounts are wrapped in objects produced with the 'create_account' factory function. (see <a href="account.html">cases/account</a>). The physical name of an EOSIO account is then aliased with the name of the corresponding account object.
-
-In a script, the aliasing is made with a statement like the following one:
-
-create_account("school_fund_2018", ...)
-
-The result is a new object in the global namespace, named 'school_fund_2018',  representing a physical account of a random name. Moreover, account's keys are automatically imported to the wallet.
-
-Once established correspondence between physical accounts and their object representations is kept between sessions.
-
-## Case
-
-We consider two scenario
-
-
-
-### Physical name translation
-
-All the responses from the blockchain refer to the physical names of the 
-accounts involved. With the alias mapping, EOSFactory can translate the to the
-aliases.
-
-The current case demonstrates this facility.
-
-#### Translation is off
+And then run this code:
 
 ```md
 reset()
@@ -78,24 +62,81 @@ host.push_action(
     },
     master)
 ```
+Here is the expected outcome:
+
 ![](./img/01.png)
 
-#### Translation is on
-
-```md
+Finally, stop the local testnet and exit Python CLI:
 
 ```
+stop()
+exit()
+```
+
+#### Symbolic names are ON
+
+Create a new Python session:
+
+```
+$ python3
+```
+
+```
+from eosfactory import *
+```
+
+Next, turn symbolic translation ON:
+
+```md
+setup.is_translating = True
+```
+And then run the same code:
+
+```md
+reset()
+create_wallet()
+create_master_account("master")
+create_account("host", master)
+create_account("alice", master)
+
+contract = Contract(host, "02_eosio_token")
+contract.build(force=False)
+contract.deploy()
+
+host.push_action(
+    "create", 
+    {
+        "issuer": master,
+        "maximum_supply": "1000000000.0000 EOS",
+        "can_freeze": "0",
+        "can_recall": "0",
+        "can_whitelist": "0"
+    }, [master, host])
+
+host.push_action(
+    "issue",
+    {
+        "to": alice, "quantity": "100.0000 EOS", "memo": ""
+    },
+    master)
+```
+
+Here is the expected outcome:
+
 ![](./img/02.png)
 
-### Test run
+Finally, stop the local testnet and exit Python CLI:
+
+```
+stop()
+exit()
+```
+
+## Test run
 
 The examples presented in this document can be executed as a Python script:
 
 ```
-python3 docs/sphinx/source/cases/05_master_account/case.py
+python3 docs/sphinx/source/cases/03_symbolic_names/case.py
 ```
-
-You should get output similar to this:
-
-![](./img/case.png)
 

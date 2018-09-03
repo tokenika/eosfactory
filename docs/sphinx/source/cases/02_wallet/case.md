@@ -1,20 +1,7 @@
 # The Wallet Class
 
-This case demonstrates how the `Wallet` class works. We present how account objects can be preserved across separate Python sessions. Also, we discuss the `Wallet` class methods.
 
-## Set-up
-
-Open a bash terminal and run Python CLI:
-
-```
-$ python3
-```
-
-Once in the Python shell, import the *EOSFactory* library:
-
-```
-from eosfactory import *
-```
+This document demonstrates how the `Wallet` class works. We present how account objects can be preserved across separate Python sessions. Also, we discuss the `Wallet` class methods.
 
 ## Context
 
@@ -35,6 +22,16 @@ There is an important distinction regarding wallet prefixes:
 ## Case
 
 #### Create a new wallet
+
+Create a new Python session:
+
+```
+$ python3
+```
+
+```
+from eosfactory import *
+```
 
 First, lets's start a local testnet:
 
@@ -63,19 +60,16 @@ What has happened?
 * An account object named `master` is created and its keys are stored in the wallet.
 * Similarly, account objects named `alice` and `carol` are created and their keys are stored in the wallet.
 
-You can now stop the local testnet and exit Python CLI:
+Finally, stop the local testnet and exit Python CLI:
 
 ```
 stop()
-```
-
-```
 exit()
 ```
 
 #### Resume the testnet
 
-Let's now create a new Python session:
+Create a new Python session:
 
 ```
 $ python3
@@ -103,19 +97,16 @@ Here is the expected outcome:
 
 ![](./img/02.png)
 
-You can now stop the local testnet and exit Python CLI:
+Finally, stop the local testnet and exit Python CLI:
 
 ```
 stop()
-```
-
-```
 exit()
 ```
 
 #### Reset the testnet
 
-Let's now create a new Python session:
+Create a new Python session:
 
 ```
 $ python3
@@ -142,13 +133,10 @@ You should get output similar to this:
 
 ![](./img/03.png)
 
-You can now stop the local testnet and exit Python CLI:
+Finally, stop the local testnet and exit Python CLI:
 
 ```
 stop()
-```
-
-```
 exit()
 ```
 
@@ -158,7 +146,7 @@ As we mentioned before, when working with unit tests you should never need to ac
 
 However, if you do, below there is a list of methods available in the `Wallet` class.
 
-Let's now create a new Python session:
+Create a new Python session:
 
 ```
 $ python3
@@ -186,7 +174,7 @@ You should get output similar to this:
 
 ![](./img/04.png)
 
-You can now exit Python CLI:
+Finally, exit Python CLI:
 
 ```
 exit()

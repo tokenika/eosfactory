@@ -2,20 +2,6 @@
 
 This case demonstrates how the concept of master account is applied in *EOSFactory*. 
 
-## Set-up
-
-Open a bash terminal and run Python CLI:
-
-```
-$ python3
-```
-
-Once in the Python shell, import the *EOSFactory* library:
-
-```
-from eosfactory import *
-```
-
 ## Context
 
 *EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. A master account is also an instance of the `Account` class, but it plays a special role in *EOSFactory*: it spawns other accounts into existence.
@@ -30,6 +16,16 @@ The implementation of a master account is dependent on the context:
 We consider two scenarios: first a local (private) testnet, and then a more complex situation of a remote (public) testnet.
 
 #### Local testnet
+
+Create a new Python session:
+
+```
+$ python3
+```
+
+```
+from eosfactory import *
+```
 
 First, let's start a local testnet:
 
@@ -56,19 +52,16 @@ Here is the expected outcome:
 
 ![](./img/01.png)
 
-You can now stop the local testnet and exit Python CLI:
+Finally, stop the local testnet and exit Python CLI:
 
 ```
 stop()
-```
-
-```
 exit()
 ```
 
 #### Remote testnet
 
-Let's create a new Python session:
+Create a new Python session:
 
 ```
 $ python3
@@ -121,13 +114,13 @@ Here is the expected outcome:
 
 ![](./img/02.png)
 
-You can now exit Python CLI:
+Exit Python CLI:
 
 ```
 exit()
 ```
 
-### Test run
+## Test run
 
 The examples presented in this document can be executed as a Python script:
 
