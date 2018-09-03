@@ -11,9 +11,9 @@ The implementation of a master account is dependent on the context:
 * On a local (private) testnet the master account refers to the `eosio` super account. As such, it has limited capabilities, e.g. it cannot be associated with a smart-contract.
 * Whereas on a remote (public) testnet the master account refers to the initial account created by the user manually. It behaves like a normal account, apart from the fact that it is used to sponsor the creation of other accounts.
 
-## Case
+## Use Case
 
-We consider two scenarios: first a local (private) testnet, and then a more complex situation of a remote (public) testnet.
+Let's consider two scenarios: first a local (private) testnet, and then a more complex situation of a remote (public) testnet.
 
 #### Local testnet
 

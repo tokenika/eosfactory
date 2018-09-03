@@ -1,5 +1,5 @@
 .. EOSFactory documentation master file, created by
-   sphinx-quickstart on Sun May  6 20:11:09 2018.
+   sphinx-quickstart on Sun May 6 20:11:09 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
@@ -10,27 +10,17 @@ Welcome to EOSFactory documentation!
 With a single command-line interface you can create a private testnet and then compile, unit-test and deploy `EOS <https://eos.io/>`_ smart-contracts.
 All of this using simple yet powerful `Python3 <https://www.python.org/>`_ syntax.
 
-Cases
+Use Cases
 -----
 
 .. toctree::
     :maxdepth: 1
 
-    cases/01_ide/case
-    cases/02_symbolic_names/case
-    cases/03_wallet/case
-    cases/account
-    cases/account_master
-    cases/account_name_conflict
-    cases/contract
-    cases/arguments
-    cases/register_to_testnode
-    cases/debugging
-    cases/configuration
-    cases/eosio_token_contract
+    cases/02_wallet/case
+    cases/03_symbolic_names/case
+    cases/04_account/case
+    cases/05_account_master/case
 
-    cases/setup
-    cases/remote_tic_tac_toe
 
 Release Notes
 -------------
@@ -73,11 +63,11 @@ Python Documentation
 .. toctree::
     :maxdepth: 1
 
-    cleos
-    cleos_system
-    setup
-    teos
-    eosf
+    rst/cleos
+    rst/cleos_system
+    rst/setup
+    rst/teos
+    rst/eosf
 
 
 Metadata

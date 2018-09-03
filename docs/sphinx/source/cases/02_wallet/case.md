@@ -19,7 +19,7 @@ There is an important distinction regarding wallet prefixes:
 * Arbitrary prefixes mark wallets associated with specific unit tests. They allow *EOSFactory* to keep state between different unit tests performed on the same testnet.
 * Empty prefix (not implemented yet) are reserved for wallets to be used with the mainnet.
 
-## Case
+## Use Case
 
 #### Create a new wallet
 

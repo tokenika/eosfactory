@@ -6,7 +6,7 @@ This case demonstrates how the `Account` class works. We present how to create a
 
 *EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. The mapping between actual accounts and their *EOSFactory* representations is cached locally in a file. As a result, what we achieve is consistent testing environment across separate Python sessions.
 
-## Case
+## Use Case
 
 #### Create a new account
 

@@ -12,7 +12,7 @@ The mapping between actual accounts and their *EOSFactory* representations is ca
 
 What's more, *EOSFactory* translates *EOSIO* logger messages, so that the random account names are replaced with human-readable *EOSFactory* aliases.
 
-## Case
+## Use Case
 
 Create a new Python session and import *EOSFactory* API:
 
