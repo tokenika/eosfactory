@@ -60,5 +60,3 @@ register_testnet(
     args.url, args.pseudo, account_name, owner_key, active_key)
 
 # python3 register_testnet.py https://api.kylin-testnet.eospace.io --pseudo kylin2 --orphan dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
-
-register_testnet
