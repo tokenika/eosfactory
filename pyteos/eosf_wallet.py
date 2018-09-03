@@ -334,6 +334,11 @@ class Wallet(cleos.WalletCreate):
                  * The wallet is empty.
             ''')
 
+    def delete_globals(self):
+        account_map = eosf.account_map()
+        for name, object_name in account_map.items():
+            del Wallet.globals[object_name]
+
     def keys(self):
         ''' Lists public keys from all unlocked wallets.
         Returns `cleos.WalletKeys` object.
