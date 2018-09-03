@@ -56,8 +56,6 @@ Here is the expected outcome:
 
 ![](./img/01.png)
 
-
-
 You can now stop the local testnet and exit Python CLI:
 
 ```
@@ -139,5 +137,5 @@ python3 docs/sphinx/source/cases/05_master_account/case.py
 
 You should get output similar to this:
 
-![](./img/case.png)
+![](./case.png)
 
