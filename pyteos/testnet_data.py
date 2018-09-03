@@ -101,6 +101,7 @@ def get_testnet(alias):
     item = get_mapping()[alias]
     return Testnet(item["url"], item["name"], item["owner_key"], item["active_key"])
 
+
 cryptolion = Testnet(
     "http://88.99.97.30:38888",
     "dgxo1uyhoytn",
