@@ -15,15 +15,15 @@ import eosf_wallet
 
 def restart():
     cleos.restart()
-    wallet_singleton.delete_globals()    
-    eosf_wallet.Wallet.wallet = None
 
     global wallet_singleton
+    wallet_singleton.delete_globals()
+    eosf_wallet.Wallet.wallet = None
+
     try:
         del wallet_singleton
     except:
         pass
-
 
     wallet_singleton = None
 
