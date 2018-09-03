@@ -6,6 +6,9 @@ create_wallet()
 create_master_account("master")
 master.info()
 
+create_account("alice", master)
+alice.info()
+
 stop()
 
 restart()
@@ -19,3 +22,6 @@ testnet.clear_cache()
 create_wallet()
 create_master_account("master", testnet)
 master.info()
+
+create_account("alice", master, buy_ram_kbytes=8, stake_net=3, stake_cpu=3)
+alice.info()

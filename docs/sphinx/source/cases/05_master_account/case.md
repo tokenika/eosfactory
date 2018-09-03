@@ -1,110 +1,143 @@
-'''
-# Account master object
+# The Master Account
 
-This file can be executed as a python script: `python3 account_master.md`.
+This case demonstrates how the concept of master account is applied in *EOSFactory*. 
 
 ## Set-up
 
-""
+Open a bash terminal and run Python CLI:
 
-```md
-'''
-from  eosfactory import *
-import testnode_data
-'''
 ```
+$ python3
+```
+
+Once in the Python shell, import the *EOSFactory* library:
+
+```
+from eosfactory import *
+```
+
+## Context
+
+*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. A master account is also an instance of the `Account` class, but it plays a special role in *EOSFactory*: it spawns other accounts into existence.
+
+The implementation of a master account is dependent on the context:
+
+* On a local (private) testnet the master account refers to the `eosio` super account. As such, it has limited capabilities, e.g. it cannot be associated with a smart-contract.
+* Whereas on a remote (public) testnet the master account refers to the initial account created by the user manually. It behaves like a normal account, apart from the fact that it is used to sponsor the creation of other accounts.
 
 ## Case
 
-The EOSFactory wraps EOSIO accounts with objects. The 'create_account` factory function produces account objects, it is explained in the article <a href="account.html">cases/account</a>.
+We consider two scenarios: first a local (private) testnet, and then a more complex situation of a remote (public) testnet.
 
-EOSIO needs that any action changing the blockchain, especially account 
-creation, is authorized by an existing account, therefore the 'create_account` 
-factory takes this account as its second argument.
+#### Local testnet
 
-At the very beginning the very first one has to be produced. The 'create_master_account' factory function is to do this.
+First, let's start a local testnet:
 
-The function 'create_master_account' takes, as its first obligatory argument, the name of the account object to be created.
-
-There are three cases where the 'create_master_account' factory can do. We will
-show them. 
-
-### Local testnet case
-
-```md
-'''
+```
 reset()
+```
+
+Next, we create a wallet and then we use the `create_master_account` to create a global variable named `master` referencing the `eosio` account.
+
+```
 create_wallet()
-create_master_account("master_local")
-master_local.info()
+create_master_account("master")
+master.info()
+```
+
+And finally, we show how the `master` variable can be used to create other accounts:
+
+```
+create_account("alice", master)
+alice.info()
+```
+
+Here is the expected outcome:
+
+![](./img/01.png)
+
+
+
+You can now stop the local testnet and exit Python CLI:
+
+```
 stop()
-'''
 ```
 
-The result of the script is the account object 'account_master_images' in the global namespace.
-
-The object wraps the 'eosio` account as a special one in the sense that it 
-does not have all the functionality of plain orders.
-
-We expect that you get something similar to this one shown in the image below.
-
-![account_master_eosio](./img/account_master_eosio.png)
-
-### Remote testnet registration
-
-This case is shown at <a href="html">cases/registering_to_testnode</a>. 
-There the account object is produced by manual interaction with the registration form of a testnet. There the resulting account object is fully functional.
-
-### Adding a physical account
-
-If the user posses an account, that is, knows the account name and private keys,
-they can add it to the Factory. In this show, we use an real account represented with the `testnet` object. 
-
-
-
-```md
-'''
-restart()
-testnet = testnode_data.kylin
-nodeos_address(testnet.url, prefix="temp")
-'''
 ```
-Delete files possibly created previously:
-```md
-'''
-remove_testnet_files()
-'''
+exit()
 ```
-First, the 'Wallet` singleton has to be created:
-```md
-'''
+
+#### Remote testnet
+
+Let's create a new Python session:
+
+```
+$ python3
+```
+
+```
+from eosfactory import *
+```
+
+First, we need to define a remote testnet and an account we control there:
+
+```
+testnet = Testnet("http://88.99.97.30:38888", "dgxo1uyhoytn", "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY", "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA")
+```
+
+We supply four parameters:
+
+- an URL of a public node offering access to the testnet, e.g. `http://88.99.97.30:38888`,
+- the name of an existing account on this testnet, e.g. `dgxo1uyhoytn`,
+- the account's owner & active private keys.
+
+Next, we let *EOSFactory* configure and verify the testnet:
+
+```
+testnet.configure()
+testnet.verify_production()
+testnet.clear_cache()
+```
+
+Then, we precede to create a global variable named `master` referencing the testnet account:
+
+```
 create_wallet()
-create_master_account(
-    "master_remote",
-    testnet.account_name,
-    testnet.owner_key,
-    testnet.active_key
-    )
-master_remote.info()
-'''
+create_master_account("master", testnet)
+master.info()
 ```
-Adding one orphan account programmatically is not practical, therefore we have a script that can help. For example:
 
-```md
-python3 add_account.py https://api.kylin-testnet.eospace.io \
-master_remote \
-dgxo1uyhoytn \
-5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
-5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
+**NOTE:** In this case the `create_master_account` command takes an extra parameter, i.e. the reference to the remote testnet.
+
+And finally, we show how the `master` variable can be used to create other accounts:
+
 ```
-![add_account](./img/add_account.png)
+create_account("alice", master, buy_ram_kbytes=8, stake_net=3, stake_cpu=3)
+alice.info()
+```
 
+**NOTE:** You might want to tweak with the extra parameters, i.e. `buy_ram_kbytes`, `stake_net` and `stake_cpu`.
+
+Here is the expected outcome:
+
+![](./img/02.png)
+
+You can now exit Python CLI:
+
+```
+exit()
+```
 
 ### Test run
 
-If you execute this script with the command `python3 account_master.md`,
-you may epect to get something similar to what we show shown in the image below.
+The examples presented in this document can be executed as a Python script:
 
-![account_master_add](./img/account_master_add.png)
+```
+python3 docs/sphinx/source/cases/05_master_account/case.py
+```
 
-'''
+You should get output similar to this:
+
+![](./img/case.png)
+
