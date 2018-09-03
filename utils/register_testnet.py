@@ -7,7 +7,7 @@ def register_testnet(
     setup.set_nodeos_address(url)
     if not eosf.verify_testnet_production():
         return
-    # eosf.clear_testnet_cache()
+    eosf.clear_testnet_cache()
 
     testnet_data.testnets()
 
@@ -20,8 +20,8 @@ def register_testnet(
         active_key=active_key)
 
     if account_object_name in globals():
-        testnet_data.add_to_map(
-            url, account_name, 
+        testnet_data.add_to_mapping(
+            url, account_name,
             owner_key if owner_key else account.owner_key.key_private, 
             active_key if active_key else account.active_key.key_private,
             alias)
@@ -29,34 +29,32 @@ def register_testnet(
     testnet_data.testnets()
 
 parser = argparse.ArgumentParser(description='''
-Given an url and an testnet pseudo (not obligatory), get registration data.
+Given an url and an testnet alias (not obligatory), get registration data.
 Apply the data to the registration form of the testnet.
 Enter 'go' when ready.
 
 Example:
     python3 register_testnet.py https://api.kylin-testnet.eospace.io
 
-If additional, flagged ``--orphan``, arguments are given then the completely 
-defined account is checked for existence, and possibly added as a testnet entry.
+If additional arguments are given, denoted as ``--master``, then the given 
+account is checked for existence, and then added as a testnet master account.
 ''')
 
 parser.add_argument("url", help="An URL of a public node offering access to the testnet, e.g. http://88.99.97.30:38888")
-parser.add_argument("-p", "--pseudo", default=None, help="Testnet pseudo")
-parser.add_argument(
-            "-o", "--orphan", nargs=3,
-            help="<name> <owner key> <active key>")
+parser.add_argument("-a", "--alias", default=None, help="Testnet alias")
+parser.add_argument("-m", "--master", nargs=3, help="<name> <owner key> <active key>")
 
 args = parser.parse_args()
 
 account_name = None
 owner_key = None
 active_key = None
-if args.orphan: 
-    account_name = args.orphan[0]
-    owner_key = args.orphan[1]
-    active_key = args.orphan[2]
+if args.master: 
+    account_name = args.master[0]
+    owner_key = args.master[1]
+    active_key = args.master[2]
 
 register_testnet(
-    args.url, args.pseudo, account_name, owner_key, active_key)
+    args.url, args.alias, account_name, owner_key, active_key)
 
-# python3 register_testnet.py https://api.kylin-testnet.eospace.io --pseudo kylin2 --orphan dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
+# python3 utils/register_testnet.py http://88.99.97.30:38888 --alias jungle --master dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA

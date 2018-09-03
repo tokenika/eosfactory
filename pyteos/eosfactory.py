@@ -26,7 +26,7 @@ contract_workspace_from_template = \
      eosf_contract.contract_workspace_from_template
 
 set_is_testing_errors = front_end.set_is_testing_errors
-set_is_throwing_errors = front_end.set_is_throwing_errors #to be removed
+set_is_throwing_errors = front_end.set_is_throwing_errors
 
 restart = eosf_account.restart
 
@@ -37,9 +37,8 @@ stop = eosf.stop
 info = eosf.info
 status = eosf.status
 
-verify_testnet_production = eosf.verify_testnet_production #to be removed
-set_nodeos_address = setup.set_nodeos_address #to be removed
-
 Testnet = testnet_data.Testnet
 LocalTestnet = testnet_data.LocalTestnet
+
 testnets = testnet_data.testnets
+get_testnet = testnet_data.get_testnet

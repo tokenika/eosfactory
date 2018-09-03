@@ -91,7 +91,7 @@ testnet.verify_production()
 testnet.clear_cache()
 ```
 
-Then, we precede to create a global variable named `master` referencing the remote testnet account:
+Then, we proceed to create a global variable named `master` referencing the remote testnet account:
 
 ```
 create_wallet()

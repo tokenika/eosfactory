@@ -213,38 +213,35 @@ if __name__ == '__main__':
     ''')
 
     parser.add_argument(
+        "alias", nargs="?",
+        help="Testnet alias")
+
+    parser.add_argument(
+        "-t", "--testnet", nargs=4,
+        help="<url> <name> <owner key> <active key>")
+
+    parser.add_argument(
+        "-r", "--reset", action="store_true",
+        help="Reset testnet cache")
+
+    parser.add_argument(
         "--ram", default=0, help="extra RAM in kbytes")
     parser.add_argument(
         "--net", default=0, help="extra NET stake in EOS")
     parser.add_argument(
         "--cpu", default=0, help="extra CPU stake in EOS")
 
-    parser.add_argument(
-        "-r", "--reset", action="store_true",
-        help="Reset testnet cache")
-    parser.add_argument(
-        "-c", "--cryptolion", action="store_true",
-        help="Using the cryptolion testnet")
-    parser.add_argument(
-        "-k", "--kylin", action="store_true",
-        help="Using the kylin testnet")
-    parser.add_argument(
-        "-t", "--testnet", nargs=4,
-        help="<url> <name> <owner key> <active key>")
-
     args = parser.parse_args()
-    if args.testnet:
-        testnet = Testnet(
-            args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3]
-        )
+
+    if args.alias:
+        testnet = get_testnet(args.alias)
     else:
-        if args.cryptolion:
-            testnet = testnet_data.cryptolion
+        if args.testnet:
+            testnet = Testnet(
+                args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3]
+            )
         else:
-            if args.kylin:
-                testnet = testnet_data.kylin
-            else:
-                testnet = LocalTestnet(reset=args.reset)
+            testnet = LocalTestnet(reset=args.reset)
 
     testnet.configure(prefix=CACHE_ID)
 

@@ -5,9 +5,10 @@ def add_account(
     url, account_object_name,
     account_name, owner_key, active_key):
 
-    set_nodeos_address(url)
-    if not verify_testnet_production():
+    setup.set_nodeos_address(url)
+    if not eosf.verify_testnet_production():
         return
+    # eosf.clear_testnet_cache()
 
     create_wallet(file=True)
     create_master_account(

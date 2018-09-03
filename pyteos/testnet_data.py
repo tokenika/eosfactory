@@ -34,7 +34,7 @@ class Testnet:
         setup.set_nodeos_address(self.url, prefix)
 
     def verify_production(self):
-        eosf.verify_testnet_production()
+        return eosf.verify_testnet_production()
 
     def clear_cache(self):
         eosf.clear_testnet_cache()
@@ -42,11 +42,11 @@ class Testnet:
 
 class GetTestnet(Testnet):
     def __init__(self, testnet):
-        map = map()
-        if testnet in map:
+        mapping = get_mapping()
+        if testnet in mapping:
             Testnet.__init__(
-            self, map[testnet]["url"], map[testnet]["name"],
-            map[testnet]["owner_key"], map[testnet]["active_key"])
+            self, mapping[testnet]["url"], mapping[testnet]["name"],
+            mapping[testnet]["owner_key"], mapping[testnet]["active_key"])
         else:
             if testnet == "cryptolion":
                 return cryptolion
@@ -54,7 +54,7 @@ class GetTestnet(Testnet):
                 return kylin
 
             front_end.Logger().ERROR('''
-            Testnet ``{}`` is not defined in the testnet map.
+            Testnet ``{}`` is not defined in the testnet mapping.
             '''.format(testnet))
 
 
@@ -63,8 +63,19 @@ class LocalTestnet(Testnet):
         Testnet.__init__( self, reset=reset)
 
 
-def add_to_map(url, name, owner_key, active_key, alias=None):
-    map_ = map()
+TESTNET_FILE = "testnet.json"
+
+def get_mapping():
+    return eosf.read_map(TESTNET_FILE)
+
+def save_mapping(mapping):
+    eosf.save_map(mapping, TESTNET_FILE)
+
+def edit_mapping():
+    eosf.edit_map(TESTNET_FILE)
+
+def add_to_mapping(url, name, owner_key, active_key, alias=None):
+    mapping = get_mapping()
     testnet = {}
     testnet["url"] = url
     testnet["name"] = name
@@ -72,9 +83,23 @@ def add_to_map(url, name, owner_key, active_key, alias=None):
     testnet["active_key"] = active_key
     if not alias:
         alias = setup.url_prefix(url)
-    map_[alias] = testnet
-    save_map(map_)
+    mapping[alias] = testnet
+    save_mapping(mapping)
 
+def remove_from_mapping(testnet):
+    mapping = get_mapping()
+    if testnet in mapping:
+        del mapping[testnet]
+        save_mapping(mapping)
+
+def testnets():
+    mapping = get_mapping()
+    for pseudo, testnet in mapping.items():
+        print("%20s: %13s @ %s" % (pseudo, testnet["name"], testnet["url"]))
+
+def get_testnet(alias):
+    item = get_mapping()[alias]
+    return Testnet(item["url"], item["name"], item["owner_key"], item["active_key"])
 
 cryptolion = Testnet(
     "http://88.99.97.30:38888",
@@ -91,33 +116,3 @@ kylin = Testnet(
 )
 
 # /mnt/c/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://88.99.97.30:38888 get info
-
-testnet_file = "testnet.json"
-def map():
-    return eosf.read_map(testnet_file)
-
-
-def save_map(map):
-    eosf.save_map(map, testnet_file)
-
-
-def edit_map():
-    eosf.edit_map(testnet_file)
-
-
-def testnets():
-    map = eosf.read_map(testnet_file)
-    for pseudo, testnet in map.items():
-        print("%20s: %13s @ %s" % (pseudo, testnet["name"], testnet["url"]))
-
-
-def remove_from_map(testnet):
-    map = map()
-    if testnet in map:
-        del map[testnet]
-        save_map(map)
-
-
-    
-
-
