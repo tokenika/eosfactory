@@ -71,7 +71,7 @@ Here is the expected outcome:
 
 ![](./img/01.png)
 
-Please note that the logger output referes to the `alice` account as `x32uuciixv4p`. It's because this is the actual name of this account as registered on the blockchain.
+Please note that when symbolic translation is disabled, the logger output referes to the `alice` account as `x32uuciixv4p`. It's because this is the actual name of this account as registered on the blockchain.
 
 #### Symbolic translation enabled
 
@@ -95,7 +95,7 @@ Here is the expected outcome:
 
 ![](./img/02.png)
 
-Please note the human-readable name `carol` is used in the logger output, even though the actual name of this account is `d4okdmdcqt4w`.
+Please note that when symbolic translation is enabled, the human-readable name `carol` is used in the logger output, even though the actual name of this account is `d4okdmdcqt4w`.
 
 Finally, stop the local testnet and exit Python CLI:
 

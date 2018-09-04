@@ -11,7 +11,7 @@ With a single command-line interface you can create a private testnet and then c
 All of this using simple yet powerful `Python3 <https://www.python.org/>`_ syntax.
 
 Use Cases
------
+---------
 
 .. toctree::
     :maxdepth: 1
@@ -19,7 +19,7 @@ Use Cases
     cases/02_wallet/case
     cases/03_symbolic_names/case
     cases/04_account/case
-    cases/05_account_master/case
+    cases/05_master_account/case
 
 
 Release Notes
