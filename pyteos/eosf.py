@@ -41,5 +41,3 @@ Testnet = eosf_testnet.Testnet
 LocalTestnet = eosf_testnet.LocalTestnet
 get_testnet = eosf_testnet.get_testnet
 testnets = eosf_testnet.testnets
-
-save_code = setup.save_code
