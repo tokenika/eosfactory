@@ -3,10 +3,9 @@ import re
 import inspect
 from termcolor import cprint, colored
 import setup
-import eosf_control
 
 def condition(msg, translate=True):
-
+    import eosf_control
     ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
     msg = setup.heredoc(ansi_escape.sub('', msg))
     if translate:
