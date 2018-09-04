@@ -38,7 +38,7 @@ class Test(unittest.TestCase):
         Create, build and deploy the contract:
         ''')
         create_account("account_host", account_master)
-        contract = Contract(account_host, contract_workspace_from_template(
+        contract = Contract(account_host, workspace_from_template(
             CONTRACT_WORKSPACE, template="01_hello_world", remove_existing=True))
         contract.build()
         contract.deploy()

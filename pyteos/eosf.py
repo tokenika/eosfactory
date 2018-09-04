@@ -22,8 +22,8 @@ get_wallet = eosf_wallet.get_wallet
 
 Contract = eosf_contract.Contract
 ContractBuilder = eosf_contract.ContractBuilder
-contract_workspace_from_template = \
-     eosf_contract.contract_workspace_from_template
+workspace_from_template = \
+     eosf_contract.workspace_from_template
 
 set_is_testing_errors = eosf_ui.set_is_testing_errors
 set_is_throwing_errors = eosf_ui.set_is_throwing_errors

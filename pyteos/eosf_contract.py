@@ -5,7 +5,7 @@ import teos
 import cleos
 
 
-def contract_workspace_from_template(
+def workspace_from_template(
         name, template="", user_workspace=None, remove_existing=False, 
         visual_studio_code=False, verbosity=None):
     '''Given the template type and a name, create a contract workspace. 
