@@ -5,7 +5,7 @@ import eosf
 import eosf_wallet
 import eosf_account
 import eosf_contract
-import testnet_data
+import eosf_testnet
 
 
 Logger = front_end.Logger
@@ -37,9 +37,9 @@ stop = eosf.stop
 info = eosf.info
 status = eosf.status
 
-Testnet = testnet_data.Testnet
-LocalTestnet = testnet_data.LocalTestnet
-GetTestnet = testnet_data.GetTestnet
-testnets = testnet_data.testnets
+Testnet = eosf_testnet.Testnet
+LocalTestnet = eosf_testnet.LocalTestnet
+GetTestnet = eosf_testnet.GetTestnet
+testnets = eosf_testnet.testnets
 
 save_code = setup.save_code

@@ -8,7 +8,7 @@ def register_testnet(
     eosf.verify_testnet_production()
     # eosf.clear_testnet_cache()
 
-    testnet_data.testnets()
+    eosf_testnet.testnets()
 
     create_wallet(file=True)
     account_object_name = "account"
@@ -19,13 +19,13 @@ def register_testnet(
         active_key=active_key)
 
     if account_object_name in globals():
-        testnet_data.add_to_map(
+        eosf_testnet.add_to_map(
             url, account_name, 
             owner_key if owner_key else account.owner_key.key_private, 
             active_key if active_key else account.active_key.key_private,
             alias)
 
-    testnet_data.testnets()
+    eosf_testnet.testnets()
 
 parser = argparse.ArgumentParser(description='''
 Given an url and an testnet pseudo (not obligatory), get registration data.

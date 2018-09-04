@@ -5,7 +5,7 @@ import time
 import re
 
 import setup
-import testnet_data
+import eosf_testnet
 import teos
 import front_end
 import cleos
@@ -391,7 +391,7 @@ def create_master_account(
             '''.format(account_object_name)) 
         return
 
-    if isinstance(account_name, testnet_data.Testnet):
+    if isinstance(account_name, eosf_testnet.Testnet):
         owner_key = account_name.owner_key
         active_key = account_name.active_key
         account_name = account_name.account_name

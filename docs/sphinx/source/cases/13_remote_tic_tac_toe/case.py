@@ -2,7 +2,7 @@
 
 import unittest
 from  eosfactory import *
-import testnet_data
+import eosf_testnet
 save_code()
 
 Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
@@ -15,7 +15,7 @@ game_stake_net = 0.1
 game_stake_cpu = 0.1
 
 reset = False
-testnet = testnet_data.LocalTestnet(reset=reset) # cryptolion kylin  
+testnet = eosf_testnet.LocalTestnet(reset=reset) # cryptolion kylin  
 set_nodeos_address(testnet.url, "tic_tac_toe")
 
 class Test(unittest.TestCase):

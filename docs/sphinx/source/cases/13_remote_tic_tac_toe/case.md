@@ -20,7 +20,7 @@ Therefore, remote node tests have to reuse accounts between sessions.
 '''
 import unittest
 from  eosfactory import *
-import testnet_data
+import eosf_testnet
 save_code()
 
 Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
@@ -33,7 +33,7 @@ game_stake_net = 0.1
 game_stake_cpu = 0.1
 
 reset = False
-testnet = testnet_data.LocalTestnet(reset=reset) # cryptolion kylin  
+testnet = eosf_testnet.LocalTestnet(reset=reset) # cryptolion kylin  
 set_nodeos_address(testnet.url, "tic_tac_toe")
 '''
 ```
@@ -81,7 +81,7 @@ The Factory produces three files for each testnet used:
 
 The files are marked with a prefix that is set as the second argument in the statement `set_nodeos_address(...)` above.
 
-These files should be edited rather, than being deleted. However if the testnet is set to be `testnet_data.LocalTestnet()`, and the local testnet is reset, the contents of them is useles, then remove them:
+These files should be edited rather, than being deleted. However if the testnet is set to be `eosf_testnet.LocalTestnet()`, and the local testnet is reset, the contents of them is useles, then remove them:
  
 ```md
         '''

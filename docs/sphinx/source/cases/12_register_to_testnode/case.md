@@ -41,7 +41,7 @@ The current article tests this registration procedure.
 ```md
 '''
 from  eosfactory import *
-import testnet_data
+import eosf_testnet
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
 testnet_pseudo = "jungle1"
@@ -58,19 +58,19 @@ In the `testnode_data` module, there is a pair of prefabricated testnet objects:
 
 ```md
 '''
-testnet = testnet_data.cryptolion
+testnet = eosf_testnet.cryptolion
 '''
 ```
 The testnet object can be taken from the testnet map. We can list available entries in this map, in our computer...
 ```md
 '''
-testnet_data.testnets()
+eosf_testnet.testnets()
 '''
 ```
 ...and use one of the listed possibilities:
 ```md
 '''
-testnet = testnet_data.GetTestnet("jungle")
+testnet = eosf_testnet.GetTestnet("jungle")
 '''
 ```
 Having the testnet chosen, introduce it to the test:
@@ -109,7 +109,7 @@ verify_testnet()
 ```md
 '''
 remove_testnet_cache()
-testnet_data.remove_from_map(testnet_pseudo)
+eosf_testnet.remove_from_map(testnet_pseudo)
 '''
 ```
 
@@ -141,12 +141,12 @@ create_master_account("account_master")
 ```md
 '''
 create_master_account("account_master", testnet)
-testnet_data.add_to_map(
+eosf_testnet.add_to_map(
     testnet.url, account_master.name, 
     account_master.owner_key.key_private,
     account_master.active_key.key_private, alias=testnet_pseudo)
 
-testnet_data.testnets()
+eosf_testnet.testnets()
 '''
 ```
 
