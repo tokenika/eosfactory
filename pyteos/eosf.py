@@ -39,7 +39,7 @@ status = eosf_control.status
 
 Testnet = eosf_testnet.Testnet
 LocalTestnet = eosf_testnet.LocalTestnet
-GetTestnet = eosf_testnet.GetTestnet
+get_testnet = eosf_testnet.get_testnet
 testnets = eosf_testnet.testnets
 
 save_code = setup.save_code

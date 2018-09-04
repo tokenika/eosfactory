@@ -42,26 +42,23 @@ class Testnet:
     def is_local(self):
         return eosf_control.is_local_address()
 
-
-class GetTestnet(Testnet):
-    def __init__(self, alias):
-        mapping = get_mapping()
-        if alias in mapping:
-            Testnet.__init__(
-            self, mapping[alias]["url"], mapping[alias]["account_name"],
+def get_testnet(
+        alias,
+        account_name=None, owner_key=None, active_key=None, 
+        reset=False
+    ):
+    mapping = get_mapping()
+    if not alias:
+        return Testnet(reset=reset)
+    elif alias in mapping:
+        return Testnet(
+            mapping[alias]["url"], mapping[alias]["name"],
             mapping[alias]["owner_key"], mapping[alias]["active_key"])
-            return
-        if alias == "jungle":
-            Testnet.__init__(
-            self, jungle.url, jungle.account_name,
-            jungle.owner_key, jungle.active_key)
-            return
-        if alias == "kylin":
-            Testnet.__init__(
-            self, kylin.url, kylin.account_name,
-            kylin.owner_key, kylin.active_key)
-            return
-
+    elif alias == "jungle":
+        return jungle
+    elif alias == "kylin":
+        return kylin
+    else:
         eosf_ui.Logger().ERROR('''
         Testnet ``{}`` is not defined in the testnet mapping.
         '''.format(alias))

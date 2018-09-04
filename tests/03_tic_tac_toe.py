@@ -247,16 +247,12 @@ if __name__ == '__main__':
         "--cpu", default=0, help="extra CPU stake in EOS")
 
     args = parser.parse_args()
-
-    if args.alias:
-        testnet = GetTestnet(args.alias)
+    if args.testnet:
+        testnet = get_testnet(
+            args.alias, 
+            args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3])
     else:
-        if args.testnet:
-            testnet = Testnet(
-                args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3]
-            )
-        else:
-            testnet = LocalTestnet(reset=args.reset)
+        testnet = get_testnet(args.alias, reset=args.reset)
 
     testnet.configure(prefix=CACHE_ID)
 
@@ -267,5 +263,4 @@ if __name__ == '__main__':
     extra_stake_net = int(args.net)
     extra_stake_cpu = int(args.cpu)
 
-    sys.argv[1:] = [] #needed to prevent passing `argv` to `unittest`.
-    unittest.main()
+    unittest.main(argv=[sys.argv[0]])
