@@ -7,7 +7,7 @@ import re
 import setup
 import eosf_testnet
 import teos
-import front_end
+import eosf_ui
 import cleos
 import cleos_system
 import eosf_control
@@ -214,7 +214,7 @@ class GetAccount(cleos.GetAccount):
 
         self.ERROR_OBJECT(self)
         if not self.error_object is None:
-            if not isinstance(self.error_object, front_end.AccountNotExist):
+            if not isinstance(self.error_object, eosf_ui.AccountNotExist):
                 self.fatal_error = True            
             return
 
@@ -259,10 +259,10 @@ class GetAccount(cleos.GetAccount):
         return self.name
 
 
-class RestoreAccount(front_end.Logger, cleos.Account, cleos.RestoreAccount):
+class RestoreAccount(eosf_ui.Logger, cleos.Account, cleos.RestoreAccount):
     def __init__(self, name, verbosity=None):
         cleos.RestoreAccount.__init__(self, name, is_verbose=-1)
-        front_end.Logger.__init__(self, verbosity)
+        eosf_ui.Logger.__init__(self, verbosity)
 
 
 class CreateAccount(cleos.CreateAccount):
@@ -375,7 +375,7 @@ def create_master_account(
     '''
 
 
-    logger = front_end.Logger(verbosity)
+    logger = eosf_ui.Logger(verbosity)
 
     globals = inspect.stack()[1][0].f_globals
     if account_object_name in globals:
@@ -746,7 +746,7 @@ def create_account(
         restore=False,
         verbosity=None):
 
-    logger = front_end.Logger(verbosity)
+    logger = eosf_ui.Logger(verbosity)
 
     globals = inspect.stack()[1][0].f_globals
     if account_object_name in globals:
@@ -821,7 +821,7 @@ def create_account(
                     )
 
             if account_object.ERROR(is_silent=True, is_fatal=False):
-                if isinstance(account_object.error_object, front_end.LowRam):
+                if isinstance(account_object.error_object, eosf_ui.LowRam):
                     account_object.TRACE('''
                     * RAM needed is {}.kByte, buying RAM {}.kByte.
                     '''.format(
@@ -898,4 +898,4 @@ def stats(
             output = output + col % find(param, json)
         output = output + "  " + last_col % (param) + "\n" 
 
-    front_end.Logger().OUT(output, translate=False)
+    eosf_ui.Logger().OUT(output, translate=False)

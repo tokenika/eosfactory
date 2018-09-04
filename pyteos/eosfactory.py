@@ -1,6 +1,6 @@
 import setup
-import front_end
 import cleos
+import eosf_ui
 import eosf_control
 import eosf_wallet
 import eosf_account
@@ -8,8 +8,8 @@ import eosf_contract
 import eosf_testnet
 
 
-Logger = front_end.Logger
-Verbosity = front_end.Verbosity
+Logger = eosf_ui.Logger
+Verbosity = eosf_ui.Verbosity
 
 CreateKey = cleos.CreateKey
 Permission = cleos.Permission
@@ -25,8 +25,8 @@ ContractBuilder = eosf_contract.ContractBuilder
 contract_workspace_from_template = \
      eosf_contract.contract_workspace_from_template
 
-set_is_testing_errors = front_end.set_is_testing_errors
-set_is_throwing_errors = front_end.set_is_throwing_errors
+set_is_testing_errors = eosf_ui.set_is_testing_errors
+set_is_throwing_errors = eosf_ui.set_is_throwing_errors
 
 restart = eosf_account.restart
 

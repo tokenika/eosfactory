@@ -20,7 +20,7 @@ import subprocess
 import json as json_module
 import pathlib
 import setup
-import front_end
+import eosf_ui
 import teos
 
 setup_setup = setup.Setup()
@@ -72,7 +72,7 @@ class Wallet:
     def __init__(self, name):
         self.name = name
 
-class _Cleos(front_end.Logger):
+class _Cleos(eosf_ui.Logger):
     '''A prototype for the `cleos` command classes.
     '''
     def copy_to(self, to_object):
@@ -83,7 +83,7 @@ class _Cleos(front_end.Logger):
         to_object.out_msg = self.out_msg
 
     def set_is_verbose(self, is_verbose, verbosity=None):
-        front_end.Logger.__init__(self, verbosity)
+        eosf_ui.Logger.__init__(self, verbosity)
 
         if setup.is_verbose and is_verbose > 0:
             self.is_verbose = 1

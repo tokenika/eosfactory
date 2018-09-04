@@ -4,7 +4,7 @@ import inspect
 
 import setup
 import teos
-import front_end
+import eosf_ui
 import cleos
 import eosf_control
 
@@ -63,7 +63,7 @@ class Wallet(cleos.WalletCreate):
         else:
             name = setup.file_prefix() + name
 
-        logger = front_end.Logger(verbosity)
+        logger = eosf_ui.Logger(verbosity)
         if not self.wallet is None:
             logger.ERROR('''
             It can be only one ``Wallet`` object in the script; there is one

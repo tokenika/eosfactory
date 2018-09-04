@@ -1,6 +1,6 @@
 import setup
 import eosf_control
-import front_end
+import eosf_ui
 import eosf_account
 
 
@@ -12,9 +12,9 @@ class Testnet:
 
         if not url:
             if reset:
-                eosf_control.reset(verbosity=[front_end.Verbosity.ERROR])
+                eosf_control.reset(verbosity=[eosf_ui.Verbosity.ERROR])
             else:
-                eosf_control.resume(verbosity=[front_end.Verbosity.ERROR])
+                eosf_control.resume(verbosity=[eosf_ui.Verbosity.ERROR])
             eosio = eosf_account.Eosio("account_master")
             setup.is_local_address = True
             account_name = eosio.name
@@ -22,7 +22,7 @@ class Testnet:
             active_key = eosio.active_key.key_private
 
         if not account_name or not owner_key or not active_key:
-            front_end.Logger().ERROR('''
+            eosf_ui.Logger().ERROR('''
         If the ``url`` is set, the ``account_name`` and keys have to be set, as well.
             ''')
         self.url = url
@@ -62,7 +62,7 @@ class GetTestnet(Testnet):
             kylin.owner_key, kylin.active_key)
             return
 
-        front_end.Logger().ERROR('''
+        eosf_ui.Logger().ERROR('''
         Testnet ``{}`` is not defined in the testnet mapping.
         '''.format(alias))
 
@@ -104,7 +104,7 @@ def remove_from_mapping(testnet):
 def testnets():
     mapping = get_mapping()
     if not mapping:
-        front_end.Logger().INFO('''
+        eosf_ui.Logger().INFO('''
         List is empty.
         ''')
         return
