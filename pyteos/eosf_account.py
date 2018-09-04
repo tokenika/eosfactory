@@ -494,7 +494,7 @@ def create_master_account(
 
             logger.OUT('''
             Use the following data to register a new account on a public testnet:
-            Accout Name: {}
+            Account Name: {}
             Owner Public Key: {}
             Active Public Key: {}
 

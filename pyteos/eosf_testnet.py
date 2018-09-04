@@ -105,7 +105,7 @@ def testnets():
     mapping = get_mapping()
     if not mapping:
         eosf_ui.Logger().INFO('''
-        List is empty.
+        Testnet mapping is empty.
         ''')
         return
     for pseudo, testnet in mapping.items():

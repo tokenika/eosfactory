@@ -35,25 +35,25 @@ Enter 'go' when ready.
 Example:
     python3 register_testnet.py https://api.kylin-testnet.eospace.io
 
-If additional arguments are given, denoted as ``--master``, then the given 
+If additional arguments are given, denoted as ``--account``, then the given 
 account is checked for existence, and then added as a testnet master account.
 ''')
 
 parser.add_argument("url", help="An URL of a public node offering access to the testnet, e.g. http://88.99.97.30:38888")
-parser.add_argument("-a", "--alias", default=None, help="Testnet alias")
-parser.add_argument("-m", "--master", nargs=3, help="<name> <owner key> <active key>")
+parser.add_argument("alias", nargs="?", default=None, help="Testnet alias")
+parser.add_argument("-a", "--account", nargs=3, help="<name> <owner key> <active key>")
 
 args = parser.parse_args()
 
 account_name = None
 owner_key = None
 active_key = None
-if args.master: 
-    account_name = args.master[0]
-    owner_key = args.master[1]
-    active_key = args.master[2]
+if args.account: 
+    account_name = args.account[0]
+    owner_key = args.account[1]
+    active_key = args.account[2]
 
 register_testnet(
     args.url, args.alias, account_name, owner_key, active_key)
 
-# python3 utils/register_testnet.py http://88.99.97.30:38888 --alias jungle --master dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
+# python3 utils/register_testnet.py http://88.99.97.30:38888 jungle -a dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
