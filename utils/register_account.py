@@ -1,7 +1,7 @@
 from eosf import *
 import argparse
 
-def add_account(
+def register_account(
     url, account_object_name,
     account_name, owner_key, active_key):
 
@@ -19,11 +19,11 @@ def add_account(
 
 parser = argparse.ArgumentParser(description='''
 Given a testnet url, the account object name, account name, private owner and 
-active keys, create an account object, and put it into the wallet that is 
-associated with the url.
+active keys, create an account object and put it into the wallet associated 
+with the url.
 
 Example:
-    python3 add_account.py https://api.kylin-testnet.eospace.io \
+    python3 utils/register_account.py http://88.99.97.30:38888 \
     master \
     dgxo1uyhoytn \
     5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
@@ -37,7 +37,7 @@ parser.add_argument("owner_key")
 parser.add_argument("active_key")
 
 args = parser.parse_args()
-add_account(
+register_account(
     args.url,
     args.account_object_name,
     args.account_name,

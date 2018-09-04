@@ -33,10 +33,15 @@ Apply the data to the registration form of the testnet.
 Enter 'go' when ready.
 
 Example:
-    python3 register_testnet.py https://api.kylin-testnet.eospace.io
+    python3 utils/register_testnet.py http://88.99.97.30:38888 jungle
 
 If additional arguments are given, denoted as ``--account``, then the given 
 account is checked for existence, and then added as a testnet master account.
+
+    python3 utils/register_testnet.py http://88.99.97.30:38888 jungle \
+    -a dgxo1uyhoytn \
+    5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
+    5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
 ''')
 
 parser.add_argument("url", help="An URL of a public node offering access to the testnet, e.g. http://88.99.97.30:38888")
