@@ -39,6 +39,9 @@ class Testnet:
     def clear_cache(self):
         eosf.clear_testnet_cache()
 
+    def is_local(self):
+        return eosf.is_local_address()
+
 
 class GetTestnet(Testnet):
     def __init__(self, testnet):

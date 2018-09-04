@@ -245,7 +245,7 @@ if __name__ == '__main__':
 
     testnet.configure(prefix=CACHE_ID)
 
-    if args.reset and not setup.is_local_address:
+    if args.reset and not testnet.is_local():
         testnet.clear_cache()
 
     extra_ram = int(args.ram)
