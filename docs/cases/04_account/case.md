@@ -1,4 +1,4 @@
-# The Account Class
+# Account Class
 
 This case demonstrates how the `Account` class works. We present how to create an account object, associate it with a contract and then execute some actions of this contract.
 

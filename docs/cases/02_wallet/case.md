@@ -1,4 +1,4 @@
-# The Wallet Class
+# Wallet Class
 
 
 This document demonstrates how the `Wallet` class works. We present how account objects can be preserved across separate Python sessions. Also, we discuss the `Wallet` class methods.

@@ -1,4 +1,4 @@
-# The Master Account
+# Master Account
 
 This case demonstrates how the concept of master account is applied in *EOSFactory*. 
 
