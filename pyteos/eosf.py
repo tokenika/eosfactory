@@ -38,6 +38,5 @@ info = eosf_control.info
 status = eosf_control.status
 
 Testnet = eosf_testnet.Testnet
-LocalTestnet = eosf_testnet.LocalTestnet
 get_testnet = eosf_testnet.get_testnet
 testnets = eosf_testnet.testnets
