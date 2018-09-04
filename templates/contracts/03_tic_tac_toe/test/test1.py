@@ -234,7 +234,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.alias:
-        testnet = get_testnet(args.alias)
+        testnet = GetTestnet(args.alias)
     else:
         if args.testnet:
             testnet = Testnet(
