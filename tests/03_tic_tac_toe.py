@@ -249,7 +249,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.testnet:
         testnet = get_testnet(
-            args.alias, 
+            args.alias,
             args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3])
     else:
         testnet = get_testnet(args.alias, reset=args.reset)
