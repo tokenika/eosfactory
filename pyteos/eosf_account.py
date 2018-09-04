@@ -5,13 +5,13 @@ import time
 import re
 
 import setup
-import eosf_testnet
 import teos
-import eosf_ui
 import cleos
 import cleos_system
 import eosf_control
 import eosf_wallet
+import eosf_testnet
+import eosf_ui
 
 def restart():
     cleos.restart()

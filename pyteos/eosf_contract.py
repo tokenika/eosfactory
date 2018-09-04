@@ -1,9 +1,8 @@
 import shutil
 
-import eosf_ui
 import teos
 import cleos
-
+import eosf_ui
 
 def workspace_from_template(
         name, template="", user_workspace=None, remove_existing=False, 

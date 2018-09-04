@@ -22,11 +22,11 @@ import pprint
 import enum
 
 import setup
-import eosf_ui
 import teos
 import cleos
 import cleos_system
 import eosf_contract
+import eosf_ui
 
 def clear_testnet_cache(verbosity=None):
     ''' Remove wallet files associated with the current testnet.

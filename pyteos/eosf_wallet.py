@@ -4,8 +4,8 @@ import inspect
 
 import setup
 import teos
-import eosf_ui
 import cleos
+import eosf_ui
 import eosf_control
 
 def wallet_json_read():
