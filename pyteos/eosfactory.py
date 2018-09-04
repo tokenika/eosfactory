@@ -1,7 +1,7 @@
 import setup
 import front_end
 import cleos
-import eosf
+import eosf_control
 import eosf_wallet
 import eosf_account
 import eosf_contract
@@ -30,12 +30,12 @@ set_is_throwing_errors = front_end.set_is_throwing_errors
 
 restart = eosf_account.restart
 
-reset = eosf.reset
-resume = eosf.resume
-stop = eosf.stop
+reset = eosf_control.reset
+resume = eosf_control.resume
+stop = eosf_control.stop
 
-info = eosf.info
-status = eosf.status
+info = eosf_control.info
+status = eosf_control.status
 
 Testnet = eosf_testnet.Testnet
 LocalTestnet = eosf_testnet.LocalTestnet

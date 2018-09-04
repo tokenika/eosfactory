@@ -1,5 +1,5 @@
 import setup
-import eosf
+import eosf_control
 import front_end
 import eosf_account
 
@@ -12,9 +12,9 @@ class Testnet:
 
         if not url:
             if reset:
-                eosf.reset(verbosity=[front_end.Verbosity.ERROR])
+                eosf_control.reset(verbosity=[front_end.Verbosity.ERROR])
             else:
-                eosf.resume(verbosity=[front_end.Verbosity.ERROR])
+                eosf_control.resume(verbosity=[front_end.Verbosity.ERROR])
             eosio = eosf_account.Eosio("account_master")
             setup.is_local_address = True
             account_name = eosio.name
@@ -34,13 +34,13 @@ class Testnet:
         setup.set_nodeos_address(self.url, prefix)
 
     def verify_production(self):
-        return eosf.verify_testnet_production()
+        return eosf_control.verify_testnet_production()
 
     def clear_cache(self):
-        eosf.clear_testnet_cache()
+        eosf_control.clear_testnet_cache()
 
     def is_local(self):
-        return eosf.is_local_address()
+        return eosf_control.is_local_address()
 
 
 class GetTestnet(Testnet):
@@ -75,13 +75,13 @@ class LocalTestnet(Testnet):
 TESTNET_FILE = "testnet.json"
 
 def get_mapping():
-    return eosf.read_map(TESTNET_FILE)
+    return eosf_control.read_map(TESTNET_FILE)
 
 def save_mapping(mapping):
-    eosf.save_map(mapping, TESTNET_FILE)
+    eosf_control.save_map(mapping, TESTNET_FILE)
 
 def edit_mapping():
-    eosf.edit_map(TESTNET_FILE)
+    eosf_control.edit_map(TESTNET_FILE)
 
 def add_to_mapping(url, account_name, owner_key, active_key, alias=None):
     mapping = get_mapping()

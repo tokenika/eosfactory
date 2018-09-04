@@ -5,8 +5,8 @@ def register_testnet(
     url, alias, account_name, owner_key, active_key):
 
     setup.set_nodeos_address(url)
-    eosf.verify_testnet_production()
-    eosf.clear_testnet_cache()
+    eosf_control.verify_testnet_production()
+    eosf_control.clear_testnet_cache()
 
     eosf_testnet.testnets()
 

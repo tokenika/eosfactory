@@ -10,7 +10,7 @@ import teos
 import front_end
 import cleos
 import cleos_system
-import eosf
+import eosf_control
 import eosf_wallet
 
 def restart():
@@ -56,7 +56,7 @@ def _data_json(data):
         data_json = json_module.dumps(data, cls=Encoder)
     else:
         data_json = re.sub("\s+|\n+|\t+", " ", data)
-        data_json = eosf.object_names_2_accout_names(data_json)
+        data_json = eosf_control.object_names_2_accout_names(data_json)
     return data_json
 
 '''The namespace where account objects go.
@@ -592,18 +592,18 @@ def append_account_methods_and_finish(
             account_object.INFO('''
                 {}
             '''.format(re.sub(
-                ' +',' ', eosf.accout_names_2_object_names(data))))
+                ' +',' ', eosf_control.accout_names_2_object_names(data))))
 
             account_object.action = result
             try:
                 account_object._console = result.console
-                account_object.DEBUG(eosf.accout_names_2_object_names(
+                account_object.DEBUG(eosf_control.accout_names_2_object_names(
                     account_object._console))
             except:
                 pass
             if json:
                 account_object.OUT(
-                    eosf.accout_names_2_object_names(result.out_msg))
+                    eosf_control.accout_names_2_object_names(result.out_msg))
 
         account_object.action = result
 
@@ -636,12 +636,12 @@ def append_account_methods_and_finish(
 
         if not account_object.ERROR(result):
             try:
-                account_map = eosf.account_map()
+                account_map = eosf_control.account_map()
                 scope = account_map[str(scope)]
             except:
                 pass
 
-            account_object.OUT(eosf.accout_names_2_object_names(result.out_msg))
+            account_object.OUT(eosf_control.accout_names_2_object_names(result.out_msg))
             return result
         return None
 

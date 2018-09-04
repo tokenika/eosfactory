@@ -258,7 +258,7 @@ editor. Return ``None`` if the the offer is rejected.
                         continue
                     else:
                         logger.ERROR('''
-            Use the function 'eosf.edit_account_map(text_editor="nano")'
+            Use the function 'eosf_control.edit_account_map(text_editor="nano")'
             or the corresponding method of any object of the 'eosf_wallet.Wallet` 
             class to edit the file.
                         ''')                    
@@ -326,7 +326,7 @@ editor. Return ``None`` if the the offer is rejected.
                     continue
                 else:
                     logger.ERROR('''
-        Use the function 'eosf.edit_account_map(text_editor="nano")'
+        Use the function 'eosf_control.edit_account_map(text_editor="nano")'
         or the corresponding method of any object of the 'eosf_wallet.Wallet` 
         class to edit the file.
                     ''', translate=False)                    
