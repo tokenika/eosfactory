@@ -130,20 +130,21 @@ class Logger():
     def SCENARIO(self, msg):
         self.COMMENT(msg)
 
-    def TRACE(self, msg):
-        msg = condition(msg)
+    def TRACE(self, msg, translate=True):
+        msg = condition(msg, translate)
         self.trace_buffer = msg
         if msg and (Verbosity.TRACE in self._verbosity):
             color = Verbosity.TRACE.value
             cprint(msg, color[0], color[1], attrs=color[2])
 
-    def INFO(self, msg):
+    def INFO(self, msg, translate=True):
         if msg and (
                 Verbosity.TRACE in self._verbosity or
                 Verbosity.INFO in self._verbosity
             ):
             color = Verbosity.INFO.value
-            cprint(condition(msg), color[0], color[1], attrs=color[2])        
+            cprint(
+                condition(msg, translate), color[0], color[1], attrs=color[2])        
 
     def OUT(self, msg, translate=True):
         if msg and (Verbosity.OUT in self._verbosity):
@@ -151,8 +152,8 @@ class Logger():
             msg = condition(msg, translate)
             cprint(msg, color[0], color[1], attrs=color[2])
 
-    def DEBUG(self, msg):
-        msg = condition(msg)
+    def DEBUG(self, msg, translate=True):
+        msg = condition(msg, translate)
         self.debug_buffer = msg
 
         if msg and (Verbosity.DEBUG in self._verbosity):

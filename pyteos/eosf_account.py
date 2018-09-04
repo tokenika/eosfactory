@@ -789,8 +789,9 @@ def create_account(
     account_object = None
     if restore:
         logger.INFO('''
-                        ... for the existing blockchain account ``{}``.
-                        '''.format(account_name))
+                    ... for the existing blockchain account ``{}`` ({}).
+                    '''.format(account_object_name, account_name), 
+                    translate=False)
         account_object = RestoreAccount(account_name, verbosity)
         account_object.account_object_name = account_object_name
     else:
