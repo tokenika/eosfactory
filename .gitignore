@@ -31,3 +31,5 @@ teos/source/conf.py
 pyteos/appJar
 vsc_extension
 tests/test.py
+
+docs2
