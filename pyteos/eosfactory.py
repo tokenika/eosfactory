@@ -42,3 +42,5 @@ LocalTestnet = testnet_data.LocalTestnet
 
 testnets = testnet_data.testnets
 get_testnet = testnet_data.get_testnet
+
+save_code = setup.save_code

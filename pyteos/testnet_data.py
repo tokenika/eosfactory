@@ -94,6 +94,11 @@ def remove_from_mapping(testnet):
 
 def testnets():
     mapping = get_mapping()
+    if not mapping:
+        front_end.Logger().INFO('''
+        List is empty.
+        ''')
+        return
     for pseudo, testnet in mapping.items():
         print("%20s: %13s @ %s" % (pseudo, testnet["name"], testnet["url"]))
 
