@@ -49,10 +49,10 @@ def get_testnet(
     ):
     mapping = get_mapping()
     if not alias:
-        return Testnet(reset=reset)
+        return LocalTestnet(reset=reset)
     elif alias in mapping:
         return Testnet(
-            mapping[alias]["url"], mapping[alias]["name"],
+            mapping[alias]["url"], mapping[alias]["account_name"],
             mapping[alias]["owner_key"], mapping[alias]["active_key"])
     elif alias == "jungle":
         return jungle
