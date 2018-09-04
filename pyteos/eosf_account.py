@@ -318,27 +318,23 @@ def create_master_account(
         account_name: the name of the account; random, if not set
         verbosity: argument to the internal logger
 
-    Preconditions
-    #############
+    ### Preconditions
 
     Check the following conditions:
     * precisely one ``Wallet`` object is defined;
     
-    Local testnet
-    #############
+    ### Local testnet
 
     If the local testnet is running, create an account object representing 
     the ``eosio`` account. Put the account into the wallet. Put the account
     object into the global namespace of the caller, and **return**.
 
-    Remote testnet
-    ##############
+    ### Remote testnet
 
     Otherwise, an outer testnet has to be defined with 
     ``setup.set_nodeos_address(<url>)``.
 
-    Existing account
-    ****************
+    ### Existing account
 
     If the ``account_name`` argument is set, check the testnet for presence of the 
     account. If present, create the corresponding object and put the account 
@@ -346,8 +342,7 @@ def create_master_account(
     the caller. and **return**. Otherwise start a  registration procedure, 
     described in the next paragraph.
 
-    Registration to a remote testnet
-    ********************************
+    ### Registration to a remote testnet
 
     If the ``account_name`` argument is not set or it does not address any existing
     account, see the previous paragraph, start a registration procedure.
@@ -365,8 +360,7 @@ def create_master_account(
     * put the account into the wallet
     * put the account object into the global namespace of the caller
     
-    Name conflict between account objects
-    #####################################
+    ### Name conflict between account objects
 
     If the new account object is going to be added to the wallet, an error
     is reported. Then an offer is given to edith the mapping file in order

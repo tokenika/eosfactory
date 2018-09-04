@@ -65,9 +65,15 @@ Python Documentation
 
     rst/cleos
     rst/cleos_system
+    rst/eosf_account
+    rst/eosf_contract
+    rst/eosf_control
+    rst/eosf_testnet
+    rst/eosf_ui
+    rst/eosf_wallet
+    rst/eosf
     rst/setup
     rst/teos
-    rst/eosf
 
 
 Metadata
