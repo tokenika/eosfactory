@@ -40,7 +40,7 @@ The current article tests this registration procedure.
 
 ```md
 '''
-from  eosfactory import *
+from eosf import *
 import eosf_testnet
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]

@@ -17,7 +17,7 @@ $ python3
 ```
 
 ```
-from eosfactory import *
+from eosf import *
 ```
 
 Start a local testnet, create a wallet and then create a special master account referenced by a global variable called `master`:

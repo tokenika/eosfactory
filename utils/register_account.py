@@ -1,4 +1,4 @@
-from  eosfactory import *
+from eosf import *
 import argparse
 
 def add_account(

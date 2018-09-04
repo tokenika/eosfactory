@@ -28,7 +28,7 @@ an account for holding the tested contract, and to working accounts (here,
 
 ```md
 '''
-from  eosfactory import *
+from eosf import *
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 CONTRACT_DIR = "01_hello_world"
 

@@ -1,5 +1,5 @@
 import unittest, argparse, sys
-from eosfactory import *
+from eosf import *
 
 Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
 _ = Logger()

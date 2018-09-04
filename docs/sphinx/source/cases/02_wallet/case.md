@@ -30,7 +30,7 @@ $ python3
 ```
 
 ```
-from eosfactory import *
+from eosf import *
 ```
 
 First, lets's start a local testnet:
@@ -76,7 +76,7 @@ $ python3
 ```
 
 ```
-from eosfactory import *
+from eosf import *
 ```
 
 Resume the testnet:
@@ -113,7 +113,7 @@ $ python3
 ```
 
 ```
-from eosfactory import *
+from eosf import *
 ```
 
 And this time we reset the testnet:
@@ -155,7 +155,7 @@ $ python3
 Then create a `Wallet` object:
 
 ```
-from eosfactory import *
+from eosf import *
 create_wallet()
 ```
 

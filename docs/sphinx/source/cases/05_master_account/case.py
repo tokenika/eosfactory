@@ -1,4 +1,4 @@
-from  eosfactory import *
+from eosf import *
 
 reset()
 
