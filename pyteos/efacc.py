@@ -395,6 +395,7 @@ def create_master_account(
             ######## {} account object restored from the blockchain.
             '''.format(account_object_name)) 
         return
+
     if isinstance(account_name, efnet.Testnet):
         owner_key = account_name.owner_key
         active_key = account_name.active_key
@@ -471,6 +472,7 @@ def create_master_account(
                         account_object.TRACE('''
                             * The account ``{}`` is in the wallet.
                             '''.format(account_object.name))
+                        return
                 else:
                     return account_object
 
@@ -900,3 +902,4 @@ def stats(
         output = output + "  " + last_col % (param) + "\n" 
 
     efui.Logger().OUT(output, translate=False)
+    
