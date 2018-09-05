@@ -105,8 +105,8 @@ def testnets():
         Testnet mapping is empty.
         ''')
         return
-    for pseudo, testnet in mapping.items():
-        print("%20s: %13s @ %s" % (pseudo, testnet["account_name"], testnet["url"]))
+    for alias, testnet in mapping.items():
+        print("%20s: %13s @ %s" % (alias, testnet["account_name"], testnet["url"]))
 
 
 jungle = Testnet(

@@ -30,7 +30,7 @@ Account ``{}`` does not exist in the blockchain. It may be created.
 
 class WalletExists:
     msg_template = '''
-Account ``{}`` does not exist in the blockchain. It may be created.
+Wallet ``{}`` already exists.
 '''
     def __init__(self, msg):
         Error.__init__(self, msg, True)
@@ -161,7 +161,7 @@ class Logger():
             cprint(msg, color[0], color[1], attrs=color[2])
 
     def error_map(self, err_msg):
-        if "main.cpp:3008" in err_msg:
+        if "unknown key" in err_msg:
             return AccountNotExist(
                 AccountNotExist.msg_template.format(self.name))
 

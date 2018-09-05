@@ -7,7 +7,7 @@ def register_account(
 
     setup.set_nodeos_address(url)
     eosf_control.verify_testnet_production()
-    # eosf_control.clear_testnet_cache()
+    eosf_control.clear_testnet_cache()
 
     create_wallet(file=True)
     create_master_account(
@@ -23,11 +23,10 @@ active keys, create an account object and put it into the wallet associated
 with the url.
 
 Example:
-    python3 utils/register_account.py http://88.99.97.30:38888 \
-    master \
-    dgxo1uyhoytn \
-    5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
-    5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
+    python3 utils/register_account.py \
+    http://88.99.97.30:38888 master uzpile1lv52y \
+    5JxJPub9btDSnfk5iZd1QeuceYdigbyCUbmTMyEgbRbPNBa4Tgp \
+    5JjrLM8LrBNVgmN9vQhgzVJn79UiShY9uw5ze6VwEygCeNWLKpR
 ''')
 
 parser.add_argument("url")

@@ -13,11 +13,17 @@ import eosf_wallet
 import eosf_testnet
 import eosf_ui
 
+
 def restart():
+    eosf_ui.Logger().INFO('''
+    ######### Reboot EOSFactory session.
+    ''')
+    eosf_control.stop([])
     cleos.restart()
 
     global wallet_singleton
-    wallet_singleton.delete_globals()
+    if wallet_singleton:
+        wallet_singleton.delete_globals()
     eosf_wallet.Wallet.wallet = None
 
     try:
@@ -29,6 +35,7 @@ def restart():
 
     global wallet_globals
     wallet_globals = None
+
 
 def is_local_testnet_running():
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
@@ -43,6 +50,7 @@ def is_local_testnet_running():
             return True
         else:
             return False
+
 
 def _data_json(data):
     class Encoder(json_module.JSONEncoder):
@@ -66,6 +74,7 @@ wallet_globals = None
 '''
 wallet_singleton = None
 
+
 def is_wallet_defined(logger, globals=None):
     '''
     '''
@@ -88,7 +97,8 @@ def is_wallet_defined(logger, globals=None):
                 ''')
 
     wallet_globals = eosf_wallet.Wallet.globals
-    
+
+
 def is_local_testnet_running(account_eosio):
     account_ = cleos.GetAccount(account_eosio.name, json=True, is_verbose=-1)
     if account_.error:
@@ -100,6 +110,7 @@ def is_local_testnet_running(account_eosio):
                     [0]["key"]
         except:
             False        
+
 
 def put_account_to_wallet_and_on_stack(
         account_object_name, account_object, logger=None):
@@ -216,10 +227,6 @@ class GetAccount(cleos.GetAccount):
         if not self.error_object is None:
             if not isinstance(self.error_object, eosf_ui.AccountNotExist):
                 self.fatal_error = True            
-            return
-
-        # Testing utility:
-        if setup.is_use_fixed_name and owner_key_private is None:
             return
 
         self.exists = True
