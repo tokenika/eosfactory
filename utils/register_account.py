@@ -7,7 +7,6 @@ def register_account(
 
     setup.set_nodeos_address(url)
     efman.verify_testnet_production()
-    # efman.clear_testnet_cache()
 
     create_wallet(file=True)
     create_master_account(
@@ -41,3 +40,5 @@ register_account(
     args.account_object_name,
     args.account_name,
     args.owner_key, args.active_key)
+
+# python3 utils/register_account.py http://88.99.97.30:38888 master uzpile1lv52y 5JxJPub9btDSnfk5iZd1QeuceYdigbyCUbmTMyEgbRbPNBa4Tgp 5JjrLM8LrBNVgmN9vQhgzVJn79UiShY9uw5ze6VwEygCeNWLKpR
