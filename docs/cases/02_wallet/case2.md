@@ -149,7 +149,6 @@ Then create a `Wallet` object:
 
 ```
 '''
-from eosf import *
 create_wallet()
 '''
 ```

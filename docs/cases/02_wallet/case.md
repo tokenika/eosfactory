@@ -151,11 +151,13 @@ Create a new Python session and import *EOSFactory* API:
 ```
 $ python3
 ```
+```
+from eosf import *
+```
 
 Then create a `Wallet` object:
 
 ```
-from eosf import *
 create_wallet()
 ```
 
