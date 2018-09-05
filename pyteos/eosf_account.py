@@ -218,6 +218,10 @@ class GetAccount(cleos.GetAccount):
                 self.fatal_error = True            
             return
 
+        # Testing utility:
+        if setup.is_use_fixed_name and owner_key_private is None:
+            return
+
         self.exists = True
         if owner_key_private is None:
             self.owner_key = cleos.CreateKey(
@@ -472,19 +476,8 @@ def create_master_account(
                 else:
                     return
         else:
-            if owner_key is None:
-                account_object.owner_key = cleos.CreateKey(
-                    "owner", is_verbose=-1)
-            else:
-                account_object.owner_key = cleos.CreateKey(
-                    "owner", "", owner_key, is_verbose=-1)
-
-            if active_key is None:
-                account_object.active_key = cleos.CreateKey(
-                    "active", is_verbose=-1)
-            else:
-                account_object.active_key = cleos.CreateKey(
-                    "active", "", active_key, is_verbose=-1)
+            owner_key_new = cleos.CreateKey("owner", is_verbose=-1)
+            active_key_new = cleos.CreateKey("active", is_verbose=-1)
 
             logger.OUT('''
             Use the following data to register a new account on a public testnet:
@@ -496,10 +489,10 @@ def create_master_account(
             Active Private Key: {}
             '''.format(
                 account_object.name,
-                account_object.owner_key.key_public,
-                account_object.active_key.key_public,
-                account_object.owner_key.key_private,
-                account_object.active_key.key_private
+                owner_key_new.key_public,
+                active_key_new.key_public,
+                owner_key_new.key_private,
+                active_key_new.key_private
                 ))
                 
             while True:
@@ -509,6 +502,9 @@ def create_master_account(
                 else: 
                     if is_ready == "go":
                         break
+            account_name = account_object.name
+            owner_key = owner_key_new.key_private
+            active_key = active_key_new.key_private
 
 def append_account_methods_and_finish(
         account_object_name, account_object, logger): 

@@ -17,10 +17,11 @@ def register_testnet(
         account_name=account_name,
         owner_key=owner_key,
         active_key=active_key)
-
+    import pdb; pdb.set_trace()
     if account_object_name in globals():
         eosf_testnet.add_to_mapping(
-            url, account_name,
+            url, 
+            account_name if account_name else account.name,
             owner_key if owner_key else account.owner_key.key_private, 
             active_key if active_key else account.active_key.key_private,
             alias)
