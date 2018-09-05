@@ -60,7 +60,7 @@ def file_prefix():
     return _file_prefix
 
 
-def restart():
+def reboot():
     global is_local_address
     is_local_address = False
     global _nodeos_address

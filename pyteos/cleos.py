@@ -26,8 +26,8 @@ import teos
 setup_setup = setup.Setup()
 _wallet_address_arg = None
 
-def restart():
-    setup.restart()
+def reboot():
+    setup.reboot()
     global setup_setup
     setup_setup = setup.Setup()
     global _wallet_address_arg

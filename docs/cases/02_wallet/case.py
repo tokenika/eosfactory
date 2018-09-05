@@ -9,9 +9,7 @@ create_account("alice", master)
 create_account("carol", master)
 get_wallet().keys()
 
-stop()
-
-restart()
+reboot()
 
 resume()
 info()
@@ -19,9 +17,7 @@ info()
 create_wallet()
 get_wallet().keys()
 
-stop()
-
-restart()
+reboot()
 
 reset()
 info()
@@ -29,9 +25,7 @@ info()
 create_wallet()
 get_wallet().keys()
 
-stop()
-
-restart()
+reboot()
 
 create_wallet()
 get_wallet().index()

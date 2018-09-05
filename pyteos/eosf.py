@@ -28,7 +28,7 @@ workspace_from_template = \
 set_is_testing_errors = eosf_ui.set_is_testing_errors
 set_is_throwing_errors = eosf_ui.set_is_throwing_errors
 
-restart = eosf_account.restart
+reboot = eosf_account.reboot
 
 reset = eosf_control.reset
 resume = eosf_control.resume

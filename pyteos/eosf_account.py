@@ -14,12 +14,12 @@ import eosf_testnet
 import eosf_ui
 
 
-def restart():
+def reboot():
     eosf_ui.Logger().INFO('''
     ######### Reboot EOSFactory session.
     ''')
     eosf_control.stop([])
-    cleos.restart()
+    cleos.reboot()
 
     global wallet_singleton
     if wallet_singleton:
