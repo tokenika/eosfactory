@@ -7,7 +7,7 @@ def register_account(
 
     setup.set_nodeos_address(url)
     efman.verify_testnet_production()
-    efman.clear_testnet_cache()
+    # efman.clear_testnet_cache()
 
     create_wallet(file=True)
     create_master_account(

@@ -83,7 +83,7 @@ class Wallet(cleos.WalletCreate):
             if name in passwords:
                 password = passwords[name]
                 logger.INFO('''
-                    The pasword is restored from the file:
+                    The password is restored from the file:
                     {}
                     '''.format(
                         os.path.join(self.wallet_dir, setup.password_map)))
