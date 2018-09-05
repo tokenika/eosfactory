@@ -31,6 +31,7 @@ Release Notes
     releases/ReleaseNotesVersion0.8
     releases/ReleaseNotesVersion1.0
     releases/ReleaseNotesVersion1.1
+    releases/ReleaseNotesVersion2.0
 
 
 Tutorials
