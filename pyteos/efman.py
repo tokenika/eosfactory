@@ -13,19 +13,11 @@ Python front-end for `EOSIO cleos`.
 
 import sys
 import os
-import time
 import json
-import inspect
-import types
-import shutil
-import pprint
-import enum
 
 import setup
 import teos
 import cleos
-import cleosys
-import efcon
 import efui
 
 def clear_testnet_cache(verbosity=None):

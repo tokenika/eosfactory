@@ -395,7 +395,6 @@ def create_master_account(
             ######## {} account object restored from the blockchain.
             '''.format(account_object_name)) 
         return
-
     if isinstance(account_name, efnet.Testnet):
         owner_key = account_name.owner_key
         active_key = account_name.active_key
@@ -408,11 +407,12 @@ def create_master_account(
     Check the following conditions:
     * a ``Wallet`` object is defined.
     '''  
-    is_wallet_defined(logger, globals)
+    if account_object_name:
+        is_wallet_defined(logger, globals)
 
-    global wallet_singleton
-    if wallet_singleton is None:
-        return
+        global wallet_singleton
+        if wallet_singleton is None:
+            return
 
     '''
     If the local testnet is running, create an account object representing 
@@ -463,14 +463,17 @@ def create_master_account(
                 if not account_object.ERROR():
                     account_object.TRACE('''
                         * The account object is created.
-                        ''')  
+                        ''')
 
-                if append_account_methods_and_finish(
-                    account_object_name, account_object, account_object):
-                    account_object.TRACE('''
-                        * The account ``{}`` is in the wallet.
-                        '''.format(account_object.name))
-                    return
+                if account_object_name:
+                    if append_account_methods_and_finish(
+                        account_object_name, account_object, account_object):
+                        account_object.TRACE('''
+                            * The account ``{}`` is in the wallet.
+                            '''.format(account_object.name))
+                else:
+                    return account_object
+
             else: # the name is taken by somebody else
                 logger.TRACE('''
                 ###

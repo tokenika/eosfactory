@@ -6,25 +6,20 @@ def register_testnet(
 
     setup.set_nodeos_address(url)
     efman.verify_testnet_production()
-    efman.clear_testnet_cache()
 
     efnet.testnets()
-
-    create_wallet(file=True)
-    account_object_name = "account"
-    create_master_account(
-        account_object_name,
+    account = create_master_account(
+        None,
         account_name=account_name,
         owner_key=owner_key,
         active_key=active_key)
 
-    if account_object_name in globals():
-        efnet.add_to_mapping(
-            url, 
-            account_name if account_name else account.name,
-            owner_key if owner_key else account.owner_key.key_private, 
-            active_key if active_key else account.active_key.key_private,
-            alias)
+    efnet.add_to_mapping(
+        url, 
+        account_name if account_name else account.name,
+        owner_key if owner_key else account.owner_key.key_private, 
+        active_key if active_key else account.active_key.key_private,
+        alias)
 
     efnet.testnets()
 
