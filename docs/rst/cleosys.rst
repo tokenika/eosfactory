@@ -1,6 +1,6 @@
-eosf_ui
+cleosys
 =======
 
-.. automodule:: eosf_ui
+.. automodule:: cleosys
     :members:
     :show-inheritance:

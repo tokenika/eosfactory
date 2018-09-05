@@ -5,10 +5,10 @@ def register_testnet(
     url, alias, account_name, owner_key, active_key):
 
     setup.set_nodeos_address(url)
-    eosf_control.verify_testnet_production()
-    eosf_control.clear_testnet_cache()
+    efman.verify_testnet_production()
+    efman.clear_testnet_cache()
 
-    eosf_testnet.testnets()
+    efnet.testnets()
 
     create_wallet(file=True)
     account_object_name = "account"
@@ -19,14 +19,14 @@ def register_testnet(
         active_key=active_key)
 
     if account_object_name in globals():
-        eosf_testnet.add_to_mapping(
+        efnet.add_to_mapping(
             url, 
             account_name if account_name else account.name,
             owner_key if owner_key else account.owner_key.key_private, 
             active_key if active_key else account.active_key.key_private,
             alias)
 
-    eosf_testnet.testnets()
+    efnet.testnets()
 
 parser = argparse.ArgumentParser(description='''
 Given an url and an testnet alias (not obligatory), get registration data.

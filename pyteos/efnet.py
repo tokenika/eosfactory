@@ -1,7 +1,7 @@
 import setup
-import eosf_control
-import eosf_ui
-import eosf_account
+import efman
+import efui
+import efacc
 
 
 class Testnet:
@@ -12,17 +12,17 @@ class Testnet:
 
         if not url:
             if reset:
-                eosf_control.reset(verbosity=[eosf_ui.Verbosity.ERROR])
+                efman.reset(verbosity=[efui.Verbosity.ERROR])
             else:
-                eosf_control.resume(verbosity=[eosf_ui.Verbosity.ERROR])
-            eosio = eosf_account.Eosio("account_master")
+                efman.resume(verbosity=[efui.Verbosity.ERROR])
+            eosio = efacc.Eosio("account_master")
             setup.is_local_address = True
             account_name = eosio.name
             owner_key = eosio.owner_key.key_private
             active_key = eosio.active_key.key_private
 
         if not account_name or not owner_key or not active_key:
-            eosf_ui.Logger().ERROR('''
+            efui.Logger().ERROR('''
         If the ``url`` is set, the ``account_name`` and keys have to be set, as well.
             ''')
         self.url = url
@@ -34,13 +34,13 @@ class Testnet:
         setup.set_nodeos_address(self.url, prefix)
 
     def verify_production(self):
-        return eosf_control.verify_testnet_production()
+        return efman.verify_testnet_production()
 
     def clear_cache(self):
-        eosf_control.clear_testnet_cache()
+        efman.clear_testnet_cache()
 
     def is_local(self):
-        return eosf_control.is_local_address()
+        return efman.is_local_address()
 
 def get_testnet(
         alias,
@@ -59,7 +59,7 @@ def get_testnet(
     elif alias == "kylin":
         return kylin
     else:
-        eosf_ui.Logger().ERROR('''
+        efui.Logger().ERROR('''
         Testnet ``{}`` is not defined in the testnet mapping.
         '''.format(alias))
 
@@ -72,13 +72,13 @@ class LocalTestnet(Testnet):
 TESTNET_FILE = "testnet.json"
 
 def get_mapping():
-    return eosf_control.read_map(TESTNET_FILE)
+    return efman.read_map(TESTNET_FILE)
 
 def save_mapping(mapping):
-    eosf_control.save_map(mapping, TESTNET_FILE)
+    efman.save_map(mapping, TESTNET_FILE)
 
 def edit_mapping():
-    eosf_control.edit_map(TESTNET_FILE)
+    efman.edit_map(TESTNET_FILE)
 
 def add_to_mapping(url, account_name, owner_key, active_key, alias=None):
     mapping = get_mapping()
@@ -101,7 +101,7 @@ def remove_from_mapping(testnet):
 def testnets():
     mapping = get_mapping()
     if not mapping:
-        eosf_ui.Logger().INFO('''
+        efui.Logger().INFO('''
         Testnet mapping is empty.
         ''')
         return

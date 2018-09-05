@@ -5,11 +5,11 @@ from termcolor import cprint, colored
 import setup
 
 def condition(msg, translate=True):
-    import eosf_control
+    import efman
     ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
     msg = setup.heredoc(ansi_escape.sub('', msg))
     if translate:
-        return eosf_control.accout_names_2_object_names(msg)
+        return efman.accout_names_2_object_names(msg)
     else:
         return msg
 

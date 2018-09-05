@@ -7,24 +7,24 @@ import re
 import setup
 import teos
 import cleos
-import cleos_system
-import eosf_control
-import eosf_wallet
-import eosf_testnet
-import eosf_ui
+import cleosys
+import efman
+import efwlt
+import efnet
+import efui
 
 
 def reboot():
-    eosf_ui.Logger().INFO('''
+    efui.Logger().INFO('''
     ######### Reboot EOSFactory session.
     ''')
-    eosf_control.stop([])
+    efman.stop([])
     cleos.reboot()
 
     global wallet_singleton
     if wallet_singleton:
         wallet_singleton.delete_globals()
-    eosf_wallet.Wallet.wallet = None
+    efwlt.Wallet.wallet = None
 
     try:
         del wallet_singleton
@@ -64,7 +64,7 @@ def _data_json(data):
         data_json = json_module.dumps(data, cls=Encoder)
     else:
         data_json = re.sub("\s+|\n+|\t+", " ", data)
-        data_json = eosf_control.object_names_2_accout_names(data_json)
+        data_json = efman.object_names_2_accout_names(data_json)
     return data_json
 
 '''The namespace where account objects go.
@@ -83,11 +83,11 @@ def is_wallet_defined(logger, globals=None):
         return
     
     global wallet_singleton
-    wallet_singleton = eosf_wallet.Wallet.wallet
+    wallet_singleton = efwlt.Wallet.wallet
 
     if wallet_singleton is None:
-        eosf_wallet.create_wallet(globals=globals)
-        wallet_singleton = eosf_wallet.Wallet.wallet
+        efwlt.create_wallet(globals=globals)
+        wallet_singleton = efwlt.Wallet.wallet
 
         if wallet_singleton is None:
             logger.ERROR('''
@@ -96,7 +96,7 @@ def is_wallet_defined(logger, globals=None):
                 `create_wallet()`
                 ''')
 
-    wallet_globals = eosf_wallet.Wallet.globals
+    wallet_globals = efwlt.Wallet.globals
 
 
 def is_local_testnet_running(account_eosio):
@@ -225,7 +225,7 @@ class GetAccount(cleos.GetAccount):
 
         self.ERROR_OBJECT(self)
         if not self.error_object is None:
-            if not isinstance(self.error_object, eosf_ui.AccountNotExist):
+            if not isinstance(self.error_object, efui.AccountNotExist):
                 self.fatal_error = True            
             return
 
@@ -270,10 +270,10 @@ class GetAccount(cleos.GetAccount):
         return self.name
 
 
-class RestoreAccount(eosf_ui.Logger, cleos.Account, cleos.RestoreAccount):
+class RestoreAccount(efui.Logger, cleos.Account, cleos.RestoreAccount):
     def __init__(self, name, verbosity=None):
         cleos.RestoreAccount.__init__(self, name, is_verbose=-1)
-        eosf_ui.Logger.__init__(self, verbosity)
+        efui.Logger.__init__(self, verbosity)
 
 
 class CreateAccount(cleos.CreateAccount):
@@ -297,7 +297,7 @@ class CreateAccount(cleos.CreateAccount):
             )
 
 
-class SystemNewaccount(cleos_system.SystemNewaccount):
+class SystemNewaccount(cleosys.SystemNewaccount):
     def __init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
@@ -310,7 +310,7 @@ class SystemNewaccount(cleos_system.SystemNewaccount):
             ref_block=None,
             verbosity=None):
             
-        cleos_system.SystemNewaccount.__init__(
+        cleosys.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
             transfer, expiration_sec, skip_signature, dont_broadcast, forceUnique,
@@ -380,7 +380,7 @@ def create_master_account(
     '''
 
 
-    logger = eosf_ui.Logger(verbosity)
+    logger = efui.Logger(verbosity)
 
     globals = inspect.stack()[1][0].f_globals
     if account_object_name in globals:
@@ -396,7 +396,7 @@ def create_master_account(
             '''.format(account_object_name)) 
         return
 
-    if isinstance(account_name, eosf_testnet.Testnet):
+    if isinstance(account_name, efnet.Testnet):
         owner_key = account_name.owner_key
         active_key = account_name.active_key
         account_name = account_name.account_name
@@ -589,18 +589,18 @@ def append_account_methods_and_finish(
             account_object.INFO('''
                 {}
             '''.format(re.sub(
-                ' +',' ', eosf_control.accout_names_2_object_names(data))))
+                ' +',' ', efman.accout_names_2_object_names(data))))
 
             account_object.action = result
             try:
                 account_object._console = result.console
-                account_object.DEBUG(eosf_control.accout_names_2_object_names(
+                account_object.DEBUG(efman.accout_names_2_object_names(
                     account_object._console))
             except:
                 pass
             if json:
                 account_object.OUT(
-                    eosf_control.accout_names_2_object_names(result.out_msg))
+                    efman.accout_names_2_object_names(result.out_msg))
 
         account_object.action = result
 
@@ -633,12 +633,12 @@ def append_account_methods_and_finish(
 
         if not account_object.ERROR(result):
             try:
-                account_map = eosf_control.account_map()
+                account_map = efman.account_map()
                 scope = account_map[str(scope)]
             except:
                 pass
 
-            account_object.OUT(eosf_control.accout_names_2_object_names(result.out_msg))
+            account_object.OUT(efman.accout_names_2_object_names(result.out_msg))
             return result
         return None
 
@@ -660,7 +660,7 @@ def append_account_methods_and_finish(
             receiver = account_object
         buy_ram_kbytes = 1
         
-        result = cleos_system.BuyRam(
+        result = cleosys.BuyRam(
             account_object, receiver, amount_kbytes,
             buy_ram_kbytes,
             expiration_sec,
@@ -691,7 +691,7 @@ def append_account_methods_and_finish(
         if receiver is None:
             receiver = account_object
 
-        delegate_bw = cleos_system.DelegateBw(
+        delegate_bw = cleosys.DelegateBw(
             account_object, receiver,
             stake_net_quantity, stake_cpu_quantity,
             permission,
@@ -743,7 +743,7 @@ def create_account(
         restore=False,
         verbosity=None):
 
-    logger = eosf_ui.Logger(verbosity)
+    logger = efui.Logger(verbosity)
 
     globals = inspect.stack()[1][0].f_globals
     if account_object_name in globals:
@@ -819,7 +819,7 @@ def create_account(
                     )
 
             if account_object.ERROR(is_silent=True, is_fatal=False):
-                if isinstance(account_object.error_object, eosf_ui.LowRam):
+                if isinstance(account_object.error_object, efui.LowRam):
                     account_object.TRACE('''
                     * RAM needed is {}.kByte, buying RAM {}.kByte.
                     '''.format(
@@ -896,4 +896,4 @@ def stats(
             output = output + col % find(param, json)
         output = output + "  " + last_col % (param) + "\n" 
 
-    eosf_ui.Logger().OUT(output, translate=False)
+    efui.Logger().OUT(output, translate=False)

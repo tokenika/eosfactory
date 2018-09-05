@@ -2,7 +2,7 @@ import shutil
 
 import teos
 import cleos
-import eosf_ui
+import efui
 
 def workspace_from_template(
         name, template="", user_workspace=None, remove_existing=False, 
@@ -19,7 +19,7 @@ def workspace_from_template(
         visual_studio_code: If set, open the ``VSCode``, if available.
         verbosity: The logging configuration.
     '''
-    logger = eosf_ui.Logger(verbosity)
+    logger = efui.Logger(verbosity)
 
     logger.INFO('''
     ######### Create contract ``{}`` from template ``{}``.
@@ -38,7 +38,7 @@ def workspace_from_template(
         return None
 
 
-class ContractBuilder(eosf_ui.Logger):
+class ContractBuilder(efui.Logger):
     '''
     '''
     def __init__(
@@ -153,13 +153,13 @@ class Contract(ContractBuilder):
             json=True)
 
         if self.ERROR(result, is_silent=True, is_fatal=False):
-            if isinstance(result.error_object, eosf_ui.ContractRunning) and not force:
+            if isinstance(result.error_object, efui.ContractRunning) and not force:
                 self.TRACE('''
                 * Contract is already running this version of code.
                 ''')
                 return
                 
-            if isinstance(result.error_object, eosf_ui.LowRam):
+            if isinstance(result.error_object, efui.LowRam):
                 self.TRACE('''
                 * RAM needed is {}.kByte, buying RAM {}.kByte.
                 '''.format(

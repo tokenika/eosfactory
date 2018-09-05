@@ -14,7 +14,7 @@ INITIAL_STAKE_CPU = 10
 class Test(unittest.TestCase):
 
     def stats():
-        eosf_account.stats(
+        efacc.stats(
             [master, host, alice, carol],
             [
                 "core_liquid_balance",

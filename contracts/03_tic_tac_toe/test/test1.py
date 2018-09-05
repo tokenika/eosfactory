@@ -12,7 +12,7 @@ INITIAL_STAKE_NET = 10
 INITIAL_STAKE_CPU = 10
 
 def stats():
-    eosf_account.stats(
+    efacc.stats(
         [master, host, alice, carol],
         [
             "core_liquid_balance",

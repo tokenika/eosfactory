@@ -5,18 +5,18 @@ import inspect
 import setup
 import teos
 import cleos
-import eosf_ui
-import eosf_control
+import efui
+import efman
 
 def wallet_json_read():
     try:
-        with open(eosf_control.wallet_dir() + setup.password_map, "r") as input:    
+        with open(efman.wallet_dir() + setup.password_map, "r") as input:    
             return json.load(input)
     except:
         return {}
 
 def wallet_json_write(wallet_json):
-    with open(eosf_control.wallet_dir() + setup.password_map, "w+")  as out:
+    with open(efman.wallet_dir() + setup.password_map, "w+")  as out:
         json.dump(wallet_json, out)
 
 def create_wallet(
@@ -63,7 +63,7 @@ class Wallet(cleos.WalletCreate):
         else:
             name = setup.file_prefix() + name
 
-        logger = eosf_ui.Logger(verbosity)
+        logger = efui.Logger(verbosity)
         if not self.wallet is None:
             logger.ERROR('''
             It can be only one ``Wallet`` object in the script; there is one
@@ -71,7 +71,7 @@ class Wallet(cleos.WalletCreate):
             '''.format(wallet.name))
             return
 
-        self.wallet_dir = eosf_control.wallet_dir()
+        self.wallet_dir = efman.wallet_dir()
 
         logger.INFO('''
                 * Wallet name is ``{}``, wallet directory is
@@ -306,7 +306,7 @@ class Wallet(cleos.WalletCreate):
         '''
         self.open_unlock()
 
-        account_map = eosf_control.account_map()
+        account_map = efman.account_map()
         new_map = {}
         wallet_keys = cleos.WalletKeys(is_verbose=0)
         if len(account_map) > 0:
@@ -320,7 +320,7 @@ class Wallet(cleos.WalletCreate):
                     if account_.owner_key in wallet_keys.json[""] and \
                             account_.active_key in wallet_keys.json[""]:
                         new_map[name] = object_name
-                        from eosf_account import create_account
+                        from efacc import create_account
                         create_account(
                             object_name, name, restore=True, verbosity=None)
 
@@ -328,14 +328,14 @@ class Wallet(cleos.WalletCreate):
                          {}
                     '''.format(object_name))
 
-            eosf_control.save_account_map(new_map)
+            efman.save_account_map(new_map)
         else:
             self.INFO('''
                  * The wallet is empty.
             ''')
 
     def delete_globals(self):
-        account_map = eosf_control.account_map()
+        account_map = efman.account_map()
         for name, object_name in account_map.items():
             del Wallet.globals[object_name]
 
@@ -352,11 +352,11 @@ class Wallet(cleos.WalletCreate):
             '''.format(self.wallet_keys.out_msg))
 
     def edit_account_map(self, text_editor="nano"):
-        eosf_control.edit_account_map(text_editor)
+        efman.edit_account_map(text_editor)
 
     def is_name_taken(self, account_object_name, account_name):
         while True:
-            account_map_json = eosf_control.account_map(self)
+            account_map_json = efman.account_map(self)
             if account_map_json is None:
                 return False
 
@@ -382,12 +382,12 @@ class Wallet(cleos.WalletCreate):
             if is_taken:
                 answer = input("y/n <<< ")
                 if answer == "y":
-                    eosf_control.edit_account_map()
+                    efman.edit_account_map()
                     continue
                 else:
                     self.ERROR('''
-            Use the function 'eosf_control.edit_account_map(text_editor="nano")'
-            or the corresponding method of any object of the 'eosf_wallet.Wallet` 
+            Use the function 'efman.edit_account_map(text_editor="nano")'
+            or the corresponding method of any object of the 'efwlt.Wallet` 
             class to edit the file.
                     ''')
                     return True
@@ -401,7 +401,7 @@ class Wallet(cleos.WalletCreate):
         '''
         '''
         if not self.is_name_taken(account_object_name, account_object.name):
-            account_map_json = eosf_control.account_map(self)
+            account_map_json = efman.account_map(self)
             if account_map_json is None:
                 return
 

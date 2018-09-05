@@ -64,13 +64,13 @@ Python Documentation
     :maxdepth: 1
 
     rst/cleos
-    rst/cleos_system
-    rst/eosf_account
-    rst/eosf_contract
-    rst/eosf_control
-    rst/eosf_testnet
-    rst/eosf_ui
-    rst/eosf_wallet
+    rst/cleosys
+    rst/efacc
+    rst/efcon
+    rst/efman
+    rst/efnet
+    rst/efui
+    rst/efwlt
     rst/eosf
     rst/setup
     rst/teos

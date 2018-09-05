@@ -1,42 +1,42 @@
 import setup
 import cleos
-import eosf_ui
-import eosf_control
-import eosf_wallet
-import eosf_account
-import eosf_contract
-import eosf_testnet
+import efui
+import efman
+import efwlt
+import efacc
+import efcon
+import efnet
 
 
-Logger = eosf_ui.Logger
-Verbosity = eosf_ui.Verbosity
+Logger = efui.Logger
+Verbosity = efui.Verbosity
 
 CreateKey = cleos.CreateKey
 Permission = cleos.Permission
 
-create_wallet = eosf_wallet.create_wallet
-create_account = eosf_account.create_account
-create_master_account = eosf_account.create_master_account
+create_wallet = efwlt.create_wallet
+create_account = efacc.create_account
+create_master_account = efacc.create_master_account
 
-get_wallet = eosf_wallet.get_wallet
+get_wallet = efwlt.get_wallet
 
-Contract = eosf_contract.Contract
-ContractBuilder = eosf_contract.ContractBuilder
+Contract = efcon.Contract
+ContractBuilder = efcon.ContractBuilder
 workspace_from_template = \
-     eosf_contract.workspace_from_template
+     efcon.workspace_from_template
 
-set_is_testing_errors = eosf_ui.set_is_testing_errors
-set_is_throwing_errors = eosf_ui.set_is_throwing_errors
+set_is_testing_errors = efui.set_is_testing_errors
+set_is_throwing_errors = efui.set_is_throwing_errors
 
-reboot = eosf_account.reboot
+reboot = efacc.reboot
 
-reset = eosf_control.reset
-resume = eosf_control.resume
-stop = eosf_control.stop
+reset = efman.reset
+resume = efman.resume
+stop = efman.stop
 
-info = eosf_control.info
-status = eosf_control.status
+info = efman.info
+status = efman.status
 
-Testnet = eosf_testnet.Testnet
-get_testnet = eosf_testnet.get_testnet
-testnets = eosf_testnet.testnets
+Testnet = efnet.Testnet
+get_testnet = efnet.get_testnet
+testnets = efnet.testnets

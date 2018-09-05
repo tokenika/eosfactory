@@ -24,9 +24,9 @@ import enum
 import setup
 import teos
 import cleos
-import cleos_system
-import eosf_contract
-import eosf_ui
+import cleosys
+import efcon
+import efui
 
 def clear_testnet_cache(verbosity=None):
     ''' Remove wallet files associated with the current testnet.
@@ -34,7 +34,7 @@ def clear_testnet_cache(verbosity=None):
 
     if not setup.file_prefix():
         return
-    logger = eosf_ui.Logger(verbosity)
+    logger = efui.Logger(verbosity)
     logger.TRACE('''
     Removing testnet cache for prefix `{}`
     '''.format(setup.file_prefix()))
@@ -118,7 +118,7 @@ def is_local_address():
 def reset(verbosity=None):
     ''' Start clean the EOSIO local node.
     '''
-    logger = eosf_ui.Logger(verbosity)
+    logger = efui.Logger(verbosity)
     if not cleos.set_local_nodeos_address_if_none():
         logger.INFO('''
         No local nodeos is set: {}
@@ -138,7 +138,7 @@ def reset(verbosity=None):
 def resume(verbosity=None):
     ''' Resume the EOSIO local node.
     ''' 
-    logger = eosf_ui.Logger(verbosity)
+    logger = efui.Logger(verbosity)
     if not cleos.set_local_nodeos_address_if_none():   
         logger.INFO('''
             Not local nodeos is set: {}
@@ -146,7 +146,7 @@ def resume(verbosity=None):
 
     node = teos.NodeStart(0, is_verbose=0)
     probe = teos.NodeProbe(is_verbose=-1)
-    logger = eosf_ui.Logger(verbosity)
+    logger = efui.Logger(verbosity)
     if not logger.ERROR(probe):
         logger.INFO('''
         ######### Local test node is started and is running.
@@ -161,7 +161,7 @@ def stop(verbosity=None):
     is empty, otherwise `False`.
     '''
     stop = teos.NodeStop(is_verbose=0)
-    logger = eosf_ui.Logger(verbosity)
+    logger = efui.Logger(verbosity)
     if not logger.ERROR(stop):
         logger.INFO('''
         ######### Local test node is stopped.
@@ -173,7 +173,7 @@ def status():
     Display EOS node status.
     '''
     get_info = cleos.GetInfo(is_verbose=-1)
-    logger = eosf_ui.Logger(None)
+    logger = efui.Logger(None)
     get_info.err_msg = '''
     {}
     THE NODE {} IS NOT OPERATIVE.
@@ -192,7 +192,7 @@ def info():
     Display EOS node info.
     '''
     get_info = cleos.GetInfo(is_verbose=-1)
-    logger = eosf_ui.Logger()
+    logger = efui.Logger()
     logger.INFO(str(get_info))
 
 
@@ -208,14 +208,14 @@ def is_head_block_num():
     return head_block_num > 0
 
 def verify_testnet_production():
-    logger = eosf_ui.Logger(None)
+    logger = efui.Logger(None)
     result = is_head_block_num()
     if not result:
-        #eosf_ui.set_is_throwing_errors(False)
+        #efui.set_is_throwing_errors(False)
         logger.ERROR('''
         Testnet is not running or is not responding.
         ''')
-        #eosf_ui.set_is_throwing_errors(True)
+        #efui.set_is_throwing_errors(True)
     else:
         logger.INFO('''
         Testnet is OK.
@@ -258,8 +258,8 @@ editor. Return ``None`` if the the offer is rejected.
                         continue
                     else:
                         logger.ERROR('''
-            Use the function 'eosf_control.edit_account_map(text_editor="nano")'
-            or the corresponding method of any object of the 'eosf_wallet.Wallet` 
+            Use the function 'efman.edit_account_map(text_editor="nano")'
+            or the corresponding method of any object of the 'efwlt.Wallet` 
             class to edit the file.
                         ''')                    
                         return None
@@ -279,7 +279,7 @@ def save_map(map, file_name):
         with open(os.path.join(wallet_dir(), file_name), "w") as out:
             out.write(map)            
     except Exception as e:
-        eosf_ui.Logger().ERROR(str(e))
+        efui.Logger().ERROR(str(e))
 
 
 def edit_map(file_name, text_editor="nano"):
@@ -299,7 +299,7 @@ If the file is corrupted, offer editing the file with the ``nano`` linux
 editor. Return ``None`` if the the offer is rejected.
     '''
     wallet_dir_ = wallet_dir()
-    logger = eosf_ui.Logger()
+    logger = efui.Logger()
     path = os.path.join(wallet_dir_, file_name)
     while True:
         try: # whether the setup map file exists:
@@ -326,8 +326,8 @@ editor. Return ``None`` if the the offer is rejected.
                     continue
                 else:
                     logger.ERROR('''
-        Use the function 'eosf_control.edit_account_map(text_editor="nano")'
-        or the corresponding method of any object of the 'eosf_wallet.Wallet` 
+        Use the function 'efman.edit_account_map(text_editor="nano")'
+        or the corresponding method of any object of the 'efwlt.Wallet` 
         class to edit the file.
                     ''', translate=False)                    
                     return None
