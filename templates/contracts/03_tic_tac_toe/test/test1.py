@@ -5,7 +5,6 @@ Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
 _ = Logger()
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
-CACHE_ID = "tic-tac-toe"
 
 INITIAL_RAM_KBYTES = 12
 INITIAL_STAKE_NET = 10
@@ -232,9 +231,9 @@ if __name__ == '__main__':
         "--cpu", default=0, help="extra CPU stake in EOS")
 
     args = parser.parse_args()
-    testnet = get_testnet(args.alias, args.testnet, reset=args.reset)
 
-    testnet.configure(prefix=CACHE_ID)
+    testnet = get_testnet(args.alias, args.testnet, reset=args.reset)
+    testnet.configure()
 
     if args.reset and not testnet.is_local():
         testnet.clear_cache()
