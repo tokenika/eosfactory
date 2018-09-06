@@ -42,26 +42,35 @@ class Testnet:
     def is_local(self):
         return efman.is_local_address()
 
+
 def get_testnet(
         alias,
-        account_name=None, owner_key=None, active_key=None, 
+        url=None, account_name=None, owner_key=None, active_key=None, 
         reset=False
     ):
-    mapping = get_mapping()
-    if not alias:
+    if not alias and not owner_key and not active_key:
         return LocalTestnet(reset=reset)
-    elif alias in mapping:
-        return Testnet(
-            mapping[alias]["url"], mapping[alias]["account_name"],
-            mapping[alias]["owner_key"], mapping[alias]["active_key"])
-    elif alias == "jungle":
-        return jungle
-    elif alias == "kylin":
-        return kylin
-    else:
-        efui.Logger().ERROR('''
-        Testnet ``{}`` is not defined in the testnet mapping.
-        '''.format(alias))
+
+    if alias:
+        mapping = get_mapping()
+        if alias in mapping:
+            return Testnet(
+                mapping[alias]["url"], mapping[alias]["account_name"],
+                mapping[alias]["owner_key"], mapping[alias]["active_key"])
+        elif alias == "jungle":
+            return jungle
+        elif alias == "kylin":
+            return kylin
+        else:
+            efui.Logger().ERROR('''
+            Testnet ``{}`` is not defined in the testnet mapping.
+            '''.format(alias))
+    elif url and account_name and owner_key and active_key:
+        return Testnet(url, account_name, owner_key, active_key)
+
+    efui.Logger().ERROR('''
+        Cannot determine testnet.
+        ''')
 
 
 class LocalTestnet(Testnet):

@@ -448,8 +448,7 @@ def create_master_account(
     '''
     while True:
         account_object = GetAccount(
-            account_object_name, account_name, 
-            owner_key, active_key, verbosity)
+            account_object_name, account_name, owner_key, active_key, verbosity)
 
         if account_object.fatal_error:
             logger.ERROR(account_object)
