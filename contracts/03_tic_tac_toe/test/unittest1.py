@@ -247,13 +247,7 @@ if __name__ == '__main__':
         "--cpu", default=0, help="extra CPU stake in EOS")
 
     args = parser.parse_args()
-    if args.testnet:
-        testnet = get_testnet(
-            args.alias,
-            args.testnet[0], args.testnet[1], args.testnet[2], args.testnet[3])
-    else:
-        testnet = get_testnet(args.alias, reset=args.reset)
-
+    testnet = get_testnet(args.alias, args.testnet, reset=args.reset)
     testnet.configure(prefix=CACHE_ID)
 
     if args.reset and not testnet.is_local():

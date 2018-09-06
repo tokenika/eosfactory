@@ -43,13 +43,10 @@ class Testnet:
         return efman.is_local_address()
 
 
-def get_testnet(
-        alias,
-        url=None, account_name=None, owner_key=None, active_key=None, 
-        reset=False
+def get_testnet(alias, testnet=None, reset=False
     ):
-    if not alias and not owner_key and not active_key:
-        return LocalTestnet(reset=reset)
+    if not alias and not testnet:
+        return Testnet(reset=reset)
 
     if alias:
         mapping = get_mapping()
@@ -65,17 +62,12 @@ def get_testnet(
             efui.Logger().ERROR('''
             Testnet ``{}`` is not defined in the testnet mapping.
             '''.format(alias))
-    elif url and account_name and owner_key and active_key:
-        return Testnet(url, account_name, owner_key, active_key)
+    elif testnet:
+        return Testnet(testnet[0], testnet[1], testnet[2], testnet[3])
 
     efui.Logger().ERROR('''
         Cannot determine testnet.
         ''')
-
-
-class LocalTestnet(Testnet):
-    def __init__(self, reset=False):
-        Testnet.__init__( self, reset=reset)
 
 
 TESTNET_FILE = "testnet.json"

@@ -41,7 +41,7 @@ nodeos address is not set.
 
     p = url_prefix(address)
 
-    if not prefix is None:
+    if prefix:
         p = prefix + "_" + p
 
     global _file_prefix
