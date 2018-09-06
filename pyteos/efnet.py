@@ -55,7 +55,7 @@ def get_testnet(alias, testnet=None, reset=False
                 mapping[alias]["url"], mapping[alias]["account_name"],
                 mapping[alias]["owner_key"], mapping[alias]["active_key"])
         elif alias == "cryptolions":
-            return jungle
+            return cryptolions
         elif alias == "kylin":
             return kylin
         else:
