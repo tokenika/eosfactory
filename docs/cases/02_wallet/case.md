@@ -9,15 +9,10 @@ The `Wallet` class wraps an *EOSIO* wallet. An instance of the class, i.e. a `Wa
 
 The `Wallet` class is a singleton, so there needs to be exactly one `Wallet` object in the namespace. After the `Wallet` is created with the `create_wallet()` command, it remains transparent to the script, yet usually there is no need to access it directly.
 
-Although *EOSFactory* manages only one `Wallet` object at a time, it produces numerous wallet files in the wallet directory, i.e. in the location where the `keosd` wallet manager stores its wallets.
+Although *EOSFactory* manages only one `Wallet` object at a time, it produces numerous wallet files in `~/eosio-wallet`, i.e. in the location where the `keosd` wallet manager stores its wallets.
 
-The wallet files are marked with prefixes, which are either encoding the URL of the active testnet (i.e. the one which is active the `create_wallet()` command is executed) or arbitrary (i.e. defined *ad hoc* by a specific unit test).
+The wallet files are marked with prefixes which are encoding the URL of the active testnet (i.e. the one which is active when the `create_wallet()` command is executed), for example: `_127_0_0_1_8888_default.wallet` or `_88_99_97_30_38888_default.wallet`.
 
-There is an important distinction regarding wallet prefixes:
-
-* URL prefixes are used in context of various testnets. They allow *EOSFactory* to keep state between different Python sessions.
-* Arbitrary prefixes mark wallets associated with specific unit tests. They allow *EOSFactory* to keep state between different unit tests performed on the same testnet.
-* Empty prefix (not implemented yet) are reserved for wallets to be used with the mainnet.
 
 ## Use Case
 
