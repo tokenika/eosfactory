@@ -54,7 +54,7 @@ def get_testnet(alias, testnet=None, reset=False
             return Testnet(
                 mapping[alias]["url"], mapping[alias]["account_name"],
                 mapping[alias]["owner_key"], mapping[alias]["active_key"])
-        elif alias == "jungle":
+        elif alias == "cryptolions":
             return jungle
         elif alias == "kylin":
             return kylin
@@ -110,7 +110,7 @@ def testnets():
         print("%20s: %13s @ %s" % (alias, testnet["account_name"], testnet["url"]))
 
 
-jungle = Testnet(
+cryptolions = Testnet(
     "http://88.99.97.30:38888",
     "dgxo1uyhoytn",
     "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
