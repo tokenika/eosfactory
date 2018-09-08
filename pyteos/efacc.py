@@ -454,10 +454,10 @@ def create_master_account(
         if first_while and account_name and owner_key and active_key \
                         and not account_object.exists:
             account_object.ERROR('''
-            There is none account of the given name ({}) in the blockchain.
+            There is no account nameed ``{}`` in the blockchain.
             '''.format(account_name))
             return
-        first_while = False 
+        first_while = False
 
         if account_object.fatal_error:
             logger.ERROR(account_object)
