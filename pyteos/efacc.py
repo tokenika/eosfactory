@@ -392,7 +392,7 @@ def create_master_account(
             return
 
         logger.INFO('''
-            ######## {} account object restored from the blockchain.
+            ######## Account object ``{}`` restored from the blockchain.
             '''.format(account_object_name)) 
         return
 
@@ -402,7 +402,7 @@ def create_master_account(
         account_name = account_name.account_name
 
     logger.INFO('''
-        ######### Create the master account object named ``{}``...
+        ######### Create a master account object ``{}``.
         '''.format(account_object_name))
     '''
     Check the following conditions:
@@ -734,7 +734,7 @@ def append_account_methods_and_finish(
     get_account = cleos.GetAccount(account_object, is_verbose=0)
     if not account_object.ERROR(get_account):
         account_object.TRACE('''
-        * Cross-checked: account {} is in the blockchain.
+        * Cross-checked: account ``{}`` exists in the blockchain.
         '''.format(account_object_name))
     return put_account_to_wallet_and_on_stack(
         account_object_name, account_object)
@@ -763,12 +763,12 @@ def create_account(
 
         if not isinstance(globals[account_object_name], cleos.Account):
             logger.ERROR('''
-            The global variable {} type is not ``Account``.
+            The global variable ``{}`` type is not ``Account``.
             '''.format(account_object_name))
             return
 
         logger.INFO('''
-            ######## {} account object restored from the blockchain.
+            ######## Account object ``{}`` restored from the blockchain.
             '''.format(account_object_name)) 
         return
 
@@ -777,7 +777,7 @@ def create_account(
             account_name = creator
 
     logger.INFO('''
-        ######### Create the account object ``{}`` ...
+        ######### Create an account object ``{}``.
         '''.format(account_object_name))
 
     '''
@@ -799,8 +799,8 @@ def create_account(
     account_object = None
     if restore:
         logger.INFO('''
-                    ... for the existing blockchain account ``{}`` ({}).
-                    '''.format(account_object_name, account_name), 
+                    ... for an existing blockchain account ``{}`` mapped as ``{}``.
+                    '''.format(account_name, account_object_name), 
                     translate=False)
         account_object = RestoreAccount(account_name, verbosity)
         account_object.account_object_name = account_object_name
@@ -816,8 +816,8 @@ def create_account(
 
         if stake_net and not setup.is_local_address:
             logger.INFO('''
-                        ... paying stake for a new blockchain account ``{}``.
-                        '''.format(account_name))
+                        ... delegating stake to a new blockchain account ``{}`` mapped as ``{}``.
+                        '''.format(account_name, account_object_name))
             account_object = SystemNewaccount(
                     creator, account_name, owner_key, active_key,
                     stake_net, stake_cpu,
