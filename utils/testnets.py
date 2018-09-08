@@ -1,0 +1,3 @@
+from eosf import *
+
+testnets()

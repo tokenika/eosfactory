@@ -54,10 +54,10 @@ def get_testnet(alias, testnet=None, reset=False
             return Testnet(
                 mapping[alias]["url"], mapping[alias]["account_name"],
                 mapping[alias]["owner_key"], mapping[alias]["active_key"])
-        elif alias == "cryptolions":
-            return cryptolions
-        elif alias == "kylin":
-            return kylin
+        elif alias == "tn1":
+            return tn1
+        elif alias == "tn2":
+            return tn2
         else:
             efui.Logger().ERROR('''
             Testnet ``{}`` is not defined in the testnet mapping.
@@ -110,18 +110,18 @@ def testnets():
         print("%20s: %13s @ %s" % (alias, testnet["account_name"], testnet["url"]))
 
 
-cryptolions = Testnet(
+tn1 = Testnet(
     "http://88.99.97.30:38888",
     "dgxo1uyhoytn",
     "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
     "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
 )
 
-kylin = Testnet(
-    "https://api.kylin-testnet.eospace.io",
-    "dgxo1uyhoytn",
-    "5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67",
-    "5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX"
+tn2 = Testnet(
+    "https://api.kylin.alohaeos.com",
+    "xlg3pao3idlq",
+    "5JBbCwe3t6j63yerYmguRVWg7ZVDY3nKXzGYMwkR9y5w4appKhk",
+    "5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK"
 )
 
 # /mnt/c/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://88.99.97.30:38888 get info
