@@ -446,9 +446,18 @@ def create_master_account(
     whether it is in the wallets. If so, put the account object into the global 
     namespace of the caller. and **return**. 
     '''
+    first_while = True
     while True:
         account_object = GetAccount(
             account_object_name, account_name, owner_key, active_key, verbosity)
+
+        if first_while and account_name and owner_key and active_key \
+                        and not account_object.exists:
+            account_object.ERROR('''
+            There is none account of the given name ({}) in the blockchain.
+            '''.format(account_name))
+            return
+        first_while = False 
 
         if account_object.fatal_error:
             logger.ERROR(account_object)
