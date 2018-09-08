@@ -53,17 +53,18 @@ class Test(unittest.TestCase):
         create_account("carol", master,
             buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
-        if (extra_ram > 0):
-            master.buy_ram(extra_ram, host)
-            master.buy_ram(extra_ram, alice)
-            master.buy_ram(extra_ram, carol)
-
-        if (extra_stake_net > 0 or extra_stake_cpu > 0):
-            master.delegate_bw(extra_stake_net, extra_stake_cpu, host)
-            master.delegate_bw(extra_stake_net, extra_stake_cpu, alice)
-            master.delegate_bw(extra_stake_net, extra_stake_cpu, carol)
-
-        cls.stats()
+        if not testnet.is_local():
+            cls.stats()
+            if (extra_ram > 0):
+                master.buy_ram(extra_ram, host)
+                master.buy_ram(extra_ram, alice)
+                master.buy_ram(extra_ram, carol)
+            if (extra_stake_net > 0 or extra_stake_cpu > 0):
+                master.delegate_bw(extra_stake_net, extra_stake_cpu, host)
+                master.delegate_bw(extra_stake_net, extra_stake_cpu, alice)
+                master.delegate_bw(extra_stake_net, extra_stake_cpu, carol)
+            if (extra_ram > 0 or extra_stake_net > 0 or extra_stake_cpu > 0):
+                cls.stats()
 
         contract = Contract(host, CONTRACT_WORKSPACE)
         contract.build(force=False)
@@ -208,9 +209,10 @@ class Test(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.stats()
-        if setup.is_local_address:
+        if testnet.is_local():
             stop()
+        else:
+            cls.stats()
 
 
 testnet = None
