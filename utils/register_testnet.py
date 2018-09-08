@@ -14,14 +14,15 @@ def register_testnet(
         owner_key=owner_key,
         active_key=active_key)
 
-    efnet.add_to_mapping(
-        url, 
-        account_name if account_name else account.name,
-        owner_key if owner_key else account.owner_key.key_private, 
-        active_key if active_key else account.active_key.key_private,
-        alias)
+    if account:
+        efnet.add_to_mapping(
+            url, 
+            account_name if account_name else account.name,
+            owner_key if owner_key else account.owner_key.key_private, 
+            active_key if active_key else account.active_key.key_private,
+            alias)
 
-    efnet.testnets()
+        efnet.testnets()
 
 parser = argparse.ArgumentParser(description='''
 Given an url and an testnet alias (not obligatory), get registration data.
