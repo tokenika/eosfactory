@@ -95,7 +95,7 @@ class Wallet(cleos.WalletCreate):
                 * Created wallet ``{}``.
                 '''.format(self.name)
             )            
-            if setup.is_local_address or file:           
+            if efman.is_local_testnet() or file:           
                 password_map = wallet_json_read()
                 password_map[name] = self.password
                 wallet_json_write(password_map)
@@ -311,7 +311,7 @@ class Wallet(cleos.WalletCreate):
         wallet_keys = cleos.WalletKeys(is_verbose=0)
         if len(account_map) > 0:
             self.INFO('''
-                    ######### Restored accounts as global variables:
+                    ######### Restore cached account objects:
                     ''') 
 
             for name, object_name in account_map.items():
@@ -323,10 +323,6 @@ class Wallet(cleos.WalletCreate):
                         from efacc import create_account
                         create_account(
                             object_name, name, restore=True, verbosity=None)
-
-                    self.INFO('''
-                         {}
-                    '''.format(object_name))
 
             efman.save_account_map(new_map)
         else:
@@ -412,7 +408,7 @@ class Wallet(cleos.WalletCreate):
                     account_map_json, indent=3, sort_keys=True))
 
             self.TRACE('''
-                * Account ``{}`` stored in the file 
+                * Account object ``{}`` stored in the file 
                     ``{}`` in the wallet directory:
                     {}
                 '''.format(

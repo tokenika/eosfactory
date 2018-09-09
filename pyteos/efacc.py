@@ -121,7 +121,7 @@ def put_account_to_wallet_and_on_stack(
     global wallet_globals
 
     if account_object.owner_key:
-        if wallet_singleton.keys_in_wallets(                [account_object.owner_key.key_private, \
+        if wallet_singleton.keys_in_wallets([account_object.owner_key.key_private, \
                 account_object.active_key.key_private]):
             wallet_singleton.map_account(account_object_name, account_object)
         else:
@@ -257,7 +257,7 @@ class GetAccount(cleos.GetAccount):
                 is_verbose=0)
 
         self.TRACE('''
-            * cleos.Account ``{}`` exists in the blockchain.
+            * Account ``{}`` exists in the blockchain.
             '''.format(self.name))
 
     def info(self):
@@ -432,7 +432,7 @@ def create_master_account(
     ``setup.set_nodeos_address(<url>)``.
     '''
 
-    if setup.is_local_address:
+    if efman.is_local_testnet():
         logger.ERROR('''
         If the local testnet is not running, an outer testnet has to be 
         defined with `setup.set_nodeos_address(<url>)`.
@@ -527,7 +527,7 @@ def create_master_account(
             active_key = active_key_new.key_private
 
 def append_account_methods_and_finish(
-        account_object_name, account_object, logger): 
+        account_object_name, account_object, logger):
 
     def code(account_object, code="", abi="", wasm=False):
         result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
@@ -698,7 +698,7 @@ def append_account_methods_and_finish(
         ref_block=None,
         is_verbose=1):
 
-        if setup.is_local_address:
+        if efman.is_local_testnet():
             return
 
         if receiver is None:
@@ -725,7 +725,7 @@ def append_account_methods_and_finish(
     account_object.delegate_bw = types.MethodType(delegate_bw, account_object)
 
     def info(account_object):
-        print("account object name: {}\n{}".format(
+        print("Account object name: {}\n{}".format(
             account_object_name,
             str(cleos.GetAccount(account_object.name, is_verbose=0))))
 
@@ -734,8 +734,8 @@ def append_account_methods_and_finish(
     get_account = cleos.GetAccount(account_object, is_verbose=0)
     if not account_object.ERROR(get_account):
         account_object.TRACE('''
-        * Cross-checked: account ``{}`` exists in the blockchain.
-        '''.format(account_object_name))
+        * Cross-checked: account object ``{}`` mapped to an existing account ``{}``.
+        '''.format(account_object_name, account_object.name), translate=False)
     return put_account_to_wallet_and_on_stack(
         account_object_name, account_object)
 
@@ -814,7 +814,7 @@ def create_account(
             owner_key = cleos.CreateKey("owner", is_verbose=-1)
             active_key = cleos.CreateKey("active", is_verbose=-1)
 
-        if stake_net and not setup.is_local_address:
+        if stake_net and not efman.is_local_testnet():
             logger.INFO('''
                         ... delegating stake to a new blockchain account ``{}`` mapped as ``{}``.
                         '''.format(account_name, account_object_name))
@@ -902,7 +902,7 @@ def stats(
     header = ""
     for json in jsons:
         header = header + col % (json["account_object_name"])
-    output = header + "\n\n"
+    output = ".\n" + header + "\n"
 
     for param in params:
         for json in jsons:
