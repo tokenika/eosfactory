@@ -1099,9 +1099,9 @@ class CreateAccount(Account, _Cleos):
         if forceUnique:
             args.append("--force-unique")
         if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
         if  max_net_usage:
-            args.extend(["--max-net-usage", max_net_usage])
+            args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
@@ -1237,9 +1237,9 @@ class SetContract(_Cleos):
         if forceUnique:
             args.append("--force-unique")
         if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
         if  max_net_usage:
-            args.extend(["--max-net-usage", max_net_usage])
+            args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block]) 
         if wasm_file:
@@ -1323,9 +1323,9 @@ class PushAction(_Cleos):
         if forceUnique:
             args.append("--force-unique")
         if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
         if  max_net_usage:
-            args.extend(["--max-net-usage", max_net_usage])
+            args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
                         

@@ -88,7 +88,10 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
 
         args = [
             self._account_arg(creator), self.name, 
-            self._key_arg(owner_key, is_owner_key=True, is_private_key=False), self._key_arg(active_key, is_owner_key=False, is_private_key=False)
+            self._key_arg(
+                owner_key, is_owner_key=True, is_private_key=False), 
+                self._key_arg(active_key, is_owner_key=False, 
+                is_private_key=False)
             ]
 
         args.append("--json")
@@ -112,9 +115,9 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         if forceUnique:
             args.append("--force-unique")
         if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
         if  max_net_usage:
-            args.extend(["--max-net-usage", max_net_usage])
+            args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
@@ -189,9 +192,9 @@ class BuyRam(cleos._Cleos):
         if forceUnique:
             args.append("--force-unique")
         if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
         if  max_net_usage:
-            args.extend(["--max-net-usage", max_net_usage])
+            args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
@@ -241,8 +244,9 @@ class DelegateBw(cleos._Cleos):
         self.stake_net_quantity = stake_net_quantity
         self.stake_cpu_quantity = stake_cpu_quantity
         args = [
-            self.payer, self.receiver, 
-            self.stake_net_quantity, self.stake_cpu_quantity,
+            self.payer, self.receiver,
+            "{} EOS".format(self.stake_net_quantity),
+            "{} EOS".format(self.stake_cpu_quantity),
             "--expiration", str(expiration_sec),
             "--json"]
         if not permission is None:
@@ -258,12 +262,12 @@ class DelegateBw(cleos._Cleos):
         if forceUnique:
             args.append("--force-unique")
         if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", max_cpu_usage])
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
         if  max_net_usage:
-            args.extend(["--max-net-usage", max_net_usage])
+            args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
-
+        import pdb; pdb.set_trace()
         cleos._Cleos.__init__(
             self, args, "system", "delegatebw", is_verbose)
 
