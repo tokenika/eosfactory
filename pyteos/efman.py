@@ -102,7 +102,7 @@ class Transaction():
         pass
 
 
-def is_local_address():
+def is_local_testnet():
     cleos.set_local_nodeos_address_if_none()
     return setup.is_local_address
 
@@ -202,16 +202,17 @@ def is_head_block_num():
 def verify_testnet_production():
     logger = efui.Logger(None)
     result = is_head_block_num()
+    domain = "LOCAL" if is_local_testnet() else "REMOTE"
     if not result:
         #efui.set_is_throwing_errors(False)
         logger.ERROR('''
-        Testnet is not running or is not responding.
-        ''')
+        {} testnet is not running or is not responding @ {}.
+        '''.format(domain, setup.nodeos_address()))
         #efui.set_is_throwing_errors(True)
     else:
         logger.INFO('''
-        Testnet is OK.
-        ''')
+        {} testnet is active @ {}.
+        '''.format(domain, setup.nodeos_address()))
     return result
 
 

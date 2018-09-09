@@ -40,7 +40,7 @@ class Testnet:
         efman.clear_testnet_cache()
 
     def is_local(self):
-        return efman.is_local_address()
+        return efman.is_local_testnet()
 
 
 def get_testnet(alias, testnet=None, reset=False
@@ -54,10 +54,10 @@ def get_testnet(alias, testnet=None, reset=False
             return Testnet(
                 mapping[alias]["url"], mapping[alias]["account_name"],
                 mapping[alias]["owner_key"], mapping[alias]["active_key"])
-        elif alias == "tn1":
-            return tn1
-        elif alias == "tn2":
-            return tn2
+        elif alias == "JUNGLE":
+            return JUNGLE
+        elif alias == "KYLIN":
+            return KYLIN
         else:
             efui.Logger().ERROR('''
             Testnet ``{}`` is not defined in the testnet mapping.
@@ -107,17 +107,17 @@ def testnets():
         ''')
         return
     for alias, testnet in mapping.items():
-        print("%20s: %13s @ %s" % (alias, testnet["account_name"], testnet["url"]))
+        print("%25s: %13s @ %s" % (alias, testnet["account_name"], testnet["url"]))
 
 
-tn1 = Testnet(
+JUNGLE = Testnet(
     "http://88.99.97.30:38888",
     "dgxo1uyhoytn",
     "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
     "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
 )
 
-tn2 = Testnet(
+KYLIN = Testnet(
     "https://api.kylin.alohaeos.com",
     "xlg3pao3idlq",
     "5JBbCwe3t6j63yerYmguRVWg7ZVDY3nKXzGYMwkR9y5w4appKhk",
