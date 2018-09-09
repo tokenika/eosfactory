@@ -7,7 +7,7 @@ def register_testnet(
     setup.set_nodeos_address(url)
     efman.verify_testnet_production()
 
-    efnet.testnets()
+    #efnet.testnets()
     account = create_master_account(
         None,
         account_name=account_name,
