@@ -267,7 +267,7 @@ class DelegateBw(cleos._Cleos):
             args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
-        import pdb; pdb.set_trace()
+
         cleos._Cleos.__init__(
             self, args, "system", "delegatebw", is_verbose)
 
