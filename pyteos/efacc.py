@@ -668,9 +668,13 @@ def append_account_methods_and_finish(
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
-            
+
+        if efman.is_local_testnet():
+            return
+
         if receiver is None:
             receiver = account_object
+
         buy_ram_kbytes = 1
         
         result = cleosys.BuyRam(
@@ -683,7 +687,10 @@ def append_account_methods_and_finish(
             is_verbose=0
             )
 
-        account_object.ERROR(result)
+        if not account_object.ERROR(result):
+            account_object.INFO('''
+                * Transfered RAM from {} to {} kbytes: {}
+                '''.format(result.payer, result.receiver, result.amount))
 
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
@@ -704,7 +711,7 @@ def append_account_methods_and_finish(
         if receiver is None:
             receiver = account_object
 
-        delegate_bw = cleosys.DelegateBw(
+        result = cleosys.DelegateBw(
             account_object, receiver,
             stake_net_quantity, stake_cpu_quantity,
             permission,
@@ -715,12 +722,13 @@ def append_account_methods_and_finish(
             ref_block,
             is_verbose=0
             )
-        if not delegate_bw.error:
+
+        if not account_object.ERROR(result):
             account_object.INFO('''
-            * Transfered from {} to {} net: {} cpu: {}
+            * Delegated stake from {} to {} NET: {} CPU: {}
             '''.format(
-                delegate_bw.payer, delegate_bw.receiver,
-                delegate_bw.stake_net_quantity, delegate_bw.stake_cpu_quantity))
+                result.payer, result.receiver,
+                result.stake_net_quantity, result.stake_cpu_quantity))
 
     account_object.delegate_bw = types.MethodType(delegate_bw, account_object)
 

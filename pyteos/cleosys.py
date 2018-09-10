@@ -180,11 +180,14 @@ class BuyRam(cleos._Cleos):
             is_verbose=1
             ):
 
-        args = [self._account_arg(payer), self._account_arg(receiver), 
-                str(amount)]
+        self.payer = self._account_arg(payer)
+        self.receiver = self._account_arg(receiver)
+        self.amount = str(amount)
+
+        args = [self.payer, self.receiver, self.amount]
+
         if buy_ram_kbytes:
             args.extend(["--kbytes"])
-
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -193,9 +196,9 @@ class BuyRam(cleos._Cleos):
             args.append("--force-unique")
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        if  max_net_usage:
+        if max_net_usage:
             args.extend(["--max-net-usage", str(max_net_usage)])
-        if  not ref_block is None:
+        if not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
         cleos._Cleos.__init__(
@@ -243,12 +246,14 @@ class DelegateBw(cleos._Cleos):
         self.receiver = self._account_arg(receiver)
         self.stake_net_quantity = stake_net_quantity
         self.stake_cpu_quantity = stake_cpu_quantity
+
         args = [
             self.payer, self.receiver,
             "{} EOS".format(self.stake_net_quantity),
             "{} EOS".format(self.stake_cpu_quantity),
             "--expiration", str(expiration_sec),
             "--json"]
+
         if not permission is None:
             p = self._permission_arg(permission)
             for perm in p:
@@ -263,9 +268,9 @@ class DelegateBw(cleos._Cleos):
             args.append("--force-unique")
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        if  max_net_usage:
+        if max_net_usage:
             args.extend(["--max-net-usage", str(max_net_usage)])
-        if  not ref_block is None:
+        if not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
         cleos._Cleos.__init__(
