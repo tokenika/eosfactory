@@ -43,8 +43,7 @@ class Testnet:
         return efman.is_local_testnet()
 
 
-def get_testnet(alias, testnet=None, reset=False
-    ):
+def get_testnet(alias, testnet=None, reset=False):
     if not alias and not testnet:
         return Testnet(reset=reset)
 
