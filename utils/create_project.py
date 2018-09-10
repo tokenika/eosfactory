@@ -6,7 +6,7 @@ Given a workspace name and a template name (optional),
 create a new workspace, compatible with Visual Studio Code.
 
 Example:
-    python3 create_workspace.py contract.name 01_hello_world
+    python3 create_project.py contract.name 01_hello_world
 ''')
 
 parser.add_argument("name")
