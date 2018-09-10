@@ -69,6 +69,7 @@ def register_testnet_kylin(
 
     path = faucet + "/" + GET_TOKEN_URL + "?" + account_name
     attempt = 0
+    success = 0
     while True:
         efui.Logger().TRACE('''
         Funding account: {}
@@ -77,20 +78,22 @@ def register_testnet_kylin(
             request = Request(path, headers=HEADERS)
             response = urlopen(request).read()
             if isinstance(response, bytes):
-                response = response.decode("utf-8")            
+                response = response.decode("utf-8")
             response = json.loads(response)
-            break
+            success = success + 1
+            if success == MAX_ATTEMPTS:
+                break
         except Exception as e:
             attempt = attempt + 1
             if attempt == MAX_ATTEMPTS:
-                efui.Logger().ERROR('''
-                    Request failed: {}
-                    Error message is
-                    {}
-                    '''.format(path, str(e)))
+                if success == 0:
+                    efui.Logger().ERROR('''
+                        Request failed: {}
+                        Error message is
+                        {}
+                        '''.format(path, str(e)))
                 break
-            else:
-                time.sleep(DELAY_IN_SECONDDS)
+            time.sleep(DELAY_IN_SECONDDS)
 
 
     efui.Logger().INFO('''
