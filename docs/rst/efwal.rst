@@ -1,6 +1,6 @@
-efwlt
+efwal
 =====
 
-.. automodule:: efwlt
+.. automodule:: efwal
     :members:
     :show-inheritance:

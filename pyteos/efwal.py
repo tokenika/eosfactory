@@ -383,7 +383,7 @@ class Wallet(cleos.WalletCreate):
                 else:
                     self.ERROR('''
             Use the function 'efman.edit_account_map(text_editor="nano")'
-            or the corresponding method of any object of the 'efwlt.Wallet` 
+            or the corresponding method of any object of the 'efwal.Wallet` 
             class to edit the file.
                     ''')
                     return True

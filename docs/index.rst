@@ -71,7 +71,7 @@ Python Documentation
     rst/efman
     rst/efnet
     rst/efui
-    rst/efwlt
+    rst/efwal
     rst/eosf
     rst/setup
     rst/teos

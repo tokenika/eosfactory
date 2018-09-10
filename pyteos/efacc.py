@@ -9,7 +9,7 @@ import teos
 import cleos
 import cleosys
 import efman
-import efwlt
+import efwal
 import efnet
 import efui
 
@@ -24,7 +24,7 @@ def reboot():
     global wallet_singleton
     if wallet_singleton:
         wallet_singleton.delete_globals()
-    efwlt.Wallet.wallet = None
+    efwal.Wallet.wallet = None
 
     try:
         del wallet_singleton
@@ -83,11 +83,11 @@ def is_wallet_defined(logger, globals=None):
         return
     
     global wallet_singleton
-    wallet_singleton = efwlt.Wallet.wallet
+    wallet_singleton = efwal.Wallet.wallet
 
     if wallet_singleton is None:
-        efwlt.create_wallet(globals=globals)
-        wallet_singleton = efwlt.Wallet.wallet
+        efwal.create_wallet(globals=globals)
+        wallet_singleton = efwal.Wallet.wallet
 
         if wallet_singleton is None:
             logger.ERROR('''
@@ -96,7 +96,7 @@ def is_wallet_defined(logger, globals=None):
                 `create_wallet()`
                 ''')
 
-    wallet_globals = efwlt.Wallet.globals
+    wallet_globals = efwal.Wallet.globals
 
 
 def is_local_testnet_running(account_eosio):

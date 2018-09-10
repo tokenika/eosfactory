@@ -2,7 +2,7 @@ import setup
 import cleos
 import efui
 import efman
-import efwlt
+import efwal
 import efacc
 import efcon
 import efnet
@@ -14,11 +14,11 @@ Verbosity = efui.Verbosity
 CreateKey = cleos.CreateKey
 Permission = cleos.Permission
 
-create_wallet = efwlt.create_wallet
+create_wallet = efwal.create_wallet
 create_account = efacc.create_account
 create_master_account = efacc.create_master_account
 
-get_wallet = efwlt.get_wallet
+get_wallet = efwal.get_wallet
 
 Contract = efcon.Contract
 ContractBuilder = efcon.ContractBuilder

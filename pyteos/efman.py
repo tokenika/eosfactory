@@ -252,7 +252,7 @@ editor. Return ``None`` if the the offer is rejected.
                     else:
                         logger.ERROR('''
             Use the function 'efman.edit_account_map(text_editor="nano")'
-            or the corresponding method of any object of the 'efwlt.Wallet` 
+            or the corresponding method of any object of the 'efwal.Wallet` 
             class to edit the file.
                         ''')                    
                         return None
@@ -320,7 +320,7 @@ editor. Return ``None`` if the the offer is rejected.
                 else:
                     logger.ERROR('''
         Use the function 'efman.edit_account_map(text_editor="nano")'
-        or the corresponding method of any object of the 'efwlt.Wallet` 
+        or the corresponding method of any object of the 'efwal.Wallet` 
         class to edit the file.
                     ''', translate=False)                    
                     return None
