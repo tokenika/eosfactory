@@ -22,8 +22,8 @@ get_wallet = efwal.get_wallet
 
 Contract = efcon.Contract
 ContractBuilder = efcon.ContractBuilder
-workspace_from_template = \
-     efcon.workspace_from_template
+project_from_template = \
+     efcon.project_from_template
 
 set_is_testing_errors = efui.set_is_testing_errors
 set_is_throwing_errors = efui.set_is_throwing_errors

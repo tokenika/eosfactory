@@ -4,7 +4,7 @@ import teos
 import cleos
 import efui
 
-def workspace_from_template(
+def project_from_template(
         name, template="", user_workspace=None, remove_existing=False, 
         visual_studio_code=False, verbosity=None):
     '''Given the template type and a name, create a contract workspace. 
