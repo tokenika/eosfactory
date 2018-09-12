@@ -18,7 +18,7 @@ HEADERS = {
 MAX_ATTEMPTS = 3
 DELAY_IN_SECONDDS = 1
 
-def register_testnet_kylin(
+def register_testnet_via_faucet(
     faucet, url, alias):
 
     setup.set_nodeos_address(url)
@@ -120,7 +120,7 @@ parser.add_argument("alias", nargs="?", default=None, help="Testnet alias")
 
 args = parser.parse_args()
 
-register_testnet_kylin(
+register_testnet_via_faucet(
     args.faucet, args.url, args.alias)
 
-# python3 utils/register_testnet_kylin.py http://faucet.cryptokylin.io https://api.kylin.alohaeos.com kylin
+# python3 utils/register_testnet_via_faucet.py http://faucet.cryptokylin.io https://api.kylin.alohaeos.com kylin
