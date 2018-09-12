@@ -88,6 +88,10 @@ Our long-term goal is to turn *EOSFactory* into a comprehensive IDE (Integrated 
 - [Plan for Subsequent EOSFactory Releases](http://eosfactory.io/build/html/roadmap/PlanForSubsequentEOSFactoryReleases.html)
 - [Long-term EOSFactory Roadmap](http://eosfactory.io/build/html/roadmap/LongTermEOSFactoryRoadmap.html)
 
+## Support
+
+For issues not covered in the documentation there is a dedicated [EOS Factory Support](https://t.me/EOSFactorySupport) channel on Telegram.
+
 ## Licence
 
 This code is provided as is, under [MIT Licence](LICENCE).

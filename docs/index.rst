@@ -78,8 +78,14 @@ Python Documentation
 
 
 Metadata
-------------------
+--------
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+Support
+-------
+
+For issues not covered in the documentation there is a dedicated `EOS Factory Support <https://t.me/EOSFactorySupport>`_ channel on Telegram.
