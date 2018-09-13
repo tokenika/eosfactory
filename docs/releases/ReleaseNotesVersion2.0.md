@@ -2,7 +2,7 @@
 
 ## Compatibility
 
-EOSFactory [v2.0](https://github.com/tokenika/eosfactory/releases/tag/2.0) is compatible with EOS [v1.2.0](https://github.com/EOSIO/eos/releases/tag/v1.2.0) (or higher).
+EOSFactory [v2.0](https://github.com/tokenika/eosfactory/releases/tag/v2.0) is compatible with EOS [v1.2.0](https://github.com/EOSIO/eos/releases/tag/v1.2.0) (or higher).
 
 ## Features available in previous releases
 
