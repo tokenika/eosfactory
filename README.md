@@ -79,7 +79,7 @@ Please refer to [this document](http://eosfactory.io/build/html/releases/Release
 
 ## Current status
 
-As of the [v2.0](https://github.com/tokenika/eosfactory/releases/tag/v2.0) release *EOSFactory* is a production-ready system, which means it can be used for working with real-life smart-contracts. Both local (private) testnets and remote (public) testnets are supported.
+As of the [v2.0](https://github.com/tokenika/eosfactory/releases/tag/2.0) release *EOSFactory* is a production-ready system, which means it can be used for working with real-life smart-contracts. Both local (private) testnets and remote (public) testnets are supported.
 
 ## Roadmap
 
