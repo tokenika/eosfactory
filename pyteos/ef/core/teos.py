@@ -455,7 +455,7 @@ def node_start(clear=False, is_verbose=1):
 
     node_probe()                    
 
-def node_probe():
+def node_probe(verbosity=None):
     count = 15
     num = 5
     block_num = None
@@ -476,6 +476,9 @@ def node_probe():
 
         if head_block_num - block_num >= num:
             print()
+            logger.INFO('''
+            Local node is running. Block number is {}
+            '''.format(head_block_num), verbosity)
             break      
 
         if count <= 0:
@@ -484,7 +487,7 @@ def node_probe():
             ''')
         
         
-def node_stop():
+def node_stop(verbosity=None):
     pid = get_pid()
     count = 10
     if pid:
@@ -499,6 +502,10 @@ def node_stop():
 Failed to kill {}. Pid is {}.
     '''.format(config.getDaemonName(), pid[0])
     )
+    else:
+        logger.INFO('''
+        Local node is stopped.
+        '''.format(head_block_num), verbosity)        
 
     
 def node_is_running():

@@ -11,6 +11,7 @@ class Verbosity(enum.Enum):
     ERROR_TESTING = ['green', None, ['reverse']]
     OUT = [None, None, []]
     DEBUG = ['yellow', None, []]
+    NONE = None
 
 
 __verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
@@ -32,32 +33,33 @@ def SCENARIO(msg):
     COMMENT(msg)
 
 
-def TRACE(msg, translate=True):
+def TRACE(msg, translate=True, verbosity=None):
     msg = condition(msg, translate)
-    if msg and (Verbosity.TRACE in __verbosity):
+    if msg and (Verbosity.TRACE in verbosity if verbosity else: __verbosity):
         color = Verbosity.TRACE.value
         cprint(msg, color[0], color[1], attrs=color[2])
 
 
-def INFO(msg, translate=True):
+def INFO(msg, translate=True, verbosity=None):
+    v = verbosity if verbosity else: __verbosity
     if msg and (
-            Verbosity.TRACE in __verbosity or Verbosity.INFO in __verbosity
+            Verbosity.TRACE in v or Verbosity.INFO in v
         ):
         color = Verbosity.INFO.value
         cprint(condition(msg, translate), color[0], color[1], attrs=color[2])        
 
-def OUT(msg, translate=True):
-    if msg and (Verbosity.OUT in __verbosity):
+def OUT(msg, translate=True, verbosity=None):
+    if msg and (Verbosity.OUT in verbosity if verbosity else: __verbosity):
         color = Verbosity.OUT.value
         msg = condition(msg, translate)
         cprint(msg, color[0], color[1], attrs=color[2])
 
 
-def DEBUG(msg, translate=True):
+def DEBUG(msg, translate=True, verbosity=None):
     msg = condition(msg, translate)
     self.debug_buffer = msg
 
-    if msg and (Verbosity.DEBUG in __verbosity):
+    if msg and (Verbosity.DEBUG in verbosity if verbosity else: __verbosity):
         color = Verbosity.DEBUG.value
         cprint(msg, color[0], color[1], attrs=color[2])
 
@@ -71,8 +73,9 @@ def error(msg, translate=True):
         color[0], color[1], attrs=color[2])
 
 
-def ERROR(msg, translate=True):
-    cprint(error(msg, translate))
+def ERROR(msg, translate=True, verbosity=None):
+    if not verbosity:
+        cprint(error(msg, translate))
 
 
 def condition(message, translate=True):

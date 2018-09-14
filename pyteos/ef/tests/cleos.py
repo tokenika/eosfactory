@@ -1,6 +1,6 @@
 import ef.setup as setup
 import ef.core.teos as teos
-# from ef.core.cleos import *
+from ef.core.cleos import *
 import ef.core.logger as logger
 
 teos.node_start(True)

@@ -6,6 +6,7 @@ import ef.core.errors as errors
 import ef.core.config
 import ef.setup as setup
 import ef.core.logger as logger
+from ef.interface import *
 
 
 setup_setup = setup.Setup()
@@ -183,971 +184,971 @@ class GetBlock(_Cleos):
         return json.dumps(self.json, sort_keys=True, indent=4)
 
 
-# class GetAccount(Account, _Cleos):
-#     '''Retrieve an account from the blockchain.
+class GetAccount(Account, _Cleos):
+    '''Retrieve an account from the blockchain.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         account: The account object or the name of the account to retrieve.
-#         is_verbose: If `0`, do not print unless on error; if `-1`, 
-#             do not print. Default is `1`.
+        account: The account object or the name of the account to retrieve.
+        is_verbose: If `0`, do not print unless on error; if `-1`, 
+            do not print. Default is `1`.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         name: The name of the account.
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
+        name: The name of the account.
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
 
-#     - **output json**::
+    - **output json**::
 
-#         {
-#             "ram_usage": 6614,
-#             "ram_quota": 290972,
-#             "core_liquid_balance": "29866.4394 EOS",
-#             "cpu_limit": {
-#                 "used": 461316,
-#                 "available": 3223327,
-#                 "max": 3684643
-#             },
+        {
+            "ram_usage": 6614,
+            "ram_quota": 290972,
+            "core_liquid_balance": "29866.4394 EOS",
+            "cpu_limit": {
+                "used": 461316,
+                "available": 3223327,
+                "max": 3684643
+            },
 
-#             "total_resources": {
-#                 "owner": "dgxo1uyhoytn",
-#                 "net_weight": "100.1000 EOS",
-#                 "cpu_weight": "100.1000 EOS",
-#                 "ram_bytes": 290972
-#             },
-#             "self_delegated_bandwidth": {
-#                 "from": "dgxo1uyhoytn",
-#                 "to": "dgxo1uyhoytn",
-#                 "net_weight": "100.1000 EOS",
-#                 "cpu_weight": "100.1000 EOS"
-#             },
-#             "net_limit": {
-#                 "used": 12403,
-#                 "available": 19299535,
-#                 "max": 19311938
-#             },
+            "total_resources": {
+                "owner": "dgxo1uyhoytn",
+                "net_weight": "100.1000 EOS",
+                "cpu_weight": "100.1000 EOS",
+                "ram_bytes": 290972
+            },
+            "self_delegated_bandwidth": {
+                "from": "dgxo1uyhoytn",
+                "to": "dgxo1uyhoytn",
+                "net_weight": "100.1000 EOS",
+                "cpu_weight": "100.1000 EOS"
+            },
+            "net_limit": {
+                "used": 12403,
+                "available": 19299535,
+                "max": 19311938
+            },
 
-#             "net_weight": 1001000,
-#             "cpu_weight": 1001000,
-#             "account_name": "dgxo1uyhoytn",
-#             "head_block_num": 12252494,
-#             "head_block_time": "2018-08-30T08:18:57.500",
-#             "privileged": false,
-#             "last_code_update": "1970-01-01T00:00:00.000",
-#             "created": "2018-07-18T18:28:38.000",
-#             "permissions": [{
-#                 "perm_name": "active",
-#                 "parent": "owner",
-#                 "required_auth": {
-#                     "threshold": 1,
-#                     "keys": [{
-#                         "key": "EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv",
-#                         "weight": 1
-#                     }
-#                     ],
-#                     "accounts": [],
-#                     "waits": []
-#                 }
-#                 },{
-#                 "perm_name": "owner",
-#                 "parent": "",
-#                 "required_auth": {
-#                     "threshold": 1,
-#                     "keys": [{
-#                         "key": "EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959",
-#                         "weight": 1
-#                     }
-#                     ],
-#                     "accounts": [],
-#                     "waits": []
-#                 }
-#                 }
-#             ],
-#             "refund_request": null,
-#             "voter_info": {
-#                 "owner": "dgxo1uyhoytn",
-#                 "proxy": "",
-#                 "producers": [],
-#                 "staked": 2168000,
-#                 "last_vote_weight": "0.00000000000000000",
-#                 "proxied_vote_weight": "0.00000000000000000",
-#                 "is_proxy": 0
-#             }
-#         }
-#     '''
-#     def __init__(self, account, is_info=True, is_verbose=1):
-#         Account.__init__(self, self._account_arg(account))
-#         _Cleos.__init__(
-#             self, 
-#             [self.name] if is_info else [self.name, "--json"], 
-#             "get", "account", is_verbose)
-#         if not self.error:
-#             self.owner_key = None
-#             self.active_key = None
-#             if json:
-#                 self.json = json_module.loads(self.out_msg)
-#                 if self.json["permissions"][1]["required_auth"]["keys"]:
-#                     self.owner_key = self.json["permissions"][1] \
-#                         ["required_auth"]["keys"][0]["key"]
-#                     self.active_key = self.json["permissions"][0] \
-#                         ["required_auth"]["keys"][0]["key"]                     
-#             else:
-#                 owner = re.search('owner\s+1\:\s+1\s(.*)\n', self.out_msg)
-#                 active = re.search('active\s+1\:\s+1\s(.*)\n', self.out_msg)
-#                 if owner and active:
-#                     self.owner_key = owner.group(1)
-#                     self.active_key = active.group(1)
+            "net_weight": 1001000,
+            "cpu_weight": 1001000,
+            "account_name": "dgxo1uyhoytn",
+            "head_block_num": 12252494,
+            "head_block_time": "2018-08-30T08:18:57.500",
+            "privileged": false,
+            "last_code_update": "1970-01-01T00:00:00.000",
+            "created": "2018-07-18T18:28:38.000",
+            "permissions": [{
+                "perm_name": "active",
+                "parent": "owner",
+                "required_auth": {
+                    "threshold": 1,
+                    "keys": [{
+                        "key": "EOS6HDfGKbR79Gcs74LcQfvL6x8eVhZNXMGZ48Ti7u84nDnyq87rv",
+                        "weight": 1
+                    }
+                    ],
+                    "accounts": [],
+                    "waits": []
+                }
+                },{
+                "perm_name": "owner",
+                "parent": "",
+                "required_auth": {
+                    "threshold": 1,
+                    "keys": [{
+                        "key": "EOS8AipFftYjovw8xpuqCxsjid57XqNstDyeTVmLtfFYNmFrgY959",
+                        "weight": 1
+                    }
+                    ],
+                    "accounts": [],
+                    "waits": []
+                }
+                }
+            ],
+            "refund_request": null,
+            "voter_info": {
+                "owner": "dgxo1uyhoytn",
+                "proxy": "",
+                "producers": [],
+                "staked": 2168000,
+                "last_vote_weight": "0.00000000000000000",
+                "proxied_vote_weight": "0.00000000000000000",
+                "is_proxy": 0
+            }
+        }
+    '''
+    def __init__(self, account, is_info=True, is_verbose=1):
+        Account.__init__(self, self._account_arg(account))
+        _Cleos.__init__(
+            self, 
+            [self.name] if is_info else [self.name, "--json"], 
+            "get", "account", is_verbose)
+        if not self.error:
+            self.owner_key = None
+            self.active_key = None
+            if json:
+                self.json = json_module.loads(self.out_msg)
+                if self.json["permissions"][1]["required_auth"]["keys"]:
+                    self.owner_key = self.json["permissions"][1] \
+                        ["required_auth"]["keys"][0]["key"]
+                    self.active_key = self.json["permissions"][0] \
+                        ["required_auth"]["keys"][0]["key"]                     
+            else:
+                owner = re.search('owner\s+1\:\s+1\s(.*)\n', self.out_msg)
+                active = re.search('active\s+1\:\s+1\s(.*)\n', self.out_msg)
+                if owner and active:
+                    self.owner_key = owner.group(1)
+                    self.active_key = active.group(1)
 
-#             self.printself()
+            self.printself()
 
-#     def __str__(self):
-#         out = "name: {}\n".format(self.name)
-#         out = out + str(_Cleos.__str__(self))
-#         return out
+    def __str__(self):
+        out = "name: {}\n".format(self.name)
+        out = out + str(_Cleos.__str__(self))
+        return out
 
-# class GetAccounts(_Cleos):
-#     '''Retrieve accounts associated with a public key.
+class GetAccounts(_Cleos):
+    '''Retrieve accounts associated with a public key.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(self, key, is_verbose=1):
-#         public_key = self._key_arg(key, is_owner_key=True, is_private_key=False)
-#         _Cleos.__init__(
-#             self, [public_key], "get", "accounts", is_verbose)
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(self, key, is_verbose=1):
+        public_key = self._key_arg(key, is_owner_key=True, is_private_key=False)
+        _Cleos.__init__(
+            self, [public_key], "get", "accounts", is_verbose)
 
-#         if not self.error:
-#             self.json = json_module.loads(self.out_msg)
-#             self.names = self.json['account_names']
-#             self.printself()
+        if not self.error:
+            self.json = json_module.loads(self.out_msg)
+            self.names = self.json['account_names']
+            self.printself()
 
 
-# class GetTransaction(_Cleos):
-#     '''Retrieve a transaction from the blockchain.
+class GetTransaction(_Cleos):
+    '''Retrieve a transaction from the blockchain.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         transaction_id: ID of the transaction to retrieve.
-#         is_verbose: If `0`, do not print unless on error; if `-1`, 
-#             do not print. Default is `1`.
+        transaction_id: ID of the transaction to retrieve.
+        is_verbose: If `0`, do not print unless on error; if `-1`, 
+            do not print. Default is `1`.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         transaction_id: ID of the transaction retrieved.
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(self, transaction_id, is_verbose=1):
+        transaction_id: ID of the transaction retrieved.
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(self, transaction_id, is_verbose=1):
         
-#         self.transaction_id = transaction_id
-#         _Cleos.__init__(
-#             self, [transaction_id], "get", "transaction", is_verbose)
+        self.transaction_id = transaction_id
+        _Cleos.__init__(
+            self, [transaction_id], "get", "transaction", is_verbose)
 
-#         if not self.error:
-#             self.json = json_module.loads(self.out_msg)
-#             self.printself()
+        if not self.error:
+            self.json = json_module.loads(self.out_msg)
+            self.printself()
 
 
-# class WalletCreate(Wallet, _Cleos):
-#     '''Create a new wallet locally.
+class WalletCreate(Wallet, _Cleos):
+    '''Create a new wallet locally.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         name: The name of the new wallet, defaults to ``default``.
-#         password: The password to the wallet, if the wallet exists. Default is None.
-#         is_verbose: If ``0``, do not print unless on error; if ``-1``, do not print. 
-#             Default is ``1``.
+        name: The name of the new wallet, defaults to ``default``.
+        password: The password to the wallet, if the wallet exists. Default is None.
+        is_verbose: If ``0``, do not print unless on error; if ``-1``, do not print. 
+            Default is ``1``.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         name: The name of the wallet.
-#         password: The password returned by wallet create.
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(self, name="default", password="", is_verbose=1):
-#         Wallet.__init__(self, name)
-#         self.password = None
+        name: The name of the wallet.
+        password: The password returned by wallet create.
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(self, name="default", password="", is_verbose=1):
+        Wallet.__init__(self, name)
+        self.password = None
         
-#         if not password: # try to create a wallet
-#             _Cleos.__init__(
-#                 self, ["--name", self.name, "--to-console"], 
-#                 "wallet", "create", is_verbose)
-#             self.json["name"] = name
-#             msg = self.out_msg
+        if not password: # try to create a wallet
+            _Cleos.__init__(
+                self, ["--name", self.name, "--to-console"], 
+                "wallet", "create", is_verbose)
+            self.json["name"] = name
+            msg = self.out_msg
 
-#             if not self.ERROR():
-#                 self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
-#                 self.json["password"] = self.password
-#                 self.is_created = True
-#             else:
-#                 return
-#         else: # try to open an existing wallet
-#             WalletOpen(name, is_verbose=-1)
-#             wallet_unlock = WalletUnlock(name, password, is_verbose=-1)
-#             self.set_error(wallet_unlock.err_msg )
-#             if not self.ERROR():
-#                 self.json = {} 
-#                 self.name = name
-#                 self.password = password
-#                 self.is_created = False
-#                 self.json["name"] = name
-#                 self.json["password"] = password
-#                 self.out_msg = "Restored wallet: {}".format(self.name)
+            if not self.ERROR():
+                self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
+                self.json["password"] = self.password
+                self.is_created = True
+            else:
+                return
+        else: # try to open an existing wallet
+            WalletOpen(name, is_verbose=-1)
+            wallet_unlock = WalletUnlock(name, password, is_verbose=-1)
+            self.set_error(wallet_unlock.err_msg )
+            if not self.ERROR():
+                self.json = {} 
+                self.name = name
+                self.password = password
+                self.is_created = False
+                self.json["name"] = name
+                self.json["password"] = password
+                self.out_msg = "Restored wallet: {}".format(self.name)
 
-#         if not self.error:
-#             self.printself()
-
-
-# class WalletStop(_Cleos):
-#     '''Stop keosd (doesn't work with nodeos).
-#     '''
-#     def __init__(self, is_verbose=1):
-#         _Cleos.__init__(self, [], "wallet", "stop", is_verbose)
-
-#         if not self.error:
-#             self.printself()
+        if not self.error:
+            self.printself()
 
 
-# class WalletList(_Cleos):
-#     '''List opened wallets, * marks unlocked.
+class WalletStop(_Cleos):
+    '''Stop keosd (doesn't work with nodeos).
+    '''
+    def __init__(self, is_verbose=1):
+        _Cleos.__init__(self, [], "wallet", "stop", is_verbose)
 
-#     - **parameters**::
+        if not self.error:
+            self.printself()
 
-#         is_verbose: If `0`, do not print unless on error; if `-1`, 
-#             do not print. Default is `1`.
+
+class WalletList(_Cleos):
+    '''List opened wallets, * marks unlocked.
+
+    - **parameters**::
+
+        is_verbose: If `0`, do not print unless on error; if `-1`, 
+            do not print. Default is `1`.
             
-#     - **attributes**::
+    - **attributes**::
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(self, is_verbose=1):
-#         _Cleos.__init__(
-#             self, [], "wallet", "list", is_verbose)
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(self, is_verbose=1):
+        _Cleos.__init__(
+            self, [], "wallet", "list", is_verbose)
 
-#         if not self.error:
-#             self.json = json_module.loads("{" + self.out_msg.replace("Wallets", \
-#                 '"Wallets"', 1) + "}")
-#             self.printself()
-
-
-# class WalletImport(_Cleos):
-#     '''Import a private key into wallet.
-
-#     - **parameters**::
-
-#         wallet: A wallet object or the name of the wallet to import key into.
-#         key: A key object or a private key in WIF format to import.
-#         is_verbose: If `0`, do not print unless on error; if `-1`, 
-#             do not print. Default is `1`.
-
-#     - **attributes**::
-
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(self, key, wallet="default", is_verbose=1):
-
-#         self.set_is_verbose(is_verbose)
-
-#         key_private = self._key_arg(key, is_owner_key=True, is_private_key=True)
-#         _Cleos.__init__(
-#             self, 
-#             ["--private-key", key_private, "--name", self._wallet_arg(wallet)],
-#             "wallet", "import", is_verbose)
-
-#         if not self.ERROR():
-#             self.json["key_private"] = key_private
-#             self.key_private = key_private
-#             self.printself()
-
-# class WalletRemove_key(_Cleos):
-#     '''Remove key from wallet
-#     - **parameters**::
-
-#         wallet: A wallet object or the name of the wallet to import key into.
-#         password: The password returned by wallet create.
-#         key: A key object or a private key in WIF format to import.
-#         is_verbose: If `0`, do not print unless on error; if `-1`, 
-#             do not print. Default is `1`.
-
-#     - **attributes**::
-
-#         error: Whether any error ocurred.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(self, key, wallet, password, is_verbose=1):
-
-#         self.set_is_verbose(is_verbose)
-
-#         key_public = self._key_arg(key, is_owner_key=True, is_private_key=False)
-
-#         _Cleos.__init__(
-#             self, 
-#             [key_public, "--name", self._wallet_arg(wallet), 
-#                 "--password", password], 
-#             "wallet", "remove_key", is_verbose)
-
-#         if not self.error:
-#             self.json["key_public"] = key_public
-#             self.key_public = key_public
-#             self.printself()
+        if not self.error:
+            self.json = json_module.loads("{" + self.out_msg.replace("Wallets", \
+                '"Wallets"', 1) + "}")
+            self.printself()
 
 
-# class WalletKeys(_Cleos):
-#     '''List of public keys from all unlocked wallets.
+class WalletImport(_Cleos):
+    '''Import a private key into wallet.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         is_verbose: If `0`, do not print unless on error; if `-1`, 
-#             do not print. Default is `1`.
+        wallet: A wallet object or the name of the wallet to import key into.
+        key: A key object or a private key in WIF format to import.
+        is_verbose: If `0`, do not print unless on error; if `-1`, 
+            do not print. Default is `1`.
 
-#     - **parameters**::
+    - **attributes**::
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(self, key, wallet="default", is_verbose=1):
 
-#     - **attributes**::
+        self.set_is_verbose(is_verbose)
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(self, is_verbose=1):
-#         _Cleos.__init__(
-#             self, [], "wallet", "keys", is_verbose)
+        key_private = self._key_arg(key, is_owner_key=True, is_private_key=True)
+        _Cleos.__init__(
+            self, 
+            ["--private-key", key_private, "--name", self._wallet_arg(wallet)],
+            "wallet", "import", is_verbose)
 
-#         if not self.error:
-#             if self.out_msg == "[]\n":
-#                 self.json[""] = []
-#             else:
-#                 self.json[""] = self.out_msg.replace("\n", "") \
-#                     .replace("[  ", "").replace('"',"").replace("]", "") \
-#                     .split(",  ")
+        if not self.ERROR():
+            self.json["key_private"] = key_private
+            self.key_private = key_private
+            self.printself()
+
+class WalletRemove_key(_Cleos):
+    '''Remove key from wallet
+    - **parameters**::
+
+        wallet: A wallet object or the name of the wallet to import key into.
+        password: The password returned by wallet create.
+        key: A key object or a private key in WIF format to import.
+        is_verbose: If `0`, do not print unless on error; if `-1`, 
+            do not print. Default is `1`.
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(self, key, wallet, password, is_verbose=1):
+
+        self.set_is_verbose(is_verbose)
+
+        key_public = self._key_arg(key, is_owner_key=True, is_private_key=False)
+
+        _Cleos.__init__(
+            self, 
+            [key_public, "--name", self._wallet_arg(wallet), 
+                "--password", password], 
+            "wallet", "remove_key", is_verbose)
+
+        if not self.error:
+            self.json["key_public"] = key_public
+            self.key_public = key_public
+            self.printself()
+
+
+class WalletKeys(_Cleos):
+    '''List of public keys from all unlocked wallets.
+
+    - **parameters**::
+
+        is_verbose: If `0`, do not print unless on error; if `-1`, 
+            do not print. Default is `1`.
+
+    - **parameters**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(self, is_verbose=1):
+        _Cleos.__init__(
+            self, [], "wallet", "keys", is_verbose)
+
+        if not self.error:
+            if self.out_msg == "[]\n":
+                self.json[""] = []
+            else:
+                self.json[""] = self.out_msg.replace("\n", "") \
+                    .replace("[  ", "").replace('"',"").replace("]", "") \
+                    .split(",  ")
                     
-#             self.printself() 
+            self.printself() 
 
-#     def __str__(self):
-#         out = "Keys in all opened wallets:\n"
-#         out = out + str(_Cleos.__str__(self))
-#         return out
-
-
-# class WalletOpen(_Cleos):
-#     '''Open an existing wallet.
-
-#     - **parameters**::
-
-#         wallet: The name of the wallet to import key into. May be an object 
-#             having the  May be an object having the attribute `name`, like 
-#             `CreateAccount`, or a string. 
-#         is_verbose: If `0`, do not print unless on error; if `-1`, 
-#             do not print. Default is `1`.
-
-#     - **attributes**::
-
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(self, wallet="default", is_verbose=1):
-#         _Cleos.__init__(
-#             self, ["--name", self._wallet_arg(wallet)], 
-#             "wallet", "open", is_verbose)
-
-#         if not self.error:
-#             self.printself()
+    def __str__(self):
+        out = "Keys in all opened wallets:\n"
+        out = out + str(_Cleos.__str__(self))
+        return out
 
 
-# class WalletLockAll(_Cleos):
-#     '''Lock all unlocked wallets.
-#     '''
-#     def __init__(self, is_verbose=1):
-#         _Cleos.__init__(
-#             self, [], "wallet", "lock_all", is_verbose)
+class WalletOpen(_Cleos):
+    '''Open an existing wallet.
 
-#         if not self.error:
-#             self.printself()
+    - **parameters**::
 
+        wallet: The name of the wallet to import key into. May be an object 
+            having the  May be an object having the attribute `name`, like 
+            `CreateAccount`, or a string. 
+        is_verbose: If `0`, do not print unless on error; if `-1`, 
+            do not print. Default is `1`.
 
-# class WalletLock(_Cleos):
-#     '''Lock wallet.
+    - **attributes**::
 
-#     - **parameters**::
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(self, wallet="default", is_verbose=1):
+        _Cleos.__init__(
+            self, ["--name", self._wallet_arg(wallet)], 
+            "wallet", "open", is_verbose)
 
-#         wallet: The name of the wallet to import key into. May be an object 
-#             having the  May be an object having the attribute `name`, like 
-#             `CreateAccount`, or a string. 
-#         is_verbose: If `0`, do not print unless on error; if `-1`, 
-#             do not print. Default is `1`.
-
-#     - **parameters**::
-
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(self, wallet="default", is_verbose=1):
-#         _Cleos.__init__(
-#             self, ["--name", self._wallet_arg(wallet)], 
-#             "wallet", "lock", is_verbose)
-
-#         if not self.error:
-#             self.printself()
+        if not self.error:
+            self.printself()
 
 
-# class WalletUnlock(_Cleos):
-#     '''Unlock wallet.
+class WalletLockAll(_Cleos):
+    '''Lock all unlocked wallets.
+    '''
+    def __init__(self, is_verbose=1):
+        _Cleos.__init__(
+            self, [], "wallet", "lock_all", is_verbose)
 
-#     - **parameters**::
+        if not self.error:
+            self.printself()
 
-#         wallet: The name of the wallet. May be an object 
-#             having the  May be an object having the attribute `name`, 
-#             like `CreateAccount`, or a string.
-#         password: If the wallet argument is not a wallet object, the password 
-#             returned by wallet create, else anything, defaults to "".
-#         is_verbose: If `0`, do not print unless on error; if `-1`, 
-#             do not print. Default is `1`.
 
-#     - **attributes**::
+class WalletLock(_Cleos):
+    '''Lock wallet.
+
+    - **parameters**::
+
+        wallet: The name of the wallet to import key into. May be an object 
+            having the  May be an object having the attribute `name`, like 
+            `CreateAccount`, or a string. 
+        is_verbose: If `0`, do not print unless on error; if `-1`, 
+            do not print. Default is `1`.
+
+    - **parameters**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(self, wallet="default", is_verbose=1):
+        _Cleos.__init__(
+            self, ["--name", self._wallet_arg(wallet)], 
+            "wallet", "lock", is_verbose)
+
+        if not self.error:
+            self.printself()
+
+
+class WalletUnlock(_Cleos):
+    '''Unlock wallet.
+
+    - **parameters**::
+
+        wallet: The name of the wallet. May be an object 
+            having the  May be an object having the attribute `name`, 
+            like `CreateAccount`, or a string.
+        password: If the wallet argument is not a wallet object, the password 
+            returned by wallet create, else anything, defaults to "".
+        is_verbose: If `0`, do not print unless on error; if `-1`, 
+            do not print. Default is `1`.
+
+    - **attributes**::
     
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(
-#             self, wallet="default", password="", timeout=0, is_verbose=1):
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(
+            self, wallet="default", password="", timeout=0, is_verbose=1):
  
-#         if isinstance(wallet, Wallet):
-#             password = wallet.password
+        if isinstance(wallet, Wallet):
+            password = wallet.password
 
-#         _Cleos.__init__(
-#             self, 
-#             ["--name", self._wallet_arg(wallet), "--password", password], 
-#             "wallet", "unlock", is_verbose)
+        _Cleos.__init__(
+            self, 
+            ["--name", self._wallet_arg(wallet), "--password", password], 
+            "wallet", "unlock", is_verbose)
 
-#         if not self.ERROR():
-#             self.printself()
-
-
-# class GetCode(_Cleos):
-#     '''Retrieve the code and ABI for an account.
-
-#     - **parameters**::
-
-#         account: The name of an account whose code should be retrieved. 
-#             May be an object having the  May be an object having the attribute 
-#             `name`, like `CreateAccount`, or a string.
-#         code: The name of the file to save the contract .wast/wasm to.
-#         abi: The name of the file to save the contract .abi to.
-#         wasm: Save contract as wasm.
-
-#     - **attributes**::
-
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.    
-#     '''
-#     def __init__(
-#             self, account, code="", abi="", 
-#             wasm=False, is_verbose=1):
-
-#         account_name = self._account_arg(account)
-
-#         args = [account_name]
-#         if code:
-#             args.extend(["--code", code])
-#         if abi:
-#             args.extend(["--abi", abi])
-#         if wasm:
-#             args.extend(["--wasm"])
-
-#         _Cleos.__init__(self, args, "get", "code", is_verbose)
-
-#         if not self.error:
-#             msg = str(self.out_msg)
-#             self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
-#             self.code_hash = self.json["code_hash"]
-#             self.printself()
+        if not self.ERROR():
+            self.printself()
 
 
-# class GetTable(_Cleos):
-#     '''Retrieve the contents of a database table
+class GetCode(_Cleos):
+    '''Retrieve the code and ABI for an account.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         account: The name of the account that owns the table. May be 
-#             an object having the  May be an object having the attribute 
-#             `name`, like `CreateAccount`, or a string.
-#         scope: The scope within the account in which the table is found,
-#             can be a `CreateAccount` or `Account` object, or a name.
-#         table: The name of the table as specified by the contract abi.
-#         binary: Return the value as BINARY rather than using abi to 
-#             interpret as JSON
-#         limit: The maximum number of rows to return.
-#         key: The name of the key to index by as defined by the abi, 
-#             defaults to primary key.
-#         lower: JSON representation of lower bound value of key, 
-#             defaults to first.
-#         upper: JSON representation of upper bound value value of key, 
-#             defaults to last.
+        account: The name of an account whose code should be retrieved. 
+            May be an object having the  May be an object having the attribute 
+            `name`, like `CreateAccount`, or a string.
+        code: The name of the file to save the contract .wast/wasm to.
+        abi: The name of the file to save the contract .abi to.
+        wasm: Save contract as wasm.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(
-#             self, account, table, scope,
-#             binary=False, 
-#             limit=10, key="", lower="", upper="",
-#             is_verbose=1
-#             ):
-#         args = [self._account_arg(account)]
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.    
+    '''
+    def __init__(
+            self, account, code="", abi="", 
+            wasm=False, is_verbose=1):
 
-#         if not scope:
-#             scope=self.name
-#         else:
-#             try:
-#                 scope_name = scope.name
-#             except:
-#                 scope_name = scope
+        account_name = self._account_arg(account)
 
-#         args.append(scope_name)
-#         args.append(table)
+        args = [account_name]
+        if code:
+            args.extend(["--code", code])
+        if abi:
+            args.extend(["--abi", abi])
+        if wasm:
+            args.extend(["--wasm"])
 
-#         if binary:
-#             args.append("--binary")
-#         if limit:
-#             args.extend(["--limit", str(limit)])
-#         if key:
-#             args.extend(
-#                 ["--key", 
-#                 self._key_arg(key, is_owner_key=False, is_private_key=False)])
-#         if lower:
-#             args.extend(["--lower", lower])
-#         if upper:
-#             args.extend(["--upper", upper])
+        _Cleos.__init__(self, args, "get", "code", is_verbose)
 
-#         _Cleos.__init__(self, args, "get", "table", is_verbose)
-
-#         if not self.error:
-#             try:
-#                 self.json = json_module.loads(self.out_msg)
-#             except:
-#                 pass
-
-#             self.printself()
+        if not self.error:
+            msg = str(self.out_msg)
+            self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
+            self.code_hash = self.json["code_hash"]
+            self.printself()
 
 
-# class CreateKey(Key, _Cleos):
-#     '''Create a new keypair and print the public and private keys.
+class GetTable(_Cleos):
+    '''Retrieve the contents of a database table
 
-#     - **parameters**::
+    - **parameters**::
 
-#         key_name: Key name.
-#         r1: Generate a key using the R1 curve (iPhone), instead of the 
-#             K1 curve (Bitcoin)
+        account: The name of the account that owns the table. May be 
+            an object having the  May be an object having the attribute 
+            `name`, like `CreateAccount`, or a string.
+        scope: The scope within the account in which the table is found,
+            can be a `CreateAccount` or `Account` object, or a name.
+        table: The name of the table as specified by the contract abi.
+        binary: Return the value as BINARY rather than using abi to 
+            interpret as JSON
+        limit: The maximum number of rows to return.
+        key: The name of the key to index by as defined by the abi, 
+            defaults to primary key.
+        lower: JSON representation of lower bound value of key, 
+            defaults to first.
+        upper: JSON representation of upper bound value value of key, 
+            defaults to last.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.    
-#     '''
-#     def __init__(
-#             self, key_name, key_public="", key_private="", r1=False, is_verbose=1):
-#         Key.__init__(self, key_name, key_public, key_private)
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(
+            self, account, table, scope,
+            binary=False, 
+            limit=10, key="", lower="", upper="",
+            is_verbose=1
+            ):
+        args = [self._account_arg(account)]
 
-#         if self.key_public or self.key_private:
-#             self.json = {}
-#             self.json["publicKey"] = self.key_public           
-#             self.json["privateKey"] = self.key_private
-#             self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
-#                 .format(self.key_private, self.key_public)
-#         else:
-#             args = ["--to-console"]
-#             if r1:
-#                 args.append("--r1")
+        if not scope:
+            scope=self.name
+        else:
+            try:
+                scope_name = scope.name
+            except:
+                scope_name = scope
 
-#             _Cleos.__init__(
-#                 self, args, "create", "key", is_verbose)
+        args.append(scope_name)
+        args.append(table)
+
+        if binary:
+            args.append("--binary")
+        if limit:
+            args.extend(["--limit", str(limit)])
+        if key:
+            args.extend(
+                ["--key", 
+                self._key_arg(key, is_owner_key=False, is_private_key=False)])
+        if lower:
+            args.extend(["--lower", lower])
+        if upper:
+            args.extend(["--upper", upper])
+
+        _Cleos.__init__(self, args, "get", "table", is_verbose)
+
+        if not self.error:
+            try:
+                self.json = json_module.loads(self.out_msg)
+            except:
+                pass
+
+            self.printself()
+
+
+class CreateKey(Key, _Cleos):
+    '''Create a new keypair and print the public and private keys.
+
+    - **parameters**::
+
+        key_name: Key name.
+        r1: Generate a key using the R1 curve (iPhone), instead of the 
+            K1 curve (Bitcoin)
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.    
+    '''
+    def __init__(
+            self, key_name, key_public="", key_private="", r1=False, is_verbose=1):
+        Key.__init__(self, key_name, key_public, key_private)
+
+        if self.key_public or self.key_private:
+            self.json = {}
+            self.json["publicKey"] = self.key_public           
+            self.json["privateKey"] = self.key_private
+            self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
+                .format(self.key_private, self.key_public)
+        else:
+            args = ["--to-console"]
+            if r1:
+                args.append("--r1")
+
+            _Cleos.__init__(
+                self, args, "create", "key", is_verbose)
             
-#             if not self.error:
-#                 self.json["name"] = key_name
-#                 msg = str(self.out_msg)
-#                 first_collon = msg.find(":")
-#                 first_end = msg.find("\n")
-#                 second_collon = msg.find(":", first_collon + 1)
-#                 self.json["privateKey"] = msg[first_collon + 2 : first_end]
-#                 self.json["publicKey"] = msg[second_collon + 2 : len(msg) - 1]
-#                 self.printself()
-#                 self.key_private = self.json["privateKey"]
-#                 self.key_public = self.json["publicKey"]
+            if not self.error:
+                self.json["name"] = key_name
+                msg = str(self.out_msg)
+                first_collon = msg.find(":")
+                first_end = msg.find("\n")
+                second_collon = msg.find(":", first_collon + 1)
+                self.json["privateKey"] = msg[first_collon + 2 : first_end]
+                self.json["publicKey"] = msg[second_collon + 2 : len(msg) - 1]
+                self.printself()
+                self.key_private = self.json["privateKey"]
+                self.key_public = self.json["publicKey"]
 
-#         self.name = key_name
+        self.name = key_name
 
-# class RestoreAccount():
+class RestoreAccount():
 
-#     def __init__(self, account, is_verbose=1):
-#         acc = GetAccount(account, is_verbose=0, json=True)
-#         acc.copy_to(self)
+    def __init__(self, account, is_verbose=1):
+        acc = GetAccount(account, is_verbose=0, json=True)
+        acc.copy_to(self)
 
-#         if not self.error:
-#             self.name = self.json["account_name"]
-#             self.owner_key = ""
-#             self.active_key = ""
-#             self.is_verbose = setup.is_verbose and is_verbose > 0
+        if not self.error:
+            self.name = self.json["account_name"]
+            self.owner_key = ""
+            self.active_key = ""
+            self.is_verbose = setup.is_verbose and is_verbose > 0
 
-#     def info(self):
-#         print(str(GetAccount(self.name, is_verbose=0)))
+    def info(self):
+        print(str(GetAccount(self.name, is_verbose=0)))
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 
-# class CreateAccount(Account, _Cleos):
-#     '''Create an account, buy ram, stake for bandwidth for the account.
+class CreateAccount(Account, _Cleos):
+    '''Create an account, buy ram, stake for bandwidth for the account.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         creator: The name, of the account creating the new account. May be an 
-#             object having the attribute `name`, like `CreateAccount`, 
-#             or a string.
-#         name: The name of the new account.
-#         owner_key: The owner public key for the new account.
-#         active_key: The active public key for the new account.
+        creator: The name, of the account creating the new account. May be an 
+            object having the attribute `name`, like `CreateAccount`, 
+            or a string.
+        name: The name of the new account.
+        owner_key: The owner public key for the new account.
+        active_key: The active public key for the new account.
 
-#         permission: An account and permission level to authorize, as in 
-#             'account@permission'. May be a `CreateAccount` or `Account` object
-#         expiration: The time in seconds before a transaction expires, 
-#             defaults to 30s
-#         skip_sign: Specify if unlocked wallet keys should be used to sign 
-#             transaction.
-#         dont_broadcast: Don't broadcast transaction to the network (just print).
-#         forceUnique: Force the transaction to be unique. this will consume extra 
-#             bandwidth and remove any protections against accidently issuing the 
-#             same transaction multiple times.
-#         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-#             the execution of the transaction 
-#             (defaults to 0 which means no limit).
-#         max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-#             transaction (defaults to 0 which means no limit).
-#         ref_block: The reference block num or block id used for TAPOS 
-#             (Transaction as Proof-of-Stake).
+        permission: An account and permission level to authorize, as in 
+            'account@permission'. May be a `CreateAccount` or `Account` object
+        expiration: The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign: Specify if unlocked wallet keys should be used to sign 
+            transaction.
+        dont_broadcast: Don't broadcast transaction to the network (just print).
+        forceUnique: Force the transaction to be unique. this will consume extra 
+            bandwidth and remove any protections against accidently issuing the 
+            same transaction multiple times.
+        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+            the execution of the transaction 
+            (defaults to 0 which means no limit).
+        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+            transaction (defaults to 0 which means no limit).
+        ref_block: The reference block num or block id used for TAPOS 
+            (Transaction as Proof-of-Stake).
 
-#     - **attributes**::
+    - **attributes**::
 
-#         owner_key: Owner private key.
-#         active_key: Active private key.
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.    
-#     '''
-#     def __init__(
-#             self, creator, name, owner_key, 
-#             active_key=None,
-#             permission=None,
-#             expiration_sec=30, 
-#             skip_signature=0, 
-#             dont_broadcast=0,
-#             forceUnique=0,
-#             max_cpu_usage=0,
-#             max_net_usage=0,
-#             ref_block=None,
-#             is_verbose=1
-#             ):
+        owner_key: Owner private key.
+        active_key: Active private key.
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.    
+    '''
+    def __init__(
+            self, creator, name, owner_key, 
+            active_key=None,
+            permission=None,
+            expiration_sec=30, 
+            skip_signature=0, 
+            dont_broadcast=0,
+            forceUnique=0,
+            max_cpu_usage=0,
+            max_net_usage=0,
+            ref_block=None,
+            is_verbose=1
+            ):
 
-#         if name is None: 
-#             name = account_name()
-#         Account.__init__(self, name)
+        if name is None: 
+            name = account_name()
+        Account.__init__(self, name)
 
-#         self.owner_key = None # private keys
-#         self.active_key = None
+        self.owner_key = None # private keys
+        self.active_key = None
         
-#         if active_key is None:
-#             active_key = owner_key        
+        if active_key is None:
+            active_key = owner_key        
 
-#         owner_key_public = self._key_arg(
-#             owner_key, is_owner_key=True, is_private_key=False)
-#         active_key_public = self._key_arg(
-#             active_key, is_owner_key=False, is_private_key=False)
+        owner_key_public = self._key_arg(
+            owner_key, is_owner_key=True, is_private_key=False)
+        active_key_public = self._key_arg(
+            active_key, is_owner_key=False, is_private_key=False)
 
-#         args = [
-#                 self._account_arg(creator), self.name, 
-#                 owner_key_public, active_key_public
-#             ]
-#         if setup.is_json:
-#             args.append("--json")
-#         if not permission is None:
-#             p = self._permission_arg(permission)
-#             for perm in p:
-#                 args.extend(["--permission", perm])
+        args = [
+                self._account_arg(creator), self.name, 
+                owner_key_public, active_key_public
+            ]
+        if setup.is_json:
+            args.append("--json")
+        if not permission is None:
+            p = self._permission_arg(permission)
+            for perm in p:
+                args.extend(["--permission", perm])
 
-#         args.extend(["--expiration", str(expiration_sec)])
-#         if skip_signature:
-#             args.append("--skip-sign")
-#         if dont_broadcast:
-#             args.append("--dont-broadcast")
-#         if forceUnique:
-#             args.append("--force-unique")
-#         if max_cpu_usage:
-#             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-#         if  max_net_usage:
-#             args.extend(["--max-net-usage", str(max_net_usage)])
-#         if  not ref_block is None:
-#             args.extend(["--ref-block", ref_block])
+        args.extend(["--expiration", str(expiration_sec)])
+        if skip_signature:
+            args.append("--skip-sign")
+        if dont_broadcast:
+            args.append("--dont-broadcast")
+        if forceUnique:
+            args.append("--force-unique")
+        if max_cpu_usage:
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        if  max_net_usage:
+            args.extend(["--max-net-usage", str(max_net_usage)])
+        if  not ref_block is None:
+            args.extend(["--ref-block", ref_block])
 
-#         _Cleos.__init__(
-#             self, args, "create", "account", is_verbose)
+        _Cleos.__init__(
+            self, args, "create", "account", is_verbose)
             
-#         if not self.error:
-#             self.transaction = get_transaction_id(self)
-#             self.json = GetAccount(self.name, is_verbose=0, json=True).json
-#             self.printself()
+        if not self.error:
+            self.transaction = get_transaction_id(self)
+            self.json = GetAccount(self.name, is_verbose=0, json=True).json
+            self.printself()
 
-#     def info(self):
-#         print(str(GetAccount(self.name, is_verbose=0)))
+    def info(self):
+        print(str(GetAccount(self.name, is_verbose=0)))
 
-#     def get_transaction(self):
-#         return GetTransaction(self.transaction)
+    def get_transaction(self):
+        return GetTransaction(self.transaction)
             
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 
-# def account_name():
-#     letters = "abcdefghijklmnopqrstuvwxyz12345"
-#     name = ""
-#     for i in range(0, 12):
-#         name += letters[random.randint(0, 30)]
+def account_name():
+    letters = "abcdefghijklmnopqrstuvwxyz12345"
+    name = ""
+    for i in range(0, 12):
+        name += letters[random.randint(0, 30)]
 
-#     return name
+    return name
 
-# def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
-#     import teos
-#     config = teos.GetConfig(contract_dir, is_verbose=0)
-#     contract_path_absolute = config.json["contract-dir"]
-#     if not contract_path_absolute:
-#         return []
+def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
+    import teos
+    config = teos.GetConfig(contract_dir, is_verbose=0)
+    contract_path_absolute = config.json["contract-dir"]
+    if not contract_path_absolute:
+        return []
 
-#     if not wasm_file:
-#         wasm_file = config.json["contract-wasm"]
-#         if not wasm_file:
-#             return []
-#     else:
-#         if not os.path.isfile(
-#                 os.path.join(contract_path_absolute, wasm_file)):
-#             return []
+    if not wasm_file:
+        wasm_file = config.json["contract-wasm"]
+        if not wasm_file:
+            return []
+    else:
+        if not os.path.isfile(
+                os.path.join(contract_path_absolute, wasm_file)):
+            return []
 
-#     if not abi_file:
-#         abi_file = config.json["contract-abi"]
-#         if not abi_file:
-#             return []
-#     else:
-#         if not os.path.isfile(
-#                 os.path.join(contract_path_absolute, abi_file)):
-#             return []
+    if not abi_file:
+        abi_file = config.json["contract-abi"]
+        if not abi_file:
+            return []
+    else:
+        if not os.path.isfile(
+                os.path.join(contract_path_absolute, abi_file)):
+            return []
 
-#     return [contract_path_absolute, wasm_file, abi_file]
+    return [contract_path_absolute, wasm_file, abi_file]
 
-# class SetContract(_Cleos):
-#     '''Create or update the contract on an account.
+class SetContract(_Cleos):
+    '''Create or update the contract on an account.
 
-#     - **parameters**:: 
+    - **parameters**:: 
 
-#         account: The account to publish a contract for. May be an object 
-#             having the  May be an object having the attribute `name`, like 
-#             `CreateAccount`, or a string.
-#         contract_dir: The path containing the .wast and .abi. 
-#         wasm_file: The file containing the contract WASM relative 
-#             to contract_dir.
-#         abi_file: The ABI for the contract relative to contract-dir.
+        account: The account to publish a contract for. May be an object 
+            having the  May be an object having the attribute `name`, like 
+            `CreateAccount`, or a string.
+        contract_dir: The path containing the .wast and .abi. 
+        wasm_file: The file containing the contract WASM relative 
+            to contract_dir.
+        abi_file: The ABI for the contract relative to contract-dir.
 
-#         permission: An account and permission level to authorize, as in 
-#             'account@permission'. May be a `CreateAccount` or `Account` object
-#         expiration: The time in seconds before a transaction expires, 
-#             defaults to 30s
-#         skip_sign: Specify if unlocked wallet keys should be used to sign 
-#             transaction.
-#         dont_broadcast: Don't broadcast transaction to the network (just print).
-#         forceUnique: Force the transaction to be unique. this will consume extra 
-#             bandwidth and remove any protections against accidently issuing the 
-#             same transaction multiple times.
-#         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-#             the execution of the transaction 
-#             (defaults to 0 which means no limit).
-#         max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-#             transaction (defaults to 0 which means no limit).
-#         ref_block: The reference block num or block id used for TAPOS 
-#             (Transaction as Proof-of-Stake).
+        permission: An account and permission level to authorize, as in 
+            'account@permission'. May be a `CreateAccount` or `Account` object
+        expiration: The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign: Specify if unlocked wallet keys should be used to sign 
+            transaction.
+        dont_broadcast: Don't broadcast transaction to the network (just print).
+        forceUnique: Force the transaction to be unique. this will consume extra 
+            bandwidth and remove any protections against accidently issuing the 
+            same transaction multiple times.
+        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+            the execution of the transaction 
+            (defaults to 0 which means no limit).
+        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+            transaction (defaults to 0 which means no limit).
+        ref_block: The reference block num or block id used for TAPOS 
+            (Transaction as Proof-of-Stake).
 
-#     - **attributes**::
+    - **attributes**::
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.    
-#     '''
-#     def __init__(
-#             self, account, contract_dir, 
-#             wasm_file=None, abi_file=None, 
-#             permission=None, expiration_sec=30, 
-#             skip_signature=0, dont_broadcast=0, forceUnique=0,
-#             max_cpu_usage=0, max_net_usage=0,
-#             ref_block=None,
-#             is_verbose=1,
-#             json=False
-#             ):
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.    
+    '''
+    def __init__(
+            self, account, contract_dir, 
+            wasm_file=None, abi_file=None, 
+            permission=None, expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            is_verbose=1,
+            json=False
+            ):
 
-#         files = contract_is_built(contract_dir, wasm_file, abi_file)
-#         if not files:
-#             self.ERROR("""
-#             Cannot determine the contract directory. The clue is 
-#             {}.
-#             """.format(contract_dir))
-#             return
+        files = contract_is_built(contract_dir, wasm_file, abi_file)
+        if not files:
+            self.ERROR("""
+            Cannot determine the contract directory. The clue is 
+            {}.
+            """.format(contract_dir))
+            return
 
-#         self.contract_path_absolute = files[0]
-#         wasm_file = files[1]
-#         abi_file = files[2]            
+        self.contract_path_absolute = files[0]
+        wasm_file = files[1]
+        abi_file = files[2]            
 
-#         self.account_name = self._account_arg(account)
+        self.account_name = self._account_arg(account)
 
-#         args = [self.account_name, self.contract_path_absolute]
+        args = [self.account_name, self.contract_path_absolute]
 
-#         if setup.is_json or json:
-#             args.append("--json")
-#         if not permission is None:
-#             p = self._permission_arg(permission)
-#             for perm in p:
-#                 args.extend(["--permission", perm])
+        if setup.is_json or json:
+            args.append("--json")
+        if not permission is None:
+            p = self._permission_arg(permission)
+            for perm in p:
+                args.extend(["--permission", perm])
 
-#         args.extend(["--expiration", str(expiration_sec)])
-#         if skip_signature:
-#             args.append("--skip-sign")
-#         if dont_broadcast:
-#             args.append("--dont-broadcast")
-#         if forceUnique:
-#             args.append("--force-unique")
-#         if max_cpu_usage:
-#             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-#         if  max_net_usage:
-#             args.extend(["--max-net-usage", str(max_net_usage)])
-#         if  not ref_block is None:
-#             args.extend(["--ref-block", ref_block]) 
-#         if wasm_file:
-#             args.append(wasm_file)
-#         if abi_file:
-#             args.append(abi_file)
+        args.extend(["--expiration", str(expiration_sec)])
+        if skip_signature:
+            args.append("--skip-sign")
+        if dont_broadcast:
+            args.append("--dont-broadcast")
+        if forceUnique:
+            args.append("--force-unique")
+        if max_cpu_usage:
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        if  max_net_usage:
+            args.extend(["--max-net-usage", str(max_net_usage)])
+        if  not ref_block is None:
+            args.extend(["--ref-block", ref_block]) 
+        if wasm_file:
+            args.append(wasm_file)
+        if abi_file:
+            args.append(abi_file)
 
-#         _Cleos.__init__(
-#             self, args, "set", "contract", is_verbose)
+        _Cleos.__init__(
+            self, args, "set", "contract", is_verbose)
 
-#         if not self.error:
-#             if setup.is_json or json:
-#                 self.json = json_module.loads(self.out_msg)
-#             self.transaction = get_transaction_id(self)
-#             self.printself()
+        if not self.error:
+            if setup.is_json or json:
+                self.json = json_module.loads(self.out_msg)
+            self.transaction = get_transaction_id(self)
+            self.printself()
 
-#     def get_transaction(self):
-#         return GetTransaction(self.transaction)
+    def get_transaction(self):
+        return GetTransaction(self.transaction)
 
 
-# class PushAction(_Cleos):
-#     '''Push a transaction with a single action
+class PushAction(_Cleos):
+    '''Push a transaction with a single action
 
-#     - **parameters**::
+    - **parameters**::
 
-#         account: The account to publish a contract for.  May be an object 
-#             having the  May be an object having the attribute `name`, like 
-#             `CreateAccount`, or a string.
-#         action: A JSON string or filename defining the action to execute on 
-#             the contract.
-#         data: The arguments to the contract.
+        account: The account to publish a contract for.  May be an object 
+            having the  May be an object having the attribute `name`, like 
+            `CreateAccount`, or a string.
+        action: A JSON string or filename defining the action to execute on 
+            the contract.
+        data: The arguments to the contract.
 
-#         permission: An account and permission level to authorize, as in 
-#             'account@permission'. May be a `CreateAccount` or `Account` object
-#         expiration: The time in seconds before a transaction expires, 
-#             defaults to 30s
-#         skip_sign: Specify if unlocked wallet keys should be used to sign 
-#             transaction.
-#         dont_broadcast: Don't broadcast transaction to the network (just print).
-#         forceUnique: Force the transaction to be unique. this will consume extra 
-#             bandwidth and remove any protections against accidently issuing the 
-#             same transaction multiple times.
-#         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-#             the execution of the transaction 
-#             (defaults to 0 which means no limit).
-#         max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-#             transaction (defaults to 0 which means no limit).
-#         ref_block: The reference block num or block id used for TAPOS 
-#             (Transaction as Proof-of-Stake).
+        permission: An account and permission level to authorize, as in 
+            'account@permission'. May be a `CreateAccount` or `Account` object
+        expiration: The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign: Specify if unlocked wallet keys should be used to sign 
+            transaction.
+        dont_broadcast: Don't broadcast transaction to the network (just print).
+        forceUnique: Force the transaction to be unique. this will consume extra 
+            bandwidth and remove any protections against accidently issuing the 
+            same transaction multiple times.
+        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+            the execution of the transaction 
+            (defaults to 0 which means no limit).
+        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+            transaction (defaults to 0 which means no limit).
+        ref_block: The reference block num or block id used for TAPOS 
+            (Transaction as Proof-of-Stake).
 
-#     - **attributes**::
+    - **attributes**::
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: Verbosity at the construction time.
-#     '''
-#     def __init__(
-#             self, account, action, data,
-#             permission=None, expiration_sec=30, 
-#             skip_signature=0, dont_broadcast=0, forceUnique=0,
-#             max_cpu_usage=0, max_net_usage=0,
-#             ref_block=None,
-#             is_verbose=1,
-#             json=False
-#         ):
-#         self.account_name = self._account_arg(account)
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: Verbosity at the construction time.
+    '''
+    def __init__(
+            self, account, action, data,
+            permission=None, expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            is_verbose=1,
+            json=False
+        ):
+        self.account_name = self._account_arg(account)
 
-#         args = [self.account_name, action, data]
-#         if setup.is_json or json:
-#             args.append("--json")
-#         if not permission is None:
-#             p = self._permission_arg(permission)
-#             for perm in p:
-#                 args.extend(["--permission", perm])
+        args = [self.account_name, action, data]
+        if setup.is_json or json:
+            args.append("--json")
+        if not permission is None:
+            p = self._permission_arg(permission)
+            for perm in p:
+                args.extend(["--permission", perm])
 
-#         args.extend(["--expiration", str(expiration_sec)])
-#         if skip_signature:
-#             args.append("--skip-sign")
-#         if dont_broadcast:
-#             args.append("--dont-broadcast")
-#         if forceUnique:
-#             args.append("--force-unique")
-#         if max_cpu_usage:
-#             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-#         if  max_net_usage:
-#             args.extend(["--max-net-usage", str(max_net_usage)])
-#         if  not ref_block is None:
-#             args.extend(["--ref-block", ref_block])
+        args.extend(["--expiration", str(expiration_sec)])
+        if skip_signature:
+            args.append("--skip-sign")
+        if dont_broadcast:
+            args.append("--dont-broadcast")
+        if forceUnique:
+            args.append("--force-unique")
+        if max_cpu_usage:
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        if  max_net_usage:
+            args.extend(["--max-net-usage", str(max_net_usage)])
+        if  not ref_block is None:
+            args.extend(["--ref-block", ref_block])
                         
-#         self.console = None
-#         self.data = None
-#         _Cleos.__init__(self, args, "push", "action", is_verbose)
+        self.console = None
+        self.data = None
+        _Cleos.__init__(self, args, "push", "action", is_verbose)
 
-#         if not self.error:
-#             self.transaction = get_transaction_id(self)
-#             try:
-#                 self.json = json_module.loads(self.out_msg)
-#                 self.console = self.json["processed"]["action_traces"][0]["console"]
-#                 self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
-#             except:
-#                 pass
+        if not self.error:
+            self.transaction = get_transaction_id(self)
+            try:
+                self.json = json_module.loads(self.out_msg)
+                self.console = self.json["processed"]["action_traces"][0]["console"]
+                self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
+            except:
+                pass
 
-#             self.printself()
+            self.printself()
 
-#     def get_transaction(self):
-#         return GetTransaction(self.transaction)
+    def get_transaction(self):
+        return GetTransaction(self.transaction)
