@@ -1,43 +1,39 @@
-# import setup
-# import cleos
-# import efui
-# import efman
-# import efwal
-# import efacc
-# import efcon
-# import efnet
-import ef.core.manager as manager
+import ef.setup
+import ef.core.cleos
+import ef.core.manager
+import ef.core.logger
+import ef.core.testnet
+import ef.interface
+import ef.wallet
+import ef.account
+import ef.contract
 
+set_is_testing_errors = ef.core.logger.set_is_testing_errors
+Verbosity = ef.core.logger.Verbosity
 
-# Logger = efui.Logger
-# Verbosity = efui.Verbosity
+CreateKey = ef.core.cleos.CreateKey
+Permission = ef.interface.Permission
 
-# CreateKey = cleos.CreateKey
-# Permission = cleos.Permission
+create_wallet = ef.wallet.create_wallet
+get_wallet = ef.wallet.get_wallet
 
-# create_wallet = efwal.create_wallet
-# create_account = efacc.create_account
-# create_master_account = efacc.create_master_account
+create_account = ef.account.create_account
+create_master_account = ef.account.create_master_account
+reboot = ef.account.reboot
 
-# get_wallet = efwal.get_wallet
+Contract = ef.contract.Contract
+ContractBuilder = ef.contract.ContractBuilder
+project_from_template = ef.contract.project_from_template
 
-# Contract = efcon.Contract
-# ContractBuilder = efcon.ContractBuilder
-# project_from_template = \
-#      efcon.project_from_template
+reboot = ef.account.reboot
 
-# set_is_testing_errors = efui.set_is_testing_errors
-# set_is_throwing_errors = efui.set_is_throwing_errors
+reset = ef.core.manager.reset
+resume = ef.core.manager.resume
+stop = ef.core.manager.stop
 
-# reboot = efacc.reboot
+info = ef.core.manager.info
+status = ef.core.manager.status
 
-reset = manager.reset
-resume = manager.resume
-stop = manager.stop
-
-# info = efman.info
-# status = efman.status
-
-# Testnet = efnet.Testnet
-# get_testnet = efnet.get_testnet
-# testnets = efnet.testnets
+Testnet = ef.core.testnet.Testnet
+get_testnet = ef.core.testnet.get_testnet
+testnets = ef.core.testnet.testnets

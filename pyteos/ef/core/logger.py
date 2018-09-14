@@ -64,10 +64,22 @@ def DEBUG(msg, translate=True, verbosity=None):
         cprint(msg, color[0], color[1], attrs=color[2])
 
 
-is_testing_errors = False
+__is_testing_errors = False
+def set_is_testing_errors(status=True):
+    '''Changes the color of the ``ERROR`` logger printout.
+
+    Makes it less alarming.
+    '''
+    global _is_testing_errors
+    if status:
+        __is_testing_errors = True
+    else:
+        __is_testing_errors = False
+
+
 def error(msg, translate=True):
     color = Verbosity.ERROR_TESTING.value \
-        if is_testing_errors else Verbosity.ERROR.value
+        if __is_testing_errors else Verbosity.ERROR.value
     return colored(
         "ERROR:\n{}".format(condition(msg, translate)),  
         color[0], color[1], attrs=color[2])
