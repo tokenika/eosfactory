@@ -1,5 +1,7 @@
 import enum
 import re
+import inspect
+
 from textwrap import dedent
 from termcolor import cprint, colored
 
@@ -35,13 +37,13 @@ def SCENARIO(msg):
 
 def TRACE(msg, translate=True, verbosity=None):
     msg = condition(msg, translate)
-    if msg and (Verbosity.TRACE in verbosity if verbosity else: __verbosity):
+    if msg and (Verbosity.TRACE in verbosity if verbosity else __verbosity):
         color = Verbosity.TRACE.value
         cprint(msg, color[0], color[1], attrs=color[2])
 
 
 def INFO(msg, translate=True, verbosity=None):
-    v = verbosity if verbosity else: __verbosity
+    v = verbosity if verbosity else __verbosity
     if msg and (
             Verbosity.TRACE in v or Verbosity.INFO in v
         ):
@@ -49,7 +51,7 @@ def INFO(msg, translate=True, verbosity=None):
         cprint(condition(msg, translate), color[0], color[1], attrs=color[2])        
 
 def OUT(msg, translate=True, verbosity=None):
-    if msg and (Verbosity.OUT in verbosity if verbosity else: __verbosity):
+    if msg and (Verbosity.OUT in verbosity if verbosity else __verbosity):
         color = Verbosity.OUT.value
         msg = condition(msg, translate)
         cprint(msg, color[0], color[1], attrs=color[2])
@@ -59,7 +61,7 @@ def DEBUG(msg, translate=True, verbosity=None):
     msg = condition(msg, translate)
     self.debug_buffer = msg
 
-    if msg and (Verbosity.DEBUG in verbosity if verbosity else: __verbosity):
+    if msg and (Verbosity.DEBUG in verbosity if verbosity else __verbosity):
         color = Verbosity.DEBUG.value
         cprint(msg, color[0], color[1], attrs=color[2])
 

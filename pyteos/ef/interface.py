@@ -34,7 +34,7 @@ class Wallet(Omittable):
     '''    
     def __init__(self, name):
         self.name = name
-        Omittable.__init(self)
+        Omittable.__init__(self)
 
 
 def wallet_arg(wallet):

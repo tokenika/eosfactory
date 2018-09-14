@@ -7,9 +7,9 @@ import sys
 import os
 import json
 
-import setup
-import teos
-import cleos
+import ef.setup as setup
+import ef.core.teos as teos
+import ef.core.cleos as cleos
 import ef.core.logger as logger
 
 def clear_testnet_cache(verbosity=None):
@@ -114,7 +114,6 @@ def reset(verbosity=None):
 def resume(verbosity=None):
     ''' Resume the EOSIO local node.
     ''' 
-    logger = efui.Logger(verbosity)
     if not cleos.set_local_nodeos_address_if_none():   
         logger.INFO('''
             Not local nodeos is set: {}

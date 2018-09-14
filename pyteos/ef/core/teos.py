@@ -422,7 +422,7 @@ def getTargetDirPath(source_dir):
     return source_dir
 
 
-def node_start(clear=False, is_verbose=1):
+def node_start(clear=False, verbosity=None):
     args = [
         "--http-server-address", config.getHttpServerAddress(),
         "--data-dir", config.getDataDir(),
@@ -453,7 +453,7 @@ def node_start(clear=False, is_verbose=1):
         args.insert(0, config.getDaemonExe())
         subprocess.Popen("gnome-terminal -- " + " ".join(args), shell=True)
 
-    node_probe()                    
+    node_probe(verbosity)                    
 
 def node_probe(verbosity=None):
     count = 15
@@ -462,14 +462,15 @@ def node_probe(verbosity=None):
     
     while True:
         time.sleep(1)
-        get_info = cleos.GetInfo(is_verbose=-1)
-        count = count - 1
-        print(".", end="", flush=True)
-
+        
         try:
+            get_info = cleos.GetInfo(is_verbose=0)
+            count = count - 1
             head_block_num = int(get_info.json["head_block_num"])
         except:
             head_block_num = 0
+        finally:
+            print(".", end="", flush=True)
 
         if block_num is None:
             block_num = head_block_num
@@ -505,7 +506,7 @@ Failed to kill {}. Pid is {}.
     else:
         logger.INFO('''
         Local node is stopped.
-        '''.format(head_block_num), verbosity)        
+        ''', verbosity)        
 
     
 def node_is_running():

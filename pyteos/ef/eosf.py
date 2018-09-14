@@ -9,7 +9,15 @@ import ef.account
 import ef.contract
 
 set_is_testing_errors = ef.core.logger.set_is_testing_errors
+verbosity = ef.core.logger.verbosity
 Verbosity = ef.core.logger.Verbosity
+SCENARIO = ef.core.logger.SCENARIO
+COMMENT = ef.core.logger.COMMENT
+TRACE = ef.core.logger.TRACE
+INFO = ef.core.logger.INFO
+OUT = ef.core.logger.OUT
+DEBUG = ef.core.logger.DEBUG
+
 
 CreateKey = ef.core.cleos.CreateKey
 Permission = ef.interface.Permission

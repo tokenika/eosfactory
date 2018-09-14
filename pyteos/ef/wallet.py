@@ -65,7 +65,7 @@ class Wallet(cleos.WalletCreate):
             name = setup.file_prefix() + name
 
         if not self.wallet is None:
-            logger.ERROR('''
+            raise errors.Error('''
             It can be only one ``Wallet`` object in the script; there is one
             named ``{}``.
             '''.format(wallet.name))
@@ -205,21 +205,15 @@ class Wallet(cleos.WalletCreate):
 
         wallet_keys = cleos.WalletKeys(is_verbose=-1)
 
-        ok = True
         for key in removed_keys:
             if key in wallet_keys.json[""]:
-                ok = False
-
-                err_msg = '''
+                raise errors.Error('''
                 Failed to remove key '{}' from the wallet '{}'
-                '''.format(key, self.name)
+                '''.format(key, self.name))
 
-                self.ERROR(self.err_msg)
-                return False
-        if ok:
-            self.TRACE('''
-            * Cross-checked: all listed keys removed from the wallet.
-            ''')
+        logger.TRACE('''
+        * Cross-checked: all listed keys removed from the wallet.
+        ''')
         return True
 
 
@@ -246,7 +240,7 @@ class Wallet(cleos.WalletCreate):
                 self.name, is_verbose=-1)
             imported_keys.append(self._key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
-            self.TRACE('''
+            logger.TRACE('''
                 * Importing keys of the account ``{}`` into the wallet ``{}``
                 '''.format(account_name, self.name)
                 )
@@ -254,37 +248,31 @@ class Wallet(cleos.WalletCreate):
             wallet_import = cleos.WalletImport(
                 self._key_arg(account_or_key, is_private_key=True), 
                 self.name, is_verbose=-1)
-            if self.ERROR(wallet_import):
-                return False
-            else:
-                self.TRACE('''
-                    * Importing keys into the wallet ``{}``
-                    '''.format(self.name)
-                            )
-                return True
+
+            logger.TRACE('''
+                * Importing keys into the wallet ``{}``
+                '''.format(self.name)
+                        )
+            return True
         
         wallet_keys = cleos.WalletKeys(is_verbose=-1)
 
         if len(imported_keys) == 0:
-            err_msg = '''
+            raise errors.Error('''
                 The list of imported keys is empty.
-                '''
-            self.ERROR(err_msg)
-            return False
+                ''')
 
         ok = True
         for key in imported_keys:
             if not key in wallet_keys.json[""]:
                 ok = False
-                err_msg = '''
+                raise errors.Error('''
                 Failed to import keys of the account '{}' into the wallet '{}'
                 '''.format(
-                    account_name if account_name else "n/a", self.name)
+                    account_name if account_name else "n/a", self.name))
 
-                self.ERROR(err_msg)
-                return False
         if ok:
-            self.TRACE('''
+            logger.TRACE('''
             * Cross-checked: all account keys are in the wallet.
             ''')
         return True
@@ -307,7 +295,7 @@ class Wallet(cleos.WalletCreate):
         new_map = {}
         wallet_keys = cleos.WalletKeys(is_verbose=0)
         if len(account_map) > 0:
-            self.INFO('''
+            logger.INFO('''
                     ######### Restore cached account objects:
                     ''') 
 
@@ -323,7 +311,7 @@ class Wallet(cleos.WalletCreate):
 
             manager.save_account_map(new_map)
         else:
-            self.INFO('''
+            logger.INFO('''
                  * The wallet is empty.
             ''')
 
@@ -339,7 +327,7 @@ class Wallet(cleos.WalletCreate):
         self.open_unlock()
 
         self.wallet_keys = cleos.WalletKeys(is_verbose=-1)
-        self.TRACE('''
+        logger.TRACE('''
             Keys in all open walets:
             {}
             '''.format(self.wallet_keys.out_msg))
@@ -356,8 +344,8 @@ class Wallet(cleos.WalletCreate):
             is_taken = False
             for name, object_name in account_map_json.items():
                 if object_name == account_object_name:
-                    if not name == account_name:                    
-                        self.ERROR('''
+                    if not name == account_name:
+                        raise errors.Error('''
                 The given account object name
                 ``{}``
                 points to an existing account, of the name {},
@@ -378,7 +366,7 @@ class Wallet(cleos.WalletCreate):
                     manager.edit_account_map()
                     continue
                 else:
-                    self.ERROR('''
+                    raise errors.Error('''
             Use the function 'manager.edit_account_map(text_editor="nano")'
             or the corresponding method of any object of the 'efwal.Wallet` 
             class to edit the file.

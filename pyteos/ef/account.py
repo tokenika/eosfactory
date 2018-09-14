@@ -7,12 +7,12 @@ import re
 import ef.core.teos as teos
 import ef.core.cleos as cleos
 import ef.core.cleosys as cleosys
-import ef.core.maanager as manager
-import ef.core.testnet as testnet
+import ef.core.manager as manager
 import ef.core.logger as logger
 
 import ef.setup as setup
 import ef.wallet as wllet
+import ef.core.testnet as testnet
 
 
 def reboot():
@@ -379,9 +379,6 @@ def create_master_account(
     finishes successfully.
     '''
 
-
-    logger = logger.Logger(verbosity)
-
     globals = inspect.stack()[1][0].f_globals
     if account_object_name in globals:
 
@@ -465,19 +462,19 @@ def create_master_account(
 
         if account_object.exists:
             if account_object.has_keys: # it is your account
-                account_object.TRACE('''
+                logger.TRACE('''
                     * Checking whether the wallet has keys to the account ``{}``
                     '''.format(account_object.name))
 
                 if not account_object.ERROR():
-                    account_object.TRACE('''
+                    logger.TRACE('''
                         * The account object is created.
                         ''')
 
                 if account_object_name:
                     if append_account_methods_and_finish(
                         account_object_name, account_object, account_object):
-                        account_object.TRACE('''
+                        logger.TRACE('''
                             * The account ``{}`` is in the wallet.
                             '''.format(account_object.name))
                         return
@@ -532,7 +529,7 @@ def append_account_methods_and_finish(
     def code(account_object, code="", abi="", wasm=False):
         result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
         if not account_object.ERROR(result):
-            account_object.INFO('''
+            logger.INFO('''
             * code()
             ''')
             account_object.OUT(result.out_msg)
@@ -594,12 +591,12 @@ def append_account_methods_and_finish(
             ref_block,
             is_verbose=-1, json=True)
 
-        account_object.INFO('''
+        logger.INFO('''
             * Push action ``{}``:
             '''.format(action))
 
         if not account_object.ERROR(result):
-            account_object.INFO('''
+            logger.INFO('''
                 {}
             '''.format(re.sub(
                 ' +',' ', manager.accout_names_2_object_names(data))))
@@ -634,7 +631,7 @@ def append_account_methods_and_finish(
             binary=False, 
             limit=10, key="", lower="", upper=""):
 
-        account_object.INFO('''
+        logger.INFO('''
         * Table ``{}`` for ``{}``
         '''.format(table_name, scope))
         
@@ -688,7 +685,7 @@ def append_account_methods_and_finish(
             )
 
         if not account_object.ERROR(result):
-            account_object.INFO('''
+            logger.INFO('''
                 * Transfered RAM from {} to {} kbytes: {}
                 '''.format(result.payer, result.receiver, result.amount))
 
@@ -724,7 +721,7 @@ def append_account_methods_and_finish(
             )
 
         if not account_object.ERROR(result):
-            account_object.INFO('''
+            logger.INFO('''
             * Delegated stake from {} to {} NET: {} CPU: {}
             '''.format(
                 result.payer, result.receiver,
@@ -741,7 +738,7 @@ def append_account_methods_and_finish(
 
     get_account = cleos.GetAccount(account_object, is_verbose=0)
     if not account_object.ERROR(get_account):
-        account_object.TRACE('''
+        logger.TRACE('''
         * Cross-checked: account object ``{}`` mapped to an existing account ``{}``.
         '''.format(account_object_name, account_object.name), translate=False)
     return put_account_to_wallet_and_on_stack(
@@ -839,7 +836,7 @@ def create_account(
 
             if account_object.ERROR(is_silent=True, is_fatal=False):
                 if isinstance(account_object.error_object, logger.LowRam):
-                    account_object.TRACE('''
+                    logger.TRACE('''
                     * RAM needed is {}.kByte, buying RAM {}.kByte.
                     '''.format(
                         account_object.error_object.needs_kbyte,
@@ -878,7 +875,7 @@ def create_account(
         account_object.active_key = active_key
 
     if not account_object.ERROR():
-        account_object.TRACE('''
+        logger.TRACE('''
             * The account object is created.
             ''')
         append_account_methods_and_finish(
