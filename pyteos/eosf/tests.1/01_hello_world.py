@@ -24,7 +24,6 @@ class Test(unittest.TestCase):
         COMMENT('''
         Create test accounts:
         ''')
-        import pdb; pdb.set_trace()
         create_account("account_alice", account_master)
         create_account("account_carol", account_master)
 

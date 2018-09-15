@@ -2,6 +2,7 @@ import subprocess
 import json
 import pathlib
 import random
+import os
 
 import eosf.core.errors as errors
 import eosf.core.config
@@ -67,11 +68,7 @@ class _Cleos():
                 self.out_msg_details = None
                 break
 
-        try:
-            errors.validate(self)
-        except Exception as e:
-            if self.is_verbose >= 0:
-                raise
+        errors.validate(self)
             
         try:
             self.json = json.loads(self.out_msg)
@@ -100,7 +97,7 @@ class _Cleos():
             return out
 
     def __repr__(self):
-        return None
+        return ""
 
 
 class GetInfo(_Cleos):
@@ -175,7 +172,6 @@ class GetBlock(_Cleos):
             [block_id] if block_id else [str(block_number)], 
             "get", "block", is_verbose)
 
-        self.json = json.loads(self.out_msg)
         self.block_num = self.json["block_num"]
         self.ref_block_prefix = self.json["ref_block_prefix"]
         self.timestamp = self.json["timestamp"]
@@ -322,7 +318,6 @@ class GetAccounts(_Cleos):
         _Cleos.__init__(
             self, [public_key], "get", "accounts", is_verbose)
 
-        self.json = json.loads(self.out_msg)
         self.names = self.json['account_names']
         self.printself()
 
@@ -349,7 +344,6 @@ class GetTransaction(_Cleos):
         _Cleos.__init__(
             self, [transaction_id], "get", "transaction", is_verbose)
 
-        self.json = json.loads(self.out_msg)
         self.printself()
 
 
@@ -713,11 +707,6 @@ class GetTable(_Cleos):
 
         _Cleos.__init__(self, args, "get", "table", is_verbose)
 
-        try:
-            self.json = json.loads(self.out_msg)
-        except:
-            pass
-
         self.printself()
 
 
@@ -856,8 +845,8 @@ class CreateAccount(Account, _Cleos):
                 account_arg(creator), self.name, 
                 owner_key_public, active_key_public
             ]
-        if setup.is_json:
-            args.append("--json")
+
+        args.append("--json")
         if not permission is None:
             p = self._permission_arg(permission)
             for perm in p:
@@ -901,14 +890,16 @@ def account_name():
 
     return name
 
-def contract_is_built(contract_dir, wasm_file=".wasm", abi_file=".abi"):
-    import teos
+def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
+    wasm_file_hint = ".wasm"
+    abi_file_hint = ".abi"
+
     contract_path_absolute = config.getContractDir(contract_dir)
     if not contract_path_absolute:
         return []
 
     if not wasm_file:
-        wasm_file = config.getContractFile(contract_dir, wasm_file)
+        wasm_file = config.getContractFile(contract_dir, wasm_file_hint)
         if not wasm_file:
             return []
     else:
@@ -917,7 +908,7 @@ def contract_is_built(contract_dir, wasm_file=".wasm", abi_file=".abi"):
             return []
 
     if not abi_file:
-        abi_file = config.getContractFile(contract_dir, abi_file)
+        abi_file = config.getContractFile(contract_dir, abi_file_hint)
         if not abi_file:
             return []
     else:
@@ -977,7 +968,7 @@ class SetContract(_Cleos):
 
         files = contract_is_built(contract_dir, wasm_file, abi_file)
         if not files:
-            self.ERROR("""
+            raise errors.Error("""
             Cannot determine the contract directory. The clue is 
             {}.
             """.format(contract_dir))
@@ -991,7 +982,7 @@ class SetContract(_Cleos):
 
         args = [self.account_name, self.contract_path_absolute]
 
-        if setup.is_json or json:
+        if json:
             args.append("--json")
         if not permission is None:
             p = self._permission_arg(permission)
@@ -1015,12 +1006,10 @@ class SetContract(_Cleos):
             args.append(wasm_file)
         if abi_file:
             args.append(abi_file)
-
+        import pdb; pdb.set_trace()
         _Cleos.__init__(
             self, args, "set", "contract", is_verbose)
 
-        if setup.is_json or json:
-            self.json = json.loads(self.out_msg)
         self.printself()
 
     def get_transaction(self):
@@ -1075,7 +1064,7 @@ class PushAction(_Cleos):
         self.account_name = account_arg(account)
 
         args = [self.account_name, action, data]
-        if setup.is_json or json:
+        if json:
             args.append("--json")
         if not permission is None:
             p = self._permission_arg(permission)
@@ -1100,12 +1089,8 @@ class PushAction(_Cleos):
         self.data = None
         _Cleos.__init__(self, args, "push", "action", is_verbose)
 
-        try:
-            self.json = json.loads(self.out_msg)
-            self.console = self.json["processed"]["action_traces"][0]["console"]
-            self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
-        except:
-            pass
+        self.console = self.json["processed"]["action_traces"][0]["console"]
+        self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
 
         self.printself()
 

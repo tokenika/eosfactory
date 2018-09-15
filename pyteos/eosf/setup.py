@@ -133,8 +133,6 @@ as {{"{2}":"absolute-path-to-teos-executable"}}
 
 
 
-is_verbose = 1
-is_json = 0
 
 is_translating = True
 

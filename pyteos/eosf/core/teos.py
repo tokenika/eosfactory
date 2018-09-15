@@ -18,8 +18,7 @@ import eosf.core.utils as utils
 
 
 def ABI(
-    contract_dir_hint=None, code_name=None, include_dir=None, 
-    is_verbose=1):
+    contract_dir_hint=None, code_name=None, include_dir=None):
     '''Given a hint to a contract directory, produce ABI file.
     '''
 
@@ -96,7 +95,7 @@ def ABI(
 
 def WAST(
         contract_dir_hint, code_name=None, include_dir=None, 
-        compile_only=False, is_verbose=1):
+        compile_only=False):
     '''Given a hint to a contract directory, produce WAST and WASM code.
     '''
 
@@ -355,6 +354,8 @@ def template_create(
 
         os.system(commandLine)
 
+    return project_dir
+
 
 def get_keosd_wallet_dir():
     '''
@@ -421,8 +422,54 @@ def getTargetDirPath(source_dir):
 
     return source_dir
 
+def node_start_cl(clear=False, verbosity=None):
+    args = [
+        "--http-server-address", config.getHttpServerAddress(),
+        "--data-dir", config.getDataDir(),
+        "--config-dir", config.getConfigDir(),
+        "--chain-state-db-size-mb", config.getMemorySizeMb(),
+        " --contracts-console",
+        " --verbose-http-errors"
+    ]
+
+    if clear:
+        node_stop()
+        args.extend([
+            "--genesis-json", config.getGenesisJson(),
+            "--delete-all-blocks"
+        ])
+
+    args.insert(0, config.getDaemonExe())
+    return " ".join(args)
+
 
 def node_start(clear=False, verbosity=None):
+    args = [
+        "--http-server-address", config.getHttpServerAddress(),
+        "--data-dir", config.getDataDir(),
+        "--config-dir", config.getConfigDir(),
+        "--chain-state-db-size-mb", config.getMemorySizeMb(),
+        " --contracts-console",
+        " --verbose-http-errors"
+    ]
+
+    if clear:
+        node_stop()
+        args.extend([
+            "--genesis-json", config.getGenesisJson(),
+            "--delete-all-blocks"
+        ])
+
+    args.insert(0, config.getDaemonExe())
+    subprocess.Popen(
+        args, 
+        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+        stderr=subprocess.DEVNULL)
+
+    node_probe(verbosity)  
+
+
+def node_start1(clear=False, verbosity=None):
     args = [
         "--http-server-address", config.getHttpServerAddress(),
         "--data-dir", config.getDataDir(),
@@ -454,6 +501,7 @@ def node_start(clear=False, verbosity=None):
         subprocess.Popen("gnome-terminal -- " + " ".join(args), shell=True)
 
     node_probe(verbosity)                    
+
 
 def node_probe(verbosity=None):
     count = 15
@@ -490,6 +538,7 @@ def node_probe(verbosity=None):
         
 def node_stop(verbosity=None):
     pid = get_pid()
+    pid0 = pid
     count = 10
     if pid:
         os.system("kill " + str(pid[0]))
@@ -505,8 +554,8 @@ Failed to kill {}. Pid is {}.
     )
     else:
         logger.INFO('''
-        Local node is stopped.
-        ''', verbosity)        
+        Local node is stopped {}.
+        '''.format(pid0), verbosity)        
 
     
 def node_is_running():
