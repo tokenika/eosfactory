@@ -17,8 +17,7 @@ import pyteos.core.logger as logger
 import pyteos.core.utils as utils
 
 
-def ABI(
-    contract_dir_hint=None, code_name=None, include_dir=None):
+def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
     '''Given a hint to a contract directory, produce ABI file.
     '''
 
@@ -422,28 +421,8 @@ def getTargetDirPath(source_dir):
 
     return source_dir
 
-def node_start_cl(clear=False, verbosity=None):
-    args = [
-        "--http-server-address", config.getHttpServerAddress(),
-        "--data-dir", config.getDataDir(),
-        "--config-dir", config.getConfigDir(),
-        "--chain-state-db-size-mb", config.getMemorySizeMb(),
-        " --contracts-console",
-        " --verbose-http-errors"
-    ]
 
-    if clear:
-        node_stop()
-        args.extend([
-            "--genesis-json", config.getGenesisJson(),
-            "--delete-all-blocks"
-        ])
-
-    args.insert(0, config.getDaemonExe())
-    return " ".join(args)
-
-
-def node_start(clear=False, verbosity=None):
+def node_start1(clear=False, verbosity=None):
     args = [
         "--http-server-address", config.getHttpServerAddress(),
         "--data-dir", config.getDataDir(),
@@ -469,7 +448,7 @@ def node_start(clear=False, verbosity=None):
     node_probe(verbosity)  
 
 
-def node_start1(clear=False, verbosity=None):
+def node_start(clear=False, verbosity=None):
     args = [
         "--http-server-address", config.getHttpServerAddress(),
         "--data-dir", config.getDataDir(),
@@ -498,8 +477,8 @@ def node_start1(clear=False, verbosity=None):
                 shell=True)
     else:
         args.insert(0, config.getDaemonExe())
-        subprocess.Popen("gnome-terminal -- " + " ".join(args), shell=True)
-
+        # subprocess.Popen("gnome-terminal -- " + " ".join(args), shell=True)
+        subprocess.call(["xterm", "-e", " ".join(args)])
     node_probe(verbosity)                    
 
 

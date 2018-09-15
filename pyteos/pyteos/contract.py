@@ -125,40 +125,40 @@ class Contract(ContractBuilder):
             return
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
-        # try:
-        result = cleos.SetContract(
-            self.account, self.contract_dir, 
-            self.wasm_file, self.abi_file, 
-            permission, self.expiration_sec, 
-            self.skip_signature, dont_broadcast, self.forceUnique,
-            self.max_cpu_usage, self.max_net_usage,
-            self.ref_block,
-            is_verbose=-1,
-            json=True)
+        try:
+            result = cleos.SetContract(
+                self.account, self.contract_dir, 
+                self.wasm_file, self.abi_file, 
+                permission, self.expiration_sec, 
+                self.skip_signature, dont_broadcast, self.forceUnique,
+                self.max_cpu_usage, self.max_net_usage,
+                self.ref_block,
+                is_verbose=-1,
+                json=True)
 
-        # except errors.LowRamError as e:
-        #     logger.TRACE('''
-        #     * RAM needed is {}.kByte, buying RAM {}.kByte.
-        #     '''.format(
-        #         e.needs_kbyte,
-        #         e.deficiency_kbyte))
+        except errors.LowRamError as e:
+            logger.TRACE('''
+            * RAM needed is {}.kByte, buying RAM {}.kByte.
+            '''.format(
+                e.needs_kbyte,
+                e.deficiency_kbyte))
 
-        #     buy_ram_kbytes = str(
-        #         e.deficiency_kbyte + 1)
-        #     if not payer:
-        #         payer = self.account
+            buy_ram_kbytes = str(
+                e.deficiency_kbyte + 1)
+            if not payer:
+                payer = self.account
 
-        #     payer.buy_ram(buy_ram_kbytes, self.account)
+            payer.buy_ram(buy_ram_kbytes, self.account)
         
-        #     result = cleos.SetContract(
-        #         self.account, self.contract_dir, 
-        #         self.wasm_file, self.abi_file, 
-        #         permission, self.expiration_sec, 
-        #         self.skip_signature, dont_broadcast, self.forceUnique,
-        #         self.max_cpu_usage, self.max_net_usage,
-        #         self.ref_block,
-        #         is_verbose=-1,
-        #         json=True)
+            result = cleos.SetContract(
+                self.account, self.contract_dir, 
+                self.wasm_file, self.abi_file, 
+                permission, self.expiration_sec, 
+                self.skip_signature, dont_broadcast, self.forceUnique,
+                self.max_cpu_usage, self.max_net_usage,
+                self.ref_block,
+                is_verbose=-1,
+                json=True)
 
         # if not dont_broadcast:
         #     import pdb; pdb.set_trace()

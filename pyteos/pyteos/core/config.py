@@ -533,8 +533,30 @@ def getEOSIO_WAST2WASM():
 def get_eosio_abigen():
     return getValidPath("EOSIO_ABIGEN")
 
+
 def getEOSIO_WASM_LLC():
     return getValidPath("EOSIO_WASM_LLC")       
+
+
+def get_abi_file(contract_dir):
+    '''Given the contract directory, return the ABI file path relative.
+    '''
+    return os.path.relpath(
+        getContractFile(contract_dir, ".abi"), contract_dir)
+
+
+def get_wast_file(contract_dir):
+    '''Given the contract directory, return the WAST file path relative.
+    '''
+    return os.path.relpath(
+        getContractFile(contract_dir, ".wast"), contract_dir)
+
+
+def get_wasm_file(contract_dir):
+    '''Given the contract directory, return the WASM file path relative.
+    '''
+    return os.path.relpath(
+        getContractFile(contract_dir, ".wasm"), contract_dir)
 
 
 def current_config(contract_dir=None):
@@ -664,20 +686,17 @@ def current_config(contract_dir=None):
             map["contract-dir"] = "NOT DEFINED"
 
         try:
-            wast_file = getContractFile(contract_dir, ".wast")
-            map["contract-wast"] = os.path.relpath(wast_file, contract_dir)
+            map["contract-wast"] = get_wast_file(contract_dir)
         except:
             map["contract-wast"] = "NOT DEFINED"
 
         try:
-            wasm_file = getContractFile(contract_dir, ".wasm")
-            map["contract-wasm"] = os.path.relpath(wasm_file, contract_dir)
+            map["contract-wasm"] = get_wasm_file(contract_dir)
         except:
             map["contract-wasm"] = "NOT DEFINED"
 
         try:
-            abi_file = getContractFile(contract_dir, ".abi")
-            map["contract-abi"] = os.path.relpath(abi_file, contract_dir)
+            map["contract-abi"] = get_abi_file(contract_dir)
         except:
             map["contract-abi"] = "NOT DEFINED"
 

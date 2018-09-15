@@ -106,7 +106,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         if transfer:
             args.extend(["--transfer"])
         if not permission is None:
-            p = self._permission_arg(permission)
+            p = permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
         if skip_signature:
@@ -256,7 +256,7 @@ class DelegateBw(cleos._Cleos):
             "--json"]
 
         if not permission is None:
-            p = self._permission_arg(permission)
+            p = permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
         if transfer:

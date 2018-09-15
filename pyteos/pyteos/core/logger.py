@@ -56,10 +56,14 @@ def OUT(msg, translate=True, verbosity=None):
         msg = condition(msg, translate)
         cprint(msg, color[0], color[1], attrs=color[2])
 
-
-def DEBUG(msg, translate=True, verbosity=None):
+__debug_buffer = ""
+def DEBUG(msg=None, translate=True, verbosity=None):
+    if not msg:
+        return __debug_buffer
+    
     msg = condition(msg, translate)
-    self.debug_buffer = msg
+    global __debug_buffer
+    __debug_buffer = msg
 
     if msg and (Verbosity.DEBUG in verbosity if verbosity else __verbosity):
         color = Verbosity.DEBUG.value

@@ -528,7 +528,7 @@ def append_account_methods_and_finish(
         logger.INFO('''
         * code()
         ''')
-        account_object.OUT(result.out_msg)
+        logger.OUT(result.out_msg)
 
     account_object.code = types.MethodType(code, account_object)
 
@@ -593,12 +593,11 @@ def append_account_methods_and_finish(
         account_object.action = result
         try:
             account_object._console = result.console
-            account_object.DEBUG(manager.accout_names_2_object_names(
-                account_object._console))
+            logger.DEBUG(account_object._console)
         except:
             pass
         if json:
-            account_object.OUT(
+            logger.OUT(
                 manager.accout_names_2_object_names(result.out_msg))
 
         account_object.action = result
@@ -636,7 +635,7 @@ def append_account_methods_and_finish(
         except:
             pass
 
-        account_object.OUT(manager.accout_names_2_object_names(result.out_msg))
+        logger.OUT(manager.accout_names_2_object_names(result.out_msg))
         return result
 
     account_object.table = types.MethodType(table, account_object)

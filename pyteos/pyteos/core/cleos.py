@@ -5,7 +5,6 @@ import random
 import os
 
 import pyteos.core.errors as errors
-import pyteos.core.config
 import pyteos.setup as setup
 import pyteos.core.logger as logger
 import pyteos.core.config as config
@@ -18,7 +17,7 @@ setup_setup = setup.Setup()
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
         setup.set_nodeos_address(
-            "http://" + pyteos.core.config.getHttpServerAddress())
+            "http://" + config.getHttpServerAddress())
         setup.is_local_address = True
 
     return setup.is_local_address
@@ -848,7 +847,7 @@ class CreateAccount(Account, _Cleos):
 
         args.append("--json")
         if not permission is None:
-            p = self._permission_arg(permission)
+            p = permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
 
@@ -891,15 +890,13 @@ def account_name():
     return name
 
 def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
-    wasm_file_hint = ".wasm"
-    abi_file_hint = ".abi"
 
     contract_path_absolute = config.getContractDir(contract_dir)
     if not contract_path_absolute:
         return []
 
     if not wasm_file:
-        wasm_file = config.getContractFile(contract_dir, wasm_file_hint)
+        wasm_file = config.get_wasm_file(contract_dir)
         if not wasm_file:
             return []
     else:
@@ -908,7 +905,7 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
             return []
 
     if not abi_file:
-        abi_file = config.getContractFile(contract_dir, abi_file_hint)
+        abi_file = config.get_abi_file(contract_dir)
         if not abi_file:
             return []
     else:
@@ -985,7 +982,7 @@ class SetContract(_Cleos):
         if json:
             args.append("--json")
         if not permission is None:
-            p = self._permission_arg(permission)
+            p = permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
 
@@ -1006,7 +1003,7 @@ class SetContract(_Cleos):
             args.append(wasm_file)
         if abi_file:
             args.append(abi_file)
-        import pdb; pdb.set_trace()
+
         _Cleos.__init__(
             self, args, "set", "contract", is_verbose)
 
@@ -1067,7 +1064,7 @@ class PushAction(_Cleos):
         if json:
             args.append("--json")
         if not permission is None:
-            p = self._permission_arg(permission)
+            p = permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
 
