@@ -9,12 +9,12 @@ import pathlib
 import shutil
 import pprint
 
-import ef.setup as setup
-import ef.core.config as config
-import ef.core.errors as errors
-import ef.core.cleos as cleos
-import ef.core.logger as logger
-import ef.core.utils as utils
+import eosf.setup as setup
+import eosf.core.config as config
+import eosf.core.errors as errors
+import eosf.core.cleos as cleos
+import eosf.core.logger as logger
+import eosf.core.utils as utils
 
 
 def ABI(

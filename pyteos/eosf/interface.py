@@ -16,7 +16,7 @@ class Key(Omittable):
         self.name = name
         self.key_public = key_public
         self.key_private = key_private
-        Omittable.__init(self)
+        Omittable.__init__(self)
 
 
 class Account(Omittable):
@@ -26,7 +26,7 @@ class Account(Omittable):
         self.name = name
         self.owner_key = owner_key
         self.active_key = active_key
-        Omittable.__init(self)
+        Omittable.__init__(self)
 
 
 class Wallet(Omittable):

@@ -2,12 +2,13 @@ import os
 import json
 import inspect
 
-import ef.setup as setup
-import ef.core.teos as teos
-import ef.core.cleos as cleos
-import ef.core.logger as logger
-import ef.core.errors as errors
-import ef.core.manager as manager
+import eosf.setup as setup
+import eosf.interface as interface
+import eosf.core.teos as teos
+import eosf.core.cleos as cleos
+import eosf.core.logger as logger
+import eosf.core.errors as errors
+import eosf.core.manager as manager
 
 def wallet_json_read():
     try:
@@ -169,24 +170,24 @@ class Wallet(cleos.WalletCreate):
         account_name = None
         if isinstance(account_or_key, cleos.Account):
             cleos.WalletRemove_key(
-                self._key_arg(
+                interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=True), 
                 self.name, is_verbose=-1)
-            removed_keys.append(self._key_arg(
+            removed_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=False))
 
             cleos.WalletRemove_key(
-                self._key_arg(
+                interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=True), 
                 self.name, is_verbose=-1)
-            removed_keys.append(self._key_arg(
+            removed_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
         else:
             cleos.WalletRemove_key(
-                self._key_arg(
+                interface.key_arg(
                     account_or_key, is_private_key=True), 
                 self.name, is_verbose=-1)
-            removed_keys.append(self._key_arg(
+            removed_keys.append(interface.key_arg(
                     account_or_key, is_private_key=False))
 
         if account_name is None:
@@ -206,7 +207,7 @@ class Wallet(cleos.WalletCreate):
         wallet_keys = cleos.WalletKeys(is_verbose=-1)
 
         for key in removed_keys:
-            if key in wallet_keys.json[""]:
+            if key in wallet_keys.json:
                 raise errors.Error('''
                 Failed to remove key '{}' from the wallet '{}'
                 '''.format(key, self.name))
@@ -228,17 +229,17 @@ class Wallet(cleos.WalletCreate):
         if isinstance(account_or_key, cleos.Account):
             account_name = account_or_key.name
             wallet_import = cleos.WalletImport(
-                self._key_arg(
+                interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=True), 
                 self.name, is_verbose=-1)
-            imported_keys.append(self._key_arg(
+            imported_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=False))
 
             wallet_import = cleos.WalletImport(
-                self._key_arg(
+                interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=True), 
                 self.name, is_verbose=-1)
-            imported_keys.append(self._key_arg(
+            imported_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
             logger.TRACE('''
                 * Importing keys of the account ``{}`` into the wallet ``{}``
@@ -246,7 +247,7 @@ class Wallet(cleos.WalletCreate):
                 )
         else:           
             wallet_import = cleos.WalletImport(
-                self._key_arg(account_or_key, is_private_key=True), 
+                interface.key_arg(account_or_key, is_private_key=True), 
                 self.name, is_verbose=-1)
 
             logger.TRACE('''
@@ -264,7 +265,7 @@ class Wallet(cleos.WalletCreate):
 
         ok = True
         for key in imported_keys:
-            if not key in wallet_keys.json[""]:
+            if not key in wallet_keys.json:
                 ok = False
                 raise errors.Error('''
                 Failed to import keys of the account '{}' into the wallet '{}'
@@ -279,10 +280,9 @@ class Wallet(cleos.WalletCreate):
 
     def keys_in_wallets(self, keys):
         self.open_unlock()
-
         result = cleos.WalletKeys(is_verbose=-1)
         for key in keys:
-            if not key in result.json[""]:
+            if not key in result.json:
                 return False
         return True
 
@@ -300,10 +300,10 @@ class Wallet(cleos.WalletCreate):
                     ''') 
 
             for name, object_name in account_map.items():
-                account_ = cleos.GetAccount(name, json=True, is_verbose=-1)
+                account_ = cleos.GetAccount(name, is_info=False, is_verbose=-1)
                 if not account_.error:
-                    if account_.owner_key in wallet_keys.json[""] and \
-                            account_.active_key in wallet_keys.json[""]:
+                    if account_.owner_key in wallet_keys.json and \
+                            account_.active_key in wallet_keys.json:
                         new_map[name] = object_name
                         from efacc import create_account
                         create_account(

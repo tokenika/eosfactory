@@ -9,9 +9,9 @@ Python front-end for `EOSIO cleos system`.
 
 '''
 
-from ef.interface import *
-import ef.setup as setup
-import ef.core.cleos as cleos
+from eosf.interface import *
+import eosf.setup as setup
+import eosf.core.cleos as cleos
 
 def reload():
     import importlib
@@ -88,7 +88,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
             active_key = owner_key
 
         args = [
-            self._account_arg(creator), self.name, 
+            account_arg(creator), self.name, 
             self._key_arg(
                 owner_key, is_owner_key=True, is_private_key=False), 
                 self._key_arg(active_key, is_owner_key=False, 
@@ -127,7 +127,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
             
         if not self.error and setup.is_json:
             self.json = cleos.GetAccount(
-                self.name, is_verbose=0, json=True).json
+                self.name, is_verbose=0, is_info=False).json
 
             if self.is_verbose:
                 print(self.__str__())
@@ -181,8 +181,8 @@ class BuyRam(cleos._Cleos):
             is_verbose=1
             ):
 
-        self.payer = self._account_arg(payer)
-        self.receiver = self._account_arg(receiver)
+        self.payer = account_arg(payer)
+        self.receiver = account_arg(receiver)
         self.amount = str(amount)
 
         args = [self.payer, self.receiver, self.amount]
@@ -243,8 +243,8 @@ class DelegateBw(cleos._Cleos):
         ref_block=None,
         is_verbose=1):
 
-        self.payer = self._account_arg(payer)
-        self.receiver = self._account_arg(receiver)
+        self.payer = account_arg(payer)
+        self.receiver = account_arg(receiver)
         self.stake_net_quantity = stake_net_quantity
         self.stake_cpu_quantity = stake_cpu_quantity
 

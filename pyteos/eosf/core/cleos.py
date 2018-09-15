@@ -1,12 +1,14 @@
 import subprocess
 import json
 import pathlib
+import random
 
-import ef.core.errors as errors
-import ef.core.config
-import ef.setup as setup
-import ef.core.logger as logger
-from ef.interface import *
+import eosf.core.errors as errors
+import eosf.core.config
+import eosf.setup as setup
+import eosf.core.logger as logger
+import eosf.core.config as config
+from eosf.interface import *
 
 
 setup_setup = setup.Setup()
@@ -15,7 +17,7 @@ setup_setup = setup.Setup()
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
         setup.set_nodeos_address(
-            "http://" + ef.core.config.getHttpServerAddress())
+            "http://" + eosf.core.config.getHttpServerAddress())
         setup.is_local_address = True
 
     return setup.is_local_address
@@ -29,7 +31,6 @@ class _Cleos():
         self.out_msg = None
         self.out_msg_details = None
         self.err_msg = None
-        self.error = False
         self.json = {}
         self.is_verbose = is_verbose
 
@@ -69,7 +70,6 @@ class _Cleos():
         try:
             errors.validate(self)
         except Exception as e:
-            self.error = True
             if self.is_verbose >= 0:
                 raise
             
@@ -280,7 +280,7 @@ class GetAccount(Account, _Cleos):
         }
     '''
     def __init__(self, account, is_info=True, is_verbose=1):
-        Account.__init__(self, self._account_arg(account))
+        Account.__init__(self, account_arg(account))
         _Cleos.__init__(
             self, 
             [self.name] if is_info else [self.name, "--json"], 
@@ -289,7 +289,6 @@ class GetAccount(Account, _Cleos):
         self.owner_key = None
         self.active_key = None
         if json:
-            self.json = json_module.loads(self.out_msg)
             if self.json["permissions"][1]["required_auth"]["keys"]:
                 self.owner_key = self.json["permissions"][1] \
                     ["required_auth"]["keys"][0]["key"]
@@ -319,11 +318,11 @@ class GetAccounts(_Cleos):
         is_verbose: Verbosity at the construction time.
     '''
     def __init__(self, key, is_verbose=1):
-        public_key = self._key_arg(key, is_owner_key=True, is_private_key=False)
+        public_key = key_arg(key, is_owner_key=True, is_private_key=False)
         _Cleos.__init__(
             self, [public_key], "get", "accounts", is_verbose)
 
-        self.json = json_module.loads(self.out_msg)
+        self.json = json.loads(self.out_msg)
         self.names = self.json['account_names']
         self.printself()
 
@@ -350,7 +349,7 @@ class GetTransaction(_Cleos):
         _Cleos.__init__(
             self, [transaction_id], "get", "transaction", is_verbose)
 
-        self.json = json_module.loads(self.out_msg)
+        self.json = json.loads(self.out_msg)
         self.printself()
 
 
@@ -428,7 +427,7 @@ class WalletList(_Cleos):
         _Cleos.__init__(
             self, [], "wallet", "list", is_verbose)
 
-        self.json = json_module.loads("{" + self.out_msg.replace("Wallets", \
+        self.json = json.loads("{" + self.out_msg.replace("Wallets", \
             '"Wallets"', 1) + "}")
         self.printself()
 
@@ -450,10 +449,7 @@ class WalletImport(_Cleos):
         is_verbose: Verbosity at the construction time.
     '''
     def __init__(self, key, wallet="default", is_verbose=1):
-
-        self.set_is_verbose(is_verbose)
-
-        key_private = self._key_arg(key, is_owner_key=True, is_private_key=True)
+        key_private = key_arg(key, is_owner_key=True, is_private_key=True)
         _Cleos.__init__(
             self, 
             ["--private-key", key_private, "--name", wallet_arg(wallet)],
@@ -479,10 +475,7 @@ class WalletRemove_key(_Cleos):
         is_verbose: Verbosity at the construction time.
     '''
     def __init__(self, key, wallet, password, is_verbose=1):
-
-        self.set_is_verbose(is_verbose)
-
-        key_public = self._key_arg(key, is_owner_key=True, is_private_key=False)
+        key_public = key_arg(key, is_owner_key=True, is_private_key=False)
 
         _Cleos.__init__(
             self, 
@@ -517,13 +510,7 @@ class WalletKeys(_Cleos):
     '''
     def __init__(self, is_verbose=1):
         _Cleos.__init__(
-            self, [], "wallet", "keys", is_verbose)
-        import pdb; pdb.set_trace()
-        if self.out_msg != "[]\n":
-            self.json[""] = self.out_msg.replace("\n", "") \
-                .replace("[  ", "").replace('"',"").replace("]", "") \
-                .split(",  ")
-                
+            self, [], "wallet", "keys", is_verbose)                
         self.printself() 
 
     def __str__(self):
@@ -647,7 +634,7 @@ class GetCode(_Cleos):
             self, account, code="", abi="", 
             wasm=False, is_verbose=1):
 
-        account_name = self._account_arg(account)
+        account_name = account_arg(account)
 
         args = [account_name]
         if code:
@@ -698,7 +685,7 @@ class GetTable(_Cleos):
             limit=10, key="", lower="", upper="",
             is_verbose=1
             ):
-        args = [self._account_arg(account)]
+        args = [account_arg(account)]
 
         if not scope:
             scope=self.name
@@ -718,7 +705,7 @@ class GetTable(_Cleos):
         if key:
             args.extend(
                 ["--key", 
-                self._key_arg(key, is_owner_key=False, is_private_key=False)])
+                key_arg(key, is_owner_key=False, is_private_key=False)])
         if lower:
             args.extend(["--lower", lower])
         if upper:
@@ -727,7 +714,7 @@ class GetTable(_Cleos):
         _Cleos.__init__(self, args, "get", "table", is_verbose)
 
         try:
-            self.json = json_module.loads(self.out_msg)
+            self.json = json.loads(self.out_msg)
         except:
             pass
 
@@ -783,7 +770,7 @@ class CreateKey(Key, _Cleos):
 class RestoreAccount():
 
     def __init__(self, account, is_verbose=1):
-        acc = GetAccount(account, is_verbose=0, json=True)
+        acc = GetAccount(account, is_verbose=0, is_info=False)
         acc.copy_to(self)
 
         self.name = self.json["account_name"]
@@ -860,13 +847,13 @@ class CreateAccount(Account, _Cleos):
         if active_key is None:
             active_key = owner_key        
 
-        owner_key_public = self._key_arg(
+        owner_key_public = key_arg(
             owner_key, is_owner_key=True, is_private_key=False)
-        active_key_public = self._key_arg(
+        active_key_public = key_arg(
             active_key, is_owner_key=False, is_private_key=False)
 
         args = [
-                self._account_arg(creator), self.name, 
+                account_arg(creator), self.name, 
                 owner_key_public, active_key_public
             ]
         if setup.is_json:
@@ -893,8 +880,7 @@ class CreateAccount(Account, _Cleos):
         _Cleos.__init__(
             self, args, "create", "account", is_verbose)
             
-        self.transaction = get_transaction_id(self)
-        self.json = GetAccount(self.name, is_verbose=0, json=True).json
+        self.json = GetAccount(self.name, is_verbose=0, is_info=False).json
         self.printself()
 
     def info(self):
@@ -915,15 +901,14 @@ def account_name():
 
     return name
 
-def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
+def contract_is_built(contract_dir, wasm_file=".wasm", abi_file=".abi"):
     import teos
-    config = teos.GetConfig(contract_dir, is_verbose=0)
-    contract_path_absolute = config.json["contract-dir"]
+    contract_path_absolute = config.getContractDir(contract_dir)
     if not contract_path_absolute:
         return []
 
     if not wasm_file:
-        wasm_file = config.json["contract-wasm"]
+        wasm_file = config.getContractFile(contract_dir, wasm_file)
         if not wasm_file:
             return []
     else:
@@ -932,7 +917,7 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
             return []
 
     if not abi_file:
-        abi_file = config.json["contract-abi"]
+        abi_file = config.getContractFile(contract_dir, abi_file)
         if not abi_file:
             return []
     else:
@@ -1002,7 +987,7 @@ class SetContract(_Cleos):
         wasm_file = files[1]
         abi_file = files[2]            
 
-        self.account_name = self._account_arg(account)
+        self.account_name = account_arg(account)
 
         args = [self.account_name, self.contract_path_absolute]
 
@@ -1035,8 +1020,7 @@ class SetContract(_Cleos):
             self, args, "set", "contract", is_verbose)
 
         if setup.is_json or json:
-            self.json = json_module.loads(self.out_msg)
-        self.transaction = get_transaction_id(self)
+            self.json = json.loads(self.out_msg)
         self.printself()
 
     def get_transaction(self):
@@ -1088,7 +1072,7 @@ class PushAction(_Cleos):
             is_verbose=1,
             json=False
         ):
-        self.account_name = self._account_arg(account)
+        self.account_name = account_arg(account)
 
         args = [self.account_name, action, data]
         if setup.is_json or json:
@@ -1116,9 +1100,8 @@ class PushAction(_Cleos):
         self.data = None
         _Cleos.__init__(self, args, "push", "action", is_verbose)
 
-        self.transaction = get_transaction_id(self)
         try:
-            self.json = json_module.loads(self.out_msg)
+            self.json = json.loads(self.out_msg)
             self.console = self.json["processed"]["action_traces"][0]["console"]
             self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
         except:

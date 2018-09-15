@@ -1,8 +1,9 @@
 import shutil
 
-import ef.core.teos as teos
-import ef.core.cleos as cleos
-import ef.core.logger as logger
+import eosf.core.teos as teos
+import eosf.core.cleos as cleos
+import eosf.core.logger as logger
+import eosf.core.config as config
 
 def project_from_template(
         name, template="", user_workspace=None, remove_existing=False, 
@@ -49,8 +50,7 @@ class ContractBuilder():
         self.INFO('''
                 ######### Create a ``Contract`` object.
                 ''')
-        config = teos.GetConfig(contract_dir, is_verbose=0)
-        self.contract_dir = config.json["contract-dir"]
+        self.contract_dir = config.getContractDir(contract_dir)
         
         if not self.contract_dir:
             self.ERROR("""

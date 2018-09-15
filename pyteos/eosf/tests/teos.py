@@ -1,5 +1,5 @@
-import ef.core.teos as teos
-import ef.setup as setup
+import eosf.core.teos as teos
+import eosf.setup as setup
 
 setup.is_print_command_line = False
 # teos.WAST("/mnt/c/Workspaces/EOS/eosfactory/contracts/01_hello_world")

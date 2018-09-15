@@ -1,9 +1,9 @@
 import os
 import json
-import ef.core.errors as errors
-import ef.setup as setup
-import ef.core.logger as logger
-import ef.core.utils as utils
+import eosf.core.errors as errors
+import eosf.setup as setup
+import eosf.core.logger as logger
+import eosf.core.utils as utils
 
 templContractsDir = "templates/contracts"
 contractsDir = "contracts"

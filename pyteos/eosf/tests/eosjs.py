@@ -1,7 +1,7 @@
-import ef.setup as setup
-import ef.core.teos as teos
-from ef.core.cleos import *
-import ef.core.logger as logger
+import eosf.setup as setup
+import eosf.core.teos as teos
+from eosf.core.eosjs import *
+import eosf.core.logger as logger
 
 teos.node_start(True)
 logger.INFO("node started")

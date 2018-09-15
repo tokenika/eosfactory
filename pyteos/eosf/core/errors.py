@@ -1,7 +1,7 @@
 import re
 
-import ef.core.logger as logger
-from ef.interface import *
+import eosf.core.logger as logger
+from eosf.interface import *
 
 
 def validate(omittable):

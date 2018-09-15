@@ -1,6 +1,6 @@
 import json
-import ef.setup as setup
-import ef.core.config as config
+import eosf.setup as setup
+import eosf.core.config as config
 
 setup.CONFIG_JSON = "config.json"
 print(config.config_file())

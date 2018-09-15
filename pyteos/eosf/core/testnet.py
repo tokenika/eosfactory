@@ -1,6 +1,6 @@
-import ef.setup as setup
-import ef.core.manager as manager
-import ef.core.logger as logger
+import eosf.setup as setup
+import eosf.core.manager as manager
+import eosf.core.logger as logger
 
 
 class Testnet:
@@ -14,7 +14,7 @@ class Testnet:
                 manager.reset(verbosity=[logger.Verbosity.ERROR])
             else:
                 manager.resume(verbosity=[logger.Verbosity.ERROR])
-            import ef.account as account
+            import eosf.account as account
             eosio = account.Eosio("account_master")
             setup.is_local_address = True
             account_name = eosio.name

@@ -30,6 +30,6 @@ teos/source/conf.py
 
 pyteos/appJar
 vsc_extension
-tests/test.py
 
-pyteos/ef
+node_modules
+package-lock.json

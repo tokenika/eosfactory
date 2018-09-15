@@ -281,6 +281,7 @@ class _Cleos(efui.Logger):
         {} or {} or {} or {}, while it is {}.
         '''.format(str, Account, tuple, list, type(permission))))
 
+
 def get_transaction_id(cleos_object):
     transaction_id = ""
     msg_keyword = "executed transaction: "
@@ -297,6 +298,7 @@ def get_transaction_id(cleos_object):
         except:
             pass
     return transaction_id
+    
 
 class GetAccount(Account, _Cleos):
     '''Retrieve an account from the blockchain.
