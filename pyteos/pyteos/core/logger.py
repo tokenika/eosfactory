@@ -35,34 +35,57 @@ def SCENARIO(msg):
     COMMENT(msg)
 
 
-def TRACE(msg, translate=True, verbosity=None):
+__trace_buffer = ""
+def TRACE(msg=None, translate=True, verbosity=None):
+    if not msg:
+        return __trace_buffer
+
     msg = condition(msg, translate)
+    __trace_buffer = msg
+
     if msg and (Verbosity.TRACE in verbosity if verbosity else __verbosity):
         color = Verbosity.TRACE.value
         cprint(msg, color[0], color[1], attrs=color[2])
 
 
-def INFO(msg, translate=True, verbosity=None):
+__info_buffer = ""
+def INFO(msg=None, translate=True, verbosity=None):
+    global __info_buffer
+    if not msg:
+        return __info_buffer
+
+    msg = condition(msg, translate)
+    __info_buffer = msg
+
     v = verbosity if verbosity else __verbosity
     if msg and (
             Verbosity.TRACE in v or Verbosity.INFO in v
         ):
         color = Verbosity.INFO.value
-        cprint(condition(msg, translate), color[0], color[1], attrs=color[2])        
+        cprint(msg, color[0], color[1], attrs=color[2])        
 
-def OUT(msg, translate=True, verbosity=None):
+
+__out_buffer = ""
+def OUT(msg=None, translate=True, verbosity=None):
+    global __out_buffer
+    if not msg:
+        return __out_buffer
+
+    msg = condition(msg, translate)
+    __out_buffer = msg
+
     if msg and (Verbosity.OUT in verbosity if verbosity else __verbosity):
         color = Verbosity.OUT.value
-        msg = condition(msg, translate)
         cprint(msg, color[0], color[1], attrs=color[2])
+
 
 __debug_buffer = ""
 def DEBUG(msg=None, translate=True, verbosity=None):
+    global __debug_buffer    
     if not msg:
         return __debug_buffer
     
     msg = condition(msg, translate)
-    global __debug_buffer
     __debug_buffer = msg
 
     if msg and (Verbosity.DEBUG in verbosity if verbosity else __verbosity):
@@ -97,10 +120,11 @@ def ERROR(msg, translate=True, verbosity=None):
 
 
 def condition(message, translate=True):
+    import pyteos.core.manager as manager
     ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
     message = dedent(message).strip()
     message.replace("<br>", "\n")
-    # if translate:
-    #    message = efman.accout_names_2_object_names(message)
+    if translate:
+       message = manager.accout_names_2_object_names(message)
 
     return message

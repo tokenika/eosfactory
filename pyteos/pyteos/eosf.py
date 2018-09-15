@@ -7,6 +7,7 @@ import pyteos.interface
 import pyteos.wallet
 import pyteos.account
 import pyteos.contract
+import pyteos.core.errors
 
 set_is_testing_errors = pyteos.core.logger.set_is_testing_errors
 verbosity = pyteos.core.logger.verbosity
@@ -17,7 +18,7 @@ TRACE = pyteos.core.logger.TRACE
 INFO = pyteos.core.logger.INFO
 OUT = pyteos.core.logger.OUT
 DEBUG = pyteos.core.logger.DEBUG
-
+Error = pyteos.core.errors.Error
 
 CreateKey = pyteos.core.cleos.CreateKey
 Permission = pyteos.interface.Permission

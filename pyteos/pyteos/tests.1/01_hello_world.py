@@ -56,12 +56,9 @@ class Test(unittest.TestCase):
         COMMENT('''
         WARNING: This action should fail due to authority mismatch!
         ''')
-        set_is_testing_errors(True)
-        action = account_host.push_action(
-            "hi", {"user":account_carol})
-        set_is_testing_errors(False)
-        self.assertTrue(account_host.action.error)
-
+        with self.assertRaises(Error):
+            account_host.push_action("hi", {"user":account_carol})
+ 
         contract.delete()
 
     def tearDown(self):

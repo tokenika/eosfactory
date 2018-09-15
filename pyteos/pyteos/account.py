@@ -570,7 +570,7 @@ def append_account_methods_and_finish(
             permission=None, expiration_sec=30, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block=None, json=False, payer=None):
+            ref_block=None, json=False):
         data = _data_json(data)
 
         result = cleos.PushAction(
@@ -587,8 +587,7 @@ def append_account_methods_and_finish(
 
         logger.INFO('''
             {}
-        '''.format(re.sub(
-            ' +',' ', manager.accout_names_2_object_names(data))))
+        '''.format(re.sub(' +',' ', data)))
 
         account_object.action = result
         try:
@@ -597,8 +596,7 @@ def append_account_methods_and_finish(
         except:
             pass
         if json:
-            logger.OUT(
-                manager.accout_names_2_object_names(result.out_msg))
+            logger.OUT(result.out_msg)
 
         account_object.action = result
 
@@ -635,7 +633,7 @@ def append_account_methods_and_finish(
         except:
             pass
 
-        logger.OUT(manager.accout_names_2_object_names(result.out_msg))
+        logger.OUT(result.out_msg)
         return result
 
     account_object.table = types.MethodType(table, account_object)
