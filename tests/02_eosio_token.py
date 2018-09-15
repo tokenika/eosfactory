@@ -57,7 +57,7 @@ class Test(unittest.TestCase):
                 "can_recall": "0",
                 "can_whitelist": "0"
             },
-            permission=[(master, Permission.ACTIVE), (host, Permission.ACTIVE)])
+            permission=[(master, Permission.OWNER), (host, Permission.ACTIVE)])
 
         host.push_action(
             "issue",
