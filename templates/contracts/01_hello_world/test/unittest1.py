@@ -19,21 +19,21 @@ class Test(unittest.TestCase):
         ''')
         reset()
         create_wallet()
-        create_master_account("account_master")
+        create_master_account("master")
 
         _.COMMENT('''
         Build and deploy the contract:
         ''')
-        create_account("account_host", account_master)
-        contract = Contract(account_host, CONTRACT_WORKSPACE)
+        create_account("host", master)
+        contract = Contract(host, CONTRACT_WORKSPACE)
         contract.build(force=False)
         contract.deploy()
 
         _.COMMENT('''
         Create test accounts:
         ''')
-        create_account("account_alice", account_master)
-        create_account("account_carol", account_master)
+        create_account("alice", master)
+        create_account("carol", master)
 
 
     def setUp(self):
@@ -44,23 +44,23 @@ class Test(unittest.TestCase):
         _.COMMENT('''
         Test an action for Alice, including the debug buffer:
         ''')
-        account_host.push_action(
-            "hi", {"user":account_alice}, account_alice)
+        host.push_action(
+            "hi", {"user":alice}, , permission=(alice, Permission.ACTIVE))
 
         _.COMMENT('''
         Test an action for Carol, including the debug buffer:
         ''')
-        account_host.push_action(
-            "hi", {"user":account_carol}, account_carol)
+        host.push_action(
+            "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
 
         _.COMMENT('''
         WARNING: This action should fail due to authority mismatch!
         ''')
         set_is_testing_errors(True)
-        action = account_host.push_action(
-            "hi", {"user":account_carol})
+        action = host.push_action(
+            "hi", {"user":carol}, permission=(alice, Permission.ACTIVE))
         set_is_testing_errors(False)
-        self.assertTrue(account_host.action.error)
+        self.assertTrue(host.action.error)
 
 
     def tearDown(self):

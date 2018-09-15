@@ -79,7 +79,7 @@ def test():
             "challenger": alice,
             "host": carol
         },
-        carol, payer=master)
+        permission=(carol, Permission.ACTIVE), payer=master)
     set_is_testing_errors(False)
 
     if host.action.err_msg:
@@ -93,7 +93,7 @@ def test():
                     "challenger": alice,
                     "host": carol
                 },
-                carol, payer=master)
+                permission=(carol, Permission.ACTIVE), payer=master)
 
             _.COMMENT('''
             Second attempt to create a new game:
@@ -104,7 +104,7 @@ def test():
                     "challenger": alice, 
                     "host": carol
                 },
-                carol, payer=master)
+                permission=(carol, Permission.ACTIVE), payer=master)
         else:
             _.COMMENT('''
             The error is different than expected.
@@ -134,7 +134,7 @@ def test():
             "by": carol,
             "row":0, "column":0
         },
-        carol, payer=master)
+        permission=(carol, Permission.ACTIVE), payer=master)
 
     _.COMMENT('''
     Second move is by alice:
@@ -147,7 +147,7 @@ def test():
             "by": alice,
             "row":1, "column":1
         },
-        alice, payer=master)
+        permission=(alice, Permission.ACTIVE), payer=master)
 
     t = host.table("games", carol)
     assert(t.json["rows"][0]["board"][0] == 1)
@@ -170,7 +170,7 @@ def test():
             "host": carol,
             "by": carol
         }, 
-        carol, payer=master)
+        permission=(carol, Permission.ACTIVE), payer=master)
 
     t = host.table("games", carol)
     assert(t.json["rows"][0]["board"][0] == 0)
@@ -192,7 +192,7 @@ def test():
             "challenger": alice,
             "host": carol
         },
-        carol, payer=master)
+        permission=(carol, Permission.ACTIVE), payer=master)
 
     if testnet.is_local():
         stop()

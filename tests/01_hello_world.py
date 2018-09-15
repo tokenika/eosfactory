@@ -20,13 +20,13 @@ class Test(unittest.TestCase):
         ''')
         reset()
         create_wallet()
-        create_master_account("account_master")
+        create_master_account("master")
 
         _.COMMENT('''
         Create test accounts:
         ''')
-        create_account("account_alice", account_master)
-        create_account("account_carol", account_master)
+        create_account("alice", master)
+        create_account("carol", master)
 
 
     def setUp(self):
@@ -37,8 +37,8 @@ class Test(unittest.TestCase):
         _.COMMENT('''
         Create, build and deploy the contract:
         ''')
-        create_account("account_host", account_master)
-        contract = Contract(account_host, project_from_template(
+        create_account("host", master)
+        contract = Contract(host, project_from_template(
             CONTRACT_WORKSPACE, template="01_hello_world", remove_existing=True))
         contract.build()
         contract.deploy()
@@ -46,25 +46,25 @@ class Test(unittest.TestCase):
         _.COMMENT('''
         Test an action for Alice, including the debug buffer:
         ''')
-        account_host.push_action(
-            "hi", {"user":account_alice}, account_alice)
-        self.assertTrue("account_alice" in account_host.debug_buffer)
+        host.push_action(
+            "hi", {"user":alice}, permission=(alice, Permission.ACTIVE))
+        self.assertTrue("alice" in host.debug_buffer)
 
         _.COMMENT('''
         Test an action for Carol, including the debug buffer:
         ''')
-        account_host.push_action(
-            "hi", {"user":account_carol}, account_carol)
-        self.assertTrue("account_carol" in account_host.debug_buffer)
+        host.push_action(
+            "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
+        self.assertTrue("carol" in host.debug_buffer)
 
         _.COMMENT('''
         WARNING: This action should fail due to authority mismatch!
         ''')
         set_is_testing_errors(True)
-        action = account_host.push_action(
-            "hi", {"user":account_carol})
+        action = host.push_action(
+            "hi", {"user":carol}, permission=(alice, Permission.ACTIVE))
         set_is_testing_errors(False)
-        self.assertTrue(account_host.action.error)
+        self.assertTrue(host.action.error)
 
         contract.delete()
 

@@ -19,22 +19,22 @@ class Test(unittest.TestCase):
         ''')
         reset()
         create_wallet()
-        create_master_account("account_master")
+        create_master_account("master")
 
         _.COMMENT('''
         Build & deploy the contract:
         ''')
-        create_account("account_host", account_master)
-        contract = Contract(account_host, CONTRACT_WORKSPACE)
+        create_account("host", master)
+        contract = Contract(host, CONTRACT_WORKSPACE)
         contract.build(force=False)
         contract.deploy()
 
         _.COMMENT('''
         Create test accounts:
         ''')
-        create_account("account_alice", account_master)
-        create_account("account_bob", account_master)
-        create_account("account_carol", account_master)
+        create_account("alice", master)
+        create_account("bob", master)
+        create_account("carol", master)
 
 
     def setUp(self):
@@ -47,66 +47,67 @@ class Test(unittest.TestCase):
         Initialize the token and send some tokens to one of the accounts:
         ''')
 
-        account_host.push_action(
+        host.push_action(
             "create",
             {
-                "issuer": account_master,
+                "issuer": master,
                 "maximum_supply": "1000000000.0000 EOS",
                 "can_freeze": "0",
                 "can_recall": "0",
                 "can_whitelist": "0"
-            }, [account_master, account_host])
+            },
+            permission=[(master, Permission.ACTIVE), (host, Permission.ACTIVE)])
 
-        account_host.push_action(
+        host.push_action(
             "issue",
             {
-                "to": account_alice, "quantity": "100.0000 EOS", "memo": ""
+                "to": alice, "quantity": "100.0000 EOS", "memo": ""
             },
-            account_master)
+            permission=(master, Permission.ACTIVE))
 
         _.COMMENT('''
         Execute a series of transfers between the accounts:
         ''')
 
-        account_host.push_action(
+        host.push_action(
             "transfer",
             {
-                "from": account_alice, "to": account_carol,
+                "from": alice, "to": carol,
                 "quantity": "25.0000 EOS", "memo":""
             },
-            account_alice)
+            permission=(alice, Permission.ACTIVE))
 
-        account_host.push_action(
+        host.push_action(
             "transfer",
             {
-                "from": account_carol, "to": account_bob, 
+                "from": carol, "to": bob, 
                 "quantity": "11.0000 EOS", "memo": ""
             },
-            account_carol)
+            permission=(carol, Permission.ACTIVE))
 
-        account_host.push_action(
+        host.push_action(
             "transfer",
             {
-                "from": account_carol, "to": account_bob, 
+                "from": carol, "to": bob, 
                 "quantity": "2.0000 EOS", "memo": ""
             },
-            account_carol)
+            permission=(carol, Permission.ACTIVE))
 
-        account_host.push_action(
+        host.push_action(
             "transfer",
             {
-                "from": account_bob, "to": account_alice, \
+                "from": bob, "to": alice,
                 "quantity": "2.0000 EOS", "memo":""
             },
-            account_bob)
+            permission=(bob, Permission.ACTIVE))
 
         _.COMMENT('''
         Verify the outcome:
         ''')
 
-        table_alice = account_host.table("accounts", account_alice)
-        table_bob = account_host.table("accounts", account_bob)
-        table_carol = account_host.table("accounts", account_carol)
+        table_alice = host.table("accounts", alice)
+        table_bob = host.table("accounts", bob)
+        table_carol = host.table("accounts", carol)
 
         self.assertEqual(
             table_alice.json["rows"][0]["balance"], '77.0000 EOS',
