@@ -215,20 +215,26 @@ class NodeStart(_Teos):
                 return
                 
             self.command_line = self.json["command_line"]
-            if self.json["is_windows_ubuntu"] == "true":
-                subprocess.call(
-                    ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
-                    self.json["command_line"]])
-            else:
-                if self.json["uname"] == "Darwin":
-                    subprocess.Popen(
-                        "open -a "
-                        + self.json["exe"] + " --args " + self.json["args"],
-                        shell=True)
-                else:
-                    subprocess.Popen(
-                        "gnome-terminal -- " + self.json["command_line"],
-                        shell=True)                    
+            args = self.json["command_line"].split()
+            subprocess.Popen(
+                args, 
+                stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+                stderr=subprocess.DEVNULL)
+
+            # if self.json["is_windows_ubuntu"] == "true":
+            #     subprocess.call(
+            #         ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
+            #         self.json["command_line"]])
+            # else:
+            #     if self.json["uname"] == "Darwin":
+            #         subprocess.Popen(
+            #             "open -a "
+            #             + self.json["exe"] + " --args " + self.json["args"],
+            #             shell=True)
+            #     else:
+            #         subprocess.Popen(
+            #             "gnome-terminal -- " + self.json["command_line"],
+            #             shell=True)                    
 
 class NodeProbe:
     error = True
