@@ -4,17 +4,17 @@ import types
 import time
 import re
 
-import eosf.core.teos as teos
-import eosf.core.cleos as cleos
-import eosf.core.cleosys as cleosys
-import eosf.core.manager as manager
-import eosf.core.logger as logger
-import eosf.core.config as config
-import eosf.core.errors as errors
+import pyteos.core.teos as teos
+import pyteos.core.cleos as cleos
+import pyteos.core.cleosys as cleosys
+import pyteos.core.manager as manager
+import pyteos.core.logger as logger
+import pyteos.core.config as config
+import pyteos.core.errors as errors
 
-import eosf.setup as setup
-import eosf.wallet as wllet
-import eosf.core.testnet as testnet
+import pyteos.setup as setup
+import pyteos.wallet as wllet
+import pyteos.core.testnet as testnet
 
 
 def reboot():

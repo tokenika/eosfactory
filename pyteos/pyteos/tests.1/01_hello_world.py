@@ -1,5 +1,5 @@
 import unittest
-from eosf.eosf import *
+from pyteos.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 

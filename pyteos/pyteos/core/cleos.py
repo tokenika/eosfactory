@@ -4,12 +4,12 @@ import pathlib
 import random
 import os
 
-import eosf.core.errors as errors
-import eosf.core.config
-import eosf.setup as setup
-import eosf.core.logger as logger
-import eosf.core.config as config
-from eosf.interface import *
+import pyteos.core.errors as errors
+import pyteos.core.config
+import pyteos.setup as setup
+import pyteos.core.logger as logger
+import pyteos.core.config as config
+from pyteos.interface import *
 
 
 setup_setup = setup.Setup()
@@ -18,7 +18,7 @@ setup_setup = setup.Setup()
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
         setup.set_nodeos_address(
-            "http://" + eosf.core.config.getHttpServerAddress())
+            "http://" + pyteos.core.config.getHttpServerAddress())
         setup.is_local_address = True
 
     return setup.is_local_address

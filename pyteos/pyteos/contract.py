@@ -1,10 +1,10 @@
 import shutil
 
-import eosf.core.teos as teos
-import eosf.core.cleos as cleos
-import eosf.core.logger as logger
-import eosf.core.config as config
-import eosf.core.errors as errors
+import pyteos.core.teos as teos
+import pyteos.core.cleos as cleos
+import pyteos.core.logger as logger
+import pyteos.core.config as config
+import pyteos.core.errors as errors
 
 def project_from_template(
         name, template="", user_workspace=None, remove_existing=False, 

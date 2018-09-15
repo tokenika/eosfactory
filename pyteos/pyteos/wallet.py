@@ -2,13 +2,13 @@ import os
 import json
 import inspect
 
-import eosf.setup as setup
-import eosf.interface as interface
-import eosf.core.teos as teos
-import eosf.core.cleos as cleos
-import eosf.core.logger as logger
-import eosf.core.errors as errors
-import eosf.core.manager as manager
+import pyteos.setup as setup
+import pyteos.interface as interface
+import pyteos.core.teos as teos
+import pyteos.core.cleos as cleos
+import pyteos.core.logger as logger
+import pyteos.core.errors as errors
+import pyteos.core.manager as manager
 
 def wallet_json_read():
     try:

@@ -1,6 +1,6 @@
 import json
-import eosf.setup as setup
-import eosf.core.config as config
+import pyteos.setup as setup
+import pyteos.core.config as config
 
 setup.CONFIG_JSON = "config.json"
 print(config.config_file())

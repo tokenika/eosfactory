@@ -3,17 +3,17 @@ import json
 import pathlib
 import re
 
-import eosf.core.errors as errors
-import eosf.core.config
-import eosf.setup as setup
-import eosf.core.logger as logger
+import pyteos.core.errors as errors
+import pyteos.core.config
+import pyteos.setup as setup
+import pyteos.core.logger as logger
 
 
 # TO DO resolve this code reuse issue.
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
         setup.set_nodeos_address(
-            "http://" + eosf.core.config.getHttpServerAddress())
+            "http://" + pyteos.core.config.getHttpServerAddress())
         setup.is_local_address = True
 
     return setup.is_local_address

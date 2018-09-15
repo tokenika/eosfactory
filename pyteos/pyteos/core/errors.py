@@ -1,7 +1,7 @@
 import re
 
-import eosf.core.logger as logger
-from eosf.interface import *
+import pyteos.core.logger as logger
+from pyteos.interface import *
 
 
 def validate(omittable):

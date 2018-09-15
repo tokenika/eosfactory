@@ -1,9 +1,9 @@
 import os
 import json
-import eosf.core.errors as errors
-import eosf.setup as setup
-import eosf.core.logger as logger
-import eosf.core.utils as utils
+import pyteos.core.errors as errors
+import pyteos.setup as setup
+import pyteos.core.logger as logger
+import pyteos.core.utils as utils
 
 templContractsDir = "templates/contracts"
 contractsDir = "contracts"

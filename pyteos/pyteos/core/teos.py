@@ -9,12 +9,12 @@ import pathlib
 import shutil
 import pprint
 
-import eosf.setup as setup
-import eosf.core.config as config
-import eosf.core.errors as errors
-import eosf.core.cleos as cleos
-import eosf.core.logger as logger
-import eosf.core.utils as utils
+import pyteos.setup as setup
+import pyteos.core.config as config
+import pyteos.core.errors as errors
+import pyteos.core.cleos as cleos
+import pyteos.core.logger as logger
+import pyteos.core.utils as utils
 
 
 def ABI(
