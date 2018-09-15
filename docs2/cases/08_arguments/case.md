@@ -38,7 +38,7 @@ create_master_account("master")
 ### Account arguments
 
 Accounts are represented either as blockchain names or as account objects. In
-the following test, the 'account_master' object enters, at first, as itself ...
+the following test, the `account_master` object enters, at first, as itself ...
 
 ```md
 '''
@@ -46,7 +46,7 @@ create_account("alice", master)
 '''
 ```
 
-... next, the 'account_master' is represented as a string, 'eosio` in this case:
+... next, the `account_master` is represented as a string, `eosio` in this case:
 
 ```md
 '''
@@ -56,7 +56,7 @@ create_account("bob", str(master))
 
 If an account argument is neither an account object nor a string, an error 
 message is printed, or an error exception is thrown. For example, let the 
-account argument be of the 'CreateKey' type:
+account argument be of the `CreateKey` type:
 
 ```md
 '''
@@ -74,7 +74,7 @@ In the simpest form, permissions are like accounts: account objects or account
 names.
 
 If an account name is used, it can be decorated with a permission level: 
-'eosio@permission', for example.
+`eosio@permission`, for example.
 
 Using the object oriented style, a permission may be a tuple enclosing an 
 account object and 
@@ -90,13 +90,17 @@ create_account(
 ```
 
 equivalent forms:
+```
 permission=[ ("eosio", "owner"), ("eosio", "active")])
-    or
+``` 
+or
+```
 permission=[ "eosio@owner", "eosio@active"])
+```
 
 If a permission argument type is not supported, an error message is printed, or 
 an error exception is thrown. For example, let the account argument be of the 
-'CreateKey' type:
+`CreateKey` type:
 
 ```md
 '''
@@ -112,8 +116,8 @@ set_throw_error(True)
 ### Data arguments
 
 Data arguments control the contract actions. Let us deploy an instance of the 
-'eosio.token' contract in order to show varies forms of the data argument of 
-the action 'transfer'. 
+`eosio.token` contract in order to show varies forms of the data argument of 
+the action `transfer`. 
 
 ```md
 '''
