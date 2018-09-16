@@ -520,12 +520,22 @@ def node_probe(verbosity=None):
             raise errors.Error('''
             The local node does not respond.
             ''')
+
+
+def top_grep(name=None):
+    if not name:
+        name = config.getDaemonName()
+
+    response = subprocess.run(
+        'ps aux | grep ' + name, shell=True, stdout=subprocess.PIPE)
+    return config.getDaemonExe() in response.stdout.decode("utf-8")
         
-        
+
 def node_stop(verbosity=None):
     # You can see if the process is a zombie by using top or 
     # the following command:
     # ps aux | awk '$8=="Z" {print $2}'
+    # top grep nodeos
 
     pid = get_pid()
     pid0 = pid

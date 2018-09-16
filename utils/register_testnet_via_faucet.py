@@ -2,7 +2,7 @@ from urllib.request import Request, urlopen
 import json
 import argparse
 import time
-from eosf import *
+from pyteos.eosf import *
 
 CREATE_ACCOUNT_URL = "create_account"
 GET_TOKEN_URL = "get_token"
@@ -22,14 +22,14 @@ def register_testnet_via_faucet(
     faucet, url, alias):
 
     setup.set_nodeos_address(url)
-    efman.verify_testnet_production()
+    manager.verify_testnet_production()
 
     account_name = cleos.account_name()
     path = faucet + "/" + CREATE_ACCOUNT_URL + "?" + account_name
     attempt = 0
     response = None
     while True:
-        efui.Logger().TRACE('''
+        TRACE('''
         Registering account: {}
         '''.format(path))
         try:
@@ -43,7 +43,7 @@ def register_testnet_via_faucet(
             response = None
             attempt = attempt + 1
             if attempt == MAX_ATTEMPTS:
-                efui.Logger().ERROR('''
+                raise errors.Error('''
                     Request failed: {}
                     Error message is
                     {}
@@ -56,14 +56,14 @@ def register_testnet_via_faucet(
 
 
     if response["account"] != account_name:
-        efui.Logger().ERROR('''
+        raise errors.Error('''
         Account names do not match: ``{}`` vs ``{}``
         '''.format(response["account"], account_name))
 
     owner_key = response["keys"]["owner_key"]["private"]
     active_key = response["keys"]["active_key"]["private"]
 
-    efui.Logger().INFO('''
+    INFO('''
         Account ``{}`` successfully registered.
         '''.format(account_name))
 
@@ -71,7 +71,7 @@ def register_testnet_via_faucet(
     attempt = 0
     success = 0
     while True:
-        efui.Logger().TRACE('''
+        TRACE('''
         Funding account: {}
         '''.format(path))
         try:
@@ -87,7 +87,7 @@ def register_testnet_via_faucet(
             attempt = attempt + 1
             if attempt == MAX_ATTEMPTS:
                 if success == 0:
-                    efui.Logger().ERROR('''
+                    raise errors.Error('''
                         Request failed: {}
                         Error message is
                         {}
@@ -96,14 +96,14 @@ def register_testnet_via_faucet(
             time.sleep(DELAY_IN_SECONDDS)
 
 
-    efui.Logger().INFO('''
+    INFO('''
         Account ``{}`` successfully funded.
         '''.format(account_name))
 
-    efnet.add_to_mapping(
+    testnet.add_to_mapping(
         url, account_name, owner_key, active_key, alias)
 
-    efnet.testnets()
+    testnet.testnets()
 
 
 parser = argparse.ArgumentParser()

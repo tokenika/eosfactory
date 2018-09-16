@@ -1,4 +1,4 @@
-from eosf import *
+from pyteos.eosf import *
 import argparse
 
 def register_account(
@@ -6,7 +6,7 @@ def register_account(
     account_name, owner_key, active_key):
 
     setup.set_nodeos_address(url)
-    efman.verify_testnet_production()
+    manager.verify_testnet_production()
 
     create_wallet(file=True)
     create_master_account(

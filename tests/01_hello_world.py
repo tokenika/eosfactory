@@ -1,8 +1,7 @@
 import unittest
-from eosf import *
+from pyteos.eosf import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
-_ = Logger()
+verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 
 CONTRACT_WORKSPACE = "_wslqwjvacdyugodewiyd"
 
@@ -11,67 +10,59 @@ class Test(unittest.TestCase):
     def run(self, result=None):
         super().run(result)
 
-
     @classmethod
     def setUpClass(cls):
-        _.SCENARIO('''
+        SCENARIO('''
         Create a contract from template, then build and deploy it.
         Also, execute simple actions, debug buffer and authority mismatch detection.
         ''')
         reset()
         create_wallet()
-        create_master_account("master")
+        create_master_account("account_master")
 
-        _.COMMENT('''
+        COMMENT('''
         Create test accounts:
         ''')
-        create_account("alice", master)
-        create_account("carol", master)
-
+        create_account("account_alice", account_master)
+        create_account("account_carol", account_master)
 
     def setUp(self):
         pass
 
-
     def test_01(self):
-        _.COMMENT('''
+        COMMENT('''
         Create, build and deploy the contract:
         ''')
-        create_account("host", master)
-        contract = Contract(host, project_from_template(
+        create_account("account_host", account_master)
+        contract = Contract(account_host, project_from_template(
             CONTRACT_WORKSPACE, template="01_hello_world", remove_existing=True))
         contract.build()
         contract.deploy()
 
-        _.COMMENT('''
+        COMMENT('''
         Test an action for Alice, including the debug buffer:
         ''')
-        host.push_action(
-            "hi", {"user":alice}, permission=(alice, Permission.ACTIVE))
-        self.assertTrue("alice" in host.debug_buffer)
+        account_host.push_action(
+            "hi", {"user":account_alice}, account_alice)
+        self.assertTrue("account_alice" in DEBUG())
 
-        _.COMMENT('''
+        COMMENT('''
         Test an action for Carol, including the debug buffer:
         ''')
-        host.push_action(
-            "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
-        self.assertTrue("carol" in host.debug_buffer)
+        account_host.push_action(
+            "hi", {"user":account_carol}, account_carol)
+        self.assertTrue("account_carol" in DEBUG())
 
-        _.COMMENT('''
+        COMMENT('''
         WARNING: This action should fail due to authority mismatch!
         ''')
-        set_is_testing_errors(True)
-        action = host.push_action(
-            "hi", {"user":carol}, permission=(alice, Permission.ACTIVE))
-        set_is_testing_errors(False)
-        self.assertTrue(host.action.error)
-
+        with self.assertRaises(Error):
+            account_host.push_action("hi", {"user":account_carol})
+ 
         contract.delete()
-
 
     def tearDown(self):
         pass
-
 
     @classmethod
     def tearDownClass(cls):

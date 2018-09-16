@@ -1,3 +1,3 @@
-from eosf import *
+from pyteos.eosf import *
 
 testnets()

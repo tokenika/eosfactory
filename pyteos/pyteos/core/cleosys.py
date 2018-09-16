@@ -17,8 +17,6 @@ def reload():
     import importlib
     importlib.reload(cleos)
 
-setup_setup = setup.Setup()
-
 
 class SystemNewaccount(cleos.Account, cleos._Cleos):
     ''' Create an account, buy ram, stake for bandwidth for the account.

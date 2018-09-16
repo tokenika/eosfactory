@@ -10,9 +10,6 @@ import pyteos.core.logger as logger
 import pyteos.core.config as config
 from pyteos.interface import *
 
-
-setup_setup = setup.Setup()
-
 # TO DO resolve this code reuse issue.
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
@@ -34,7 +31,7 @@ class _Cleos():
         self.json = {}
         self.is_verbose = is_verbose
 
-        cl = [setup_setup.cleos_exe]
+        cl = [config.getCleosExe()]
         set_local_nodeos_address_if_none()
         cl.extend(["--url", setup.nodeos_address()])
 
@@ -56,7 +53,7 @@ class _Cleos():
             cl,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            cwd=str(pathlib.Path(setup_setup.cleos_exe).parent)) 
+            cwd=str(pathlib.Path(config.getCleosExe()).parent)) 
 
         self.out_msg = process.stdout.decode("utf-8")
         self.out_msg_details = process.stderr.decode("utf-8")

@@ -22,7 +22,7 @@ map = {
     "EOSIO_EOSFACTORY_DIR": [None],
     "EOSIO_CLI_NAME": ["cleos"],
     "EOSIO_KEY_PRIVATE": [
-        "KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"],
+        "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"],
     "EOSIO_KEY_PUBLIC": [
         "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"],
         # relative to EOSIO_EOSFACTORY_DIR:
@@ -148,6 +148,22 @@ def getValidPath(config_key, findFile=None):
     '''
     values = configValues(config_key)
     for path in values:
+
+        if "${U_HOME}" in path: 
+            home = None
+            if "U_HOME" in os.environ:
+                home = os.environ["U_HOME"]
+            elif "HOME" in os.environ:
+                home = os.environ["HOME"]
+                
+            if home:
+                path = path.replace("${U_HOME}", home)
+                if findFile: 
+                    if os.path.exists(os.path.join(path, findFile)):
+                        return path
+                else:
+                    return path
+
         if os.path.isabs(path):
             if findFile:
                 if os.path.exists(os.path.join(path, findFile)):
@@ -157,26 +173,6 @@ def getValidPath(config_key, findFile=None):
         else:
             path = os.path.join(getSourceDir(), path)
             if findFile:
-                if os.path.exists(os.path.join(path, findFile)):
-                    return path
-            else:
-                return path            
-
-    if "U_HOME" in os.environ:
-        home = os.environ["U_HOME"]
-        for path in values:
-            path = path.replace("${U_HOME}", home)
-            if findFile: 
-                if os.path.exists(os.path.join(path, findFile)):
-                    return path
-            else:
-                return path
-
-    if "HOME" in os.environ:
-        home = os.environ["HOME"]
-        for path in values:
-            path = path.replace("${HOME}", home)
-            if findFile: 
                 if os.path.exists(os.path.join(path, findFile)):
                     return path
             else:
@@ -488,7 +484,10 @@ def getConfigDir():
 
 
 def getKeosdWalletDir():
-    return "${HOME}/eosio-wallet/"
+    if "U_HOME" in os.environ:
+        home = os.environ["U_HOME"]
+        return home + "/eosio-wallet/"
+    return None
 
 
 def getTeosDir():

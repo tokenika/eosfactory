@@ -1,13 +1,13 @@
-from eosf import *
+from pyteos.eosf import *
 import argparse
 
 def register_testnet(
     url, alias, account_name, owner_key, active_key):
 
     setup.set_nodeos_address(url)
-    efman.verify_testnet_production()
+    manager.verify_testnet_production()
 
-    #efnet.testnets()
+    #testnet.testnets()
     account = create_master_account(
         None,
         account_name=account_name,
@@ -15,14 +15,14 @@ def register_testnet(
         active_key=active_key)
 
     if account:
-        efnet.add_to_mapping(
+        testnet.add_to_mapping(
             url, 
             account_name if account_name else account.name,
             owner_key if owner_key else account.owner_key.key_private, 
             active_key if active_key else account.active_key.key_private,
             alias)
 
-        efnet.testnets()
+        testnet.testnets()
 
 parser = argparse.ArgumentParser(description='''
 Given an url and an testnet alias (not obligatory), get registration data.
