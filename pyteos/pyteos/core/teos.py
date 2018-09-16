@@ -484,8 +484,13 @@ def node_start(clear=False, verbosity=None):
                 shell=True)
     else:
         args.insert(0, config.getDaemonExe())
+        subprocess.Popen(
+            args, 
+            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+            stderr=subprocess.DEVNULL)
+
         # subprocess.Popen("gnome-terminal -- " + " ".join(args), shell=True)
-        subprocess.call(["xterm", "-e", " ".join(args)])
+        # subprocess.call(["xterm", "-e", " ".join(args)])
     node_probe(verbosity)                    
 
 
@@ -522,7 +527,7 @@ def node_probe(verbosity=None):
             ''')
 
 
-def top_grep(name=None):
+def is_local_node_process_running(name=None):
     if not name:
         name = config.getDaemonName()
 
