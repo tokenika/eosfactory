@@ -27,7 +27,7 @@ def validate(omittable):
     elif "Invalid wallet password" in err_msg:
         raise InvalidPasswordError(omittable)
     elif "Contract is already running this version of code" in err_msg:
-        raise ContractRunning()
+        raise ContractRunningError()
     
     #######################################################################
     # NOT ERRORS
@@ -63,7 +63,7 @@ Account ``{}`` does not exist in the blockchain. It may be created.
             True)
          
 
-class WalletExistsError:
+class WalletExistsError(Error):
     def __init__(self, wallet):
         self.wallet = wallet
         Error.__init__(
@@ -72,7 +72,7 @@ class WalletExistsError:
             True)
 
 
-class WalletNotExistError:
+class WalletNotExistError(Error):
     def __init__(self, wallet):
         self.wallet = wallet
         Error.__init__(
@@ -81,7 +81,7 @@ class WalletNotExistError:
             True)
 
 
-class InvalidPasswordError:
+class InvalidPasswordError(Error):
     def __init__(self, wallet):
         self.wallet = wallet
         Error.__init__(
@@ -90,7 +90,7 @@ class InvalidPasswordError:
             True)
 
 
-class ContractRunningError:
+class ContractRunningError(Error):
     def __init__(self):
         Error.__init__(
             self, 
@@ -98,7 +98,7 @@ class ContractRunningError:
             True)
 
 
-class LowRamError:
+class LowRamError(Error):
     def __init__(self, needs_byte, deficiency_byte):
         self.needs_kbyte =  needs_byte// 1024 + 1
         self.deficiency_kbyte = deficiency_byte // 1024 + 1

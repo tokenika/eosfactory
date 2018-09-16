@@ -41,7 +41,7 @@ def reboot():
 
 
 def is_local_testnet_running():
-        account_ = cleos.GetAccount(self.name, is_info=False, is_verbose=-1)
+        account_ = cleos.GetAccount(self.name, is_info=False, is_verbose=False)
         if not account_.error and \
             self.key_public == \
                 account_.json["permissions"][0]["required_auth"]["keys"] \
@@ -161,7 +161,7 @@ class Eosio(cleos.Account):
         print("account object name: {}\nname: {}\n{}".format(
                 self.account_object_name, 
                 self.name,
-                cleos.GetAccount(self.name, is_verbose=-1).out_msg))
+                cleos.GetAccount(self.name, is_verbose=False).out_msg))
 
     def __str__(self):
         return self.name
@@ -225,7 +225,7 @@ class GetAccount(cleos.GetAccount):
         self.has_keys = not owner_key_private is None
         
         cleos.GetAccount.__init__(
-            self, self.name, is_info=False, is_verbose=-1)
+            self, self.name, is_info=False, is_verbose=False)
 
         self.ERROR_OBJECT(self)
         if not self.error_object is None:
@@ -265,7 +265,7 @@ class GetAccount(cleos.GetAccount):
             '''.format(self.name))
 
     def info(self):
-        get_account = cleos.GetAccount(self.name, is_verbose=-1)
+        get_account = cleos.GetAccount(self.name, is_verbose=False)
         print("account object name: {}\n{}".format(
             self.account_object_name, get_account))
 
@@ -273,9 +273,9 @@ class GetAccount(cleos.GetAccount):
         return self.name
 
 
-class RestoreAccount(cleos.Account, cleos.RestoreAccount):
+class RestoreAccount(cleos.RestoreAccount):
     def __init__(self, name, verbosity=None):
-        cleos.RestoreAccount.__init__(self, name, is_verbose=-1)
+        cleos.RestoreAccount.__init__(self, name, is_verbose=False)
 
 
 class CreateAccount(cleos.CreateAccount):
@@ -295,7 +295,7 @@ class CreateAccount(cleos.CreateAccount):
             self, creator, name, owner_key, active_key, permission,
             expiration_sec, skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
-            ref_block, is_verbose=-1
+            ref_block, is_verbose=False
             )
 
 
@@ -316,7 +316,7 @@ class SystemNewaccount(cleosys.SystemNewaccount):
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
             transfer, expiration_sec, skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage, ref_block, is_verbose=-1)
+            max_cpu_usage, max_net_usage, ref_block, is_verbose=False)
         
 
 def create_master_account(
@@ -490,8 +490,8 @@ def create_master_account(
                 else:
                     return
         else:
-            owner_key_new = cleos.CreateKey("owner", is_verbose=-1)
-            active_key_new = cleos.CreateKey("active", is_verbose=-1)
+            owner_key_new = cleos.CreateKey("owner", is_verbose=False)
+            active_key_new = cleos.CreateKey("active", is_verbose=False)
 
             logger.OUT('''
             Use the following data to register a new account on a public testnet:
@@ -524,7 +524,7 @@ def append_account_methods_and_finish(
         account_object_name, account_object, logger):
 
     def code(account_object, code="", abi="", wasm=False):
-        result = cleos.GetCode(account_object, code, abi, is_verbose=-1)
+        result = cleos.GetCode(account_object, code, abi, is_verbose=False)
         logger.INFO('''
         * code()
         ''')
@@ -533,7 +533,7 @@ def append_account_methods_and_finish(
     account_object.code = types.MethodType(code, account_object)
 
     def is_code(account_object):
-        get_code = cleos.GetCode(account_object.name, is_verbose=-1)
+        get_code = cleos.GetCode(account_object.name, is_verbose=False)
         if get_code.code_hash == \
         "0000000000000000000000000000000000000000000000000000000000000000":
             return ""
@@ -557,7 +557,7 @@ def append_account_methods_and_finish(
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=-1
+            is_verbose=False
             )
         logger.OUT(result)
         account_object.set_contract = result
@@ -579,7 +579,7 @@ def append_account_methods_and_finish(
             skip_signature, dont_broadcast, forceUnique,
             max_cpu_usage, max_net_usage,
             ref_block,
-            is_verbose=-1, json=True)
+            is_verbose=False, json=True)
 
         logger.INFO('''
             * Push action ``{}``:
@@ -625,7 +625,7 @@ def append_account_methods_and_finish(
                     account_object, table_name, scope,
                     binary, 
                     limit, key, lower, upper,
-                    is_verbose=-1)
+                    is_verbose=False)
 
         try:
             account_map = manager.account_map()
@@ -795,8 +795,8 @@ def create_account(
             if not active_key:
                 active_key = owner_key
         else:
-            owner_key = cleos.CreateKey("owner", is_verbose=-1)
-            active_key = cleos.CreateKey("active", is_verbose=-1)
+            owner_key = cleos.CreateKey("owner", is_verbose=False)
+            active_key = cleos.CreateKey("active", is_verbose=False)
 
         if stake_net and not manager.is_local_testnet():
             logger.INFO('''

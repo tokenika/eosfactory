@@ -29,12 +29,12 @@ get_wallet = pyteos.wallet.get_wallet
 create_account = pyteos.account.create_account
 create_master_account = pyteos.account.create_master_account
 reboot = pyteos.account.reboot
+stats = pyteos.account.stats
 
 Contract = pyteos.contract.Contract
 ContractBuilder = pyteos.contract.ContractBuilder
 project_from_template = pyteos.contract.project_from_template
 
-reboot = pyteos.account.reboot
 
 reset = pyteos.core.manager.reset
 resume = pyteos.core.manager.resume

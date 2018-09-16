@@ -1,8 +1,7 @@
 import unittest
-from eosf import *
+from pyteos.eosf import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
-_ = Logger()
+verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 
 CONTRACT_WORKSPACE = "_iqhgcqllgnpkirjwwkms"
 
@@ -14,7 +13,7 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        _.SCENARIO('''
+        SCENARIO('''
         Create a contract from template, then build and deploy it.
         Also, initialize the token and run a couple of transfers between different accounts.
         ''')
@@ -22,7 +21,7 @@ class Test(unittest.TestCase):
         create_wallet()
         create_master_account("account_master")
 
-        _.COMMENT('''
+        COMMENT('''
         Create test accounts:
         ''')
         create_account("account_alice", account_master)
@@ -35,7 +34,7 @@ class Test(unittest.TestCase):
 
 
     def test_01(self):
-        _.COMMENT('''
+        COMMENT('''
         Create, build and deploy the contract:
         ''')
         create_account("account_host", account_master)
@@ -44,7 +43,7 @@ class Test(unittest.TestCase):
         contract.build()
         contract.deploy()
 
-        _.COMMENT('''
+        COMMENT('''
         Initialize the token and send some tokens to one of the accounts:
         ''')
 
@@ -65,7 +64,7 @@ class Test(unittest.TestCase):
             },
             account_master)
 
-        _.COMMENT('''
+        COMMENT('''
         Execute a series of transfers between the accounts:
         ''')
 
@@ -76,7 +75,7 @@ class Test(unittest.TestCase):
                 "quantity": "25.0000 EOS", "memo":""
             },
             account_alice)
-        self.assertTrue("250000" in account_host.debug_buffer)
+        self.assertTrue("250000" in DEBUG())
 
         account_host.push_action(
             "transfer",
@@ -85,7 +84,7 @@ class Test(unittest.TestCase):
                 "quantity": "11.0000 EOS", "memo": ""
             },
             account_carol)
-        self.assertTrue("110000" in account_host.debug_buffer)
+        self.assertTrue("110000" in DEBUG())
 
         account_host.push_action(
             "transfer",
@@ -94,7 +93,7 @@ class Test(unittest.TestCase):
                 "quantity": "2.0000 EOS", "memo": ""
             },
             account_carol)
-        self.assertTrue("20000" in account_host.debug_buffer)
+        self.assertTrue("20000" in DEBUG())
 
         account_host.push_action(
             "transfer",
@@ -103,9 +102,9 @@ class Test(unittest.TestCase):
                 "quantity": "2.0000 EOS", "memo":""
             },
             account_bob)
-        self.assertTrue("20000" in account_host.debug_buffer)
+        self.assertTrue("20000" in DEBUG())
 
-        _.COMMENT('''
+        COMMENT('''
         Verify the outcome:
         ''')
 

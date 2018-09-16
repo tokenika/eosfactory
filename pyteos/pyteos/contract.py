@@ -133,7 +133,7 @@ class Contract(ContractBuilder):
                 self.skip_signature, dont_broadcast, self.forceUnique,
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
-                is_verbose=-1,
+                is_verbose=False,
                 json=True)
 
         except errors.LowRamError as e:
@@ -157,7 +157,7 @@ class Contract(ContractBuilder):
                 self.skip_signature, dont_broadcast, self.forceUnique,
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
-                is_verbose=-1,
+                is_verbose=False,
                 json=True)
 
         # if not dont_broadcast:

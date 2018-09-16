@@ -11,6 +11,7 @@ import pyteos.setup as setup
 import pyteos.core.teos as teos
 import pyteos.core.cleos as cleos
 import pyteos.core.logger as logger
+import pyteos.core.errors as errors
 
 def clear_testnet_cache(verbosity=None):
     ''' Remove wallet files associated with the current testnet.
@@ -30,7 +31,7 @@ def clear_testnet_cache(verbosity=None):
             if file.startswith(setup.file_prefix()):
                 os.remove(os.path.join(dir, file))
     except Exception as e:
-        logger.ERROR('''
+        raise errors.Error('''
         Cannot remove testnet cache. The error message is:
         {}
         '''.format(str(e)))
@@ -68,7 +69,7 @@ def object_names_2_accout_names(sentence):
 
 
 def stop_keosd():
-    cleos.WalletStop(is_verbose=-1)
+    cleos.WalletStop(is_verbose=False)
 
 
 def kill_keosd():
@@ -132,27 +133,20 @@ def status():
     '''
     Display EOS node status.
     '''
-    get_info = cleos.GetInfo(is_verbose=-1)
-    logger = efui.Logger(None)
-    get_info.err_msg = '''
-    {}
-    THE NODE {} IS NOT OPERATIVE.
-    '''.format(get_info.err_msg, setup.nodeos_address())
-    
-    if not logger.ERROR(get_info):
-        logger.INFO('''
-        ######### Node ``{}``, head block number ``{}``.
-        '''.format(
-            setup.nodeos_address(),
-            get_info.json["head_block_num"]))
+    get_info = cleos.GetInfo(is_verbose=0)
+
+    logger.INFO('''
+    ######### Node ``{}``, head block number ``{}``.
+    '''.format(
+        setup.nodeos_address(),
+        get_info.json["head_block_num"]))
 
 
 def info():
     '''
     Display EOS node info.
     '''
-    get_info = cleos.GetInfo(is_verbose=-1)
-    logger = efui.Logger()
+    get_info = cleos.GetInfo(is_verbose=False)
     logger.INFO(str(get_info))
 
 
@@ -160,7 +154,7 @@ def is_head_block_num():
     '''
     Check if testnet is running.
     '''
-    get_info = cleos.GetInfo(is_verbose=-1)
+    get_info = cleos.GetInfo(is_verbose=False)
     try: # if running, json is produced
         head_block_num = int(get_info.json["head_block_num"])
     except:
@@ -168,15 +162,12 @@ def is_head_block_num():
     return head_block_num > 0
 
 def verify_testnet_production():
-    logger = efui.Logger(None)
     result = is_head_block_num()
     domain = "LOCAL" if is_local_testnet() else "REMOTE"
     if not result:
-        #efui.set_is_throwing_errors(False)
-        logger.ERROR('''
+        raise errors.Error('''
         {} testnet is not running or is not responding @ {}.
         '''.format(domain, setup.nodeos_address()))
-        #efui.set_is_throwing_errors(True)
     else:
         logger.INFO('''
         {} testnet is active @ {}.
@@ -205,25 +196,24 @@ editor. Return ``None`` if the the offer is rejected.
             if isinstance(e, FileNotFoundError):
                 return {}
             else:
-                if not logger is None:
-                    logger.ERROR('''
-                The account mapping file is misformed. The error message is:
-                {}
-                
-                Do you want to edit the file?
-                '''.format(str(e)))
-                        
-                    answer = input("y/n <<< ")
-                    if answer == "y":
-                        edit_account_map()
-                        continue
-                    else:
-                        logger.ERROR('''
-            Use the function 'efman.edit_account_map(text_editor="nano")'
-            or the corresponding method of any object of the 'efwal.Wallet` 
-            class to edit the file.
-                        ''')                    
-                        return None
+                logger.OUT('''
+            The account mapping file is misformed. The error message is:
+            {}
+            
+            Do you want to edit the file?
+            '''.format(str(e)))
+                    
+                answer = input("y/n <<< ")
+                if answer == "y":
+                    edit_account_map()
+                    continue
+                else:
+                    raise errors.Error('''
+        Use the function 'efman.edit_account_map(text_editor="nano")'
+        or the corresponding method of any object of the 'pyteos.wallet.Wallet` 
+        class to edit the file.
+                    ''')                    
+                    return None
 
 
 def save_account_map(map):
@@ -235,12 +225,9 @@ def edit_account_map():
 
 
 def save_map(map, file_name):
-    try: # whether the setup map file exists:
-        map = json.dumps(map, indent=3, sort_keys=True)
-        with open(os.path.join(wallet_dir(), file_name), "w") as out:
-            out.write(map)            
-    except Exception as e:
-        efui.Logger().ERROR(str(e))
+    map = json.dumps(map, indent=3, sort_keys=True)
+    with open(os.path.join(wallet_dir(), file_name), "w") as out:
+        out.write(map)            
 
 
 def edit_map(file_name, text_editor="nano"):
@@ -260,7 +247,6 @@ If the file is corrupted, offer editing the file with the ``nano`` linux
 editor. Return ``None`` if the the offer is rejected.
     '''
     wallet_dir_ = wallet_dir()
-    logger = efui.Logger()
     path = os.path.join(wallet_dir_, file_name)
     while True:
         try: # whether the setup map file exists:
@@ -271,7 +257,7 @@ editor. Return ``None`` if the the offer is rejected.
             if isinstance(e, FileNotFoundError):
                 return {}
             else:
-                logger.ERROR('''
+                raise errors.Error('''
             The json file 
             {}
             is misformed. The error message is:
@@ -286,9 +272,9 @@ editor. Return ``None`` if the the offer is rejected.
                     subprocess.run([text_editor, path])
                     continue
                 else:
-                    logger.ERROR('''
+                    raise errors.Error('''
         Use the function 'efman.edit_account_map(text_editor="nano")'
-        or the corresponding method of any object of the 'efwal.Wallet` 
+        or the corresponding method of any object of the 'pyteos.wallet.Wallet` 
         class to edit the file.
                     ''', translate=False)                    
                     return None

@@ -90,7 +90,7 @@ class Wallet(cleos.WalletCreate):
                         os.path.join(self.wallet_dir, setup.password_map)),
                         verbosity)
 
-        cleos.WalletCreate.__init__(self, name, password, is_verbose=-1)
+        cleos.WalletCreate.__init__(self, name, password, is_verbose=False)
 
         if self.is_created: # new password
             logger.INFO('''
@@ -125,7 +125,7 @@ class Wallet(cleos.WalletCreate):
         ''' Opens the wallet.
         Returns `WalletOpen` object
         '''
-        result = cleos.WalletOpen(self.name, is_verbose=-1)
+        result = cleos.WalletOpen(self.name, is_verbose=False)
         logger.TRACE('''
         * Wallet ``{}`` opened.
         '''.format(self.name), verbosity)
@@ -134,14 +134,14 @@ class Wallet(cleos.WalletCreate):
         ''' Lock the wallet.
         Returns `cleos.WalletLock` object.
         '''
-        result = cleos.WalletLock(self.name, is_verbose=-1)
+        result = cleos.WalletLock(self.name, is_verbose=False)
         logger.TRACE("Wallet `{}` locked.".format(self.name), verbosity)
 
     def lock_all(self):
         ''' Lock the wallet.
         Returns `cleos.WalletLock` object.
         '''
-        result = cleos.WalletLockAll(is_verbose=-1)
+        result = cleos.WalletLockAll(is_verbose=False)
         logger.TRACE("All wallets locked.", verbosity)
 
     def unlock(self):
@@ -149,7 +149,7 @@ class Wallet(cleos.WalletCreate):
         Returns `WalletUnlock` object.
         '''
         result = cleos.WalletUnlock(
-            self.name, self.password, is_verbose=-1)
+            self.name, self.password, is_verbose=False)
         logger.TRACE('''
         * Wallet ``{}`` unlocked.
         '''.format(self.name))
@@ -157,9 +157,9 @@ class Wallet(cleos.WalletCreate):
     def open_unlock(self):
         ''' Open&Unlock automatics.
         '''
-        cleos.WalletOpen(self.name, is_verbose=-1)
+        cleos.WalletOpen(self.name, is_verbose=False)
         cleos.WalletUnlock(
-            self.name, self.password, is_verbose=-1)
+            self.name, self.password, is_verbose=False)
 
     def remove_key(self, account_or_key):
         '''
@@ -172,21 +172,21 @@ class Wallet(cleos.WalletCreate):
             cleos.WalletRemove_key(
                 interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=True), 
-                self.name, is_verbose=-1)
+                self.name, is_verbose=False)
             removed_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=False))
 
             cleos.WalletRemove_key(
                 interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=True), 
-                self.name, is_verbose=-1)
+                self.name, is_verbose=False)
             removed_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
         else:
             cleos.WalletRemove_key(
                 interface.key_arg(
                     account_or_key, is_private_key=True), 
-                self.name, is_verbose=-1)
+                self.name, is_verbose=False)
             removed_keys.append(interface.key_arg(
                     account_or_key, is_private_key=False))
 
@@ -204,7 +204,7 @@ class Wallet(cleos.WalletCreate):
                 '''.format(account_name, self.name)
                         )        
 
-        wallet_keys = cleos.WalletKeys(is_verbose=-1)
+        wallet_keys = cleos.WalletKeys(is_verbose=False)
 
         for key in removed_keys:
             if key in wallet_keys.json:
@@ -231,14 +231,14 @@ class Wallet(cleos.WalletCreate):
             wallet_import = cleos.WalletImport(
                 interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=True), 
-                self.name, is_verbose=-1)
+                self.name, is_verbose=False)
             imported_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=False))
 
             wallet_import = cleos.WalletImport(
                 interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=True), 
-                self.name, is_verbose=-1)
+                self.name, is_verbose=False)
             imported_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
             logger.TRACE('''
@@ -248,7 +248,7 @@ class Wallet(cleos.WalletCreate):
         else:           
             wallet_import = cleos.WalletImport(
                 interface.key_arg(account_or_key, is_private_key=True), 
-                self.name, is_verbose=-1)
+                self.name, is_verbose=False)
 
             logger.TRACE('''
                 * Importing keys into the wallet ``{}``
@@ -256,7 +256,7 @@ class Wallet(cleos.WalletCreate):
                         )
             return True
         
-        wallet_keys = cleos.WalletKeys(is_verbose=-1)
+        wallet_keys = cleos.WalletKeys(is_verbose=False)
 
         if len(imported_keys) == 0:
             raise errors.Error('''
@@ -280,7 +280,7 @@ class Wallet(cleos.WalletCreate):
 
     def keys_in_wallets(self, keys):
         self.open_unlock()
-        result = cleos.WalletKeys(is_verbose=-1)
+        result = cleos.WalletKeys(is_verbose=False)
         for key in keys:
             if not key in result.json:
                 return False
@@ -290,7 +290,6 @@ class Wallet(cleos.WalletCreate):
         '''
         '''
         self.open_unlock()
-
         account_map = manager.account_map()
         new_map = {}
         wallet_keys = cleos.WalletKeys(is_verbose=0)
@@ -298,17 +297,20 @@ class Wallet(cleos.WalletCreate):
             logger.INFO('''
                     ######### Restore cached account objects:
                     ''') 
-
             for name, object_name in account_map.items():
-                account_ = cleos.GetAccount(name, is_info=False, is_verbose=-1)
-                if not account_.error:
+                try:
+                    account_ = cleos.GetAccount(
+                        name, is_info=False, is_verbose=False)
                     if account_.owner_key in wallet_keys.json and \
                             account_.active_key in wallet_keys.json:
                         new_map[name] = object_name
-                        from efacc import create_account
-                        create_account(
-                            object_name, name, restore=True, verbosity=None)
 
+                    from pyteos.account import create_account
+                    create_account(
+                        object_name, name, restore=True, verbosity=None)                        
+                except errors.AccountNotExistError:
+                    pass
+                    
             manager.save_account_map(new_map)
         else:
             logger.INFO('''
@@ -326,7 +328,7 @@ class Wallet(cleos.WalletCreate):
         '''
         self.open_unlock()
 
-        self.wallet_keys = cleos.WalletKeys(is_verbose=-1)
+        self.wallet_keys = cleos.WalletKeys(is_verbose=False)
         logger.TRACE('''
             Keys in all open walets:
             {}
@@ -345,7 +347,7 @@ class Wallet(cleos.WalletCreate):
             for name, object_name in account_map_json.items():
                 if object_name == account_object_name:
                     if not name == account_name:
-                        raise errors.Error('''
+                        logger.OUT('''
                 The given account object name
                 ``{}``
                 points to an existing account, of the name {},
@@ -356,7 +358,7 @@ class Wallet(cleos.WalletCreate):
                 However, you can free the name by changing the mapping. 
                 Do you want to edit the file?
                 '''.format(
-                    account_object_name, name, self.wallet_dir), is_fatal=False)
+                    account_object_name, name, self.wallet_dir))
                         is_taken = True
                         break
 
@@ -368,7 +370,7 @@ class Wallet(cleos.WalletCreate):
                 else:
                     raise errors.Error('''
             Use the function 'manager.edit_account_map(text_editor="nano")'
-            or the corresponding method of any object of the 'efwal.Wallet` 
+            or the corresponding method of any object of the 'pyteos.wallet.Wallet` 
             class to edit the file.
                     ''')
                     return True

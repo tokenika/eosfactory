@@ -1,8 +1,7 @@
 import unittest, argparse, sys
-from eosf import *
+from pyteos.eosf import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
-_ = Logger()
+verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
 
 CONTRACT_WORKSPACE = "03_tic_tac_toe"
 
@@ -13,7 +12,7 @@ INITIAL_STAKE_CPU = 10
 class Test(unittest.TestCase):
 
     def stats():
-        efacc.stats(
+        stats(
             [master, host, alice, carol],
             [
                 "core_liquid_balance",
@@ -35,7 +34,7 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        _.SCENARIO('''
+        SCENARIO('''
         There is the ``master`` account that sponsors the ``host``
         account equipped with an instance of the ``tic_tac_toe`` smart contract. There
         are two players ``alice`` and ``carol``. We are testing that the moves of
@@ -68,31 +67,32 @@ class Test(unittest.TestCase):
 
         contract = Contract(host, CONTRACT_WORKSPACE)
         contract.build(force=False)
-        contract.deploy(force=False, payer=master)
 
+        import pyteos.core.errors as errors
+        try:
+            contract.deploy(force=False, payer=master)
+        except errors.ContractRunningError:
+            pass
 
     def setUp(self):
         pass
 
-
     def test_01(self):
-        _.COMMENT('''
+        COMMENT('''
         Attempting to create a new game.
         This might fail if the previous game has not been closes properly:
         ''')
-        set_is_testing_errors(True)
-        host.push_action(
-            "create",
-            {
-                "challenger": alice,
-                "host": carol
-            },
-            carol, payer=master)
-        set_is_testing_errors(False)
-
-        if host.action.err_msg:
-            if "game already exists" in host.action.err_msg:
-                _.COMMENT('''
+        try:
+            host.push_action(
+                "create",
+                {
+                    "challenger": alice,
+                    "host": carol
+                },
+                carol)
+        except Error as e:
+            if "game already exists" in e.message:
+                COMMENT('''
                 We need to close the previous game before creating a new one:
                 ''')
                 host.push_action(
@@ -101,9 +101,9 @@ class Test(unittest.TestCase):
                         "challenger": alice,
                         "host": carol
                     },
-                    carol, payer=master)
+                    carol)
 
-                _.COMMENT('''
+                COMMENT('''
                 Second attempt to create a new game:
                 ''')
                 host.push_action(
@@ -112,13 +112,12 @@ class Test(unittest.TestCase):
                         "challenger": alice, 
                         "host": carol
                     },
-                    carol, payer=master)
+                    carol)
             else:
-                _.COMMENT('''
+                COMMENT('''
                 The error is different than expected.
                 ''')
-                host.action.ERROR()
-                return
+                raise Error(str(e))
 
         t = host.table("games", carol)
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -131,7 +130,7 @@ class Test(unittest.TestCase):
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        _.COMMENT('''
+        COMMENT('''
         First move is by carol:
         ''')
         host.push_action(
@@ -142,9 +141,9 @@ class Test(unittest.TestCase):
                 "by": carol,
                 "row":0, "column":0
             },
-            carol, payer=master)
+            carol)
 
-        _.COMMENT('''
+        COMMENT('''
         Second move is by alice:
         ''')
         host.push_action(
@@ -155,7 +154,7 @@ class Test(unittest.TestCase):
                 "by": alice,
                 "row":1, "column":1
             },
-            alice, payer=master)
+            alice)
 
         t = host.table("games", carol)
         self.assertEqual(t.json["rows"][0]["board"][0], 1)
@@ -168,7 +167,7 @@ class Test(unittest.TestCase):
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        _.COMMENT('''
+        COMMENT('''
         Restarting the game:
         ''')
         host.push_action(
@@ -178,7 +177,7 @@ class Test(unittest.TestCase):
                 "host": carol,
                 "by": carol
             }, 
-            carol, payer=master)
+            carol)
 
         t = host.table("games", carol)
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -191,7 +190,7 @@ class Test(unittest.TestCase):
         self.assertEqual(t.json["rows"][0]["board"][7], 0)
         self.assertEqual(t.json["rows"][0]["board"][8], 0)
 
-        _.COMMENT('''
+        COMMENT('''
         Closing the game:
         ''')
         host.push_action(
@@ -200,12 +199,10 @@ class Test(unittest.TestCase):
                 "challenger": alice,
                 "host": carol
             },
-            carol, payer=master)
-
+            carol)
 
     def tearDown(self):
         pass
-
 
     @classmethod
     def tearDownClass(cls):

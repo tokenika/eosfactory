@@ -465,15 +465,22 @@ def node_start(clear=False, verbosity=None):
             "--delete-all-blocks"
         ])
 
+    cl = args
+    cl.insert(0, config.getDaemonExe())
+
+    if setup.is_print_command_line:
+        print("nodeos command line:")
+        print(" ".join(cl))    
+
     if is_windows_ubuntu():
         args.insert(0, config.getDaemonExe())
         subprocess.call(
             ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
-            " ".join(args)])
+            " ".join(cl)])
     elif uname() == "Darwin":
             subprocess.Popen(
                 "open -a "
-                + self.json["exe"] + " --args " + " ".join(args),
+                + config.getDaemonExe() + " --args " + " ".join(args),
                 shell=True)
     else:
         args.insert(0, config.getDaemonExe())
@@ -516,6 +523,10 @@ def node_probe(verbosity=None):
         
         
 def node_stop(verbosity=None):
+    # You can see if the process is a zombie by using top or 
+    # the following command:
+    # ps aux | awk '$8=="Z" {print $2}'
+
     pid = get_pid()
     pid0 = pid
     count = 10
