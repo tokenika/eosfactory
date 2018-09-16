@@ -47,7 +47,7 @@ def is_local_testnet_running():
                 account_.json["permissions"][0]["required_auth"]["keys"] \
                     [0]["key"]:
             self.account_info = str(account_)
-            self.TRACE('''
+            logger.TRACE('''
                 Local testnet is ON: the `eosio` account is master.
                 ''')
             return True
@@ -221,18 +221,15 @@ class GetAccount(cleos.GetAccount):
 
         self.exists = False
         self.in_wallet_on_stack = False
-        self.fatal_error = False
         self.has_keys = not owner_key_private is None
         
-        cleos.GetAccount.__init__(
-            self, self.name, is_info=False, is_verbose=False)
-
-        self.ERROR_OBJECT(self)
-        if not self.error_object is None:
-            if not isinstance(self.error_object, logger.AccountNotExist):
-                self.fatal_error = True            
+        try:
+            cleos.GetAccount.__init__(
+                self, self.name, is_info=False, is_verbose=False)
+        except errors.AccountNotExistError:
             return
 
+        import pdb; pdb.set_trace()
         self.exists = True
         if owner_key_private is None:
             self.owner_key = cleos.CreateKey(
@@ -260,7 +257,7 @@ class GetAccount(cleos.GetAccount):
                 [0]["key"], active_key_private,
                 is_verbose=0)
 
-        self.TRACE('''
+        logger.TRACE('''
             * Account ``{}`` exists in the blockchain.
             '''.format(self.name))
 
@@ -470,7 +467,7 @@ def create_master_account(
 
                 if account_object_name:
                     if append_account_methods_and_finish(
-                        account_object_name, account_object, account_object):
+                        account_object_name, account_object):
                         logger.TRACE('''
                             * The account ``{}`` is in the wallet.
                             '''.format(account_object.name))
@@ -520,8 +517,7 @@ def create_master_account(
             owner_key = owner_key_new.key_private
             active_key = active_key_new.key_private
 
-def append_account_methods_and_finish(
-        account_object_name, account_object, logger):
+def append_account_methods_and_finish(account_object_name, account_object):
 
     def code(account_object, code="", abi="", wasm=False):
         result = cleos.GetCode(account_object, code, abi, is_verbose=False)
@@ -719,9 +715,11 @@ def append_account_methods_and_finish(
     account_object.info = types.MethodType(info, account_object)
 
     get_account = cleos.GetAccount(account_object, is_info=False, is_verbose=0)
+
     logger.TRACE('''
     * Cross-checked: account object ``{}`` mapped to an existing account ``{}``.
     '''.format(account_object_name, account_object.name), translate=False)
+
     return put_account_to_wallet_and_on_stack(
         account_object_name, account_object)
 
@@ -858,8 +856,7 @@ def create_account(
     logger.TRACE('''
         * The account object is created.
         ''')
-    append_account_methods_and_finish(
-        account_object_name, account_object, logger)
+    append_account_methods_and_finish(account_object_name, account_object)
 
 
 def stats(
