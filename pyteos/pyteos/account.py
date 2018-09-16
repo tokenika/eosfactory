@@ -12,6 +12,7 @@ import pyteos.core.logger as logger
 import pyteos.core.config as config
 import pyteos.core.errors as errors
 
+import pyteos.interface as interface
 import pyteos.setup as setup
 import pyteos.wallet as wllet
 import pyteos.core.testnet as testnet
@@ -208,7 +209,7 @@ class GetAccount(cleos.GetAccount):
     def __init__(
             self,
             account_object_name, name=None, 
-            owner_key_private=None, active_key_private=None, verbosity=None):
+            owner_key=None, active_key=None, verbosity=None):
 
         self.account_object_name = account_object_name
         if name is None: 
@@ -216,12 +217,12 @@ class GetAccount(cleos.GetAccount):
         else:
             self.name = name
             
-        if active_key_private is None:
-            active_key_private = owner_key_private
+        if active_key is None:
+            active_key = owner_key
 
         self.exists = False
         self.in_wallet_on_stack = False
-        self.has_keys = not owner_key_private is None
+        self.has_keys = owner_key and not owner_key.key_private is None
         
         try:
             cleos.GetAccount.__init__(
@@ -231,7 +232,7 @@ class GetAccount(cleos.GetAccount):
 
         import pdb; pdb.set_trace()
         self.exists = True
-        if owner_key_private is None:
+        if owner_key is None:
             self.owner_key = cleos.CreateKey(
                 "owner", 
                 self.json["permissions"][1]["required_auth"]["keys"] \
@@ -241,10 +242,11 @@ class GetAccount(cleos.GetAccount):
             self.owner_key = cleos.CreateKey(
                 "owner", 
                 self.json["permissions"][1]["required_auth"]["keys"] \
-                [0]["key"], owner_key_private,
+                [0]["key"], interface.key_arg(
+                    owner_key, is_owner_key=True, is_private_key=True),
                 is_verbose=0) 
 
-        if active_key_private is None:
+        if active_key is None:
             self.owner_key = cleos.CreateKey(
                 "owner", 
                 self.json["permissions"][0]["required_auth"]["keys"] \
@@ -254,7 +256,8 @@ class GetAccount(cleos.GetAccount):
             self.active_key = cleos.CreateKey(
                 "active", 
                 self.json["permissions"][0]["required_auth"]["keys"] \
-                [0]["key"], active_key_private,
+                [0]["key"], interface.key_arg(
+                    active_key, is_owner_key=False, is_private_key=True),
                 is_verbose=0)
 
         logger.TRACE('''
@@ -514,8 +517,8 @@ def create_master_account(
                     if is_ready == "go":
                         break
             account_name = account_object.name
-            owner_key = owner_key_new.key_private
-            active_key = active_key_new.key_private
+            owner_key = owner_key_new
+            active_key = active_key_new
 
 def append_account_methods_and_finish(account_object_name, account_object):
 
