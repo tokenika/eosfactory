@@ -118,7 +118,7 @@ Usage: ./build.sh [OPTIONS]
 "
 }
 
-while getopts ":e:w:c:C:X:i:t:s:rvh" opt; do
+while getopts ":e:w:o:h" opt; do
   case $opt in
     e)
         EOSIO_SOURCE_DIR__=$OPTARG
