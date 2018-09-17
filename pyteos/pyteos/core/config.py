@@ -668,7 +668,7 @@ def current_config(contract_dir=None):
     
     try:
         map["workspaceEosio"] = os.path.join(
-                                        getSourceDir(), "EOSIO_CONTRACT_DIR")
+                                    getSourceDir(), setup.EOSIO_CONTRACT_DIR)
     except:
         map["workspaceEosio"] = "NOT DEFINED"
 
