@@ -2,7 +2,6 @@
 
 import os
 import subprocess
-import json as json_module
 import time
 import re
 import pathlib
