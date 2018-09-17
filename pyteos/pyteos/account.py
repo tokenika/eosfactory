@@ -14,7 +14,7 @@ import pyteos.core.errors as errors
 
 import pyteos.interface as interface
 import pyteos.setup as setup
-import pyteos.wallet as wllet
+import pyteos.wallet as wallet
 import pyteos.core.testnet as testnet
 
 
@@ -28,7 +28,7 @@ def reboot():
     global wallet_singleton
     if wallet_singleton:
         wallet_singleton.delete_globals()
-    wllet.Wallet.wallet = None
+    wallet.Wallet.wallet = None
 
     try:
         del wallet_singleton
@@ -87,11 +87,11 @@ def is_wallet_defined(logger, globals=None):
         return
     
     global wallet_singleton
-    wallet_singleton = wllet.Wallet.wallet
+    wallet_singleton = wallet.Wallet.wallet
 
     if wallet_singleton is None:
-        wllet.create_wallet(globals=globals)
-        wallet_singleton = wllet.Wallet.wallet
+        wallet.create_wallet(globals=globals)
+        wallet_singleton = wallet.Wallet.wallet
 
         if wallet_singleton is None:
             raise errors.Error('''
@@ -100,7 +100,7 @@ def is_wallet_defined(logger, globals=None):
                 `create_wallet()`
                 ''')
 
-    wallet_globals = wllet.Wallet.globals
+    wallet_globals = wallet.Wallet.globals
 
 
 def is_local_testnet_running(account_eosio):

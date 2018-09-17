@@ -68,7 +68,6 @@ class Test(unittest.TestCase):
         contract = Contract(host, CONTRACT_WORKSPACE)
         contract.build(force=False)
 
-        import pyteos.core.errors as errors
         try:
             contract.deploy(force=False, payer=master)
         except errors.ContractRunningError:

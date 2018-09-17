@@ -1,4 +1,4 @@
-from eosf import *
+from pyteos.eosf import *
 
 reset() 
 create_wallet()
