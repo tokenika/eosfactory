@@ -425,7 +425,7 @@ def getTargetDirPath(source_dir):
     return source_dir
 
 
-def node_start(clear=False, verbosity=None):
+def node_start1(clear=False, verbosity=None):
     args = [
         "--http-server-address", config.getHttpServerAddress(),
         "--data-dir", config.getDataDir(),
@@ -451,7 +451,7 @@ def node_start(clear=False, verbosity=None):
     node_probe(verbosity)
 
 
-def node_start1(clear=False, verbosity=None):
+def node_start(clear=False, verbosity=None):
     args = [
         "--http-server-address", config.getHttpServerAddress(),
         "--data-dir", config.getDataDir(),
