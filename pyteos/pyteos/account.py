@@ -1,4 +1,4 @@
-import json as json
+import json
 import inspect
 import types
 import time
