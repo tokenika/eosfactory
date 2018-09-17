@@ -100,7 +100,6 @@ and Darwin."
 fi
 
 source scripts/${OS_NAME}.sh
-setCompilersAndDependencies # Sets operating system parameters
 
 ##############################################################################
 # Command-line modification of the parameters.

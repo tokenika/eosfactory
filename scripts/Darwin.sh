@@ -13,12 +13,4 @@ function setLinuxVariable() {
     fi
 }
 
-function setCompilersAndDependencies(){
-    export BOOST_ROOT=${U_HOME}/opt/boost
-    export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
-    export WASM_ROOT=/usr/local/wasm
-
-    C_COMPILER__=clang
-    CXX_COMPILER__=clang++
-}
 
