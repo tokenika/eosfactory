@@ -422,32 +422,6 @@ def getTargetDirPath(source_dir):
     return source_dir
 
 
-def node_start1(clear=False, verbosity=None):
-    args = [
-        "--http-server-address", config.getHttpServerAddress(),
-        "--data-dir", config.getDataDir(),
-        "--config-dir", config.getConfigDir(),
-        "--chain-state-db-size-mb", config.getMemorySizeMb(),
-        " --contracts-console",
-        " --verbose-http-errors"
-    ]
-
-    if clear:
-        node_stop()
-        args.extend([
-            "--genesis-json", config.getGenesisJson(),
-            "--delete-all-blocks"
-        ])
-
-    args.insert(0, config.getDaemonExe())
-    subprocess.Popen(
-        args, 
-        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
-        stderr=subprocess.DEVNULL)
-
-    node_probe(verbosity)  
-
-
 def node_start(clear=False, verbosity=None):
     args = [
         "--http-server-address", config.getHttpServerAddress(),
@@ -543,13 +517,13 @@ def node_stop(verbosity=None):
     # top grep nodeos
 
     pid = get_pid()
-    pid0 = pid
     count = 10
     if pid:
         os.system("kill " + str(pid[0]))
-        while pid and count > 0:
+        while count > 0:
             time.sleep(1)
-            pid = get_pid()
+            if not is_local_node_process_running():
+                break
             count = count -1
 
     if count <= 0:
@@ -560,7 +534,7 @@ Failed to kill {}. Pid is {}.
     else:
         logger.INFO('''
         Local node is stopped {}.
-        '''.format(pid0), verbosity)        
+        '''.format(pid), verbosity)        
 
     
 def node_is_running():

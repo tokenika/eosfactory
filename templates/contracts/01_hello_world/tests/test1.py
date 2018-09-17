@@ -1,20 +1,19 @@
 import sys
-from eosf import *
+from pyteos.eosf import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
-_ = Logger()
+verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
-def test():
-    _.SCENARIO('''
+def tests():
+    SCENARIO('''
     Execute simple actions, debug buffer and authority mismatch detection.
     ''')
     reset()
     create_wallet()
     create_master_account("master")
 
-    _.COMMENT('''
+    COMMENT('''
     Build and deploy the contract:
     ''')
     create_account("host", master)
@@ -22,37 +21,36 @@ def test():
     contract.build(force=False)
     contract.deploy()
 
-    _.COMMENT('''
-    Create test accounts:
+    COMMENT('''
+    Create tests accounts:
     ''')
     create_account("alice", master)
     create_account("carol", master)
 
-    _.COMMENT('''
+    COMMENT('''
     Test an action for Alice, including the debug buffer:
     ''')
     host.push_action(
         "hi", {"user":alice}, permission=(alice, Permission.ACTIVE))
-    assert("alice" in host.debug_buffer)
+    assert("alice" in DEBUG())
 
-    _.COMMENT('''
+    COMMENT('''
     Test an action for Carol, including the debug buffer:
     ''')
     host.push_action(
         "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
-    assert("carol" in host.debug_buffer)
+    assert("carol" in DEBUG())
 
-    _.COMMENT('''
+    COMMENT('''
     WARNING: This action should fail due to authority mismatch!
     ''')
-    set_is_testing_errors(True)
-    action = host.push_action(
-        "hi", {"user":carol}, permission=(alice, Permission.ACTIVE)))
-    set_is_testing_errors(False)
-    assert(host.action.error)
+    try:
+        host.push_action("hi", {"user":carol})
+    except:
+        pass
 
     stop()
 
 
 if __name__ == "__main__":
-    test()
+    tests()

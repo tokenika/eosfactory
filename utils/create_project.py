@@ -1,4 +1,4 @@
-from eosf import *
+from pyteos.eosf import *
 import argparse
 
 parser = argparse.ArgumentParser(description='''

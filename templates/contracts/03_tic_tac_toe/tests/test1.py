@@ -1,8 +1,7 @@
 import unittest, argparse, sys
-from eosf import *
+from pyteos.eosf import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
-_ = Logger()
+verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
@@ -11,7 +10,7 @@ INITIAL_STAKE_NET = 10
 INITIAL_STAKE_CPU = 10
 
 def stats():
-    efacc.stats(
+    stats(
         [master, host, alice, carol],
         [
             "core_liquid_balance",
@@ -31,8 +30,8 @@ def stats():
         ]
     )
 
-def test():
-    _.SCENARIO('''
+def tests():
+    SCENARIO('''
     There is the ``master`` account that sponsors the ``host``
     account equipped with an instance of the ``tic_tac_toe`` smart contract. There
     are two players ``alice`` and ``carol``. We are testing that the moves of
@@ -43,12 +42,15 @@ def test():
     
     create_wallet(file=True)
     create_master_account("master", testnet)
-    create_account("host", master,
-        buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-    create_account("alice", master,
-        buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-    create_account("carol", master,
-        buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+    create_account(
+        "host", master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+        stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+    create_account(
+        "alice", master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+        stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+    create_account(
+        "carol", master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+        stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
     if not testnet.is_local():
         stats()
@@ -65,26 +67,27 @@ def test():
 
     contract = Contract(host, CONTRACT_WORKSPACE)
     contract.build(force=False)
-    contract.deploy(force=False, payer=master)
+    try:
+        contract.deploy(force=False, payer=master)
+    except errors.ContractRunningError:
+        pass
 
 
-    _.COMMENT('''
+    COMMENT('''
     Attempting to create a new game.
     This might fail if the previous game has not been closes properly:
     ''')
-    set_is_testing_errors(True)
-    host.push_action(
-        "create",
-        {
-            "challenger": alice,
-            "host": carol
-        },
-        permission=(carol, Permission.ACTIVE), payer=master)
-    set_is_testing_errors(False)
-
-    if host.action.err_msg:
-        if "game already exists" in host.action.err_msg:
-            _.COMMENT('''
+    try:
+        host.push_action(
+            "create",
+            {
+                "challenger": alice,
+                "host": carol
+            },
+            carol)
+    except Error as e:
+        if "game already exists" in e.message:
+            COMMENT('''
             We need to close the previous game before creating a new one:
             ''')
             host.push_action(
@@ -93,9 +96,9 @@ def test():
                     "challenger": alice,
                     "host": carol
                 },
-                permission=(carol, Permission.ACTIVE), payer=master)
+                carol)
 
-            _.COMMENT('''
+            COMMENT('''
             Second attempt to create a new game:
             ''')
             host.push_action(
@@ -104,13 +107,13 @@ def test():
                     "challenger": alice, 
                     "host": carol
                 },
-                permission=(carol, Permission.ACTIVE), payer=master)
+                carol)
         else:
-            _.COMMENT('''
+            COMMENT('''
             The error is different than expected.
             ''')
-            host.action.ERROR()
-            return
+            raise Error(str(e))
+
 
     t = host.table("games", carol)
     assert(t.json["rows"][0]["board"][0] == 0)
@@ -123,7 +126,7 @@ def test():
     assert(t.json["rows"][0]["board"][7] == 0)
     assert(t.json["rows"][0]["board"][8] == 0)
 
-    _.COMMENT('''
+    COMMENT('''
     First move is by carol:
     ''')
     host.push_action(
@@ -134,9 +137,9 @@ def test():
             "by": carol,
             "row":0, "column":0
         },
-        permission=(carol, Permission.ACTIVE), payer=master)
+        permission=(carol, Permission.ACTIVE))
 
-    _.COMMENT('''
+    COMMENT('''
     Second move is by alice:
     ''')
     host.push_action(
@@ -147,7 +150,7 @@ def test():
             "by": alice,
             "row":1, "column":1
         },
-        permission=(alice, Permission.ACTIVE), payer=master)
+        permission=(alice, Permission.ACTIVE))
 
     t = host.table("games", carol)
     assert(t.json["rows"][0]["board"][0] == 1)
@@ -160,7 +163,7 @@ def test():
     assert(t.json["rows"][0]["board"][7] == 0)
     assert(t.json["rows"][0]["board"][8] == 0)
 
-    _.COMMENT('''
+    COMMENT('''
     Restarting the game:
     ''')
     host.push_action(
@@ -170,7 +173,7 @@ def test():
             "host": carol,
             "by": carol
         }, 
-        permission=(carol, Permission.ACTIVE), payer=master)
+        permission=(carol, Permission.ACTIVE))
 
     t = host.table("games", carol)
     assert(t.json["rows"][0]["board"][0] == 0)
@@ -183,7 +186,7 @@ def test():
     assert(t.json["rows"][0]["board"][7] == 0)
     assert(t.json["rows"][0]["board"][8] == 0)
 
-    _.COMMENT('''
+    COMMENT('''
     Closing the game:
     ''')
     host.push_action(
@@ -192,7 +195,7 @@ def test():
             "challenger": alice,
             "host": carol
         },
-        permission=(carol, Permission.ACTIVE), payer=master)
+        permission=(carol, Permission.ACTIVE))
 
     if testnet.is_local():
         stop()
@@ -208,7 +211,7 @@ extra_stake_cpu = None
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='''
-    This is a unit test for the ``tic-tac-toe`` smart contract.
+    This is a unit tests for the ``tic-tac-toe`` smart contract.
     It works both on a local testnet and remote testnet.
     The default option is local testnet.
     ''')
@@ -244,4 +247,4 @@ if __name__ == '__main__':
     extra_stake_net = int(args.net)
     extra_stake_cpu = int(args.cpu)
 
-    test()
+    tests()

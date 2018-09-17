@@ -10,7 +10,7 @@ LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
 CONTRACTS_DIR = "contracts/"
 CONFIG_DIR = "teos"
 CONFIG_JSON = "config.json"
-OSIO_CONTRACT_DIR = "build/contracts/"
+EOSIO_CONTRACT_DIR = "build/contracts/"
 
 __nodeos_address = None
 
