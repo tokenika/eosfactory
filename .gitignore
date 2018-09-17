@@ -7,21 +7,10 @@ CMakeFiles
 cmake_install.cmake
 CMakeCache.txt
 
-teos/teos/include/teos/config.h
-teos/teos_lib/include/teoslib/config.h
-
-/docs/sphinx/build
-!/docs/sphinx/Makefile
-
-!/contracts/01_hello_world/build
-!/contracts/02_eosio_token/build
-!/contracts/03_tic_tac_toe/build
-
 **/.vs
 *.pyc
 
-teos/config.json
-teos/source/conf.py
+config.json
 
 .vscode/c_cpp_properties.json
 .vscode/launch.json
@@ -30,7 +19,6 @@ teos/source/conf.py
 
 pyteos/appJar
 vsc_extension
-
 node_modules
 package-lock.json
 
