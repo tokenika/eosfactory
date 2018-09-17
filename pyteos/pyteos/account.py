@@ -230,7 +230,6 @@ class GetAccount(cleos.GetAccount):
         except errors.AccountNotExistError:
             return
 
-        import pdb; pdb.set_trace()
         self.exists = True
         if owner_key is None:
             self.owner_key = cleos.CreateKey(
@@ -238,7 +237,7 @@ class GetAccount(cleos.GetAccount):
                 self.json["permissions"][1]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
-        else: # an orphan account, private key is restored from a safe
+        else: # an orphan account, private key is restored from cache
             self.owner_key = cleos.CreateKey(
                 "owner", 
                 self.json["permissions"][1]["required_auth"]["keys"] \
@@ -252,7 +251,7 @@ class GetAccount(cleos.GetAccount):
                 self.json["permissions"][0]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
-        else: # an orphan account, private key is restored from a safe
+        else: # an orphan account, private key is restored from cache
             self.active_key = cleos.CreateKey(
                 "active", 
                 self.json["permissions"][0]["required_auth"]["keys"] \
