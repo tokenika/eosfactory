@@ -431,8 +431,8 @@ def node_start1(clear=False, verbosity=None):
         "--data-dir", config.getDataDir(),
         "--config-dir", config.getConfigDir(),
         "--chain-state-db-size-mb", config.getMemorySizeMb(),
-        " --contracts-console",
-        " --verbose-http-errors"
+        "--contracts-console",
+        "--verbose-http-errors"
     ]
 
     if clear:
@@ -441,7 +441,6 @@ def node_start1(clear=False, verbosity=None):
             "--genesis-json", config.getGenesisJson(),
             "--delete-all-blocks"
         ])
-
     args.insert(0, config.getDaemonExe())
     subprocess.Popen(
         args, 
@@ -457,8 +456,8 @@ def node_start(clear=False, verbosity=None):
         "--data-dir", config.getDataDir(),
         "--config-dir", config.getConfigDir(),
         "--chain-state-db-size-mb", config.getMemorySizeMb(),
-        " --contracts-console",
-        " --verbose-http-errors"
+        "--contracts-console",
+        "--verbose-http-errors"
     ]
 
     if clear:
@@ -473,18 +472,24 @@ def node_start(clear=False, verbosity=None):
 
     if setup.is_print_command_line:
         print("nodeos command line:")
-        print(" ".join(cl))    
+        print(" ".join(cl))
 
-    if is_windows_ubuntu():
-        args.insert(0, config.getDaemonExe())
-        subprocess.call(
-            ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
-            " ".join(cl)])
-    elif uname() == "Darwin":
+    if config.is_nodeos_in_window():
+
+        if is_windows_ubuntu():
+            args.insert(0, config.getDaemonExe())
+            subprocess.call(
+                ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
+                " ".join(cl)])
+        elif uname() == "Darwin":
+                subprocess.Popen(
+                    "open -a "
+                    + config.getDaemonExe() + " --args " + " ".join(args),
+                    shell=True)
+        else:
+            args.insert(0, config.getDaemonExe())
             subprocess.Popen(
-                "open -a "
-                + config.getDaemonExe() + " --args " + " ".join(args),
-                shell=True)
+                "gnome-terminal -- " + " ".join(args), shell=True)
     else:
         args.insert(0, config.getDaemonExe())
         subprocess.Popen(
@@ -492,8 +497,6 @@ def node_start(clear=False, verbosity=None):
             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
             stderr=subprocess.DEVNULL)
 
-        # subprocess.Popen("gnome-terminal -- " + " ".join(args), shell=True)
-        # subprocess.call(["xterm", "-e", " ".join(args)])
     node_probe(verbosity)                    
 
 

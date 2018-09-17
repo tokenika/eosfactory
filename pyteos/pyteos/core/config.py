@@ -48,7 +48,8 @@ map = {
         "build/programs/eosio-abigen/eosio-abigen",
         "/usr/local/bin/eosio-abigen",
         "/usr/local/eosio/bin/eosio-abigen"
-    ]
+    ],
+    "NODEOS_IN_WINDOW": [0]
 }
 
 
@@ -398,6 +399,10 @@ def getMemorySizeMb():
     return configValue("EOSIO_SHARED_MEMORY_SIZE_MB")
 
 
+def is_nodeos_in_window():
+    return configValue("NODEOS_IN_WINDOW")
+
+
 def getHttpServerAddress():
     return configValue("EOSIO_DAEMON_ADDRESS")
 
@@ -656,10 +661,8 @@ def current_config(contract_dir=None):
     except:
         map["EOSIO_WAST2WASM"] = "NOT DEFINED"
 
-    try:
-        map["sharedMemory"] = getMemorySizeMb()
-    except:
-        map["sharedMemory"] = "NOT DEFINED"
+    map["sharedMemory"] = getMemorySizeMb()
+    map["NODEOS_IN_WINDOW"] = is_nodeos_in_window()
 
     try:
         map["contractWorkspace"] = configValue("EOSIO_CONTRACT_WORKSPACE")

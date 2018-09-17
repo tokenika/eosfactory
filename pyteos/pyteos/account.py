@@ -1,4 +1,4 @@
-import json
+import json as json
 import inspect
 import types
 import time
@@ -11,6 +11,7 @@ import pyteos.core.manager as manager
 import pyteos.core.logger as logger
 import pyteos.core.config as config
 import pyteos.core.errors as errors
+
 import pyteos.interface as interface
 import pyteos.setup as setup
 import pyteos.wallet as wallet
@@ -381,18 +382,33 @@ def create_master_account(
     '''
 
     globals = inspect.stack()[1][0].f_globals
-    if account_object_name in globals:
+ 
+    if account_object_name: # account_object_name==None in register_testnet
+        '''
+        Check the conditions:
+        * a ``Wallet`` object is defined.
+        * the account object name is not in use, already.    
+        ''' 
+        is_wallet_defined(logger, globals)
 
-        if not isinstance(globals[account_object_name], cleos.Account):
-            raise errors.Error('''
-            The global variable {} type is not ``Account``.
-            '''.format(account_object_name))
+        global wallet_singleton
+        if wallet_singleton is None:
             return
 
-        logger.INFO('''
-            ######## Account object ``{}`` restored from the blockchain.
-            '''.format(account_object_name)) 
-        return
+        if account_object_name in globals:
+
+            if not isinstance(globals[account_object_name], cleos.Account):
+                raise errors.Error('''
+                The global variable {} type is not ``Account``.
+                '''.format(account_object_name))
+                return
+
+            logger.INFO('''
+                ######## Account object ``{}`` restored from the blockchain.
+                '''.format(account_object_name)) 
+            return
+
+            #wallet_singleton.is_name_taken(account_object_name, account_name)
 
     if isinstance(account_name, testnet.Testnet):
         owner_key = account_name.owner_key
@@ -401,17 +417,7 @@ def create_master_account(
 
     logger.INFO('''
         ######### Create a master account object ``{}``.
-        '''.format(account_object_name))
-    '''
-    Check the following conditions:
-    * a ``Wallet`` object is defined.
-    '''  
-    if account_object_name:
-        is_wallet_defined(logger, globals)
-
-        global wallet_singleton
-        if wallet_singleton is None:
-            return
+        '''.format(account_object_name))                
 
     '''
     If the local testnet is running, create an account object representing 
@@ -743,10 +749,18 @@ def create_account(
         verbosity=None):
 
     global wallet_singleton
-    # if wallet_singleton:
-    #     wallet_singleton.is_name_taken(account_object_name, account_name)
-
     globals = inspect.stack()[1][0].f_globals
+
+    '''
+    Check the conditions:
+    * a ``Wallet`` object is defined;
+    * the account object name is not in use, already.
+    '''
+    is_wallet_defined(logger)
+    if wallet_singleton is None:
+        return
+    #wallet_singleton.is_name_taken(account_object_name, account_name)
+
     if account_object_name in globals:
 
         if not isinstance(globals[account_object_name], cleos.Account):
@@ -758,30 +772,20 @@ def create_account(
         logger.INFO('''
             ######## Account object ``{}`` restored from the blockchain.
             '''.format(account_object_name)) 
-        return
-
-    if restore:
-        if creator:
-            account_name = creator
+        return        
 
     logger.INFO('''
         ######### Create an account object ``{}``.
         '''.format(account_object_name))
 
     '''
-    Check the following conditions:
-    * a ``Wallet`` object is defined;
-    * the account object name is not in use, already.
-    '''
-    is_wallet_defined(logger)
-    if wallet_singleton is None:
-        return
-
-    '''
     Create an account object.
     '''
     account_object = None
+
     if restore:
+        if creator:
+            account_name = creator
         logger.INFO('''
                     ... for an existing blockchain account ``{}`` mapped as ``{}``.
                     '''.format(account_name, account_object_name), 
