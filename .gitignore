@@ -1,6 +1,8 @@
-*.exe
 build
-b
+
+!/contracts/01_hello_world/build
+!/contracts/02_eosio_token/build
+!/contracts/03_tic_tac_toe/build
 
 Makefile
 CMakeFiles
