@@ -12,6 +12,7 @@ Python front-end for `EOSIO cleos system`.
 from pyteos.interface import *
 import pyteos.setup as setup
 import pyteos.core.cleos as cleos
+import pyteos.interface as interface
 
 def reload():
     import importlib
@@ -87,10 +88,8 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
 
         args = [
             account_arg(creator), self.name, 
-            self._key_arg(
-                owner_key, is_owner_key=True, is_private_key=False), 
-                self._key_arg(active_key, is_owner_key=False, 
-                is_private_key=False)
+                interface.key_arg(owner_key, is_owner_key=True, is_private_key=False), 
+                interface.key_arg(active_key, is_owner_key=False, is_private_key=False)
             ]
 
         args.append("--json")
@@ -123,12 +122,11 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         cleos._Cleos.__init__(
             self, args, "system", "newaccount", is_verbose)
             
-        if not self.error and setup.is_json:
-            self.json = cleos.GetAccount(
-                self.name, is_verbose=0, is_info=False).json
+        self.json = cleos.GetAccount(
+            self.name, is_verbose=0, is_info=False).json
 
-            if self.is_verbose:
-                print(self.__str__())
+        if self.is_verbose:
+            print(self.__str__())
 
     def info(self):
         print(str(cleos.GetAccount(self.name, is_verbose=1)))

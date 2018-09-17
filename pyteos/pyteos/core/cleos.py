@@ -3,6 +3,7 @@ import json
 import pathlib
 import random
 import os
+import re
 
 import pyteos.core.errors as errors
 import pyteos.setup as setup
@@ -277,7 +278,7 @@ class GetAccount(Account, _Cleos):
 
         self.owner_key = None
         self.active_key = None
-        if json:
+        if not is_info:
             if self.json["permissions"][1]["required_auth"]["keys"]:
                 self.owner_key = self.json["permissions"][1] \
                     ["required_auth"]["keys"][0]["key"]

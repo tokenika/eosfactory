@@ -1,4 +1,4 @@
-import json as json
+import json
 import inspect
 import types
 import time
@@ -11,7 +11,6 @@ import pyteos.core.manager as manager
 import pyteos.core.logger as logger
 import pyteos.core.config as config
 import pyteos.core.errors as errors
-
 import pyteos.interface as interface
 import pyteos.setup as setup
 import pyteos.wallet as wallet
@@ -222,7 +221,8 @@ class GetAccount(cleos.GetAccount):
 
         self.exists = False
         self.in_wallet_on_stack = False
-        self.has_keys = owner_key and not owner_key.key_private is None
+        #self.has_keys = owner_key and not owner_key.key_private is None
+        self.has_keys = not owner_key is None
         
         try:
             cleos.GetAccount.__init__(
