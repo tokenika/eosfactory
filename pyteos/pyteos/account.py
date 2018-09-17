@@ -743,6 +743,8 @@ def create_account(
         restore=False,
         verbosity=None):
 
+    wallet_singleton.is_name_taken(account_object_name, account_name)
+
     globals = inspect.stack()[1][0].f_globals
     if account_object_name in globals:
 
@@ -773,9 +775,6 @@ def create_account(
     is_wallet_defined(logger)
     global wallet_singleton
     if wallet_singleton is None:
-        return
-        
-    if wallet_singleton.is_name_taken(account_object_name, account_name):
         return
 
     '''

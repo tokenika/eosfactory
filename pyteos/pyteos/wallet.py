@@ -363,21 +363,26 @@ class Wallet(cleos.WalletCreate):
                         break
 
             if is_taken:
+                temp = None
+                if account_object_name in Wallet.globals:
+                    temp = Wallet.globals[account_object_name]
+                    del Wallet.globals[account_object_name]
+                
                 answer = input("y/n <<< ")
+                
                 if answer == "y":
                     manager.edit_account_map()
                     continue
                 else:
+                    if temp:
+                        Wallet.globals[account_object_name] = temp
                     raise errors.Error('''
             Use the function 'manager.edit_account_map(text_editor="nano")'
             or the corresponding method of any object of the 'pyteos.wallet.Wallet` 
             class to edit the file.
                     ''')
-                    return True
             else:
                 break
-
-        return False
             
 
     def map_account(self, account_object_name, account_object):
