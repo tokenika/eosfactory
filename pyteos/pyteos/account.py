@@ -11,7 +11,6 @@ import pyteos.core.manager as manager
 import pyteos.core.logger as logger
 import pyteos.core.config as config
 import pyteos.core.errors as errors
-
 import pyteos.interface as interface
 import pyteos.setup as setup
 import pyteos.wallet as wallet
