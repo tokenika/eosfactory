@@ -5,11 +5,11 @@ import random
 import os
 import re
 
-import pyteos.core.errors as errors
-import pyteos.setup as setup
-import pyteos.core.logger as logger
-import pyteos.core.config as config
-from pyteos.interface import *
+import core.errors as errors
+import core.logger as logger
+import core.config as config
+import shell.setup as setup
+import shell.interface as interface
 
 # TO DO resolve this code reuse issue.
 def set_local_nodeos_address_if_none():
@@ -176,7 +176,7 @@ class GetBlock(_Cleos):
         return json.dumps(self.json, sort_keys=True, indent=4)
 
 
-class GetAccount(Account, _Cleos):
+class GetAccount(interface.Account, _Cleos):
     '''Retrieve an account from the blockchain.
 
     - **parameters**::
@@ -270,7 +270,7 @@ class GetAccount(Account, _Cleos):
         }
     '''
     def __init__(self, account, is_info=True, is_verbose=True):
-        Account.__init__(self, account_arg(account))
+        interface.Account.__init__(self, interface.account_arg(account))
         _Cleos.__init__(
             self, 
             [self.name] if is_info else [self.name, "--json"], 
@@ -308,7 +308,7 @@ class GetAccounts(_Cleos):
         is_verbose: Verbosity at the construction time.
     '''
     def __init__(self, key, is_verbose=True):
-        public_key = key_arg(key, is_owner_key=True, is_private_key=False)
+        public_key = interface.key_arg(key, is_owner_key=True, is_private_key=False)
         _Cleos.__init__(
             self, [public_key], "get", "accounts", is_verbose)
 
@@ -340,7 +340,7 @@ class GetTransaction(_Cleos):
         self.printself()
 
 
-class WalletCreate(Wallet, _Cleos):
+class WalletCreate(interface.Wallet, _Cleos):
     '''Create a new wallet locally.
 
     - **parameters**::
@@ -358,7 +358,7 @@ class WalletCreate(Wallet, _Cleos):
         is_verbose: Verbosity at the construction time.
     '''
     def __init__(self, name="default", password="", is_verbose=True):
-        Wallet.__init__(self, name)
+        interface.Wallet.__init__(self, name)
         self.password = None
         
         if not password: # try to create a wallet
@@ -433,10 +433,10 @@ class WalletImport(_Cleos):
         is_verbose: Verbosity at the construction time.
     '''
     def __init__(self, key, wallet="default", is_verbose=True):
-        key_private = key_arg(key, is_owner_key=True, is_private_key=True)
+        key_private = interface.key_arg(key, is_owner_key=True, is_private_key=True)
         _Cleos.__init__(
             self, 
-            ["--private-key", key_private, "--name", wallet_arg(wallet)],
+            ["--private-key", key_private, "--name", interface.wallet_arg(wallet)],
             "wallet", "import", is_verbose)
 
         self.json["key_private"] = key_private
@@ -458,11 +458,11 @@ class WalletRemove_key(_Cleos):
         is_verbose: Verbosity at the construction time.
     '''
     def __init__(self, key, wallet, password, is_verbose=True):
-        key_public = key_arg(key, is_owner_key=True, is_private_key=False)
+        key_public = interface.key_arg(key, is_owner_key=True, is_private_key=False)
 
         _Cleos.__init__(
             self, 
-            [key_public, "--name", wallet_arg(wallet), 
+            [key_public, "--name", interface.wallet_arg(wallet), 
                 "--password", password], 
             "wallet", "remove_key", is_verbose)
 
@@ -519,7 +519,7 @@ class WalletOpen(_Cleos):
     '''
     def __init__(self, wallet="default", is_verbose=True):
         _Cleos.__init__(
-            self, ["--name", wallet_arg(wallet)], 
+            self, ["--name", interface.wallet_arg(wallet)], 
             "wallet", "open", is_verbose)
 
         self.printself()
@@ -553,7 +553,7 @@ class WalletLock(_Cleos):
     '''
     def __init__(self, wallet="default", is_verbose=True):
         _Cleos.__init__(
-            self, ["--name", wallet_arg(wallet)], 
+            self, ["--name", interface.wallet_arg(wallet)], 
             "wallet", "lock", is_verbose)
 
         self.printself()
@@ -580,12 +580,12 @@ class WalletUnlock(_Cleos):
     def __init__(
             self, wallet="default", password="", timeout=0, is_verbose=True):
  
-        if isinstance(wallet, Wallet):
+        if isinstance(wallet, interface.Wallet):
             password = wallet.password
 
         _Cleos.__init__(
             self, 
-            ["--name", wallet_arg(wallet), "--password", password], 
+            ["--name", interface.wallet_arg(wallet), "--password", password], 
             "wallet", "unlock", is_verbose)
 
         self.printself()
@@ -613,7 +613,7 @@ class GetCode(_Cleos):
             self, account, code="", abi="", 
             wasm=False, is_verbose=True):
 
-        account_name = account_arg(account)
+        account_name = interface.account_arg(account)
 
         args = [account_name]
         if code:
@@ -664,7 +664,7 @@ class GetTable(_Cleos):
             limit=10, key="", lower="", upper="",
             is_verbose=True
             ):
-        args = [account_arg(account)]
+        args = [interface.account_arg(account)]
 
         if not scope:
             scope=self.name
@@ -684,7 +684,7 @@ class GetTable(_Cleos):
         if key:
             args.extend(
                 ["--key", 
-                key_arg(key, is_owner_key=False, is_private_key=False)])
+                interface.key_arg(key, is_owner_key=False, is_private_key=False)])
         if lower:
             args.extend(["--lower", lower])
         if upper:
@@ -695,7 +695,7 @@ class GetTable(_Cleos):
         self.printself()
 
 
-class CreateKey(Key, _Cleos):
+class CreateKey(interface.Key, _Cleos):
     '''Create a new keypair and print the public and private keys.
 
     - **parameters**::
@@ -712,7 +712,7 @@ class CreateKey(Key, _Cleos):
     '''
     def __init__(
             self, key_name, key_public="", key_private="", r1=False, is_verbose=True):
-        Key.__init__(self, key_name, key_public, key_private)
+        interface.Key.__init__(self, key_name, key_public, key_private)
 
         if self.key_public or self.key_private:
             self.json = {}
@@ -757,7 +757,7 @@ class RestoreAccount(GetAccount):
         return self.name
 
 
-class CreateAccount(Account, _Cleos):
+class CreateAccount(interface.Account, _Cleos):
     '''Create an account, buy ram, stake for bandwidth for the account.
 
     - **parameters**::
@@ -811,7 +811,7 @@ class CreateAccount(Account, _Cleos):
 
         if name is None: 
             name = account_name()
-        Account.__init__(self, name)
+        interface.Account.__init__(self, name)
 
         self.owner_key = None # private keys
         self.active_key = None
@@ -819,19 +819,19 @@ class CreateAccount(Account, _Cleos):
         if active_key is None:
             active_key = owner_key        
 
-        owner_key_public = key_arg(
+        owner_key_public = interface.key_arg(
             owner_key, is_owner_key=True, is_private_key=False)
-        active_key_public = key_arg(
+        active_key_public = interface.key_arg(
             active_key, is_owner_key=False, is_private_key=False)
 
         args = [
-                account_arg(creator), self.name, 
+                interface.account_arg(creator), self.name, 
                 owner_key_public, active_key_public
             ]
 
         args.append("--json")
         if not permission is None:
-            p = permission_arg(permission)
+            p = interface.permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
 
@@ -959,14 +959,14 @@ class SetContract(_Cleos):
         wasm_file = files[1]
         abi_file = files[2]            
 
-        self.account_name = account_arg(account)
+        self.account_name = interface.account_arg(account)
 
         args = [self.account_name, self.contract_path_absolute]
 
         if json:
             args.append("--json")
         if not permission is None:
-            p = permission_arg(permission)
+            p = interface.permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
 
@@ -1042,13 +1042,13 @@ class PushAction(_Cleos):
             is_verbose=True,
             json=False
         ):
-        self.account_name = account_arg(account)
+        self.account_name = interface.account_arg(account)
 
         args = [self.account_name, action, data]
         if json:
             args.append("--json")
         if not permission is None:
-            p = permission_arg(permission)
+            p = interface.permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
 

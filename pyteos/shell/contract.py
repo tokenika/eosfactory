@@ -1,10 +1,10 @@
 import shutil
 
-import pyteos.core.teos as teos
-import pyteos.core.cleos as cleos
-import pyteos.core.logger as logger
-import pyteos.core.config as config
-import pyteos.core.errors as errors
+import core.teos as teos
+import core.cleos as cleos
+import core.logger as logger
+import core.config as config
+import core.errors as errors
 
 def project_from_template(
         name, template="", user_workspace=None, remove_existing=False, 

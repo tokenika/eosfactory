@@ -8,12 +8,12 @@ import pathlib
 import shutil
 import pprint
 
-import pyteos.setup as setup
-import pyteos.core.config as config
-import pyteos.core.errors as errors
-import pyteos.core.cleos as cleos
-import pyteos.core.logger as logger
-import pyteos.core.utils as utils
+import shell.setup as setup
+import core.config as config
+import core.errors as errors
+import core.cleos as cleos
+import core.logger as logger
+import core.utils as utils
 
 
 def ABI(contract_dir_hint=None, code_name=None, include_dir=None):

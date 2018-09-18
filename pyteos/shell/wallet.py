@@ -2,13 +2,13 @@ import os
 import json
 import inspect
 
-import pyteos.setup as setup
-import pyteos.interface as interface
-import pyteos.core.teos as teos
-import pyteos.core.cleos as cleos
-import pyteos.core.logger as logger
-import pyteos.core.errors as errors
-import pyteos.core.manager as manager
+import shell.setup as setup
+import shell.interface as interface
+import core.teos as teos
+import core.cleos as cleos
+import core.logger as logger
+import core.errors as errors
+import core.manager as manager
 
 def wallet_json_read():
     try:
@@ -168,7 +168,7 @@ class Wallet(cleos.WalletCreate):
 
         removed_keys = []
         account_name = None
-        if isinstance(account_or_key, cleos.Account):
+        if isinstance(account_or_key, interface.Account):
             cleos.WalletRemove_key(
                 interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=True), 
@@ -226,7 +226,7 @@ class Wallet(cleos.WalletCreate):
 
         imported_keys = []
         account_name = None
-        if isinstance(account_or_key, cleos.Account):
+        if isinstance(account_or_key, interface.Account):
             account_name = account_or_key.name
             wallet_import = cleos.WalletImport(
                 interface.key_arg(
@@ -305,12 +305,12 @@ class Wallet(cleos.WalletCreate):
                             account_.active_key in wallet_keys.json:
                         new_map[name] = object_name
 
-                    from pyteos.account import create_account
+                    from shell.account import create_account
                     create_account(
                         object_name, name, restore=True, verbosity=None)                        
-                except errors.AccountNotExistError:
+                except errors.AccountDoesNotExistError:
                     pass
-                    
+
             manager.save_account_map(new_map)
         else:
             logger.INFO('''

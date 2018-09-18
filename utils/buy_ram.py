@@ -1,4 +1,4 @@
-from pyteos.eosf import *
+from eosf import *
 
 testnet = get_testnet("KYLIN")
 testnet.configure()

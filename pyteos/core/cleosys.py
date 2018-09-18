@@ -9,17 +9,16 @@ Python front-end for `EOSIO cleos system`.
 
 '''
 
-from pyteos.interface import *
-import pyteos.setup as setup
-import pyteos.core.cleos as cleos
-import pyteos.interface as interface
+import core.cleos as cleos
+import shell.setup as setup
+import shell.interface as interface
 
 def reload():
     import importlib
     importlib.reload(cleos)
 
 
-class SystemNewaccount(cleos.Account, cleos._Cleos):
+class SystemNewaccount(interface.Account, cleos._Cleos):
     ''' Create an account, buy ram, stake for bandwidth for the account.
 
     - **parameters**::
@@ -78,7 +77,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         
         if name is None: 
             name = account_name()
-        cleos.Account.__init__(self, name)
+        interface.Account.__init__(self, name)
 
         self.owner_key = None # private keys
         self.active_key = None
@@ -87,7 +86,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
             active_key = owner_key
 
         args = [
-            account_arg(creator), self.name, 
+            interface.account_arg(creator), self.name, 
                 interface.key_arg(owner_key, is_owner_key=True, is_private_key=False), 
                 interface.key_arg(active_key, is_owner_key=False, is_private_key=False)
             ]
@@ -103,7 +102,7 @@ class SystemNewaccount(cleos.Account, cleos._Cleos):
         if transfer:
             args.extend(["--transfer"])
         if not permission is None:
-            p = permission_arg(permission)
+            p = interface.permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
         if skip_signature:
@@ -177,8 +176,8 @@ class BuyRam(cleos._Cleos):
             is_verbose=1
             ):
 
-        self.payer = account_arg(payer)
-        self.receiver = account_arg(receiver)
+        self.payer = interface.account_arg(payer)
+        self.receiver = interface.account_arg(receiver)
         self.amount = str(amount)
 
         args = [self.payer, self.receiver, self.amount]
@@ -239,8 +238,8 @@ class DelegateBw(cleos._Cleos):
         ref_block=None,
         is_verbose=1):
 
-        self.payer = account_arg(payer)
-        self.receiver = account_arg(receiver)
+        self.payer = interface.account_arg(payer)
+        self.receiver = interface.account_arg(receiver)
         self.stake_net_quantity = stake_net_quantity
         self.stake_cpu_quantity = stake_cpu_quantity
 
@@ -252,7 +251,7 @@ class DelegateBw(cleos._Cleos):
             "--json"]
 
         if not permission is None:
-            p = permission_arg(permission)
+            p = interface.permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
         if transfer:

@@ -1,8 +1,8 @@
 import os
 import subprocess
 import time
-import pyteos.core.config as config
-import pyteos.core.errors as errors
+import core.config as config
+import core.errors as errors
 
 def get_pid(name=None):
     """Return process ids found by (partial) name or regex.

@@ -1,7 +1,7 @@
 import re
 
-import pyteos.core.logger as logger
-from pyteos.interface import *
+import core.logger as logger
+import shell.interface as interface
 
 
 def validate(omittable):
@@ -12,7 +12,7 @@ def validate(omittable):
         return
 
     if "unknown key" in err_msg:
-        raise AccountNotExistError(omittable)
+        raise AccountDoesNotExistError(omittable)
     elif "Error 3080001: Account using more than allotted RAM" in err_msg:
         needs = int(re.search('needs\s(.*)\sbytes\shas', err_msg).group(1))
         has = int(re.search('bytes\shas\s(.*)\sbytes', err_msg).group(1))
@@ -20,10 +20,10 @@ def validate(omittable):
     elif "transaction executed locally, but may not be" in err_msg:
         pass
     elif "Wallet already exists" in err_msg:
-        raise WalletExistsError(omittable)
+        raise WalletAlreadyExistsError(omittable)
     elif "Error 3120002: Nonexistent wallet" in err_msg:
-        raise WalletNotExist(
-            WalletNotExist.msg_template.format(self.name))
+        raise WalletDoesNotExistError(
+            WalletDoesNotExistError.msg_template.format(self.name))
     elif "Invalid wallet password" in err_msg:
         raise InvalidPasswordError(omittable)
     elif "Contract is already running this version of code" in err_msg:
@@ -47,7 +47,7 @@ class Error(Exception):
         Exception.__init__(self, self.message)
 
 
-class AccountNotExistError(Error):
+class AccountDoesNotExistError(Error):
     '''Account does not exist.
 
     Attributes:
@@ -57,27 +57,28 @@ class AccountNotExistError(Error):
         self.account = account
         Error.__init__(
             self, 
-            '''
-Account ``{}`` does not exist in the blockchain. It may be created.
-'''.format(account_arg(account)), 
+            "Account ``{}`` does not exist in the blockchain."
+            .format(interface.account_arg(account)), 
             True)
-         
 
-class WalletExistsError(Error):
+
+class WalletDoesNotExistError(Error):
     def __init__(self, wallet):
         self.wallet = wallet
         Error.__init__(
             self, 
-            "Wallet ``{}`` already exists.".format(wallet_arg(wallet)), 
+            "Wallet ``{}`` does not exist."
+            .format(interface.wallet_arg(wallet)), 
             True)
 
 
-class WalletNotExistError(Error):
+class WalletAlreadyExistsError(Error):
     def __init__(self, wallet):
         self.wallet = wallet
         Error.__init__(
             self, 
-            "Wallet ``{}`` does not exist.".format(wallet_arg(wallet)), 
+            "Wallet ``{}`` already exists."
+            .format(interface.wallet_arg(wallet)), 
             True)
 
 
@@ -86,7 +87,8 @@ class InvalidPasswordError(Error):
         self.wallet = wallet
         Error.__init__(
             self, 
-            "Invalid password for wallet {}".format(wallet_arg(wallet)), 
+            "Invalid password for wallet {}"
+            .format(interface.wallet_arg(wallet)), 
             True)
 
 
@@ -104,6 +106,6 @@ class LowRamError(Error):
         self.deficiency_kbyte = deficiency_byte // 1024 + 1
         Error.__init__(
             self, 
-            "RAM needed is {}kB, deficiency is {}kB.".format(
-            self.needs_kbyte, self.deficiency_kbyte), 
+            "RAM needed is {}kB, deficiency is {}kB."
+            .format(self.needs_kbyte, self.deficiency_kbyte), 
             True)   

@@ -2,7 +2,7 @@ from urllib.request import Request, urlopen
 import json
 import argparse
 import time
-from pyteos.eosf import *
+from eosf import *
 
 CREATE_ACCOUNT_URL = "create_account"
 GET_TOKEN_URL = "get_token"

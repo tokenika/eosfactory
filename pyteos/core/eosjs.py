@@ -3,10 +3,10 @@ import json
 import pathlib
 import re
 
-import pyteos.core.errors as errors
-import pyteos.core.config
-import pyteos.setup as setup
-import pyteos.core.logger as logger
+import core.errors as errors
+import core.config
+import shell.setup as setup
+import core.logger as logger
 
 
 # TO DO resolve this code reuse issue.

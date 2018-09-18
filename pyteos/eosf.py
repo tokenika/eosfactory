@@ -1,19 +1,21 @@
-import pyteos.setup as setup
-import pyteos.core.cleos as cleos
-import pyteos.core.manager as manager
-import pyteos.core.logger as logger
-import pyteos.core.testnet as testnet
-import pyteos.interface as interface
-import pyteos.wallet as wallet
-import pyteos.account as account
-import pyteos.contract as contract
-import pyteos.core.errors as errors
+import core.cleos as cleos
+import core.manager as manager
+import core.logger as logger
+import core.testnet as testnet
+import core.errors as errors
+import shell.setup as setup
+import shell.interface as interface
+import shell.wallet as wallet
+import shell.account as account
+import shell.contract as contract
+
 
 set_is_testing_errors =  logger.set_is_testing_errors
+
 verbosity =  logger.verbosity
 Verbosity =  logger.Verbosity
-SCENARIO =  logger.SCENARIO
 
+SCENARIO =  logger.SCENARIO
 COMMENT =  logger.COMMENT
 TRACE =  logger.TRACE
 INFO =  logger.INFO
@@ -30,6 +32,7 @@ get_wallet = wallet.get_wallet
 
 create_account = account.create_account
 create_master_account = account.create_master_account
+
 reboot = account.reboot
 stats = account.stats
 

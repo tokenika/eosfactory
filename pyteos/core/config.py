@@ -1,9 +1,9 @@
 import os
 import json
-import pyteos.core.errors as errors
-import pyteos.setup as setup
-import pyteos.core.logger as logger
-import pyteos.core.utils as utils
+import core.errors as errors
+import shell.setup as setup
+import core.logger as logger
+import core.utils as utils
 
 templContractsDir = "templates/contracts"
 contractsDir = "contracts"

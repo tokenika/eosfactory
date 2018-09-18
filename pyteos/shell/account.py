@@ -4,17 +4,17 @@ import types
 import time
 import re
 
-import pyteos.core.teos as teos
-import pyteos.core.cleos as cleos
-import pyteos.core.cleosys as cleosys
-import pyteos.core.manager as manager
-import pyteos.core.logger as logger
-import pyteos.core.config as config
-import pyteos.core.errors as errors
-import pyteos.interface as interface
-import pyteos.setup as setup
-import pyteos.wallet as wallet
-import pyteos.core.testnet as testnet
+import core.teos as teos
+import core.cleos as cleos
+import core.cleosys as cleosys
+import core.manager as manager
+import core.logger as logger
+import core.config as config
+import core.errors as errors
+import core.testnet as testnet
+import shell.interface as interface
+import shell.setup as setup
+import shell.wallet as wallet
 
 
 def reboot():
@@ -58,7 +58,7 @@ def is_local_testnet_running():
 def _data_json(data):
     class Encoder(json.JSONEncoder):
         def default(self, o):
-            if isinstance(o, cleos.Account):
+            if isinstance(o, interface.Account):
                 return str(o)
             else:
                 json.JSONEncoder.default(self, o) 
@@ -146,7 +146,7 @@ def put_account_to_wallet_and_on_stack(
     return True
 
 
-class Eosio(cleos.Account):
+class Eosio(interface.Account):
     def __init__(self, account_object_name):    
         self.name = "eosio"
         self.account_object_name = account_object_name        
@@ -227,7 +227,7 @@ class GetAccount(cleos.GetAccount):
         try:
             cleos.GetAccount.__init__(
                 self, self.name, is_info=False, is_verbose=False)
-        except errors.AccountNotExistError:
+        except errors.AccountDoesNotExistError:
             return
 
         self.exists = True
@@ -396,7 +396,7 @@ def create_master_account(
 
         if account_object_name in globals:
 
-            if not isinstance(globals[account_object_name], cleos.Account):
+            if not isinstance(globals[account_object_name], interface.Account):
                 raise errors.Error('''
                 The global variable {} type is not ``Account``.
                 '''.format(account_object_name))
@@ -762,7 +762,7 @@ def create_account(
 
     if account_object_name in globals:
 
-        if not isinstance(globals[account_object_name], cleos.Account):
+        if not isinstance(globals[account_object_name], interface.Account):
             raise errors.Error('''
             The global variable ``{}`` type is not ``Account``.
             '''.format(account_object_name))

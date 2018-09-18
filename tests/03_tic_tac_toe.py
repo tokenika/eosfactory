@@ -1,5 +1,5 @@
 import unittest, argparse, sys
-from pyteos.eosf import *
+from eosf import *
 
 verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
 

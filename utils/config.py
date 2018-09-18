@@ -1,5 +1,5 @@
 import json
-import pyteos.core.config as config
+import core.config as config
 
 print('''
 The current configuration of the EOSFactory is
