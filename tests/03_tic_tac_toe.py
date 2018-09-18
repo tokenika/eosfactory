@@ -1,4 +1,4 @@
-import unittest, argparse, sys
+import unittest, argparse, sys, time
 from eosf import *
 
 verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
@@ -69,7 +69,7 @@ class Test(unittest.TestCase):
         contract.build(force=False)
 
         try:
-            contract.deploy(force=False, payer=master)
+            contract.deploy(payer=master)
         except errors.ContractRunningError:
             pass
 
@@ -88,7 +88,7 @@ class Test(unittest.TestCase):
                     "challenger": alice,
                     "host": carol
                 },
-                carol)
+                permission=(carol, Permission.ACTIVE))
         except Error as e:
             if "game already exists" in e.message:
                 COMMENT('''
@@ -100,7 +100,9 @@ class Test(unittest.TestCase):
                         "challenger": alice,
                         "host": carol
                     },
-                    carol)
+                    permission=(carol, Permission.ACTIVE))
+
+                time.sleep(3)
 
                 COMMENT('''
                 Second attempt to create a new game:
@@ -111,7 +113,7 @@ class Test(unittest.TestCase):
                         "challenger": alice, 
                         "host": carol
                     },
-                    carol)
+                    permission=(carol, Permission.ACTIVE))
             else:
                 COMMENT('''
                 The error is different than expected.
@@ -140,7 +142,7 @@ class Test(unittest.TestCase):
                 "by": carol,
                 "row":0, "column":0
             },
-            carol)
+            permission=(carol, Permission.ACTIVE))
 
         COMMENT('''
         Second move is by alice:
@@ -153,7 +155,7 @@ class Test(unittest.TestCase):
                 "by": alice,
                 "row":1, "column":1
             },
-            alice)
+            permission=(alice, Permission.ACTIVE))
 
         t = host.table("games", carol)
         self.assertEqual(t.json["rows"][0]["board"][0], 1)
@@ -176,7 +178,7 @@ class Test(unittest.TestCase):
                 "host": carol,
                 "by": carol
             }, 
-            carol)
+            permission=(carol, Permission.ACTIVE))
 
         t = host.table("games", carol)
         self.assertEqual(t.json["rows"][0]["board"][0], 0)
@@ -191,6 +193,19 @@ class Test(unittest.TestCase):
 
         COMMENT('''
         Closing the game:
+        WARNING: This action should fail due to authority mismatch!
+        ''')
+        with self.assertRaises(MissingRequiredAuthorityError):
+            host.push_action(
+                "close",
+                {
+                    "challenger": alice,
+                    "host": carol
+                },
+                permission=(alice, Permission.ACTIVE))
+
+        COMMENT('''
+        Closing the game:
         ''')
         host.push_action(
             "close",
@@ -198,7 +213,7 @@ class Test(unittest.TestCase):
                 "challenger": alice,
                 "host": carol
             },
-            carol)
+            permission=(carol, Permission.ACTIVE))
 
     def tearDown(self):
         pass

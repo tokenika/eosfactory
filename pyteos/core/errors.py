@@ -28,6 +28,10 @@ def validate(omittable):
         raise InvalidPasswordError(omittable)
     elif "Contract is already running this version of code" in err_msg:
         raise ContractRunningError()
+    elif "Missing required authority" in err_msg:
+        raise MissingRequiredAuthorityError(err_msg)
+    elif "Duplicate transaction" in err_msg:
+        raise DuplicateTransactionError(err_msg)
     
     #######################################################################
     # NOT ERRORS
@@ -109,3 +113,15 @@ class LowRamError(Error):
             "RAM needed is {}kB, deficiency is {}kB."
             .format(self.needs_kbyte, self.deficiency_kbyte), 
             True)   
+
+
+class MissingRequiredAuthorityError(Error):
+    def __init__(self, message):
+        Error.__init__(
+            self, message, True)
+
+
+class DuplicateTransactionError(Error):
+    def __init__(self, message):
+        Error.__init__(
+            self, message, True)

@@ -23,6 +23,9 @@ OUT =  logger.OUT
 DEBUG =  logger.DEBUG
 
 Error = errors.Error
+LowRamError = errors.LowRamError
+MissingRequiredAuthorityError = errors.MissingRequiredAuthorityError
+DuplicateTransactionError = errors.DuplicateTransactionError
 
 CreateKey = cleos.CreateKey
 Permission = interface.Permission

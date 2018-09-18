@@ -117,7 +117,7 @@ class Contract(ContractBuilder):
         self._console = None
 
     def deploy(
-        self, force=True, permission=None, dont_broadcast=None, payer=None):
+        self, permission=None, dont_broadcast=None, payer=None):
         if not self.is_built():
             raise errors.Error('''
             Contract needs to be built before deployment.
