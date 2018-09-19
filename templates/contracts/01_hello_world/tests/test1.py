@@ -5,9 +5,9 @@ verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
-def tests():
+def test():
     SCENARIO('''
-    Execute simple actions, debug buffer and authority mismatch detection.
+    Execute simple actions.
     ''')
     reset()
     create_wallet()
@@ -22,35 +22,27 @@ def tests():
     contract.deploy()
 
     COMMENT('''
-    Create tests accounts:
+    Create test accounts:
     ''')
     create_account("alice", master)
     create_account("carol", master)
 
     COMMENT('''
-    Test an action for Alice, including the debug buffer:
+    Test an action for Alice:
     ''')
     host.push_action(
         "hi", {"user":alice}, permission=(alice, Permission.ACTIVE))
     assert("alice" in DEBUG())
 
     COMMENT('''
-    Test an action for Carol, including the debug buffer:
+    Test an action for Carol:
     ''')
     host.push_action(
         "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
     assert("carol" in DEBUG())
 
-    COMMENT('''
-    WARNING: This action should fail due to authority mismatch!
-    ''')
-    try:
-        host.push_action("hi", {"user":carol})
-    except:
-        pass
-
     stop()
 
 
 if __name__ == "__main__":
-    tests()
+    test()

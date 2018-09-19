@@ -10,10 +10,11 @@ class Test(unittest.TestCase):
     def run(self, result=None):
         super().run(result)
 
+
     @classmethod
     def setUpClass(cls):
         SCENARIO('''
-        Execute simple actions, debug buffer and authority mismatch detection.
+        Execute simple actions.
         ''')
         reset()
         create_wallet()
@@ -28,29 +29,48 @@ class Test(unittest.TestCase):
         contract.deploy()
 
         COMMENT('''
-        Create tests accounts:
+        Create test accounts:
         ''')
         create_account("alice", master)
         create_account("carol", master)
+        create_account("bob", master)
+
+
+    def setUp(self):
+        pass
+
 
     def test_01(self):
         COMMENT('''
-        Test an action for Alice, including the debug buffer:
+        Test an action for Alice:
         ''')
         host.push_action(
             "hi", {"user":alice}, permission=(alice, Permission.ACTIVE))
 
         COMMENT('''
-        Test an action for Carol, including the debug buffer:
+        Test an action for Carol:
         ''')
         host.push_action(
             "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
 
         COMMENT('''
+        WARNING: This action should fail due to being duplicate!
+        ''')
+        with self.assertRaises(DuplicateTransactionError):
+            host.push_action(
+                "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
+
+        COMMENT('''
         WARNING: This action should fail due to authority mismatch!
         ''')
-        with self.assertRaises(Error):
-            host.push_action("hi", {"user":carol})
+        with self.assertRaises(MissingRequiredAuthorityError):
+            host.push_action(
+                "hi", {"user":carol}, permission=(bob, Permission.ACTIVE))
+
+
+    def tearDown(self):
+        pass
+
 
     @classmethod
     def tearDownClass(cls):

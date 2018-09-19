@@ -1,8 +1,7 @@
 import unittest, sys
 from eosf import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-_ = Logger()
+verbosity = [Verbosity.INFO, Verbosity.OUT]
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
@@ -14,14 +13,14 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        _.SCENARIO('''
-        Execute simple actions, debug buffer and authority mismatch detection.
+        SCENARIO('''
+        Execute simple actions.
         ''')
         reset()
         create_wallet()
         create_master_account("master")
 
-        _.COMMENT('''
+        COMMENT('''
         Build and deploy the contract:
         ''')
         create_account("host", master)
@@ -29,11 +28,12 @@ class Test(unittest.TestCase):
         contract.build(force=False)
         contract.deploy()
 
-        _.COMMENT('''
+        COMMENT('''
         Create test accounts:
         ''')
         create_account("alice", master)
         create_account("carol", master)
+        create_account("bob", master)
 
 
     def setUp(self):
@@ -41,26 +41,31 @@ class Test(unittest.TestCase):
 
 
     def test_01(self):
-        _.COMMENT('''
-        Test an action for Alice, including the debug buffer:
+        COMMENT('''
+        Test an action for Alice:
         ''')
         host.push_action(
             "hi", {"user":alice}, permission=(alice, Permission.ACTIVE))
 
-        _.COMMENT('''
-        Test an action for Carol, including the debug buffer:
+        COMMENT('''
+        Test an action for Carol:
         ''')
         host.push_action(
             "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
 
-        _.COMMENT('''
+        COMMENT('''
+        WARNING: This action should fail due to being duplicate!
+        ''')
+        with self.assertRaises(DuplicateTransactionError):
+            host.push_action(
+                "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
+
+        COMMENT('''
         WARNING: This action should fail due to authority mismatch!
         ''')
-        set_is_testing_errors(True)
-        action = host.push_action(
-            "hi", {"user":carol}, permission=(alice, Permission.ACTIVE))
-        set_is_testing_errors(False)
-        self.assertTrue(host.action.error)
+        with self.assertRaises(MissingRequiredAuthorityError):
+            host.push_action(
+                "hi", {"user":carol}, permission=(bob, Permission.ACTIVE))
 
 
     def tearDown(self):

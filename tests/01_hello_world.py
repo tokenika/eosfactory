@@ -10,11 +10,11 @@ class Test(unittest.TestCase):
     def run(self, result=None):
         super().run(result)
 
+
     @classmethod
     def setUpClass(cls):
         SCENARIO('''
         Create a contract from template, then build and deploy it.
-        Also, execute simple actions, debug buffer and authority mismatch detection.
         ''')
         reset()
         create_wallet()
@@ -27,8 +27,10 @@ class Test(unittest.TestCase):
         create_account("carol", master)
         create_account("bob", master)
 
+
     def setUp(self):
         pass
+
 
     def test_01(self):
         COMMENT('''
@@ -70,8 +72,10 @@ class Test(unittest.TestCase):
  
         contract.delete()
 
+
     def tearDown(self):
         pass
+
 
     @classmethod
     def tearDownClass(cls):
