@@ -1,8 +1,8 @@
 def wslMapLinuxWindows(path):
-    if not path or path.find(""/mnt/"") == -1:
+    if not path or path.find("/mnt/") == -1:
         return path
     path = path[5].upper() + ":" + path[6:]
-    path = path.replace("/", "\\")
+    #path = path.replace("/", "\\")
     return path
 
 
