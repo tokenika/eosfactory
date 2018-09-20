@@ -29,7 +29,7 @@ class Test(unittest.TestCase):
         contract.deploy()
 
         COMMENT('''
-        Create tests accounts:
+        Create test accounts:
         ''')
         create_account("alice", master)
         create_account("bob", master)

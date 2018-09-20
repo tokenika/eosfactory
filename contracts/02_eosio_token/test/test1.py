@@ -1,20 +1,19 @@
 import sys
 from eosf import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
-_ = Logger()
+verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
 def test():
-    _.SCENARIO('''
+    SCENARIO('''
     Initialize the token and run a couple of transfers between different accounts.
     ''')
     reset()
     create_wallet()
     create_master_account("master")
 
-    _.COMMENT('''
+    COMMENT('''
     Build & deploy the contract:
     ''')
     create_account("host", master)
@@ -22,14 +21,14 @@ def test():
     contract.build(force=False)
     contract.deploy()
 
-    _.COMMENT('''
+    COMMENT('''
     Create test accounts:
     ''')
     create_account("alice", master)
     create_account("bob", master)
     create_account("carol", master)
 
-    _.COMMENT('''
+    COMMENT('''
     Initialize the token and send some tokens to one of the accounts:
     ''')
 
@@ -51,7 +50,7 @@ def test():
         },
         permission=(master, Permission.ACTIVE))
 
-    _.COMMENT('''
+    COMMENT('''
     Execute a series of transfers between the accounts:
     ''')
 
@@ -62,7 +61,7 @@ def test():
             "quantity": "25.0000 EOS", "memo":""
         },
         permission=(alice, Permission.ACTIVE))
-    assert("250000" in host.debug_buffer)
+    assert("250000" in DEBUG())
 
     host.push_action(
         "transfer",
@@ -71,7 +70,7 @@ def test():
             "quantity": "11.0000 EOS", "memo": ""
         },
         permission=(carol, Permission.ACTIVE))
-    assert("110000" in host.debug_buffer)
+    assert("110000" in DEBUG())
 
     host.push_action(
         "transfer",
@@ -80,7 +79,7 @@ def test():
             "quantity": "2.0000 EOS", "memo": ""
         },
         permission=(carol, Permission.ACTIVE))
-    assert("20000" in host.debug_buffer)
+    assert("20000" in DEBUG())
 
     host.push_action(
         "transfer",
@@ -89,9 +88,9 @@ def test():
             "quantity": "2.0000 EOS", "memo":""
         },
         permission=(bob, Permission.ACTIVE))
-    assert("20000" in host.debug_buffer)
+    assert("20000" in DEBUG())
 
-    _.COMMENT('''
+    COMMENT('''
     Verify the outcome:
     ''')
 

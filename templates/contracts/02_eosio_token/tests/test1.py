@@ -5,7 +5,7 @@ verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
-def tests():
+def test():
     SCENARIO('''
     Initialize the token and run a couple of transfers between different accounts.
     ''')
@@ -22,7 +22,7 @@ def tests():
     contract.deploy()
 
     COMMENT('''
-    Create tests accounts:
+    Create test accounts:
     ''')
     create_account("alice", master)
     create_account("bob", master)
@@ -106,4 +106,4 @@ def tests():
 
 
 if __name__ == "__main__":
-    tests()
+    test()

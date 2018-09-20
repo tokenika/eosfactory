@@ -32,6 +32,7 @@ class Test(unittest.TestCase):
             ]
         )
 
+
     @classmethod
     def setUpClass(cls):
         SCENARIO('''
@@ -73,8 +74,10 @@ class Test(unittest.TestCase):
         except errors.ContractRunningError:
             pass
 
+
     def setUp(self):
         pass
+
 
     def test_01(self):
         COMMENT('''

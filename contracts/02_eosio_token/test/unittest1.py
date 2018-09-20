@@ -1,8 +1,7 @@
 import unittest, sys
 from eosf import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
-_ = Logger()
+verbosity = [Verbosity.INFO, Verbosity.OUT]
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
@@ -14,14 +13,14 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        _.SCENARIO('''
+        SCENARIO('''
         Initialize the token and run a couple of transfers between different accounts.
         ''')
         reset()
         create_wallet()
         create_master_account("master")
 
-        _.COMMENT('''
+        COMMENT('''
         Build & deploy the contract:
         ''')
         create_account("host", master)
@@ -29,7 +28,7 @@ class Test(unittest.TestCase):
         contract.build(force=False)
         contract.deploy()
 
-        _.COMMENT('''
+        COMMENT('''
         Create test accounts:
         ''')
         create_account("alice", master)
@@ -43,7 +42,7 @@ class Test(unittest.TestCase):
 
     def test_01(self):
 
-        _.COMMENT('''
+        COMMENT('''
         Initialize the token and send some tokens to one of the accounts:
         ''')
 
@@ -65,7 +64,7 @@ class Test(unittest.TestCase):
             },
             permission=(master, Permission.ACTIVE))
 
-        _.COMMENT('''
+        COMMENT('''
         Execute a series of transfers between the accounts:
         ''')
 
@@ -101,7 +100,7 @@ class Test(unittest.TestCase):
             },
             permission=(bob, Permission.ACTIVE))
 
-        _.COMMENT('''
+        COMMENT('''
         Verify the outcome:
         ''')
 

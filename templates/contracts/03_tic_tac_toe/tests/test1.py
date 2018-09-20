@@ -1,4 +1,4 @@
-import unittest, argparse, sys
+import unittest, argparse, sys, time
 from eosf import *
 
 verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
@@ -30,7 +30,8 @@ def stats():
         ]
     )
 
-def tests():
+
+def test():
     SCENARIO('''
     There is the ``master`` account that sponsors the ``host``
     account equipped with an instance of the ``tic_tac_toe`` smart contract. There
@@ -42,36 +43,23 @@ def tests():
     
     create_wallet(file=True)
     create_master_account("master", testnet)
-    create_account(
-        "host", master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
-        stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-    create_account(
-        "alice", master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
-        stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-    create_account(
-        "carol", master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
-        stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+    create_account("host", master,
+        buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+    create_account("alice", master,
+        buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+    create_account("carol", master,
+        buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
     if not testnet.is_local():
         stats()
-        if (extra_ram > 0):
-            master.buy_ram(extra_ram, host)
-            master.buy_ram(extra_ram, alice)
-            master.buy_ram(extra_ram, carol)
-        if (extra_stake_net > 0 or extra_stake_cpu > 0):
-            master.delegate_bw(extra_stake_net, extra_stake_cpu, host)
-            master.delegate_bw(extra_stake_net, extra_stake_cpu, alice)
-            master.delegate_bw(extra_stake_net, extra_stake_cpu, carol)
-        if (extra_ram > 0 or extra_stake_net > 0 or extra_stake_cpu > 0):
-            stats()
 
     contract = Contract(host, CONTRACT_WORKSPACE)
     contract.build(force=False)
+
     try:
-        contract.deploy(force=False, payer=master)
+        contract.deploy(payer=master)
     except errors.ContractRunningError:
         pass
-
 
     COMMENT('''
     Attempting to create a new game.
@@ -84,7 +72,7 @@ def tests():
                 "challenger": alice,
                 "host": carol
             },
-            carol)
+            permission=(carol, Permission.ACTIVE))
     except Error as e:
         if "game already exists" in e.message:
             COMMENT('''
@@ -96,7 +84,9 @@ def tests():
                     "challenger": alice,
                     "host": carol
                 },
-                carol)
+                permission=(carol, Permission.ACTIVE))
+
+            time.sleep(3)
 
             COMMENT('''
             Second attempt to create a new game:
@@ -107,13 +97,12 @@ def tests():
                     "challenger": alice, 
                     "host": carol
                 },
-                carol)
+                permission=(carol, Permission.ACTIVE))
         else:
             COMMENT('''
             The error is different than expected.
             ''')
             raise Error(str(e))
-
 
     t = host.table("games", carol)
     assert(t.json["rows"][0]["board"][0] == 0)
@@ -204,14 +193,11 @@ def tests():
 
 
 testnet = None
-extra_ram = None
-extra_stake_net = None
-extra_stake_cpu = None
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='''
-    This is a unit tests for the ``tic-tac-toe`` smart contract.
+    This is a unit test for the ``tic-tac-toe`` smart contract.
     It works both on a local testnet and remote testnet.
     The default option is local testnet.
     ''')
@@ -228,13 +214,6 @@ if __name__ == '__main__':
         "-r", "--reset", action="store_true",
         help="Reset testnet cache")
 
-    parser.add_argument(
-        "--ram", default=0, help="extra RAM in kbytes")
-    parser.add_argument(
-        "--net", default=0, help="extra NET stake in EOS")
-    parser.add_argument(
-        "--cpu", default=0, help="extra CPU stake in EOS")
-
     args = parser.parse_args()
 
     testnet = get_testnet(args.alias, args.testnet, reset=args.reset)
@@ -243,8 +222,4 @@ if __name__ == '__main__':
     if args.reset and not testnet.is_local():
         testnet.clear_cache()
 
-    extra_ram = int(args.ram)
-    extra_stake_net = int(args.net)
-    extra_stake_cpu = int(args.cpu)
-
-    tests()
+    test()
