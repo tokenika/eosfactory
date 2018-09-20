@@ -10,8 +10,6 @@ import shell.account as account
 import shell.contract as contract
 
 
-set_is_testing_errors =  logger.set_is_testing_errors
-
 verbosity =  logger.verbosity
 Verbosity =  logger.Verbosity
 
