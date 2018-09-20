@@ -10,7 +10,7 @@ As far as VSC is concerned, we'd like to create a VSC extension providing GUI in
 
 #### Two implementations
 
-We are also considering splitting the EOSFactory project into two implementations: pure Python (based on [unittest](https://docs.python.org/3/library/unittest.html) or [pytest](https://docs.pytest.org/en/latest/)) and pure C++ (based on [Boost Unit Test Framework](https://www.boost.org/doc/libs/1_53_0/libs/test/doc/html/utf.html)).
+We are also considering splitting the EOSFactory project into two implementations: pure Python (based on [unittest](https://docs.python.org/3/library/unittest.html) or [pytest](https://docs.pytest.org/en/latest/)) and pure C++ (based on [Boost Unit Test Framework](https://www.boost.org/doc/libs/1_53_0/libs/tests/doc/html/utf.html)).
 
 #### Ricardian Contracts
 
