@@ -880,7 +880,10 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
         return []
 
     if not wasm_file:
-        wasm_file = config.get_wasm_file(contract_dir)
+        try :
+            wasm_file = config.get_wasm_file(contract_dir)
+        except:
+            pass
         if not wasm_file:
             return []
     else:
