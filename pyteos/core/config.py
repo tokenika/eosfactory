@@ -217,18 +217,14 @@ def getGenesisJson():
 
 
 def getContractDir(contract_dir_hint):
-    '''Given a hint, determine the contract directory.
-
+    ''' Given a hint, determine the contract directory.
     The contract directory is the container for the project of a contract. The 
     hint is probed to be one of the following pieces of information:
-    *   the absolute path to a contract directory;
-    *   the relative path to a contract directory, relative to the directory set 
-        with the EOSIO_CONTRACT_WORKSPACE variable;
-    *   the relative path to a contract directory, relative to the ``contracts`` 
-        directory in the repository of EOSFactory;
-    *   the relative path to a contract directory, relative to the ``contracts`` 
-        directory in the repository of EOSIO.
-    '''    
+    the absolute path to a contract directory;
+    the relative path to a contract directory, relative to the directory set with the EOSIO_CONTRACT_WORKSPACE variable;
+    the relative path to a contract directory, relative to the ``contracts`` directory in the repository of EOSFactory;
+    the relative path to a contract directory, relative to the ``contracts`` directory in the repository of EOSIO.
+    ''' 
     contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
 
     # ? the absolute path to a contract directory
@@ -305,7 +301,7 @@ def getContractSourceFiles(contract_dir_hint):
 
 
 def getContractFile(contract_dir_hint, contract_file_hint):
-    '''Given contract dir and contract file hints, determine the file.
+    ''' Given contract dir and contract file hints, determine the file.
 
     Contract files are those extended with ``wast``, ``wasm`` and ``abi``.
 
@@ -318,11 +314,8 @@ def getContractFile(contract_dir_hint, contract_file_hint):
 
     Any contract directory contains directories and files structured according 
     to few schemes:
-    * flat structure with all the files in this directory as in the 
-        ``eos/contracts/*`` contract directories in the EOS repository;
-    * structure with a directory named ``build`` as resulting from the 
-        EOSFactory templates;
-    * 
+    flat structure with all the files in this directory as in the ``eos/contracts/*`` contract directories in the EOS repository;
+    structure with a directory named ``build`` as resulting from the EOSFactory templates;
     '''
     contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
     contract_file_hint = utils.wslMapWindowsLinux(contract_file_hint)

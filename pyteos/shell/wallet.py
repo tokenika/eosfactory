@@ -77,7 +77,7 @@ class Wallet(cleos.WalletCreate):
         logger.INFO('''
                 * Wallet name is ``{}``, wallet directory is
                     {}.
-                '''.format(name, self.wallet_dir), verbosity)
+                '''.format(name, self.wallet_dir))
 
         if not password: # look for password:
             passwords = wallet_json_read()
@@ -108,18 +108,18 @@ class Wallet(cleos.WalletCreate):
                     verbosity
                 )
             else:
-                logger.OUT(self.out_msg, verbosity)
+                logger.OUT(self.out_msg)
         else:
             logger.TRACE('''
                     Opened wallet ``{}``
-                    '''.format(self.name), verbosity)            
+                    '''.format(self.name))            
 
     def index(self):
         ''' Lists opened wallets, * marks unlocked.
         Returns `cleos.WalletList` object
         ''' 
         result = cleos.WalletList(is_verbose=0)
-        logger.OUT(result.out_msg, verbosity)
+        logger.OUT(result.out_msg)
     
     def open(self):
         ''' Opens the wallet.
@@ -128,21 +128,21 @@ class Wallet(cleos.WalletCreate):
         result = cleos.WalletOpen(self.name, is_verbose=False)
         logger.TRACE('''
         * Wallet ``{}`` opened.
-        '''.format(self.name), verbosity)
+        '''.format(self.name))
 
     def lock(self):
         ''' Lock the wallet.
         Returns `cleos.WalletLock` object.
         '''
         result = cleos.WalletLock(self.name, is_verbose=False)
-        logger.TRACE("Wallet `{}` locked.".format(self.name), verbosity)
+        logger.TRACE("Wallet `{}` locked.".format(self.name))
 
     def lock_all(self):
         ''' Lock the wallet.
         Returns `cleos.WalletLock` object.
         '''
         result = cleos.WalletLockAll(is_verbose=False)
-        logger.TRACE("All wallets locked.", verbosity)
+        logger.TRACE("All wallets locked.")
 
     def unlock(self):
         ''' Unlock the wallet.

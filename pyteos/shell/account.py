@@ -22,7 +22,7 @@ def reboot():
     ######### Reboot EOSFactory session.
     ''')
     manager.stop([])
-    cleos.reboot()
+    #cleos.reboot()
 
     global wallet_singleton
     if wallet_singleton:

@@ -1070,10 +1070,12 @@ class PushAction(_Cleos):
         self.data = None
         _Cleos.__init__(self, args, "push", "action", is_verbose)
 
-        self.console = self.json["processed"]["action_traces"][0]["console"]
-        self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
+        if not dont_broadcast:
+            self.console = self.json["processed"]["action_traces"][0]["console"]
+            self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
 
         self.printself()
+
 
     def get_transaction(self):
         return GetTransaction(self.transaction)
