@@ -32,5 +32,8 @@ EOSFactory [v2.1](https://github.com/tokenika/eosfactory/releases/tag/v2.1) is c
 * Radially improved logger messaging, including highly customizable verbosity.
 
 ## New features available in v2.1
-
-
+* Local testnet running in a headless mode (this allows you to run EOSFactory in a GUI-less environment, e.g. Ubuntu Server, or via SSH).
+* All functionality ported to Python, no need to compile any C++ code.
+* Precise error catching in unit tests, utilizing Python's `assertRaises(Error)` feature.
+* Improved folder structure within Python modules.
+* Simplified syntax for logger management.
