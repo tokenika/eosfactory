@@ -864,7 +864,7 @@ def create_account(
     append_account_methods_and_finish(account_object_name, account_object)
 
 
-def stats(
+def print_stats(
         accounts, params, 
         last_col="%s", col="%15s"
     ):

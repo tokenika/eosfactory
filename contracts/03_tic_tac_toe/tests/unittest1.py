@@ -5,14 +5,14 @@ verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
-INITIAL_RAM_KBYTES = 12
-INITIAL_STAKE_NET = 10
-INITIAL_STAKE_CPU = 10
+INITIAL_RAM_KBYTES = 8
+INITIAL_STAKE_NET = 3
+INITIAL_STAKE_CPU = 3
 
 class Test(unittest.TestCase):
 
     def stats():
-        stats(
+        print_stats(
             [master, host, alice, carol],
             [
                 "core_liquid_balance",
