@@ -17,6 +17,7 @@ def wslMapWindowsLinux(path):
 import os
 import re
 import sys
+from textwrap import dedent
 
 def save_code():
     '''Copy the current file without heredoc comments.
@@ -33,3 +34,9 @@ def save_code():
 
     open(result, "w").write(re.sub(prog, '', data))
     exit()
+
+
+def heredoc(message):
+    message = dedent(message).strip()
+    message.replace("<br>", "\n")
+    return message

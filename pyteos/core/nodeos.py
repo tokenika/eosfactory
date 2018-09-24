@@ -31,7 +31,7 @@ def DaemonStop():
     pid = get_pid()
     count = 10
     if pid:
-        os.system("kill " + str(pid[0]))
+        os.system("pkill " + str(pid[0]))
         while pid and count > 0:
             time.sleep(1)
             pid = get_pid()

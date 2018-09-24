@@ -221,8 +221,7 @@ class GetAccount(cleos.GetAccount):
 
         self.exists = False
         self.in_wallet_on_stack = False
-        #self.has_keys = owner_key and not owner_key.key_private is None
-        self.has_keys = not owner_key is None
+        self.has_keys = owner_key and not owner_key.key_private is None
         
         try:
             cleos.GetAccount.__init__(
@@ -237,7 +236,7 @@ class GetAccount(cleos.GetAccount):
                 self.json["permissions"][1]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
-        else: # an orphan account, private key is restored from cache
+        else: # an orphan account, private key is restored from your safe
             self.owner_key = cleos.CreateKey(
                 "owner", 
                 self.json["permissions"][1]["required_auth"]["keys"] \
@@ -251,7 +250,7 @@ class GetAccount(cleos.GetAccount):
                 self.json["permissions"][0]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
-        else: # an orphan account, private key is restored from cache
+        else: # an orphan account, private key is restored from your safe
             self.active_key = cleos.CreateKey(
                 "active", 
                 self.json["permissions"][0]["required_auth"]["keys"] \
@@ -864,7 +863,7 @@ def create_account(
     append_account_methods_and_finish(account_object_name, account_object)
 
 
-def print_stats(
+def stats(
         accounts, params, 
         last_col="%s", col="%15s"
     ):
