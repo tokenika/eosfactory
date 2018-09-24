@@ -163,21 +163,24 @@ def getValidPath(config_key, findFile=None):
                     if os.path.exists(os.path.join(path, findFile)):
                         return path
                 else:
-                    return path
+                    if os.path.exists(path):
+                        return path
 
         if os.path.isabs(path):
             if findFile:
                 if os.path.exists(os.path.join(path, findFile)):
                     return path
             else:
-                return path
+                if os.path.exists(path):
+                    return path
         else:
             path = os.path.join(getSourceDir(), path)
             if findFile:
                 if os.path.exists(os.path.join(path, findFile)):
                     return path
             else:
-                return path
+                if os.path.exists(path):
+                    return path
 
     return None
 

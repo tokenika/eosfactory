@@ -35,7 +35,7 @@ create_account = account.create_account
 create_master_account = account.create_master_account
 
 reboot = account.reboot
-stats = account.stats
+print_stats = account.print_stats
 
 Contract = contract.Contract
 ContractBuilder = contract.ContractBuilder
