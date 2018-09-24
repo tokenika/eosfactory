@@ -23,3 +23,5 @@ pyteos/appJar
 vsc_extension
 node_modules
 package-lock.json
+
+tests/test.py
