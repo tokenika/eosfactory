@@ -29,10 +29,6 @@ def project_from_template(
     contract_path_absolute = teos.template_create(
         name, template, user_workspace, remove_existing, visual_studio_code)
 
-    logger.INFO('''
-    * Contract directory is
-        {}
-    '''.format(contract_path_absolute))
     return contract_path_absolute
 
 
@@ -45,9 +41,6 @@ class ContractBuilder():
             abi_file=None,
             wasm_file=None):
 
-        logger.INFO('''
-                ######### Create a ``Contract`` object.
-                ''')
         self.contract_dir = config.getContractDir(contract_dir)
         
         if not self.contract_dir:
@@ -56,10 +49,6 @@ class ContractBuilder():
                 ``{}``.
                 """.format(contract_dir))
             return
-        logger.INFO('''
-            * Contract directory is
-                {}
-            '''.format(self.contract_dir))
 
         self.abi_file = abi_file
         self.wasm_file = wasm_file

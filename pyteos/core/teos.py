@@ -336,7 +336,7 @@ def template_create(
 
     copy_dir_contents(project_dir, template_dir, "", project_name)
     logger.TRACE('''
-    Contract project '{}' created from template '{}' in directory
+    * Contract project '{}' created from template '{}' in directory
         {}
     '''.format(project_name, template_name, project_dir))    
 
