@@ -160,23 +160,9 @@ class Contract(ContractBuilder):
                 is_verbose=False,
                 json=True)
 
-        # if not dont_broadcast:
-        #     import pdb; pdb.set_trace()
-        #     is_code = self.account.is_code()
-        #     if not is_code:
-        #         raise errors.Error('''
-        #         Error in contract deployment:
-        #         Despite the ``set contract`` command returning without any error,
-        #         the code hash of the associated account is null.
-        #         ''')
-        #         return
-        #     else:
-        #         logger.INFO('''
-        #         * The contract {} deployed. 
-        #         '''.format(self.contract_dir))
-        #         logger.TRACE('''
-        #         * Code hash is cross-checked to be non-zero.
-        #         ''')
+        logger.INFO('''
+        * Contract {} is deployed. 
+        '''.format(self.contract_dir))            
         
         self.contract = result
 
