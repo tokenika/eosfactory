@@ -1,7 +1,7 @@
 import unittest, argparse, sys, time
 from eosf import *
 
-verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE]
+verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
 
 CONTRACT_WORKSPACE = "03_tic_tac_toe"
 
