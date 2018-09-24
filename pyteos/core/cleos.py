@@ -108,7 +108,7 @@ class GetInfo(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(self, is_verbose=True):
         _Cleos.__init__(self, [], "get", "info", is_verbose)
@@ -159,7 +159,7 @@ class GetBlock(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.    
+        is_verbose: If set, print output.    
     '''
     def __init__(self, block_number, block_id=None, is_verbose=True):
         _Cleos.__init__(
@@ -189,7 +189,7 @@ class GetAccount(interface.Account, _Cleos):
         name: The name of the account.
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
 
     - **output json**::
 
@@ -305,7 +305,7 @@ class GetAccounts(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(self, key, is_verbose=True):
         public_key = interface.key_arg(key, is_owner_key=True, is_private_key=False)
@@ -329,7 +329,7 @@ class GetTransaction(_Cleos):
         transaction_id: ID of the transaction retrieved.
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(self, transaction_id, is_verbose=True):
         
@@ -355,7 +355,7 @@ class WalletCreate(interface.Wallet, _Cleos):
         password: The password returned by wallet create.
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(self, name="default", password="", is_verbose=True):
         interface.Wallet.__init__(self, name)
@@ -406,7 +406,7 @@ class WalletList(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(self, is_verbose=True):
         _Cleos.__init__(
@@ -430,13 +430,15 @@ class WalletImport(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(self, key, wallet="default", is_verbose=True):
-        key_private = interface.key_arg(key, is_owner_key=True, is_private_key=True)
+        key_private = interface.key_arg(
+            key, is_owner_key=True, is_private_key=True)
         _Cleos.__init__(
             self, 
-            ["--private-key", key_private, "--name", interface.wallet_arg(wallet)],
+            ["--private-key", key_private, "--name", 
+                interface.wallet_arg(wallet)],
             "wallet", "import", is_verbose)
 
         self.json["key_private"] = key_private
@@ -455,10 +457,11 @@ class WalletRemove_key(_Cleos):
     - **attributes**::
 
         error: Whether any error ocurred.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(self, key, wallet, password, is_verbose=True):
-        key_public = interface.key_arg(key, is_owner_key=True, is_private_key=False)
+        key_public = interface.key_arg(
+            key, is_owner_key=True, is_private_key=False)
 
         _Cleos.__init__(
             self, 
@@ -482,13 +485,13 @@ class WalletKeys(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
 
     - **attributes**::
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(self, is_verbose=True):
         _Cleos.__init__(
@@ -515,7 +518,7 @@ class WalletOpen(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(self, wallet="default", is_verbose=True):
         _Cleos.__init__(
@@ -549,7 +552,7 @@ class WalletLock(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(self, wallet="default", is_verbose=True):
         _Cleos.__init__(
@@ -575,7 +578,7 @@ class WalletUnlock(_Cleos):
     
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(
             self, wallet="default", password="", timeout=0, is_verbose=True):
@@ -607,7 +610,7 @@ class GetCode(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.    
+        is_verbose: If set, print output.    
     '''
     def __init__(
             self, account, code="", abi="", 
@@ -656,7 +659,7 @@ class GetTable(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(
             self, account, table, scope,
@@ -684,7 +687,8 @@ class GetTable(_Cleos):
         if key:
             args.extend(
                 ["--key", 
-                interface.key_arg(key, is_owner_key=False, is_private_key=False)])
+                    interface.key_arg(key, is_owner_key=False, 
+                    is_private_key=False)])
         if lower:
             args.extend(["--lower", lower])
         if upper:
@@ -708,10 +712,11 @@ class CreateKey(interface.Key, _Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.    
+        is_verbose: If set, print output.    
     '''
     def __init__(
-            self, key_name, key_public="", key_private="", r1=False, is_verbose=True):
+            self, key_name, key_public="", key_private="", r1=False, 
+            is_verbose=True):
         interface.Key.__init__(self, key_name, key_public, key_private)
 
         if self.key_public or self.key_private:
@@ -793,7 +798,7 @@ class CreateAccount(interface.Account, _Cleos):
         active_key: Active private key.
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.    
+        is_verbose: If set, print output.    
     '''
     def __init__(
             self, creator, name, owner_key, 
@@ -937,7 +942,7 @@ class SetContract(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.    
+        is_verbose: If set, print output.    
     '''
     def __init__(
             self, account, contract_dir, 
@@ -1034,7 +1039,7 @@ class PushAction(_Cleos):
 
         error: Whether any error ocurred.
         json: The json representation of the object.
-        is_verbose: Verbosity at the construction time.
+        is_verbose: If set, print output.
     '''
     def __init__(
             self, account, action, data,

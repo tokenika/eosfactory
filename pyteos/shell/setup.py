@@ -2,9 +2,7 @@
 
 import re
 import os
-# import sys
 import json
-# from textwrap import dedent
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
 CONTRACTS_DIR = "contracts/"
@@ -80,17 +78,6 @@ def reboot():
     __nodeos_address = None
     global _file_prefix
     _file_prefix = None
-
-
-
-
-
-
-
-def heredoc(message):
-    message = dedent(message).strip()
-    message.replace("<br>", "\n")
-    return message
 
 
 def save_code():
