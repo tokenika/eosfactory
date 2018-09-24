@@ -25,5 +25,3 @@ node_modules
 package-lock.json
 
 tests/test.py
-
-docs1
