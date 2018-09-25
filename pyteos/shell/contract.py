@@ -151,11 +151,7 @@ class Contract(ContractBuilder):
 
         logger.INFO('''
         * Contract {} is deployed. 
-<<<<<<< HEAD
-        '''.format(self.contract_dir))
-=======
         '''.format(self.contract_dir))            
->>>>>>> 99dd6b936ea6d7bbc5f7fda32e9d2c2dc7e2258c
         
         self.contract = result
 
