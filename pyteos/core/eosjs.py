@@ -10,6 +10,7 @@ import core.errors as errors
 import core.config
 import shell.setup as setup
 import core.logger as logger
+import core.teos as teos
 from shell.interface import *
 
 
@@ -23,6 +24,62 @@ def set_local_nodeos_address_if_none():
     return setup.is_local_address
 
 
+def config():
+
+    return '''
+        const Eos = require('eosjs')
+        eos = Eos()
+        http_endpoint = '%s'
+        key_provider = %s
+        verbose = %s
+        broadcast = %s
+        sign = %s
+        no_error_tag = 'OK'
+
+        eos.getInfo({}).then(result => id(result, api))
+
+        function id(result, api) {
+            chain_id = result.chain_id
+            config = {
+                chainId: chain_id,
+                keyProvider: key_provider, 
+                httpEndpoint: http_endpoint,
+                expireInSeconds: 60,
+                broadcast: broadcast,
+                verbose: verbose,
+                sign: sign
+            }    
+            eos = Eos(config)
+            api()
+        }
+
+        function print_result(result, err) {
+            if (err) {
+                console.error(err)
+            }
+            else {
+                result = process_result(result)
+                console.error(no_error_tag)
+                console.log(JSON.stringify(result))
+            }
+        }
+
+        function api() {
+            eos.getAccount('eosio').then(print_result)
+        }
+
+        function process_result(result) {
+            return result
+        }    
+                ''' % (
+                    'http://127.0.0.1:8888',
+                    "['5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3']",
+                    'false',
+                    'true',
+                    'true'
+                    )
+
+
 class _Eosjs():
     '''A prototype for ``cleos`` command classes.
     '''
@@ -33,10 +90,8 @@ class _Eosjs():
         self.json = None
         self.is_verbose = is_verbose
         cl = ["node", "-e"]
-        js = utils.heredoc(js)
-        # js = re.sub("\s+", " ", js.strip()) 
+        js = utils.heredoc(config() + js)
         cl.append(js)
-        self.js = js
 
         set_local_nodeos_address_if_none()
         # cl.extend(["--url", setup.nodeos_address()])
@@ -52,33 +107,13 @@ class _Eosjs():
             cl,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE) 
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         self.err_msg = process.stderr.decode("utf-8")
-        if self.err_msg:
+        if self.err_msg.strip() != "OK":
             raise errors.Error(self.err_msg)
 
-        out = process.stdout.decode("utf-8")
-        if "FetchError:" in out:
-            out = out[out.find("{") + 2 :out.find("}")]
-            self.err_msg = out
-            raise errors.Error(self.err_msg)
-        else:
-            out = out[out.find("{"):]
-            self.out_msg = out
-        try:
-            out = out.replace("'", '"')
-            out = out.replace(': ', '": ')
-            search = re.compile(r'\s(?=[a-z])')
-            out = re.sub(search, ' "', out)
-            out = out.replace('"null', 'null')
-            out = out.replace('"false', 'false')
-            out = out.replace('"true', 'true')
-            out = out.replace('Object', '"Object"')
-            self.json = json.loads(out)
-        except Exception as e:
-            print("ERROR:")
-            print(out)
-            raise e
+        self.out_msg = process.stdout.decode("utf-8")
+        self.json = json.loads(self.out_msg)
 
         self.printself()
                   
@@ -87,8 +122,6 @@ class _Eosjs():
             logger.OUT(self.__str__())
 
     def __str__(self):
-        if not self.json:
-            return str(self.out_msg)
         return json.dumps(self.json, sort_keys=True, indent=4)
 
     def __repr__(self):
@@ -114,10 +147,9 @@ class GetInfo(_Eosjs):
         _Eosjs.__init__(
             self, 
             '''
-    const Eos = require('eosjs'); 
-    Eos().getInfo(
-        (error, result) => {console.log(error, result);}
-    );
+    function api() {
+        eos.getInfo({}).then(print_result)
+    }
             ''', 
             is_verbose)
 
@@ -167,24 +199,26 @@ class GetBlock(_Eosjs):
         is_verbose: If set, print output.    
     '''
     def __init__(self, block_number, block_id=None, is_verbose=1):
-        block =  block_id if block_id else str(block_number)
-        _Eosjs.__init__(
-            self,
-'''
-    const Eos = require('eosjs'); 
-    Eos().getBlock(
-        {}, 
-        (error, result) => {console.log(error, result);}
-    );
-            '''.format(block),
-            is_verbose)
+        if block_id:
+            _Eosjs.__init__(
+                self,
+                '''
+        function api() {
+            eos.getBlock('%s').then(print_result)
+        }
+                ''' % (block_id), is_verbose)
+        else:
+            _Eosjs.__init__(
+                self,
+                '''
+        function api() {
+            eos.getBlock(%d).then(print_result)
+        }
+                ''' % (block_number), is_verbose)                        
 
         self.block_num = self.json["block_num"]
         self.ref_block_prefix = self.json["ref_block_prefix"]
         self.timestamp = self.json["timestamp"]
-
-    def __str__(self):
-        return json.dumps(self.json, sort_keys=True, indent=4)
 
 
 class GetAccount(Account, _Eosjs):
@@ -206,25 +240,22 @@ class GetAccount(Account, _Eosjs):
     def __init__(self, account, is_info=True, is_verbose=True):
         Account.__init__(self, account_arg(account))
         _Eosjs.__init__(
-            self, 
+            self,
             '''
-    const Eos = require('eosjs'); 
-    Eos().getAccount(
-        '{}', 
-        (error, result) => {console.log(error, result);}
-    );
-            '''.format(self.name),
-            is_verbose)
+    function api() {
+        eos.getAccount('%s').then(print_result)
+    }
 
-        self.owner_key = None
-        self.active_key = None
+    function process_result(result) {
+        result.key_active = result.permissions[0].required_auth.keys[0].key
+        result.key_owner = result.permissions[1].required_auth.keys[0].key
+        delete result.permissions
+        return result    
+    }
+            ''' % (self.name), is_verbose)
 
-        if self.json["permissions"][1]["required_auth"]:
-            pass
-            # self.owner_key = self.json["permissions"][1] \
-            #     ["required_auth"]["keys"][0]["key"]
-            # self.active_key = self.json["permissions"][0] \
-            #     ["required_auth"]["keys"][0]["key"]                     
+        self.owner_key = self.json["key_owner"]
+        self.active_key = self.json["key_active"]                  
 
 
 class GetAccounts(_Eosjs):
@@ -243,94 +274,97 @@ class GetAccounts(_Eosjs):
         _Eosjs.__init__(
             self,
             '''
-    const Eos = require('eosjs'); 
-    Eos().getKeyAccounts('{}', 
-        (error, result) => {console.log(error, result);}
-        );            
-            '''.format(key_arg(key, is_owner_key=True, is_private_key=False)),
-            is_verbose)
+    function api() {
+        eos.getKeyAccounts('%s').then(print_result)
+    }
 
-        # self.names = self.json['account_names']
-
-    def printself(self):
-        if self.is_verbose:
-            logger.OUT(pprint.pformat(self.json["account_names"]))
-
-
-class GetTransaction(_Eosjs):
-    '''Retrieve a transaction from the blockchain.
-
-    - **parameters**::
-
-        transaction_id: ID of the transaction to retrieve.
-        block_num_hint: A non-zero block number allows shorter transaction IDs 
-            (8 hex, 4 bytes). Default is ``0``.
-        is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **attributes**::
-
-        transaction_id: ID of the transaction retrieved.
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
-    '''
-    def __init__(self, transaction_id, block_num_hint=0, is_verbose=True):
-        _Eosjs.__init__(
-            self, 
-            '''
-    const Eos = require('eosjs'); 
-    Eos().getKeyAccounts('{}', 
-        (error, result) => {console.log(error, result);}
-        );            
-            '''.format(transaction_id, block_num_hint),
-            
+    function process_result(result) {
+        return result.account_names    
+    }        
+            ''' % (key_arg(key, is_owner_key=True, is_private_key=False)),
             is_verbose)
 
 
-# class WalletCreate(Wallet, _Eosjs):
-#     '''Create a new wallet locally.
+# class GetTransaction(_Eosjs):
+#     '''Retrieve a transaction from the blockchain.
 
 #     - **parameters**::
 
-#         name: The name of the new wallet, defaults to ``default``.
-#         password: The password to the wallet, if the wallet exists. Default is None.
+#         transaction_id: ID of the transaction to retrieve.
+#         block_num_hint: A non-zero block number allows shorter transaction IDs 
+#             (8 hex, 4 bytes). Default is ``0``.
 #         is_verbose: If ``False`` do not print. Default is ``True``.
 
 #     - **attributes**::
 
-#         name: The name of the wallet.
-#         password: The password returned by wallet create.
+#         transaction_id: ID of the transaction retrieved.
 #         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.
 #     '''
-#     def __init__(self, name="default", password="", is_verbose=True):
-#         Wallet.__init__(self, name)
-#         self.password = None
-        
-#         if not password: # try to create a wallet
-#             _Eosjs.__init__(
-#                 self, ["--name", self.name, "--to-console"], 
-#                 "wallet", "create", is_verbose)
-#             self.json["name"] = name
-#             msg = self.out_msg
+#     def __init__(self, transaction_id, block_num_hint=0, is_verbose=True):
+#         _Eosjs.__init__(
+#             self, 
+#             '''
+#     const Eos = require('eosjs'); 
+#     Eos().getKeyAccounts('{}', 
+#         (error, result) => {console.log(error, result);}
+#         );            
+#             '''.format(transaction_id, block_num_hint),
+            
+#             is_verbose)
 
-#             self.password = msg[msg.find("\"")+1:msg.rfind("\"")]
-#             self.json["password"] = self.password
-#             self.is_created = True
 
-#         else: # try to open an existing wallet
-#             WalletOpen(name, is_verbose=False)
-#             wallet_unlock = WalletUnlock(name, password, is_verbose=False)
-#             self.json = {} 
-#             self.name = name
-#             self.password = password
-#             self.is_created = False
-#             self.json["name"] = name
-#             self.json["password"] = password
-#             self.out_msg = "Restored wallet: {}".format(self.name)
+class WalletCreate(Wallet, _Eosjs):
+    '''Create a new wallet locally.
 
-#         self.printself(is_verbose)
+    - **parameters**::
+
+        name: The name of the new wallet, defaults to ``default``.
+        password: The password to the wallet, if the wallet exists. Default is None.
+        is_verbose: If ``False`` do not print. Default is ``True``.
+
+    - **attributes**::
+
+        name: The name of the wallet.
+        password: The password returned by wallet create.
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: If set, print output.
+    '''
+    def __init__(self, name="default", password="", is_verbose=True):
+        Wallet.__init__(self, name)
+        self.password = None
+        self.is_verbose = is_verbose
+        # import pdb; pdb.set_trace()
+        if not password: # try to create a wallet
+            with open(teos.get_keosd_wallet_dir() + self.name, "w+")  as out:
+                out.write("")
+            self.json = {}
+            self.json["name"] = name
+            self.out_msg = '''
+            With eosjs interface, wallets are not password-protected, currently.
+            '''
+
+            self.password = "not password-protected"
+            self.json["password"] = self.password
+            self.is_created = True
+
+        else: # try to open an existing wallet
+            WalletOpen(name, is_verbose=False)
+            wallet_unlock = WalletUnlock(name, password, is_verbose=False)
+            self.json = {} 
+            self.name = name
+            self.password = password
+            self.is_created = False
+            self.json["name"] = name
+            self.json["password"] = password
+            self.out_msg = "Restored wallet: {}".format(self.name)
+
+        self.printself()
+
+    def __str__(self):
+        return utils.heredoc(self.out_msg)
 
 
 # class WalletStop(_Eosjs):
@@ -642,51 +676,54 @@ class GetTransaction(_Eosjs):
 #         self.printself()
 
 
-# class CreateKey(Key, _Eosjs):
-#     '''Create a new keypair and print the public and private keys.
+class CreateKey(Key, _Eosjs):
+    '''Create a new keypair and print the public and private keys.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         key_name: Key name.
-#         r1: Generate a key using the R1 curve (iPhone), instead of the 
-#             K1 curve (Bitcoin)
+        key_name: Key name.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: If set, print output.    
-#     '''
-#     def __init__(
-#             self, key_name, key_public="", key_private="", r1=False, is_verbose=True):
-#         Key.__init__(self, key_name, key_public, key_private)
+        json: The json representation of the object.
+        is_verbose: If set, print output.    
+    '''
+    def __init__(
+            self, key_name, key_public="", key_private="", r1=False, is_verbose=True):
+        Key.__init__(self, key_name, key_public, key_private)
 
-#         if self.key_public or self.key_private:
-#             self.json = {}
-#             self.json["publicKey"] = self.key_public           
-#             self.json["privateKey"] = self.key_private
-#             self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
-#                 .format(self.key_private, self.key_public)
-#         else:
-#             args = ["--to-console"]
-#             if r1:
-#                 args.append("--r1")
+        if self.key_public or self.key_private:
+            self.json = {}
+            self.json["publicKey"] = self.key_public           
+            self.json["privateKey"] = self.key_private
+            self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
+                .format(self.key_private, self.key_public)
+        else:
+            args = ["--to-console"]
+            if r1:
+                args.append("--r1")
 
-#             _Eosjs.__init__(
-#                 self, args, "create", "key", is_verbose)
+            _Eosjs.__init__(
+                self, 
+                '''
+    const ecc = require('eosjs-ecc')
+
+    function api() {
+        ecc.randomKey().then(print_result)
+    }
+
+    function process_result(private_key) {
+        return {key_private: private_key, 
+                key_public: ecc.privateToPublic(private_key)}
+    }
+                ''', 
+                is_verbose)
             
-#             self.json["name"] = key_name
-#             msg = str(self.out_msg)
-#             first_collon = msg.find(":")
-#             first_end = msg.find("\n")
-#             second_collon = msg.find(":", first_collon + 1)
-#             self.json["privateKey"] = msg[first_collon + 2 : first_end]
-#             self.json["publicKey"] = msg[second_collon + 2 : len(msg) - 1]
-#             self.printself()
-#             self.key_private = self.json["privateKey"]
-#             self.key_public = self.json["publicKey"]
+        self.json["name"] = key_name
+        self.name = key_name
+        self.key_private = self.json["key_private"]
+        self.key_public = self.json["key_public"]
 
-#         self.name = key_name
 
 # class RestoreAccount(GetAccount):
 
@@ -798,37 +835,68 @@ class CreateAccount(Account, _Eosjs):
         import pdb; pdb.set_trace()
         _Eosjs.__init__(
             self,
-#             '''
-# const Eos = require('eosjs');
-# eosConfig = {keyProvider: 
-#     ['5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3']}
-# let eos = Eos(eosConfig)
-# eos.transaction(tr => {
-#     tr.newaccount({
-#         creator: 'eosio',
-#         name: '{0}',
-#         owner: '{1}',
-#         active: '{2}'
-#     })});
-#            '''
-            '''
-    Eos = require("eosjs");
-    binaryen = require("binaryen");
+                '''
+    const Eos = require('eosjs');
 
-    keyProvider = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
-    pubkey = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV";
+    const config1 = {
+        keyProvider: ['5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3'],
+        httpEndpoint: 'http://127.0.0.1:8888',
+        expireInSeconds: 60,
+        broadcast: true,
+        verbose: false, // API activity
+        sign: true
+    };
 
-    eos = Eos({ keyProvider, binaryen });
+    options = {
+        authorization: 'eosio@active',
+        broadcast: true,
+            sign: true,
+    }
+    // connects to localhost
+    const eos = Eos(config1);
 
     eos.transaction(tr => {
-        tr.newaccount({
-            creator: "%s",
-            name: "%s",
-            owner: pubkey,
-            active: pubkey
-        });
-    });
+    tr.newaccount({
+        creator: '%s',
+        name: '%s',
+        owner: 'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV',
+        active: 'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'
+        })
+    }, options)
             ''' % (creator, name),
+
+    #            '''
+    # const Eos = require('eosjs');
+    # keyProvider = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
+    # pubkey = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV";
+    # eosConfig = {keyProvider: [keyProvider]}
+    # let eos = Eos(eosConfig)
+    # eos.transaction(tr => {
+    #     tr.newaccount({
+    #         creator: '%s',
+    #         name: '%s',
+    #         owner: pubkey,
+    #         active: pubkey
+    #     })});
+    #         ''' % (creator, name),
+    #         '''
+    # Eos = require("eosjs");
+    # binaryen = require("binaryen");
+
+    # keyProvider = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
+    # pubkey = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV";
+
+    # eos = Eos({ keyProvider, binaryen });
+
+    # eos.transaction(tr => {
+    #     tr.newaccount({
+    #         creator: "%s",
+    #         name: "%s",
+    #         owner: pubkey,
+    #         active: pubkey
+    #     });
+    # });
+    #         ''' % (creator, name),
             is_verbose)
             
     #     self.json = GetAccount(self.name, is_verbose=False, is_info=False).json
