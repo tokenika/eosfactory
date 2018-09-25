@@ -1,7 +1,7 @@
 import unittest
 from eosf import *
 
-verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG]
+verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 
 CONTRACT_WORKSPACE = "_wslqwjvacdyugodewiyd"
 

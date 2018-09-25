@@ -1,7 +1,7 @@
 import sys
 from eosf import *
 
-verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
+verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
