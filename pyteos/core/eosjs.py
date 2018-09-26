@@ -138,7 +138,6 @@ class GetInfo(_Eosjs):
 
     - **attributes**::
 
-        error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: If set, print output.
     '''
@@ -194,7 +193,6 @@ class GetBlock(_Eosjs):
             
     - **attributes**::
 
-        error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: If set, print output.    
     '''
@@ -298,7 +296,6 @@ class GetAccounts(_Eosjs):
 #     - **attributes**::
 
 #         transaction_id: ID of the transaction retrieved.
-#         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.
 #     '''
@@ -328,7 +325,6 @@ class WalletCreate(Wallet, _Eosjs):
 
         name: The name of the wallet.
         password: The password returned by wallet create.
-        error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: If set, print output.
     '''
@@ -343,7 +339,7 @@ class WalletCreate(Wallet, _Eosjs):
             self.json = {}
             self.json["name"] = name
             self.out_msg = '''
-            With eosjs interface, wallets are not password-protected, currently.
+        With 'eosjs' interface, wallets are not password-protected, currently.
             '''
 
             self.password = "not password-protected"
@@ -367,89 +363,94 @@ class WalletCreate(Wallet, _Eosjs):
         return utils.heredoc(self.out_msg)
 
 
-# class WalletStop(_Eosjs):
-#     '''Stop keosd (doesn't work with nodeos).
-#     '''
-#     def __init__(self, is_verbose=True):
-#         _Eosjs.__init__(self, [], "wallet", "stop", is_verbose)
+class WalletStop(_Eosjs):
+    '''Stop keosd (doesn't work with nodeos).
+    '''
+    def __init__(self):
+        self.printself()
 
-#         self.printself()
+    def __str__(self):
+        return utils.heredoc('''
+        With 'eosjs' interface, 'WalletStop' command is empty.
+        ''')
 
 
-# class WalletList(_Eosjs):
-#     '''List opened wallets, * marks unlocked.
+class WalletList(_Eosjs):
+    '''List opened wallets, * marks unlocked.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         is_verbose: If ``False`` do not print. Default is ``True``.
+        is_verbose: If ``False`` do not print. Default is ``True``.
             
-#     - **attributes**::
+    - **attributes**::
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: If set, print output.
-#     '''
-#     def __init__(self, is_verbose=True):
-#         _Eosjs.__init__(
-#             self, [], "wallet", "list", is_verbose)
-
-#         self.json = json.loads("{" + self.out_msg.replace("Wallets", \
-#             '"Wallets"', 1) + "}")
-#         self.printself()
+        is_verbose: If set, print output.
+    '''
+    def __init__(self):
+        self.printself()
+            
+    def __str__(self):
+        return utils.heredoc('''
+        With 'eosjs' interface, 'WalletList' command is empty.
+        ''')
 
 
-# class WalletImport(_Eosjs):
-#     '''Import a private key into wallet.
+class WalletImport(_Eosjs):
+    '''Import a private key into wallet.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         wallet: A wallet object or the name of the wallet to import key into.
-#         key: A key object or a private key in WIF format to import.
-#         is_verbose: If ``False`` do not print. Default is ``True``.
+        wallet: A wallet object or the name of the wallet to import key into.
+        key: A key object or a private key in WIF format to import.
+        is_verbose: If ``False`` do not print. Default is ``True``.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         error: Whether any error ocurred.
-#         json: The json representation of the object.
-#         is_verbose: If set, print output.
-#     '''
-#     def __init__(self, key, wallet="default", is_verbose=True):
-#         key_private = key_arg(key, is_owner_key=True, is_private_key=True)
-#         _Eosjs.__init__(
-#             self, 
-#             ["--private-key", key_private, "--name", wallet_arg(wallet)],
-#             "wallet", "import", is_verbose)
+        json: The json representation of the object.
+        is_verbose: If set, print output.
+    '''
+    def __init__(self, key, wallet="default", is_verbose=True):
+        self.name = wallet_arg(wallet)
+        key_private = key_arg(key, is_owner_key=True, is_private_key=True)
 
-#         self.json["key_private"] = key_private
-#         self.key_private = key_private
-#         self.printself()
+        with open(teos.get_keosd_wallet_dir() + self.name, "w")  as out:
+            out.write(key_private + "\n")
 
-# class WalletRemove_key(_Eosjs):
-#     '''Remove key from wallet
-#     - **parameters**::
+        self.printself()
 
-#         wallet: A wallet object or the name of the wallet to import key into.
-#         password: The password returned by wallet create.
-#         key: A key object or a private key in WIF format to import.
-#         is_verbose: If ``False`` do not print. Default is ``True``.
+    def __str__(self):
+        return utils.heredoc('''
+        Key imported to wallet '{}'.
+        '''.format(self.name))
 
-#     - **attributes**::
 
-#         error: Whether any error ocurred.
-#         is_verbose: If set, print output.
-#     '''
-#     def __init__(self, key, wallet, password, is_verbose=True):
-#         key_public = key_arg(key, is_owner_key=True, is_private_key=False)
+class WalletRemove_key(_Eosjs):
+    '''Remove key from wallet
+    - **parameters**::
 
-#         _Eosjs.__init__(
-#             self, 
-#             [key_public, "--name", wallet_arg(wallet), 
-#                 "--password", password], 
-#             "wallet", "remove_key", is_verbose)
+        wallet: A wallet object or the name of the wallet to import key into.
+        password: The password returned by wallet create.
+        key: A key object or a private key in WIF format to import.
+        is_verbose: If ``False`` do not print. Default is ``True``.
 
-#         self.json["key_public"] = key_public
-#         self.key_public = key_public
-#         self.printself()
+    - **attributes**::
+
+        is_verbose: If set, print output.
+    '''
+    def __init__(self, key, wallet, password, is_verbose=True):
+        key_public = key_arg(key, is_owner_key=True, is_private_key=False)
+
+        
+
+        _Eosjs.__init__(
+            self, 
+            [key_public, "--name", wallet_arg(wallet), 
+                "--password", password], 
+            "wallet", "remove_key", is_verbose)
+
+        self.json["key_public"] = key_public
+        self.key_public = key_public
+        self.printself()
 
 
 # class WalletKeys(_Eosjs):
@@ -461,13 +462,11 @@ class WalletCreate(Wallet, _Eosjs):
 
 #     - **parameters**::
 
-#         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.
 
 #     - **attributes**::
 
-#         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.
 #     '''
@@ -494,7 +493,6 @@ class WalletCreate(Wallet, _Eosjs):
 
 #     - **attributes**::
 
-#         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.
 #     '''
@@ -528,7 +526,6 @@ class WalletCreate(Wallet, _Eosjs):
 
 #     - **parameters**::
 
-#         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.
 #     '''
@@ -554,7 +551,6 @@ class WalletCreate(Wallet, _Eosjs):
 
 #     - **attributes**::
     
-#         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.
 #     '''
@@ -586,7 +582,6 @@ class WalletCreate(Wallet, _Eosjs):
 
 #     - **attributes**::
 
-#         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.    
 #     '''
@@ -635,7 +630,6 @@ class WalletCreate(Wallet, _Eosjs):
 
 #     - **attributes**::
 
-#         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.
 #     '''
@@ -775,7 +769,6 @@ class CreateAccount(Account, _Eosjs):
 
         owner_key: Owner private key.
         active_key: Active private key.
-        error: Whether any error ocurred.
         json: The json representation of the object.
         is_verbose: If set, print output.    
     '''
@@ -979,7 +972,6 @@ def account_name():
 
 #     - **attributes**::
 
-#         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.    
 #     '''
@@ -1076,7 +1068,6 @@ def account_name():
 
 #     - **attributes**::
 
-#         error: Whether any error ocurred.
 #         json: The json representation of the object.
 #         is_verbose: If set, print output.
 #     '''
