@@ -1,6 +1,7 @@
 import os
 import subprocess
 import json
+from simplecrypt import encrypt, decrypt
 
 from shell.interface import *
 import shell.setup as setup
@@ -9,64 +10,25 @@ import core.errors as errors
 import core.logger as logger
 import core.utils as utils
 
-class Node():
-    def __init__(self, js):
-        self.out_msg = None
-        self.err_msg = None
-        self.json = None
-        cl = ["node", "-e"]
-        header = '''
-            no_error_tag = 'OK'
-
-            function print_result(result, err) {
-                if (err) {
-                    console.error(err)
-                }
-                else {
-                    result = process_result(result)
-                    console.error(no_error_tag)
-                    console.log(JSON.stringify(result))
-                }
-            }
-
-            function process_result(result) {
-                return result
-            }
-        '''
-        js = utils.heredoc(header + js)
-        cl.append(js)
-
-        if setup.is_print_command_line:
-            print("javascript:")
-            print("___________")
-            print("")
-            print(js)
-            print("")
-
-        process = subprocess.run(
-            cl,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE) 
-        self.err_msg = process.stderr.decode("utf-8")
-        if self.err_msg.strip() != "OK":
-            raise errors.Error(self.err_msg)
-
-        self.out_msg = process.stdout.decode("utf-8")
-        self.json = json.loads(self.out_msg)
-
-    def __str__(self):
-        return json.dumps(self.json, sort_keys=True, indent=4)
-
-    def __repr__(self):
-        return ""
 
 class WalletManager:
-
     manager_id = "5JfjYNzKTDoU35RSn6BpXei8Uqs1B6EGNwkEFHaN8SPHwhjUzcX"
     file_ext = ".walletjs"
 
     def wallet_file(self, name):
         return config.getKeosdWalletDir() + name + WalletManager.file_ext
+
+    def encrypt(name, password, append):
+            # plaintext = WalletManager.manager_id + "\n"
+            # ciphertext = encrypt(password, plaintext)
+            # plaintext = decrypt('password', ciphertext)        
+        pass
+
+    def decrypt(name, password):
+        with open(self.wallet_file(name), "r")  as input:
+            data = input.read()
+        plaintext = decrypt('password', data)
+        keys = plaintext.splitlines()
 
     def create(self, name, is_verbose=True):        
         password_key = Node('''
@@ -142,7 +104,8 @@ class WalletManager:
         ''' % (key_private)).json["key_public"]
 
         if is_verbose:
-            logger.OUT("Imported key: {}".format(key_public))
+            logger.OUT("Imported key to wallet '{}':\n{}".format(
+                name, key_public))
         
         return key_public
         
@@ -152,11 +115,49 @@ class WalletManager:
             key, is_owner_key=True, is_private_key=False)
         active_key_public = key_arg(
             key, is_owner_key=False, is_private_key=False)
+        private_keys = self.private_keys(wallet, False)
+
+        keys = Node('''
+        const ecc = require('eosjs-ecc')
+        keys = %s
+        print_result(keys)
+
+        function process_result(keys) {
+            public_keys = []
+            for (i = 0; i < keys.length; i++) {
+                pair = []
+                pair[0] = keys[i]
+                pair[1] = ecc.privateToPublic(keys[i])
+                public_keys[i] = pair
+            }
+
+            return public_keys
+        }
+        ''' % private_keys).json
+
+        trash = []
+        for pair in keys:
+            if pair[1] == owner_key_public or pair[1] == active_key_public:
+                trash.append(pair[0])
+
+        if trash:
+            remaining = []
+            for private_key in private_keys:
+                if not private_key in trash:
+                    remaining.append(private_key)
+
+            with open(self.wallet_file(name), "w")  as out:
+                out.write("\n".join(remaining))
+        
+        if is_verbose:
+            if trash:
+                logger.OUT("Removed keys from wallet '{}':\n".format(
+                    name
+                ) + "\n".join(trash))
         
     def keys(self, wallet, is_verbose=True):
         name = wallet_arg(wallet)
         private_keys = self.private_keys(wallet, False)
-        import pdb; pdb.set_trace()
         public_keys = Node('''
         const ecc = require('eosjs-ecc')
         keys = %s
@@ -180,7 +181,6 @@ class WalletManager:
         name = wallet_arg(wallet)
         with open(self.wallet_file(name), "r")  as input:
             keys = [key.rstrip('\n') for key in input]
-        import pdb; pdb.set_trace()
         if is_verbose:
             logger.OUT("private keys in wallet '{}': \n".format(
                 name
@@ -195,3 +195,55 @@ class WalletManager:
 __wallet_manager = WalletManager()
 def wallet_manager():
     return __wallet_manager
+
+
+class Node():
+    def __init__(self, js):
+        self.out_msg = None
+        self.err_msg = None
+        self.json = None
+        cl = ["node", "-e"]
+        header = '''
+            no_error_tag = 'OK'
+
+            function print_result(result, err) {
+                if (err) {
+                    console.error(err)
+                }
+                else {
+                    result = process_result(result)
+                    console.error(no_error_tag)
+                    console.log(JSON.stringify(result))
+                }
+            }
+
+            function process_result(result) {
+                return result
+            }
+        '''
+        js = utils.heredoc(header + js)
+        cl.append(js)
+
+        if setup.is_print_command_line:
+            print("javascript:")
+            print("___________")
+            print("")
+            print(js)
+            print("")
+
+        process = subprocess.run(
+            cl,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE) 
+        self.err_msg = process.stderr.decode("utf-8")
+        if self.err_msg.strip() != "OK":
+            raise errors.Error(self.err_msg)
+
+        self.out_msg = process.stdout.decode("utf-8")
+        self.json = json.loads(self.out_msg)
+
+    def __str__(self):
+        return json.dumps(self.json, sort_keys=True, indent=4)
+
+    def __repr__(self):
+        return ""
