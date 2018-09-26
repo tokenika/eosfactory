@@ -126,10 +126,11 @@ class WalletManager:
     def list(self, is_verbose=True):
         pass
 
-    def import_key(self, key, is_verbose=True):
+    def import_key(self, wallet, key, is_verbose=True):
+        name = wallet_arg(wallet)
         key_private = key_arg(key, is_owner_key=True, is_private_key=True)
 
-        with open(self.wallet_file(name), "w")  as out:
+        with open(self.wallet_file(name), "a")  as out:
             out.write(key_private + "\n")
 
         key_public = Node('''
@@ -139,20 +140,54 @@ class WalletManager:
                 return {key_public: ecc.privateToPublic(private_key)}
             }
         ''' % (key_private)).json["key_public"]
+
+        if is_verbose:
+            logger.OUT("Imported key: {}".format(key_public))
         
+        return key_public
+        
+    def remove_key(self, wallet, key, is_verbose=True):
+        name = wallet_arg(wallet)
+        owner_key_public = key_arg(
+            key, is_owner_key=True, is_private_key=False)
+        active_key_public = key_arg(
+            key, is_owner_key=False, is_private_key=False)
+        
+    def keys(self, wallet, is_verbose=True):
+        name = wallet_arg(wallet)
+        private_keys = self.private_keys(wallet, False)
+        import pdb; pdb.set_trace()
+        public_keys = Node('''
+        const ecc = require('eosjs-ecc')
+        keys = %s
+        print_result(keys)
+
+        function process_result(keys) {
+            var public_keys = []
+            for (i = 0; i < keys.length; i++) {
+                public_keys[i] = ecc.privateToPublic(keys[i])
+            }
+
+            return public_keys
+        }
+        ''' % private_keys).json
+        if is_verbose:
+            logger.OUT("keys in wallet '{}': \n".format(
+                name
+            ) + "\n".join(public_keys))
+
+    def private_keys(self, wallet, is_verbose=True):
+        name = wallet_arg(wallet)
+        with open(self.wallet_file(name), "r")  as input:
+            keys = [key.rstrip('\n') for key in input]
         import pdb; pdb.set_trace()
         if is_verbose:
-            logger.OUT("Imported key: {}".format(name))
+            logger.OUT("private keys in wallet '{}': \n".format(
+                name
+            ) + "\n".join(keys))
+
+        return keys
         
-
-    def remove_key(self, key, is_verbose=True):
-        pass
-
-    def keys(self):
-        pass
-
-    def private_keys(self, is_verbose=True):
-        pass
 
     def stop(self, is_verbose=True):
         pass

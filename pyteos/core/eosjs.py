@@ -18,7 +18,7 @@ from shell.interface import *
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
         setup.set_nodeos_address(
-            "http://" + pyteos.core.config.getHttpServerAddress())
+            "http://" + core.config.getHttpServerAddress())
         setup.is_local_address = True
 
     return setup.is_local_address
@@ -440,7 +440,7 @@ class WalletRemove_key(_Eosjs):
     def __init__(self, key, wallet, password, is_verbose=True):
         key_public = key_arg(key, is_owner_key=True, is_private_key=False)
 
-        
+
 
         _Eosjs.__init__(
             self, 
