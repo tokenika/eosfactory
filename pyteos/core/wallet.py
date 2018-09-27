@@ -1,7 +1,8 @@
 import os
 import subprocess
 import json
-from simplecrypt import encrypt, decrypt
+from cryptography.fernet import Fernet
+
 
 from shell.interface import *
 import shell.setup as setup
@@ -10,10 +11,16 @@ import core.errors as errors
 import core.logger as logger
 import core.utils as utils
 
+class OpenWallet:
+    def __init__(self, name, cipher_suite=None):
+        self.name = name
+        self.cipher_suite = cipher_suite
+
+open_wallets = {}
 
 class WalletManager:
     manager_id = "5JfjYNzKTDoU35RSn6BpXei8Uqs1B6EGNwkEFHaN8SPHwhjUzcX"
-    file_ext = ".walletjs"
+    file_ext = ".eosfwallet"
 
     def wallet_file(self, name):
         return config.getKeosdWalletDir() + name + WalletManager.file_ext
@@ -21,7 +28,12 @@ class WalletManager:
     def encrypt(name, password, append):
             # plaintext = WalletManager.manager_id + "\n"
             # ciphertext = encrypt(password, plaintext)
-            # plaintext = decrypt('password', ciphertext)        
+            # plaintext = decrypt('password', ciphertext) 
+# key = Fernet.generate_key()
+# cipher_suite = Fernet(key)
+# encoded_text = cipher_suite.encrypt(str.encode(x))
+# decoded_text = cipher_suite.decrypt(encoded_text).decode("utf-8").splitlines()
+
         pass
 
     def decrypt(name, password):
@@ -29,18 +41,9 @@ class WalletManager:
             data = input.read()
         plaintext = decrypt('password', data)
         keys = plaintext.splitlines()
+        cipher_suite = Fernet(key)
 
-    def create(self, name, is_verbose=True):        
-        password_key = Node('''
-            const ecc = require('eosjs-ecc')
-            ecc.randomKey().then(print_result)
-
-            function process_result(private_key) {
-                return {key_private: private_key, 
-                        key_public: ecc.privateToPublic(private_key)}
-            }
-        ''').json
-        password = password_key["key_public"]
+    def create(self, name, is_verbose=True):
 
         file = self.wallet_file(name)
         if os.path.exists(file):
@@ -52,41 +55,81 @@ class WalletManager:
         with open(file, "w+")  as out:
             out.write(WalletManager.manager_id + "\n")
 
+        password = Fernet.generate_key()
+        cipher_suite = Fernet(password)
+        open_wallets[name] = OpenWallet(name, cipher_suite)
+
         if is_verbose:
             logger.OUT('''
-        With 'eosjs' interface, wallets are not password-protected, currently.
-            ''')
+            Creating wallet: {}
+            Save password to use in the future to unlock this wallet.
+            Without password imported keys will not be retrievable.
+            "{}"
+            '''.format(name, password))
 
     def open(self, wallet, is_verbose=True):
         name = wallet_arg(wallet)
+        wallets = self.wallets()
+        if name + WalletManager.file_ext in wallets:
+            open_wallets[name] = OpenWallet(name)
+        else:
+            raise errors.Error('''
+            There is not any wallet file named
+                {}
+            '''.format(self.wallet_file(name)))
+
         if is_verbose:
             logger.OUT("Opened: {}".format(name))
 
     def lock(self, wallet):
         name = wallet_arg(wallet)
+        if open_wallets[name]:
+            open_wallets[name].cipher_suite = None
+        else:
+            raise errors.Error('''
+            The wallet '{}' is not open.
+            '''.format(name))
+
         if is_verbose:
             logger.OUT("Locked: {}".format(name))
 
-    def wallets(self):
-        directory = os.fsencode(config.getKeosdWalletDir())
-        retval = []
-        for file in os.listdir(directory):
-            filename = os.fsdecode(file)
-            if filename.endswith(WalletManager.file_ext): 
-                retval.append(filename)
-        return retval
-
     def lock_all(self, is_verbose=True):
+        locked = []
+        for name, cipher_suite in open_wallets.items:
+            cipher_suite = None
+            locked.append(name)
+        
         if is_verbose:
-            logger.OUT("Locked: \n" + ", ".join(self.wallets()))
+            if locked:
+                logger.OUT("Locked: \n" + ", ".join(locked))
+            else:
+                logger.OUT("Nothing to lock.")
 
-    def unlock(self, wallet, is_verbose=True):
+    def unlock(self, wallet, password, is_verbose=True):
         name = wallet_arg(wallet)
+        if open_wallets[name]:
+            open_wallets[name].cipher_suite = Fernet(password)
+        else:
+            raise errors.Error('''
+            The wallet '{}' is not open.
+            '''.format(name))
+        
         if is_verbose:
             logger.OUT("Unlocked: {}".format(name))
 
     def list(self, is_verbose=True):
-        pass
+        wallets = []
+        for name, cipher_suite in open_wallets.items:
+            if cipher_suite:
+                wallets.append("*" + name)
+            else:
+                wallets.append(name)
+
+        if is_verbose:
+            if wallets:
+                logger.OUT("Open wallets: \n" + "\n".join(wallets))
+            else:
+                logger.OUT("There is not any wallet open.")            
 
     def import_key(self, wallet, key, is_verbose=True):
         name = wallet_arg(wallet)
@@ -191,6 +234,16 @@ class WalletManager:
 
     def stop(self, is_verbose=True):
         pass
+
+    def wallets(self):
+        directory = os.fsencode(config.getKeosdWalletDir())
+        retval = []
+        for file in os.listdir(directory):
+            filename = os.fsdecode(file)
+            if filename.endswith(WalletManager.file_ext): 
+                retval.append(filename)
+        return retval
+
 
 __wallet_manager = WalletManager()
 def wallet_manager():
