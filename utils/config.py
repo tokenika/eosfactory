@@ -7,7 +7,7 @@ The current configuration of the EOSFactory is
 
 You may overwrite it with entries into the configuration file.
 
-Configuration file is look for in the following locations:
+Configuration file is searched for in the following locations:
     * EOSIO_EOSFACTORY_DIR + setup.CONFIG_DIR 
         where ``EOSIO_EOSFACTORY_DIR`` is a environment variable and 
         ``setup.CONFIG_DIR`` is defined in the ``pyteos.setup`` module

@@ -1,8 +1,16 @@
 # Plan for Subsequent EOSFactory Releases
 
-#### Integration with `eosjs` instead of `cleos`
+#### Integration with `eosjs`
 
-Right now *EOSFactory* is using C++-based `cleos` to communicate with a local or remote testnet. In the future we plan to switch this dependence to JavaScript-based `eosjs`.
+As of now *EOSFactory* is using C++-based `cleos` to communicate with a local or remote testnet. In the future we plan to create an alternative and also use the JavaScript-based `eosjs`.
+
+#### Flexible folder structure
+
+We plan to make *EOSFactory* more generic, i.e. allow the user to have his own folder structure, instead of imposing our own.
+
+#### Less invasive configuration
+
+We'd like to avoid using `~/.profile` and `~/.bash_profile` files for storing *EOSFactory* configuration.
 
 #### Better integration with *Visual Studio Code*
 

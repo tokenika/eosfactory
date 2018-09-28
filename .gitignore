@@ -25,9 +25,6 @@ node_modules
 package-lock.json
 
 tests/test.py
-<<<<<<< HEAD
 tests/js.js
-=======
->>>>>>> 91448810512696083aa04a39b057f35833d4f367
 tests/eosjs.py
 tests/eosjsecc.js
