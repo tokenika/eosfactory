@@ -146,7 +146,7 @@ def open_wallet(wallet, is_verbose=True):
         logger.OUT("Opened: {}".format(name))
 
 
-def lock(wallet):
+def lock(wallet, is_verbose=True)):
     name = wallet_arg(wallet)
     if _open_wallets[name]:
         _open_wallets[name].cipher_suite = None
