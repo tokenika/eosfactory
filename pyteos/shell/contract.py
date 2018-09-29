@@ -41,7 +41,7 @@ class ContractBuilder():
             abi_file=None,
             wasm_file=None):
 
-        self.contract_dir = config.getContractDir(contract_dir)
+        self.contract_dir = config.contract_dir(contract_dir)
         
         if not self.contract_dir:
             raise errors.Error("""

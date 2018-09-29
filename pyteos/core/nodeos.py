@@ -15,7 +15,7 @@ def get_pid(name=None):
     []
     """    
     if not name:
-        name = config.getDaemonName()
+        name = config.nodeos_name()
 
     child = subprocess.Popen(
         ['pgrep', '-f', name], stdout=subprocess.PIPE, shell=False)
@@ -40,7 +40,7 @@ def DaemonStop():
     if count <= 0:
         raise errors.Error('''
 Failed to kill {}. Pid is {}.
-    '''.format(config.getDaemonName(), pid[0])
+    '''.format(config.nodeos_name(), pid[0])
     )
 
 
@@ -49,17 +49,17 @@ def commandLine(clearBlockchain=False):
         DaemonStop()
 
     args = [
-        "--http-server-address", config.getHttpServerAddress(),
-        "--data-dir", config.getDataDir(),
-        "--config-dir", config.getConfigDir(),
-        "--chain-state-db-size-mb", config.getMemorySizeMb(),
+        "--http-server-address", config.http_server_address(),
+        "--data-dir", config.data_dir(),
+        "--config-dir", config.config_dir(),
+        "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
         " --contracts-console",
         " --verbose-http-errors"
     ]
     if clearBlockchain:
         args.extend([
-            "--genesis-json", config.getGenesisJson(),
+            "--genesis-json", config.genesis_json(),
             "--delete-all-blocks"
         ])
     
-    commandLine = args.insert(0, config.getDaemonExe())
+    commandLine = args.insert(0, config.nodeos_exe())

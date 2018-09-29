@@ -19,7 +19,7 @@ from shell.interface import *
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
         setup.set_nodeos_address(
-            "http://" + core.config.getHttpServerAddress())
+            "http://" + core.config.http_server_address())
         setup.is_local_address = True
 
     return setup.is_local_address
@@ -855,12 +855,12 @@ def account_name():
 
 # def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
 
-#     contract_path_absolute = config.getContractDir(contract_dir)
+#     contract_path_absolute = config.contract_dir(contract_dir)
 #     if not contract_path_absolute:
 #         return []
 
 #     if not wasm_file:
-#         wasm_file = config.get_wasm_file(contract_dir)
+#         wasm_file = config.wasm_file(contract_dir)
 #         if not wasm_file:
 #             return []
 #     else:
@@ -869,7 +869,7 @@ def account_name():
 #             return []
 
 #     if not abi_file:
-#         abi_file = config.get_abi_file(contract_dir)
+#         abi_file = config.abi_file(contract_dir)
 #         if not abi_file:
 #             return []
 #     else:

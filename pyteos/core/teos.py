@@ -20,8 +20,8 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
     '''Given a hint to a contract directory, produce ABI file.
     '''
 
-    contract_dir = config.getContractDir(contract_dir_hint)
-    srcs = config.getContractSourceFiles(contract_dir)
+    contract_dir = config.contract_dir(contract_dir_hint)
+    srcs = config.contract_source_files(contract_dir)
     if not srcs:
         raise errors.Error('''
         "The source is empty. The assumed contract dir is   
@@ -51,16 +51,16 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
         code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
 
     command_line = [
-        config.get_eosio_abigen(),
+        config.abigen_exe(),
         "-extra-arg=-c", "-extra-arg=--std=c++14", 
         "-extra-arg=--target=wasm32", "-extra-arg=-nostdinc", 
         "-extra-arg=-nostdinc++", "-extra-arg=-DABIGEN",
-        "-extra-arg=-I" + config.getSourceDir() + "/contracts/libc++/upstream/include",
-        "-extra-arg=-I" + config.getSourceDir() + "/contracts/musl/upstream/include",
-        "-extra-arg=-I" + config.getSourceDir() + "/externals/magic_get/include",
-        "-extra-arg=-I" + config.getEOSIO_BOOST_INCLUDE_DIR(),
-        "-extra-arg=-I" + config.getSourceDir() + "/contracts",
-        "-extra-arg=-I" + config.getSourceDir() + "/build/contracts",
+        "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts/libc++/upstream/include",
+        "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts/musl/upstream/include",
+        "-extra-arg=-I" + config.eosio_repository_dir() + "/externals/magic_get/include",
+        "-extra-arg=-I" + config.boost_include_dir(),
+        "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts",
+        "-extra-arg=-I" + config.eosio_repository_dir() + "/build/contracts",
         "-extra-arg=-I" + source_dir
     ]
 
@@ -82,7 +82,7 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
     )
 
     if setup.is_print_command_line:
-        print("######## {}:".format(config.get_eosio_abigen()))
+        print("######## {}:".format(config.abigen_exe()))
         print(" ".join(command_line))
 
     process(command_line)
@@ -97,8 +97,8 @@ def WAST(
     '''Given a hint to a contract directory, produce WAST and WASM code.
     '''
 
-    contract_dir = config.getContractDir(contract_dir_hint)
-    srcs = config.getContractSourceFiles(contract_dir)
+    contract_dir = config.contract_dir(contract_dir_hint)
+    srcs = config.contract_source_files(contract_dir)
     if not srcs:
         raise errors.Error('''
         "The source is empty. The assumed contract dir is  
@@ -131,17 +131,17 @@ def WAST(
             continue
 
         command_line = [
-            config.getEOSIO_WASM_CLANG(),
+            config.wasm_clang_exe(),
             "-emit-llvm", "-O3", "--std=c++14", "--target=wasm32", "-nostdinc",
             #"-DBOOST_DISABLE_ASSERTS -DBOOST_EXCEPTION_DISABLE",
             "-nostdlib", "-nostdlibinc", "-ffreestanding", "-nostdlib",
             "-fno-threadsafe-statics", "-fno-rtti", "-fno-exceptions",
-            "-I", config.getSourceDir() + "/contracts/libc++/upstream/include",
-            "-I", config.getSourceDir() + "/contracts/musl/upstream/include",
-            "-I", config.getSourceDir() + "/externals/magic_get/include",
-            "-I", config.getEOSIO_BOOST_INCLUDE_DIR(),
-            "-I", config.getSourceDir() + "/contracts",
-            "-I", config.getSourceDir() + "/build/contracts",
+            "-I", config.eosio_repository_dir() + "/contracts/libc++/upstream/include",
+            "-I", config.eosio_repository_dir() + "/contracts/musl/upstream/include",
+            "-I", config.eosio_repository_dir() + "/externals/magic_get/include",
+            "-I", config.boost_include_dir(),
+            "-I", config.eosio_repository_dir() + "/contracts",
+            "-I", config.eosio_repository_dir() + "/build/contracts",
             "-I", contract_dir
         ]
 
@@ -155,7 +155,7 @@ def WAST(
         command_line.extend(["-c", file, "-o", output])
         
         if setup.is_print_command_line:
-            print("######## {}:".format(config.getEOSIO_WASM_CLANG()))
+            print("######## {}:".format(config.wasm_clang_exe()))
             print(" ".join(command_line))
 
         try:
@@ -170,16 +170,16 @@ def WAST(
 
     if not compile_only:
         command_line = [ 
-            config.getEOSIO_WASM_LLVM_LINK(),
+            config.wasm_llvm_link_exe(),
             "-only-needed", 
             "-o",  workdir + "/linked.bc",
             " ".join(objectFileList),
-            config.getSourceDir() + "/build/contracts/musl/libc.bc",
-            config.getSourceDir() + "/build/contracts/libc++/libc++.bc",
-            config.getSourceDir() + "/build/contracts/eosiolib/eosiolib.bc"
+            config.eosio_repository_dir() + "/build/contracts/musl/libc.bc",
+            config.eosio_repository_dir() + "/build/contracts/libc++/libc++.bc",
+            config.eosio_repository_dir() + "/build/contracts/eosiolib/eosiolib.bc"
         ]
         if setup.is_print_command_line:
-            print("######## {}:".format(config.getEOSIO_WASM_LLVM_LINK()))
+            print("######## {}:".format(config.wasm_llvm_link_exe()))
             print(" ".join(command_line))
 
         try:
@@ -193,13 +193,13 @@ def WAST(
             raise errors.Error(str(e))
 
         command_line = [
-            config.getEOSIO_WASM_LLC(),
+            config.wasm_llc_exe(),
             "-thread-model=single", "--asm-verbose=false",
             "-o", workdir + "/assembly.s",
             workdir + "/linked.bc"
         ]
         if setup.is_print_command_line:
-            print("######## {}:".format(config.getEOSIO_WASM_LLC()))
+            print("######## {}:".format(config.wasm_llc_exe()))
             print(" ".join(command_line))
 
         try:
@@ -214,13 +214,13 @@ def WAST(
             raise errors.Error(str(e))          
 
         command_line = [
-            config.getEOSIO_S2WASM(),
+            config.s2wasm_exe(),
             "-o", targetPathWast,
             "-s", "16384",
             workdir + "/assembly.s"
         ]
         if setup.is_print_command_line:
-            print("######## {}:".format(config.getEOSIO_S2WASM()))
+            print("######## {}:".format(config.s2wasm_exe()))
             print(" ".join(command_line))
 
         try:
@@ -238,10 +238,10 @@ def WAST(
         '''.format(targetPathWast))                      
 
         command_line = [
-            config.getEOSIO_WAST2WASM(), targetPathWast, targetPathWasm, "-n"]
+            config.wast2wasm_exe(), targetPathWast, targetPathWasm, "-n"]
 
         if setup.is_print_command_line:
-            print("######## {}:".format(config.getEOSIO_WAST2WASM()))
+            print("######## {}:".format(config.wast2wasm_exe()))
             print(" ".join(command_line))
 
         try:
@@ -277,11 +277,11 @@ def template_create(
     if not workspace_dir \
                             or not os.path.isabs(workspace_dir) \
                             or not os.path.exists(workspace_dir):
-        workspace_dir = config.getContractWorkspace()
+        workspace_dir = config.contract_workspace()
     workspace_dir = workspace_dir.strip()
 
     template_dir = os.path.join(
-        config.getEosFactoryDir(), config.templContractsDir, template_name)
+        config.eosf_dir(), config.templContractsDir, template_name)
 
     if not os.path.exists(template_dir):
         raise errors.Error('''
@@ -359,7 +359,7 @@ def get_keosd_wallet_dir():
     '''
     Get the directory of the `nodeos` local wallet.
     '''
-    return config.getKeosdWalletDir()
+    return config.keosd_wallet_dir()
 
 
 def get_pid(name=None):
@@ -373,7 +373,7 @@ def get_pid(name=None):
     []
     """    
     if not name:
-        name = config.getDaemonName()
+        name = config.nodeos_name()
 
     child = subprocess.Popen(
         ['pgrep', '-f', name], stdout=subprocess.PIPE, shell=False)
@@ -426,10 +426,10 @@ def getTargetDirPath(source_dir):
 
 def node_start1(clear=False, verbosity=None):
     args = [
-        "--http-server-address", config.getHttpServerAddress(),
-        "--data-dir", config.getDataDir(),
-        "--config-dir", config.getConfigDir(),
-        "--chain-state-db-size-mb", config.getMemorySizeMb(),
+        "--http-server-address", config.http_server_address(),
+        "--data-dir", config.data_dir(),
+        "--config-dir", config.config_dir(),
+        "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
         "--contracts-console",
         "--verbose-http-errors"
     ]
@@ -437,10 +437,10 @@ def node_start1(clear=False, verbosity=None):
     if clear:
         node_stop()
         args.extend([
-            "--genesis-json", config.getGenesisJson(),
+            "--genesis-json", config.genesis_json(),
             "--delete-all-blocks"
         ])
-    args.insert(0, config.getDaemonExe())
+    args.insert(0, config.nodeos_exe())
     subprocess.Popen(
         args, 
         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
@@ -451,10 +451,10 @@ def node_start1(clear=False, verbosity=None):
 
 def node_start(clear=False, verbosity=None):
     args = [
-        "--http-server-address", config.getHttpServerAddress(),
-        "--data-dir", config.getDataDir(),
-        "--config-dir", config.getConfigDir(),
-        "--chain-state-db-size-mb", config.getMemorySizeMb(),
+        "--http-server-address", config.http_server_address(),
+        "--data-dir", config.data_dir(),
+        "--config-dir", config.config_dir(),
+        "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
         "--contracts-console",
         "--verbose-http-errors"
     ]
@@ -462,12 +462,12 @@ def node_start(clear=False, verbosity=None):
     if clear:
         node_stop()
         args.extend([
-            "--genesis-json", config.getGenesisJson(),
+            "--genesis-json", config.genesis_json(),
             "--delete-all-blocks"
         ])
 
     cl = args
-    cl.insert(0, config.getDaemonExe())
+    cl.insert(0, config.nodeos_exe())
 
     if setup.is_print_command_line:
         print("nodeos command line:")
@@ -476,21 +476,21 @@ def node_start(clear=False, verbosity=None):
     if config.is_nodeos_in_window():
 
         if is_windows_ubuntu():
-            args.insert(0, config.getDaemonExe())
+            args.insert(0, config.nodeos_exe())
             subprocess.call(
                 ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
                 " ".join(cl)])
         elif uname() == "Darwin":
                 subprocess.Popen(
                     "open -a "
-                    + config.getDaemonExe() + " --args " + " ".join(args),
+                    + config.nodeos_exe() + " --args " + " ".join(args),
                     shell=True)
         else:
-            args.insert(0, config.getDaemonExe())
+            args.insert(0, config.nodeos_exe())
             subprocess.Popen(
                 "gnome-terminal -- " + " ".join(args), shell=True)
     else:
-        args.insert(0, config.getDaemonExe())
+        args.insert(0, config.nodeos_exe())
         subprocess.Popen(
             args, 
             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
@@ -534,11 +534,11 @@ def node_probe(verbosity=None):
 
 def is_local_node_process_running(name=None):
     if not name:
-        name = config.getDaemonName()
+        name = config.nodeos_name()
 
     response = subprocess.run(
         'ps aux | grep ' + name, shell=True, stdout=subprocess.PIPE)
-    return config.getDaemonExe() in response.stdout.decode("utf-8")
+    return config.nodeos_exe() in response.stdout.decode("utf-8")
         
 
 def node_stop1(verbosity=None):
@@ -559,7 +559,7 @@ def node_stop1(verbosity=None):
     if count <= 0:
         raise errors.Error('''
 Failed to kill {}. Pid is {}.
-    '''.format(config.getDaemonName(), pid[0])
+    '''.format(config.nodeos_name(), pid[0])
     )
     else:
         logger.INFO('''
@@ -584,7 +584,7 @@ def node_stop(verbosity=None):
     if count <= 0:
         raise errors.Error('''
 Failed to kill {}. Pid is {}.
-    '''.format(config.getDaemonName(), pid[0])
+    '''.format(config.nodeos_name(), pid[0])
     )
     else:
         logger.INFO('''

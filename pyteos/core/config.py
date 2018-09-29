@@ -113,7 +113,7 @@ Cannot find the config json file.
     ''')
 
 
-def configValues(config_key):
+def config_values(config_key):
     retval = []
     # First, configure file ...
     config_json = config_map()
@@ -135,19 +135,19 @@ def configValues(config_key):
     return retval
 
 
-def configValue(config_key):
-    retval = configValues(config_key) 
+def config_value(config_key):
+    retval = config_values(config_key) 
     return retval[0] if retval else None
 
 
-def getValidPath(config_key, findFile=None):
+def valid_path(config_key, findFile=None):
     '''Given a key to the config map, get a valid file system path.
 
     The key may map to a path either absolute or relative to the EOS 
     repository. Also, the path can be relative to the ``HOME`` environment
     variable.
     '''
-    values = configValues(config_key)
+    values = config_values(config_key)
     for path in values:
 
         if "${U_HOME}" in path: 
@@ -174,7 +174,7 @@ def getValidPath(config_key, findFile=None):
                 if os.path.exists(path):
                     return path
         else:
-            path = os.path.join(getSourceDir(), path)
+            path = os.path.join(eosio_repository_dir(), path)
             if findFile:
                 if os.path.exists(os.path.join(path, findFile)):
                     return path
@@ -185,30 +185,30 @@ def getValidPath(config_key, findFile=None):
     return None
 
 
-def getEosFactoryDir():
-    config_value = configValue("EOSIO_EOSFACTORY_DIR")
-    if config_value:
-        return config_value
+def eosf_dir():
+    path = config_value("EOSIO_EOSFACTORY_DIR")
+    if path:
+        return path
 
     raise errors.Error('''
         Cannot determine the context directory.
     ''')
 
 
-def getSourceDir():
-    config_value = configValue("EOSIO_SOURCE_DIR")
-    if config_value:
-        return config_value
+def eosio_repository_dir():
+    path = config_value("EOSIO_SOURCE_DIR")
+    if path:
+        return path
 
     raise errors.Error('''
         Cannot determine the EOSIO source directory.
     ''')
 
 
-def getGenesisJson():
-    path = configValue("EOSIO_GENESIS_JSON")
+def genesis_json():
+    path = config_value("EOSIO_GENESIS_JSON")
     if not os.path.isabs(path):
-        path = os.path.join(getConfigDir(), path)
+        path = os.path.join(config_dir(), path)
     if os.path.isfile(path):
         return path
 
@@ -219,14 +219,17 @@ def getGenesisJson():
     '''.format(path))
 
 
-def getContractDir(contract_dir_hint):
+def contract_dir(contract_dir_hint):
     ''' Given a hint, determine the contract directory.
     The contract directory is the container for the project of a contract. The 
     hint is probed to be one of the following pieces of information:
     the absolute path to a contract directory;
-    the relative path to a contract directory, relative to the directory set with the EOSIO_CONTRACT_WORKSPACE variable;
-    the relative path to a contract directory, relative to the ``contracts`` directory in the repository of EOSFactory;
-    the relative path to a contract directory, relative to the ``contracts`` directory in the repository of EOSIO.
+    the relative path to a contract directory, relative to the directory 
+        set with the EOSIO_CONTRACT_WORKSPACE variable;
+    the relative path to a contract directory, relative to the ``contracts`` 
+        directory in the repository of EOSFactory;
+    the relative path to a contract directory, relative to the ``contracts`` 
+        directory in the repository of EOSIO.
     ''' 
     contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
 
@@ -239,29 +242,29 @@ def getContractDir(contract_dir_hint):
 
     # ? the relative path to a contract directory, relative to the directory 
     # set with the EOSIO_CONTRACT_WORKSPACE variable
-    contract_dir = os.path.join(
-        configValue("EOSIO_CONTRACT_WORKSPACE"), contract_dir_hint)
-    trace = trace + contract_dir + "\n"
-    if os.path.isdir(contract_dir):
-        return contract_dir
+    contract_dir_ = os.path.join(
+        config_value("EOSIO_CONTRACT_WORKSPACE"), contract_dir_hint)
+    trace = trace + contract_dir_ + "\n"
+    if os.path.isdir(contract_dir_):
+        return contract_dir_
 
     # ? the relative path to a contract directory, relative to the 
     # ``contracts`` directory in the repository of EOSFactory
-    contract_dir = os.path.join(
-            configValue("EOSIO_EOSFACTORY_DIR"), 
+    contract_dir_ = os.path.join(
+            config_value("EOSIO_EOSFACTORY_DIR"), 
             setup.CONTRACTS_DIR, contract_dir_hint)
-    trace = trace + contract_dir + "\n"
-    if os.path.isdir(contract_dir):
-        return contract_dir 
+    trace = trace + contract_dir_ + "\n"
+    if os.path.isdir(contract_dir_):
+        return contract_dir_ 
 
     # ? the relative path to a contract directory, relative to the 
     # ``contracts`` directory in the repository of EOSIO
-    contract_dir = os.path.join(
-            configValue("EOSIO_SOURCE_DIR"),
+    contract_dir_ = os.path.join(
+            config_value("EOSIO_SOURCE_DIR"),
             setup.EOSIO_CONTRACT_DIR, contract_dir_hint)
-    trace = trace + contract_dir + "\n"
-    if os.path.isdir(contract_dir):
-        return contract_dir 
+    trace = trace + contract_dir_ + "\n"
+    if os.path.isdir(contract_dir_):
+        return contract_dir_ 
     
     raise errors.Error('''
         Cannot determine the contract directory.
@@ -270,7 +273,7 @@ def getContractDir(contract_dir_hint):
     '''.format(trace))
 
 
-def getSourceFiles(source_path):
+def source_files(source_path):
     srcs = []
     extensions = [".cpp", ".cxx", ".c", ".abi"]
     files = os.listdir(source_path)
@@ -282,17 +285,17 @@ def getSourceFiles(source_path):
     return srcs
     
 
-def getContractSourceFiles(contract_dir_hint):
-    contract_dir = getContractDir(utils.wslMapWindowsLinux(contract_dir_hint))
-    trace = contract_dir + "\n"
+def contract_source_files(contract_dir_hint):
+    contract_dir_ = contract_dir(utils.wslMapWindowsLinux(contract_dir_hint))
+    trace = contract_dir_ + "\n"
 
-    srcs = getSourceFiles(contract_dir)
+    srcs = source_files(contract_dir_)
     if srcs:
         return srcs            
 
-    source_path = os.path.join(contract_dir, "src")
+    source_path = os.path.join(contract_dir_, "src")
     trace = trace + source_path + "\n"
-    srcs = getSourceFiles(source_path)
+    srcs = source_files(source_path)
     if srcs:
         return srcs            
 
@@ -303,7 +306,7 @@ def getContractSourceFiles(contract_dir_hint):
     '''.format(trace))
 
 
-def getContractFile(contract_dir_hint, contract_file_hint):
+def contract_file(contract_dir_hint, contract_file_hint):
     ''' Given contract dir and contract file hints, determine the file.
 
     Contract files are those extended with ``wast``, ``wasm`` and ``abi``.
@@ -312,7 +315,7 @@ def getContractFile(contract_dir_hint, contract_file_hint):
     Next, it may be relative to the contract directory.
 
     The contract directory is the container for the project of a contract. This 
-    directory is determined with the ``getContractDir`` function, basing on the 
+    directory is determined with the ``contract_dir`` function, basing on the 
     ``contract_dir_hint``.
 
     Any contract directory contains directories and files structured according 
@@ -330,24 +333,24 @@ def getContractFile(contract_dir_hint, contract_file_hint):
         return contract_file_hint
 
     # ? it may be relative to the contract directory.
-    contract_dir = getContractDir(contract_dir_hint)
+    contract_dir_ = contract_dir(contract_dir_hint)
 
     # ? flat structure with all the files in this directory
-    contract_file = os.path.join(contract_dir, contract_file_hint)
+    contract_file = os.path.join(contract_dir_, contract_file_hint)
     trace = trace + contract_file + "\n"
     if os.path.isfile(contract_file):
         return contract_file
 
     # ? structure with a directory named ``build``
     # and ``contract_file_hint`` is relative file
-    contract_file = os.path.join(contract_dir, "build", contract_file_hint)
+    contract_file = os.path.join(contract_dir_, "build", contract_file_hint)
     trace = trace + contract_file + "\n"
     if os.path.isfile(contract_file):
         return contract_file
 
     # ? structure with a directory named ``build``
     # and ``contract_file_hint`` is a file extension merely
-    build_dir = os.path.join(contract_dir, "build")
+    build_dir = os.path.join(contract_dir_, "build")
     trace = trace + build_dir + "\n"
     files = os.listdir(build_dir)
     for file in files:
@@ -363,10 +366,10 @@ def getContractFile(contract_dir_hint, contract_file_hint):
     '''.format(contract_dir_hint, contract_file_hint, trace))  
 
 
-def getContractWorkspace():
+def contract_workspace():
     '''Return the absolute path to the contract workspace of the user.
     '''
-    workspacePath = configValue("EOSIO_CONTRACT_WORKSPACE")
+    workspacePath = config_value("EOSIO_CONTRACT_WORKSPACE")
     trace = workspacePath + "\n"
 
     if not os.path.isabs(workspacePath):
@@ -385,59 +388,40 @@ def getContractWorkspace():
 
 def getEosioKeyPrivate():
     return configValue("EOSIO_KEY_PRIVATE")
+def eosio_key_private():
+    return config_value("EOSIO_KEY_PRIVATE")
 
 
-def getEosioKeyPublic():
-    return configValue("EOSIO_KEY_PUBLIC")
+def eosio_key_public():
+    return config_value("EOSIO_KEY_PUBLIC")
 
 
-def getMemorySizeMb():
-    return configValue("EOSIO_SHARED_MEMORY_SIZE_MB")
+def chain_state_db_size_mb():
+    return config_value("EOSIO_SHARED_MEMORY_SIZE_MB")
 
 
 def is_nodeos_in_window():
-    return configValue("NODEOS_IN_WINDOW")
+    return config_value("NODEOS_IN_WINDOW")
 
 
-def getHttpServerAddress():
-    return configValue("EOSIO_DAEMON_ADDRESS")
+def http_server_address():
+    return config_value("EOSIO_DAEMON_ADDRESS")
 
 
-def getHttpWalletAddress():
-    return configValue("EOSIO_WALLET_ADDRESS")
-    
+def http_wallet_address():
+    return config_value("EOSIO_WALLET_ADDRESS")
 
-def getDaemonExe():
+
+def cleos_exe():
     path = os.path.join(
-            getSourceDir(), "build/programs/", configValue("EOSIO_DAEMON_NAME"),
-            configValue("EOSIO_DAEMON_NAME"))
-    trace = path + "\n"
-    if os.path.exists(path):
-        return path
- 
-    path = os.path.join(
-        "/usr/local/bin", configValue("EOSIO_DAEMON_NAME"))
-    trace = trace + path + "\n"
-    if os.path.exists(path):
-        return path
-
-    raise errors.Error('''
-        Cannot determine the EOS test node executable file. 
-        Tried path list:
-        {}
-    '''.format(trace))
-
-
-def getCleosExe():
-    path = os.path.join(
-        getSourceDir(), "build/programs/", configValue("EOSIO_CLI_NAME"), 
-        configValue("EOSIO_CLI_NAME"))
+        eosio_repository_dir(), "build/programs/", config_value("EOSIO_CLI_NAME"), 
+        config_value("EOSIO_CLI_NAME"))
 
     trace = path + "\n"
     if os.path.exists(path):
         return path       
 
-    path = os.path.join("/usr/local/bin", configValue("EOSIO_CLI_NAME"))
+    path = os.path.join("/usr/local/bin", config_value("EOSIO_CLI_NAME"))
     trace = trace + path + "\n"
     if os.path.exists(path):
         return path.string() 
@@ -449,11 +433,11 @@ def getCleosExe():
     '''.format(trace))
 
 
-def getDataDir():
-    path = configValue("EOSIO_DATA_DIR")
+def data_dir():
+    path = config_value("EOSIO_DATA_DIR")
 
     if not os.path.isabs(path):
-        contextDir = configValue("EOSIO_EOSFACTORY_DIR")
+        contextDir = config_value("EOSIO_EOSFACTORY_DIR")
         if contextDir:
             path = os.path.join(contextDir, path)
 
@@ -467,10 +451,10 @@ def getDataDir():
     '''.format(path))      
 
 
-def getConfigDir():
-    path = configValue("EOSIO_CONFIG_DIR")
+def config_dir():
+    path = config_value("EOSIO_CONFIG_DIR")
     if not os.path.isabs(path):
-        contextDir = configValue("EOSIO_EOSFACTORY_DIR")
+        contextDir = config_value("EOSIO_EOSFACTORY_DIR")
         if contextDir:
             path = os.path.join(contextDir, path)
 
@@ -484,217 +468,185 @@ def getConfigDir():
     '''.format(path))         
 
 
-def getKeosdWalletDir():
+def keosd_wallet_dir():
     if "U_HOME" in os.environ:
         home = os.environ["U_HOME"]
         return home + "/eosio-wallet/"
     return None
 
 
-def getTeosDir():
-    path = configValue("EOSIO_TEOS_DIR")
-
-    if not os.path.isabs(path):        
-        path = os.path.join(configValue(EOSIO_EOSFACTORY_DIR), path)
-    
-    if os.path.isdir(path):
+def nodeos_exe():
+    path = os.path.join(
+            eosio_repository_dir(), "build/programs/", 
+            config_value("EOSIO_DAEMON_NAME"), 
+            config_value("EOSIO_DAEMON_NAME"))
+    trace = path + "\n"
+    if os.path.exists(path):
         return path
 
-    raise errors.Error('''
-        Cannot find the teos directory. 
-        Tried path is
-        {}
-    '''.format(path)) 
+
+def nodeos_name():
+    return config_value("EOSIO_DAEMON_NAME")
 
 
-def getDaemonName():
-    return configValue("EOSIO_DAEMON_NAME")
+def boost_include_dir():
+    return valid_path("EOSIO_BOOST_INCLUDE_DIR", "boost/version.hpp")
 
 
-def getEOSIO_BOOST_INCLUDE_DIR():
-    return getValidPath("EOSIO_BOOST_INCLUDE_DIR", "boost/version.hpp")
+def wasm_clang_exe():
+    return valid_path("EOSIO_WASM_CLANG")
 
 
-def getEOSIO_WASM_CLANG():
-    return getValidPath("EOSIO_WASM_CLANG")
+def wasm_llvm_link_exe():
+    return valid_path("EOSIO_WASM_LLVM_LINK")      
 
 
-def getEOSIO_WASM_LLVM_LINK():
-    return getValidPath("EOSIO_WASM_LLVM_LINK")      
+def s2wasm_exe():
+    return valid_path("EOSIO_S2WASM")
 
 
-def getEOSIO_S2WASM():
-    return getValidPath("EOSIO_S2WASM")
+def wast2wasm_exe():
+    return valid_path("EOSIO_WAST2WASM")
+
+def abigen_exe():
+    return valid_path("EOSIO_ABIGEN")
 
 
-def getEOSIO_WAST2WASM():
-    return getValidPath("EOSIO_WAST2WASM")
-
-def get_eosio_abigen():
-    return getValidPath("EOSIO_ABIGEN")
+def wasm_llc_exe():
+    return valid_path("EOSIO_WASM_LLC")       
 
 
-def getEOSIO_WASM_LLC():
-    return getValidPath("EOSIO_WASM_LLC")       
-
-
-def get_abi_file(contract_dir):
+def abi_file(contract_dir):
     '''Given the contract directory, return the ABI file path relative.
     '''
     return os.path.relpath(
-        getContractFile(contract_dir, ".abi"), contract_dir)
+        contract_file(contract_dir, ".abi"), contract_dir)
 
 
-def get_wast_file(contract_dir):
+def wast_file(contract_dir):
     '''Given the contract directory, return the WAST file path relative.
     '''
     return os.path.relpath(
-        getContractFile(contract_dir, ".wast"), contract_dir)
+        contract_file(contract_dir, ".wast"), contract_dir)
 
 
-def get_wasm_file(contract_dir):
+def wasm_file(contract_dir):
     '''Given the contract directory, return the WASM file path relative.
     '''
     return os.path.relpath(
-        getContractFile(contract_dir, ".wasm"), contract_dir)
+        contract_file(contract_dir, ".wasm"), contract_dir)
 
 
 def current_config(contract_dir=None):
     map = {}
     try: 
-        map["EOSIO_SOURCE_DIR"] = getSourceDir()
+        map["EOSIO_SOURCE_DIR"] = eosio_repository_dir()
     except:
         map["EOSIO_SOURCE_DIR"] = "NOT DEFINED"
 
     try:
-        map["EOSIO_EOSFACTORY_DIR"] = getEosFactoryDir()
+        map["EOSIO_EOSFACTORY_DIR"] = eosf_dir()
     except:
         map["EOSIO_EOSFACTORY_DIR"] = "NOT DEFINED"   
 
     try: 
-        map["EOSIO_DATA_DIR"] = getDataDir()
+        map["EOSIO_DATA_DIR"] = data_dir()
     except:
         map["EOSIO_DATA_DIR"] = "NOT DEFINED" 
 
     try:    
-        map["EOSIO_CONFIG_DIR"] = getConfigDir()
+        map["EOSIO_CONFIG_DIR"] = config_dir()
     except:
         map["EOSIO_CONFIG_DIR"] = "NOT DEFINED"   
-
-    try:    
-        map["KEOSD_WALLET_DIR"] = getKeosdWalletDir()
-    except:
-        map["KEOSD_WALLET_DIR"] = "NOT DEFINED"   
-
-    try:
-        map["nodeExe"] = getDaemonExe()
-    except:
-        map["nodeExe"] = "NOT DEFINED"    
+    
+    map["KEOSD_WALLET_DIR"] = keosd_wallet_dir()   
 
     try: 
-        map["cleosExe"] = getCleosExe()
+        map["cleosExe"] = cleos_exe()
     except:
         map["cleosExe"] = "NOT DEFINED" 
 
     try:   
-        map["genesisJson"] = getGenesisJson()
+        map["genesisJson"] = genesis_json()
     except:
         map["genesisJson"] = "NOT DEFINED"   
+   
+    map["EOSIO_DAEMON_ADDRESS"] = http_server_address()     
 
-    try:    
-        map["EOSIO_DAEMON_ADDRESS"] = getHttpServerAddress() 
-    except:
-        map["EOSIO_DAEMON_ADDRESS"] = "NOT DEFINED"    
+    map["EOSIO_KEY_PRIVATE"] = eosio_key_private()  
 
-    try:
-        map["EOSIO_KEY_PRIVATE"] = getEosioKeyPrivate()
-    except:
-        map["EOSIO_KEY_PRIVATE"] = "NOT DEFINED"    
+    map["EOSIO_KEY_PUBLIC"] = eosio_key_public()
 
-    try:
-        map["EOSIO_KEY_PUBLIC"] = getEosioKeyPublic()
-    except:
-        map["EOSIO_KEY_PUBLIC"] = "NOT DEFINED"
+    map["EOSIO_WALLET_ADDRESS"] = http_wallet_address() \
+            if http_wallet_address() else http_server_address()
+
+    map["EOSIO_DAEMON_NAME"] = nodeos_name()
 
     try:
-        map["EOSIO_WALLET_ADDRESS"] = getHttpWalletAddress() \
-            if getHttpWalletAddress() else getHttpServerAddress()
-    except:
-        map["EOSIO_WALLET_ADDRESS"] = "NOT DEFINED"
-
-    try:
-        map["EOSIO_DAEMON_NAME"] = getDaemonName()
-    except:
-        map["EOSIO_DAEMON_NAME"] = "NOT DEFINED"
-
-    try:
-        map["EOSIO_WASM_CLANG"] = getEOSIO_WASM_CLANG()
+        map["EOSIO_WASM_CLANG"] = wasm_clang_exe()
     except:
         map["EOSIO_WASM_CLANG"] = "NOT DEFINED"
 
     try:
-        map["EOSIO_BOOST_INCLUDE_DIR"] =  getEOSIO_BOOST_INCLUDE_DIR()
+        map["EOSIO_BOOST_INCLUDE_DIR"] =  boost_include_dir()
     except:
         map["EOSIO_BOOST_INCLUDE_DIR"] = "NOT DEFINED"
 
     try:
-        map["EOSIO_WASM_LLVM_LINK"] = getEOSIO_WASM_LLVM_LINK()
+        map["EOSIO_WASM_LLVM_LINK"] = wasm_llvm_link_exe()
     except:
         map["EOSIO_WASM_LLVM_LINK"] = "NOT DEFINED"
 
     try:
-        map["EOSIO_WASM_LLC"] = getEOSIO_WASM_LLC()
+        map["EOSIO_WASM_LLC"] = wasm_llc_exe()
     except:
         map["EOSIO_WASM_LLC"] = "NOT DEFINED"
 
     try:
-        map["EOSIO_S2WASM"] = getEOSIO_S2WASM()
+        map["EOSIO_S2WASM"] = s2wasm_exe()
     except:
         map["EOSIO_S2WASM"] = "NOT DEFINED"
 
     try:
-        map["EOSIO_WAST2WASM"] = getEOSIO_WAST2WASM()
+        map["EOSIO_WAST2WASM"] = wast2wasm_exe()
     except:
         map["EOSIO_WAST2WASM"] = "NOT DEFINED"
 
-    map["sharedMemory"] = getMemorySizeMb()
+    map["sharedMemory"] = chain_state_db_size_mb()
     map["NODEOS_IN_WINDOW"] = is_nodeos_in_window()
 
-    try:
-        map["contractWorkspace"] = configValue("EOSIO_CONTRACT_WORKSPACE")
-    except:
-        map["contractWorkspace"] = "NOT DEFINED"
+    map["contractWorkspace"] = config_value("EOSIO_CONTRACT_WORKSPACE")
     
     try:
         map["workspaceEosio"] = os.path.join(
-                                    getSourceDir(), setup.EOSIO_CONTRACT_DIR)
+                                    eosio_repository_dir(), setup.EOSIO_CONTRACT_DIR)
     except:
         map["workspaceEosio"] = "NOT DEFINED"
 
     try:
-        map["EOSIO_ABIGEN"] = get_eosio_abigen()
+        map["EOSIO_ABIGEN"] = abigen_exe()
     except:
         map["EOSIO_ABIGEN"] = "NOT DEFINED"
     
     if contract_dir:
-        contract_dir = getContractDir(contract_dir)
+        contract_dir = contract_dir(contract_dir)
         try:
             map["contract-dir"] = contract_dir
         except:
             map["contract-dir"] = "NOT DEFINED"
 
         try:
-            map["contract-wast"] = get_wast_file(contract_dir)
+            map["contract-wast"] = wast_file(contract_dir)
         except:
             map["contract-wast"] = "NOT DEFINED"
 
         try:
-            map["contract-wasm"] = get_wasm_file(contract_dir)
+            map["contract-wasm"] = wasm_file(contract_dir)
         except:
             map["contract-wasm"] = "NOT DEFINED"
 
         try:
-            map["contract-abi"] = get_abi_file(contract_dir)
+            map["contract-abi"] = abi_file(contract_dir)
         except:
             map["contract-abi"] = "NOT DEFINED"
 

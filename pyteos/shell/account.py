@@ -152,8 +152,8 @@ class Eosio(interface.Account):
         self.account_object_name = account_object_name        
         self.owner_key = cleos.CreateKey(
             "owner",
-            config.getEosioKeyPublic(),
-            config.getEosioKeyPrivate()
+            config.eosio_key_public(),
+            config.eosio_key_private()
             )
         self.active_key = self.owner_key
 

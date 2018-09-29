@@ -15,7 +15,7 @@ import shell.interface as interface
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
         setup.set_nodeos_address(
-            "http://" + config.getHttpServerAddress())
+            "http://" + config.http_server_address())
         setup.is_local_address = True
 
     return setup.is_local_address
@@ -32,7 +32,7 @@ class _Cleos():
         self.json = {}
         self.is_verbose = is_verbose
 
-        cl = [config.getCleosExe()]
+        cl = [config.cleos_exe()]
         set_local_nodeos_address_if_none()
         cl.extend(["--url", setup.nodeos_address()])
 
@@ -54,7 +54,7 @@ class _Cleos():
             cl,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            cwd=str(pathlib.Path(config.getCleosExe()).parent)) 
+            cwd=str(pathlib.Path(config.cleos_exe()).parent)) 
 
         self.out_msg = process.stdout.decode("utf-8")
         self.out_msg_details = process.stderr.decode("utf-8")
@@ -880,13 +880,13 @@ def account_name():
 
 def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
 
-    contract_path_absolute = config.getContractDir(contract_dir)
+    contract_path_absolute = config.contract_dir(contract_dir)
     if not contract_path_absolute:
         return []
 
     if not wasm_file:
         try :
-            wasm_file = config.get_wasm_file(contract_dir)
+            wasm_file = config.wasm_file(contract_dir)
         except:
             pass
         if not wasm_file:
@@ -897,7 +897,7 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
             return []
 
     if not abi_file:
-        abi_file = config.get_abi_file(contract_dir)
+        abi_file = config.abi_file(contract_dir)
         if not abi_file:
             return []
     else:

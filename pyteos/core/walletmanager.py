@@ -89,7 +89,7 @@ def setTimeout(time):
 
 
 def wallet_file(name):
-    return config.getKeosdWalletDir() + name + _file_ext
+    return config.keosd_wallet_dir() + name + _file_ext
 
 
 def encrypt(key, cipher_suite):
@@ -418,7 +418,7 @@ def is_open_and_unlocked(wallet):
 
 
 def wallets():
-    directory = os.fsencode(config.getKeosdWalletDir())
+    directory = os.fsencode(config.keosd_wallet_dir())
     retval = []
     for file in os.listdir(directory):
         filename = os.fsdecode(file)
