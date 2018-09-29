@@ -32,8 +32,9 @@ class Account(Omittable):
 class Wallet(Omittable):
     '''Having the ``name`` attribute.
     '''    
-    def __init__(self, name):
+    def __init__(self, name, password=None):
         self.name = name
+        self.password = password
         Omittable.__init__(self)
 
 
