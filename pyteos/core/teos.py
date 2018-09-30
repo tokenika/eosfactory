@@ -342,15 +342,15 @@ def template_create(
 
     if open_vscode:
         if is_windows_ubuntu():
-            commandLine = "cmd.exe /C code {}".format(
+            command_line = "cmd.exe /C code {}".format(
                 utils.wslMapLinuxWindows(project_dir))
         elif uname() == "Darwin":
-            commandLine = "open -n -b com.microsoft.VSCode --args {}".format(
+            command_line = "open -n -b com.microsoft.VSCode --args {}".format(
                 project_dir)
         else:
-            commandLine = "code {}".format(project_dir)
+            command_line = "code {}".format(project_dir)
 
-        os.system(commandLine)
+        os.system(command_line)
 
     return project_dir
 
