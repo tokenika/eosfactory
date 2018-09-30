@@ -423,34 +423,8 @@ def getTargetDirPath(source_dir):
 
     return source_dir
 
-
-def node_start1(clear=False, verbosity=None):
-    args = [
-        "--http-server-address", config.http_server_address(),
-        "--data-dir", config.data_dir(),
-        "--config-dir", config.config_dir(),
-        "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
-        "--contracts-console",
-        "--verbose-http-errors"
-    ]
-
-    if clear:
-        node_stop()
-        args.extend([
-            "--genesis-json", config.genesis_json(),
-            "--delete-all-blocks"
-        ])
-    args.insert(0, config.node_exe())
-    subprocess.Popen(
-        args, 
-        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
-        stderr=subprocess.DEVNULL)
-
-    node_probe(verbosity)
-
-
-def node_start(clear=False, verbosity=None):
-    args = [
+def args(clear=False):
+    args_ = [
         "--http-server-address", config.http_server_address(),
         "--data-dir", config.data_dir(),
         "--config-dir", config.config_dir(),
@@ -468,40 +442,42 @@ def node_start(clear=False, verbosity=None):
     ]
     if clear:
         node_stop()
-        args.extend([
+        args_.extend([
             "--genesis-json", config.genesis_json(),
             "--delete-all-blocks"
         ])
+    return args_
 
-    cl = args
-    cl.insert(0, config.node_exe())
+
+def node_start(clear=False, verbosity=None):
+    args_ = args(clear)
 
     if setup.is_print_command_line:
         print("nodeos command line:")
-        print(" ".join(cl))
+        print(config.node_exe() + " " + " ".join(args_))
 
     if config.is_nodeos_in_window():
 
         if is_windows_ubuntu():
-            args.insert(0, config.node_exe())
+            args_.insert(0, config.node_exe())
             subprocess.call(
                 ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
                 " ".join(cl)])
         elif uname() == "Darwin":
                 subprocess.Popen(
                     "open -a "
-                    + config.node_exe() + " --args " + " ".join(args),
+                    + config.node_exe() + " --args " + " ".join(args_),
                     shell=True)
         else:
-            args.insert(0, config.node_exe())
+            args_.insert(0, config.node_exe())
             subprocess.Popen(
-                "gnome-terminal -- " + " ".join(args), shell=True)
+                "gnome-terminal -- " + " ".join(args_), shell=True)
     else:
-        args.insert(0, config.node_exe())
+        args_.insert(0, config.node_exe())
         subprocess.Popen(
-            args, 
+            " ".join(args_), 
             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
-            stderr=subprocess.DEVNULL)
+            stderr=subprocess.DEVNULL, shell=True)
 
     node_probe(verbosity)                    
 
@@ -541,47 +517,24 @@ def node_probe(verbosity=None):
 
 def is_local_node_process_running(name=None):
     if not name:
-        name = config.node_exe_name()
+        name = config.node_exe()
 
     response = subprocess.run(
         'ps aux | grep ' + name, shell=True, stdout=subprocess.PIPE)
-    return config.node_exe() in response.stdout.decode("utf-8")
+    out = response.stdout.decode("utf-8")
+    return config.node_exe() in out and not "grep" in out
         
-
-def node_stop1(verbosity=None):
-    # You can see if the process is a zombie by using top or 
-    # the following command:
-    # ps aux | awk '$8=="Z" {print $2}'
-
-    pid = get_pid()
-    pid0 = pid
-    count = 10
-    if pid:
-        os.system("kill " + str(pid[0]))
-        while pid and count > 0:
-            time.sleep(1)
-            pid = get_pid()
-            count = count -1
-
-    if count <= 0:
-        raise errors.Error('''
-Failed to kill {}. Pid is {}.
-    '''.format(config.node_exe_name(), pid[0])
-    )
-    else:
-        logger.INFO('''
-        Local node is stopped {}.
-        '''.format(pid0), verbosity)
 
 def node_stop(verbosity=None):
     # You can see if the process is a zombie by using top or 
     # the following command:
     # ps aux | awk '$8=="Z" {print $2}'
 
-    pid = get_pid()
+    pids = get_pid()
     count = 10
-    if pid:
-        os.system("kill " + str(pid[0]))
+    if pids:
+        for pid in pids:
+            os.system("kill " + str(pid))
         while count > 0:
             time.sleep(1)
             if not is_local_node_process_running():
@@ -591,12 +544,12 @@ def node_stop(verbosity=None):
     if count <= 0:
         raise errors.Error('''
 Failed to kill {}. Pid is {}.
-    '''.format(config.node_exe_name(), pid[0])
+    '''.format(config.node_exe_name(), str(pids))
     )
     else:
         logger.INFO('''
         Local node is stopped {}.
-        '''.format(pid), verbosity)        
+        '''.format(str(pids)), verbosity)        
 
     
 def node_is_running():

@@ -22,9 +22,9 @@ eosf_dir_ = ("EOSFACTORY_DIR", [None])
 
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 wallet_address_ = ("WALLET_MANAGER_ADDRESS", [None])
-genesis_json_ = ("EOSIO_GENESIS_JSON", ["build/daemon/data-dir/genesis.json"])
-data_dir_ = ("LOCAL_NODE_DATA_DIR", ["build/daemon/data-dir/"])
-config_dir_ = ("LOCAL_NODE_CONFIG_DIR", ["build/daemon/data-dir/"])
+genesis_json_ = ("EOSIO_GENESIS_JSON", ["localnode/daemon/data-dir/genesis.json"])
+data_dir_ = ("LOCAL_NODE_DATA_DIR", ["localnode/daemon/data-dir/"])
+config_dir_ = ("LOCAL_NODE_CONFIG_DIR", ["localnode/daemon/data-dir/"])
 workspaceEosio_ = ("EOSIO_WORKSPACE", [EOSIO_CONTRACT_DIR])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${U_HOME}/eosio-wallet/"])
 

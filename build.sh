@@ -319,34 +319,9 @@ if [ -z "$EOSIO_SOURCE_DIR" ]; then
 ##########################################################################
 "
     exit -1
-fi
+fi`
 
-BUILD_DIR="${EOSIO_EOSFACTORY_DIR__}/build"
-
-##########################################################################
-# Make the file structure
-##########################################################################
-printf "%s" "
-##########################################################################
-"
-printf "%s" "
-Makes the file structure:
-    ${EOSIO_EOSFACTORY_DIR__}  # eosfactory repository
-        ${BUILD_DIR}  # binary dir
-            daemon  # local EOSIO node documents
-                data-dir  # the EOSIO node data-dir
-                    genesis.json
-                    config.in
-"
-
-cd ${EOSIO_EOSFACTORY_DIR__}
-mkdir -p ${BUILD_DIR}
-mkdir -p ${BUILD_DIR}/daemon/data-dir
-
-cp ${EOSIO_EOSFACTORY_DIR__}/resources/genesis.json \
-    ${BUILD_DIR}/daemon/data-dir/genesis.json
-cp ${EOSIO_EOSFACTORY_DIR__}/resources/config.ini \
-    ${BUILD_DIR}/daemon/data-dir/config.ini
+LOCAL_NODE="${EOSIO_EOSFACTORY_DIR__}/localnode"
 
 ##########################################################################
 # Is EOSIO_SOURCE_DIR set?
