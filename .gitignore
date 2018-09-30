@@ -28,5 +28,5 @@ tests/test.py
 tests/js.js
 tests/eosjs.py
 tests/eosjsecc.js
-localnode/daemon/data-dir/state
-localnode/daemon/data-dir/blocks
+localnode/data-dir/state
+localnode/data-dir/blocks
