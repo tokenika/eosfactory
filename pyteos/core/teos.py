@@ -456,9 +456,16 @@ def node_start(clear=False, verbosity=None):
         "--config-dir", config.config_dir(),
         "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
         "--contracts-console",
-        "--verbose-http-errors"
+        "--verbose-http-errors",
+        "--enable-stale-production",
+        "--producer-name eosio",
+        "--signature-provider " + config.eosio_key_public() + "=KEY:" 
+            + config.eosio_key_private(),
+        "--plugin eosio::producer_plugin",
+        "--plugin eosio::chain_api_plugin",
+        "--plugin eosio::http_plugin",
+        "--plugin eosio::history_api_plugin"
     ]
-
     if clear:
         node_stop()
         args.extend([
