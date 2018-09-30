@@ -373,7 +373,7 @@ def get_pid(name=None):
     []
     """    
     if not name:
-        name = config.nodeos_name()
+        name = config.node_exe_name()
 
     child = subprocess.Popen(
         ['pgrep', '-f', name], stdout=subprocess.PIPE, shell=False)
@@ -440,7 +440,7 @@ def node_start1(clear=False, verbosity=None):
             "--genesis-json", config.genesis_json(),
             "--delete-all-blocks"
         ])
-    args.insert(0, config.nodeos_exe())
+    args.insert(0, config.node_exe())
     subprocess.Popen(
         args, 
         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
@@ -467,7 +467,7 @@ def node_start(clear=False, verbosity=None):
         ])
 
     cl = args
-    cl.insert(0, config.nodeos_exe())
+    cl.insert(0, config.node_exe())
 
     if setup.is_print_command_line:
         print("nodeos command line:")
@@ -476,21 +476,21 @@ def node_start(clear=False, verbosity=None):
     if config.is_nodeos_in_window():
 
         if is_windows_ubuntu():
-            args.insert(0, config.nodeos_exe())
+            args.insert(0, config.node_exe())
             subprocess.call(
                 ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
                 " ".join(cl)])
         elif uname() == "Darwin":
                 subprocess.Popen(
                     "open -a "
-                    + config.nodeos_exe() + " --args " + " ".join(args),
+                    + config.node_exe() + " --args " + " ".join(args),
                     shell=True)
         else:
-            args.insert(0, config.nodeos_exe())
+            args.insert(0, config.node_exe())
             subprocess.Popen(
                 "gnome-terminal -- " + " ".join(args), shell=True)
     else:
-        args.insert(0, config.nodeos_exe())
+        args.insert(0, config.node_exe())
         subprocess.Popen(
             args, 
             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
@@ -534,11 +534,11 @@ def node_probe(verbosity=None):
 
 def is_local_node_process_running(name=None):
     if not name:
-        name = config.nodeos_name()
+        name = config.node_exe_name()
 
     response = subprocess.run(
         'ps aux | grep ' + name, shell=True, stdout=subprocess.PIPE)
-    return config.nodeos_exe() in response.stdout.decode("utf-8")
+    return config.node_exe() in response.stdout.decode("utf-8")
         
 
 def node_stop1(verbosity=None):
@@ -559,7 +559,7 @@ def node_stop1(verbosity=None):
     if count <= 0:
         raise errors.Error('''
 Failed to kill {}. Pid is {}.
-    '''.format(config.nodeos_name(), pid[0])
+    '''.format(config.node_exe_name(), pid[0])
     )
     else:
         logger.INFO('''
@@ -584,7 +584,7 @@ def node_stop(verbosity=None):
     if count <= 0:
         raise errors.Error('''
 Failed to kill {}. Pid is {}.
-    '''.format(config.nodeos_name(), pid[0])
+    '''.format(config.node_exe_name(), pid[0])
     )
     else:
         logger.INFO('''

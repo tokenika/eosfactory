@@ -194,7 +194,7 @@ printf "%s" "
 printf "%s\n" "Sets environment variables, if not set already:"
 
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
-setLinuxVariable "EOSIO_EOSFACTORY_DIR" "$EOSIO_EOSFACTORY_DIR__"
+setLinuxVariable "EOSFACTORY_DIR" "$EOSIO_EOSFACTORY_DIR__"
 setLinuxVariable "U_HOME" "$HOME"
 
 if [ -z $EOSIO_CONTRACT_WORKSPACE__ ]; then
@@ -228,7 +228,7 @@ if [ ! -z "$IS_WSL" ]; then
 
     retval=""
     wslMapLinux2Windows retval $EOSIO_EOSFACTORY_DIR__
-    setWindowsVariable "EOSIO_EOSFACTORY_DIR" "$retval" 
+    setWindowsVariable "EOSFACTORY_DIR" "$retval" 
 
     retval=""
     wslMapLinux2Windows retval $EOSIO_SOURCE_DIR_SET

@@ -4,18 +4,12 @@ import re
 import os
 import json
 
-LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
-CONTRACTS_DIR = "contracts/"
-CONFIG_DIR = "teos"
-CONFIG_JSON = "config.json"
-EOSIO_CONTRACT_DIR = "build/contracts/"
-
-__nodeos_address = None
-
 
 is_print_command_line = False
 is_print_request = False
 is_print_response = False
+
+__nodeos_address = None
 
 
 def nodeos_address():

@@ -15,7 +15,7 @@ def get_pid(name=None):
     []
     """    
     if not name:
-        name = config.nodeos_name()
+        name = config.node_exe_name()
 
     child = subprocess.Popen(
         ['pgrep', '-f', name], stdout=subprocess.PIPE, shell=False)
@@ -40,7 +40,7 @@ def DaemonStop():
     if count <= 0:
         raise errors.Error('''
 Failed to kill {}. Pid is {}.
-    '''.format(config.nodeos_name(), pid[0])
+    '''.format(config.node_exe_name(), pid[0])
     )
 
 
@@ -62,4 +62,4 @@ def commandLine(clearBlockchain=False):
             "--delete-all-blocks"
         ])
     
-    commandLine = args.insert(0, config.nodeos_exe())
+    commandLine = args.insert(0, config.node_exe())
