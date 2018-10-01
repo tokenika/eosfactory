@@ -97,8 +97,11 @@ class Wallet(cleos.WalletCreate):
                 * Created wallet ``{}``.
                 '''.format(self.name),
                 verbosity
-            )            
-            if manager.is_local_testnet() or file:           
+            )
+###############################################################################
+# TO DO: detect any live node!!!!!!!!!!
+            if manager.is_local_testnet() or file or True:           
+###############################################################################                        
                 password_map = wallet_json_read()
                 password_map[name] = self.password
                 wallet_json_write(password_map)

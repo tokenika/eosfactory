@@ -8,7 +8,6 @@ def register_account(
     setup.set_nodeos_address(url)
     manager.verify_testnet_production()
 
-    create_wallet(file=True)
     create_master_account(
         account_object_name,
         account_name,

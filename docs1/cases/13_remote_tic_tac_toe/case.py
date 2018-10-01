@@ -5,7 +5,7 @@ from eosf import *
 import eosf_testnet
 save_code()
 
-Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
+verbosity([Verbosity.TRACE, Verbosity.OUT])
 _ = Logger()
 CONTRACT_DIR = "03_tic_tac_toe"
 
@@ -43,8 +43,6 @@ class Test(unittest.TestCase):
         
         if reset:
             remove_testnet_files()
-        
-        create_wallet(file=True)
         
         create_master_account("grandpa", testnet)        
         create_account("alice", grandpa, start_stake_net, start_stake_cpu)  

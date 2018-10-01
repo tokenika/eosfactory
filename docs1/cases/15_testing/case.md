@@ -52,7 +52,7 @@ KEOSD options:
 
 ```md
 """
-eosf.Logger.verbosity = [Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG]
+verbosity([Verbosity.EOSF, Verbosity.OUT, Verbosity.DEBUG])
 _ = eosf.Logger()
 eosf.use_keosd(False)
 

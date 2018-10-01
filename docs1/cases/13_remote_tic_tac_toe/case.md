@@ -23,7 +23,7 @@ from eosf import *
 import eosf_testnet
 save_code()
 
-Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
+verbosity([Verbosity.TRACE, Verbosity.OUT])
 _ = Logger()
 CONTRACT_DIR = "03_tic_tac_toe"
 
@@ -92,13 +92,8 @@ These files should be edited rather, than being deleted. However if the testnet 
 
 ### Exactly one 'Wallet' object in the namespace
 
-It has to be exactly one 'Wallet' object in the namespace. 
-```md
-        '''
-        create_wallet(file=True)
-        '''
-```
-The parameter `file=True` causes that the password of the created walled is persisted between sessions.
+It has to be exactly one 'Wallet' object in the namespace. This is controlled automatically.
+The password of the created walled is persisted between testnet (not live) sessions. 
 
 ### Accounts are reused between test sessions
 

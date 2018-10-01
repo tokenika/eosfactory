@@ -7,7 +7,6 @@ This file can be executed as a python script:
 Registering to a public testnet involves three steps:
 
 * `set_nodeos_address(testnet.url)` # set the url of the testnet;
-* `create_wallet(file=True)` # create the wallet singleton (`file=True` means password to file);
 * `create_master_account("account_master")` # create an account object, named as the argument of the factory function.
 
 The last step prints data to be entered into the registration form of the testnet.
@@ -40,7 +39,7 @@ The current article tests this registration procedure.
 '''
 from eosf import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+verbosity([Verbosity.INFO, Verbosity.OUT])
 _ = Logger()
 set_is_testing_errors(False)
 set_throw_error(True)
@@ -101,8 +100,7 @@ At the beginning, the 'Wallet` singleton has to be created:
 
 ```md
 '''
-Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT]
-create_wallet(file=True)
+verbosity([Verbosity.TRACE, Verbosity.OUT])
 '''
 ```
 

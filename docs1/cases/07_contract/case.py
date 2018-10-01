@@ -1,6 +1,6 @@
 from eosf import *
 
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
+verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 
 reset()
 create_wallet()   

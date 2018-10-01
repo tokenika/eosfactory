@@ -10,7 +10,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 ```md
 '''
 from eosf import *
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT]
+verbosity([Verbosity.INFO, Verbosity.OUT])
 CONTRACT_DIR = "02_eosio_token"
 '''
 ```

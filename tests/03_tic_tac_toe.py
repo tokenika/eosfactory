@@ -44,7 +44,6 @@ class Test(unittest.TestCase):
 
         testnet.verify_production()
         
-        create_wallet(file=True)
         create_master_account("master", testnet)
         create_account(
             "host", master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 

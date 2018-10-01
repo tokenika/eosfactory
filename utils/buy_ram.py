@@ -7,7 +7,6 @@ testnet.configure()
 testnet.verify_production()
 testnet.clear_cache()
 
-create_wallet(file=True)
 create_master_account("master", testnet)
 master.info()
 

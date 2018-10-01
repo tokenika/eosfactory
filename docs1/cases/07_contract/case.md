@@ -11,7 +11,7 @@ The set-up statements are explained at <a href="setup.html">cases/setup</a>.
 ```md
 '''
 from eosf import *
-Logger.verbosity = [Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG]
+verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 '''
 ```
 

@@ -63,7 +63,7 @@ from eosf_wallet import Wallet
 from eosf_account import account_create, account_master_create
 from eosf_contract import Contract
 
-eosf.Logger.verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+verbosity([Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG])
 eosf.use_keosd(False)
 
 eosf.set_is_testing_errors(False)

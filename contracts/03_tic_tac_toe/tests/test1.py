@@ -41,7 +41,6 @@ def test():
 
     testnet.verify_production()
     
-    create_wallet(file=True)
     create_master_account("master", testnet)
     create_account("host", master,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
