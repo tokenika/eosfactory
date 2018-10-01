@@ -40,7 +40,7 @@ pyteos="pyteos"
 tests="tests"
 contracts="contracts"
 
-EOSIO_EOSFACTORY_DIR__="$PWD"
+EOSFACTORY_DIR__="$PWD"
 EOSIO_CONTRACT_WORKSPACE__=$EOSIO_CONTRACT_WORKSPACE
 
 IS_WSL="" # Windows Subsystem Linux
@@ -194,15 +194,14 @@ printf "%s" "
 printf "%s\n" "Sets environment variables, if not set already:"
 
 setLinuxVariable "EOSIO_SOURCE_DIR" "$EOSIO_SOURCE_DIR__"
-setLinuxVariable "EOSFACTORY_DIR" "$EOSIO_EOSFACTORY_DIR__"
 setLinuxVariable "U_HOME" "$HOME"
 
 if [ -z $EOSIO_CONTRACT_WORKSPACE__ ]; then
-    EOSIO_CONTRACT_WORKSPACE__="${EOSIO_EOSFACTORY_DIR__}/$contracts"
+    EOSIO_CONTRACT_WORKSPACE__="${EOSFACTORY_DIR__}/$contracts"
 fi
 setLinuxVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
 
-PYTHONPATH__="$EOSIO_EOSFACTORY_DIR__/${pyteos}:$EOSIO_EOSFACTORY_DIR__/${tests}"
+PYTHONPATH__="$EOSFACTORY_DIR__/${pyteos}:$EOSFACTORY_DIR__/${tests}"
 if [[ -z "$PYTHONPATH" || "$PYTHONPATH" != *"$PYTHONPATH__"* ]]; then
     setLinuxVariable "PYTHONPATH" "${PYTHONPATH__}:${PYTHONPATH}"
 fi
@@ -225,10 +224,6 @@ if [ ! -z "$IS_WSL" ]; then
     fi
 
     setWindowsVariable "EOSIO_CONTRACT_WORKSPACE" "$EOSIO_CONTRACT_WORKSPACE__"
-
-    retval=""
-    wslMapLinux2Windows retval $EOSIO_EOSFACTORY_DIR__
-    setWindowsVariable "EOSFACTORY_DIR" "$retval" 
 
     retval=""
     wslMapLinux2Windows retval $EOSIO_SOURCE_DIR_SET
@@ -321,8 +316,6 @@ if [ -z "$EOSIO_SOURCE_DIR" ]; then
     exit -1
 fi`
 
-LOCAL_NODE="${EOSIO_EOSFACTORY_DIR__}/localnode"
-
 ##########################################################################
 # Is EOSIO_SOURCE_DIR set?
 ##########################################################################
@@ -338,22 +331,6 @@ if [ -z "$EOSIO_SOURCE_DIR" ]; then
 "
     exit -1
 fi
-
-##############################################################################
-# CMake
-##############################################################################
-printf "%s" "
-##############################################################################
-"
-cd ${EOSIO_EOSFACTORY_DIR__}
-cd ${source_dir}
-mkdir build
-cd build
-if [ ! -z "$RESET__" ]; then
-    printf "%s\n" "Deleting the contents of $PWD"
-    rm -r *
-fi
-
 
 ##############################################################################
 # finishing

@@ -12,14 +12,11 @@ TEMPLATE_TOKEN = "CONTRACT_NAME"
 DEFAULT_TEMPLATE = "01_hello_world"
 NOT_DEFINED = "NOT DEFINED"
 FROM_HERE_TO_EOSF_DIR = "../../../"
-CONFIG_DIR = "teos"
 CONFIG_JSON = "config.json"
 EOSIO_CONTRACT_DIR = "build/contracts/"
 CONTRACTS_DIR = "contracts/"
 
 eosio_repository_dir_ = ("EOSIO_SOURCE_DIR", [None])
-eosf_dir_ = ("EOSFACTORY_DIR", [None])
-
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 wallet_address_ = ("WALLET_MANAGER_ADDRESS", [None])
 genesis_json_ = ("EOSIO_GENESIS_JSON", ["localnode/genesis.json"])
@@ -79,25 +76,17 @@ def eosio_repository_dir():
 
 
 def eosf_dir():
-    if eosf_dir_[0] in os.environ:
-        path = os.environ[eosf_dir_[0]]
-        if os.path.exists(path):
-            return path
-
     path = os.path.realpath(os.path.join(__file__, FROM_HERE_TO_EOSF_DIR))
     if os.path.exists(path):
         return path
 
     raise errors.Error('''
         Cannot determine the root directory of the EOSFactory.
-        * First, it is expected to be given as the environment variable named
+        It is attempted to be derived from the path of the configuration file
             '{}'.
-        * Next, it is attempted to be derived from the path of the file
-            '{}'.
-            Derivation fails if this file is not in the original position.
-            Currently, it is supposed to be
-            '{}'.
-    '''.format(eosf_dir_[0], __file__, path))
+        Therefore, this file has to remain in the original position.
+        Currently, the result of the assertion is '{}'.
+    '''.format(__file__, path))
 
 
 def eosio_key_private():
@@ -186,49 +175,17 @@ def workspaceEosio():
 
 
 def config_file():
-    file = ""
-    eosf_dir_ = eosf_dir()
-    trace = eosf_dir_
-    file = os.path.join(eosf_dir_, CONFIG_DIR, CONFIG_JSON)
-    trace = trace + file + "\n\n"
+    file = os.path.join(eosf_dir(), CONFIG_JSON)
         
-
-    if os.path.exists(file):
-        return file
-
-    setup_dir = os.path.dirname(setup.__file__)
-    file = os.path.join(setup_dir, CONFIG_JSON)
-    trace = trace + file + "\n"
-
-    if os.path.exists(file):
-        return file
-
-    setup_dir = os.path.dirname(setup_dir)
-    file = os.path.join(setup_dir, CONFIG_JSON)
-    trace = trace + file + "\n"
-
-    if os.path.exists(file):
-        return file                
-
-    setup_dir = os.path.dirname(setup_dir)
-    file = os.path.join(setup_dir, CONFIG_JSON)
-    trace = trace + file + "\n"
-
-    if os.path.exists(file):
-        return file
-    else:
+    if not os.path.exists(file):
         with open(file, "w") as output:
             output.write("{}")
 
-        logger.INFO('''
-Cannot find the config json file. It is expected in any of the following 
-locations:
-{}
--- searched in the same order.
-
-Creating an empty config file:
-{}
-        '''.format(file, trace))
+            logger.INFO('''
+        Cannot find the config json file. It is expected to be 
+            '{}'.
+        Creating an empty config file there.
+            '''.format(file))
 
     return file
 
@@ -538,11 +495,7 @@ def current_config(contract_dir=None):
     try: 
         map[eosio_repository_dir_[0]] = eosio_repository_dir()
     except:
-        map[eosio_repository_dir_[0]] = NOT_DEFINED
-    try:
-        map[eosf_dir_[0]] = eosf_dir()
-    except:
-        map[eosf_dir_[0]] = NOT_DEFINED   
+        map[eosio_repository_dir_[0]] = NOT_DEFINED 
     try: 
         map[data_dir_[0]] = data_dir()
     except:

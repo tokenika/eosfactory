@@ -42,24 +42,3 @@ def DaemonStop():
 Failed to kill {}. Pid is {}.
     '''.format(config.node_exe_name(), pid[0])
     )
-
-
-def commandLine(clearBlockchain=False):
-    if clearBlockchain: # (reqJson_.get("delete-all-blocks", false)){
-        DaemonStop()
-
-    args = [
-        "--http-server-address", config.http_server_address(),
-        "--data-dir", config.data_dir(),
-        "--config-dir", config.config_dir(),
-        "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
-        " --contracts-console",
-        " --verbose-http-errors"
-    ]
-    if clearBlockchain:
-        args.extend([
-            "--genesis-json", config.genesis_json(),
-            "--delete-all-blocks"
-        ])
-    
-    commandLine = args.insert(0, config.node_exe())

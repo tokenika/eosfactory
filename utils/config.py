@@ -5,29 +5,15 @@ print('''
 The current configuration of the EOSFactory is
 {}
 
-You may overwrite it with entries into the configuration file.
+You may overwrite it with entries into a configuration file.
 
-Configuration file is searched for in the following locations:
-    * EOSFACTORY_DIR + CONFIG_DIR 
-        where ``EOSFACTORY_DIR`` is a environment variable and 
-        ``CONFIG_DIR`` is defined in the ``pyteos.setup`` module
-    * <directory of the ``pyteos.setup`` module> + CONFIG_DIR
-    * <../<directory of the ``pyteos.setup`` module>> + CONFIG_DIR
-    * <../../<directory of the ``pyteos.setup`` module>> + CONFIG_DIR
-
-The 'CONFIG_DIR' constant is defined in file
-    '{}'
-
-If not found, an empty file is created in the last location.
-
-The current configuration json file is 
-    '{}'
+The configuration file named '{}' is expected for in the repository directory 
+of the EOSFactory. If it is not found, an empty file is created there.
 
 The contents of the configuration json file is 
 {}
 '''.format(
         json.dumps(config.current_config(), sort_keys=True, indent=4),
-        __file__,
-        config.config_file(),
+        config.CONFIG_JSON,
         json.dumps(config.config_map(), sort_keys=True, indent=4))
 )
