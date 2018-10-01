@@ -10,10 +10,6 @@ All of this using simple yet powerful [Python3](https://www.python.org/) syntax.
 
 ## Why it’s needed?
 
-Undoubtedly, everything that *EOSFactory* offers can be done with the official EOSIO toolset, i.e. `cleos` and `eosiocpp`. Does it make *EOSFactory* just a simple alternative to those tools? Not really.
-
-Try to go through [EOS tutorials](https://github.com/EOSIO/eos/wiki/Tutorial-eosio-token-Contract) based on `cleos` and you'll see how much concentration is required to follow those simple examples without making a single mistake. And now imagine doing it 10 or 100 times. Surely, it's a daunting task!
-
 Code development and unit-testing involve tasks that need to be executed hundreds of times, and each time in exactly the same way and exactly the same context. Therefore those tasks need to be fully automated, as otherwise a lot of time is being wasted and, what’s even worse, a lot of additional uncertainty is introduced. Manually performed actions are prone to errors.
 
 And this is what *EOSFactory* actually brings to the table: an easy & intuitive way to automate the process of dealing with smart-contracts. Write down, in the form of a Python script, what needs to be done multiple times in exactly the same way and exactly the same context, and then just run the script. *EOSFactory* will take care of everything else: it will compile your smart-contract, create a new testnet, deploy the contract, invoke its methods and verify the response, then tear down the testnet, and finally report the results. And all of this done in a couple of seconds.
