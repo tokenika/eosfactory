@@ -3,28 +3,26 @@
 import re
 import os
 import json
+import core.config as config
 
 
 is_print_command_line = False
 is_print_request = False
 is_print_response = False
+is_translating = True
+account_map = "accounts.json"
+password_map = "passwords.json"
+wallet_default_name = "default"
+is_local_address = False
+node_api = config.node_api()
 
 __nodeos_address = None
+__file_prefix = None
 
 
 def nodeos_address():
     global __nodeos_address
     return __nodeos_address
-
-is_translating = True
-
-account_map = "accounts.json"
-password_map = "passwords.json"
-wallet_default_name = "default"
-
-is_local_address = False
-
-_file_prefix = None
 
 
 def url_prefix(address):
@@ -49,20 +47,20 @@ nodeos address is not set.
     if prefix:
         p = prefix + "_" + p
 
-    global _file_prefix
-    _file_prefix = p
+    global __file_prefix
+    __file_prefix = p
 
     global account_map
-    account_map = _file_prefix + "accounts.json"
+    account_map = __file_prefix + "accounts.json"
     global password_map
-    password_map = _file_prefix + "passwords.json"
+    password_map = __file_prefix + "passwords.json"
     global wallet_default_name
-    wallet_default_name = _file_prefix + "default"
+    wallet_default_name = __file_prefix + "default"
 
 
 def file_prefix():
-    global _file_prefix
-    return _file_prefix
+    global __file_prefix
+    return __file_prefix
 
 
 def reboot():
@@ -70,8 +68,8 @@ def reboot():
     is_local_address = False
     global __nodeos_address
     __nodeos_address = None
-    global _file_prefix
-    _file_prefix = None
+    global __file_prefix
+    __file_prefix = None
 
 
 def save_code():

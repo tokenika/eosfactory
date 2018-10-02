@@ -1,7 +1,7 @@
 import os
 import json
+
 import core.errors as errors
-import shell.setup as setup
 import core.logger as logger
 import core.utils as utils
 
@@ -24,6 +24,8 @@ data_dir_ = ("LOCAL_NODE_DATA_DIR", ["localnode"])
 config_dir_ = ("LOCAL_NODE_CONFIG_DIR", ["localnode"])
 workspaceEosio_ = ("EOSIO_WORKSPACE", [EOSIO_CONTRACT_DIR])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${U_HOME}/eosio-wallet/"])
+chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
+node_api_ = ("NODE_API", ["cleos"])
 
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
@@ -42,7 +44,6 @@ contract_workspace_ = (
 boost_include_dir_ = (
     "BOOST_INCLUDE_DIR", 
     ["${U_HOME}/opt/boost/include", "/usr/local/include/"])
-chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
 wasm_clang_exe_ = (
     "WASM_CLANG_EXECUTABLE", 
     ["${U_HOME}/opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"])
@@ -96,9 +97,11 @@ def eosio_key_private():
 def eosio_key_public():
     return config_value(key_public_)
 
-
 def chain_state_db_size_mb():
     return config_value(chain_state_db_size_mb_)
+
+def node_api():
+    return config_value(node_api_)
 
 
 def is_nodeos_in_window():
@@ -485,6 +488,7 @@ def current_config(contract_dir=None):
     map[wallet_address_[0]] = http_wallet_address() \
             if http_wallet_address() else http_server_address()
     map[chain_state_db_size_mb_[0]] = chain_state_db_size_mb()
+    map[node_api_[0]] = node_api()
     map[is_nodeos_in_window_[0]] = is_nodeos_in_window()
     map[contract_workspace_[0]] = config_value(contract_workspace_)
 

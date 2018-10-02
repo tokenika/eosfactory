@@ -2,13 +2,18 @@ import os
 import json
 import inspect
 
+import core.logger as logger
+import core.errors as errors
 import shell.setup as setup
 import shell.interface as interface
 import core.teos as teos
-import core.cleos as cleos
-import core.logger as logger
-import core.errors as errors
+if setup.node_api == "cleos":
+    import core.cleos as cleos
+elif setup.node_api == "eosjs":
+    import core.eosjs as cleos
+
 import core.manager as manager
+
 
 def wallet_json_read():
     try:
@@ -22,13 +27,12 @@ def wallet_json_write(wallet_json):
         json.dump(wallet_json, out)
 
 def create_wallet(
-        name=None, password="", verbosity=None, file=False,
+        name=None, password=None, verbosity=None, file=False,
         globals=None):
     if globals:
         Wallet.globals = globals
     else:
         Wallet.globals = inspect.stack()[1][0].f_globals
-
     Wallet.wallet = Wallet(name, password, verbosity, file)
     Wallet.wallet.restore_accounts()
 
@@ -56,7 +60,7 @@ class Wallet(cleos.WalletCreate):
     wallet_keys = None
     wallet = None
     globals = None
-  
+    setup.node_api
     def __init__(self, name=None, password="", verbosity=None, file=False):
 
         cleos.set_local_nodeos_address_if_none()
@@ -99,7 +103,7 @@ class Wallet(cleos.WalletCreate):
                 verbosity
             )
 ###############################################################################
-# TO DO: detect any live node!!!!!!!!!!
+# TO DO: detect live node!!!!!!!!!!
             if manager.is_local_testnet() or file or True:           
 ###############################################################################                        
                 password_map = wallet_json_read()
@@ -325,6 +329,9 @@ class Wallet(cleos.WalletCreate):
         for name, object_name in account_map.items():
             del Wallet.globals[object_name]
 
+    def stop(self):
+        cleos.WalletStop()
+        
     def keys(self):
         ''' Lists public keys from all unlocked wallets.
         Returns `cleos.WalletKeys` object.
