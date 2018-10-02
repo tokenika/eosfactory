@@ -4,16 +4,21 @@ import types
 import time
 import re
 
+import core.logger as logger
+import core.errors as errors
+import core.config as config
+import shell.setup as setup
+import core.errors as errors
+import shell.interface as interface
 import core.teos as teos
-import core.cleos as cleos
+import shell.interface as interface
+if setup.node_api == "cleos":
+    import core.cleos as cleos
+elif setup.node_api == "eosjs":
+    import core.eosjs as cleos
 import core.cleosys as cleosys
 import core.manager as manager
-import core.logger as logger
-import core.config as config
-import core.errors as errors
 import core.testnet as testnet
-import shell.interface as interface
-import shell.setup as setup
 import shell.wallet as wallet
 
 
@@ -110,9 +115,7 @@ def is_local_testnet_running(account_eosio):
         return False
 
     try: # remote eosio may have the ["keys"] array empty.
-        return account_eosio.owner_key.key_public == \
-            account_.json["permissions"][1]["required_auth"]["keys"] \
-                [0]["key"]
+        return account_eosio.owner_key.key_public == account_.owner_key
     except:
         False        
 
@@ -424,7 +427,7 @@ def create_master_account(
     object into the global namespace of the caller, and **return**.
     '''   
     account_object = Eosio(account_object_name)
-
+    
     if is_local_testnet_running(account_object):
         put_account_to_wallet_and_on_stack(
             account_object_name, account_object, logger)
