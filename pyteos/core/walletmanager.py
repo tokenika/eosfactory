@@ -29,12 +29,11 @@ class Create(Wallet):
         Wallet.__init__(self, name, password)
         file = wallet_file(name)
         cipher_suite = None
-        self.is_created = False
 
         if self.password:
             if not os.path.exists(file):
                 raise errors.Error('''
-                    Password is set, but the wallet file does not exist:
+                    Password is set, yet the wallet file does not exist:
                         {}
                 '''.format(file))
             cipher_suite = Fernet(str.encode(password))
@@ -70,8 +69,6 @@ class Create(Wallet):
             except Exception as e:
                 raise errors.Error(str(e))
             
-            self.is_creted = True
-
             if is_verbose:
                 logger.OUT('''
                 Created wallet: {}
@@ -149,7 +146,7 @@ def open_wallet(wallet, is_verbose=True):
         logger.OUT("Opened: {}".format(name))
 
 
-def lock(wallet, is_verbose=True):
+def lock(wallet, is_verbose=True)):
     name = wallet_arg(wallet)
     if _open_wallets[name]:
         _open_wallets[name].cipher_suite = None
@@ -181,26 +178,20 @@ def unlock(wallet, password=None, is_verbose=True):
     if not password and isinstance(wallet, Wallet):
         password = wallet.password
 
-    if not is_open(name):
-        raise errors.Error('''
-            The wallet '{}' is not open.
-            '''.format(name))
-
-    if not is_unlocked(name):
-        _manager_id = None
+    _manager_id = None
+    if is_opened(name):
         _open_wallets[name].cipher_suite = Fernet(str.encode(password))
         try:
-            with open(wallet_file(name), "r")  as input:
-                keys_ciphered = [key.rstrip('\n') for key in input]
-
-
-            _manager_id = decrypt(
-                    keys_ciphered[0], _open_wallets[name].cipher_suite)
-        except Exception as e:
+            _manager_id = private_keys(wallet, is_verbose=False)[0]
+        except:
             raise errors.Error('''
                 Wrong password.
                 ''')
-        
+    else:
+        raise errors.Error('''
+        The wallet '{}' is not open.
+        '''.format(name))
+
     if is_verbose:
         logger.OUT("Unlocked: {}".format(name))    
     
@@ -253,51 +244,45 @@ def import_key(wallet, key, is_verbose=True):
     return key_public
     
 
-def remove_key(key, is_verbose=True):
-    trash = []
+def remove_key(wallet, key, is_verbose=True):
+    name = wallet_arg(wallet)
+    owner_key_public = key_arg(
+        key, is_owner_key=True, is_private_key=False)
+    active_key_public = key_arg(
+        key, is_owner_key=False, is_private_key=False)
+    private_keys = private_keys(wallet, False)
 
-    for name, open_wallet in _open_wallets.items():
-        if not open_wallet.cipher_suite:
-            continue
+    keys = Node('''
+    const ecc = require('eosjs-ecc')
+    keys = %s
+    print_result(keys)
 
-        owner_key_public = key_arg(
-            key, is_owner_key=True, is_private_key=False)
-        active_key_public = key_arg(
-            key, is_owner_key=False, is_private_key=False)
-
-    
-        private_keys_ = private_keys(name, False)
-
-        keys = Node('''
-        const ecc = require('eosjs-ecc')
-        keys = %s
-        print_result(keys)
-
-        function process_result(keys) {
-            public_keys = []
-            for (i = 0; i < keys.length; i++) {
-                pair = []
-                pair[0] = keys[i]
-                pair[1] = ecc.privateToPublic(keys[i])
-                public_keys[i] = pair
-            }
-
-            return public_keys
+    function process_result(keys) {
+        public_keys = []
+        for (i = 0; i < keys.length; i++) {
+            pair = []
+            pair[0] = keys[i]
+            pair[1] = ecc.privateToPublic(keys[i])
+            public_keys[i] = pair
         }
-        ''' % private_keys_).json
 
-        for pair in keys:
-            if pair[1] == owner_key_public or pair[1] == active_key_public:
-                trash.append(pair[0])
+        return public_keys
+    }
+    ''' % private_keys).json
 
-        if trash:
-            remaining = []
-            for private_key in private_keys_:
-                if not private_key in trash:
-                    remaining.append(private_key)
+    trash = []
+    for pair in keys:
+        if pair[1] == owner_key_public or pair[1] == active_key_public:
+            trash.append(pair[0])
 
-            with open(wallet_file(name), "w")  as out:
-                out.write("\n".join(remaining))
+    if trash:
+        remaining = []
+        for private_key in private_keys:
+            if not private_key in trash:
+                remaining.append(private_key)
+
+        with open(wallet_file(name), "w")  as out:
+            out.write("\n".join(remaining))
     
     if is_verbose:
         if trash:
@@ -306,7 +291,11 @@ def remove_key(key, is_verbose=True):
             ) + "\n".join(trash))
     
 
-def keys(wallet=None, is_verbose=True, is_lock_checked=True):
+def keys(wallet, is_verbose=True, is_lock_checked=True):
+    if is_lock_checked:
+        is_open_and_unlocked(wallet)
+
+    name = wallet_arg(wallet)
     private_keys_ = private_keys(wallet, False)
     public_keys = Node('''
     const ecc = require('eosjs-ecc')
@@ -323,30 +312,26 @@ def keys(wallet=None, is_verbose=True, is_lock_checked=True):
     }
     ''' % private_keys_).json
     if is_verbose:
-        logger.OUT("keys in all unlocked wallets: \n".format(
+        logger.OUT("keys in wallet '{}': \n".format(
             name
         ) + "\n".join(public_keys))
 
     return public_keys
 
 
-def private_keys(wallet=None, is_verbose=True):
-    keys = []    
-    for name, open_wallet in _open_wallets.items():
-        if not open_wallet.cipher_suite:
-            continue
-        if wallet:
-            if name != wallet_arg(wallet):
-                continue
+def private_keys(wallet, is_verbose=True):
+    is_open_and_unlocked(wallet)
 
-        with open(wallet_file(name), "r")  as input:
-            keys_ciphered = [key.rstrip('\n') for key in input]
+    name = wallet_arg(wallet)
+    with open(wallet_file(name), "r")  as input:
+        keys_ciphered = [key.rstrip('\n') for key in input]
 
-        for key in keys_ciphered:
-            keys.append(decrypt(key, _open_wallets[name].cipher_suite))
+    keys = []
+    for key in keys_ciphered:
+        keys.append(decrypt(key, _open_wallets[name].cipher_suite))
 
     if is_verbose:
-        logger.OUT("Private keys in all unlocked wallets: \n".format(
+        logger.OUT("Private keys in wallet '{}': \n".format(
             name
         ) + "\n".join(keys))
 
@@ -362,7 +347,8 @@ def stop(is_verbose=True):
 
     if is_verbose:
         logger.OUT('''
-    All the wallet objects locked and removed from the list of open wallets.''')
+        All the wallet objects locked and removed from the wallet list of 
+        the open wallets''')
 
 
 class Node():

@@ -75,7 +75,7 @@ def config():
         }    
             ''' % (
                 'http://127.0.0.1:8888',
-                str(wm.private_keys(is_verbose=False)),
+                "['5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3']",
                 'false',
                 'true',
                 'true'
@@ -85,10 +85,10 @@ def config():
 def print_result():
 
     return '''
+        const Eos = require('eosjs')
+        eos = Eos()
         no_error_tag = 'OK'
-
-        api()
-
+        
         function print_result(result, err) {
             if (err) {
                 console.error(err)
@@ -101,31 +101,30 @@ def print_result():
         }
 
         function api() {
-
             // For example:
-            // ecc = require('eosjs-ecc')
-            // ecc.randomKey().then(print_result)
+            // eos.getAccount('eosio').then(print_result)
         }
 
         function process_result(result) {
             return result
-        }   
-    '''
+        }    
+            '''
 
 
 class _Eosjs():
     '''A prototype for ``cleos`` command classes.
     '''
-    def __init__(self, js, is_verbose=1, is_config=True):
+
+    def __init__(self, js, is_config=False, is_verbose=1):
         self.out_msg = None
         self.err_msg = None
         self.json = None
         self.is_verbose = is_verbose
         cl = ["node", "-e"]
         if is_config:
-            js = utils.heredoc(config()) + "\n\n" + utils.heredoc(js)
+            js = utils.heredoc(config() + js)
         else:
-            js = utils.heredoc(print_result()) + "\n\n" + utils.heredoc(js)
+            js = utils.heredoc(print_result() + js)
 
         cl.append(js)
 
@@ -143,7 +142,7 @@ class _Eosjs():
             cl,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE) 
-
+        # import pdb; pdb.set_trace()
         self.err_msg = process.stderr.decode("utf-8")
         if self.err_msg.strip() != "OK":
             raise errors.Error(self.err_msg)
@@ -316,7 +315,7 @@ class GetAccounts(_Eosjs):
         return result.account_names    
     }        
             ''' % (key_arg(key, is_owner_key=True, is_private_key=False)),
-            is_verbose=is_verbose)
+            is_verbose)
 
 
 # class GetTransaction(_Eosjs):
@@ -365,14 +364,14 @@ class WalletCreate(wm.Create):
         is_verbose: If set, print output.
     '''
     def __init__(self, name="default", password="", is_verbose=True):
-        wm.Create.__init__(self, name, password, is_verbose)
+        wm.Create.__init__(name, password, is_verbose)
 
 
 class WalletStop:
     '''Close all open wallets.
     '''
     def __init__(self, is_verbose=True):
-        wm.stop()
+        wm.stop(()
 
 
 class WalletList:
@@ -412,15 +411,16 @@ class WalletRemove_key:
     '''Remove key from wallet
     - **parameters**::
 
+        wallet: A wallet object or the name of the wallet to import key into.
         password: The password returned by wallet create.
-        key: A key object or a public key in WIF format to remove.
+        key: A key object or a private key in WIF format to import.
         is_verbose: If ``False`` do not print. Default is ``True``.
 
     - **attributes**::
 
         is_verbose: If set, print output.
     '''
-    def __init__(self, key, password, is_verbose=True):
+    def __init__(self, key, wallet, password, is_verbose=True):
         wm.remove_key(wallet, key, is_verbose)
 
 
@@ -442,7 +442,12 @@ class WalletKeys:
         is_verbose: If set, print output.
     '''
     def __init__(self, is_verbose=True):
-        self.json = wm.keys(None, is_verbose)
+        unlocked = wm.unlocked()
+        keys = []
+        for name in unlocked:
+            keys.extend(wm.keys(name, is_verbose=False))
+
+        self.json = keys
 
     def __str__(self):
         out = "Keys in all opened wallets:\n"
@@ -623,8 +628,8 @@ class CreateKey(Key, _Eosjs):
 
         if self.key_public or self.key_private:
             self.json = {}
-            self.json["key_public"] = self.key_public           
-            self.json["key_private"] = self.key_private
+            self.json["publicKey"] = self.key_public           
+            self.json["privateKey"] = self.key_private
             self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
                 .format(self.key_private, self.key_public)
         else:
@@ -635,8 +640,9 @@ class CreateKey(Key, _Eosjs):
             _Eosjs.__init__(
                 self, 
                 '''
+    const ecc = require('eosjs-ecc')
+
     function api() {
-        ecc = require('eosjs-ecc')
         ecc.randomKey().then(print_result)
     }
 
@@ -644,30 +650,29 @@ class CreateKey(Key, _Eosjs):
         return {key_private: private_key, 
                 key_public: ecc.privateToPublic(private_key)}
     }
-                ''',
-                is_verbose=is_verbose, is_config=False)
-        
-            self.json["name"] = key_name
-            self.name = key_name
-
+                ''', 
+                is_verbose)
+            
+        self.json["name"] = key_name
+        self.name = key_name
         self.key_private = self.json["key_private"]
         self.key_public = self.json["key_public"]
 
 
-class RestoreAccount(GetAccount):
+# class RestoreAccount(GetAccount):
 
-    def __init__(self, account, is_verbose=True):
-        GetAccount.__init__(self, account, is_verbose=False, is_info=False)
+#     def __init__(self, account, is_verbose=True):
+#         GetAccount.__init__(self, account, is_verbose=False, is_info=False)
 
-        self.name = self.json["account_name"]
-        self.owner_key = ""
-        self.active_key = ""
+#         self.name = self.json["account_name"]
+#         self.owner_key = ""
+#         self.active_key = ""
         
-    def info(self):
-        print(str(GetAccount(self.name, is_verbose=False)))
+#     def info(self):
+#         print(str(GetAccount(self.name, is_verbose=False)))
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class CreateAccount(Account, _Eosjs):
@@ -760,7 +765,7 @@ class CreateAccount(Account, _Eosjs):
             args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
-
+        import pdb; pdb.set_trace()
         _Eosjs.__init__(
             self,
                 '''
@@ -780,6 +785,7 @@ class CreateAccount(Account, _Eosjs):
         broadcast: true,
             sign: true,
     }
+    // connects to localhost
     const eos = Eos(config1);
 
     eos.transaction(tr => {

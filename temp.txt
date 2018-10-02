@@ -1,3 +1,0 @@
-192.168.99.100:7777
-
-/mnt/c/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://192.168.99.100:7777 get block 56
