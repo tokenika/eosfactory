@@ -1,10 +1,15 @@
 import shutil
 
-import core.teos as teos
-import core.cleos as cleos
 import core.logger as logger
-import core.config as config
 import core.errors as errors
+import core.config as config
+import shell.setup as setup
+import core.teos as teos
+if setup.node_api == "cleos":
+    import core.cleos as cleos
+elif setup.node_api == "eosjs":
+    import core.eosjs as cleos
+
 
 def project_from_template(
         name, template="", user_workspace=None, remove_existing=False, 

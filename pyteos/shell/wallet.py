@@ -344,6 +344,19 @@ class Wallet(cleos.WalletCreate):
             {}
             '''.format(self.wallet_keys.out_msg))
 
+    def private_keys(self):
+        ''' Lists public keys from all unlocked wallets.
+        Returns `cleos.WalletKeys` object.
+        '''
+        self.open_unlock()
+
+        self.wallet_private_keys = cleos.WalletPrivateKeys(is_verbose=False)
+        logger.TRACE('''
+            Keys in all open walets:
+            {}
+            '''.format(json.dumps(
+                self.wallet_private_keys.json, indent=4)))    
+
     def edit_account_map(self, text_editor="nano"):
         manager.edit_account_map(text_editor)
 

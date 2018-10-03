@@ -45,19 +45,32 @@ def reboot():
     wallet_globals = None
 
 
-def is_local_testnet_running():
-        account_ = cleos.GetAccount(self.name, is_info=False, is_verbose=False)
-        if not account_.error and \
-            self.key_public == \
-                account_.json["permissions"][0]["required_auth"]["keys"] \
-                    [0]["key"]:
-            self.account_info = str(account_)
-            logger.TRACE('''
-                Local testnet is ON: the `eosio` account is master.
-                ''')
-            return True
-        else:
-            return False
+# def is_local_testnet_running():
+#         account_ = cleos.GetAccount(self.name, is_info=False, is_verbose=False)
+#         if not account_.error and \
+#             self.key_public == \
+#                 account_.json["permissions"][0]["required_auth"]["keys"] \
+#                     [0]["key"]:
+#             self.account_info = str(account_)
+#             logger.TRACE('''
+#                 Local testnet is ON: the `eosio` account is master.
+#                 ''')
+#             return True
+#         else:
+#             return False
+
+
+def is_local_testnet_running(account_eosio):
+    try:
+        account_ = cleos.GetAccount(
+            account_eosio.name, is_info=False, is_verbose=0)
+    except:
+        return False
+
+    try: # remote eosio may have the ["keys"] array empty.
+        return account_eosio.owner_key.key_public == account_.owner_key
+    except:
+        False        
 
 
 def _data_json(data):
@@ -105,19 +118,6 @@ def is_wallet_defined(logger, globals=None):
                 ''')
 
     wallet_globals = wallet.Wallet.globals
-
-
-def is_local_testnet_running(account_eosio):
-    try:
-        account_ = cleos.GetAccount(
-            account_eosio.name, is_info=False, is_verbose=0)
-    except:
-        return False
-
-    try: # remote eosio may have the ["keys"] array empty.
-        return account_eosio.owner_key.key_public == account_.owner_key
-    except:
-        False        
 
 
 def put_account_to_wallet_and_on_stack(

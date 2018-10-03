@@ -25,16 +25,18 @@ def set_local_nodeos_address_if_none():
     return setup.is_local_address
 
 
-def config():
+def config(expiration_sec=30, skip_signature=False, dont_broadcast=False):
 
     return '''
         const Eos = require('eosjs')
         eos = Eos()
         http_endpoint = '%s'
         key_provider = %s
-        verbose = %s
+        verbose = false
         broadcast = %s
         sign = %s
+        expireInSeconds = %d
+
         no_error_tag = 'OK'
 
         eos.getInfo({}).then(result => id(result, api))
@@ -45,7 +47,7 @@ def config():
                 chainId: chain_id,
                 keyProvider: key_provider, 
                 httpEndpoint: http_endpoint,
-                expireInSeconds: 60,
+                expireInSeconds: expireInSeconds,
                 broadcast: broadcast,
                 verbose: verbose,
                 sign: sign
@@ -74,11 +76,11 @@ def config():
             return result
         }    
             ''' % (
-                'http://127.0.0.1:8888',
-                str(wm.private_keys(is_verbose=False)),
-                'false',
-                'true',
-                'true'
+                setup.nodeos_address(),
+                json.dumps(wm.private_keys(is_verbose=False), indent=4),
+                'false' if dont_broadcast else 'true',
+                'false' if skip_signature else 'true',
+                expiration_sec
                 )
 
 
@@ -116,16 +118,13 @@ def print_result():
 class _Eosjs():
     '''A prototype for ``cleos`` command classes.
     '''
-    def __init__(self, js, is_verbose=1, is_config=True):
+    def __init__(self, header, js, is_verbose=1):
         self.out_msg = None
         self.err_msg = None
         self.json = None
         self.is_verbose = is_verbose
         cl = ["node", "-e"]
-        if is_config:
-            js = utils.heredoc(config()) + "\n\n" + utils.heredoc(js)
-        else:
-            js = utils.heredoc(print_result()) + "\n\n" + utils.heredoc(js)
+        js = utils.heredoc(header) + "\n\n" + utils.heredoc(js)
 
         cl.append(js)
 
@@ -179,8 +178,7 @@ class GetInfo(_Eosjs):
     '''
     def __init__(self, is_verbose=1):
 
-        _Eosjs.__init__(
-            self, 
+        _Eosjs.__init__(self, config(),
             '''
     function api() {
         eos.getInfo({}).then(print_result)
@@ -230,20 +228,17 @@ class GetBlock(_Eosjs):
     - **attributes**::
 
         json: The json representation of the object.
-        is_verbose: If set, print output.    
     '''
     def __init__(self, block_number, block_id=None, is_verbose=1):
         if block_id:
-            _Eosjs.__init__(
-                self,
+            _Eosjs.__init__(self, config(),
                 '''
         function api() {
             eos.getBlock('%s').then(print_result)
         }
                 ''' % (block_id), is_verbose)
         else:
-            _Eosjs.__init__(
-                self,
+            _Eosjs.__init__(self, config(),
                 '''
         function api() {
             eos.getBlock(%d).then(print_result)
@@ -267,14 +262,10 @@ class GetAccount(Account, _Eosjs):
 
         name: The name of the account.
         json: The json representation of the object.
-        is_verbose: If set, print output.
-
-    - **output json**::
     '''
     def __init__(self, account, is_info=True, is_verbose=True):
         Account.__init__(self, account_arg(account))
-        _Eosjs.__init__(
-            self,
+        _Eosjs.__init__(self, config(),
             '''
     function api() {
         eos.getAccount('%s').then(print_result)
@@ -289,7 +280,7 @@ class GetAccount(Account, _Eosjs):
             ''' % (self.name), is_verbose)
 
         self.owner_key = self.json["key_owner"]
-        self.active_key = self.json["key_active"]                  
+        self.active_key = self.json["key_active"]                 
 
 
 class GetAccounts(_Eosjs):
@@ -302,11 +293,9 @@ class GetAccounts(_Eosjs):
     - **attributes**::
 
         json: The json representation of the object.
-        is_verbose: If set, print output.
     '''
     def __init__(self, key, is_verbose=True):
-        _Eosjs.__init__(
-            self,
+        _Eosjs.__init__(self, config(),
             '''
     function api() {
         eos.getKeyAccounts('%s').then(print_result)
@@ -333,11 +322,9 @@ class GetAccounts(_Eosjs):
 
 #         transaction_id: ID of the transaction retrieved.
 #         json: The json representation of the object.
-#         is_verbose: If set, print output.
 #     '''
 #     def __init__(self, transaction_id, block_num_hint=0, is_verbose=True):
-#         _Eosjs.__init__(
-#             self, 
+#         _Eosjs.__init__(self, config(), 
 #             '''
 #     const Eos = require('eosjs'); 
 #     Eos().getKeyAccounts('{}', 
@@ -362,7 +349,6 @@ class WalletCreate(wm.Create):
         name: The name of the wallet.
         password: The password returned by wallet create.
         json: The json representation of the object.
-        is_verbose: If set, print output.
     '''
     def __init__(self, name="default", password="", is_verbose=True):
         wm.Create.__init__(self, name, password, is_verbose)
@@ -381,10 +367,6 @@ class WalletList:
     - **parameters**::
 
         is_verbose: If ``False`` do not print. Default is ``True``.
-            
-    - **attributes**::
-
-        is_verbose: If set, print output.
     '''
     def __init__(self, is_verbose=True):
         wm.list()
@@ -402,7 +384,6 @@ class WalletImport:
     - **attributes**::
 
         json: The json representation of the object.
-        is_verbose: If set, print output.
     '''
     def __init__(self, key, wallet="default", is_verbose=True):
         wm.import_key(wallet, key, is_verbose)
@@ -415,10 +396,6 @@ class WalletRemove_key:
         password: The password returned by wallet create.
         key: A key object or a public key in WIF format to remove.
         is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **attributes**::
-
-        is_verbose: If set, print output.
     '''
     def __init__(self, key, password, is_verbose=True):
         wm.remove_key(wallet, key, is_verbose)
@@ -439,13 +416,37 @@ class WalletKeys:
     - **attributes**::
 
         json: The json representation of the object.
-        is_verbose: If set, print output.
     '''
     def __init__(self, is_verbose=True):
         self.json = wm.keys(None, is_verbose)
 
     def __str__(self):
         out = "Keys in all opened wallets:\n"
+        out = out + str(self.json)
+        return out
+
+
+class WalletPrivateKeys:
+    '''List of private keys from all unlocked wallets.
+
+    - **parameters**::
+
+        is_verbose: If ``False`` do not print. Default is ``True``.
+
+    - **parameters**::
+
+        json: The json representation of the object.
+        is_verbose: If set, print output.
+
+    - **attributes**::
+
+        json: The json representation of the object.
+    '''
+    def __init__(self, is_verbose=True):
+        self.json = wm.private_keys(None, is_verbose)
+
+    def __str__(self):
+        out = "Private keys in all opened wallets:\n"
         out = out + str(self.json)
         return out
 
@@ -517,7 +518,6 @@ class WalletUnlock(_Eosjs):
 #     - **attributes**::
 
 #         json: The json representation of the object.
-#         is_verbose: If set, print output.    
 #     '''
 #     def __init__(
 #             self, account, code="", abi="", 
@@ -565,7 +565,6 @@ class WalletUnlock(_Eosjs):
 #     - **attributes**::
 
 #         json: The json representation of the object.
-#         is_verbose: If set, print output.
 #     '''
 #     def __init__(
 #             self, account, table, scope,
@@ -614,7 +613,6 @@ class CreateKey(Key, _Eosjs):
     - **attributes**::
 
         json: The json representation of the object.
-        is_verbose: If set, print output.    
     '''
     def __init__(
             self, key_name=None, key_public=None, key_private=None, 
@@ -632,8 +630,7 @@ class CreateKey(Key, _Eosjs):
             if r1:
                 args.append("--r1")
 
-            _Eosjs.__init__(
-                self, 
+            _Eosjs.__init__(self, print_result(),
                 '''
     function api() {
         ecc = require('eosjs-ecc')
@@ -645,7 +642,7 @@ class CreateKey(Key, _Eosjs):
                 key_public: ecc.privateToPublic(private_key)}
     }
                 ''',
-                is_verbose=is_verbose, is_config=False)
+                is_verbose)
         
             self.json["name"] = key_name
             self.name = key_name
@@ -704,8 +701,7 @@ class CreateAccount(Account, _Eosjs):
 
         owner_key: Owner private key.
         active_key: Active private key.
-        json: The json representation of the object.
-        is_verbose: If set, print output.    
+        json: The json representation of the object.  
     '''
     def __init__(
             self, creator, name, owner_key, 
@@ -721,14 +717,14 @@ class CreateAccount(Account, _Eosjs):
             is_verbose=True
             ):
 
-        if name is None: 
+        if not name: 
             name = account_name()
         Account.__init__(self, name)
 
         self.owner_key = None # private keys
         self.active_key = None
         
-        if active_key is None:
+        if not active_key:
             active_key = owner_key        
 
         owner_key_public = key_arg(
@@ -736,105 +732,47 @@ class CreateAccount(Account, _Eosjs):
         active_key_public = key_arg(
             active_key, is_owner_key=False, is_private_key=False)
 
-        args = [
-                account_arg(creator), self.name, 
-                owner_key_public, active_key_public
-            ]
+        # args = []
+        # if forceUnique:
+        #     args.append("--force-unique")
+        # if max_cpu_usage:
+        #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        # if  max_net_usage:
+        #     args.extend(["--max-net-usage", str(max_net_usage)])
+        # if  ref_block:
+        #     args.extend(["--ref-block", ref_block])
 
-        args.append("--json")
-        if not permission is None:
-            p = permission_arg(permission)
-            for perm in p:
-                args.extend(["--permission", perm])
+        authorization = []
+        if permission:
+            authorization = permission_arg(permission)
 
-        args.extend(["--expiration", str(expiration_sec)])
-        if skip_signature:
-            args.append("--skip-sign")
-        if dont_broadcast:
-            args.append("--dont-broadcast")
-        if forceUnique:
-            args.append("--force-unique")
-        if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        if  max_net_usage:
-            args.extend(["--max-net-usage", str(max_net_usage)])
-        if  not ref_block is None:
-            args.extend(["--ref-block", ref_block])
-
-        _Eosjs.__init__(
-            self,
+        _Eosjs.__init__(self, config(expiration_sec),
                 '''
-    const Eos = require('eosjs');
-
-    const config1 = {
-        keyProvider: ['5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3'],
-        httpEndpoint: 'http://127.0.0.1:8888',
-        expireInSeconds: 60,
-        broadcast: true,
-        verbose: false, // API activity
-        sign: true
-    };
-
     options = {
-        authorization: 'eosio@active',
-        broadcast: true,
-            sign: true,
+        authorization: %s,
+        broadcast: %s,
+            sign: %s,
     }
-    const eos = Eos(config1);
 
-    eos.transaction(tr => {
-    tr.newaccount({
-        creator: '%s',
-        name: '%s',
-        owner: 'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV',
-        active: 'EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV'
-        })
-    }, options)
-            ''' % (creator, name),
+    function api() {
+        eos.transaction(tr => {
+            tr.newaccount(
+                {
+                    creator: '%s',
+                    name: '%s',
+                    owner: '%s',
+                    active: '%s'
+                }
+            )
+        }, options).then(print_result)
+    }
+            ''' % (
+                str(authorization),
+                "false" if dont_broadcast else "true",
+                "false" if skip_signature else "true",
+                creator, name, owner_key_public, active_key_public
+                ), is_verbose)
 
-    #            '''
-    # const Eos = require('eosjs');
-    # keyProvider = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
-    # pubkey = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV";
-    # eosConfig = {keyProvider: [keyProvider]}
-    # let eos = Eos(eosConfig)
-    # eos.transaction(tr => {
-    #     tr.newaccount({
-    #         creator: '%s',
-    #         name: '%s',
-    #         owner: pubkey,
-    #         active: pubkey
-    #     })});
-    #         ''' % (creator, name),
-    #         '''
-    # Eos = require("eosjs");
-    # binaryen = require("binaryen");
-
-    # keyProvider = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
-    # pubkey = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV";
-
-    # eos = Eos({ keyProvider, binaryen });
-
-    # eos.transaction(tr => {
-    #     tr.newaccount({
-    #         creator: "%s",
-    #         name: "%s",
-    #         owner: pubkey,
-    #         active: pubkey
-    #     });
-    # });
-    #         ''' % (creator, name),
-            is_verbose)
-            
-    #     self.json = GetAccount(self.name, is_verbose=False, is_info=False).json
-    #     self.printself()
-
-    # def info(self):
-    #     print(str(GetAccount(self.name, is_verbose=False)))
-
-    # def get_transaction(self):
-    #     return GetTransaction(self.transaction)
-            
     def __str__(self):
         return self.name
 
@@ -847,127 +785,142 @@ def account_name():
 
     return name
 
-# def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
+def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
 
-#     contract_path_absolute = config.contract_dir(contract_dir)
-#     if not contract_path_absolute:
-#         return []
+    contract_path_absolute = config.contract_dir(contract_dir)
+    if not contract_path_absolute:
+        return []
 
-#     if not wasm_file:
-#         wasm_file = config.wasm_file(contract_dir)
-#         if not wasm_file:
-#             return []
-#     else:
-#         if not os.path.isfile(
-#                 os.path.join(contract_path_absolute, wasm_file)):
-#             return []
+    if not wasm_file:
+        wasm_file = config.wasm_file(contract_dir)
+        if not wasm_file:
+            return []
+    else:
+        if not os.path.isfile(
+                os.path.join(contract_path_absolute, wasm_file)):
+            return []
 
-#     if not abi_file:
-#         abi_file = config.abi_file(contract_dir)
-#         if not abi_file:
-#             return []
-#     else:
-#         if not os.path.isfile(
-#                 os.path.join(contract_path_absolute, abi_file)):
-#             return []
+    if not abi_file:
+        abi_file = config.abi_file(contract_dir)
+        if not abi_file:
+            return []
+    else:
+        if not os.path.isfile(
+                os.path.join(contract_path_absolute, abi_file)):
+            return []
 
-#     return [contract_path_absolute, wasm_file, abi_file]
+    return [contract_path_absolute, wasm_file, abi_file]
 
-# class SetContract(_Eosjs):
-#     '''Create or update the contract on an account.
+class SetContract(_Eosjs):
+    '''Create or update the contract on an account.
 
-#     - **parameters**:: 
+    - **parameters**:: 
 
-#         account: The account to publish a contract for. May be an object 
-#             having the  May be an object having the attribute `name`, like 
-#             `CreateAccount`, or a string.
-#         contract_dir: The path containing the .wast and .abi. 
-#         wasm_file: The file containing the contract WASM relative 
-#             to contract_dir.
-#         abi_file: The ABI for the contract relative to contract-dir.
+        account: The account to publish a contract for. May be an object 
+            having the  May be an object having the attribute `name`, like 
+            `CreateAccount`, or a string.
+        contract_dir: The path containing the .wast and .abi. 
+        wasm_file: The file containing the contract WASM relative 
+            to contract_dir.
+        abi_file: The ABI for the contract relative to contract-dir.
 
-#         permission: An account and permission level to authorize, as in 
-#             'account@permission'. May be a `CreateAccount` or `Account` object
-#         expiration: The time in seconds before a transaction expires, 
-#             defaults to 30s
-#         skip_sign: Specify if unlocked wallet keys should be used to sign 
-#             transaction.
-#         dont_broadcast: Don't broadcast transaction to the network (just print).
-#         forceUnique: Force the transaction to be unique. this will consume extra 
-#             bandwidth and remove any protections against accidently issuing the 
-#             same transaction multiple times.
-#         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-#             the execution of the transaction 
-#             (defaults to 0 which means no limit).
-#         max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-#             transaction (defaults to 0 which means no limit).
-#         ref_block: The reference block num or block id used for TAPOS 
-#             (Transaction as Proof-of-Stake).
+        permission: An account and permission level to authorize, as in 
+            'account@permission'. May be a `CreateAccount` or `Account` object
+        expiration: The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign: Specify if unlocked wallet keys should be used to sign 
+            transaction.
+        dont_broadcast: Don't broadcast transaction to the network (just print).
+        forceUnique: Force the transaction to be unique. this will consume extra 
+            bandwidth and remove any protections against accidently issuing the 
+            same transaction multiple times.
+        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+            the execution of the transaction 
+            (defaults to 0 which means no limit).
+        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+            transaction (defaults to 0 which means no limit).
+        ref_block: The reference block num or block id used for TAPOS 
+            (Transaction as Proof-of-Stake).
 
-#     - **attributes**::
+    - **attributes**::
 
-#         json: The json representation of the object.
-#         is_verbose: If set, print output.    
-#     '''
-#     def __init__(
-#             self, account, contract_dir, 
-#             wasm_file=None, abi_file=None, 
-#             permission=None, expiration_sec=30, 
-#             skip_signature=0, dont_broadcast=0, forceUnique=0,
-#             max_cpu_usage=0, max_net_usage=0,
-#             ref_block=None,
-#             is_verbose=True,
-#             json=False
-#             ):
+        json: The json representation of the object.
+    '''
+    def __init__(
+            self, account, contract_dir, 
+            wasm_file=None, abi_file=None, 
+            permission=None, expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            is_verbose=True,
+            json=False
+            ):
 
-#         files = contract_is_built(contract_dir, wasm_file, abi_file)
-#         if not files:
-#             raise errors.Error("""
-#             Cannot determine the contract directory. The clue is 
-#             {}.
-#             """.format(contract_dir))
-#             return
+        files = contract_is_built(contract_dir, wasm_file, abi_file)
+        if not files:
+            raise errors.Error("""
+            Cannot determine the contract directory. The clue is 
+            {}.
+            """.format(contract_dir))
+            return
 
-#         self.contract_path_absolute = files[0]
-#         wasm_file = files[1]
-#         abi_file = files[2]            
+        self.contract_path_absolute = files[0]
+        wasm_file = files[1]
+        abi_file = files[2]  
 
-#         self.account_name = account_arg(account)
+        self.account_name = account_arg(account)
 
-#         args = [self.account_name, self.contract_path_absolute]
+        # args = []
+        # if permission:
+        #     p = permission_arg(permission)
+        #     for perm in p:
+        #         args.extend(["--permission", perm])
 
-#         if json:
-#             args.append("--json")
-#         if not permission is None:
-#             p = permission_arg(permission)
-#             for perm in p:
-#                 args.extend(["--permission", perm])
+        # args.extend(["--expiration", str(expiration_sec)])
+        # if skip_signature:
+        #     args.append("--skip-sign")
+        # if dont_broadcast:
+        #     args.append("--dont-broadcast")
+        # if forceUnique:
+        #     args.append("--force-unique")
+        # if max_cpu_usage:
+        #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        # if  max_net_usage:
+        #     args.extend(["--max-net-usage", str(max_net_usage)])
+        # if  ref_block:
+        #     args.extend(["--ref-block", ref_block]) 
 
-#         args.extend(["--expiration", str(expiration_sec)])
-#         if skip_signature:
-#             args.append("--skip-sign")
-#         if dont_broadcast:
-#             args.append("--dont-broadcast")
-#         if forceUnique:
-#             args.append("--force-unique")
-#         if max_cpu_usage:
-#             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-#         if  max_net_usage:
-#             args.extend(["--max-net-usage", str(max_net_usage)])
-#         if  not ref_block is None:
-#             args.extend(["--ref-block", ref_block]) 
-#         if wasm_file:
-#             args.append(wasm_file)
-#         if abi_file:
-#             args.append(abi_file)
+        _Eosjs.__init__(self, config(expiration_sec),
+            '''
+    const fs = require("fs")
+    const wasm = fs.readFileSync("%s")
 
-#         _Eosjs.__init__(
-#             self, args, "set", "contract", is_verbose)
+    function api() {
+        eos.setcode("%s", 0, 0, wasm).then(print_result)
+    }
+            ''' % (
+                wasm_file,
+                self.account_name
+                ), is_verbose)
 
-#         self.printself()
+        _Eosjs.__init__(self, config(expiration_sec),
+            '''
+    const fs = require("fs")
+    const abi = fs.readFileSync("%s")
 
-#     def get_transaction(self):
-#         return GetTransaction(self.transaction)
+    function api() {
+        eos.setabi("%s", abi).then(print_result)
+    }
+            ''' % (
+                abi_file,
+                self.account_name
+                ), is_verbose) 
+
+        self.printself()
+
+    def get_transaction(self):
+        return GetTransaction(self.transaction)
 
 
 # class PushAction(_Eosjs):
@@ -1003,7 +956,6 @@ def account_name():
 #     - **attributes**::
 
 #         json: The json representation of the object.
-#         is_verbose: If set, print output.
 #     '''
 #     def __init__(
 #             self, account, action, data,
