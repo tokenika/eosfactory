@@ -530,11 +530,11 @@ def create_master_account(
 def append_account_methods_and_finish(account_object_name, account_object):
 
     def code(account_object, code="", abi="", wasm=False):
-        result = cleos.GetCode(account_object, code, abi, is_verbose=False)
+        result = cleos.GetCode(account_object, is_verbose=False)
         logger.INFO('''
         * code()
         ''')
-        logger.OUT(result.out_msg)
+        logger.OUT(str(result))
 
     account_object.code = types.MethodType(code, account_object)
 

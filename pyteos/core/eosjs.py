@@ -26,9 +26,10 @@ def set_local_nodeos_address_if_none():
     return setup.is_local_address
 
 
-def config(expiration_sec=30, skip_signature=False, dont_broadcast=False):
-
-    return '''
+def config(
+        key_provider=None,
+        expiration_sec=30, skip_signature=False, dont_broadcast=False):
+    code = utils.heredoc('''
         const Eos = require('eosjs')
         eos = Eos()
         http_endpoint = '%s'
@@ -76,9 +77,12 @@ def config(expiration_sec=30, skip_signature=False, dont_broadcast=False):
         function process_result(result) {
             return result
         }    
-            ''' % (
+            ''')
+
+    return code % (
                 setup.nodeos_address(),
-                json.dumps(wm.private_keys(is_verbose=False), indent=4),
+                json.dumps(wm.private_keys(is_verbose=False), indent=4) \
+                    if key_provider is None else key_provider,
                 'false' if dont_broadcast else 'true',
                 'false' if skip_signature else 'true',
                 expiration_sec
@@ -104,7 +108,6 @@ def print_result():
         }
 
         function api() {
-
             // For example:
             // ecc = require('eosjs-ecc')
             // ecc.randomKey().then(print_result)
@@ -504,42 +507,33 @@ class WalletUnlock(_Eosjs):
         wm.unlock(wallet, password, is_verbose)
 
 
-# class GetCode(_Eosjs):
-#     '''Retrieve the code and ABI for an account.
+class GetCode(_Eosjs):
+    '''Retrieve the code and ABI for an account.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         account: The name of an account whose code should be retrieved. 
-#             May be an object having the  May be an object having the attribute 
-#             `name`, like `CreateAccount`, or a string.
-#         code: The name of the file to save the contract .wast/wasm to.
-#         abi: The name of the file to save the contract .abi to.
-#         wasm: Save contract as wasm.
+        account: The name of an account whose code should be retrieved. 
+            May be an object having the  May be an object having the attribute 
+            `name`, like `CreateAccount`, or a string.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         json: The json representation of the object.
-#     '''
-#     def __init__(
-#             self, account, code="", abi="", 
-#             wasm=False, is_verbose=True):
+        json: The json representation of the object.
+    '''
+    def __init__(self, account, is_verbose=True):
 
-#         account_name = account_arg(account)
+        _Eosjs.__init__(self, config(key_provider=[]),
+            '''
+    function api() {
+        eos.getCode("%s").then(print_result)
+    }
+            ''' % (account_arg(account)), is_verbose)
 
-#         args = [account_name]
-#         if code:
-#             args.extend(["--code", code])
-#         if abi:
-#             args.extend(["--abi", abi])
-#         if wasm:
-#             args.extend(["--wasm"])
+        self.code_hash = self.json["code_hash"]
+        self.printself()
 
-#         _Eosjs.__init__(self, args, "get", "code", is_verbose)
-
-#         msg = str(self.out_msg)
-#         self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
-#         self.code_hash = self.json["code_hash"]
-#         self.printself()
+    def __str__(self):
+        return "code hash: {}".format(self.code_hash)
 
 
 # class GetTable(_Eosjs):
@@ -747,7 +741,7 @@ class CreateAccount(Account, _Eosjs):
         if permission:
             authorization = permission_arg(permission)
 
-        _Eosjs.__init__(self, config(expiration_sec),
+        _Eosjs.__init__(self, config(expiration_sec=expiration_sec),
                 '''
     options = {
         authorization: %s,
@@ -871,17 +865,6 @@ class SetContract(_Eosjs):
 
         self.account_name = account_arg(account)
 
-        # args = []
-        # if permission:
-        #     p = permission_arg(permission)
-        #     for perm in p:
-        #         args.extend(["--permission", perm])
-
-        # args.extend(["--expiration", str(expiration_sec)])
-        # if skip_signature:
-        #     args.append("--skip-sign")
-        # if dont_broadcast:
-        #     args.append("--dont-broadcast")
         # if forceUnique:
         #     args.append("--force-unique")
         # if max_cpu_usage:
@@ -889,33 +872,55 @@ class SetContract(_Eosjs):
         # if  max_net_usage:
         #     args.extend(["--max-net-usage", str(max_net_usage)])
         # if  ref_block:
-        #     args.extend(["--ref-block", ref_block]) 
+        #     args.extend(["--ref-block", ref_block])
 
-        _Eosjs.__init__(self, config(expiration_sec),
-            '''
-    const fs = require("fs")
-    const wasm = fs.readFileSync("%s")
+        authorization = [self.account_name + "@active"]
+        if permission:
+            authorization.extend(permission_arg(permissions))
 
-    function api() {
-        eos.setcode("%s", 0, 0, wasm).then(print_result)
-    }
-            ''' % (
-                wasm_file,
-                self.account_name
-                ), is_verbose)
-
-        _Eosjs.__init__(self, config(expiration_sec),
+        _Eosjs.__init__(self, config(expiration_sec=expiration_sec),
             '''
     const fs = require("fs")
     const abi = fs.readFileSync("%s")
 
+    options = {
+        authorization: %s,
+        broadcast: %s,
+            sign: %s,
+    }    
+
     function api() {
-        eos.setabi("%s", abi).then(print_result)
+        eos.setabi("%s", abi, options).then(print_result)
     }
             ''' % (
                 abi_file,
+                str(authorization),
+                "false" if dont_broadcast else "true",
+                "false" if skip_signature else "true",                
                 self.account_name
                 ), is_verbose) 
+
+    #     _Eosjs.__init__(self, config(expiration_sec=expiration_sec),
+    #         '''
+    # const fs = require("fs")
+    # const wasm = fs.readFileSync("%s")
+
+    # options = {
+    #     authorization: %s,
+    #     broadcast: %s,
+    #         sign: %s,
+    # }    
+
+    # function api() {
+    #     eos.setcode("%s", 0, 0, wasm).then(print_result)
+    # }
+    #         ''' % (
+    #             wasm_file,
+    #             str(authorization),
+    #             "false" if dont_broadcast else "true",
+    #             "false" if skip_signature else "true",                
+    #             self.account_name
+    #             ), is_verbose)
 
         self.printself()
 

@@ -34,12 +34,15 @@ class Test(unittest.TestCase):
         Create, build and deploy the contract:
         ''')
         create_account("host", master)
+
         contract = Contract(host, project_from_template(
             CONTRACT_WORKSPACE, template="01_hello_world", 
             remove_existing=True))
         contract.build()
+        # setup.is_print_command_line = True
         contract.deploy()
-        exit()
+        contract.code()
+        return
         COMMENT('''
         Test an action for Alice, including the debug buffer:
         ''')
@@ -77,8 +80,9 @@ class Test(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        get_wallet().private_keys()
         get_wallet().stop()
-        stop()
+        # stop()
 
 
 if __name__ == "__main__":
