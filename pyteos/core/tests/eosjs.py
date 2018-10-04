@@ -80,7 +80,7 @@ class Test(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        get_wallet().private_keys()
+        # get_wallet().private_keys()
         get_wallet().stop()
         # stop()
 

@@ -38,7 +38,6 @@ def config(
         broadcast = %s
         sign = %s
         expireInSeconds = %d
-
         no_error_tag = 'OK'
 
         eos.getInfo({}).then(result => id(result, api))
@@ -76,7 +75,9 @@ def config(
 
         function process_result(result) {
             return result
-        }    
+        }
+
+        //////////////////////////////////////////////////////////////////////////////
             ''')
 
     return code % (
@@ -880,8 +881,29 @@ class SetContract(_Eosjs):
 
         _Eosjs.__init__(self, config(expiration_sec=expiration_sec),
             '''
+    const fs = require("fs");
+    const abi = JSON.parse(fs.readFileSync("%s"));
+    
+    options = {
+        authorization: %s,
+        broadcast: %s,
+            sign: %s,
+    }
+
+    function api() {
+        eos.setabi("%s", abi, options).then(print_result)
+    }            ''' % (
+                abi_file,
+                str(authorization),
+                "false" if dont_broadcast else "true",
+                "false" if skip_signature else "true",                
+                self.account_name
+                ), is_verbose) 
+
+        _Eosjs.__init__(self, config(expiration_sec=expiration_sec),
+            '''
     const fs = require("fs")
-    const abi = fs.readFileSync("%s")
+    const wasm = fs.readFileSync("%s")
 
     options = {
         authorization: %s,
@@ -890,37 +912,15 @@ class SetContract(_Eosjs):
     }    
 
     function api() {
-        eos.setabi("%s", abi, options).then(print_result)
+        eos.setcode("%s", 0, 0, wasm).then(print_result)
     }
             ''' % (
-                abi_file,
+                wasm_file,
                 str(authorization),
                 "false" if dont_broadcast else "true",
                 "false" if skip_signature else "true",                
                 self.account_name
-                ), is_verbose) 
-
-    #     _Eosjs.__init__(self, config(expiration_sec=expiration_sec),
-    #         '''
-    # const fs = require("fs")
-    # const wasm = fs.readFileSync("%s")
-
-    # options = {
-    #     authorization: %s,
-    #     broadcast: %s,
-    #         sign: %s,
-    # }    
-
-    # function api() {
-    #     eos.setcode("%s", 0, 0, wasm).then(print_result)
-    # }
-    #         ''' % (
-    #             wasm_file,
-    #             str(authorization),
-    #             "false" if dont_broadcast else "true",
-    #             "false" if skip_signature else "true",                
-    #             self.account_name
-    #             ), is_verbose)
+                ), is_verbose)
 
         self.printself()
 

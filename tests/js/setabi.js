@@ -1,49 +1,40 @@
-const fs = require("fs");
-const abi = JSON.parse(fs.readFileSync("/mnt/c/Workspaces/EOS/eosfactory/contracts/01_hello_world/build/hello_world.abi"));
-
 const Eos = require('eosjs')
 eos = Eos()
 http_endpoint = 'http://127.0.0.1:8888'
 key_provider = [
-    "5JfjYNzKTDoU35RSn6BpXei8Uqs1B6EGNwkEFHaN8SPHwhjUzcX",
-    "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3",
-    "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3",
-    "5J9oVJy1ReuY7M8HpfPqSZPMqE5XuH96ZKHga1duaa7gzNjXoBG",
-    "5JqWeEpnCJs4LNpsbgXWRRzezct2Ki7GK8vmbuUXCaX4dU8Bxt3",
-    "5JuYrB7nwfjBL6zGJcpCwkbP2Ao8SGwUsRRjizWDH3EweuBfiYH",
-    "5Kfip1ScCjVsGGnpQCc4EU86XM8LevBGykoBKjYpPtZ927g9rMc",
-    "5JyqTgFup3aL7qvvFTvZZUBZnVbQq6QP8V8JMSRezyefm5msX3K",
-    "5Jt6rCFNeqEqRiCc3vYnTk3mNLCNFCT2akAqwnQDs7nGLhFyGHM",
-    "5JkTP6FcXXLkxqvdYSgogYADiU8Q8t4zKPhdFS2NYm4e6w7HrxS",
-    "5KkGVWKXFJuPJVMQkgy1L7qJUobBvc7Jv6zbCuQHiuxRYA2DhH8"
+    '5JfjYNzKTDoU35RSn6BpXei8Uqs1B6EGNwkEFHaN8SPHwhjUzcX', 
+    '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3', 
+    '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3', 
+    '5HvG218JtkheXWThDKkRnpvBFK3hjbSsgD7AbmWdHK5dQvtqTc3', 
+    '5JTCmvrV4WwpGGwkBximniE5wwMp3CywdHZJmhWQS1DmsDhRoJ3', 
+    '5JsD5QAfnpAXwr1qdQa8GNsEEidZvee5SHBzdti6PWM8FWYdBgs', 
+    '5KieZJGFnTSCaGm2QCS1SDqEFbccwVyMvpJdzq5g9jFxVAhUCdR', 
+    '5JkZxkLw5UPCHbbA8EfgvXUgf6iTN4LdVwe3FGNCX6Nj4mf99h4', 
+    '5KEEJD1R9NvHSYiykTJTc3vE2CkAvSjH7NSiJEsyCXXnUhFCHd9', 
+    '5JUEJ9yxT4mQRstFXNkfoy8Kw1SCU7BiWMMk9A5xJdL94SpzJuu', 
+    '5JnUaiuDxDih416ZGmWkZhUwqenBBxHsUZjB6AD4DQUTNEpg8SG'
 ]
 verbose = false
 broadcast = true
 sign = true
+expireInSeconds = 30
 no_error_tag = 'OK'
 
-config = {
-    chainId: "6cbecff836a9fa60da53bf97a0a180103b2e76041d4414693d11bf39e2341547",
-    keyProvider: key_provider,
-    httpEndpoint: http_endpoint,
-    expireInSeconds: 60,
-    broadcast: broadcast,
-    verbose: verbose,
-    sign: sign
-}
+eos.getInfo({}).then(result => id(result, api))
 
-options = {
-    authorization: ["aqpehkxnf5tw@active"],
-    broadcast: true,
-        sign: true,
-}
-
-eos = Eos(config)
-
-api()
-
-function process_result(result) {
-    return result
+function id(result, api) {
+    chain_id = result.chain_id
+    config = {
+        chainId: chain_id,
+        keyProvider: key_provider,
+        httpEndpoint: http_endpoint,
+        expireInSeconds: expireInSeconds,
+        broadcast: broadcast,
+        verbose: verbose,
+        sign: sign
+    }
+    eos = Eos(config)
+    api()
 }
 
 function print_result(result, err) {
@@ -58,5 +49,25 @@ function print_result(result, err) {
 }
 
 function api() {
-    eos.setabi("aqpehkxnf5tw", abi, options).then(print_result)
+    // For example:
+    // eos.getAccount('eosio').then(print_result)
+}
+
+function process_result(result) {
+    return result
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+const fs = require("fs");
+const abi = JSON.parse(fs.readFileSync("/mnt/c/Workspaces/EOS/contracts/_wslqwjvacdyugodewiyd/build/_wslqwjvacdyugodewiyd.abi"));
+
+options = {
+    authorization: ["ytcohantju3s@active"],
+    broadcast: true,
+        sign: true,
+}
+
+function api() {
+    eos.setabi("ytcohantju3s", abi, options).then(print_result)
 }
