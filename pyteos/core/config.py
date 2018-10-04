@@ -54,51 +54,19 @@ map = {
 
 
 def config_file():
-    trace = "Environment variable EOSIO_EOSFACTORY_DIR + setup.CONFIG_DIR:\n"
-    trace = "os.environ"
-    if "EOSIO_EOSFACTORY_DIR" in os.environ:
-        env = os.environ["EOSIO_EOSFACTORY_DIR"]
-        trace = trace + env if env else "EOSIO_EOSFACTORY_DIR not defined"
-        file = os.path.join(env, setup.CONFIG_DIR, setup.CONFIG_JSON)
-        trace = trace + file + "\n\n"
+    if not "EOSIO_EOSFACTORY_DIR" in os.environ:
+        raise errors.Error('''
+        EOSIO_EOSFACTORY_DIR not defined
+        ''')
+
+    file = os.path.join(os.environ["EOSIO_EOSFACTORY_DIR"], setup.CONFIG_JSON)
 
     if os.path.exists(file):
         return file
-
-    setup_dir = os.path.dirname(setup.__file__)
-    file = os.path.join(setup_dir, setup.CONFIG_JSON)
-    trace = trace + file + "\n"
-
-    if os.path.exists(file):
-        return file
-
-    setup_dir = os.path.dirname(setup_dir)
-    file = os.path.join(setup_dir, setup.CONFIG_JSON)
-    trace = trace + file + "\n"
-
-    if os.path.exists(file):
-        return file                
-
-    setup_dir = os.path.dirname(setup_dir)
-    file = os.path.join(setup_dir, setup.CONFIG_JSON)
-    trace = trace + file + "\n"
-
-    if os.path.exists(file):
-        return file
-    else:
-        with open(file, "w") as output:
-            output.write("{}")
-
-        logger.INFO('''
-Cannot find the config json file. It is expected in any of the following 
-locations:
-{}
--- searched in the same order.
-
-Creating an empty config file:
-{}
-        '''.format(file, trace))
-
+    
+    with open(file, "w") as output:
+        output.write("{}")
+    logger.INFO('''Creating an empty config file: {}'''.format(file, trace))
     return file
 
 
@@ -109,7 +77,7 @@ def config_map():
             return json.load(input)
 
     raise errors.Error('''
-Cannot find the config json file.       
+    Cannot find the config json file.       
     ''')
 
 
