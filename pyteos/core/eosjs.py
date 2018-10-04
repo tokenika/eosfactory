@@ -4,6 +4,7 @@ import pathlib
 import re
 import random
 import pprint
+import os
 
 import core.utils as utils
 import core.errors as errors
@@ -786,13 +787,12 @@ def account_name():
     return name
 
 def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
-
-    contract_path_absolute = config.contract_dir(contract_dir)
+    contract_path_absolute = core.config.contract_dir(contract_dir)
     if not contract_path_absolute:
         return []
 
     if not wasm_file:
-        wasm_file = config.wasm_file(contract_dir)
+        wasm_file = core.config.wasm_file(contract_dir)
         if not wasm_file:
             return []
     else:
@@ -801,7 +801,7 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
             return []
 
     if not abi_file:
-        abi_file = config.abi_file(contract_dir)
+        abi_file = core.config.abi_file(contract_dir)
         if not abi_file:
             return []
     else:
@@ -866,8 +866,8 @@ class SetContract(_Eosjs):
             return
 
         self.contract_path_absolute = files[0]
-        wasm_file = files[1]
-        abi_file = files[2]  
+        wasm_file = os.path.join(files[0], files[1])
+        abi_file =  os.path.join(files[0], files[2])
 
         self.account_name = account_arg(account)
 

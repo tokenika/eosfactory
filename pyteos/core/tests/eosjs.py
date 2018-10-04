@@ -77,6 +77,7 @@ class Test(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        get_wallet().stop()
         stop()
 
 
