@@ -422,12 +422,12 @@ def create_master_account(
         '''.format(account_object_name))                
 
     '''
-    If the local testnet is running, create an account object representing 
-    the ``eosio`` account. Put the account into the wallet. Put the account
-    object into the global namespace of the caller, and **return**.
-    '''   
+    If the local testnet is running, create an account object representing the 
+    ``eosio`` account. Put the account into the wallet. Put the account object into 
+    the global namespace of the caller, and **return**.
+    '''
     account_object = Eosio(account_object_name)
-    
+
     if is_local_testnet_running(account_object):
         put_account_to_wallet_and_on_stack(
             account_object_name, account_object, logger)
@@ -439,18 +439,22 @@ def create_master_account(
     '''
 
     if manager.is_local_testnet():
+        if teos.is_local_node_process_running():
+            raise errors.Error('''
+    There is an local testnode process running, but its 'eosio` account is not like 
+    expected.
+            ''')
+
         raise errors.Error('''
-        If the local testnet is not running, an outer testnet has to be 
-        defined with `setup.set_nodeos_address(<url>)`.
-        Use 'setup.set_nodeos_address(<URL>)'
+    If the local testnet is not running, an outer testnet has to be defined with 
+    `setup.set_nodeos_address(<url>)`: use 'setup.set_nodeos_address(<URL>)'
         ''')
-        return
 
     '''
-    If the ``account_name`` argument is not set, it is randomized. Check the testnet for 
-    presence of the account. If present, create the corresponding object and see 
-    whether it is in the wallets. If so, put the account object into the global 
-    namespace of the caller. and **return**. 
+    If the ``account_name`` argument is not set, it is randomized. Check the 
+    testnet for presence of the account. If present, create the corresponding 
+    object and see whether it is in the wallets. If so, put the account object into 
+    the global namespace of the caller. and **return**. 
     '''
     first_while = True
     while True:

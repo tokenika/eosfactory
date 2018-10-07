@@ -462,7 +462,7 @@ def node_start(clear=False, verbosity=None):
             args_.insert(0, config.node_exe())
             subprocess.call(
                 ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
-                " ".join(cl)])
+                " ".join(args_)])
         elif uname() == "Darwin":
                 subprocess.Popen(
                     "open -a "
@@ -520,9 +520,10 @@ def is_local_node_process_running(name=None):
         name = config.node_exe()
 
     response = subprocess.run(
-        'ps aux | grep ' + name, shell=True, stdout=subprocess.PIPE)
+        'ps aux |  grep -v grep | grep ' + name, shell=True, 
+        stdout=subprocess.PIPE)
     out = response.stdout.decode("utf-8")
-    return config.node_exe() in out and not "grep" in out
+    return name in out
         
 
 def node_stop(verbosity=None):

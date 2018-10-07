@@ -25,100 +25,26 @@ def set_local_nodeos_address_if_none():
 
     return setup.is_local_address
 
-
-def config(
-        key_provider=None,
-        expiration_sec=30, skip_signature=False, dont_broadcast=False):
+def config():
     code = utils.heredoc('''
-        const Eos = require('eosjs')
-        eos = Eos()
-        http_endpoint = '%s'
-        key_provider = %s
-        verbose = false
-        broadcast = %s
-        sign = %s
-        expireInSeconds = %d
-        no_error_tag = 'OK'
+const eosjs = require('eosjs')
+const fetch = require('node-fetch')
+const rpc = new eosjs.Rpc.JsonRpc('%(endpoint)s', { fetch })
+    ''')
 
-        eos.getInfo({}).then(result => id(result, api))
-
-        function id(result, api) {
-            chain_id = result.chain_id
-            config = {
-                chainId: chain_id,
-                keyProvider: key_provider, 
-                httpEndpoint: http_endpoint,
-                expireInSeconds: expireInSeconds,
-                broadcast: broadcast,
-                verbose: verbose,
-                sign: sign
-            }    
-            eos = Eos(config)
-            api()
-        }
-
-        function print_result(result, err) {
-            if (err) {
-                console.error(err)
-            }
-            else {
-                result = process_result(result)
-                console.error(no_error_tag)
-                console.log(JSON.stringify(result))
-            }
-        }
-
-        function api() {
-            // For example:
-            // eos.getAccount('eosio').then(print_result)
-        }
-
-        function process_result(result) {
-            return result
-        }
-
-        //////////////////////////////////////////////////////////////////////////////
-            ''')
-
-    return code % (
-                setup.nodeos_address(),
-                json.dumps(wm.private_keys(is_verbose=False), indent=4) \
-                    if key_provider is None else key_provider,
-                'false' if dont_broadcast else 'true',
-                'false' if skip_signature else 'true',
-                expiration_sec
-                )
+    return code % {'endpoint': setup.nodeos_address()}
 
 
-def print_result():
 
-    return '''
-        no_error_tag = 'OK'
+###############################################################################
+# TO DO ?
+# authorization
+# :[{actor: "gy4dkmjzhege", permission: "active"}]
 
-        api()
-
-        function print_result(result, err) {
-            if (err) {
-                console.error(err)
-            }
-            else {
-                result = process_result(result)
-                console.error(no_error_tag)
-                console.log(JSON.stringify(result))
-            }
-        }
-
-        function api() {
-            // For example:
-            // ecc = require('eosjs-ecc')
-            // ecc.randomKey().then(print_result)
-        }
-
-        function process_result(result) {
-            return result
-        }   
-    '''
-
+#     scope: [
+#      "exchange"
+#    ]
+###############################################################################
 
 class _Eosjs():
     '''A prototype for ``cleos`` command classes.
@@ -129,7 +55,7 @@ class _Eosjs():
         self.json = None
         self.is_verbose = is_verbose
         cl = ["node", "-e"]
-        js = utils.heredoc(header) + "\n\n" + utils.heredoc(js)
+        js = header + utils.heredoc(js)
 
         cl.append(js)
 
@@ -183,11 +109,14 @@ class GetInfo(_Eosjs):
     '''
     def __init__(self, is_verbose=1):
 
-        _Eosjs.__init__(self, config(),
+        _Eosjs.__init__(self, config(), 
             '''
-    function api() {
-        eos.getInfo({}).then(print_result)
-    }
+        async function get_info() {
+            result = await rpc.get_info()
+            console.log(result)
+        }
+
+        get_info()
             ''', 
             is_verbose)
 
@@ -238,16 +167,36 @@ class GetBlock(_Eosjs):
         if block_id:
             _Eosjs.__init__(self, config(),
                 '''
-        function api() {
-            eos.getBlock('%s').then(print_result)
+        async function get_block(block_num_or_id, json=true) {
+            result = await rpc.get_block(block_num_or_id)
+            if(json) {
+                console.log(result)
+            } else {
+                console.log(`timestamp: ${result["timestamp"]}`)
+                console.log(`block_num: ${result["block_num"]}`)
+                console.log(`id: ${result["id"]}`)
+            }
+            
         }
+
+        get_block("%s")
                 ''' % (block_id), is_verbose)
         else:
             _Eosjs.__init__(self, config(),
                 '''
-        function api() {
-            eos.getBlock(%d).then(print_result)
+        async function get_block(block_num_or_id, json=true) {
+            result = await rpc.get_block(block_num_or_id)
+            if(json) {
+                console.log(result)
+            } else {
+                console.log(`timestamp: ${result["timestamp"]}`)
+                console.log(`block_num: ${result["block_num"]}`)
+                console.log(`id: ${result["id"]}`)
+            }
+            
         }
+
+        get_block(%d)
                 ''' % (block_number), is_verbose)                        
 
         self.block_num = self.json["block_num"]
@@ -272,16 +221,12 @@ class GetAccount(Account, _Eosjs):
         Account.__init__(self, account_arg(account))
         _Eosjs.__init__(self, config(),
             '''
-    function api() {
-        eos.getAccount('%s').then(print_result)
-    }
+        async function get_account(account_name) {
+            result = await rpc.get_account(account_name)
+            console.log(JSON.stringify(result))
+        }
 
-    function process_result(result) {
-        result.key_active = result.permissions[0].required_auth.keys[0].key
-        result.key_owner = result.permissions[1].required_auth.keys[0].key
-        delete result.permissions
-        return result    
-    }
+        get_account("%s")
             ''' % (self.name), is_verbose)
 
         self.owner_key = self.json["key_owner"]
@@ -302,42 +247,41 @@ class GetAccounts(_Eosjs):
     def __init__(self, key, is_verbose=True):
         _Eosjs.__init__(self, config(),
             '''
-    function api() {
-        eos.getKeyAccounts('%s').then(print_result)
-    }
+        async function get_accounts(public_key) {
+            result = await rpc.history_get_key_accounts(public_key)
+                console.log(JSON.stringify(result))
+        }
 
-    function process_result(result) {
-        return result.account_names    
-    }        
+        get_accounts("%s")    
             ''' % (key_arg(key, is_owner_key=True, is_private_key=False)),
             is_verbose=is_verbose)
 
 
-# class GetTransaction(_Eosjs):
-#     '''Retrieve a transaction from the blockchain.
+class GetTransaction(_Eosjs):
+    '''Retrieve a transaction from the blockchain.
 
-#     - **parameters**::
+    - **parameters**::
 
-#         transaction_id: ID of the transaction to retrieve.
-#         block_num_hint: A non-zero block number allows shorter transaction IDs 
-#             (8 hex, 4 bytes). Default is ``0``.
-#         is_verbose: If ``False`` do not print. Default is ``True``.
+        transaction_id: ID of the transaction to retrieve.
+        block_num_hint: A non-zero block number allows shorter transaction IDs 
+            (8 hex, 4 bytes). Default is ``0``.
+        is_verbose: If ``False`` do not print. Default is ``True``.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         transaction_id: ID of the transaction retrieved.
-#         json: The json representation of the object.
-#     '''
-#     def __init__(self, transaction_id, block_num_hint=0, is_verbose=True):
-#         _Eosjs.__init__(self, config(), 
-#             '''
-#     const Eos = require('eosjs'); 
-#     Eos().getKeyAccounts('{}', 
-#         (error, result) => {console.log(error, result);}
-#         );            
-#             '''.format(transaction_id, block_num_hint),
-            
-#             is_verbose)
+        transaction_id: ID of the transaction retrieved.
+        json: The json representation of the object.
+    '''
+    def __init__(self, transaction_id, block_num_hint=0, is_verbose=True):
+        _Eosjs.__init__(self, 
+            '''
+        async function get_transaction(is, block_num_hint) {
+            result = await rpc.history_get_transaction(is, block_num_hint)
+            console.log(JSON.stringify(result))
+        }
+
+        get_transaction("%s", %d)
+            '''.format(transaction_id, block_num_hint), is_verbose)
 
 
 class WalletCreate(wm.Create):
@@ -491,7 +435,7 @@ class WalletLock:
         wm.lock(wallet, is_verbose)
 
 
-class WalletUnlock(_Eosjs):
+class WalletUnlock():
     '''Unlock wallet.
 
     - **parameters**::
@@ -523,11 +467,14 @@ class GetCode(_Eosjs):
     '''
     def __init__(self, account, is_verbose=True):
 
-        _Eosjs.__init__(self, config(key_provider=[]),
+        _Eosjs.__init__(self, config(),
             '''
-    function api() {
-        eos.getCode("%s").then(print_result)
-    }
+        async function get_code(account_name) {
+            result = await rpc.get_code(account_name)
+            console.log(JSON.stringify(result))
+        }
+
+        get_code("%s")
             ''' % (account_arg(account)), is_verbose)
 
         self.code_hash = self.json["code_hash"]
@@ -537,66 +484,79 @@ class GetCode(_Eosjs):
         return "code hash: {}".format(self.code_hash)
 
 
-# class GetTable(_Eosjs):
-#     '''Retrieve the contents of a database table
+class GetTable(_Eosjs):
+    '''Retrieve the contents of a database table
 
-#     - **parameters**::
+    - **parameters**::
 
-#         account: The name of the account that owns the table. May be 
-#             an object having the  May be an object having the attribute 
-#             `name`, like `CreateAccount`, or a string.
-#         scope: The scope within the account in which the table is found,
-#             can be a `CreateAccount` or `Account` object, or a name.
-#         table: The name of the table as specified by the contract abi.
-#         binary: Return the value as BINARY rather than using abi to 
-#             interpret as JSON
-#         limit: The maximum number of rows to return.
-#         key: The name of the key to index by as defined by the abi, 
-#             defaults to primary key.
-#         lower: JSON representation of lower bound value of key, 
-#             defaults to first.
-#         upper: JSON representation of upper bound value value of key, 
-#             defaults to last.
+        account: The name of the account that owns the table. May be 
+            an object having the  May be an object having the attribute 
+            `name`, like `CreateAccount`, or a string.
+        scope: The scope within the account in which the table is found,
+            can be a `CreateAccount` or `Account` object, or a name.
+        table: The name of the table as specified by the contract abi.
+        binary: Return the value as BINARY rather than using abi to 
+            interpret as JSON
+        limit: The maximum number of rows to return.
+        key: The name of the key to index by as defined by the abi, 
+            defaults to primary key.
+        lower: JSON representation of lower bound value of key, 
+            defaults to first.
+        upper: JSON representation of upper bound value value of key, 
+            defaults to last.
 
-#     - **attributes**::
+    - **attributes**::
 
-#         json: The json representation of the object.
-#     '''
-#     def __init__(
-#             self, account, table, scope,
-#             binary=False, 
-#             limit=10, key="", lower="", upper="",
-#             is_verbose=True
-#             ):
-#         args = [account_arg(account)]
+        json: The json representation of the object.
+    '''
+    def __init__(
+            self, account, table, scope,
+            binary=False, 
+            limit=10, key="", lower="", upper="",
+            is_verbose=True
+            ):
+        self.name = account_arg(account)
 
-#         if not scope:
-#             scope=self.name
-#         else:
-#             try:
-#                 scope_name = scope.name
-#             except:
-#                 scope_name = scope
+        if not scope:
+            scope=self.name
+        try:
+            scope_name = scope.name
+        except:
+            scope_name = scope
 
-#         args.append(scope_name)
-#         args.append(table)
+        _Eosjs.__init__(self, config(), 
+        '''
+        async function get_table(
+                code, scope, table, json=true, limit=10, table_key="", 
+                lower_bound="", upper_bound="") {
+            __namedParameters = {
+                code: code,
+                json: json,
+                limit: limit,
+                lower_bound: lower_bound,
+                scope: scope,
+                table: table,
+                table_key: table_key,
+                upper_bound: upper_bound
+            }
+            result = await rpc.get_table_rows__namedParameters()
+                console.log(result)
+        }
 
-#         if binary:
-#             args.append("--binary")
-#         if limit:
-#             args.extend(["--limit", str(limit)])
-#         if key:
-#             args.extend(
-#                 ["--key", 
-#                 key_arg(key, is_owner_key=False, is_private_key=False)])
-#         if lower:
-#             args.extend(["--lower", lower])
-#         if upper:
-#             args.extend(["--upper", upper])
+        get_block(
+            "%(code)s", "%(scope)s", "%(table)s", %s(json)s,
+            %(limit)d, "%(key)s", "%(lower)s", "%(upper)s"
 
-#         _Eosjs.__init__(self, args, "get", "table", is_verbose)
-
-#         self.printself()
+        ''' % {
+                "code": self.name,
+                "scope": scope_name,
+                "table": "table",
+                "json": "false" if binary else "true",
+                "limit": limit,
+                "key": key_arg(key, is_owner_key=False, is_private_key=False),
+                "lower": lower,
+                "upper": upper
+            }, is_verbose)
 
 
 class CreateKey(Key, _Eosjs):
@@ -626,17 +586,21 @@ class CreateKey(Key, _Eosjs):
             if r1:
                 args.append("--r1")
 
-            _Eosjs.__init__(self, print_result(),
+            _Eosjs.__init__(self, "",
                 '''
-    function api() {
-        ecc = require('eosjs-ecc')
-        ecc.randomKey().then(print_result)
-    }
+        const ecc = require('eosjs-ecc')
 
-    function process_result(private_key) {
-        return {key_private: private_key, 
-                key_public: ecc.privateToPublic(private_key)}
-    }
+        async function create_key() {
+            private_key = await ecc.randomKey()
+            public_key = ecc.privateToPublic(private_key)
+            const result = {
+                private_key: private_key,
+                public_key: public_key
+            }
+            console.log(JSON.stringify(result))
+        }
+
+        create_key()
                 ''',
                 is_verbose)
         
@@ -742,14 +706,8 @@ class CreateAccount(Account, _Eosjs):
         if permission:
             authorization = permission_arg(permission)
 
-        _Eosjs.__init__(self, config(expiration_sec=expiration_sec),
+        _Eosjs.__init__(self, config(),
                 '''
-    options = {
-        authorization: %s,
-        broadcast: %s,
-            sign: %s,
-    }
-
     function api() {
         eos.transaction(tr => {
             tr.newaccount(
@@ -763,9 +721,6 @@ class CreateAccount(Account, _Eosjs):
         }, options).then(print_result)
     }
             ''' % (
-                str(authorization),
-                "false" if dont_broadcast else "true",
-                "false" if skip_signature else "true",
                 creator, name, owner_key_public, active_key_public
                 ), is_verbose)
 
@@ -879,46 +834,28 @@ class SetContract(_Eosjs):
         if permission:
             authorization.extend(permission_arg(permissions))
 
-        _Eosjs.__init__(self, config(expiration_sec=expiration_sec),
+        _Eosjs.__init__(self, config(),
             '''
     const fs = require("fs");
     const abi = JSON.parse(fs.readFileSync("%s"));
-    
-    options = {
-        authorization: %s,
-        broadcast: %s,
-            sign: %s,
-    }
 
     function api() {
         eos.setabi("%s", abi, options).then(print_result)
     }            ''' % (
-                abi_file,
-                str(authorization),
-                "false" if dont_broadcast else "true",
-                "false" if skip_signature else "true",                
+                abi_file,               
                 self.account_name
                 ), is_verbose) 
 
-        _Eosjs.__init__(self, config(expiration_sec=expiration_sec),
+        _Eosjs.__init__(self, config(),
             '''
     const fs = require("fs")
     const wasm = fs.readFileSync("%s")
-
-    options = {
-        authorization: %s,
-        broadcast: %s,
-            sign: %s,
-    }    
 
     function api() {
         eos.setcode("%s", 0, 0, wasm).then(print_result)
     }
             ''' % (
-                wasm_file,
-                str(authorization),
-                "false" if dont_broadcast else "true",
-                "false" if skip_signature else "true",                
+                wasm_file,               
                 self.account_name
                 ), is_verbose)
 
@@ -928,81 +865,81 @@ class SetContract(_Eosjs):
         return GetTransaction(self.transaction)
 
 
-# class PushAction(_Eosjs):
-#     '''Push a transaction with a single action
+class PushAction(_Eosjs):
+    '''Push a transaction with a single action
 
-#     - **parameters**::
+    - **parameters**::
 
-#         account: The account to publish a contract for.  May be an object 
-#             having the  May be an object having the attribute `name`, like 
-#             `CreateAccount`, or a string.
-#         action: A JSON string or filename defining the action to execute on 
-#             the contract.
-#         data: The arguments to the contract.
+        account: The account to publish a contract for.  May be an object 
+            having the  May be an object having the attribute `name`, like 
+            `CreateAccount`, or a string.
+        action: A JSON string or filename defining the action to execute on 
+            the contract.
+        data: The arguments to the contract.
 
-#         permission: An account and permission level to authorize, as in 
-#             'account@permission'. May be a `CreateAccount` or `Account` object
-#         expiration: The time in seconds before a transaction expires, 
-#             defaults to 30s
-#         skip_sign: Specify if unlocked wallet keys should be used to sign 
-#             transaction.
-#         dont_broadcast: Don't broadcast transaction to the network (just print).
-#         forceUnique: Force the transaction to be unique. this will consume extra 
-#             bandwidth and remove any protections against accidently issuing the 
-#             same transaction multiple times.
-#         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-#             the execution of the transaction 
-#             (defaults to 0 which means no limit).
-#         max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-#             transaction (defaults to 0 which means no limit).
-#         ref_block: The reference block num or block id used for TAPOS 
-#             (Transaction as Proof-of-Stake).
+        permission: An account and permission level to authorize, as in 
+            'account@permission'. May be a `CreateAccount` or `Account` object
+        expiration: The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign: Specify if unlocked wallet keys should be used to sign 
+            transaction.
+        dont_broadcast: Don't broadcast transaction to the network (just print).
+        forceUnique: Force the transaction to be unique. this will consume extra 
+            bandwidth and remove any protections against accidently issuing the 
+            same transaction multiple times.
+        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+            the execution of the transaction 
+            (defaults to 0 which means no limit).
+        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+            transaction (defaults to 0 which means no limit).
+        ref_block: The reference block num or block id used for TAPOS 
+            (Transaction as Proof-of-Stake).
 
-#     - **attributes**::
+    - **attributes**::
 
-#         json: The json representation of the object.
-#     '''
-#     def __init__(
-#             self, account, action, data,
-#             permission=None, expiration_sec=30, 
-#             skip_signature=0, dont_broadcast=0, forceUnique=0,
-#             max_cpu_usage=0, max_net_usage=0,
-#             ref_block=None,
-#             is_verbose=True,
-#             json=False
-#         ):
-#         self.account_name = account_arg(account)
+        json: The json representation of the object.
+    '''
+    def __init__(
+            self, account, action, data,
+            permission=None, expiration_sec=30, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            is_verbose=True,
+            json=False
+        ):
+        self.account_name = account_arg(account)
 
-#         args = [self.account_name, action, data]
-#         if json:
-#             args.append("--json")
-#         if not permission is None:
-#             p = permission_arg(permission)
-#             for perm in p:
-#                 args.extend(["--permission", perm])
+        args = [self.account_name, action, data]
+        if json:
+            args.append("--json")
+        if not permission is None:
+            p = permission_arg(permission)
+            for perm in p:
+                args.extend(["--permission", perm])
 
-#         args.extend(["--expiration", str(expiration_sec)])
-#         if skip_signature:
-#             args.append("--skip-sign")
-#         if dont_broadcast:
-#             args.append("--dont-broadcast")
-#         if forceUnique:
-#             args.append("--force-unique")
-#         if max_cpu_usage:
-#             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-#         if  max_net_usage:
-#             args.extend(["--max-net-usage", str(max_net_usage)])
-#         if  not ref_block is None:
-#             args.extend(["--ref-block", ref_block])
+        args.extend(["--expiration", str(expiration_sec)])
+        if skip_signature:
+            args.append("--skip-sign")
+        if dont_broadcast:
+            args.append("--dont-broadcast")
+        if forceUnique:
+            args.append("--force-unique")
+        if max_cpu_usage:
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        if  max_net_usage:
+            args.extend(["--max-net-usage", str(max_net_usage)])
+        if  not ref_block is None:
+            args.extend(["--ref-block", ref_block])
                         
-#         self.console = None
-#         self.data = None
-#         _Eosjs.__init__(self, args, "push", "action", is_verbose)
+        self.console = None
+        self.data = None
+        _Eosjs.__init__(self, args, "push", "action", is_verbose)
 
-#         self.console = self.json["processed"]["action_traces"][0]["console"]
-#         self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
+        self.console = self.json["processed"]["action_traces"][0]["console"]
+        self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
 
-#         self.printself()
+        self.printself()
 
-#     def get_transaction(self):
-#         return GetTransaction(self.transaction)
+    def get_transaction(self):
+        return GetTransaction(self.transaction)

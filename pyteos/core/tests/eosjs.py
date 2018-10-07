@@ -13,6 +13,10 @@ class Test(unittest.TestCase):
 
     def run(self, result=None):
         super().run(result)
+        print('''
+=============================================================================
+==============================================================================
+''')
 
     @classmethod
     def setUpClass(cls):
@@ -20,6 +24,8 @@ class Test(unittest.TestCase):
         Create a contract from template, then build and deploy it.
         ''')
         reset()
+        exit()        
+        # setup.is_print_command_line = True        
         create_master_account("master")
 
         COMMENT('''
@@ -33,13 +39,13 @@ class Test(unittest.TestCase):
         COMMENT('''
         Create, build and deploy the contract:
         ''')
+
         create_account("host", master)
 
         contract = Contract(host, project_from_template(
             CONTRACT_WORKSPACE, template="01_hello_world", 
             remove_existing=True))
         contract.build()
-        # setup.is_print_command_line = True
         contract.deploy()
         contract.code()
         return
