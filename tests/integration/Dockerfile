@@ -18,20 +18,22 @@ WORKDIR /opt/eosfactory/
 
 RUN mv /eos /opt/eos
 RUN mv /tmp/build /opt/eos/build
-RUN rm -f /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
-
-RUN mkdir /opt/workspace
-RUN ./build.sh -e /opt/eos -w /opt/workspace
 
 RUN apt-get update
 RUN apt-get install -y python3-pip python3-setuptools
 RUN pip3 install --upgrade pip
-RUN python3 -m pip install termcolor
+RUN rm -f /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python && \
+    rm -f /usr/bin/pip && ln -s /usr/bin/pip3 /usr/bin/pip
+
+RUN mkdir /opt/workspace
+RUN export TERM=xterm && ./build.sh -e /opt/eos -w /opt/workspace
+
+RUN python -m pip install termcolor
 
 # https://stackoverflow.com/questions/48109702/command-source-doesnt-work-in-dockerfile
-RUN . ~/.profile && \
-    python3 tests/01_hello_world.py && \
-    python3 tests/02_eosio_token.py && \
-    python3 tests/03_tic_tac_toe.py
+#RUN . ~/.profile && \
+#    python3 tests/01_hello_world.py && \
+#    python3 tests/02_eosio_token.py && \
+#    python3 tests/03_tic_tac_toe.py
 
 
