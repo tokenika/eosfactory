@@ -24,7 +24,7 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
     srcs = config.getContractSourceFiles(contract_dir)
     if not srcs:
         raise errors.Error('''
-        "The source is empty. The assumed contract dir is   
+        "The source is empty. The assumed contract dir is
         {}
         '''.format(contract_dir))
         return
@@ -41,7 +41,7 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
             Just copying it to the target directory.
             '''.format(src))
             shutil.move(
-                srcPath, os.path.join(targetDirPath, 
+                srcPath, os.path.join(targetDirPath,
                 os.path.basename(srcPath)))
             return
 
@@ -52,8 +52,8 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
 
     command_line = [
         config.get_eosio_abigen(),
-        "-extra-arg=-c", "-extra-arg=--std=c++14", 
-        "-extra-arg=--target=wasm32", "-extra-arg=-nostdinc", 
+        "-extra-arg=-c", "-extra-arg=--std=c++14",
+        "-extra-arg=--target=wasm32", "-extra-arg=-nostdinc",
         "-extra-arg=-nostdinc++", "-extra-arg=-DABIGEN",
         "-extra-arg=-I" + config.getSourceDir() + "/contracts/libc++/upstream/include",
         "-extra-arg=-I" + config.getSourceDir() + "/contracts/musl/upstream/include",
@@ -92,7 +92,7 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
 
 
 def WAST(
-        contract_dir_hint, code_name=None, include_dir=None, 
+        contract_dir_hint, code_name=None, include_dir=None,
         compile_only=False):
     '''Given a hint to a contract directory, produce WAST and WASM code.
     '''
@@ -101,7 +101,7 @@ def WAST(
     srcs = config.getContractSourceFiles(contract_dir)
     if not srcs:
         raise errors.Error('''
-        "The source is empty. The assumed contract dir is  
+        "The source is empty. The assumed contract dir is
         {}
         '''.format(contract_dir))
         return
@@ -115,7 +115,7 @@ def WAST(
 
     workdir_build = os.path.join(workdir, "build")
     if not os.path.exists(workdir_build):
-        os.mkdir(workdir_build)    
+        os.mkdir(workdir_build)
 
     objectFileList = []
     extensions = [".h", ".hpp", ".hxx", ".c", ".cpp",".cxx", ".c++"]
@@ -124,7 +124,7 @@ def WAST(
     targetPathWast = os.path.join(
         target_dir_path, code_name + ".wast")
     targetPathWasm = os.path.join(
-        target_dir_path, code_name + ".wasm")    
+        target_dir_path, code_name + ".wasm")
 
     for file in srcs:
         if not os.path.splitext(file)[1].lower() in extensions:
@@ -151,9 +151,9 @@ def WAST(
                 command_line.extend(["-I", dir])
 
         output = os.path.join(workdir_build, code_name + ".o")
-        objectFileList.append(output)        
+        objectFileList.append(output)
         command_line.extend(["-c", file, "-o", output])
-        
+
         if setup.is_print_command_line:
             print("######## {}:".format(config.getEOSIO_WASM_CLANG()))
             print(" ".join(command_line))
@@ -165,13 +165,13 @@ def WAST(
                 shutil.rmtree(workdir)
             except:
                 pass
-                        
+
             raise errors.Error(str(e))
 
     if not compile_only:
-        command_line = [ 
+        command_line = [
             config.getEOSIO_WASM_LLVM_LINK(),
-            "-only-needed", 
+            "-only-needed",
             "-o",  workdir + "/linked.bc",
             " ".join(objectFileList),
             config.getSourceDir() + "/build/contracts/musl/libc.bc",
@@ -189,7 +189,7 @@ def WAST(
                 shutil.rmtree(workdir)
             except:
                 pass
-                        
+
             raise errors.Error(str(e))
 
         command_line = [
@@ -210,15 +210,18 @@ def WAST(
                 shutil.rmtree(workdir)
             except:
                 pass
-                        
-            raise errors.Error(str(e))          
 
+            raise errors.Error(str(e))
+
+        if not config.getEOSIO_S2WASM():
+            raise errors.Error('Your EOSIO_S2WASM configuration setting is Null; please set manually.')
         command_line = [
             config.getEOSIO_S2WASM(),
             "-o", targetPathWast,
             "-s", "16384",
             workdir + "/assembly.s"
         ]
+
         if setup.is_print_command_line:
             print("######## {}:".format(config.getEOSIO_S2WASM()))
             print(" ".join(command_line))
@@ -230,13 +233,15 @@ def WAST(
                 shutil.rmtree(workdir)
             except:
                 pass
-                        
+
             raise errors.Error(str(e))
 
         logger.TRACE('''
         WAST file writen to file: {}
-        '''.format(targetPathWast))                      
+        '''.format(targetPathWast))
 
+        if not config.getEOSIO_WAST2WASM():
+            raise errors.Error('Your EOSIO_WAST2WASM configuration setting is Null; please set manually.')
         command_line = [
             config.getEOSIO_WAST2WASM(), targetPathWast, targetPathWasm, "-n"]
 
@@ -251,7 +256,7 @@ def WAST(
                 shutil.rmtree(workdir)
             except:
                 pass
-                        
+
             raise errors.Error(str(e))
 
         logger.TRACE('''
@@ -265,7 +270,7 @@ def WAST(
 
 
 def template_create(
-        project_name, template_name=None, workspace_dir=None, 
+        project_name, template_name=None, workspace_dir=None,
         remove_existing=False, open_vscode=False):
     '''Given the project name and template name, create a smart contract project.
     '''
@@ -273,7 +278,7 @@ def template_create(
     if not template_name:
         template_name = config.DEFAULT_TEMPLATE
     template_name = template_name.strip()
-    
+
     if not workspace_dir \
                             or not os.path.isabs(workspace_dir) \
                             or not os.path.exists(workspace_dir):
@@ -338,7 +343,7 @@ def template_create(
     logger.TRACE('''
     * Contract project '{}' created from template '{}' in directory
         {}
-    '''.format(project_name, template_name, project_dir))    
+    '''.format(project_name, template_name, project_dir))
 
     if open_vscode:
         if is_windows_ubuntu():
@@ -371,7 +376,7 @@ def get_pid(name=None):
     [10, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61]  # ymmv
     >>> get_process_id('non-existent process')
     []
-    """    
+    """
     if not name:
         name = config.getDaemonName()
 
@@ -400,8 +405,8 @@ def process(command_line, throw_error=True):
     process = subprocess.run(
         command_line,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE) 
-    
+        stderr=subprocess.PIPE)
+
     out_msg = process.stdout.decode("utf-8")
     out_err = process.stderr.decode("utf-8")
     returncode = process.returncode
@@ -412,7 +417,7 @@ def process(command_line, throw_error=True):
 
 
 def getTargetDirPath(source_dir):
-    
+
     target_dir = os.path.join(source_dir, "..", "build")
     if os.path.exists(target_dir):
         return target_dir
@@ -442,8 +447,8 @@ def node_start1(clear=False, verbosity=None):
         ])
     args.insert(0, config.getDaemonExe())
     subprocess.Popen(
-        args, 
-        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+        args,
+        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL)
 
     node_probe(verbosity)
@@ -478,7 +483,7 @@ def node_start(clear=False, verbosity=None):
         if is_windows_ubuntu():
             args.insert(0, config.getDaemonExe())
             subprocess.call(
-                ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
+                ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c",
                 " ".join(cl)])
         elif uname() == "Darwin":
                 subprocess.Popen(
@@ -492,21 +497,21 @@ def node_start(clear=False, verbosity=None):
     else:
         args.insert(0, config.getDaemonExe())
         subprocess.Popen(
-            args, 
-            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+            args,
+            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL)
 
-    node_probe(verbosity)                    
+    node_probe(verbosity)
 
 
 def node_probe(verbosity=None):
     count = 15
     num = 5
     block_num = None
-    
+
     while True:
         time.sleep(1)
-        
+
         try:
             get_info = cleos.GetInfo(is_verbose=0)
             count = count - 1
@@ -524,7 +529,7 @@ def node_probe(verbosity=None):
             logger.INFO('''
             Local node is running. Block number is {}
             '''.format(head_block_num), verbosity)
-            break      
+            break
 
         if count <= 0:
             raise errors.Error('''
@@ -539,10 +544,10 @@ def is_local_node_process_running(name=None):
     response = subprocess.run(
         'ps aux | grep ' + name, shell=True, stdout=subprocess.PIPE)
     return config.getDaemonExe() in response.stdout.decode("utf-8")
-        
+
 
 def node_stop1(verbosity=None):
-    # You can see if the process is a zombie by using top or 
+    # You can see if the process is a zombie by using top or
     # the following command:
     # ps aux | awk '$8=="Z" {print $2}'
 
@@ -567,7 +572,7 @@ Failed to kill {}. Pid is {}.
         '''.format(pid0), verbosity)
 
 def node_stop(verbosity=None):
-    # You can see if the process is a zombie by using top or 
+    # You can see if the process is a zombie by using top or
     # the following command:
     # ps aux | awk '$8=="Z" {print $2}'
 
@@ -589,9 +594,8 @@ Failed to kill {}. Pid is {}.
     else:
         logger.INFO('''
         Local node is stopped {}.
-        '''.format(pid), verbosity)        
+        '''.format(pid), verbosity)
 
-    
+
 def node_is_running():
     return not get_pid()
-
