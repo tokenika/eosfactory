@@ -16,6 +16,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
+TEMPLATE_CONTRACTS_DIR = "templates/contracts"
 TEMPLATE_NAME = "CONTRACT_NAME"
 TEMPLATE_EOSIO_DIR = "@EOSIO_DIR@"
 TEMPLATE_HOME = "@HOME@"
@@ -36,7 +37,7 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
         '''.format(contract_dir))
         return
 
-    targetDirPath = getTargetDirPath(source[0])
+    target_dir = get_target_dir(source[0])
 
     for src in srcs:
         srcPath = src
@@ -48,7 +49,7 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
             Just copying it to the target directory.
             '''.format(src))
             shutil.move(
-                srcPath, os.path.join(targetDirPath, 
+                srcPath, os.path.join(target_dir, 
                 os.path.basename(srcPath)))
             return
 
@@ -77,7 +78,7 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
             command_line.append("-extra-arg=-I " + dir)
 
     target_path_abi = os.path.normpath(
-                            os.path.join(targetDirPath, code_name  + ".abi"))
+                            os.path.join(target_dir, code_name  + ".abi"))
     command_line.extend(
         [
             "-extra-arg=-fparse-all-comments",
@@ -116,7 +117,7 @@ def WAST(
         return
 
     targetPathWast = None
-    target_dir_path = getTargetDirPath(source[0])
+    target_dir_path = get_target_dir(source[0])
 
     workdir = os.path.join(target_dir_path, "working_dir")
     if not os.path.exists(workdir):
@@ -132,7 +133,7 @@ def WAST(
         code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
     targetPathWast = os.path.join(
         target_dir_path, code_name + ".wast")
-    targetPathWasm = os.path.join(
+    terget_path_wasm = os.path.join(
         target_dir_path, code_name + ".wasm")    
 
     for file in srcs:
@@ -247,7 +248,7 @@ def WAST(
         '''.format(os.path.normpath(targetPathWast)))                      
 
         command_line = [
-            config.wast2wasm_exe(), targetPathWast, targetPathWasm, "-n"]
+            config.wast2wasm_exe(), targetPathWast, terget_path_wasm, "-n"]
 
         if setup.is_print_command_line:
             print("######## {}:".format(config.wast2wasm_exe()))
@@ -265,7 +266,7 @@ def WAST(
 
         logger.TRACE('''
         WASM file writen to file: {}
-        '''.format(os.path.normpath(targetPathWasm)))
+        '''.format(os.path.normpath(terget_path_wasm)))
 
         try:
             shutil.rmtree(workdir)
@@ -290,7 +291,7 @@ def template_create(
     workspace_dir = workspace_dir.strip()
 
     template_dir = os.path.join(
-        config.eosf_dir(), config.templContractsDir, template_name)
+        config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template_name)
 
     if not os.path.exists(template_dir):
         raise errors.Error('''
@@ -435,7 +436,7 @@ def process(command_line, throw_error=True):
     return returncode
 
 
-def getTargetDirPath(source_dir):
+def get_target_dir(source_dir):
     
     target_dir = os.path.join(source_dir, "..", "build")
     if os.path.exists(target_dir):
