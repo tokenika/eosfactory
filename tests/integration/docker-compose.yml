@@ -1,8 +1,20 @@
 version: "3"
 
 services:
+# master
+ # 1.3.1
+  # python 3.5.6
+   eosfactory-master-vs-eos-v1.3.1-vs-python3.5.6:
+      build:
+        context: .
+        args:
+          eosfactory_branch: master
+          eos_branch: v1.3.1
+          python_version: 3.5.6
+      command: ./unittest.sh
 
-    eosfactory-master-vs-eos-v1.3.1:
+  # python 3.6.6
+   eosfactory-master-vs-eos-v1.3.1-vs-python3.6.6:
       build:
         context: .
         args:
@@ -11,11 +23,106 @@ services:
           python_version: 3.6.6
       command: ./unittest.sh
 
-    eosfactory-dev-vs-eos-v1.3.1:
+  # python 3.7.0
+   eosfactory-master-vs-eos-v1.3.1-vs-python3.7.0:
+      build:
+        context: .
+        args:
+          eosfactory_branch: master
+          eos_branch: v1.3.1
+          python_version: 3.7.0
+      command: ./unittest.sh
+
+ # develop
+  # python 3.5.6
+   eosfactory-master-vs-eos-develop-vs-python3.5.6:
+      build:
+        context: .
+        args:
+          eosfactory_branch: master
+          eos_branch: develop
+          python_version: 3.5.6
+      command: ./unittest.sh
+
+  # python 3.6.6
+   eosfactory-master-vs-eos-develop-vs-python3.6.6:
+      build:
+        context: .
+        args:
+          eosfactory_branch: master
+          eos_branch: develop
+          python_version: 3.6.6
+      command: ./unittest.sh
+
+  # python 3.7.0
+   eosfactory-master-vs-eos-develop-vs-python3.7.0:
+      build:
+        context: .
+        args:
+          eosfactory_branch: master
+          eos_branch: develop
+          python_version: 3.7.0
+      command: ./unittest.sh
+
+# dev
+ # 1.3.1
+  # python 3.5.6
+   eosfactory-dev-vs-eos-v1.3.1-vs-python3.5.6:
+      build:
+        context: .
+        args:
+          eosfactory_branch: dev
+          eos_branch: v1.3.1
+          python_version: 3.5.6
+      command: ./unittest.sh
+
+  # python 3.6.6
+   eosfactory-dev-vs-eos-v1.3.1-vs-python3.6.6:
       build:
         context: .
         args:
           eosfactory_branch: dev
           eos_branch: v1.3.1
           python_version: 3.6.6
+      command: ./unittest.sh
+
+  # python 3.7.0
+   eosfactory-dev-vs-eos-v1.3.1-vs-python3.7.0:
+      build:
+        context: .
+        args:
+          eosfactory_branch: dev
+          eos_branch: v1.3.1
+          python_version: 3.7.0
+      command: ./unittest.sh
+
+ # develop
+  # python 3.5.6
+   eosfactory-dev-vs-eos-develop-vs-python3.5.6:
+      build:
+        context: .
+        args:
+          eosfactory_branch: dev
+          eos_branch: develop
+          python_version: 3.5.6
+      command: ./unittest.sh
+
+  # python 3.6.6
+   eosfactory-dev-vs-eos-develop-vs-python3.6.6:
+      build:
+        context: .
+        args:
+          eosfactory_branch: dev
+          eos_branch: develop
+          python_version: 3.6.6
+      command: ./unittest.sh
+
+  # python 3.7.0
+   eosfactory-dev-vs-eos-develop-vs-python3.7.0:
+      build:
+        context: .
+        args:
+          eosfactory_branch: dev
+          eos_branch: develop
+          python_version: 3.7.0
       command: ./unittest.sh
