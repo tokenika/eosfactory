@@ -4,22 +4,22 @@ import types
 import time
 import re
 
-import core.logger as logger
-import core.errors as errors
-import core.config as config
-import shell.setup as setup
-import core.errors as errors
-import shell.interface as interface
-import core.teos as teos
-import shell.interface as interface
+import eosfactory.core.logger as logger
+import eosfactory.core.errors as errors
+import eosfactory.core.config as config
+import eosfactory.shell.setup as setup
+import eosfactory.core.errors as errors
+import eosfactory.shell.interface as interface
+import eosfactory.core.teos as teos
+import eosfactory.shell.interface as interface
 if setup.node_api == "cleos":
-    import core.cleos as cleos
+    import eosfactory.core.cleos as cleos
 elif setup.node_api == "eosjs":
-    import core.eosjs as cleos
-import core.cleosys as cleosys
-import core.manager as manager
-import core.testnet as testnet
-import shell.wallet as wallet
+    import eosfactory.core.eosjs as cleos
+import eosfactory.core.cleosys as cleosys
+import eosfactory.core.manager as manager
+import eosfactory.core.testnet as testnet
+import eosfactory.shell.wallet as wallet
 
 
 def reboot():

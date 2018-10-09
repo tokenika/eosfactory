@@ -9,9 +9,9 @@ Python front-end for `EOSIO cleos system`.
 
 '''
 
-import core.cleos as cleos
-import shell.setup as setup
-import shell.interface as interface
+import eosfactory.core.cleos as cleos
+import eosfactory.shell.setup as setup
+import eosfactory.shell.interface as interface
 
 def reload():
     import importlib

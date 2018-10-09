@@ -8,12 +8,18 @@ import pathlib
 import shutil
 import pprint
 
-import shell.setup as setup
-import core.config as config
-import core.errors as errors
-import core.cleos as cleos
-import core.logger as logger
-import core.utils as utils
+import eosfactory.shell.setup as setup
+import eosfactory.core.config as config
+import eosfactory.core.errors as errors
+import eosfactory.core.cleos as cleos
+import eosfactory.core.logger as logger
+import eosfactory.core.utils as utils
+
+
+TEMPLATE_NAME = "CONTRACT_NAME"
+TEMPLATE_EOSIO_DIR = "@EOSIO_DIR@"
+TEMPLATE_HOME = "@HOME@"
+TEMPLATE_ROOT = "@ROOT@"
 
 
 def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
@@ -21,7 +27,8 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
     '''
 
     contract_dir = config.contract_dir(contract_dir_hint)
-    srcs = config.contract_source_files(contract_dir)
+    source = config.contract_source_files(contract_dir)
+    srcs = source[1]
     if not srcs:
         raise errors.Error('''
         "The source is empty. The assumed contract dir is   
@@ -29,7 +36,7 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
         '''.format(contract_dir))
         return
 
-    targetDirPath = getTargetDirPath(contract_dir)
+    targetDirPath = getTargetDirPath(source[0])
 
     for src in srcs:
         srcPath = src
@@ -69,11 +76,12 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
         for dir in include_dirs:
             command_line.append("-extra-arg=-I " + dir)
 
+    target_path_abi = os.path.normpath(
+                            os.path.join(targetDirPath, code_name  + ".abi"))
     command_line.extend(
         [
             "-extra-arg=-fparse-all-comments",
-            "-destination-file=" + os.path.join(
-                                        targetDirPath, code_name  + ".abi"),
+            "-destination-file=" + target_path_abi,
             # "-verbose=" + to_string(verbose),
             "-context=" + source_dir,
             sourcePath,
@@ -88,7 +96,7 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
     process(command_line)
     logger.TRACE('''
     ABI file writen to file: {}
-    '''.format(targetDirPath))
+    '''.format(target_path_abi))
 
 
 def WAST(
@@ -98,7 +106,8 @@ def WAST(
     '''
 
     contract_dir = config.contract_dir(contract_dir_hint)
-    srcs = config.contract_source_files(contract_dir)
+    source = config.contract_source_files(contract_dir)
+    srcs = source[1]
     if not srcs:
         raise errors.Error('''
         "The source is empty. The assumed contract dir is  
@@ -107,7 +116,7 @@ def WAST(
         return
 
     targetPathWast = None
-    target_dir_path = getTargetDirPath(contract_dir)
+    target_dir_path = getTargetDirPath(source[0])
 
     workdir = os.path.join(target_dir_path, "working_dir")
     if not os.path.exists(workdir):
@@ -235,7 +244,7 @@ def WAST(
 
         logger.TRACE('''
         WAST file writen to file: {}
-        '''.format(targetPathWast))                      
+        '''.format(os.path.normpath(targetPathWast)))                      
 
         command_line = [
             config.wast2wasm_exe(), targetPathWast, targetPathWasm, "-n"]
@@ -256,7 +265,7 @@ def WAST(
 
         logger.TRACE('''
         WASM file writen to file: {}
-        '''.format(targetPathWasm))
+        '''.format(os.path.normpath(targetPathWasm)))
 
         try:
             shutil.rmtree(workdir)
@@ -318,7 +327,7 @@ def template_create(
             template_path = os.path.join(template_dir, path)
             contract_path = os.path.join(
                 project_dir, path.replace(
-                                        config.TEMPLATE_TOKEN, project_name))
+                                        TEMPLATE_NAME, project_name))
             if os.path.isdir(template_path):
                 os.mkdir(contract_path)
                 copy_dir_contents(
@@ -329,8 +338,23 @@ def template_create(
     def copy(template_path, contract_path, project_name):
         with open(template_path, "r") as input:
             template = input.read()
+
+        if TEMPLATE_HOME in template or TEMPLATE_ROOT in template:
+            home = os.environ["HOME"]
+            root = ""
+            eosio_dir = config.eosio_repository_dir()
+            if is_windows_ubuntu():
+                home = config.wsl_root() + home
+                root = config.wsl_root()
+                eosio_dir = config.wsl_root() + eosio_dir
+
+            template = template.replace(TEMPLATE_HOME, home)
+            template = template.replace(TEMPLATE_ROOT, root)
+            template = template.replace(TEMPLATE_EOSIO_DIR, eosio_dir)
+            
+        
         template = template.replace(
-                            "@" + config.TEMPLATE_TOKEN + "@", project_name)
+                            "@" + TEMPLATE_NAME + "@", project_name)
         with open(contract_path, "w") as output:
             output.write(template)
 

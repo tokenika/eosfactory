@@ -2,17 +2,17 @@ import os
 import json
 import inspect
 
-import core.logger as logger
-import core.errors as errors
-import shell.setup as setup
-import shell.interface as interface
-import core.teos as teos
+import eosfactory.core.logger as logger
+import eosfactory.core.errors as errors
+import eosfactory.shell.setup as setup
+import eosfactory.shell.interface as interface
+import eosfactory.core.teos as teos
 if setup.node_api == "cleos":
-    import core.cleos as cleos
+    import eosfactory.core.cleos as cleos
 elif setup.node_api == "eosjs":
-    import core.eosjs as cleos
+    import eosfactory.core.eosjs as cleos
 
-import core.manager as manager
+import eosfactory.core.manager as manager
 
 
 def wallet_json_read():
@@ -312,7 +312,7 @@ class Wallet(cleos.WalletCreate):
                             account_.active_key in wallet_keys.json:
                         new_map[name] = object_name
 
-                    from shell.account import create_account
+                    from eosfactory.shell.account import create_account
                     create_account(
                         object_name, name, restore=True, verbosity=None)                        
                 except errors.AccountDoesNotExistError:

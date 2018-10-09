@@ -1,7 +1,7 @@
 import re
 
-import core.logger as logger
-import shell.interface as interface
+import eosfactory.core.logger as logger
+import eosfactory.shell.interface as interface
 
 
 def validate(omittable):

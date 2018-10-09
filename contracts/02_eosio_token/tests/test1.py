@@ -1,5 +1,5 @@
 import sys
-from eosf import *
+from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 

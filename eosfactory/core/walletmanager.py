@@ -5,11 +5,11 @@ from cryptography.fernet import Fernet
 from threading import Timer
 
 from shell.interface import *
-import core.config as config
-import core.errors as errors
-import core.logger as logger
-import core.utils as utils
-import shell.setup as setup
+import eosfactory.core.config as config
+import eosfactory.core.errors as errors
+import eosfactory.core.logger as logger
+import eosfactory.core.utils as utils
+import eosfactory.shell.setup as setup
 
 
 class OpenWallet:
@@ -19,7 +19,7 @@ class OpenWallet:
 
 _manager_id = "5JfjYNzKTDoU35RSn6BpXei8Uqs1B6EGNwkEFHaN8SPHwhjUzcX"
 _file_ext = ".eosfwallet"
-_timeout = 300
+_timeout = 3000
 _timer = None
 _open_wallets = {}
 
@@ -369,25 +369,7 @@ class Node():
     def __init__(self, js):
         self.json = None
         cl = ["node", "-e"]
-        header = '''
-            no_error_tag = 'OK'
-
-            function print_result(result, err) {
-                if (err) {
-                    console.error(err)
-                }
-                else {
-                    result = process_result(result)
-                    console.error(no_error_tag)
-                    console.log(JSON.stringify(result))
-                }
-            }
-
-            function process_result(result) {
-                return result
-            }
-        '''
-        js = utils.heredoc(header + js)
+        js = utils.heredoc(js)
         cl.append(js)
 
         if setup.is_print_command_line:

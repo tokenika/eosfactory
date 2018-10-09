@@ -1,16 +1,16 @@
 import os
+import argparse
+
 import json
 
-import core.errors as errors
-import core.logger as logger
-import core.utils as utils
+import eosfactory.core.errors as errors
+import eosfactory.core.logger as logger
+import eosfactory.core.utils as utils
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
 templContractsDir = "templates/contracts"
 contractsDir = "contracts"
-TEMPLATE_TOKEN = "CONTRACT_NAME"
 DEFAULT_TEMPLATE = "01_hello_world"
-NOT_DEFINED = "NOT DEFINED"
 FROM_HERE_TO_EOSF_DIR = "../../../"
 CONFIG_JSON = "config.json"
 EOSIO_CONTRACT_DIR = "build/contracts/"
@@ -23,9 +23,10 @@ genesis_json_ = ("EOSIO_GENESIS_JSON", ["localnode/genesis.json"])
 data_dir_ = ("LOCAL_NODE_DATA_DIR", ["localnode"])
 config_dir_ = ("LOCAL_NODE_CONFIG_DIR", ["localnode"])
 workspaceEosio_ = ("EOSIO_WORKSPACE", [EOSIO_CONTRACT_DIR])
-keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${U_HOME}/eosio-wallet/"])
+keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
 node_api_ = ("NODE_API", ["cleos"])
+wsl_root_ = ("WSL_ROOT", [None])
 
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
@@ -43,16 +44,16 @@ contract_workspace_ = (
     "EOSIO_CONTRACT_WORKSPACE", [CONTRACTS_DIR])
 boost_include_dir_ = (
     "BOOST_INCLUDE_DIR", 
-    ["${U_HOME}/opt/boost/include", "/usr/local/include/"])
+    ["${HOME}/opt/boost/include", "/usr/local/include/"])
 wasm_clang_exe_ = (
     "WASM_CLANG_EXECUTABLE", 
-    ["${U_HOME}/opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"])
+    ["${HOME}/opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"])
 wasm_llvm_link_exe_ = (
     "WASM_LLVM_LINK_EXECUTABLE",
-    ["${U_HOME}/opt/wasm/bin/llvm-link", "/usr/local/wasm/bin/llvm-link"])
+    ["${HOME}/opt/wasm/bin/llvm-link", "/usr/local/wasm/bin/llvm-link"])
 wasm_llc_exe_ = (
     "WASM_LLC_EXECUTABLE",
-    ["${U_HOME}/opt/wasm/bin/llc", "/usr/local/wasm/bin/llc"])
+    ["${HOME}/opt/wasm/bin/llc", "/usr/local/wasm/bin/llc"])
 s2wasm_exe_ = (
     "S2WASM_EXECUTABLE",
     ["/usr/local/bin/eosio-s2wasm", "/usr/local/eosio/bin/eosio-s2wasm"])
@@ -67,13 +68,7 @@ is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
 
 
 def eosio_repository_dir():
-    if eosio_repository_dir_[0] in os.environ:
-        path = os.environ[eosio_repository_dir_[0]]
-        if os.path.exists(path):
-            return path
-        else:
-            # We can do without any eosio repository, if eosio is installed.
-            return None
+    return config_value(eosio_repository_dir_)
 
 
 def eosf_dir():
@@ -93,7 +88,6 @@ def eosf_dir():
 def eosio_key_private():
     return config_value(key_private_)
 
-
 def eosio_key_public():
     return config_value(key_public_)
 
@@ -102,6 +96,11 @@ def chain_state_db_size_mb():
 
 def node_api():
     return config_value(node_api_)
+
+
+def wsl_root():
+    path = config_value(wsl_root_)
+    return path.replace("\\", "/")
 
 
 def is_nodeos_in_window():
@@ -196,13 +195,32 @@ def config_file():
 def config_map():
     path = config_file()
     if os.path.exists(path):
-        with open(path, "r") as input:
-            return json.load(input)
+        try:
+            with open(path, "r") as input:
+                text = input.read()
+                if not text:
+                    return {}
+                else:
+                    return json.loads(text)
+        except Exception as e:
+            raise errors.Error(str(e))
 
     raise errors.Error('''
 Cannot find the config json file.       
     ''')
 
+
+def write_config_map(map):
+    path = config_file()
+    if os.path.exists(path):
+        with open(path, "w+") as output:
+            output.write(json.dumps(map, indent=4))
+        return
+
+    raise errors.Error('''
+Cannot find the config json file.       
+    ''')
+    
 
 def config_values(config_list):
     config_key = config_list[0]
@@ -239,21 +257,18 @@ def first_valid_path(config_list, findFile=None):
     The key may map to a path either absolute, or relative either to the EOSIO 
     or EOSF repositories.
     
-    Also, the path can be relative to either the ``HOME`` or ``U_HOME`` 
-    environment variablee.
+    Also, the path can be relative to the ``HOME`` environment variable.
     '''
     values = config_values(config_list)
     for path in values:
 
-        if "${U_HOME}" in path: 
+        if "${HOME}" in path: 
             home = None
-            if "U_HOME" in os.environ:
-                home = os.environ["U_HOME"]
-            elif "HOME" in os.environ:
+            if "HOME" in os.environ:
                 home = os.environ["HOME"]
                 
             if home:
-                path = path.replace("${U_HOME}", home)
+                path = path.replace("${HOME}", home)
                 if findFile: 
                     if os.path.exists(os.path.join(path, findFile)):
                         return path
@@ -363,15 +378,16 @@ def contract_source_files(contract_dir_hint):
     contract_dir_ = contract_dir(utils.wslMapWindowsLinux(contract_dir_hint))
     trace = contract_dir_ + "\n"
 
-    srcs = source_files(contract_dir_)
+    source_path = contract_dir_
+    srcs = source_files(source_path)
     if srcs:
-        return srcs            
+        return (source_path, srcs)            
 
     source_path = os.path.join(contract_dir_, "src")
     trace = trace + source_path + "\n"
     srcs = source_files(source_path)
     if srcs:
-        return srcs            
+        return (source_path, srcs)            
 
     raise errors.Error('''
         Cannot find any contract source directory.
@@ -445,7 +461,7 @@ def contract_workspace():
     '''
     workspacePath = config_value(contract_workspace_)
     trace = workspacePath + "\n"
-
+    
     if not os.path.isabs(workspacePath):
         workspacePath = os.path.join(eosf_dir(), workspacePath)
         trace = trace + workspacePath + "\n"
@@ -479,12 +495,22 @@ def wasm_file(contract_dir):
         contract_file(contract_dir, ".wasm"), contract_dir)
 
 
+def not_defined():
+    map = current_config()
+    retval = {}
+    for key, value in map.items():
+        if value == None or value is None:
+            retval[key] = value
+    return retval
+
+
 def current_config(contract_dir=None):
     map = {}
    
     map[node_address_[0]] = http_server_address()     
     map[key_private_[0]] = eosio_key_private()  
     map[key_public_[0]] = eosio_key_public()
+    map[wsl_root_[0]] = wsl_root()
     map[wallet_address_[0]] = http_wallet_address() \
             if http_wallet_address() else http_server_address()
     map[chain_state_db_size_mb_[0]] = chain_state_db_size_mb()
@@ -495,82 +521,82 @@ def current_config(contract_dir=None):
     try:
         map[keosd_wallet_dir_[0]] = keosd_wallet_dir()   
     except:
-        map[keosd_wallet_dir_[0]] = NOT_DEFINED
+        map[keosd_wallet_dir_[0]] = None
     try: 
         map[eosio_repository_dir_[0]] = eosio_repository_dir()
     except:
-        map[eosio_repository_dir_[0]] = NOT_DEFINED 
+        map[eosio_repository_dir_[0]] = None 
     try: 
         map[data_dir_[0]] = data_dir()
     except:
-        map[data_dir_[0]] = NOT_DEFINED 
+        map[data_dir_[0]] = None 
     try:    
         map[config_dir_[0]] = config_dir()
     except:
-        map[config_dir_[0]] = NOT_DEFINED   
+        map[config_dir_[0]] = None   
     try: 
         map[cli_exe_[0]] = cli_exe()
     except:
-        map[cli_exe_[0]] = NOT_DEFINED 
+        map[cli_exe_[0]] = None 
     try: 
         map[node_exe_[0]] = node_exe()
     except:
-        map[node_exe_[0]] = NOT_DEFINED     
+        map[node_exe_[0]] = None     
     try:   
         map[genesis_json_[0]] = genesis_json()
     except:
-        map[genesis_json_[0]] = NOT_DEFINED      
+        map[genesis_json_[0]] = None      
     try:
         map[wasm_clang_exe_[0]] = wasm_clang_exe()
     except:
-        map[wasm_clang_exe_[0]] = NOT_DEFINED
+        map[wasm_clang_exe_[0]] = None
     try:
         map[boost_include_dir_[0]] =  boost_include_dir()
     except:
-        map[boost_include_dir_[0]] = NOT_DEFINED
+        map[boost_include_dir_[0]] = None
     try:
         map[wasm_llvm_link_exe_[0]] = wasm_llvm_link_exe()
     except:
-        map[wasm_llvm_link_exe_[0]] = NOT_DEFINED
+        map[wasm_llvm_link_exe_[0]] = None
     try:
         map[wasm_llc_exe_[0]] = wasm_llc_exe()
     except:
-        map[wasm_llc_exe_[0]] = NOT_DEFINED
+        map[wasm_llc_exe_[0]] = None
     try:
         map[s2wasm_exe_[0]] = s2wasm_exe()
     except:
-        map[s2wasm_exe_[0]] = NOT_DEFINED
+        map[s2wasm_exe_[0]] = None
     try:
         map[wast2wasm_exe_[0]] = wast2wasm_exe()
     except:
-        map[wast2wasm_exe_[0]] = NOT_DEFINED
+        map[wast2wasm_exe_[0]] = None
     try:
         map[workspaceEosio_[0]] = workspaceEosio()
     except:
-        map[workspaceEosio_[0]] = NOT_DEFINED
+        map[workspaceEosio_[0]] = None
     try:
         map[abigen_exe_[0]] = abigen_exe()
     except:
-        map[abigen_exe_[0]] = NOT_DEFINED
+        map[abigen_exe_[0]] = None
     
     if contract_dir:
         contract_dir = contract_dir(contract_dir)
         try:
             map["contract-dir"] = contract_dir
         except:
-            map["contract-dir"] = NOT_DEFINED
+            map["contract-dir"] = None
         try:
             map["contract-wast"] = wast_file(contract_dir)
         except:
-            map["contract-wast"] = NOT_DEFINED
+            map["contract-wast"] = None
         try:
             map["contract-wasm"] = wasm_file(contract_dir)
         except:
-            map["contract-wasm"] = NOT_DEFINED
+            map["contract-wasm"] = None
         try:
             map["contract-abi"] = abi_file(contract_dir)
         except:
-            map["contract-abi"] = NOT_DEFINED
+            map["contract-abi"] = None
 
     return map        
 

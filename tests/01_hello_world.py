@@ -1,5 +1,6 @@
 import unittest
-from eosf import *
+import eosfactory
+from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 
@@ -71,7 +72,7 @@ class Test(unittest.TestCase):
             host.push_action(
                 "hi", {"user":carol}, permission=(bob, Permission.ACTIVE))
  
-        contract.delete()
+        # contract.delete()
 
 
     def tearDown(self):

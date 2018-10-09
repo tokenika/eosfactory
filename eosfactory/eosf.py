@@ -1,13 +1,13 @@
-import core.cleos as cleos
-import core.manager as manager
-import core.logger as logger
-import core.testnet as testnet
-import core.errors as errors
-import shell.setup as setup
-import shell.interface as interface
-import shell.wallet as wallet
-import shell.account as account
-import shell.contract as contract
+import eosfactory.core.cleos as cleos
+import eosfactory.core.manager as manager
+import eosfactory.core.logger as logger
+import eosfactory.core.testnet as testnet
+import eosfactory.core.errors as errors
+import eosfactory.shell.setup as setup
+import eosfactory.shell.interface as interface
+import eosfactory.shell.wallet as wallet
+import eosfactory.shell.account as account
+import eosfactory.shell.contract as contract
 
 
 verbosity =  logger.verbosity

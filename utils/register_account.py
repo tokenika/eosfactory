@@ -1,5 +1,5 @@
-from eosf import *
 import argparse
+from eosfactory.eosf import *
 
 def register_account(
     url, account_object_name,

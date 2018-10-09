@@ -7,11 +7,11 @@ import sys
 import os
 import json
 
-import shell.setup as setup
-import core.teos as teos
-import core.cleos as cleos
-import core.logger as logger
-import core.errors as errors
+import eosfactory.shell.setup as setup
+import eosfactory.core.teos as teos
+import eosfactory.core.cleos as cleos
+import eosfactory.core.logger as logger
+import eosfactory.core.errors as errors
 
 def clear_testnet_cache(verbosity=None):
     ''' Remove wallet files associated with the current testnet.

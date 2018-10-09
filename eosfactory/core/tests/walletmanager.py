@@ -1,8 +1,8 @@
 import unittest
-import shell.setup as setup
+import eosfactory.shell.setup as setup
 import time
 from threading import Timer
-import core.eosjs as eosjs
+import eosfactory.core.eosjs as eosjs
 from eosf import *
 from core.walletmanager import *
 

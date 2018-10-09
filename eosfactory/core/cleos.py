@@ -5,11 +5,11 @@ import random
 import os
 import re
 
-import core.errors as errors
-import core.logger as logger
-import core.config as config
-import shell.setup as setup
-import shell.interface as interface
+import eosfactory.core.errors as errors
+import eosfactory.core.logger as logger
+import eosfactory.core.config as config
+import eosfactory.shell.setup as setup
+import eosfactory.shell.interface as interface
 
 # TO DO resolve this code reuse issue.
 def set_local_nodeos_address_if_none():

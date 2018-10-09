@@ -1,5 +1,5 @@
 
-import shell.setup as setup
+import eosfactory.shell.setup as setup
 setup.node_api = "eosjs"
 
 import unittest

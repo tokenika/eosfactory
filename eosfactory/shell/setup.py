@@ -3,7 +3,7 @@
 import re
 import os
 import json
-import core.config as config
+import eosfactory.core.config as config
 
 
 is_print_command_line = False

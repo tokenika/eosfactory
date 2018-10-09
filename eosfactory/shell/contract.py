@@ -1,14 +1,14 @@
 import shutil
 
-import core.logger as logger
-import core.errors as errors
-import core.config as config
-import shell.setup as setup
-import core.teos as teos
+import eosfactory.core.logger as logger
+import eosfactory.core.errors as errors
+import eosfactory.core.config as config
+import eosfactory.shell.setup as setup
+import eosfactory.core.teos as teos
 if setup.node_api == "cleos":
-    import core.cleos as cleos
+    import eosfactory.core.cleos as cleos
 elif setup.node_api == "eosjs":
-    import core.eosjs as cleos
+    import eosfactory.core.eosjs as cleos
 
 
 def project_from_template(
@@ -95,6 +95,7 @@ class Contract(ContractBuilder):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             verbosity=None):
+        
         super().__init__(
             contract_dir, verbosity=verbosity,
             abi_file=abi_file, wasm_file=wasm_file)

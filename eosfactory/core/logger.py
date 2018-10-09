@@ -120,7 +120,7 @@ def ERROR(msg, translate=True, verbosity=None):
 
 
 def condition(message, translate=True):
-    import core.manager as manager
+    import eosfactory.core.manager as manager
     ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
     message = ansi_escape.sub('', message)
     message = dedent(message).strip()
