@@ -66,7 +66,7 @@ def config_file():
     
     with open(file, "w") as output:
         output.write("{}")
-    logger.INFO('''Creating an empty config file: {}'''.format(file, trace))
+    logger.INFO('''Creating an empty config file: {}'''.format(file))
     return file
 
 
