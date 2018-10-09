@@ -1,0 +1,18 @@
+version: "3"
+
+
+services:
+
+    eosfactory-master-vs-eos-v1.3.1:
+      build:
+        context: .
+        args:
+          eosfactory_branch: master
+          eos_branch: v1.3.1
+
+    eosfactory-dev-vs-eos-v1.3.1:
+      build:
+        context: .
+        args:
+          eosfactory_branch: dev
+          eos_branch: v1.3.1
