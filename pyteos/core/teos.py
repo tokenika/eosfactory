@@ -169,6 +169,8 @@ def WAST(
             raise errors.Error(str(e))
 
     if not compile_only:
+        if not config.getEOSIO_WASM_LLVM_LINK():
+            raise errors.Error('Your EOSIO_WASM_LLVM_LINK configuration setting is Null; please set manually.')
         command_line = [ 
             config.getEOSIO_WASM_LLVM_LINK(),
             "-only-needed", 
@@ -192,6 +194,8 @@ def WAST(
                         
             raise errors.Error(str(e))
 
+        if not config.getEOSIO_WASM_LLC():
+            raise errors.Error('Your EOSIO_WASM_LLC configuration setting is Null; please set manually.')
         command_line = [
             config.getEOSIO_WASM_LLC(),
             "-thread-model=single", "--asm-verbose=false",
@@ -213,6 +217,8 @@ def WAST(
                         
             raise errors.Error(str(e))          
 
+        if not config.getEOSIO_S2WASM():
+            raise errors.Error('Your EOSIO_S2WASM configuration setting is Null; please set manually.')
         command_line = [
             config.getEOSIO_S2WASM(),
             "-o", targetPathWast,
@@ -237,6 +243,8 @@ def WAST(
         WAST file writen to file: {}
         '''.format(targetPathWast))                      
 
+        if not config.getEOSIO_WAST2WASM():
+            raise errors.Error('Your EOSIO_WAST2WASM configuration setting is Null; please set manually.')
         command_line = [
             config.getEOSIO_WAST2WASM(), targetPathWast, targetPathWasm, "-n"]
 
