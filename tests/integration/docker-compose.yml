@@ -9,6 +9,7 @@ services:
         args:
           eosfactory_branch: master
           eos_branch: v1.3.1
+      command: ./unittest.sh
 
     eosfactory-dev-vs-eos-v1.3.1:
       build:
@@ -16,3 +17,4 @@ services:
         args:
           eosfactory_branch: dev
           eos_branch: v1.3.1
+      command: ./unittest.sh

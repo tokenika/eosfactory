@@ -43,7 +43,10 @@ RUN export TERM=xterm && ./build.sh -e /opt/eos -w /opt/workspace
 
 RUN mkdir ~/eosio-wallet/
 
-# https://stackoverflow.com/questions/48109702/command-source-doesnt-work-in-dockerfile
+# https://superuser.com/a/1253889/59009
+RUN sed -i 's/mesg n || true/tty -s \&\& mesg n || true/g' /root/.profile
+RUN chmod +x ./tests/unittest.sh
+WORKDIR /opt/eosfactory/tests/
 
-ENTRYPOINT . ~/.profile && /bin/bash
-CMD cd tests/ && ./unittest.sh
+# bash loads .profile by default
+ENTRYPOINT ["/bin/bash", "-l", "-c"]
