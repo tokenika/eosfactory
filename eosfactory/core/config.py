@@ -8,7 +8,6 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
-TEMPLATE_CONTRACTS_DIR = "templates/contracts"
 contractsDir = "contracts"
 DEFAULT_TEMPLATE = "01_hello_world"
 FROM_HERE_TO_EOSF_DIR = "../../../"

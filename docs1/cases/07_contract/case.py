@@ -3,7 +3,6 @@ from eosf import *
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 
 reset()
-create_wallet()   
 create_master_account("master")
 
 create_account("host", master)

@@ -18,7 +18,6 @@ class Test(unittest.TestCase):
         Create a contract from template, then build and deploy it.
         ''')
         reset()
-        create_wallet()
         create_master_account("master")
 
         COMMENT('''

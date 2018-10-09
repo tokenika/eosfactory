@@ -9,8 +9,7 @@ def test():
     SCENARIO('''
     Execute simple actions.
     ''')
-    reset()
-    create_wallet()
+    reset()    
     create_master_account("master")
 
     COMMENT('''

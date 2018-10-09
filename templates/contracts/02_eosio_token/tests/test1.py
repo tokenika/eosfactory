@@ -10,7 +10,6 @@ def test():
     Initialize the token and run a couple of transfers between different accounts.
     ''')
     reset()
-    create_wallet()
     create_master_account("master")
 
     COMMENT('''

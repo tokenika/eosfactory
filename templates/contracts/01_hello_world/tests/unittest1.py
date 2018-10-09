@@ -17,7 +17,6 @@ class Test(unittest.TestCase):
         Execute simple actions.
         ''')
         reset()
-        create_wallet()
         create_master_account("master")
 
         COMMENT('''
