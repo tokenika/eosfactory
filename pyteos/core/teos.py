@@ -169,6 +169,8 @@ def WAST(
             raise errors.Error(str(e))
 
     if not compile_only:
+        if not objectFileList:
+            raise errors.Error('No source code in contract directory.')
         command_line = [ 
             config.getEOSIO_WASM_LLVM_LINK(),
             "-only-needed", 

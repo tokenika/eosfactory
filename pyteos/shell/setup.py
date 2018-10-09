@@ -14,7 +14,7 @@ EOSIO_CONTRACT_DIR = "build/contracts/"
 __nodeos_address = None
 
 
-is_print_command_line = False
+is_print_command_line = True
 is_print_request = False
 is_print_response = False
 
