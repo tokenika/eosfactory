@@ -33,6 +33,12 @@ cli_exe_ = (
 node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
     ["build/programs/nodeos/nodeos", "/usr/local/eosio/bin/nodeos"])
+eosio_cpp_ = ("EOSIO_CPP", 
+    ["/usr/local/bin/eosio-cpp", "/usr/local/eosio.cdt/bin/eosio-cpp",
+    ""])
+eosio_abigen_ = ("EOSIO_ABIGEN", 
+    [None])
+
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
     ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"])
@@ -143,6 +149,14 @@ def node_exe():
 
 def cli_exe():
     return first_valid_path(cli_exe_)
+
+
+def eosio_cpp():
+    return first_valid_path(eosio_cpp_)
+
+
+def eosio_abigen():
+    return first_valid_path(eosio_abigen_)
 
 
 def abigen_exe():
@@ -540,7 +554,15 @@ def current_config(contract_dir=None):
     try: 
         map[node_exe_[0]] = node_exe()
     except:
-        map[node_exe_[0]] = None     
+        map[node_exe_[0]] = None
+    try: 
+        map[eosio_cpp_[0]] = eosio_cpp()
+    except:
+        map[eosio_cpp_[0]] = None             
+    try: 
+        map[eosio_abigen_[0]] = eosio_abigen()
+    except:
+        map[eosio_abigen_[0]] = None             
     try:   
         map[genesis_json_[0]] = genesis_json()
     except:

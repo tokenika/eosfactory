@@ -19,7 +19,6 @@ config.json
 .vscode/settings.json
 .vscode/tasks.json
 
-pyteos/appJar
 vsc_extension
 node_modules
 package-lock.json
@@ -30,8 +29,6 @@ tests/eosjs.py
 tests/eosjsecc.js
 localnode/state
 localnode/blocks
-transcrypt
-
 
 # Compiled python modules.
 *.pyc

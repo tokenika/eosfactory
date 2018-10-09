@@ -13,7 +13,7 @@ import eosfactory.shell.setup as setup
 import eosfactory.core.logger as logger
 import eosfactory.core.teos as teos
 import eosfactory.core.walletmanager as wm
-from shell.interface import *
+from eosfactory.shell.interface import *
 
 
 # TO DO resolve this code reuse issue.

@@ -37,7 +37,11 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
         '''.format(contract_dir))
         return
 
+    if not code_name:
+        code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
     target_dir = get_target_dir(source[0])
+    target_path_abi = os.path.normpath(
+                        os.path.join(target_dir, code_name  + ".abi"))
 
     for src in srcs:
         srcPath = src
@@ -51,50 +55,68 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
             shutil.move(
                 srcPath, os.path.join(target_dir, 
                 os.path.basename(srcPath)))
-            return
+            return    
 
-    sourcePath = srcs[0]
-    source_dir = os.path.dirname(srcs[0])
-    if not code_name:
-        code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
+    eosio_abigen = None
+    try:
+        eosio_abigen = config.eosio_abigen()
+    except:
+        pass
 
-    command_line = [
-        config.abigen_exe(),
-        "-extra-arg=-c", "-extra-arg=--std=c++14", 
-        "-extra-arg=--target=wasm32", "-extra-arg=-nostdinc", 
-        "-extra-arg=-nostdinc++", "-extra-arg=-DABIGEN",
-        "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts/libc++/upstream/include",
-        "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts/musl/upstream/include",
-        "-extra-arg=-I" + config.eosio_repository_dir() + "/externals/magic_get/include",
-        "-extra-arg=-I" + config.boost_include_dir(),
-        "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts",
-        "-extra-arg=-I" + config.eosio_repository_dir() + "/build/contracts",
-        "-extra-arg=-I" + source_dir
-    ]
+    if eosio_abigen:
+        command_line = [
+            config.eosio_abigen(),
+            "--output",
+            target_path_abi,
+            srcs[0]
+            ]
 
-    if include_dir:
-        include_dirs = include_dir.split(",")
-        for dir in include_dirs:
-            command_line.append("-extra-arg=-I " + dir)
+        try:
+            process(command_line)
+        except Exception as e:
+            raise errors.Error(str(e))
+    else:
+        ###########################################################################
+        # eosio.cdt is not available.        
+        sourcePath = srcs[0]
+        source_dir = os.path.dirname(srcs[0])
 
-    target_path_abi = os.path.normpath(
-                            os.path.join(target_dir, code_name  + ".abi"))
-    command_line.extend(
-        [
-            "-extra-arg=-fparse-all-comments",
-            "-destination-file=" + target_path_abi,
-            # "-verbose=" + to_string(verbose),
-            "-context=" + source_dir,
-            sourcePath,
-            "--"
+        command_line = [
+            config.abigen_exe(),
+            "-extra-arg=-c", "-extra-arg=--std=c++14", 
+            "-extra-arg=--target=wasm32", "-extra-arg=-nostdinc", 
+            "-extra-arg=-nostdinc++", "-extra-arg=-DABIGEN",
+            "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts/libc++/upstream/include",
+            "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts/musl/upstream/include",
+            "-extra-arg=-I" + config.eosio_repository_dir() + "/externals/magic_get/include",
+            "-extra-arg=-I" + config.boost_include_dir(),
+            "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts",
+            "-extra-arg=-I" + config.eosio_repository_dir() + "/build/contracts",
+            "-extra-arg=-I" + source_dir
         ]
-    )
 
-    if setup.is_print_command_line:
-        print("######## {}:".format(config.abigen_exe()))
-        print(" ".join(command_line))
+        if include_dir:
+            include_dirs = include_dir.split(",")
+            for dir in include_dirs:
+                command_line.append("-extra-arg=-I " + dir)
 
-    process(command_line)
+        command_line.extend(
+            [
+                "-extra-arg=-fparse-all-comments",
+                "-destination-file=" + target_path_abi,
+                # "-verbose=" + to_string(verbose),
+                "-context=" + source_dir,
+                sourcePath,
+                "--"
+            ]
+        )
+
+        if setup.is_print_command_line:
+            print("######## {}:".format(config.abigen_exe()))
+            print(" ".join(command_line))
+
+        process(command_line)
+
     logger.TRACE('''
     ABI file writen to file: {}
     '''.format(target_path_abi))
@@ -133,146 +155,166 @@ def WAST(
         code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
     targetPathWast = os.path.join(
         target_dir_path, code_name + ".wast")
-    terget_path_wasm = os.path.join(
-        target_dir_path, code_name + ".wasm")    
+    target_path_wasm = os.path.join(
+        target_dir_path, code_name + ".wasm")
 
-    for file in srcs:
-        if not os.path.splitext(file)[1].lower() in extensions:
-            continue
+    eosio_cpp = None
+    try:
+        eosio_cpp = config.eosio_cpp()
+    except:
+        pass
 
+    if eosio_cpp:
         command_line = [
-            config.wasm_clang_exe(),
-            "-emit-llvm", "-O3", "--std=c++14", "--target=wasm32", "-nostdinc",
-            #"-DBOOST_DISABLE_ASSERTS -DBOOST_EXCEPTION_DISABLE",
-            "-nostdlib", "-nostdlibinc", "-ffreestanding", "-nostdlib",
-            "-fno-threadsafe-statics", "-fno-rtti", "-fno-exceptions",
-            "-I", config.eosio_repository_dir() + "/contracts/libc++/upstream/include",
-            "-I", config.eosio_repository_dir() + "/contracts/musl/upstream/include",
-            "-I", config.eosio_repository_dir() + "/externals/magic_get/include",
-            "-I", config.boost_include_dir(),
-            "-I", config.eosio_repository_dir() + "/contracts",
-            "-I", config.eosio_repository_dir() + "/build/contracts",
-            "-I", contract_dir
-        ]
-
-        if include_dir:
-            include_dirs = include_dir.split(",")
-            for dir in include_dirs:
-                command_line.extend(["-I", dir])
-
-        output = os.path.join(workdir_build, code_name + ".o")
-        objectFileList.append(output)        
-        command_line.extend(["-c", file, "-o", output])
-        
-        if setup.is_print_command_line:
-            print("######## {}:".format(config.wasm_clang_exe()))
-            print(" ".join(command_line))
+            config.eosio_cpp(),
+            "-o",
+            target_path_wasm
+            ]
+        for file in srcs:
+            if not os.path.splitext(file)[1].lower() in extensions:
+                continue
+            command_line.append(file)
 
         try:
             process(command_line)
-        except Exception as e:
-            try:
-                shutil.rmtree(workdir)
-            except:
-                pass
-                        
+        except Exception as e:                       
             raise errors.Error(str(e))
+    else:
+        ###########################################################################
+        # eosio.cdt is not available.
+        for file in srcs:
+            if not os.path.splitext(file)[1].lower() in extensions:
+                continue
 
-    if not compile_only:
-        command_line = [ 
-            config.wasm_llvm_link_exe(),
-            "-only-needed", 
-            "-o",  workdir + "/linked.bc",
-            " ".join(objectFileList),
-            config.eosio_repository_dir() + "/build/contracts/musl/libc.bc",
-            config.eosio_repository_dir() + "/build/contracts/libc++/libc++.bc",
-            config.eosio_repository_dir() + "/build/contracts/eosiolib/eosiolib.bc"
-        ]
-        if setup.is_print_command_line:
-            print("######## {}:".format(config.wasm_llvm_link_exe()))
-            print(" ".join(command_line))
+            command_line = [
+                config.wasm_clang_exe(),
+                "-emit-llvm", "-O3", "--std=c++14", "--target=wasm32", "-nostdinc",
+                #"-DBOOST_DISABLE_ASSERTS -DBOOST_EXCEPTION_DISABLE",
+                "-nostdlib", "-nostdlibinc", "-ffreestanding", "-nostdlib",
+                "-fno-threadsafe-statics", "-fno-rtti", "-fno-exceptions",
+                "-I", config.eosio_repository_dir() 
+                    + "/contracts/libc++/upstream/include",
+                "-I", config.eosio_repository_dir() 
+                    + "/contracts/musl/upstream/include",
+                "-I", config.eosio_repository_dir() 
+                    + "/externals/magic_get/include",
+                "-I", config.boost_include_dir(),
+                "-I", config.eosio_repository_dir() + "/contracts",
+                "-I", config.eosio_repository_dir() + "/build/contracts",
+                "-I", contract_dir
+            ]
 
-        try:
-            process(command_line)
-        except Exception as e:
+            if include_dir:
+                include_dirs = include_dir.split(",")
+                for dir in include_dirs:
+                    command_line.extend(["-I", dir])
+
+            output = os.path.join(workdir_build, code_name + ".o")
+            objectFileList.append(output)        
+            command_line.extend(["-c", file, "-o", output])
+            
+            if setup.is_print_command_line:
+                print("######## {}:".format(config.wasm_clang_exe()))
+                print(" ".join(command_line))
+
             try:
-                shutil.rmtree(workdir)
-            except:
-                pass
-                        
-            raise errors.Error(str(e))
+                process(command_line)
+            except Exception as e:
+                try:
+                    shutil.rmtree(workdir)
+                except:
+                    pass
+                            
+                raise errors.Error(str(e))
 
-        command_line = [
-            config.wasm_llc_exe(),
-            "-thread-model=single", "--asm-verbose=false",
-            "-o", workdir + "/assembly.s",
-            workdir + "/linked.bc"
-        ]
-        if setup.is_print_command_line:
-            print("######## {}:".format(config.wasm_llc_exe()))
-            print(" ".join(command_line))
+        if not compile_only:
+            command_line = [ 
+                config.wasm_llvm_link_exe(),
+                "-only-needed", 
+                "-o",  workdir + "/linked.bc",
+                " ".join(objectFileList),
+                config.eosio_repository_dir() + "/build/contracts/musl/libc.bc",
+                config.eosio_repository_dir() + "/build/contracts/libc++/libc++.bc",
+                config.eosio_repository_dir() + "/build/contracts/eosiolib/eosiolib.bc"
+            ]
+            if setup.is_print_command_line:
+                print("######## {}:".format(config.wasm_llvm_link_exe()))
+                print(" ".join(command_line))
 
-        try:
-            process(command_line)
-        except Exception as e:
-            raise errors.Error(str(e))
             try:
-                shutil.rmtree(workdir)
-            except:
-                pass
-                        
-            raise errors.Error(str(e))          
+                process(command_line)
+            except Exception as e:                           
+                raise errors.Error(str(e))
 
-        command_line = [
-            config.s2wasm_exe(),
-            "-o", targetPathWast,
-            "-s", "16384",
-            workdir + "/assembly.s"
-        ]
-        if setup.is_print_command_line:
-            print("######## {}:".format(config.s2wasm_exe()))
-            print(" ".join(command_line))
+            command_line = [
+                config.wasm_llc_exe(),
+                "-thread-model=single", "--asm-verbose=false",
+                "-o", workdir + "/assembly.s",
+                workdir + "/linked.bc"
+            ]
+            if setup.is_print_command_line:
+                print("######## {}:".format(config.wasm_llc_exe()))
+                print(" ".join(command_line))
 
-        try:
-            process(command_line)
-        except Exception as e:
             try:
-                shutil.rmtree(workdir)
-            except:
-                pass
-                        
-            raise errors.Error(str(e))
+                process(command_line)
+            except Exception as e:
+                raise errors.Error(str(e))
+                try:
+                    shutil.rmtree(workdir)
+                except:
+                    pass
+                            
+                raise errors.Error(str(e))          
 
-        logger.TRACE('''
-        WAST file writen to file: {}
-        '''.format(os.path.normpath(targetPathWast)))                      
+            command_line = [
+                config.s2wasm_exe(),
+                "-o", targetPathWast,
+                "-s", "16384",
+                workdir + "/assembly.s"
+            ]
+            if setup.is_print_command_line:
+                print("######## {}:".format(config.s2wasm_exe()))
+                print(" ".join(command_line))
 
-        command_line = [
-            config.wast2wasm_exe(), targetPathWast, terget_path_wasm, "-n"]
-
-        if setup.is_print_command_line:
-            print("######## {}:".format(config.wast2wasm_exe()))
-            print(" ".join(command_line))
-
-        try:
-            process(command_line)
-        except Exception as e:
             try:
-                shutil.rmtree(workdir)
-            except:
-                pass
-                        
-            raise errors.Error(str(e))
+                process(command_line)
+            except Exception as e:
+                try:
+                    shutil.rmtree(workdir)
+                except:
+                    pass
+                            
+                raise errors.Error(str(e))
 
-        logger.TRACE('''
-        WASM file writen to file: {}
-        '''.format(os.path.normpath(terget_path_wasm)))
+            logger.TRACE('''
+            WAST file writen to file: {}
+            '''.format(os.path.normpath(targetPathWast)))                      
 
+            command_line = [
+                config.wast2wasm_exe(), targetPathWast, target_path_wasm, "-n"]
+
+            if setup.is_print_command_line:
+                print("######## {}:".format(config.wast2wasm_exe()))
+                print(" ".join(command_line))
+
+            try:
+                process(command_line)
+            except Exception as e:
+                try:
+                    shutil.rmtree(workdir)
+                except:
+                    pass
+                            
+                raise errors.Error(str(e))
         try:
             shutil.rmtree(workdir)
         except:
             pass
 
+    logger.TRACE('''
+    WASM file writen to file: {}
+    '''.format(os.path.normpath(target_path_wasm)))
 
 def template_create(
         project_name, template_name=None, workspace_dir=None, 

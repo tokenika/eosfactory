@@ -22,7 +22,7 @@ if [ ! -z "$IS_WSL" ]; then
     printf "%s\n" "Windows Subsystem Linux detected"
 
     WSL_ROOT_IS_SET=""
-    function verifyHome() {
+    function verifyWslRoot() {
         path=$1
         bashrc=".bashrc"
         home=${path}\\$HOME
@@ -45,7 +45,7 @@ if [ ! -z "$IS_WSL" ]; then
     bpKey=$(reg.exe query "${Lxss}\\{$dd}" /v BasePath)
 
     if [ -z "$WSL_ROOT_IS_SET" ]; then
-        verifyHome "$(echo $bpKey | \
+        verifyWslRoot "$(echo $bpKey | \
             grep -o -P '(?<=REG_SZ)[ A-Za-z0-9:\\\._]*')\\rootfs"
     fi
     
@@ -62,7 +62,7 @@ not care about having the Visual Studio Code intelisense efficient.
         break
     fi
 
-    verifyHome "${wslRootDir}"
+    verifyWslRoot "${wslRootDir}"
     done
 fi
 

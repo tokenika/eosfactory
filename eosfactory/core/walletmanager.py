@@ -4,7 +4,7 @@ import json
 from cryptography.fernet import Fernet
 from threading import Timer
 
-from shell.interface import *
+from eosfactory.shell.interface import *
 import eosfactory.core.config as config
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
