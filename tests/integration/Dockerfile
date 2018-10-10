@@ -20,9 +20,8 @@ RUN apt-get update \
 ARG eos_branch=v1.3.1
 ARG eos_symbol=SYS
 
-RUN git clone https://github.com/EOSIO/eos.git --recursive --depth 1 /opt/eos
+RUN git clone -b $eos_branch https://github.com/EOSIO/eos.git --recursive /opt/eos
 WORKDIR /opt/eos
-RUN git checkout $eos_branch
 
 RUN ./eosio_build.sh
 RUN ./eosio_install.sh
