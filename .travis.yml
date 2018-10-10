@@ -1,9 +1,11 @@
-language: python
+sudo: required
+language: bash
 
-python:
+services:
+  - docker
 
-  - "2.7"
+before_install:
+  - docker build -t e2e --build-arg eosfactory_branch=master ./tests/integration/
 
-script: 
-
-  - python hello.py
+script:
+  - docker run -ti e2e ./unittest.sh
