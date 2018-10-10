@@ -1,10 +1,10 @@
 import unittest
-import eosfactory.shell.setup as setup
 import time
-from threading import Timer
+
+import eosfactory.shell.setup as setup
 import eosfactory.core.eosjs as eosjs
-from eosf import *
-from core.walletmanager import *
+from eosfactory.eosf import *
+from eosfactory.core.walletmanager import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
 wallet_name = "test_wallet"
@@ -67,14 +67,14 @@ class Test(unittest.TestCase):
         COMMENT('''
         As the wallet is locked, keys cannot be listed:
         ''')
-        with self.assertRaises(Error) as cm:        
+        with self.assertRaises(Error) as cm:
             keys(wallet)
         print(cm.exception.message)
 
         COMMENT('''
         As the password is wrong, wallet cannot be unlocked:
         ''')
-        with self.assertRaises(Error) as cm:        
+        with self.assertRaises(Error) as cm:      
             unlock(wallet, "TbVJIaTC76vUo8RQ_5EPQIsWkBIZbxlKSxhY7qXN0rQ=")
         print(cm.exception.message)
 
@@ -120,8 +120,8 @@ class Test(unittest.TestCase):
         unlock(wallet)
         setTimeout(300)
         time.sleep(8)
-        with self.assertRaises(Error) as cm:        
-            keys(wallet)
+        with self.assertRaises(Error) as cm:
+            keys(wallet_name)
         print(cm.exception.message)
 
     @classmethod

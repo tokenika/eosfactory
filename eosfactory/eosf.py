@@ -1,9 +1,13 @@
-import eosfactory.core.cleos as cleos
-import eosfactory.core.manager as manager
+
 import eosfactory.core.logger as logger
-import eosfactory.core.testnet as testnet
 import eosfactory.core.errors as errors
 import eosfactory.shell.setup as setup
+if setup.node_api == "cleos":
+    import eosfactory.core.cleos as cleos
+elif setup.node_api == "eosjs":
+    import eosfactory.core.eosjs as cleos
+import eosfactory.core.manager as manager
+import eosfactory.core.testnet as testnet
 import eosfactory.shell.interface as interface
 import eosfactory.shell.wallet as wallet
 import eosfactory.shell.account as account

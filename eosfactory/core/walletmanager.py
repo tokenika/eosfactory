@@ -101,12 +101,13 @@ def encrypt(key, cipher_suite):
 
 def public_key(private_key):
     return Node('''
-        const ecc = require('eosjs-ecc')
-        print_result('%s', null)
-        function process_result(private_key) {
-            return {key_public: ecc.privateToPublic(private_key)}
-        }
-    ''' % (private_key)).json["key_public"]
+    const ecc = require('eosjs-ecc');
+    
+    ((private_key) => {
+        public_key = {key_public: ecc.privateToPublic(private_key)}
+        console.log(JSON.stringify(public_key))   
+    })('%s')
+        ''' % (private_key)).json["key_public"]
 
 
 def decrypt(ciphered_key, cipher_suite):
@@ -186,13 +187,12 @@ def unlock(wallet, password=None, is_verbose=True):
             The wallet '{}' is not open.
             '''.format(name))
 
+    _manager_id = None
     if not is_unlocked(name):
-        _manager_id = None
-        _open_wallets[name].cipher_suite = Fernet(str.encode(password))
         try:
+            _open_wallets[name].cipher_suite = Fernet(str.encode(password))
             with open(wallet_file(name), "r")  as input:
                 keys_ciphered = [key.rstrip('\n') for key in input]
-
 
             _manager_id = decrypt(
                     keys_ciphered[0], _open_wallets[name].cipher_suite)
@@ -239,12 +239,13 @@ def import_key(wallet, key, is_verbose=True):
         out.write(encrypt(key_private, _open_wallets[name].cipher_suite) + "\n")
 
     key_public = Node('''
-        const ecc = require('eosjs-ecc')
-        print_result('%s', null)
-        function process_result(private_key) {
-            return {key_public: ecc.privateToPublic(private_key)}
-        }
-    ''' % (key_private)).json["key_public"]
+    const ecc = require('eosjs-ecc');
+
+    ((private_key) => {
+        public_key = {key_public: ecc.privateToPublic(private_key)}
+        console.log(JSON.stringify(public_key))   
+    })('%s')
+        ''' % (key_private)).json["key_public"]
 
     if is_verbose:
         logger.OUT("Imported key to wallet '{}':\n{}".format(
@@ -269,11 +270,9 @@ def remove_key(key, is_verbose=True):
         private_keys_ = private_keys(name, False)
 
         keys = Node('''
-        const ecc = require('eosjs-ecc')
-        keys = %s
-        print_result(keys)
+        const ecc = require('eosjs-ecc');
 
-        function process_result(keys) {
+        ((keys) => {
             public_keys = []
             for (i = 0; i < keys.length; i++) {
                 pair = []
@@ -282,8 +281,8 @@ def remove_key(key, is_verbose=True):
                 public_keys[i] = pair
             }
 
-            return public_keys
-        }
+            console.log(JSON.stringify(public_keys))   
+        })(%s)
         ''' % private_keys_).json
 
         for pair in keys:
@@ -307,21 +306,21 @@ def remove_key(key, is_verbose=True):
     
 
 def keys(wallet=None, is_verbose=True, is_lock_checked=True):
+    name = wallet_arg(wallet)
     private_keys_ = private_keys(wallet, False)
     public_keys = Node('''
-    const ecc = require('eosjs-ecc')
-    keys = %s
-    print_result(keys)
+    const ecc = require('eosjs-ecc');
 
-    function process_result(keys) {
+    ((keys) => {
         var public_keys = []
         for (i = 0; i < keys.length; i++) {
             public_keys[i] = ecc.privateToPublic(keys[i])
         }
 
-        return public_keys
-    }
-    ''' % private_keys_).json
+        console.log(JSON.stringify(public_keys))   
+    })(%s)
+    ''' % (private_keys_)).json
+
     if is_verbose:
         logger.OUT("keys in all unlocked wallets: \n".format(
             name
@@ -333,12 +332,11 @@ def keys(wallet=None, is_verbose=True, is_lock_checked=True):
 def private_keys(wallet=None, is_verbose=True):
     keys = []    
     for name, open_wallet in _open_wallets.items():
-        if not open_wallet.cipher_suite:
-            continue
         if wallet:
             if name != wallet_arg(wallet):
                 continue
-
+        is_open_and_unlocked(name)
+        
         with open(wallet_file(name), "r")  as input:
             keys_ciphered = [key.rstrip('\n') for key in input]
 
@@ -384,7 +382,7 @@ class Node():
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE) 
         err_msg = process.stderr.decode("utf-8")
-        if err_msg.strip() != "OK":
+        if err_msg:
             raise errors.Error(err_msg)
 
         self.json = json.loads( process.stdout.decode("utf-8"))

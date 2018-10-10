@@ -8,12 +8,11 @@ import pathlib
 import shutil
 import pprint
 
+import eosfactory.core.logger as logger
+import eosfactory.core.utils as utils
 import eosfactory.shell.setup as setup
 import eosfactory.core.config as config
 import eosfactory.core.errors as errors
-import eosfactory.core.cleos as cleos
-import eosfactory.core.logger as logger
-import eosfactory.core.utils as utils
 
 
 TEMPLATE_CONTRACTS_DIR = "templates/contracts"
@@ -558,6 +557,11 @@ def node_probe(verbosity=None):
         time.sleep(1)
         
         try:
+            if setup.node_api == "cleos":
+                import eosfactory.core.cleos as cleos
+            elif setup.node_api == "eosjs":
+                import eosfactory.core.eosjs as cleos
+
             get_info = cleos.GetInfo(is_verbose=0)
             count = count - 1
             head_block_num = int(get_info.json["head_block_num"])

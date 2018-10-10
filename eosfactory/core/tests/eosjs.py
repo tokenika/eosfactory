@@ -24,7 +24,7 @@ class Test(unittest.TestCase):
         Create a contract from template, then build and deploy it.
         ''')
         reset()
-        exit()        
+
         # setup.is_print_command_line = True        
         create_master_account("master")
 
@@ -34,7 +34,7 @@ class Test(unittest.TestCase):
         create_account("alice", master)
         create_account("carol", master)
         create_account("bob", master)
-
+        exit()        
     def test_01(self):
         COMMENT('''
         Create, build and deploy the contract:

@@ -20,19 +20,38 @@ from eosfactory.shell.interface import *
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
         setup.set_nodeos_address(
-            "http://" + core.config.http_server_address())
+            "http://" + eosfactory.core.config.http_server_address())
         setup.is_local_address = True
 
     return setup.is_local_address
 
-def config():
+
+def config_rpc():
+    code = utils.heredoc('''
+const eosjs = require('eosjs');
+const fetch = require('node-fetch');
+const rpc = new eosjs.Rpc.JsonRpc('%(endpoint)s', { fetch });
+    ''')
+
+    return code % {'endpoint': setup.nodeos_address()}
+
+
+def config_api():
     code = utils.heredoc('''
 const eosjs = require('eosjs')
 const fetch = require('node-fetch')
 const rpc = new eosjs.Rpc.JsonRpc('%(endpoint)s', { fetch })
+
+const { TextDecoder, TextEncoder } = require('text-encoding');
+const signatureProvider = new eosjs.SignatureProvider(%(keys)s);
+const api = new eosjs.Api({ rpc, signatureProvider, 
+    textDecoder: new TextDecoder, textEncoder: new TextEncoder });
     ''')
 
-    return code % {'endpoint': setup.nodeos_address()}
+    return code % {
+        'endpoint': setup.nodeos_address(),
+        'keys': json.dumps(wm.private_keys(is_verbose=False), indent=4)
+        }
 
 
 
@@ -55,7 +74,7 @@ class _Eosjs():
         self.json = None
         self.is_verbose = is_verbose
         cl = ["node", "-e"]
-        js = header + utils.heredoc(js)
+        js = header + "\n" + utils.heredoc(js)
 
         cl.append(js)
 
@@ -75,7 +94,7 @@ class _Eosjs():
             stderr=subprocess.PIPE) 
 
         self.err_msg = process.stderr.decode("utf-8")
-        if self.err_msg.strip() != "OK":
+        if self.err_msg:
             raise errors.Error(self.err_msg)
 
         self.out_msg = process.stdout.decode("utf-8")
@@ -109,14 +128,12 @@ class GetInfo(_Eosjs):
     '''
     def __init__(self, is_verbose=1):
 
-        _Eosjs.__init__(self, config(), 
+        _Eosjs.__init__(self, config_rpc(), 
             '''
-        async function get_info() {
-            result = await rpc.get_info()
-            console.log(result)
-        }
-
-        get_info()
+    (async () => {
+        result = await rpc.get_info()
+        console.log(JSON.stringify(result))    
+    })()
             ''', 
             is_verbose)
 
@@ -165,38 +182,22 @@ class GetBlock(_Eosjs):
     '''
     def __init__(self, block_number, block_id=None, is_verbose=1):
         if block_id:
-            _Eosjs.__init__(self, config(),
+            _Eosjs.__init__(self, config_rpc(),
                 '''
-        async function get_block(block_num_or_id, json=true) {
+        (async (block_num_or_id) => {
             result = await rpc.get_block(block_num_or_id)
-            if(json) {
-                console.log(result)
-            } else {
-                console.log(`timestamp: ${result["timestamp"]}`)
-                console.log(`block_num: ${result["block_num"]}`)
-                console.log(`id: ${result["id"]}`)
-            }
-            
-        }
+            console.log(JSON.stringify(result))
 
-        get_block("%s")
+        })("%s")
                 ''' % (block_id), is_verbose)
         else:
-            _Eosjs.__init__(self, config(),
+            _Eosjs.__init__(self, config_rpc(),
                 '''
-        async function get_block(block_num_or_id, json=true) {
+        (async (block_num_or_id) => {
             result = await rpc.get_block(block_num_or_id)
-            if(json) {
-                console.log(result)
-            } else {
-                console.log(`timestamp: ${result["timestamp"]}`)
-                console.log(`block_num: ${result["block_num"]}`)
-                console.log(`id: ${result["id"]}`)
-            }
-            
-        }
+            console.log(JSON.stringify(result))
 
-        get_block(%d)
+        })(%d)
                 ''' % (block_number), is_verbose)                        
 
         self.block_num = self.json["block_num"]
@@ -219,18 +220,18 @@ class GetAccount(Account, _Eosjs):
     '''
     def __init__(self, account, is_info=True, is_verbose=True):
         Account.__init__(self, account_arg(account))
-        _Eosjs.__init__(self, config(),
+        _Eosjs.__init__(self, config_rpc(),
             '''
-        async function get_account(account_name) {
+        (async (account_name) => {
             result = await rpc.get_account(account_name)
             console.log(JSON.stringify(result))
-        }
-
-        get_account("%s")
+        })("%s")
             ''' % (self.name), is_verbose)
 
-        self.owner_key = self.json["key_owner"]
-        self.active_key = self.json["key_active"]                 
+        self.owner_key = self.json['permissions'][0]['required_auth'] \
+            ['keys'][0]['key']
+        self.active_key = self.json['permissions'][1]['required_auth'] \
+            ['keys'][0]['key']                 
 
 
 class GetAccounts(_Eosjs):
@@ -245,14 +246,13 @@ class GetAccounts(_Eosjs):
         json: The json representation of the object.
     '''
     def __init__(self, key, is_verbose=True):
-        _Eosjs.__init__(self, config(),
+        _Eosjs.__init__(self, config_rpc(),
             '''
-        async function get_accounts(public_key) {
+        (async (public_key) => {
             result = await rpc.history_get_key_accounts(public_key)
-                console.log(JSON.stringify(result))
-        }
+            console.log(JSON.stringify(result))
 
-        get_accounts("%s")    
+        })("%s")    
             ''' % (key_arg(key, is_owner_key=True, is_private_key=False)),
             is_verbose=is_verbose)
 
@@ -275,12 +275,11 @@ class GetTransaction(_Eosjs):
     def __init__(self, transaction_id, block_num_hint=0, is_verbose=True):
         _Eosjs.__init__(self, 
             '''
-        async function get_transaction(is, block_num_hint) {
+        (async (is, block_num_hint) => {
             result = await rpc.history_get_transaction(is, block_num_hint)
             console.log(JSON.stringify(result))
-        }
 
-        get_transaction("%s", %d)
+        })("%s", %d)
             '''.format(transaction_id, block_num_hint), is_verbose)
 
 
@@ -467,7 +466,7 @@ class GetCode(_Eosjs):
     '''
     def __init__(self, account, is_verbose=True):
 
-        _Eosjs.__init__(self, config(),
+        _Eosjs.__init__(self, config_rpc(),
             '''
         async function get_code(account_name) {
             result = await rpc.get_code(account_name)
@@ -524,7 +523,7 @@ class GetTable(_Eosjs):
         except:
             scope_name = scope
 
-        _Eosjs.__init__(self, config(), 
+        _Eosjs.__init__(self, config_rpc(), 
         '''
         async function get_table(
                 code, scope, table, json=true, limit=10, table_key="", 
@@ -588,24 +587,21 @@ class CreateKey(Key, _Eosjs):
 
             _Eosjs.__init__(self, "",
                 '''
-        const ecc = require('eosjs-ecc')
+        const ecc = require('eosjs-ecc');
 
-        async function create_key() {
+        (async () => {
             private_key = await ecc.randomKey()
             public_key = ecc.privateToPublic(private_key)
             const result = {
-                private_key: private_key,
-                public_key: public_key
+                key_private: private_key,
+                key_public: public_key
             }
             console.log(JSON.stringify(result))
-        }
-
-        create_key()
+        })()
                 ''',
                 is_verbose)
-        
-            self.json["name"] = key_name
-            self.name = key_name
+        self.json["name"] = key_name
+        self.name = key_name
 
         self.key_private = self.json["key_private"]
         self.key_public = self.json["key_public"]
@@ -705,21 +701,58 @@ class CreateAccount(Account, _Eosjs):
         authorization = []
         if permission:
             authorization = permission_arg(permission)
-
-        _Eosjs.__init__(self, config(),
+            
+        _Eosjs.__init__(self, config_api(),
                 '''
-    function api() {
-        eos.transaction(tr => {
-            tr.newaccount(
+        (async () => {
+            const result = await api.transact(
                 {
-                    creator: '%s',
-                    name: '%s',
-                    owner: '%s',
-                    active: '%s'
-                }
-            )
-        }, options).then(print_result)
-    }
+                    actions: [
+                        {
+                            account: 'eosio',
+                            name: 'newaccount',
+                            authorization: [
+                                {
+                                    actor: 'eosio',
+                                    permission: 'active',
+                                }
+                            ],
+                            data: {
+                                creator: '%s',
+                                name: '%s',
+                                owner: {
+                                    threshold: 1,
+                                    keys: [
+                                        {
+                                            key: '%s',
+                                            weight: 1
+                                        }
+                                    ],
+                                    accounts: [],
+                                    waits: []
+                                },
+                                    active: {
+                                    threshold: 1,
+                                    keys: [
+                                        {
+                                            key: '%s',
+                                            weight: 1
+                                        }
+                                    ],
+                                    accounts: [],
+                                    waits: []
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    blocksBehind: 3,
+                    expireSeconds: 30,
+                });
+
+        console.log(JSON.stringify(result))
+        })()
             ''' % (
                 creator, name, owner_key_public, active_key_public
                 ), is_verbose)
@@ -834,7 +867,7 @@ class SetContract(_Eosjs):
         if permission:
             authorization.extend(permission_arg(permissions))
 
-        _Eosjs.__init__(self, config(),
+        _Eosjs.__init__(self, config_rpc(),
             '''
     const fs = require("fs");
     const abi = JSON.parse(fs.readFileSync("%s"));
@@ -846,7 +879,7 @@ class SetContract(_Eosjs):
                 self.account_name
                 ), is_verbose) 
 
-        _Eosjs.__init__(self, config(),
+        _Eosjs.__init__(self, config_rpc(),
             '''
     const fs = require("fs")
     const wasm = fs.readFileSync("%s")
