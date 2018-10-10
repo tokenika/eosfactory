@@ -5,11 +5,23 @@ services:
   - docker
 
 before_install:
-  - docker build -t e2e_a --build-arg eosfactory_branch=master --build-arg python_version=3.5.6 ./tests/integration/
-  - docker build -t e2e_b --build-arg eosfactory_branch=master --build-arg python_version=3.7.0 ./tests/integration/
-  - docker build -t e2e_c --build-arg eosfactory_branch=master --build-arg python_version=3.7.0 ./tests/integration/
-
 script:
   - docker run -ti e2e_a ./unittest.sh
   - docker run -ti e2e_b ./unittest.sh
   - docker run -ti e2e_c ./unittest.sh
+
+
+sudo: true
+dist: trusty
+
+jobs:
+  include:
+    - stage: build docker images
+      script:
+      - docker build -t e2e_a --build-arg eosfactory_branch=master --build-arg python_version=3.5.6 ./tests/integration/
+      - docker build -t e2e_b --build-arg eosfactory_branch=master --build-arg python_version=3.7.0 ./tests/integration/
+      - docker build -t e2e_c --build-arg eosfactory_branch=master --build-arg python_version=3.7.0 ./tests/integration/
+    - stage: tests
+      script: docker run -ti e2e_a ./unittest.sh
+    - script: docker run -ti e2e_b ./unittest.sh
+    - script: docker run -ti e2e_c ./unittest.sh
