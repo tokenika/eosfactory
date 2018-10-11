@@ -6,7 +6,15 @@
     {
         "taskName": "Compile",
         "type": "shell",
-        "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.WAST(r\"${workspaceFolder}/src\", compile_only=True)'",
+        "windows": {
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.WAST(r\"${workspaceFolder}/src\", compile_only=True)'"
+        },
+        "osx": {
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.WAST(\"${workspaceFolder}/src\", compile_only=True)'"
+        },
+        "linux": {
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.WAST(\"${workspaceFolder}/src\", compile_only=True)'"
+        },
         "presentation": {
             "reveal": "always",
             "panel": "dedicated"
@@ -17,7 +25,15 @@
     {
         "taskName": "Build",
         "type": "shell",
-        "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.ABI(r\"${workspaceFolder}/src\"); teos.WAST(r\"${workspaceFolder}/src\")'",
+        "windows": {
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.ABI(r\"${workspaceFolder}/src\"); teos.WAST(r\"${workspaceFolder}/src\")'"
+        },
+        "osx": {
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.ABI(\"${workspaceFolder}/src\"); teos.WAST(\"${workspaceFolder}/src\")'"
+        },
+        "linux": {
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.ABI(\"${workspaceFolder}/src\"); teos.WAST(\"${workspaceFolder}/src\")'"
+        },
         "problemMatcher": [],
         "presentation": {
             "reveal": "always",
@@ -33,7 +49,15 @@
     {
         "taskName": "Test",
         "type": "shell",
-        "command": "python3 ./tests/test1.py",
+        "windows": {
+            "command": "python3 ./tests/test1.py"
+        },
+        "osx": {
+            "command": "python3 ./tests/test1.py"
+        },
+        "linux": {
+            "command": "python3 ./tests/test1.py"
+        },
         "presentation": {
             "reveal": "always",
             "panel": "dedicated"
@@ -44,7 +68,15 @@
     {
         "taskName": "Unittest",
         "type": "shell",
-        "command": "python3 ./tests/unittest1.py",
+        "windows": {
+            "command": "python3 ./tests/unittest1.py"
+        },
+        "osx": {
+            "command": "python3 ./tests/unittest1.py"
+        },
+        "linux": {
+            "command": "python3 ./tests/unittest1.py"
+        },
         "presentation": {
             "reveal": "always",
             "panel": "dedicated"
@@ -55,7 +87,15 @@
     {
         "taskName": "EOSIO API",
         "type": "shell",
-        "command": "explorer.exe",
+        "windows": {
+            "command": "explorer.exe"
+        },
+        "osx": {
+            "command": "open"
+        },
+        "linux": {
+            "command": "sensible-browser"
+        },
         "args": [
             "https://developers.eos.io/eosio-cpp/reference"
         ],

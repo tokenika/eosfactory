@@ -9,7 +9,7 @@ def test():
     SCENARIO('''
     Execute simple actions.
     ''')
-    reset()    
+    reset()
     create_master_account("master")
 
     COMMENT('''

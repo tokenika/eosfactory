@@ -8,7 +8,7 @@ import os
 
 import eosfactory.core.utils as utils
 import eosfactory.core.errors as errors
-import eosfactory.core.config
+import eosfactory.core.config as config
 import eosfactory.shell.setup as setup
 import eosfactory.core.logger as logger
 import eosfactory.core.teos as teos
@@ -20,7 +20,7 @@ from eosfactory.shell.interface import *
 def set_local_nodeos_address_if_none():
     if not setup.nodeos_address():
         setup.set_nodeos_address(
-            "http://" + eosfactory.core.config.http_server_address())
+            "http://" + config.http_server_address())
         setup.is_local_address = True
 
     return setup.is_local_address
@@ -770,12 +770,12 @@ def account_name():
     return name
 
 def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
-    contract_path_absolute = core.config.contract_dir(contract_dir)
+    contract_path_absolute = config.contract_dir(contract_dir)
     if not contract_path_absolute:
         return []
 
     if not wasm_file:
-        wasm_file = core.config.wasm_file(contract_dir)
+        wasm_file = config.wasm_file(contract_dir)
         if not wasm_file:
             return []
     else:
@@ -784,7 +784,7 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
             return []
 
     if not abi_file:
-        abi_file = core.config.abi_file(contract_dir)
+        abi_file = config.abi_file(contract_dir)
         if not abi_file:
             return []
     else:

@@ -39,4 +39,4 @@ localnode/blocks
 # Python egg metadata, regenerated from source files by setuptools.
 /*.egg-info
 tests/js
-tests/js1
+

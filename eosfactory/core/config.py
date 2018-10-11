@@ -34,10 +34,9 @@ node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
     ["build/programs/nodeos/nodeos", "/usr/local/eosio/bin/nodeos"])
 eosio_cpp_ = ("EOSIO_CPP", 
-    ["/usr/local/bin/eosio-cpp", "/usr/local/eosio.cdt/bin/eosio-cpp",
-    ""])
+    ["/usr/local/bin/eosio-cpp", "/usr/local/eosio.cdt/bin/eosio-cpp"])
 eosio_abigen_ = ("EOSIO_ABIGEN", 
-    [None])
+    ["/usr/local/bin/eosio-abigen", "/usr/local/eosio.cdt/bin/eosio-abigen"])
 
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
