@@ -1,16 +1,3 @@
-sudo: required
-language: bash
-
-services:
-  - docker
-
-before_install:
-script:
-  - docker run -ti e2e_a ./unittest.sh
-  - docker run -ti e2e_b ./unittest.sh
-  - docker run -ti e2e_c ./unittest.sh
-
-
 sudo: true
 dist: trusty
 
