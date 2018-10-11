@@ -6,6 +6,7 @@
     {
         "taskName": "Compile",
         "type": "shell",
+        
         "windows": {
             "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.WAST(r\"${workspaceFolder}/src\", compile_only=True)'"
         },

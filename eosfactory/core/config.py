@@ -33,10 +33,11 @@ cli_exe_ = (
 node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
     ["build/programs/nodeos/nodeos", "/usr/local/eosio/bin/nodeos"])
-eosio_cpp_ = ("EOSIO_CPP", 
-    ["/usr/local/bin/eosio-cpp", "/usr/local/eosio.cdt/bin/eosio-cpp"])
-eosio_abigen_ = ("EOSIO_ABIGEN", 
-    ["/usr/local/bin/eosio-abigen", "/usr/local/eosio.cdt/bin/eosio-abigen"])
+# eosio_cpp_ = ("EOSIO_CPP", ["/usr/local/eosio.cdt/bin/eosio-cpp"])
+# eosio_abigen_ = ("EOSIO_ABIGEN", ["/usr/local/eosio.cdt/bin/eosio-abigen"])
+
+eosio_cpp_ = ("EOSIO_CPP", [None])
+eosio_abigen_ = ("EOSIO_ABIGEN", [None])
 
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
@@ -64,10 +65,10 @@ s2wasm_exe_ = (
 wast2wasm_exe_ = (
     "WAST2WASM_EXECUTABLE",
     ["/usr/local/bin/eosio-wast2wasm", "/usr/local/eosio/bin/eosio-wast2wasm"])
-abigen_exe_ = (
+abigen_exe_ = ( # used without eosio.cdt
     "ABIGEN_EXECUTABLE",
-    ["build/programs/eosio-abigen/eosio-abigen",
-        "/usr/local/bin/eosio-abigen", "/usr/local/eosio/bin/eosio-abigen"])
+    ["build/programs/eosio-abigen/eosio-abigen", 
+        "/usr/local/eosio/bin/eosio-abigen"])
 is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
 
 

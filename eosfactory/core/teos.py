@@ -62,14 +62,15 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
     except:
         pass
 
+    extensions = [".c", ".cpp",".cxx", ".c++"]
     if eosio_abigen:
-        command_line = [
-            config.eosio_abigen(),
-            "--output",
-            target_path_abi,
-            srcs[0]
-            ]
-
+        command_line = [config.eosio_abigen(), "-output=" + target_path_abi]
+        for file in srcs:
+            if not os.path.splitext(file)[1].lower() in extensions:
+                continue
+            command_line.append(file)
+        
+        import pdb; pdb.set_trace()
         try:
             process(command_line)
         except Exception as e:
@@ -291,7 +292,8 @@ def WAST(
             '''.format(os.path.normpath(targetPathWast)))                      
 
             command_line = [
-                config.wast2wasm_exe(), targetPathWast, target_path_wasm, "-n"]
+                config.wast2wasm_exe(), 
+                targetPathWast, "-o", target_path_wasm]
 
             if setup.is_print_command_line:
                 print("######## {}:".format(config.wast2wasm_exe()))

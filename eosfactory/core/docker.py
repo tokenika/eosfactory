@@ -23,7 +23,7 @@ def is_docker():
 
 
 def cli_exe():
-    '''Return a cleos exxecutable.
+    '''Return a cleos executable.
     '''
     return config.cli_exe()
 
@@ -74,7 +74,10 @@ def wasm(src_file, wasm_file, options=[]):
     import eosfactory.core.teos as teos
     teos.process(cl)
 
-setup.is_print_command_line = True
+###############################################################################
+# test
+###############################################################################
+
 setup.set_nodeos_address(url())
 
 
