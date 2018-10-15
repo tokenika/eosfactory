@@ -25,7 +25,7 @@ if [ ! -z "$IS_WSL" ]; then
     function verifyWslRoot() {
         path=$1
         bashrc=".bashrc"
-        home=${path}\\$HOME
+        home=${path}\\home\\${USER}
         bashrcPath=${home}\\$bashrc
         bashrcDir=$(cmd.exe /c dir /B  $bashrcPath)
 
@@ -74,7 +74,7 @@ Installing the 'eosfactory' package locally with the Python pip system...
 # It is essentioal that the package is installed as a symlink, with 
 # the flag '-e'
 ###############################################################################
-# sudo  -H python3 -m pip install -e .
+sudo  -H python3 -m pip install -e .
 
 printf "%s\n" "
 Configuring the eosfactory installation...
