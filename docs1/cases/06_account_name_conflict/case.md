@@ -39,8 +39,7 @@ Change 'account_alice' to 'account_alice_b'.
 
 ```md
 '''
-reset() 
-create_wallet()
+reset()
 create_master_account("master")
 
 create_account("alice", master)

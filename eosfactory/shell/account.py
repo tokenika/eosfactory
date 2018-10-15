@@ -21,24 +21,24 @@ import eosfactory.core.manager as manager
 import eosfactory.core.testnet as testnet
 import eosfactory.shell.wallet as wallet
 
+'''The namespace where account objects go.
+'''
+wallet_globals = None
+
+'''The singleton ``Wallet`` object.
+'''
+wallet_singleton = None
+
 
 def reboot():
-    logger.INFO('''
-    ######### Reboot EOSFactory session.
-    ''')
-    manager.stop([])
-    #cleos.reboot()
-
     global wallet_singleton
     if wallet_singleton:
         wallet_singleton.delete_globals()
     wallet.Wallet.wallet = None
-
     try:
         del wallet_singleton
     except:
         pass
-
     wallet_singleton = None
 
     global wallet_globals
@@ -88,13 +88,6 @@ def _data_json(data):
         data_json = manager.object_names_2_accout_names(data_json)
     return data_json
 
-'''The namespace where account objects go.
-'''
-wallet_globals = None
-'''The singleton ``Wallet`` object.
-'''
-wallet_singleton = None
-
 
 def is_wallet_defined(logger, globals=None):
     '''
@@ -113,8 +106,6 @@ def is_wallet_defined(logger, globals=None):
         if wallet_singleton is None:
             raise errors.Error('''
                 Cannot find any `Wallet` object.
-                Add the definition of an `Wallet` object, for example:
-                `create_wallet()`
                 ''')
 
     wallet_globals = wallet.Wallet.globals

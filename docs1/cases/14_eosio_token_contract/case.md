@@ -23,7 +23,6 @@ managedby  the KEOSD:
 ```md
 '''
 reset()
-create_wallet()
 '''
 ```
 ### `account master` object

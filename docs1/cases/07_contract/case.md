@@ -20,7 +20,6 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 ```md
 '''
 reset()
-create_wallet()   
 create_master_account("master")
 '''
 ```

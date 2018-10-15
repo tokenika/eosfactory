@@ -16,6 +16,16 @@ if setup.node_api == "cleos":
 elif setup.node_api == "eosjs":
     import eosfactory.core.eosjs as cleos
 
+
+def reboot():
+    logger.INFO('''
+    ######### Reboot EOSFactory session.
+    ''')
+    stop([])
+    import eosfactory.shell.account as account
+    account.reboot()
+
+
 def clear_testnet_cache(verbosity=None):
     ''' Remove wallet files associated with the current testnet.
     '''
@@ -110,8 +120,9 @@ def reset(verbosity=None):
         No local nodeos is set: {}
         '''.format(setup.nodeos_address()), verbosity)
 
+    import eosfactory.shell.account as account
+    account.reboot()
     clear_testnet_cache()
-
     teos.node_start(clear=True, verbosity=verbosity)
 
 

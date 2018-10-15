@@ -2,7 +2,6 @@ from eosfactory.eosf import *
 
 reset()
 
-create_wallet()
 create_master_account("master")
 master.info()
 

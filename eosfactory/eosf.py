@@ -38,13 +38,13 @@ get_wallet = wallet.get_wallet
 create_account = account.create_account
 create_master_account = account.create_master_account
 
-reboot = account.reboot
 print_stats = account.print_stats
 
 Contract = contract.Contract
 ContractBuilder = contract.ContractBuilder
 project_from_template = contract.project_from_template
 
+reboot = manager.reboot
 reset = manager.reset
 resume = manager.resume
 stop = manager.stop

@@ -36,7 +36,6 @@ reset()
 Next, we create a wallet and then we use the `create_master_account` command to create a global variable named `master` referencing the `eosio` account.
 
 ```
-create_wallet()
 create_master_account("master")
 master.info()
 ```
@@ -94,7 +93,6 @@ testnet.clear_cache()
 Then, we proceed to create a global variable named `master` referencing the remote testnet account:
 
 ```
-create_wallet()
 create_master_account("master", testnet)
 master.info()
 ```

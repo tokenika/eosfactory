@@ -24,7 +24,6 @@ Start a local testnet, create a wallet and then create a special master account 
 
 ```
 reset()
-create_wallet()   
 create_master_account("master")
 ```
 
