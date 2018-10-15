@@ -1,25 +1,13 @@
+language: bash
 sudo: true
 dist: trusty
 
-jobs:
-  include:
-    - stage: build docker images
-      script:
-        - docker build -t tokenika/e2e:${TRAVIS_COMMIT}_a --build-arg eosfactory_branch=$TRAVIS_BRANCH --build-arg python_version=3.5.6 ./tests/integration/ 
-        - docker login -u $DOCKER_USER -p $DOCKER_PASS
-        - docker push tokenika/e2e:${TRAVIS_COMMIT}_a
+env:
+  - EOS_BRANCH=v1.3.1 PYTHON_VERSION=3.5.6
+  - EOS_BRANCH=v1.3.1 PYTHON_VERSION=3.6.6
+  - EOS_BRANCH=v1.3.1 PYTHON_VERSION=3.7.0
 
-    - script:
-        - docker build -t tokenika/e2e:${TRAVIS_COMMIT}_b --build-arg eosfactory_branch=$TRAVIS_BRANCH --build-arg python_version=3.6.6 ./tests/integration/
-        - docker login -u $DOCKER_USER -p $DOCKER_PASS
-        - docker push tokenika/e2e:${TRAVIS_COMMIT}_b
 
-    - script:
-        - docker build -t tokenika/e2e:${TRAVIS_COMMIT}_c --build-arg eosfactory_branch=$TRAVIS_BRANCH --build-arg python_version=3.7.0 ./tests/integration/
-        - docker login -u $DOCKER_USER -p $DOCKER_PASS
-        - docker push tokenika/e2e:${TRAVIS_COMMIT}_c
-
-    - stage: tests
-      script: docker run -ti tokenika/e2e:${TRAVIS_COMMIT}_a ./unittest.sh
-    - script: docker run -ti tokenika/e2e:${TRAVIS_COMMIT}_b ./unittest.sh
-    - script: docker run -ti tokenika/e2e:${TRAVIS_COMMIT}_c ./unittest.sh
+script:
+  - docker build -t tokenika/e2e:${TRAVIS_COMMIT}_${EOS_BRANCH}_${PYTHON_VERSION} --build-arg eos_branch=${EOS_BRANCH} --build-arg eosfactory_branch=${TRAVIS_BRANCH} --build-arg python_version=${PYTHON_VERSION} ./tests/integration/
+  - docker run -ti tokenika/e2e:${TRAVIS_COMMIT}_${EOS_BRANCH}_${PYTHON_VERSION} ./unittest.sh
