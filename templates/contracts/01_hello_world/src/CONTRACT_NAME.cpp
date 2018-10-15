@@ -7,6 +7,7 @@
 #include "@CONTRACT_NAME@.hpp"
 
 using namespace eosio;
+
 class hello : public eosio::contract {
     public:
         using contract::contract;
