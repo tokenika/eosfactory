@@ -24,7 +24,7 @@ And import *EOSFactory* API:
 
 ```
 '''
-from eosf import *
+from eosfactory.eosf import *
 '''
 ```
 

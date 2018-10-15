@@ -26,7 +26,7 @@ Local test node reset, wallet started, master account object created:
 
 ```md
 '''
-from eosf import *
+from eosfactory.eosf import *
 
 reset() 
 create_wallet()

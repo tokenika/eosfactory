@@ -37,7 +37,7 @@ The current article tests this registration procedure.
 
 ```md
 '''
-from eosf import *
+from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT])
 _ = Logger()

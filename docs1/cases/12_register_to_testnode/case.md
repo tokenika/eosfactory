@@ -39,7 +39,7 @@ The current article tests this registration procedure.
 
 ```md
 '''
-from eosf import *
+from eosfactory.eosf import *
 import eosf_testnet
 
 verbosity([Verbosity.INFO, Verbosity.OUT])

@@ -24,7 +24,7 @@ $ python3
 ```
 
 ```
-from eosf import *
+from eosfactory.eosf import *
 ```
 
 First, let's start a local testnet:
@@ -68,7 +68,7 @@ $ python3
 ```
 
 ```
-from eosf import *
+from eosfactory.eosf import *
 ```
 
 First, we need to define a remote testnet and pass to *EOSFactory* the data of the account we control there:

@@ -1,4 +1,4 @@
-from eosf import *
+from eosfactory.eosf import *
 import testnode_data
 
 testnet = testnode_data.kylin

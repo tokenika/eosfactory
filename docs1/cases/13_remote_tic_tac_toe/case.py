@@ -1,7 +1,7 @@
 
 
 import unittest
-from eosf import *
+from eosfactory.eosf import *
 import eosf_testnet
 save_code()
 

@@ -19,7 +19,7 @@ Therefore, remote node tests have to reuse accounts between sessions.
 ```md
 '''
 import unittest
-from eosf import *
+from eosfactory.eosf import *
 import eosf_testnet
 save_code()
 
