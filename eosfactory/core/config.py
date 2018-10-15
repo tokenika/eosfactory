@@ -59,16 +59,19 @@ wasm_llvm_link_exe_ = (
 wasm_llc_exe_ = (
     "WASM_LLC_EXECUTABLE",
     ["${HOME}/opt/wasm/bin/llc", "/usr/local/wasm/bin/llc"])
-s2wasm_exe_ = (
+s2wasm_exe_ = ( ##/mnt/c/Workspaces/EOS/eos/
     "S2WASM_EXECUTABLE",
-    ["/usr/local/bin/eosio-s2wasm", "/usr/local/eosio/bin/eosio-s2wasm"])
+    ["build/externals/binaryen/bin/eosio-s2wasm",
+        "/usr/local/bin/eosio-s2wasm", "/usr/local/eosio/bin/eosio-s2wasm"])
 wast2wasm_exe_ = (
     "WAST2WASM_EXECUTABLE",
-    ["/usr/local/bin/eosio-wast2wasm", "/usr/local/eosio/bin/eosio-wast2wasm"])
+    ["build/libraries/wasm-jit/Source/Programs/eosio-wast2wasm",
+        "/usr/local/bin/eosio-wast2wasm", "/usr/local/eosio/bin/eosio-wast2wasm"])
 abigen_exe_ = ( # used without eosio.cdt
     "ABIGEN_EXECUTABLE",
-    ["build/programs/eosio-abigen/eosio-abigen", 
-        "/usr/local/eosio/bin/eosio-abigen"])
+    ["build/programs/eosio-abigen/eosio-abigen",
+        "/usr/local/bin/eosio-abigen","/usr/local/eosio/bin/eosio-abigen"])
+
 is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
 
 

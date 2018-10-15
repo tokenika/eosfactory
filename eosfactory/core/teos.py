@@ -25,7 +25,6 @@ TEMPLATE_ROOT = "@ROOT@"
 def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
     '''Given a hint to a contract directory, produce ABI file.
     '''
-
     contract_dir = config.contract_dir(contract_dir_hint)
     source = config.contract_source_files(contract_dir)
     srcs = source[1]
@@ -70,7 +69,6 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
                 continue
             command_line.append(file)
         
-        import pdb; pdb.set_trace()
         try:
             process(command_line)
         except Exception as e:
@@ -293,7 +291,7 @@ def WAST(
 
             command_line = [
                 config.wast2wasm_exe(), 
-                targetPathWast, "-o", target_path_wasm]
+                targetPathWast, target_path_wasm, "-n"]
 
             if setup.is_print_command_line:
                 print("######## {}:".format(config.wast2wasm_exe()))
