@@ -63,13 +63,13 @@ def file_prefix():
     return __file_prefix
 
 
-def reboot():
-    global is_local_address
-    is_local_address = False
-    global __nodeos_address
-    __nodeos_address = None
-    global __file_prefix
-    __file_prefix = None
+# def reboot():
+#     global is_local_address
+#     is_local_address = False
+#     global __nodeos_address
+#     __nodeos_address = None
+#     global __file_prefix
+#     __file_prefix = None
 
 
 def save_code():
