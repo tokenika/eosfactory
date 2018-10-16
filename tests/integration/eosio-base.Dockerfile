@@ -25,5 +25,3 @@ WORKDIR /opt/eos
 
 RUN ./eosio_build.sh
 RUN ./eosio_install.sh
-FROM tokenika/eosio:${eos_branch}
-
