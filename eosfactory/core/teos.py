@@ -10,7 +10,7 @@ import pprint
 
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
-import eosfactory.shell.setup as setup
+import eosfactory.core.setup as setup
 import eosfactory.core.config as config
 import eosfactory.core.errors as errors
 
@@ -484,10 +484,14 @@ def get_target_dir(source_dir):
         return target_dir
 
     target_dir = os.path.join(source_dir, "build")
-    if os.path.exists(target_dir):
-        return target_dir
+    if not os.path.exists(target_dir):
+        try:
+            os.mkdir(target_dir)
+        except Exception as e:
+            raise errors.Error(str(e))
 
-    return source_dir
+    return target_dir
+
 
 def args(clear=False):
     args_ = [

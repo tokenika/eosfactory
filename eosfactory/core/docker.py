@@ -5,7 +5,7 @@ import os
 
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
-import eosfactory.shell.setup as setup
+import eosfactory.core.setup as setup
 import eosfactory.core.config as config
 import eosfactory.core.cleos as cleos
 import eosfactory.eosf as eosf

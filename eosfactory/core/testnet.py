@@ -1,4 +1,4 @@
-import eosfactory.shell.setup as setup
+import eosfactory.core.setup as setup
 import eosfactory.core.manager as manager
 import eosfactory.core.logger as logger
 

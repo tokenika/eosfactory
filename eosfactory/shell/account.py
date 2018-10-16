@@ -7,11 +7,11 @@ import re
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
 import eosfactory.core.config as config
-import eosfactory.shell.setup as setup
+import eosfactory.core.setup as setup
 import eosfactory.core.errors as errors
-import eosfactory.shell.interface as interface
+import eosfactory.core.interface as interface
 import eosfactory.core.teos as teos
-import eosfactory.shell.interface as interface
+import eosfactory.core.interface as interface
 if setup.node_api == "cleos":
     import eosfactory.core.cleos as cleos
 elif setup.node_api == "eosjs":

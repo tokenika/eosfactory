@@ -4,8 +4,8 @@ import inspect
 
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
-import eosfactory.shell.setup as setup
-import eosfactory.shell.interface as interface
+import eosfactory.core.setup as setup
+import eosfactory.core.interface as interface
 import eosfactory.core.teos as teos
 if setup.node_api == "cleos":
     import eosfactory.core.cleos as cleos

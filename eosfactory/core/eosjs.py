@@ -9,11 +9,11 @@ import os
 import eosfactory.core.utils as utils
 import eosfactory.core.errors as errors
 import eosfactory.core.config as config
-import eosfactory.shell.setup as setup
+import eosfactory.core.setup as setup
 import eosfactory.core.logger as logger
 import eosfactory.core.teos as teos
 import eosfactory.core.walletmanager as wm
-from eosfactory.shell.interface import *
+from eosfactory.core.interface import *
 
 
 # TO DO resolve this code reuse issue.

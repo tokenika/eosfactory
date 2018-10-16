@@ -4,12 +4,12 @@ import json
 from cryptography.fernet import Fernet
 from threading import Timer
 
-from eosfactory.shell.interface import *
+from eosfactory.core.interface import *
 import eosfactory.core.config as config
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
-import eosfactory.shell.setup as setup
+import eosfactory.core.setup as setup
 
 
 class OpenWallet:

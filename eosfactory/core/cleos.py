@@ -8,8 +8,8 @@ import re
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.config as config
-import eosfactory.shell.setup as setup
-import eosfactory.shell.interface as interface
+import eosfactory.core.setup as setup
+import eosfactory.core.interface as interface
 
 # TO DO resolve this code reuse issue.
 def set_local_nodeos_address_if_none():
@@ -801,7 +801,6 @@ def account_name():
     return name
 
 def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
-
     contract_path_absolute = config.contract_dir(contract_dir)
     if not contract_path_absolute:
         return []

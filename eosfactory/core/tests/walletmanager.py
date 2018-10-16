@@ -1,7 +1,7 @@
 import unittest
 import time
 
-import eosfactory.shell.setup as setup
+import eosfactory.core.setup as setup
 import eosfactory.core.eosjs as eosjs
 from eosfactory.eosf import *
 from eosfactory.core.walletmanager import *

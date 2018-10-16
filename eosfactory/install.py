@@ -42,9 +42,9 @@ def install(wsl_root):
             _eosio_repository_dir = eosio_repository_dir
 
         ok = os.path.exists(
-            os.path.join(_eosio_repository_dir, "build/programs/nodeos/nodeos")) and \
+            os.path.join(_eosio_repository_dir, config.node_exe_[1][0]")) and \
             os.path.exists(
-            os.path.join(_eosio_repository_dir, "build/programs/cleos/cleos"))
+            os.path.join(_eosio_repository_dir, config.cleos_exe_[1][0]))
 
         if ok:
             map = config.config_map()
