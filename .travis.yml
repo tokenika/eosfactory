@@ -11,7 +11,7 @@ env:
   - EOS_BRANCH=v1.4.0 PYTHON_VERSION=3.7.0
 
 script:
-  - docker build -t e2e --build-arg eos_branch=${EOS_BRANCH} --build-arg eosfactory_branch=${TRAVIS_BRANCH} --build-arg python_version=${PYTHON_VERSION} ./tests/integration/
+  - docker build -t e2e --build-arg eos_branch=${EOS_BRANCH} --build-arg eosfactory_branch=${TRAVIS_PULL_REQUEST_BRANCH} --build-arg python_version=${PYTHON_VERSION} ./tests/integration/
   - docker run -ti e2e "python /opt/eosfactory/tests/01_hello_world.py"
   - docker run -ti e2e "python /opt/eosfactory/tests/02_eosio_token.py"
   - docker run -ti e2e "python /opt/eosfactory/tests/03_tic_tac_toe.py"

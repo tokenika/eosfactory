@@ -80,7 +80,8 @@ RUN python -m pip install termcolor
 ARG eosfactory_branch=master
 RUN git clone -b "$eosfactory_branch" https://github.com/tokenika/eosfactory.git /opt/eosfactory/
 WORKDIR /opt/eosfactory/
-
+RUN git branch
+RUN git log -10 --oneline
 RUN mkdir /opt/workspace
 RUN apt-get update && apt-get install -y expect
 RUN mkdir ~/eosio-wallet/
