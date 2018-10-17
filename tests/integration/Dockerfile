@@ -78,14 +78,13 @@ RUN python -m pip install termcolor
 ############## EOS FACTORY #############################################################################################
 
 ARG eosfactory_branch=master
-
 RUN git clone -b "$eosfactory_branch" https://github.com/tokenika/eosfactory.git /opt/eosfactory/
 WORKDIR /opt/eosfactory/
 
 RUN mkdir /opt/workspace
-RUN ./build.sh -e /opt/eos -w /opt/workspace
-
+RUN apt-get update && apt-get install -y expect
 RUN mkdir ~/eosio-wallet/
+RUN /opt/eosfactory/tests/integration/expect_script.sh
 
 # https://superuser.com/a/1253889/59009
 RUN sed -i 's/mesg n || true/tty -s \&\& mesg n || true/g' /root/.profile
