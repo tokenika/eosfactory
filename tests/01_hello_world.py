@@ -58,13 +58,6 @@ class Test(unittest.TestCase):
         self.assertTrue("carol" in DEBUG())
 
         COMMENT('''
-        WARNING: This action should fail due to being duplicate!
-        ''')
-        with self.assertRaises(DuplicateTransactionError):
-            host.push_action(
-                "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
-
-        COMMENT('''
         WARNING: This action should fail due to authority mismatch!
         ''')
         with self.assertRaises(MissingRequiredAuthorityError):
