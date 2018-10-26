@@ -66,12 +66,12 @@ s2wasm_exe_ = ( ##/mnt/c/Workspaces/EOS/eos/
 wast2wasm_exe_ = (
     "WAST2WASM_EXECUTABLE",
     ["build/libraries/wasm-jit/Source/Programs/eosio-wast2wasm",
-        "/usr/local/bin/eosio-wast2wasm", "/usr/local/eosio/bin/eosio-wast2wasm"])
+        "/usr/local/bin/eosio-wast2wasm", 
+        "/usr/local/eosio/bin/eosio-wast2wasm"])
 abigen_exe_ = ( # used without eosio.cdt
     "ABIGEN_EXECUTABLE",
     ["build/programs/eosio-abigen/eosio-abigen",
         "/usr/local/bin/eosio-abigen","/usr/local/eosio/bin/eosio-abigen"])
-
 is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
 
 

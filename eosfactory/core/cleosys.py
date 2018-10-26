@@ -272,8 +272,6 @@ class DelegateBw(cleos._Cleos):
         cleos._Cleos.__init__(
             self, args, "system", "delegatebw", is_verbose)
 
-        self.ERROR()
-
 
 
 

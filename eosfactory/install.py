@@ -11,7 +11,7 @@ def tilde(tilde_path):
     return tilde_path.replace("~", str(pathlib.Path.home()))
 
 
-def install(wsl_root):
+def install(wsl_root=None):
     if wsl_root:
         map = config.config_map()
         map[config.wsl_root_[0]] = wsl_root
@@ -41,7 +41,8 @@ def install(wsl_root):
         if not _eosio_repository_dir:
             _eosio_repository_dir = eosio_repository_dir
 
-        ok = os.path.exists(os.path.join(_eosio_repository_dir, config.node_exe_[1][0]))
+        ok = _eosio_repository_dir and os.path.exists(os.path.join(
+                _eosio_repository_dir, config.node_exe_[1][0]))
 
         if ok:
             map = config.config_map()
@@ -73,11 +74,12 @@ def install(wsl_root):
                 Where do you prefer to keep your smart-contract projects?
                 Input an existing directory path:
                 ''') + "\n"))
-
         if not _contract_workspace_dir:
             _contract_workspace_dir = contract_workspace_dir
         
-        if os.path.exists(_contract_workspace_dir) and os.path.isdir(_contract_workspace_dir):
+        if _contract_workspace_dir and os.path.exists(
+                _contract_workspace_dir) and os.path.isdir(
+                    _contract_workspace_dir):
             map = config.config_map()
             map[config.contract_workspace_[0]] = _contract_workspace_dir
             config.write_config_map(map)
