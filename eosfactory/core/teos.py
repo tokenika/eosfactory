@@ -321,11 +321,14 @@ def template_create(
     '''Given the project name and template name, create a smart contract project.
     '''
     project_name = project_name.strip()
+
+    template_dir = template_dir.strip()    
     template_dir = utils.wslMapWindowsLinux(template_dir)
     if not template_dir:
         template_dir = config.DEFAULT_TEMPLATE
-    template_dir = template_dir.strip()
-
+    if not os.path.isdir(template_dir):
+        template_dir = os.path.join(
+            config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template_dir) 
     if not os.path.isdir(template_dir):
         raise errors.Error('''
         TemplateCreate '{}' does not exist.
@@ -336,10 +339,6 @@ def template_create(
                             or not os.path.exists(workspace_dir):
         workspace_dir = config.contract_workspace()
     workspace_dir = workspace_dir.strip()
-
-    if not os.path.isdir(template_dir):
-        template_dir = os.path.join(
-            config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template_dir)
 
     project_name = utils.wslMapWindowsLinux(project_name.strip())
     split = os.path.split(project_name)
