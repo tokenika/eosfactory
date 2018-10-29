@@ -5,11 +5,11 @@ def readme():
         return f.read()
 
 setup(name='eosfactory',
-      version='2.1',
+      version='2.2',
       description='Python-based EOS smart-contract development & testing framework',
       long_description=readme(),
       classifiers=[
-        'Development Status :: 2.0 - Beta',
+        'Development Status :: 2.2 - Beta',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Testing',

@@ -316,44 +316,56 @@ def WAST(
     '''.format(os.path.normpath(target_path_wasm)))
 
 def template_create(
-        project_name, template_name=None, workspace_dir=None, 
-        remove_existing=False, open_vscode=False):
+        project_name, template_dir=None, workspace_dir=None, 
+        remove_existing=False, open_vscode=False, throw_exists=False):
     '''Given the project name and template name, create a smart contract project.
     '''
     project_name = project_name.strip()
-    if not template_name:
-        template_name = config.DEFAULT_TEMPLATE
-    template_name = template_name.strip()
-    
+
+    template_dir = template_dir.strip()    
+    template_dir = utils.wslMapWindowsLinux(template_dir)
+    if not template_dir:
+        template_dir = config.DEFAULT_TEMPLATE
+    if not os.path.isdir(template_dir):
+        template_dir = os.path.join(
+            config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template_dir) 
+    if not os.path.isdir(template_dir):
+        raise errors.Error('''
+        TemplateCreate '{}' does not exist.
+        '''.format(template_dir)) 
+       
     if not workspace_dir \
                             or not os.path.isabs(workspace_dir) \
                             or not os.path.exists(workspace_dir):
         workspace_dir = config.contract_workspace()
     workspace_dir = workspace_dir.strip()
 
-    template_dir = os.path.join(
-        config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template_name)
-
-    if not os.path.exists(template_dir):
-        raise errors.Error('''
-        TemplateCreate '{}' does not exist.
-        '''.format(template_dir))
-
-    project_dir = os.path.join(workspace_dir, project_name)
-    if os.path.exists(project_dir):
-        if remove_existing:
-            try:
-                shutil.rmtree(project_dir)
-            except Exception as e:
-                raise errors.Error(str(e))
-        else:
-            logger.INFO('''
-            NOTE:
-            Contract workspace
-            '{}'
-            already exists. Cannot owerwrite it.
-            '''.format(project_dir))
-            return
+    project_name = utils.wslMapWindowsLinux(project_name.strip())
+    split = os.path.split(project_name)
+    if os.path.isdir(split[0]):
+        project_dir = project_name
+        project_name = split[1]
+    else:
+        project_dir = os.path.join(workspace_dir, project_name)
+    if os.path.isdir(project_dir):
+        if os.listdir(project_dir):
+            if remove_existing:
+                try:
+                    shutil.rmtree(project_dir)
+                except Exception as e:
+                    raise errors.Error(str(e))
+            else:
+                msg = '''
+                NOTE:
+                Contract workspace
+                '{}'
+                already exists. Cannot overwrite it.
+                '''.format(project_dir)
+                if throw_exists:
+                    raise errors.Error(msg)
+                else:
+                    logger.ERROR(msg)
+                    return
 
     try:    # make contract directory and its build directory:
         os.makedirs(os.path.join(project_dir, "build"))
@@ -402,9 +414,8 @@ def template_create(
 
     copy_dir_contents(project_dir, template_dir, "", project_name)
     logger.TRACE('''
-    * Contract project '{}' created from template '{}' in directory
-        {}
-    '''.format(project_name, template_name, project_dir))    
+    * Contract project '{}' created from template '{}'
+    '''.format(project_name, project_dir))    
 
     if open_vscode:
         if is_windows_ubuntu():
@@ -567,7 +578,6 @@ def node_probe(verbosity=None):
                 import eosfactory.core.eosjs as cleos
 
             get_info = cleos.GetInfo(is_verbose=0)
-            count = count - 1
             head_block_num = int(get_info.json["head_block_num"])
         except:
             head_block_num = 0
@@ -582,8 +592,9 @@ def node_probe(verbosity=None):
             logger.INFO('''
             Local node is running. Block number is {}
             '''.format(head_block_num), verbosity)
-            break      
+            break
 
+        count = count - 1        
         if count <= 0:
             raise errors.Error('''
             The local node does not respond.

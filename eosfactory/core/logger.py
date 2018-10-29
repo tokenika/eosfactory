@@ -1,6 +1,7 @@
 import enum
 import re
 import inspect
+import sys
 
 from textwrap import dedent
 from termcolor import cprint, colored
@@ -116,7 +117,7 @@ def error(msg, translate=True):
 
 def ERROR(msg, translate=True, verbosity=None):
     if not verbosity:
-        cprint(error(msg, translate))
+        print(error(msg, translate), file=sys.stderr)
 
 
 def condition(message, translate=True):

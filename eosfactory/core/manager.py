@@ -224,7 +224,7 @@ editor. Return ``None`` if the the offer is rejected.
                 else:
                     raise errors.Error('''
         Use the function 'efman.edit_account_map(text_editor="nano")'
-        or the corresponding method of any object of the 'pyteos.wallet.Wallet` 
+        or the corresponding method of any object of the 'eosfactory.wallet.Wallet` 
         class to edit the file.
                     ''')                    
                     return None
@@ -287,8 +287,6 @@ editor. Return ``None`` if the the offer is rejected.
                     continue
                 else:
                     raise errors.Error('''
-        Use the function 'efman.edit_account_map(text_editor="nano")'
-        or the corresponding method of any object of the 'pyteos.wallet.Wallet` 
-        class to edit the file.
+                    Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
                     ''', translate=False)                    
                     return None

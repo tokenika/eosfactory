@@ -79,12 +79,7 @@ sudo  -H python3 -m pip install -e .
 printf "%s\n" "
 Configuring the eosfactory installation...
 "
-
-if [ ! -z "$IS_WSL" ]; then
-    python3 eosfactory/install.py ${WSL_ROOT}
-else
-    python3 eosfactory/install.py ""
-fi
+python3 eosfactory/install.py "${WSL_ROOT}"
 
 txtbld=$(tput bold)
 bldred=${txtbld}$(tput setaf 1)

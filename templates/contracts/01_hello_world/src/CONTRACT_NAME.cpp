@@ -14,9 +14,9 @@ class hello : public eosio::contract {
 
         [[eosio::action]]
         void hi( account_name user ) {
-        logger_info( "debug user name: ", name{user} );
-        require_auth( user );
-        print( "Hello, ", name{user} );
+            logger_info( "debug user name: ", name{user} );
+            require_auth( user );
+            print( "Hello, ", name{user} );
         }
 };
 

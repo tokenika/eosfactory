@@ -1,14 +1,3 @@
-'''
-Python front-end for `EOSIO cleos system`.
-
-.. module:: pyteos
-    :platform: Unix, Windows
-    :synopsis: Python front-end for `EOSIO cleos system`.
-
-.. moduleauthor:: Tokenika
-
-'''
-
 import eosfactory.core.cleos as cleos
 import eosfactory.core.setup as setup
 import eosfactory.core.interface as interface
@@ -271,8 +260,6 @@ class DelegateBw(cleos._Cleos):
 
         cleos._Cleos.__init__(
             self, args, "system", "delegatebw", is_verbose)
-
-        self.ERROR()
 
 
 

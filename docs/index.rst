@@ -33,6 +33,7 @@ Release Notes
     releases/ReleaseNotesVersion1.1
     releases/ReleaseNotesVersion2.0
     releases/ReleaseNotesVersion2.1
+    releases/ReleaseNotesVersion2.2
 
 
 Tutorials
@@ -69,16 +70,16 @@ Python Documentation
     rst/core.cleosys
     rst/core.config
     rst/core.errors
+    rst/core.interface
     rst/core.logger
     rst/core.manager
+    rst/core.setup
     rst/core.teos
     rst/core.testnet
     rst/core.utils
-    rst/shell.interface
-    rst/shell.wallet
-    rst/shell.setup
     rst/shell.account
     rst/shell.contract
+    rst/shell.wallet
     rst/eosf
 
 

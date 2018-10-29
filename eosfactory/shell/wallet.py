@@ -400,9 +400,7 @@ class Wallet(cleos.WalletCreate):
                     if temp:
                         Wallet.globals[account_object_name] = temp
                     raise errors.Error('''
-            Use the function 'manager.edit_account_map(text_editor="nano")'
-            or the corresponding method of any object of the 'pyteos.wallet.Wallet` 
-            class to edit the file.
+                    Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
                     ''')
             else:
                 break

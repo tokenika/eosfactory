@@ -33,6 +33,7 @@ cli_exe_ = (
 node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
     ["build/programs/nodeos/nodeos", "/usr/local/eosio/bin/nodeos"])
+
 # eosio_cpp_ = ("EOSIO_CPP", ["/usr/local/eosio.cdt/bin/eosio-cpp"])
 # eosio_abigen_ = ("EOSIO_ABIGEN", ["/usr/local/eosio.cdt/bin/eosio-abigen"])
 
@@ -66,12 +67,12 @@ s2wasm_exe_ = ( ##/mnt/c/Workspaces/EOS/eos/
 wast2wasm_exe_ = (
     "WAST2WASM_EXECUTABLE",
     ["build/libraries/wasm-jit/Source/Programs/eosio-wast2wasm",
-        "/usr/local/bin/eosio-wast2wasm", "/usr/local/eosio/bin/eosio-wast2wasm"])
+        "/usr/local/bin/eosio-wast2wasm", 
+        "/usr/local/eosio/bin/eosio-wast2wasm"])
 abigen_exe_ = ( # used without eosio.cdt
     "ABIGEN_EXECUTABLE",
     ["build/programs/eosio-abigen/eosio-abigen",
         "/usr/local/bin/eosio-abigen","/usr/local/eosio/bin/eosio-abigen"])
-
 is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
 
 
@@ -325,17 +326,14 @@ def first_valid_path(config_list, findFile=None):
 
 
 def contract_dir(contract_dir_hint):
-    ''' Given a hint, determine the contract directory.
-    The contract directory is the container for the project of a contract. The 
-    hint is probed to be one of the following pieces of information:
+    '''Given a hint, determine the contract directory.
+    The contract directory is the container for the project of a contract.
+    The hint is probed to be one of the following pieces of information:
     the absolute path to a contract directory;
-    the relative path to a contract directory, relative to the directory 
-        set with the 'contract_workspace_' variable;
-    the relative path to a contract directory, relative to the ``contracts`` 
-        directory in the repository of EOSFactory;
-    the relative path to a contract directory, relative to the ``contracts`` 
-        directory in the repository of EOSIO.
-    ''' 
+    the relative path to a contract directory, relative to the directory set with the ``contract_workspace_`` variable;
+    the relative path to a contract directory, relative to the ``contracts`` directory in the repository of EOSFactory;
+    the relative path to a contract directory, relative to the ``contracts`` directory in the repository of EOSIO.
+    '''
     contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
 
     # ? the absolute path to a contract directory
@@ -488,7 +486,8 @@ def contract_workspace():
         Cannot determine the contract workspace.
         Tried path list:
         {}
-    '''.format(trace))            
+    '''.format(trace))
+
 
 def abi_file(contract_dir):
     '''Given the contract directory, return the ABI file path relative.

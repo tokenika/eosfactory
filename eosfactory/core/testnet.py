@@ -110,17 +110,18 @@ def testnets():
 
 
 JUNGLE = Testnet(
-    "http://88.99.97.30:38888",
+    "http://145.239.133.201:8888",
     "dgxo1uyhoytn",
     "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
     "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
 )
 
 KYLIN = Testnet(
-    "https://api.kylin.alohaeos.com",
+    "http://145.239.133.201:9999",
     "xlg3pao3idlq",
     "5JBbCwe3t6j63yerYmguRVWg7ZVDY3nKXzGYMwkR9y5w4appKhk",
     "5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK"
 )
 
-# /mnt/c/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://88.99.97.30:38888 get info
+# /mnt/d/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://145.239.133.201:8888 get info
+# /mnt/d/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://145.239.133.201:9999 get info
