@@ -39,8 +39,3 @@ localnode/blocks
 # Python egg metadata, regenerated from source files by setuptools.
 /*.egg-info
 tests/js
-
-docs/tutorials/style.css
-docs/tutorials/00.IntroductionToEOSFactory.html
-docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html
-docs/tutorials/05.InteractingWithPublicTestnet.html
