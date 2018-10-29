@@ -326,17 +326,14 @@ def first_valid_path(config_list, findFile=None):
 
 
 def contract_dir(contract_dir_hint):
-    ''' Given a hint, determine the contract directory.
-    The contract directory is the container for the project of a contract. The 
-    hint is probed to be one of the following pieces of information:
+    '''Given a hint, determine the contract directory.
+    The contract directory is the container for the project of a contract.
+    The hint is probed to be one of the following pieces of information:
     the absolute path to a contract directory;
-    the relative path to a contract directory, relative to the directory 
-        set with the 'contract_workspace_' variable;
-    the relative path to a contract directory, relative to the ``contracts`` 
-        directory in the repository of EOSFactory;
-    the relative path to a contract directory, relative to the ``contracts`` 
-        directory in the repository of EOSIO.
-    ''' 
+    the relative path to a contract directory, relative to the directory set with the ``contract_workspace_`` variable;
+    the relative path to a contract directory, relative to the ``contracts`` directory in the repository of EOSFactory;
+    the relative path to a contract directory, relative to the ``contracts`` directory in the repository of EOSIO.
+    '''
     contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
 
     # ? the absolute path to a contract directory
@@ -489,7 +486,8 @@ def contract_workspace():
         Cannot determine the contract workspace.
         Tried path list:
         {}
-    '''.format(trace))            
+    '''.format(trace))
+
 
 def abi_file(contract_dir):
     '''Given the contract directory, return the ABI file path relative.

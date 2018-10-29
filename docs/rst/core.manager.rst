@@ -1,6 +1,6 @@
 core.manager
 ============
 
-.. automodule:: core.manager
+.. automodule:: eosfactory.core.manager
     :members:
     :show-inheritance:

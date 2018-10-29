@@ -1,6 +1,6 @@
-core.cleos
+core.setup
 ==========
 
-.. automodule:: eosfactory.core.cleos
+.. automodule:: eosfactory.core.setup
     :members:
     :show-inheritance:

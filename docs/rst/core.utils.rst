@@ -1,6 +1,6 @@
 core.utils
 ==========
 
-.. automodule:: core.utils
+.. automodule:: eosfactory.core.utils
     :members:
     :show-inheritance:
