@@ -1,5 +1,5 @@
-from eosf import *
 import argparse
+from eosfactory.eosf import *
 
 def register_testnet(
     url, alias, account_name, owner_key, active_key):

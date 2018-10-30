@@ -17,14 +17,13 @@ $ python3
 ```
 
 ```
-from eosf import *
+from eosfactory.eosf import *
 ```
 
 Start a local testnet, create a wallet and then create a special master account referenced by a global variable called `master`:
 
 ```
 reset()
-create_wallet()   
 create_master_account("master")
 ```
 

@@ -25,7 +25,7 @@ $ python3
 ```
 
 ```
-from eosf import *
+from eosfactory.eosf import *
 ```
 
 First, lets's start a local testnet:
@@ -71,7 +71,7 @@ $ python3
 ```
 
 ```
-from eosf import *
+from eosfactory.eosf import *
 ```
 
 Resume the testnet:
@@ -108,7 +108,7 @@ $ python3
 ```
 
 ```
-from eosf import *
+from eosfactory.eosf import *
 ```
 
 And this time we reset the testnet:
@@ -147,7 +147,7 @@ Create a new Python session and import *EOSFactory* API:
 $ python3
 ```
 ```
-from eosf import *
+from eosfactory.eosf import *
 ```
 
 Then create a `Wallet` object:

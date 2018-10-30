@@ -24,7 +24,7 @@ $ python3
 ```
 
 ```
-from eosf import *
+from eosfactory.eosf import *
 ```
 
 First, let's start a local testnet:
@@ -36,7 +36,6 @@ reset()
 Next, we create a wallet and then we use the `create_master_account` command to create a global variable named `master` referencing the `eosio` account.
 
 ```
-create_wallet()
 create_master_account("master")
 master.info()
 ```
@@ -68,7 +67,7 @@ $ python3
 ```
 
 ```
-from eosf import *
+from eosfactory.eosf import *
 ```
 
 First, we need to define a remote testnet and pass to *EOSFactory* the data of the account we control there:
@@ -94,7 +93,6 @@ testnet.clear_cache()
 Then, we proceed to create a global variable named `master` referencing the remote testnet account:
 
 ```
-create_wallet()
 create_master_account("master", testnet)
 master.info()
 ```

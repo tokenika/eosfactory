@@ -1,4 +1,4 @@
-from eosf import *
+from eosfactory.eosf import *
 
 reset()
 info()

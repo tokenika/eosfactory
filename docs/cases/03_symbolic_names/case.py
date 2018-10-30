@@ -1,7 +1,6 @@
-from eosf import *
+from eosfactory.eosf import *
 
 reset()
-create_wallet()
 create_master_account("master")
 create_account("host", master)
 create_account("alice", master)

@@ -7,13 +7,13 @@
         "taskName": "Compile",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; mkdir -p build; python3 -c 'import core.teos as teos; teos.WAST(r\"${workspaceFolder}/src\", compile_only=True)'"
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.WAST(r\"${workspaceFolder}/src\", compile_only=True)'"
         },
         "osx": {
-            "command": "mkdir -p build; python3 -c 'import core.teos as teos; teos.WAST(\"${workspaceFolder}/src\", compile_only=True)'"
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.WAST(\"${workspaceFolder}/src\", compile_only=True)'"
         },
         "linux": {
-            "command": "mkdir -p build; python3 -c 'import core.teos as teos; teos.WAST(\"${workspaceFolder}/src\", compile_only=True)'"
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.WAST(\"${workspaceFolder}/src\", compile_only=True)'"
         },
         "presentation": {
             "reveal": "always",
@@ -26,13 +26,13 @@
         "taskName": "Build",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; mkdir -p build; python3 -c 'import core.teos as teos; teos.ABI(r\"${workspaceFolder}/src\"); teos.WAST(r\"${workspaceFolder}/src\")'"
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.ABI(r\"${workspaceFolder}/src\"); teos.WAST(r\"${workspaceFolder}/src\")'"
         },
         "osx": {
-            "command": "mkdir -p build; python3 -c 'import core.teos as teos; teos.ABI(\"${workspaceFolder}/src\"); teos.WAST(\"${workspaceFolder}/src\")'"
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.ABI(\"${workspaceFolder}/src\"); teos.WAST(\"${workspaceFolder}/src\")'"
         },
         "linux": {
-            "command": "mkdir -p build; python3 -c 'import core.teos as teos; teos.ABI(\"${workspaceFolder}/src\"); teos.WAST(\"${workspaceFolder}/src\")'"
+            "command": "mkdir -p build; python3 -c 'import eosfactory.core.teos as teos; teos.ABI(\"${workspaceFolder}/src\"); teos.WAST(\"${workspaceFolder}/src\")'"
         },
         "problemMatcher": [],
         "presentation": {
@@ -50,7 +50,7 @@
         "taskName": "Test",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; python3 ./tests/test1.py"
+            "command": "python3 ./tests/test1.py"
         },
         "osx": {
             "command": "python3 ./tests/test1.py"
@@ -69,7 +69,7 @@
         "taskName": "Unittest",
         "type": "shell",
         "windows": {
-            "command": "source ~/.profile; python3 ./tests/unittest1.py"
+            "command": "python3 ./tests/unittest1.py"
         },
         "osx": {
             "command": "python3 ./tests/unittest1.py"

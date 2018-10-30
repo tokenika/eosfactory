@@ -1,5 +1,5 @@
 import sys
-from eosf import *
+from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 
@@ -10,7 +10,6 @@ def test():
     Initialize the token and run a couple of transfers between different accounts.
     ''')
     reset()
-    create_wallet()
     create_master_account("master")
 
     COMMENT('''

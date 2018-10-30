@@ -1,5 +1,5 @@
-from eosf import *
 import argparse
+from eosfactory.eosf import *
 
 def register_account(
     url, account_object_name,
@@ -8,7 +8,6 @@ def register_account(
     setup.set_nodeos_address(url)
     manager.verify_testnet_production()
 
-    create_wallet(file=True)
     create_master_account(
         account_object_name,
         account_name,

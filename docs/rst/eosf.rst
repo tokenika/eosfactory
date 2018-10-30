@@ -1,6 +1,6 @@
 eosf
 ====
 
-.. automodule:: eosf
+.. automodule:: eosfactory.eosf
     :members:
     :show-inheritance:

@@ -19,7 +19,23 @@ config.json
 .vscode/settings.json
 .vscode/tasks.json
 
-pyteos/appJar
 vsc_extension
 node_modules
 package-lock.json
+
+tests/test.py
+tests/js.js
+tests/eosjs.py
+tests/eosjsecc.js
+localnode/state
+localnode/blocks
+
+# Compiled python modules.
+*.pyc
+
+# Setuptools distribution folder.
+/dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+tests/js

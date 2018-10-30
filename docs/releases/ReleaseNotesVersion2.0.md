@@ -30,7 +30,7 @@ EOSFactory [v2.0](https://github.com/tokenika/eosfactory/releases/tag/v2.0) is c
 * The entire wallet management migrated to `keosd`, as for security reasons this feature is no longer supported by `nodeos`.
 * Radically improved mechanism for mapping random account names to human-friendly aliases, including symbolic translation of *EOS* logger messages.
 * New mechanism for caching public testnet settings.
-* [Developer API](https://github.com/tokenika/eosfactory/blob/master/pyteos/eosf.py) reduced to less than 20 basic commands and classes.
+* [Developer API](https://github.com/tokenika/eosfactory/blob/master/eosfactory/eosf.py) reduced to less than 20 basic commands and classes.
 * Radially improved logger messaging, including highly customizable verbosity.
 
 ## Current limitations

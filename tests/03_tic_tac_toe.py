@@ -1,5 +1,5 @@
 import unittest, argparse, sys, time
-from eosf import *
+from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
 
@@ -44,14 +44,16 @@ class Test(unittest.TestCase):
 
         testnet.verify_production()
         
-        create_wallet(file=True)
         create_master_account("master", testnet)
-        create_account("host", master,
-            buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-        create_account("alice", master,
-            buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-        create_account("carol", master,
-            buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+        create_account(
+            "host", master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+            stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+        create_account(
+            "alice", master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+            stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+        create_account(
+            "carol", master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+            stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
         if not testnet.is_local():
             cls.stats()

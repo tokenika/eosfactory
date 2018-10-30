@@ -1,5 +1,5 @@
 import unittest
-from eosf import *
+from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 
@@ -17,7 +17,6 @@ class Test(unittest.TestCase):
         Create a contract from template, then build and deploy it.
         ''')
         reset()
-        create_wallet()
         create_master_account("master")
 
         COMMENT('''
@@ -38,7 +37,8 @@ class Test(unittest.TestCase):
         ''')
         create_account("host", master)
         contract = Contract(host, project_from_template(
-            CONTRACT_WORKSPACE, template="01_hello_world", remove_existing=True))
+            CONTRACT_WORKSPACE, template="01_hello_world", 
+            remove_existing=True))
         contract.build()
         contract.deploy()
 
@@ -55,13 +55,6 @@ class Test(unittest.TestCase):
         host.push_action(
             "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
         self.assertTrue("carol" in DEBUG())
-
-        COMMENT('''
-        WARNING: This action should fail due to being duplicate!
-        ''')
-        with self.assertRaises(DuplicateTransactionError):
-            host.push_action(
-                "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
 
         COMMENT('''
         WARNING: This action should fail due to authority mismatch!

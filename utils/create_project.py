@@ -1,5 +1,5 @@
-from eosf import *
 import argparse
+from eosfactory.eosf import *
 
 parser = argparse.ArgumentParser(description='''
 Given a workspace name and a template name (optional),

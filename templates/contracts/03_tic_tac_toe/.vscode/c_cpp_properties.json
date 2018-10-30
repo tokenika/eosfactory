@@ -3,24 +3,24 @@
         {
             "name": "LinuxWin32",
             "includePath": [
-                "${EOSIO_SOURCE_DIR}/contracts",
-                "${EOSIO_SOURCE_DIR}/contracts/libc++/upstream/include",
-                "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
-                "${U_HOME}/opt/boost/include",
-                "/usr/local/include/",
-                "${EOSIO_SOURCE_DIR}/externals/magic_get/include",
+                "@EOSIO_DIR@/contracts",
+                "@EOSIO_DIR@/contracts/libc++/upstream/include",
+                "@EOSIO_DIR@/contracts/musl/upstream/include",
+                "@HOME@/opt/boost/include",
+                "@ROOT@/usr/local/include/",
+                "@EOSIO_DIR@/externals/magic_get/include",
                 "${workspaceFolder}"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
             "browse": {
                 "path": [
-                    "${EOSIO_SOURCE_DIR}/contracts",
-                    "${EOSIO_SOURCE_DIR}/contracts/libc++/upstream/include",
-                    "${EOSIO_SOURCE_DIR}/contracts/musl/upstream/include",
-                    "${U_HOME}/opt/boost/include",
-                    "/usr/local/include/",
-                    "${EOSIO_SOURCE_DIR}/externals/magic_get/include",
+                    "@EOSIO_DIR@/contracts",
+                    "@EOSIO_DIR@/contracts/libc++/upstream/include",
+                    "@EOSIO_DIR@/contracts/musl/upstream/include",
+                    "@HOME@/opt/boost/include",
+                    "@ROOT@/usr/local/include/",
+                    "@EOSIO_DIR@/externals/magic_get/include",
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
