@@ -554,11 +554,13 @@ def node_start(clear=False, verbosity=None):
             subprocess.Popen(
                 "gnome-terminal -- " + " ".join(args_), shell=True)
     else:
+        nodeos_log = config.nodeos_log()
+        std_out_handle = open(nodeos_log, 'w') if nodeos_log else subprocess.DEVNULL
         args_.insert(0, config.node_exe())
         subprocess.Popen(
             " ".join(args_), 
-            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
-            stderr=subprocess.DEVNULL, shell=True)
+            stdin=subprocess.DEVNULL, stdout=std_out_handle, 
+            stderr=subprocess.STDOUT, shell=True)
 
     node_probe(verbosity)                    
 

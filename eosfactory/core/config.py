@@ -74,7 +74,7 @@ abigen_exe_ = ( # used without eosio.cdt
     ["build/programs/eosio-abigen/eosio-abigen",
         "/usr/local/bin/eosio-abigen","/usr/local/eosio/bin/eosio-abigen"])
 is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
-
+nodeos_log_ = ("NODEOS_LOG", [None])
 
 def eosio_repository_dir():
     return config_value(eosio_repository_dir_)
@@ -115,6 +115,8 @@ def wsl_root():
 def is_nodeos_in_window():
     return config_value(is_nodeos_in_window_)
 
+def nodeos_log():
+    return config_value(nodeos_log_)
 
 def http_server_address():
     return config_value(node_address_)
