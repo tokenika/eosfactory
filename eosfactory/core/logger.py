@@ -44,7 +44,8 @@ def TRACE(msg=None, translate=True, verbosity=None):
     msg = condition(msg, translate)
     __trace_buffer = msg
 
-    if msg and Verbosity.TRACE in (verbosity if verbosity else __verbosity):
+    if msg and Verbosity.TRACE in \
+                        (verbosity if not verbosity is None else __verbosity):
         color = Verbosity.TRACE.value
         cprint(msg, color[0], color[1], attrs=color[2])
 
@@ -58,10 +59,8 @@ def INFO(msg=None, translate=True, verbosity=None):
     msg = condition(msg, translate)
     __info_buffer = msg
 
-    v = verbosity if verbosity else __verbosity
-    if msg and (
-            Verbosity.TRACE in v or Verbosity.INFO in v
-        ):
+    v = verbosity if not verbosity is None else __verbosity
+    if msg and (Verbosity.TRACE in v or Verbosity.INFO in v):
         color = Verbosity.INFO.value
         cprint(msg, color[0], color[1], attrs=color[2])        
 
@@ -75,7 +74,8 @@ def OUT(msg=None, translate=True, verbosity=None):
     msg = condition(msg, translate)
     __out_buffer = msg
 
-    if msg and Verbosity.OUT in (verbosity if verbosity else __verbosity):
+    if msg and Verbosity.OUT in \
+                        (verbosity if not verbosity is None else __verbosity):
         color = Verbosity.OUT.value
         cprint(msg, color[0], color[1], attrs=color[2])
 
@@ -89,7 +89,8 @@ def DEBUG(msg=None, translate=True, verbosity=None):
     msg = condition(msg, translate)
     __debug_buffer = msg
 
-    if msg and Verbosity.DEBUG in (verbosity if verbosity else __verbosity):
+    if msg and Verbosity.DEBUG in \
+                        (verbosity if not verbosity is None else __verbosity):
         color = Verbosity.DEBUG.value
         cprint(msg, color[0], color[1], attrs=color[2])
 
@@ -115,9 +116,8 @@ def error(msg, translate=True):
         color[0], color[1], attrs=color[2])
 
 
-def ERROR(msg, translate=True, verbosity=None):
-    if not verbosity:
-        print(error(msg, translate), file=sys.stderr)
+def ERROR(msg, translate=True):
+    print(error(msg, translate), file=sys.stderr)
 
 
 def condition(message, translate=True):
