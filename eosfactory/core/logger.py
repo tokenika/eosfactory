@@ -37,7 +37,7 @@ def SCENARIO(msg):
 
 
 __trace_buffer = ""
-def TRACE(msg=None, translate=True, verbosity=None):
+def TRACE(msg=None, verbosity=None, translate=True):
     if not msg:
         return __trace_buffer
 
@@ -51,7 +51,7 @@ def TRACE(msg=None, translate=True, verbosity=None):
 
 
 __info_buffer = ""
-def INFO(msg=None, translate=True, verbosity=None):
+def INFO(msg=None, verbosity=None, translate=True):
     global __info_buffer
     if not msg:
         return __info_buffer
@@ -66,7 +66,7 @@ def INFO(msg=None, translate=True, verbosity=None):
 
 
 __out_buffer = ""
-def OUT(msg=None, translate=True, verbosity=None):
+def OUT(msg=None, verbosity=None, translate=True):
     global __out_buffer
     if not msg:
         return __out_buffer
@@ -81,7 +81,7 @@ def OUT(msg=None, translate=True, verbosity=None):
 
 
 __debug_buffer = ""
-def DEBUG(msg=None, translate=True, verbosity=None):
+def DEBUG(msg=None, verbosity=None, translate=True):
     global __debug_buffer    
     if not msg:
         return __debug_buffer

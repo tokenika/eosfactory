@@ -22,7 +22,9 @@ TEMPLATE_HOME = "@HOME@"
 TEMPLATE_ROOT = "@ROOT@"
 
 
-def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
+def ABI(
+        contract_dir_hint=None, code_name=None, include_dir=None, 
+        verbosity=None):
     '''Given a hint to a contract directory, produce ABI file.
     '''
     contract_dir = config.contract_dir(contract_dir_hint)
@@ -49,7 +51,7 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
             An ABI exists in the source directory. Cannot overwrite it:
             {}
             Just copying it to the target directory.
-            '''.format(src))
+            '''.format(src), verbosity)
             shutil.move(
                 srcPath, os.path.join(target_dir, 
                 os.path.basename(srcPath)))
@@ -117,12 +119,12 @@ def ABI(contract_dir_hint=None, code_name=None, include_dir=None):
 
     logger.TRACE('''
     ABI file writen to file: {}
-    '''.format(target_path_abi))
+    '''.format(target_path_abi), verbosity)
 
 
 def WAST(
         contract_dir_hint, code_name=None, include_dir=None, 
-        compile_only=False):
+        compile_only=False, verbosity=None):
     '''Given a hint to a contract directory, produce WAST and WASM code.
     '''
 
@@ -287,7 +289,7 @@ def WAST(
 
             logger.TRACE('''
             WAST file writen to file: {}
-            '''.format(os.path.normpath(targetPathWast)))                      
+            '''.format(os.path.normpath(targetPathWast)), verbosity)                      
 
             command_line = [
                 config.wast2wasm_exe(), 
@@ -313,12 +315,25 @@ def WAST(
 
     logger.TRACE('''
     WASM file writen to file: {}
-    '''.format(os.path.normpath(target_path_wasm)))
+    '''.format(os.path.normpath(target_path_wasm)), verbosity)
 
-def template_create(
+def project_from_template(
         project_name, template_dir=None, workspace_dir=None, 
-        remove_existing=False, open_vscode=False, throw_exists=False):
+        remove_existing=False, open_vscode=False, throw_exists=False, 
+        verbosity=None):
     '''Given the project name and template name, create a smart contract project.
+
+    - **parameters**::
+
+        project_name: The name of the project, or an existing path to 
+            a directory.
+        template: The name of the template used, defaults to 
+            config.DEFAULT_TEMPLATE, or an existing path to a directory.
+        workspace_dir: If set, the folder for the work-space. Defaults to the 
+            value returned by the config.contract_workspace() function.
+        remove_existing: If set, overwrite any existing project.
+        visual_studio_code: If set, open the ``VSCode``, if available.
+        verbosity: The logging configuration.
     '''
     project_name = project_name.strip()
 
@@ -413,9 +428,10 @@ def template_create(
             output.write(template)
 
     copy_dir_contents(project_dir, template_dir, "", project_name)
+
     logger.TRACE('''
     * Contract project '{}' created from template '{}'
-    '''.format(project_name, project_dir))    
+    '''.format(project_name, project_dir), verbosity)    
 
     if open_vscode:
         if is_windows_ubuntu():
@@ -428,6 +444,10 @@ def template_create(
             command_line = "code {}".format(project_dir)
 
         os.system(command_line)
+
+    logger.INFO('''
+    ######### Created contract project ``{}``, originated from template ``{}``.
+    '''.format(project_name, template_dir), verbosity)
 
     return project_dir
 
@@ -538,7 +558,6 @@ def node_start(clear=False, verbosity=None):
         print(config.node_exe() + " " + " ".join(args_))
 
     if config.is_nodeos_in_window():
-
         if is_windows_ubuntu():
             args_.insert(0, config.node_exe())
             subprocess.call(
@@ -560,7 +579,7 @@ def node_start(clear=False, verbosity=None):
             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
             stderr=subprocess.DEVNULL, shell=True)
 
-    node_probe(verbosity)                    
+    node_probe(verbosity)
 
 
 def node_probe(verbosity=None):
