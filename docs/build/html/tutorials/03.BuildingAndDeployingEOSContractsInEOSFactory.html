@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Building and Deploying EOS Contracts using EOSFactory &#8212; EOSFactory 0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Working with EOS Contracts using EOSFactory in Visual Studio Code" href="04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html" />
+    <link rel="prev" title="Interacting with EOS Contracts in EOSFactory" href="02.InteractingWithEOSContractsInEOSFactory.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          EOSFactory</a>
+        <span class="navbar-text navbar-version pull-left"><b>v2.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../cases/02_wallet/case.html">Wallet Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cases/03_symbolic_names/case.html">Symbolic Names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cases/04_account/case.html">Account Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cases/05_master_account/case.html">Master Account</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion0.8.html">EOSFactory Release Notes - v0.8</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.0.html">EOSFactory Release Notes - v1.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion1.1.html">EOSFactory Release Notes - v1.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion2.0.html">EOSFactory Release Notes - v2.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion2.1.html">EOSFactory Release Notes - v2.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/ReleaseNotesVersion2.2.html">EOSFactory Release Notes - v2.2</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="00.IntroductionToEOSFactory.html">Introduction to <em>EOSFactory</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="01.InstallingEOSFactory.html">Installing <em>EOSFactory</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in <em>EOSFactory</em></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Building and Deploying EOS Contracts using <em>EOSFactory</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using <em>EOSFactory</em> in <em>Visual Studio Code</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.cleos.html">core.cleos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.cleosys.html">core.cleosys</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.config.html">core.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.errors.html">core.errors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.interface.html">core.interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.logger.html">core.logger</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.manager.html">core.manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.setup.html">core.setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.teos.html">core.teos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.testnet.html">core.testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/core.utils.html">core.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/shell.account.html">shell.account</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/shell.contract.html">shell.contract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/shell.wallet.html">shell.wallet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rst/eosf.html">eosf</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Building and Deploying EOS Contracts using <em>EOSFactory</em></a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#run-python-cli-in-vsc">Run Python CLI in VSC</a></li>
+<li><a class="reference internal" href="#create-a-new-contract-from-template">Create a new contract from template</a></li>
+<li><a class="reference internal" href="#create-reference-to-an-existing-contract">Create reference to an existing contract</a></li>
+<li><a class="reference internal" href="#edit-the-source-code">Edit the source code</a></li>
+<li><a class="reference internal" href="#build-the-new-contract">Build the new contract</a></li>
+<li><a class="reference internal" href="#deploy-the-contract">Deploy the contract</a></li>
+<li><a class="reference internal" href="#test-the-contract">Test the contract</a></li>
+<li><a class="reference internal" href="#modify-the-code-re-compile-re-deploy">Modify the code, re-compile &amp; re-deploy</a></li>
+<li><a class="reference internal" href="#clean-up">Clean up</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="02.InteractingWithEOSContractsInEOSFactory.html" title="Previous Chapter: Interacting with EOS Contracts in EOSFactory"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Interacting w...</span>
+    </a>
+  </li>
+  <li>
+    <a href="04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html" title="Next Chapter: Working with EOS Contracts using EOSFactory in Visual Studio Code"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Working with ... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="building-and-deploying-eos-contracts-using-eosfactory">
+<span id="building-and-deploying-eos-contracts-using-eosfactory"></span><h1>Building and Deploying EOS Contracts using <em>EOSFactory</em><a class="headerlink" href="#building-and-deploying-eos-contracts-using-eosfactory" title="Permalink to this headline">¶</a></h1>
+<p>The purpose of this tutorial is to demonstrate how you can use <em>EOSFactory</em> to execute the simplest development cycle: create a new contract, edit the code, build the contract, deploy it and interact with it.</p>
+<div class="section" id="prerequisites">
+<span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>This tutorial assumes that you have successfully installed <em>EOSFactory</em>. If it’s not the case, please refer to <a class="reference external" href="01.InstallingEOSFactory.html">Installing EOSFactory</a>.</li>
+<li>We also assume that you are familiar with the material covered in <a class="reference external" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a>.</li>
+<li>Finally, we assume that you are familiar with the official <a class="reference external" href="https://developers.eos.io/eosio-cpp/docs/hello-world">EOS Hello World tutorial</a>.</li>
+</ul>
+</div>
+<div class="section" id="run-python-cli-in-vsc">
+<span id="run-python-cli-in-vsc"></span><h2>Run Python CLI in VSC<a class="headerlink" href="#run-python-cli-in-vsc" title="Permalink to this headline">¶</a></h2>
+<p>Open a bash terminal and run Python CLI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">python3</span>
+</pre></div>
+</div>
+<p>Once in the Python shell, import the <em>EOSFactory</em> library:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">eosfactory.eosf</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-a-new-contract-from-template">
+<span id="create-a-new-contract-from-template"></span><h2>Create a new contract from template<a class="headerlink" href="#create-a-new-contract-from-template" title="Permalink to this headline">¶</a></h2>
+<p>To create a new contract from a pre-defined template all you need is a name for the contract and the name of the template, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span> <span class="o">=</span> <span class="n">ContractBuilder</span><span class="p">(</span><span class="n">project_from_template</span><span class="p">(</span><span class="s2">&quot;foo_bar&quot;</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="s2">&quot;01_hello_world&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> Do not use spaces in contract names. What is allowed are letters, numbers, underscores <code class="docutils literal notranslate"><span class="pre">_</span></code>, dots <code class="docutils literal notranslate"><span class="pre">.</span></code> and dashes <code class="docutils literal notranslate"><span class="pre">-</span></code>. Regarding the second parameter, as of now there are three templates to choose from (i.e. <code class="docutils literal notranslate"><span class="pre">01_hello_world</span></code>, <code class="docutils literal notranslate"><span class="pre">02_eosio_token</span></code> and <code class="docutils literal notranslate"><span class="pre">03_tic_tac_toe</span></code>), with more coming in the future. This parameter is optional, the default value is&nbsp;<code class="docutils literal notranslate"><span class="pre">01_hello_world</span></code>.</p>
+</div>
+<div class="section" id="create-reference-to-an-existing-contract">
+<span id="create-reference-to-an-existing-contract"></span><h2>Create reference to an existing contract<a class="headerlink" href="#create-reference-to-an-existing-contract" title="Permalink to this headline">¶</a></h2>
+<p>The above command creates a new folder and inside it a new smart-contract file is placed. However, if you want to access an existing smart-contract, use the following syntax and specifying the entire path, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span> <span class="o">=</span> <span class="n">ContractBuilder</span><span class="p">(</span><span class="s2">&quot;/mnt/d/Workspaces/EOS/contracts/foo_bar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or use just the folder name, if the contract is located in the workspace you explicitly defined when installing <em>EOSFactory</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span> <span class="o">=</span> <span class="n">ContractBuilder</span><span class="p">(</span><span class="s2">&quot;foo_bar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In a similar way, you can access demo contracts shipped with <em>EOSFactory</em>, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span> <span class="o">=</span> <span class="n">ContractBuilder</span><span class="p">(</span><span class="s2">&quot;01_hello_world&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="edit-the-source-code">
+<span id="edit-the-source-code"></span><h2>Edit the source code<a class="headerlink" href="#edit-the-source-code" title="Permalink to this headline">¶</a></h2>
+<p>To check the directory where the contract’s files are located:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">path</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Locate the folder containing the new contract (if you’re not sure where it is, use the output produced by the <code class="docutils literal notranslate"><span class="pre">contract.path</span></code> method) and edit the <code class="docutils literal notranslate"><span class="pre">foo_bar.cpp</span></code> file in your favorite text editor by commenting out line <code class="docutils literal notranslate"><span class="pre">18</span></code>, i.e. <code class="docutils literal notranslate"><span class="pre">require_auth(</span> <span class="pre">user</span> <span class="pre">)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="c1">#include &lt;eosiolib/eosio.hpp&gt;</span>
+<span class="c1">#include &lt;eosiolib/print.hpp&gt;</span>
+
+<span class="c1">#define DEBUG</span>
+
+<span class="c1">#include &quot;logger.hpp&quot;</span>
+<span class="c1">#include &quot;hello.world.hpp&quot;</span>
+
+<span class="n">using</span> <span class="n">namespace</span> <span class="n">eosio</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">hello</span> <span class="p">:</span> <span class="n">public</span> <span class="n">eosio</span><span class="p">::</span><span class="n">contract</span> <span class="p">{</span>
+  <span class="n">public</span><span class="p">:</span>
+    <span class="n">using</span> <span class="n">contract</span><span class="p">::</span><span class="n">contract</span><span class="p">;</span>
+
+    <span class="p">[[</span><span class="n">eosio</span><span class="p">::</span><span class="n">action</span><span class="p">]]</span>
+    <span class="n">void</span> <span class="n">hi</span><span class="p">(</span> <span class="n">account_name</span> <span class="n">user</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="n">logger_info</span><span class="p">(</span> <span class="s2">&quot;debug user name: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">}</span> <span class="p">);</span>
+      <span class="o">//</span><span class="n">require_auth</span><span class="p">(</span> <span class="n">user</span> <span class="p">);</span>
+      <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Hello, &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">}</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">EOSIO_ABI</span><span class="p">(</span> <span class="n">hello</span><span class="p">,</span> <span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-the-new-contract">
+<span id="build-the-new-contract"></span><h2>Build the new contract<a class="headerlink" href="#build-the-new-contract" title="Permalink to this headline">¶</a></h2>
+<p>You can generate ABI and the web assembly code separately:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">build_abi</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">build_wast</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Or you can generate both at the same time:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="deploy-the-contract">
+<span id="deploy-the-contract"></span><h2>Deploy the contract<a class="headerlink" href="#deploy-the-contract" title="Permalink to this headline">¶</a></h2>
+<p>First, start the testnet and initialize the workspace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">reset</span><span class="p">()</span>
+<span class="n">create_master_account</span><span class="p">(</span><span class="s2">&quot;master&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then create an account which will be holding the contract:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, let’s redefine the contract, so that it’s associated with the above account and thus becomes deployable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">contract</span><span class="o">.</span><span class="n">path</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Or you can use the name of the contract’s folder (provided it’s located in your smart-contract workspace):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="s2">&quot;foo_bar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or you can use the entire path to the contract’s folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="s2">&quot;/mnt/d/Workspaces/EOS/contracts/foo_bar&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we can deploy the contract:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> In a similar way you could deploy a demo contract supplied by <em>EOSFactory</em>, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="s2">&quot;01_hello_world&quot;</span><span class="p">)</span>
+<span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Or a demo contract supplied by <em>EOSIO</em>, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="s2">&quot;eosio.token&quot;</span><span class="p">)</span>
+<span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="test-the-contract">
+<span id="test-the-contract"></span><h2>Test the contract<a class="headerlink" href="#test-the-contract" title="Permalink to this headline">¶</a></h2>
+<p>First, let’s create a couple of testing accounts:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+<span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;carol&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can play with the contract by sending it actions with different arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">alice</span><span class="p">},</span> <span class="n">permission</span><span class="o">=</span><span class="n">alice</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">carol</span><span class="p">},</span> <span class="n">permission</span><span class="o">=</span><span class="n">carol</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">alice</span><span class="p">},</span> <span class="n">permission</span><span class="o">=</span><span class="n">carol</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">carol</span><span class="p">},</span> <span class="n">permission</span><span class="o">=</span><span class="n">alice</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> The <code class="docutils literal notranslate"><span class="pre">push_action</span></code> method takes three parameters:</p>
+<ul class="simple">
+<li>the name of the action, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;hi&quot;</span></code>,</li>
+<li>the data required by the action, e.g. <code class="docutils literal notranslate"><span class="pre">{&quot;user&quot;:alice}</span></code>,</li>
+<li>the permissions required by the action, e.g. <code class="docutils literal notranslate"><span class="pre">alice</span></code>.</li>
+</ul>
+<p>Regarding permissions, <em>EOSFactory</em> offers several options:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">alice</span><span class="p">},</span> <span class="n">alice</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">alice</span><span class="p">},</span> <span class="n">permission</span><span class="o">=</span><span class="n">alice</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">alice</span><span class="p">},</span> <span class="n">permission</span><span class="o">=</span><span class="p">(</span><span class="n">alice</span><span class="p">,</span> <span class="n">Permission</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">alice</span><span class="p">},</span> <span class="n">permission</span><span class="o">=</span><span class="p">[(</span><span class="n">alice</span><span class="p">,</span> <span class="n">Permission</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">),</span> <span class="p">(</span><span class="n">carol</span><span class="p">,</span> <span class="n">Permission</span><span class="o">.</span><span class="n">OWNER</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>All the above variations should work, as the contract allows anyone to authorize the <code class="docutils literal notranslate"><span class="pre">hi</span></code> action.</p>
+<p><strong>NOTE:</strong> Among other things, the console displays a debugger output, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">INFO</span> <span class="n">debug</span> <span class="n">user</span> <span class="n">name</span><span class="p">:</span> <span class="n">alice</span> <span class="o">@</span> <span class="mi">12</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">05</span> <span class="n">hello</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">cpp</span><span class="p">[</span><span class="mi">17</span><span class="p">](</span><span class="n">hi</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is the result of a <code class="docutils literal notranslate"><span class="pre">logger_info</span></code> clause in the <code class="docutils literal notranslate"><span class="pre">foo_bar.cpp</span></code> file (line <code class="docutils literal notranslate"><span class="pre">17</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">logger_info</span><span class="p">(</span> <span class="s2">&quot;debug user name: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">}</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="modify-the-code-re-compile-re-deploy">
+<span id="modify-the-code-re-compile-re-deploy"></span><h2>Modify the code, re-compile &amp; re-deploy<a class="headerlink" href="#modify-the-code-re-compile-re-deploy" title="Permalink to this headline">¶</a></h2>
+<p>And now let’s modify the <code class="docutils literal notranslate"><span class="pre">hi</span></code> method by uncommenting line <code class="docutils literal notranslate"><span class="pre">18</span></code>, so that that contract authenticates the user before further execution:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">void</span> <span class="n">hi</span><span class="p">(</span> <span class="n">account_name</span> <span class="n">user</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="n">logger_info</span><span class="p">(</span> <span class="s2">&quot;debug user name: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">}</span> <span class="p">);</span>
+  <span class="n">require_auth</span><span class="p">(</span> <span class="n">user</span> <span class="p">);</span>
+  <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Hello, &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">}</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Re-compile the contract:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And re-deploy the contract:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Now, if we attempt to mismatch the user and the authority, the contract will throw an error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">alice</span><span class="p">},</span> <span class="n">permission</span><span class="o">=</span><span class="n">carol</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre>Error 3090004: Missing required authority
+Ensure that you have the related authority inside your transaction!
+</pre></div>
+</div>
+<p>But if we use the appropriate authority, there should no error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="n">alice</span><span class="p">},</span> <span class="n">permission</span><span class="o">=</span><span class="n">alice</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="clean-up">
+<span id="clean-up"></span><h2>Clean up<a class="headerlink" href="#clean-up" title="Permalink to this headline">¶</a></h2>
+<p>When your are done your contract, you might want to delete it from your workspace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">contract</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> The above command removes the entire folder.</p>
+<p>To stop the testnet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To exit Python CLI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Alternatively, use the <code class="docutils literal notranslate"><span class="pre">ctrl-D</span></code> shortcut.</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Tokenika.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
