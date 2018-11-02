@@ -1,6 +1,4 @@
 build
-docs/build/doctrees
-!docs/build
 
 !/contracts/01_hello_world/build
 !/contracts/02_eosio_token/build
