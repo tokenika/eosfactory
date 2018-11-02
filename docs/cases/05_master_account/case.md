@@ -123,7 +123,7 @@ exit()
 The examples presented in this document can be executed as a Python script:
 
 ```
-python3 docs/sphinx/source/cases/05_master_account/case.py
+python3 docs""/cases/05_master_account/case.py
 ```
 
 You should get output similar to this:
