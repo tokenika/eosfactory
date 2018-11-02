@@ -197,3 +197,7 @@ source_parsers = {
 
 def setup(app):
     app.add_stylesheet('css/custom.css')  # may also be an URL
+
+
+better docs formatting
+The column width, colors, layout of the markdown documents have to be controlled. Let us introduce a customizing css sheet.
