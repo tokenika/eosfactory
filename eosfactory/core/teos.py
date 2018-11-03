@@ -318,7 +318,7 @@ def WAST(
     '''.format(os.path.normpath(target_path_wasm)), verbosity)
 
 def project_from_template(
-        project_name, template_dir=None, workspace_dir=None, 
+        project_name, template=None, workspace_dir=None, 
         remove_existing=False, open_vscode=False, throw_exists=False, 
         verbosity=None):
     '''Given the project name and template name, create a smart contract project.
@@ -337,17 +337,17 @@ def project_from_template(
     '''
     project_name = project_name.strip()
 
-    template_dir = template_dir.strip()    
-    template_dir = utils.wslMapWindowsLinux(template_dir)
-    if not template_dir:
-        template_dir = config.DEFAULT_TEMPLATE
-    if not os.path.isdir(template_dir):
-        template_dir = os.path.join(
-            config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template_dir) 
-    if not os.path.isdir(template_dir):
+    template = template.strip()    
+    template = utils.wslMapWindowsLinux(template)
+    if not template:
+        template = config.DEFAULT_TEMPLATE
+    if not os.path.isdir(template):
+        template = os.path.join(
+            config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template) 
+    if not os.path.isdir(template):
         raise errors.Error('''
         TemplateCreate '{}' does not exist.
-        '''.format(template_dir)) 
+        '''.format(template)) 
        
     if not workspace_dir \
                             or not os.path.isabs(workspace_dir) \
@@ -427,7 +427,7 @@ def project_from_template(
         with open(contract_path, "w") as output:
             output.write(template)
 
-    copy_dir_contents(project_dir, template_dir, "", project_name)
+    copy_dir_contents(project_dir, template, "", project_name)
 
     logger.TRACE('''
     * Contract project '{}' created from template '{}'
@@ -447,7 +447,7 @@ def project_from_template(
 
     logger.INFO('''
     ######### Created contract project ``{}``, originated from template ``{}``.
-    '''.format(project_name, template_dir), verbosity)
+    '''.format(project_name, template), verbosity)
 
     return project_dir
 
