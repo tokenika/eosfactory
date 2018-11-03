@@ -24,7 +24,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 project_from_template(
-    args.name, template_dir=args.template, open_vscode=args.vsc,
+    args.name, template=args.template, open_vscode=args.vsc,
     throw_exists=args.throw, remove_existing=args.ovr,
     verbosity=[] if args.silent else None
     )
