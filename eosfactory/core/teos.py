@@ -416,12 +416,10 @@ def project_from_template(
                 home = config.wsl_root() + home
                 root = config.wsl_root()
                 eosio_dir = config.wsl_root() + eosio_dir
-
             template = template.replace(TEMPLATE_HOME, home)
             template = template.replace(TEMPLATE_ROOT, root)
             template = template.replace(TEMPLATE_EOSIO_DIR, eosio_dir)
             
-        
         template = template.replace(
                             "@" + TEMPLATE_NAME + "@", project_name)
         with open(contract_path, "w") as output:

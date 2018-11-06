@@ -108,7 +108,7 @@ def node_api():
 
 
 def wsl_root():
-    path = config_value(wsl_root_)
+    path = config_value(wsl_root_).strip()
     return path.replace("\\", "/")
 
 
@@ -623,3 +623,5 @@ def current_config(contract_dir=None):
 
     return map        
 
+if __name__ == '__main__':
+    print(json.dumps(current_config(), indent=4))

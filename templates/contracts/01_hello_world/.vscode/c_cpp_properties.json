@@ -1,7 +1,6 @@
 {
     "configurations": [
         {
-            "name": "LinuxWin32",
             "includePath": [
                 "@EOSIO_DIR@/contracts",
                 "@EOSIO_DIR@/contracts/libc++/upstream/include",
