@@ -591,13 +591,13 @@ class GetTable(_Cleos):
             ):
         args = [interface.account_arg(account)]
 
-        if not scope:
-            scope=self.name
+        if scope == None:
+            scope_name=self.name
         else:
             try:
                 scope_name = scope.name
             except:
-                scope_name = scope
+                scope_name = str(scope)
 
         args.append(scope_name)
         args.append(table)
@@ -998,7 +998,7 @@ class PushAction(_Cleos):
             args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
-                        
+         
         self.console = None
         self.data = None
         _Cleos.__init__(self, args, "push", "action", is_verbose)
