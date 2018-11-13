@@ -109,7 +109,8 @@ class Transaction():
 
 def is_local_testnet():
     cleos.set_local_nodeos_address_if_none()
-    return setup.is_local_address
+    return False
+    # return setup.is_local_address
 
 
 def reset(verbosity=None):

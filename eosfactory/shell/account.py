@@ -634,7 +634,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
         except:
             pass
 
-        logger.OUT(result.out_msg)
+        # logger.OUT(result.out_msg)
         return result
 
     account_object.table = types.MethodType(table, account_object)
@@ -856,9 +856,9 @@ def create_account(
         account_object.owner_key = owner_key
         account_object.active_key = active_key
 
-    logger.TRACE('''
-        * The account object is created.
-        ''')
+    # logger.TRACE('''
+    #     * The account object is created.
+    #     ''')
     append_account_methods_and_finish(account_object_name, account_object)
 
 
