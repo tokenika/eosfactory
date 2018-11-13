@@ -616,7 +616,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
     def table(
             account_object, table_name, scope="", 
             binary=False, 
-            limit=10, key="", lower="", upper=""):
+            limit=10, key="", lower="", upper="",index="first",key_type="i64"):
 
         logger.INFO('''
         * Table ``{}`` for ``{}``
@@ -625,7 +625,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
         result = cleos.GetTable(
                     account_object, table_name, scope,
                     binary, 
-                    limit, key, lower, upper,
+                    limit, key, lower, upper,index,key_type,
                     is_verbose=False)
 
         try:
@@ -734,9 +734,9 @@ def create_account(
         creator, 
         account_name="",
         owner_key="", active_key="",
-        stake_net=3, stake_cpu=3,
+        stake_net=0, stake_cpu=0,
         permission=None,
-        buy_ram_kbytes=8, buy_ram="",
+        buy_ram_kbytes=0, buy_ram="",
         transfer=False,
         expiration_sec=30,
         skip_signature=0, dont_broadcast=0, forceUnique=0,
@@ -799,7 +799,7 @@ def create_account(
             owner_key = cleos.CreateKey("owner", is_verbose=False)
             active_key = cleos.CreateKey("active", is_verbose=False)
 
-        if stake_net and not manager.is_local_testnet():
+        if buy_ram_kbytes != 0 and not manager.is_local_testnet():
             logger.INFO('''
                         ... delegating stake to a new blockchain account ``{}`` mapped as ``{}``.
                         '''.format(account_name, account_object_name))

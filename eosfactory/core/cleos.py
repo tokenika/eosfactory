@@ -586,7 +586,7 @@ class GetTable(_Cleos):
     def __init__(
             self, account, table, scope,
             binary=False, 
-            limit=10, key="", lower="", upper="",
+            limit=10, key="", lower="", upper="",index="first",key_type="i64",
             is_verbose=True
             ):
         args = [interface.account_arg(account)]
@@ -615,6 +615,10 @@ class GetTable(_Cleos):
             args.extend(["--lower", lower])
         if upper:
             args.extend(["--upper", upper])
+        if index:
+            args.extend(["--index",index])
+        if key_type:
+            args.extend(["--key-type",key_type])
 
         _Cleos.__init__(self, args, "get", "table", is_verbose)
 
