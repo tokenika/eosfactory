@@ -37,6 +37,7 @@ get_wallet = wallet.get_wallet
 
 create_account = account.create_account
 create_master_account = account.create_master_account
+append_account_methods_and_finish = account.append_account_methods_and_finish
 
 print_stats = account.print_stats
 
