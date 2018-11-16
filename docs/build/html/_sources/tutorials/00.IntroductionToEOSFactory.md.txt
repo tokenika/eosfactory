@@ -1,0 +1,36 @@
+# Introduction to *EOSFactory*
+
+[EOSFactory](https://github.com/tokenika/eosfactory) is a Python-based [EOS](https://eos.io) smart-contract development & testing framework, created by [TOKENIKA](https://tokenika.io).
+
+The goal is to achieve a similar functionality to Ethereum's [Truffle Framework](http://truffleframework.com/).
+
+With a single command-line interface you can create a private testnet and then compile, unit-test and deploy EOS smart-contracts.
+
+All of this using simple yet powerful [Python3](https://www.python.org/) syntax.
+
+## Why it's needed?
+
+Code development and unit-testing involve tasks that need to be executed hundreds of times, and each time in exactly the same way and exactly the same context. Therefore those tasks need to be fully automated, as otherwise a lot of time is being wasted and, what's even worse, a lot of additional uncertainty is introduced. Manually performed actions are prone to errors.
+
+And this is what *EOSFactory* actually brings to the table: an easy & intuitive way to automate the process of dealing with smart-contracts. Write down, in the form of a Python script, what needs to be done multiple times in exactly the same way and exactly the same context, and then just run the script. *EOSFactory* will take care of everything else: it will compile your smart-contract, create a new testnet, deploy the contract, invoke its methods and verify the response, then tear down the testnet, and finally report the results. And all of this done in a couple of seconds.
+
+## Main features
+
+#### 1. Simple syntax
+
+The front-end of *EOSFactory* is simply a Python3 Command Line Interface. This way you can interact with EOS smart-contract, and prove it works as expected, without having to deal with the complexity of a low-level language like C++. In most cases Python's syntax is clear for everyone.
+
+#### 2. Real testnet
+
+As EOS full node is very quick we don't need to rely on a testnet simulator similar to [TestRPC](https://github.com/trufflesuite/ganache-cli) in Ethereum. Instead, we can work with a real testnet (both local and remote) and this makes unit-tests much more reliable. Thus *EOSFactory* lets you fully test your smart-contract in a couple of seconds and do it over and over again without much hassle.
+
+#### 3. Truly cross-platform
+
+We make sure everything we do is fully compatible with Windows - our toolset enables you to run an EOS node and interact with it on any operating system, including Windows, MacOS and Linux.
+
+## Architecture
+
+*EOSFactory* is composed of two layers:
+
+- C++ client (i.e. `cleos`) connected to an EOS node (i.e. `nodeos`) running a private or public testnet,
+- Python wrapper acting as a convenient human-oriented interface.

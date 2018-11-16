@@ -7,7 +7,7 @@ def wslMapLinuxWindows(path):
 
 
 def wslMapWindowsLinux(path):
-    if path.find(":\\") == -1:
+    if path.find(":") == -1:
         return path
     path = path.replace("\\", "/")
     drive = path[0]

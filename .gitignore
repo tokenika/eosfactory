@@ -1,9 +1,10 @@
-build
+docs/build/doctrees
 
 !/contracts/01_hello_world/build
 !/contracts/02_eosio_token/build
 !/contracts/03_tic_tac_toe/build
 
+Makefile
 CMakeFiles
 cmake_install.cmake
 CMakeCache.txt
@@ -37,4 +38,5 @@ localnode/blocks
 
 # Python egg metadata, regenerated from source files by setuptools.
 /*.egg-info
+
 tests/js
