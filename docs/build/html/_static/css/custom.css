@@ -15,4 +15,4 @@ code {
   color: black
 }
 
-@media (min-width:640px){.container{width:640px}}
+@media (min-width:600px){.container{width:600px}}
