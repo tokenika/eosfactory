@@ -14,13 +14,14 @@ FROM_HERE_TO_EOSF_DIR = "../../../"
 CONFIG_JSON = "config.json"
 EOSIO_CONTRACT_DIR = "build/contracts/"
 CONTRACTS_DIR = "contracts/"
+LOCALNODE = "localnode/"
 
 eosio_repository_dir_ = ("EOSIO_SOURCE_DIR", [None])
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 wallet_address_ = ("WALLET_MANAGER_ADDRESS", [None])
-genesis_json_ = ("EOSIO_GENESIS_JSON", ["localnode/genesis.json"])
-data_dir_ = ("LOCAL_NODE_DATA_DIR", ["localnode"])
-config_dir_ = ("LOCAL_NODE_CONFIG_DIR", ["localnode"])
+genesis_json_ = ("EOSIO_GENESIS_JSON", [LOCALNODE + "genesis.json"])
+data_dir_ = ("LOCAL_NODE_DATA_DIR", [LOCALNODE])
+config_dir_ = ("LOCAL_NODE_CONFIG_DIR", [LOCALNODE])
 workspaceEosio_ = ("EOSIO_WORKSPACE", [EOSIO_CONTRACT_DIR])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
@@ -97,11 +98,14 @@ def eosf_dir():
 def eosio_key_private():
     return config_value(key_private_)
 
+
 def eosio_key_public():
     return config_value(key_public_)
 
+
 def chain_state_db_size_mb():
     return config_value(chain_state_db_size_mb_)
+
 
 def node_api():
     return config_value(node_api_)
@@ -521,7 +525,8 @@ def not_defined():
 
 def current_config(contract_dir=None):
     map = {}
-   
+    
+    map["CONFIG_FILE"] = config_file()
     map[node_address_[0]] = http_server_address()     
     map[key_private_[0]] = eosio_key_private()  
     map[key_public_[0]] = eosio_key_public()
@@ -624,4 +629,4 @@ def current_config(contract_dir=None):
     return map        
 
 if __name__ == '__main__':
-    print(json.dumps(current_config(), indent=4))
+    print(json.dumps(current_config(), sort_keys=True, indent=4))
