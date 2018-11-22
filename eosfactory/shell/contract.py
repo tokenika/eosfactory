@@ -155,7 +155,7 @@ class Contract(ContractBuilder):
     def show_action(self, action, data, permission=None):
         ''' Implements the `push action` command without broadcasting. 
         '''
-        self.account.show_action(self, action, data, permission)
+        self.account.show_action(action, data, permission)
 
     def table(
             self, table_name, scope="",
@@ -169,7 +169,7 @@ class Contract(ContractBuilder):
             limit, key, lower, upper)
 
     def code(self, code="", abi="", wasm=False):
-        return self.account.code(code, abi, wasm)  
+        return self.account.code(code, abi, wasm)
 
     def console(self):
         return self._console
