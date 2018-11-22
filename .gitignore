@@ -1,4 +1,4 @@
-build
+docs/build/doctrees
 
 !/contracts/01_hello_world/build
 !/contracts/02_eosio_token/build
@@ -38,4 +38,5 @@ localnode/blocks
 
 # Python egg metadata, regenerated from source files by setuptools.
 /*.egg-info
+
 tests/js

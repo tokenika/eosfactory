@@ -181,7 +181,7 @@ exit()
 
 The examples presented in this document can be executed as a Python script:
 ```
-python3 docs/sphinx/source/cases/02_wallet/case.py
+python3 docs/cases/02_wallet/case.py
 ```
 You should get output similar to this:
 
