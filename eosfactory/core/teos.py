@@ -548,6 +548,7 @@ def args(clear=False):
     return args_
 
 
+std_out_handle = subprocess.DEVNULL
 def node_start(clear=False, verbosity=None):
     args_ = args(clear)
 
@@ -571,10 +572,19 @@ def node_start(clear=False, verbosity=None):
             subprocess.Popen(
                 "gnome-terminal -- " + " ".join(args_), shell=True)
     else:
+        global std_out_handle
+        std_out_handle = subprocess.DEVNULL
+        nodeos_log = config.nodeos_log()
+        if nodeos_log:
+            try:
+                std_out_handle = open(nodeos_log, 'w')
+            except Exception as e:
+                raise errors.Error(str(e))
+
         args_.insert(0, config.node_exe())
         subprocess.Popen(
             " ".join(args_), 
-            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+            stdin=subprocess.DEVNULL, stdout=std_out_handle, 
             stderr=subprocess.DEVNULL, shell=True)
 
     node_probe(verbosity)
@@ -651,6 +661,12 @@ Failed to kill {}. Pid is {}.
     '''.format(config.node_exe_name(), str(pids))
     )
     else:
+        if not std_out_handle == subprocess.DEVNULL:
+            try:
+                std_out_handle.close()
+            except:
+                pass
+            
         logger.INFO('''
         Local node is stopped {}.
         '''.format(str(pids)), verbosity)        
