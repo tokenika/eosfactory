@@ -11,32 +11,6 @@ elif setup.node_api == "eosjs":
     import eosfactory.core.eosjs as cleos
 
 
-def project_from_template(
-        name, template="", user_workspace=None, remove_existing=False, 
-        visual_studio_code=False, verbosity=None):
-    '''Given the template type and a name, create a contract workspace. 
-
-    - **parameters**::
-
-        name: The name of the new wallet, defaults to ``default``.
-        template: The name of the template used.
-        user_workspace: If set, the folder for the work-space. Defaults to the 
-            value of the ``EOSIO_CONTRACT_WORKSPACE`` env. variable.
-        remove_existing: If set, overwrite any existing workspace.
-        visual_studio_code: If set, open the ``VSCode``, if available.
-        verbosity: The logging configuration.
-    '''
-
-    logger.INFO('''
-    ######### Create contract ``{}`` from template ``{}``.
-    '''.format(name, template))
-
-    contract_path_absolute = teos.template_create(
-        name, template, user_workspace, remove_existing, visual_studio_code)
-
-    return contract_path_absolute
-
-
 class ContractBuilder():
     '''
     '''
@@ -195,7 +169,7 @@ class Contract(ContractBuilder):
             limit, key, lower, upper)
 
     def code(self, code="", abi="", wasm=False):
-        return self.account.code(code, abi, wasm)
+        return self.account.code(code, abi, wasm)  
 
     def console(self):
         return self._console
