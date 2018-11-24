@@ -549,7 +549,7 @@ def args(clear=False):
     return args_
 
 
-def node_start(clear=False, nodeos_log=None verbosity=None):
+def node_start(clear=False, nodeos_stdout=None verbosity=None):
     args_ = args(clear)
 
     if setup.is_print_command_line:
@@ -572,13 +572,13 @@ def node_start(clear=False, nodeos_log=None verbosity=None):
             subprocess.Popen(
                 "gnome-terminal -- " + " ".join(args_), shell=True)
     else:
-        if not nodeos_log:
-            nodeos_log = config.nodeos_log()
+        if not nodeos_stdout:
+            nodeos_stdout = config.nodeos_stdout()
 
         std_out_handle = subprocess.DEVNULL
-        if nodeos_log:
+        if nodeos_stdout:
             try:
-                std_out_handle = open(nodeos_log, 'w')
+                std_out_handle = open(nodeos_stdout, 'w')
             except Exception as e:
                 raise errors.Error('''
 Error when preparing to start the local EOS node, opening the given stdout
@@ -586,7 +586,7 @@ log file that is
 {}
 Error message is
 {}
-                '''.format(nodeos_log, str(e)))
+                '''.format(nodeos_stdout, str(e)))
 
         def onExit():
             if not std_out_handle == subprocess.DEVNULL:
