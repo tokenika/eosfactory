@@ -297,7 +297,13 @@ def ABI(
             shutil.move(
                 srcPath, os.path.join(target_dir, 
                 os.path.basename(srcPath)))
-            return 
+            return
+
+    eosio_abigen = None
+    try:
+        eosio_abigen = config.eosio_abigen()
+    except:
+        pass
 
     extensions = [".c", ".cpp",".cxx", ".c++"]
     sourcePath = srcs[0]

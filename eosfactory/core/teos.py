@@ -65,7 +65,13 @@ def ABI(
 
     extensions = [".c", ".cpp",".cxx", ".c++"]
     if eosio_abigen:
-        command_line = [config.eosio_abigen(), "-output=" + target_path_abi]
+        command_line = [
+            config.eosio_abigen(), 
+            "-R",
+            get_resources_dir(source[0]),
+            "-output=",
+            target_path_abi]
+
         for file in srcs:
             if not os.path.splitext(file)[1].lower() in extensions:
                 continue
@@ -508,18 +514,34 @@ def process(command_line, throw_error=True):
 
 def get_target_dir(source_dir):
     
-    target_dir = os.path.join(source_dir, "..", "build")
-    if os.path.exists(target_dir):
-        return target_dir
+    dir = os.path.join(source_dir, "..", "build")
+    if os.path.exists(dir):
+        return dir
 
-    target_dir = os.path.join(source_dir, "build")
-    if not os.path.exists(target_dir):
+    dir = os.path.join(source_dir, "build")
+    if not os.path.exists(dir):
         try:
-            os.mkdir(target_dir)
+            os.mkdir(dir)
         except Exception as e:
             raise errors.Error(str(e))
 
-    return target_dir
+    return dir
+
+
+def get_resources_dir(source_dir):
+    
+    dir = os.path.join(source_dir, "..", "resources")
+    if os.path.exists(dir):
+        return dir
+
+    dir = os.path.join(source_dir, "resources")
+    if not os.path.exists(dir):
+        try:
+            os.mkdir(dir)
+        except Exception as e:
+            raise errors.Error(str(e))
+
+    return dir
 
 
 def args(clear=False):
