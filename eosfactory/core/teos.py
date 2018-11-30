@@ -7,29 +7,72 @@ import re
 import pathlib
 import shutil
 import pprint
+import json
 
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 import eosfactory.core.setup as setup
 import eosfactory.core.config as config
 import eosfactory.core.errors as errors
+import eosfactory.core.teos as teos
+import eosfactory.core.vscode as vscode
 
 
 TEMPLATE_CONTRACTS_DIR = "templates/contracts"
 TEMPLATE_NAME = "CONTRACT_NAME"
-TEMPLATE_EOSIO_DIR = "@EOSIO_DIR@"
-TEMPLATE_HOME = "@HOME@"
-TEMPLATE_ROOT = "@ROOT@"
+TEMPLATE_EOSIO_DIR = "${EOSIO_DIR}"
+TEMPLATE_HOME = "${HOME}"
+TEMPLATE_ROOT = "${ROOT}"
+C_CPP_PROP = "${c_cpp_prop}"
+TASK_JSON = "${tasks}"
+
+
+def replace_templates(string): 
+    home = os.environ["HOME"]
+    root = ""
+    eosio_dir = config.eosio_repository_dir()
+    if teos.is_windows_ubuntu():
+        home = config.wsl_root() + home
+        root = config.wsl_root()
+        eosio_dir = config.wsl_root() + eosio_dir
+
+    string = string.replace(TEMPLATE_HOME, home)
+    string = string.replace(TEMPLATE_ROOT, root)
+    string = string.replace(TEMPLATE_EOSIO_DIR, eosio_dir)
+    return string                                                      
+
+
+def get_c_cpp_properties(contract_dir, c_cpp_properties_path):
+    if not c_cpp_properties_path:
+        c_cpp_properties_path = os.path.join(
+                                contract_dir, ".vscode/c_cpp_properties.json")
+    else:
+        c_cpp_properties_path = utils.wslMapWindowsLinux(c_cpp_properties_path)
+        if not os.path.exists(c_cpp_properties_path):
+            raise errors.Error('''
+                The given path does not exist:
+                ${}       
+            '''.format(c_cpp_properties_path))
+    
+    if os.path.exists(c_cpp_properties_path):
+        try:
+            with open(c_cpp_properties_path, "r") as input:
+                return json.loads(input.read())
+        except Exception as e:
+            raise errors.Error(str(e))
+    else:
+        return json.loads(replace_templates(vscode.c_cpp_properties))
 
 
 def ABI(
-        contract_dir_hint=None, code_name=None, include_dir=None, 
+        contract_dir_hint=None, c_cpp_properties_path=None,
         verbosity=None):
     '''Given a hint to a contract directory, produce ABI file.
     '''
     contract_dir = config.contract_dir(contract_dir_hint)
-    source = config.contract_source_files(contract_dir)
-    srcs = source[1]
+    # source_files[0] is directory, source_files[1] is contents:
+    source_files = config.contract_source_files(contract_dir)
+    srcs = source_files[1]
     if not srcs:
         raise errors.Error('''
         "The source is empty. The assumed contract dir is   
@@ -37,10 +80,9 @@ def ABI(
         '''.format(contract_dir))
         return
 
-    if not code_name:
-        code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
-    target_dir = get_target_dir(source[0])
-    target_path_abi = os.path.normpath(
+    code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
+    target_dir = get_target_dir(source_files[0])
+    target_path = os.path.normpath(
                         os.path.join(target_dir, code_name  + ".abi"))
 
     for src in srcs:
@@ -55,88 +97,47 @@ def ABI(
             shutil.move(
                 srcPath, os.path.join(target_dir, 
                 os.path.basename(srcPath)))
-            return    
+            return
 
-    eosio_abigen = None
-    try:
-        eosio_abigen = config.eosio_abigen()
-    except:
-        pass
+    command_line = [
+        config.eosio_abigen(),
+        "-contract=" + code_name,
+        "-R=" + get_resources_dir(source_files[0]),
+        "-output=" + target_path]
 
-    extensions = [".c", ".cpp",".cxx", ".c++"]
-    if eosio_abigen:
-        command_line = [
-            config.eosio_abigen(), 
-            "-R",
-            get_resources_dir(source[0]),
-            "-output=",
-            target_path_abi]
+    c_cpp_properties = get_c_cpp_properties(
+                                    contract_dir, c_cpp_properties_path)
 
-        for file in srcs:
-            if not os.path.splitext(file)[1].lower() in extensions:
-                continue
+    for entry in c_cpp_properties["configurations"][0]["includePath"]:
+        if entry == "${workspaceFolder}":
+            command_line.append("-extra-arg=-I=" + contract_dir)
+        else:
+            command_line.append("-extra-arg=-I=" + strip_wsl_root(entry))
+
+    for file in srcs:
+        if os.path.splitext(file)[1].lower() in \
+                                                [".c", ".cpp",".cxx", ".c++"]:
             command_line.append(file)
-        
-        try:
-            process(command_line)
-        except Exception as e:
-            raise errors.Error(str(e))
-    else:
-        ###########################################################################
-        # eosio.cdt is not available.        
-        sourcePath = srcs[0]
-        source_dir = os.path.dirname(srcs[0])
 
-        command_line = [
-            config.abigen_exe(),
-            "-extra-arg=-c", "-extra-arg=--std=c++14", 
-            "-extra-arg=--target=wasm32", "-extra-arg=-nostdinc", 
-            "-extra-arg=-nostdinc++", "-extra-arg=-DABIGEN",
-            "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts/libc++/upstream/include",
-            "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts/musl/upstream/include",
-            "-extra-arg=-I" + config.eosio_repository_dir() + "/externals/magic_get/include",
-            "-extra-arg=-I" + config.boost_include_dir(),
-            "-extra-arg=-I" + config.eosio_repository_dir() + "/contracts",
-            "-extra-arg=-I" + config.eosio_repository_dir() + "/build/contracts",
-            "-extra-arg=-I" + source_dir
-        ]
-
-        if include_dir:
-            include_dirs = include_dir.split(",")
-            for dir in include_dirs:
-                command_line.append("-extra-arg=-I " + dir)
-
-        command_line.extend(
-            [
-                "-extra-arg=-fparse-all-comments",
-                "-destination-file=" + target_path_abi,
-                # "-verbose=" + to_string(verbose),
-                "-context=" + source_dir,
-                sourcePath,
-                "--"
-            ]
-        )
-
-        if setup.is_print_command_line:
-            print("######## {}:".format(config.abigen_exe()))
-            print(" ".join(command_line))
-
+    try:
         process(command_line)
+    except Exception as e:
+        raise errors.Error(str(e))
 
     logger.TRACE('''
     ABI file writen to file: {}
-    '''.format(target_path_abi), verbosity)
+    '''.format(target_path), verbosity)
 
 
 def WAST(
-        contract_dir_hint, code_name=None, include_dir=None, 
+        contract_dir_hint, c_cpp_properties_path=None,
         compile_only=False, verbosity=None):
-    '''Given a hint to a contract directory, produce WAST and WASM code.
+    '''Produce WASM code.
     '''
-
     contract_dir = config.contract_dir(contract_dir_hint)
-    source = config.contract_source_files(contract_dir)
-    srcs = source[1]
+    source_files = config.contract_source_files(contract_dir)
+    # source_files[0] is directory, source_files[1] is contents:
+    srcs = source_files[1]
     if not srcs:
         raise errors.Error('''
         "The source is empty. The assumed contract dir is  
@@ -144,188 +145,55 @@ def WAST(
         '''.format(contract_dir))
         return
 
-    targetPathWast = None
-    target_dir_path = get_target_dir(source[0])
+    code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
+    target_path = os.path.join(
+         get_target_dir(source_files[0]), code_name + ".wasm")
 
-    workdir = os.path.join(target_dir_path, "working_dir")
-    if not os.path.exists(workdir):
-        os.makedirs(workdir)
+    c_cpp_properties = get_c_cpp_properties(
+                                        contract_dir, c_cpp_properties_path)
 
-    workdir_build = os.path.join(workdir, "build")
-    if not os.path.exists(workdir_build):
-        os.mkdir(workdir_build)    
+    command_line = [config.eosio_cpp()]
 
-    objectFileList = []
-    extensions = [".h", ".hpp", ".hxx", ".c", ".cpp",".cxx", ".c++"]
-    if not code_name:
-        code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
-    targetPathWast = os.path.join(
-        target_dir_path, code_name + ".wast")
-    target_path_wasm = os.path.join(
-        target_dir_path, code_name + ".wasm")
+    # for entry in c_cpp_properties["configurations"][0]["includePath"]:
+    #     if entry == "${workspaceFolder}":
+    #         command_line.append("-I=" + contract_dir)
+    #     else:
+    #         command_line.append("-I=" + strip_wsl_root(entry))
 
-    eosio_cpp = None
-    try:
-        eosio_cpp = config.eosio_cpp()
-    except:
-        pass
+    # for entry in c_cpp_properties["configurations"][0]["libs"]:
+    #     command_line.append("-l=" + strip_wsl_root(entry))
 
-    if eosio_cpp:
-        command_line = [
-            config.eosio_cpp(),
-            "-o",
-            target_path_wasm
-            ]
-        for file in srcs:
-            if not os.path.splitext(file)[1].lower() in extensions:
-                continue
+    # for entry in c_cpp_properties["configurations"][0]["compilerOptions"]:
+    #     command_line.append(entry)
+    
+    for file in srcs:
+        if os.path.splitext(file)[1].lower() in \
+                                    [".c", ".cpp",".cxx", ".c++"]:
             command_line.append(file)
 
-        try:
-            process(command_line)
-        except Exception as e:                       
-            raise errors.Error(str(e))
-    else:
-        ###########################################################################
-        # eosio.cdt is not available.
-        for file in srcs:
-            if not os.path.splitext(file)[1].lower() in extensions:
-                continue
+    if setup.is_print_command_line:
+        print("######## {}:".format(config.wasm_llvm_link_exe()))
+        print(" ".join(command_line))
 
-            command_line = [
-                config.wasm_clang_exe(),
-                "-emit-llvm", "-O3", "--std=c++14", "--target=wasm32", "-nostdinc",
-                #"-DBOOST_DISABLE_ASSERTS -DBOOST_EXCEPTION_DISABLE",
-                "-nostdlib", "-nostdlibinc", "-ffreestanding", "-nostdlib",
-                "-fno-threadsafe-statics", "-fno-rtti", "-fno-exceptions",
-                "-I", config.eosio_repository_dir() 
-                    + "/contracts/libc++/upstream/include",
-                "-I", config.eosio_repository_dir() 
-                    + "/contracts/musl/upstream/include",
-                "-I", config.eosio_repository_dir() 
-                    + "/externals/magic_get/include",
-                "-I", config.boost_include_dir(),
-                "-I", config.eosio_repository_dir() + "/contracts",
-                "-I", config.eosio_repository_dir() + "/build/contracts",
-                "-I", contract_dir
-            ]
+    if not compile_only:
+        command_line.append("-o=" + target_path)
 
-            if include_dir:
-                include_dirs = include_dir.split(",")
-                for dir in include_dirs:
-                    command_line.extend(["-I", dir])
+    try:
+        process(command_line)
+    except Exception as e:                       
+        raise errors.Error(str(e))
 
-            output = os.path.join(workdir_build, code_name + ".o")
-            objectFileList.append(output)        
-            command_line.extend(["-c", file, "-o", output])
-            
-            if setup.is_print_command_line:
-                print("######## {}:".format(config.wasm_clang_exe()))
-                print(" ".join(command_line))
+    if not compile_only:
+        logger.TRACE('''
+            WASM file writen to file: {}
+            '''.format(os.path.normpath(target_path)), verbosity)
 
-            try:
-                process(command_line)
-            except Exception as e:
-                try:
-                    shutil.rmtree(workdir)
-                except:
-                    pass
-                            
-                raise errors.Error(str(e))
-
-        if not compile_only:
-            command_line = [ 
-                config.wasm_llvm_link_exe(),
-                "-only-needed", 
-                "-o",  workdir + "/linked.bc",
-                " ".join(objectFileList),
-                config.eosio_repository_dir() + "/build/contracts/musl/libc.bc",
-                config.eosio_repository_dir() + "/build/contracts/libc++/libc++.bc",
-                config.eosio_repository_dir() + "/build/contracts/eosiolib/eosiolib.bc"
-            ]
-            if setup.is_print_command_line:
-                print("######## {}:".format(config.wasm_llvm_link_exe()))
-                print(" ".join(command_line))
-
-            try:
-                process(command_line)
-            except Exception as e:                           
-                raise errors.Error(str(e))
-
-            command_line = [
-                config.wasm_llc_exe(),
-                "-thread-model=single", "--asm-verbose=false",
-                "-o", workdir + "/assembly.s",
-                workdir + "/linked.bc"
-            ]
-            if setup.is_print_command_line:
-                print("######## {}:".format(config.wasm_llc_exe()))
-                print(" ".join(command_line))
-
-            try:
-                process(command_line)
-            except Exception as e:
-                raise errors.Error(str(e))
-                try:
-                    shutil.rmtree(workdir)
-                except:
-                    pass
-                            
-                raise errors.Error(str(e))          
-
-            command_line = [
-                config.s2wasm_exe(),
-                "-o", targetPathWast,
-                "-s", "16384",
-                workdir + "/assembly.s"
-            ]
-            if setup.is_print_command_line:
-                print("######## {}:".format(config.s2wasm_exe()))
-                print(" ".join(command_line))
-
-            try:
-                process(command_line)
-            except Exception as e:
-                try:
-                    shutil.rmtree(workdir)
-                except:
-                    pass
-                            
-                raise errors.Error(str(e))
-
-            logger.TRACE('''
-            WAST file writen to file: {}
-            '''.format(os.path.normpath(targetPathWast)), verbosity)                      
-
-            command_line = [
-                config.wast2wasm_exe(), 
-                targetPathWast, target_path_wasm, "-n"]
-
-            if setup.is_print_command_line:
-                print("######## {}:".format(config.wast2wasm_exe()))
-                print(" ".join(command_line))
-
-            try:
-                process(command_line)
-            except Exception as e:
-                try:
-                    shutil.rmtree(workdir)
-                except:
-                    pass
-                            
-                raise errors.Error(str(e))
-        try:
-            shutil.rmtree(workdir)
-        except:
-            pass
-
-    logger.TRACE('''
-    WASM file writen to file: {}
-    '''.format(os.path.normpath(target_path_wasm)), verbosity)
 
 def project_from_template(
-        project_name, template=None, workspace_dir=None, 
-        remove_existing=False, open_vscode=False, throw_exists=False, 
+        project_name, template=None, workspace_dir=None,
+        c_cpp_prop_path=None, 
+        remove_existing=False, 
+        open_vscode=False, throw_exists=False, 
         verbosity=None):
     '''Given the project name and template name, create a smart contract project.
 
@@ -333,27 +201,23 @@ def project_from_template(
 
         project_name: The name of the project, or an existing path to 
             a directory.
-        template: The name of the template used, defaults to 
-            config.DEFAULT_TEMPLATE, or an existing path to a directory.
+        template: The name of the template used.
         workspace_dir: If set, the folder for the work-space. Defaults to the 
             value returned by the config.contract_workspace() function.
         remove_existing: If set, overwrite any existing project.
         visual_studio_code: If set, open the ``VSCode``, if available.
         verbosity: The logging configuration.
     '''
-    project_name = project_name.strip()
-
-    template = template.strip()    
-    template = utils.wslMapWindowsLinux(template)
-    if not template:
-        template = config.DEFAULT_TEMPLATE
-    if not os.path.isdir(template):
-        template = os.path.join(
+    project_name = utils.wslMapWindowsLinux(project_name.strip())
+    template = template.strip()
+    template_dir = utils.wslMapWindowsLinux(template)
+    if not os.path.isdir(template_dir):
+        template_dir = os.path.join(
             config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template) 
-    if not os.path.isdir(template):
+    if not os.path.isdir(template_dir):
         raise errors.Error('''
         TemplateCreate '{}' does not exist.
-        '''.format(template)) 
+        '''.format(template_dir)) 
        
     if not workspace_dir \
                             or not os.path.isabs(workspace_dir) \
@@ -361,7 +225,19 @@ def project_from_template(
         workspace_dir = config.contract_workspace()
     workspace_dir = workspace_dir.strip()
 
-    project_name = utils.wslMapWindowsLinux(project_name.strip())
+    if c_cpp_prop_path:
+        c_cpp_prop_path = utils.wslMapWindowsLinux(c_cpp_prop_path)
+        if os.path.exists(c_cpp_prop_path):
+            try:
+                with open(c_cpp_prop_path, "r") as input:
+                    c_cpp_properties = json.loads(input.read())
+            except Exception:
+                c_cpp_properties = vscode.c_cpp_properties
+    else:
+        c_cpp_properties = vscode.c_cpp_properties
+
+    c_cpp_properties = replace_templates(vscode.c_cpp_properties)
+
     split = os.path.split(project_name)
     if os.path.isdir(split[0]):
         project_dir = project_name
@@ -418,27 +294,29 @@ def project_from_template(
             home = os.environ["HOME"]
             root = ""
             eosio_dir = config.eosio_repository_dir()
-            if is_windows_ubuntu():
+            if teos.is_windows_ubuntu():
                 home = config.wsl_root() + home
                 root = config.wsl_root()
                 eosio_dir = config.wsl_root() + eosio_dir
             template = template.replace(TEMPLATE_HOME, home)
             template = template.replace(TEMPLATE_ROOT, root)
             template = template.replace(TEMPLATE_EOSIO_DIR, eosio_dir)
-            
-        template = template.replace(
-                            "@" + TEMPLATE_NAME + "@", project_name)
+
+        template = template.replace("${" + TEMPLATE_NAME + "}", project_name)
+        template = template.replace(C_CPP_PROP, c_cpp_properties)
+        template = template.replace(TASK_JSON, vscode.TASKS)
+
         with open(contract_path, "w") as output:
             output.write(template)
 
-    copy_dir_contents(project_dir, template, "", project_name)
+    copy_dir_contents(project_dir, template_dir, "", project_name)
 
     logger.TRACE('''
     * Contract project '{}' created from template '{}'
-    '''.format(project_name, project_dir), verbosity)    
+    '''.format(project_name, template_dir), verbosity)    
 
     if open_vscode:
-        if is_windows_ubuntu():
+        if teos.is_windows_ubuntu():
             command_line = "cmd.exe /C code {}".format(
                 utils.wslMapLinuxWindows(project_dir))
         elif uname() == "Darwin":
@@ -451,50 +329,14 @@ def project_from_template(
 
     logger.INFO('''
     ######### Created contract project ``{}``, originated from template ``{}``.
-    '''.format(project_name, template), verbosity)
+    '''.format(project_name, template_dir), verbosity)
 
     return project_dir
 
 
-def get_keosd_wallet_dir():
-    '''
-    Get the directory of the `nodeos` local wallet.
-    '''
-    return config.keosd_wallet_dir()
-
-
-def get_pid(name=None):
-    """Return process ids found by (partial) name or regex.
-
-    >>> get_process_id('kthreadd')
-    [2]
-    >>> get_process_id('watchdog')
-    [10, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61]  # ymmv
-    >>> get_process_id('non-existent process')
-    []
-    """    
-    if not name:
-        name = config.node_exe_name()
-
-    child = subprocess.Popen(
-        ['pgrep', '-f', name], stdout=subprocess.PIPE, shell=False)
-    response = child.communicate()[0]
-    return [int(pid) for pid in response.split()]
-
-
-def uname(options=None):
-    args = ['uname']
-    if options:
-        args.append(options)
-
-    child = subprocess.Popen(args, stdout=subprocess.PIPE, shell=False)
-    response = child.communicate()[0]
-    return response.decode("utf-8").strip()
-
-
-def is_windows_ubuntu():
-    resp = uname("-v")
-    return resp.find("Microsoft") != -1
+def strip_wsl_root(path):
+    wsl_root = config.wsl_root()
+    return path.replace(wsl_root, "")
 
 
 def process(command_line, throw_error=True):
@@ -542,142 +384,3 @@ def get_resources_dir(source_dir):
             raise errors.Error(str(e))
 
     return dir
-
-
-def args(clear=False):
-    args_ = [
-        "--http-server-address", config.http_server_address(),
-        "--data-dir", config.data_dir(),
-        "--config-dir", config.config_dir(),
-        "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
-        "--contracts-console",
-        "--verbose-http-errors",
-        "--enable-stale-production",
-        "--producer-name eosio",
-        "--signature-provider " + config.eosio_key_public() + "=KEY:" 
-            + config.eosio_key_private(),
-        "--plugin eosio::producer_plugin",
-        "--plugin eosio::chain_api_plugin",
-        "--plugin eosio::http_plugin",
-        "--plugin eosio::history_api_plugin"
-    ]
-    if clear:
-        node_stop()
-        args_.extend([
-            "--genesis-json", config.genesis_json(),
-            "--delete-all-blocks"
-        ])
-    return args_
-
-
-def node_start(clear=False, verbosity=None):
-    args_ = args(clear)
-
-    if setup.is_print_command_line:
-        print("nodeos command line:")
-        print(config.node_exe() + " " + " ".join(args_))
-
-    if config.is_nodeos_in_window():
-        if is_windows_ubuntu():
-            args_.insert(0, config.node_exe())
-            subprocess.call(
-                ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
-                " ".join(args_)])
-        elif uname() == "Darwin":
-                subprocess.Popen(
-                    "open -a "
-                    + config.node_exe() + " --args " + " ".join(args_),
-                    shell=True)
-        else:
-            args_.insert(0, config.node_exe())
-            subprocess.Popen(
-                "gnome-terminal -- " + " ".join(args_), shell=True)
-    else:
-        args_.insert(0, config.node_exe())
-        subprocess.Popen(
-            " ".join(args_), 
-            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
-            stderr=subprocess.DEVNULL, shell=True)
-
-    node_probe(verbosity)
-
-
-def node_probe(verbosity=None):
-    count = 15
-    num = 5
-    block_num = None
-    
-    while True:
-        time.sleep(1)
-        
-        try:
-            if setup.node_api == "cleos":
-                import eosfactory.core.cleos as cleos
-            elif setup.node_api == "eosjs":
-                import eosfactory.core.eosjs as cleos
-
-            get_info = cleos.GetInfo(is_verbose=0)
-            head_block_num = int(get_info.json["head_block_num"])
-        except:
-            head_block_num = 0
-        finally:
-            print(".", end="", flush=True)
-
-        if block_num is None:
-            block_num = head_block_num
-
-        if head_block_num - block_num >= num:
-            print()
-            logger.INFO('''
-            Local node is running. Block number is {}
-            '''.format(head_block_num), verbosity)
-            break
-
-        count = count - 1        
-        if count <= 0:
-            raise errors.Error('''
-            The local node does not respond.
-            ''')
-
-
-def is_local_node_process_running(name=None):
-    if not name:
-        name = config.node_exe()
-
-    response = subprocess.run(
-        'ps aux |  grep -v grep | grep ' + name, shell=True, 
-        stdout=subprocess.PIPE)
-    out = response.stdout.decode("utf-8")
-    return name in out
-        
-
-def node_stop(verbosity=None):
-    # You can see if the process is a zombie by using top or 
-    # the following command:
-    # ps aux | awk '$8=="Z" {print $2}'
-
-    pids = get_pid()
-    count = 10
-    if pids:
-        for pid in pids:
-            os.system("kill " + str(pid))
-        while count > 0:
-            time.sleep(1)
-            if not is_local_node_process_running():
-                break
-            count = count -1
-
-    if count <= 0:
-        raise errors.Error('''
-Failed to kill {}. Pid is {}.
-    '''.format(config.node_exe_name(), str(pids))
-    )
-    else:
-        logger.INFO('''
-        Local node is stopped {}.
-        '''.format(str(pids)), verbosity)        
-
-    
-def node_is_running():
-    return not get_pid()
-

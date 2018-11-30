@@ -1,4 +1,20 @@
+import json
 
+INCLUDES = [
+        "${ROOT}/usr/local/eosio.cdt/include/eosiolib",
+        "${ROOT}/usr/local/eosio.cdt/include/boost",
+        "${ROOT}/usr/local/eosio.cdt/include/libc",
+        "${ROOT}/usr/local/eosio.cdt/include/libcxx",
+        "${workspaceFolder}"
+    ]
+LIBS = [
+        "${ROOT}/usr/local/eosio.cdt/lib/libc.bc",
+        "${ROOT}/usr/local/eosio.cdt/lib/libc.bc++",
+        "${ROOT}/usr/local/eosio.cdt/lib/libeosio"
+]
+COMPILER_OPTIONS = [
+]
+TASKS = '''
 {
     "version": "2.0.0",   
     "tasks": [
@@ -147,3 +163,29 @@
         }
     ]
 }
+'''
+
+c_cpp_properties = """
+{
+    "configurations": [
+        {
+            "includePath": %s,
+            "libs": %s,
+            "compilerOptions": %s,
+            "defines": [],
+            "intelliSenseMode": "clang-x64",
+            "browse": {
+                "path": %s,
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        }
+    ],
+    "version": 4
+}
+""" % (
+    json.dumps(INCLUDES, indent=4),
+    json.dumps(LIBS, indent=4),
+    json.dumps(COMPILER_OPTIONS, indent=4),
+    json.dumps(INCLUDES, indent=4))
+

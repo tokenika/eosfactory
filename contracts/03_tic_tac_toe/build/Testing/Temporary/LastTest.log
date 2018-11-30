@@ -1,0 +1,166 @@
+Start testing: Nov 30 11:06 STD
+----------------------------------------------------------
+1/2 Testing: tests
+1/2 Test: tests
+Command: "/usr/bin/python3" "/mnt/c/Workspaces/EOS/contracts/03_tic_tac_toe/tests/test1.py"
+Directory: /mnt/c/Workspaces/EOS/contracts/03_tic_tac_toe/build
+"tests" start time: Nov 30 11:06 STD
+Output:
+----------------------------------------------------------
+..
+[32m
+###  SCENARIO:
+There is the ``master`` account that sponsors the ``host``
+account equipped with an instance of the ``tic_tac_toe`` smart contract. There
+are two players ``alice`` and ``carol``. We are testing that the moves of
+the game are correctly stored in the blockchain database.
+[0m
+[34mLOCAL testnet is active @ http://127.0.0.1:8888.[0m
+[34m* Wallet name is ``_127_0_0_1_8888_default``, wallet directory is
+    /home/cartman/eosio-wallet/.[0m
+[34mThe password is restored from the file:
+/home/cartman/eosio-wallet/_127_0_0_1_8888_passwords.json[0m
+[36mOpened wallet ``_127_0_0_1_8888_default``[0m
+[34m######### Restore cached account objects:[0m
+[34m######### Create an account object ``bob``.[0m
+[34m... for an existing blockchain account ``czzo414g2c4z`` mapped as ``bob``.[0m
+[36m* The account object is created.[0m
+[36m* Cross-checked: account object ``bob`` mapped to an existing account ``czzo414g2c4z``.[0m
+[34m######### Create an account object ``master``.[0m
+[34m... for an existing blockchain account ``eosio`` mapped as ``master``.[0m
+[36m* The account object is created.[0m
+[36m* Cross-checked: account object ``master`` mapped to an existing account ``eosio``.[0m
+[34m######### Create an account object ``carol``.[0m
+[34m... for an existing blockchain account ``24j45rxzjup3`` mapped as ``carol``.[0m
+[36m* The account object is created.[0m
+[36m* Cross-checked: account object ``carol`` mapped to an existing account ``24j45rxzjup3``.[0m
+[34m######### Create an account object ``host``.[0m
+[34m... for an existing blockchain account ``piyp1e3jnosv`` mapped as ``host``.[0m
+[36m* The account object is created.[0m
+[36m* Cross-checked: account object ``host`` mapped to an existing account ``piyp1e3jnosv``.[0m
+[34m######### Create an account object ``alice``.[0m
+[34m... for an existing blockchain account ``lhubbdcy33u3`` mapped as ``alice``.[0m
+[36m* The account object is created.[0m
+[36m* Cross-checked: account object ``alice`` mapped to an existing account ``lhubbdcy33u3``.[0m
+[34m######## Account object ``master`` restored from the blockchain.[0m
+[34m######## Account object ``host`` restored from the blockchain.[0m
+[34m######## Account object ``alice`` restored from the blockchain.[0m
+[34m######## Account object ``carol`` restored from the blockchain.[0m
+[34m* Contract /mnt/c/Workspaces/EOS/contracts/03_tic_tac_toe/tests/../ is deployed.[0m
+[32m
+###  test:
+Attempting to create a new game.
+This might fail if the previous game has not been closes properly:
+[0m
+[32m
+###  test:
+We need to close the previous game before creating a new one:
+[0m
+[34m* Push action ``close``:[0m
+[34m{"host": "carol", "challenger": "alice"}[0m
+[32m
+###  test:
+Second attempt to create a new game:
+[0m
+[34m* Push action ``create``:[0m
+[34m{"host": "carol", "challenger": "alice"}[0m
+[34m* Table ``games`` for ``carol``[0m
+{
+  "rows": [{
+      "challenger": "alice",
+      "host": "carol",
+      "turn": "carol",
+      "winner": "none",
+      "board": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "more": false
+}[0m
+[32m
+###  test:
+First move is by carol:
+[0m
+[34m* Push action ``move``:[0m
+[34m{"column": 0, "host": "carol", "by": "carol", "row": 0, "challenger": "alice"}[0m
+[32m
+###  test:
+Second move is by alice:
+[0m
+[34m* Push action ``move``:[0m
+[34m{"column": 1, "host": "carol", "by": "alice", "row": 1, "challenger": "alice"}[0m
+[34m* Table ``games`` for ``carol``[0m
+{
+  "rows": [{
+      "challenger": "alice",
+      "host": "carol",
+      "turn": "carol",
+      "winner": "none",
+      "board": [
+        1,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "more": false
+}[0m
+[32m
+###  test:
+Restarting the game:
+[0m
+[34m* Push action ``restart``:[0m
+[34m{"host": "carol", "by": "carol", "challenger": "alice"}[0m
+[34m* Table ``games`` for ``carol``[0m
+{
+  "rows": [{
+      "challenger": "alice",
+      "host": "carol",
+      "turn": "carol",
+      "winner": "none",
+      "board": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "more": false
+}[0m
+[32m
+###  test:
+Closing the game:
+[0m
+[34m* Push action ``close``:[0m
+[34m{"host": "carol", "challenger": "alice"}[0m
+[34mLocal node is stopped [1805, 1806].[0m
+<end of output>
+Test time =   9.66 sec
+----------------------------------------------------------
+Test Passed.
+"tests" end time: Nov 30 11:06 STD
+"tests" time elapsed: 00:00:09
+----------------------------------------------------------
+
+End testing: Nov 30 11:06 STD

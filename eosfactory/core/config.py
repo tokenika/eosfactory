@@ -35,11 +35,8 @@ node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
     ["build/programs/nodeos/nodeos", "/usr/local/eosio/bin/nodeos"])
 
-# eosio_cpp_ = ("EOSIO_CPP", ["/usr/local/eosio.cdt/bin/eosio-cpp"])
-# eosio_abigen_ = ("EOSIO_ABIGEN", ["/usr/local/eosio.cdt/bin/eosio-abigen"])
-
-eosio_cpp_ = ("EOSIO_CPP", [None])
-eosio_abigen_ = ("EOSIO_ABIGEN", [None])
+eosio_cpp_ = ("EOSIO_CPP", ["/usr/local/eosio.cdt/bin/eosio-cpp"])
+eosio_abigen_ = ("EOSIO_ABIGEN", ["/usr/local/eosio.cdt/bin/eosio-abigen"])
 
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
@@ -249,7 +246,7 @@ def config_values(config_list):
     retval = []
     # First, configure file ...
     config_json = config_map()
-    if config_key in config_json:
+    if config_key in config_json and config_json[config_key]:
         retval.append(config_json[config_key])
         return retval        
       
