@@ -14,7 +14,6 @@ import eosfactory.core.utils as utils
 import eosfactory.core.setup as setup
 import eosfactory.core.config as config
 import eosfactory.core.errors as errors
-import eosfactory.core.teos as teos
 import eosfactory.core.vscode as vscode
 
 
@@ -31,7 +30,7 @@ def replace_templates(string):
     home = os.environ["HOME"]
     root = ""
     eosio_dir = config.eosio_repository_dir()
-    if teos.is_windows_ubuntu():
+    if is_windows_ubuntu():
         home = config.wsl_root() + home
         root = config.wsl_root()
         eosio_dir = config.wsl_root() + eosio_dir
@@ -294,7 +293,7 @@ def project_from_template(
             home = os.environ["HOME"]
             root = ""
             eosio_dir = config.eosio_repository_dir()
-            if teos.is_windows_ubuntu():
+            if is_windows_ubuntu():
                 home = config.wsl_root() + home
                 root = config.wsl_root()
                 eosio_dir = config.wsl_root() + eosio_dir
@@ -316,7 +315,7 @@ def project_from_template(
     '''.format(project_name, template_dir), verbosity)    
 
     if open_vscode:
-        if teos.is_windows_ubuntu():
+        if is_windows_ubuntu():
             command_line = "cmd.exe /C code {}".format(
                 utils.wslMapLinuxWindows(project_dir))
         elif uname() == "Darwin":
@@ -337,6 +336,47 @@ def project_from_template(
 def strip_wsl_root(path):
     wsl_root = config.wsl_root()
     return path.replace(wsl_root, "")
+
+
+def get_keosd_wallet_dir():
+    '''
+    Get the directory of the `nodeos` local wallet.
+    '''
+    return config.keosd_wallet_dir()
+
+
+def get_pid(name=None):
+    """Return process ids found by (partial) name or regex.
+
+    >>> get_process_id('kthreadd')
+    [2]
+    >>> get_process_id('watchdog')
+    [10, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61]  # ymmv
+    >>> get_process_id('non-existent process')
+    []
+    """    
+    if not name:
+        name = config.node_exe_name()
+
+    child = subprocess.Popen(
+        ['pgrep', '-f', name], stdout=subprocess.PIPE, shell=False)
+    response = child.communicate()[0]
+    return [int(pid) for pid in response.split()]
+
+
+def uname(options=None):
+    args = ['uname']
+    if options:
+        args.append(options)
+
+    child = subprocess.Popen(args, stdout=subprocess.PIPE, shell=False)
+    response = child.communicate()[0]
+    return response.decode("utf-8").strip()
+
+
+def is_windows_ubuntu():
+    resp = uname("-v")
+    return resp.find("Microsoft") != -1
 
 
 def process(command_line, throw_error=True):
@@ -382,5 +422,145 @@ def get_resources_dir(source_dir):
             os.mkdir(dir)
         except Exception as e:
             raise errors.Error(str(e))
+
+    return dir
+
+
+def args(clear=False):
+    args_ = [
+        "--http-server-address", config.http_server_address(),
+        "--data-dir", config.data_dir(),
+        "--config-dir", config.config_dir(),
+        "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
+        "--contracts-console",
+        "--verbose-http-errors",
+        "--enable-stale-production",
+        "--producer-name eosio",
+        "--signature-provider " + config.eosio_key_public() + "=KEY:" 
+            + config.eosio_key_private(),
+        "--plugin eosio::producer_plugin",
+        "--plugin eosio::chain_api_plugin",
+        "--plugin eosio::http_plugin",
+        "--plugin eosio::history_api_plugin"
+    ]
+    if clear:
+        node_stop()
+        args_.extend([
+            "--genesis-json", config.genesis_json(),
+            "--delete-all-blocks"
+        ])
+    return args_
+
+
+def node_start(clear=False, verbosity=None):
+    args_ = args(clear)
+
+    if setup.is_print_command_line:
+        print("nodeos command line:")
+        print(config.node_exe() + " " + " ".join(args_))
+
+    if config.is_nodeos_in_window():
+        if is_windows_ubuntu():
+            args_.insert(0, config.node_exe())
+            subprocess.call(
+                ["cmd.exe", "/c", "start", "/MIN", "bash.exe", "-c", 
+                " ".join(args_)])
+        elif uname() == "Darwin":
+                subprocess.Popen(
+                    "open -a "
+                    + config.node_exe() + " --args " + " ".join(args_),
+                    shell=True)
+        else:
+            args_.insert(0, config.node_exe())
+            subprocess.Popen(
+                "gnome-terminal -- " + " ".join(args_), shell=True)
+    else:
+        args_.insert(0, config.node_exe())
+        subprocess.Popen(
+            " ".join(args_), 
+            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+            stderr=subprocess.DEVNULL, shell=True)
+
+    node_probe(verbosity)
+
+
+def node_probe(verbosity=None):
+    count = 15
+    num = 5
+    block_num = None
+    
+    while True:
+        time.sleep(1)
+        
+        try:
+            if setup.node_api == "cleos":
+                import eosfactory.core.cleos as cleos
+            elif setup.node_api == "eosjs":
+                import eosfactory.core.eosjs as cleos
+
+            get_info = cleos.GetInfo(is_verbose=0)
+            head_block_num = int(get_info.json["head_block_num"])
+        except:
+            head_block_num = 0
+        finally:
+            print(".", end="", flush=True)
+
+        if block_num is None:
+            block_num = head_block_num
+
+        if head_block_num - block_num >= num:
+            print()
+            logger.INFO('''
+            Local node is running. Block number is {}
+            '''.format(head_block_num), verbosity)
+            break
+
+        count = count - 1        
+        if count <= 0:
+            raise errors.Error('''
+            The local node does not respond.
+            ''')
+
+
+def is_local_node_process_running(name=None):
+    if not name:
+        name = config.node_exe()
+
+    response = subprocess.run(
+        'ps aux |  grep -v grep | grep ' + name, shell=True, 
+        stdout=subprocess.PIPE)
+    out = response.stdout.decode("utf-8")
+    return name in out
+        
+
+def node_stop(verbosity=None):
+    # You can see if the process is a zombie by using top or 
+    # the following command:
+    # ps aux | awk '$8=="Z" {print $2}'
+
+    pids = get_pid()
+    count = 10
+    if pids:
+        for pid in pids:
+            os.system("kill " + str(pid))
+        while count > 0:
+            time.sleep(1)
+            if not is_local_node_process_running():
+                break
+            count = count -1
+
+    if count <= 0:
+        raise errors.Error('''
+Failed to kill {}. Pid is {}.
+    '''.format(config.node_exe_name(), str(pids))
+    )
+    else:
+        logger.INFO('''
+        Local node is stopped {}.
+        '''.format(str(pids)), verbosity)        
+
+    
+def node_is_running():
+    return not get_pid()
 
     return dir

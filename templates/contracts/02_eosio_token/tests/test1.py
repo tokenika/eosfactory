@@ -60,7 +60,6 @@ def test():
             "quantity": "25.0000 EOS", "memo":""
         },
         permission=(alice, Permission.ACTIVE))
-    assert("250000" in DEBUG())
 
     host.push_action(
         "transfer",
@@ -69,7 +68,6 @@ def test():
             "quantity": "11.0000 EOS", "memo": ""
         },
         permission=(carol, Permission.ACTIVE))
-    assert("110000" in DEBUG())
 
     host.push_action(
         "transfer",
@@ -78,7 +76,6 @@ def test():
             "quantity": "2.0000 EOS", "memo": ""
         },
         permission=(carol, Permission.ACTIVE))
-    assert("20000" in DEBUG())
 
     host.push_action(
         "transfer",
@@ -87,7 +84,6 @@ def test():
             "quantity": "2.0000 EOS", "memo":""
         },
         permission=(bob, Permission.ACTIVE))
-    assert("20000" in DEBUG())
 
     COMMENT('''
     Verify the outcome:
