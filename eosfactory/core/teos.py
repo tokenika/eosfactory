@@ -153,17 +153,17 @@ def WAST(
 
     command_line = [config.eosio_cpp()]
 
-    # for entry in c_cpp_properties["configurations"][0]["includePath"]:
-    #     if entry == "${workspaceFolder}":
-    #         command_line.append("-I=" + contract_dir)
-    #     else:
-    #         command_line.append("-I=" + strip_wsl_root(entry))
+    for entry in c_cpp_properties["configurations"][0]["includePath"]:
+        if entry == "${workspaceFolder}":
+            command_line.append("-I=" + contract_dir)
+        else:
+            command_line.append("-I=" + strip_wsl_root(entry))
 
-    # for entry in c_cpp_properties["configurations"][0]["libs"]:
-    #     command_line.append("-l=" + strip_wsl_root(entry))
+    for entry in c_cpp_properties["configurations"][0]["libs"]:
+        command_line.append("-l=" + strip_wsl_root(entry))
 
-    # for entry in c_cpp_properties["configurations"][0]["compilerOptions"]:
-    #     command_line.append(entry)
+    for entry in c_cpp_properties["configurations"][0]["compilerOptions"]:
+        command_line.append(entry)
     
     for file in srcs:
         if os.path.splitext(file)[1].lower() in \
@@ -334,8 +334,7 @@ def project_from_template(
 
 
 def strip_wsl_root(path):
-    wsl_root = config.wsl_root()
-    return path.replace(wsl_root, "")
+    return path.replace(config.wsl_root(), "")
 
 
 def get_keosd_wallet_dir():

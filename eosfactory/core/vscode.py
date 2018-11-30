@@ -8,9 +8,6 @@ INCLUDES = [
         "${workspaceFolder}"
     ]
 LIBS = [
-        "${ROOT}/usr/local/eosio.cdt/lib/libc.bc",
-        "${ROOT}/usr/local/eosio.cdt/lib/libc.bc++",
-        "${ROOT}/usr/local/eosio.cdt/lib/libeosio"
 ]
 COMPILER_OPTIONS = [
 ]
