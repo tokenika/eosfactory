@@ -3,6 +3,8 @@
  *  @copyright defined in eos/LICENSE.txt
  */
 
+#define DEBUG
+#include "logger.hpp"
 #include "${CONTRACT_NAME}.hpp"
 
 namespace eosio {

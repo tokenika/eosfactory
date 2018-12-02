@@ -3,6 +3,8 @@
  *  @copyright defined in eos/LICENSE.txt
  */
 
+#define DEBUG
+#include "logger.hpp"
 #include "03_tic_tac_toe.hpp"
 
 namespace eosio {
