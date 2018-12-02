@@ -675,6 +675,46 @@ def append_account_methods_and_finish(account_object_name, account_object):
 
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
+    def set_permission(
+        account_object, permission_name, authority, 
+            permission=None,
+            expiration_sec=30, 
+            skip_signature=0, 
+            dont_broadcast=0,
+            return_packed=0,
+            forceUnique=0,
+            max_cpu_usage=0,
+            max_net_usage=0,
+            ref_block=None,
+            delay_sec=0,
+            is_verbose=True,
+            json=False
+        ):
+
+        logger.TRACE('''
+        * Set account premission.
+        ''')
+
+        authority = _data_json(authority)
+        import pdb; pdb.set_trace()
+        result = cleos.SetAccountPermission(
+            account_object, permission_name, authority,
+            permission,
+            expiration_sec, 
+            skip_signature, 
+            dont_broadcast,
+            return_packed,
+            forceUnique,
+            max_cpu_usage,
+            max_net_usage,
+            ref_block,
+            delay_sec,
+            is_verbose=False, json=True)
+        
+
+    account_object.set_permission = types.MethodType(
+                                                set_permission, account_object)
+
     def delegate_bw(
         account_object, stake_net_quantity, stake_cpu_quantity,
         receiver=None,

@@ -41,7 +41,8 @@ class _Cleos():
         if setup.is_print_response:
             cl.append("--print-response")
 
-        cl.extend([first, second])
+        cl.append(first)
+        cl.extend(re.sub(re.compile(r'\s+'), ' ', second.strip()).split(" "))
         cl.extend(args)
         self.args = args
 
@@ -933,8 +934,8 @@ class SetAccountPermission(_Cleos):
 
         account: The account to set/delete a permission authority for. May be 
         an object having the attribute `name`, or a string.
-        permission_name: The permission name to set/delete an authority for.
-            May be an object having the attribute `name`, or a string.
+        permission_name: The permission name string to set/delete an authority 
+            for.
         authority:  None to delete; a public key string or an interface.key_arg
             object; JSON string; a filename defining the authority.
         permission: An account and permission level to authorize, as in 
@@ -977,9 +978,9 @@ class SetAccountPermission(_Cleos):
             ):
 
         self.account_name = interface.account_arg(account)
-        permission_name_ = interface.account_arg(permission_name)
-
-        args = [self.account_name, permission_name_, authority]
+        import pdb; pdb.set_trace()         
+        authority =  re.sub(re.compile(r'\s+'), '', authority)
+        args = [self.account_name, permission_name, authority]
         if json:
             args.append("--json")
         if not permission is None:
@@ -1005,6 +1006,8 @@ class SetAccountPermission(_Cleos):
                         
         self.console = None
         self.data = None
+        import pdb; pdb.set_trace()        
+        
         _Cleos.__init__(self, args, "set", "account permission", is_verbose)
 
         if not dont_broadcast:
