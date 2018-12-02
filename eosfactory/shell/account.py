@@ -696,7 +696,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
         ''')
 
         authority = _data_json(authority)
-        import pdb; pdb.set_trace()
+
         result = cleos.SetAccountPermission(
             account_object, permission_name, authority,
             permission,

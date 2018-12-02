@@ -5,8 +5,8 @@ class Omittable:
         self.err_msg = None
 
 class Permission(enum.Enum):
-    OWNER = '@owner'
-    ACTIVE = '@active'
+    OWNER = 'owner'
+    ACTIVE = 'active'
 
 
 class Key(Omittable):
@@ -27,6 +27,18 @@ class Account(Omittable):
         self.owner_key = owner_key
         self.active_key = active_key
         Omittable.__init__(self)
+    
+    def owner(self):
+        if isinstance(self.owner_key, Key):
+            return self.owner_key.key_public
+        else:
+            return self.owner_key
+
+    def active(self):
+        if isinstance(self.active_key, Key):
+            return self.active_key.key_public
+        else:
+            return self.active_key    
 
 
 class Wallet(Omittable):

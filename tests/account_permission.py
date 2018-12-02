@@ -36,16 +36,15 @@ class Test(unittest.TestCase):
         create_account("host", master)
 
         contract = Contract(host, "02_eosio_token")
-        contract.build()
+        # contract.build()
         contract.deploy()
-        import pdb; pdb.set_trace()
-        alice.set_permission("active", 
+        alice.set_permission(Permission.ACTIVE, 
             {
                 "threshold": 1,
                 "keys": 
                     [
                         {
-                            "key": host.owner_key.key_public,
+                            "key": host.owner(),
                             "weight": 1
                         }
                     ],
@@ -138,8 +137,6 @@ class Test(unittest.TestCase):
         self.assertEqual(
             table_carol.json["rows"][0]["balance"], '12.0000 EOS',
             '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
-
-        contract.delete()
 
 
     def tearDown(self):

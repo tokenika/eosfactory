@@ -933,9 +933,9 @@ class SetAccountPermission(_Cleos):
     - **parameters**::
 
         account: The account to set/delete a permission authority for. May be 
-        an object having the attribute `name`, or a string.
-        permission_name: The permission name string to set/delete an authority 
-            for.
+            an object having the attribute `name`, or a string.
+        permission_value: The permission to set/delete an authority for. May be
+            a string or an instance of the interface.Permission class.
         authority:  None to delete; a public key string or an interface.key_arg
             object; JSON string; a filename defining the authority.
         permission: An account and permission level to authorize, as in 
@@ -948,7 +948,6 @@ class SetAccountPermission(_Cleos):
         dont_broadcast: Don't broadcast transaction to the network (just print).
         return_packed: Used in conjunction with dont_broadcast to get the 
             packed transaction.
-        
         forceUnique: Force the transaction to be unique. this will consume extra 
             bandwidth and remove any protections against accidently issuing the 
             same transaction multiple times.
@@ -962,7 +961,7 @@ class SetAccountPermission(_Cleos):
         delay_sec: Set the delay_sec seconds, defaults to 0s            
     '''
     def __init__(
-            self, account, permission_name, authority, 
+            self, account, permission_value, authority, 
             permission=None,
             expiration_sec=30, 
             skip_signature=0, 
@@ -978,9 +977,11 @@ class SetAccountPermission(_Cleos):
             ):
 
         self.account_name = interface.account_arg(account)
-        import pdb; pdb.set_trace()         
         authority =  re.sub(re.compile(r'\s+'), '', authority)
-        args = [self.account_name, permission_name, authority]
+        if isinstance(permission_value, interface.Permission):
+            permission_value = permission_value.value
+
+        args = [self.account_name, permission_value, authority]
         if json:
             args.append("--json")
         if not permission is None:
@@ -1006,7 +1007,6 @@ class SetAccountPermission(_Cleos):
                         
         self.console = None
         self.data = None
-        import pdb; pdb.set_trace()        
         
         _Cleos.__init__(self, args, "set", "account permission", is_verbose)
 
