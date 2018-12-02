@@ -432,8 +432,8 @@ class WalletOpen(_Cleos):
     - **parameters**::
 
         wallet: The name of the wallet to import key into. May be an object 
-            having the  May be an object having the attribute `name`, like 
-            `CreateAccount`, or a string. 
+            having the  May be an object having the attribute `name`, 
+            or a string. 
         is_verbose: If ``False`` do not print. Default is ``True``.
 
     - **attributes**::
@@ -466,8 +466,8 @@ class WalletLock(_Cleos):
     - **parameters**::
 
         wallet: The name of the wallet to import key into. May be an object 
-            having the  May be an object having the attribute `name`, like 
-            `CreateAccount`, or a string. 
+            having the  May be an object having the attribute `name`, 
+            or a string. 
         is_verbose: If ``False`` do not print. Default is ``True``.
 
     - **parameters**::
@@ -490,8 +490,8 @@ class WalletUnlock(_Cleos):
     - **parameters**::
 
         wallet: The name of the wallet. May be an object 
-            having the  May be an object having the attribute `name`, 
-            like `CreateAccount`, or a string.
+            having the  May be an object having the attribute `name`,
+            or a string.
         password: If the wallet argument is not a wallet object, the password 
             returned by wallet create, else anything, defaults to "".
         is_verbose: If ``False`` do not print. Default is ``True``.
@@ -523,7 +523,7 @@ class GetCode(_Cleos):
 
         account: The name of an account whose code should be retrieved. 
             May be an object having the  May be an object having the attribute 
-            `name`, like `CreateAccount`, or a string.
+            `name`, or a string.
         code: The name of the file to save the contract .wast/wasm to.
         abi: The name of the file to save the contract .abi to.
         wasm: Save contract as wasm.
@@ -562,10 +562,9 @@ class GetTable(_Cleos):
     - **parameters**::
 
         account: The name of the account that owns the table. May be 
-            an object having the  May be an object having the attribute 
-            `name`, like `CreateAccount`, or a string.
-        scope: The scope within the account in which the table is found,
-            can be a `CreateAccount` or `Account` object, or a name.
+            an object having the attribute `name`, or a string.
+        scope: The scope within the account in which the table is found. May be
+            an object having the attribute `name`, or a string.
         table: The name of the table as specified by the contract abi.
         binary: Return the value as BINARY rather than using abi to 
             interpret as JSON
@@ -690,14 +689,14 @@ class CreateAccount(interface.Account, _Cleos):
     - **parameters**::
 
         creator: The name, of the account creating the new account. May be an 
-            object having the attribute `name`, like `CreateAccount`, 
-            or a string.
+            object having the attribute `name`, or a string.
         name: The name of the new account.
         owner_key: The owner public key for the new account.
         active_key: The active public key for the new account.
 
         permission: An account and permission level to authorize, as in 
-            'account@permission'. May be a `CreateAccount` or `Account` object
+            'account@permission'. May be an object having the attribute `name`, 
+            or a string.
         expiration: The time in seconds before a transaction expires, 
             defaults to 30s
         skip_sign: Specify if unlocked wallet keys should be used to sign 
@@ -834,15 +833,16 @@ class SetContract(_Cleos):
     - **parameters**:: 
 
         account: The account to publish a contract for. May be an object 
-            having the  May be an object having the attribute `name`, like 
-            `CreateAccount`, or a string.
+            having the  May be an object having the attribute `name`, 
+            or a string.
         contract_dir: The path containing the .wast and .abi. 
         wasm_file: The file containing the contract WASM relative 
             to contract_dir.
         abi_file: The ABI for the contract relative to contract-dir.
 
         permission: An account and permission level to authorize, as in 
-            'account@permission'. May be a `CreateAccount` or `Account` object
+            'account@permission'. May be an object having the attribute `name`, 
+            or a string.
         expiration: The time in seconds before a transaction expires, 
             defaults to 30s
         skip_sign: Specify if unlocked wallet keys should be used to sign 
@@ -926,20 +926,109 @@ class SetContract(_Cleos):
         return GetTransaction(self.transaction)
 
 
+class SetAccountPermission(_Cleos):
+    '''Set parameters dealing with account permissions.
+
+    - **parameters**::
+
+        account: The account to set/delete a permission authority for. May be 
+        an object having the attribute `name`, or a string.
+        permission_name: The permission name to set/delete an authority for.
+            May be an object having the attribute `name`, or a string.
+        authority:  None to delete; a public key string or an interface.key_arg
+            object; JSON string; a filename defining the authority.
+        permission: An account and permission level to authorize, as in 
+            'account@permission'. May be an object having the attribute `name`, 
+            or a string.
+        expiration: The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign: Specify if unlocked wallet keys should be used to sign 
+            transaction.
+        dont_broadcast: Don't broadcast transaction to the network (just print).
+        return_packed: Used in conjunction with dont_broadcast to get the 
+            packed transaction.
+        
+        forceUnique: Force the transaction to be unique. this will consume extra 
+            bandwidth and remove any protections against accidently issuing the 
+            same transaction multiple times.
+        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+            the execution of the transaction 
+            (defaults to 0 which means no limit).
+        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+            transaction (defaults to 0 which means no limit).
+        ref_block: The reference block num or block id used for TAPOS 
+            (Transaction as Proof-of-Stake).
+        delay_sec: Set the delay_sec seconds, defaults to 0s            
+    '''
+    def __init__(
+            self, account, permission_name, authority, 
+            permission=None,
+            expiration_sec=30, 
+            skip_signature=0, 
+            dont_broadcast=0,
+            return_packed=0,
+            forceUnique=0,
+            max_cpu_usage=0,
+            max_net_usage=0,
+            ref_block=None,
+            delay_sec=0,
+            is_verbose=True,
+            json=False
+            ):
+
+        self.account_name = interface.account_arg(account)
+        permission_name_ = interface.account_arg(permission_name)
+
+        args = [self.account_name, permission_name_, authority]
+        if json:
+            args.append("--json")
+        if not permission is None:
+            p = interface.permission_arg(permission)
+            for perm in p:
+                args.extend(["--permission", perm])
+
+        args.extend(["--expiration", str(expiration_sec)])
+        if skip_signature:
+            args.append("--skip-sign")
+        if dont_broadcast:
+            args.append("--dont-broadcast")
+        if forceUnique:
+            args.append("--force-unique")
+        if max_cpu_usage:
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        if  max_net_usage:
+            args.extend(["--max-net-usage", str(max_net_usage)])
+        if  not ref_block is None:
+            args.extend(["--ref-block", ref_block])
+        if delay_sec:
+            args.extend(["--delay-sec", str(delay_sec)])
+                        
+        self.console = None
+        self.data = None
+        _Cleos.__init__(self, args, "set", "account permission", is_verbose)
+
+        if not dont_broadcast:
+            self.console = self.json["processed"]["action_traces"][0]["console"]
+            self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
+
+        self.printself()
+
+
+
 class PushAction(_Cleos):
-    '''Push a transaction with a single action
+    '''Push a transaction with a single action.
 
     - **parameters**::
 
         account: The account to publish a contract for.  May be an object 
-            having the  May be an object having the attribute `name`, like 
-            `CreateAccount`, or a string.
+            having the  May be an object having the attribute `name`, 
+            or a string.
         action: A JSON string or filename defining the action to execute on 
             the contract.
         data: The arguments to the contract.
-
         permission: An account and permission level to authorize, as in 
-            'account@permission'. May be a `CreateAccount` or `Account` object
+            'account@permission'. May be an object having the attribute `name`, 
+            or a string.
         expiration: The time in seconds before a transaction expires, 
             defaults to 30s
         skip_sign: Specify if unlocked wallet keys should be used to sign 
