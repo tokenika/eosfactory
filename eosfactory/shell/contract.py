@@ -138,7 +138,7 @@ class Contract(ContractBuilder):
     def is_deployed(self):
         if not self.contract:
             return False
-        return not self.contract.error
+        return not self.contract.err_msg
 
     def push_action(
             self, action, data,

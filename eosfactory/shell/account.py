@@ -45,21 +45,6 @@ def reboot():
     wallet_globals = None
 
 
-# def is_local_testnet_running():
-#         account_ = cleos.GetAccount(self.name, is_info=False, is_verbose=False)
-#         if not account_.error and \
-#             self.key_public == \
-#                 account_.json["permissions"][0]["required_auth"]["keys"] \
-#                     [0]["key"]:
-#             self.account_info = str(account_)
-#             logger.TRACE('''
-#                 Local testnet is ON: the `eosio` account is master.
-#                 ''')
-#             return True
-#         else:
-#             return False
-
-
 def is_local_testnet_running(account_eosio):
     try:
         account_ = cleos.GetAccount(
