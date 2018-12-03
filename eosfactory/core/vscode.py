@@ -2,7 +2,7 @@ import json
 
 INCLUDES = [
         "${ROOT}/usr/local/eosio.cdt/include/eosiolib",
-        "${ROOT}/usr/local/eosio.cdt/include/boost",
+        "${ROOT}/usr/local/eosio.cdt/include",
         "${ROOT}/usr/local/eosio.cdt/include/libc",
         "${ROOT}/usr/local/eosio.cdt/include/libcxx",
         "${workspaceFolder}"
