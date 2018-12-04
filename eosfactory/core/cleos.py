@@ -201,18 +201,21 @@ class GetAccount(interface.Account, _Cleos):
 
         self.owner_key = None
         self.active_key = None
-        if not is_info:
-            if self.json["permissions"][1]["required_auth"]["keys"]:
-                self.owner_key = self.json["permissions"][1] \
-                    ["required_auth"]["keys"][0]["key"]
-                self.active_key = self.json["permissions"][0] \
-                    ["required_auth"]["keys"][0]["key"]                     
-        else:
-            owner = re.search('owner\s+1\:\s+1\s(.*)\n', self.out_msg)
-            active = re.search('active\s+1\:\s+1\s(.*)\n', self.out_msg)
-            if owner and active:
-                self.owner_key = owner.group(1)
-                self.active_key = active.group(1)
+        try:
+            if not is_info:
+                if self.json["permissions"][1]["required_auth"]["keys"]:
+                    self.owner_key = self.json["permissions"][1] \
+                        ["required_auth"]["keys"][0]["key"]
+                    self.active_key = self.json["permissions"][0] \
+                        ["required_auth"]["keys"][0]["key"]                     
+            else:
+                owner = re.search('owner\s+1\:\s+1\s(.*)\n', self.out_msg)
+                active = re.search('active\s+1\:\s+1\s(.*)\n', self.out_msg)
+                if owner and active:
+                    self.owner_key = owner.group(1)
+                    self.active_key = active.group(1)
+        except:
+            pass
 
         self.printself()
 
@@ -637,7 +640,7 @@ class CreateKey(interface.Key, _Cleos):
         is_verbose: If set, print output.    
     '''
     def __init__(
-            self, key_name, key_public="", key_private="", r1=False, 
+            self, key_name="", key_public="", key_private="", r1=False, 
             is_verbose=True):
         interface.Key.__init__(self, key_name, key_public, key_private)
 
@@ -726,7 +729,7 @@ class CreateAccount(interface.Account, _Cleos):
             self, creator, name, owner_key, 
             active_key=None,
             permission=None,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, 
             dont_broadcast=0,
             forceUnique=0,
@@ -762,7 +765,8 @@ class CreateAccount(interface.Account, _Cleos):
             for perm in p:
                 args.extend(["--permission", perm])
 
-        args.extend(["--expiration", str(expiration_sec)])
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -869,7 +873,7 @@ class SetContract(_Cleos):
     def __init__(
             self, account, contract_dir, 
             wasm_file=None, abi_file=None, 
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -900,7 +904,8 @@ class SetContract(_Cleos):
             for perm in p:
                 args.extend(["--permission", perm])
 
-        args.extend(["--expiration", str(expiration_sec)])
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -934,8 +939,11 @@ class SetAccountPermission(_Cleos):
 
         account: The account to set/delete a permission authority for. May be 
             an object having the attribute `name`, or a string.
-        permission_value: The permission to set/delete an authority for. May be
-            a string or an instance of the interface.Permission class.
+        permission_name: The permission to set/delete an authority for. May be
+            a string or an instance of ``eosfactory.core.interface.Permission``.
+        parent_permission_name: The permission name of this parents permission 
+            (defaults to: "Active"). May be a string or an instance of 
+            ``eosfactory.core.interface.Permission``.
         authority:  None to delete; a public key string or an interface.key_arg
             object; JSON string; a filename defining the authority.
         permission: An account and permission level to authorize, as in 
@@ -961,9 +969,10 @@ class SetAccountPermission(_Cleos):
         delay_sec: Set the delay_sec seconds, defaults to 0s            
     '''
     def __init__(
-            self, account, permission_value, authority, 
+            self, account, permission_name, authority, 
+            parent_permission_name,
             permission=None,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, 
             dont_broadcast=0,
             return_packed=0,
@@ -975,13 +984,27 @@ class SetAccountPermission(_Cleos):
             is_verbose=True,
             json=False
             ):
-
+        # import pdb; pdb.set_trace()
         self.account_name = interface.account_arg(account)
-        authority =  re.sub(re.compile(r'\s+'), '', authority)
-        if isinstance(permission_value, interface.Permission):
-            permission_value = permission_value.value
+        args = [self.account_name]
 
-        args = [self.account_name, permission_value, authority]
+        if isinstance(permission_name, interface.Permission):
+            permission_name = permission_name.value
+        args.append(permission_name)
+
+        if authority:
+            if isinstance(authority, interface.Account):
+                args.append(authority.active())
+            else:
+                authority =  re.sub(re.compile(r'\s+'), '', authority)
+                args.append(authority)
+        else:
+            args.append("NULL")
+
+        if isinstance(parent_permission_name, interface.Permission):
+            parent_permission_name = parent_permission_name.value
+        args.append(parent_permission_name)        
+
         if json:
             args.append("--json")
         if not permission is None:
@@ -989,7 +1012,8 @@ class SetAccountPermission(_Cleos):
             for perm in p:
                 args.extend(["--permission", perm])
 
-        args.extend(["--expiration", str(expiration_sec)])
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -1056,7 +1080,7 @@ class PushAction(_Cleos):
     '''
     def __init__(
             self, account, action, data,
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -1073,7 +1097,8 @@ class PushAction(_Cleos):
             for perm in p:
                 args.extend(["--permission", perm])
 
-        args.extend(["--expiration", str(expiration_sec)])
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:

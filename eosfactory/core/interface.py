@@ -104,17 +104,17 @@ def permission_arg(permission):
             retval = permission[0].name
         if retval is None:
             return None
-        permission_value = None
+        permission_name = None
         if isinstance(permission[1], Permission):
-            permission_value = permission[1].value
+            permission_name = permission[1].value
         if isinstance(permission[1], str):
-            permission_value = permission[1]
+            permission_name = permission[1]
 
-        if not permission_value is None:
-            if permission_value[0] == "@":
-                retval = retval + permission_value
+        if not permission_name is None:
+            if permission_name[0] == "@":
+                retval = retval + permission_name
             else:
-                retval = retval + "@" + permission_value
+                retval = retval + "@" + permission_name
             return [retval]
         else:
             return None

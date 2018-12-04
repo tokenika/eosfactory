@@ -57,7 +57,7 @@ def wallet_dir():
     return os.path.expandvars(teos.get_keosd_wallet_dir())
 
 
-def accout_names_2_object_names(sentence):
+def accout_names_2_object_names(sentence, keys=False):
     if not setup.is_translating:
         return sentence
         
@@ -68,6 +68,19 @@ def accout_names_2_object_names(sentence):
         if name in exceptions:
             continue
         sentence = sentence.replace(name, account_object_name)
+        
+        if keys:
+            account = cleos.GetAccount(
+                        name, is_info=False, is_verbose=False)
+            owner_key = account.owner()
+            if owner_key:
+                sentence = sentence.replace(
+                    owner_key, account_object_name + "@owner")
+
+            active_key = account.active()
+            if active_key:
+                sentence = sentence.replace(
+                    active_key, account_object_name + "@active")        
 
     return sentence
 

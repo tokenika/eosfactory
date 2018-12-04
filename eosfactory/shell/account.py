@@ -65,12 +65,16 @@ def _data_json(data):
                 return str(o)
             else:
                 json.JSONEncoder.default(self, o) 
+    if not data:
+        return data
 
+    data_json = data
     if isinstance(data, dict) or isinstance(data, list):
         data_json = json.dumps(data, cls=Encoder)
     else:
-        data_json = re.sub("\s+|\n+|\t+", " ", data)
-        data_json = manager.object_names_2_accout_names(data_json)
+        if isinstance(data, str):
+            data_json = re.sub("\s+|\n+|\t+", " ", data)
+            data_json = manager.object_names_2_accout_names(data_json)
     return data_json
 
 
@@ -137,10 +141,13 @@ class Eosio(interface.Account):
         self.active_key = self.owner_key
 
     def info(self):
-        print("account object name: {}\nname: {}\n{}".format(
+        msg = manager.accout_names_2_object_names(
+            "account object name: {}\nname: {}\n{}".format(
                 self.account_object_name, 
                 self.name,
-                cleos.GetAccount(self.name, is_verbose=False).out_msg))
+                cleos.GetAccount(self.name, is_verbose=False).out_msg),
+                True)
+        print(msg)
 
     def __str__(self):
         return self.name
@@ -150,7 +157,7 @@ class Eosio(interface.Account):
             receiver=None,
             permission=None,
             transfer=False,
-            expiration_sec=30,
+            expiration_sec=None,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -159,7 +166,7 @@ class Eosio(interface.Account):
 
     def buy_ram(
             account_object, amount_kbytes, receiver=None,
-            expiration_sec=30,
+            expiration_sec=None,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
@@ -244,8 +251,12 @@ class GetAccount(cleos.GetAccount):
 
     def info(self):
         get_account = cleos.GetAccount(self.name, is_verbose=False)
-        print("account object name: {}\n{}".format(
-            self.account_object_name, get_account))
+        msg = manager.accout_names_2_object_names(
+            "account object name: {}\n{}".format(
+            self.account_object_name, get_account),
+            True
+        )
+        print(msg)
 
     def __str__(self):
         return self.name
@@ -261,7 +272,7 @@ class CreateAccount(cleos.CreateAccount):
             self, creator, name, owner_key, 
             active_key="",
             permission=None,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, 
             dont_broadcast=0,
             forceUnique=0,
@@ -284,7 +295,7 @@ class SystemNewaccount(cleosys.SystemNewaccount):
             permission=None,
             buy_ram_kbytes=0, buy_ram="",
             transfer=False,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -531,7 +542,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
     def set_contract(
             account_object, contract_dir, 
             wast_file="", abi_file="", 
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
@@ -553,7 +564,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
 
     def push_action(
             account_object, action, data,
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
@@ -631,7 +642,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
 
     def buy_ram(
             account_object, amount_kbytes, receiver=None,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
@@ -661,9 +672,9 @@ def append_account_methods_and_finish(account_object_name, account_object):
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
     def set_permission(
-        account_object, permission_name, authority, 
+        account_object, permission_name, authority, parent_permission_name, 
             permission=None,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, 
             dont_broadcast=0,
             return_packed=0,
@@ -675,7 +686,40 @@ def append_account_methods_and_finish(account_object_name, account_object):
             is_verbose=True,
             json=False
         ):
+        '''Set parameters dealing with account permissions.
 
+        - **parameters**::
+
+            permission_name: The permission to set/delete an authority for. May be
+                a string or an instance of ``eosfactory.coreinterface.Permission``.
+            authority:  None to delete; a public key string or an interface.key_arg
+                object; JSON string; a filename defining the authority.
+            parent_permission_name: The permission name of this parents permission 
+                (defaults to: "Active"). May be a string or an instance of 
+                ``eosfactory.core.interface.Permission``.
+            permission: An account and permission level to authorize, as in 
+                'account@permission'. May be an object having the attribute `name`, 
+                or a string.
+            expiration: The time in seconds before a transaction expires, 
+                defaults to 30s
+            skip_sign: Specify if unlocked wallet keys should be used to sign 
+                transaction.
+            dont_broadcast: Don't broadcast transaction to the network (just print).
+            return_packed: Used in conjunction with dont_broadcast to get the 
+                packed transaction.
+            forceUnique: Force the transaction to be unique. this will consume extra 
+                bandwidth and remove any protections against accidently issuing the 
+                same transaction multiple times.
+            max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+                the execution of the transaction 
+                (defaults to 0 which means no limit).
+            max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+                transaction (defaults to 0 which means no limit).
+            ref_block: The reference block num or block id used for TAPOS 
+                (Transaction as Proof-of-Stake).
+            delay_sec: Set the delay_sec seconds, defaults to 0s
+
+        '''
         logger.TRACE('''
         * Set account premission.
         ''')
@@ -683,7 +727,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
         authority = _data_json(authority)
 
         result = cleos.SetAccountPermission(
-            account_object, permission_name, authority,
+            account_object, permission_name, authority, parent_permission_name,
             permission,
             expiration_sec, 
             skip_signature, 
@@ -705,7 +749,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
         receiver=None,
         permission=None,
         transfer=False,
-        expiration_sec=30, 
+        expiration_sec=None, 
         skip_signature=0, dont_broadcast=0, forceUnique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
@@ -738,9 +782,13 @@ def append_account_methods_and_finish(account_object_name, account_object):
     account_object.delegate_bw = types.MethodType(delegate_bw, account_object)
 
     def info(account_object):
-        print("Account object name: {}\n{}".format(
+        msg = manager.accout_names_2_object_names(
+            "Account object name: {}\n{}".format(
             account_object_name,
-            str(cleos.GetAccount(account_object.name, is_verbose=0))))
+            str(cleos.GetAccount(account_object.name, is_verbose=0))),
+            True
+        )
+        print(msg)
 
     account_object.info = types.MethodType(info, account_object)
 
@@ -763,7 +811,7 @@ def create_account(
         permission=None,
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
-        expiration_sec=30,
+        expiration_sec=None,
         skip_signature=0, dont_broadcast=0, forceUnique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,

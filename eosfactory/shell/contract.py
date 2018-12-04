@@ -64,7 +64,7 @@ class Contract(ContractBuilder):
             self, account, contract_dir,
             abi_file=None, wasm_file=None,
             permission=None,
-            expiration_sec=30,
+            expiration_sec=None,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -142,7 +142,7 @@ class Contract(ContractBuilder):
 
     def push_action(
             self, action, data,
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
