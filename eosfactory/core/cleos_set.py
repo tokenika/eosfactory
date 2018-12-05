@@ -146,7 +146,6 @@ class SetActionPermission(cleos._Cleos):
         ref_block: The reference block num or block id used for TAPOS 
             (Transaction as Proof-of-Stake).
         delay_sec: Set the delay_sec seconds, defaults to 0s
-
     '''
     def __init__(
             self, account, code, type, requirement,

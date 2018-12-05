@@ -203,11 +203,14 @@ class GetAccount(interface.Account, _Cleos):
         self.active_key = None
         try:
             if not is_info:
-                if self.json["permissions"][1]["required_auth"]["keys"]:
-                    self.owner_key = self.json["permissions"][1] \
-                        ["required_auth"]["keys"][0]["key"]
-                    self.active_key = self.json["permissions"][0] \
-                        ["required_auth"]["keys"][0]["key"]                     
+                permissions = self.json["permissions"]
+                for permission in permissions:
+                    if permission["required_auth"]["keys"]:
+                        key = permission["required_auth"]["keys"][0]["key"]
+                        if permission["perm_name"] == "owner":
+                            self.owner_key = key
+                        if permission["perm_name"] == "active":
+                            self.active_key = key                   
             else:
                 owner = re.search('owner\s+1\:\s+1\s(.*)\n', self.out_msg)
                 active = re.search('active\s+1\:\s+1\s(.*)\n', self.out_msg)
@@ -215,7 +218,7 @@ class GetAccount(interface.Account, _Cleos):
                     self.owner_key = owner.group(1)
                     self.active_key = active.group(1)
         except:
-            pass
+            import pdb; pdb.set_trace()
 
         self.printself()
 
