@@ -6,6 +6,7 @@
 import sys
 import os
 import json
+import re
 
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
@@ -303,3 +304,23 @@ editor. Return ``None`` if the the offer is rejected.
                     Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
                     ''', translate=False)                    
                     return None
+
+
+def data_json(data):
+    class Encoder(json.JSONEncoder):
+        def default(self, o):
+            if isinstance(o, interface.Account):
+                return str(o)
+            else:
+                json.JSONEncoder.default(self, o) 
+    if not data:
+        return data
+
+    data_json = data
+    if isinstance(data, dict) or isinstance(data, list):
+        data_json = json.dumps(data, cls=Encoder)
+    else:
+        if isinstance(data, str):
+            data_json = re.sub("\s+|\n+|\t+", " ", data)
+            data_json = object_names_2_accout_names(data_json)
+    return data_json

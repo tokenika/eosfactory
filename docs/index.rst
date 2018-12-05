@@ -50,6 +50,22 @@ Tutorials
     tutorials/05.InteractingWithPublicTestnet
 
 
+Patterns
+--------
+
+.. toctree::
+    :maxdepth: 1
+
+    patterns/README
+
+set
+```
+
+.. toctree::
+    :maxdepth: 1
+
+    patterns/set/set_account_permission
+
 Roadmap
 -------
 

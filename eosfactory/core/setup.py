@@ -71,24 +71,3 @@ def file_prefix():
 #     global __file_prefix
 #     __file_prefix = None
 
-
-def save_code():
-    '''Copy the current file without heredoc comments.
-    '''
-    if len(sys.argv) < 2 or sys.argv[1] != "-s" and sys.argv[1] != "--save":
-        return
-
-    original = os.path.abspath(sys.argv[0])
-    converted = os.path.splitext(original)[0] + ".py"
-
-    try:
-        with open(original, "r") as r:
-            text = r.read()
-
-        search = re.compile(r'\'\'\'.*?\'\'\'', flags=re.DOTALL)
-        with open(converted, "w") as w:
-            w.write(re.sub(search, '', text))
-    except Exception as e: 
-        print(e)
-
-    exit()
