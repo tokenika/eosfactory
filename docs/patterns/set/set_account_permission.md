@@ -2,6 +2,8 @@
 
 Creates or updates an account's permission.
 
+The python code involved can be executed, as it is explained [here](../README.html).
+
 ```python
 
 from eosfactory.eosf import *

@@ -2,6 +2,8 @@
 
 This article follows a [document](https://developers.eos.io/eosio-nodeos/docs/bios-boot-sequence) from eosio archives.
 
+The python code involved can be executed, as it is explained [here](./README.html).
+
 ## Steps 1 - 2 Setup
 
 Start `nodeos`, create a wallet.
@@ -50,8 +52,8 @@ contract = "eosio.token"
 Contract(
     contract, 
     os.path.join(eosio_contracts_dir, contract),
-    abi_file = contract + ".abi",
-    wasm_file = contract + ".wasm"
+    contract + ".abi",
+    contract + ".wasm"
     ).deploy()
 ```
 
@@ -66,8 +68,8 @@ contract = "eosio.msig"
 Contract(
     contract, 
     os.path.join(eosio_contracts_dir, contract),
-    abi_file = contract + ".abi",
-    wasm_file = contract + ".wasm"
+    contract + ".abi",
+    contract + ".wasm"
     ).deploy()
 ```
 
@@ -107,7 +109,7 @@ contract = "eosio.system"
 Contract(
     eosio, 
     os.path.join(eosio_contracts_dir, contract),
-    abi_file = contract + ".abi",
-    wasm_file = contract + ".wasm"
+    contract + ".abi",
+    contract + ".wasm"
     ).deploy()
 ```

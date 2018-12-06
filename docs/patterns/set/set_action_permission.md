@@ -1,6 +1,8 @@
 # set action permission
 
-Set's authorization for a contract's specific action
+Set's authorization for a contract's specific action.
+
+The python code involved can be executed, as it is explained [here](../README.html).
 
 ```python
 
