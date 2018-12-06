@@ -57,6 +57,7 @@ Patterns
     :maxdepth: 1
 
     patterns/README
+    patterns/BIOS_Boot_Sequence
 
 set
 ```

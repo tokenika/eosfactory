@@ -51,19 +51,25 @@ class _Cleos():
             print(" ".join(cl))
             print("")
 
-        process = subprocess.run(
-            cl,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            cwd=str(pathlib.Path(config.cli_exe()).parent)) 
+        while True:
+            process = subprocess.run(
+                cl,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=str(pathlib.Path(config.cli_exe()).parent)) 
 
-        self.out_msg = process.stdout.decode("utf-8")
-        self.out_msg_details = process.stderr.decode("utf-8")
-        error_key_words = ["ERROR", "Error", "error", "Failed"]
-        for word in error_key_words:
-            if word in self.out_msg_details:
-                self.err_msg = self.out_msg_details
-                self.out_msg_details = None
+            self.out_msg = process.stdout.decode("utf-8")
+            self.out_msg_details = process.stderr.decode("utf-8")
+            self.err_msg = None
+            error_key_words = ["ERROR", "Error", "error", "Failed"]
+            for word in error_key_words:
+                if word in self.out_msg_details:
+                    self.err_msg = self.out_msg_details
+                    self.out_msg_details = None
+                    break
+
+            if not self.err_msg or self.err_msg and \
+                    not "Transaction took too long" in self.err_msg:
                 break
 
         errors.validate(self)
@@ -218,7 +224,6 @@ class GetAccount(interface.Account, _Cleos):
                     self.owner_key = owner.group(1)
                     self.active_key = active.group(1)
         except:
-            # import pdb; pdb.set_trace()
             pass
 
         self.printself()

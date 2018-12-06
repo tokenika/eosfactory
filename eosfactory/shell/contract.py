@@ -103,7 +103,7 @@ class Contract(ContractBuilder):
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
                 is_verbose=False,
-                json=True)
+                json=False)
 
         except errors.LowRamError as e:
             logger.TRACE('''
@@ -127,7 +127,7 @@ class Contract(ContractBuilder):
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
                 is_verbose=False,
-                json=True)
+                json=False)
 
         logger.INFO('''
         * Contract {} is deployed. 
