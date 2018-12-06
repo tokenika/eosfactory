@@ -97,7 +97,7 @@ As a point of interest, from an economic point of view, moving token from reserv
 
 `eosio.system` contract provides the actions for pretty much all token-based operational behavior. Prior to installing the system contract, actions are done independent of accounting. Once the system contract is enabled, **actions now have an economic element to them**. Resources (cpu, network, memory) must be paid for. Likewise, new accounts must be paid for. The system contract enables tokens to be staked and unstaked, resources to be purchased, potential producers to be registered and subsequently voted on, producer rewards to be claimed, privileges and limits to be set, and more.
 
-Therefore, with the `eosio.system` contract, all the simple tests, using the simple signature of the `create_account` contract factory function, will fail.
+Therefore, with the `eosio.system` contract, all the simple tests in the EOSFactory distribution, using the simple signature of the `create_account` account factory function, will fail.
 
 
 ```python
@@ -110,6 +110,4 @@ Contract(
     abi_file = contract + ".abi",
     wasm_file = contract + ".wasm"
     ).deploy()
-
-
 ```
