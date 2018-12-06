@@ -40,3 +40,4 @@ localnode/blocks
 /*.egg-info
 
 tests/js
+docs/patterns/*/*.py

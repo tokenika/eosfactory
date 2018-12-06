@@ -5,7 +5,7 @@ import eosfactory.core.cleos_set as cleos_set
 
 
 def set_action_permission(
-    account_object, code, type, requirement,
+    self, code, type, requirement,
             permission=None,
             expiration_sec=None, 
             skip_signature=0, 
@@ -19,11 +19,13 @@ def set_action_permission(
             is_verbose=True,
             json=False
             ):
-    '''Set parameters dealing with account permissions.
+    '''Set parameters dealing with self permissions.
+
+    A method of ``account`` object.
 
     - **parameters**::
 
-        account: The account to set/delete a permission authority for. May be 
+        self: The account to set/delete a permission authority for. May be 
             an object having the attribute `name`, or a string.
         code: The account that owns the code for the action. May be 
             an object having the attribute `name`, or a string.
@@ -58,7 +60,7 @@ def set_action_permission(
     ''')
 
     result = cleos_set.SetActionPermission(
-        account_object, code, type, requirement,
+        self, code, type, requirement,
         permission,
         expiration_sec, 
         skip_signature, 
@@ -73,7 +75,7 @@ def set_action_permission(
 
 
 def set_account_permission(
-    account_object, permission_name, authority, parent_permission_name, 
+    self, permission_name, authority, parent_permission_name, 
         permission=None,
         expiration_sec=None, 
         skip_signature=0, 
@@ -87,10 +89,14 @@ def set_account_permission(
         is_verbose=True,
         json=False
     ):
-    '''Set parameters dealing with account permissions.
+    '''Set parameters dealing with self permissions.
+
+    A method of ``account`` object.
 
     - **parameters**::
 
+        self: The account to set/delete a permission authority for. May be 
+            an object having the attribute `name`, or a string.
         permission_name: The permission to set/delete an authority for. May be
             a string or an instance of ``eosfactory.coreinterface.Permission``.
         authority:  None to delete; a public key string or an interface.key_arg
@@ -128,7 +134,7 @@ def set_account_permission(
     authority = manager.data_json(authority)
 
     result = cleos_set.SetAccountPermission(
-        account_object, permission_name, authority, parent_permission_name,
+        self, permission_name, authority, parent_permission_name,
         permission,
         expiration_sec, 
         skip_signature, 

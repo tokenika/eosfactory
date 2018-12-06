@@ -6,8 +6,6 @@ import argparse
 def save_code(path):
     '''Copy the current file without heredoc comments.
     '''
-    #import pdb; pdb.set_trace()
-
     md_file = os.path.abspath(path)
     python_file = os.path.splitext(md_file)[0] + ".py"
 

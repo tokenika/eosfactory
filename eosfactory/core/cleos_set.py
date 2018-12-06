@@ -55,7 +55,7 @@ class SetAccountPermission(cleos._Cleos):
             is_verbose=True,
             json=False
             ):
-        # import pdb; pdb.set_trace()
+
         self.account_name = interface.account_arg(account)
         args = [self.account_name]
 
@@ -162,7 +162,7 @@ class SetActionPermission(cleos._Cleos):
             is_verbose=True,
             json=False
             ):
-        # import pdb; pdb.set_trace()
+
         self.account_name = interface.account_arg(account)
         args = [self.account_name]
 

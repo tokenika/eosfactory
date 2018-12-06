@@ -218,7 +218,8 @@ class GetAccount(interface.Account, _Cleos):
                     self.owner_key = owner.group(1)
                     self.active_key = active.group(1)
         except:
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
+            pass
 
         self.printself()
 

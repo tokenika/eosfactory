@@ -15,7 +15,9 @@ create_account("Jim", master)
 Alice.info()
 
 ```
-`Alice.info()` reads, in the *permissions* section:
+
+`Alice.info()` reads, in the `permissions` section:
+
 ```md
 permissions:
      owner     1:    1 Alice@owner
@@ -35,7 +37,9 @@ setup.is_print_command_line = False
 Alice.info()
 
 ```
-Now, the *permissions* section of `Alice.info()` changes:
+
+The `permissions` section of `Alice.info()`:
+
 ```md
 permissions:
      owner     1:    1 Alice@owner

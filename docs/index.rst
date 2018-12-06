@@ -65,6 +65,7 @@ set
     :maxdepth: 1
 
     patterns/set/set_account_permission
+    patterns/set/set_action_permission
 
 Roadmap
 -------

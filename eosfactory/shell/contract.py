@@ -135,11 +135,6 @@ class Contract(ContractBuilder):
         
         self.contract = result
 
-    def is_deployed(self):
-        if not self.contract:
-            return False
-        return not self.contract.err_msg
-
     def push_action(
             self, action, data,
             permission=None, expiration_sec=None, 
@@ -181,9 +176,9 @@ class Contract(ContractBuilder):
             return str(self.contract.contract_path_absolute)
         else:
             return str(self.contract_dir)
-
+            
     def __str__(self):
-        if self.is_deployed():
+        if self.contract and not self.contract.err_msg:
             return str(self.contract)
         else:
             return str(self.account)

@@ -10,35 +10,33 @@ import eosfactory.core.setup as setup
 
 reset()
 create_master_account("master")
-
-create_account("host", master)
-contract = Contract(host, "02_eosio_token")
-# contract.build(force=False)
-contract.deploy()
-
 create_account("PRODUCERACCT", master)
-create_account("Bob", master)
 ```
 
 ```python
 
 PRODUCERACCT.info()
+```
 
-COMMENT('''PRODUCERACCT.set_account_permission("create"''')
-PRODUCERACCT.set_account_permission("create",
+The `permissions` section of `PRODUCERACCT.info()`:
+
+```md
+permissions:
+     owner     1:    1 PRODUCERACCT@owner
+        active     1:    1 PRODUCERACCT@active
+```
+
+```python
+
+COMMENT('''PRODUCERACCT.set_account_permission("claimer"''')
+PRODUCERACCT.set_account_permission("claimer",
     {
         "threshold" : 1, 
         "keys" : 
-            [], 
-        "accounts" : 
             [
                 {
-                    "permission":
-                        {
-                            "actor": host,
-                            "permission":"active"
-                        },
-                    "weight":1
+                    "key": PRODUCERACCT.active(),
+                    "weight": 1
                 }
             ]
 
@@ -46,33 +44,21 @@ PRODUCERACCT.set_account_permission("create",
     Permission.ACTIVE)
 
 PRODUCERACCT.info()
+```
 
-COMMENT('''PRODUCERACCT.set_action_permission(host''')
+The `permissions` section of `PRODUCERACCT.info()`:
+
+```md
+permissions:
+     owner     1:    1 PRODUCERACCT@owner
+        active     1:    1 PRODUCERACCT@active
+           claimer     1:    1 PRODUCERACCT@active
+```
+
+```python
+
+COMMENT('''PRODUCERACCT.set_action_permission("eosio"''')
 PRODUCERACCT.set_action_permission(
-    host, "create", "create", 
-    permission=(PRODUCERACCT, "create"))
+    "eosio", "claimrewards", "claimer", permission=(PRODUCERACCT, "active"))
 
-host.push_action(
-    "create",
-    {
-        "issuer": master,
-        "maximum_supply": "1000000000.0000 EOS",
-        "can_freeze": "0",
-        "can_recall": "0",
-        "can_whitelist": "0"
-    },
-    permission=(PRODUCERACCT, "create")
-)
-
-#cleos set action permission @ACCOUNT @CONTRACT ACTION_NAME PERMISSION_NAME
-
-#Link a `voteproducer` action to the 'vote' permissions
-# PRODUCERACCT.set_action_permission(
-#     "eosio.system", "voteproducer", "voting", (PRODUCERACCT, "voting")
-# )
-
-# ) sandwichfarm eosio.system voteproducer voting -p sandwichfarm@voting
-
-# #Now can execute the transaction with the previously set permissions. 
-# cleos system voteproducer approve sandwichfarm someproducer -p sandwichfarm@voting
 ```
