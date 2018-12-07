@@ -31,7 +31,6 @@ args = parser.parse_args()
 #     log.write(str(sys.argv) + "\n")
 #     log.write(str(args) + "\n")
 
-# import pdb; pdb.set_trace()
 project_from_template(
     args.name, template=args.template, 
     c_cpp_prop_path=args.c_cpp_prop_path,
