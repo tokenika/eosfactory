@@ -4,9 +4,7 @@ This article follows a [document](https://developers.eos.io/eosio-nodeos/docs/bi
 
 The python code involved can be executed, as it is explained [here](./README.html).
 
-## Steps 1 - 2 Setup
-
-Start `nodeos`, create a wallet.
+## Steps 0 System contracts
 
 ```python
 
@@ -16,6 +14,9 @@ from eosfactory.eosf import *
 import eosfactory.core.cleos as cleos
 import eosfactory.core.setup as setup
 import eosfactory.core.config as config
+```
+
+```python
 
 while True:
     map = config.config_map()
@@ -23,31 +24,24 @@ while True:
     EOSIO_CONTRACTS = "EOSIO_CONTRACTS"
     current_path_color = "green"
     error_path_color = "red"
+    eosio_bios = "build/contracts/eosio.bios"
 
     if EOSIO_CONTRACTS in map:
         eosio_contracts_dir = os.path.join(
-            map[EOSIO_CONTRACTS], "build/contracts")
-        _eosio_contracts_dir = tilde(input(utils.heredoc('''
-            Where is the eosio.contract repository located on your machine?
-            The current location is:
-            {}
-            Input another existing directory path, or nothing to keep the current one:
-            ''').format(colored(map[EOSIO_CONTRACTS], current_path_color)) + "\n"))
-    else:
-        _eosio_repository_dir = tilde(input(utils.heredoc('''
-            Where is the EOSIO repository located on your machine?
-            Input an existing directory path:
-            ''') + "\n"))
+                                    map[EOSIO_CONTRACTS], "build/contracts")
+        if eosio_contracts_dir and os.path.exists(
+                    os.path.join(eosio_contracts_dir, eosio_bios)):
+            break
 
-    if not _eosio_contracts_dir:
-        _eosio_contracts_dir = eosio_contracts_dir
+    eosio_repository_dir = tilde(input(utils.heredoc('''
+        Where is the EOSIO repository located on your machine?
+        Input an existing directory path:
+        ''') + "\n"))
 
-    ok = _eosio_contracts_dir and os.path.exists(
-        os.path.join(_eosio_contracts_dir, "build/contracts/eosio.bios"))
-
-    if ok:
+    if eosio_contracts_dir and os.path.exists(
+                            os.path.join(eosio_contracts_dir, eosio_bios)):
         map = config.config_map()
-        map[EOSIO_CONTRACTS] = _eosio_contracts_dir
+        map[EOSIO_CONTRACTS] = eosio_contracts_dir
         config.write_config_map(map)
         print()
         break
@@ -55,9 +49,15 @@ while True:
     print("\n" + utils.heredoc('''
     The path you entered:
     {}
-    doesn't seem to be correct! eosio.bios contact is not detected there.
+    doesn't seem to be correct! 
+    'build/eosio.bios' directory is not there.
     ''').format(colored(_eosio_repository_dir, error_path_color)) + "\n")
+```
+## Steps 1 - 2 Setup
 
+Start nodeos, create a wallet.
+
+```python
 reset()
 
 create_master_account("eosio")
