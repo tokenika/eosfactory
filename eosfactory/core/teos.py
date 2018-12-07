@@ -342,7 +342,11 @@ def project_from_template(
 
 
 def strip_wsl_root(path):
-    return path.replace(config.wsl_root(), "")
+    wsl_root = config.wsl_root()
+    if wsl_root:
+        return path.replace(config.wsl_root(), "")
+    else:
+        return path
 
 
 def get_keosd_wallet_dir():

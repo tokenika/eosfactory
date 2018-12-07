@@ -87,7 +87,11 @@ def node_api():
 
 
 def wsl_root():
-    path = config_value_checked(wsl_root_).strip()
+    path = config_value(wsl_root_)
+    if path is None:
+        return None
+    else:
+        path = path.strip()
     return path.replace("\\", "/")
 
 
@@ -104,7 +108,10 @@ def http_server_address():
 
 
 def http_wallet_address():
-    return config_value_checked(wallet_address_)
+    retval = config_value(wallet_address_)
+    if not retval:
+        retval = http_server_address()
+    return retval
 
 
 def node_exe():
@@ -233,7 +240,7 @@ def config_value_checked(config_list):
 The value of {} is not defined.
 Define it in the config file
 {}       
-    '''.format(config_list[0]), config_file())
+    '''.format(config_list[0], config_file())
 
 
 def first_valid_path(config_list, findFile=None):
@@ -569,6 +576,8 @@ def current_config(contract_dir=None):
         map[workspaceEosio_[0]] = workspaceEosio()
     except:
         map[workspaceEosio_[0]] = None
+
+    map[nodeos_stdout_[0]] = nodeos_stdout()
     
     if contract_dir:
         contract_dir = contract_dir(contract_dir)
