@@ -240,7 +240,7 @@ def config_value_checked(config_list):
 The value of {} is not defined.
 Define it in the config file
 {}       
-    '''.format(config_list[0], config_file())
+    '''.format(config_list[0], config_file()))
 
 
 def first_valid_path(config_list, findFile=None):
