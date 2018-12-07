@@ -663,7 +663,7 @@ class CreateAccount(Account, _Eosjs):
             self, creator, name, owner_key, 
             active_key=None,
             permission=None,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, 
             dont_broadcast=0,
             forceUnique=0,
@@ -832,7 +832,7 @@ class SetContract(_Eosjs):
     def __init__(
             self, account, contract_dir, 
             wasm_file=None, abi_file=None, 
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -934,7 +934,7 @@ class PushAction(_Eosjs):
     '''
     def __init__(
             self, account, action, data,
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,

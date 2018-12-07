@@ -5,8 +5,8 @@ class Omittable:
         self.err_msg = None
 
 class Permission(enum.Enum):
-    OWNER = '@owner'
-    ACTIVE = '@active'
+    OWNER = 'owner'
+    ACTIVE = 'active'
 
 
 class Key(Omittable):
@@ -27,6 +27,18 @@ class Account(Omittable):
         self.owner_key = owner_key
         self.active_key = active_key
         Omittable.__init__(self)
+    
+    def owner(self):
+        if isinstance(self.owner_key, Key):
+            return self.owner_key.key_public
+        else:
+            return self.owner_key
+
+    def active(self):
+        if isinstance(self.active_key, Key):
+            return self.active_key.key_public
+        else:
+            return self.active_key    
 
 
 class Wallet(Omittable):
@@ -92,17 +104,17 @@ def permission_arg(permission):
             retval = permission[0].name
         if retval is None:
             return None
-        permission_value = None
+        permission_name = None
         if isinstance(permission[1], Permission):
-            permission_value = permission[1].value
+            permission_name = permission[1].value
         if isinstance(permission[1], str):
-            permission_value = permission[1]
+            permission_name = permission[1]
 
-        if not permission_value is None:
-            if permission_value[0] == "@":
-                retval = retval + permission_value
+        if not permission_name is None:
+            if permission_name[0] == "@":
+                retval = retval + permission_name
             else:
-                retval = retval + "@" + permission_value
+                retval = retval + "@" + permission_name
             return [retval]
         else:
             return None

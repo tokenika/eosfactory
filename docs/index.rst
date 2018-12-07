@@ -50,6 +50,24 @@ Tutorials
     tutorials/05.InteractingWithPublicTestnet
 
 
+Patterns
+--------
+
+.. toctree::
+    :maxdepth: 1
+
+    patterns/README
+    patterns/BIOS_Boot_Sequence
+
+set
+```
+
+.. toctree::
+    :maxdepth: 1
+
+    patterns/set/set_account_permission
+    patterns/set/set_action_permission
+
 Roadmap
 -------
 
