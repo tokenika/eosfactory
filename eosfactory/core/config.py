@@ -25,10 +25,10 @@ config_dir_ = ("LOCAL_NODE_CONFIG_DIR", [LOCALNODE])
 workspaceEosio_ = ("EOSIO_WORKSPACE", [EOSIO_CONTRACT_DIR])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
-node_api_ = ("NODE_API", ["cleos"])
 wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 
+node_api_ = ("NODE_API", ["cleos"]) # cleos or eosjs
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
     ["build/programs/cleos/cleos", "/usr/local/eosio/bin/cleos"])
@@ -36,8 +36,10 @@ node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
     ["build/programs/nodeos/nodeos", "/usr/local/eosio/bin/nodeos"])
 
-eosio_cpp_ = ("EOSIO_CPP", ["/usr/local/eosio.cdt/bin/eosio-cpp"])
-eosio_abigen_ = ("EOSIO_ABIGEN", ["/usr/local/eosio.cdt/bin/eosio-abigen"])
+eosio_cpp_ = ("EOSIO_CPP", 
+    ["/usr/bin/eosio-cpp", "/usr/local/eosio.cdt/bin/eosio-cpp"])
+eosio_abigen_ = ("EOSIO_ABIGEN", 
+    ["/usr/bin/eosio-abigen", "/usr/local/eosio.cdt/bin/eosio-abigen"])
 
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
@@ -47,31 +49,6 @@ key_public_ = (
     ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"])
 contract_workspace_ = (
     "EOSIO_CONTRACT_WORKSPACE", [CONTRACTS_DIR])
-boost_include_dir_ = (
-    "BOOST_INCLUDE_DIR", 
-    ["${HOME}/opt/boost/include", "/usr/local/include/"])
-wasm_clang_exe_ = (
-    "WASM_CLANG_EXECUTABLE", 
-    ["${HOME}/opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"])
-wasm_llvm_link_exe_ = (
-    "WASM_LLVM_LINK_EXECUTABLE",
-    ["${HOME}/opt/wasm/bin/llvm-link", "/usr/local/wasm/bin/llvm-link"])
-wasm_llc_exe_ = (
-    "WASM_LLC_EXECUTABLE",
-    ["${HOME}/opt/wasm/bin/llc", "/usr/local/wasm/bin/llc"])
-s2wasm_exe_ = ( ##/mnt/c/Workspaces/EOS/eos/
-    "S2WASM_EXECUTABLE",
-    ["build/externals/binaryen/bin/eosio-s2wasm",
-        "/usr/local/bin/eosio-s2wasm", "/usr/local/eosio/bin/eosio-s2wasm"])
-wast2wasm_exe_ = (
-    "WAST2WASM_EXECUTABLE",
-    ["build/libraries/wasm-jit/Source/Programs/eosio-wast2wasm",
-        "/usr/local/bin/eosio-wast2wasm", 
-        "/usr/local/eosio/bin/eosio-wast2wasm"])
-abigen_exe_ = ( # used without eosio.cdt
-    "ABIGEN_EXECUTABLE",
-    ["build/programs/eosio-abigen/eosio-abigen",
-        "/usr/local/bin/eosio-abigen","/usr/local/eosio/bin/eosio-abigen"])
 is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
 
 
@@ -130,29 +107,6 @@ def http_wallet_address():
     return config_value_checked(wallet_address_)
 
 
-def boost_include_dir():
-    return first_valid_path(boost_include_dir_, "boost/version.hpp")
-
-
-def wasm_clang_exe():
-    return first_valid_path(wasm_clang_exe_)
-
-
-def wasm_llvm_link_exe():
-    return first_valid_path(wasm_llvm_link_exe_)      
-
-
-def s2wasm_exe():
-    return first_valid_path(s2wasm_exe_)
-
-
-def wast2wasm_exe():
-    return first_valid_path(wast2wasm_exe_)
-
-def wasm_llc_exe():
-    return first_valid_path(wasm_llc_exe_) 
-
-
 def node_exe():
     return first_valid_path(node_exe_) 
 
@@ -167,10 +121,6 @@ def eosio_cpp():
 
 def eosio_abigen():
     return first_valid_path(eosio_abigen_)
-
-
-def abigen_exe():
-    return first_valid_path(abigen_exe_)
 
 
 def keosd_wallet_dir():
@@ -616,37 +566,9 @@ def current_config(contract_dir=None):
     except:
         map[genesis_json_[0]] = None      
     try:
-        map[wasm_clang_exe_[0]] = wasm_clang_exe()
-    except:
-        map[wasm_clang_exe_[0]] = None
-    try:
-        map[boost_include_dir_[0]] =  boost_include_dir()
-    except:
-        map[boost_include_dir_[0]] = None
-    try:
-        map[wasm_llvm_link_exe_[0]] = wasm_llvm_link_exe()
-    except:
-        map[wasm_llvm_link_exe_[0]] = None
-    try:
-        map[wasm_llc_exe_[0]] = wasm_llc_exe()
-    except:
-        map[wasm_llc_exe_[0]] = None
-    try:
-        map[s2wasm_exe_[0]] = s2wasm_exe()
-    except:
-        map[s2wasm_exe_[0]] = None
-    try:
-        map[wast2wasm_exe_[0]] = wast2wasm_exe()
-    except:
-        map[wast2wasm_exe_[0]] = None
-    try:
         map[workspaceEosio_[0]] = workspaceEosio()
     except:
         map[workspaceEosio_[0]] = None
-    try:
-        map[abigen_exe_[0]] = abigen_exe()
-    except:
-        map[abigen_exe_[0]] = None
     
     if contract_dir:
         contract_dir = contract_dir(contract_dir)

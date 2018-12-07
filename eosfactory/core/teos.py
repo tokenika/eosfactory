@@ -178,8 +178,7 @@ def WAST(
         command_line.append(file)
 
     if setup.is_print_command_line:
-        print("######## {}:".format(config.wasm_llvm_link_exe()))
-        print(" ".join(command_line))
+        print("######## \n{}:".format(" ".join(command_line)))
 
     if not compile_only:
         command_line.append("-o=" + target_path)
@@ -285,7 +284,7 @@ def project_from_template(
             contract_path = os.path.join(
                 project_dir, path.replace(
                                         TEMPLATE_NAME, project_name))
-            # import pdb; pdb.set_trace()                            
+                          
             if os.path.isdir(template_path):
                 os.mkdir(contract_path)
                 copy_dir_contents(
