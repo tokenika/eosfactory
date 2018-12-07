@@ -618,7 +618,7 @@ def project_from_template(
             template = template.replace(TEMPLATE_HOME, home)
             template = template.replace(TEMPLATE_ROOT, root)
             template = template.replace(TEMPLATE_EOSIO_DIR, eosio_dir)
-
+        import pdb; pdb.set_trace()
         template = template.replace("${" + TEMPLATE_NAME + "}", project_name)
         template = template.replace(C_CPP_PROP, c_cpp_properties)
         template = template.replace(TASK_JSON, TASKS)
