@@ -96,36 +96,36 @@ def eosf_dir():
 
 
 def eosio_key_private():
-    return config_value_checked(key_private_)
+    return config_value(key_private_)
 
 
 def eosio_key_public():
-    return config_value_checked(key_public_)
+    return config_value(key_public_)
 
 
 def chain_state_db_size_mb():
-    return config_value_checked(chain_state_db_size_mb_)
+    return config_value(chain_state_db_size_mb_)
 
 
 def node_api():
-    return config_value_checked(node_api_)
+    return config_value(node_api_)
 
 
 def wsl_root():
-    path = config_value_checked(wsl_root_).strip()
+    path = config_value(wsl_root_).strip()
     return path.replace("\\", "/")
 
 
 def is_nodeos_in_window():
-    return config_value_checked(is_nodeos_in_window_)
+    return config_value(is_nodeos_in_window_)
 
 
 def http_server_address():
-    return config_value_checked(node_address_)
+    return config_value(node_address_)
 
 
 def http_wallet_address():
-    return config_value_checked(wallet_address_)
+    return config_value(wallet_address_)
 
 
 def boost_include_dir():
@@ -272,16 +272,6 @@ def config_value(config_list):
     return retval[0] if retval else None
 
 
-def config_value_checked(config_list)
-    retval = config_value(config_list)
-    if retval:
-        return retval
-
-    raise errors.Error('''
-Cannot find any value for {}.       
-    '''.format(config_list))
-
-
 def first_valid_path(config_list, findFile=None):
     '''Given a key to the config list, get a valid file system path.
 
@@ -392,7 +382,7 @@ def contract_dir(contract_dir_hint):
 
 def source_files(source_path):
     srcs = []
-    extensions = [".cpp", ".cxx", ".c"]
+    extensions = [".cpp", ".cxx", ".c", ".abi"]
     files = os.listdir(source_path)
     for file in files:
         path = os.path.join(source_path, file)
