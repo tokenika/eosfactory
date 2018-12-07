@@ -154,3 +154,7 @@ permissions:
         active   100:    50 Alice@active, 50 Bob@owner
 ```
 
+```python
+stop()
+```
+

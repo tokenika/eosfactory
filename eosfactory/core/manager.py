@@ -127,7 +127,7 @@ def is_local_testnet():
     return setup.is_local_address
 
 
-def reset(nodeos_log=None, verbosity=None):
+def reset(nodeos_stdout=None, verbosity=None):
     ''' Start clean the EOSIO local node.
     '''
     if not cleos.set_local_nodeos_address_if_none():
@@ -138,10 +138,10 @@ def reset(nodeos_log=None, verbosity=None):
     import eosfactory.shell.account as account
     account.reboot()
     clear_testnet_cache()
-    teos.node_start(clear=True, nodeos_log=nodeos_log, verbosity=verbosity)
+    teos.node_start(clear=True, nodeos_stdout=nodeos_stdout, verbosity=verbosity)
 
 
-def resume(nodeos_log=None, verbosity=None):
+def resume(nodeos_stdout=None, verbosity=None):
     ''' Resume the EOSIO local node.
     ''' 
     if not cleos.set_local_nodeos_address_if_none():   
@@ -149,7 +149,7 @@ def resume(nodeos_log=None, verbosity=None):
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()), verbosity)
 
-    teos.node_start(nodeos_log=nodeos_log, verbosity=verbosity)
+    teos.node_start(nodeos_stdout=nodeos_stdout, verbosity=verbosity)
 
 
 def stop(verbosity=None):

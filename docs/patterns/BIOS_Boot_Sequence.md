@@ -113,3 +113,7 @@ Contract(
     contract + ".wasm"
     ).deploy()
 ```
+
+```python
+stop()
+```

@@ -460,7 +460,7 @@ def args(clear=False):
     return args_
 
 
-def node_start(clear=False, nodeos_stdout=None verbosity=None):
+def node_start(clear=False, nodeos_stdout=None, verbosity=None):
     args_ = args(clear)
 
     if setup.is_print_command_line:
