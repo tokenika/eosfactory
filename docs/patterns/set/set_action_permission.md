@@ -64,3 +64,7 @@ PRODUCERACCT.set_action_permission(
     "eosio", "claimrewards", "claimer", permission=(PRODUCERACCT, "active"))
 
 ```
+
+```python
+stop()
+```
