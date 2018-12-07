@@ -1,0 +1,6 @@
+*.abi
+*.wast
+*.wasm
+*.cmake
+*.tcl
+Testing
