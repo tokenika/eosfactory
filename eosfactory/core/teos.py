@@ -70,38 +70,41 @@ def ABI(
     '''
     contract_dir = config.contract_dir(contract_dir_hint)
     # source_files[0] is directory, source_files[1] is contents:
-    source_files = config.contract_source_files(contract_dir)
-    srcs = source_files[1]
-    if not srcs:
+    contract_source_files = config.contract_source_files(contract_dir)
+
+    source_files = []
+    source_ext = [".c", ".cpp",".cxx", ".c++"]
+    for file in contract_source_files[1]:
+        if os.path.splitext(file)[1].lower() in source_ext:
+            source_files.append(file)
+
+    if not source_files:
         raise errors.Error('''
         "The source is empty. The assumed contract dir is   
         {}
         '''.format(contract_dir))
         return
 
-    code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
-    target_dir = get_target_dir(source_files[0])
+    code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
     target_path = os.path.normpath(
-                        os.path.join(target_dir, code_name  + ".abi"))
+                        os.path.join(get_target_dir(
+                            contract_source_files[0]), code_name  + ".abi"))
 
-    for src in srcs:
-        srcPath = src
-        if os.path.splitext(src)[1].lower() == ".abi":
+    for file in contract_source_files[1]:
+        if os.path.splitext(file)[1].lower() == ".abi":
             logger.INFO('''
             NOTE:
             An ABI exists in the source directory. Cannot overwrite it:
             {}
             Just copying it to the target directory.
-            '''.format(src), verbosity)
-            shutil.move(
-                srcPath, os.path.join(target_dir, 
-                os.path.basename(srcPath)))
+            '''.format(file), verbosity)
+            shutil.move(file, target_path)
             return
 
     command_line = [
         config.eosio_abigen(),
         "-contract=" + code_name,
-        "-R=" + get_resources_dir(source_files[0]),
+        "-R=" + get_resources_dir(contract_source_files[0]),
         "-output=" + target_path]
 
     c_cpp_properties = get_c_cpp_properties(
@@ -113,10 +116,8 @@ def ABI(
         else:
             command_line.append("-extra-arg=-I=" + strip_wsl_root(entry))
 
-    for file in srcs:
-        if os.path.splitext(file)[1].lower() in \
-                                                [".c", ".cpp",".cxx", ".c++"]:
-            command_line.append(file)
+    for file in source_files:
+        command_line.append(file)
 
     try:
         process(command_line)
@@ -134,19 +135,26 @@ def WAST(
     '''Produce WASM code.
     '''
     contract_dir = config.contract_dir(contract_dir_hint)
-    source_files = config.contract_source_files(contract_dir)
     # source_files[0] is directory, source_files[1] is contents:
-    srcs = source_files[1]
-    if not srcs:
+    contract_source_files = config.contract_source_files(contract_dir)
+    
+    source_files = []
+    source_ext = [".c", ".cpp",".cxx", ".c++"]
+    for file in contract_source_files[1]:
+        if os.path.splitext(file)[1].lower() in source_ext:
+            source_files.append(file)
+
+    if not source_files:
         raise errors.Error('''
-        "The source is empty. The assumed contract dir is  
+        "The source is empty. The assumed contract dir is   
         {}
         '''.format(contract_dir))
         return
 
-    code_name = os.path.splitext(os.path.basename(srcs[0]))[0]
-    target_path = os.path.join(
-         get_target_dir(source_files[0]), code_name + ".wasm")
+    code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
+    target_path = os.path.normpath(
+                        os.path.join(get_target_dir(
+                            contract_source_files[0]), code_name  + ".wasm"))
 
     c_cpp_properties = get_c_cpp_properties(
                                         contract_dir, c_cpp_properties_path)
@@ -165,10 +173,8 @@ def WAST(
     for entry in c_cpp_properties["configurations"][0]["compilerOptions"]:
         command_line.append(entry)
     
-    for file in srcs:
-        if os.path.splitext(file)[1].lower() in \
-                                    [".c", ".cpp",".cxx", ".c++"]:
-            command_line.append(file)
+    for file in source_files:
+        command_line.append(file)
 
     if setup.is_print_command_line:
         print("######## {}:".format(config.wasm_llvm_link_exe()))
@@ -271,18 +277,20 @@ def project_from_template(
     def copy_dir_contents(
             project_dir, template_dir, directory, project_name):
         contents = os.listdir(os.path.join(template_dir, directory))
-
+        
         for item in contents:
             path = os.path.join(directory, item)
             template_path = os.path.join(template_dir, path)
             contract_path = os.path.join(
                 project_dir, path.replace(
                                         TEMPLATE_NAME, project_name))
+            # import pdb; pdb.set_trace()                            
             if os.path.isdir(template_path):
                 os.mkdir(contract_path)
                 copy_dir_contents(
                             project_dir, template_dir, path, project_name)
             elif os.path.isfile(template_path):
+
                 copy(template_path, contract_path, project_name)
 
     def copy(template_path, contract_path, project_name):
