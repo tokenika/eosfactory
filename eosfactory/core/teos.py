@@ -20,7 +20,6 @@ import eosfactory.core.vscode as vscode
 
 TEMPLATE_CONTRACTS_DIR = "templates/contracts"
 TEMPLATE_NAME = "CONTRACT_NAME"
-TEMPLATE_EOSIO_DIR = "${EOSIO_DIR}"
 TEMPLATE_HOME = "${HOME}"
 TEMPLATE_ROOT = "${ROOT}"
 C_CPP_PROP = "${c_cpp_prop}"
@@ -30,15 +29,12 @@ TASK_JSON = "${tasks}"
 def replace_templates(string): 
     home = os.environ["HOME"]
     root = ""
-    eosio_dir = config.eosio_repository_dir()
     if is_windows_ubuntu():
         home = config.wsl_root() + home
         root = config.wsl_root()
-        eosio_dir = config.wsl_root() + eosio_dir
 
     string = string.replace(TEMPLATE_HOME, home)
     string = string.replace(TEMPLATE_ROOT, root)
-    string = string.replace(TEMPLATE_EOSIO_DIR, eosio_dir)
     return string                                                      
 
 
@@ -300,14 +296,8 @@ def project_from_template(
         if TEMPLATE_HOME in template or TEMPLATE_ROOT in template:
             home = os.environ["HOME"]
             root = ""
-            eosio_dir = config.eosio_repository_dir()
             if is_windows_ubuntu():
-                home = config.wsl_root() + home
-                root = config.wsl_root()
-                eosio_dir = config.wsl_root() + eosio_dir
-            template = template.replace(TEMPLATE_HOME, home)
-            template = template.replace(TEMPLATE_ROOT, root)
-            template = template.replace(TEMPLATE_EOSIO_DIR, eosio_dir)
+                replace_templates(template)
 
         template = template.replace("${" + TEMPLATE_NAME + "}", project_name)
         template = template.replace(C_CPP_PROP, c_cpp_properties)

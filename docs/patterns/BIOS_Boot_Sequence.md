@@ -11,13 +11,52 @@ Start `nodeos`, create a wallet.
 ```python
 
 import os
+from termcolor import cprint, colored
 from eosfactory.eosf import *
 import eosfactory.core.cleos as cleos
 import eosfactory.core.setup as setup
 import eosfactory.core.config as config
 
-eosio_contracts_dir = os.path.join(
-    config.eosio_repository_dir(), "build/contracts")
+while True:
+    map = config.config_map()
+    eosio_contracts_dir = None
+    EOSIO_CONTRACTS = "EOSIO_CONTRACTS"
+    current_path_color = "green"
+    error_path_color = "red"
+
+    if EOSIO_CONTRACTS in map:
+        eosio_contracts_dir = os.path.join(
+            map[EOSIO_CONTRACTS], "build/contracts")
+        _eosio_contracts_dir = tilde(input(utils.heredoc('''
+            Where is the eosio.contract repository located on your machine?
+            The current location is:
+            {}
+            Input another existing directory path, or nothing to keep the current one:
+            ''').format(colored(map[EOSIO_CONTRACTS], current_path_color)) + "\n"))
+    else:
+        _eosio_repository_dir = tilde(input(utils.heredoc('''
+            Where is the EOSIO repository located on your machine?
+            Input an existing directory path:
+            ''') + "\n"))
+
+    if not _eosio_contracts_dir:
+        _eosio_contracts_dir = eosio_contracts_dir
+
+    ok = _eosio_contracts_dir and os.path.exists(
+        os.path.join(_eosio_contracts_dir, "build/contracts/eosio.bios"))
+
+    if ok:
+        map = config.config_map()
+        map[EOSIO_CONTRACTS] = _eosio_contracts_dir
+        config.write_config_map(map)
+        print()
+        break
+
+    print("\n" + utils.heredoc('''
+    The path you entered:
+    {}
+    doesn't seem to be correct! eosio.bios contact is not detected there.
+    ''').format(colored(_eosio_repository_dir, error_path_color)) + "\n")
 
 reset()
 
