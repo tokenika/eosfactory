@@ -27,6 +27,7 @@ keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
 node_api_ = ("NODE_API", ["cleos"])
 wsl_root_ = ("WSL_ROOT", [None])
+nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
@@ -115,6 +116,10 @@ def wsl_root():
 
 def is_nodeos_in_window():
     return config_value_checked(is_nodeos_in_window_)
+
+
+def nodeos_stdout():
+    return config_value(nodeos_stdout_)
 
 
 def http_server_address():
@@ -536,6 +541,7 @@ def current_config(contract_dir=None):
     map = {}
     
     map["CONFIG_FILE"] = config_file()
+
     try:
         map[node_address_[0]] = http_server_address()
     except:
