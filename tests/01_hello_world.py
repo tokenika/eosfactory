@@ -63,8 +63,6 @@ class Test(unittest.TestCase):
             host.push_action(
                 "hi", {"user":carol}, permission=(bob, Permission.ACTIVE))
  
-        contract.delete()
-
 
     def tearDown(self):
         pass

@@ -36,11 +36,8 @@ node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
     ["build/programs/nodeos/nodeos", "/usr/local/eosio/bin/nodeos"])
 
-# eosio_cpp_ = ("EOSIO_CPP", ["/usr/local/eosio.cdt/bin/eosio-cpp"])
-# eosio_abigen_ = ("EOSIO_ABIGEN", ["/usr/local/eosio.cdt/bin/eosio-abigen"])
-
-eosio_cpp_ = ("EOSIO_CPP", [None])
-eosio_abigen_ = ("EOSIO_ABIGEN", [None])
+eosio_cpp_ = ("EOSIO_CPP", ["/usr/local/eosio.cdt/bin/eosio-cpp"])
+eosio_abigen_ = ("EOSIO_ABIGEN", ["/usr/local/eosio.cdt/bin/eosio-abigen"])
 
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
@@ -79,7 +76,7 @@ is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
 
 
 def eosio_repository_dir():
-    return config_value(eosio_repository_dir_)
+    return config_value_checked(eosio_repository_dir_)
 
 
 def eosf_dir():
@@ -97,28 +94,28 @@ def eosf_dir():
 
 
 def eosio_key_private():
-    return config_value(key_private_)
+    return config_value_checked(key_private_)
 
 
 def eosio_key_public():
-    return config_value(key_public_)
+    return config_value_checked(key_public_)
 
 
 def chain_state_db_size_mb():
-    return config_value(chain_state_db_size_mb_)
+    return config_value_checked(chain_state_db_size_mb_)
 
 
 def node_api():
-    return config_value(node_api_)
+    return config_value_checked(node_api_)
 
 
 def wsl_root():
-    path = config_value(wsl_root_).strip()
+    path = config_value_checked(wsl_root_).strip()
     return path.replace("\\", "/")
 
 
 def is_nodeos_in_window():
-    return config_value(is_nodeos_in_window_)
+    return config_value_checked(is_nodeos_in_window_)
 
 
 def nodeos_stdout():
@@ -126,11 +123,11 @@ def nodeos_stdout():
 
 
 def http_server_address():
-    return config_value(node_address_)
+    return config_value_checked(node_address_)
 
 
 def http_wallet_address():
-    return config_value(wallet_address_)
+    return config_value_checked(wallet_address_)
 
 
 def boost_include_dir():
@@ -254,7 +251,7 @@ def config_values(config_list):
     retval = []
     # First, configure file ...
     config_json = config_map()
-    if config_key in config_json:
+    if config_key in config_json and config_json[config_key]:
         retval.append(config_json[config_key])
         return retval        
       
@@ -275,6 +272,18 @@ def config_values(config_list):
 def config_value(config_list):
     retval = config_values(config_list) 
     return retval[0] if retval else None
+
+
+def config_value_checked(config_list):
+    retval = config_value(config_list)
+    if not retval is None:
+        return retval
+
+    raise errors.Error('''
+The value of {} is not defined.
+Define it in the config file
+{}       
+    '''.format(config_list[0]), config_file())
 
 
 def first_valid_path(config_list, findFile=None):
@@ -532,18 +541,44 @@ def current_config(contract_dir=None):
     map = {}
     
     map["CONFIG_FILE"] = config_file()
-    map[node_address_[0]] = http_server_address()     
-    map[key_private_[0]] = eosio_key_private()  
-    map[key_public_[0]] = eosio_key_public()
-    map[wsl_root_[0]] = wsl_root()
-    map[wallet_address_[0]] = http_wallet_address() \
-            if http_wallet_address() else http_server_address()
-    map[chain_state_db_size_mb_[0]] = chain_state_db_size_mb()
-    map[node_api_[0]] = node_api()
-    map[is_nodeos_in_window_[0]] = is_nodeos_in_window()
-    map[contract_workspace_[0]] = config_value(contract_workspace_)
-    map[nodeos_stdout_[0]] = config_value(nodeos_stdout_)
 
+    try:
+        map[node_address_[0]] = http_server_address()
+    except:
+        map[node_address_[0]] = None
+    try:     
+        map[key_private_[0]] = eosio_key_private()
+    except:
+        map[key_private_[0]] = None
+    try:  
+        map[key_public_[0]] = eosio_key_public()
+    except:
+        map[key_public_[0]] = None
+    try:
+        map[wsl_root_[0]] = wsl_root()
+    except:
+        map[wsl_root_[0]] = None
+    try:
+        map[wallet_address_[0]] = http_wallet_address() \
+                if http_wallet_address() else http_server_address()
+    except:
+        map[wallet_address_[0]] = None
+    try:
+        map[chain_state_db_size_mb_[0]] = chain_state_db_size_mb()
+    except:
+        map[chain_state_db_size_mb_[0]] = None
+    try:
+        map[node_api_[0]] = node_api()
+    except:
+        map[node_api_[0]] = None
+    try:
+        map[is_nodeos_in_window_[0]] = is_nodeos_in_window()
+    except:
+        map[is_nodeos_in_window_[0]] = None
+    try:
+        map[contract_workspace_[0]] = config_value_checked(contract_workspace_)
+    except:
+         map[contract_workspace_[0]] = None
     try:
         map[keosd_wallet_dir_[0]] = keosd_wallet_dir()   
     except:
