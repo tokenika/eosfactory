@@ -58,8 +58,8 @@ class _Cleos():
                 stderr=subprocess.PIPE,
                 cwd=str(pathlib.Path(config.cli_exe()).parent)) 
 
-            self.out_msg = process.stdout.decode("utf-8")
-            self.out_msg_details = process.stderr.decode("utf-8")
+            self.out_msg = process.stdout.decode("ISO-8859-1")
+            self.out_msg_details = process.stderr.decode("ISO-8859-1")
             self.err_msg = None
             error_key_words = ["ERROR", "Error", "error", "Failed"]
             for word in error_key_words:
