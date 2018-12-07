@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import threading
 import time
 import re
 import pathlib
@@ -548,7 +549,7 @@ def args(clear=False):
     return args_
 
 
-def node_start(clear=False, verbosity=None):
+def node_start(clear=False, nodeos_stdout=None verbosity=None):
     args_ = args(clear)
 
     if setup.is_print_command_line:
@@ -571,11 +572,41 @@ def node_start(clear=False, verbosity=None):
             subprocess.Popen(
                 "gnome-terminal -- " + " ".join(args_), shell=True)
     else:
+        if not nodeos_stdout:
+            nodeos_stdout = config.nodeos_stdout()
+
+        std_out_handle = subprocess.DEVNULL
+        if nodeos_stdout:
+            try:
+                std_out_handle = open(nodeos_stdout, 'w')
+            except Exception as e:
+                raise errors.Error('''
+Error when preparing to start the local EOS node, opening the given stdout
+log file that is 
+{}
+Error message is
+{}
+                '''.format(nodeos_stdout, str(e)))
+
+        def onExit():
+            if not std_out_handle == subprocess.DEVNULL:
+                try:
+                    std_out_handle.close()
+                except:
+                    pass
+
         args_.insert(0, config.node_exe())
-        subprocess.Popen(
-            " ".join(args_), 
-            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
-            stderr=subprocess.DEVNULL, shell=True)
+        def runInThread():
+            proc = subprocess.Popen(
+                " ".join(args_), 
+                stdin=subprocess.DEVNULL, stdout=std_out_handle, 
+                stderr=subprocess.DEVNULL, shell=True)
+            proc.wait()
+            onExit()
+            return
+        
+        thread = threading.Thread(target=runInThread)
+        thread.start()
 
     node_probe(verbosity)
 
@@ -650,7 +681,7 @@ def node_stop(verbosity=None):
 Failed to kill {}. Pid is {}.
     '''.format(config.node_exe_name(), str(pids))
     )
-    else:
+    else:         
         logger.INFO('''
         Local node is stopped {}.
         '''.format(str(pids)), verbosity)        
