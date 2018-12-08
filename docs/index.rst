@@ -34,6 +34,7 @@ Release Notes
     releases/ReleaseNotesVersion2.0
     releases/ReleaseNotesVersion2.1
     releases/ReleaseNotesVersion2.2
+    releases/ReleaseNotesVersion2.3
 
 
 Tutorials
