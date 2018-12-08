@@ -79,7 +79,8 @@ sudo  -H python3 -m pip install -e .
 printf "%s\n" "
 Configuring the eosfactory installation...
 
-WSL ROOT is "${WSL_ROOT}"
+if [ ! -z $(uname -v | grep 'Microsoft') ]; then
+    WSL ROOT is "${WSL_ROOT}"
 "
 python3 eosfactory/install.py "${WSL_ROOT}"
 

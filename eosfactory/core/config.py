@@ -31,16 +31,18 @@ node_api_ = ("NODE_API", ["cleos"]) # cleos or eosjs
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
     ["/usr/bin/cleos", "build/programs/cleos/cleos", 
-        "/usr/local/eosio/bin/cleos"])
+        "/usr/local/eosio/bin/cleos", "/usr/local/bin/cleos"])
 node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
     ["/usr/bin/nodeos", "build/programs/nodeos/nodeos", 
-        "/usr/local/eosio/bin/nodeos"])
+        "/usr/local/eosio/bin/nodeos", "/usr/local/bin/nodeos"])
 
 eosio_cpp_ = ("EOSIO_CPP", 
-    ["/usr/bin/eosio-cpp", "/usr/local/eosio.cdt/bin/eosio-cpp"])
+    ["/usr/bin/eosio-cpp", "/usr/local/eosio.cdt/bin/eosio-cpp", 
+    "/usr/local/bin/eosio-cpp"])
 eosio_abigen_ = ("EOSIO_ABIGEN", 
-    ["/usr/bin/eosio-abigen", "/usr/local/eosio.cdt/bin/eosio-abigen"])
+    ["/usr/bin/eosio-abigen", "/usr/local/eosio.cdt/bin/eosio-abigen", 
+    "/usr/local/bin/eosio-abigen"])
 
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
@@ -310,7 +312,7 @@ def contract_dir(contract_dir_hint):
         config_value(contract_workspace_), contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
-        return contract_dir_
+        return os.path.abspath(contract_dir_)
 
     # ? the relative path to a contract directory, relative to the 
     # ``contracts`` directory in the repository of EOSFactory
@@ -319,7 +321,7 @@ def contract_dir(contract_dir_hint):
             CONTRACTS_DIR, contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
-        return contract_dir_ 
+        return os.path.abspath(contract_dir_)
     
     raise errors.Error('''
         Cannot determine the contract directory.
