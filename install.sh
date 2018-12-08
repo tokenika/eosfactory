@@ -78,16 +78,14 @@ sudo  -H python3 -m pip install -e .
 
 printf "%s\n" "
 Configuring the eosfactory installation...
-
-if [ ! -z $(uname -v | grep 'Microsoft') ]; then
-    WSL ROOT is "${WSL_ROOT}"
 "
+
 python3 eosfactory/install.py "${WSL_ROOT}"
 
 txtbld=$(tput bold)
 bldred=${txtbld}$(tput setaf 1)
 txtrst=$(tput sgr0)
-printf "${bldred}%s${txtrst}" '
+printf "${bldred}%s${txtrst}" "
          ______ ____   _____  ______      _____ _______ ____  _______     __
         |  ____/ __ \ / ____||  ____/\   / ____|__   __/ __ \|  __ \ \   / /
         | |__ | |  | | (___  | |__ /  \ | |       | | | |  | | |__) \ \_/ / 
@@ -95,7 +93,7 @@ printf "${bldred}%s${txtrst}" '
         | |___| |__| |____) || | / ____ \ |____   | | | |__| | | \ \  | |   
         |______\____/|_____/ |_|/_/    \_\_____|  |_|  \____/|_|  \_\ |_|   
                                                       
-'
+"
 printf "%s\n" "
 To verify EOSFactory installation navigate to the 'eosfactory' folder and run 
 these tests:
