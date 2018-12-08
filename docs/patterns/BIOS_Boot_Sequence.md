@@ -13,16 +13,16 @@ The following chunk of code serves the prompt.
 ```python
 
 import os
-import pathlib
-from termcolor import cprint, colored
+
 import eosfactory.core.utils as utils
 from eosfactory.eosf import *
-import eosfactory.core.cleos as cleos
-import eosfactory.core.setup as setup
-import eosfactory.core.config as config
 ```
 
 ```python
+import pathlib
+from termcolor import colored
+
+import eosfactory.core.config as config
 
 contract_dir = None
 
