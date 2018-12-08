@@ -16,7 +16,6 @@ EOSIO_CONTRACT_DIR = "build/contracts/"
 CONTRACTS_DIR = "contracts/"
 LOCALNODE = "localnode/"
 
-eosio_repository_dir_ = ("EOSIO_SOURCE_DIR", [None])
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 wallet_address_ = ("WALLET_MANAGER_ADDRESS", [None])
 genesis_json_ = ("EOSIO_GENESIS_JSON", [LOCALNODE + "genesis.json"])
@@ -31,10 +30,12 @@ nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 node_api_ = ("NODE_API", ["cleos"]) # cleos or eosjs
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
-    ["build/programs/cleos/cleos", "/usr/local/eosio/bin/cleos"])
+    ["/usr/bin/cleos", "build/programs/cleos/cleos", 
+        "/usr/local/eosio/bin/cleos"])
 node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
-    ["build/programs/nodeos/nodeos", "/usr/local/eosio/bin/nodeos"])
+    ["/usr/bin/nodeos", "build/programs/nodeos/nodeos", 
+        "/usr/local/eosio/bin/nodeos"])
 
 eosio_cpp_ = ("EOSIO_CPP", 
     ["/usr/bin/eosio-cpp", "/usr/local/eosio.cdt/bin/eosio-cpp"])
@@ -50,10 +51,6 @@ key_public_ = (
 contract_workspace_ = (
     "EOSIO_CONTRACT_WORKSPACE", [CONTRACTS_DIR])
 is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
-
-
-def eosio_repository_dir():
-    return config_value_checked(eosio_repository_dir_)
 
 
 def eosf_dir():
@@ -276,17 +273,6 @@ def first_valid_path(config_list, findFile=None):
                 if os.path.exists(path):
                     return path
 
-        try: # We can do without any eosio repository.
-            full_path = os.path.join(eosio_repository_dir(), path)
-            if findFile:
-                if os.path.exists(os.path.join(full_path, findFile)):
-                    return full_path
-            else:
-                if os.path.exists(full_path):
-                    return full_path
-        except:
-            pass
-
         full_path = os.path.join(eosf_dir(), path)
         if findFile:
             if os.path.exists(os.path.join(full_path, findFile)):
@@ -331,15 +317,6 @@ def contract_dir(contract_dir_hint):
     contract_dir_ = os.path.join(
             eosf_dir(), 
             CONTRACTS_DIR, contract_dir_hint)
-    trace = trace + contract_dir_ + "\n"
-    if os.path.isdir(contract_dir_):
-        return contract_dir_ 
-
-    # ? the relative path to a contract directory, relative to the 
-    # ``contracts`` directory in the repository of EOSIO
-    contract_dir_ = os.path.join(
-            config_value(eosio_repository_dir_),
-            EOSIO_CONTRACT_DIR, contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
         return contract_dir_ 
@@ -540,10 +517,6 @@ def current_config(contract_dir=None):
         map[keosd_wallet_dir_[0]] = keosd_wallet_dir()   
     except:
         map[keosd_wallet_dir_[0]] = None
-    try: 
-        map[eosio_repository_dir_[0]] = eosio_repository_dir()
-    except:
-        map[eosio_repository_dir_[0]] = None 
     try: 
         map[data_dir_[0]] = data_dir()
     except:

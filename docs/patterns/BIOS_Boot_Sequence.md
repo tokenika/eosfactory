@@ -4,21 +4,79 @@ This article follows a [document](https://developers.eos.io/eosio-nodeos/docs/bi
 
 The python code involved can be executed, as it is explained [here](./README.html).
 
-## Steps 1 - 2 Setup
+## Steps 0 System contracts
 
-Start `nodeos`, create a wallet.
+Execution of the presented code depends on definitions given in [eosio.contracts repository](https://github.com/EOSIO/eosio.contracts), hence, if running the code, as it is explained [here](./README.html), for the first time, you will be asked for the root directory of the repository (build).
+
+The following chunk of code serves the prompt.
 
 ```python
 
 import os
+
+import eosfactory.core.utils as utils
 from eosfactory.eosf import *
-import eosfactory.core.cleos as cleos
-import eosfactory.core.setup as setup
+```
+
+```python
+import pathlib
+from termcolor import colored
+
 import eosfactory.core.config as config
 
-eosio_contracts_dir = os.path.join(
-    config.eosio_repository_dir(), "build/contracts")
+contract_dir = None
 
+while True:
+    map = config.config_map()
+    eosio_contracts_dir = None
+    EOSIO_CONTRACTS = "EOSIO_CONTRACTS"
+    prompt_color = "green"
+    error_path_color = "red"
+    eosio_bios = "build/eosio.bios"
+
+    def ok():
+        is_ok = eosio_contracts_dir and os.path.exists(
+                    os.path.join(eosio_contracts_dir, eosio_bios))
+        if is_ok:
+            global contract_dir
+            contract_dir = os.path.join(eosio_contracts_dir, "build")
+        return is_ok
+
+    if EOSIO_CONTRACTS in map:
+        eosio_contracts_dir = map[EOSIO_CONTRACTS]
+        if ok():
+            break
+
+    eosio_contracts_dir = input(colored(utils.heredoc('''
+        Where is 'eosio.contracts` repository located on your machine?
+        Input an existing directory path:
+        ''') + "\n", prompt_color))
+
+    eosio_contracts_dir.replace("~", str(pathlib.Path.home()))
+
+    if ok():
+        map[EOSIO_CONTRACTS] = eosio_contracts_dir
+        config.write_config_map(map)
+        print()
+        break
+
+    print("\n" + utils.heredoc('''
+    The path you entered:
+    {}
+    doesn't seem to be correct!
+    directory --
+    {} 
+    -- does not exist.
+    ''').format(
+        colored(eosio_contracts_dir, error_path_color),
+        colored(os.path.join(eosio_contracts_dir, eosio_bios), error_path_color)
+        ) + "\n")
+```
+## Steps 1 - 2 Setup
+
+Start nodeos, create a wallet.
+
+```python
 reset()
 
 create_master_account("eosio")
@@ -47,13 +105,12 @@ create_account("eosio_vpay", eosio, "eosio.vpay")
 
 ```python
 COMMENT('''Install the eosio.token contract''')
-
 contract = "eosio.token"
 Contract(
     contract, 
-    os.path.join(eosio_contracts_dir, contract),
+    os.path.join(contract_dir, contract),
     contract + ".abi",
-    contract + ".wasm"
+    contract + ".wasm"    
     ).deploy()
 ```
 
@@ -67,7 +124,7 @@ COMMENT('''Set the eosio.msig contract''')
 contract = "eosio.msig"
 Contract(
     contract, 
-    os.path.join(eosio_contracts_dir, contract),
+    os.path.join(contract_dir, contract),
     contract + ".abi",
     contract + ".wasm"
     ).deploy()
@@ -108,7 +165,7 @@ COMMENT('''Set the eosio.system contract''')
 contract = "eosio.system"
 Contract(
     eosio, 
-    os.path.join(eosio_contracts_dir, contract),
+    os.path.join(contract_dir, contract),
     contract + ".abi",
     contract + ".wasm"
     ).deploy()
