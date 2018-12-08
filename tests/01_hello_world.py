@@ -62,6 +62,8 @@ class Test(unittest.TestCase):
         with self.assertRaises(MissingRequiredAuthorityError):
             host.push_action(
                 "hi", {"user":carol}, permission=(bob, Permission.ACTIVE))
+
+        contract.delete()
  
 
     def tearDown(self):
