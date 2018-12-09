@@ -38,7 +38,8 @@ EOSFactory [v2.3](https://github.com/tokenika/eosfactory/releases/tag/v2.3) is c
 * While using EOSFactory with *Visual Studio Code* is highly recommended, EOSFactory has become independent from any particular IDE and does not impose any particular folder structure inside your smart-contract project. The only requirement is having a folder called `build` on the same level or one level up from your C++ source files.
 
 ## New features available in v2.3
-* Support for binary version of *EOSIO*.
+* Compatibility with *EOSIO* [v1.5.0](https://github.com/EOSIO/eos/releases/tag/v1.5.0).
+* Support for binary version of *EOSIO* (while support for a source code build is maintained).
 * Smart-contract are built using *EOSIO Contract Development Toolkit* (CDT).
 * Support for setting account and action permissions.
 * Optional `nodeos` output to file.
