@@ -17,30 +17,33 @@ CONTRACTS_DIR = "contracts/"
 LOCALNODE = "localnode/"
 
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
-wallet_address_ = ("WALLET_MANAGER_ADDRESS", [None])
+wallet_address_ = ("WALLET_MANAGER_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 genesis_json_ = ("EOSIO_GENESIS_JSON", [LOCALNODE + "genesis.json"])
 data_dir_ = ("LOCAL_NODE_DATA_DIR", [LOCALNODE])
 config_dir_ = ("LOCAL_NODE_CONFIG_DIR", [LOCALNODE])
 workspaceEosio_ = ("EOSIO_WORKSPACE", [EOSIO_CONTRACT_DIR])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
+
 wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 
 node_api_ = ("NODE_API", ["cleos"]) # cleos or eosjs
+
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
-    ["/usr/bin/cleos", "build/programs/cleos/cleos", 
-        "/usr/local/eosio/bin/cleos"])
+    ["/usr/bin/cleos", "/usr/local/bin/cleos", "/usr/local/eosio/bin/cleos"])
+keosd_exe_ = ("KEOSD_EXECUTABLE", 
+    ["/usr/bin/keosd", "/usr/local/bin/keosd"])
 node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
-    ["/usr/bin/nodeos", "build/programs/nodeos/nodeos", 
-        "/usr/local/eosio/bin/nodeos"])
-
+    ["/usr/bin/nodeos", "/usr/local/bin/nodeos", "/usr/local/eosio/bin/nodeos"])
 eosio_cpp_ = ("EOSIO_CPP", 
-    ["/usr/bin/eosio-cpp", "/usr/local/eosio.cdt/bin/eosio-cpp"])
+    ["/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp", 
+        "/usr/local/eosio.cdt/bin/eosio-cpp"])
 eosio_abigen_ = ("EOSIO_ABIGEN", 
-    ["/usr/bin/eosio-abigen", "/usr/local/eosio.cdt/bin/eosio-abigen"])
+    ["/usr/bin/eosio-abigen", "/usr/local/bin/eosio-abigen", 
+        "/usr/local/eosio.cdt/bin/eosio-abigen"])
 
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
@@ -119,6 +122,10 @@ def cli_exe():
     return first_valid_path(cli_exe_)
 
 
+def keosd_exe():
+    return first_valid_path(keosd_exe_)
+
+
 def eosio_cpp():
     return first_valid_path(eosio_cpp_)
 
@@ -127,9 +134,9 @@ def eosio_abigen():
     return first_valid_path(eosio_abigen_)
 
 
-def keosd_wallet_dir():
-    return first_valid_path(keosd_wallet_dir_)
-
+def keosd_wallet_dir(raise_error=True):
+    return first_valid_path(keosd_wallet_dir_, raise_error=raise_error)
+    
 
 def node_exe_name():
     '''Name of the local node executable, used for killing the process.
@@ -240,7 +247,7 @@ Define it in the config file
     '''.format(config_list[0], config_file()))
 
 
-def first_valid_path(config_list, findFile=None):
+def first_valid_path(config_list, findFile=None, raise_error=True):
     '''Given a key to the config list, get a valid file system path.
 
     The key may map to a path either absolute, or relative either to the EOSIO 
@@ -272,18 +279,19 @@ def first_valid_path(config_list, findFile=None):
             else:
                 if os.path.exists(path):
                     return path
-
-        full_path = os.path.join(eosf_dir(), path)
-        if findFile:
-            if os.path.exists(os.path.join(full_path, findFile)):
-                return full_path
         else:
-            if os.path.exists(full_path):
-                return full_path        
+            full_path = os.path.join(eosf_dir(), path)
+            if findFile:
+                if os.path.exists(os.path.join(full_path, findFile)):
+                    return full_path
+            else:
+                if os.path.exists(full_path):
+                    return full_path        
 
-    raise errors.Error('''
-    Cannot find any path for '{}'.
-    '''.format(config_list[0]))
+    if raise_error:
+        raise errors.Error('''
+        Cannot find any path for '{}'.
+        '''.format(config_list[0]))
 
 
 def contract_dir(contract_dir_hint):
@@ -310,7 +318,7 @@ def contract_dir(contract_dir_hint):
         config_value(contract_workspace_), contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
-        return contract_dir_
+        return os.path.abspath(contract_dir_)
 
     # ? the relative path to a contract directory, relative to the 
     # ``contracts`` directory in the repository of EOSFactory
@@ -319,7 +327,7 @@ def contract_dir(contract_dir_hint):
             CONTRACTS_DIR, contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
-        return contract_dir_ 
+        return os.path.abspath(contract_dir_)
     
     raise errors.Error('''
         Cannot determine the contract directory.
@@ -529,6 +537,10 @@ def current_config(contract_dir=None):
         map[cli_exe_[0]] = cli_exe()
     except:
         map[cli_exe_[0]] = None 
+    try: 
+        map[keosd_exe_[0]] = keosd_exe()
+    except:
+        map[keosd_exe_[0]] = None 
     try: 
         map[node_exe_[0]] = node_exe()
     except:

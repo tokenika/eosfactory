@@ -8,6 +8,7 @@ import os
 import json
 import re
 
+import eosfactory.core. config as config
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
@@ -39,7 +40,7 @@ def clear_testnet_cache(verbosity=None):
     '''.format(setup.file_prefix()))
 
     kill_keosd() # otherwise the manager may protects the wallet files
-    dir = wallet_dir()
+    dir = config.keosd_wallet_dir()
     files = os.listdir(dir)
     try:
         for file in files:
@@ -53,10 +54,6 @@ def clear_testnet_cache(verbosity=None):
     logger.TRACE('''
     Testnet cache successfully removed.
     ''')
-
-
-def wallet_dir():
-    return os.path.expandvars(teos.get_keosd_wallet_dir())
 
 
 def accout_names_2_object_names(sentence, keys=False):
@@ -127,6 +124,15 @@ def is_local_testnet():
     return setup.is_local_address
 
 
+def node_start(clear=False, nodeos_stdout=None, verbosity=None):
+    try:
+        teos.node_start(clear, nodeos_stdout, verbosity)
+        teos.node_probe(verbosity)
+    except:
+        teos.node_start(clear, nodeos_stdout, verbosity)
+        teos.node_probe(verbosity)
+    
+
 def reset(nodeos_stdout=None, verbosity=None):
     ''' Start clean the EOSIO local node.
     '''
@@ -136,9 +142,12 @@ def reset(nodeos_stdout=None, verbosity=None):
         '''.format(setup.nodeos_address()), verbosity)
 
     import eosfactory.shell.account as account
+    teos.keosd_start()
     account.reboot()
     clear_testnet_cache()
-    teos.node_start(clear=True, nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    node_start(
+        clear=True, nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    
 
 
 def resume(nodeos_stdout=None, verbosity=None):
@@ -149,7 +158,8 @@ def resume(nodeos_stdout=None, verbosity=None):
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()), verbosity)
 
-    teos.node_start(nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    node_start(nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    
 
 
 def stop(verbosity=None):
@@ -208,13 +218,16 @@ def account_map(logger=None):
     '''Return json account map
 
 Attempt to open the account map file named ``setup.account_map``, located 
-in the wallet directory ``wallet_dir()``, to return its json contents. If the 
-file does not exist, return an empty json.
+in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
+contents. If the file does not exist, return an empty json.
 
 If the file is corrupted, offer editing the file with the ``nano`` linux 
 editor. Return ``None`` if the the offer is rejected.
     '''
-    wallet_dir_ = wallet_dir()
+    wallet_dir_ = config.keosd_wallet_dir(raise_error=False)
+    if not wallet_dir_:
+        return {}
+    
     path = os.path.join(wallet_dir_, setup.account_map)
     while True:
         try: # whether the setup map file exists:
@@ -255,13 +268,14 @@ def edit_account_map():
 
 def save_map(map, file_name):
     map = json.dumps(map, indent=3, sort_keys=True)
-    with open(os.path.join(wallet_dir(), file_name), "w") as out:
+    with open(os.path.join(config.keosd_wallet_dir(), file_name), "w") as out:
         out.write(map)            
 
 
 def edit_map(file_name, text_editor="nano"):
     import subprocess
-    subprocess.run([text_editor, os.path.join(wallet_dir(), file_name)])
+    subprocess.run([text_editor, os.path.join(
+                                    config.keosd_wallet_dir(), file_name)])
     read_map(file_name, text_editor)
 
 
@@ -269,13 +283,13 @@ def read_map(file_name, text_editor="nano"):
     '''Return json account map
 
 Attempt to open the account map file named ``setup.account_map``, located 
-in the wallet directory ``wallet_dir()``, to return its json contents. If the 
-file does not exist, return an empty json.
+in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
+contents. If the file does not exist, return an empty json.
 
 If the file is corrupted, offer editing the file with the ``nano`` linux 
 editor. Return ``None`` if the the offer is rejected.
     '''
-    wallet_dir_ = wallet_dir()
+    wallet_dir_ = config.keosd_wallet_dir()
     path = os.path.join(wallet_dir_, file_name)
     while True:
         try: # whether the setup map file exists:

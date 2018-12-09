@@ -2,6 +2,7 @@ import os
 import json
 import inspect
 
+import eosfactory.core.config as config
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
 import eosfactory.core.setup as setup
@@ -17,13 +18,14 @@ import eosfactory.core.manager as manager
 
 def wallet_json_read():
     try:
-        with open(manager.wallet_dir() + setup.password_map, "r") as input:    
+        with open(config.keosd_wallet_dir() + setup.password_map, "r") \
+                as input:    
             return json.load(input)
     except:
         return {}
 
 def wallet_json_write(wallet_json):
-    with open(manager.wallet_dir() + setup.password_map, "w+")  as out:
+    with open(config.keosd_wallet_dir() + setup.password_map, "w+")  as out:
         json.dump(wallet_json, out)
 
 def create_wallet(
@@ -76,7 +78,7 @@ class Wallet(cleos.WalletCreate):
             '''.format(wallet.name))
             return
 
-        self.wallet_dir = manager.wallet_dir()
+        self.wallet_dir = config.keosd_wallet_dir()
 
         logger.INFO('''
                 * Wallet name is ``{}``, wallet directory is

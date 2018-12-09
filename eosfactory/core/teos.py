@@ -339,13 +339,6 @@ def strip_wsl_root(path):
         return path
 
 
-def get_keosd_wallet_dir():
-    '''
-    Get the directory of the `nodeos` local wallet.
-    '''
-    return config.keosd_wallet_dir()
-
-
 def get_pid(name=None):
     """Return process ids found by (partial) name or regex.
 
@@ -453,6 +446,18 @@ def args(clear=False):
     return args_
 
 
+def keosd_start():
+    if not config.keosd_wallet_dir(raise_error=False):
+        subprocess.Popen(config.keosd_exe(), 
+                stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+                stderr=subprocess.DEVNULL, shell=True)
+
+        while True:
+            time.sleep(1)
+            if config.keosd_wallet_dir(raise_error=False):
+                break
+
+
 def node_start(clear=False, nodeos_stdout=None, verbosity=None):
     args_ = args(clear)
 
@@ -511,8 +516,6 @@ Error message is
         
         thread = threading.Thread(target=runInThread)
         thread.start()
-
-    node_probe(verbosity)
 
 
 def node_probe(verbosity=None):
