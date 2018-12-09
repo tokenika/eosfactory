@@ -32,6 +32,7 @@ cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
     ["/usr/bin/cleos", "build/programs/cleos/cleos", 
         "/usr/local/eosio/bin/cleos", "/usr/local/bin/cleos"])
+keosd_exe_ = ("KEOSD_EXECUTABLE", ["/usr/bin/keosd"])
 node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
     ["/usr/bin/nodeos", "build/programs/nodeos/nodeos", 
@@ -121,6 +122,10 @@ def cli_exe():
     return first_valid_path(cli_exe_)
 
 
+def keosd_exe():
+    return first_valid_path(keosd_exe_)
+
+
 def eosio_cpp():
     return first_valid_path(eosio_cpp_)
 
@@ -129,9 +134,9 @@ def eosio_abigen():
     return first_valid_path(eosio_abigen_)
 
 
-def keosd_wallet_dir():
-    return first_valid_path(keosd_wallet_dir_)
-
+def keosd_wallet_dir(raise_error=True):
+    return first_valid_path(keosd_wallet_dir_, raise_error=raise_error)
+    
 
 def node_exe_name():
     '''Name of the local node executable, used for killing the process.
@@ -242,7 +247,7 @@ Define it in the config file
     '''.format(config_list[0], config_file()))
 
 
-def first_valid_path(config_list, findFile=None):
+def first_valid_path(config_list, findFile=None, raise_error=True):
     '''Given a key to the config list, get a valid file system path.
 
     The key may map to a path either absolute, or relative either to the EOSIO 
@@ -274,18 +279,19 @@ def first_valid_path(config_list, findFile=None):
             else:
                 if os.path.exists(path):
                     return path
-
-        full_path = os.path.join(eosf_dir(), path)
-        if findFile:
-            if os.path.exists(os.path.join(full_path, findFile)):
-                return full_path
         else:
-            if os.path.exists(full_path):
-                return full_path        
+            full_path = os.path.join(eosf_dir(), path)
+            if findFile:
+                if os.path.exists(os.path.join(full_path, findFile)):
+                    return full_path
+            else:
+                if os.path.exists(full_path):
+                    return full_path        
 
-    raise errors.Error('''
-    Cannot find any path for '{}'.
-    '''.format(config_list[0]))
+    if raise_error:
+        raise errors.Error('''
+        Cannot find any path for '{}'.
+        '''.format(config_list[0]))
 
 
 def contract_dir(contract_dir_hint):
@@ -531,6 +537,10 @@ def current_config(contract_dir=None):
         map[cli_exe_[0]] = cli_exe()
     except:
         map[cli_exe_[0]] = None 
+    try: 
+        map[keosd_exe_[0]] = keosd_exe()
+    except:
+        map[keosd_exe_[0]] = None 
     try: 
         map[node_exe_[0]] = node_exe()
     except:
