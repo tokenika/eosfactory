@@ -17,17 +17,19 @@ CONTRACTS_DIR = "contracts/"
 LOCALNODE = "localnode/"
 
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
-wallet_address_ = ("WALLET_MANAGER_ADDRESS", [None])
+wallet_address_ = ("WALLET_MANAGER_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 genesis_json_ = ("EOSIO_GENESIS_JSON", [LOCALNODE + "genesis.json"])
 data_dir_ = ("LOCAL_NODE_DATA_DIR", [LOCALNODE])
 config_dir_ = ("LOCAL_NODE_CONFIG_DIR", [LOCALNODE])
 workspaceEosio_ = ("EOSIO_WORKSPACE", [EOSIO_CONTRACT_DIR])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
+
 wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 
 node_api_ = ("NODE_API", ["cleos"]) # cleos or eosjs
+
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
     ["/usr/bin/cleos", "/usr/local/bin/cleos", "/usr/local/eosio/bin/cleos"])
@@ -36,7 +38,6 @@ keosd_exe_ = ("KEOSD_EXECUTABLE",
 node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
     ["/usr/bin/nodeos", "/usr/local/bin/nodeos", "/usr/local/eosio/bin/nodeos"])
-
 eosio_cpp_ = ("EOSIO_CPP", 
     ["/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp", 
         "/usr/local/eosio.cdt/bin/eosio-cpp"])
