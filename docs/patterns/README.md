@@ -2,8 +2,8 @@
 
 ## Execute a pattern file
 
-While `bash` working directory is the root of EOSFactory, do, for example:
+Assuming `eosfactory` is your working directory and `docs/patterns/set/set_account_permission.md` is the file to be executed, run this command:
 
-```md
-eosfactory/utils/pythonmd.sh  docs/patterns/set/set_account_permission.md
+```
+eosfactory/utils/pythonmd.sh docs/patterns/set/set_account_permission.md
 ```

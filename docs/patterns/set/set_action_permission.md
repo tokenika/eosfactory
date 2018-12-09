@@ -1,43 +1,37 @@
-# set action permission
+# Set Action Permission
 
-Set's authorization for a contract's specific action.
+The `set_account_permission` command sets authorization for a contract's specific action.
 
-The python code involved can be executed, as it is explained [here](../README.html).
+**NOTE**: The Python code listed below is executable, as explained [here](../README.html).
 
 ```python
-
 from eosfactory.eosf import *
-import eosfactory.core.cleos as cleos
-import eosfactory.core.setup as setup
+```
 
+```python
 reset()
 create_master_account("master")
-create_account("PRODUCERACCT", master)
+create_account("producer", master)
+producer.info()
 ```
 
-```python
-
-PRODUCERACCT.info()
-```
-
-The `permissions` section of `PRODUCERACCT.info()`:
+The `permissions` section of `producer.info()`:
 
 ```md
 permissions:
-     owner     1:    1 PRODUCERACCT@owner
-        active     1:    1 PRODUCERACCT@active
+     owner     1:    1 producer@owner
+        active     1:    1 producer@active
 ```
 
 ```python
-
-COMMENT('''PRODUCERACCT.set_account_permission("claimer"''')
-PRODUCERACCT.set_account_permission("claimer",
+COMMENT('''producer.set_account_permission("claimer"''')
+producer.set_account_permission("claimer",
     {
         "threshold" : 1, 
         "keys" : 
             [
                 {
-                    "key": PRODUCERACCT.active(),
+                    "key": producer.active(),
                     "weight": 1
                 }
             ]
@@ -45,24 +39,22 @@ PRODUCERACCT.set_account_permission("claimer",
     },
     Permission.ACTIVE)
 
-PRODUCERACCT.info()
+producer.info()
 ```
 
-The `permissions` section of `PRODUCERACCT.info()`:
+The `permissions` section of `producer.info()`:
 
 ```md
 permissions:
-     owner     1:    1 PRODUCERACCT@owner
-        active     1:    1 PRODUCERACCT@active
-           claimer     1:    1 PRODUCERACCT@active
+     owner     1:    1 producer@owner
+        active     1:    1 producer@active
+           claimer     1:    1 producer@active
 ```
 
 ```python
-
-COMMENT('''PRODUCERACCT.set_action_permission("eosio"''')
-PRODUCERACCT.set_action_permission(
-    "eosio", "claimrewards", "claimer", permission=(PRODUCERACCT, "active"))
-
+COMMENT('''producer.set_action_permission("eosio"''')
+producer.set_action_permission(
+    "eosio", "claimrewards", "claimer", permission=(producer, "active"))
 ```
 
 ```python
