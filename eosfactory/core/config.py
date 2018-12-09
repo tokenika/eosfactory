@@ -30,20 +30,19 @@ nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 node_api_ = ("NODE_API", ["cleos"]) # cleos or eosjs
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
-    ["/usr/bin/cleos", "build/programs/cleos/cleos", 
-        "/usr/local/eosio/bin/cleos", "/usr/local/bin/cleos"])
-keosd_exe_ = ("KEOSD_EXECUTABLE", ["/usr/bin/keosd"])
+    ["/usr/bin/cleos", "/usr/local/bin/cleos", "/usr/local/eosio/bin/cleos"])
+keosd_exe_ = ("KEOSD_EXECUTABLE", 
+    ["/usr/bin/keosd", "/usr/local/bin/keosd"])
 node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
-    ["/usr/bin/nodeos", "build/programs/nodeos/nodeos", 
-        "/usr/local/eosio/bin/nodeos", "/usr/local/bin/nodeos"])
+    ["/usr/bin/nodeos", "/usr/local/bin/nodeos", "/usr/local/eosio/bin/nodeos"])
 
 eosio_cpp_ = ("EOSIO_CPP", 
-    ["/usr/bin/eosio-cpp", "/usr/local/eosio.cdt/bin/eosio-cpp", 
-    "/usr/local/bin/eosio-cpp"])
+    ["/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp", 
+        "/usr/local/eosio.cdt/bin/eosio-cpp"])
 eosio_abigen_ = ("EOSIO_ABIGEN", 
-    ["/usr/bin/eosio-abigen", "/usr/local/eosio.cdt/bin/eosio-abigen", 
-    "/usr/local/bin/eosio-abigen"])
+    ["/usr/bin/eosio-abigen", "/usr/local/bin/eosio-abigen", 
+        "/usr/local/eosio.cdt/bin/eosio-abigen"])
 
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
