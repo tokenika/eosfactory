@@ -517,8 +517,6 @@ Error message is
         thread = threading.Thread(target=runInThread)
         thread.start()
 
-    node_probe(verbosity)
-
 
 def node_probe(verbosity=None):
     count = 15

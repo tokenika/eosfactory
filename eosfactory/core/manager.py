@@ -124,6 +124,15 @@ def is_local_testnet():
     return setup.is_local_address
 
 
+def node_start(clear=False, nodeos_stdout=None, verbosity=None):
+    try:
+        teos.node_start(clear, nodeos_stdout, verbosity)
+        teos.node_probe(verbosity)
+    except:
+        teos.node_start(clear, nodeos_stdout, verbosity)
+        teos.node_probe(verbosity)
+    
+
 def reset(nodeos_stdout=None, verbosity=None):
     ''' Start clean the EOSIO local node.
     '''
@@ -136,7 +145,9 @@ def reset(nodeos_stdout=None, verbosity=None):
     teos.keosd_start()
     account.reboot()
     clear_testnet_cache()
-    teos.node_start(clear=True, nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    node_start(
+        clear=True, nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    
 
 
 def resume(nodeos_stdout=None, verbosity=None):
@@ -147,7 +158,8 @@ def resume(nodeos_stdout=None, verbosity=None):
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()), verbosity)
 
-    teos.node_start(nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    node_start(nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    
 
 
 def stop(verbosity=None):
