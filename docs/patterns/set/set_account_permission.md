@@ -1,4 +1,4 @@
-# Set Account Permission?
+# Set Account Permission
 
 The `set_account_permission` command creates or updates an account's permission.
 
