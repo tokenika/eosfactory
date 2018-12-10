@@ -75,6 +75,12 @@ RUN set -ex; \
 	rm -f get-pip.py
 
 RUN python -m pip install termcolor
+############## EOS CDT #############################################################################################
+
+RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.4.1/eosio.cdt-1.4.1.x86_64.deb && \
+    apt install ./eosio.cdt-1.4.1.x86_64.deb \
+    && rm ./eosio.cdt-1.4.1.x86_64.deb
+
 ############## EOS FACTORY #############################################################################################
 
 ARG eosfactory_branch=master
