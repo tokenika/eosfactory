@@ -91,6 +91,9 @@ RUN /opt/eosfactory/tests/integration/expect_script.sh
 RUN sed -i 's/mesg n || true/tty -s \&\& mesg n || true/g' /root/.profile
 RUN chmod +x ./tests/unittest.sh
 
+RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.4.1/eosio.cdt-1.4.1.x86_64.deb
+RUN apt install ./eosio.cdt-1.4.1.x86_64.deb && rm ./eosio.cdt-1.4.1.x86_64.deb
+
 WORKDIR /opt/eosfactory/tests/
 
 # bash loads .profile by default
