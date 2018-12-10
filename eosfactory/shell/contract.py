@@ -11,32 +11,6 @@ elif setup.node_api == "eosjs":
     import eosfactory.core.eosjs as cleos
 
 
-def project_from_template(
-        name, template="", user_workspace=None, remove_existing=False, 
-        visual_studio_code=False, verbosity=None):
-    '''Given the template type and a name, create a contract workspace. 
-
-    - **parameters**::
-
-        name: The name of the new wallet, defaults to ``default``.
-        template: The name of the template used.
-        user_workspace: If set, the folder for the work-space. Defaults to the 
-            value of the ``EOSIO_CONTRACT_WORKSPACE`` env. variable.
-        remove_existing: If set, overwrite any existing workspace.
-        visual_studio_code: If set, open the ``VSCode``, if available.
-        verbosity: The logging configuration.
-    '''
-
-    logger.INFO('''
-    ######### Create contract ``{}`` from template ``{}``.
-    '''.format(name, template))
-
-    contract_path_absolute = teos.template_create(
-        name, template, user_workspace, remove_existing, visual_studio_code)
-
-    return contract_path_absolute
-
-
 class ContractBuilder():
     '''
     '''
@@ -90,7 +64,7 @@ class Contract(ContractBuilder):
             self, account, contract_dir,
             abi_file=None, wasm_file=None,
             permission=None,
-            expiration_sec=30,
+            expiration_sec=None,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -129,7 +103,7 @@ class Contract(ContractBuilder):
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
                 is_verbose=False,
-                json=True)
+                json=False)
 
         except errors.LowRamError as e:
             logger.TRACE('''
@@ -153,7 +127,7 @@ class Contract(ContractBuilder):
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
                 is_verbose=False,
-                json=True)
+                json=False)
 
         logger.INFO('''
         * Contract {} is deployed. 
@@ -161,14 +135,9 @@ class Contract(ContractBuilder):
         
         self.contract = result
 
-    def is_deployed(self):
-        if not self.contract:
-            return False
-        return not self.contract.error
-
     def push_action(
             self, action, data,
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
@@ -181,7 +150,7 @@ class Contract(ContractBuilder):
     def show_action(self, action, data, permission=None):
         ''' Implements the `push action` command without broadcasting. 
         '''
-        self.account.show_action(self, action, data, permission)
+        self.account.show_action(action, data, permission)
 
     def table(
             self, table_name, scope="",
@@ -207,9 +176,9 @@ class Contract(ContractBuilder):
             return str(self.contract.contract_path_absolute)
         else:
             return str(self.contract_dir)
-
+            
     def __str__(self):
-        if self.is_deployed():
+        if self.contract and not self.contract.err_msg:
             return str(self.contract)
         else:
             return str(self.account)

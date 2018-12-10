@@ -2,6 +2,7 @@
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
 import eosfactory.core.setup as setup
+import eosfactory.core.teos as teos
 if setup.node_api == "cleos":
     import eosfactory.core.cleos as cleos
 elif setup.node_api == "eosjs":
@@ -42,7 +43,7 @@ print_stats = account.print_stats
 
 Contract = contract.Contract
 ContractBuilder = contract.ContractBuilder
-project_from_template = contract.project_from_template
+project_from_template = teos.project_from_template
 
 reboot = manager.reboot
 reset = manager.reset

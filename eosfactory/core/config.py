@@ -14,31 +14,36 @@ FROM_HERE_TO_EOSF_DIR = "../../../"
 CONFIG_JSON = "config.json"
 EOSIO_CONTRACT_DIR = "build/contracts/"
 CONTRACTS_DIR = "contracts/"
+LOCALNODE = "localnode/"
 
-eosio_repository_dir_ = ("EOSIO_SOURCE_DIR", [None])
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
-wallet_address_ = ("WALLET_MANAGER_ADDRESS", [None])
-genesis_json_ = ("EOSIO_GENESIS_JSON", ["localnode/genesis.json"])
-data_dir_ = ("LOCAL_NODE_DATA_DIR", ["localnode"])
-config_dir_ = ("LOCAL_NODE_CONFIG_DIR", ["localnode"])
+wallet_address_ = ("WALLET_MANAGER_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
+genesis_json_ = ("EOSIO_GENESIS_JSON", [LOCALNODE + "genesis.json"])
+data_dir_ = ("LOCAL_NODE_DATA_DIR", [LOCALNODE])
+config_dir_ = ("LOCAL_NODE_CONFIG_DIR", [LOCALNODE])
 workspaceEosio_ = ("EOSIO_WORKSPACE", [EOSIO_CONTRACT_DIR])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
-node_api_ = ("NODE_API", ["cleos"])
+
 wsl_root_ = ("WSL_ROOT", [None])
+nodeos_stdout_ = ("NODEOS_STDOUT", [None])
+
+node_api_ = ("NODE_API", ["cleos"]) # cleos or eosjs
 
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
-    ["build/programs/cleos/cleos", "/usr/local/eosio/bin/cleos"])
+    ["/usr/bin/cleos", "/usr/local/bin/cleos", "/usr/local/eosio/bin/cleos"])
+keosd_exe_ = ("KEOSD_EXECUTABLE", 
+    ["/usr/bin/keosd", "/usr/local/bin/keosd"])
 node_exe_ = (
     "LOCAL_NODE_EXECUTABLE", 
-    ["build/programs/nodeos/nodeos", "/usr/local/eosio/bin/nodeos"])
-
-# eosio_cpp_ = ("EOSIO_CPP", ["/usr/local/eosio.cdt/bin/eosio-cpp"])
-# eosio_abigen_ = ("EOSIO_ABIGEN", ["/usr/local/eosio.cdt/bin/eosio-abigen"])
-
-eosio_cpp_ = ("EOSIO_CPP", [None])
-eosio_abigen_ = ("EOSIO_ABIGEN", [None])
+    ["/usr/bin/nodeos", "/usr/local/bin/nodeos", "/usr/local/eosio/bin/nodeos"])
+eosio_cpp_ = ("EOSIO_CPP", 
+    ["/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp", 
+        "/usr/local/eosio.cdt/bin/eosio-cpp"])
+eosio_abigen_ = ("EOSIO_ABIGEN", 
+    ["/usr/bin/eosio-abigen", "/usr/local/bin/eosio-abigen", 
+        "/usr/local/eosio.cdt/bin/eosio-abigen"])
 
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
@@ -48,36 +53,7 @@ key_public_ = (
     ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"])
 contract_workspace_ = (
     "EOSIO_CONTRACT_WORKSPACE", [CONTRACTS_DIR])
-boost_include_dir_ = (
-    "BOOST_INCLUDE_DIR", 
-    ["${HOME}/opt/boost/include", "/usr/local/include/"])
-wasm_clang_exe_ = (
-    "WASM_CLANG_EXECUTABLE", 
-    ["${HOME}/opt/wasm/bin/clang", "/usr/local/wasm/bin/clang"])
-wasm_llvm_link_exe_ = (
-    "WASM_LLVM_LINK_EXECUTABLE",
-    ["${HOME}/opt/wasm/bin/llvm-link", "/usr/local/wasm/bin/llvm-link"])
-wasm_llc_exe_ = (
-    "WASM_LLC_EXECUTABLE",
-    ["${HOME}/opt/wasm/bin/llc", "/usr/local/wasm/bin/llc"])
-s2wasm_exe_ = ( ##/mnt/c/Workspaces/EOS/eos/
-    "S2WASM_EXECUTABLE",
-    ["build/externals/binaryen/bin/eosio-s2wasm",
-        "/usr/local/bin/eosio-s2wasm", "/usr/local/eosio/bin/eosio-s2wasm"])
-wast2wasm_exe_ = (
-    "WAST2WASM_EXECUTABLE",
-    ["build/libraries/wasm-jit/Source/Programs/eosio-wast2wasm",
-        "/usr/local/bin/eosio-wast2wasm", 
-        "/usr/local/eosio/bin/eosio-wast2wasm"])
-abigen_exe_ = ( # used without eosio.cdt
-    "ABIGEN_EXECUTABLE",
-    ["build/programs/eosio-abigen/eosio-abigen",
-        "/usr/local/bin/eosio-abigen","/usr/local/eosio/bin/eosio-abigen"])
 is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
-
-
-def eosio_repository_dir():
-    return config_value(eosio_repository_dir_)
 
 
 def eosf_dir():
@@ -95,56 +71,47 @@ def eosf_dir():
 
 
 def eosio_key_private():
-    return config_value(key_private_)
+    return config_value_checked(key_private_)
+
 
 def eosio_key_public():
-    return config_value(key_public_)
+    return config_value_checked(key_public_)
+
 
 def chain_state_db_size_mb():
-    return config_value(chain_state_db_size_mb_)
+    return config_value_checked(chain_state_db_size_mb_)
+
 
 def node_api():
-    return config_value(node_api_)
+    return config_value_checked(node_api_)
 
 
 def wsl_root():
     path = config_value(wsl_root_)
+    if path is None:
+        return None
+    else:
+        path = path.strip()
     return path.replace("\\", "/")
 
 
 def is_nodeos_in_window():
-    return config_value(is_nodeos_in_window_)
+    return config_value_checked(is_nodeos_in_window_)
+
+
+def nodeos_stdout():
+    return config_value(nodeos_stdout_)
 
 
 def http_server_address():
-    return config_value(node_address_)
+    return config_value_checked(node_address_)
 
 
 def http_wallet_address():
-    return config_value(wallet_address_)
-
-
-def boost_include_dir():
-    return first_valid_path(boost_include_dir_, "boost/version.hpp")
-
-
-def wasm_clang_exe():
-    return first_valid_path(wasm_clang_exe_)
-
-
-def wasm_llvm_link_exe():
-    return first_valid_path(wasm_llvm_link_exe_)      
-
-
-def s2wasm_exe():
-    return first_valid_path(s2wasm_exe_)
-
-
-def wast2wasm_exe():
-    return first_valid_path(wast2wasm_exe_)
-
-def wasm_llc_exe():
-    return first_valid_path(wasm_llc_exe_) 
+    retval = config_value(wallet_address_)
+    if not retval:
+        retval = http_server_address()
+    return retval
 
 
 def node_exe():
@@ -155,6 +122,10 @@ def cli_exe():
     return first_valid_path(cli_exe_)
 
 
+def keosd_exe():
+    return first_valid_path(keosd_exe_)
+
+
 def eosio_cpp():
     return first_valid_path(eosio_cpp_)
 
@@ -163,13 +134,9 @@ def eosio_abigen():
     return first_valid_path(eosio_abigen_)
 
 
-def abigen_exe():
-    return first_valid_path(abigen_exe_)
-
-
-def keosd_wallet_dir():
-    return first_valid_path(keosd_wallet_dir_)
-
+def keosd_wallet_dir(raise_error=True):
+    return first_valid_path(keosd_wallet_dir_, raise_error=raise_error)
+    
 
 def node_exe_name():
     '''Name of the local node executable, used for killing the process.
@@ -245,7 +212,7 @@ def config_values(config_list):
     retval = []
     # First, configure file ...
     config_json = config_map()
-    if config_key in config_json:
+    if config_key in config_json and config_json[config_key]:
         retval.append(config_json[config_key])
         return retval        
       
@@ -268,7 +235,19 @@ def config_value(config_list):
     return retval[0] if retval else None
 
 
-def first_valid_path(config_list, findFile=None):
+def config_value_checked(config_list):
+    retval = config_value(config_list)
+    if not retval is None:
+        return retval
+
+    raise errors.Error('''
+The value of {} is not defined.
+Define it in the config file
+{}       
+    '''.format(config_list[0], config_file()))
+
+
+def first_valid_path(config_list, findFile=None, raise_error=True):
     '''Given a key to the config list, get a valid file system path.
 
     The key may map to a path either absolute, or relative either to the EOSIO 
@@ -300,29 +279,19 @@ def first_valid_path(config_list, findFile=None):
             else:
                 if os.path.exists(path):
                     return path
-
-        try: # We can do without any eosio repository.
-            full_path = os.path.join(eosio_repository_dir(), path)
+        else:
+            full_path = os.path.join(eosf_dir(), path)
             if findFile:
                 if os.path.exists(os.path.join(full_path, findFile)):
                     return full_path
             else:
                 if os.path.exists(full_path):
-                    return full_path
-        except:
-            pass
+                    return full_path        
 
-        full_path = os.path.join(eosf_dir(), path)
-        if findFile:
-            if os.path.exists(os.path.join(full_path, findFile)):
-                return full_path
-        else:
-            if os.path.exists(full_path):
-                return full_path        
-
-    raise errors.Error('''
-    Cannot find any path for '{}'.
-    '''.format(config_list[0]))
+    if raise_error:
+        raise errors.Error('''
+        Cannot find any path for '{}'.
+        '''.format(config_list[0]))
 
 
 def contract_dir(contract_dir_hint):
@@ -349,7 +318,7 @@ def contract_dir(contract_dir_hint):
         config_value(contract_workspace_), contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
-        return contract_dir_
+        return os.path.abspath(contract_dir_)
 
     # ? the relative path to a contract directory, relative to the 
     # ``contracts`` directory in the repository of EOSFactory
@@ -358,16 +327,7 @@ def contract_dir(contract_dir_hint):
             CONTRACTS_DIR, contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
-        return contract_dir_ 
-
-    # ? the relative path to a contract directory, relative to the 
-    # ``contracts`` directory in the repository of EOSIO
-    contract_dir_ = os.path.join(
-            config_value(eosio_repository_dir_),
-            EOSIO_CONTRACT_DIR, contract_dir_hint)
-    trace = trace + contract_dir_ + "\n"
-    if os.path.isdir(contract_dir_):
-        return contract_dir_ 
+        return os.path.abspath(contract_dir_)
     
     raise errors.Error('''
         Cannot determine the contract directory.
@@ -521,26 +481,50 @@ def not_defined():
 
 def current_config(contract_dir=None):
     map = {}
-   
-    map[node_address_[0]] = http_server_address()     
-    map[key_private_[0]] = eosio_key_private()  
-    map[key_public_[0]] = eosio_key_public()
-    map[wsl_root_[0]] = wsl_root()
-    map[wallet_address_[0]] = http_wallet_address() \
-            if http_wallet_address() else http_server_address()
-    map[chain_state_db_size_mb_[0]] = chain_state_db_size_mb()
-    map[node_api_[0]] = node_api()
-    map[is_nodeos_in_window_[0]] = is_nodeos_in_window()
-    map[contract_workspace_[0]] = config_value(contract_workspace_)
+    
+    map["CONFIG_FILE"] = config_file()
 
+    try:
+        map[node_address_[0]] = http_server_address()
+    except:
+        map[node_address_[0]] = None
+    try:     
+        map[key_private_[0]] = eosio_key_private()
+    except:
+        map[key_private_[0]] = None
+    try:  
+        map[key_public_[0]] = eosio_key_public()
+    except:
+        map[key_public_[0]] = None
+    try:
+        map[wsl_root_[0]] = wsl_root()
+    except:
+        map[wsl_root_[0]] = None
+    try:
+        map[wallet_address_[0]] = http_wallet_address() \
+                if http_wallet_address() else http_server_address()
+    except:
+        map[wallet_address_[0]] = None
+    try:
+        map[chain_state_db_size_mb_[0]] = chain_state_db_size_mb()
+    except:
+        map[chain_state_db_size_mb_[0]] = None
+    try:
+        map[node_api_[0]] = node_api()
+    except:
+        map[node_api_[0]] = None
+    try:
+        map[is_nodeos_in_window_[0]] = is_nodeos_in_window()
+    except:
+        map[is_nodeos_in_window_[0]] = None
+    try:
+        map[contract_workspace_[0]] = config_value_checked(contract_workspace_)
+    except:
+         map[contract_workspace_[0]] = None
     try:
         map[keosd_wallet_dir_[0]] = keosd_wallet_dir()   
     except:
         map[keosd_wallet_dir_[0]] = None
-    try: 
-        map[eosio_repository_dir_[0]] = eosio_repository_dir()
-    except:
-        map[eosio_repository_dir_[0]] = None 
     try: 
         map[data_dir_[0]] = data_dir()
     except:
@@ -553,6 +537,10 @@ def current_config(contract_dir=None):
         map[cli_exe_[0]] = cli_exe()
     except:
         map[cli_exe_[0]] = None 
+    try: 
+        map[keosd_exe_[0]] = keosd_exe()
+    except:
+        map[keosd_exe_[0]] = None 
     try: 
         map[node_exe_[0]] = node_exe()
     except:
@@ -570,37 +558,11 @@ def current_config(contract_dir=None):
     except:
         map[genesis_json_[0]] = None      
     try:
-        map[wasm_clang_exe_[0]] = wasm_clang_exe()
-    except:
-        map[wasm_clang_exe_[0]] = None
-    try:
-        map[boost_include_dir_[0]] =  boost_include_dir()
-    except:
-        map[boost_include_dir_[0]] = None
-    try:
-        map[wasm_llvm_link_exe_[0]] = wasm_llvm_link_exe()
-    except:
-        map[wasm_llvm_link_exe_[0]] = None
-    try:
-        map[wasm_llc_exe_[0]] = wasm_llc_exe()
-    except:
-        map[wasm_llc_exe_[0]] = None
-    try:
-        map[s2wasm_exe_[0]] = s2wasm_exe()
-    except:
-        map[s2wasm_exe_[0]] = None
-    try:
-        map[wast2wasm_exe_[0]] = wast2wasm_exe()
-    except:
-        map[wast2wasm_exe_[0]] = None
-    try:
         map[workspaceEosio_[0]] = workspaceEosio()
     except:
         map[workspaceEosio_[0]] = None
-    try:
-        map[abigen_exe_[0]] = abigen_exe()
-    except:
-        map[abigen_exe_[0]] = None
+
+    map[nodeos_stdout_[0]] = nodeos_stdout()
     
     if contract_dir:
         contract_dir = contract_dir(contract_dir)
@@ -623,3 +585,5 @@ def current_config(contract_dir=None):
 
     return map        
 
+if __name__ == '__main__':
+    print(json.dumps(current_config(), sort_keys=True, indent=4))

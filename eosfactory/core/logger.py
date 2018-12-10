@@ -37,20 +37,21 @@ def SCENARIO(msg):
 
 
 __trace_buffer = ""
-def TRACE(msg=None, translate=True, verbosity=None):
+def TRACE(msg=None, verbosity=None, translate=True):
     if not msg:
         return __trace_buffer
 
     msg = condition(msg, translate)
     __trace_buffer = msg
 
-    if msg and Verbosity.TRACE in (verbosity if verbosity else __verbosity):
+    if msg and Verbosity.TRACE in \
+                        (verbosity if not verbosity is None else __verbosity):
         color = Verbosity.TRACE.value
         cprint(msg, color[0], color[1], attrs=color[2])
 
 
 __info_buffer = ""
-def INFO(msg=None, translate=True, verbosity=None):
+def INFO(msg=None, verbosity=None, translate=True):
     global __info_buffer
     if not msg:
         return __info_buffer
@@ -58,16 +59,14 @@ def INFO(msg=None, translate=True, verbosity=None):
     msg = condition(msg, translate)
     __info_buffer = msg
 
-    v = verbosity if verbosity else __verbosity
-    if msg and (
-            Verbosity.TRACE in v or Verbosity.INFO in v
-        ):
+    v = verbosity if not verbosity is None else __verbosity
+    if msg and (Verbosity.TRACE in v or Verbosity.INFO in v):
         color = Verbosity.INFO.value
         cprint(msg, color[0], color[1], attrs=color[2])        
 
 
 __out_buffer = ""
-def OUT(msg=None, translate=True, verbosity=None):
+def OUT(msg=None, verbosity=None, translate=True):
     global __out_buffer
     if not msg:
         return __out_buffer
@@ -75,13 +74,14 @@ def OUT(msg=None, translate=True, verbosity=None):
     msg = condition(msg, translate)
     __out_buffer = msg
 
-    if msg and Verbosity.OUT in (verbosity if verbosity else __verbosity):
+    if msg and Verbosity.OUT in \
+                        (verbosity if not verbosity is None else __verbosity):
         color = Verbosity.OUT.value
         cprint(msg, color[0], color[1], attrs=color[2])
 
 
 __debug_buffer = ""
-def DEBUG(msg=None, translate=True, verbosity=None):
+def DEBUG(msg=None, verbosity=None, translate=True):
     global __debug_buffer    
     if not msg:
         return __debug_buffer
@@ -89,7 +89,8 @@ def DEBUG(msg=None, translate=True, verbosity=None):
     msg = condition(msg, translate)
     __debug_buffer = msg
 
-    if msg and Verbosity.DEBUG in (verbosity if verbosity else __verbosity):
+    if msg and Verbosity.DEBUG in \
+                        (verbosity if not verbosity is None else __verbosity):
         color = Verbosity.DEBUG.value
         cprint(msg, color[0], color[1], attrs=color[2])
 
@@ -115,9 +116,8 @@ def error(msg, translate=True):
         color[0], color[1], attrs=color[2])
 
 
-def ERROR(msg, translate=True, verbosity=None):
-    if not verbosity:
-        print(error(msg, translate), file=sys.stderr)
+def ERROR(msg, translate=True):
+    print(error(msg, translate), file=sys.stderr)
 
 
 def condition(message, translate=True):

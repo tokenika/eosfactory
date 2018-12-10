@@ -6,9 +6,12 @@
 import sys
 import os
 import json
+import re
 
+import eosfactory.core. config as config
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
+import eosfactory.core.interface as interface
 import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
 if setup.node_api == "cleos":
@@ -37,7 +40,7 @@ def clear_testnet_cache(verbosity=None):
     '''.format(setup.file_prefix()))
 
     kill_keosd() # otherwise the manager may protects the wallet files
-    dir = wallet_dir()
+    dir = config.keosd_wallet_dir()
     files = os.listdir(dir)
     try:
         for file in files:
@@ -53,11 +56,7 @@ def clear_testnet_cache(verbosity=None):
     ''')
 
 
-def wallet_dir():
-    return os.path.expandvars(teos.get_keosd_wallet_dir())
-
-
-def accout_names_2_object_names(sentence):
+def accout_names_2_object_names(sentence, keys=False):
     if not setup.is_translating:
         return sentence
         
@@ -68,6 +67,19 @@ def accout_names_2_object_names(sentence):
         if name in exceptions:
             continue
         sentence = sentence.replace(name, account_object_name)
+        
+        if keys:
+            account = cleos.GetAccount(
+                        name, is_info=False, is_verbose=False)
+            owner_key = account.owner()
+            if owner_key:
+                sentence = sentence.replace(
+                    owner_key, account_object_name + "@owner")
+
+            active_key = account.active()
+            if active_key:
+                sentence = sentence.replace(
+                    active_key, account_object_name + "@active")        
 
     return sentence
 
@@ -112,7 +124,16 @@ def is_local_testnet():
     return setup.is_local_address
 
 
-def reset(verbosity=None):
+def node_start(clear=False, nodeos_stdout=None, verbosity=None):
+    try:
+        teos.node_start(clear, nodeos_stdout, verbosity)
+        teos.node_probe(verbosity)
+    except:
+        teos.node_start(clear, nodeos_stdout, verbosity)
+        teos.node_probe(verbosity)
+    
+
+def reset(nodeos_stdout=None, verbosity=None):
     ''' Start clean the EOSIO local node.
     '''
     if not cleos.set_local_nodeos_address_if_none():
@@ -121,12 +142,15 @@ def reset(verbosity=None):
         '''.format(setup.nodeos_address()), verbosity)
 
     import eosfactory.shell.account as account
+    teos.keosd_start()
     account.reboot()
     clear_testnet_cache()
-    teos.node_start(clear=True, verbosity=verbosity)
+    node_start(
+        clear=True, nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    
 
 
-def resume(verbosity=None):
+def resume(nodeos_stdout=None, verbosity=None):
     ''' Resume the EOSIO local node.
     ''' 
     if not cleos.set_local_nodeos_address_if_none():   
@@ -134,7 +158,8 @@ def resume(verbosity=None):
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()), verbosity)
 
-    teos.node_start(verbosity=verbosity)
+    node_start(nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    
 
 
 def stop(verbosity=None):
@@ -193,13 +218,16 @@ def account_map(logger=None):
     '''Return json account map
 
 Attempt to open the account map file named ``setup.account_map``, located 
-in the wallet directory ``wallet_dir()``, to return its json contents. If the 
-file does not exist, return an empty json.
+in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
+contents. If the file does not exist, return an empty json.
 
 If the file is corrupted, offer editing the file with the ``nano`` linux 
 editor. Return ``None`` if the the offer is rejected.
     '''
-    wallet_dir_ = wallet_dir()
+    wallet_dir_ = config.keosd_wallet_dir(raise_error=False)
+    if not wallet_dir_:
+        return {}
+    
     path = os.path.join(wallet_dir_, setup.account_map)
     while True:
         try: # whether the setup map file exists:
@@ -240,13 +268,14 @@ def edit_account_map():
 
 def save_map(map, file_name):
     map = json.dumps(map, indent=3, sort_keys=True)
-    with open(os.path.join(wallet_dir(), file_name), "w") as out:
+    with open(os.path.join(config.keosd_wallet_dir(), file_name), "w") as out:
         out.write(map)            
 
 
 def edit_map(file_name, text_editor="nano"):
     import subprocess
-    subprocess.run([text_editor, os.path.join(wallet_dir(), file_name)])
+    subprocess.run([text_editor, os.path.join(
+                                    config.keosd_wallet_dir(), file_name)])
     read_map(file_name, text_editor)
 
 
@@ -254,13 +283,13 @@ def read_map(file_name, text_editor="nano"):
     '''Return json account map
 
 Attempt to open the account map file named ``setup.account_map``, located 
-in the wallet directory ``wallet_dir()``, to return its json contents. If the 
-file does not exist, return an empty json.
+in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
+contents. If the file does not exist, return an empty json.
 
 If the file is corrupted, offer editing the file with the ``nano`` linux 
 editor. Return ``None`` if the the offer is rejected.
     '''
-    wallet_dir_ = wallet_dir()
+    wallet_dir_ = config.keosd_wallet_dir()
     path = os.path.join(wallet_dir_, file_name)
     while True:
         try: # whether the setup map file exists:
@@ -290,3 +319,23 @@ editor. Return ``None`` if the the offer is rejected.
                     Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
                     ''', translate=False)                    
                     return None
+
+
+def data_json(data):
+    class Encoder(json.JSONEncoder):
+        def default(self, o):
+            if isinstance(o, interface.Account):
+                return str(o)
+            else:
+                json.JSONEncoder.default(self, o) 
+    if not data:
+        return data
+
+    data_json = data
+    if isinstance(data, dict) or isinstance(data, list):
+        data_json = json.dumps(data, cls=Encoder)
+    else:
+        if isinstance(data, str):
+            data_json = re.sub("\s+|\n+|\t+", " ", data)
+            data_json = object_names_2_accout_names(data_json)
+    return data_json

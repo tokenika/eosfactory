@@ -27,7 +27,7 @@ copyright = u'2018, Tokenika'
 author = u'Tokenika'
 
 # The short X.Y version
-version = u'v2.2'
+version = u'v2.3'
 # The full version, including alpha/beta/rc tags
 release = u'0.0'
 
@@ -119,7 +119,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = []
+html_static_path = ['_static']
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -194,3 +194,6 @@ texinfo_documents = [
 source_parsers = {
    '.md': 'recommonmark.parser.CommonMarkParser',
 }
+
+def setup(app):
+    app.add_stylesheet('css/custom.css')  # may also be an URL

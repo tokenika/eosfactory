@@ -41,7 +41,8 @@ class _Cleos():
         if setup.is_print_response:
             cl.append("--print-response")
 
-        cl.extend([first, second])
+        cl.append(first)
+        cl.extend(re.sub(re.compile(r'\s+'), ' ', second.strip()).split(" "))
         cl.extend(args)
         self.args = args
 
@@ -50,19 +51,25 @@ class _Cleos():
             print(" ".join(cl))
             print("")
 
-        process = subprocess.run(
-            cl,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            cwd=str(pathlib.Path(config.cli_exe()).parent)) 
+        while True:
+            process = subprocess.run(
+                cl,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=str(pathlib.Path(config.cli_exe()).parent)) 
 
-        self.out_msg = process.stdout.decode("utf-8")
-        self.out_msg_details = process.stderr.decode("utf-8")
-        error_key_words = ["ERROR", "Error", "error", "Failed"]
-        for word in error_key_words:
-            if word in self.out_msg_details:
-                self.err_msg = self.out_msg_details
-                self.out_msg_details = None
+            self.out_msg = process.stdout.decode("ISO-8859-1")
+            self.out_msg_details = process.stderr.decode("ISO-8859-1")
+            self.err_msg = None
+            error_key_words = ["ERROR", "Error", "error", "Failed"]
+            for word in error_key_words:
+                if word in self.out_msg_details:
+                    self.err_msg = self.out_msg_details
+                    self.out_msg_details = None
+                    break
+
+            if not self.err_msg or self.err_msg and \
+                    not "Transaction took too long" in self.err_msg:
                 break
 
         errors.validate(self)
@@ -200,18 +207,24 @@ class GetAccount(interface.Account, _Cleos):
 
         self.owner_key = None
         self.active_key = None
-        if not is_info:
-            if self.json["permissions"][1]["required_auth"]["keys"]:
-                self.owner_key = self.json["permissions"][1] \
-                    ["required_auth"]["keys"][0]["key"]
-                self.active_key = self.json["permissions"][0] \
-                    ["required_auth"]["keys"][0]["key"]                     
-        else:
-            owner = re.search('owner\s+1\:\s+1\s(.*)\n', self.out_msg)
-            active = re.search('active\s+1\:\s+1\s(.*)\n', self.out_msg)
-            if owner and active:
-                self.owner_key = owner.group(1)
-                self.active_key = active.group(1)
+        try:
+            if not is_info:
+                permissions = self.json["permissions"]
+                for permission in permissions:
+                    if permission["required_auth"]["keys"]:
+                        key = permission["required_auth"]["keys"][0]["key"]
+                        if permission["perm_name"] == "owner":
+                            self.owner_key = key
+                        if permission["perm_name"] == "active":
+                            self.active_key = key                   
+            else:
+                owner = re.search('owner\s+1\:\s+1\s(.*)\n', self.out_msg)
+                active = re.search('active\s+1\:\s+1\s(.*)\n', self.out_msg)
+                if owner and active:
+                    self.owner_key = owner.group(1)
+                    self.active_key = active.group(1)
+        except:
+            pass
 
         self.printself()
 
@@ -432,8 +445,8 @@ class WalletOpen(_Cleos):
     - **parameters**::
 
         wallet: The name of the wallet to import key into. May be an object 
-            having the  May be an object having the attribute `name`, like 
-            `CreateAccount`, or a string. 
+            having the  May be an object having the attribute `name`, 
+            or a string. 
         is_verbose: If ``False`` do not print. Default is ``True``.
 
     - **attributes**::
@@ -466,8 +479,8 @@ class WalletLock(_Cleos):
     - **parameters**::
 
         wallet: The name of the wallet to import key into. May be an object 
-            having the  May be an object having the attribute `name`, like 
-            `CreateAccount`, or a string. 
+            having the  May be an object having the attribute `name`, 
+            or a string. 
         is_verbose: If ``False`` do not print. Default is ``True``.
 
     - **parameters**::
@@ -490,8 +503,8 @@ class WalletUnlock(_Cleos):
     - **parameters**::
 
         wallet: The name of the wallet. May be an object 
-            having the  May be an object having the attribute `name`, 
-            like `CreateAccount`, or a string.
+            having the  May be an object having the attribute `name`,
+            or a string.
         password: If the wallet argument is not a wallet object, the password 
             returned by wallet create, else anything, defaults to "".
         is_verbose: If ``False`` do not print. Default is ``True``.
@@ -523,7 +536,7 @@ class GetCode(_Cleos):
 
         account: The name of an account whose code should be retrieved. 
             May be an object having the  May be an object having the attribute 
-            `name`, like `CreateAccount`, or a string.
+            `name`, or a string.
         code: The name of the file to save the contract .wast/wasm to.
         abi: The name of the file to save the contract .abi to.
         wasm: Save contract as wasm.
@@ -562,10 +575,9 @@ class GetTable(_Cleos):
     - **parameters**::
 
         account: The name of the account that owns the table. May be 
-            an object having the  May be an object having the attribute 
-            `name`, like `CreateAccount`, or a string.
-        scope: The scope within the account in which the table is found,
-            can be a `CreateAccount` or `Account` object, or a name.
+            an object having the attribute `name`, or a string.
+        scope: The scope within the account in which the table is found. May be
+            an object having the attribute `name`, or a string.
         table: The name of the table as specified by the contract abi.
         binary: Return the value as BINARY rather than using abi to 
             interpret as JSON
@@ -637,7 +649,7 @@ class CreateKey(interface.Key, _Cleos):
         is_verbose: If set, print output.    
     '''
     def __init__(
-            self, key_name, key_public="", key_private="", r1=False, 
+            self, key_name="", key_public="", key_private="", r1=False, 
             is_verbose=True):
         interface.Key.__init__(self, key_name, key_public, key_private)
 
@@ -690,14 +702,14 @@ class CreateAccount(interface.Account, _Cleos):
     - **parameters**::
 
         creator: The name, of the account creating the new account. May be an 
-            object having the attribute `name`, like `CreateAccount`, 
-            or a string.
+            object having the attribute `name`, or a string.
         name: The name of the new account.
         owner_key: The owner public key for the new account.
         active_key: The active public key for the new account.
 
         permission: An account and permission level to authorize, as in 
-            'account@permission'. May be a `CreateAccount` or `Account` object
+            'account@permission'. May be an object having the attribute `name`, 
+            or a string.
         expiration: The time in seconds before a transaction expires, 
             defaults to 30s
         skip_sign: Specify if unlocked wallet keys should be used to sign 
@@ -726,7 +738,7 @@ class CreateAccount(interface.Account, _Cleos):
             self, creator, name, owner_key, 
             active_key=None,
             permission=None,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, 
             dont_broadcast=0,
             forceUnique=0,
@@ -762,7 +774,8 @@ class CreateAccount(interface.Account, _Cleos):
             for perm in p:
                 args.extend(["--permission", perm])
 
-        args.extend(["--expiration", str(expiration_sec)])
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -834,15 +847,16 @@ class SetContract(_Cleos):
     - **parameters**:: 
 
         account: The account to publish a contract for. May be an object 
-            having the  May be an object having the attribute `name`, like 
-            `CreateAccount`, or a string.
+            having the  May be an object having the attribute `name`, 
+            or a string.
         contract_dir: The path containing the .wast and .abi. 
         wasm_file: The file containing the contract WASM relative 
             to contract_dir.
         abi_file: The ABI for the contract relative to contract-dir.
 
         permission: An account and permission level to authorize, as in 
-            'account@permission'. May be a `CreateAccount` or `Account` object
+            'account@permission'. May be an object having the attribute `name`, 
+            or a string.
         expiration: The time in seconds before a transaction expires, 
             defaults to 30s
         skip_sign: Specify if unlocked wallet keys should be used to sign 
@@ -868,7 +882,7 @@ class SetContract(_Cleos):
     def __init__(
             self, account, contract_dir, 
             wasm_file=None, abi_file=None, 
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -899,7 +913,8 @@ class SetContract(_Cleos):
             for perm in p:
                 args.extend(["--permission", perm])
 
-        args.extend(["--expiration", str(expiration_sec)])
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -927,19 +942,19 @@ class SetContract(_Cleos):
 
 
 class PushAction(_Cleos):
-    '''Push a transaction with a single action
+    '''Push a transaction with a single action.
 
     - **parameters**::
 
         account: The account to publish a contract for.  May be an object 
-            having the  May be an object having the attribute `name`, like 
-            `CreateAccount`, or a string.
+            having the  May be an object having the attribute `name`, 
+            or a string.
         action: A JSON string or filename defining the action to execute on 
             the contract.
         data: The arguments to the contract.
-
         permission: An account and permission level to authorize, as in 
-            'account@permission'. May be a `CreateAccount` or `Account` object
+            'account@permission'. May be an object having the attribute `name`, 
+            or a string.
         expiration: The time in seconds before a transaction expires, 
             defaults to 30s
         skip_sign: Specify if unlocked wallet keys should be used to sign 
@@ -964,7 +979,7 @@ class PushAction(_Cleos):
     '''
     def __init__(
             self, account, action, data,
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -981,7 +996,8 @@ class PushAction(_Cleos):
             for perm in p:
                 args.extend(["--permission", perm])
 
-        args.extend(["--expiration", str(expiration_sec)])
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:

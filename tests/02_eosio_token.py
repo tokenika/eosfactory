@@ -75,7 +75,6 @@ class Test(unittest.TestCase):
                 "quantity": "25.0000 EOS", "memo":""
             },
             permission=(alice, Permission.ACTIVE))
-        self.assertTrue("250000" in DEBUG())
 
         host.push_action(
             "transfer",
@@ -84,7 +83,6 @@ class Test(unittest.TestCase):
                 "quantity": "11.0000 EOS", "memo": ""
             },
             permission=(carol, Permission.ACTIVE))
-        self.assertTrue("110000" in DEBUG())
 
         host.push_action(
             "transfer",
@@ -93,7 +91,6 @@ class Test(unittest.TestCase):
                 "quantity": "2.0000 EOS", "memo": ""
             },
             permission=(carol, Permission.ACTIVE))
-        self.assertTrue("20000" in DEBUG())
 
         host.push_action(
             "transfer",
@@ -102,7 +99,6 @@ class Test(unittest.TestCase):
                 "quantity": "2.0000 EOS", "memo":""
             },
             permission=(bob, Permission.ACTIVE))
-        self.assertTrue("20000" in DEBUG())
 
         COMMENT('''
         Verify the outcome:
@@ -123,7 +119,7 @@ class Test(unittest.TestCase):
             '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
 
         contract.delete()
-
+        
 
     def tearDown(self):
         pass

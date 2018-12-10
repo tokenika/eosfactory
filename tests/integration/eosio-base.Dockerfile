@@ -17,7 +17,7 @@ RUN apt-get update \
 
 ##############     EOS     #############################################################################################
 
-ARG eos_branch=v1.3.1
+ARG eos_branch=v1.5.0
 ARG eos_symbol=SYS
  
 RUN git clone -b $eos_branch https://github.com/EOSIO/eos.git --recursive /opt/eos

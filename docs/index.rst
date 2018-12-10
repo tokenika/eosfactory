@@ -34,6 +34,7 @@ Release Notes
     releases/ReleaseNotesVersion2.0
     releases/ReleaseNotesVersion2.1
     releases/ReleaseNotesVersion2.2
+    releases/ReleaseNotesVersion2.3
 
 
 Tutorials
@@ -49,6 +50,24 @@ Tutorials
     tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC
     tutorials/05.InteractingWithPublicTestnet
 
+
+Patterns
+--------
+
+.. toctree::
+    :maxdepth: 1
+
+    patterns/README
+    patterns/BIOS_Boot_Sequence
+
+set
+```
+
+.. toctree::
+    :maxdepth: 1
+
+    patterns/set/set_account_permission
+    patterns/set/set_action_permission
 
 Roadmap
 -------

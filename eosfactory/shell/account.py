@@ -16,10 +16,15 @@ if setup.node_api == "cleos":
     import eosfactory.core.cleos as cleos
 elif setup.node_api == "eosjs":
     import eosfactory.core.eosjs as cleos
+
+import eosfactory.core.cleos_set as cleos_set
 import eosfactory.core.cleosys as cleosys
 import eosfactory.core.manager as manager
 import eosfactory.core.testnet as testnet
+import eosfactory.core.account_set as account_set
+
 import eosfactory.shell.wallet as wallet
+
 
 '''The namespace where account objects go.
 '''
@@ -45,21 +50,6 @@ def reboot():
     wallet_globals = None
 
 
-# def is_local_testnet_running():
-#         account_ = cleos.GetAccount(self.name, is_info=False, is_verbose=False)
-#         if not account_.error and \
-#             self.key_public == \
-#                 account_.json["permissions"][0]["required_auth"]["keys"] \
-#                     [0]["key"]:
-#             self.account_info = str(account_)
-#             logger.TRACE('''
-#                 Local testnet is ON: the `eosio` account is master.
-#                 ''')
-#             return True
-#         else:
-#             return False
-
-
 def is_local_testnet_running(account_eosio):
     try:
         account_ = cleos.GetAccount(
@@ -70,23 +60,7 @@ def is_local_testnet_running(account_eosio):
     try: # remote eosio may have the ["keys"] array empty.
         return account_eosio.owner_key.key_public == account_.owner_key
     except:
-        False        
-
-
-def _data_json(data):
-    class Encoder(json.JSONEncoder):
-        def default(self, o):
-            if isinstance(o, interface.Account):
-                return str(o)
-            else:
-                json.JSONEncoder.default(self, o) 
-
-    if isinstance(data, dict) or isinstance(data, list):
-        data_json = json.dumps(data, cls=Encoder)
-    else:
-        data_json = re.sub("\s+|\n+|\t+", " ", data)
-        data_json = manager.object_names_2_accout_names(data_json)
-    return data_json
+        False
 
 
 def is_wallet_defined(logger, globals=None):
@@ -152,10 +126,13 @@ class Eosio(interface.Account):
         self.active_key = self.owner_key
 
     def info(self):
-        print("account object name: {}\nname: {}\n{}".format(
+        msg = manager.accout_names_2_object_names(
+            "account object name: {}\nname: {}\n{}".format(
                 self.account_object_name, 
                 self.name,
-                cleos.GetAccount(self.name, is_verbose=False).out_msg))
+                cleos.GetAccount(self.name, is_verbose=False).out_msg),
+                True)
+        print(msg)
 
     def __str__(self):
         return self.name
@@ -165,7 +142,7 @@ class Eosio(interface.Account):
             receiver=None,
             permission=None,
             transfer=False,
-            expiration_sec=30,
+            expiration_sec=None,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -174,7 +151,7 @@ class Eosio(interface.Account):
 
     def buy_ram(
             account_object, amount_kbytes, receiver=None,
-            expiration_sec=30,
+            expiration_sec=None,
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
@@ -259,8 +236,12 @@ class GetAccount(cleos.GetAccount):
 
     def info(self):
         get_account = cleos.GetAccount(self.name, is_verbose=False)
-        print("account object name: {}\n{}".format(
-            self.account_object_name, get_account))
+        msg = manager.accout_names_2_object_names(
+            "account object name: {}\n{}".format(
+            self.account_object_name, get_account),
+            True
+        )
+        print(msg)
 
     def __str__(self):
         return self.name
@@ -276,7 +257,7 @@ class CreateAccount(cleos.CreateAccount):
             self, creator, name, owner_key, 
             active_key="",
             permission=None,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, 
             dont_broadcast=0,
             forceUnique=0,
@@ -299,7 +280,7 @@ class SystemNewaccount(cleosys.SystemNewaccount):
             permission=None,
             buy_ram_kbytes=0, buy_ram="",
             transfer=False,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -546,7 +527,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
     def set_contract(
             account_object, contract_dir, 
             wast_file="", abi_file="", 
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
@@ -568,11 +549,11 @@ def append_account_methods_and_finish(account_object_name, account_object):
 
     def push_action(
             account_object, action, data,
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
-        data = _data_json(data)
+        data = manager.data_json(data)
 
         result = cleos.PushAction(
             account_object, action, data,
@@ -646,7 +627,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
 
     def buy_ram(
             account_object, amount_kbytes, receiver=None,
-            expiration_sec=30, 
+            expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
@@ -675,12 +656,18 @@ def append_account_methods_and_finish(account_object_name, account_object):
 
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
+
+    account_object.set_account_permission = types.MethodType(
+                                    account_set.set_account_permission, account_object)
+    account_object.set_action_permission = types.MethodType(
+                            account_set.set_action_permission, account_object)    
+
     def delegate_bw(
         account_object, stake_net_quantity, stake_cpu_quantity,
         receiver=None,
         permission=None,
         transfer=False,
-        expiration_sec=30, 
+        expiration_sec=None, 
         skip_signature=0, dont_broadcast=0, forceUnique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
@@ -713,9 +700,13 @@ def append_account_methods_and_finish(account_object_name, account_object):
     account_object.delegate_bw = types.MethodType(delegate_bw, account_object)
 
     def info(account_object):
-        print("Account object name: {}\n{}".format(
+        msg = manager.accout_names_2_object_names(
+            "Account object name: {}\n{}".format(
             account_object_name,
-            str(cleos.GetAccount(account_object.name, is_verbose=0))))
+            str(cleos.GetAccount(account_object.name, is_verbose=0))),
+            True
+        )
+        print(msg)
 
     account_object.info = types.MethodType(info, account_object)
 
@@ -738,7 +729,7 @@ def create_account(
         permission=None,
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
-        expiration_sec=30,
+        expiration_sec=None,
         skip_signature=0, dont_broadcast=0, forceUnique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
