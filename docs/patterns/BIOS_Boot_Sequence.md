@@ -2,11 +2,11 @@
 
 This article follows a [document](https://developers.eos.io/eosio-nodeos/docs/bios-boot-sequence) from eosio archives.
 
-The python code involved can be executed, as it is explained [here](./README.html).
+**NOTE**: The Python code listed below is executable, as explained [here](../README.html).
 
-## Steps 0 System contracts
+## Step 0 The system contracts
 
-Execution of the presented code depends on definitions given in [eosio.contracts repository](https://github.com/EOSIO/eosio.contracts), hence, if running the code, as it is explained [here](./README.html), for the first time, you will be asked for the root directory of the repository (build).
+Execution of the presented code depends on definitions given in [eosio.contracts repository](https://github.com/EOSIO/eosio.contracts), hence, if running the code, as explained [here](./README.html) for the first time, you will be asked for the root directory of the repository (build).
 
 The following chunk of code serves the prompt.
 
