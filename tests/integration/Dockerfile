@@ -75,6 +75,12 @@ RUN set -ex; \
 	rm -f get-pip.py
 
 RUN python -m pip install termcolor
+############## EOS CDT #############################################################################################
+
+RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.4.1/eosio.cdt-1.4.1.x86_64.deb && \
+    apt install ./eosio.cdt-1.4.1.x86_64.deb \
+    && rm ./eosio.cdt-1.4.1.x86_64.deb
+
 ############## EOS FACTORY #############################################################################################
 
 ARG eosfactory_branch=master
@@ -90,9 +96,6 @@ RUN /opt/eosfactory/tests/integration/expect_script.sh
 # https://superuser.com/a/1253889/59009
 RUN sed -i 's/mesg n || true/tty -s \&\& mesg n || true/g' /root/.profile
 RUN chmod +x ./tests/unittest.sh
-
-RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.4.1/eosio.cdt-1.4.1.x86_64.deb
-RUN apt install ./eosio.cdt-1.4.1.x86_64.deb && rm ./eosio.cdt-1.4.1.x86_64.deb
 
 WORKDIR /opt/eosfactory/tests/
 
