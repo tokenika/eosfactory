@@ -12,7 +12,6 @@ contractsDir = "contracts"
 DEFAULT_TEMPLATE = "01_hello_world"
 FROM_HERE_TO_EOSF_DIR = "../../../"
 CONFIG_JSON = "config.json"
-EOSIO_CONTRACT_DIR = "build/contracts/"
 CONTRACTS_DIR = "contracts/"
 LOCALNODE = "localnode/"
 
@@ -21,7 +20,6 @@ wallet_address_ = ("WALLET_MANAGER_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 genesis_json_ = ("EOSIO_GENESIS_JSON", [LOCALNODE + "genesis.json"])
 data_dir_ = ("LOCAL_NODE_DATA_DIR", [LOCALNODE])
 config_dir_ = ("LOCAL_NODE_CONFIG_DIR", [LOCALNODE])
-workspaceEosio_ = ("EOSIO_WORKSPACE", [EOSIO_CONTRACT_DIR])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
 
@@ -155,9 +153,6 @@ def config_dir():
 
 def genesis_json():
     return first_valid_path(genesis_json_)
-
-def workspaceEosio():
-    return first_valid_path(workspaceEosio_)
 
 
 def config_file():
@@ -556,11 +551,7 @@ def current_config(contract_dir=None):
     try:   
         map[genesis_json_[0]] = genesis_json()
     except:
-        map[genesis_json_[0]] = None      
-    try:
-        map[workspaceEosio_[0]] = workspaceEosio()
-    except:
-        map[workspaceEosio_[0]] = None
+        map[genesis_json_[0]] = None
 
     map[nodeos_stdout_[0]] = nodeos_stdout()
     

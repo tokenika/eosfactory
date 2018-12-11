@@ -16,6 +16,10 @@ parser.add_argument(
 parser.add_argument(
     "--c_cpp_prop_path", help="Path to a c_cpp_prop file.", default="")
 parser.add_argument(
+    "--include", help="Additional includes.", default="")
+parser.add_argument(
+    "--libs", help="Additional libraries.", default="")
+parser.add_argument(
     "--vsc", help="Open Visual Studio Code.", action="store_true")
 parser.add_argument(
     "--throw", help="Throw error if the project exists.", action="store_true")
@@ -34,6 +38,8 @@ args = parser.parse_args()
 project_from_template(
     args.name, template=args.template, 
     c_cpp_prop_path=args.c_cpp_prop_path,
+    include=args.include,
+    libs=args.libs,
     open_vscode=args.vsc,
     throw_exists=args.throw, remove_existing=args.ovr,
     verbosity=[] if args.silent else None

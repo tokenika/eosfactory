@@ -24,6 +24,10 @@ TEMPLATE_HOME = "${HOME}"
 TEMPLATE_ROOT = "${ROOT}"
 C_CPP_PROP = "${c_cpp_prop}"
 TASK_JSON = "${tasks}"
+CONFIGURATIONS = "configurations"
+INCLUDE_PATH = "includePath"
+BROWSE = "browse"
+WORKSPACE_FOLDER = "${workspaceFolder}"
 
 
 def replace_templates(string): 
@@ -107,9 +111,10 @@ def ABI(
     c_cpp_properties = get_c_cpp_properties(
                                     contract_dir, c_cpp_properties_path)
 
-    for entry in c_cpp_properties["configurations"][0]["includePath"]:
-        if entry == "${workspaceFolder}":
-            command_line.append("-extra-arg=-I=" + contract_dir)
+    for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
+        if WORKSPACE_FOLDER in entry:
+            entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
+            command_line.append("-extra-arg=-I=" + entry)
         else:
             command_line.append("-extra-arg=-I=" + strip_wsl_root(entry))
 
@@ -158,16 +163,17 @@ def WAST(
 
     command_line = [config.eosio_cpp()]
 
-    for entry in c_cpp_properties["configurations"][0]["includePath"]:
-        if entry == "${workspaceFolder}":
-            command_line.append("-I=" + contract_dir)
+    for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
+        if WORKSPACE_FOLDER in entry:
+            entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
+            command_line.append("-I=" + entry)
         else:
             command_line.append("-I=" + strip_wsl_root(entry))
 
-    for entry in c_cpp_properties["configurations"][0]["libs"]:
+    for entry in c_cpp_properties[CONFIGURATIONS][0]["libs"]:
         command_line.append("-l=" + strip_wsl_root(entry))
 
-    for entry in c_cpp_properties["configurations"][0]["compilerOptions"]:
+    for entry in c_cpp_properties[CONFIGURATIONS][0]["compilerOptions"]:
         command_line.append(entry)
     
     for file in source_files:
@@ -192,7 +198,9 @@ def WAST(
 
 def project_from_template(
         project_name, template=None, workspace_dir=None,
-        c_cpp_prop_path=None, 
+        c_cpp_prop_path=None,
+        include=None,
+        libs=None, 
         remove_existing=False, 
         open_vscode=False, throw_exists=False, 
         verbosity=None):
@@ -211,6 +219,7 @@ def project_from_template(
     '''
     project_name = utils.wslMapWindowsLinux(project_name.strip())
     template = template.strip()
+
     template_dir = utils.wslMapWindowsLinux(template)
     if not os.path.isdir(template_dir):
         template_dir = os.path.join(
@@ -219,32 +228,47 @@ def project_from_template(
         raise errors.Error('''
         TemplateCreate '{}' does not exist.
         '''.format(template_dir)) 
-       
-    if not workspace_dir \
-                            or not os.path.isabs(workspace_dir) \
-                            or not os.path.exists(workspace_dir):
-        workspace_dir = config.contract_workspace()
-    workspace_dir = workspace_dir.strip()
 
     if c_cpp_prop_path:
         c_cpp_prop_path = utils.wslMapWindowsLinux(c_cpp_prop_path)
         if os.path.exists(c_cpp_prop_path):
             try:
                 with open(c_cpp_prop_path, "r") as input:
-                    c_cpp_properties = json.loads(input.read())
+                    c_cpp_properties = input.read()
             except Exception:
                 c_cpp_properties = vscode.c_cpp_properties
     else:
         c_cpp_properties = vscode.c_cpp_properties
 
-    c_cpp_properties = replace_templates(vscode.c_cpp_properties)
+    c_cpp_properties = replace_templates(c_cpp_properties)
+
+    if include:
+        c_cpp_properties_json = json.loads(c_cpp_properties)
+        c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].extend(
+                                                        include.split(", "))
+        c_cpp_properties_json[CONFIGURATIONS][0][BROWSE]["path"].extend(
+                                                        include.split(", "))
+        c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
+
+    if libs:
+        c_cpp_properties_json = json.loads(c_cpp_properties)
+        c_cpp_properties_json[CONFIGURATIONS][0]["libs"].extend(
+                                                        libs.split(", "))
+        c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
+
 
     split = os.path.split(project_name)
     if os.path.isdir(split[0]):
         project_dir = project_name
         project_name = split[1]
     else:
+        if not workspace_dir \
+                                or not os.path.isabs(workspace_dir) \
+                                or not os.path.exists(workspace_dir):
+            workspace_dir = config.contract_workspace()
+        workspace_dir = workspace_dir.strip()        
         project_dir = os.path.join(workspace_dir, project_name)
+
     if os.path.isdir(project_dir):
         if os.listdir(project_dir):
             if remove_existing:
