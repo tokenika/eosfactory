@@ -16,7 +16,7 @@ TASKS = '''
     "version": "2.0.0",   
     "tasks": [
         {
-            "taskName": "Compile",
+            "label": "Compile",
             "type": "shell",
             "windows": {
                 "options": {
@@ -43,7 +43,7 @@ TASKS = '''
             ]
         },
         {
-            "taskName": "Build",
+            "label": "Build",
             "type": "shell",
             "windows": {
                 "options": {
@@ -75,7 +75,7 @@ TASKS = '''
             ]
         },
         {
-            "taskName": "Test",
+            "label": "Test",
             "type": "shell",
             "windows": {
                 "options": {
@@ -102,7 +102,7 @@ TASKS = '''
             ]
         },
         {
-            "taskName": "Unittest",
+            "label": "Unittest",
             "type": "shell",
             "windows": {
                 "options": {
@@ -129,7 +129,7 @@ TASKS = '''
             ]
         },
         {
-            "taskName": "EOSIO API",
+            "label": "EOSIO API",
             "type": "shell",
             "windows": {
                 "options": {

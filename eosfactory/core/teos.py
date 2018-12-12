@@ -99,19 +99,20 @@ def ABI(
             return
 
     command_line = [
-        config.eosio_abigen(),
+        config.eosio_cpp(),
         "-contract=" + code_name,
         "-R=" + get_resources_dir(contract_source_files[0]),
-        "-output=" + target_path]
+        "-abigen",
+        "-abigen_output=" + target_path]
 
     c_cpp_properties = get_c_cpp_properties(
                                     contract_dir, c_cpp_properties_path)
 
     for entry in c_cpp_properties["configurations"][0]["includePath"]:
         if entry == "${workspaceFolder}":
-            command_line.append("-extra-arg=-I=" + contract_dir)
+            command_line.append("-I=" + contract_dir)
         else:
-            command_line.append("-extra-arg=-I=" + strip_wsl_root(entry))
+            command_line.append("-I=" + strip_wsl_root(entry))
 
     for file in source_files:
         command_line.append(file)
