@@ -2,7 +2,7 @@
 
 ## Scenario
 
-There are two persons, `Alice` and `Carol`, both having their accounts in a `Bank`. The `Bank` provides the service of `LC` (Letter of Credit). Hence, the parties can enter a deal that involves a temporal deposition of resources in the `Bank`, released when the deal is concluded in an agreed way.
+There are two persons, `Alice` and `Carol`, both having their accounts in a `Bank`. The `Bank` provides the service of `LC` (Letter of Credit). Hence, parties can enter a deal that involves a temporal deposition of resources in the `Bank`, released when the deal is concluded in an agreed way.
 
 ## Setup EOSFactory
 
@@ -23,9 +23,9 @@ create_master_account("eosio")
 
 ### Arrange the Bank
 
-The `Bank` is made of two smart contracts. One belongs to the set of the eosio system contracts: it is `eosio.token`. It implements money transfers.
+The `Bank` is made of two smart contracts. One belongs to the set of the eosio system contracts: it is `eosio.token`. It implements transfers of resources.
 
-The other contract is the issue of the current project. This one implements the idea of the Letter of Credit.
+The other contract is the issue of the current project: it implements the idea of the Letter of Credit.
 
 Both contracts are, in fact, eosio accounts, `Bank` and `LC`, accordingly. Each of them is equipped with relevant actions. The `LC` account is to be related to the `Bank` account with a system permission named `eosio.code`.
 

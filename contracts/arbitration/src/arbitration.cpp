@@ -91,14 +91,16 @@ void dep::transfer(name from, name to, asset quantity, string memo) {
     if (from == _self || to != _self) {
         return;
     }
-    eosio_assert(quantity.symbol == symbol("SYS", 4), "I think you're looking for another contract");
+    eosio_assert(quantity.symbol == symbol("SYS", 4), 
+                                "I think you're looking for another contract");
     eosio_assert(quantity.is_valid(), "Are you trying to corrupt me?");
     eosio_assert(quantity.amount > 0, "When pigs fly");
     deposits db(_self, from.value);
     auto to_acnt = db.find(name(memo).value);
     logger_info("name(memo) ", name(memo));
     logger_info("name(memo).value ", name(memo).value);
-    eosio_assert(to_acnt != db.end(), "Don't send us your money before opening account" );
+    eosio_assert(to_acnt != db.end(), 
+                        "Don't send us your money before opening account" );
     add_balance(from, name(memo), quantity);
 }
 
@@ -192,7 +194,8 @@ void dep::resolve(name buyer, name seller, name user) {
         permission_level{get_self() ,"active"_n},
         "eosio.token"_n,
         "transfer"_n,
-        std::make_tuple(get_self(), user, request->amount, std::string("Here are your tokens"))
+        std::make_tuple(get_self(), user, request->amount, std::string(
+                                                    "Here are your tokens"))
     );
     transfer.send();
     db.erase(request);
@@ -230,15 +233,18 @@ extern "C" {
               execute_action(name(receiver), name(code), &dep::hold); 
         } else if(code == self && action == name("resolve").value) {
               execute_action(name(receiver), name(code), &dep::resolve); 
-        } else if(code == name("eosio.token").value && action == name("transfer").value) {
+        } else if(code == name("eosio.token").value 
+                                    && action == name("transfer").value) {
               execute_action(name(receiver), name(code), &dep::transfer); 
         } else{
-            eosio_assert(false, (string("Ooops - action not configured: ")+ name(action).to_string()).c_str());
+            eosio_assert(false, (string("Ooops - action not configured: ")
+                + name(action).to_string()).c_str());
         }
     }
 }
 
 time_point current_time_point() {
-   const static time_point ct{ microseconds{ static_cast<int64_t>( current_time() ) } };
+   const static time_point ct{ 
+       microseconds{ static_cast<int64_t>( current_time() ) } };
    return ct;
 }
