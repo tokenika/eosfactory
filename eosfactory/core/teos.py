@@ -114,9 +114,12 @@ def ABI(
     for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
-            command_line.append("-extra-arg=-I=" + entry)
+            command_line.append(
+                "-extra-arg=-I" + utils.wslMapWindowsLinux(entry))
         else:
-            command_line.append("-extra-arg=-I=" + strip_wsl_root(entry))
+            command_line.append(
+                "-extra-arg=-I" + utils.wslMapWindowsLinux(
+                    strip_wsl_root(entry)))
 
     for file in source_files:
         command_line.append(file)
@@ -139,7 +142,7 @@ def WAST(
     contract_dir = config.contract_dir(contract_dir_hint)
     # source_files[0] is directory, source_files[1] is contents:
     contract_source_files = config.contract_source_files(contract_dir)
-    
+
     source_files = []
     source_ext = [".c", ".cpp",".cxx", ".c++"]
     for file in contract_source_files[1]:
@@ -166,12 +169,14 @@ def WAST(
     for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
-            command_line.append("-I=" + entry)
+            command_line.append("-I=" + utils.wslMapWindowsLinux(entry))
         else:
-            command_line.append("-I=" + strip_wsl_root(entry))
+            command_line.append(
+                "-I=" + utils.wslMapWindowsLinux(strip_wsl_root(entry)))
 
     for entry in c_cpp_properties[CONFIGURATIONS][0]["libs"]:
-        command_line.append("-l=" + strip_wsl_root(entry))
+        command_line.append(
+            "-l=" + utils.wslMapWindowsLinux(strip_wsl_root(entry)))
 
     for entry in c_cpp_properties[CONFIGURATIONS][0]["compilerOptions"]:
         command_line.append(entry)
@@ -543,7 +548,7 @@ Error message is
 
 
 def node_probe(verbosity=None):
-    count = 15
+    count = 10
     num = 5
     block_num = None
     

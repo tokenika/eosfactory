@@ -85,6 +85,7 @@ Python Documentation
 .. toctree::
     :maxdepth: 1
 
+    rst/core.cleos_set
     rst/core.cleos
     rst/core.cleosys
     rst/core.config

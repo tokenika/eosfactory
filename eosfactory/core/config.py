@@ -478,7 +478,10 @@ def current_config(contract_dir=None):
     map = {}
     
     map["CONFIG_FILE"] = config_file()
-
+    try:
+        map["EOS_FACTORY_DIR"] = eosf_dir()
+    except:
+        map["EOS_FACTORY_DIR"] = None
     try:
         map[node_address_[0]] = http_server_address()
     except:

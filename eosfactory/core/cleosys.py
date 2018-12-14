@@ -30,7 +30,7 @@ class SystemNewaccount(interface.Account, cleos._Cleos):
             transaction.
         dont_broadcast: Don't broadcast transaction to the network (just print).
         forceUnique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidently issuing the 
+            bandwidth and remove any protections against accidentally issuing the 
             same transaction multiple times.
         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
             the execution of the transaction 
@@ -139,7 +139,7 @@ class BuyRam(cleos._Cleos):
             transaction.
         dont_broadcast: Don't broadcast transaction to the network (just print).
         forceUnique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidently issuing the 
+            bandwidth and remove any protections against accidentally issuing the 
             same transaction multiple times.
         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
             the execution of the transaction 
@@ -207,7 +207,7 @@ class DelegateBw(cleos._Cleos):
             transaction.
         dont_broadcast: Don't broadcast transaction to the network (just print).
         forceUnique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidently issuing the 
+            bandwidth and remove any protections against accidentally issuing the 
             same transaction multiple times.
         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
             the execution of the transaction 

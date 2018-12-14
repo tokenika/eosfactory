@@ -21,7 +21,6 @@ import eosfactory.core.cleos_set as cleos_set
 import eosfactory.core.cleosys as cleosys
 import eosfactory.core.manager as manager
 import eosfactory.core.testnet as testnet
-import eosfactory.core.account_set as account_set
 
 import eosfactory.shell.wallet as wallet
 
@@ -94,7 +93,8 @@ def put_account_to_wallet_and_on_stack(
     global wallet_globals
 
     if account_object.owner_key:
-        if wallet_singleton.keys_in_wallets([account_object.owner_key.key_private, \
+        if wallet_singleton.keys_in_wallets(
+                [account_object.owner_key.key_private,
                 account_object.active_key.key_private]):
             wallet_singleton.map_account(account_object_name, account_object)
         else:
@@ -656,11 +656,10 @@ def append_account_methods_and_finish(account_object_name, account_object):
 
     account_object.buy_ram = types.MethodType(buy_ram, account_object)
 
-
     account_object.set_account_permission = types.MethodType(
-                                    account_set.set_account_permission, account_object)
+                            cleos_set.set_account_permission, account_object)
     account_object.set_action_permission = types.MethodType(
-                            account_set.set_action_permission, account_object)    
+                            cleos_set.set_action_permission, account_object)    
 
     def delegate_bw(
         account_object, stake_net_quantity, stake_cpu_quantity,
