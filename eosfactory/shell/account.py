@@ -514,29 +514,8 @@ def append_account_methods_and_finish(account_object_name, account_object):
             return get_code.code_hash
 
     account_object.is_code = types.MethodType(is_code, account_object)        
-
-    def set_contract(
-            account_object, contract_dir, 
-            wast_file="", abi_file="", 
-            permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None):
-
-        result = cleos_set.set_contract(
-            account_object, contract_dir, 
-            wast_file, abi_file, 
-            permission, expiration_sec, 
-            skip_signature, dont_broadcast, forceUnique,
-            max_cpu_usage, max_net_usage,
-            ref_block,
-            is_verbose=False
-            )
-        logger.OUT(result)
-        account_object.set_contract = result
-
     account_object.set_contract = types.MethodType(
-                                    set_contract , account_object)
+                                    cleos_set.set_contract , account_object)
 
     def push_action(
             account_object, action, data,

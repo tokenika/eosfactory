@@ -7,13 +7,14 @@ import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
 
 
-def set_contract(
+def set_contract_(
             account, contract_dir, 
             wasm_file=None, abi_file=None, 
             permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, forceUnique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
+            delay_sec=0,
             is_verbose=True,
             json=False
     ):
@@ -88,24 +89,57 @@ def set_contract(
         args.extend(["--max-net-usage", str(max_net_usage)])
     if  not ref_block is None:
         args.extend(["--ref-block", ref_block]) 
+    if delay_sec:
+        args.extend(["--delay-sec", str(delay_sec)])
     if wasm_file:
         args.append(wasm_file)
     if abi_file:
         args.append(abi_file)
 
-    retval = cleos._Cleos(args, "set", "contract", is_verbose)
-    retval.contract_path_absolute = files[0]
-    retval.account_name = interface.account_arg(account)
+    result = cleos._Cleos(args, "set", "contract", is_verbose)
+    result.contract_path_absolute = files[0]
+    result.account_name = interface.account_arg(account)
 
     def get_transaction(self):
         return GetTransaction(self.transaction)
 
-    retval.get_transaction = types.MethodType(get_transaction, retval)
+    result.get_transaction = types.MethodType(get_transaction, result)
+    result.printself()
 
-    retval.printself()
+    return result
 
-    return retval
-    
+
+def set_contract(
+            self, contract_dir, 
+            wasm_file="", abi_file="", 
+            permission=None, expiration_sec=None, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            delay_sec=0
+    ):
+    '''Create or update the contract on an account.
+
+    This is a specification of the function 
+    :func:`.set_contract`, used as a 
+    method of objects created with the ``create_action`` factory function. 
+    The owning account object is represented as the ``self`` parameter.
+    '''
+
+    result = set_contract_(
+                self, contract_dir, 
+                wasm_file, abi_file, 
+                permission, expiration_sec, 
+                skip_signature, dont_broadcast, forceUnique,
+                max_cpu_usage, max_net_usage,
+                ref_block,
+                delay_sec,
+                is_verbose=False, json=True
+            )
+
+    logger.OUT(result)
+    self.set_contract = result
+
 
 def set_account_permission_(
             account, permission_name, authority, parent_permission_name,
@@ -198,17 +232,17 @@ def set_account_permission_(
     if delay_sec:
         args.extend(["--delay-sec", str(delay_sec)])
                     
-    retval = cleos._Cleos(args, "set", "account permission", is_verbose)
-    retval.account_name = account_name
-    retval.console = None
-    retval.data = None
+    result = cleos._Cleos(args, "set", "account permission", is_verbose)
+    result.account_name = account_name
+    result.console = None
+    result.data = None
 
     if json and not dont_broadcast:
-        retval.console = retval.json["processed"]["action_traces"][0]["console"]
-        retval.data = retval.json["processed"]["action_traces"][0]["act"]["data"]
+        result.console = result.json["processed"]["action_traces"][0]["console"]
+        result.data = result.json["processed"]["action_traces"][0]["act"]["data"]
 
-    retval.printself()    
-    return retval
+    result.printself()    
+    return result
 
 
 def set_account_permission(
@@ -223,7 +257,7 @@ def set_account_permission(
     '''Set parameters dealing with account permissions.
 
     This is a specification of the function 
-    :func:`eosfactory.core.cleos_set.set_account_permission_`, used as a 
+    :func:`.set_account_permission_`, used as a 
     method of objects created with the ``create_action`` factory function. 
     The owning account object is represented as the ``self`` parameter.
     '''
@@ -324,15 +358,15 @@ def set_action_permission_(
     if delay_sec:
         args.extend(["--delay-sec", str(delay_sec)])
 
-    retval = cleos._Cleos(args, "set", "action permission", is_verbose)
-    retval.console = None
-    retval.data = None
+    result = cleos._Cleos(args, "set", "action permission", is_verbose)
+    result.console = None
+    result.data = None
 
     if json and not dont_broadcast:
-        retval.console = retval.json["processed"]["action_traces"][0]["console"]
-        retval.data = retval.json["processed"]["action_traces"][0]["act"]["data"]
+        result.console = result.json["processed"]["action_traces"][0]["console"]
+        result.data = result.json["processed"]["action_traces"][0]["act"]["data"]
 
-    retval.printself()
+    result.printself()
 
 
 def set_action_permission(
@@ -347,8 +381,8 @@ def set_action_permission(
     '''Set parameters dealing with account permissions.
 
     This is a specification of the function 
-    :func:`eosfactory.core.cleos_set.set_action_permission`, used as a 
-    method of objects created with the ``create_action`` factory function. 
+    :func:`.set_action_permission_`, used as a method of objects created with 
+    the ``create_action`` factory function. 
     The owning account object is represented as the ``self`` parameter.
     '''
     logger.TRACE('''

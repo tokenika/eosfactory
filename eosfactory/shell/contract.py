@@ -93,7 +93,7 @@ class Contract(ContractBuilder):
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
         try:
-            result = cleos_set.set_contract(
+            result = cleos_set.set_contract_(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file, 
                 permission, self.expiration_sec, 
@@ -117,7 +117,7 @@ class Contract(ContractBuilder):
 
             payer.buy_ram(buy_ram_kbytes, self.account)
         
-            result = cleos_set.set_contract(
+            result = cleos_set.set_contract_(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file, 
                 permission, self.expiration_sec, 

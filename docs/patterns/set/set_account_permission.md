@@ -1,6 +1,6 @@
 # Set Account Permission
 
-The `set_account_permission` command creates or updates an account's permission.
+The `set_account_permission` command creates or updates an account's permission. You might want to see the plain `cleos` approach [here](https://developers.eos.io/eosio-cleos/v1.2.0/reference#cleos-set-account).
 
 **NOTE**: The Python code listed below is executable, as explained [here](../README.html).
 

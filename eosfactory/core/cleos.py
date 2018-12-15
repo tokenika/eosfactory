@@ -97,7 +97,7 @@ class _Cleos():
         else:
             out = self.out_msg
             if self.out_msg_details:
-                out = out + self.err_msg
+                out = out + self.out_msg_details
             return out
 
     def __repr__(self):
