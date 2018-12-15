@@ -5,10 +5,7 @@ import eosfactory.core.errors as errors
 import eosfactory.core.config as config
 import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
-if setup.node_api == "cleos":
-    import eosfactory.core.cleos as cleos
-elif setup.node_api == "eosjs":
-    import eosfactory.core.eosjs as cleos
+import eosfactory.core.cleos as cleos
 import eosfactory.core.cleos_set as cleos_set
 
 

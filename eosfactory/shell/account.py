@@ -12,11 +12,7 @@ import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 import eosfactory.core.teos as teos
 import eosfactory.core.interface as interface
-if setup.node_api == "cleos":
-    import eosfactory.core.cleos as cleos
-elif setup.node_api == "eosjs":
-    import eosfactory.core.eosjs as cleos
-
+import eosfactory.core.cleos as cleos
 import eosfactory.core.cleos_set as cleos_set
 import eosfactory.core.cleosys as cleosys
 import eosfactory.core.manager as manager

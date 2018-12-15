@@ -1,6 +1,5 @@
 
 import eosfactory.core.setup as setup
-setup.node_api = "eosjs"
 
 import unittest
 from eosfactory.eosf import *

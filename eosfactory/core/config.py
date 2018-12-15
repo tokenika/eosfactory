@@ -26,7 +26,6 @@ chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
 wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 
-node_api_ = ("NODE_API", ["cleos"]) # cleos or eosjs
 
 cli_exe_ = (
     "EOSIO_CLI_EXECUTABLE", 
@@ -78,10 +77,6 @@ def eosio_key_public():
 
 def chain_state_db_size_mb():
     return config_value_checked(chain_state_db_size_mb_)
-
-
-def node_api():
-    return config_value_checked(node_api_)
 
 
 def wsl_root():
@@ -507,10 +502,6 @@ def current_config(contract_dir=None):
         map[chain_state_db_size_mb_[0]] = chain_state_db_size_mb()
     except:
         map[chain_state_db_size_mb_[0]] = None
-    try:
-        map[node_api_[0]] = node_api()
-    except:
-        map[node_api_[0]] = None
     try:
         map[is_nodeos_in_window_[0]] = is_nodeos_in_window()
     except:

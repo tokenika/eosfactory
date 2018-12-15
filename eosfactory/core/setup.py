@@ -14,7 +14,6 @@ account_map = "accounts.json"
 password_map = "passwords.json"
 wallet_default_name = "default"
 is_local_address = False
-node_api = config.node_api()
 
 __nodeos_address = None
 __file_prefix = None

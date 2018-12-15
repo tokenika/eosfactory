@@ -8,11 +8,7 @@ import eosfactory.core.errors as errors
 import eosfactory.core.setup as setup
 import eosfactory.core.interface as interface
 import eosfactory.core.teos as teos
-if setup.node_api == "cleos":
-    import eosfactory.core.cleos as cleos
-elif setup.node_api == "eosjs":
-    import eosfactory.core.eosjs as cleos
-
+import eosfactory.core.cleos as cleos
 import eosfactory.core.manager as manager
 
 
@@ -62,7 +58,7 @@ class Wallet(cleos.WalletCreate):
     wallet_keys = None
     wallet = None
     globals = None
-    setup.node_api
+
     def __init__(self, name=None, password="", verbosity=None, file=False):
 
         cleos.set_local_nodeos_address_if_none()
