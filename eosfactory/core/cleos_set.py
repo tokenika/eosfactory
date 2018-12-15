@@ -1,10 +1,111 @@
 import re
+import types
 
 import eosfactory.core.logger as logger
 import eosfactory.core.manager as manager
 import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
 
+
+def set_contract(
+            account, contract_dir, 
+            wasm_file=None, abi_file=None, 
+            permission=None, expiration_sec=None, 
+            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            is_verbose=True,
+            json=False
+    ):
+    '''Create or update the contract on an account.
+
+    - **parameters**:: 
+
+        account: The account to publish a contract for. May be an object having 
+            the attribute `name`, or a string.
+        contract_dir: The path containing to a directory. 
+        wasm_file: The WASM file relative to the contract_dir.
+        abi_file: The ABI file for the contract relative to the contract-dir.
+        permission: An account and permission level to authorize, as in 
+            'account@permission'. May be an object having the attribute `name`, 
+            or a string.
+        expiration: The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign: Specify if unlocked wallet keys should be used to sign 
+            transaction.
+        dont_broadcast: Don't broadcast transaction to the network (just print).
+        forceUnique: Force the transaction to be unique. this will consume extra 
+            bandwidth and remove any protections against accidentally issuing the 
+            same transaction multiple times.
+        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+            the execution of the transaction 
+            (defaults to 0 which means no limit).
+        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+            transaction (defaults to 0 which means no limit).
+        ref_block: The reference block num or block id used for TAPOS 
+            (Transaction as Proof-of-Stake).
+
+    - **attributes**::
+
+        error: Whether any error ocurred.
+        json: The json representation of the object.
+        is_verbose: If set, print output.    
+    '''
+    files = cleos.contract_is_built(contract_dir, wasm_file, abi_file)
+    if not files:
+        raise errors.Error("""
+        Cannot determine the contract directory. The clue is 
+        {}.
+        """.format(contract_dir))
+        return
+
+    contract_path_absolute = files[0]
+    wasm_file = files[1]
+    abi_file = files[2]            
+
+    account_name = interface.account_arg(account)
+
+    args = [account_name, contract_path_absolute]
+
+    if json:
+        args.append("--json")
+    if not permission is None:
+        p = interface.permission_arg(permission)
+        for perm in p:
+            args.extend(["--permission", perm])
+
+    if expiration_sec:
+        args.extend(["--expiration", str(expiration_sec)])
+    if skip_signature:
+        args.append("--skip-sign")
+    if dont_broadcast:
+        args.append("--dont-broadcast")
+    if forceUnique:
+        args.append("--force-unique")
+    if max_cpu_usage:
+        args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+    if  max_net_usage:
+        args.extend(["--max-net-usage", str(max_net_usage)])
+    if  not ref_block is None:
+        args.extend(["--ref-block", ref_block]) 
+    if wasm_file:
+        args.append(wasm_file)
+    if abi_file:
+        args.append(abi_file)
+
+    retval = cleos._Cleos(args, "set", "contract", is_verbose)
+    retval.contract_path_absolute = files[0]
+    retval.account_name = interface.account_arg(account)
+
+    def get_transaction(self):
+        return GetTransaction(self.transaction)
+
+    retval.get_transaction = types.MethodType(get_transaction, retval)
+
+    retval.printself()
+
+    return retval
+    
 
 def set_account_permission_(
             account, permission_name, authority, parent_permission_name,

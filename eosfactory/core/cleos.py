@@ -638,7 +638,6 @@ class CreateKey(interface.Key, _Cleos):
 
     - **parameters**::
 
-        key_name: Key name.
         r1: Generate a key using the R1 curve (iPhone), instead of the 
             K1 curve (Bitcoin)
 
@@ -649,9 +648,9 @@ class CreateKey(interface.Key, _Cleos):
         is_verbose: If set, print output.    
     '''
     def __init__(
-            self, key_name="", key_public="", key_private="", r1=False, 
+            self, key_public="", key_private="", r1=False, 
             is_verbose=True):
-        interface.Key.__init__(self, key_name, key_public, key_private)
+        interface.Key.__init__(self, key_public, key_private)
 
         if self.key_public or self.key_private:
             self.json = {}
@@ -667,7 +666,6 @@ class CreateKey(interface.Key, _Cleos):
             _Cleos.__init__(
                 self, args, "create", "key", is_verbose)
             
-            self.json["name"] = key_name
             msg = str(self.out_msg)
             first_collon = msg.find(":")
             first_end = msg.find("\n")
@@ -678,7 +676,6 @@ class CreateKey(interface.Key, _Cleos):
             self.key_private = self.json["privateKey"]
             self.key_public = self.json["publicKey"]
 
-        self.name = key_name
 
 class RestoreAccount(GetAccount):
 
@@ -840,105 +837,6 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
             return []
 
     return [contract_path_absolute, wasm_file, abi_file]
-
-class SetContract(_Cleos):
-    '''Create or update the contract on an account.
-
-    - **parameters**:: 
-
-        account: The account to publish a contract for. May be an object 
-            having the  May be an object having the attribute `name`, 
-            or a string.
-        contract_dir: The path containing the .wast and .abi. 
-        wasm_file: The file containing the contract WASM relative 
-            to contract_dir.
-        abi_file: The ABI for the contract relative to contract-dir.
-
-        permission: An account and permission level to authorize, as in 
-            'account@permission'. May be an object having the attribute `name`, 
-            or a string.
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        forceUnique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
-
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.    
-    '''
-    def __init__(
-            self, account, contract_dir, 
-            wasm_file=None, abi_file=None, 
-            permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            is_verbose=True,
-            json=False
-            ):
-
-        files = contract_is_built(contract_dir, wasm_file, abi_file)
-        if not files:
-            raise errors.Error("""
-            Cannot determine the contract directory. The clue is 
-            {}.
-            """.format(contract_dir))
-            return
-
-        self.contract_path_absolute = files[0]
-        wasm_file = files[1]
-        abi_file = files[2]            
-
-        self.account_name = interface.account_arg(account)
-
-        args = [self.account_name, self.contract_path_absolute]
-
-        if json:
-            args.append("--json")
-        if not permission is None:
-            p = interface.permission_arg(permission)
-            for perm in p:
-                args.extend(["--permission", perm])
-
-        if expiration_sec:
-            args.extend(["--expiration", str(expiration_sec)])
-        if skip_signature:
-            args.append("--skip-sign")
-        if dont_broadcast:
-            args.append("--dont-broadcast")
-        if forceUnique:
-            args.append("--force-unique")
-        if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        if  max_net_usage:
-            args.extend(["--max-net-usage", str(max_net_usage)])
-        if  not ref_block is None:
-            args.extend(["--ref-block", ref_block]) 
-        if wasm_file:
-            args.append(wasm_file)
-        if abi_file:
-            args.append(abi_file)
-
-        _Cleos.__init__(
-            self, args, "set", "contract", is_verbose)
-
-        self.printself()
-
-    def get_transaction(self):
-        return GetTransaction(self.transaction)
 
 
 class PushAction(_Cleos):

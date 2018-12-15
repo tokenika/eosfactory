@@ -119,7 +119,6 @@ class Eosio(interface.Account):
         self.name = "eosio"
         self.account_object_name = account_object_name        
         self.owner_key = cleos.CreateKey(
-            "owner",
             config.eosio_key_public(),
             config.eosio_key_private()
             )
@@ -204,13 +203,11 @@ class GetAccount(cleos.GetAccount):
         self.exists = True
         if owner_key is None:
             self.owner_key = cleos.CreateKey(
-                "owner", 
                 self.json["permissions"][1]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
         else: # an orphan account, private key is restored from cache
             self.owner_key = cleos.CreateKey(
-                "owner", 
                 self.json["permissions"][1]["required_auth"]["keys"] \
                 [0]["key"], interface.key_arg(
                     owner_key, is_owner_key=True, is_private_key=True),
@@ -218,13 +215,11 @@ class GetAccount(cleos.GetAccount):
 
         if active_key is None:
             self.owner_key = cleos.CreateKey(
-                "owner", 
                 self.json["permissions"][0]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
         else: # an orphan account, private key is restored from cache
             self.active_key = cleos.CreateKey(
-                "active", 
                 self.json["permissions"][0]["required_auth"]["keys"] \
                 [0]["key"], interface.key_arg(
                     active_key, is_owner_key=False, is_private_key=True),
@@ -473,8 +468,8 @@ def create_master_account(
                 else:
                     return
         else:
-            owner_key_new = cleos.CreateKey("owner", is_verbose=False)
-            active_key_new = cleos.CreateKey("active", is_verbose=False)
+            owner_key_new = cleos.CreateKey(is_verbose=False)
+            active_key_new = cleos.CreateKey(is_verbose=False)
 
             logger.OUT('''
             Use the following data to register a new account on a public testnet:
@@ -532,7 +527,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
 
-        result = cleos.SetContract(
+        result = cleos_set.set_contract(
             account_object, contract_dir, 
             wast_file, abi_file, 
             permission, expiration_sec, 
@@ -786,8 +781,8 @@ def create_account(
             if not active_key:
                 active_key = owner_key
         else:
-            owner_key = cleos.CreateKey("owner", is_verbose=False)
-            active_key = cleos.CreateKey("active", is_verbose=False)
+            owner_key = cleos.CreateKey(is_verbose=False)
+            active_key = cleos.CreateKey(is_verbose=False)
 
         if stake_net and not manager.is_local_testnet():
             logger.INFO('''

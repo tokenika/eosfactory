@@ -89,11 +89,11 @@ pygments_style = 'sphinx'
 #     'body_max_width': '650px' 
 # }
 
-# html_theme = "alabaster"
-# html_theme_options = {
-#     'page_width': '1000px',
-#     'sidebar_width': '220px'
-# }
+html_theme = "alabaster"
+html_theme_options = {
+    'page_width': '1000px',
+    'sidebar_width': '220px'
+}
 
 # html_theme = "classic"
 # html_theme_options = {
@@ -106,8 +106,8 @@ pygments_style = 'sphinx'
 # html_theme = "sphinx-theme-graphite"
 # html_theme_path = [.]
 
-html_theme = "bootstrap"
-html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+# html_theme = "bootstrap"
+# html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 
 # Theme options are theme-specific and customize the look and feel of a theme

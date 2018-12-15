@@ -9,6 +9,7 @@ if setup.node_api == "cleos":
     import eosfactory.core.cleos as cleos
 elif setup.node_api == "eosjs":
     import eosfactory.core.eosjs as cleos
+import eosfactory.core.cleos_set as cleos_set
 
 
 class ContractBuilder():
@@ -95,7 +96,7 @@ class Contract(ContractBuilder):
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
         try:
-            result = cleos.SetContract(
+            result = cleos_set.set_contract(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file, 
                 permission, self.expiration_sec, 
@@ -119,7 +120,7 @@ class Contract(ContractBuilder):
 
             payer.buy_ram(buy_ram_kbytes, self.account)
         
-            result = cleos.SetContract(
+            result = cleos_set.set_contract(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file, 
                 permission, self.expiration_sec, 

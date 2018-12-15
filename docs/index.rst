@@ -86,11 +86,11 @@ Python Documentation
     :maxdepth: 1
 
     rst/core.cleos_set
+    rst/core.interface
     rst/core.cleos
     rst/core.cleosys
     rst/core.config
     rst/core.errors
-    rst/core.interface
     rst/core.logger
     rst/core.manager
     rst/core.setup
