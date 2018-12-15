@@ -104,37 +104,6 @@ class _Cleos():
         return ""
 
 
-class GetInfo(_Cleos):
-    '''Get current blockchain information.
-
-    - **parameters**::
-
-        is_verbose: If ``False``, do not print.
-
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
-    '''
-    def __init__(self, is_verbose=True):
-        _Cleos.__init__(self, [], "get", "info", is_verbose)
-
-        self.head_block = self.json["head_block_num"]
-        self.head_block_time = self.json["head_block_time"]
-        self.last_irreversible_block_num \
-            = self.json["last_irreversible_block_num"]
-        self.printself()
-
-    def __str__(self):
-        return json.dumps(self.json, sort_keys=True, indent=4)
-
-
-def get_last_block():
-    info = GetInfo(is_verbose=False)
-    return GetBlock(info.head_block)
-
-
 def get_block_trx_data(block_num):
     block = GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]

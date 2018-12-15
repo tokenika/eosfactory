@@ -556,10 +556,8 @@ def node_probe(verbosity=None):
         time.sleep(1)
         
         try:
-            import eosfactory.core.cleos as cleos
-
-            get_info = cleos.GetInfo(is_verbose=0)
-            head_block_num = int(get_info.json["head_block_num"])
+            import eosfactory.core.cleos_get as cleos_get
+            head_block_num = int(cleos_get.get_info(is_verbose=0).head_block)
         except:
             head_block_num = 0
         finally:

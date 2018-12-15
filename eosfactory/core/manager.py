@@ -15,6 +15,7 @@ import eosfactory.core.interface as interface
 import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
 import eosfactory.core.cleos as cleos
+import eosfactory.core.cleos_get as cleos_get
 
 
 def reboot():
