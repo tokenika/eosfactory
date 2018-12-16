@@ -85,7 +85,7 @@ def ABI(
         {}
         '''.format(contract_dir))
         return
-
+    import pdb; pdb.set_trace()
     code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
     target_path = os.path.normpath(
                         os.path.join(get_target_dir(
@@ -419,16 +419,18 @@ def process(command_line, throw_error=True):
 
 def get_target_dir(source_dir):
     
-    dir = os.path.join(source_dir, "..", "build")
+    dir = os.path.join(source_dir, "build")
     if os.path.exists(dir):
         return dir
 
-    dir = os.path.join(source_dir, "build")
-    if not os.path.exists(dir):
-        try:
-            os.mkdir(dir)
-        except Exception as e:
-            raise errors.Error(str(e))
+    dir = os.path.join(source_dir, "..", "build")
+    if os.path.exists(dir):
+        return dir
+        
+    try:
+        os.mkdir(dir)
+    except Exception as e:
+        raise errors.Error(str(e))
 
     return dir
 

@@ -4,7 +4,7 @@
 #include <eosiolib/time.hpp>
 
 #define DEBUG
-// #include <eoside/logger.hpp>
+#include <eoside/logger.hpp>
 
 using namespace eosio;
 using namespace std;
@@ -87,7 +87,7 @@ class [[eosio::contract("arbitration")]] dep : public contract {
 };
 
 void dep::transfer(name from, name to, asset quantity, string memo) {
-    // logger_info();    
+    logger_info();    
     if (from == _self || to != _self) {
         return;
     }
@@ -97,8 +97,8 @@ void dep::transfer(name from, name to, asset quantity, string memo) {
     eosio_assert(quantity.amount > 0, "When pigs fly");
     deposits db(_self, from.value);
     auto to_acnt = db.find(name(memo).value);
-    // logger_info("name(memo) ", name(memo));
-    // logger_info("name(memo).value ", name(memo).value);
+    logger_info("name(memo) ", name(memo));
+    logger_info("name(memo).value ", name(memo).value);
     eosio_assert(to_acnt != db.end(), 
                         "Don't send us your money before opening account" );
     add_balance(from, name(memo), quantity);
