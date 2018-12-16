@@ -10,7 +10,7 @@
                     "C:/Users/cartman/AppData/Local/Packages/CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc/LocalState/rootfs/usr/local/eosio.cdt/include/libc",
                     "C:/Users/cartman/AppData/Local/Packages/CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc/LocalState/rootfs/usr/local/eosio.cdt/include/libcxx",
                     "${workspaceFolder}",
-                    "C:/Workspaces/EOS/eoside/include"
+                    "${workspaceFolder}/include"
                 ],
                 "databaseFilename": ""
             },
@@ -20,7 +20,7 @@
                 "C:/Users/cartman/AppData/Local/Packages/CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc/LocalState/rootfs/usr/local/eosio.cdt/include/libc",
                 "C:/Users/cartman/AppData/Local/Packages/CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc/LocalState/rootfs/usr/local/eosio.cdt/include/libcxx",
                 "${workspaceFolder}",
-                "C:/Workspaces/EOS/eoside/include"
+                "${workspaceFolder}/include"
             ],
             "compilerOptions": [],
             "defines": [],

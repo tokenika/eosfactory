@@ -1,3 +1,10 @@
+'''
+..module:: core
+    :platform: Unix, Darwin
+    :synopsis: eosio cleos commands assorted.
+..moduleauthor:: Tokenika
+'''
+
 import subprocess
 import json
 import pathlib
@@ -22,7 +29,10 @@ def set_local_nodeos_address_if_none():
 
 
 class _Cleos():
-    '''A prototype for ``cleos`` command classes.
+    '''A prototype for ``cleos`` commands.
+
+    Args:
+        args: List of arguments to be sent to ``cleos``
     '''
 
     def __init__(self, args, first, second, is_verbose=True):
