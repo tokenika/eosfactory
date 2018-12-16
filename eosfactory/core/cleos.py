@@ -1,8 +1,9 @@
 '''
-..module:: core
+.. module:: core
     :platform: Unix, Darwin
     :synopsis: eosio cleos commands assorted.
-..moduleauthor:: Tokenika
+
+.. moduleauthor:: Tokenika
 '''
 
 import subprocess
@@ -29,13 +30,28 @@ def set_local_nodeos_address_if_none():
 
 
 class _Cleos():
-    '''A prototype for ``cleos`` commands.
-
-    Args:
-        args: List of arguments to be sent to ``cleos``
+    '''A prototype for ``eosio cleos`` commands.
     '''
 
-    def __init__(self, args, first, second, is_verbose=True):
+    def __init__(self, args, command_group, command, is_verbose=True):
+        '''Calls ``eosio cleos``, and processes the responce.
+
+        Args:
+            args (list): List of ``eosio cleos`` positionals and options.
+            command_group (str): Command group name.
+            command (str): Command name.
+
+        Kwargs:
+            is_verbose (bool): If set, a message is printed.
+
+        Attributes:
+            out_msg (str): Responce received via the stdout stream.
+            out_msg_details (str): Responce received via the stderr stream.
+            err_msg (str): Error message received via the stderr stream.
+            json (dict): Responce received as JSON, if any.
+            args (list): Value of ``args`` argument.
+            is_verbose (bool): Value of ``is_verbose`` argument.
+        '''
         self.out_msg = None
         self.out_msg_details = None
         self.err_msg = None
@@ -51,8 +67,8 @@ class _Cleos():
         if setup.is_print_response:
             cl.append("--print-response")
 
-        cl.append(first)
-        cl.extend(re.sub(re.compile(r'\s+'), ' ', second.strip()).split(" "))
+        cl.append(command_group)
+        cl.extend(re.sub(re.compile(r'\s+'), ' ', command.strip()).split(" "))
         cl.extend(args)
         self.args = args
 
@@ -94,7 +110,12 @@ class _Cleos():
         except:
             pass        
 
-    def printself(self, is_verbose=None):
+    def printself(self, is_verbose=False):
+        '''Print message.
+
+        Kwargs:
+            is_verbose (bool): If set, a message is printed.
+        '''
         if not hasattr(self, "is_verbose"):
             self.is_verbose = is_verbose
 
