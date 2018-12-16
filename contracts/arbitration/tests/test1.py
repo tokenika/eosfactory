@@ -14,12 +14,12 @@ create_master_account("eosio")
 create_account("Bank", eosio, "eosio.token")
 contract_bank = Contract(
     Bank, os.path.join(config.eosf_dir(), "contracts/02_eosio_token"))
-# contract_bank.build(force=False)
+contract_bank.build(force=False)
 contract_bank.deploy()
 
 create_account("LC", eosio)
 contract_lc = Contract(LC, CONTRACT_WORKSPACE)
-# contract_lc.build(force=False)
+contract_lc.build(force=False)
 contract_lc.deploy()
 
 COMMENT('''
