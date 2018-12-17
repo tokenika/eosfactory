@@ -91,7 +91,7 @@ pygments_style = 'sphinx'
 
 html_theme = "alabaster"
 html_theme_options = {
-    'page_width': '820px',
+    'page_width': '850px',
     'sidebar_width': '220px'
 }
 

@@ -1,5 +1,5 @@
 '''
-.. module:: core
+.. module:: eosfactory.core.cleos
     :platform: Unix, Darwin
     :synopsis: eosio cleos commands assorted.
 

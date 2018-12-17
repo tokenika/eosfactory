@@ -1,3 +1,11 @@
+'''
+.. module:: eosfactory.core.interface
+    :platform: Unix, Darwin
+    :synopsis: basic interfaces.
+
+.. moduleauthor:: Tokenika
+'''
+
 import enum
 
 class Omittable:
@@ -163,9 +171,13 @@ def permission_arg(permission):
     Exemplary values of the argument *permission*::
 
         eosio # eosio is an interface.Account object
+
         "eosio@owner"
+
         ("eosio", "owner")
+
         (eosio, interface.Permission.ACTIVE)
+        
         ["eosio@owner", (eosio, .Permission.ACTIVE)]
 
     :return: A list of tuples.

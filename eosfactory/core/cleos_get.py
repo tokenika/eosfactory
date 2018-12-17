@@ -1,3 +1,11 @@
+'''
+.. module:: eosfactory.core.cleos_get
+    :platform: Unix, Darwin
+    :synopsis: eosio cleos get commands.
+
+.. moduleauthor:: Tokenika
+'''
+
 import types
 
 import eosfactory.core.logger as logger
