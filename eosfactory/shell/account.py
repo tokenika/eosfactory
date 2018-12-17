@@ -138,7 +138,7 @@ class Eosio(interface.Account):
             permission=None,
             transfer=False,
             expiration_sec=None,
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             is_verbose=1):
@@ -147,7 +147,7 @@ class Eosio(interface.Account):
     def buy_ram(
             account_object, amount_kbytes, receiver=None,
             expiration_sec=None,
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
         pass
@@ -251,14 +251,14 @@ class CreateAccount(cleos.CreateAccount):
             expiration_sec=None, 
             skip_signature=0, 
             dont_broadcast=0,
-            forceUnique=0,
+            force_unique=0,
             max_cpu_usage=0,
             max_net_usage=0,
             ref_block=None,
             verbosity=None):
         cleos.CreateAccount.__init__(
             self, creator, name, owner_key, active_key, permission,
-            expiration_sec, skip_signature, dont_broadcast, forceUnique,
+            expiration_sec, skip_signature, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block, is_verbose=False
             )
@@ -272,7 +272,7 @@ class SystemNewaccount(cleosys.SystemNewaccount):
             buy_ram_kbytes=0, buy_ram="",
             transfer=False,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             verbosity=None):
@@ -280,7 +280,7 @@ class SystemNewaccount(cleosys.SystemNewaccount):
         cleosys.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
-            transfer, expiration_sec, skip_signature, dont_broadcast, forceUnique,
+            transfer, expiration_sec, skip_signature, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage, ref_block, is_verbose=False)
         
 
@@ -520,7 +520,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
     def push_action(
             account_object, action, data,
             permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
         data = manager.data_json(data)
@@ -528,7 +528,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
         result = cleos.PushAction(
             account_object, action, data,
             permission, expiration_sec, 
-            skip_signature, dont_broadcast, forceUnique,
+            skip_signature, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=False, json=True)
@@ -598,7 +598,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
     def buy_ram(
             account_object, amount_kbytes, receiver=None,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
 
@@ -614,7 +614,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
             account_object, receiver, amount_kbytes,
             buy_ram_kbytes,
             expiration_sec,
-            skip_signature, dont_broadcast, forceUnique,
+            skip_signature, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=0
@@ -637,7 +637,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
         permission=None,
         transfer=False,
         expiration_sec=None, 
-        skip_signature=0, dont_broadcast=0, forceUnique=0,
+        skip_signature=0, dont_broadcast=0, force_unique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
         is_verbose=1):
@@ -654,7 +654,7 @@ def append_account_methods_and_finish(account_object_name, account_object):
             permission,
             transfer,
             expiration_sec,
-            skip_signature, dont_broadcast, forceUnique,
+            skip_signature, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=0
@@ -699,11 +699,13 @@ def create_account(
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
         expiration_sec=None,
-        skip_signature=0, dont_broadcast=0, forceUnique=0,
+        skip_signature=0, dont_broadcast=0, force_unique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
         restore=False,
         verbosity=None):
+    '''Account factory
+    '''
 
     global wallet_singleton
     globals = inspect.stack()[1][0].f_globals
@@ -772,7 +774,7 @@ def create_account(
                         buy_ram_kbytes, buy_ram,
                         transfer,
                         expiration_sec, 
-                        skip_signature, dont_broadcast, forceUnique,
+                        skip_signature, dont_broadcast, force_unique,
                         max_cpu_usage, max_net_usage,
                         ref_block,
                         verbosity
@@ -793,7 +795,7 @@ def create_account(
                         buy_ram_kbytes, buy_ram,
                         transfer,
                         expiration_sec, 
-                        skip_signature, dont_broadcast, forceUnique,
+                        skip_signature, dont_broadcast, force_unique,
                         max_cpu_usage, max_net_usage,
                         ref_block,
                         verbosity
@@ -806,7 +808,7 @@ def create_account(
                     creator, account_name, 
                     owner_key, active_key,
                     permission,
-                    expiration_sec, skip_signature, dont_broadcast, forceUnique,
+                    expiration_sec, skip_signature, dont_broadcast, force_unique,
                     max_cpu_usage, max_net_usage,
                     ref_block,
                     verbosity

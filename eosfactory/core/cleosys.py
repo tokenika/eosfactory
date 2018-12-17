@@ -7,7 +7,7 @@ def reload():
     importlib.reload(cleos)
 
 
-class SystemNewaccount(interface.Account, cleos._Cleos):
+class SystemNewaccount(interface.Account, cleos.Cleos):
     ''' Create an account, buy ram, stake for bandwidth for the account.
 
     - **parameters**::
@@ -29,7 +29,7 @@ class SystemNewaccount(interface.Account, cleos._Cleos):
         skip_sign: Specify if unlocked wallet keys should be used to sign 
             transaction.
         dont_broadcast: Don't broadcast transaction to the network (just print).
-        forceUnique: Force the transaction to be unique. this will consume extra 
+        force_unique: Force the transaction to be unique. this will consume extra 
             bandwidth and remove any protections against accidentally issuing the 
             same transaction multiple times.
         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
@@ -55,7 +55,7 @@ class SystemNewaccount(interface.Account, cleos._Cleos):
             buy_ram_kbytes=0, buy_ram="",
             transfer=False,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             is_verbose = 1
@@ -98,7 +98,7 @@ class SystemNewaccount(interface.Account, cleos._Cleos):
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
-        if forceUnique:
+        if force_unique:
             args.append("--force-unique")
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
@@ -107,7 +107,7 @@ class SystemNewaccount(interface.Account, cleos._Cleos):
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
-        cleos._Cleos.__init__(
+        cleos.Cleos.__init__(
             self, args, "system", "newaccount", is_verbose)
             
         self.json = cleos.GetAccount(
@@ -123,7 +123,7 @@ class SystemNewaccount(interface.Account, cleos._Cleos):
         return self.name
 
 
-class BuyRam(cleos._Cleos):
+class BuyRam(cleos.Cleos):
     ''' Buy RAM.
 
     - **parameters**::
@@ -138,7 +138,7 @@ class BuyRam(cleos._Cleos):
         skip_sign: Specify if unlocked wallet keys should be used to sign 
             transaction.
         dont_broadcast: Don't broadcast transaction to the network (just print).
-        forceUnique: Force the transaction to be unique. this will consume extra 
+        force_unique: Force the transaction to be unique. this will consume extra 
             bandwidth and remove any protections against accidentally issuing the 
             same transaction multiple times.
         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
@@ -159,7 +159,7 @@ class BuyRam(cleos._Cleos):
             self, payer, receiver, amount,
             buy_ram_kbytes=0, 
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             is_verbose=1
@@ -177,7 +177,7 @@ class BuyRam(cleos._Cleos):
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
-        if forceUnique:
+        if force_unique:
             args.append("--force-unique")
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
@@ -186,11 +186,11 @@ class BuyRam(cleos._Cleos):
         if not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
-        cleos._Cleos.__init__(
+        cleos.Cleos.__init__(
             self, args, "system", "buyram", is_verbose)
 
     
-class DelegateBw(cleos._Cleos):
+class DelegateBw(cleos.Cleos):
     '''Delegate bandwidth.
 
     - **parameters**::
@@ -206,7 +206,7 @@ class DelegateBw(cleos._Cleos):
         skip_sign: Specify if unlocked wallet keys should be used to sign 
             transaction.
         dont_broadcast: Don't broadcast transaction to the network (just print).
-        forceUnique: Force the transaction to be unique. this will consume extra 
+        force_unique: Force the transaction to be unique. this will consume extra 
             bandwidth and remove any protections against accidentally issuing the 
             same transaction multiple times.
         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
@@ -222,7 +222,7 @@ class DelegateBw(cleos._Cleos):
         permission=None,
         transfer=False,
         expiration_sec=None, 
-        skip_signature=0, dont_broadcast=0, forceUnique=0,
+        skip_signature=0, dont_broadcast=0, force_unique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
         is_verbose=1):
@@ -249,7 +249,7 @@ class DelegateBw(cleos._Cleos):
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
-        if forceUnique:
+        if force_unique:
             args.append("--force-unique")
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
@@ -258,7 +258,7 @@ class DelegateBw(cleos._Cleos):
         if not ref_block is None:
             args.extend(["--ref-block", ref_block])
 
-        cleos._Cleos.__init__(
+        cleos.Cleos.__init__(
             self, args, "system", "delegatebw", is_verbose)
 
 

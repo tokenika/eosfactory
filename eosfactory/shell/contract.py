@@ -63,7 +63,7 @@ class Contract(ContractBuilder):
             abi_file=None, wasm_file=None,
             permission=None,
             expiration_sec=None,
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             verbosity=None):
@@ -75,7 +75,7 @@ class Contract(ContractBuilder):
         self.expiration_sec = expiration_sec
         self.skip_signature = skip_signature
         self.dont_broadcast = dont_broadcast
-        self.forceUnique = forceUnique
+        self.force_unique = force_unique
         self.max_cpu_usage = max_cpu_usage
         self.max_net_usage = max_net_usage
         self.ref_block = ref_block
@@ -97,7 +97,7 @@ class Contract(ContractBuilder):
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file, 
                 permission, self.expiration_sec, 
-                self.skip_signature, dont_broadcast, self.forceUnique,
+                self.skip_signature, dont_broadcast, self.force_unique,
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
                 is_verbose=False,
@@ -121,7 +121,7 @@ class Contract(ContractBuilder):
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file, 
                 permission, self.expiration_sec, 
-                self.skip_signature, dont_broadcast, self.forceUnique,
+                self.skip_signature, dont_broadcast, self.force_unique,
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
                 is_verbose=False,
@@ -136,12 +136,12 @@ class Contract(ContractBuilder):
     def push_action(
             self, action, data,
             permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
         self.account.push_action(action, data,
             permission, expiration_sec,
-            skip_signature, dont_broadcast, forceUnique,
+            skip_signature, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block, json)
 

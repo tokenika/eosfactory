@@ -17,7 +17,7 @@ def get_info(is_verbose=1):
         last_irreversible_block_num: The number of the most recent irreversible
             block.
     '''
-    result = cleos._Cleos([], "get", "info", is_verbose)
+    result = cleos.Cleos([], "get", "info", is_verbose)
     result.head_block = result.json["head_block_num"]
     result.head_block_time = result.json["head_block_time"]
     result.last_irreversible_block_num \

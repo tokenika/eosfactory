@@ -11,7 +11,7 @@ def set_contract_(
             account, contract_dir, 
             wasm_file=None, abi_file=None, 
             permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
@@ -20,37 +20,47 @@ def set_contract_(
     ):
     '''Create or update the contract on an account.
 
-    - **parameters**:: 
+    :param account: The account to publish a contract for.
+    :type account: .Account or str
+    :param str contract_dir: The path containing to a directory.
+    :param str wasm_file: The WASM file relative to the contract_dir.
+    :param str abi_file: The ABI file for the contract relative to the contract-dir.
+    :param permission: An account and permission level to authorize.
+    :type permission: .Account or str or (str, str) or \
+        (.Account, str) or any list of the previous items.
+        
+    Exemplary values of the argument *permission*::
 
-        account: The account to publish a contract for. May be an object having 
-            the attribute `name`, or a string.
-        contract_dir: The path containing to a directory. 
-        wasm_file: The WASM file relative to the contract_dir.
-        abi_file: The ABI file for the contract relative to the contract-dir.
-        permission: An account and permission level to authorize, as in 
-            'account@permission'. May be an object having the attribute `name`, 
-            or a string.
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        forceUnique: Force the transaction to be unique. this will consume extra 
+        eosio # eosio is an interface.Account object
+        "eosio@owner"
+        ("eosio", "owner")
+        (eosio, interface.Permission.ACTIVE)
+        ["eosio@owner", (eosio, .Permission.ACTIVE)]
+
+    :param int expiration: The time in seconds before a transaction expires, 
+        defaults to 30s
+    :param bool skip_sign: Specify if unlocked wallet keys should be used to sign 
+        transaction.
+    :param bool dont_broadcast: Don't broadcast transaction to the network (just print).
+    :param bool force_unique: Force the transaction to be unique. this will consume extra 
             bandwidth and remove any protections against accidentally issuing the 
             same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+    :param int max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
             the execution of the transaction 
             (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+    :param int max_net_usage: Upper limit on the net usage budget, in bytes, for the 
             transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
+    :param int ref_block: The reference block num or block id used for TAPOS 
             (Transaction as Proof-of-Stake).
 
-    - **attributes**::
+    :return: A :class:`eosfactory.core.cleos.Cleos` object, extended with the 
+        following items:
 
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.    
+    :var str contract_path_absolute: The path to the contract project
+    :var str account_name: The EOSIO name of the contract's account.
+        
+    :method: - **get_transaction()** *(json)* -- the transaction returned from \
+        EOSIO cleos.
     '''
     files = cleos.contract_is_built(contract_dir, wasm_file, abi_file)
     if not files:
@@ -81,7 +91,7 @@ def set_contract_(
         args.append("--skip-sign")
     if dont_broadcast:
         args.append("--dont-broadcast")
-    if forceUnique:
+    if force_unique:
         args.append("--force-unique")
     if max_cpu_usage:
         args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
@@ -96,11 +106,14 @@ def set_contract_(
     if abi_file:
         args.append(abi_file)
 
-    result = cleos._Cleos(args, "set", "contract", is_verbose)
+    result = cleos.Cleos(args, "set", "contract", is_verbose)
     result.contract_path_absolute = files[0]
     result.account_name = interface.account_arg(account)
 
-    def get_transaction(self):
+    def get_transaction(self): #: Get the transaction returned by EOSIO cleos.
+        '''Get the transaction returned by EOSIO cleos.
+        :return: A JSON transaction object.
+        '''
         return GetTransaction(self.transaction)
 
     result.get_transaction = types.MethodType(get_transaction, result)
@@ -113,24 +126,22 @@ def set_contract(
             self, contract_dir, 
             wasm_file="", abi_file="", 
             permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0
     ):
     '''Create or update the contract on an account.
 
-    This is a specification of the function 
-    :func:`.set_contract`, used as a 
-    method of objects created with the ``create_action`` factory function. 
-    The owning account object is represented as the ``self`` parameter.
+    This function which is a specification of :func:`.set_contract`, 
+    is used as a method of objects created with the :func:`.shell.account.create_account` factory function. The owning account object is represented as the *self* parameter.
     '''
 
     result = set_contract_(
                 self, contract_dir, 
                 wasm_file, abi_file, 
                 permission, expiration_sec, 
-                skip_signature, dont_broadcast, forceUnique,
+                skip_signature, dont_broadcast, force_unique,
                 max_cpu_usage, max_net_usage,
                 ref_block,
                 delay_sec,
@@ -145,7 +156,7 @@ def set_account_permission_(
             account, permission_name, authority, parent_permission_name,
             permission=None,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, return_packed=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, return_packed=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
@@ -153,40 +164,45 @@ def set_account_permission_(
     ):
     '''Set parameters dealing with account permissions.
 
-    - **parameters**::
-
-        account: The account to set/delete a permission authority for. May be 
-            an object having the attribute `name`, or a string.
-        permission_name: The permission to set/delete an authority for. May be
-            a string or an instance of ``eosfactory.core.interface.Permission``.
-        parent_permission_name: The permission name of this parents permission 
-            (defaults to: "Active"). May be a string or an instance of 
-            ``eosfactory.core.interface.Permission``.
-        authority:  None to delete. May be a public key string, or an 
-            interface.key_arg object, or JSON string, or Python ``dict`` object,
-            or a filename defining the authority.
-        permission: An account and permission level to authorize, as in 
-            'account@permission'. May be an object having the attribute `name`, 
-            or a string.
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        return_packed: Used in conjunction with dont_broadcast to get the 
-            packed transaction.
-        forceUnique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing 
-            the same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
-        delay_sec: Set the delay_sec seconds, defaults to 0s            
+    :param account: The account to set/delete a permission authority for. May be 
+        :class:`.interface.Account` object, or a string.
+    :param str permission_name: The permission to set/delete an authority for.
     '''
+    
+    # - **parameters**::
+
+    #     account: The account to set/delete a permission authority for. May be 
+    #         an object having the attribute `name`, or a string.
+    #     permission_name: The permission to set/delete an authority for. May be
+    #         a string or an instance of *eosfactory.core.interface.Permission*.
+    #     parent_permission_name: The permission name of this parents permission 
+    #         (defaults to: "Active"). May be a string or an instance of 
+    #         *eosfactory.core.interface.Permission*.
+    #     authority:  None to delete. May be a public key string, or an 
+    #         interface.key_arg object, or JSON string, or Python *dict* object,
+    #         or a filename defining the authority.
+    #     permission: An account and permission level to authorize, as in 
+    #         'account@permission'. May be an object having the attribute `name`, 
+    #         or a string.
+    #     expiration: The time in seconds before a transaction expires, 
+    #         defaults to 30s
+    #     skip_sign: Specify if unlocked wallet keys should be used to sign 
+    #         transaction.
+    #     dont_broadcast: Don't broadcast transaction to the network (just print).
+    #     return_packed: Used in conjunction with dont_broadcast to get the 
+    #         packed transaction.
+    #     force_unique: Force the transaction to be unique. this will consume extra 
+    #         bandwidth and remove any protections against accidentally issuing 
+    #         the same transaction multiple times.
+    #     max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
+    #         the execution of the transaction 
+    #         (defaults to 0 which means no limit).
+    #     max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+    #         transaction (defaults to 0 which means no limit).
+    #     ref_block: The reference block num or block id used for TAPOS 
+    #         (Transaction as Proof-of-Stake).
+    #     delay_sec: Set the delay_sec seconds, defaults to 0s            
+    # '''
     account_name = interface.account_arg(account)
     args = [account_name]
 
@@ -221,7 +237,7 @@ def set_account_permission_(
         args.append("--skip-sign")
     if dont_broadcast:
         args.append("--dont-broadcast")
-    if forceUnique:
+    if force_unique:
         args.append("--force-unique")
     if max_cpu_usage:
         args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
@@ -232,7 +248,7 @@ def set_account_permission_(
     if delay_sec:
         args.extend(["--delay-sec", str(delay_sec)])
                     
-    result = cleos._Cleos(args, "set", "account permission", is_verbose)
+    result = cleos.Cleos(args, "set", "account permission", is_verbose)
     result.account_name = account_name
     result.console = None
     result.data = None
@@ -249,7 +265,7 @@ def set_account_permission(
             self, permission_name, authority, parent_permission_name,
             permission=None,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, return_packed=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, return_packed=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0
@@ -258,8 +274,8 @@ def set_account_permission(
 
     This is a specification of the function 
     :func:`.set_account_permission_`, used as a 
-    method of objects created with the ``create_action`` factory function. 
-    The owning account object is represented as the ``self`` parameter.
+    method of objects created with the *create_action* factory function. 
+    The owning account object is represented as the *self* parameter.
     '''
     logger.TRACE('''
         * Set action permission.
@@ -268,7 +284,7 @@ def set_account_permission(
             self, permission_name, authority, parent_permission_name,
             permission,
             expiration_sec, 
-            skip_signature, dont_broadcast, return_packed, forceUnique,
+            skip_signature, dont_broadcast, return_packed, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block,
             delay_sec,
@@ -280,7 +296,7 @@ def set_action_permission_(
             account, code, type, requirement,
             permission=None,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, return_packed=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, return_packed=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
@@ -308,7 +324,7 @@ def set_action_permission_(
         dont_broadcast: Don't broadcast transaction to the network (just print).
         return_packed: Used in conjunction with dont_broadcast to get the 
             packed transaction.
-        forceUnique: Force the transaction to be unique. this will consume extra 
+        force_unique: Force the transaction to be unique. this will consume extra 
             bandwidth and remove any protections against accidentally issuing 
             the same transaction multiple times.
         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
@@ -347,7 +363,7 @@ def set_action_permission_(
         args.append("--skip-sign")
     if dont_broadcast:
         args.append("--dont-broadcast")
-    if forceUnique:
+    if force_unique:
         args.append("--force-unique")
     if max_cpu_usage:
         args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
@@ -358,7 +374,7 @@ def set_action_permission_(
     if delay_sec:
         args.extend(["--delay-sec", str(delay_sec)])
 
-    result = cleos._Cleos(args, "set", "action permission", is_verbose)
+    result = cleos.Cleos(args, "set", "action permission", is_verbose)
     result.console = None
     result.data = None
 
@@ -373,7 +389,7 @@ def set_action_permission(
             self, code, type, requirement,
             permission=None,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, return_packed=0, forceUnique=0,
+            skip_signature=0, dont_broadcast=0, return_packed=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0
@@ -382,8 +398,8 @@ def set_action_permission(
 
     This is a specification of the function 
     :func:`.set_action_permission_`, used as a method of objects created with 
-    the ``create_action`` factory function. 
-    The owning account object is represented as the ``self`` parameter.
+    the *create_action* factory function. 
+    The owning account object is represented as the *self* parameter.
     '''
     logger.TRACE('''
     * Set action permission.
@@ -393,7 +409,7 @@ def set_action_permission(
             self, code, type, requirement,
             permission,
             expiration_sec, 
-            skip_signature, dont_broadcast, return_packed, forceUnique,
+            skip_signature, dont_broadcast, return_packed, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block,
             delay_sec,
