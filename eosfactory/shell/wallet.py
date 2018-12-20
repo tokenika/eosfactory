@@ -311,8 +311,7 @@ class Wallet(cleos.WalletCreate):
                         new_map[name] = object_name
 
                     from eosfactory.shell.account import create_account
-                    create_account(
-                        object_name, name, restore=True, verbosity=None)                        
+                    create_account(object_name, name, restore=True)                        
                 except errors.AccountDoesNotExistError:
                     pass
 

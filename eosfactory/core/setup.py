@@ -30,6 +30,13 @@ def url_prefix(address):
 
 
 def set_nodeos_address(address, prefix=None):
+    '''Set testnet properties.
+
+    :param str address: testnet url, for example `http://faucet.cryptokylin.io`.
+    :param str prefix: A prefix prepended to names of system files like the
+        wallet file and password map file and account map file, in order to 
+        relate them to the given testnet.
+    '''
     global __nodeos_address
     if address:
         __nodeos_address = address

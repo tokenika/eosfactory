@@ -14,7 +14,7 @@ class Testnet:
                 manager.reset(verbosity=[logger.Verbosity.ERROR])
             else:
                 manager.resume(verbosity=[logger.Verbosity.ERROR])
-            import eosfactory.shell.account as account
+            import eosfactory.core.account as account
             eosio = account.Eosio("account_master")
             setup.is_local_address = True
             account_name = eosio.name

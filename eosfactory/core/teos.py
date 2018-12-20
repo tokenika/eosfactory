@@ -85,7 +85,7 @@ def ABI(
         {}
         '''.format(contract_dir))
         return
-    import pdb; pdb.set_trace()
+
     code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
     target_path = os.path.normpath(
                         os.path.join(get_target_dir(
@@ -559,7 +559,7 @@ def node_probe(verbosity=None):
         
         try:
             import eosfactory.core.cleos_get as cleos_get
-            head_block_num = int(cleos_get.get_info(is_verbose=0).head_block)
+            head_block_num = cleos_get.get_info(is_verbose=0).head_block
         except:
             head_block_num = 0
         finally:

@@ -1,3 +1,5 @@
+
+
 import json
 import inspect
 import types
@@ -17,16 +19,11 @@ import eosfactory.core.cleos_set as cleos_set
 import eosfactory.core.cleosys as cleosys
 import eosfactory.core.manager as manager
 import eosfactory.core.testnet as testnet
-
+import eosfactory.core.account as account
 import eosfactory.shell.wallet as wallet
 
 
-'''The namespace where account objects go.
-'''
 wallet_globals = None
-
-'''The singleton ``Wallet`` object.
-'''
 wallet_singleton = None
 
 
@@ -59,8 +56,6 @@ def is_local_testnet_running(account_eosio):
 
 
 def is_wallet_defined(logger, globals=None):
-    '''
-    '''
     global wallet_globals   
     if not wallet_globals is None:
         return
@@ -99,7 +94,7 @@ def put_account_to_wallet_and_on_stack(
                 account_object)
             else:
                 logger.TRACE('''
-                Wrong or missing keys for the account ``{}`` in the wallets.
+                Wrong or missing keys for the account *{}* in the wallets.
                 '''.format(account_object.name))
                 return False
 
@@ -110,240 +105,57 @@ def put_account_to_wallet_and_on_stack(
     return True
 
 
-class Eosio(interface.Account):
-    def __init__(self, account_object_name):    
-        self.name = "eosio"
-        self.account_object_name = account_object_name        
-        self.owner_key = cleos.CreateKey(
-            config.eosio_key_public(),
-            config.eosio_key_private()
-            )
-        self.active_key = self.owner_key
-
-    def info(self):
-        msg = manager.accout_names_2_object_names(
-            "account object name: {}\nname: {}\n{}".format(
-                self.account_object_name, 
-                self.name,
-                cleos.GetAccount(self.name, is_verbose=False).out_msg),
-                True)
-        print(msg)
-
-    def __str__(self):
-        return self.name
-
-    def delegate_bw(
-            self, stake_net_quantity, stake_cpu_quantity,
-            receiver=None,
-            permission=None,
-            transfer=False,
-            expiration_sec=None,
-            skip_signature=0, dont_broadcast=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            is_verbose=1):
-        pass
-
-    def buy_ram(
-            account_object, amount_kbytes, receiver=None,
-            expiration_sec=None,
-            skip_signature=0, dont_broadcast=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None):
-        pass
-
-
-class GetAccount(cleos.GetAccount):
-    '''Look for the account of the given name, put it into the wallet.
-
-    - **parameters**::
-
-        account_object_name: the name of the account object
-        account_name: the name of the account
-        owner_key_private: private owner key, if not ``None``, used for 
-            adding any orphan account, when preivate keys are restored from
-            a safe
-        active_key_private: private active key, if not ``None``, used for 
-            adding any orphan account, when preivate keys are restored from
-            a safe 
-
-    - **return**::
-        account object, if account exists, ``None`` otherwise
-        
-    '''    
-    def __init__(
-            self,
-            account_object_name, name=None, 
-            owner_key=None, active_key=None, verbosity=None):
-
-        self.account_object_name = account_object_name
-        if name is None: 
-            self.name = cleos.account_name()
-        else:
-            self.name = name
-            
-        if active_key is None:
-            active_key = owner_key
-
-        self.exists = False
-        self.in_wallet_on_stack = False
-        #self.has_keys = owner_key and not owner_key.key_private is None
-        self.has_keys = not owner_key is None
-        
-        try:
-            cleos.GetAccount.__init__(
-                self, self.name, is_info=False, is_verbose=False)
-        except errors.AccountDoesNotExistError:
-            return
-
-        self.exists = True
-        if owner_key is None:
-            self.owner_key = cleos.CreateKey(
-                self.json["permissions"][1]["required_auth"]["keys"] \
-                [0]["key"], 
-                is_verbose=0)
-        else: # an orphan account, private key is restored from cache
-            self.owner_key = cleos.CreateKey(
-                self.json["permissions"][1]["required_auth"]["keys"] \
-                [0]["key"], interface.key_arg(
-                    owner_key, is_owner_key=True, is_private_key=True),
-                is_verbose=0) 
-
-        if active_key is None:
-            self.owner_key = cleos.CreateKey(
-                self.json["permissions"][0]["required_auth"]["keys"] \
-                [0]["key"], 
-                is_verbose=0)
-        else: # an orphan account, private key is restored from cache
-            self.active_key = cleos.CreateKey(
-                self.json["permissions"][0]["required_auth"]["keys"] \
-                [0]["key"], interface.key_arg(
-                    active_key, is_owner_key=False, is_private_key=True),
-                is_verbose=0)
-
-        logger.TRACE('''
-            * Account ``{}`` exists in the blockchain.
-            '''.format(self.name))
-
-    def info(self):
-        get_account = cleos.GetAccount(self.name, is_verbose=False)
-        msg = manager.accout_names_2_object_names(
-            "account object name: {}\n{}".format(
-            self.account_object_name, get_account),
-            True
-        )
-        print(msg)
-
-    def __str__(self):
-        return self.name
-
-
-class RestoreAccount(cleos.RestoreAccount):
-    def __init__(self, name, verbosity=None):
-        cleos.RestoreAccount.__init__(self, name, is_verbose=False)
-
-
-class CreateAccount(cleos.CreateAccount):
-    def __init__(
-            self, creator, name, owner_key, 
-            active_key="",
-            permission=None,
-            expiration_sec=None, 
-            skip_signature=0, 
-            dont_broadcast=0,
-            force_unique=0,
-            max_cpu_usage=0,
-            max_net_usage=0,
-            ref_block=None,
-            verbosity=None):
-        cleos.CreateAccount.__init__(
-            self, creator, name, owner_key, active_key, permission,
-            expiration_sec, skip_signature, dont_broadcast, force_unique,
-            max_cpu_usage, max_net_usage,
-            ref_block, is_verbose=False
-            )
-
-
-class SystemNewaccount(cleosys.SystemNewaccount):
-    def __init__(
-            self, creator, name, owner_key, active_key,
-            stake_net, stake_cpu,
-            permission=None,
-            buy_ram_kbytes=0, buy_ram="",
-            transfer=False,
-            expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            verbosity=None):
-            
-        cleosys.SystemNewaccount.__init__(
-            self, creator, name, owner_key, active_key,
-            stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
-            transfer, expiration_sec, skip_signature, dont_broadcast, force_unique,
-            max_cpu_usage, max_net_usage, ref_block, is_verbose=False)
-        
-
 def create_master_account(
             account_object_name, account_name=None, 
-            owner_key=None, active_key=None,
-            verbosity=None):
-    '''Create account object in caller's global namespace.
+            owner_key=None, active_key=None):
+    '''Create master account object in caller's global namespace.
 
-    - **parameters**::
+    Start a singleton :class:`.shell.wallet.Wallet` object if there is no one 
+    in the global namespace already.
 
-        account_object_name:: the name of the account object
-        account_name: the name of the account; random, if not set
-        verbosity: argument to the internal logger
+    If a local testnet is running, create an account object representing 
+    the *eosio* account. Put the account into the wallet. Put the account
+    object into the global namespace of the caller, and return.
 
-    ### Preconditions
+    Otherwise, an outer testnet has to be defined with the function
+    :func:`.core.setup.set_nodeos_address`.
 
-    Check the following conditions:
-    * precisely one ``Wallet`` object is defined;
-    
-    ### Local testnet
-
-    If the local testnet is running, create an account object representing 
-    the ``eosio`` account. Put the account into the wallet. Put the account
-    object into the global namespace of the caller, and **return**.
-
-    ### Remote testnet
-
-    Otherwise, an outer testnet has to be defined with 
-    ``setup.set_nodeos_address(<url>)``.
-
-    ### Existing account
-
-    If the ``account_name`` argument is set, check the testnet for presence of the 
-    account. If present, create the corresponding object and put the account 
+    If the *account_name* argument is set, check the testnet for presence of the 
+    account. If present, create a corresponding object and put the account 
     into the wallet, and put the account object into the global namespace of 
-    the caller. and **return**. Otherwise start a  registration procedure, 
-    described in the next paragraph.
-
-    ### Registration to a remote testnet
-
-    If the ``account_name`` argument is not set or it does not address any existing
-    account, see the previous paragraph, start a registration procedure.
-
-    * if the ``account_name`` argument is not set, make it random
-    * print registration data, namely:
-        * account name
-        * owner public key
-        * active public key
-        * owner private key
-        * active private key
-    * wait for the user to register the master account
-    * . . . . 
-    * detect the named account on the remote testnet
-    * put the account into the wallet
-    * put the account object into the global namespace of the caller
+    the caller, and return. 
     
-    ### Name conflict between account objects
+    Otherwise start a registration procedure:    
+    
+        - if the argument *account_name* is not set, make it random
+        - print registration data, namely:
+            - account name
+            - owner public key
+            - active public key
+            - owner private key
+            - active private key
+        - wait for the user to register the master account
+        - . . . . 
+        - detect the named account on the remote testnet
+        - put the account into the wallet
+        - put the account object into the global namespace of the caller and 
+            return
 
-    If the new account object is going to be added to the wallet, an error
-    is reported. Then an offer is given to edith the mapping file in order
-    to resolve the conflict. When the conflict is resolved, the procedure
-    finishes successfully.
+    .. note:: Name conflict:
+
+        If a new account object, named as an existing one, is going to be added to 
+        the wallet, an error is reported. Then an offer is given to edith the 
+        mapping file in order to resolve the conflict. When the conflict is 
+        resolved, the procedure finishes successfully.   
+
+    Args:
+        account_object_name (str): The name of the account object returned.
+        account_name (str): The name of an valid EOSIO account. Must be set if 
+            the testnode is not local.
+        owner_key (str or .core.interface.Key): The owner public key. Must 
+            be set if the testnode is not local.
+        active_key (str or .core.interface.Key): The active public key. Must 
+            be set if the testnode is not local.
     '''
 
     globals = inspect.stack()[1][0].f_globals
@@ -351,7 +163,7 @@ def create_master_account(
     if account_object_name: # account_object_name==None in register_testnet
         '''
         Check the conditions:
-        * a ``Wallet`` object is defined.
+        * a *Wallet* object is defined.
         * the account object name is not in use, already.    
         ''' 
         is_wallet_defined(logger, globals)
@@ -364,12 +176,12 @@ def create_master_account(
 
             if not isinstance(globals[account_object_name], interface.Account):
                 raise errors.Error('''
-                The global variable {} type is not ``Account``.
+                The global variable {} type is not *Account*.
                 '''.format(account_object_name))
                 return
 
             logger.INFO('''
-                ######## Account object ``{}`` restored from the blockchain.
+                ######## Account object *{}* restored from the blockchain.
                 '''.format(account_object_name)) 
             return
 
@@ -381,15 +193,15 @@ def create_master_account(
         account_name = account_name.account_name
 
     logger.INFO('''
-        ######### Create a master account object ``{}``.
+        ######### Create a master account object *{}*.
         '''.format(account_object_name))                
 
     '''
     If the local testnet is running, create an account object representing the 
-    ``eosio`` account. Put the account into the wallet. Put the account object into 
+    *eosio* account. Put the account into the wallet. Put the account object into 
     the global namespace of the caller, and **return**.
     '''
-    account_object = Eosio(account_object_name)
+    account_object = account.Eosio(account_object_name)
 
     if is_local_testnet_running(account_object):
         put_account_to_wallet_and_on_stack(
@@ -398,7 +210,7 @@ def create_master_account(
 
     '''
     Otherwise, an outer testnet has to be defined with 
-    ``setup.set_nodeos_address(<url>)``.
+    *setup.set_nodeos_address(<url>)*.
     '''
 
     if manager.is_local_testnet():
@@ -414,20 +226,20 @@ def create_master_account(
         ''')
 
     '''
-    If the ``account_name`` argument is not set, it is randomized. Check the 
+    If the *account_name* argument is not set, it is randomized. Check the 
     testnet for presence of the account. If present, create the corresponding 
     object and see whether it is in the wallets. If so, put the account object into 
     the global namespace of the caller. and **return**. 
     '''
     first_while = True
     while True:
-        account_object = GetAccount(
-            account_object_name, account_name, owner_key, active_key, verbosity)
+        account_object = account.GetAccount(
+            account_object_name, account_name, owner_key, active_key)
 
         if first_while and account_name and owner_key and active_key \
                         and not account_object.exists:
             raise errors.Error('''
-            There is no account named ``{}`` in the blockchain.
+            There is no account named *{}* in the blockchain.
             '''.format(account_name))
             return
         first_while = False
@@ -435,7 +247,7 @@ def create_master_account(
         if account_object.exists:
             if account_object.has_keys: # it is your account
                 logger.TRACE('''
-                    * Checking whether the wallet has keys to the account ``{}``
+                    * Checking whether the wallet has keys to the account *{}*
                     '''.format(account_object.name))
 
                 logger.TRACE('''
@@ -443,10 +255,10 @@ def create_master_account(
                     ''')
 
                 if account_object_name:
-                    if append_account_methods_and_finish(
+                    if account_methods(
                         account_object_name, account_object):
                         logger.TRACE('''
-                            * The account ``{}`` is in the wallet.
+                            * The account *{}* is in the wallet.
                             '''.format(account_object.name))
                         return
                 else:
@@ -494,87 +306,219 @@ def create_master_account(
             owner_key = owner_key_new
             active_key = active_key_new
 
-def append_account_methods_and_finish(account_object_name, account_object):
 
-    def code(account_object, code="", abi="", wasm=False):
-        result = cleos.GetCode(account_object, is_verbose=False)
+def common_parameters(
+        permission=None, 
+        expiration_sec=None, 
+        skip_signature=False, dont_broadcast=False, force_unique=False,
+        max_cpu_usage=0, max_net_usage=0,
+        ref_block=None,
+        delay_sec=0
+    ):
+    '''Common parameters.
+
+    Args:
+        permission (.interface.Account or str or (str, str) or \
+            (.interface.Account, str) or any list of the previous items.): 
+            An account and permission level to authorize.
+        
+    Exemplary values of the argument *permission*::
+
+        eosio # eosio is interface.Account object
+
+        "eosio@owner"
+
+        ("eosio", "owner")
+
+        (eosio, interface.Permission.ACTIVE)
+
+        ["eosio@owner", (eosio, .Permission.ACTIVE)]
+
+    Args:
+        expiration (int): The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign (bool): Specify if unlocked wallet keys should be used to 
+            sign transaction.
+        dont_broadcast (bool): Don't broadcast transaction to the network 
+            (just print).
+        force_unique(bool): Force the transaction to be unique. This will 
+            consume extra bandwidth and remove any protections against 
+            accidentally issuing the same transaction multiple times.
+        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget, 
+            for the execution of the transaction (defaults to 0 which means no limit).
+        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the 
+            transaction (defaults to 0 which means no limit).
+        ref_block (int): The reference block num or block id used for TAPOS 
+            (Transaction as Proof-of-Stake).
+        delay_sec: The delay in seconds, defaults to 0s.
+    '''
+    pass
+
+
+class Account(interface.Account):
+    '''Methods ascribed to account objects produced with 
+    :func:`.create_account` and :func:`.create_master_account` factories.
+    '''
+    @classmethod
+    def add_methods(cls, object):
+        object.code = types.MethodType(cls.code, object)
+        object.is_code = types.MethodType(cls.is_code, object)        
+        object.set_contract = types.MethodType(cls.set_contract , object)
+        object.push_action = types.MethodType(cls.push_action, object)
+        object.show_action = types.MethodType(cls.show_action, object)
+        object.table = types.MethodType(cls.table, object)
+        object.__str__ = types.MethodType(cls.__str__, object)
+        object.buy_ram = types.MethodType(cls.buy_ram, object)
+
+        object.set_account_permission = types.MethodType(
+                                cleos_set.set_account_permission_, object)
+        object.set_action_permission = types.MethodType(
+                                cleos_set.set_action_permission_, object)    
+
+        object.delegate_bw = types.MethodType(cls.delegate_bw, object)
+        object.info = types.MethodType(cls.info, object)
+
+        return object
+
+    def code(self, code=None, abi=None, wasm=False):
+        '''Retrieve the code and ABI
+
+        A method of objects created with :func:`.create_account` and 
+        :func:`.create_master_account` factories.
+
+        Args:
+            self: The account object. It is to be omitted if the function is used as
+                an account object's method.
+            code (str): If set, the name of the file to save the contract 
+                .wast/wasm to.
+            abi (str): If set, the name of the file to save the contract .abi to.
+            wasm (bool): Save contract as wasm.
+        '''
+        result = cleos.GetCode(self, is_verbose=False)
         logger.INFO('''
         * code()
         ''')
         logger.OUT(str(result))
 
-    account_object.code = types.MethodType(code, account_object)
+    def is_code(self):
+        '''Determine whether contract is set to the account.
 
-    def is_code(account_object):
-        get_code = cleos.GetCode(account_object.name, is_verbose=False)
+        A method of objects created with :func:`.create_account` and 
+        :func:`.create_master_account` factories.
+
+        Args:
+            self: The account object. It is to be omitted if the function is used as
+                an account object's method.
+
+        Return:
+            True if the retrieved hash code of the contract code is not null.    
+        '''
+        get_code = cleos.GetCode(self.name, is_verbose=False)
         if get_code.code_hash == \
         "0000000000000000000000000000000000000000000000000000000000000000":
             return ""
         else:
             return get_code.code_hash
 
-    account_object.is_code = types.MethodType(is_code, account_object)        
-    account_object.set_contract = types.MethodType(
-                                    cleos_set.set_contract , account_object)
-
-    def push_action(
-            account_object, action, data,
+    def set_contract(
+            self, contract_dir, 
+            wasm_file="", abi_file="", 
             permission=None, expiration_sec=None, 
             skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            delay_sec=0
+        ):
+        '''Create or update the contract.
+
+        Args:
+            contract_dir (str): The path containing to a directory.
+            wasm_file (str): The WASM file relative to the contract_dir.
+            abi_file (str): The ABI file for the contract relative to the contract-dir.
+
+        See definitions of the remaining common parameters: 
+        :func:`.common_parameters`.
+
+        Return:
+            A :class:`eosfactory.core.cleos.Cleos` object, extended with the \
+                following items:
+
+        Attributes:
+            contract_path_absolute (str): The path to the contract project
+            account_name (str): The EOSIO name of the contract's account.
+            
+        :Methods: - **get_transaction()** *(json)* -- The transaction returned from \
+            EOSIO cleos.
+        '''
+        result = set_contract(
+                    self, contract_dir, 
+                    wasm_file, abi_file, 
+                    permission, expiration_sec, 
+                    skip_signature, dont_broadcast, force_unique,
+                    max_cpu_usage, max_net_usage,
+                    ref_block,
+                    delay_sec,
+                    is_verbose=False, json=True
+                )
+
+        logger.OUT(result)
+        self.set_contract = result
+
+    def push_action(
+            self, action, data,
+            permission=None, expiration_sec=None, 
+            skip_sign=0, dont_broadcast=0, force_unique=0,
+            max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
+        '''
+
+        '''
         data = manager.data_json(data)
 
         result = cleos.PushAction(
-            account_object, action, data,
+            self, action, data,
             permission, expiration_sec, 
-            skip_signature, dont_broadcast, force_unique,
+            skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=False, json=True)
 
         logger.INFO('''
-            * Push action ``{}``:
+            * Push action *{}*:
             '''.format(action))
 
         logger.INFO('''
             {}
         '''.format(re.sub(' +',' ', data)))
 
-        account_object.action = result
+        self.action = result
         try:
-            account_object._console = result.console
-            logger.DEBUG(account_object._console)
+            self._console = result.console
+            logger.DEBUG(self._console)
         except:
             pass
         if json:
             logger.OUT(result.out_msg)
 
-        account_object.action = result
+        self.action = result
 
-    account_object.push_action = types.MethodType(
-                                    push_action, account_object)
-
-    def show_action(account_object, action, data, permission=None):
+    def show_action(self, action, data, permission=None):
         ''' Implements the `push action` command without broadcasting. 
         '''
-        account_object.push_action(
+        self.push_action(
             action, data, permission, dont_broadcast=1, json=True)
 
-    account_object.show_action = types.MethodType(
-                                    show_action, account_object)
-
     def table(
-            account_object, table_name, scope="", 
+            self, table_name, scope="", 
             binary=False, 
             limit=10, key="", lower="", upper=""):
 
         logger.INFO('''
-        * Table ``{}`` for ``{}``
+        * Table *{}* for *{}*
         '''.format(table_name, scope))
         
         result = cleos.GetTable(
-                    account_object, table_name, scope,
+                    self, table_name, scope,
                     binary, 
                     limit, key, lower, upper,
                     is_verbose=False)
@@ -588,17 +532,13 @@ def append_account_methods_and_finish(account_object_name, account_object):
         logger.OUT(result.out_msg)
         return result
 
-    account_object.table = types.MethodType(table, account_object)
-
-    def __str__(account_object):
-        return account_object.name
-
-    account_object.__str__ = types.MethodType(__str__, account_object)
+    def __str__(self):
+        return self.name
 
     def buy_ram(
-            account_object, amount_kbytes, receiver=None,
+            self, amount_kbytes, receiver=None,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
 
@@ -606,15 +546,15 @@ def append_account_methods_and_finish(account_object_name, account_object):
             return
 
         if receiver is None:
-            receiver = account_object
+            receiver = self
 
         buy_ram_kbytes = 1
         
         result = cleosys.BuyRam(
-            account_object, receiver, amount_kbytes,
+            self, receiver, amount_kbytes,
             buy_ram_kbytes,
             expiration_sec,
-            skip_signature, dont_broadcast, force_unique,
+            skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=0
@@ -624,20 +564,13 @@ def append_account_methods_and_finish(account_object_name, account_object):
             * Transfered RAM from {} to {} kbytes: {}
             '''.format(result.payer, result.receiver, result.amount))
 
-    account_object.buy_ram = types.MethodType(buy_ram, account_object)
-
-    account_object.set_account_permission = types.MethodType(
-                            cleos_set.set_account_permission, account_object)
-    account_object.set_action_permission = types.MethodType(
-                            cleos_set.set_action_permission, account_object)    
-
     def delegate_bw(
-        account_object, stake_net_quantity, stake_cpu_quantity,
+        self, stake_net_quantity, stake_cpu_quantity,
         receiver=None,
         permission=None,
         transfer=False,
         expiration_sec=None, 
-        skip_signature=0, dont_broadcast=0, force_unique=0,
+        skip_sign=0, dont_broadcast=0, force_unique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
         is_verbose=1):
@@ -646,15 +579,15 @@ def append_account_methods_and_finish(account_object_name, account_object):
             return
 
         if receiver is None:
-            receiver = account_object
+            receiver = self
 
         result = cleosys.DelegateBw(
-            account_object, receiver,
+            self, receiver,
             stake_net_quantity, stake_cpu_quantity,
             permission,
             transfer,
             expiration_sec,
-            skip_signature, dont_broadcast, force_unique,
+            skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=0
@@ -666,27 +599,29 @@ def append_account_methods_and_finish(account_object_name, account_object):
             result.payer, result.receiver,
             result.stake_net_quantity, result.stake_cpu_quantity))
 
-    account_object.delegate_bw = types.MethodType(delegate_bw, account_object)
-
-    def info(account_object):
+    def info(self):
         msg = manager.accout_names_2_object_names(
             "Account object name: {}\n{}".format(
-            account_object_name,
-            str(cleos.GetAccount(account_object.name, is_verbose=0))),
+            self.account_object_name,
+            str(cleos.GetAccount(self.name, is_verbose=0))),
             True
         )
         print(msg)
+        
+        
+def account_methods(account_object_name, object):
 
-    account_object.info = types.MethodType(info, account_object)
+    object.account_object_name = account_object_name
+    object = Account.add_methods(object)
 
-    get_account = cleos.GetAccount(account_object, is_info=False, is_verbose=0)
+    get_account = cleos.GetAccount(object, is_info=False, is_verbose=0)
 
     logger.TRACE('''
-    * Cross-checked: account object ``{}`` mapped to an existing account ``{}``.
-    '''.format(account_object_name, account_object.name), translate=False)
+    * Cross-checked: account object *{}* mapped to an existing account *{}*.
+    '''.format(account_object_name, object.name), translate=False)
 
     return put_account_to_wallet_and_on_stack(
-        account_object_name, account_object)
+        account_object_name, object)
 
 
 def create_account(
@@ -696,15 +631,35 @@ def create_account(
         owner_key="", active_key="",
         stake_net=3, stake_cpu=3,
         permission=None,
-        buy_ram_kbytes=8, buy_ram="",
-        transfer=False,
         expiration_sec=None,
-        skip_signature=0, dont_broadcast=0, force_unique=0,
+        skip_sign=0, dont_broadcast=0, force_unique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
-        restore=False,
-        verbosity=None):
-    '''Account factory
+        delay_sec=0,        
+        buy_ram_kbytes=8, buy_ram="",
+        transfer=False,
+        restore=False):
+    '''Create master account object in caller's global namespace.
+    
+    Args:
+        account_object_name (str): The name of the account object returned.
+        creator (str or .core.interface.Account): The account creating the new 
+            account
+        account_name (str): The name of an valid EOSIO account. If not set, it 
+            is random.
+        owner_key (.core.interface.Key): The *owner* key pair. If not set, it
+            is random.
+        active_key (.core.interface.Key): The *active* key pair. If not set, 
+            and the *owner_key* is set, it is substituted with the *owner_key*.
+            Otherwise, it is random.
+        stake_net (int): The amount of EOS delegated for net bandwidth.
+        stake_cpu (int): The amount of EOS delegated for CPU bandwidth.
+        buy_ram_kbytes (int): The amount of RAM bytes to purchase.
+        transfer (bool): Transfer voting power and right to unstake EOS to 
+            receiver.
+
+    See definitions of the remaining common parameters: 
+    :func:`.common_parameters`.
     '''
 
     global wallet_singleton
@@ -712,7 +667,7 @@ def create_account(
 
     '''
     Check the conditions:
-    * a ``Wallet`` object is defined;
+    * a *Wallet* object is defined;
     * the account object name is not in use, already.
     '''
     is_wallet_defined(logger)
@@ -724,17 +679,17 @@ def create_account(
 
         if not isinstance(globals[account_object_name], interface.Account):
             raise errors.Error('''
-            The global variable ``{}`` type is not ``Account``.
+            The global variable *{}* type is not *Account*.
             '''.format(account_object_name))
             return
 
         logger.INFO('''
-            ######## Account object ``{}`` restored from the blockchain.
+            ######## Account object *{}* restored from the blockchain.
             '''.format(account_object_name)) 
         return        
 
     logger.INFO('''
-        ######### Create an account object ``{}``.
+        ######### Create an account object *{}*.
         '''.format(account_object_name))
 
     '''
@@ -746,10 +701,10 @@ def create_account(
         if creator:
             account_name = creator
         logger.INFO('''
-                    ... for an existing blockchain account ``{}`` mapped as ``{}``.
+                    ... for an existing blockchain account *{}* mapped as *{}*.
                     '''.format(account_name, account_object_name), 
                     translate=False)
-        account_object = RestoreAccount(account_name, verbosity)
+        account_object = account.RestoreAccount(account_name)
         account_object.account_object_name = account_object_name
     else:
         if not account_name:
@@ -763,7 +718,7 @@ def create_account(
 
         if stake_net and not manager.is_local_testnet():
             logger.INFO('''
-                        ... delegating stake to a new blockchain account ``{}`` mapped as ``{}``.
+                        ... delegating stake to a new blockchain account *{}* mapped as *{}*.
                         '''.format(account_name, account_object_name))
 
             try:
@@ -774,10 +729,10 @@ def create_account(
                         buy_ram_kbytes, buy_ram,
                         transfer,
                         expiration_sec, 
-                        skip_signature, dont_broadcast, force_unique,
+                        skip_sign, dont_broadcast, force_unique,
                         max_cpu_usage, max_net_usage,
                         ref_block,
-                        verbosity
+                        delay_sec
                         )
             except errors.LowRamError as e:
                 logger.TRACE('''
@@ -795,23 +750,23 @@ def create_account(
                         buy_ram_kbytes, buy_ram,
                         transfer,
                         expiration_sec, 
-                        skip_signature, dont_broadcast, force_unique,
+                        skip_sign, dont_broadcast, force_unique,
                         max_cpu_usage, max_net_usage,
                         ref_block,
-                        verbosity
+                        delay_sec
                         )
         else:
             logger.INFO('''
-                        ... for a new blockchain account ``{}``.
+                        ... for a new blockchain account *{}*.
                         '''.format(account_name))
-            account_object = CreateAccount(
+            account_object = account.CreateAccount(
                     creator, account_name, 
                     owner_key, active_key,
                     permission,
-                    expiration_sec, skip_signature, dont_broadcast, force_unique,
+                    expiration_sec, skip_sign, dont_broadcast, force_unique,
                     max_cpu_usage, max_net_usage,
                     ref_block,
-                    verbosity
+                    delay_sec
                     )
 
         account_object.account_object_name = account_object_name
@@ -821,7 +776,7 @@ def create_account(
     logger.TRACE('''
         * The account object is created.
         ''')
-    append_account_methods_and_finish(account_object_name, account_object)
+    account_methods(account_object_name, account_object)
 
 
 def print_stats(

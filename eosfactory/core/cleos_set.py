@@ -15,7 +15,7 @@ import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
 
 
-def set_contract_(
+def set_contract(
             account, contract_dir, 
             wasm_file=None, abi_file=None, 
             permission=None, expiration_sec=None, 
@@ -28,14 +28,14 @@ def set_contract_(
     ):
     '''Create or update the contract on an account.
 
-    :param account: The account to publish a contract for.
-    :type account: str or .Account
-    :param str contract_dir: The path containing to a directory.
-    :param str wasm_file: The WASM file relative to the contract_dir.
-    :param str abi_file: The ABI file for the contract relative to the contract-dir.
-    :param permission: An account and permission level to authorize.
-    :type permission: .Account or str or (str, str) or \
-        (.Account, str) or any list of the previous items.
+    Args:
+        account (str or .interface.Account): The account to publish a contract for.
+        contract_dir (str): The path containing to a directory.
+        wasm_file (str): The WASM file relative to the contract_dir.
+        abi_file (str): The ABI file for the contract relative to the contract-dir.
+        permission (.interface.Account or str or (str, str) or \
+            (.interface.Account, str) or any list of the previous items.): An account 
+            and permission level to authorize.
         
     Exemplary values of the argument *permission*::
 
@@ -49,29 +49,31 @@ def set_contract_(
 
         ["eosio@owner", (eosio, .Permission.ACTIVE)]
 
-    :param int expiration: The time in seconds before a transaction expires, 
-        defaults to 30s
-    :param bool skip_sign: Specify if unlocked wallet keys should be used to sign 
-        transaction.
-    :param bool dont_broadcast: Don't broadcast transaction to the network (just print).
-    :param bool force_unique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-    :param int max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-    :param int max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+    Args:
+        expiration (int): The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign (bool): Specify if unlocked wallet keys should be used to 
+            sign transaction.
+        dont_broadcast (bool): Don't broadcast transaction to the network 
+            (just print).
+        force_unique(bool): Force the transaction to be unique. This will 
+            consume extra bandwidth and remove any protections against accidentally issuing the same transaction multiple times.
+        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget, 
+            for the execution of the transaction (defaults to 0 which means no limit).
+        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the 
             transaction (defaults to 0 which means no limit).
-    :param int ref_block: The reference block num or block id used for TAPOS 
+        ref_block (int): The reference block num or block id used for TAPOS 
             (Transaction as Proof-of-Stake).
 
-    :return: A :class:`eosfactory.core.cleos.Cleos` object, extended with the 
-        following items:
+    Return:
+        A :class:`eosfactory.core.cleos.Cleos` object, extended with the \
+            following items:
 
-    :var str contract_path_absolute: The path to the contract project
-    :var str account_name: The EOSIO name of the contract's account.
+    Attributes:
+        contract_path_absolute (str): The path to the contract project
+        account_name (str): The EOSIO name of the contract's account.
         
-    :method: - **get_transaction()** *(json)* -- the transaction returned from \
+    :Methods: - **get_transaction()** *(json)* -- The transaction returned from \
         EOSIO cleos.
     '''
     files = cleos.contract_is_built(contract_dir, wasm_file, abi_file)
@@ -124,17 +126,20 @@ def set_contract_(
 
     def get_transaction(self): #: Get the transaction returned by EOSIO cleos.
         '''Get the transaction returned by EOSIO cleos.
-        :return: A JSON transaction object.
+
+        Return: 
+            A JSON transaction object.
         '''
         return GetTransaction(self.transaction)
 
     result.get_transaction = types.MethodType(get_transaction, result)
+
     result.printself()
 
     return result
 
 
-def set_contract(
+def set_contract_(
             self, contract_dir, 
             wasm_file="", abi_file="", 
             permission=None, expiration_sec=None, 
@@ -145,15 +150,15 @@ def set_contract(
     ):
     '''Create or update the contract on an account.
 
-    This function which is a specification of :func:`.set_contract_`, 
+    This function which is a specification of :func:`.set_contract`, 
     is used as a method of objects created with the 
     :func:`.shell.account.create_account` factory function. The owning account 
     object is represented as the *self* parameter.
 
-    See :func:`.set_contract_` for other details.
+    See :func:`.set_contract` for other details.
     '''
 
-    result = set_contract_(
+    result = set_contract(
                 self, contract_dir, 
                 wasm_file, abi_file, 
                 permission, expiration_sec, 
@@ -168,7 +173,7 @@ def set_contract(
     self.set_contract = result
 
 
-def set_account_permission_(
+def set_account_permission(
             account, permission_name, authority, parent_permission_name,
             permission=None,
             expiration_sec=None, 
@@ -180,15 +185,14 @@ def set_account_permission_(
     ):
     '''Set parameters dealing with account permissions.
 
-    :param account: The account to set/delete a permission authority for.
-    :type account: str or .Account
-    :param permission_name: The permission to set/delete an authority for.
-    :type permission_name: str or .Permission
-    :param parent_permission_name: The permission name of this parents permission 
-        (defaults to: "active").
-    :type parent_permission_name: str or .Permission
-    :param authority:  None to delete.
-    :type authority: str or dict or filename
+    Args:
+        account (str or .interface.Account): The account to set/delete a permission 
+            authority for.
+        permission_name (str or .Permission): The permission to set/delete an 
+            authority for.
+        parent_permission_name (str or .Permission): The permission name of 
+            this parents permission (defaults to: "active").
+        authority (str or dict or filename):  None to delete.
 
     Exemplary values of the argument *authority*::
 
@@ -215,9 +219,10 @@ def set_account_permission_(
                 ]
         }
 
-    :param permission: An account and permission level to authorize.
-    :type permission: .Account or str or (str, str) or \
-        (.Account, str) or any list of the previous items.
+    Args:
+        permission (.interface.Account or str or (str, str) or 
+            (.interface.Account, str) or any list of the previous items): An account and 
+            permission level to authorize.
         
     Exemplary values of the argument *permission*::
 
@@ -231,30 +236,32 @@ def set_account_permission_(
 
         ["eosio@owner", (eosio, .Permission.ACTIVE)]
 
-    :param int expiration: The time in seconds before a transaction expires, 
-        defaults to 30s
-    :param bool skip_sign: Specify if unlocked wallet keys should be used to sign 
-        transaction.
-    :param bool dont_broadcast: Don't broadcast transaction to the network (just print).
-    :param bool force_unique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-    :param int max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-    :param int max_net_usage: Upper limit on the net usage budget, in bytes, for the 
+    Args:
+        expiration (int): The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign (bool): Specify if unlocked wallet keys should be used to 
+            sign transaction.
+        dont_broadcast (bool): Don't broadcast transaction to the network 
+            (just print).
+        force_unique(bool): Force the transaction to be unique. This will 
+            consume extra bandwidth and remove any protections against accidentally issuing the same transaction multiple times.
+        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget, 
+            for the execution of the transaction (defaults to 0 which means no limit).
+        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the 
             transaction (defaults to 0 which means no limit).
-    :param int ref_block: The reference block num or block id used for TAPOS 
+        ref_block (int): The reference block num or block id used for TAPOS 
             (Transaction as Proof-of-Stake).
 
-    :return: A :class:`eosfactory.core.cleos.Cleos` object, extended with the 
-        following items:
+    Returns:
+         A :class:`eosfactory.core.cleos.Cleos` object, extended with the \
+            following items:
 
-    :var str account_name: The EOSIO name of the contract's account.
-    :var str console: *["processed"]["action_traces"][0]["console"]* \
-        component of EOSIO cleos responce.
-    :var str data: *["processed"]["action_traces"][0]["act"]["data"]* \
-        component of EOSIO cleos responce.
+    Attributes:
+        account_name (str): The EOSIO name of the contract's account.
+        console (str): *["processed"]["action_traces"][0]["console"]*
+            component of EOSIO cleos responce.
+        data (str): *["processed"]["action_traces"][0]["act"]["data"]*
+            component of EOSIO cleos responce.
     '''
     account_name = interface.account_arg(account)
     args = [account_name]
@@ -314,7 +321,7 @@ def set_account_permission_(
     return result
 
 
-def set_account_permission(
+def set_account_permission_(
             self, permission_name, authority, parent_permission_name,
             permission=None,
             expiration_sec=None, 
@@ -325,17 +332,17 @@ def set_account_permission(
     ):
     '''Set parameters dealing with account permissions.
 
-    This function which is a specification of :func:`.set_account_permission_`, 
+    This function which is a specification of :func:`.set_account_permission`, 
     is used as a method of objects created with the 
     :func:`.shell.account.create_account` factory function. The owning account 
     object is represented as the *self* parameter.
 
-    See :func:`.set_account_permission_` for other details.
+    See :func:`.set_account_permission` for other details.
     '''
     logger.TRACE('''
         * Set action permission.
         ''')
-    return set_account_permission_(
+    return set_account_permission(
             self, permission_name, authority, parent_permission_name,
             permission,
             expiration_sec, 
@@ -347,7 +354,7 @@ def set_account_permission(
     )
 
 
-def set_action_permission_(
+def set_action_permission(
             account, code, type, requirement,
             permission=None,
             expiration_sec=None, 
@@ -355,21 +362,20 @@ def set_action_permission_(
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
-            is_verbose=True,
-            json=False
+            is_verbose=True, json=False
     ):
     '''Set parameters dealing with account permissions.
 
     :param account: The account to set/delete a permission authority for.
-    :type account: str or .Account
+    :type account: str or .interface.Account
     :param code: The account that owns the code for the action.
-    :type account: str or .Account
+    :type account: str or .interface.Account
     :param str type: The type of the action.
     :param strrequirement: The permission name require for executing the given 
         action.
     :param permission: An account and permission level to authorize.
-    :type permission: .Account or str or (str, str) or \
-        (.Account, str) or any list of the previous items.
+    :type permission: .interface.Account or str or (str, str) or \
+        (.interface.Account, str) or any list of the previous items.
         
     Exemplary values of the argument *permission*::
 
@@ -457,7 +463,7 @@ def set_action_permission_(
     result.printself()
 
 
-def set_action_permission(
+def set_action_permission_(
             self, code, type, requirement,
             permission=None,
             expiration_sec=None, 
@@ -468,18 +474,18 @@ def set_action_permission(
     ):
     '''Set parameters dealing with account permissions.
 
-    This function which is a specification of :func:`.set_action_permission_`, 
+    This function which is a specification of :func:`.set_action_permission`, 
     is used as a method of objects created with the 
     :func:`.shell.account.create_account` factory function. The owning account 
     object is represented as the *self* parameter.
 
-    See :func:`.set_action_permission_` for other details.
+    See :func:`.set_action_permission` for other details.
     '''
     logger.TRACE('''
     * Set action permission.
     ''')
 
-    return set_action_permission_(
+    return set_action_permission(
             self, code, type, requirement,
             permission,
             expiration_sec, 

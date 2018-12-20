@@ -39,6 +39,7 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
             transaction (defaults to 0 which means no limit).
         ref_block: The reference block num or block id used for TAPOS 
             (Transaction as Proof-of-Stake).
+        delay_sec: The delay in seconds, defaults to 0s.
 
     - **attributes**::
 
@@ -58,6 +59,7 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
             skip_signature=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
+            delay_sec=0,
             is_verbose = 1
             ):
 
@@ -106,6 +108,8 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
             args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
+        if delay_sec:
+            args.extend(["--delay-sec", delay_sec])
 
         cleos.Cleos.__init__(
             self, args, "system", "newaccount", is_verbose)

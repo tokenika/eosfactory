@@ -130,54 +130,6 @@ class Cleos():
         return ""
 
 
-def get_block_trx_data(block_num):
-    block = GetBlock(block_num, is_verbose=False)
-    trxs = block.json["transactions"]
-    if not len(trxs):
-        logger.OUT("No transactions in block {}.".format(block_num))
-    else:
-        for trx in trxs:
-            logger.OUT(trx["trx"]["transaction"]["actions"][0]["data"])
-
-
-def get_block_trx_count(block_num):
-    block = GetBlock(block_num, is_verbose=False)
-    trxs = block.json["transactions"]
-    if not len(trxs):
-        logger.OUT("No transactions in block {}.".format(block_num))    
-    return len(trxs)
-
-
-class GetBlock(Cleos):
-    '''Retrieve a full block from the blockchain.
-
-    - **parameters**::
-    
-        block_number: The number of the block to retrieve.
-        block_id: The ID of the block to retrieve, if set, defaults to "".
-        is_verbose: If ``False``, Default is ``True``.
-            
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.    
-    '''
-    def __init__(self, block_number, block_id=None, is_verbose=True):
-        Cleos.__init__(
-            self, 
-            [block_id] if block_id else [str(block_number)], 
-            "get", "block", is_verbose)
-
-        self.block_num = self.json["block_num"]
-        self.ref_block_prefix = self.json["ref_block_prefix"]
-        self.timestamp = self.json["timestamp"]
-        self.printself()
-
-    def __str__(self):
-        return json.dumps(self.json, sort_keys=True, indent=4)
-
-
 class GetAccount(interface.Account, Cleos):
     '''Retrieve an account from the blockchain.
 
@@ -717,6 +669,7 @@ class CreateAccount(interface.Account, Cleos):
             transaction (defaults to 0 which means no limit).
         ref_block: The reference block num or block id used for TAPOS 
             (Transaction as Proof-of-Stake).
+        delay_sec: The delay in seconds, defaults to 0s.
 
     - **attributes**::
 
@@ -737,6 +690,7 @@ class CreateAccount(interface.Account, Cleos):
             max_cpu_usage=0,
             max_net_usage=0,
             ref_block=None,
+            delay_sec=0,
             is_verbose=True
             ):
 
@@ -780,6 +734,8 @@ class CreateAccount(interface.Account, Cleos):
             args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
+        if delay_sec:
+            args.extend(["--delay-sec", delay_sec])
 
         Cleos.__init__(
             self, args, "create", "account", is_verbose)
