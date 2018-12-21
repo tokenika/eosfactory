@@ -31,21 +31,24 @@ def set_local_nodeos_address_if_none():
 
 # http://www.sphinx-doc.org/domains.html#info-field-lists
 class Cleos():
-    '''A prototype for ``eosio cleos`` commands.
-    Calls ``eosio cleos``, and processes the responce.
+    '''A prototype for *EOSIO cleos* commands.
+    Calls *EOSIO cleos*, and processes the responce.
 
-    :param list args: List of ``eosio cleos`` positionals and options.
-    :param str command_group: Command group name.
-    :param str command: Command name.
+    Args:
+        args (list): List of *EOSIO cleos* positionals and options.
+        command_group (str): Command group name.
+        command (str): Command name.
 
-    :var str out_msg: Responce received via the stdout stream.
-    :var str out_msg_details: Responce received via the stderr stream.
-    :var str err_msg: Error message received via the stderr stream.
-    :var dict json: Responce received as JSON, if any.
-    :var bool is_verbose: If set, a message is printed.
-    :var list args: Value of the ``args`` argument.
+    Attributes:
+        out_msg (str): Responce received via the stdout stream.
+        out_msg_details (str): Responce received via the stderr stream.
+        err_msg (str): Error message received via the stderr stream.
+        json (json): Responce received as JSON, if any.
+        is_verbose (bool): If set, a message is printed.
+        args (list): Value of the *args* argument.
 
-    :raises .core.errors.Error: If err_msg.
+    Raises:
+        .core.errors.Error: If err_msg.
     '''    
     def __init__(self, args, command_group, command, is_verbose=True):
         self.out_msg = None
@@ -107,9 +110,10 @@ class Cleos():
             pass        
 
     def printself(self, is_verbose=False):
-        '''Print message.
+        '''Print a message.
 
-        :keyword bool is_verbose: If set, a message is printed.
+        Args:
+            is_verbose (bool): If set, a message is printed.
         '''
         if not hasattr(self, "is_verbose"):
             self.is_verbose = is_verbose
@@ -182,17 +186,14 @@ def common_parameters(
 class GetAccount(interface.Account, Cleos):
     '''Retrieve an account from the blockchain.
 
-    - **parameters**::
+    Args:
+        account (str or .interface.Account): The account to retrieve.
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-        account: The account object or the name of the account to retrieve.
-        is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **attributes**::
-
-        name: The name of the account.
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Attributes:
+        name (str): The EOSIO name of the account.
+        owner_key (str) The *owner* public key.
+        active_key (str) The *active* public key.
     '''
     def __init__(self, account, is_info=True, is_verbose=True):
         interface.Account.__init__(self, interface.account_arg(account))
@@ -225,18 +226,18 @@ class GetAccount(interface.Account, Cleos):
         self.printself()
 
     def __str__(self):
-        out = "name: {}\n".format(self.name)
-        out = out + str(Cleos.__str__(self))
-        return out
+        return "name: {}\n".format(self.name) + str(Cleos.__str__(self))
+
 
 class GetAccounts(Cleos):
     '''Retrieve accounts associated with a public key.
 
-    - **attributes**::
+    Args:
+        key (str or .interface.Key): The public key to retrieve accounts for.
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Attributes:
+        names (list): The retrieved list of accounts.
     '''
     def __init__(self, key, is_verbose=True):
         public_key = interface.key_arg(key, is_owner_key=True, is_private_key=False)
@@ -250,17 +251,13 @@ class GetAccounts(Cleos):
 class GetTransaction(Cleos):
     '''Retrieve a transaction from the blockchain.
 
-    - **parameters**::
+    Args:
+        transaction_id (str): ID of the transaction to retrieve.
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-        transaction_id: ID of the transaction to retrieve.
-        is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **attributes**::
-
-        transaction_id: ID of the transaction retrieved.
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Attributes:
+        transaction_id: The ID of the transaction retrieved.
+        json: The transaction retrieved.
     '''
     def __init__(self, transaction_id, is_verbose=True):
         
@@ -274,19 +271,19 @@ class GetTransaction(Cleos):
 class WalletCreate(interface.Wallet, Cleos):
     '''Create a new wallet locally.
 
-    - **parameters**::
+    If the *password* argument is set, try to open a wallet. Otherwise, create
+    a new wallet.
 
-        name: The name of the new wallet, defaults to ``default``.
-        password: The password to the wallet, if the wallet exists. Default is None.
-        is_verbose: If ``False`` do not print. Default is ``True``.
+    Args:
+        name (str): The name of the wallet, defaults to *default*.
+        password (str): The password to the wallet, if the wallet exists. 
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-    - **attributes**::
-
-        name: The name of the wallet.
-        password: The password returned by wallet create.
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Attributes:
+        name (str): The name of the wallet.
+        password (str): The password returned by the *wallet create* 
+            EOSIO cleos command.
+        is_created (bool): True, if the wallet created.
     '''
     def __init__(self, name="default", password="", is_verbose=True):
         interface.Wallet.__init__(self, name)
@@ -318,7 +315,10 @@ class WalletCreate(interface.Wallet, Cleos):
 
 
 class WalletStop(Cleos):
-    '''Stop keosd (doesn't work with nodeos).
+    '''Stop keosd, the EOSIO wallet manager.
+
+    Args:
+        is_verbose (bool): If *False* do not print. Default is *True*.    
     '''
     def __init__(self, is_verbose=True):
         Cleos.__init__(self, [], "wallet", "stop", is_verbose)
@@ -329,15 +329,11 @@ class WalletStop(Cleos):
 class WalletList(Cleos):
     '''List opened wallets, * marks unlocked.
 
-    - **parameters**::
-
-        is_verbose: If ``False`` do not print. Default is ``True``.
+    Args:
+        is_verbose (bool): If *False* do not print. Default is *True*.    
             
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Attributes:
+        json: The list of the open wallets.
     '''
     def __init__(self, is_verbose=True):
         Cleos.__init__(
@@ -351,17 +347,13 @@ class WalletList(Cleos):
 class WalletImport(Cleos):
     '''Import a private key into wallet.
 
-    - **parameters**::
+    Args:
+        wallet (str or .interface.Wallet): A wallet to import key into.
+        key (str or .interface.Key): A key to import.
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-        wallet: A wallet object or the name of the wallet to import key into.
-        key: A key object or a private key in WIF format to import.
-        is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Attributes:
+        key_private (str) The key imported.
     '''
     def __init__(self, key, wallet="default", is_verbose=True):
         key_private = interface.key_arg(
@@ -378,17 +370,15 @@ class WalletImport(Cleos):
 
 class WalletRemove_key(Cleos):
     '''Remove key from wallet
-    - **parameters**::
 
-        wallet: A wallet object or the name of the wallet to import key into.
-        password: The password returned by wallet create.
-        key: A key object or a private key in WIF format to import.
-        is_verbose: If ``False`` do not print. Default is ``True``.
+    Args:
+        wallet (str or .interface.Wallet): The wallet to remove key from.
+        password (str): The password returned by wallet create.
+        key (str or .interface.Key): A public key to remove.
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        is_verbose: If set, print output.
+    Attributes:
+        key_public (str): The public key removed.
     '''
     def __init__(self, key, wallet, password, is_verbose=True):
         key_public = interface.key_arg(
@@ -408,21 +398,8 @@ class WalletRemove_key(Cleos):
 class WalletKeys(Cleos):
     '''List of public keys from all unlocked wallets.
 
-    - **parameters**::
-
-        is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **parameters**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
-
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Args:
+        is_verbose (bool): If *False* do not print. Default is *True*.
     '''
     def __init__(self, is_verbose=True):
         Cleos.__init__(
@@ -438,18 +415,9 @@ class WalletKeys(Cleos):
 class WalletOpen(Cleos):
     '''Open an existing wallet.
 
-    - **parameters**::
-
-        wallet: The name of the wallet to import key into. May be an object 
-            having the  May be an object having the attribute `name`, 
-            or a string. 
-        is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Args:
+        wallet (str or .interface.Wallet): The wallet to open.
+        is_verbose (bool): If *False* do not print. Default is *True*.
     '''
     def __init__(self, wallet="default", is_verbose=True):
         Cleos.__init__(
@@ -461,6 +429,9 @@ class WalletOpen(Cleos):
 
 class WalletLockAll(Cleos):
     '''Lock all unlocked wallets.
+
+    Args:
+        is_verbose (bool): If *False* do not print. Default is *True*.    
     '''
     def __init__(self, is_verbose=True):
         Cleos.__init__(
@@ -472,18 +443,9 @@ class WalletLockAll(Cleos):
 class WalletLock(Cleos):
     '''Lock wallet.
 
-    - **parameters**::
-
-        wallet: The name of the wallet to import key into. May be an object 
-            having the  May be an object having the attribute `name`, 
-            or a string. 
-        is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **parameters**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Args:
+        wallet (str or .interface.Wallet): The wallet to open.
+        is_verbose (bool): If *False* do not print. Default is *True*.
     '''
     def __init__(self, wallet="default", is_verbose=True):
         Cleos.__init__(
@@ -496,20 +458,10 @@ class WalletLock(Cleos):
 class WalletUnlock(Cleos):
     '''Unlock wallet.
 
-    - **parameters**::
-
-        wallet: The name of the wallet. May be an object 
-            having the  May be an object having the attribute `name`,
-            or a string.
-        password: If the wallet argument is not a wallet object, the password 
-            returned by wallet create, else anything, defaults to "".
-        is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **attributes**::
-    
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Args:
+        wallet (str or .interface.Wallet): The wallet to remove key from.
+        password (str): The password returned by wallet create.
+        is_verbose (bool): If *False* do not print. Default is *True*.
     '''
     def __init__(
             self, wallet="default", password="", timeout=0, is_verbose=True):
@@ -528,20 +480,16 @@ class WalletUnlock(Cleos):
 class GetCode(Cleos):
     '''Retrieve the code and ABI for an account.
 
-    - **parameters**::
+    Args:
+        account (str or .interface.Account): The account to retrieve.
+        code (str): If set, the name of the file to save the contract 
+            .wast/wasm to.
+        abi (str): If set, the name of the file to save the contract .abi to.
+        wasm (bool): Save contract as wasm.
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-        account: The name of an account whose code should be retrieved. 
-            May be an object having the  May be an object having the attribute 
-            `name`, or a string.
-        code: The name of the file to save the contract .wast/wasm to.
-        abi: The name of the file to save the contract .abi to.
-        wasm: Save contract as wasm.
-
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.    
+    Attributes:
+        code_hash (str): The hash of the code.
     '''
     def __init__(
             self, account, code="", abi="", 
@@ -568,28 +516,19 @@ class GetCode(Cleos):
 class GetTable(Cleos):
     '''Retrieve the contents of a database table
 
-    - **parameters**::
-
-        account: The name of the account that owns the table. May be 
-            an object having the attribute `name`, or a string.
-        scope: The scope within the account in which the table is found. May be
-            an object having the attribute `name`, or a string.
-        table: The name of the table as specified by the contract abi.
-        binary: Return the value as BINARY rather than using abi to 
-            interpret as JSON
-        limit: The maximum number of rows to return.
-        key: The name of the key to index by as defined by the abi, 
-            defaults to primary key.
-        lower: JSON representation of lower bound value of key, 
+    Args:
+        account (str or .interface.Account): The account that owns the table. 
+        scope (str or .interface.Account): The scope within the account in 
+            which the table is found.
+        table (str): The name of the table as specified by the contract abi.
+        binary (bool): Return the value as BINARY rather than using abi to 
+            interpret as JSON. Default is *False*.
+        limit (int): The maximum number of rows to return. Default is 10.
+        lower (str): JSON representation of lower bound value of key, 
             defaults to first.
-        upper: JSON representation of upper bound value value of key, 
+        upper (str): JSON representation of upper bound value value of key, 
             defaults to last.
-
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+        is_verbose (bool): If *False* do not print. Default is *True*.
     '''
     def __init__(
             self, account, table, scope,
@@ -614,11 +553,6 @@ class GetTable(Cleos):
             args.append("--binary")
         if limit:
             args.extend(["--limit", str(limit)])
-        if key:
-            args.extend(
-                ["--key", 
-                    interface.key_arg(key, is_owner_key=False, 
-                    is_private_key=False)])
         if lower:
             args.extend(["--lower", lower])
         if upper:
@@ -632,19 +566,19 @@ class GetTable(Cleos):
 class CreateKey(interface.Key, Cleos):
     '''Create a new keypair and print the public and private keys.
 
-    - **parameters**::
-
+    Args:
+        key_private (str): If set, a private key to set, otherwise random.
+        key_public (str): If set, a public key to set, otherwise random.
         r1: Generate a key using the R1 curve (iPhone), instead of the 
             K1 curve (Bitcoin)
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.    
+    Attributes:
+        key_private (str): The private key set.
+        key_public (str): The public key set.
     '''
     def __init__(
-            self, key_public="", key_private="", r1=False, 
+            self, key_public=None, key_private=None, r1=False, 
             is_verbose=True):
         interface.Key.__init__(self, key_public, key_private)
 
@@ -692,41 +626,17 @@ class RestoreAccount(GetAccount):
 class CreateAccount(interface.Account, Cleos):
     '''Create an account, buy ram, stake for bandwidth for the account.
 
-    - **parameters**::
+    Args:
+        creator (str or .interface.Account): The account creating 
+            the new account.
+        name: (str) The name of the new account.
+        owner_key: If set, the owner public key for the new account, otherwise
+            random.
+        active_key: If set, the active public key for the new account, 
+            otherwise random.
 
-        creator: The name, of the account creating the new account. May be an 
-            object having the attribute `name`, or a string.
-        name: The name of the new account.
-        owner_key: The owner public key for the new account.
-        active_key: The active public key for the new account.
-
-        permission: An account and permission level to authorize, as in 
-            'account@permission'. May be an object having the attribute `name`, 
-            or a string.
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        force_unique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
-        delay_sec: The delay in seconds, defaults to 0s.
-
-    - **attributes**::
-
-        owner_key: Owner private key.
-        active_key: Active private key.
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.    
+    See definitions of the remaining parameters: 
+        \:func:`.cleos.common_parameters`.
     '''
     def __init__(
             self, creator, name, owner_key, 
@@ -803,6 +713,8 @@ class CreateAccount(interface.Account, Cleos):
 
 
 def account_name():
+    '''Get a random EOSIO account name.
+    '''
     letters = "abcdefghijklmnopqrstuvwxyz12345"
     name = ""
     for i in range(0, 12):
@@ -810,13 +722,24 @@ def account_name():
 
     return name
 
+
 def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
+    '''Check whether the given contract project has its ABI and WASM files.
+
+    Args:
+        contract_dir (str): A hint to the project root directory.
+        wasm_file (str): If set, the WASM file.
+        abi_file (str): If set, the ABI file.
+
+    Returns:
+        [<absolute contract dir>, <wasm file>, <abi file>]
+    '''
     contract_path_absolute = config.contract_dir(contract_dir)
     if not contract_path_absolute:
         return []
 
     if not wasm_file:
-        try :
+        try:
             wasm_file = config.wasm_file(contract_dir)
         except:
             pass
@@ -842,38 +765,21 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
 class PushAction(Cleos):
     '''Push a transaction with a single action.
 
-    - **parameters**::
-
-        account: The account to publish a contract for.  May be an object 
-            having the  May be an object having the attribute `name`, 
-            or a string.
-        action: A JSON string or filename defining the action to execute on 
+    Args:
+        account (str or .interface.Account): The account to publish a contract 
+            for.
+        action (str or json or filename): Definition of the action to execute on 
             the contract.
-        data: The arguments to the contract.
-        permission: An account and permission level to authorize, as in 
-            'account@permission'. May be an object having the attribute `name`, 
-            or a string.
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        force_unique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
+        data (str): The arguments to the contract.
 
-    - **attributes**::
+    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.
 
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: If set, print output.
+    Attributes:
+        account_name (str): The EOSIO name of the contract's account.
+        console (str): *["processed"]["action_traces"][0]["console"]* \
+            component of EOSIO cleos responce.
+        data (str): *["processed"]["action_traces"][0]["act"]["data"]* \
+            component of EOSIO cleos responce.
     '''
     def __init__(
             self, account, action, data,
@@ -881,6 +787,7 @@ class PushAction(Cleos):
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
+            delay_sec=0,
             is_verbose=True,
             json=False
         ):
@@ -908,6 +815,8 @@ class PushAction(Cleos):
             args.extend(["--max-net-usage", str(max_net_usage)])
         if  not ref_block is None:
             args.extend(["--ref-block", ref_block])
+        if delay_sec:
+            args.extend(["--delay-sec", str(delay_sec)])
                         
         self.console = None
         self.data = None

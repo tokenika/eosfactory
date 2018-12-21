@@ -16,7 +16,7 @@ import eosfactory.core.teos as teos
 import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
 import eosfactory.core.cleos_set as cleos_set
-import eosfactory.core.cleosys as cleosys
+import eosfactory.core.cleos_sys as cleos_sys
 import eosfactory.core.manager as manager
 import eosfactory.core.testnet as testnet
 import eosfactory.core.account as account
@@ -308,13 +308,13 @@ def put_account_to_wallet_and_on_stack(
 
 
 class Account(interface.Account):
-    '''Methods ascribed to account objects produced with 
-    :func:`.create_account` and :func:`.create_master_account` factories.
+    '''Methods to be ascribed to account objects, produced with 
+    :func:`.create_master_account` factories and :func:`.create_account`.
     '''
     @classmethod
     def add_methods_and_finalize(cls, account_object_name, account):
-        '''Ascribes methodes of the class .Account to the given *account*, 
-        and finalizes the creation of the *account*.
+        '''Ascribes methodes to the given *account*, and finalizes the creation 
+        of this *account*.
         '''
         account.account_object_name = account_object_name
 
@@ -344,9 +344,6 @@ class Account(interface.Account):
     def code(self, code=None, abi=None, wasm=False):
         '''Retrieve the code and ABI
 
-        A method of objects created with :func:`.create_account` and 
-        :func:`.create_master_account` factories.
-
         Args:
             self: The account object. It is to be omitted if the function is used as
                 an account object's method.
@@ -363,13 +360,6 @@ class Account(interface.Account):
 
     def is_code(self):
         '''Determine whether contract is set to the account.
-
-        A method of objects created with :func:`.create_account` and 
-        :func:`.create_master_account` factories.
-
-        Args:
-            self: The account object. It is to be omitted if the function is used as
-                an account object's method.
 
         Return:
             True if the retrieved hash code of the contract code is not null.    
@@ -392,10 +382,15 @@ class Account(interface.Account):
         ):
         '''Create or update the contract.
 
+        Call *EOSIO cleos* with the *set contract* command. Stores the result,
+        which is an object of the class :class:`.cleos_set.SetContract`, as
+        the value of the *set_contract* attribute.
+
         Args:
-            contract_dir (str): The path containing to a directory.
+            contract_dir (str): A path to a directory.
             wasm_file (str): The WASM file relative to the contract_dir.
-            abi_file (str): The ABI file for the contract relative to the contract-dir.
+            abi_file (str): The ABI file for the contract, relative to the 
+                contract-dir.
 
         See definitions of the remaining parameters: :func:`.cleos.common_parameters`.
 
@@ -427,9 +422,11 @@ class Account(interface.Account):
         ):
         '''Set parameters dealing with account permissions.
 
+        Call *EOSIO cleos* with the *set account permission* command. Stores 
+        the result, which is an object of the 
+        class :class:`.cleos_set.SetAccountPermission`, as the value of the *account_permission* attribute.
+
         Args:
-            account (str or .interface.Account): The account to set/delete 
-                a permission authority for.
             permission_name (str or .Permission): The permission to set/delete an 
                 authority for.
             parent_permission_name (str or .Permission): The permission name of 
@@ -470,7 +467,7 @@ class Account(interface.Account):
         logger.TRACE('''
             * Set action permission.
             ''')
-        return SetAccountPermission(
+        result = SetAccountPermission(
                 self, permission_name, authority, parent_permission_name,
                 permission,
                 expiration_sec, 
@@ -479,7 +476,13 @@ class Account(interface.Account):
                 ref_block,
                 delay_sec,
                 is_verbose=False, json=True
-        )
+            )
+
+        logger.INFO('''
+            * account permission *{}*:
+            '''.format(authority))
+
+        self.account_permission = result
     
     def set_action_permission(
                 self, code, type, requirement,
@@ -492,9 +495,11 @@ class Account(interface.Account):
         ):
         '''Set parameters dealing with account permissions.
 
+        Call *EOSIO cleos* with the *set action permission* command. Stores the 
+        result, which is an object of the 
+        class :class:`.cleos_set.SetActionPermission`, as the value of the *action_permission* attribute.
+
         Args:
-            account (str or .interface.Account): The account to set/delete a 
-                permission authority for.
             code (str or .interface.Account): The account that owns the code for \
                 the action.
             type (str): The type of the action.
@@ -510,7 +515,7 @@ class Account(interface.Account):
         * Set action permission.
         ''')
 
-        return SetActionPermission(
+        result = SetActionPermission(
                 self, code, type, requirement,
                 permission,
                 expiration_sec, 
@@ -520,16 +525,41 @@ class Account(interface.Account):
                 delay_sec,
                 is_verbose=False,
                 json=True
-        )
+            )
+
+        logger.INFO('''
+            * action permission *{}*:
+            '''.format(type))
+
+        self.action_permission = result
+
 
     def push_action(
             self, action, data,
             permission=None, expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block=None, json=False):
-        '''
+            ref_block=None, delay_sec=0):
+        '''Push a transaction with a single action.
 
+        Call *EOSIO cleos* with the *push action* command. Stores the result,
+        which is an object of the class :class:`.cleos.PushAction`,  as
+        the value of the *action* attribute.
+
+        Args:
+            action (str or json or filename): Definition of the action to 
+                execute on the contract.
+            data (str): The arguments to the contract.
+
+        See definitions of the remaining parameters: 
+        \:func:`.cleos.common_parameters`.
+
+        Attributes:
+            account_name (str): The EOSIO name of the contract's account.
+            console (str): *["processed"]["action_traces"][0]["console"]* \
+                component of EOSIO cleos responce.
+            data (str): *["processed"]["action_traces"][0]["act"]["data"]* \
+                component of EOSIO cleos responce.
         '''
         data = manager.data_json(data)
 
@@ -542,7 +572,7 @@ class Account(interface.Account):
             is_verbose=False, json=True)
 
         logger.INFO('''
-            * Push action *{}*:
+            * push action *{}*:
             '''.format(action))
 
         logger.INFO('''
@@ -605,7 +635,7 @@ class Account(interface.Account):
 
         buy_ram_kbytes = 1
         
-        result = cleosys.BuyRam(
+        result = cleos_sys.BuyRam(
             self, receiver, amount_kbytes,
             buy_ram_kbytes,
             expiration_sec,
@@ -636,7 +666,7 @@ class Account(interface.Account):
         if receiver is None:
             receiver = self
 
-        result = cleosys.DelegateBw(
+        result = cleos_sys.DelegateBw(
             self, receiver,
             stake_net_quantity, stake_cpu_quantity,
             permission,

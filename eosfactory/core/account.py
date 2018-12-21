@@ -1,7 +1,7 @@
 import eosfactory.core.config as config
 import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
-import eosfactory.core.cleosys as cleosys
+import eosfactory.core.cleos_sys as cleos_sys
 
 class Eosio(interface.Account):
     def __init__(self, account_object_name):    
@@ -141,7 +141,7 @@ class CreateAccount(cleos.CreateAccount):
             )
 
 
-class SystemNewaccount(cleosys.SystemNewaccount):
+class SystemNewaccount(cleos_sys.SystemNewaccount):
     def __init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
@@ -154,7 +154,7 @@ class SystemNewaccount(cleosys.SystemNewaccount):
             ref_block=None,
             verbosity=None):
             
-        cleosys.SystemNewaccount.__init__(
+        cleos_sys.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
             transfer, expiration_sec, skip_sign, dont_broadcast, force_unique,

@@ -87,25 +87,21 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
+
 html_theme = 'alabaster'
 html_theme_options = {
-    'page_width': '850px',
+    'page_width': '900px',
     'sidebar_width': '220px'
 }
 
 # html_theme = "classic"
 # html_theme_options = {
-#     'body_max_width': '730px'
+#     'body_max_width': '650px'
 # }
 
-# html_theme = "readable"
-# html_theme_path = sphinx_readable_theme.get_html_theme_path()
-
-# html_theme = "sphinx-theme-graphite"
-# html_theme_path = [.]
-
-# html_theme = "bootstrap"
-# html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+# html_theme = "sphinxdoc"
+# html_theme = "haiku"
+# html_theme = "bizstyle"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
