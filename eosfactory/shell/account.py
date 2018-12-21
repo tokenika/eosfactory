@@ -345,8 +345,6 @@ class Account(interface.Account):
         '''Retrieve the code and ABI
 
         Args:
-            self: The account object. It is to be omitted if the function is used as
-                an account object's method.
             code (str): If set, the name of the file to save the contract 
                 .wast/wasm to.
             abi (str): If set, the name of the file to save the contract .abi to.
@@ -382,7 +380,7 @@ class Account(interface.Account):
         ):
         '''Create or update the contract.
 
-        Call *EOSIO cleos* with the *set contract* command. Stores the result,
+        Call *EOSIO cleos* with the *set contract* command. Store the result,
         which is an object of the class :class:`.cleos_set.SetContract`, as
         the value of the *set_contract* attribute.
 
@@ -393,9 +391,6 @@ class Account(interface.Account):
                 contract-dir.
 
         See definitions of the remaining parameters: :func:`.cleos.common_parameters`.
-
-        Return:
-            :class:`.cleos_set.SetContract` object.
         '''
         result = cleos_set.SetContract(
                     self, contract_dir, 
@@ -422,7 +417,7 @@ class Account(interface.Account):
         ):
         '''Set parameters dealing with account permissions.
 
-        Call *EOSIO cleos* with the *set account permission* command. Stores 
+        Call *EOSIO cleos* with the *set account permission* command. Store
         the result, which is an object of the 
         class :class:`.cleos_set.SetAccountPermission`, as the value of the *account_permission* attribute.
 
@@ -460,9 +455,6 @@ class Account(interface.Account):
 
         See definitions of the remaining parameters: 
         \:func:`.cleos.common_parameters`.
-
-        Return: 
-            :class:`.cleos_set.SetAccountPermission` object
         '''
         logger.TRACE('''
             * Set action permission.
@@ -495,7 +487,7 @@ class Account(interface.Account):
         ):
         '''Set parameters dealing with account permissions.
 
-        Call *EOSIO cleos* with the *set action permission* command. Stores the 
+        Call *EOSIO cleos* with the *set action permission* command. Store the 
         result, which is an object of the 
         class :class:`.cleos_set.SetActionPermission`, as the value of the *action_permission* attribute.
 
@@ -507,9 +499,6 @@ class Account(interface.Account):
                 action.
 
         See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.
-
-        Return:
-            :class:`.cleos_set.SetActionPermission` object.
         '''
         logger.TRACE('''
         * Set action permission.
@@ -542,7 +531,7 @@ class Account(interface.Account):
             ref_block=None, delay_sec=0):
         '''Push a transaction with a single action.
 
-        Call *EOSIO cleos* with the *push action* command. Stores the result,
+        Call *EOSIO cleos* with the *push action* command. Store the result,
         which is an object of the class :class:`.cleos.PushAction`,  as
         the value of the *action* attribute.
 
@@ -600,6 +589,24 @@ class Account(interface.Account):
             self, table_name, scope="", 
             binary=False, 
             limit=10, key="", lower="", upper=""):
+        '''Retrieve the contents of a database table
+
+        Store the result,
+        which is an object of the class :class:`.cleos_set.SetTable`, as
+        the value of the *table* attribute.
+
+        Args:
+            scope (str or .interface.Account): The scope within the account in 
+                which the table is found.
+            table (str): The name of the table as specified by the contract abi.
+            binary (bool): Return the value as BINARY rather than using abi to 
+                interpret as JSON. Default is *False*.
+            limit (int): The maximum number of rows to return. Default is 10.
+            lower (str): JSON representation of lower bound value of key, 
+                defaults to first.
+            upper (str): JSON representation of upper bound value value of key, 
+                defaults to last.
+        '''            
 
         logger.INFO('''
         * Table *{}* for *{}*
@@ -618,7 +625,8 @@ class Account(interface.Account):
             pass
 
         logger.OUT(result.out_msg)
-        return result
+
+        self.table = result
 
     def buy_ram(
             self, amount_kbytes, receiver=None,
