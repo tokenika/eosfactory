@@ -15,6 +15,7 @@ import eosfactory.core.interface as interface
 import eosfactory.core.teos as teos
 import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
+import eosfactory.core.cleos_get as cleos_get
 import eosfactory.core.cleos_set as cleos_set
 import eosfactory.core.cleos_sys as cleos_sys
 import eosfactory.core.manager as manager
@@ -350,7 +351,7 @@ class Account(interface.Account):
             abi (str): If set, the name of the file to save the contract .abi to.
             wasm (bool): Save contract as wasm.
         '''
-        result = cleos.GetCode(self, is_verbose=False)
+        result = cleos_get.GetCode(self, is_verbose=False)
         logger.INFO('''
         * code()
         ''')
@@ -362,7 +363,7 @@ class Account(interface.Account):
         Return:
             True if the retrieved hash code of the contract code is not null.    
         '''
-        get_code = cleos.GetCode(self.name, is_verbose=False)
+        get_code = cleos_get.GetCode(self.name, is_verbose=False)
         if get_code.code_hash == \
         "0000000000000000000000000000000000000000000000000000000000000000":
             return ""
@@ -591,10 +592,6 @@ class Account(interface.Account):
             limit=10, key="", lower="", upper=""):
         '''Retrieve the contents of a database table
 
-        Store the result,
-        which is an object of the class :class:`.cleos_set.SetTable`, as
-        the value of the *table* attribute.
-
         Args:
             scope (str or .interface.Account): The scope within the account in 
                 which the table is found.
@@ -606,13 +603,16 @@ class Account(interface.Account):
                 defaults to first.
             upper (str): JSON representation of upper bound value value of key, 
                 defaults to last.
+
+        Returns:
+            :class:`.cleos_set.SetTable` object
         '''            
 
         logger.INFO('''
         * Table *{}* for *{}*
         '''.format(table_name, scope))
-        
-        result = cleos.GetTable(
+
+        result = cleos_get.GetTable(
                     self, table_name, scope,
                     binary, 
                     limit, key, lower, upper,
@@ -626,7 +626,7 @@ class Account(interface.Account):
 
         logger.OUT(result.out_msg)
 
-        self.table = result
+        return result
 
     def buy_ram(
             self, amount_kbytes, receiver=None,

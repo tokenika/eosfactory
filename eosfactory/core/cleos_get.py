@@ -75,4 +75,106 @@ def get_block_trx_count(block_num):
     return len(trxs)
 
 
+class GetAccounts(cleos.Cleos):
+    '''Retrieve accounts associated with a public key.
 
+    Args:
+        key (str or .interface.Key): The public key to retrieve accounts for.
+        is_verbose (bool): If *False* do not print. Default is *True*.
+
+    Attributes:
+        names (list): The retrieved list of accounts.
+    '''
+    def __init__(self, key, is_verbose=True):
+        public_key = interface.key_arg(key, is_owner_key=True, is_private_key=False)
+        cleos.Cleos.__init__(
+            self, [public_key], "get", "accounts", is_verbose)
+
+        self.names = self.json['account_names']
+        self.printself()
+
+
+class GetCode(cleos.Cleos):
+    '''Retrieve the code and ABI for an account.
+
+    Args:
+        account (str or .interface.Account): The account to retrieve.
+        code (str): If set, the name of the file to save the contract 
+            .wast/wasm to.
+        abi (str): If set, the name of the file to save the contract .abi to.
+        wasm (bool): Save contract as wasm.
+        is_verbose (bool): If *False* do not print. Default is *True*.
+
+    Attributes:
+        code_hash (str): The hash of the code.
+    '''
+    def __init__(
+            self, account, code="", abi="", 
+            wasm=False, is_verbose=True):
+
+        account_name = interface.account_arg(account)
+
+        args = [account_name]
+        if code:
+            args.extend(["--code", code])
+        if abi:
+            args.extend(["--abi", abi])
+        if wasm:
+            args.extend(["--wasm"])
+
+        cleos.Cleos.__init__(self, args, "get", "code", is_verbose)
+
+        msg = str(self.out_msg)
+        self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
+        self.code_hash = self.json["code_hash"]
+        self.printself()
+
+
+class GetTable(cleos.Cleos):
+    '''Retrieve the contents of a database table
+
+    Args:
+        account (str or .interface.Account): The account that owns the table. 
+        scope (str or .interface.Account): The scope within the account in 
+            which the table is found.
+        table (str): The name of the table as specified by the contract abi.
+        binary (bool): Return the value as BINARY rather than using abi to 
+            interpret as JSON. Default is *False*.
+        limit (int): The maximum number of rows to return. Default is 10.
+        lower (str): JSON representation of lower bound value of key, 
+            defaults to first.
+        upper (str): JSON representation of upper bound value value of key, 
+            defaults to last.
+        is_verbose (bool): If *False* do not print. Default is *True*.
+    '''
+    def __init__(
+            self, account, table, scope,
+            binary=False, 
+            limit=10, key="", lower="", upper="",
+            is_verbose=True
+            ):
+        args = [interface.account_arg(account)]
+
+        if not scope:
+            scope=self.name
+        else:
+            try:
+                scope_name = scope.name
+            except:
+                scope_name = scope
+
+        args.append(scope_name)
+        args.append(table)
+
+        if binary:
+            args.append("--binary")
+        if limit:
+            args.extend(["--limit", str(limit)])
+        if lower:
+            args.extend(["--lower", lower])
+        if upper:
+            args.extend(["--upper", upper])
+
+        cleos.Cleos.__init__(self, args, "get", "table", is_verbose)
+
+        self.printself()

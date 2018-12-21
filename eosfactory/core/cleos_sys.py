@@ -10,44 +10,24 @@ def reload():
 class SystemNewaccount(interface.Account, cleos.Cleos):
     ''' Create an account, buy ram, stake for bandwidth for the account.
 
-    - **parameters**::
-
-        creator: The name, of the account creating the new account. May be an 
-            object having the attribute `name`, like `CreateAccount`, 
-            or a string.
+    Args:
+        creator (str or .interface.Account): The account creating 
+            the new account.
         name: The name of the new account.
-        owner_key: The owner public key for the new account.
-        active_key: The active public key for the new account.
-        stake_net: The amount of EOS delegated for net bandwidth.
-        stake_cpu: The amount of EOS delegated for CPU bandwidth.
-        buy_ram: The amount of RAM bytes to purchase for the new account in EOS.
-        transfer: Transfer voting power and right to unstake EOS to receiver.
-        permission: An account and permission level to authorize, as in 
-            'account@permission'. May be a `CreateAccount` or `Account` object
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        force_unique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
-        delay_sec: The delay in seconds, defaults to 0s.
+        owner_key (str): If set, the owner public key for the new account, 
+            otherwise random.
+        active_key (str): If set, the active public key for the new account, 
+            otherwise random.
+        stake_net (int): The amount of EOS delegated for net bandwidth.
+        stake_cpu (int): The amount of EOS delegated for CPU bandwidth.
+        buy_ram (str): The amount of RAM bytes to purchase for the new 
+            account in EOS.
+        buy_ram_kbytes (int): The amount of RAM bytes to purchase for the new 
+            account in kibibytes (KiB)
+        transfer (bool): Transfer voting power and right to unstake EOS to receiver.
 
-    - **attributes**::
-
-        owner_key: Owner private key.
-        active_key: Active private key.
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: Verbosity at the constraction time.
+    See definitions of the remaining parameters: 
+        \:func:`.cleos.common_parameters`.
     '''
     def __init__(
             self, creator, name, owner_key, active_key,
@@ -130,34 +110,16 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
 class BuyRam(cleos.Cleos):
     ''' Buy RAM.
 
-    - **parameters**::
+    Args:
 
-        payer: The account paying for RAM.
-        receiver: The account receiving bought RAM.
-        amount: The amount of EOS to pay for RAM, or number of kbytes of RAM if 
+        payer (str or .interface.Account): The account paying for RAM.
+        receiver (str or .interface.Account): The account receiving bought RAM.
+        amount (int): The amount of EOS to pay for RAM, or number of kbytes of RAM if 
             --kbytes is set.
-        buy_ram_kbytes: If set, buy ram in number of kbytes.
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        force_unique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
+        buy_ram_kbytes (bool): If set, buy ram in number of kbytes.
 
-    - **attributes**::
-
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: Verbosity at the constraction time.
+    See definitions of the remaining parameters: 
+        \:func:`.cleos.common_parameters`.
     '''
     def __init__(
             self, payer, receiver, amount,
@@ -166,6 +128,7 @@ class BuyRam(cleos.Cleos):
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
+            delay_sec=0,
             is_verbose=1
             ):
 
@@ -189,6 +152,8 @@ class BuyRam(cleos.Cleos):
             args.extend(["--max-net-usage", str(max_net_usage)])
         if not ref_block is None:
             args.extend(["--ref-block", ref_block])
+        if delay_sec:
+            args.extend(["--delay-sec", delay_sec])
 
         cleos.Cleos.__init__(
             self, args, "system", "buyram", is_verbose)
@@ -197,29 +162,18 @@ class BuyRam(cleos.Cleos):
 class DelegateBw(cleos.Cleos):
     '''Delegate bandwidth.
 
-    - **parameters**::
+    Args:
+        payer (str or .interface.Account): The account to delegate bandwidth 
+            from.
+        receiver (str or .interface.Account): The account to receive the 
+            delegated bandwidth.
+        stake_net_quantity (int): The amount of EOS to stake for network bandwidth.
+        stake_cpu_quantity (int): The amount of EOS to stake for CPU bandwidth.
+        transfer (bool): Transfer voting power and right to unstake EOS to 
+            receiver.
 
-        payer: The account to delegate bandwidth from.
-        receiver: The account to receive the delegated bandwidth.
-        stake_net_quantity: The amount of EOS to stake for network bandwidth.
-        stake_cpu_quantity: The amount of EOS to stake for CPU bandwidth.
-        permission: An account and permission level to authorize.
-        transfer: Transfer voting power and right to unstake EOS to receiver.
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        force_unique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).            
+    See definitions of the remaining parameters: 
+        \:func:`.cleos.common_parameters`.           
     '''
     def __init__(
         self, payer, receiver, stake_net_quantity, stake_cpu_quantity,
@@ -229,6 +183,7 @@ class DelegateBw(cleos.Cleos):
         skip_sign=0, dont_broadcast=0, force_unique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
+        delay_sec=0,
         is_verbose=1):
 
         self.payer = interface.account_arg(payer)
@@ -261,6 +216,8 @@ class DelegateBw(cleos.Cleos):
             args.extend(["--max-net-usage", str(max_net_usage)])
         if not ref_block is None:
             args.extend(["--ref-block", ref_block])
+        if delay_sec:
+            args.extend(["--delay-sec", delay_sec])            
 
         cleos.Cleos.__init__(
             self, args, "system", "delegatebw", is_verbose)
