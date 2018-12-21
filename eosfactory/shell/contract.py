@@ -63,9 +63,10 @@ class Contract(ContractBuilder):
             abi_file=None, wasm_file=None,
             permission=None,
             expiration_sec=None,
-            skip_signature=0, dont_broadcast=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
+            delay_sec=0,
             verbosity=None):
         
         super().__init__(
@@ -73,12 +74,13 @@ class Contract(ContractBuilder):
             abi_file=abi_file, wasm_file=wasm_file)
         self.account = account
         self.expiration_sec = expiration_sec
-        self.skip_signature = skip_signature
+        self.skip_sign = skip_sign
         self.dont_broadcast = dont_broadcast
         self.force_unique = force_unique
         self.max_cpu_usage = max_cpu_usage
         self.max_net_usage = max_net_usage
         self.ref_block = ref_block
+        self.delay_sec = delay_sec
         self.verbosity = verbosity
         self.contract = None
         self._console = None
@@ -93,13 +95,14 @@ class Contract(ContractBuilder):
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
         try:
-            result = cleos_set.set_contract(
+            result = cleos_set.SetContract(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file, 
                 permission, self.expiration_sec, 
-                self.skip_signature, dont_broadcast, self.force_unique,
+                self.skip_sign, dont_broadcast, self.force_unique,
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
+                self.delay_sec,
                 is_verbose=False,
                 json=False)
 
@@ -117,13 +120,14 @@ class Contract(ContractBuilder):
 
             payer.buy_ram(buy_ram_kbytes, self.account)
         
-            result = cleos_set.set_contract(
+            result = cleos_set.SetContract(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file, 
                 permission, self.expiration_sec, 
-                self.skip_signature, dont_broadcast, self.force_unique,
+                self.skip_sign, dont_broadcast, self.force_unique,
                 self.max_cpu_usage, self.max_net_usage,
                 self.ref_block,
+                self.delay_sec,
                 is_verbose=False,
                 json=False)
 
@@ -136,12 +140,12 @@ class Contract(ContractBuilder):
     def push_action(
             self, action, data,
             permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=False):
         self.account.push_action(action, data,
             permission, expiration_sec,
-            skip_signature, dont_broadcast, force_unique,
+            skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block, json)
 

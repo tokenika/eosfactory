@@ -1,9 +1,9 @@
 .. EOSFactory documentation master file, created by
-   sphinx-quickstart on Sun May 6 20:11:09 2018.
+   sphinx-quickstart on Thu Dec 20 19:31:12 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to EOSFactory documentation!
+Welcome to EOSFactory's documentation!
 ======================================
 
 `EOSFactory <https://github.com/tokenika/eosfactory>`_ is a Python-based EOS smart-contract development framework, created by `Tokenika <https://tokenika.io>`_.
@@ -96,9 +96,14 @@ Python Documentation
     rst/shell.wallet
     rst/eosf
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
 
-Metadata
---------
+
+
+Indices and tables
+==================
 
 * :ref:`genindex`
 * :ref:`modindex`

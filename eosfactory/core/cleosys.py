@@ -56,7 +56,7 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
             buy_ram_kbytes=0, buy_ram="",
             transfer=False,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
@@ -96,7 +96,7 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
             p = interface.permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
-        if skip_signature:
+        if skip_sign:
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
@@ -163,7 +163,7 @@ class BuyRam(cleos.Cleos):
             self, payer, receiver, amount,
             buy_ram_kbytes=0, 
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             is_verbose=1
@@ -177,7 +177,7 @@ class BuyRam(cleos.Cleos):
 
         if buy_ram_kbytes:
             args.extend(["--kbytes"])
-        if skip_signature:
+        if skip_sign:
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
@@ -226,7 +226,7 @@ class DelegateBw(cleos.Cleos):
         permission=None,
         transfer=False,
         expiration_sec=None, 
-        skip_signature=0, dont_broadcast=0, force_unique=0,
+        skip_sign=0, dont_broadcast=0, force_unique=0,
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
         is_verbose=1):
@@ -249,7 +249,7 @@ class DelegateBw(cleos.Cleos):
                 args.extend(["--permission", perm])
         if transfer:
             args.append("--transfer")
-        if skip_signature:
+        if skip_sign:
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")

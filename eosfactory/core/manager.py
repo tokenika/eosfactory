@@ -175,14 +175,14 @@ def status():
     ######### Node ``{}``, head block number ``{}``.
     '''.format(
         setup.nodeos_address(),
-        cleos_get.get_info(is_verbose=0).head_block))
+        cleos_get.GetInfo(is_verbose=0).head_block))
 
 
 def info():
     '''
     Display EOS node info.
     '''
-    logger.INFO(str(cleos_get.get_info(is_verbose=False)))
+    logger.INFO(str(cleos_get.GetInfo(is_verbose=False)))
 
 
 def is_head_block_num():
@@ -190,7 +190,7 @@ def is_head_block_num():
     Check if testnet is running.
     '''
     try: # if running, json is produced
-        head_block_num = cleos_get.get_info(is_verbose=False).head_block
+        head_block_num = cleos_get.GetInfo(is_verbose=False).head_block
     except:
         head_block_num = -1
     return head_block_num > 0

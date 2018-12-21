@@ -130,6 +130,55 @@ class Cleos():
         return ""
 
 
+def common_parameters(
+        permission=None, 
+        expiration_sec=None, 
+        skip_sign=False, dont_broadcast=False, force_unique=False,
+        max_cpu_usage=0, max_net_usage=0,
+        ref_block=None,
+        delay_sec=0
+    ):
+    '''Common parameters.
+
+    Args:
+        permission (.interface.Account or str or (str, str) or \
+            (.interface.Account, str) or any list of the previous items.): 
+            An account and permission level to authorize.
+        
+    Exemplary values of the argument *permission*::
+
+        eosio # eosio is interface.Account object
+
+        "eosio@owner"
+
+        ("eosio", "owner")
+
+        (eosio, interface.Permission.ACTIVE)
+
+        ["eosio@owner", (eosio, .Permission.ACTIVE)]
+
+    Args:
+        expiration (int): The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign (bool): Specify if unlocked wallet keys should be used to 
+            sign transaction.
+        dont_broadcast (bool): Don't broadcast transaction to the network 
+            (just print).
+        force_unique(bool): Force the transaction to be unique. This will 
+            consume extra bandwidth and remove any protections against 
+            accidentally issuing the same transaction multiple times.
+        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget, 
+            for the execution of the transaction (defaults to 0 which means no limit).
+        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the 
+            transaction (defaults to 0 which means no limit).
+        ref_block (int): The reference block num or block id used for TAPOS 
+            (Transaction as Proof-of-Stake).
+        delay_sec: The delay in seconds, defaults to 0s.
+    '''
+    pass
+
+
+
 class GetAccount(interface.Account, Cleos):
     '''Retrieve an account from the blockchain.
 
@@ -684,7 +733,7 @@ class CreateAccount(interface.Account, Cleos):
             active_key=None,
             permission=None,
             expiration_sec=None, 
-            skip_signature=0, 
+            skip_sign=0, 
             dont_broadcast=0,
             force_unique=0,
             max_cpu_usage=0,
@@ -722,7 +771,7 @@ class CreateAccount(interface.Account, Cleos):
 
         if expiration_sec:
             args.extend(["--expiration", str(expiration_sec)])
-        if skip_signature:
+        if skip_sign:
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
@@ -829,7 +878,7 @@ class PushAction(Cleos):
     def __init__(
             self, account, action, data,
             permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             is_verbose=True,
@@ -847,7 +896,7 @@ class PushAction(Cleos):
 
         if expiration_sec:
             args.extend(["--expiration", str(expiration_sec)])
-        if skip_signature:
+        if skip_sign:
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")

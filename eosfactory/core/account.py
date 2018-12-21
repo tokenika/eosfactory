@@ -31,7 +31,7 @@ class Eosio(interface.Account):
             permission=None,
             transfer=False,
             expiration_sec=None,
-            skip_signature=0, dont_broadcast=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             is_verbose=1):
@@ -40,7 +40,7 @@ class Eosio(interface.Account):
     def buy_ram(
             account_object, amount_kbytes, receiver=None,
             expiration_sec=None,
-            skip_signature=0, dont_broadcast=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
         pass
@@ -125,7 +125,7 @@ class CreateAccount(cleos.CreateAccount):
             active_key="",
             permission=None,
             expiration_sec=None, 
-            skip_signature=0, 
+            skip_sign=0, 
             dont_broadcast=0,
             force_unique=0,
             max_cpu_usage=0,
@@ -135,7 +135,7 @@ class CreateAccount(cleos.CreateAccount):
             verbosity=None):
         cleos.CreateAccount.__init__(
             self, creator, name, owner_key, active_key, permission,
-            expiration_sec, skip_signature, dont_broadcast, force_unique,
+            expiration_sec, skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
             ref_block, delay_sec, is_verbose=False
             )
@@ -149,7 +149,7 @@ class SystemNewaccount(cleosys.SystemNewaccount):
             buy_ram_kbytes=0, buy_ram="",
             transfer=False,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             verbosity=None):
@@ -157,6 +157,6 @@ class SystemNewaccount(cleosys.SystemNewaccount):
         cleosys.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
-            transfer, expiration_sec, skip_signature, dont_broadcast, force_unique,
+            transfer, expiration_sec, skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage, ref_block, is_verbose=False)
         

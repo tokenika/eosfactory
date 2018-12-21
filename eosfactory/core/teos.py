@@ -559,7 +559,7 @@ def node_probe(verbosity=None):
         
         try:
             import eosfactory.core.cleos_get as cleos_get
-            head_block_num = cleos_get.get_info(is_verbose=0).head_block
+            head_block_num = cleos_get.GetInfo(is_verbose=0).head_block
         except:
             head_block_num = 0
         finally:

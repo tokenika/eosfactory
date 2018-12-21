@@ -13,7 +13,7 @@ import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
 
 
-def get_info(is_verbose=1):
+class GetInfo(cleos.Cleos):
     '''Get current blockchain information.
 
     :param bool is_verbose: If ``False``, print a message. Default is ``True``.
@@ -26,22 +26,19 @@ def get_info(is_verbose=1):
     :var int last_irreversible_block_num: The number of the most recent irreversible
         block.
     '''
-    result = cleos.Cleos([], "get", "info", is_verbose)
-    result.head_block = int(result.json["head_block_num"])
-    result.head_block_time = result.json["head_block_time"]
-    result.last_irreversible_block_num \
-                            = int(result.json["last_irreversible_block_num"])
-    result.printself()
+    def __init__(self, is_verbose=True):
+        cleos.Cleos.__init__(self, [], "get", "info", is_verbose)
+        self.head_block = int(self.json["head_block_num"])
+        self.head_block_time = self.json["head_block_time"]
+        self.last_irreversible_block_num \
+                            = int(self.json["last_irreversible_block_num"])
+        self.printself()
 
     def __str__(self):
         return json.dumps(self.json, sort_keys=True, indent=4)
 
-    result.__str__ = types.MethodType(__str__, result)
-    
-    return result
 
-
-def get_block(block_number, block_id=None, is_verbose=True):
+class GetBlock(cleos.Cleos):
     '''Retrieve a full block from the blockchain.
 
     :param int block_number: The number of the block to retrieve.
@@ -50,22 +47,18 @@ def get_block(block_number, block_id=None, is_verbose=True):
         
     :return: A :class:`eosfactory.core.cleos.Cleos` object.
     '''
-    
-    result = cleos.Cleos([block_id] if block_id else [str(block_number)], 
-            "get", "block", is_verbose)
+    def __init__(self, block_number, block_id=None, is_verbose=True):
+        cleos.Cleos.__init__(
+                        self, [block_id] if block_id else [str(block_number)], 
+                        "get", "block", is_verbose)
+        self.printself()
 
     def __str__(self):
         return json.dumps(self.json, sort_keys=True, indent=4)
 
-    result.__str__ = types.MethodType(__str__, result)
-
-    result.printself()
-
-    return result
-
 
 def get_block_trx_data(block_num):
-    block = get_block(block_num, is_verbose=False)
+    block = GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]
     if not len(trxs):
         logger.OUT("No transactions in block {}.".format(block_num))
@@ -75,7 +68,7 @@ def get_block_trx_data(block_num):
 
 
 def get_block_trx_count(block_num):
-    block = get_block(block_num, is_verbose=False)
+    block = GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]
     if not len(trxs):
         logger.OUT("No transactions in block {}.".format(block_num))    

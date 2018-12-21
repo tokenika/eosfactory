@@ -15,17 +15,7 @@ import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
 
 
-def set_contract(
-            account, contract_dir, 
-            wasm_file=None, abi_file=None, 
-            permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            delay_sec=0,
-            is_verbose=True,
-            json=False
-    ):
+class SetContract(cleos.Cleos):
     '''Create or update the contract on an account.
 
     Args:
@@ -33,156 +23,82 @@ def set_contract(
         contract_dir (str): The path containing to a directory.
         wasm_file (str): The WASM file relative to the contract_dir.
         abi_file (str): The ABI file for the contract relative to the contract-dir.
-        permission (.interface.Account or str or (str, str) or \
-            (.interface.Account, str) or any list of the previous items.): An account 
-            and permission level to authorize.
-        
-    Exemplary values of the argument *permission*::
 
-        eosio # eosio is interface.Account object
-
-        "eosio@owner"
-
-        ("eosio", "owner")
-
-        (eosio, interface.Permission.ACTIVE)
-
-        ["eosio@owner", (eosio, .Permission.ACTIVE)]
-
-    Args:
-        expiration (int): The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign (bool): Specify if unlocked wallet keys should be used to 
-            sign transaction.
-        dont_broadcast (bool): Don't broadcast transaction to the network 
-            (just print).
-        force_unique(bool): Force the transaction to be unique. This will 
-            consume extra bandwidth and remove any protections against accidentally issuing the same transaction multiple times.
-        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget, 
-            for the execution of the transaction (defaults to 0 which means no limit).
-        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block (int): The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
-
-    Return:
-        A :class:`eosfactory.core.cleos.Cleos` object, extended with the \
-            following items:
+    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.
 
     Attributes:
         contract_path_absolute (str): The path to the contract project
         account_name (str): The EOSIO name of the contract's account.
-        
-    :Methods: - **get_transaction()** *(json)* -- The transaction returned from \
-        EOSIO cleos.
     '''
-    files = cleos.contract_is_built(contract_dir, wasm_file, abi_file)
-    if not files:
-        raise errors.Error("""
-        Cannot determine the contract directory. The clue is 
-        {}.
-        """.format(contract_dir))
-        return
+    def __init__(
+            self, account, contract_dir, 
+            wasm_file=None, abi_file=None, 
+            permission=None, expiration_sec=None, 
+            skip_sign=0, dont_broadcast=0, force_unique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            delay_sec=0,
+            is_verbose=True,
+            json=False):
 
-    contract_path_absolute = files[0]
-    wasm_file = files[1]
-    abi_file = files[2]            
+        files = cleos.contract_is_built(contract_dir, wasm_file, abi_file)
+        if not files:
+            raise errors.Error("""
+            Cannot determine the contract directory. The clue is 
+            {}.
+            """.format(contract_dir))
+            return
 
-    account_name = interface.account_arg(account)
+        contract_path_absolute = files[0]
+        wasm_file = files[1]
+        abi_file = files[2]            
 
-    args = [account_name, contract_path_absolute]
+        account_name = interface.account_arg(account)
 
-    if json:
-        args.append("--json")
-    if not permission is None:
-        p = interface.permission_arg(permission)
-        for perm in p:
-            args.extend(["--permission", perm])
+        args = [account_name, contract_path_absolute]
 
-    if expiration_sec:
-        args.extend(["--expiration", str(expiration_sec)])
-    if skip_signature:
-        args.append("--skip-sign")
-    if dont_broadcast:
-        args.append("--dont-broadcast")
-    if force_unique:
-        args.append("--force-unique")
-    if max_cpu_usage:
-        args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-    if  max_net_usage:
-        args.extend(["--max-net-usage", str(max_net_usage)])
-    if  not ref_block is None:
-        args.extend(["--ref-block", ref_block]) 
-    if delay_sec:
-        args.extend(["--delay-sec", str(delay_sec)])
-    if wasm_file:
-        args.append(wasm_file)
-    if abi_file:
-        args.append(abi_file)
+        if json:
+            args.append("--json")
+        if not permission is None:
+            p = interface.permission_arg(permission)
+            for perm in p:
+                args.extend(["--permission", perm])
 
-    result = cleos.Cleos(args, "set", "contract", is_verbose)
-    result.contract_path_absolute = files[0]
-    result.account_name = interface.account_arg(account)
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
+        if skip_sign:
+            args.append("--skip-sign")
+        if dont_broadcast:
+            args.append("--dont-broadcast")
+        if force_unique:
+            args.append("--force-unique")
+        if max_cpu_usage:
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        if  max_net_usage:
+            args.extend(["--max-net-usage", str(max_net_usage)])
+        if  not ref_block is None:
+            args.extend(["--ref-block", ref_block]) 
+        if delay_sec:
+            args.extend(["--delay-sec", str(delay_sec)])
+        if wasm_file:
+            args.append(wasm_file)
+        if abi_file:
+            args.append(abi_file)
+
+        cleos.Cleos.__init__(self, args, "set", "contract", is_verbose)
+        self.contract_path_absolute = files[0]
+        self.account_name = interface.account_arg(account)
+        self.printself()
 
     def get_transaction(self): #: Get the transaction returned by EOSIO cleos.
-        '''Get the transaction returned by EOSIO cleos.
+        '''Get the transaction returned from EOSIO cleos.
 
         Return: 
             A JSON transaction object.
         '''
         return GetTransaction(self.transaction)
 
-    result.get_transaction = types.MethodType(get_transaction, result)
-
-    result.printself()
-
-    return result
-
-
-def set_contract_(
-            self, contract_dir, 
-            wasm_file="", abi_file="", 
-            permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            delay_sec=0
-    ):
-    '''Create or update the contract on an account.
-
-    This function which is a specification of :func:`.set_contract`, 
-    is used as a method of objects created with the 
-    :func:`.shell.account.create_account` factory function. The owning account 
-    object is represented as the *self* parameter.
-
-    See :func:`.set_contract` for other details.
-    '''
-
-    result = set_contract(
-                self, contract_dir, 
-                wasm_file, abi_file, 
-                permission, expiration_sec, 
-                skip_signature, dont_broadcast, force_unique,
-                max_cpu_usage, max_net_usage,
-                ref_block,
-                delay_sec,
-                is_verbose=False, json=True
-            )
-
-    logger.OUT(result)
-    self.set_contract = result
-
-
-def set_account_permission(
-            account, permission_name, authority, parent_permission_name,
-            permission=None,
-            expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, return_packed=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            delay_sec=0,
-            is_verbose=True, json=False
-    ):
+class SetAccountPermission(cleos.Cleos):
     '''Set parameters dealing with account permissions.
 
     Args:
@@ -219,42 +135,7 @@ def set_account_permission(
                 ]
         }
 
-    Args:
-        permission (.interface.Account or str or (str, str) or 
-            (.interface.Account, str) or any list of the previous items): An account and 
-            permission level to authorize.
-        
-    Exemplary values of the argument *permission*::
-
-        eosio # eosio is interface.Account object
-
-        "eosio@owner"
-
-        ("eosio", "owner")
-
-        (eosio, interface.Permission.ACTIVE)
-
-        ["eosio@owner", (eosio, .Permission.ACTIVE)]
-
-    Args:
-        expiration (int): The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign (bool): Specify if unlocked wallet keys should be used to 
-            sign transaction.
-        dont_broadcast (bool): Don't broadcast transaction to the network 
-            (just print).
-        force_unique(bool): Force the transaction to be unique. This will 
-            consume extra bandwidth and remove any protections against accidentally issuing the same transaction multiple times.
-        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget, 
-            for the execution of the transaction (defaults to 0 which means no limit).
-        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block (int): The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
-
-    Returns:
-         A :class:`eosfactory.core.cleos.Cleos` object, extended with the \
-            following items:
+    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.
 
     Attributes:
         account_name (str): The EOSIO name of the contract's account.
@@ -263,237 +144,149 @@ def set_account_permission(
         data (str): *["processed"]["action_traces"][0]["act"]["data"]*
             component of EOSIO cleos responce.
     '''
-    account_name = interface.account_arg(account)
-    args = [account_name]
-
-    if isinstance(permission_name, interface.Permission):
-        permission_name = permission_name.value
-    args.append(permission_name)
-
-    if authority:
-        authority = manager.data_json(authority)
-        if isinstance(authority, interface.Account):
-            args.append(authority.active())
-        else:
-            authority =  re.sub(re.compile(r'\s+'), '', authority)
-            args.append(authority)
-    else:
-        args.append("NULL")
-
-    if isinstance(parent_permission_name, interface.Permission):
-        parent_permission_name = parent_permission_name.value
-    args.append(parent_permission_name)        
-
-    if json:
-        args.append("--json")
-    if not permission is None:
-        p = interface.permission_arg(permission)
-        for perm in p:
-            args.extend(["--permission", perm])
-
-    if expiration_sec:
-        args.extend(["--expiration", str(expiration_sec)])
-    if skip_signature:
-        args.append("--skip-sign")
-    if dont_broadcast:
-        args.append("--dont-broadcast")
-    if force_unique:
-        args.append("--force-unique")
-    if max_cpu_usage:
-        args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-    if  max_net_usage:
-        args.extend(["--max-net-usage", str(max_net_usage)])
-    if  not ref_block is None:
-        args.extend(["--ref-block", ref_block])
-    if delay_sec:
-        args.extend(["--delay-sec", str(delay_sec)])
-                    
-    result = cleos.Cleos(args, "set", "account permission", is_verbose)
-    result.account_name = account_name
-    result.console = None
-    result.data = None
-
-    if json and not dont_broadcast:
-        result.console = result.json["processed"]["action_traces"][0]["console"]
-        result.data = result.json["processed"]["action_traces"][0]["act"]["data"]
-
-    result.printself()    
-    return result
-
-
-def set_account_permission_(
-            self, permission_name, authority, parent_permission_name,
+    def __init__(
+            self, account, permission_name, authority, parent_permission_name,
             permission=None,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, return_packed=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            delay_sec=0
-    ):
-    '''Set parameters dealing with account permissions.
-
-    This function which is a specification of :func:`.set_account_permission`, 
-    is used as a method of objects created with the 
-    :func:`.shell.account.create_account` factory function. The owning account 
-    object is represented as the *self* parameter.
-
-    See :func:`.set_account_permission` for other details.
-    '''
-    logger.TRACE('''
-        * Set action permission.
-        ''')
-    return set_account_permission(
-            self, permission_name, authority, parent_permission_name,
-            permission,
-            expiration_sec, 
-            skip_signature, dont_broadcast, return_packed, force_unique,
-            max_cpu_usage, max_net_usage,
-            ref_block,
-            delay_sec,
-            is_verbose=False, json=True
-    )
-
-
-def set_action_permission(
-            account, code, type, requirement,
-            permission=None,
-            expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, return_packed=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, return_packed=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
             is_verbose=True, json=False
-    ):
+        ):
+        account_name = interface.account_arg(account)
+        args = [account_name]
+
+        if isinstance(permission_name, interface.Permission):
+            permission_name = permission_name.value
+        args.append(permission_name)
+
+        if authority:
+            authority = manager.data_json(authority)
+            if isinstance(authority, interface.Account):
+                args.append(authority.active())
+            else:
+                authority =  re.sub(re.compile(r'\s+'), '', authority)
+                args.append(authority)
+        else:
+            args.append("NULL")
+
+        if isinstance(parent_permission_name, interface.Permission):
+            parent_permission_name = parent_permission_name.value
+        args.append(parent_permission_name)        
+
+        if json:
+            args.append("--json")
+        if not permission is None:
+            p = interface.permission_arg(permission)
+            for perm in p:
+                args.extend(["--permission", perm])
+
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
+        if skip_sign:
+            args.append("--skip-sign")
+        if dont_broadcast:
+            args.append("--dont-broadcast")
+        if force_unique:
+            args.append("--force-unique")
+        if max_cpu_usage:
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        if  max_net_usage:
+            args.extend(["--max-net-usage", str(max_net_usage)])
+        if  not ref_block is None:
+            args.extend(["--ref-block", ref_block])
+        if delay_sec:
+            args.extend(["--delay-sec", str(delay_sec)])
+                        
+        cleos.Cleos.__init__(args, "set", "account permission", is_verbose)
+        self.account_name = account_name
+        self.console = None
+        self.data = None
+
+        if json and not dont_broadcast:
+            self.console = self.json["processed"]["action_traces"][0]["console"]
+            self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
+
+        self.printself()    
+
+
+class SetActionPermission(cleos.Cleos):
     '''Set parameters dealing with account permissions.
 
-    :param account: The account to set/delete a permission authority for.
-    :type account: str or .interface.Account
-    :param code: The account that owns the code for the action.
-    :type account: str or .interface.Account
-    :param str type: The type of the action.
-    :param strrequirement: The permission name require for executing the given 
-        action.
-    :param permission: An account and permission level to authorize.
-    :type permission: .interface.Account or str or (str, str) or \
-        (.interface.Account, str) or any list of the previous items.
-        
-    Exemplary values of the argument *permission*::
+    Args:
+        account (str or .interface.Account): The account to set/delete a 
+            permission authority for.
+        code (str or .interface.Account): The account that owns the code for \
+            the action.
+        type (str): The type of the action.
+        requirement (str): The permission name require for executing the given 
+            action.
 
-        eosio # eosio is interface.Account object
+    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.
 
-        "eosio@owner"
-
-        ("eosio", "owner")
-
-        (eosio, interface.Permission.ACTIVE)
-
-        ["eosio@owner", (eosio, .Permission.ACTIVE)]
-
-    :param int expiration: The time in seconds before a transaction expires, 
-        defaults to 30s
-    :param bool skip_sign: Specify if unlocked wallet keys should be used to sign 
-        transaction.
-    :param bool dont_broadcast: Don't broadcast transaction to the network (just print).
-    :param bool force_unique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-    :param int max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-    :param int max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-    :param int ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
-
-    :return: A :class:`eosfactory.core.cleos.Cleos` object, extended with the 
-        following items:
-
-    :var str account_name: The EOSIO name of the contract's account.
-    :var str console: *["processed"]["action_traces"][0]["console"]* \
-        component of EOSIO cleos responce.
-    :var str data: *["processed"]["action_traces"][0]["act"]["data"]* \
-        component of EOSIO cleos responce.
+    Attributes:
+        account_name (str): The EOSIO name of the contract's account.
+        console (str): *["processed"]["action_traces"][0]["console"]* \
+            component of EOSIO cleos responce.
+        data (str): *["processed"]["action_traces"][0]["act"]["data"]* \
+            component of EOSIO cleos responce.
     '''
-    account_name = interface.account_arg(account)
-    args = [account_name]
-
-    code_name = interface.account_arg(code)
-    args.append(code_name)
-
-    args.append(type)
-
-    if requirement:
-        requirement_name = interface.account_arg(requirement)
-        args.append(requirement_name)
-    else:
-        args.append("NULL")
-
-    if json:
-        args.append("--json")
-    if not permission is None:
-        p = interface.permission_arg(permission)
-        for perm in p:
-            args.extend(["--permission", perm])
-
-    if expiration_sec:
-        args.extend(["--expiration", str(expiration_sec)])
-    if skip_signature:
-        args.append("--skip-sign")
-    if dont_broadcast:
-        args.append("--dont-broadcast")
-    if force_unique:
-        args.append("--force-unique")
-    if max_cpu_usage:
-        args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-    if  max_net_usage:
-        args.extend(["--max-net-usage", str(max_net_usage)])
-    if  not ref_block is None:
-        args.extend(["--ref-block", ref_block])
-    if delay_sec:
-        args.extend(["--delay-sec", str(delay_sec)])
-
-    result = cleos.Cleos(args, "set", "action permission", is_verbose)
-    result.console = None
-    result.data = None
-
-    if json and not dont_broadcast:
-        result.console = result.json["processed"]["action_traces"][0]["console"]
-        result.data = result.json["processed"]["action_traces"][0]["act"]["data"]
-
-    result.printself()
-
-
-def set_action_permission_(
-            self, code, type, requirement,
+    def __init__(
+            self, account, code, type, requirement,
             permission=None,
             expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, return_packed=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, return_packed=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
-            delay_sec=0
-    ):
-    '''Set parameters dealing with account permissions.
+            delay_sec=0,
+            is_verbose=True, json=False
+        ):
+        account_name = interface.account_arg(account)
+        args = [account_name]
 
-    This function which is a specification of :func:`.set_action_permission`, 
-    is used as a method of objects created with the 
-    :func:`.shell.account.create_account` factory function. The owning account 
-    object is represented as the *self* parameter.
+        code_name = interface.account_arg(code)
+        args.append(code_name)
 
-    See :func:`.set_action_permission` for other details.
-    '''
-    logger.TRACE('''
-    * Set action permission.
-    ''')
+        args.append(type)
 
-    return set_action_permission(
-            self, code, type, requirement,
-            permission,
-            expiration_sec, 
-            skip_signature, dont_broadcast, return_packed, force_unique,
-            max_cpu_usage, max_net_usage,
-            ref_block,
-            delay_sec,
-            is_verbose=False,
-            json=True
-    )
+        if requirement:
+            requirement_name = interface.account_arg(requirement)
+            args.append(requirement_name)
+        else:
+            args.append("NULL")
+
+        if json:
+            args.append("--json")
+        if not permission is None:
+            p = interface.permission_arg(permission)
+            for perm in p:
+                args.extend(["--permission", perm])
+
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
+        if skip_sign:
+            args.append("--skip-sign")
+        if dont_broadcast:
+            args.append("--dont-broadcast")
+        if force_unique:
+            args.append("--force-unique")
+        if max_cpu_usage:
+            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        if  max_net_usage:
+            args.extend(["--max-net-usage", str(max_net_usage)])
+        if  not ref_block is None:
+            args.extend(["--ref-block", ref_block])
+        if delay_sec:
+            args.extend(["--delay-sec", str(delay_sec)])
+
+        self = cleos.Cleos(args, "set", "action permission", is_verbose)
+        self.console = None
+        self.data = None
+
+        if json and not dont_broadcast:
+            self.console = self.json["processed"]["action_traces"][0]["console"]
+            self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
+
+        self.printself()
     

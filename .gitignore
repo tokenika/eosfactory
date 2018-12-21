@@ -43,3 +43,4 @@ localnode/blocks
 tests/js
 docs/patterns/*/*.py
 docs/patterns/*.py
+docs/_build

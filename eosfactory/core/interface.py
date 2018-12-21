@@ -113,11 +113,11 @@ def key_arg(key, is_owner_key=True, is_private_key=True):
     '''Accepts any key argument.
 
     :param key: The *key* argument.
-    :type key: str or .Key or .Account
+    :type key: str or .Key or .interface.Account
     :param bool is_owner_key: Solves ambivalence of the *key* parameter if
-            the key argument is an .Account object.
+            the key argument is an .interface.Account object.
     :param bool is_private_key: Solves ambivalence of the *key* parameter if
-            the the key argument is a .Key or .Account object
+            the the key argument is a .Key or .interface.Account object
     :return: The value of the *key* argument.
     :rtype: str
     '''
@@ -151,7 +151,7 @@ def account_arg(account):
     '''Accepts any account argument.
 
     :param account: *account* argument.
-    :type account: str or .Account
+    :type account: str or .interface.Account
     :return: The EOSIO name of the *account* argument.
     :rtype: str 
     '''
@@ -165,8 +165,8 @@ def permission_arg(permission):
     '''Accepts any permission argument.
 
     :param permission: The *permission* argument.
-    :type permission: .Account or str or (str, str) or \
-        (.Account, str) or any list of the previous items.
+    :type permission: .interface.Account or str or (str, str) or \
+        (.interface.Account, str) or any list of the previous items.
         
     Exemplary values of the argument *permission*::
 
