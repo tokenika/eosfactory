@@ -15,7 +15,7 @@ import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
 import eosfactory.core.cleos as cleos
 import eosfactory.core.cleos_set as cleos_set
-import eosfactory.shell.account as account
+import eosfactory.shell.account
 
 
 class ContractBuilder():
@@ -102,7 +102,7 @@ class Contract(ContractBuilder):
             ref_block=None,
             delay_sec=0):
         
-        if not type(account) == account.Account:
+        if not isinstance(account, eosfactory.shell.account.Account):
             raise errors.Error("""
             The account object has to be of the type 
             ``eosfactory.shell.account.Account``.

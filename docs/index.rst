@@ -80,6 +80,12 @@ Python Documentation
     :maxdepth: 1
 
     rst/shell.account
+    rst/shell.contract
+    rst/shell.wallet
+
+.. toctree::
+    :maxdepth: 1
+
     rst/core.cleos
     rst/core.cleos_get    
     rst/core.cleos_set
@@ -94,10 +100,6 @@ Python Documentation
     rst/core.teos
     rst/core.testnet
     rst/core.utils
-
-    rst/shell.contract
-    rst/shell.wallet
-    rst/eosf
 
 .. toctree::
    :maxdepth: 2
