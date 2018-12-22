@@ -1,7 +1,7 @@
 '''
 .. module:: eosfactory.core.cleos_get
     :platform: Unix, Darwin
-    :synopsis: eosio cleos get commands.
+    :synopsis: EOSIO cleos get commands.
 
 .. moduleauthor:: Tokenika
 '''

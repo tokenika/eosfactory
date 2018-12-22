@@ -317,22 +317,8 @@ class Account(interface.Account):
         '''Ascribes methodes to the given *account*, and finalizes the creation 
         of this *account*.
         '''
+        account.__class__ = cls
         account.account_object_name = account_object_name
-
-        account.code = types.MethodType(cls.code, account)
-        account.is_code = types.MethodType(cls.is_code, account)        
-        account.set_contract = types.MethodType(cls.set_contract, account)
-        account.set_account_permission = types.MethodType(
-                                            cls.set_account_permission, account)
-        account.set_action_permission = types.MethodType(
-                                            cls.set_action_permission, account)    
-        account.push_action = types.MethodType(cls.push_action, account)
-        account.show_action = types.MethodType(cls.show_action, account)
-        account.table = types.MethodType(cls.table, account)
-        account.buy_ram = types.MethodType(cls.buy_ram, account)
-        account.delegate_bw = types.MethodType(cls.delegate_bw, account)
-        account.info = types.MethodType(cls.info, account)
-        account.__str__ = types.MethodType(cls.__str__, account)
 
         get_account = cleos.GetAccount(account, is_info=False, is_verbose=0)
 
@@ -580,11 +566,21 @@ class Account(interface.Account):
 
         self.action = result
 
-    def show_action(self, action, data, permission=None):
-        ''' Implements the `push action` command without broadcasting. 
+    def show_action(
+            self, action, data, permission=None,
+            expiration_sec=None, 
+            skip_sign=0, force_unique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None, delay_sec=0
+            ):
+        ''' Implement the `push action` command without broadcasting. 
         '''
         self.push_action(
-            action, data, permission, dont_broadcast=1, json=True)
+            action, data,
+            permission, expiration_sec, 
+            skip_sign, dont_broadcast=1, force_unique=force_unique,
+            max_cpu_usage=max_cpu_usage, max_net_usage=max_net_usage,
+            ref_block=ref_block, delay_sec=delay_sec)
 
     def table(
             self, table_name, scope="", 
@@ -607,7 +603,6 @@ class Account(interface.Account):
         Returns:
             :class:`.cleos_set.SetTable` object
         '''            
-
         logger.INFO('''
         * Table *{}* for *{}*
         '''.format(table_name, scope))

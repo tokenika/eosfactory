@@ -1,3 +1,11 @@
+'''
+.. module:: eosfactory.core.cleos_sys
+    :platform: Unix, Darwin
+    :synopsis: EOSIO cleos sys commands.
+
+.. moduleauthor:: Tokenika
+'''
+
 import eosfactory.core.cleos as cleos
 import eosfactory.core.setup as setup
 import eosfactory.core.interface as interface

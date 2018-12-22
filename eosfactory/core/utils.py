@@ -1,3 +1,11 @@
+'''
+.. module:: eosfactory.core.utils
+    :platform: Unix, Darwin
+    :synopsis: Helper functions.
+
+.. moduleauthor:: Tokenika
+'''
+
 def wslMapLinuxWindows(path):
     if not path or path.find("/mnt/") == -1:
         return path

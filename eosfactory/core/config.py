@@ -1,3 +1,11 @@
+'''
+.. module:: eosfactory.core.config
+    :platform: Unix, Darwin
+    :synopsis: Configuration for EOSFactory installation.
+
+.. moduleauthor:: Tokenika
+'''
+
 import os
 import argparse
 

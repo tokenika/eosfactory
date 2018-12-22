@@ -1,7 +1,7 @@
 '''
 .. module:: eosfactory.core.cleos_set
     :platform: Unix, Darwin
-    :synopsis: eosio cleos set commands.
+    :synopsis: EOSIO cleos set commands.
 
 .. moduleauthor:: Tokenika
 '''
@@ -21,12 +21,13 @@ class SetContract(cleos.Cleos):
     Args:
         account (str or .interface.Account): The account to publish a contract 
             for.
-        contract_dir (str): A path to a directory.
+        contract_dir (str): The path to a directory.
         wasm_file (str): The WASM file relative to the contract_dir.
         abi_file (str): The ABI file for the contract relative to the 
             contract-dir.
 
-    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.
+    See definitions of the remaining parameters: 
+    \:func:`.cleos.common_parameters`.
 
     Attributes:
         contract_path_absolute (str): The path to the contract project

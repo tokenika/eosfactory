@@ -1,7 +1,7 @@
 '''
 .. module:: eosfactory.core.cleos
     :platform: Unix, Darwin
-    :synopsis: eosio cleos commands assorted.
+    :synopsis: EOSIO cleos commands assorted.
 
 .. moduleauthor:: Tokenika
 '''

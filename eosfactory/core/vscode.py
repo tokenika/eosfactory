@@ -1,3 +1,11 @@
+'''
+.. module:: eosfactory.core.vscode
+    :platform: Unix, Darwin
+    :synopsis: Default configuration items of a contract project.
+
+.. moduleauthor:: Tokenika
+'''
+
 import json
 
 INCLUDES = [
