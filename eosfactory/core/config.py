@@ -747,7 +747,8 @@ if __name__ == '__main__':
 The current configuration of EOSFactory:
 {}
 
-You are free to overwrite the above settings with entries in the configuration file located here:
+You are free to overwrite the above settings with entries in the configuration 
+file located here:
 {}
 '''.format(
         json.dumps(
