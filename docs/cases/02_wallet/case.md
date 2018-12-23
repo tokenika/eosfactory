@@ -162,7 +162,7 @@ And execute the following methods of the `Wallet` class:
 get_wallet().index()
 get_wallet().open()
 get_wallet().unlock()
-get_wallet().import_key("5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3")
+get_wallet().import_key(config.eosio_key_private())
 get_wallet().keys()
 get_wallet().lock()
 ```

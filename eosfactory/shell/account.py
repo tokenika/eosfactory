@@ -463,8 +463,7 @@ def create_master_account(
         - put the account object into the global namespace of the caller and \
             return
 
-    .. note:: Name conflict:
-
+    Note: Name conflict:
         If a new account object, named as an existing one, is going to be added to 
         the wallet, an error is reported. Then an offer is given to edith the 
         mapping file in order to resolve the conflict. When the conflict is 
