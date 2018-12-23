@@ -767,4 +767,3 @@ The current contents of the configuration file is:
 '''.format(
         json.dumps(config_map(), sort_keys=True, indent=4))
     )
-
