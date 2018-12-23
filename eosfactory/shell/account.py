@@ -280,8 +280,6 @@ class Account():
             logger.DEBUG(self._console)
         except:
             pass
-        if json:
-            logger.OUT(result.out_msg)
 
         self.action = result
 
