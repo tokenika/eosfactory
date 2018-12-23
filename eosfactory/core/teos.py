@@ -87,9 +87,9 @@ def ABI(
         return
 
     code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
+    target_dir = get_target_dir(contract_source_files[0])
     target_path = os.path.normpath(
-                        os.path.join(get_target_dir(
-                            contract_source_files[0]), code_name  + ".abi"))
+                        os.path.join(target_dir, code_name  + ".abi"))
 
     for file in contract_source_files[1]:
         if os.path.splitext(file)[1].lower() == ".abi":
@@ -126,7 +126,7 @@ def ABI(
         command_line.append(file)
 
     try:
-        process(command_line)
+        process(command_line, cwd=target_dir)
     except Exception as e:
         raise errors.Error(str(e))
 
@@ -158,9 +158,9 @@ def WAST(
         return
 
     code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
+    target_dir = get_target_dir(contract_source_files[0])
     target_path = os.path.normpath(
-                        os.path.join(get_target_dir(
-                            contract_source_files[0]), code_name  + ".wasm"))
+                        os.path.join(target_dir, code_name  + ".wasm"))
 
     c_cpp_properties = get_c_cpp_properties(
                                         contract_dir, c_cpp_properties_path)
@@ -188,11 +188,14 @@ def WAST(
     if setup.is_print_command_line:
         print("######## \n{}:".format(" ".join(command_line)))
 
-    if not compile_only:
-        command_line.append("-o=" + target_path)
+
+    if compile_only:
+        command_line.append("-c=")
+
+    command_line.append("-o=" + target_path)
 
     try:
-        process(command_line)
+        process(command_line, cwd=target_dir)
     except Exception as e:                       
         raise errors.Error(str(e))
 
@@ -403,9 +406,10 @@ def is_windows_ubuntu():
     return resp.find("Microsoft") != -1
 
 
-def process(command_line, throw_error=True):
+def process(command_line, cwd=None, throw_error=True):
     process = subprocess.run(
         command_line,
+        cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE) 
     
