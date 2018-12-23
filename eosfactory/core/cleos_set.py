@@ -1,11 +1,3 @@
-'''
-.. module:: eosfactory.core.cleos_set
-    :platform: Unix, Darwin
-    :synopsis: EOSIO cleos set commands.
-
-.. moduleauthor:: Tokenika
-'''
-
 import re
 import types
 

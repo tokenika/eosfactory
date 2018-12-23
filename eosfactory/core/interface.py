@@ -1,11 +1,3 @@
-'''
-.. module:: eosfactory.core.interface
-    :platform: Unix, Darwin
-    :synopsis: basic interfaces.
-
-.. moduleauthor:: Tokenika
-'''
-
 import enum
 
 class Omittable:

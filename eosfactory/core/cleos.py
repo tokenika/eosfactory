@@ -1,11 +1,3 @@
-'''
-.. module:: eosfactory.core.cleos
-    :platform: Unix, Darwin
-    :synopsis: EOSIO cleos commands assorted.
-
-.. moduleauthor:: Tokenika
-'''
-
 import subprocess
 import json
 import pathlib

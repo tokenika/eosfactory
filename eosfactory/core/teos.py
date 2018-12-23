@@ -103,10 +103,11 @@ def ABI(
             return
 
     command_line = [
-        config.eosio_abigen(),
+        config.eosio_cpp(),
         "-contract=" + code_name,
         "-R=" + get_resources_dir(contract_source_files[0]),
-        "-output=" + target_path]
+        "-abigen",
+        "-abigen_output=" + target_path]
 
     c_cpp_properties = get_c_cpp_properties(
                                     contract_dir, c_cpp_properties_path)
@@ -115,10 +116,10 @@ def ABI(
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
             command_line.append(
-                "-extra-arg=-I" + utils.wslMapWindowsLinux(entry))
+                "-I" + utils.wslMapWindowsLinux(entry))
         else:
             command_line.append(
-                "-extra-arg=-I" + utils.wslMapWindowsLinux(
+                "-I" + utils.wslMapWindowsLinux(
                     strip_wsl_root(entry)))
 
     for file in source_files:

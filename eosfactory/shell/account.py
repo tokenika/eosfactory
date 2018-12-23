@@ -1,11 +1,3 @@
-'''
-.. module:: eosfactory.shell.account
-    :platform: Unix, Darwin
-    :synopsis: Account object factories.
-
-.. moduleauthor:: Tokenika
-'''
-
 import json
 import inspect
 import time

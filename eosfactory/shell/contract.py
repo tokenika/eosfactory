@@ -1,11 +1,3 @@
-'''
-.. module:: eosfactory.shell.contract
-    :platform: Unix, Darwin
-    :synopsis: The Contract class.
-
-.. moduleauthor:: Tokenika
-'''
-
 import shutil
 
 import eosfactory.core.logger as logger

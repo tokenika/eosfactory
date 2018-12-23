@@ -1,11 +1,3 @@
-'''
-.. module:: eosfactory.core.account
-    :platform: Unix, Darwin
-    :synopsis: Helper code for the module eosfactory.shell.account.
-
-.. moduleauthor:: Tokenika
-'''
-
 import eosfactory.core.config as config
 import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos

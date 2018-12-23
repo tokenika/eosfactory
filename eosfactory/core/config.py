@@ -1,11 +1,3 @@
-'''
-.. module:: eosfactory.core.config
-    :platform: Unix, Darwin
-    :synopsis: Configuration for EOSFactory installation.
-
-.. moduleauthor:: Tokenika
-'''
-
 import os
 import argparse
 
@@ -46,9 +38,6 @@ node_exe_ = (
 eosio_cpp_ = ("EOSIO_CPP", 
     ["/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp", 
         "/usr/local/eosio.cdt/bin/eosio-cpp"])
-eosio_abigen_ = ("EOSIO_ABIGEN", 
-    ["/usr/bin/eosio-abigen", "/usr/local/bin/eosio-abigen", 
-        "/usr/local/eosio.cdt/bin/eosio-abigen"])
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
     ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"])
@@ -252,16 +241,6 @@ def eosio_cpp():
     return first_valid_path(eosio_cpp_)
 
 
-def eosio_abigen():
-    '''The path to the *eosio-abigen* executable.
-    
-    The setting may be changed with 
-    *EOSIO_ABIGEN* entry in the *config.json* file, 
-    see :func:`.current_config`.
-    '''
-    return first_valid_path(eosio_abigen_)
-
-
 def keosd_wallet_dir(raise_error=True):
     '''The path to the local wallet directory.
 
@@ -460,16 +439,16 @@ def contract_dir(contract_dir_hint):
     '''Given a hint, determine the contract directory.
 
     The contract directory is the container for the project of a contract.
-    The hint is probed to be one of the following pieces of information:
-        - the absolute path to a contract directory,
-        - the relative path to a contract directory, relative to the directory 
-            given with :func:`contract_workspace`,
-        - the relative path to a contract directory, relative to the directory
-            :func:`eosf_dir`/contracts.
+    The hint is probed to be one of the following paths:
+
+    - the absolute path to a contract directory,
+    - the relative path to a contract directory: 
+        - relative to the directory given with :func:`contract_workspace`,
+        - relative to the directory given with :func:`eosf_dir`/contracts.
 
     Args:
-        contract_dir_hint (path): A file path, absolute or relative to 
-            a contract directory.
+        contract_dir_hint (path): A file path, absolute or relative to a 
+        contract directory.
         
     Raises:
         .core.errors.Error: If the result is not defined.
@@ -544,21 +523,22 @@ def contract_source_files(contract_dir_hint):
 
 
 def contract_file(contract_dir_hint, contract_file_hint):
-    ''' Given contract dir and contract file hints, determine the file.
-
-    Contract files are those extended with *wast*, *wasm* and *abi*.
-
-    First, the *contract_file_hint* may be an absolute path.
-    Next, it may be relative to the contract directory.
+    ''' Given contract directory and contract file hints, determine the file.
 
     The contract directory is the container for the project of a contract. This 
-    directory is determined with the *contract_dir* function, basing on the 
-    *contract_dir_hint*.
+    directory is determined with the function :func:`.contract_dir`, basing on 
+    the *contract_dir_hint* argument.
 
-    Any contract directory contains directories and files structured according 
-    to few schemes:
-    flat structure with all the files in this directory as in the *eos/contracts/** contract directories in the EOS repository;
-    structure with a directory named *build* as resulting from the EOSFactory templates;
+    Any contract directory considered is structured according to one of the 
+    following patterns:
+
+    - flat structure with all the files in this directory as in the *eos/contracts/** contract directories in the EOS repository;
+    structure with a directory named *build* as resulting from the EOSFactory templates;    
+    
+    Contract files are extended *wasm* or *abi*. The *contract_file_hint* may 
+    be an absolute file path, or it may be relative to the contract directory.
+
+
     '''
     contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
     contract_file_hint = utils.wslMapWindowsLinux(contract_file_hint)
@@ -658,6 +638,9 @@ def current_config(contract_dir=None):
     The current configuration result from both the *config.json* file setting
     and default hard-codded setup. The *config.json* prevails.
 
+    Args:
+        contract_dir str(): If set
+
     Note:
         The current configuration can be seen with the bash command:
 
@@ -730,11 +713,7 @@ def current_config(contract_dir=None):
     try: 
         map[eosio_cpp_[0]] = eosio_cpp()
     except:
-        map[eosio_cpp_[0]] = None             
-    try: 
-        map[eosio_abigen_[0]] = eosio_abigen()
-    except:
-        map[eosio_abigen_[0]] = None             
+        map[eosio_cpp_[0]] = None                       
     try:   
         map[genesis_json_[0]] = genesis_json()
     except:
