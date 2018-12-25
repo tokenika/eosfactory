@@ -92,11 +92,11 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # a list of builtin themes.
 #
 
-html_theme = 'alabaster'
-html_theme_options = {
-    'page_width': '900px',
-    'sidebar_width': '220px'
-}
+# html_theme = 'alabaster'
+# html_theme_options = {
+#     'page_width': '900px',
+#     'sidebar_width': '250px'
+# }
 
 # html_theme = "classic"
 # html_theme_options = {

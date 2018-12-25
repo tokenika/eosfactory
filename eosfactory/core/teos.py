@@ -9,6 +9,7 @@ import pathlib
 import shutil
 import pprint
 import json
+import shutil
 
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
@@ -126,7 +127,7 @@ def ABI(
         command_line.append(file)
 
     try:
-        process(command_line, cwd=target_dir)
+        process(command_line, target_dir)
     except Exception as e:
         raise errors.Error(str(e))
 
@@ -195,7 +196,7 @@ def WAST(
     command_line.append("-o=" + target_path)
 
     try:
-        process(command_line, cwd=target_dir)
+        process(command_line, target_dir)
     except Exception as e:                       
         raise errors.Error(str(e))
 
@@ -383,7 +384,7 @@ def get_pid(name=None):
     []
     """    
     if not name:
-        name = config.node_exe_name()
+        name = os.path.splitext(os.path.basename(config.node_exe()))[0]
 
     child = subprocess.Popen(
         ['pgrep', '-f', name], stdout=subprocess.PIPE, shell=False)
@@ -406,19 +407,24 @@ def is_windows_ubuntu():
     return resp.find("Microsoft") != -1
 
 
-def process(command_line, cwd=None, throw_error=True):
+def process(command_line, target_dir):
+
+    cwd = os.path.join(target_dir, "cwd")
+    os.mkdir(cwd)
+
     process = subprocess.run(
         command_line,
         cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE) 
     
-    out_msg = process.stdout.decode("utf-8")
-    out_err = process.stderr.decode("utf-8")
+    out_msg = process.stdout.decode("ISO-8859-1")
+    out_err = process.stderr.decode("ISO-8859-1")
     returncode = process.returncode
-    if returncode and throw_error:
+    if returncode:
         raise errors.Error(out_err)
 
+    shutil.rmtree(cwd)
     return returncode
 
 
@@ -594,7 +600,7 @@ def is_local_node_process_running(name=None):
     response = subprocess.run(
         'ps aux |  grep -v grep | grep ' + name, shell=True, 
         stdout=subprocess.PIPE)
-    out = response.stdout.decode("utf-8")
+    out = response.stdout.decode("ISO-8859-1")
     return name in out
         
 

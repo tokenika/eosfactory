@@ -244,24 +244,15 @@ def eosio_cpp():
 def keosd_wallet_dir(raise_error=True):
     '''The path to the local wallet directory.
 
+    The path is hard-coded in the *keosd* wallet manager.
+
     Args:
         raise_error (bool): If set, rise an error if the path is invalid.
 
     Raises:
-        .core.errors.Error: If the configured path is invalid.
-
-    The setting may be changed with 
-    *KEOSD_WALLET_DIR* entry in the *config.json* file, 
-    see :func:`.current_config`.
+        .core.errors.Error: If the directory does not exist.
     '''
     return first_valid_path(keosd_wallet_dir_, raise_error=raise_error)
-    
-
-def node_exe_name():
-    '''Name of the local node executable, used for killing a process.    
-    '''
-    path = node_exe()
-    return os.path.splitext(os.path.basename(path))[0]
 
 
 def config_file():
@@ -274,7 +265,7 @@ def config_file():
             output.write("{}")
 
             logger.INFO('''
-        Cannot find the config json file. It is expected to be 
+        Cannot find the config file. It is expected to be 
             '{}'.
         Creating an empty config file there.
             '''.format(file))
@@ -283,7 +274,7 @@ def config_file():
 
 
 def config_map():
-    '''A JSON object read from the *config.json* file.
+    '''Return a JSON object read from the *config.json* file.
 
     Raises:
         .core.errors.Error: If the JSON object cannot be returned.
@@ -301,7 +292,7 @@ def config_map():
             raise errors.Error(str(e))
 
     raise errors.Error('''
-Cannot find the config json file.       
+Cannot find the config file.       
     ''')
 
 
@@ -321,18 +312,18 @@ def write_config_map(map):
         return
 
     raise errors.Error('''
-Cannot find the config json file.       
+Cannot find the config file.       
     ''')
     
 
 def config_values(config_list):
     '''List values ascribed to the key of a hard-codded configuration list.
 
-    First, consider the *config.json*, next the values of a hard-codded 
+    First, consider the *config.json*, next the values of the hard-codded 
     configuration list.
 
     Args:
-        config_list (()): A configure list tuple.
+        config_list (tuple): A configure list tuple.
     '''
     config_key = config_list[0]
 
@@ -362,10 +353,10 @@ def config_value(config_list):
 
 
 def config_value_checked(config_list):
-    '''Get the first item from :func:`.config_values`.
+    '''Get the first item from :func:`.config_values`. Raise an error if fails.
 
     Args:
-        config_list (()): A configure list tuple.  
+        config_list (tuple): A configure list tuple.  
 
     Raises:
         .core.errors.Error: If the result is not defined.
@@ -381,20 +372,23 @@ Define it in the config file
     '''.format(config_list[0], config_file()))
 
 
-def first_valid_path(config_list, findFile=None, raise_error=True):
+def first_valid_path(config_list, find_file=None, raise_error=True):
     '''Given a key to the config list, get a valid file system path.
 
     Applicable if the *config_list* argument refers to a file path.
     The path may be absolute or relative to the root of the EOSFactory 
     installation.
     
-    Also, the path can be relative to the *HOME* environment variable.
+    Also, the path may be relative to the *HOME* environment variable.
 
     Args:
-        config_list (()): A configure list tuple.
+        config_list (tuple): A configure list tuple.
+        find_file (str): If set, the given file has to exist.
+        raise_error (bool): If set, raise an error on failure.
         
     Raises:
-        .core.errors.Error: If the result is not defined.            
+        .core.errors.Error: If the *raise_error* argument is set and the \
+            result is not defined.            
     '''
     values = config_values(config_list)
     for path in values:
@@ -406,24 +400,24 @@ def first_valid_path(config_list, findFile=None, raise_error=True):
                 
             if home:
                 path = path.replace("${HOME}", home)
-                if findFile: 
-                    if os.path.exists(os.path.join(path, findFile)):
+                if find_file: 
+                    if os.path.exists(os.path.join(path, find_file)):
                         return path
                 else:
                     if os.path.exists(path):
                         return path
 
         if os.path.isabs(path):
-            if findFile:
-                if os.path.exists(os.path.join(path, findFile)):
+            if find_file:
+                if os.path.exists(os.path.join(path, find_file)):
                     return path
             else:
                 if os.path.exists(path):
                     return path
         else:
             full_path = os.path.join(eosf_dir(), path)
-            if findFile:
-                if os.path.exists(os.path.join(full_path, findFile)):
+            if find_file:
+                if os.path.exists(os.path.join(full_path, find_file)):
                     return full_path
             else:
                 if os.path.exists(full_path):
@@ -436,19 +430,16 @@ def first_valid_path(config_list, findFile=None, raise_error=True):
 
 
 def contract_dir(contract_dir_hint):
-    '''Given a hint, determine the contract directory.
+    '''Given a hint, determine the contract root directory.
 
-    The contract directory is the container for the project of a contract.
-    The hint is probed to be one of the following paths:
-
-    - the absolute path to a contract directory,
-    - the relative path to a contract directory: 
-        - relative to the directory given with :func:`contract_workspace`,
-        - relative to the directory given with :func:`eosf_dir`/contracts.
+    The ``contract_dir_hint`` is tested to be either
+        - an absolute path, or
+        - a path relative to either
+            - the directory given with :func:`contract_workspace`, or
+            - the directory given with :func:`eosf_dir` ``/contracts``.
 
     Args:
-        contract_dir_hint (path): A file path, absolute or relative to a 
-        contract directory.
+        contract_dir_hint (path): A directory path, may be not absolute.
         
     Raises:
         .core.errors.Error: If the result is not defined.
@@ -463,7 +454,7 @@ def contract_dir(contract_dir_hint):
         return contract_dir_hint
 
     # ? the relative path to a contract directory, relative to the directory 
-    # set with the 'contract_workspace_' variable
+    # set with the 'contract_workspace()' function
     contract_dir_ = os.path.join(
         config_value(contract_workspace_), contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
@@ -471,7 +462,7 @@ def contract_dir(contract_dir_hint):
         return os.path.abspath(contract_dir_)
 
     # ? the relative path to a contract directory, relative to the 
-    # *contracts* directory in the repository of EOSFactory
+    # set with the 'eosf_dir() / contracts' function
     contract_dir_ = os.path.join(
             eosf_dir(), 
             CONTRACTS_DIR, contract_dir_hint)
@@ -486,14 +477,14 @@ def contract_dir(contract_dir_hint):
     '''.format(trace))
 
 
-def source_files(source_path):
-    '''
+def source_files(source_dir):
+    '''List files CPP/C and ABI files from the given directory
     '''
     srcs = []
     extensions = [".cpp", ".cxx", ".c", ".abi"]
-    files = os.listdir(source_path)
+    files = os.listdir(source_dir)
     for file in files:
-        path = os.path.join(source_path, file)
+        path = os.path.join(source_dir, file)
         if os.path.splitext(file)[1] in extensions:
             if os.path.isfile(path):
                 srcs.append(path)
@@ -501,19 +492,28 @@ def source_files(source_path):
     
 
 def contract_source_files(contract_dir_hint):
+    '''List files CPP/C and ABI files from directory given with a hint.
+
+    Args:
+        contract_dir_hint (str): An argument to the function 
+            :func:`.contract_dir`
+
+    Raises:
+        .core.errors.Error: If the list is empty.
+    '''
     contract_dir_ = contract_dir(utils.wslMapWindowsLinux(contract_dir_hint))
     trace = contract_dir_ + "\n"
 
-    source_path = contract_dir_
-    srcs = source_files(source_path)
+    source_dir = contract_dir_
+    srcs = source_files(source_dir)
     if srcs:
-        return (source_path, srcs)            
+        return (source_dir, srcs)            
 
-    source_path = os.path.join(contract_dir_, "src")
-    trace = trace + source_path + "\n"
-    srcs = source_files(source_path)
+    source_dir = os.path.join(contract_dir_, "src")
+    trace = trace + source_dir + "\n"
+    srcs = source_files(source_dir)
     if srcs:
-        return (source_path, srcs)            
+        return (source_dir, srcs)            
 
     raise errors.Error('''
         Cannot find any contract source directory.
@@ -523,49 +523,54 @@ def contract_source_files(contract_dir_hint):
 
 
 def contract_file(contract_dir_hint, contract_file_hint):
-    ''' Given contract directory and contract file hints, determine the file.
+    ''' Given contract directory and contract file hints, determine a contract 
+    file.
 
-    The contract directory is the container for the project of a contract. This 
-    directory is determined with the function :func:`.contract_dir`, basing on 
-    the *contract_dir_hint* argument.
+    The contract directory is determined with the function 
+    :func:`.contract_dir`, basing on the *contract_dir_hint* argument.
 
-    Any contract directory considered is structured according to one of the 
+    Contract files are ABI or WASM ones. Contract file hint is an absolute path
+    to a contract file, or it is relative to the contract dir, ir it is 
+    a file extension.
+
+    Any contract directory considered to be structured according to one of the 
     following patterns:
+        - all the files in the contract directory,
+        - contract files in the *build* subdirectory.  
 
-    - flat structure with all the files in this directory as in the *eos/contracts/** contract directories in the EOS repository;
-    structure with a directory named *build* as resulting from the EOSFactory templates;    
-    
-    Contract files are extended *wasm* or *abi*. The *contract_file_hint* may 
-    be an absolute file path, or it may be relative to the contract directory.
+    Args:
+        contract_dir_hint (path): A directory path, may be not absolute.
+        contract_file_hint (str or path): A file extension, or file path, 
+            may be not absolute.
 
-
+    Raises:
+        .core.errors.Error: If the result is not defined.
     '''
     contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
     contract_file_hint = utils.wslMapWindowsLinux(contract_file_hint)
 
-    # ? *contract_file_hint* may be an absolute path to a file
+    # Contract file hint is an absolute path to a contract file:
     trace = contract_file_hint + "\n" 
     if os.path.isabs(contract_file_hint) \
                                     and os.path.isfile(contract_file_hint):
         return contract_file_hint
 
-    # ? it may be relative to the contract directory.
     contract_dir_ = contract_dir(contract_dir_hint)
 
-    # ? flat structure with all the files in this directory
+    # All the files in the contract directory:
     contract_file = os.path.join(contract_dir_, contract_file_hint)
     trace = trace + contract_file + "\n"
     if os.path.isfile(contract_file):
         return contract_file
 
-    # ? structure with a directory named *build*
-    # and *contract_file_hint* is relative file
+    # Contract files in the *build* subdirectory,
+    # and *contract_file_hint* is a relative file
     contract_file = os.path.join(contract_dir_, "build", contract_file_hint)
     trace = trace + contract_file + "\n"
     if os.path.isfile(contract_file):
         return contract_file
 
-    # ? structure with a directory named *build*
+    # Contract files in the *build* subdirectory,
     # and *contract_file_hint* is a file extension merely
     build_dir = os.path.join(contract_dir_, "build")
     trace = trace + build_dir + "\n"
@@ -584,7 +589,17 @@ def contract_file(contract_dir_hint, contract_file_hint):
 
 
 def contract_workspace():
-    '''Return the absolute path to the contract workspace of the user.
+    '''The absolute path to the contract workspace of the user.
+
+    The contract workspace is a directory where automatically created projects
+    are placed by default. It is set while the EOSFactory is installed. 
+
+    If not set, the projects are stored in the *contracts* directory of the 
+    EOSFActory installation.
+
+    The setting may be changed with 
+    *EOSIO_CONTRACT_WORKSPACE* entry in the *config.json* file, 
+    see :func:`.current_config`.
     '''
     workspacePath = config_value(contract_workspace_)
     trace = workspacePath + "\n"
@@ -602,25 +617,46 @@ def contract_workspace():
     '''.format(trace))
 
 
-def abi_file(contract_dir):
-    '''Given the contract directory, return the ABI file path relative.
+def abi_file(contract_dir_hint):
+    '''Given a contract directory hint, return the ABI file path.
+    See :func:`contract_file`.
+
+    Args:
+        contract_dir_hint: A directory path, may be not absolute.
+
+    Raises:
+        .core.errors.Error: If the result is not defined.
     '''
     return os.path.relpath(
-        contract_file(contract_dir, ".abi"), contract_dir)
+        contract_file(contract_dir_hint, ".abi"), contract_dir_hint)
 
 
-def wast_file(contract_dir):
-    '''Given the contract directory, return the WAST file path relative.
+def wast_file(contract_dir_hint):
+    '''Given the contract directory, return the WAST file path.
+    See :func:`contract_file`.
+
+    Args:
+        contract_dir_hint: A directory path, may be not absolute.
+
+    Raises:
+        .core.errors.Error: If the result is not defined.    
     '''
     return os.path.relpath(
-        contract_file(contract_dir, ".wast"), contract_dir)
+        contract_file(contract_dir_hint, ".wast"), contract_dir_hint)
 
 
-def wasm_file(contract_dir):
-    '''Given the contract directory, return the WASM file path relative.
+def wasm_file(contract_dir_hint):
+    '''Given the contract directory, return the WASM file path.
+    See :func:`contract_file`.
+    
+    Args:
+        contract_dir_hint: A directory path, may be not absolute.
+
+    Raises:
+        .core.errors.Error: If the result is not defined.    
     '''
     return os.path.relpath(
-        contract_file(contract_dir, ".wasm"), contract_dir)
+        contract_file(contract_dir_hint, ".wasm"), contract_dir_hint)
 
 
 def not_defined():
