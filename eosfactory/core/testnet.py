@@ -48,7 +48,7 @@ def get_testnet(alias, testnet=None, reset=False):
         return Testnet(reset=reset)
 
     if alias:
-        mapping = get_mapping()
+        mapping = manager.read_map(TESTNET_FILE)
         if alias in mapping:
             return Testnet(
                 mapping[alias]["url"], mapping[alias]["account_name"],
@@ -71,17 +71,15 @@ def get_testnet(alias, testnet=None, reset=False):
 
 TESTNET_FILE = "testnet.json"
 
-def get_mapping():
-    return manager.read_map(TESTNET_FILE)
 
-def save_mapping(mapping):
-    manager.save_map(mapping, TESTNET_FILE)
-
-def edit_mapping():
-    manager.edit_map(TESTNET_FILE)
+def add_testnet_to_mapping(testnet_object):
+    add_to_mapping(
+        testnet_object.url, testnet_object.account_name, 
+        testnet_object.owner_key, testnet_object.active_key, None)
+    
 
 def add_to_mapping(url, account_name, owner_key, active_key, alias=None):
-    mapping = get_mapping()
+    mapping = manager.read_map(TESTNET_FILE)
     testnet = {}
     testnet["url"] = url
     testnet["account_name"] = account_name
@@ -90,22 +88,25 @@ def add_to_mapping(url, account_name, owner_key, active_key, alias=None):
     if not alias:
         alias = setup.url_prefix(url)
     mapping[alias] = testnet
-    save_mapping(mapping)
+    manager.save_map(mapping, TESTNET_FILE)
+
 
 def remove_from_mapping(testnet):
-    mapping = get_mapping()
+    mapping = manager.read_map(TESTNET_FILE)
     if testnet in mapping:
         del mapping[testnet]
-        save_mapping(mapping)
+        manager.save_map(mapping, TESTNET_FILE)
+
 
 def testnets():
-    mapping = get_mapping()
+    mapping = manager.read_map(TESTNET_FILE)
+
     if not mapping:
         logger.INFO('''
         Testnet mapping is empty.
         ''')
         return
-    for alias, testnet in mapping.items():
+    for alias, testnet in mapping.items():       
         print("%25s: %13s @ %s" % (alias, testnet["account_name"], testnet["url"]))
 
 

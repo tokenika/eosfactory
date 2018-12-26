@@ -25,7 +25,7 @@ def nodeos_address():
 
 
 def url_prefix(address):
-    p = re.sub("\.|\:|-|https|http|\/", "_", __nodeos_address)
+    p = re.sub("\.|\:|-|https|http|\/", "_", address)
     return re.sub("_+", "_", p) + "_"
 
 

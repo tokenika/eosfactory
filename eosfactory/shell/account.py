@@ -832,11 +832,10 @@ def put_account_to_wallet_and_on_stack(
         if wallet_singleton.keys_in_wallets(
                 [account_object.owner_key.key_private,
                 account_object.active_key.key_private]):
-            wallet_singleton.map_account(account_object_name, account_object)
+            wallet_singleton.map_account(account_object)
         else:
             if wallet_singleton.import_key(account_object):
-                wallet_singleton.map_account(account_object_name, 
-                account_object)
+                wallet_singleton.map_account(account_object)
             else:
                 logger.TRACE('''
                 Wrong or missing keys for the account *{}* in the wallets.

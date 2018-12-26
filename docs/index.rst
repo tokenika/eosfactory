@@ -75,7 +75,11 @@ Roadmap
 
 Python Documentation
 --------------------
+.. toctree::
+    :maxdepth: 1
 
+    rst/utils
+    
 .. toctree::
     :maxdepth: 1
 

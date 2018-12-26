@@ -535,6 +535,7 @@ def contract_file(contract_dir_hint, contract_file_hint):
 
     Any contract directory considered to be structured according to one of the 
     following patterns:
+
         - all the files in the contract directory,
         - contract files in the *build* subdirectory.  
 
