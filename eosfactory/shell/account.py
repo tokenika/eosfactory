@@ -42,7 +42,8 @@ class Account():
         get_account = cleos.GetAccount(account, is_info=False, is_verbose=0)
 
         logger.TRACE('''
-        * Cross-checked: account object *{}* mapped to an existing account *{}*.
+        * Cross-checked: account object ``{}`` mapped to an existing 
+        account ``{}``.
         '''.format(account_object_name, account.name), translate=False)
 
         return put_account_to_wallet_and_on_stack(account_object_name, account)
@@ -177,7 +178,7 @@ class Account():
             )
 
         logger.INFO('''
-            * account permission *{}*:
+            * account permission ``{}``:
             '''.format(authority))
 
         self.account_permission = result
@@ -223,7 +224,7 @@ class Account():
             )
 
         logger.INFO('''
-            * action permission *{}*:
+            * action permission ``{}``:
             '''.format(type))
 
         self.action_permission = result
@@ -267,7 +268,7 @@ class Account():
             is_verbose=False, json=True)
 
         logger.INFO('''
-            * push action *{}*:
+            * push action ``{}``:
             '''.format(action))
 
         logger.INFO('''
@@ -321,7 +322,7 @@ class Account():
             :class:`.cleos_set.SetTable` object
         '''            
         logger.INFO('''
-        * Table *{}* for *{}*
+        * Table ``{}`` for ``{}``
         '''.format(table_name, scope))
 
         result = cleos_get.GetTable(
@@ -492,7 +493,7 @@ def create_master_account(
                 return
 
             logger.INFO('''
-                ######## Account object *{}* restored from the blockchain.
+                ######## Account object ``{}`` restored from the blockchain.
                 '''.format(account_object_name)) 
             return
 
@@ -504,7 +505,7 @@ def create_master_account(
         account_name = account_name.account_name
 
     logger.INFO('''
-        ######### Create a master account object *{}*.
+        ######### Create a master account object ``{}``.
         '''.format(account_object_name))                
 
     '''
@@ -550,7 +551,7 @@ def create_master_account(
         if first_while and account_name and owner_key and active_key \
                         and not account_object.exists:
             raise errors.Error('''
-            There is no account named *{}* in the blockchain.
+            There is no account named ``{}`` in the blockchain.
             '''.format(account_name))
             return
         first_while = False
@@ -558,7 +559,7 @@ def create_master_account(
         if account_object.exists:
             if account_object.has_keys: # it is your account
                 logger.TRACE('''
-                    * Checking whether the wallet has keys to the account *{}*
+                    * Checking whether the wallet has keys to the account ``{}``
                     '''.format(account_object.name))
 
                 logger.TRACE('''
@@ -569,7 +570,7 @@ def create_master_account(
                     if Account.add_methods_and_finalize(
                         account_object_name, account_object):
                         logger.TRACE('''
-                            * The account *{}* is in the wallet.
+                            * The account ``{}`` is in the wallet.
                             '''.format(account_object.name))
                         return
                 else:
@@ -672,17 +673,17 @@ def create_account(
 
         if not isinstance(globals[account_object_name], interface.Account):
             raise errors.Error('''
-            The global variable *{}* type is not *Account*.
+            The global variable ``{}`` type is not *Account*.
             '''.format(account_object_name))
             return
 
         logger.INFO('''
-            ######## Account object *{}* restored from the blockchain.
+            ######## Account object ``{}`` restored from the blockchain.
             '''.format(account_object_name)) 
         return        
 
     logger.INFO('''
-        ######### Create an account object *{}*.
+        ######### Create an account object ``{}``.
         '''.format(account_object_name))
 
     '''
@@ -694,7 +695,8 @@ def create_account(
         if creator:
             account_name = creator
         logger.INFO('''
-                    ... for an existing blockchain account *{}* mapped as *{}*.
+                    ... for an existing blockchain account ``{}`` 
+                    mapped as ``{}``.
                     '''.format(account_name, account_object_name), 
                     translate=False)
         account_object = account.RestoreAccount(account_name)
@@ -711,7 +713,7 @@ def create_account(
 
         if stake_net and not manager.is_local_testnet():
             logger.INFO('''
-                        ... delegating stake to a new blockchain account *{}* mapped as *{}*.
+                        ... delegating stake to a new blockchain account ``{}`` mapped as ``{}``.
                         '''.format(account_name, account_object_name))
 
             try:
@@ -750,7 +752,7 @@ def create_account(
                         )
         else:
             logger.INFO('''
-                        ... for a new blockchain account *{}*.
+                        ... for a new blockchain account ``{}``.
                         '''.format(account_name))
             account_object = account.CreateAccount(
                     creator, account_name, 
@@ -776,7 +778,7 @@ def reboot():
     global wallet_singleton
     if wallet_singleton:
         wallet_singleton.delete_globals()
-    wallet.Wallet.wallet = None
+    wallet.Wallet.wallet_single = None
     try:
         del wallet_singleton
     except:
@@ -806,11 +808,11 @@ def is_wallet_defined(logger, globals=None):
         return
     
     global wallet_singleton
-    wallet_singleton = wallet.Wallet.wallet
+    wallet_singleton = wallet.Wallet.wallet_single
 
     if wallet_singleton is None:
         wallet.create_wallet(globals=globals)
-        wallet_singleton = wallet.Wallet.wallet
+        wallet_singleton = wallet.Wallet.wallet_single
 
         if wallet_singleton is None:
             raise errors.Error('''
@@ -838,7 +840,7 @@ def put_account_to_wallet_and_on_stack(
                 wallet_singleton.map_account(account_object)
             else:
                 logger.TRACE('''
-                Wrong or missing keys for the account *{}* in the wallets.
+                Wrong or missing keys for the account ``{}`` in the wallets.
                 '''.format(account_object.name))
                 return False
 

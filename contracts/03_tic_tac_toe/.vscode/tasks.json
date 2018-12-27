@@ -14,13 +14,13 @@
                         ]
                     }
                 },
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}' --compile"
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}' --compile"
             },
             "osx": {
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}' --compile"
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}' --compile"
             },
             "linux": {
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}' --compile"
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}' --compile"
             },
             "presentation": {
                 "reveal": "always",
@@ -41,13 +41,13 @@
                         ]
                     }
                 },
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}'"        
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}'"        
             },
             "osx": {
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}'"
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}'"
             },
             "linux": {
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}'"
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}'"
             },
             "problemMatcher": [],
             "presentation": {

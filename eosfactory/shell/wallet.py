@@ -20,8 +20,7 @@ class Wallet(cleos.WalletCreate):
         name (str): The name of the new wallet, defaults to `default`.
         password (str): The password to the wallet, if the wallet exists. 
     '''
-    wallet_keys = None
-    wallet = None
+    wallet_single = None
     globals = None
 
     def __init__(self, name=None, password="", file=False):
@@ -32,12 +31,13 @@ class Wallet(cleos.WalletCreate):
         else:
             name = setup.file_prefix() + name
 
-        if not self.wallet is None:
-            raise errors.Error('''
-            It can be only one ``Wallet`` object in the script; there is one
-            named ``{}``.
-            '''.format(wallet.name))
-            return
+        if not Wallet.wallet_single is None \
+                                    and not Wallet.wallet_single.name == name:
+                raise errors.Error('''
+                It can be only one ``Wallet`` object in the script; there is one
+                named ``{}``.
+                '''.format(Wallet.wallet_single.name))
+                return
 
         self.wallet_dir = config.keosd_wallet_dir()
 
@@ -71,7 +71,8 @@ class Wallet(cleos.WalletCreate):
                 password_map[name] = self.password
                 wallet_json_write(password_map)
                 logger.INFO('''
-                    * Password is saved to the file ``{}`` in the wallet directory.
+                    * Password is saved to the file ``{}`` 
+                    in the wallet directory.
                     '''.format(setup.password_map)
                 )
             else:
@@ -219,7 +220,8 @@ class Wallet(cleos.WalletCreate):
             imported_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
             logger.TRACE('''
-                * Importing keys of the account ``{}`` into the wallet ``{}``
+                * Importing keys of the account ``{}`` 
+                into the wallet ``{}``
                 '''.format(account_name, self.name)
                 )
         else:           
@@ -321,11 +323,11 @@ class Wallet(cleos.WalletCreate):
         '''
         self.open_unlock()
 
-        self.wallet_keys = cleos.WalletKeys(is_verbose=False)
+        wallet_keys = cleos.WalletKeys(is_verbose=False)
         logger.TRACE('''
             Keys in all open walets:
             {}
-            '''.format(self.wallet_keys.out_msg))
+            '''.format(wallet_keys.out_msg))
 
     def private_keys(self):
         ''' Lists public keys from all unlocked wallets.
@@ -459,9 +461,9 @@ def create_wallet(
         Wallet.globals = globals
     else:
         Wallet.globals = inspect.stack()[1][0].f_globals
-    Wallet.wallet = Wallet(name, password, file)
-    Wallet.wallet.restore_accounts()
+    Wallet.wallet_single = Wallet(name, password, file)
+    Wallet.wallet_single.restore_accounts()
 
 
 def get_wallet():
-    return Wallet.wallet
+    return Wallet.wallet_single

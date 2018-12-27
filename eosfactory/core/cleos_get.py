@@ -1,4 +1,5 @@
-import types
+
+import json
 
 import eosfactory.core.logger as logger
 import eosfactory.core.interface as interface

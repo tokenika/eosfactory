@@ -16,28 +16,35 @@ The wallet files are marked with prefixes which are encoding the URL of the acti
 
 ## Use Case
 
+The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do --
+
+```bash
+eosfactory/utils/pythonmd.sh docs/cases/wallet.md
+```
+
+-- in order to execute the whole.
+
 #### Create a new wallet
 
 Create a new Python session and import *EOSFactory* API:
 
-```
-$ python3
+```bash
+python3
 ```
 
-```
+```python
 from eosfactory.eosf import *
 ```
 
 First, lets's start a local testnet:
 
-
-```
+```python
 reset()
-info()
 ```
 
 Next, create a wallet, then create a couple of accounts and finally let the `Wallet` object list the private keys associated with those accounts:
-```
+
+```python
 create_wallet()
 create_master_account("master")
 create_account("alice", master)
@@ -47,7 +54,7 @@ get_wallet().keys()
 
 Here is the expected outcome:
 
-![](./img/01.png)
+![create wallet and put two accounts](../images/create_wallet_put_two_accounts.png)
 
 What has happened?
 
@@ -57,82 +64,79 @@ What has happened?
 
 Finally, stop the local testnet and exit Python CLI:
 
-```
+```python
 stop()
-exit()
 ```
+
+Note that the command `create_wallet()` is not necessary: it is issued internally with the first call to the `create_master_account` and `create_account` account factory functions.
 
 #### Resume the testnet
 
 Create a new Python session and import *EOSFactory* API:
 
-```
-$ python3
+```bash
+python3
 ```
 
-```
+```python
 from eosfactory.eosf import *
 ```
 
 Resume the testnet:
 
-```
+```python
 resume()
-info()
 ```
 
 When you run the `create_wallet()` command, *EOSFactory* will recreate the existing wallet, including the private keys we created in the previous session:
 
-```
+```python
 create_wallet()
 get_wallet().keys()
 ```
 
 Here is the expected outcome:
 
-![](./img/02.png)
+![resume wallet](../images/resume_wallet.png)
 
 Finally, stop the local testnet and exit Python CLI:
 
-```
+```python
 stop()
-exit()
 ```
 
 #### Reset the testnet
 
 Create a new Python session and import *EOSFactory* API:
 
-```
-$ python3
+```bash
+python3
 ```
 
-```
+```python
 from eosfactory.eosf import *
 ```
 
 And this time we reset the testnet:
 
-```
+```python
 reset()
-info()
 ```
 
 When you run the `create_wallet()` command, *EOSFactory* will lose track of the private keys, as the wallet is created from scratch. This is because the local testnet was reset, not resumed.
 
-```
+```python
 create_wallet()
 get_wallet().keys()
 ```
 You should get output similar to this:
 
-![](./img/03.png)
+![reset wallet](../images/reset_wallet.png)
 
 Finally, stop the local testnet and exit Python CLI:
 
-```
+```python
 stop()
-exit()
 ```
 
 #### Methods of the Wallet class
@@ -143,46 +147,48 @@ However, if you do, below there is a list of methods available in the `Wallet` c
 
 Create a new Python session and import *EOSFactory* API:
 
+```bash
+python3
 ```
-$ python3
-```
-```
+
+```python
 from eosfactory.eosf import *
 ```
 
-Then create a `Wallet` object:
+Then reset the local testnode and create an account. The singleton `Wallet` object is created automatically:
 
-```
-create_wallet()
+```python
+reset()
+create_master_account("master")
+create_account("alice", master)
 ```
 
 And execute the following methods of the `Wallet` class:
 
-```
+```python
 get_wallet().index()
 get_wallet().open()
 get_wallet().unlock()
-get_wallet().import_key(config.eosio_key_private())
 get_wallet().keys()
 get_wallet().lock()
 ```
 
 You should get output similar to this:
 
-![](./img/04.png)
+![wallet methods](../images/wallet_methods.png)
 
 Finally, exit Python CLI:
 
-```
+```python
 exit()
 ```
 
 ## Test Run
 
-The examples presented in this document can be executed as a Python script:
-```
-python3 docs/cases/02_wallet/case.py
-```
-You should get output similar to this:
+The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do --
 
-![](./case.png)
+```bash
+eosfactory/utils/pythonmd.sh docs/cases/wallet.md
+```
+
+-- in order to execute the whole.

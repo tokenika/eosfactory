@@ -16,7 +16,7 @@ Use Cases
 .. toctree::
     :maxdepth: 1
 
-    cases/02_wallet/case
+    cases/wallet
     cases/03_symbolic_names/case
     cases/04_account/case
     cases/05_master_account/case
