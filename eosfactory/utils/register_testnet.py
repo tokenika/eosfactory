@@ -70,9 +70,12 @@ def register_testnet():
         5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
     ''')
 
-    parser.add_argument("url", help="An URL of a public node offering access to the testnet, e.g. http://88.99.97.30:38888")
+    parser.add_argument(
+        "url", 
+        help="An URL of a public node offering access to the testnet, e.g."                         "http://88.99.97.30:38888")
     parser.add_argument("alias", nargs="?", default=None, help="Testnet alias")
-    parser.add_argument("-a", "--account", nargs=3, help="<name> <owner key> <active key>")
+    parser.add_argument(
+        "-a", "--account", nargs=3, help="<name> <owner key> <active key>")
 
     args = parser.parse_args()
 
@@ -84,8 +87,7 @@ def register_testnet():
         owner_key = args.account[1]
         active_key = args.account[2]
 
-    register_testnet_(
-        args.url, args.alias, account_name, owner_key, active_key)
+    register_testnet_(args.url, args.alias, account_name, owner_key, active_key)
 
     # python3 utils/register_testnet.py http://88.99.97.30:38888 jungle -a dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
 

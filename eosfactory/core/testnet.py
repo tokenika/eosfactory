@@ -4,6 +4,23 @@ import eosfactory.core.logger as logger
 
 
 class Testnet:
+    '''Testing ``nodeos`` node.
+
+    Args:
+        url (str): If set, the URL of a remote ``nodeos``, otherwise 
+            a localhost URL.
+        account_name (str): If set, the account name, otherwise the node is
+            considered local and the name is ``eosio``.
+        owner_key (str): If set, the public owner key of the ``account``.
+        active_key (str): If set, the public active key of the ``account``.
+        reset (bool): If set and if local node, reset the node.
+
+    Attributes:
+        url (str): The URL of the ``nodeos``.
+        account_name (str): The name of the account.
+        owner_key (str): The public owner key of the ``account``.
+        active_key (str): The public active key of the ``account``.
+    '''
     def __init__(
             self, url=None, 
             account_name=None, owner_key=None, active_key=None, 
@@ -31,19 +48,50 @@ class Testnet:
         self.active_key = active_key
 
     def configure(self, prefix=None):
+        '''Set the testnet to be the listener to EOSFactory.
+        '''
         setup.set_nodeos_address(self.url, prefix)
 
     def verify_production(self):
+        '''Check whether the node is active.
+
+        Returns:
+            bool: Whether the node is active.
+        '''
         return manager.verify_testnet_production()
 
     def clear_cache(self):
+        '''Remove all the saved interaction with the testnet.
+
+        Remove wallets ascribed to the testnet, as wall as its account map and
+        its password map.
+        '''
         manager.clear_testnet_cache()
 
     def is_local(self):
+        '''Check whether EOSFactory is connected to the local testnet.
+
+        Returns: 
+            bool: Whether EOSFactory is connected to the local testnet.
+        '''        
         return manager.is_local_testnet()
 
 
-def get_testnet(alias, testnet=None, reset=False):
+def get_testnet(alias=None, testnet=None, reset=False):
+    '''Return a testnet.
+
+    Args:
+        alias (str): If set, the testnet alias, otherwise the local testnet
+            is returned.
+        testnet (tuple): The tuple (<url> <name> <owner key> <active key>)
+            representing a :class:`.Testnet` object, returned if the 
+            ``alias`` argument is not set.
+        reset (bool): If both the ``alias`` and ``testnet`` arguments are not 
+            set, determine whether the local node is to be reset.
+
+    Returns:
+        :class:`.Testnet`: a testnet
+    '''
     if not alias and not testnet:
         return Testnet(reset=reset)
 
@@ -72,13 +120,29 @@ def get_testnet(alias, testnet=None, reset=False):
 TESTNET_FILE = "testnet.json"
 
 
-def add_testnet_to_mapping(testnet_object):
+def add_testnet_to_mapping(testnet):
+    '''Save the given :class:`.Testnet` object.
+
+    Args:
+        testnet (.Testnet): The object to be saved.
+    '''
     add_to_mapping(
-        testnet_object.url, testnet_object.account_name, 
-        testnet_object.owner_key, testnet_object.active_key, None)
+        testnet.url, testnet.account_name, 
+        testnet.owner_key, testnet.active_key, None)
     
 
 def add_to_mapping(url, account_name, owner_key, active_key, alias=None):
+    '''Save a :class:`.Testnet` object.
+
+    Args:
+        url (str): If set, the URL of a remote ``nodeos``, otherwise 
+            a localhost URL.
+        account_name (str): If set, the account name, otherwise the node is
+            considered local and the name is ``eosio``.
+        owner_key (str): If set, the public owner key of the ``account``.
+        active_key (str): If set, the public active key of the ``account``.
+        alias (str): If set, the name of the testnet.        
+    '''
     mapping = manager.read_map(TESTNET_FILE)
     testnet = {}
     testnet["url"] = url
@@ -92,6 +156,11 @@ def add_to_mapping(url, account_name, owner_key, active_key, alias=None):
 
 
 def remove_from_mapping(testnet):
+    '''Remove the given :class:`.Testnet` object from the record.
+
+    Args:
+        testnet (.Testnet): The object to be saved.
+    '''    
     mapping = manager.read_map(TESTNET_FILE)
     if testnet in mapping:
         del mapping[testnet]
@@ -99,6 +168,8 @@ def remove_from_mapping(testnet):
 
 
 def testnets():
+    '''Print recorded :class:`.Testnet` objects.
+    '''
     mapping = manager.read_map(TESTNET_FILE)
 
     if not mapping:
@@ -110,6 +181,7 @@ def testnets():
         print("%25s: %13s @ %s" % (alias, testnet["account_name"], testnet["url"]))
 
 
+#: Testnet http;//145.239.133.201;8888
 JUNGLE = Testnet(
     "http://145.239.133.201:8888",
     "dgxo1uyhoytn",
@@ -117,6 +189,8 @@ JUNGLE = Testnet(
     "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
 )
 
+
+#: Testnet http;//145.239.133.201;9999
 KYLIN = Testnet(
     "http://145.239.133.201:9999",
     "xlg3pao3idlq",
@@ -124,5 +198,3 @@ KYLIN = Testnet(
     "5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK"
 )
 
-# /mnt/d/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://145.239.133.201:8888 get info
-# /mnt/d/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://145.239.133.201:9999 get info
