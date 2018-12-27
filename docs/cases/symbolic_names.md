@@ -14,19 +14,25 @@ What's more, *EOSFactory* translates *EOSIO* logger messages, so that the random
 
 ## Use Case
 
+The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
+
+```bash
+eosfactory/utils/pythonmd.sh docs/cases/symbolic_names.md
+```
+
 Create a new Python session and import *EOSFactory* API:
 
-```
+```bash
 $ python3
 ```
 
-```
+```python
 from eosfactory.eosf import *
 ```
 
 Then run this code to initialize a local testnet, register a couple of accounts and deploy a smart-contract to one of them:
 
-```
+```python
 reset()
 create_master_account("master")
 create_account("host", master)
@@ -41,10 +47,7 @@ host.push_action(
     "create", 
     {
         "issuer": master,
-        "maximum_supply": "1000000000.0000 EOS",
-        "can_freeze": "0",
-        "can_recall": "0",
-        "can_whitelist": "0"
+        "maximum_supply": "1000000000.0000 EOS"
     }, [master, host])
 ```
 
@@ -52,13 +55,13 @@ host.push_action(
 
 Next, turn symbolic translation OFF:
 
-```md
+```python
 setup.is_translating = False
 ```
 
 And push an action to the smart-contract:
 
-```md
+```python
 host.push_action(
     "issue",
     {
@@ -68,20 +71,20 @@ host.push_action(
 ```
 Here is the expected outcome:
 
-![](./img/01.png)
+![not translating](../images/not_translating.png)
 
-Please note that when symbolic translation is disabled, the logger output referes to the `alice` account as `x32uuciixv4p`. It's because this is the actual name of this account as registered on the blockchain.
+Please note that when symbolic translation is disabled, the logger output refers to the `alice` account as `v13zgjp3bu45`. It's because this is the actual name of this account as registered on the blockchain.
 
 #### Symbolic translation enabled
 
 Now, turn symbolic translation ON:
 
-```md
+```python
 setup.is_translating = True
 ```
 And push another action to the same smart-contract:
 
-```md
+```python
 host.push_action(
     "issue",
     {
@@ -92,25 +95,20 @@ host.push_action(
 
 Here is the expected outcome:
 
-![](./img/02.png)
+![translating](../images/translating.png)
 
 Please note that when symbolic translation is enabled, the human-readable name `carol` is used in the logger output, even though the actual name of this account is `d4okdmdcqt4w`.
 
 Finally, stop the local testnet and exit Python CLI:
 
-```
+```python
 stop()
-exit()
 ```
 
 ## Test run
 
-The examples presented in this document can be executed as a Python script:
+The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
+```bash
+eosfactory/utils/pythonmd.sh docs/cases/symbolic_names.md
 ```
-python3 docs""/cases/03_symbolic_names/case.py
-```
-
-You should get output similar to this:
-
-![](./case.png)

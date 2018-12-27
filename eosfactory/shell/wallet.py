@@ -221,7 +221,7 @@ class Wallet(cleos.WalletCreate):
                     account_or_key, is_owner_key=False, is_private_key=False))
             logger.TRACE('''
                 * Importing keys of the account ``{}`` 
-                into the wallet ``{}``
+                    into the wallet ``{}``
                 '''.format(account_name, self.name)
                 )
         else:           

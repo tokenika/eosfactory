@@ -43,7 +43,7 @@ class Account():
 
         logger.TRACE('''
         * Cross-checked: account object ``{}`` mapped to an existing 
-        account ``{}``.
+            account ``{}``.
         '''.format(account_object_name, account.name), translate=False)
 
         return put_account_to_wallet_and_on_stack(account_object_name, account)
@@ -696,7 +696,7 @@ def create_account(
             account_name = creator
         logger.INFO('''
                     ... for an existing blockchain account ``{}`` 
-                    mapped as ``{}``.
+                        mapped as ``{}``.
                     '''.format(account_name, account_object_name), 
                     translate=False)
         account_object = account.RestoreAccount(account_name)
