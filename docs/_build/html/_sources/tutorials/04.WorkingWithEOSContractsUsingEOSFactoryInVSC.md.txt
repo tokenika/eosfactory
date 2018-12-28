@@ -10,9 +10,9 @@ The purpose of this tutorial is to demonstrate how *EOSFactory* can be combined 
 
 - We also assume you have [Visual Studio Code](https://code.visualstudio.com/) installed. If you are on Windows and run VSC for the first time, in order to get access to *Windows Subsystem for Linux* bash terminal inside VSC, navigate to `Preferences -> Settings` and overwrite the default configuration for the `terminal.integrated.shell.windows` option:
 
-  ```
-  "terminal.integrated.shell.windows": "C:\\Windows\\sysnative\\bash.exe"
-  ```
+    ```json
+    "terminal.integrated.shell.windows": "C:\\Windows\\sysnative\\bash.exe"
+    ```
 
 - Finally, we assume that you are familiar with the official [EOS Hello World tutorial](https://github.com/EOSIO/eos/wiki/Tutorial-Hello-World-Contract), as it presents the standard way to compile and deploy smart-contracts in EOS. What we present here is an alternative.
 
@@ -20,7 +20,7 @@ The purpose of this tutorial is to demonstrate how *EOSFactory* can be combined 
 
 In a bash terminal run the following command:
 
-```
+```bash
 cd eosfactory
 python3 -m eosfactory.utils.create_project foo_bar 01_hello_world
 ```
@@ -37,7 +37,7 @@ You can open the new project manually by launching VSC and navigating to the pro
 
 Alternatively, you can add the `--vsc` option to the command and then VSC will launch automatically, already switched to the projects's folder, for example:
 
-```
+```bash
 cd eosfactory
 python3 -m eosfactory.utils.create_project foo_bar 01_hello_world --vsc
 ```
@@ -66,7 +66,7 @@ With *EOSFactory* you can use [CMake](https://cmake.org/) routines to compile, b
 
 First open a bash terminal inside VSC (navigate to `View -> Integrated Terminal`), and switch to the `build` folder:
 
-```
+```bash
 cd build
 ```
 
@@ -74,13 +74,13 @@ cd build
 
 To configure your project:
 
-```
+```bash
 cmake ..
 ```
 
 The output should look like this:
 
-```
+```bash
 -- The C compiler identification is GNU 7.3.0
 -- The CXX compiler identification is GNU 7.3.0
 -- Check for working C compiler: /usr/bin/cc
@@ -104,13 +104,13 @@ The output should look like this:
 
 To build your project:
 
-```
+```bash
 make
 ```
 
 The output should look like this:
 
-```
+```bash
 Scanning dependencies of target abi
 Built target abi
 Scanning dependencies of target wast
@@ -123,25 +123,25 @@ Built target wast
 
 And finally, after your contract has been successfully built, invoke unit tests with this command:
 
-```
+```bash
 ctest
 ```
 
 If you want to make your unit tests more verbose, use the `-V` parameter:
 
-```
+```bash
 ctest -V
 ```
 
 And if you want to be more specific about which unit tests should be run, you can use the `-R` parameter which allows you to supply a regular expression indicating specific criteria regarding the names of the tests to be run, for example:
 
-```
+```bash
 ctest -R ^test$
 ```
 
 The outcome of the unit test (in the non-verbose mode) should look like this:
 
-```
+```bash
 Test project /mnt/d/Workspaces/EOS/contracts/contract.name/build
     Start 1: test
 1/2 Test #1: test .............................   Passed    9.96 sec
@@ -157,11 +157,11 @@ Total Test time (real) =  19.92 sec
 
 Also, please note that an alternative way to run the tests is to invoke them as a Python executable file, for example:
 
-```
+```bash
 python3 tests/test1.py
 ```
 
-```
+```bash
 python3 tests/unittest1.py
 ```
 
@@ -210,7 +210,7 @@ To run standardized unit tests navigate to `Terminal > Run Task > Unittest`:
 ![unittest](../images/unittest.png)
 
 You can further speed up your development cycle by creating key bindings for those tasks, for example:
-```
+```json
     {
         "key": "ctrl+shift+c",
         "command": "workbench.action.tasks.runTask",
@@ -228,7 +228,7 @@ You can further speed up your development cycle by creating key bindings for tho
     }
 ```
 Or if you are on MacOS:
-```
+```json
     {
         "key": "cmd+shift+c",
         "command": "workbench.action.tasks.runTask",
@@ -260,25 +260,25 @@ As *EOSFactory* gets upgraded, it will include further libraries that enhance th
 
 You might have noticed the `logger.hpp` header file in the `src` directory. And if you have applied the `01_hello_world` template when creating your VSC project, you'll also notice the following line in the `contract.name.cpp` file:
 
-```
+```python
 logger_info( "debug user name: ", name{user} );
 ```
 
 The effect of the above code entry is the following output in test results:
 
-```
+```python
 INFO debug user name: carol @ 8:53:50 contract.name.cpp[17](hi)
 ```
 
 A similar example can be found in the `02_eosio_token` template:
 
-```
+```python
 logger_info("quantity.amount: ", quantity.amount);
 ```
 
 The effect of the above code entry is the following output in test results:
 
-```
+```python
 INFO quantity.amount: 250000 @ 13:29:17 contract.name.cpp[88](transfer)
 ```
 
@@ -286,7 +286,7 @@ Thus the logger utility offers you much more than just a way of monitoring the v
 
 **NOTE:** For the logger output to be visible in the console, make sure that your unit test contains the `Verbosity.DEBUG` flag as part of the `Logger.verbosity` options, for example:
 
-```
+```python
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 ```
 

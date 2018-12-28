@@ -57,7 +57,7 @@
 <li><p class="first">We assume that you are familiar with the material covered in <a class="reference external" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in <em>EOSFactory</em></a>.</p>
 </li>
 <li><p class="first">We also assume you have <a class="reference external" href="https://code.visualstudio.com/">Visual Studio Code</a> installed. If you are on Windows and run VSC for the first time, in order to get access to <em>Windows Subsystem for Linux</em> bash terminal inside VSC, navigate to <code class="docutils literal notranslate"><span class="pre">Preferences</span> <span class="pre">-&gt;</span> <span class="pre">Settings</span></code> and overwrite the default configuration for the <code class="docutils literal notranslate"><span class="pre">terminal.integrated.shell.windows</span></code> option:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;terminal.integrated.shell.windows&quot;</span><span class="p">:</span> <span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">Windows</span><span class="se">\\</span><span class="s2">sysnative</span><span class="se">\\</span><span class="s2">bash.exe&quot;</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>&quot;terminal.integrated.shell.windows&quot;: &quot;C:\\Windows\\sysnative\\bash.exe&quot;
 </pre></div>
 </div>
 </li>
@@ -68,8 +68,8 @@
 <div class="section" id="create-a-new-smart-contract-vsc-project">
 <span id="create-a-new-smart-contract-vsc-project"></span><h2>Create a new smart-contract VSC project<a class="headerlink" href="#create-a-new-smart-contract-vsc-project" title="Permalink to this headline">¶</a></h2>
 <p>In a bash terminal run the following command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">eosfactory</span>
-<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">eosfactory</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">create_project</span> <span class="n">foo_bar</span> <span class="mi">01</span><span class="n">_hello_world</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> eosfactory
+python3 -m eosfactory.utils.create_project foo_bar 01_hello_world
 </pre></div>
 </div>
 <p><strong>NOTE:</strong> If you are on Windows and have not restarted your WSL bash terminal after <em>EOSFactory</em> installation, you’ll need to do so before you execute this command (if you are using WSL bash terminal inside <em>Visual Studio Code</em>, restart your VSC instead).</p>
@@ -80,8 +80,8 @@
 <span id="open-the-new-project-in-visual-studio-code"></span><h2>Open the new project in <em>Visual Studio Code</em><a class="headerlink" href="#open-the-new-project-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
 <p>You can open the new project manually by launching VSC and navigating to the projects’s folder.</p>
 <p>Alternatively, you can add the <code class="docutils literal notranslate"><span class="pre">--vsc</span></code> option to the command and then VSC will launch automatically, already switched to the projects’s folder, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">eosfactory</span>
-<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">eosfactory</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">create_project</span> <span class="n">foo_bar</span> <span class="mi">01</span><span class="n">_hello_world</span> <span class="o">--</span><span class="n">vsc</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> eosfactory
+python3 -m eosfactory.utils.create_project foo_bar 01_hello_world --vsc
 </pre></div>
 </div>
 </div>
@@ -105,47 +105,47 @@ definitions, etc.</li>
 <span id="use-cmake-in-visual-studio-code"></span><h2>Use <em>CMake</em> in <em>Visual Studio Code</em><a class="headerlink" href="#use-cmake-in-visual-studio-code" title="Permalink to this headline">¶</a></h2>
 <p>With <em>EOSFactory</em> you can use <a class="reference external" href="https://cmake.org/">CMake</a> routines to compile, build and unit test a contract.</p>
 <p>First open a bash terminal inside VSC (navigate to <code class="docutils literal notranslate"><span class="pre">View</span> <span class="pre">-&gt;</span> <span class="pre">Integrated</span> <span class="pre">Terminal</span></code>), and switch to the <code class="docutils literal notranslate"><span class="pre">build</span></code> folder:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">build</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> build
 </pre></div>
 </div>
 <div class="section" id="configure">
 <span id="configure"></span><h3>Configure<a class="headerlink" href="#configure" title="Permalink to this headline">¶</a></h3>
 <p>To configure your project:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cmake</span> <span class="o">..</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ..
 </pre></div>
 </div>
 <p>The output should look like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="n">The</span> <span class="n">C</span> <span class="n">compiler</span> <span class="n">identification</span> <span class="ow">is</span> <span class="n">GNU</span> <span class="mf">7.3</span><span class="o">.</span><span class="mi">0</span>
-<span class="o">--</span> <span class="n">The</span> <span class="n">CXX</span> <span class="n">compiler</span> <span class="n">identification</span> <span class="ow">is</span> <span class="n">GNU</span> <span class="mf">7.3</span><span class="o">.</span><span class="mi">0</span>
-<span class="o">--</span> <span class="n">Check</span> <span class="k">for</span> <span class="n">working</span> <span class="n">C</span> <span class="n">compiler</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">cc</span>
-<span class="o">--</span> <span class="n">Check</span> <span class="k">for</span> <span class="n">working</span> <span class="n">C</span> <span class="n">compiler</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">cc</span> <span class="o">--</span> <span class="n">works</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">C</span> <span class="n">compiler</span> <span class="n">ABI</span> <span class="n">info</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">C</span> <span class="n">compiler</span> <span class="n">ABI</span> <span class="n">info</span> <span class="o">-</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">C</span> <span class="nb">compile</span> <span class="n">features</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">C</span> <span class="nb">compile</span> <span class="n">features</span> <span class="o">-</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Check</span> <span class="k">for</span> <span class="n">working</span> <span class="n">CXX</span> <span class="n">compiler</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">c</span><span class="o">++</span>
-<span class="o">--</span> <span class="n">Check</span> <span class="k">for</span> <span class="n">working</span> <span class="n">CXX</span> <span class="n">compiler</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">c</span><span class="o">++</span> <span class="o">--</span> <span class="n">works</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">CXX</span> <span class="n">compiler</span> <span class="n">ABI</span> <span class="n">info</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">CXX</span> <span class="n">compiler</span> <span class="n">ABI</span> <span class="n">info</span> <span class="o">-</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">CXX</span> <span class="nb">compile</span> <span class="n">features</span>
-<span class="o">--</span> <span class="n">Detecting</span> <span class="n">CXX</span> <span class="nb">compile</span> <span class="n">features</span> <span class="o">-</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Configuring</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Generating</span> <span class="n">done</span>
-<span class="o">--</span> <span class="n">Build</span> <span class="n">files</span> <span class="n">have</span> <span class="n">been</span> <span class="n">written</span> <span class="n">to</span><span class="p">:</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">contract</span><span class="o">.</span><span class="n">name</span><span class="o">/</span><span class="n">build</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-- The C compiler identification is GNU <span class="m">7</span>.3.0
+-- The CXX compiler identification is GNU <span class="m">7</span>.3.0
+-- Check <span class="k">for</span> working C compiler: /usr/bin/cc
+-- Check <span class="k">for</span> working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - <span class="k">done</span>
+-- Detecting C compile features
+-- Detecting C compile features - <span class="k">done</span>
+-- Check <span class="k">for</span> working CXX compiler: /usr/bin/c++
+-- Check <span class="k">for</span> working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - <span class="k">done</span>
+-- Detecting CXX compile features
+-- Detecting CXX compile features - <span class="k">done</span>
+-- Configuring <span class="k">done</span>
+-- Generating <span class="k">done</span>
+-- Build files have been written to: /mnt/d/Workspaces/EOS/contracts/contract.name/build
 </pre></div>
 </div>
 </div>
 <div class="section" id="build">
 <span id="build"></span><h3>Build<a class="headerlink" href="#build" title="Permalink to this headline">¶</a></h3>
 <p>To build your project:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make
 </pre></div>
 </div>
 <p>The output should look like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Scanning</span> <span class="n">dependencies</span> <span class="n">of</span> <span class="n">target</span> <span class="n">abi</span>
-<span class="n">Built</span> <span class="n">target</span> <span class="n">abi</span>
-<span class="n">Scanning</span> <span class="n">dependencies</span> <span class="n">of</span> <span class="n">target</span> <span class="n">wast</span>
-<span class="n">Built</span> <span class="n">target</span> <span class="n">wast</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Scanning dependencies of target abi
+Built target abi
+Scanning dependencies of target wast
+Built target wast
 </pre></div>
 </div>
 <p><strong>NOTE:</strong> If the <code class="docutils literal notranslate"><span class="pre">ABI</span></code> file already exists in the <code class="docutils literal notranslate"><span class="pre">src</span></code> folder (you should keep it there, if you prefer to create it manually instead of relying on the <em>EOSIO</em> toolset) <em>CMake</em> will skip the <code class="docutils literal notranslate"><span class="pre">ABI</span></code> file generation step and proceed with <code class="docutils literal notranslate"><span class="pre">WAST</span></code> file generation.</p>
@@ -153,35 +153,35 @@ definitions, etc.</li>
 <div class="section" id="unit-tests">
 <span id="unit-tests"></span><h3>Unit tests<a class="headerlink" href="#unit-tests" title="Permalink to this headline">¶</a></h3>
 <p>And finally, after your contract has been successfully built, invoke unit tests with this command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ctest</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ctest
 </pre></div>
 </div>
 <p>If you want to make your unit tests more verbose, use the <code class="docutils literal notranslate"><span class="pre">-V</span></code> parameter:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ctest</span> <span class="o">-</span><span class="n">V</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ctest -V
 </pre></div>
 </div>
 <p>And if you want to be more specific about which unit tests should be run, you can use the <code class="docutils literal notranslate"><span class="pre">-R</span></code> parameter which allows you to supply a regular expression indicating specific criteria regarding the names of the tests to be run, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ctest -R ^test$
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ctest -R ^test$
 </pre></div>
 </div>
 <p>The outcome of the unit test (in the non-verbose mode) should look like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Test</span> <span class="n">project</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">contract</span><span class="o">.</span><span class="n">name</span><span class="o">/</span><span class="n">build</span>
-    <span class="n">Start</span> <span class="mi">1</span><span class="p">:</span> <span class="n">test</span>
-<span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="n">Test</span> <span class="c1">#1: test .............................   Passed    9.96 sec</span>
-    <span class="n">Start</span> <span class="mi">2</span><span class="p">:</span> <span class="n">unittest</span>
-<span class="mi">2</span><span class="o">/</span><span class="mi">2</span> <span class="n">Test</span> <span class="c1">#2: unittest .........................   Passed    9.94 sec</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Test project /mnt/d/Workspaces/EOS/contracts/contract.name/build
+    Start <span class="m">1</span>: <span class="nb">test</span>
+<span class="m">1</span>/2 Test <span class="c1">#1: test .............................   Passed    9.96 sec</span>
+    Start <span class="m">2</span>: unittest
+<span class="m">2</span>/2 Test <span class="c1">#2: unittest .........................   Passed    9.94 sec</span>
 
-<span class="mi">100</span><span class="o">%</span> <span class="n">tests</span> <span class="n">passed</span><span class="p">,</span> <span class="mi">0</span> <span class="n">tests</span> <span class="n">failed</span> <span class="n">out</span> <span class="n">of</span> <span class="mi">2</span>
+<span class="m">100</span>% tests passed, <span class="m">0</span> tests failed out of <span class="m">2</span>
 
-<span class="n">Total</span> <span class="n">Test</span> <span class="n">time</span> <span class="p">(</span><span class="n">real</span><span class="p">)</span> <span class="o">=</span>  <span class="mf">19.92</span> <span class="n">sec</span>
+Total Test <span class="nb">time</span> <span class="o">(</span>real<span class="o">)</span> <span class="o">=</span>  <span class="m">19</span>.92 sec
 </pre></div>
 </div>
 <p><strong>NOTE:</strong> As you might have noticed, there are two types of unit tests: the standard ones (named <em>unittest1</em>, <em>unittest2</em>, etc) and ad-hoc ones (named <em>test1</em>, <em>test2</em>, etc). The reason for this duality is this: we find it useful to have standard unit tests to prove that things work as expected, and ad-hoc tests to investigate bugs and generally monitor the inner workings of a smart-contract. <em>EOSFactory</em> supports both, so you can choose whatever suits your needs.</p>
 <p>Also, please note that an alternative way to run the tests is to invoke them as a Python executable file, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">tests</span><span class="o">/</span><span class="n">test1</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 tests/test1.py
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">tests</span><span class="o">/</span><span class="n">unittest1</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 tests/unittest1.py
 </pre></div>
 </div>
 </div>
@@ -222,38 +222,38 @@ are listed.</li>
 <p>To run standardized unit tests navigate to <code class="docutils literal notranslate"><span class="pre">Terminal</span> <span class="pre">&gt;</span> <span class="pre">Run</span> <span class="pre">Task</span> <span class="pre">&gt;</span> <span class="pre">Unittest</span></code>:</p>
 <p><img alt="unittest" src="../_images/unittest.png" /></p>
 <p>You can further speed up your development cycle by creating key bindings for those tasks, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="p">{</span>
-        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;ctrl+shift+c&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Compile&quot;</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>    <span class="p">{</span>
+        <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;ctrl+shift+c&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Compile&quot;</span>
     <span class="p">}</span>
     <span class="p">{</span>
-        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;ctrl+shift+t&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Test&quot;</span>
+        <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;ctrl+shift+t&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Test&quot;</span>
     <span class="p">}</span>
     <span class="p">{</span>
-        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;ctrl+shift+u&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Unittest&quot;</span>
+        <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;ctrl+shift+u&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Unittest&quot;</span>
     <span class="p">}</span>
 </pre></div>
 </div>
 <p>Or if you are on MacOS:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="p">{</span>
-        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;cmd+shift+c&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Compile&quot;</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>    <span class="p">{</span>
+        <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;cmd+shift+c&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Compile&quot;</span>
     <span class="p">}</span>
     <span class="p">{</span>
-        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;cmd+shift+t&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Test&quot;</span>
+        <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;cmd+shift+t&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Test&quot;</span>
     <span class="p">}</span>
     <span class="p">{</span>
-        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;cmd+shift+u&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Unittest&quot;</span>
+        <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;cmd+shift+u&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;workbench.action.tasks.runTask&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;args&quot;</span><span class="p">:</span> <span class="s2">&quot;Unittest&quot;</span>
     <span class="p">}</span>
 </pre></div>
 </div>
@@ -269,24 +269,24 @@ are listed.</li>
 <span id="debug-with-smart-loggers"></span><h2>Debug with smart loggers<a class="headerlink" href="#debug-with-smart-loggers" title="Permalink to this headline">¶</a></h2>
 <p>As <em>EOSFactory</em> gets upgraded, it will include further libraries that enhance the process of smart-contract development. Here we present one of such features in action: the logging tool. It’s quite important, as using loggers is actually the only way to debug smart contracts.</p>
 <p>You might have noticed the <code class="docutils literal notranslate"><span class="pre">logger.hpp</span></code> header file in the <code class="docutils literal notranslate"><span class="pre">src</span></code> directory. And if you have applied the <code class="docutils literal notranslate"><span class="pre">01_hello_world</span></code> template when creating your VSC project, you’ll also notice the following line in the <code class="docutils literal notranslate"><span class="pre">contract.name.cpp</span></code> file:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">logger_info</span><span class="p">(</span> <span class="s2">&quot;debug user name: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">}</span> <span class="p">);</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">logger_info</span><span class="p">(</span> <span class="s2">&quot;debug user name: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">{</span><span class="n">user</span><span class="p">}</span> <span class="p">);</span>
 </pre></div>
 </div>
 <p>The effect of the above code entry is the following output in test results:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span> <span class="n">debug</span> <span class="n">user</span> <span class="n">name</span><span class="p">:</span> <span class="n">carol</span> <span class="o">@</span> <span class="mi">8</span><span class="p">:</span><span class="mi">53</span><span class="p">:</span><span class="mi">50</span> <span class="n">contract</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">cpp</span><span class="p">[</span><span class="mi">17</span><span class="p">](</span><span class="n">hi</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>INFO debug user name: carol @ 8:53:50 contract.name.cpp[17](hi)
 </pre></div>
 </div>
 <p>A similar example can be found in the <code class="docutils literal notranslate"><span class="pre">02_eosio_token</span></code> template:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">logger_info</span><span class="p">(</span><span class="s2">&quot;quantity.amount: &quot;</span><span class="p">,</span> <span class="n">quantity</span><span class="o">.</span><span class="n">amount</span><span class="p">);</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">logger_info</span><span class="p">(</span><span class="s2">&quot;quantity.amount: &quot;</span><span class="p">,</span> <span class="n">quantity</span><span class="o">.</span><span class="n">amount</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>The effect of the above code entry is the following output in test results:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span> <span class="n">quantity</span><span class="o">.</span><span class="n">amount</span><span class="p">:</span> <span class="mi">250000</span> <span class="o">@</span> <span class="mi">13</span><span class="p">:</span><span class="mi">29</span><span class="p">:</span><span class="mi">17</span> <span class="n">contract</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">cpp</span><span class="p">[</span><span class="mi">88</span><span class="p">](</span><span class="n">transfer</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>INFO quantity.amount: 250000 @ 13:29:17 contract.name.cpp[88](transfer)
 </pre></div>
 </div>
 <p>Thus the logger utility offers you much more than just a way of monitoring the value of a variable. What you also get is the method name, the file name and the line number where this logger event occurred.</p>
 <p><strong>NOTE:</strong> For the logger output to be visible in the console, make sure that your unit test contains the <code class="docutils literal notranslate"><span class="pre">Verbosity.DEBUG</span></code> flag as part of the <code class="docutils literal notranslate"><span class="pre">Logger.verbosity</span></code> options, for example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">verbosity</span><span class="p">([</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">Verbosity</span><span class="o">.</span><span class="n">OUT</span><span class="p">,</span> <span class="n">Verbosity</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">verbosity</span><span class="p">([</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">Verbosity</span><span class="o">.</span><span class="n">OUT</span><span class="p">,</span> <span class="n">Verbosity</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>In our examples logger verbosity is defined in the top section of the file, just below the import statements.</p>
@@ -373,7 +373,7 @@ are listed.</li>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Tokenika.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/b49cbcc.
     </div>
   </body>
 </html>

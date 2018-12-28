@@ -18,7 +18,7 @@ And this is what *EOSFactory* actually brings to the table: an easy & intuitive 
 
 #### 1. Simple syntax
 
-The front-end of *EOSFactory* is simply a Python3 Command Line Interface. This way you can interact with EOS smart-contract, and prove it works as expected, without having to deal with the complexity of a low-level language like C++. In most cases Python syntax is clear for everyone.
+The front-end of *EOSFactory* is simply a Python3 Command Line Interface. This way you can interact with EOS smart-contract, and prove it works as expected, instead having to deal with the raw primitives of the EOSIO `cleos`. In most cases Python syntax is immediately clear for everyone.
 
 #### 2. Real testnet
 
@@ -27,10 +27,3 @@ As EOS full node is very quick we don't need to rely on a testnet simulator simi
 #### 3. Truly cross-platform
 
 We make sure everything we do is fully compatible with Windows - our toolset enables you to run an EOS node and interact with it on any operating system, including Windows, MacOS and Linux.
-
-## Architecture
-
-*EOSFactory* is composed of two layers:
-
-- C++ client (i.e. `cleos`) connected to an EOS node (i.e. `nodeos`) running a private or public testnet,
-- Python wrapper acting as a convenient human-oriented interface.

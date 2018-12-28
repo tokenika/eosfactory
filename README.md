@@ -42,7 +42,7 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 * [Installing EOSFactory](docs/tutorials/01.InstallingEOSFactory.md)
 * [Interacting with EOS Contracts in EOSFactory](docs/tutorials/02.InteractingWithEOSContractsInEOSFactory.md)
 * [Building and deploying EOS Contracts in EOSFactory](docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md)
-* [Working with EOS Contracts using EOSFactory in VSC](docs/tutorials/tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.md)
+* [Working with EOS Contracts using EOSFactory in VSC](docs/tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.md)
 * [Interacting with Public Testnet](docs/tutorials/05.InteractingWithPublicTestnet.md)
 
 ## Use cases
@@ -53,6 +53,8 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 * [Master Account](docs/cases/master_account.md)
 
 ## Developer documentation
+
+[index](file:///C:/Workspaces/EOS/eosfactory/docs/_build/html/rst/core.teos.html)
 
 Please refer to [this index of Python modules](http://eosfactory.io/build/html/py-modindex.html) which constitute the front-end of *EOSFactory*.
 

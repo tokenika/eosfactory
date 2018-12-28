@@ -11,13 +11,13 @@ The purpose of this tutorial is to demonstrate how *EOSFactory* and its Python C
 
 Open a bash terminal (or if you are on Windows, open an Ubuntu bash terminal supplied by *Windows Subsystem for Linux*) and run Python CLI:
 
-```
+```bash
 python3
 ```
 
 Once in the Python shell, import the *EOSFactory* library:
 
-```
+```python
 from eosfactory.eosf import *
 ```
 
@@ -25,7 +25,7 @@ from eosfactory.eosf import *
 
 To start your own single-node local testnet:
 
-```
+```python
 reset()
 ```
 
@@ -33,7 +33,7 @@ On MacOS the *EOSIO* process is run in the background with no visible interface.
 
 To verify the *EOSIO* node is running or to get information about the current state of the testnet:
 
-```
+```python
 info()
 ```
 
@@ -41,19 +41,19 @@ info()
 
 To stop the current testnet:
 
-```
+```python
 stop()
 ```
 
 To continue running the same testnet:
 
-```
+```python
 resume()
 ```
 
 To stop the current testnet and start a new one:
 
-```
+```python
 reset()
 ```
 
@@ -61,19 +61,19 @@ reset()
 
 First, make sure a local testnet is running:
 
-```
+```python
 reset()
 ```
 
 Next, create a master account from which other accounts can be created:
 
-```
+```python
 create_master_account("master")
 ```
 
 As a result, a global variable called `master` (or whatever name you pass as the parameter) is created and from now on you can use it anywhere in the code, for example:
 
-```
+```python
 master.info()
 ```
 
@@ -85,13 +85,13 @@ You don't need to worry about locking or unlocking the wallet, managing its pass
 
 If you need to create test accounts, here is how you do it:
 
-```
+```python
 create_account("charlie", master)
 ```
 
 Again, a global variable, this time called `charlie`, is created and from now on you can use it anywhere in the code, for example:
 
-```
+```python
 charlie.info()
 ```
 
@@ -99,7 +99,7 @@ charlie.info()
 
 However, if you want to assign a specific name to an account, you can still do it, for example:
 
-```
+```python
 create_account("charlie2", master, account_name="charlie4eos")
 ```
 
@@ -107,7 +107,7 @@ create_account("charlie2", master, account_name="charlie4eos")
 
 And then run the `info()` command to verify that the `charlie4eos` name is actually assigned to the account referenced by the `charlie2` variable:
 
-```
+```python
 charlie2.info()
 ```
 
@@ -115,26 +115,26 @@ charlie2.info()
 
 We assume that a local testnet is running and initialized:
 
-```
+```python
 reset()
 create_master_account("master")
 ```
 
 To create a reference to an already existing contract, first create an account which will host the contract:
 
-```
+```python
 create_account("host", master)
 ```
 
 And then create a reference to the contract by supplying the host account and the path to the folder where the contract is located, for example:
 
-```
+```python
 contract = Contract(host, "/mnt/d/Workspaces/EOS/eosfactory/contracts/02_eosio_token")
 ```
 
 Alternatively, supply just the name of the folder, if it can be found in the standard location, i.e. `eosfactory/contracts`, for example:
 
-```
+```python
 contract = Contract(host, "02_eosio_token")
 ```
 
@@ -142,7 +142,7 @@ contract = Contract(host, "02_eosio_token")
 
 Before deploying the contract needs to be built from the source code. To build the contract invoke its `build()` method:
 
-```
+```python
 contract.build()
 ```
 
@@ -150,19 +150,19 @@ contract.build()
 
 At this stage the contract has no code deployed. You can check it by running its `code()` method:
 
-```
+```python
 contract.code()
 ```
 
 To deploy the contract use its `deploy()` method:
 
-```
+```python
 contract.deploy()
 ```
 
 And now you can verify that the hash of the deployed code is non-zero:
 
-```
+```python
 contract.code()
 ```
 
@@ -170,7 +170,7 @@ contract.code()
 
 To create a new token we call the `create` action on the `eosio.token` contract:
 
-```
+```python
 host.push_action(
     "create", 
     {
@@ -186,7 +186,7 @@ host.push_action(
 
 **NOTE:** If you want to see the actual transaction without broadcasting it, use the `show_action` method instead of `push_action`, for example:
 
-```
+```python
 host.show_action(
     "create", 
     {
@@ -202,7 +202,7 @@ host.show_action(
 
 We'll need two accounts. To create them just run:
 
-```
+```python
 create_account("alice", master)
 create_account("carol", master)
 ```
@@ -211,7 +211,7 @@ create_account("carol", master)
 
 Now that we have created the token, the issuer can issue new tokens to `alice`:
 
-```
+```python
 host.push_action(
     "issue",
     {
@@ -226,7 +226,7 @@ host.push_action(
 
 Now that `alice` has tokens, we will transfer some of them to `carol`: 
 
-```
+```python
 host.push_action(
     "transfer",
     {
@@ -244,11 +244,11 @@ From the contract's ABI we know that the table keeping track of the token balanc
 
 Let's check the state of both accounts involved in the previous transaction:
 
-```
+```python
 host.table("accounts", alice)
 ```
 
-```
+```python
 host.table("accounts", carol)
 ```
 
@@ -256,25 +256,25 @@ host.table("accounts", carol)
 
 This is the result you should get for `alice`:
 
-```
+```python
 {
   "rows": [{
       "balance": "75.0000 EOS"
     }
   ],
-  "more": false
+  "more": False
 }
 ```
 
 And this is for `carol`:
 
-```
+```python
 {
   "rows": [{
       "balance": "25.0000 EOS"
     }
   ],
-  "more": false
+  "more": False
 }
 ```
 
@@ -282,14 +282,22 @@ And this is for `carol`:
 
 To stop the local testnet:
 
-```
+```python
 stop()
 ```
 
 To exit Python CLI:
 
-```
+```bash
 exit()
 ```
 
 Alternatively, use the `ctrl-D` shortcut.
+
+## Run the tutorial
+
+The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
+
+```bash
+eosfactory/utils/pythonmd.sh docs/tutorials/02.InteractingWithEOSContractsInEOSFactory.md
+```

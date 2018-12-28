@@ -51,17 +51,14 @@
 <p>The purpose of this tutorial is to demonstrate how <em>EOSFactory</em> can be used to deploy and test EOS smart-contracts on a public testnet, e.g. <a class="reference external" href="http://dev.cryptolions.io/">Jungle Testnet</a> or <a class="reference external" href="https://www.cryptokylin.io/">CryptoKylin Testnet</a>.</p>
 <div class="section" id="prerequisites">
 <span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
-<ul>
-<li><p class="first">This tutorial assumes that you have successfully installed <em>EOSFactory</em>. If it’s not the case, please refer to <a class="reference external" href="01.InstallingEOSFactory.html">Installing EOSFactory</a>.</p>
-</li>
-<li><p class="first">We assume that you are familiar with the material covered in <a class="reference external" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a> and <a class="reference external" href="03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building &amp; Deploying EOS Contracts using EOSFactory</a>.</p>
-</li>
-<li><p class="first">We also assume you have <a class="reference external" href="https://code.visualstudio.com/">Visual Studio Code</a> installed. If you are on Windows and run VSC for the first time, in order to get access to <em>Windows Subsystem for Linux</em> bash terminal inside VSC, navigate to <code class="docutils literal notranslate"><span class="pre">Preferences</span> <span class="pre">-&gt;</span> <span class="pre">Settings</span></code> and overwrite the default configuration for the <code class="docutils literal notranslate"><span class="pre">terminal.integrated.shell.windows</span></code> option:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<ul class="simple">
+<li>This tutorial assumes that you have successfully installed <em>EOSFactory</em>. If it’s not the case, please refer to <a class="reference external" href="01.InstallingEOSFactory.html">Installing EOSFactory</a>.</li>
+<li>We assume that you are familiar with the material covered in <a class="reference external" href="02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in EOSFactory</a> and <a class="reference external" href="03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building &amp; Deploying EOS Contracts using EOSFactory</a>.</li>
+<li>We also assume you have <a class="reference external" href="https://code.visualstudio.com/">Visual Studio Code</a> installed. If you are on Windows and run VSC for the first time, in order to get access to <em>Windows Subsystem for Linux</em> bash terminal inside VSC, navigate to <code class="docutils literal notranslate"><span class="pre">Preferences</span> <span class="pre">-&gt;</span> <span class="pre">Settings</span></code> and overwrite the default configuration for the <code class="docutils literal notranslate"><span class="pre">terminal.integrated.shell.windows</span></code> option:</li>
+</ul>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>  &quot;terminal.integrated.shell.windows&quot;: &quot;C:\\Windows\\sysnative\\bash.exe&quot;
 </pre></div>
 </div>
-</li>
-</ul>
 </div>
 <div class="section" id="the-problems-with-public-testnet">
 <span id="the-problems-with-public-testnet"></span><h2>The problems with public testnet<a class="headerlink" href="#the-problems-with-public-testnet" title="Permalink to this headline">¶</a></h2>
@@ -81,20 +78,20 @@
 <li>your preferred alias for the testnet, e.g. <code class="docutils literal notranslate"><span class="pre">myjungle</span></code>.</li>
 </ul>
 <p>In our case the command looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">eosfactory</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_testnet</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">145.239</span><span class="o">.</span><span class="mf">133.201</span><span class="p">:</span><span class="mi">8888</span> <span class="n">myjungle</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m eosfactory.utils.register_testnet http://145.239.133.201:8888 myjungle
 </pre></div>
 </div>
 <p>In response you will receive a message similar to the following example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Account</span> <span class="n">Name</span><span class="p">:</span> <span class="n">tcfchehyagd4</span>
-<span class="n">Owner</span> <span class="n">Public</span> <span class="n">Key</span><span class="p">:</span> <span class="n">EOS4x5jhfaJ6vA7z5K36dWFkeZfabRbSoSoGUQFjvWNUwtFt7jXGU</span>
-<span class="n">Active</span> <span class="n">Public</span> <span class="n">Key</span><span class="p">:</span> <span class="n">EOS8LQq1VDf1F5cBSdYvbott9GgsR7Bvz4ttR8A6RJiHDKsPdBY1c</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Account Name: tcfchehyagd4
+Owner Public Key: EOS4x5jhfaJ6vA7z5K36dWFkeZfabRbSoSoGUQFjvWNUwtFt7jXGU
+Active Public Key: EOS8LQq1VDf1F5cBSdYvbott9GgsR7Bvz4ttR8A6RJiHDKsPdBY1c
 </pre></div>
 </div>
 <p>To complete the process, use the suggested account name and public keys (ignore the private keys) to register a new account on a public testnet. This account will serve as a master account for the <em>EOSFactory</em> testnet object.</p>
 <p><strong>NOTE:</strong> Make sure to use the testnet’s faucet to fund the newly created account with enough liquid EOS to be able to spawn other accounts, delegate CPU &amp; NET and buy RAM for them.</p>
 <p>When you are ready, type <code class="docutils literal notranslate"><span class="pre">go</span></code> to let the script verify that the newly created account has been registered properly with the testnet. Once this is done, the script proceeds to register the testnet with <em>EOSFactory</em>.</p>
 <p>If everything works fine, you should see a message similar to this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">myjungle</span><span class="p">:</span>  <span class="n">tcfchehyagd4</span> <span class="o">@</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">145.239</span><span class="o">.</span><span class="mf">133.201</span><span class="p">:</span><span class="mi">8888</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>myjungle:  tcfchehyagd4 @ http://145.239.133.201:8888
 </pre></div>
 </div>
 </div>
@@ -110,12 +107,12 @@
 <li>your account’s active private key.</li>
 </ul>
 <p>In our case the command looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">eosfactory</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_testnet</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">88.99</span><span class="o">.</span><span class="mf">97.30</span><span class="p">:</span><span class="mi">38888</span> <span class="n">myjungle</span> <span class="o">-</span><span class="n">a</span> <span class="n">tcfchehyagd4</span> <span class="mi">5</span><span class="n">JBbCwe3t6j63yerYmguRVWg7ZVDY3nKXzGYMwkR9y5w4appKhk</span> <span class="mi">5</span><span class="n">JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m eosfactory.utils.register_testnet http://88.99.97.30:38888 myjungle -a tcfchehyagd4 5JBbCwe3t6j63yerYmguRVWg7ZVDY3nKXzGYMwkR9y5w4appKhk 5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK
 </pre></div>
 </div>
 <p>As a result, the script verifies that the account supplied by you is properly registered with the testnet and then proceeds to register the testnet with <em>EOSFactory</em>.</p>
 <p>If everything works fine, you should see a message similar to this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">myjungle</span><span class="p">:</span>  <span class="n">tcfchehyagd4</span> <span class="o">@</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">88.99</span><span class="o">.</span><span class="mf">97.30</span><span class="p">:</span><span class="mi">38888</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>myjungle:  tcfchehyagd4 @ http://88.99.97.30:38888
 </pre></div>
 </div>
 </div>
@@ -129,21 +126,21 @@
 <li>your preferred alias for the testnet, e.g. <code class="docutils literal notranslate"><span class="pre">mykylin</span></code>.</li>
 </ul>
 <p>In our case the command looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">eosfactory</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_testnet_via_faucet</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">faucet</span><span class="o">.</span><span class="n">cryptokylin</span><span class="o">.</span><span class="n">io</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">145.239</span><span class="o">.</span><span class="mf">133.201</span><span class="p">:</span><span class="mi">9999</span> <span class="n">mykylin</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m eosfactory.utils.register_testnet_via_faucet http://faucet.cryptokylin.io http://145.239.133.201:9999 mykylin
 </pre></div>
 </div>
 <p>The output should be similar to this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>REMOTE testnet is active @ https://api.kylin.alohaeos.com.
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>REMOTE testnet is active @ https://api.kylin.alohaeos.com.
 Registering account: http://faucet.cryptokylin.io/create_account?xlg3pao3idlq
-Account ``xlg3pao3idlq`` successfully registered.
+Account <span class="sb">``</span>xlg3pao3idlq<span class="sb">``</span> successfully registered.
 Funding account: http://faucet.cryptokylin.io/get_token?xlg3pao3idlq
 Funding account: http://faucet.cryptokylin.io/get_token?xlg3pao3idlq
 Funding account: http://faucet.cryptokylin.io/get_token?xlg3pao3idlq
-Account ``xlg3pao3idlq`` successfully funded.
+Account <span class="sb">``</span>xlg3pao3idlq<span class="sb">``</span> successfully funded.
 </pre></div>
 </div>
 <p>If everything works fine, you should see a message similar to this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mykylin</span><span class="p">:</span>  <span class="n">xlg3pao3idlq</span> <span class="o">@</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">api</span><span class="o">.</span><span class="n">kylin</span><span class="o">.</span><span class="n">alohaeos</span><span class="o">.</span><span class="n">com</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mykylin:  xlg3pao3idlq @ https://api.kylin.alohaeos.com
 </pre></div>
 </div>
 </div>
@@ -151,33 +148,33 @@ Account ``xlg3pao3idlq`` successfully funded.
 <div class="section" id="list-registered-testnets">
 <span id="list-registered-testnets"></span><h2>List registered testnets<a class="headerlink" href="#list-registered-testnets" title="Permalink to this headline">¶</a></h2>
 <p>Use this command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">eosfactory</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">testnets</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m eosfactory.utils.testnets
 </pre></div>
 </div>
 <p>As a result, you should get a list similar to this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">myjungle</span><span class="p">:</span>  <span class="n">dgxo1uyhoytn</span> <span class="o">@</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">88.99</span><span class="o">.</span><span class="mf">97.30</span><span class="p">:</span><span class="mi">38888</span>
-<span class="n">mykylin</span><span class="p">:</span>   <span class="n">xlg3pao3idlq</span> <span class="o">@</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">api</span><span class="o">.</span><span class="n">kylin</span><span class="o">.</span><span class="n">alohaeos</span><span class="o">.</span><span class="n">com</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>myjungle:  dgxo1uyhoytn @ http://88.99.97.30:38888
+mykylin:   xlg3pao3idlq @ https://api.kylin.alohaeos.com
 </pre></div>
 </div>
 </div>
 <div class="section" id="run-unit-tests">
 <span id="run-unit-tests"></span><h2>Run unit tests<a class="headerlink" href="#run-unit-tests" title="Permalink to this headline">¶</a></h2>
 <p>Create a new smart-contract project:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">eosfactory</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">create_project</span> <span class="n">foo_bar</span> <span class="mi">03</span><span class="n">_tic_tac_toe</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m eosfactory.utils.create_project foo_bar 03_tic_tac_toe
 </pre></div>
 </div>
 <p><strong>NOTE:</strong> The first parameter is the name of your project (and it’s also the name of the smart-contract itself), whereas the second parameter is the name of the template being used for project creation. For more details about this command please refer to <a class="reference external" href="04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working With EOS Contracts Using EOSFactory In VSC</a>.</p>
 <p><strong>NOTE:</strong> As of now only the <code class="docutils literal notranslate"><span class="pre">03_tic_tac_toe</span></code> template supports the public testnet interactions.</p>
 <p>As a result, you should get a message similar to this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Contract</span> <span class="n">directory</span> <span class="ow">is</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">Workspaces</span><span class="o">/</span><span class="n">EOS</span><span class="o">/</span><span class="n">contracts</span><span class="o">/</span><span class="n">foo_bar</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Contract directory is /mnt/d/Workspaces/EOS/contracts/foo_bar
 </pre></div>
 </div>
 <p>Switch to the <code class="docutils literal notranslate"><span class="pre">foo_bar</span></code> folder and first execute <code class="docutils literal notranslate"><span class="pre">unittest1.py</span></code> without any parameters, just to make sure everything works fine on a local testnet:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">tests</span><span class="o">/</span><span class="n">unittest1</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 tests/unittest1.py
 </pre></div>
 </div>
 <p>Next, you can attempt to run the same unit test on a public testnet:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">test</span><span class="o">/</span><span class="n">unittest1</span><span class="o">.</span><span class="n">py</span> <span class="n">myjungle</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 test/unittest1.py myjungle
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">tests</span><span class="o">/</span><span class="n">unittest1</span><span class="o">.</span><span class="n">py</span> <span class="n">mykylin</span>
@@ -185,10 +182,10 @@ Account ``xlg3pao3idlq`` successfully funded.
 </div>
 <p><strong>NOTE:</strong> The positional parameter, in our case <code class="docutils literal notranslate"><span class="pre">myjungle</span></code> or <code class="docutils literal notranslate"><span class="pre">mykylin</span></code>, indicates the alias of the public testnet.</p>
 <p>Similarly, you can run the other (non-standard) test:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">tests</span><span class="o">/</span><span class="n">test1</span><span class="o">.</span><span class="n">py</span> <span class="n">myjungle</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 tests/test1.py myjungle
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">tests</span><span class="o">/</span><span class="n">test1</span><span class="o">.</span><span class="n">py</span> <span class="n">mykylin</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 tests/test1.py mykylin
 </pre></div>
 </div>
 </div>
@@ -197,7 +194,7 @@ Account ``xlg3pao3idlq`` successfully funded.
 <p>During the initial run of a unit test, the master account associated with a given testnet is used to create (and register) all the additional accounts required by the unit test.</p>
 <p>However, during subsequent runs those accounts are reused, which saves you a lot of hassle with managing those accounts and constantly having to refund them. As described above, this is possible because all newly created accounts are internally cached by <em>EOSFactory</em> and their random names are mapped to stable variable names.</p>
 <p>Use the <code class="docutils literal notranslate"><span class="pre">-r</span></code> option, if you want to run the test from scratch, i.e. with the existing accounts being removed from <em>EOSFactory</em> cache and replaced by another set of newly created accounts:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">tests</span><span class="o">/</span><span class="n">unittest1</span><span class="o">.</span><span class="n">py</span> <span class="n">myjungle</span> <span class="o">-</span><span class="n">r</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 tests/unittest1.py myjungle -r
 </pre></div>
 </div>
 </div>
@@ -212,7 +209,7 @@ Account ``xlg3pao3idlq`` successfully funded.
 <li>your account’s active private key.</li>
 </ul>
 <p>In our case the command looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">tests</span><span class="o">/</span><span class="n">unittest1</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">t</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">88.99</span><span class="o">.</span><span class="mf">97.30</span><span class="p">:</span><span class="mi">38888</span> <span class="n">dgxo1uyhoytn</span> <span class="mi">5</span><span class="n">JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY</span> <span class="mi">5</span><span class="n">JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 tests/unittest1.py -t http://88.99.97.30:38888 dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
 </pre></div>
 </div>
 </div>
@@ -290,7 +287,7 @@ Account ``xlg3pao3idlq`` successfully funded.
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, Tokenika.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/b49cbcc.
     </div>
   </body>
 </html>
