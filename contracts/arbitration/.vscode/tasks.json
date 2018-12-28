@@ -3,7 +3,7 @@
     "version": "2.0.0",   
     "tasks": [
         {
-            "taskName": "Compile",
+            "label": "Compile",
             "type": "shell",
             "windows": {
                 "options": {
@@ -30,7 +30,7 @@
             ]
         },
         {
-            "taskName": "Build",
+            "label": "Build",
             "type": "shell",
             "windows": {
                 "options": {
@@ -49,7 +49,6 @@
             "linux": {
                 "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}'"
             },
-            "problemMatcher": [],
             "presentation": {
                 "reveal": "always",
                 "panel": "dedicated"
@@ -62,7 +61,7 @@
             ]
         },
         {
-            "taskName": "Test",
+            "label": "Test",
             "type": "shell",
             "windows": {
                 "options": {
@@ -89,7 +88,7 @@
             ]
         },
         {
-            "taskName": "EOSIO API",
+            "label": "EOSIO API",
             "type": "shell",
             "windows": {
                 "options": {
