@@ -501,9 +501,6 @@ class RestoreAccount(GetAccount):
         self.name = self.json["account_name"]
         self.owner_key = ""
         self.active_key = ""
-        
-    def info(self):
-        print(str(GetAccount(self.name, is_verbose=False)))
 
     def __str__(self):
         return self.name
@@ -587,12 +584,6 @@ class CreateAccount(interface.Account, Cleos):
             
         self.json = GetAccount(self.name, is_verbose=False, is_info=False).json
         self.printself()
-
-    def info(self):
-        print(str(GetAccount(self.name, is_verbose=False)))
-
-    def get_transaction(self):
-        return GetTransaction(self.transaction)
             
     def __str__(self):
         return self.name

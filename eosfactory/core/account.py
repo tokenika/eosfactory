@@ -2,6 +2,8 @@ import eosfactory.core.config as config
 import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
 import eosfactory.core.cleos_sys as cleos_sys
+import eosfactory.core.manager as manager
+import eosfactory.core.logger as logger
 
 class Eosio(interface.Account):
     def __init__(self, account_object_name):    
@@ -25,26 +27,6 @@ class Eosio(interface.Account):
     def __str__(self):
         return self.name
 
-    def delegate_bw(
-            self, stake_net_quantity, stake_cpu_quantity,
-            receiver=None,
-            permission=None,
-            transfer=False,
-            expiration_sec=None,
-            skip_sign=0, dont_broadcast=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            is_verbose=1):
-        pass
-
-    def buy_ram(
-            account_object, amount_kbytes, receiver=None,
-            expiration_sec=None,
-            skip_sign=0, dont_broadcast=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None):
-        pass
-
 
 class GetAccount(cleos.GetAccount):  
     def __init__(
@@ -63,7 +45,6 @@ class GetAccount(cleos.GetAccount):
 
         self.exists = False
         self.in_wallet_on_stack = False
-        #self.has_keys = owner_key and not owner_key.key_private is None
         self.has_keys = not owner_key is None
         
         try:
@@ -100,15 +81,6 @@ class GetAccount(cleos.GetAccount):
         logger.TRACE('''
             * Account *{}* exists in the blockchain.
             '''.format(self.name))
-
-    def info(self):
-        get_account = cleos.GetAccount(self.name, is_verbose=False)
-        msg = manager.accout_names_2_object_names(
-            "account object name: {}\n{}".format(
-            self.account_object_name, get_account),
-            True
-        )
-        print(msg)
 
     def __str__(self):
         return self.name

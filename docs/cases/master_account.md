@@ -13,66 +13,73 @@ The implementation of a master account is dependent on the context:
 
 ## Use Case
 
+The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
+
+```bash
+eosfactory/utils/pythonmd.sh docs/cases/master_account.md
+```
+
 Let's consider two scenarios: first a local (private) testnet, and then a more complex situation of a remote (public) testnet.
 
-#### Local testnet
+### Local testnet
 
 Create a new Python session and import *EOSFactory* API:
 
-```
-$ python3
+```bash
+python3
 ```
 
-```
+```python
 from eosfactory.eosf import *
 ```
 
 First, let's start a local testnet:
 
-```
+```python
 reset()
 ```
 
 Next, we create a wallet and then we use the `create_master_account` command to create a global variable named `master` referencing the `eosio` account.
 
-```
+```python
 create_master_account("master")
 master.info()
 ```
 
 And finally, we show how the `master` variable can be used to create other accounts:
 
-```
+```python
 create_account("alice", master)
 alice.info()
 ```
 
 Here is the expected outcome:
 
-![](./img/01.png)
+![master account local](../images/master_account_local.pdb)
 
 Finally, stop the local testnet and exit Python CLI:
 
-```
+```python
 stop()
-exit()
+reboot()
 ```
+The `reboot()` command above resets the EOSFactory from the next tests, involving remote testnet: this command has to be used always if different testnets are used in the same Python session.
 
-#### Remote testnet
+### Remote testnet
 
 Create a new Python session and import *EOSFactory* API:
 
-```
-$ python3
+```bash
+python3
 ```
 
-```
+```python
 from eosfactory.eosf import *
 ```
 
 First, we need to define a remote testnet and pass to *EOSFactory* the data of the account we control there:
 
-```
+```python
 testnet = Testnet("http://88.99.97.30:38888", "dgxo1uyhoytn", "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY", "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA")
 ```
 
@@ -84,7 +91,7 @@ We supply four parameters:
 
 Next, we let *EOSFactory* configure and verify the testnet:
 
-```
+```python
 testnet.configure()
 testnet.verify_production()
 testnet.clear_cache()
@@ -92,7 +99,7 @@ testnet.clear_cache()
 
 Then, we proceed to create a global variable named `master` referencing the remote testnet account:
 
-```
+```python
 create_master_account("master", testnet)
 master.info()
 ```
@@ -101,32 +108,22 @@ master.info()
 
 And finally, we show how the `master` variable can be used to create other accounts:
 
-```
-create_account("alice", master, buy_ram_kbytes=8, stake_net=3, stake_cpu=3)
-alice.info()
+```python
+create_account("carol", master, buy_ram_kbytes=8, stake_net=3, stake_cpu=3)
+carol.info()
 ```
 
 **NOTE:** You might want to tweak with the extra parameters, i.e. `buy_ram_kbytes`, `stake_net` and `stake_cpu`.
 
 Here is the expected outcome:
 
-![](./img/02.png)
+![master account remote master](../images/master_account_remote_master.pdb)
+![master account remote carol](../images/master_account_remote_carol.pdb)
 
-Exit Python CLI:
+### Test run
 
+The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
+
+```bash
+eosfactory/utils/pythonmd.sh docs/cases/master_account.md
 ```
-exit()
-```
-
-## Test run
-
-The examples presented in this document can be executed as a Python script:
-
-```
-python3 docs""/cases/05_master_account/case.py
-```
-
-You should get output similar to this:
-
-![](./case.png)
-

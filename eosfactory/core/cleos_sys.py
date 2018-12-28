@@ -99,9 +99,6 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
 
         if self.is_verbose:
             print(self.__str__())
-
-    def info(self):
-        print(str(cleos.GetAccount(self.name, is_verbose=1)))
             
     def __str__(self):
         return self.name

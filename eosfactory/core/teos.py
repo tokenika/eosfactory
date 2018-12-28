@@ -132,7 +132,8 @@ def ABI(
         raise errors.Error(str(e))
 
     logger.TRACE('''
-    ABI file writen to file: {}
+    ABI file writen to file: 
+        {}
     '''.format(target_path), verbosity)
 
 
@@ -154,7 +155,7 @@ def WAST(
     if not source_files:
         raise errors.Error('''
         "The source is empty. The assumed contract dir is   
-        {}
+            {}
         '''.format(contract_dir))
         return
 
@@ -202,7 +203,8 @@ def WAST(
 
     if not compile_only:
         logger.TRACE('''
-            WASM file writen to file: {}
+            WASM file writen to file: 
+                {}
             '''.format(os.path.normpath(target_path)), verbosity)
 
 
@@ -343,7 +345,8 @@ def project_from_template(
     copy_dir_contents(project_dir, template_dir, "", project_name)
 
     logger.TRACE('''
-    * Contract project '{}' created from template '{}'
+    * Contract project '{}' created from template 
+        '{}'
     '''.format(project_name, template_dir), verbosity)    
 
     if open_vscode:
@@ -359,7 +362,9 @@ def project_from_template(
         os.system(command_line)
 
     logger.INFO('''
-    ######### Created contract project ``{}``, originated from template ``{}``.
+    ######### Created contract project ``{}``, 
+        originated from template 
+        ``{}``.
     '''.format(project_name, template_dir), verbosity)
 
     return project_dir

@@ -17,9 +17,9 @@ Use Cases
     :maxdepth: 1
 
     cases/wallet
-    cases/03_symbolic_names/case
-    cases/04_account/case
-    cases/05_master_account/case
+    cases/symbolic_names
+    cases/account
+    cases/master_account
 
 
 Release Notes

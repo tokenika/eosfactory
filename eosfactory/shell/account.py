@@ -717,7 +717,7 @@ def create_account(
                         '''.format(account_name, account_object_name))
 
             try:
-                account_object = SystemNewaccount(
+                account_object = account.SystemNewaccount(
                         creator, account_name, owner_key, active_key,
                         stake_net, stake_cpu,
                         permission,
@@ -738,7 +738,7 @@ def create_account(
 
                 buy_ram_kbytes = str(
                     e.deficiency_kbyte + 1)
-                account_object = SystemNewaccount(
+                account_object = account.SystemNewaccount(
                         creator, account_name, owner_key, active_key,
                         stake_net, stake_cpu,
                         permission,
@@ -787,6 +787,7 @@ def reboot():
 
     global wallet_globals
     wallet_globals = None
+    setup.reboot()
 
 
 def is_local_testnet_running(account_eosio):
