@@ -1,0 +1,256 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Set Account Permission &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Set Action Permission" href="set_action_permission.html" />
+    <link rel="prev" title="BIOS Boot Sequence" href="../BIOS_Boot_Sequence.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="set_action_permission.html" title="Set Action Permission"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../BIOS_Boot_Sequence.html" title="BIOS Boot Sequence"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="set-account-permission">
+<span id="set-account-permission"></span><h1>Set Account Permission<a class="headerlink" href="#set-account-permission" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">set_account_permission</span></code> command creates or updates an account’s permission. You might want to see the plain <code class="docutils literal notranslate"><span class="pre">cleos</span></code> approach <a class="reference external" href="https://developers.eos.io/eosio-cleos/v1.2.0/reference#cleos-set-account">here</a>.</p>
+<p><strong>NOTE</strong>: The Python code listed below is executable, as explained <a class="reference external" href="../README.html">here</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eosfactory.eosf</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.setup</span> <span class="kn">as</span> <span class="nn">setup</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reset</span><span class="p">()</span>
+<span class="n">create_master_account</span><span class="p">(</span><span class="s2">&quot;master&quot;</span><span class="p">)</span>
+<span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The permissions section of <code class="docutils literal notranslate"><span class="pre">alice.info()</span></code>:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span>permissions:
+     owner     1:    1 alice@owner
+        active     1:    1 alice@active
+</pre></div>
+</div>
+<div class="section" id="set-new-key-to-a-permission">
+<span id="set-new-key-to-a-permission"></span><h2>Set new key to a permission<a class="headerlink" href="#set-new-key-to-a-permission" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">COMMENT</span><span class="p">(</span><span class="s2">&quot;Set new key to a permission:&quot;</span><span class="p">)</span>
+<span class="n">key</span> <span class="o">=</span> <span class="n">CreateKey</span><span class="p">(</span><span class="n">is_verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">setup</span><span class="o">.</span><span class="n">is_print_command_line</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">set_account_permission</span><span class="p">(</span>
+    <span class="n">Permission</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">key_public</span><span class="p">,</span> <span class="n">Permission</span><span class="o">.</span><span class="n">OWNER</span><span class="p">,</span> 
+    <span class="p">(</span><span class="n">alice</span><span class="p">,</span> <span class="n">Permission</span><span class="o">.</span><span class="n">OWNER</span><span class="p">))</span>
+<span class="n">setup</span><span class="o">.</span><span class="n">is_print_command_line</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">permissions</span></code> section of <code class="docutils literal notranslate"><span class="pre">alice.info()</span></code>:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span>permissions:
+     owner     1:    1 alice@owner
+        active     1:    1 alice@active
+</pre></div>
+</div>
+</div>
+<div class="section" id="set-an-account-instead-of-a-key-as-authority-for-a-permission">
+<span id="set-an-account-instead-of-a-key-as-authority-for-a-permission"></span><h2>Set an account (instead of a key) as authority for a permission<a class="headerlink" href="#set-an-account-instead-of-a-key-as-authority-for-a-permission" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">COMMENT</span><span class="p">(</span><span class="s2">&quot;Set an account (instead of a key) as authority for a permission:&quot;</span><span class="p">)</span>
+<span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;bob&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+<span class="n">setup</span><span class="o">.</span><span class="n">is_print_command_line</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">set_account_permission</span><span class="p">(</span>
+    <span class="n">Permission</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">,</span> <span class="n">bob</span><span class="p">,</span> <span class="n">Permission</span><span class="o">.</span><span class="n">OWNER</span><span class="p">,</span> 
+    <span class="p">(</span><span class="n">alice</span><span class="p">,</span> <span class="n">Permission</span><span class="o">.</span><span class="n">OWNER</span><span class="p">))</span>
+<span class="n">setup</span><span class="o">.</span><span class="n">is_print_command_line</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The permissions section of <code class="docutils literal notranslate"><span class="pre">alice.info()</span></code>:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span>permissions:
+     owner     1:    1 alice@owner
+        active     1:    1 bob@active
+</pre></div>
+</div>
+</div>
+<div class="section" id="weights-and-threshold">
+<span id="weights-and-threshold"></span><h2>Weights and Threshold<a class="headerlink" href="#weights-and-threshold" title="Permalink to this headline">¶</a></h2>
+<p>Note that actors have to be sorted in the <code class="docutils literal notranslate"><span class="pre">authority</span></code> JSON.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">COMMENT</span><span class="p">(</span><span class="s2">&quot;Weights and Threshold:&quot;</span><span class="p">)</span>
+<span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;carol&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+<span class="n">actors</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">bob</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">carol</span><span class="p">)]</span>
+<span class="n">actors</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">set_account_permission</span><span class="p">(</span><span class="n">Permission</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;threshold&quot;</span> <span class="p">:</span> <span class="mi">100</span><span class="p">,</span> 
+        <span class="s2">&quot;keys&quot;</span> <span class="p">:</span> <span class="p">[],</span> 
+        <span class="s2">&quot;accounts&quot;</span> <span class="p">:</span> 
+            <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;permission&quot;</span><span class="p">:</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="n">actors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                            <span class="s2">&quot;permission&quot;</span><span class="p">:</span><span class="s2">&quot;active&quot;</span>
+                        <span class="p">},</span>
+                    <span class="s2">&quot;weight&quot;</span><span class="p">:</span><span class="mi">25</span>
+                <span class="p">},</span> 
+                <span class="p">{</span>   
+                    <span class="s2">&quot;permission&quot;</span><span class="p">:</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;actor&quot;</span><span class="p">:</span><span class="n">actors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                            <span class="s2">&quot;permission&quot;</span><span class="p">:</span><span class="s2">&quot;active&quot;</span>
+                        <span class="p">},</span>
+                    <span class="s2">&quot;weight&quot;</span><span class="p">:</span><span class="mi">75</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="n">Permission</span><span class="o">.</span><span class="n">OWNER</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">alice</span><span class="p">,</span> <span class="n">Permission</span><span class="o">.</span><span class="n">OWNER</span><span class="p">))</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The permissions section of <code class="docutils literal notranslate"><span class="pre">alice.info()</span></code>:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span>permissions:
+     owner     1:    1 alice@owner
+        active   100:    25 carol@active, 75 bob@active
+</pre></div>
+</div>
+</div>
+<div class="section" id="set-two-weighted-keys">
+<span id="set-two-weighted-keys"></span><h2>Set two-weighted keys<a class="headerlink" href="#set-two-weighted-keys" title="Permalink to this headline">¶</a></h2>
+<p>Note that keys have to be sorted in the <code class="docutils literal notranslate"><span class="pre">authority</span></code> JSON.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">COMMENT</span><span class="p">(</span><span class="s2">&quot;Set two weighted keys:&quot;</span><span class="p">)</span>
+<span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">bob</span><span class="o">.</span><span class="n">owner</span><span class="p">(),</span> <span class="n">carol</span><span class="o">.</span><span class="n">owner</span><span class="p">()]</span>
+<span class="n">keys</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">set_account_permission</span><span class="p">(</span><span class="n">Permission</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;threshold&quot;</span> <span class="p">:</span> <span class="mi">100</span><span class="p">,</span> 
+        <span class="s2">&quot;keys&quot;</span> <span class="p">:</span> 
+            <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="mi">50</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="n">keys</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="mi">50</span>
+                <span class="p">}</span>                    
+            <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="n">Permission</span><span class="o">.</span><span class="n">OWNER</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">alice</span><span class="p">,</span> <span class="n">Permission</span><span class="o">.</span><span class="n">OWNER</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The permissions section of <code class="docutils literal notranslate"><span class="pre">alice.info()</span></code>:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span>permissions:
+     owner     1:    1 alice@owner
+        active   100:    50 alice@active, 50 bob@owner
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Set Account Permission</a><ul>
+<li><a class="reference internal" href="#set-new-key-to-a-permission">Set new key to a permission</a></li>
+<li><a class="reference internal" href="#set-an-account-instead-of-a-key-as-authority-for-a-permission">Set an account (instead of a key) as authority for a permission</a></li>
+<li><a class="reference internal" href="#weights-and-threshold">Weights and Threshold</a></li>
+<li><a class="reference internal" href="#set-two-weighted-keys">Set two-weighted keys</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../BIOS_Boot_Sequence.html"
+                        title="previous chapter">BIOS Boot Sequence</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="set_action_permission.html"
+                        title="next chapter">Set Action Permission</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/patterns/set/set_account_permission.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="set_action_permission.html" title="Set Action Permission"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../BIOS_Boot_Sequence.html" title="BIOS Boot Sequence"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

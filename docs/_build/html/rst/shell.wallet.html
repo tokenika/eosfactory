@@ -1,0 +1,305 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>shell.wallet &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="core.cleos" href="core.cleos.html" />
+    <link rel="prev" title="shell.contract" href="shell.contract.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.cleos.html" title="core.cleos"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="shell.contract.html" title="shell.contract"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-eosfactory.shell.wallet">
+<span id="shell-wallet"></span><h1>shell.wallet<a class="headerlink" href="#module-eosfactory.shell.wallet" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="eosfactory.shell.wallet.Wallet">
+<em class="property">class </em><code class="descclassname">eosfactory.shell.wallet.</code><code class="descname">Wallet</code><span class="sig-paren">(</span><em>name=None</em>, <em>password=''</em>, <em>file=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="core.cleos.html#eosfactory.core.cleos.WalletCreate" title="eosfactory.core.cleos.WalletCreate"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.cleos.WalletCreate</span></code></a></p>
+<p>Create a new wallet locally and operate it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – The name of the new wallet, defaults to <cite>default</cite>.</li>
+<li><strong>password</strong> (<em>str</em>) – The password to the wallet, if the wallet exists.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.delete_globals">
+<code class="descname">delete_globals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.delete_globals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.delete_globals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete from the global namespace all the account objects restored
+with the function <code class="xref py py-func docutils literal notranslate"><span class="pre">restore_accounts()</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.import_key">
+<code class="descname">import_key</code><span class="sig-paren">(</span><em>account_or_key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.import_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.import_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports private keys into wallet.</p>
+<p>Return list of <cite>cleos.WalletImport</cite> objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>account_or_key</strong> (<em>str</em><em> or </em><a class="reference internal" href="core.interface.html#eosfactory.core.interface.Key" title="eosfactory.core.interface.Key"><em>interface.Key</em></a><em> or </em><a class="reference internal" href="core.interface.html#eosfactory.core.interface.Account" title="eosfactory.core.interface.Account"><em>interface.Account</em></a>) – A private key to import. If <em>account_or_key</em> is an
+.interface.Account object, both owner and active keys are
+imported.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.index">
+<code class="descname">index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists opened wallets, * marks unlocked.
+Returns <cite>cleos.WalletList</cite> object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.is_name_taken">
+<code class="descname">is_name_taken</code><span class="sig-paren">(</span><em>account_object_name</em>, <em>account_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.is_name_taken"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.is_name_taken" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the given name is available is a name of an account
+object.</p>
+<p>If the name points to an existing account, propese an action that may
+resolve the conflict.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>account_object_name</strong> (<em>str</em>) – The proposed name of a new account
+object.</li>
+<li><strong>account_name</strong> (<em>str</em>) – The EOSIO name of the account mapped with the
+new account object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><dl class="docutils">
+<dt>Whether the given name is available is a name of an account</dt>
+<dd><p class="first last">object.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.keys">
+<code class="descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists public keys from all unlocked wallets.
+Returns <cite>cleos.WalletKeys</cite> object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.keys_in_wallets">
+<code class="descname">keys_in_wallets</code><span class="sig-paren">(</span><em>keys</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.keys_in_wallets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.keys_in_wallets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether all listed keys are in the wallet.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>keys</strong> (<em>[</em><em>str</em><em>]</em>) – List of public keys to be verified.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: Whether all listed keys are in the wallet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.lock">
+<code class="descname">lock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lock the wallet.
+Returns <cite>cleos.WalletLock</cite> object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.lock_all">
+<code class="descname">lock_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.lock_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.lock_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lock the wallet.
+Returns <cite>cleos.WalletLock</cite> object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.map_account">
+<code class="descname">map_account</code><span class="sig-paren">(</span><em>account_object</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.map_account"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.map_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a new account object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>account_object</strong> (<a class="reference internal" href="shell.account.html#eosfactory.shell.account.Account" title="eosfactory.shell.account.Account"><em>shell.account.Account</em></a>) – The account to be saved.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.open">
+<code class="descname">open</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the wallet.
+Returns <cite>WalletOpen</cite> object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.open_unlock">
+<code class="descname">open_unlock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.open_unlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.open_unlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open &amp; Unlock.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.private_keys">
+<code class="descname">private_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.private_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.private_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists public keys from all unlocked wallets.
+Returns <cite>cleos.WalletKeys</cite> object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.remove_key">
+<code class="descname">remove_key</code><span class="sig-paren">(</span><em>account_or_key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.remove_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.remove_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove key from wallet.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>account_or_key</strong> (<em>str</em><em> or </em><a class="reference internal" href="core.interface.html#eosfactory.core.interface.Key" title="eosfactory.core.interface.Key"><em>interface.Key</em></a><em> or </em><a class="reference internal" href="core.interface.html#eosfactory.core.interface.Account" title="eosfactory.core.interface.Account"><em>interface.Account</em></a>) – A public key to remove. If <em>account_or_key</em> is an
+.interface.Account object, both owner and active keys are
+removed.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.restore_accounts">
+<code class="descname">restore_accounts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.restore_accounts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.restore_accounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restore into the global namespace all the account objects
+represented in the wallet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop keosd, the EOSIO wallet manager.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.shell.wallet.Wallet.unlock">
+<code class="descname">unlock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#Wallet.unlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.Wallet.unlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unlock the wallet.
+Returns <cite>WalletUnlock</cite> object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.shell.wallet.create_wallet">
+<code class="descclassname">eosfactory.shell.wallet.</code><code class="descname">create_wallet</code><span class="sig-paren">(</span><em>name=None</em>, <em>password=None</em>, <em>file=False</em>, <em>globals=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/shell/wallet.html#create_wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.shell.wallet.create_wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a singleton <a class="reference internal" href="#eosfactory.shell.wallet.Wallet" title="eosfactory.shell.wallet.Wallet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Wallet</span></code></a> object.</p>
+<p>It is not usual to use this function. Instead, it is called automatically
+upon the first use of either <a class="reference internal" href="shell.account.html#eosfactory.shell.account.create_master_account" title="eosfactory.shell.account.create_master_account"><code class="xref py py-func docutils literal notranslate"><span class="pre">shell.account.create_master_account()</span></code></a>
+or <a class="reference internal" href="shell.account.html#eosfactory.shell.account.create_account" title="eosfactory.shell.account.create_account"><code class="xref py py-func docutils literal notranslate"><span class="pre">shell.account.create_account()</span></code></a> functions.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="shell.contract.html"
+                        title="previous chapter">shell.contract</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="core.cleos.html"
+                        title="next chapter">core.cleos</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rst/shell.wallet.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.cleos.html" title="core.cleos"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="shell.contract.html" title="shell.contract"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

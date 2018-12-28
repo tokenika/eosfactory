@@ -1,0 +1,224 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eosfactory.utils.register_testnet_via_faucet &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eosfactory.utils.register_testnet_via_faucet</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">urllib.request</span> <span class="k">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">urlopen</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">eosfactory.eosf</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">CREATE_ACCOUNT_URL</span> <span class="o">=</span> <span class="s2">&quot;create_account&quot;</span>
+<span class="n">GET_TOKEN_URL</span> <span class="o">=</span> <span class="s2">&quot;get_token&quot;</span>
+<span class="n">HEADERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 </span><span class="se">\</span>
+<span class="s1">        (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Accept&#39;</span><span class="p">:</span> <span class="s1">&#39;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Accept-Charset&#39;</span><span class="p">:</span> <span class="s1">&#39;ISO-8859-1,utf-8;q=0.7,*;q=0.3&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Accept-Encoding&#39;</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Accept-Language&#39;</span><span class="p">:</span> <span class="s1">&#39;en-US,en;q=0.8&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Connection&#39;</span><span class="p">:</span> <span class="s1">&#39;keep-alive&#39;</span><span class="p">}</span>
+
+<span class="n">MAX_ATTEMPTS</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">DELAY_IN_SECONDDS</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">register_testnet_via_faucet_</span><span class="p">(</span><span class="n">faucet</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">alias</span><span class="p">):</span>
+
+
+    <span class="n">setup</span><span class="o">.</span><span class="n">set_nodeos_address</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">verify_testnet_production</span><span class="p">()</span>
+
+    <span class="n">account_name</span> <span class="o">=</span> <span class="n">cleos</span><span class="o">.</span><span class="n">account_name</span><span class="p">()</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">faucet</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">CREATE_ACCOUNT_URL</span> <span class="o">+</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">account_name</span>
+    <span class="n">attempt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">TRACE</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        Registering account: </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">attempt</span> <span class="o">=</span> <span class="n">attempt</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">attempt</span> <span class="o">==</span> <span class="n">MAX_ATTEMPTS</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                    Request failed: </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">                    Error message is</span>
+<span class="s1">                    </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">                    &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">account_name</span> <span class="o">=</span> <span class="n">cleos</span><span class="o">.</span><span class="n">account_name</span><span class="p">()</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">faucet</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">CREATE_ACCOUNT_URL</span> <span class="o">+</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">account_name</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">DELAY_IN_SECONDDS</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;account&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">account_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        Account names do not match: ``</span><span class="si">{}</span><span class="s1">`` vs ``</span><span class="si">{}</span><span class="s1">``</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;account&quot;</span><span class="p">],</span> <span class="n">account_name</span><span class="p">))</span>
+
+    <span class="n">owner_key</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">][</span><span class="s2">&quot;owner_key&quot;</span><span class="p">][</span><span class="s2">&quot;private&quot;</span><span class="p">]</span>
+    <span class="n">active_key</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">][</span><span class="s2">&quot;active_key&quot;</span><span class="p">][</span><span class="s2">&quot;private&quot;</span><span class="p">]</span>
+
+    <span class="n">INFO</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        Account ``</span><span class="si">{}</span><span class="s1">`` successfully registered.</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">account_name</span><span class="p">))</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">faucet</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">GET_TOKEN_URL</span> <span class="o">+</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">account_name</span>
+    <span class="n">attempt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">TRACE</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        Funding account: </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="n">success</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">success</span> <span class="o">==</span> <span class="n">MAX_ATTEMPTS</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">attempt</span> <span class="o">=</span> <span class="n">attempt</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">attempt</span> <span class="o">==</span> <span class="n">MAX_ATTEMPTS</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">success</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                        Request failed: </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">                        Error message is</span>
+<span class="s1">                        </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">                        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+                <span class="k">break</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">DELAY_IN_SECONDDS</span><span class="p">)</span>
+
+
+    <span class="n">INFO</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        Account ``</span><span class="si">{}</span><span class="s1">`` successfully funded.</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">account_name</span><span class="p">))</span>
+
+    <span class="n">testnet</span><span class="o">.</span><span class="n">add_to_mapping</span><span class="p">(</span>
+        <span class="n">url</span><span class="p">,</span> <span class="n">account_name</span><span class="p">,</span> <span class="n">owner_key</span><span class="p">,</span> <span class="n">active_key</span><span class="p">,</span> <span class="n">alias</span><span class="p">)</span>
+
+    <span class="n">testnet</span><span class="o">.</span><span class="n">testnets</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="register_testnet_via_faucet"><a class="viewcode-back" href="../../../rst/utils.html#eosfactory.utils.register_testnet_via_faucet.register_testnet_via_faucet">[docs]</a><span class="k">def</span> <span class="nf">register_testnet_via_faucet</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    usage: python3 -m eosfactory.utils.register_testnet_via_faucet [-h] \</span>
+<span class="sd">    faucet url [alias]</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        faucet: An URL of a public faucet for the testnet, e.g.</span>
+<span class="sd">            http://faucet.cryptokylin.io</span>
+<span class="sd">        url: An URL of a public node offering access to the testnet, e.g.</span>
+<span class="sd">            https://api.kylin.alohaeos.com</span>
+<span class="sd">        alias: Testnet alias.</span>
+<span class="sd">        -h: Show help message and exit.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;faucet&quot;</span><span class="p">,</span> 
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;An URL of a public faucet for the testnet, &quot;</span>
+            <span class="s2">&quot;e.g. http://faucet.cryptokylin.io&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">,</span> 
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;An URL of a public node offering access to the testnet, &quot;</span>
+            <span class="s2">&quot;e.g. https://api.kylin.alohaeos.com&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;alias&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Testnet alias&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">register_testnet_via_faucet_</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">faucet</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">alias</span><span class="p">)</span></div>
+
+    <span class="c1"># python3 -m eosfactory.utils.register_testnet_via_faucet http://faucet.cryptokylin.io https://api.kylin.alohaeos.com kylin</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">register_testnet_via_faucet</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

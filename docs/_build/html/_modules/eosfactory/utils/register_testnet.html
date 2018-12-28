@@ -1,0 +1,178 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eosfactory.utils.register_testnet &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eosfactory.utils.register_testnet</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">eosfactory.eosf</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<span class="k">def</span> <span class="nf">register_testnet_</span><span class="p">(</span>
+    <span class="n">url</span><span class="p">,</span> <span class="n">alias</span><span class="p">,</span> <span class="n">account_name</span><span class="p">,</span> <span class="n">owner_key</span><span class="p">,</span> <span class="n">active_key</span><span class="p">):</span>
+
+    <span class="n">setup</span><span class="o">.</span><span class="n">set_nodeos_address</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">verify_testnet_production</span><span class="p">()</span>
+
+    <span class="c1">#testnet.testnets()</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">create_master_account</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">account_name</span><span class="o">=</span><span class="n">account_name</span><span class="p">,</span>
+        <span class="n">owner_key</span><span class="o">=</span><span class="n">owner_key</span><span class="p">,</span>
+        <span class="n">active_key</span><span class="o">=</span><span class="n">active_key</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">account</span><span class="p">:</span>
+        <span class="n">testnet</span><span class="o">.</span><span class="n">add_to_mapping</span><span class="p">(</span>
+            <span class="n">url</span><span class="p">,</span> 
+            <span class="n">account_name</span> <span class="k">if</span> <span class="n">account_name</span> <span class="k">else</span> <span class="n">account</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">owner_key</span> <span class="k">if</span> <span class="n">owner_key</span> <span class="k">else</span> <span class="n">account</span><span class="o">.</span><span class="n">owner_key</span><span class="o">.</span><span class="n">key_private</span><span class="p">,</span> 
+            <span class="n">active_key</span> <span class="k">if</span> <span class="n">active_key</span> <span class="k">else</span> <span class="n">account</span><span class="o">.</span><span class="n">active_key</span><span class="o">.</span><span class="n">key_private</span><span class="p">,</span>
+            <span class="n">alias</span><span class="p">)</span>
+
+        <span class="n">testnet</span><span class="o">.</span><span class="n">testnets</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="register_testnet"><a class="viewcode-back" href="../../../rst/utils.html#eosfactory.utils.register_testnet.register_testnet">[docs]</a><span class="k">def</span> <span class="nf">register_testnet</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    usage: python3 -m eosfactory.utils.register_testnet [-h] \</span>
+<span class="sd">    [-a ACCOUNT ACCOUNT ACCOUNT] url [alias]</span>
+
+<span class="sd">    Given an url and an testnet alias (not obligatory), get registration data.</span>
+<span class="sd">    Apply the data to the registration form of the testnet. Enter &#39;go&#39; when ready.</span>
+<span class="sd">    </span>
+<span class="sd">    Example: </span>
+<span class="sd">    </span>
+<span class="sd">    python3 -m eosfactory.utils.register_testnet http://88.99.97.30:38888 jungle </span>
+<span class="sd">    </span>
+<span class="sd">    If additional arguments are given, denoted as ``--account``, then the given</span>
+<span class="sd">    account is checked for existence, and then added as a testnet master </span>
+<span class="sd">    account, for example:</span>
+
+<span class="sd">    python3 -m eosfactory.utils.register_testnet http://88.99.97.30:38888 jungle -a</span>
+<span class="sd">    dgxo1uyhoytn 5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67</span>
+<span class="sd">    5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url: An URL of a public node offering access to the</span>
+<span class="sd">                                testnet, e.g. http://88.99.97.30:38888</span>
+<span class="sd">        alias: Testnet alias</span>
+<span class="sd">        -h: show this help message and exit</span>
+<span class="sd">        -a (ACCOUNT ACCOUNT ACCOUNT): &lt;name&gt; &lt;owner key&gt; &lt;active key&gt;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    Given an url and an testnet alias (not obligatory), get registration data.</span>
+<span class="s1">    Apply the data to the registration form of the testnet.</span>
+<span class="s1">    Enter &#39;go&#39; when ready.</span>
+
+<span class="s1">    Example:</span>
+<span class="s1">        python3 utils/register_testnet.py http://88.99.97.30:38888 jungle</span>
+
+<span class="s1">    If additional arguments are given, denoted as ``--account``, then the given </span>
+<span class="s1">    account is checked for existence, and then added as a testnet master account.</span>
+
+<span class="s1">        python3 utils/register_testnet.py http://88.99.97.30:38888 jungle </span><span class="se">\</span>
+<span class="s1">        -a dgxo1uyhoytn </span><span class="se">\</span>
+<span class="s1">        5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 </span><span class="se">\</span>
+<span class="s1">        5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">,</span> 
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;An URL of a public node offering access to the testnet, e.g.&quot;</span>                         <span class="s2">&quot;http://88.99.97.30:38888&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;alias&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Testnet alias&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-a&quot;</span><span class="p">,</span> <span class="s2">&quot;--account&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;&lt;name&gt; &lt;owner key&gt; &lt;active key&gt;&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">account_name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">owner_key</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">active_key</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">account</span><span class="p">:</span> 
+        <span class="n">account_name</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">account</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">owner_key</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">account</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">active_key</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">account</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">register_testnet_</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">alias</span><span class="p">,</span> <span class="n">account_name</span><span class="p">,</span> <span class="n">owner_key</span><span class="p">,</span> <span class="n">active_key</span><span class="p">)</span></div>
+
+    <span class="c1"># python3 utils/register_testnet.py http://88.99.97.30:38888 jungle -a dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">register_testnet</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

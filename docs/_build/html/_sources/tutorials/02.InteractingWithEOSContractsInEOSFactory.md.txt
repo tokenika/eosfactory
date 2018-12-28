@@ -1,0 +1,295 @@
+# Interacting with EOS Contracts in *EOSFactory*
+
+The purpose of this tutorial is to demonstrate how *EOSFactory* and its Python CLI can be used to make interacting with EOS easy & intuitive.
+
+## Prerequisites
+
+* This tutorial assumes that you have successfully installed *EOSFactory*. If it's not the case, please refer to [Installing EOSFactory](01.InstallingEOSFactory.html).
+* We also assume that you are familiar with the official [EOS tutorials](https://developers.eos.io/eosio-cpp/docs/introduction-to-smart-contracts), as they will give you a broader context and explain the rationale behind EOS smart-contracts.
+
+## Run Python CLI
+
+Open a bash terminal (or if you are on Windows, open an Ubuntu bash terminal supplied by *Windows Subsystem for Linux*) and run Python CLI:
+
+```
+python3
+```
+
+Once in the Python shell, import the *EOSFactory* library:
+
+```
+from eosfactory.eosf import *
+```
+
+## Start local testnet
+
+To start your own single-node local testnet:
+
+```
+reset()
+```
+
+On MacOS the *EOSIO* process is run in the background with no visible interface. However in Ubuntu & Windows it's launched in a separate window.
+
+To verify the *EOSIO* node is running or to get information about the current state of the testnet:
+
+```
+info()
+```
+
+## Manage local testnet
+
+To stop the current testnet:
+
+```
+stop()
+```
+
+To continue running the same testnet:
+
+```
+resume()
+```
+
+To stop the current testnet and start a new one:
+
+```
+reset()
+```
+
+## Initialize workspace
+
+First, make sure a local testnet is running:
+
+```
+reset()
+```
+
+Next, create a master account from which other accounts can be created:
+
+```
+create_master_account("master")
+```
+
+As a result, a global variable called `master` (or whatever name you pass as the parameter) is created and from now on you can use it anywhere in the code, for example:
+
+```
+master.info()
+```
+
+**NOTE:** The name `master` is just a name of a global variable, not the actual name of the account created on the blockchain.
+
+You don't need to worry about locking or unlocking the wallet, managing its password or importing private keys into it. All of this is being taken care of by EOS Factory behind the scenes.
+
+## Create accounts
+
+If you need to create test accounts, here is how you do it:
+
+```
+create_account("charlie", master)
+```
+
+Again, a global variable, this time called `charlie`, is created and from now on you can use it anywhere in the code, for example:
+
+```
+charlie.info()
+```
+
+**NOTE:** If you don't specify the `account_name` parameter in `create_account()`, a random name is applied, which is useful on a public testnet where extra restrictions apply.
+
+However, if you want to assign a specific name to an account, you can still do it, for example:
+
+```
+create_account("charlie2", master, account_name="charlie4eos")
+```
+
+**NOTE:** You cannot create the same account variable twice, that's why we use a different name for the variable to be created, i.e. `charlie2`.
+
+And then run the `info()` command to verify that the `charlie4eos` name is actually assigned to the account referenced by the `charlie2` variable:
+
+```
+charlie2.info()
+```
+
+## Create reference to an existing contract
+
+We assume that a local testnet is running and initialized:
+
+```
+reset()
+create_master_account("master")
+```
+
+To create a reference to an already existing contract, first create an account which will host the contract:
+
+```
+create_account("host", master)
+```
+
+And then create a reference to the contract by supplying the host account and the path to the folder where the contract is located, for example:
+
+```
+contract = Contract(host, "/mnt/d/Workspaces/EOS/eosfactory/contracts/02_eosio_token")
+```
+
+Alternatively, supply just the name of the folder, if it can be found in the standard location, i.e. `eosfactory/contracts`, for example:
+
+```
+contract = Contract(host, "02_eosio_token")
+```
+
+## Build the contract
+
+Before deploying the contract needs to be built from the source code. To build the contract invoke its `build()` method:
+
+```
+contract.build()
+```
+
+## Deploy the contract
+
+At this stage the contract has no code deployed. You can check it by running its `code()` method:
+
+```
+contract.code()
+```
+
+To deploy the contract use its `deploy()` method:
+
+```
+contract.deploy()
+```
+
+And now you can verify that the hash of the deployed code is non-zero:
+
+```
+contract.code()
+```
+
+## Create the token
+
+To create a new token we call the `create` action on the `eosio.token` contract:
+
+```
+host.push_action(
+    "create", 
+    {
+        "issuer": master,
+        "maximum_supply": "1000000000.0000 EOS",
+        "can_freeze": "0",
+        "can_recall": "0",
+        "can_whitelist": "0"
+    }, [master, host])
+```
+
+**NOTE:** The `push_action` method takes three arguments: the action's name, the action's arguments in JSON format and the accounts whose permission is needed, in this case `master` & `host`.
+
+**NOTE:** If you want to see the actual transaction without broadcasting it, use the `show_action` method instead of `push_action`, for example:
+
+```
+host.show_action(
+    "create", 
+    {
+        "issuer": master,
+        "maximum_supply": "1000000000.0000 EOS",
+        "can_freeze": "0",
+        "can_recall": "0",
+        "can_whitelist": "0"
+    }, [master, host])
+```
+
+## Create more accounts
+
+We'll need two accounts. To create them just run:
+
+```
+create_account("alice", master)
+create_account("carol", master)
+```
+
+## Issue tokens
+
+Now that we have created the token, the issuer can issue new tokens to `alice`:
+
+```
+host.push_action(
+    "issue",
+    {
+        "to": alice, "quantity": "100.0000 EOS", "memo": ""
+    },
+    master)
+```
+
+**NOTE:** In this case the permission is assigned to the default `master` account.
+
+## Transfer tokens
+
+Now that `alice` has tokens, we will transfer some of them to `carol`: 
+
+```
+host.push_action(
+    "transfer",
+    {
+        "from": alice, "to": carol,
+        "quantity": "25.0000 EOS", "memo":""
+    },
+    alice)
+```
+
+**NOTE:** As the third argument we pass the reference to the `alice` account to indicate that she is the one who authorized this action.
+
+## Check the contract table
+
+From the contract's ABI we know that the table keeping track of the token balances is called `accounts`.
+
+Let's check the state of both accounts involved in the previous transaction:
+
+```
+host.table("accounts", alice)
+```
+
+```
+host.table("accounts", carol)
+```
+
+**NOTE:** The `table()` method takes two arguments: the name of the table as specified by the contract ABI and the scope within the contract in which the table is found.
+
+This is the result you should get for `alice`:
+
+```
+{
+  "rows": [{
+      "balance": "75.0000 EOS"
+    }
+  ],
+  "more": false
+}
+```
+
+And this is for `carol`:
+
+```
+{
+  "rows": [{
+      "balance": "25.0000 EOS"
+    }
+  ],
+  "more": false
+}
+```
+
+## Stop testnet and exit Python
+
+To stop the local testnet:
+
+```
+stop()
+```
+
+To exit Python CLI:
+
+```
+exit()
+```
+
+Alternatively, use the `ctrl-D` shortcut.

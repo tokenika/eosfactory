@@ -1,0 +1,331 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>core.interface &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="core.config" href="core.config.html" />
+    <link rel="prev" title="core.cleos_sys" href="core.cleos_sys.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.config.html" title="core.config"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="core.cleos_sys.html" title="core.cleos_sys"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-eosfactory.core.interface">
+<span id="core-interface"></span><h1>core.interface<a class="headerlink" href="#module-eosfactory.core.interface" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="eosfactory.core.interface.Account">
+<em class="property">class </em><code class="descclassname">eosfactory.core.interface.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>name</em>, <em>owner_key=None</em>, <em>active_key=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/interface.html#Account"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.Account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.interface.Omittable" title="eosfactory.core.interface.Omittable"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.interface.Omittable</span></code></a></p>
+<p>Having the <em>name</em> and <em>key_public</em> and <em>key_private</em> attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – EOSIO contract name</li>
+<li><strong>owner_key</strong> (<em>str</em><em> or </em><a class="reference internal" href="#eosfactory.core.interface.Key" title="eosfactory.core.interface.Key"><em>Key</em></a>) – The owner key of the account.</li>
+<li><strong>active_key</strong> (<em>str</em><em> or </em><a class="reference internal" href="#eosfactory.core.interface.Key" title="eosfactory.core.interface.Key"><em>Key</em></a>) – The account key of the account.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – EOSIO contract name</li>
+<li><strong>owner_key</strong> (<em>str</em><em> or </em><a class="reference internal" href="#eosfactory.core.interface.Key" title="eosfactory.core.interface.Key"><em>Key</em></a>) – The owner key of the account.</li>
+<li><strong>active_key</strong> (<em>str</em><em> or </em><a class="reference internal" href="#eosfactory.core.interface.Key" title="eosfactory.core.interface.Key"><em>Key</em></a>) – The account key of the account.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="eosfactory.core.interface.Account.active">
+<code class="descname">active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/interface.html#Account.active"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.Account.active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the public active key</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">public active key</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="eosfactory.core.interface.Account.owner">
+<code class="descname">owner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/interface.html#Account.owner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.Account.owner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the public owner key</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">public owner key</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="eosfactory.core.interface.Key">
+<em class="property">class </em><code class="descclassname">eosfactory.core.interface.</code><code class="descname">Key</code><span class="sig-paren">(</span><em>key_public</em>, <em>key_private</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/interface.html#Key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.Key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.interface.Omittable" title="eosfactory.core.interface.Omittable"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.interface.Omittable</span></code></a></p>
+<p>Having the <em>key_public</em> and <em>key_private</em> attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key_public</strong> (<em>str</em>) – The public key of a key pair.</li>
+<li><strong>key_private</strong> (<em>str</em>) – The private key of a key pair.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key_public</strong> (<em>str</em>) – The public key of a key pair.</li>
+<li><strong>key_private</strong> (<em>str</em>) – The private key of a key pair.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="eosfactory.core.interface.Omittable">
+<em class="property">class </em><code class="descclassname">eosfactory.core.interface.</code><code class="descname">Omittable</code><a class="reference internal" href="../_modules/eosfactory/core/interface.html#Omittable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.Omittable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Having the <em>err_msg</em> attribute.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="eosfactory.core.interface.Permission">
+<em class="property">class </em><code class="descclassname">eosfactory.core.interface.</code><code class="descname">Permission</code><a class="reference internal" href="../_modules/eosfactory/core/interface.html#Permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.Permission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Enumeration {OWNER, ACTIVE}</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="eosfactory.core.interface.Wallet">
+<em class="property">class </em><code class="descclassname">eosfactory.core.interface.</code><code class="descname">Wallet</code><span class="sig-paren">(</span><em>name</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/interface.html#Wallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.Wallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.interface.Omittable" title="eosfactory.core.interface.Omittable"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.interface.Omittable</span></code></a></p>
+<p>Having the <em>name</em> and <em>password</em> attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) – The wallet name.</li>
+<li><strong>password</strong> (<em>str</em>) – The password to the wallet.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – The wallet name.</li>
+<li><strong>password</strong> (<em>str</em>) – The password to the wallet.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.interface.account_arg">
+<code class="descclassname">eosfactory.core.interface.</code><code class="descname">account_arg</code><span class="sig-paren">(</span><em>account</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/interface.html#account_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.account_arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accepts any account argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>account</strong> (<em>str</em><em> or </em><a class="reference internal" href="#eosfactory.core.interface.Account" title="eosfactory.core.interface.Account"><em>interface.Account</em></a>) – <em>account</em> argument.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The EOSIO name of the <em>account</em> argument.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.interface.key_arg">
+<code class="descclassname">eosfactory.core.interface.</code><code class="descname">key_arg</code><span class="sig-paren">(</span><em>key</em>, <em>is_owner_key=True</em>, <em>is_private_key=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/interface.html#key_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.key_arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accepts any key argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>str</em><em> or </em><a class="reference internal" href="#eosfactory.core.interface.Key" title="eosfactory.core.interface.Key"><em>Key</em></a><em> or </em><a class="reference internal" href="#eosfactory.core.interface.Account" title="eosfactory.core.interface.Account"><em>interface.Account</em></a>) – The <em>key</em> argument.</li>
+<li><strong>is_owner_key</strong> (<em>bool</em>) – Solves ambivalence of the <em>key</em> parameter if
+the key argument is an .interface.Account object.</li>
+<li><strong>is_private_key</strong> (<em>bool</em>) – Solves ambivalence of the <em>key</em> parameter if
+the the key argument is a .Key or .interface.Account object</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The value of the <em>key</em> argument.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.interface.permission_arg">
+<code class="descclassname">eosfactory.core.interface.</code><code class="descname">permission_arg</code><span class="sig-paren">(</span><em>permission</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/interface.html#permission_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.permission_arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accepts any permission argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>permission</strong> (<a class="reference internal" href="#eosfactory.core.interface.Account" title="eosfactory.core.interface.Account"><em>interface.Account</em></a><em> or </em><em>str</em><em> or </em><em>(</em><em>str</em><em>, </em><em>str</em><em>) or         </em><em>(</em><a class="reference internal" href="#eosfactory.core.interface.Account" title="eosfactory.core.interface.Account"><em>interface.Account</em></a><em>, </em><em>str</em><em>) or </em><em>any list of the previous items.</em>) – The <em>permission</em> argument.</td>
+</tr>
+</tbody>
+</table>
+<p>Exemplary values of the argument <em>permission</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eosio</span> <span class="c1"># eosio is an interface.Account object</span>
+
+<span class="s2">&quot;eosio@owner&quot;</span>
+
+<span class="p">(</span><span class="s2">&quot;eosio&quot;</span><span class="p">,</span> <span class="s2">&quot;owner&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">eosio</span><span class="p">,</span> <span class="n">interface</span><span class="o">.</span><span class="n">Permission</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">)</span>
+
+<span class="p">[</span><span class="s2">&quot;eosio@owner&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">eosio</span><span class="p">,</span> <span class="o">.</span><span class="n">Permission</span><span class="o">.</span><span class="n">ACTIVE</span><span class="p">)]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of tuples.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[(str, str)]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.interface.wallet_arg">
+<code class="descclassname">eosfactory.core.interface.</code><code class="descname">wallet_arg</code><span class="sig-paren">(</span><em>wallet</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/interface.html#wallet_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.interface.wallet_arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accepts any <em>wallet</em> argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wallet</strong> (<em>str</em><em> or </em><a class="reference internal" href="#eosfactory.core.interface.Wallet" title="eosfactory.core.interface.Wallet"><em>interface.Wallet</em></a>) – <em>wallet</em> argument.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">name of the <em>wallet</em> argument.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="core.cleos_sys.html"
+                        title="previous chapter">core.cleos_sys</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="core.config.html"
+                        title="next chapter">core.config</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rst/core.interface.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.config.html" title="core.config"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="core.cleos_sys.html" title="core.cleos_sys"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

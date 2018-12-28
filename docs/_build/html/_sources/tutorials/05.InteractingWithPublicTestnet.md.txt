@@ -1,0 +1,214 @@
+# Interacting with Public Testnet
+
+The purpose of this tutorial is to demonstrate how *EOSFactory* can be used to deploy and test EOS smart-contracts on a public testnet, e.g. [Jungle Testnet](http://dev.cryptolions.io/) or [CryptoKylin Testnet](https://www.cryptokylin.io/).
+
+## Prerequisites
+
+- This tutorial assumes that you have successfully installed *EOSFactory*. If it's not the case, please refer to [Installing EOSFactory](01.InstallingEOSFactory.html).
+
+- We assume that you are familiar with the material covered in [Interacting with EOS Contracts in EOSFactory](02.InteractingWithEOSContractsInEOSFactory.html) and [Building & Deploying EOS Contracts using EOSFactory](03.BuildingAndDeployingEOSContractsInEOSFactory.html).
+
+- We also assume you have [Visual Studio Code](https://code.visualstudio.com/) installed. If you are on Windows and run VSC for the first time, in order to get access to *Windows Subsystem for Linux* bash terminal inside VSC, navigate to `Preferences -> Settings` and overwrite the default configuration for the `terminal.integrated.shell.windows` option:
+
+  ```
+
+  ```
+
+
+## The problems with public testnet
+
+To be able to create a new account on a public testnet you need an account name and two public keys (owner & active). The problem with account names is that they need to be unique and also comply with strict rules (e.g. `[a-z1-5]{12}` ).
+
+Another problem is that you do not have full control of a public testnet (as is the case with a local private testnet), you cannot reset it any time you want and thus each time you use a public testnet for your smart-contract testing you need to either create a new set of accounts (which is ineffective and time consuming) or you need to carefully recycle the same set of accounts (each having a unique random name).
+
+*EOSFactory* uses the latter approach and offers a built-in mechanism for caching multiple accounts and mapping their random names to a set of stable names used in smart-contract testing. The mapping is stored in `JSON` files located next to the wallets managed by `keosd`, i.e. in the `~/eosio-wallet` folder.
+
+## Register a public testnet with *EOSFactory* 
+
+The following procedure differs depending whether you want to use your existing account which is already registered on a public testnet or you want EOSFactory to help you with creating a new account.
+
+Also, if you need a new account and intend to work with the [CryptoKylin Testnet](https://www.cryptokylin.io/), *EOSFactory* offers a special script for that purpose, as described in *Case 3*.
+
+#### Case 1: You do not have an account
+
+We recommend using the `python3 -m eosfactory.utils.register_testnet` script with the following two parameters:
+
+- an URL of a public node offering access to the testnet, e.g. `http://145.239.133.201:8888`,
+- your preferred alias for the testnet, e.g. `myjungle`.
+
+In our case the command looks like this:
+
+```
+python3 -m eosfactory.utils.register_testnet http://145.239.133.201:8888 myjungle
+```
+
+In response you will receive a message similar to the following example:
+
+```
+Account Name: tcfchehyagd4
+Owner Public Key: EOS4x5jhfaJ6vA7z5K36dWFkeZfabRbSoSoGUQFjvWNUwtFt7jXGU
+Active Public Key: EOS8LQq1VDf1F5cBSdYvbott9GgsR7Bvz4ttR8A6RJiHDKsPdBY1c
+```
+
+To complete the process, use the suggested account name and public keys (ignore the private keys) to register a new account on a public testnet. This account will serve as a master account for the *EOSFactory* testnet object.
+
+**NOTE:** Make sure to use the testnet's faucet to fund the newly created account with enough liquid EOS to be able to spawn other accounts, delegate CPU & NET and buy RAM for them.
+
+When you are ready, type `go` to let the script verify that the newly created account has been registered properly with the testnet. Once this is done, the script proceeds to register the testnet with *EOSFactory*.
+
+If everything works fine, you should see a message similar to this:
+
+```
+myjungle:  tcfchehyagd4 @ http://145.239.133.201:8888
+```
+
+#### Case 2: You already have an account
+
+We assume that you already have an account registered on a public testnet and this account is able to act as a master account for the *EOSFactory* testnet object, i.e. it's funded with enough liquid EOS to be able to spawn other accounts, delegate CPU & NET and buy RAM for them.
+
+We recommend using the `python3 -m eosfactory.utils.register_testnet` script with the following five parameters:
+
+- an URL of a public node offering access to the testnet, e.g. `http://145.239.133.201:8888`,
+- your preferred alias for the testnet, e.g. `myjungle`,
+- your account name, as registered on the testnet, e.g. `tcfchehyagd4`,
+- your account's owner private key,
+- your account's active private key.
+
+In our case the command looks like this:
+
+```
+python3 -m eosfactory.utils.register_testnet http://88.99.97.30:38888 myjungle -a tcfchehyagd4 5JBbCwe3t6j63yerYmguRVWg7ZVDY3nKXzGYMwkR9y5w4appKhk 5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK
+```
+
+As a result, the script verifies that the account supplied by you is properly registered with the testnet and then proceeds to register the testnet with *EOSFactory*.
+
+If everything works fine, you should see a message similar to this:
+
+```
+myjungle:  tcfchehyagd4 @ http://88.99.97.30:38888
+```
+
+#### Case 3: The Kylin Testnet
+
+We assume here that for the purpose of unit testing you want to create a new account on the [CryptoKylin Testnet](https://www.cryptokylin.io/). If you want to use an exiting one, please refer to *Case 2* above.
+
+We recommend using the `eosfactory.utils.register_testnet_via_faucet` script with the following three parameters:
+
+- an URL of a public faucet, e.g. `http://faucet.cryptokylin.io`,
+- an URL of a public node offering access to the testnet, e.g. `http://145.239.133.201:9999`,
+- your preferred alias for the testnet, e.g. `mykylin`.
+
+In our case the command looks like this:
+
+```
+python3 -m eosfactory.utils.register_testnet_via_faucet http://faucet.cryptokylin.io http://145.239.133.201:9999 mykylin
+```
+
+The output should be similar to this:
+
+```
+REMOTE testnet is active @ https://api.kylin.alohaeos.com.
+Registering account: http://faucet.cryptokylin.io/create_account?xlg3pao3idlq
+Account ``xlg3pao3idlq`` successfully registered.
+Funding account: http://faucet.cryptokylin.io/get_token?xlg3pao3idlq
+Funding account: http://faucet.cryptokylin.io/get_token?xlg3pao3idlq
+Funding account: http://faucet.cryptokylin.io/get_token?xlg3pao3idlq
+Account ``xlg3pao3idlq`` successfully funded.
+```
+
+If everything works fine, you should see a message similar to this:
+
+```
+mykylin:  xlg3pao3idlq @ https://api.kylin.alohaeos.com
+```
+
+## List registered testnets
+
+Use this command:
+
+```
+python3 -m eosfactory.utils.testnets
+```
+
+As a result, you should get a list similar to this:
+
+```
+myjungle:  dgxo1uyhoytn @ http://88.99.97.30:38888
+mykylin:   xlg3pao3idlq @ https://api.kylin.alohaeos.com
+```
+
+## Run unit tests
+
+Create a new smart-contract project:
+
+```
+python3 -m eosfactory.utils.create_project foo_bar 03_tic_tac_toe
+```
+
+**NOTE:** The first parameter is the name of your project (and it's also the name of the smart-contract itself), whereas the second parameter is the name of the template being used for project creation. For more details about this command please refer to [Working With EOS Contracts Using EOSFactory In VSC](04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html).
+
+**NOTE:** As of now only the `03_tic_tac_toe` template supports the public testnet interactions.
+
+As a result, you should get a message similar to this:
+
+```
+Contract directory is /mnt/d/Workspaces/EOS/contracts/foo_bar
+```
+
+Switch to the `foo_bar` folder and first execute `unittest1.py ` without any parameters, just to make sure everything works fine on a local testnet:
+
+```
+python3 tests/unittest1.py
+```
+
+Next, you can attempt to run the same unit test on a public testnet:
+
+```
+python3 test/unittest1.py myjungle
+```
+
+```
+python3 tests/unittest1.py mykylin
+```
+
+**NOTE:** The positional parameter, in our case `myjungle` or `mykylin`, indicates the alias of the public testnet.
+
+Similarly, you can run the other (non-standard) test:
+
+```
+python3 tests/test1.py myjungle
+```
+
+```
+python3 tests/test1.py mykylin
+```
+
+## Account management
+
+During the initial run of a unit test, the master account associated with a given testnet is used to create (and register) all the additional accounts required by the unit test.
+
+However, during subsequent runs those accounts are reused, which saves you a lot of hassle with managing those accounts and constantly having to refund them. As described above, this is possible because all newly created accounts are internally cached by *EOSFactory* and their random names are mapped to stable variable names.
+
+Use the `-r` option, if you want to run the test from scratch, i.e. with the existing accounts being removed from *EOSFactory* cache and replaced by another set of newly created accounts:
+
+```
+python3 tests/unittest1.py myjungle -r
+```
+
+## Utilizing public testnet in an *ad hoc* mode
+
+If you have an account on a public testnet, you can skip the process of registering this testnet with *EOSFactory* and run a unit test directly, by using the `-t` (or `--testnet`) option.
+
+This option requires four parameters:
+
+- an URL of a public node offering access to the testnet, e.g. `http://145.239.133.201:8888`,
+- your account name, as registered on the testnet,
+- your account's owner private key,
+- your account's active private key.
+
+In our case the command looks like this:
+
+```
+python3 tests/unittest1.py -t http://88.99.97.30:38888 dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
+```
+

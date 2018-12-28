@@ -1,0 +1,282 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eosfactory.core.testnet &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eosfactory.core.testnet</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">eosfactory.core.setup</span> <span class="k">as</span> <span class="nn">setup</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.manager</span> <span class="k">as</span> <span class="nn">manager</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.logger</span> <span class="k">as</span> <span class="nn">logger</span>
+
+
+<div class="viewcode-block" id="Testnet"><a class="viewcode-back" href="../../../rst/core.testnet.html#eosfactory.core.testnet.Testnet">[docs]</a><span class="k">class</span> <span class="nc">Testnet</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;Testing ``nodeos`` node.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): If set, the URL of a remote ``nodeos``, otherwise </span>
+<span class="sd">            a localhost URL.</span>
+<span class="sd">        account_name (str): If set, the account name, otherwise the node is</span>
+<span class="sd">            considered local and the name is ``eosio``.</span>
+<span class="sd">        owner_key (str): If set, the public owner key of the ``account``.</span>
+<span class="sd">        active_key (str): If set, the public active key of the ``account``.</span>
+<span class="sd">        reset (bool): If set and if local node, reset the node.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        url (str): The URL of the ``nodeos``.</span>
+<span class="sd">        account_name (str): The name of the account.</span>
+<span class="sd">        owner_key (str): The public owner key of the ``account``.</span>
+<span class="sd">        active_key (str): The public active key of the ``account``.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">account_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">owner_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">active_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">reset</span><span class="p">:</span>
+                <span class="n">manager</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="p">[</span><span class="n">logger</span><span class="o">.</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">ERROR</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">manager</span><span class="o">.</span><span class="n">resume</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="p">[</span><span class="n">logger</span><span class="o">.</span><span class="n">Verbosity</span><span class="o">.</span><span class="n">ERROR</span><span class="p">])</span>
+            <span class="kn">import</span> <span class="nn">eosfactory.core.account</span> <span class="k">as</span> <span class="nn">account</span>
+            <span class="n">eosio</span> <span class="o">=</span> <span class="n">account</span><span class="o">.</span><span class="n">Eosio</span><span class="p">(</span><span class="s2">&quot;account_master&quot;</span><span class="p">)</span>
+            <span class="n">setup</span><span class="o">.</span><span class="n">is_local_address</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">account_name</span> <span class="o">=</span> <span class="n">eosio</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">owner_key</span> <span class="o">=</span> <span class="n">eosio</span><span class="o">.</span><span class="n">owner_key</span><span class="o">.</span><span class="n">key_private</span>
+            <span class="n">active_key</span> <span class="o">=</span> <span class="n">eosio</span><span class="o">.</span><span class="n">active_key</span><span class="o">.</span><span class="n">key_private</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">account_name</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">owner_key</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">active_key</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        If the ``url`` is set, the ``account_name`` and keys have to be set, as well.</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_name</span> <span class="o">=</span> <span class="n">account_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner_key</span> <span class="o">=</span> <span class="n">owner_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_key</span> <span class="o">=</span> <span class="n">active_key</span>
+
+<div class="viewcode-block" id="Testnet.configure"><a class="viewcode-back" href="../../../rst/core.testnet.html#eosfactory.core.testnet.Testnet.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set the testnet to be the listener to EOSFactory.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">setup</span><span class="o">.</span><span class="n">set_nodeos_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Testnet.verify_production"><a class="viewcode-back" href="../../../rst/core.testnet.html#eosfactory.core.testnet.Testnet.verify_production">[docs]</a>    <span class="k">def</span> <span class="nf">verify_production</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Check whether the node is active.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the node is active.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">verify_testnet_production</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Testnet.clear_cache"><a class="viewcode-back" href="../../../rst/core.testnet.html#eosfactory.core.testnet.Testnet.clear_cache">[docs]</a>    <span class="k">def</span> <span class="nf">clear_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Remove all the saved interaction with the testnet.</span>
+
+<span class="sd">        Remove wallets ascribed to the testnet, as wall as its account map and</span>
+<span class="sd">        its password map.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">manager</span><span class="o">.</span><span class="n">clear_testnet_cache</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Testnet.is_local"><a class="viewcode-back" href="../../../rst/core.testnet.html#eosfactory.core.testnet.Testnet.is_local">[docs]</a>    <span class="k">def</span> <span class="nf">is_local</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Check whether EOSFactory is connected to the local testnet.</span>
+
+<span class="sd">        Returns: </span>
+<span class="sd">            bool: Whether EOSFactory is connected to the local testnet.</span>
+<span class="sd">        &#39;&#39;&#39;</span>        
+        <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">is_local_testnet</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="get_testnet"><a class="viewcode-back" href="../../../rst/core.testnet.html#eosfactory.core.testnet.get_testnet">[docs]</a><span class="k">def</span> <span class="nf">get_testnet</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">testnet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return a testnet.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        alias (str): If set, the testnet alias, otherwise the local testnet</span>
+<span class="sd">            is returned.</span>
+<span class="sd">        testnet (tuple): The tuple (&lt;url&gt; &lt;name&gt; &lt;owner key&gt; &lt;active key&gt;)</span>
+<span class="sd">            representing a :class:`.Testnet` object, returned if the </span>
+<span class="sd">            ``alias`` argument is not set.</span>
+<span class="sd">        reset (bool): If both the ``alias`` and ``testnet`` arguments are not </span>
+<span class="sd">            set, determine whether the local node is to be reset.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`.Testnet`: a testnet</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">alias</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">testnet</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Testnet</span><span class="p">(</span><span class="n">reset</span><span class="o">=</span><span class="n">reset</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">alias</span><span class="p">:</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">read_map</span><span class="p">(</span><span class="n">TESTNET_FILE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Testnet</span><span class="p">(</span>
+                <span class="n">mapping</span><span class="p">[</span><span class="n">alias</span><span class="p">][</span><span class="s2">&quot;url&quot;</span><span class="p">],</span> <span class="n">mapping</span><span class="p">[</span><span class="n">alias</span><span class="p">][</span><span class="s2">&quot;account_name&quot;</span><span class="p">],</span>
+                <span class="n">mapping</span><span class="p">[</span><span class="n">alias</span><span class="p">][</span><span class="s2">&quot;owner_key&quot;</span><span class="p">],</span> <span class="n">mapping</span><span class="p">[</span><span class="n">alias</span><span class="p">][</span><span class="s2">&quot;active_key&quot;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">alias</span> <span class="o">==</span> <span class="s2">&quot;JUNGLE&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">JUNGLE</span>
+        <span class="k">elif</span> <span class="n">alias</span> <span class="o">==</span> <span class="s2">&quot;KYLIN&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">KYLIN</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            Testnet ``</span><span class="si">{}</span><span class="s1">`` is not defined in the testnet mapping.</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alias</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">testnet</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Testnet</span><span class="p">(</span><span class="n">testnet</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">testnet</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">testnet</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">testnet</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        Cannot determine testnet.</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span></div>
+
+
+<span class="n">TESTNET_FILE</span> <span class="o">=</span> <span class="s2">&quot;testnet.json&quot;</span>
+
+
+<div class="viewcode-block" id="add_testnet_to_mapping"><a class="viewcode-back" href="../../../rst/core.testnet.html#eosfactory.core.testnet.add_testnet_to_mapping">[docs]</a><span class="k">def</span> <span class="nf">add_testnet_to_mapping</span><span class="p">(</span><span class="n">testnet</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Save the given :class:`.Testnet` object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        testnet (.Testnet): The object to be saved.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">add_to_mapping</span><span class="p">(</span>
+        <span class="n">testnet</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">testnet</span><span class="o">.</span><span class="n">account_name</span><span class="p">,</span> 
+        <span class="n">testnet</span><span class="o">.</span><span class="n">owner_key</span><span class="p">,</span> <span class="n">testnet</span><span class="o">.</span><span class="n">active_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="add_to_mapping"><a class="viewcode-back" href="../../../rst/core.testnet.html#eosfactory.core.testnet.add_to_mapping">[docs]</a><span class="k">def</span> <span class="nf">add_to_mapping</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">account_name</span><span class="p">,</span> <span class="n">owner_key</span><span class="p">,</span> <span class="n">active_key</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Save a :class:`.Testnet` object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): If set, the URL of a remote ``nodeos``, otherwise </span>
+<span class="sd">            a localhost URL.</span>
+<span class="sd">        account_name (str): If set, the account name, otherwise the node is</span>
+<span class="sd">            considered local and the name is ``eosio``.</span>
+<span class="sd">        owner_key (str): If set, the public owner key of the ``account``.</span>
+<span class="sd">        active_key (str): If set, the public active key of the ``account``.</span>
+<span class="sd">        alias (str): If set, the name of the testnet.        </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">read_map</span><span class="p">(</span><span class="n">TESTNET_FILE</span><span class="p">)</span>
+    <span class="n">testnet</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">testnet</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
+    <span class="n">testnet</span><span class="p">[</span><span class="s2">&quot;account_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">account_name</span>
+    <span class="n">testnet</span><span class="p">[</span><span class="s2">&quot;owner_key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">owner_key</span>
+    <span class="n">testnet</span><span class="p">[</span><span class="s2">&quot;active_key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">active_key</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">alias</span><span class="p">:</span>
+        <span class="n">alias</span> <span class="o">=</span> <span class="n">setup</span><span class="o">.</span><span class="n">url_prefix</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">mapping</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span> <span class="o">=</span> <span class="n">testnet</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">save_map</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">TESTNET_FILE</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="remove_from_mapping"><a class="viewcode-back" href="../../../rst/core.testnet.html#eosfactory.core.testnet.remove_from_mapping">[docs]</a><span class="k">def</span> <span class="nf">remove_from_mapping</span><span class="p">(</span><span class="n">testnet</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Remove the given :class:`.Testnet` object from the record.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        testnet (.Testnet): The object to be saved.</span>
+<span class="sd">    &#39;&#39;&#39;</span>    
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">read_map</span><span class="p">(</span><span class="n">TESTNET_FILE</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">testnet</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">mapping</span><span class="p">[</span><span class="n">testnet</span><span class="p">]</span>
+        <span class="n">manager</span><span class="o">.</span><span class="n">save_map</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">TESTNET_FILE</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="testnets"><a class="viewcode-back" href="../../../rst/core.testnet.html#eosfactory.core.testnet.testnets">[docs]</a><span class="k">def</span> <span class="nf">testnets</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Print recorded :class:`.Testnet` objects.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">read_map</span><span class="p">(</span><span class="n">TESTNET_FILE</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mapping</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">INFO</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        Testnet mapping is empty.</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">alias</span><span class="p">,</span> <span class="n">testnet</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>       
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%25s</span><span class="s2">: </span><span class="si">%13s</span><span class="s2"> @ </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">alias</span><span class="p">,</span> <span class="n">testnet</span><span class="p">[</span><span class="s2">&quot;account_name&quot;</span><span class="p">],</span> <span class="n">testnet</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]))</span></div>
+
+
+<span class="c1">#: Testnet http;//145.239.133.201;8888</span>
+<span class="n">JUNGLE</span> <span class="o">=</span> <span class="n">Testnet</span><span class="p">(</span>
+    <span class="s2">&quot;http://145.239.133.201:8888&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dgxo1uyhoytn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA&quot;</span>
+<span class="p">)</span>
+
+
+<span class="c1">#: Testnet http;//145.239.133.201;9999</span>
+<span class="n">KYLIN</span> <span class="o">=</span> <span class="n">Testnet</span><span class="p">(</span>
+    <span class="s2">&quot;http://145.239.133.201:9999&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;xlg3pao3idlq&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;5JBbCwe3t6j63yerYmguRVWg7ZVDY3nKXzGYMwkR9y5w4appKhk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK&quot;</span>
+<span class="p">)</span>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

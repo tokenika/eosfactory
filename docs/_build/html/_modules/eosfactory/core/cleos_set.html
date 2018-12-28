@@ -1,0 +1,369 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eosfactory.core.cleos_set &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eosfactory.core.cleos_set</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">types</span>
+
+<span class="kn">import</span> <span class="nn">eosfactory.core.logger</span> <span class="k">as</span> <span class="nn">logger</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.manager</span> <span class="k">as</span> <span class="nn">manager</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.interface</span> <span class="k">as</span> <span class="nn">interface</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.cleos</span> <span class="k">as</span> <span class="nn">cleos</span>
+
+
+<div class="viewcode-block" id="SetContract"><a class="viewcode-back" href="../../../rst/core.cleos_set.html#eosfactory.core.cleos_set.SetContract">[docs]</a><span class="k">class</span> <span class="nc">SetContract</span><span class="p">(</span><span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create or update the contract on an account.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account (str or .interface.Account): The account to publish a contract </span>
+<span class="sd">            for.</span>
+<span class="sd">        contract_dir (str): The path to a directory.</span>
+<span class="sd">        wasm_file (str): The WASM file relative to the contract_dir.</span>
+<span class="sd">        abi_file (str): The ABI file for the contract relative to the </span>
+<span class="sd">            contract-dir.</span>
+
+<span class="sd">    See definitions of the remaining parameters: </span>
+<span class="sd">    \:func:`.cleos.common_parameters`.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        contract_path_absolute (str): The path to the contract project</span>
+<span class="sd">        account_name (str): The EOSIO name of the contract&#39;s account.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">contract_dir</span><span class="p">,</span> 
+            <span class="n">wasm_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">abi_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">skip_sign</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">force_unique</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">delay_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="n">files</span> <span class="o">=</span> <span class="n">cleos</span><span class="o">.</span><span class="n">contract_is_built</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">,</span> <span class="n">wasm_file</span><span class="p">,</span> <span class="n">abi_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            Cannot determine the contract directory. The clue is </span>
+<span class="s2">            </span><span class="si">{}</span><span class="s2">.</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">))</span>
+            <span class="k">return</span>
+
+        <span class="n">contract_path_absolute</span> <span class="o">=</span> <span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">wasm_file</span> <span class="o">=</span> <span class="n">files</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">abi_file</span> <span class="o">=</span> <span class="n">files</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>            
+
+        <span class="n">account_name</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">account_name</span><span class="p">,</span> <span class="n">contract_path_absolute</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">json</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permission</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">permission_arg</span><span class="p">(</span><span class="n">permission</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--permission&quot;</span><span class="p">,</span> <span class="n">perm</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">expiration_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--expiration&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">expiration_sec</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">skip_sign</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--skip-sign&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--dont-broadcast&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">force_unique</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--force-unique&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_cpu_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-cpu-usage-ms&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_cpu_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="n">max_net_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-net-usage&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_net_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="ow">not</span> <span class="n">ref_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--ref-block&quot;</span><span class="p">,</span> <span class="n">ref_block</span><span class="p">])</span> 
+        <span class="k">if</span> <span class="n">delay_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--delay-sec&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">delay_sec</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">wasm_file</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wasm_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">abi_file</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">abi_file</span><span class="p">)</span>
+
+        <span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="s2">&quot;set&quot;</span><span class="p">,</span> <span class="s2">&quot;contract&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contract_path_absolute</span> <span class="o">=</span> <span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_name</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SetContract.get_transaction"><a class="viewcode-back" href="../../../rst/core.cleos_set.html#eosfactory.core.cleos_set.SetContract.get_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1">#: Get the transaction returned by EOSIO cleos.</span>
+        <span class="sd">&#39;&#39;&#39;Get the transaction returned from EOSIO cleos.</span>
+
+<span class="sd">        Return: </span>
+<span class="sd">            A JSON transaction object.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">GetTransaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transaction</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="SetAccountPermission"><a class="viewcode-back" href="../../../rst/core.cleos_set.html#eosfactory.core.cleos_set.SetAccountPermission">[docs]</a><span class="k">class</span> <span class="nc">SetAccountPermission</span><span class="p">(</span><span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set parameters dealing with account permissions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account (str or .interface.Account): The account to set/delete a permission </span>
+<span class="sd">            authority for.</span>
+<span class="sd">        permission_name (str or .Permission): The permission to set/delete an </span>
+<span class="sd">            authority for.</span>
+<span class="sd">        parent_permission_name (str or .Permission): The permission name of </span>
+<span class="sd">            this parents permission (defaults to: &quot;active&quot;).</span>
+<span class="sd">        authority (str or dict or filename):  None to delete.</span>
+
+<span class="sd">    Exemplary values of the argument *authority*::</span>
+
+<span class="sd">        # bob, carol are account objects created with </span>
+<span class="sd">        # shell.account.create_account factory function</span>
+
+<span class="sd">        &quot;EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV&quot;</span>
+
+<span class="sd">        bob.active()</span>
+
+<span class="sd">        {</span>
+<span class="sd">            &quot;threshold&quot; : 100, </span>
+<span class="sd">            &quot;keys&quot; : [], </span>
+<span class="sd">            &quot;accounts&quot; : </span>
+<span class="sd">                [</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &quot;permission&quot;:</span>
+<span class="sd">                            {</span>
+<span class="sd">                                &quot;actor&quot;: bob.active(),</span>
+<span class="sd">                                &quot;permission&quot;:&quot;active&quot;</span>
+<span class="sd">                            },</span>
+<span class="sd">                        &quot;weight&quot;:100</span>
+<span class="sd">                    }</span>
+<span class="sd">                ]</span>
+<span class="sd">        }</span>
+
+<span class="sd">    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        account_name (str): The EOSIO name of the contract&#39;s account.</span>
+<span class="sd">        console (str): *[&quot;processed&quot;][&quot;action_traces&quot;][0][&quot;console&quot;]*</span>
+<span class="sd">            component of EOSIO cleos responce.</span>
+<span class="sd">        data (str): *[&quot;processed&quot;][&quot;action_traces&quot;][0][&quot;act&quot;][&quot;data&quot;]*</span>
+<span class="sd">            component of EOSIO cleos responce.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">permission_name</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">parent_permission_name</span><span class="p">,</span>
+            <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">skip_sign</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">return_packed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">force_unique</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">delay_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">):</span>
+        <span class="n">account_name</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">account_name</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">permission_name</span><span class="p">,</span> <span class="n">interface</span><span class="o">.</span><span class="n">Permission</span><span class="p">):</span>
+            <span class="n">permission_name</span> <span class="o">=</span> <span class="n">permission_name</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">permission_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">authority</span><span class="p">:</span>
+            <span class="n">authority</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">data_json</span><span class="p">(</span><span class="n">authority</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">authority</span><span class="p">,</span> <span class="n">interface</span><span class="o">.</span><span class="n">Account</span><span class="p">):</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">authority</span><span class="o">.</span><span class="n">active</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">authority</span> <span class="o">=</span>  <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">authority</span><span class="p">)</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">authority</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;NULL&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parent_permission_name</span><span class="p">,</span> <span class="n">interface</span><span class="o">.</span><span class="n">Permission</span><span class="p">):</span>
+            <span class="n">parent_permission_name</span> <span class="o">=</span> <span class="n">parent_permission_name</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent_permission_name</span><span class="p">)</span>        
+
+        <span class="k">if</span> <span class="n">json</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permission</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">permission_arg</span><span class="p">(</span><span class="n">permission</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--permission&quot;</span><span class="p">,</span> <span class="n">perm</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">expiration_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--expiration&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">expiration_sec</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">skip_sign</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--skip-sign&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--dont-broadcast&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">force_unique</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--force-unique&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_cpu_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-cpu-usage-ms&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_cpu_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="n">max_net_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-net-usage&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_net_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="ow">not</span> <span class="n">ref_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--ref-block&quot;</span><span class="p">,</span> <span class="n">ref_block</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">delay_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--delay-sec&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">delay_sec</span><span class="p">)])</span>
+                        
+        <span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;set&quot;</span><span class="p">,</span> <span class="s2">&quot;account permission&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_name</span> <span class="o">=</span> <span class="n">account_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">json</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;processed&quot;</span><span class="p">][</span><span class="s2">&quot;action_traces&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;console&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;processed&quot;</span><span class="p">][</span><span class="s2">&quot;action_traces&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;act&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span>    </div>
+
+
+<div class="viewcode-block" id="SetActionPermission"><a class="viewcode-back" href="../../../rst/core.cleos_set.html#eosfactory.core.cleos_set.SetActionPermission">[docs]</a><span class="k">class</span> <span class="nc">SetActionPermission</span><span class="p">(</span><span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set parameters dealing with account permissions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account (str or .interface.Account): The account to set/delete a </span>
+<span class="sd">            permission authority for.</span>
+<span class="sd">        code (str or .interface.Account): The account that owns the code for \</span>
+<span class="sd">            the action.</span>
+<span class="sd">        type (str): The type of the action.</span>
+<span class="sd">        requirement (str): The permission name require for executing the given </span>
+<span class="sd">            action.</span>
+
+<span class="sd">    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        account_name (str): The EOSIO name of the contract&#39;s account.</span>
+<span class="sd">        console (str): *[&quot;processed&quot;][&quot;action_traces&quot;][0][&quot;console&quot;]* \</span>
+<span class="sd">            component of EOSIO cleos responce.</span>
+<span class="sd">        data (str): *[&quot;processed&quot;][&quot;action_traces&quot;][0][&quot;act&quot;][&quot;data&quot;]* \</span>
+<span class="sd">            component of EOSIO cleos responce.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">requirement</span><span class="p">,</span>
+            <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">skip_sign</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">return_packed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">force_unique</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">delay_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">):</span>
+        <span class="n">account_name</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">account_name</span><span class="p">]</span>
+
+        <span class="n">code_name</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code_name</span><span class="p">)</span>
+
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">requirement</span><span class="p">:</span>
+            <span class="n">requirement_name</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">requirement</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">requirement_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;NULL&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">json</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permission</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">permission_arg</span><span class="p">(</span><span class="n">permission</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--permission&quot;</span><span class="p">,</span> <span class="n">perm</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">expiration_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--expiration&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">expiration_sec</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">skip_sign</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--skip-sign&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--dont-broadcast&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">force_unique</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--force-unique&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_cpu_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-cpu-usage-ms&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_cpu_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="n">max_net_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-net-usage&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_net_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="ow">not</span> <span class="n">ref_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--ref-block&quot;</span><span class="p">,</span> <span class="n">ref_block</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">delay_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--delay-sec&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">delay_sec</span><span class="p">)])</span>
+
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;set&quot;</span><span class="p">,</span> <span class="s2">&quot;action permission&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">json</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;processed&quot;</span><span class="p">][</span><span class="s2">&quot;action_traces&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;console&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;processed&quot;</span><span class="p">][</span><span class="s2">&quot;action_traces&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;act&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span></div>
+    
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

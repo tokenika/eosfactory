@@ -1,0 +1,213 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Symbolic Names &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Account Class" href="account.html" />
+    <link rel="prev" title="Wallet Class" href="wallet.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="account.html" title="Account Class"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="wallet.html" title="Wallet Class"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="symbolic-names">
+<span id="symbolic-names"></span><h1>Symbolic Names<a class="headerlink" href="#symbolic-names" title="Permalink to this headline">¶</a></h1>
+<p>This document demonstrates how <em>EOSFactory</em> uses symbolic names to handle <em>EOSIO</em> accounts and display logger messages.</p>
+<div class="section" id="context">
+<span id="context"></span><h2>Context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h2>
+<p><em>EOSIO</em> accounts are indexed by their names, thus those names have to be unique within the blockchain namespace and have to follow specific restrictions. As a result, most of the human readable combinations are already taken, even in a testnet environment, so we need to resort to random names when registering new accounts on the blockchain.</p>
+<p>With <em>EOSFactory</em>, the actual accounts registered on a blockchain are wrapped in Python objects initialized via the <code class="docutils literal notranslate"><span class="pre">create_account</span></code> command. This allows us to hide the actual name of an <em>EOSIO</em> account behind an alias equal to the name of a Python variable referencing the account object.</p>
+<p>The mapping between actual accounts and their <em>EOSFactory</em> representations is cached locally in a file. As a result, what we achieve is consistent testing environment across separate Python sessions.</p>
+<p>What’s more, <em>EOSFactory</em> translates <em>EOSIO</em> logger messages, so that the random account names are replaced with human-readable <em>EOSFactory</em> aliases.</p>
+</div>
+<div class="section" id="use-case">
+<span id="use-case"></span><h2>Use Case<a class="headerlink" href="#use-case" title="Permalink to this headline">¶</a></h2>
+<p>The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the <code class="docutils literal notranslate"><span class="pre">EOSFactory</span></code> installation, do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>eosfactory/utils/pythonmd.sh docs/cases/symbolic_names.md
+</pre></div>
+</div>
+<p>Create a new Python session and import <em>EOSFactory</em> API:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eosfactory.eosf</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>Then run this code to initialize a local testnet, register a couple of accounts and deploy a smart-contract to one of them:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reset</span><span class="p">()</span>
+<span class="n">create_master_account</span><span class="p">(</span><span class="s2">&quot;master&quot;</span><span class="p">)</span>
+<span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+<span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+<span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;carol&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+
+<span class="n">contract</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="s2">&quot;02_eosio_token&quot;</span><span class="p">)</span>
+<span class="n">contract</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">contract</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
+
+<span class="n">host</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span>
+    <span class="s2">&quot;create&quot;</span><span class="p">,</span> 
+    <span class="p">{</span>
+        <span class="s2">&quot;issuer&quot;</span><span class="p">:</span> <span class="n">master</span><span class="p">,</span>
+        <span class="s2">&quot;maximum_supply&quot;</span><span class="p">:</span> <span class="s2">&quot;1000000000.0000 EOS&quot;</span>
+    <span class="p">},</span> <span class="p">[</span><span class="n">master</span><span class="p">,</span> <span class="n">host</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="section" id="symbolic-translation-disabled">
+<span id="symbolic-translation-disabled"></span><h3>Symbolic translation disabled<a class="headerlink" href="#symbolic-translation-disabled" title="Permalink to this headline">¶</a></h3>
+<p>Next, turn symbolic translation OFF:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">setup</span><span class="o">.</span><span class="n">is_translating</span> <span class="o">=</span> <span class="bp">False</span>
+</pre></div>
+</div>
+<p>And push an action to the smart-contract:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">host</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span>
+    <span class="s2">&quot;issue&quot;</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="n">alice</span><span class="p">,</span> <span class="s2">&quot;quantity&quot;</span><span class="p">:</span> <span class="s2">&quot;100.0000 EOS&quot;</span><span class="p">,</span> <span class="s2">&quot;memo&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+    <span class="p">},</span>
+    <span class="n">master</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here is the expected outcome:</p>
+<p><img alt="not translating" src="../_images/not_translating.png" /></p>
+<p>Please note that when symbolic translation is disabled, the logger output refers to the <code class="docutils literal notranslate"><span class="pre">alice</span></code> account as <code class="docutils literal notranslate"><span class="pre">v13zgjp3bu45</span></code>. It’s because this is the actual name of this account as registered on the blockchain.</p>
+</div>
+<div class="section" id="symbolic-translation-enabled">
+<span id="symbolic-translation-enabled"></span><h3>Symbolic translation enabled<a class="headerlink" href="#symbolic-translation-enabled" title="Permalink to this headline">¶</a></h3>
+<p>Now, turn symbolic translation ON:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">setup</span><span class="o">.</span><span class="n">is_translating</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</div>
+<p>And push another action to the same smart-contract:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">host</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span>
+    <span class="s2">&quot;issue&quot;</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="n">carol</span><span class="p">,</span> <span class="s2">&quot;quantity&quot;</span><span class="p">:</span> <span class="s2">&quot;100.0000 EOS&quot;</span><span class="p">,</span> <span class="s2">&quot;memo&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+    <span class="p">},</span>
+    <span class="n">master</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here is the expected outcome:</p>
+<p><img alt="translating" src="../_images/translating.png" /></p>
+<p>Please note that when symbolic translation is enabled, the human-readable name <code class="docutils literal notranslate"><span class="pre">carol</span></code> is used in the logger output, even though the actual name of this account is <code class="docutils literal notranslate"><span class="pre">d4okdmdcqt4w</span></code>.</p>
+<p>Finally, stop the local testnet and exit Python CLI:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="test-run">
+<span id="test-run"></span><h2>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h2>
+<p>The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the <code class="docutils literal notranslate"><span class="pre">EOSFactory</span></code> installation, do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>eosfactory/utils/pythonmd.sh docs/cases/symbolic_names.md
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Symbolic Names</a><ul>
+<li><a class="reference internal" href="#context">Context</a></li>
+<li><a class="reference internal" href="#use-case">Use Case</a><ul>
+<li><a class="reference internal" href="#symbolic-translation-disabled">Symbolic translation disabled</a></li>
+<li><a class="reference internal" href="#symbolic-translation-enabled">Symbolic translation enabled</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#test-run">Test run</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="wallet.html"
+                        title="previous chapter">Wallet Class</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="account.html"
+                        title="next chapter">Account Class</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/cases/symbolic_names.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="account.html" title="Account Class"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="wallet.html" title="Wallet Class"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

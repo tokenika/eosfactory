@@ -1,0 +1,173 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>core.manager &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="core.setup" href="core.setup.html" />
+    <link rel="prev" title="core.logger" href="core.logger.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.setup.html" title="core.setup"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="core.logger.html" title="core.logger"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-eosfactory.core.manager">
+<span id="core-manager"></span><h1>core.manager<a class="headerlink" href="#module-eosfactory.core.manager" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="eosfactory.core.manager.account_map">
+<code class="descclassname">eosfactory.core.manager.</code><code class="descname">account_map</code><span class="sig-paren">(</span><em>logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/manager.html#account_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.manager.account_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return json account map</p>
+<p>Attempt to open the account map file named <code class="docutils literal notranslate"><span class="pre">setup.account_map</span></code>, located
+in the wallet directory <code class="docutils literal notranslate"><span class="pre">config.keosd_wallet_dir()</span></code>, to return its json
+contents. If the file does not exist, return an empty json.</p>
+<p>If the file is corrupted, offer editing the file with the <code class="docutils literal notranslate"><span class="pre">nano</span></code> linux
+editor. Return <code class="docutils literal notranslate"><span class="pre">None</span></code> if the the offer is rejected.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.manager.clear_testnet_cache">
+<code class="descclassname">eosfactory.core.manager.</code><code class="descname">clear_testnet_cache</code><span class="sig-paren">(</span><em>verbosity=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/manager.html#clear_testnet_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.manager.clear_testnet_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove wallet files associated with the current testnet.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.manager.info">
+<code class="descclassname">eosfactory.core.manager.</code><code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/manager.html#info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.manager.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display EOS node info.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.manager.is_head_block_num">
+<code class="descclassname">eosfactory.core.manager.</code><code class="descname">is_head_block_num</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/manager.html#is_head_block_num"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.manager.is_head_block_num" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if testnet is running.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.manager.read_map">
+<code class="descclassname">eosfactory.core.manager.</code><code class="descname">read_map</code><span class="sig-paren">(</span><em>file_name</em>, <em>text_editor='nano'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/manager.html#read_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.manager.read_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return json account map</p>
+<p>Attempt to open the account map file named <code class="docutils literal notranslate"><span class="pre">setup.account_map</span></code>, located
+in the wallet directory <code class="docutils literal notranslate"><span class="pre">config.keosd_wallet_dir()</span></code>, to return its json
+contents. If the file does not exist, return an empty json.</p>
+<p>If the file is corrupted, offer editing the file with the <code class="docutils literal notranslate"><span class="pre">nano</span></code> linux
+editor. Return <code class="docutils literal notranslate"><span class="pre">None</span></code> if the the offer is rejected.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.manager.reset">
+<code class="descclassname">eosfactory.core.manager.</code><code class="descname">reset</code><span class="sig-paren">(</span><em>nodeos_stdout=None</em>, <em>verbosity=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/manager.html#reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.manager.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start clean the EOSIO local node.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.manager.resume">
+<code class="descclassname">eosfactory.core.manager.</code><code class="descname">resume</code><span class="sig-paren">(</span><em>nodeos_stdout=None</em>, <em>verbosity=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/manager.html#resume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.manager.resume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resume the EOSIO local node.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.manager.status">
+<code class="descclassname">eosfactory.core.manager.</code><code class="descname">status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/manager.html#status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.manager.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display EOS node status.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.manager.stop">
+<code class="descclassname">eosfactory.core.manager.</code><code class="descname">stop</code><span class="sig-paren">(</span><em>verbosity=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/manager.html#stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.manager.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops all running EOSIO nodes.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="core.logger.html"
+                        title="previous chapter">core.logger</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="core.setup.html"
+                        title="next chapter">core.setup</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rst/core.manager.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.setup.html" title="core.setup"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="core.logger.html" title="core.logger"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,792 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eosfactory.core.cleos &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eosfactory.core.cleos</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">import</span> <span class="nn">eosfactory.core.errors</span> <span class="k">as</span> <span class="nn">errors</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.logger</span> <span class="k">as</span> <span class="nn">logger</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.config</span> <span class="k">as</span> <span class="nn">config</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.setup</span> <span class="k">as</span> <span class="nn">setup</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.interface</span> <span class="k">as</span> <span class="nn">interface</span>
+
+
+<span class="k">def</span> <span class="nf">set_local_nodeos_address_if_none</span><span class="p">():</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">setup</span><span class="o">.</span><span class="n">nodeos_address</span><span class="p">():</span>
+        <span class="n">setup</span><span class="o">.</span><span class="n">set_nodeos_address</span><span class="p">(</span>
+            <span class="s2">&quot;http://&quot;</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">http_server_address</span><span class="p">())</span>
+        <span class="n">setup</span><span class="o">.</span><span class="n">is_local_address</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">setup</span><span class="o">.</span><span class="n">is_local_address</span>
+
+
+<span class="c1"># http://www.sphinx-doc.org/domains.html#info-field-lists</span>
+<div class="viewcode-block" id="Cleos"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.Cleos">[docs]</a><span class="k">class</span> <span class="nc">Cleos</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;A prototype for *EOSIO cleos* commands.</span>
+<span class="sd">    Calls *EOSIO cleos*, and processes the responce.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        args (list): List of *EOSIO cleos* positionals and options.</span>
+<span class="sd">        command_group (str): Command group name.</span>
+<span class="sd">        command (str): Command name.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        out_msg (str): Responce received via the stdout stream.</span>
+<span class="sd">        out_msg_details (str): Responce received via the stderr stream.</span>
+<span class="sd">        err_msg (str): Error message received via the stderr stream.</span>
+<span class="sd">        json (json): Responce received as JSON, if any.</span>
+<span class="sd">        is_verbose (bool): If set, a message is printed.</span>
+<span class="sd">        args (list): Value of the *args* argument.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        .core.errors.Error: If err_msg.</span>
+<span class="sd">    &#39;&#39;&#39;</span>    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">command_group</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_msg_details</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">err_msg</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_verbose</span> <span class="o">=</span> <span class="n">is_verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+
+        <span class="n">cl</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">cli_exe</span><span class="p">()]</span>
+        <span class="n">set_local_nodeos_address_if_none</span><span class="p">()</span>
+        <span class="n">cl</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--url&quot;</span><span class="p">,</span> <span class="n">setup</span><span class="o">.</span><span class="n">nodeos_address</span><span class="p">()])</span>
+
+        <span class="k">if</span> <span class="n">setup</span><span class="o">.</span><span class="n">is_print_request</span><span class="p">:</span>
+            <span class="n">cl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--print-request&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">setup</span><span class="o">.</span><span class="n">is_print_response</span><span class="p">:</span>
+            <span class="n">cl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--print-response&quot;</span><span class="p">)</span>
+
+        <span class="n">cl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">command_group</span><span class="p">)</span>
+        <span class="n">cl</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span>
+        <span class="n">cl</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">setup</span><span class="o">.</span><span class="n">is_print_command_line</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;command line sent to cleos:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cl</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="n">cl</span><span class="p">,</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="n">cwd</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">cli_exe</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span> 
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_msg_details</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">err_msg</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">error_key_words</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;Failed&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">error_key_words</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_msg_details</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">err_msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_msg_details</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">out_msg_details</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">err_msg</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">err_msg</span> <span class="ow">and</span> \
+                    <span class="ow">not</span> <span class="s2">&quot;Transaction took too long&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">err_msg</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="n">errors</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_msg_details</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>        
+
+<div class="viewcode-block" id="Cleos.printself"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.Cleos.printself">[docs]</a>    <span class="k">def</span> <span class="nf">printself</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Print a message.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            is_verbose (bool): If set, a message is printed.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;is_verbose&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_verbose</span> <span class="o">=</span> <span class="n">is_verbose</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_verbose</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">OUT</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">err_msg</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">err_msg</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_msg_details</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_msg_details</span>
+            <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="common_parameters"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.common_parameters">[docs]</a><span class="k">def</span> <span class="nf">common_parameters</span><span class="p">(</span>
+        <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="n">skip_sign</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">force_unique</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">delay_sec</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Common parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        permission (.interface.Account or str or (str, str) or \</span>
+<span class="sd">            (.interface.Account, str) or any list of the previous items.): </span>
+<span class="sd">            An account and permission level to authorize.</span>
+<span class="sd">        </span>
+<span class="sd">    Exemplary values of the argument *permission*::</span>
+
+<span class="sd">        eosio # eosio is interface.Account object</span>
+
+<span class="sd">        &quot;eosio@owner&quot;</span>
+
+<span class="sd">        (&quot;eosio&quot;, &quot;owner&quot;)</span>
+
+<span class="sd">        (eosio, interface.Permission.ACTIVE)</span>
+
+<span class="sd">        [&quot;eosio@owner&quot;, (eosio, .Permission.ACTIVE)]</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        expiration (int): The time in seconds before a transaction expires, </span>
+<span class="sd">            defaults to 30s</span>
+<span class="sd">        skip_sign (bool): Specify if unlocked wallet keys should be used to </span>
+<span class="sd">            sign transaction.</span>
+<span class="sd">        dont_broadcast (bool): Don&#39;t broadcast transaction to the network </span>
+<span class="sd">            (just print).</span>
+<span class="sd">        force_unique(bool): Force the transaction to be unique. This will </span>
+<span class="sd">            consume extra bandwidth and remove any protections against </span>
+<span class="sd">            accidentally issuing the same transaction multiple times.</span>
+<span class="sd">        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget, </span>
+<span class="sd">            for the execution of the transaction (defaults to 0 which means no limit).</span>
+<span class="sd">        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the </span>
+<span class="sd">            transaction (defaults to 0 which means no limit).</span>
+<span class="sd">        ref_block (int): The reference block num or block id used for TAPOS </span>
+<span class="sd">            (Transaction as Proof-of-Stake).</span>
+<span class="sd">        delay_sec: The delay in seconds, defaults to 0s.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="GetAccount"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.GetAccount">[docs]</a><span class="k">class</span> <span class="nc">GetAccount</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="n">Account</span><span class="p">,</span> <span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Retrieve an account from the blockchain.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account (str or .interface.Account): The account to retrieve.</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (str): The EOSIO name of the account.</span>
+<span class="sd">        owner_key (str) The *owner* public key.</span>
+<span class="sd">        active_key (str) The *active* public key.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">is_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">interface</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">account</span><span class="p">))</span>
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> 
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="k">if</span> <span class="n">is_info</span> <span class="k">else</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;--json&quot;</span><span class="p">],</span> 
+            <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;account&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner_key</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_key</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_info</span><span class="p">:</span>
+                <span class="n">permissions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;permissions&quot;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">permission</span> <span class="ow">in</span> <span class="n">permissions</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">permission</span><span class="p">[</span><span class="s2">&quot;required_auth&quot;</span><span class="p">][</span><span class="s2">&quot;keys&quot;</span><span class="p">]:</span>
+                        <span class="n">key</span> <span class="o">=</span> <span class="n">permission</span><span class="p">[</span><span class="s2">&quot;required_auth&quot;</span><span class="p">][</span><span class="s2">&quot;keys&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;key&quot;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">permission</span><span class="p">[</span><span class="s2">&quot;perm_name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;owner&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">owner_key</span> <span class="o">=</span> <span class="n">key</span>
+                        <span class="k">if</span> <span class="n">permission</span><span class="p">[</span><span class="s2">&quot;perm_name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;active&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">active_key</span> <span class="o">=</span> <span class="n">key</span>                   
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">owner</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;owner\s+1\:\s+1\s(.*)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span><span class="p">)</span>
+                <span class="n">active</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;active\s+1\:\s+1\s(.*)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">owner</span> <span class="ow">and</span> <span class="n">active</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">owner_key</span> <span class="o">=</span> <span class="n">owner</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">active_key</span> <span class="o">=</span> <span class="n">active</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;name: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Cleos</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="GetTransaction"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.GetTransaction">[docs]</a><span class="k">class</span> <span class="nc">GetTransaction</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Retrieve a transaction from the blockchain.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        transaction_id (str): ID of the transaction to retrieve.</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        transaction_id: The ID of the transaction retrieved.</span>
+<span class="sd">        json: The transaction retrieved.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">transaction_id</span> <span class="o">=</span> <span class="n">transaction_id</span>
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="n">transaction_id</span><span class="p">],</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;transaction&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="WalletCreate"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.WalletCreate">[docs]</a><span class="k">class</span> <span class="nc">WalletCreate</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="n">Wallet</span><span class="p">,</span> <span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create a new wallet locally.</span>
+
+<span class="sd">    If the *password* argument is set, try to open a wallet. Otherwise, create</span>
+<span class="sd">    a new wallet.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The name of the wallet, defaults to *default*.</span>
+<span class="sd">        password (str): The password to the wallet, if the wallet exists. </span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (str): The name of the wallet.</span>
+<span class="sd">        password (str): The password returned by the *wallet create* </span>
+<span class="sd">            EOSIO cleos command.</span>
+<span class="sd">        is_created (bool): True, if the wallet created.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">interface</span><span class="o">.</span><span class="n">Wallet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span> <span class="c1"># try to create a wallet</span>
+            <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;--name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;--to-console&quot;</span><span class="p">],</span> 
+                <span class="s2">&quot;wallet&quot;</span><span class="p">,</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">msg</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_created</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># try to open an existing wallet</span>
+            <span class="n">WalletOpen</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">wallet_unlock</span> <span class="o">=</span> <span class="n">WalletUnlock</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="p">{}</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_created</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">password</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span> <span class="o">=</span> <span class="s2">&quot;Restored wallet: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">(</span><span class="n">is_verbose</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WalletStop"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.WalletStop">[docs]</a><span class="k">class</span> <span class="nc">WalletStop</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Stop keosd, the EOSIO wallet manager.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;wallet&quot;</span><span class="p">,</span> <span class="s2">&quot;stop&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="WalletList"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.WalletList">[docs]</a><span class="k">class</span> <span class="nc">WalletList</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;List opened wallets, * marks unlocked.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.    </span>
+<span class="sd">            </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        json: The list of the open wallets.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;wallet&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="s2">&quot;{&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Wallets&quot;</span><span class="p">,</span> \
+            <span class="s1">&#39;&quot;Wallets&quot;&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="WalletImport"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.WalletImport">[docs]</a><span class="k">class</span> <span class="nc">WalletImport</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Import a private key into wallet.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wallet (str or .interface.Wallet): A wallet to import key into.</span>
+<span class="sd">        key (str or .interface.Key): A key to import.</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        key_private (str) The key imported.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">key_private</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">key_arg</span><span class="p">(</span>
+            <span class="n">key</span><span class="p">,</span> <span class="n">is_owner_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_private_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> 
+            <span class="p">[</span><span class="s2">&quot;--private-key&quot;</span><span class="p">,</span> <span class="n">key_private</span><span class="p">,</span> <span class="s2">&quot;--name&quot;</span><span class="p">,</span> 
+                <span class="n">interface</span><span class="o">.</span><span class="n">wallet_arg</span><span class="p">(</span><span class="n">wallet</span><span class="p">)],</span>
+            <span class="s2">&quot;wallet&quot;</span><span class="p">,</span> <span class="s2">&quot;import&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;key_private&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">key_private</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_private</span> <span class="o">=</span> <span class="n">key_private</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="WalletRemove_key"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.WalletRemove_key">[docs]</a><span class="k">class</span> <span class="nc">WalletRemove_key</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Remove key from wallet</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wallet (str or .interface.Wallet): The wallet to remove key from.</span>
+<span class="sd">        password (str): The password returned by wallet create.</span>
+<span class="sd">        key (str or .interface.Key): A public key to remove.</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        key_public (str): The public key removed.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">wallet</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">key_public</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">key_arg</span><span class="p">(</span>
+            <span class="n">key</span><span class="p">,</span> <span class="n">is_owner_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_private_key</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> 
+            <span class="p">[</span><span class="n">key_public</span><span class="p">,</span> <span class="s2">&quot;--name&quot;</span><span class="p">,</span> <span class="n">interface</span><span class="o">.</span><span class="n">wallet_arg</span><span class="p">(</span><span class="n">wallet</span><span class="p">),</span> 
+                <span class="s2">&quot;--password&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">],</span> 
+            <span class="s2">&quot;wallet&quot;</span><span class="p">,</span> <span class="s2">&quot;remove_key&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;key_public&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">key_public</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_public</span> <span class="o">=</span> <span class="n">key_public</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="WalletKeys"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.WalletKeys">[docs]</a><span class="k">class</span> <span class="nc">WalletKeys</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;List of public keys from all unlocked wallets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;wallet&quot;</span><span class="p">,</span> <span class="s2">&quot;keys&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>                
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span> 
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;Keys in all opened wallets:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">Cleos</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="WalletOpen"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.WalletOpen">[docs]</a><span class="k">class</span> <span class="nc">WalletOpen</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Open an existing wallet.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wallet (str or .interface.Wallet): The wallet to open.</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;--name&quot;</span><span class="p">,</span> <span class="n">interface</span><span class="o">.</span><span class="n">wallet_arg</span><span class="p">(</span><span class="n">wallet</span><span class="p">)],</span> 
+            <span class="s2">&quot;wallet&quot;</span><span class="p">,</span> <span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="WalletLockAll"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.WalletLockAll">[docs]</a><span class="k">class</span> <span class="nc">WalletLockAll</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Lock all unlocked wallets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;wallet&quot;</span><span class="p">,</span> <span class="s2">&quot;lock_all&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="WalletLock"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.WalletLock">[docs]</a><span class="k">class</span> <span class="nc">WalletLock</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Lock wallet.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wallet (str or .interface.Wallet): The wallet to open.</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;--name&quot;</span><span class="p">,</span> <span class="n">interface</span><span class="o">.</span><span class="n">wallet_arg</span><span class="p">(</span><span class="n">wallet</span><span class="p">)],</span> 
+            <span class="s2">&quot;wallet&quot;</span><span class="p">,</span> <span class="s2">&quot;lock&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="WalletUnlock"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.WalletUnlock">[docs]</a><span class="k">class</span> <span class="nc">WalletUnlock</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Unlock wallet.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wallet (str or .interface.Wallet): The wallet to remove key from.</span>
+<span class="sd">        password (str): The password returned by wallet create.</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">wallet</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+ 
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wallet</span><span class="p">,</span> <span class="n">interface</span><span class="o">.</span><span class="n">Wallet</span><span class="p">):</span>
+            <span class="n">password</span> <span class="o">=</span> <span class="n">wallet</span><span class="o">.</span><span class="n">password</span>
+
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> 
+            <span class="p">[</span><span class="s2">&quot;--name&quot;</span><span class="p">,</span> <span class="n">interface</span><span class="o">.</span><span class="n">wallet_arg</span><span class="p">(</span><span class="n">wallet</span><span class="p">),</span> <span class="s2">&quot;--password&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">],</span> 
+            <span class="s2">&quot;wallet&quot;</span><span class="p">,</span> <span class="s2">&quot;unlock&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="CreateKey"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.CreateKey">[docs]</a><span class="k">class</span> <span class="nc">CreateKey</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="n">Key</span><span class="p">,</span> <span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create a new keypair and print the public and private keys.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key_private (str): If set, a private key to set, otherwise random.</span>
+<span class="sd">        key_public (str): If set, a public key to set, otherwise random.</span>
+<span class="sd">        r1: Generate a key using the R1 curve (iPhone), instead of the </span>
+<span class="sd">            K1 curve (Bitcoin)</span>
+<span class="sd">        is_verbose (bool): If *False* do not print. Default is *True*.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        key_private (str): The private key set.</span>
+<span class="sd">        key_public (str): The public key set.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">key_public</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key_private</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">r1</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+            <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">interface</span><span class="o">.</span><span class="n">Key</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key_public</span><span class="p">,</span> <span class="n">key_private</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_public</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_private</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;publicKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_public</span>           
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;privateKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_private</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span> <span class="o">=</span> <span class="s2">&quot;Private key: </span><span class="si">{0}</span><span class="se">\n</span><span class="s2">Public key: </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key_private</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_public</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;--to-console&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">r1</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--r1&quot;</span><span class="p">)</span>
+
+            <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;key&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+            
+            <span class="n">msg</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_msg</span><span class="p">)</span>
+            <span class="n">first_collon</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="n">first_end</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">second_collon</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">first_collon</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;privateKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="n">first_collon</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">:</span> <span class="n">first_end</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;publicKey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="n">second_collon</span> <span class="o">+</span> <span class="mi">2</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key_private</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;privateKey&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key_public</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;publicKey&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="RestoreAccount"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.RestoreAccount">[docs]</a><span class="k">class</span> <span class="nc">RestoreAccount</span><span class="p">(</span><span class="n">GetAccount</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">GetAccount</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_info</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;account_name&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner_key</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_key</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="CreateAccount"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.CreateAccount">[docs]</a><span class="k">class</span> <span class="nc">CreateAccount</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="n">Account</span><span class="p">,</span> <span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create an account, buy ram, stake for bandwidth for the account.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        creator (str or .interface.Account): The account creating </span>
+<span class="sd">            the new account.</span>
+<span class="sd">        name: (str) The name of the new account.</span>
+<span class="sd">        owner_key (str): If set, the owner public key for the new account, </span>
+<span class="sd">            otherwise random.</span>
+<span class="sd">        active_key (str): If set, the active public key for the new account, </span>
+<span class="sd">            otherwise random.</span>
+
+<span class="sd">    See definitions of the remaining parameters: </span>
+<span class="sd">        \:func:`.cleos.common_parameters`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">creator</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">owner_key</span><span class="p">,</span> 
+            <span class="n">active_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">skip_sign</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+            <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">force_unique</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">delay_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="n">name</span> <span class="o">=</span> <span class="n">account_name</span><span class="p">()</span>
+        <span class="n">interface</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner_key</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># private keys</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_key</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="k">if</span> <span class="n">active_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">active_key</span> <span class="o">=</span> <span class="n">owner_key</span>        
+
+        <span class="n">owner_key_public</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">key_arg</span><span class="p">(</span>
+            <span class="n">owner_key</span><span class="p">,</span> <span class="n">is_owner_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_private_key</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">active_key_public</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">key_arg</span><span class="p">(</span>
+            <span class="n">active_key</span><span class="p">,</span> <span class="n">is_owner_key</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_private_key</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">creator</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> 
+                <span class="n">owner_key_public</span><span class="p">,</span> <span class="n">active_key_public</span>
+            <span class="p">]</span>
+
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permission</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">permission_arg</span><span class="p">(</span><span class="n">permission</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--permission&quot;</span><span class="p">,</span> <span class="n">perm</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">expiration_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--expiration&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">expiration_sec</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">skip_sign</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--skip-sign&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--dont-broadcast&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">force_unique</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--force-unique&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_cpu_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-cpu-usage-ms&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_cpu_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="n">max_net_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-net-usage&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_net_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="ow">not</span> <span class="n">ref_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--ref-block&quot;</span><span class="p">,</span> <span class="n">ref_block</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">delay_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--delay-sec&quot;</span><span class="p">,</span> <span class="n">delay_sec</span><span class="p">])</span>
+
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;account&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">GetAccount</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_info</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span>
+            
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="account_name"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.account_name">[docs]</a><span class="k">def</span> <span class="nf">account_name</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Get a random EOSIO account name.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">letters</span> <span class="o">=</span> <span class="s2">&quot;abcdefghijklmnopqrstuvwxyz12345&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">+=</span> <span class="n">letters</span><span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="contract_is_built"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.contract_is_built">[docs]</a><span class="k">def</span> <span class="nf">contract_is_built</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">,</span> <span class="n">wasm_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">abi_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check whether the given contract project has its ABI and WASM files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        contract_dir (str): A hint to the project root directory.</span>
+<span class="sd">        wasm_file (str): If set, the WASM file.</span>
+<span class="sd">        abi_file (str): If set, the ABI file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        [&lt;absolute contract dir&gt;, &lt;wasm file&gt;, &lt;abi file&gt;]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">contract_path_absolute</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">contract_path_absolute</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">wasm_file</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">wasm_file</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">wasm_file</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">wasm_file</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">contract_path_absolute</span><span class="p">,</span> <span class="n">wasm_file</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">abi_file</span><span class="p">:</span>
+        <span class="n">abi_file</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">abi_file</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">abi_file</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">contract_path_absolute</span><span class="p">,</span> <span class="n">abi_file</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">contract_path_absolute</span><span class="p">,</span> <span class="n">wasm_file</span><span class="p">,</span> <span class="n">abi_file</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PushAction"><a class="viewcode-back" href="../../../rst/core.cleos.html#eosfactory.core.cleos.PushAction">[docs]</a><span class="k">class</span> <span class="nc">PushAction</span><span class="p">(</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Push a transaction with a single action.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account (str or .interface.Account): The account to publish a contract </span>
+<span class="sd">            for.</span>
+<span class="sd">        action (str or json or filename): Definition of the action to execute on </span>
+<span class="sd">            the contract.</span>
+<span class="sd">        data (str): The arguments to the contract.</span>
+
+<span class="sd">    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        account_name (str): The EOSIO name of the contract&#39;s account.</span>
+<span class="sd">        console (str): *[&quot;processed&quot;][&quot;action_traces&quot;][0][&quot;console&quot;]* \</span>
+<span class="sd">            component of EOSIO cleos responce.</span>
+<span class="sd">        data (str): *[&quot;processed&quot;][&quot;action_traces&quot;][0][&quot;act&quot;][&quot;data&quot;]* \</span>
+<span class="sd">            component of EOSIO cleos responce.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
+            <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">skip_sign</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">force_unique</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">delay_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">is_verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_name</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">account</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">account_name</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">data</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">json</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permission</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">permission_arg</span><span class="p">(</span><span class="n">permission</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--permission&quot;</span><span class="p">,</span> <span class="n">perm</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">expiration_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--expiration&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">expiration_sec</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">skip_sign</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--skip-sign&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--dont-broadcast&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">force_unique</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--force-unique&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_cpu_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-cpu-usage-ms&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_cpu_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="n">max_net_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-net-usage&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_net_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="ow">not</span> <span class="n">ref_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--ref-block&quot;</span><span class="p">,</span> <span class="n">ref_block</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">delay_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--delay-sec&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">delay_sec</span><span class="p">)])</span>
+                        
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="s2">&quot;push&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">console</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;processed&quot;</span><span class="p">][</span><span class="s2">&quot;action_traces&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;console&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;processed&quot;</span><span class="p">][</span><span class="s2">&quot;action_traces&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;act&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">printself</span><span class="p">()</span>
+
+
+    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">GetTransaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transaction</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

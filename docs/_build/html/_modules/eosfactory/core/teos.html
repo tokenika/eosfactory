@@ -1,0 +1,724 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eosfactory.core.teos &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eosfactory.core.teos</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python3</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">import</span> <span class="nn">eosfactory.core.logger</span> <span class="k">as</span> <span class="nn">logger</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.setup</span> <span class="k">as</span> <span class="nn">setup</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.config</span> <span class="k">as</span> <span class="nn">config</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.errors</span> <span class="k">as</span> <span class="nn">errors</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.vscode</span> <span class="k">as</span> <span class="nn">vscode</span>
+
+
+<span class="n">TEMPLATE_CONTRACTS_DIR</span> <span class="o">=</span> <span class="s2">&quot;templates/contracts&quot;</span>
+<span class="n">TEMPLATE_NAME</span> <span class="o">=</span> <span class="s2">&quot;CONTRACT_NAME&quot;</span>
+<span class="n">TEMPLATE_HOME</span> <span class="o">=</span> <span class="s2">&quot;$</span><span class="si">{HOME}</span><span class="s2">&quot;</span>
+<span class="n">TEMPLATE_ROOT</span> <span class="o">=</span> <span class="s2">&quot;$</span><span class="si">{ROOT}</span><span class="s2">&quot;</span>
+<span class="n">C_CPP_PROP</span> <span class="o">=</span> <span class="s2">&quot;$</span><span class="si">{c_cpp_prop}</span><span class="s2">&quot;</span>
+<span class="n">TASK_JSON</span> <span class="o">=</span> <span class="s2">&quot;$</span><span class="si">{tasks}</span><span class="s2">&quot;</span>
+<span class="n">CONFIGURATIONS</span> <span class="o">=</span> <span class="s2">&quot;configurations&quot;</span>
+<span class="n">INCLUDE_PATH</span> <span class="o">=</span> <span class="s2">&quot;includePath&quot;</span>
+<span class="n">BROWSE</span> <span class="o">=</span> <span class="s2">&quot;browse&quot;</span>
+<span class="n">WORKSPACE_FOLDER</span> <span class="o">=</span> <span class="s2">&quot;$</span><span class="si">{workspaceFolder}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">replace_templates</span><span class="p">(</span><span class="n">string</span><span class="p">):</span> 
+    <span class="n">home</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;HOME&quot;</span><span class="p">]</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">is_windows_ubuntu</span><span class="p">():</span>
+        <span class="n">home</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">wsl_root</span><span class="p">()</span> <span class="o">+</span> <span class="n">home</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">wsl_root</span><span class="p">()</span>
+
+    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">TEMPLATE_HOME</span><span class="p">,</span> <span class="n">home</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">TEMPLATE_ROOT</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">string</span>                                                      
+
+
+<span class="k">def</span> <span class="nf">get_c_cpp_properties</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">,</span> <span class="n">c_cpp_properties_path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">c_cpp_properties_path</span><span class="p">:</span>
+        <span class="n">c_cpp_properties_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                <span class="n">contract_dir</span><span class="p">,</span> <span class="s2">&quot;.vscode/c_cpp_properties.json&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">c_cpp_properties_path</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">wslMapWindowsLinux</span><span class="p">(</span><span class="n">c_cpp_properties_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">c_cpp_properties_path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                The given path does not exist:</span>
+<span class="s1">                $</span><span class="si">{}</span><span class="s1">       </span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c_cpp_properties_path</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">c_cpp_properties_path</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">c_cpp_properties_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">input</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">replace_templates</span><span class="p">(</span><span class="n">vscode</span><span class="o">.</span><span class="n">c_cpp_properties</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="ABI"><a class="viewcode-back" href="../../../rst/core.teos.html#eosfactory.core.teos.ABI">[docs]</a><span class="k">def</span> <span class="nf">ABI</span><span class="p">(</span>
+        <span class="n">contract_dir_hint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_cpp_properties_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbosity</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Given a hint to a contract directory, produce ABI file.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">contract_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">(</span><span class="n">contract_dir_hint</span><span class="p">)</span>
+    <span class="c1"># source_files[0] is directory, source_files[1] is contents:</span>
+    <span class="n">contract_source_files</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">contract_source_files</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">)</span>
+
+    <span class="n">source_files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">source_ext</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.c&quot;</span><span class="p">,</span> <span class="s2">&quot;.cpp&quot;</span><span class="p">,</span><span class="s2">&quot;.cxx&quot;</span><span class="p">,</span> <span class="s2">&quot;.c++&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">contract_source_files</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">source_ext</span><span class="p">:</span>
+            <span class="n">source_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">source_files</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        &quot;The source is empty. The assumed contract dir is   </span>
+<span class="s1">        </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">))</span>
+        <span class="k">return</span>
+
+    <span class="n">code_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">source_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">target_dir</span> <span class="o">=</span> <span class="n">get_target_dir</span><span class="p">(</span><span class="n">contract_source_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">target_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">code_name</span>  <span class="o">+</span> <span class="s2">&quot;.abi&quot;</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">contract_source_files</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.abi&quot;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">INFO</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            NOTE:</span>
+<span class="s1">            An ABI exists in the source directory. Cannot overwrite it:</span>
+<span class="s1">            </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">            Just copying it to the target directory.</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file</span><span class="p">),</span> <span class="n">verbosity</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">target_path</span><span class="p">)</span>
+            <span class="k">return</span>
+
+    <span class="n">command_line</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">eosio_cpp</span><span class="p">(),</span>
+        <span class="s2">&quot;-contract=&quot;</span> <span class="o">+</span> <span class="n">code_name</span><span class="p">,</span>
+        <span class="s2">&quot;-R=&quot;</span> <span class="o">+</span> <span class="n">get_resources_dir</span><span class="p">(</span><span class="n">contract_source_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="s2">&quot;-abigen&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-abigen_output=&quot;</span> <span class="o">+</span> <span class="n">target_path</span><span class="p">]</span>
+
+    <span class="n">c_cpp_properties</span> <span class="o">=</span> <span class="n">get_c_cpp_properties</span><span class="p">(</span>
+                                    <span class="n">contract_dir</span><span class="p">,</span> <span class="n">c_cpp_properties_path</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">c_cpp_properties</span><span class="p">[</span><span class="n">CONFIGURATIONS</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">INCLUDE_PATH</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">WORKSPACE_FOLDER</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">WORKSPACE_FOLDER</span><span class="p">,</span> <span class="n">contract_dir</span><span class="p">)</span>
+            <span class="n">command_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;-I&quot;</span> <span class="o">+</span> <span class="n">utils</span><span class="o">.</span><span class="n">wslMapWindowsLinux</span><span class="p">(</span><span class="n">entry</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">command_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;-I&quot;</span> <span class="o">+</span> <span class="n">utils</span><span class="o">.</span><span class="n">wslMapWindowsLinux</span><span class="p">(</span>
+                    <span class="n">strip_wsl_root</span><span class="p">(</span><span class="n">entry</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">source_files</span><span class="p">:</span>
+        <span class="n">command_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">process</span><span class="p">(</span><span class="n">command_line</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">TRACE</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    ABI file writen to file: </span>
+<span class="s1">        </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_path</span><span class="p">),</span> <span class="n">verbosity</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WAST"><a class="viewcode-back" href="../../../rst/core.teos.html#eosfactory.core.teos.WAST">[docs]</a><span class="k">def</span> <span class="nf">WAST</span><span class="p">(</span>
+        <span class="n">contract_dir_hint</span><span class="p">,</span> <span class="n">c_cpp_properties_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">compile_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Produce WASM code.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">contract_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">(</span><span class="n">contract_dir_hint</span><span class="p">)</span>
+    <span class="c1"># source_files[0] is directory, source_files[1] is contents:</span>
+    <span class="n">contract_source_files</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">contract_source_files</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">)</span>
+
+    <span class="n">source_files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">source_ext</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.c&quot;</span><span class="p">,</span> <span class="s2">&quot;.cpp&quot;</span><span class="p">,</span><span class="s2">&quot;.cxx&quot;</span><span class="p">,</span> <span class="s2">&quot;.c++&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">contract_source_files</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">source_ext</span><span class="p">:</span>
+            <span class="n">source_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">source_files</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        &quot;The source is empty. The assumed contract dir is   </span>
+<span class="s1">            </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">))</span>
+        <span class="k">return</span>
+
+    <span class="n">code_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">source_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">target_dir</span> <span class="o">=</span> <span class="n">get_target_dir</span><span class="p">(</span><span class="n">contract_source_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">target_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">code_name</span>  <span class="o">+</span> <span class="s2">&quot;.wasm&quot;</span><span class="p">))</span>
+
+    <span class="n">c_cpp_properties</span> <span class="o">=</span> <span class="n">get_c_cpp_properties</span><span class="p">(</span>
+                                        <span class="n">contract_dir</span><span class="p">,</span> <span class="n">c_cpp_properties_path</span><span class="p">)</span>
+
+    <span class="n">command_line</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">eosio_cpp</span><span class="p">()]</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">c_cpp_properties</span><span class="p">[</span><span class="n">CONFIGURATIONS</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">INCLUDE_PATH</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">WORKSPACE_FOLDER</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">WORKSPACE_FOLDER</span><span class="p">,</span> <span class="n">contract_dir</span><span class="p">)</span>
+            <span class="n">command_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-I=&quot;</span> <span class="o">+</span> <span class="n">utils</span><span class="o">.</span><span class="n">wslMapWindowsLinux</span><span class="p">(</span><span class="n">entry</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">command_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;-I=&quot;</span> <span class="o">+</span> <span class="n">utils</span><span class="o">.</span><span class="n">wslMapWindowsLinux</span><span class="p">(</span><span class="n">strip_wsl_root</span><span class="p">(</span><span class="n">entry</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">c_cpp_properties</span><span class="p">[</span><span class="n">CONFIGURATIONS</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;libs&quot;</span><span class="p">]:</span>
+        <span class="n">command_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="s2">&quot;-l=&quot;</span> <span class="o">+</span> <span class="n">utils</span><span class="o">.</span><span class="n">wslMapWindowsLinux</span><span class="p">(</span><span class="n">strip_wsl_root</span><span class="p">(</span><span class="n">entry</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">c_cpp_properties</span><span class="p">[</span><span class="n">CONFIGURATIONS</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;compilerOptions&quot;</span><span class="p">]:</span>
+        <span class="n">command_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">source_files</span><span class="p">:</span>
+        <span class="n">command_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">setup</span><span class="o">.</span><span class="n">is_print_command_line</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;######## </span><span class="se">\n</span><span class="si">{}</span><span class="s2">:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">command_line</span><span class="p">)))</span>
+
+
+    <span class="k">if</span> <span class="n">compile_only</span><span class="p">:</span>
+        <span class="n">command_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-c=&quot;</span><span class="p">)</span>
+
+    <span class="n">command_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-o=&quot;</span> <span class="o">+</span> <span class="n">target_path</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">process</span><span class="p">(</span><span class="n">command_line</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>                       
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">compile_only</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">TRACE</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            WASM file writen to file: </span>
+<span class="s1">                </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">target_path</span><span class="p">)),</span> <span class="n">verbosity</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="project_from_template"><a class="viewcode-back" href="../../../rst/core.teos.html#eosfactory.core.teos.project_from_template">[docs]</a><span class="k">def</span> <span class="nf">project_from_template</span><span class="p">(</span>
+        <span class="n">project_name</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">workspace_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">c_cpp_prop_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">libs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="n">remove_existing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+        <span class="n">open_vscode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">throw_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+        <span class="n">verbosity</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Given the project name and template name, create a smart contract project.</span>
+
+<span class="sd">    - **parameters**::</span>
+
+<span class="sd">        project_name: The name of the project, or an existing path to </span>
+<span class="sd">            a directory.</span>
+<span class="sd">        template: The name of the template used.</span>
+<span class="sd">        workspace_dir: If set, the folder for the work-space. Defaults to the </span>
+<span class="sd">            value returned by the config.contract_workspace() function.</span>
+<span class="sd">        remove_existing: If set, overwrite any existing project.</span>
+<span class="sd">        visual_studio_code: If set, open the ``VSCode``, if available.</span>
+<span class="sd">        verbosity: The logging configuration.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">project_name</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">wslMapWindowsLinux</span><span class="p">(</span><span class="n">project_name</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="n">template_dir</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">wslMapWindowsLinux</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">template_dir</span><span class="p">):</span>
+        <span class="n">template_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">eosf_dir</span><span class="p">(),</span> <span class="n">TEMPLATE_CONTRACTS_DIR</span><span class="p">,</span> <span class="n">template</span><span class="p">)</span> 
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">template_dir</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        TemplateCreate &#39;</span><span class="si">{}</span><span class="s1">&#39; does not exist.</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">template_dir</span><span class="p">))</span> 
+
+    <span class="k">if</span> <span class="n">c_cpp_prop_path</span><span class="p">:</span>
+        <span class="n">c_cpp_prop_path</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">wslMapWindowsLinux</span><span class="p">(</span><span class="n">c_cpp_prop_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">c_cpp_prop_path</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">c_cpp_prop_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">input</span><span class="p">:</span>
+                    <span class="n">c_cpp_properties</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">c_cpp_properties</span> <span class="o">=</span> <span class="n">vscode</span><span class="o">.</span><span class="n">c_cpp_properties</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">c_cpp_properties</span> <span class="o">=</span> <span class="n">vscode</span><span class="o">.</span><span class="n">c_cpp_properties</span>
+
+    <span class="n">c_cpp_properties</span> <span class="o">=</span> <span class="n">replace_templates</span><span class="p">(</span><span class="n">c_cpp_properties</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">include</span><span class="p">:</span>
+        <span class="n">c_cpp_properties_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">c_cpp_properties</span><span class="p">)</span>
+        <span class="n">c_cpp_properties_json</span><span class="p">[</span><span class="n">CONFIGURATIONS</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">INCLUDE_PATH</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                                                        <span class="n">include</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">))</span>
+        <span class="n">c_cpp_properties_json</span><span class="p">[</span><span class="n">CONFIGURATIONS</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">BROWSE</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                                                        <span class="n">include</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">))</span>
+        <span class="n">c_cpp_properties</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">c_cpp_properties_json</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">libs</span><span class="p">:</span>
+        <span class="n">c_cpp_properties_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">c_cpp_properties</span><span class="p">)</span>
+        <span class="n">c_cpp_properties_json</span><span class="p">[</span><span class="n">CONFIGURATIONS</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;libs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                                                        <span class="n">libs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">))</span>
+        <span class="n">c_cpp_properties</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">c_cpp_properties_json</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+
+    <span class="n">split</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">project_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">project_dir</span> <span class="o">=</span> <span class="n">project_name</span>
+        <span class="n">project_name</span> <span class="o">=</span> <span class="n">split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">workspace_dir</span> \
+                                <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">workspace_dir</span><span class="p">)</span> \
+                                <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">workspace_dir</span><span class="p">):</span>
+            <span class="n">workspace_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">contract_workspace</span><span class="p">()</span>
+        <span class="n">workspace_dir</span> <span class="o">=</span> <span class="n">workspace_dir</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>        
+        <span class="n">project_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace_dir</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">project_dir</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">project_dir</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">remove_existing</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                NOTE:</span>
+<span class="s1">                Contract workspace</span>
+<span class="s1">                &#39;</span><span class="si">{}</span><span class="s1">&#39;</span>
+<span class="s1">                already exists. Cannot overwrite it.</span>
+<span class="s1">                &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">throw_exists</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">return</span>
+
+    <span class="k">try</span><span class="p">:</span>    <span class="c1"># make contract directory and its build directory:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="s2">&quot;build&quot;</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">copy_dir_contents</span><span class="p">(</span>
+            <span class="n">project_dir</span><span class="p">,</span> <span class="n">template_dir</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">project_name</span><span class="p">):</span>
+        <span class="n">contents</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">template_dir</span><span class="p">,</span> <span class="n">directory</span><span class="p">))</span>
+        
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+            <span class="n">template_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">template_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">contract_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">project_dir</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                                        <span class="n">TEMPLATE_NAME</span><span class="p">,</span> <span class="n">project_name</span><span class="p">))</span>
+                          
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">template_path</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">contract_path</span><span class="p">)</span>
+                <span class="n">copy_dir_contents</span><span class="p">(</span>
+                            <span class="n">project_dir</span><span class="p">,</span> <span class="n">template_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">template_path</span><span class="p">):</span>
+
+                <span class="n">copy</span><span class="p">(</span><span class="n">template_path</span><span class="p">,</span> <span class="n">contract_path</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="n">template_path</span><span class="p">,</span> <span class="n">contract_path</span><span class="p">,</span> <span class="n">project_name</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">template_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">input</span><span class="p">:</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">TEMPLATE_HOME</span> <span class="ow">in</span> <span class="n">template</span> <span class="ow">or</span> <span class="n">TEMPLATE_ROOT</span> <span class="ow">in</span> <span class="n">template</span><span class="p">:</span>
+            <span class="n">home</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;HOME&quot;</span><span class="p">]</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">is_windows_ubuntu</span><span class="p">():</span>
+                <span class="n">replace_templates</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+
+        <span class="n">template</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;${&quot;</span> <span class="o">+</span> <span class="n">TEMPLATE_NAME</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">C_CPP_PROP</span><span class="p">,</span> <span class="n">c_cpp_properties</span><span class="p">)</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">TASK_JSON</span><span class="p">,</span> <span class="n">vscode</span><span class="o">.</span><span class="n">TASKS</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">contract_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+
+    <span class="n">copy_dir_contents</span><span class="p">(</span><span class="n">project_dir</span><span class="p">,</span> <span class="n">template_dir</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">project_name</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">TRACE</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    * Contract project &#39;</span><span class="si">{}</span><span class="s1">&#39; created from template </span>
+<span class="s1">        &#39;</span><span class="si">{}</span><span class="s1">&#39;</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project_name</span><span class="p">,</span> <span class="n">template_dir</span><span class="p">),</span> <span class="n">verbosity</span><span class="p">)</span>    
+
+    <span class="k">if</span> <span class="n">open_vscode</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_windows_ubuntu</span><span class="p">():</span>
+            <span class="n">command_line</span> <span class="o">=</span> <span class="s2">&quot;cmd.exe /C code </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">utils</span><span class="o">.</span><span class="n">wslMapLinuxWindows</span><span class="p">(</span><span class="n">project_dir</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">uname</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
+            <span class="n">command_line</span> <span class="o">=</span> <span class="s2">&quot;open -n -b com.microsoft.VSCode --args </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">project_dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">command_line</span> <span class="o">=</span> <span class="s2">&quot;code </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">command_line</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">INFO</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    ######### Created contract project ``</span><span class="si">{}</span><span class="s1">``, </span>
+<span class="s1">        originated from template </span>
+<span class="s1">        ``</span><span class="si">{}</span><span class="s1">``.</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project_name</span><span class="p">,</span> <span class="n">template_dir</span><span class="p">),</span> <span class="n">verbosity</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">project_dir</span></div>
+
+
+<span class="k">def</span> <span class="nf">strip_wsl_root</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="n">wsl_root</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">wsl_root</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">wsl_root</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">wsl_root</span><span class="p">(),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">path</span>
+
+
+<div class="viewcode-block" id="get_pid"><a class="viewcode-back" href="../../../rst/core.teos.html#eosfactory.core.teos.get_pid">[docs]</a><span class="k">def</span> <span class="nf">get_pid</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return process ids found by (partial) name or regex.</span>
+
+<span class="sd">    &gt;&gt;&gt; get_process_id(&#39;kthreadd&#39;)</span>
+<span class="sd">    [2]</span>
+<span class="sd">    &gt;&gt;&gt; get_process_id(&#39;watchdog&#39;)</span>
+<span class="sd">    [10, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61]  # ymmv</span>
+<span class="sd">    &gt;&gt;&gt; get_process_id(&#39;non-existent process&#39;)</span>
+<span class="sd">    []</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">node_exe</span><span class="p">()))[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">child</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;pgrep&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">communicate</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span> <span class="k">for</span> <span class="n">pid</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span></div>
+
+
+<span class="k">def</span> <span class="nf">uname</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;uname&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">options</span><span class="p">:</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+    <span class="n">child</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">communicate</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">is_windows_ubuntu</span><span class="p">():</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">uname</span><span class="p">(</span><span class="s2">&quot;-v&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;Microsoft&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">command_line</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
+
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s2">&quot;cwd&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+
+    <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="n">command_line</span><span class="p">,</span>
+        <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span> 
+    
+    <span class="n">out_msg</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+    <span class="n">out_err</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+    <span class="n">returncode</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span>
+    <span class="k">if</span> <span class="n">returncode</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">out_err</span><span class="p">)</span>
+
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">returncode</span>
+
+
+<span class="k">def</span> <span class="nf">get_target_dir</span><span class="p">(</span><span class="n">source_dir</span><span class="p">):</span>
+    
+    <span class="nb">dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s2">&quot;build&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dir</span>
+
+    <span class="nb">dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;build&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dir</span>
+        
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="nb">dir</span>
+
+
+<span class="k">def</span> <span class="nf">get_resources_dir</span><span class="p">(</span><span class="n">source_dir</span><span class="p">):</span>
+    
+    <span class="nb">dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;resources&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dir</span>
+
+    <span class="nb">dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="s2">&quot;resources&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="nb">dir</span>
+
+
+<span class="k">def</span> <span class="nf">args</span><span class="p">(</span><span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">args_</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;--http-server-address&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">http_server_address</span><span class="p">(),</span>
+        <span class="s2">&quot;--data-dir&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">data_dir</span><span class="p">(),</span>
+        <span class="s2">&quot;--config-dir&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">config_dir</span><span class="p">(),</span>
+        <span class="s2">&quot;--chain-state-db-size-mb&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">chain_state_db_size_mb</span><span class="p">(),</span>
+        <span class="s2">&quot;--contracts-console&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--verbose-http-errors&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--enable-stale-production&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--producer-name eosio&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--signature-provider &quot;</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">eosio_key_public</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;=KEY:&quot;</span> 
+            <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">eosio_key_private</span><span class="p">(),</span>
+        <span class="s2">&quot;--plugin eosio::producer_plugin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--plugin eosio::chain_api_plugin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--plugin eosio::http_plugin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--plugin eosio::history_api_plugin&quot;</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">clear</span><span class="p">:</span>
+        <span class="n">node_stop</span><span class="p">()</span>
+        <span class="n">args_</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+            <span class="s2">&quot;--genesis-json&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">genesis_json</span><span class="p">(),</span>
+            <span class="s2">&quot;--delete-all-blocks&quot;</span>
+        <span class="p">])</span>
+    <span class="k">return</span> <span class="n">args_</span>
+
+
+<span class="k">def</span> <span class="nf">keosd_start</span><span class="p">():</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">keosd_wallet_dir</span><span class="p">(</span><span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">keosd_exe</span><span class="p">(),</span> 
+                <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> 
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">keosd_wallet_dir</span><span class="p">(</span><span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                <span class="k">break</span>
+
+
+<span class="k">def</span> <span class="nf">node_start</span><span class="p">(</span><span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nodeos_stdout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">args_</span> <span class="o">=</span> <span class="n">args</span><span class="p">(</span><span class="n">clear</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">setup</span><span class="o">.</span><span class="n">is_print_command_line</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nodeos command line:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">node_exe</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">is_nodeos_in_window</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">is_windows_ubuntu</span><span class="p">():</span>
+            <span class="n">args_</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">node_exe</span><span class="p">())</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+                <span class="p">[</span><span class="s2">&quot;cmd.exe&quot;</span><span class="p">,</span> <span class="s2">&quot;/c&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;/MIN&quot;</span><span class="p">,</span> <span class="s2">&quot;bash.exe&quot;</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> 
+                <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="p">)])</span>
+        <span class="k">elif</span> <span class="n">uname</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                    <span class="s2">&quot;open -a &quot;</span>
+                    <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">node_exe</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; --args &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="p">),</span>
+                    <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args_</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">node_exe</span><span class="p">())</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                <span class="s2">&quot;gnome-terminal -- &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="p">),</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">nodeos_stdout</span><span class="p">:</span>
+            <span class="n">nodeos_stdout</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">nodeos_stdout</span><span class="p">()</span>
+
+        <span class="n">std_out_handle</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span>
+        <span class="k">if</span> <span class="n">nodeos_stdout</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">std_out_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">nodeos_stdout</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">Error when preparing to start the local EOS node, opening the given stdout</span>
+<span class="s1">log file that is </span>
+<span class="si">{}</span><span class="s1"></span>
+<span class="s1">Error message is</span>
+<span class="si">{}</span><span class="s1"></span>
+<span class="s1">                &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nodeos_stdout</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+
+        <span class="k">def</span> <span class="nf">onExit</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">std_out_handle</span> <span class="o">==</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">std_out_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+        <span class="n">args_</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">node_exe</span><span class="p">())</span>
+        <span class="k">def</span> <span class="nf">runInThread</span><span class="p">():</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="p">),</span> 
+                <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">std_out_handle</span><span class="p">,</span> 
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="n">onExit</span><span class="p">()</span>
+            <span class="k">return</span>
+        
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">runInThread</span><span class="p">)</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">node_probe</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">block_num</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">eosfactory.core.cleos_get</span> <span class="k">as</span> <span class="nn">cleos_get</span>
+            <span class="n">head_block_num</span> <span class="o">=</span> <span class="n">cleos_get</span><span class="o">.</span><span class="n">GetInfo</span><span class="p">(</span><span class="n">is_verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">head_block</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">head_block_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">block_num</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">block_num</span> <span class="o">=</span> <span class="n">head_block_num</span>
+
+        <span class="k">if</span> <span class="n">head_block_num</span> <span class="o">-</span> <span class="n">block_num</span> <span class="o">&gt;=</span> <span class="n">num</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">INFO</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            Local node is running. Block number is </span><span class="si">{}</span><span class="s1"></span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">head_block_num</span><span class="p">),</span> <span class="n">verbosity</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">-</span> <span class="mi">1</span>        
+        <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            The local node does not respond.</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">is_local_node_process_running</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">node_exe</span><span class="p">()</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="s1">&#39;ps aux |  grep -v grep | grep &#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">out</span>
+        
+
+<span class="k">def</span> <span class="nf">node_stop</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># You can see if the process is a zombie by using top or </span>
+    <span class="c1"># the following command:</span>
+    <span class="c1"># ps aux | awk &#39;$8==&quot;Z&quot; {print $2}&#39;</span>
+
+    <span class="n">pids</span> <span class="o">=</span> <span class="n">get_pid</span><span class="p">()</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">if</span> <span class="n">pids</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">pid</span> <span class="ow">in</span> <span class="n">pids</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;kill &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pid</span><span class="p">))</span>
+        <span class="k">while</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_local_node_process_running</span><span class="p">():</span>
+                <span class="k">break</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">Failed to kill </span><span class="si">{}</span><span class="s1">. Pid is </span><span class="si">{}</span><span class="s1">.</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">node_exe_name</span><span class="p">(),</span> <span class="nb">str</span><span class="p">(</span><span class="n">pids</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>         
+        <span class="n">logger</span><span class="o">.</span><span class="n">INFO</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        Local node is stopped </span><span class="si">{}</span><span class="s1">.</span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pids</span><span class="p">)),</span> <span class="n">verbosity</span><span class="p">)</span>        
+
+    
+<span class="k">def</span> <span class="nf">node_is_running</span><span class="p">():</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">get_pid</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="nb">dir</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

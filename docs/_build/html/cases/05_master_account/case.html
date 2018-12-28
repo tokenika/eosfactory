@@ -1,0 +1,257 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Master Account &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="EOSFactory Release Notes - v2.3" href="../../releases/ReleaseNotesVersion2.3.html" />
+    <link rel="prev" title="Account Class" href="../04_account/case.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="master-account">
+<span id="master-account"></span><h1>Master Account<a class="headerlink" href="#master-account" title="Permalink to this headline">¶</a></h1>
+<p>This case demonstrates how the concept of master account is applied in <em>EOSFactory</em>.</p>
+<div class="section" id="context">
+<span id="context"></span><h2>Context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h2>
+<p><em>EOSFactory</em> wraps <em>EOSIO</em> accounts using Python objects, i.e. instances of the <code class="docutils literal notranslate"><span class="pre">Account</span></code> class. A master account is also an instance of the <code class="docutils literal notranslate"><span class="pre">Account</span></code> class, but it plays a special role in <em>EOSFactory</em>: it spawns other accounts into existence.</p>
+<p>The implementation of a master account is dependent on the context:</p>
+<ul class="simple">
+<li>On a local (private) testnet the master account refers to the <code class="docutils literal notranslate"><span class="pre">eosio</span></code> super account. As such, it has limited capabilities, e.g. it cannot be associated with a smart-contract.</li>
+<li>Whereas on a remote (public) testnet the master account refers to the initial account created by the user manually. It behaves like a normal account, apart from the fact that it is used to sponsor the creation of other accounts.</li>
+</ul>
+</div>
+<div class="section" id="use-case">
+<span id="use-case"></span><h2>Use Case<a class="headerlink" href="#use-case" title="Permalink to this headline">¶</a></h2>
+<p>Let’s consider two scenarios: first a local (private) testnet, and then a more complex situation of a remote (public) testnet.</p>
+<div class="section" id="local-testnet">
+<span id="local-testnet"></span><h3>Local testnet<a class="headerlink" href="#local-testnet" title="Permalink to this headline">¶</a></h3>
+<p>Create a new Python session and import <em>EOSFactory</em> API:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eosfactory.eosf</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>First, let’s start a local testnet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Next, we create a wallet and then we use the <code class="docutils literal notranslate"><span class="pre">create_master_account</span></code> command to create a global variable named <code class="docutils literal notranslate"><span class="pre">master</span></code> referencing the <code class="docutils literal notranslate"><span class="pre">eosio</span></code> account.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">create_master_account</span><span class="p">(</span><span class="s2">&quot;master&quot;</span><span class="p">)</span>
+<span class="n">master</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And finally, we show how the <code class="docutils literal notranslate"><span class="pre">master</span></code> variable can be used to create other accounts:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Here is the expected outcome:</p>
+<p><img alt="" src="../../_images/012.png" /></p>
+<p>Finally, stop the local testnet and exit Python CLI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">stop</span><span class="p">()</span>
+<span class="n">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="remote-testnet">
+<span id="remote-testnet"></span><h3>Remote testnet<a class="headerlink" href="#remote-testnet" title="Permalink to this headline">¶</a></h3>
+<p>Create a new Python session and import <em>EOSFactory</em> API:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eosfactory.eosf</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>First, we need to define a remote testnet and pass to <em>EOSFactory</em> the data of the account we control there:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">testnet</span> <span class="o">=</span> <span class="n">Testnet</span><span class="p">(</span><span class="s2">&quot;http://88.99.97.30:38888&quot;</span><span class="p">,</span> <span class="s2">&quot;dgxo1uyhoytn&quot;</span><span class="p">,</span> <span class="s2">&quot;5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY&quot;</span><span class="p">,</span> <span class="s2">&quot;5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We supply four parameters:</p>
+<ul class="simple">
+<li>an URL of a public node offering access to the testnet, e.g. <code class="docutils literal notranslate"><span class="pre">http://88.99.97.30:38888</span></code>,</li>
+<li>the name of an existing account on this testnet, e.g. <code class="docutils literal notranslate"><span class="pre">dgxo1uyhoytn</span></code>,</li>
+<li>the account’s owner &amp; active private keys.</li>
+</ul>
+<p>Next, we let <em>EOSFactory</em> configure and verify the testnet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">testnet</span><span class="o">.</span><span class="n">configure</span><span class="p">()</span>
+<span class="n">testnet</span><span class="o">.</span><span class="n">verify_production</span><span class="p">()</span>
+<span class="n">testnet</span><span class="o">.</span><span class="n">clear_cache</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Then, we proceed to create a global variable named <code class="docutils literal notranslate"><span class="pre">master</span></code> referencing the remote testnet account:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">create_master_account</span><span class="p">(</span><span class="s2">&quot;master&quot;</span><span class="p">,</span> <span class="n">testnet</span><span class="p">)</span>
+<span class="n">master</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> In this case the <code class="docutils literal notranslate"><span class="pre">create_master_account</span></code> command takes an extra parameter, i.e. the reference to the remote testnet.</p>
+<p>And finally, we show how the <code class="docutils literal notranslate"><span class="pre">master</span></code> variable can be used to create other accounts:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">create_account</span><span class="p">(</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span> <span class="n">master</span><span class="p">,</span> <span class="n">buy_ram_kbytes</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">stake_net</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stake_cpu</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">alice</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>NOTE:</strong> You might want to tweak with the extra parameters, i.e. <code class="docutils literal notranslate"><span class="pre">buy_ram_kbytes</span></code>, <code class="docutils literal notranslate"><span class="pre">stake_net</span></code> and <code class="docutils literal notranslate"><span class="pre">stake_cpu</span></code>.</p>
+<p>Here is the expected outcome:</p>
+<p><img alt="" src="../../_images/022.png" /></p>
+<p>Exit Python CLI:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="test-run">
+<span id="test-run"></span><h2>Test run<a class="headerlink" href="#test-run" title="Permalink to this headline">¶</a></h2>
+<p>The examples presented in this document can be executed as a Python script:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">docs</span><span class="s2">&quot;&quot;</span><span class="o">/</span><span class="n">cases</span><span class="o">/</span><span class="mi">05</span><span class="n">_master_account</span><span class="o">/</span><span class="n">case</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>You should get output similar to this:</p>
+<p><img alt="" src="../../_images/case3.png" /></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">EOSFactory</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../02_wallet/case.html">Wallet Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_symbolic_names/case.html">Symbolic Names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_account/case.html">Account Class</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Master Account</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/ReleaseNotesVersion2.3.html">EOSFactory Release Notes - v2.3</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/00.IntroductionToEOSFactory.html">Introduction to <em>EOSFactory</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/01.InstallingEOSFactory.html">Installing <em>EOSFactory</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/02.InteractingWithEOSContractsInEOSFactory.html">Interacting with EOS Contracts in <em>EOSFactory</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html">Building and Deploying EOS Contracts using <em>EOSFactory</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html">Working with EOS Contracts using <em>EOSFactory</em> in <em>Visual Studio Code</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/05.InteractingWithPublicTestnet.html">Interacting with Public Testnet</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../patterns/README.html">Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../patterns/BIOS_Boot_Sequence.html">BIOS Boot Sequence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../patterns/set/set_account_permission.html">Set Account Permission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../patterns/set/set_action_permission.html">Set Action Permission</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../roadmap/PlanForSubsequentEOSFactoryReleases.html">Plan for Subsequent EOSFactory Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../roadmap/LongTermEOSFactoryRoadmap.html">Long-term EOSFactory Roadmap</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/utils.html">utils</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/shell.account.html">shell.account</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/shell.contract.html">shell.contract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/shell.wallet.html">shell.wallet</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.cleos.html">core.cleos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.cleos_get.html">core.cleos_get</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.cleos_set.html">core.cleos_set</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.cleos_sys.html">core.cleos_sys</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.interface.html">core.interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.config.html">core.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.errors.html">core.errors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.logger.html">core.logger</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.manager.html">core.manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.setup.html">core.setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.teos.html">core.teos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.testnet.html">core.testnet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rst/core.utils.html">core.utils</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../04_account/case.html" title="previous chapter">Account Class</a></li>
+      <li>Next: <a href="../../releases/ReleaseNotesVersion2.3.html" title="next chapter">EOSFactory Release Notes - v2.3</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Tokenika.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0+/00b0d66</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/cases/05_master_account/case.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

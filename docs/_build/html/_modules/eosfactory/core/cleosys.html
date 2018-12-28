@@ -1,0 +1,353 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eosfactory.core.cleosys &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eosfactory.core.cleosys</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">eosfactory.core.cleos</span> <span class="k">as</span> <span class="nn">cleos</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.setup</span> <span class="k">as</span> <span class="nn">setup</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.interface</span> <span class="k">as</span> <span class="nn">interface</span>
+
+<span class="k">def</span> <span class="nf">reload</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">importlib</span>
+    <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">cleos</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SystemNewaccount"><a class="viewcode-back" href="../../../rst/core.cleosys.html#eosfactory.core.cleosys.SystemNewaccount">[docs]</a><span class="k">class</span> <span class="nc">SystemNewaccount</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="n">Account</span><span class="p">,</span> <span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Create an account, buy ram, stake for bandwidth for the account.</span>
+
+<span class="sd">    - **parameters**::</span>
+
+<span class="sd">        creator: The name, of the account creating the new account. May be an </span>
+<span class="sd">            object having the attribute `name`, like `CreateAccount`, </span>
+<span class="sd">            or a string.</span>
+<span class="sd">        name: The name of the new account.</span>
+<span class="sd">        owner_key: The owner public key for the new account.</span>
+<span class="sd">        active_key: The active public key for the new account.</span>
+<span class="sd">        stake_net: The amount of EOS delegated for net bandwidth.</span>
+<span class="sd">        stake_cpu: The amount of EOS delegated for CPU bandwidth.</span>
+<span class="sd">        buy_ram: The amount of RAM bytes to purchase for the new account in EOS.</span>
+<span class="sd">        transfer: Transfer voting power and right to unstake EOS to receiver.</span>
+<span class="sd">        permission: An account and permission level to authorize, as in </span>
+<span class="sd">            &#39;account@permission&#39;. May be a `CreateAccount` or `Account` object</span>
+<span class="sd">        expiration: The time in seconds before a transaction expires, </span>
+<span class="sd">            defaults to 30s</span>
+<span class="sd">        skip_sign: Specify if unlocked wallet keys should be used to sign </span>
+<span class="sd">            transaction.</span>
+<span class="sd">        dont_broadcast: Don&#39;t broadcast transaction to the network (just print).</span>
+<span class="sd">        force_unique: Force the transaction to be unique. this will consume extra </span>
+<span class="sd">            bandwidth and remove any protections against accidentally issuing the </span>
+<span class="sd">            same transaction multiple times.</span>
+<span class="sd">        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for </span>
+<span class="sd">            the execution of the transaction </span>
+<span class="sd">            (defaults to 0 which means no limit).</span>
+<span class="sd">        max_net_usage: Upper limit on the net usage budget, in bytes, for the </span>
+<span class="sd">            transaction (defaults to 0 which means no limit).</span>
+<span class="sd">        ref_block: The reference block num or block id used for TAPOS </span>
+<span class="sd">            (Transaction as Proof-of-Stake).</span>
+<span class="sd">        delay_sec: The delay in seconds, defaults to 0s.</span>
+
+<span class="sd">    - **attributes**::</span>
+
+<span class="sd">        owner_key: Owner private key.</span>
+<span class="sd">        active_key: Active private key.</span>
+<span class="sd">        error: Whether any error ocurred.</span>
+<span class="sd">        json: The json representation of the object.</span>
+<span class="sd">        is_verbose: Verbosity at the constraction time.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">creator</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">owner_key</span><span class="p">,</span> <span class="n">active_key</span><span class="p">,</span>
+            <span class="n">stake_net</span><span class="p">,</span> <span class="n">stake_cpu</span><span class="p">,</span>
+            <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">buy_ram_kbytes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">buy_ram</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">transfer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">skip_sign</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">force_unique</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">delay_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">is_verbose</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="p">):</span>
+
+        <span class="n">stake_net</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> EOS&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stake_net</span><span class="p">)</span>
+        <span class="n">stake_cpu</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> EOS&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stake_cpu</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="n">name</span> <span class="o">=</span> <span class="n">account_name</span><span class="p">()</span>
+        <span class="n">interface</span><span class="o">.</span><span class="n">Account</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner_key</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># private keys</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_key</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="k">if</span> <span class="n">active_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">active_key</span> <span class="o">=</span> <span class="n">owner_key</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">creator</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> 
+                <span class="n">interface</span><span class="o">.</span><span class="n">key_arg</span><span class="p">(</span><span class="n">owner_key</span><span class="p">,</span> <span class="n">is_owner_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_private_key</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> 
+                <span class="n">interface</span><span class="o">.</span><span class="n">key_arg</span><span class="p">(</span><span class="n">active_key</span><span class="p">,</span> <span class="n">is_owner_key</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_private_key</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="p">]</span>
+
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--json&quot;</span><span class="p">)</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+            <span class="s2">&quot;--stake-net&quot;</span><span class="p">,</span> <span class="n">stake_net</span><span class="p">,</span> 
+            <span class="s2">&quot;--stake-cpu&quot;</span><span class="p">,</span> <span class="n">stake_cpu</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">buy_ram_kbytes</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--buy-ram-kbytes&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">buy_ram_kbytes</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">buy_ram</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--buy-ram&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">buy_ram</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">transfer</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--transfer&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permission</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">permission_arg</span><span class="p">(</span><span class="n">permission</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--permission&quot;</span><span class="p">,</span> <span class="n">perm</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">skip_sign</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--skip-sign&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--dont-broadcast&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">force_unique</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--force-unique&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_cpu_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-cpu-usage-ms&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_cpu_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="n">max_net_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-net-usage&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_net_usage</span><span class="p">)])</span>
+        <span class="k">if</span>  <span class="ow">not</span> <span class="n">ref_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--ref-block&quot;</span><span class="p">,</span> <span class="n">ref_block</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">delay_sec</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--delay-sec&quot;</span><span class="p">,</span> <span class="n">delay_sec</span><span class="p">])</span>
+
+        <span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;newaccount&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">cleos</span><span class="o">.</span><span class="n">GetAccount</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_info</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">cleos</span><span class="o">.</span><span class="n">GetAccount</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">is_verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)))</span>
+            
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="BuyRam"><a class="viewcode-back" href="../../../rst/core.cleosys.html#eosfactory.core.cleosys.BuyRam">[docs]</a><span class="k">class</span> <span class="nc">BuyRam</span><span class="p">(</span><span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Buy RAM.</span>
+
+<span class="sd">    - **parameters**::</span>
+
+<span class="sd">        payer: The account paying for RAM.</span>
+<span class="sd">        receiver: The account receiving bought RAM.</span>
+<span class="sd">        amount: The amount of EOS to pay for RAM, or number of kbytes of RAM if </span>
+<span class="sd">            --kbytes is set.</span>
+<span class="sd">        buy_ram_kbytes: If set, buy ram in number of kbytes.</span>
+<span class="sd">        expiration: The time in seconds before a transaction expires, </span>
+<span class="sd">            defaults to 30s</span>
+<span class="sd">        skip_sign: Specify if unlocked wallet keys should be used to sign </span>
+<span class="sd">            transaction.</span>
+<span class="sd">        dont_broadcast: Don&#39;t broadcast transaction to the network (just print).</span>
+<span class="sd">        force_unique: Force the transaction to be unique. this will consume extra </span>
+<span class="sd">            bandwidth and remove any protections against accidentally issuing the </span>
+<span class="sd">            same transaction multiple times.</span>
+<span class="sd">        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for </span>
+<span class="sd">            the execution of the transaction </span>
+<span class="sd">            (defaults to 0 which means no limit).</span>
+<span class="sd">        max_net_usage: Upper limit on the net usage budget, in bytes, for the </span>
+<span class="sd">            transaction (defaults to 0 which means no limit).</span>
+<span class="sd">        ref_block: The reference block num or block id used for TAPOS </span>
+<span class="sd">            (Transaction as Proof-of-Stake).</span>
+
+<span class="sd">    - **attributes**::</span>
+
+<span class="sd">        error: Whether any error ocurred.</span>
+<span class="sd">        json: The json representation of the object.</span>
+<span class="sd">        is_verbose: Verbosity at the constraction time.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">payer</span><span class="p">,</span> <span class="n">receiver</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span>
+            <span class="n">buy_ram_kbytes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+            <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">skip_sign</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">force_unique</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">is_verbose</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">payer</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">payer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">receiver</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">receiver</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">payer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">receiver</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">amount</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">buy_ram_kbytes</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--kbytes&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">skip_sign</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--skip-sign&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--dont-broadcast&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">force_unique</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--force-unique&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_cpu_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-cpu-usage-ms&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_cpu_usage</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">max_net_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-net-usage&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_net_usage</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ref_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--ref-block&quot;</span><span class="p">,</span> <span class="n">ref_block</span><span class="p">])</span>
+
+        <span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;buyram&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="DelegateBw"><a class="viewcode-back" href="../../../rst/core.cleosys.html#eosfactory.core.cleosys.DelegateBw">[docs]</a><span class="k">class</span> <span class="nc">DelegateBw</span><span class="p">(</span><span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Delegate bandwidth.</span>
+
+<span class="sd">    - **parameters**::</span>
+
+<span class="sd">        payer: The account to delegate bandwidth from.</span>
+<span class="sd">        receiver: The account to receive the delegated bandwidth.</span>
+<span class="sd">        stake_net_quantity: The amount of EOS to stake for network bandwidth.</span>
+<span class="sd">        stake_cpu_quantity: The amount of EOS to stake for CPU bandwidth.</span>
+<span class="sd">        permission: An account and permission level to authorize.</span>
+<span class="sd">        transfer: Transfer voting power and right to unstake EOS to receiver.</span>
+<span class="sd">        expiration: The time in seconds before a transaction expires, </span>
+<span class="sd">            defaults to 30s</span>
+<span class="sd">        skip_sign: Specify if unlocked wallet keys should be used to sign </span>
+<span class="sd">            transaction.</span>
+<span class="sd">        dont_broadcast: Don&#39;t broadcast transaction to the network (just print).</span>
+<span class="sd">        force_unique: Force the transaction to be unique. this will consume extra </span>
+<span class="sd">            bandwidth and remove any protections against accidentally issuing the </span>
+<span class="sd">            same transaction multiple times.</span>
+<span class="sd">        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for </span>
+<span class="sd">            the execution of the transaction </span>
+<span class="sd">            (defaults to 0 which means no limit).</span>
+<span class="sd">        max_net_usage: Upper limit on the net usage budget, in bytes, for the </span>
+<span class="sd">            transaction (defaults to 0 which means no limit).</span>
+<span class="sd">        ref_block: The reference block num or block id used for TAPOS </span>
+<span class="sd">            (Transaction as Proof-of-Stake).            </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">payer</span><span class="p">,</span> <span class="n">receiver</span><span class="p">,</span> <span class="n">stake_net_quantity</span><span class="p">,</span> <span class="n">stake_cpu_quantity</span><span class="p">,</span>
+        <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">transfer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="n">skip_sign</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">force_unique</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">is_verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">payer</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">payer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">receiver</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">account_arg</span><span class="p">(</span><span class="n">receiver</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stake_net_quantity</span> <span class="o">=</span> <span class="n">stake_net_quantity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stake_cpu_quantity</span> <span class="o">=</span> <span class="n">stake_cpu_quantity</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">payer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">receiver</span><span class="p">,</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> EOS&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stake_net_quantity</span><span class="p">),</span>
+            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> EOS&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stake_cpu_quantity</span><span class="p">),</span>
+            <span class="s2">&quot;--expiration&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">expiration_sec</span><span class="p">),</span>
+            <span class="s2">&quot;--json&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permission</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">permission_arg</span><span class="p">(</span><span class="n">permission</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--permission&quot;</span><span class="p">,</span> <span class="n">perm</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">transfer</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--transfer&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">skip_sign</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--skip-sign&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dont_broadcast</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--dont-broadcast&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">force_unique</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--force-unique&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_cpu_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-cpu-usage-ms&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_cpu_usage</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">max_net_usage</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--max-net-usage&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">max_net_usage</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ref_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--ref-block&quot;</span><span class="p">,</span> <span class="n">ref_block</span><span class="p">])</span>
+
+        <span class="n">cleos</span><span class="o">.</span><span class="n">Cleos</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;delegatebw&quot;</span><span class="p">,</span> <span class="n">is_verbose</span><span class="p">)</span></div>
+
+
+
+
+            
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

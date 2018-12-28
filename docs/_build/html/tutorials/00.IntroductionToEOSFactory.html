@@ -1,0 +1,156 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Introduction to EOSFactory &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Installing EOSFactory" href="01.InstallingEOSFactory.html" />
+    <link rel="prev" title="EOSFactory Release Notes - v2.3" href="../releases/ReleaseNotesVersion2.3.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="01.InstallingEOSFactory.html" title="Installing EOSFactory"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../releases/ReleaseNotesVersion2.3.html" title="EOSFactory Release Notes - v2.3"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction-to-eosfactory">
+<span id="introduction-to-eosfactory"></span><h1>Introduction to <em>EOSFactory</em><a class="headerlink" href="#introduction-to-eosfactory" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/tokenika/eosfactory">EOSFactory</a> is a Python-based <a class="reference external" href="https://eos.io">EOS</a> smart-contract development &amp; testing framework, created by <a class="reference external" href="https://tokenika.io">TOKENIKA</a>.</p>
+<p>The goal is to achieve a similar functionality to Ethereum’s <a class="reference external" href="http://truffleframework.com/">Truffle Framework</a>.</p>
+<p>With a single command-line interface you can create a private testnet and then compile, test and deploy EOS smart-contracts.</p>
+<p>All of this using simple yet powerful <a class="reference external" href="https://www.python.org/">Python3</a> syntax.</p>
+<div class="section" id="why-it-s-needed">
+<span id="why-it-s-needed"></span><h2>Why it’s needed?<a class="headerlink" href="#why-it-s-needed" title="Permalink to this headline">¶</a></h2>
+<p>Code development and testing involve tasks that need to be executed hundreds of times, and each time in exactly the same way and exactly the same context. Therefore those tasks need to be fully automated, as otherwise a lot of time is being wasted and, what’s even worse, a lot of additional uncertainty is introduced. Manually performed actions are prone to errors.</p>
+<p>And this is what <em>EOSFactory</em> actually brings to the table: an easy &amp; intuitive way to automate the process of dealing with smart-contracts. Write down, in the form of a Python script, what needs to be done multiple times in exactly the same way and exactly the same context, and then just run the script. <em>EOSFactory</em> will take care of everything else: it will compile your smart-contract, create a new testnet, deploy the contract, invoke its methods and verify the response, then tear down the testnet, and finally report the results. And all of this done in a couple of seconds.</p>
+</div>
+<div class="section" id="main-features">
+<span id="main-features"></span><h2>Main features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="simple-syntax">
+<span id="simple-syntax"></span><h3>1. Simple syntax<a class="headerlink" href="#simple-syntax" title="Permalink to this headline">¶</a></h3>
+<p>The front-end of <em>EOSFactory</em> is simply a Python3 Command Line Interface. This way you can interact with EOS smart-contract, and prove it works as expected, without having to deal with the complexity of a low-level language like C++. In most cases Python syntax is clear for everyone.</p>
+</div>
+<div class="section" id="real-testnet">
+<span id="real-testnet"></span><h3>2. Real testnet<a class="headerlink" href="#real-testnet" title="Permalink to this headline">¶</a></h3>
+<p>As EOS full node is very quick we don’t need to rely on a testnet simulator similar to <a class="reference external" href="https://github.com/trufflesuite/ganache-cli">TestRPC</a> in Ethereum. Instead, we can work with a real testnet (both local and remote) and this makes testing much more reliable. Thus <em>EOSFactory</em> lets you fully test your smart-contract in a couple of seconds and do it over and over again without much hassle.</p>
+</div>
+<div class="section" id="truly-cross-platform">
+<span id="truly-cross-platform"></span><h3>3. Truly cross-platform<a class="headerlink" href="#truly-cross-platform" title="Permalink to this headline">¶</a></h3>
+<p>We make sure everything we do is fully compatible with Windows - our toolset enables you to run an EOS node and interact with it on any operating system, including Windows, MacOS and Linux.</p>
+</div>
+</div>
+<div class="section" id="architecture">
+<span id="architecture"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h2>
+<p><em>EOSFactory</em> is composed of two layers:</p>
+<ul class="simple">
+<li>C++ client (i.e. <code class="docutils literal notranslate"><span class="pre">cleos</span></code>) connected to an EOS node (i.e. <code class="docutils literal notranslate"><span class="pre">nodeos</span></code>) running a private or public testnet,</li>
+<li>Python wrapper acting as a convenient human-oriented interface.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to <em>EOSFactory</em></a><ul>
+<li><a class="reference internal" href="#why-it-s-needed">Why it’s needed?</a></li>
+<li><a class="reference internal" href="#main-features">Main features</a><ul>
+<li><a class="reference internal" href="#simple-syntax">1. Simple syntax</a></li>
+<li><a class="reference internal" href="#real-testnet">2. Real testnet</a></li>
+<li><a class="reference internal" href="#truly-cross-platform">3. Truly cross-platform</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#architecture">Architecture</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../releases/ReleaseNotesVersion2.3.html"
+                        title="previous chapter">EOSFactory Release Notes - v2.3</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="01.InstallingEOSFactory.html"
+                        title="next chapter">Installing <em>EOSFactory</em></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorials/00.IntroductionToEOSFactory.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="01.InstallingEOSFactory.html" title="Installing EOSFactory"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../releases/ReleaseNotesVersion2.3.html" title="EOSFactory Release Notes - v2.3"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

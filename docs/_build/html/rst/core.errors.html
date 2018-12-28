@@ -1,0 +1,179 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>core.errors &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="core.logger" href="core.logger.html" />
+    <link rel="prev" title="core.config" href="core.config.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.logger.html" title="core.logger"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="core.config.html" title="core.config"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-eosfactory.core.errors">
+<span id="core-errors"></span><h1>core.errors<a class="headerlink" href="#module-eosfactory.core.errors" title="Permalink to this headline">¶</a></h1>
+<dl class="exception">
+<dt id="eosfactory.core.errors.AccountDoesNotExistError">
+<em class="property">exception </em><code class="descclassname">eosfactory.core.errors.</code><code class="descname">AccountDoesNotExistError</code><span class="sig-paren">(</span><em>account</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/errors.html#AccountDoesNotExistError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.errors.AccountDoesNotExistError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.errors.Error" title="eosfactory.core.errors.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.errors.Error</span></code></a></p>
+<p>Account does not exist.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>account</strong> – account argument: an <code class="docutils literal notranslate"><span class="pre">Account</span></code> object or account name.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="exception">
+<dt id="eosfactory.core.errors.ContractRunningError">
+<em class="property">exception </em><code class="descclassname">eosfactory.core.errors.</code><code class="descname">ContractRunningError</code><a class="reference internal" href="../_modules/eosfactory/core/errors.html#ContractRunningError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.errors.ContractRunningError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.errors.Error" title="eosfactory.core.errors.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.errors.Error</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="eosfactory.core.errors.DuplicateTransactionError">
+<em class="property">exception </em><code class="descclassname">eosfactory.core.errors.</code><code class="descname">DuplicateTransactionError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/errors.html#DuplicateTransactionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.errors.DuplicateTransactionError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.errors.Error" title="eosfactory.core.errors.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.errors.Error</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="eosfactory.core.errors.Error">
+<em class="property">exception </em><code class="descclassname">eosfactory.core.errors.</code><code class="descname">Error</code><span class="sig-paren">(</span><em>message</em>, <em>translate=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/errors.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.errors.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base class for exceptions in EOSFactory.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="eosfactory.core.errors.InvalidPasswordError">
+<em class="property">exception </em><code class="descclassname">eosfactory.core.errors.</code><code class="descname">InvalidPasswordError</code><span class="sig-paren">(</span><em>wallet</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/errors.html#InvalidPasswordError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.errors.InvalidPasswordError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.errors.Error" title="eosfactory.core.errors.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.errors.Error</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="eosfactory.core.errors.LowRamError">
+<em class="property">exception </em><code class="descclassname">eosfactory.core.errors.</code><code class="descname">LowRamError</code><span class="sig-paren">(</span><em>needs_byte</em>, <em>deficiency_byte</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/errors.html#LowRamError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.errors.LowRamError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.errors.Error" title="eosfactory.core.errors.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.errors.Error</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="eosfactory.core.errors.MissingRequiredAuthorityError">
+<em class="property">exception </em><code class="descclassname">eosfactory.core.errors.</code><code class="descname">MissingRequiredAuthorityError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/errors.html#MissingRequiredAuthorityError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.errors.MissingRequiredAuthorityError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.errors.Error" title="eosfactory.core.errors.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.errors.Error</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="eosfactory.core.errors.WalletAlreadyExistsError">
+<em class="property">exception </em><code class="descclassname">eosfactory.core.errors.</code><code class="descname">WalletAlreadyExistsError</code><span class="sig-paren">(</span><em>wallet</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/errors.html#WalletAlreadyExistsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.errors.WalletAlreadyExistsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.errors.Error" title="eosfactory.core.errors.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.errors.Error</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="eosfactory.core.errors.WalletDoesNotExistError">
+<em class="property">exception </em><code class="descclassname">eosfactory.core.errors.</code><code class="descname">WalletDoesNotExistError</code><span class="sig-paren">(</span><em>wallet</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/errors.html#WalletDoesNotExistError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.errors.WalletDoesNotExistError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#eosfactory.core.errors.Error" title="eosfactory.core.errors.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">eosfactory.core.errors.Error</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="eosfactory.core.errors.validate">
+<code class="descclassname">eosfactory.core.errors.</code><code class="descname">validate</code><span class="sig-paren">(</span><em>omittable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eosfactory/core/errors.html#validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eosfactory.core.errors.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Throw exception if validation fails.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="core.config.html"
+                        title="previous chapter">core.config</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="core.logger.html"
+                        title="next chapter">core.logger</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rst/core.errors.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.logger.html" title="core.logger"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="core.config.html" title="core.config"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">EOSFactory 3.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,338 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>eosfactory.shell.contract &#8212; EOSFactory 3.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for eosfactory.shell.contract</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">import</span> <span class="nn">eosfactory.core.logger</span> <span class="k">as</span> <span class="nn">logger</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.errors</span> <span class="k">as</span> <span class="nn">errors</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.config</span> <span class="k">as</span> <span class="nn">config</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.setup</span> <span class="k">as</span> <span class="nn">setup</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.teos</span> <span class="k">as</span> <span class="nn">teos</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.cleos</span> <span class="k">as</span> <span class="nn">cleos</span>
+<span class="kn">import</span> <span class="nn">eosfactory.core.cleos_set</span> <span class="k">as</span> <span class="nn">cleos_set</span>
+<span class="kn">import</span> <span class="nn">eosfactory.shell.account</span>
+
+
+<div class="viewcode-block" id="ContractBuilder"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.ContractBuilder">[docs]</a><span class="k">class</span> <span class="nc">ContractBuilder</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Build or delete a contract project.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        contract_dir (str): A hint to the root directory of a contract project.</span>
+<span class="sd">        abi_file (str): If set, the path to the ABI file, absolute, </span>
+<span class="sd">            or relative to *contract_dir*.</span>
+<span class="sd">        wasm_file (str): If set, the path to the WASM file, absolute, </span>
+<span class="sd">            or relative to *contract_dir*.    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">contract_dir</span><span class="p">,</span>
+            <span class="n">abi_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wasm_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">contract_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                Cannot determine the contract directory. The path is </span>
+<span class="s2">                ``</span><span class="si">{}</span><span class="s2">``.</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">contract_dir</span><span class="p">))</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">abi_file</span> <span class="o">=</span> <span class="n">abi_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wasm_file</span> <span class="o">=</span> <span class="n">wasm_file</span>
+
+<div class="viewcode-block" id="ContractBuilder.build_wast"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.ContractBuilder.build_wast">[docs]</a>    <span class="k">def</span> <span class="nf">build_wast</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Make the WAST file.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">teos</span><span class="o">.</span><span class="n">WAST</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ContractBuilder.build_abi"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.ContractBuilder.build_abi">[docs]</a>    <span class="k">def</span> <span class="nf">build_abi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Make the ABI file.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">teos</span><span class="o">.</span><span class="n">ABI</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ContractBuilder.build"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.ContractBuilder.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Make both, ABI and WASM files.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">force</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_built</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_abi</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_wast</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ContractBuilder.is_built"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.ContractBuilder.is_built">[docs]</a>    <span class="k">def</span> <span class="nf">is_built</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Check whether both the ABI and WASM files exist.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">cleos</span><span class="o">.</span><span class="n">contract_is_built</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wasm_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">abi_file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ContractBuilder.delete"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.ContractBuilder.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Delete the project.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="Contract"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.Contract">[docs]</a><span class="k">class</span> <span class="nc">Contract</span><span class="p">(</span><span class="n">ContractBuilder</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Add a contract to the given account.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account (.shell.Account): The *Account* object to be fitted with a </span>
+<span class="sd">            contract.</span>
+<span class="sd">        contract_dir (str): The path to a directory.</span>
+<span class="sd">        wasm_file (str): The WASM file relative to the contract_dir.</span>
+<span class="sd">        abi_file (str): The ABI file for the contract relative to the </span>
+<span class="sd">            contract-dir.</span>
+
+<span class="sd">    See definitions of the remaining parameters: </span>
+<span class="sd">    \:func:`.cleos.common_parameters`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">contract_dir</span><span class="p">,</span>
+            <span class="n">abi_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wasm_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">skip_sign</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">force_unique</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">delay_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">account</span><span class="p">,</span> <span class="n">eosfactory</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">Account</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            The account object has to be of the type </span>
+<span class="s2">            ``eosfactory.shell.account.Account``.</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">contract_dir</span><span class="p">,</span> <span class="n">abi_file</span><span class="o">=</span><span class="n">abi_file</span><span class="p">,</span> <span class="n">wasm_file</span><span class="o">=</span><span class="n">wasm_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account</span> <span class="o">=</span> <span class="n">account</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expiration_sec</span> <span class="o">=</span> <span class="n">expiration_sec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skip_sign</span> <span class="o">=</span> <span class="n">skip_sign</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dont_broadcast</span> <span class="o">=</span> <span class="n">dont_broadcast</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">force_unique</span> <span class="o">=</span> <span class="n">force_unique</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_cpu_usage</span> <span class="o">=</span> <span class="n">max_cpu_usage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_net_usage</span> <span class="o">=</span> <span class="n">max_net_usage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref_block</span> <span class="o">=</span> <span class="n">ref_block</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delay_sec</span> <span class="o">=</span> <span class="n">delay_sec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contract</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_console</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Contract.deploy"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.Contract.deploy">[docs]</a>    <span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">payer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Deploy the contract.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_built</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            Contract needs to be built before deployment.</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">dont_broadcast</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dont_broadcast</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dont_broadcast</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">cleos_set</span><span class="o">.</span><span class="n">SetContract</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">,</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">wasm_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">abi_file</span><span class="p">,</span> 
+                <span class="n">permission</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">expiration_sec</span><span class="p">,</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">skip_sign</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_unique</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">max_cpu_usage</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_net_usage</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ref_block</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delay_sec</span><span class="p">,</span>
+                <span class="n">is_verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">errors</span><span class="o">.</span><span class="n">LowRamError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">TRACE</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            * RAM needed is </span><span class="si">{}</span><span class="s1">.kByte, buying RAM </span><span class="si">{}</span><span class="s1">.kByte.</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">needs_kbyte</span><span class="p">,</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">deficiency_kbyte</span><span class="p">))</span>
+
+            <span class="n">buy_ram_kbytes</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">deficiency_kbyte</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">payer</span><span class="p">:</span>
+                <span class="n">payer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">account</span>
+
+            <span class="n">payer</span><span class="o">.</span><span class="n">buy_ram</span><span class="p">(</span><span class="n">buy_ram_kbytes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="p">)</span>
+        
+            <span class="n">result</span> <span class="o">=</span> <span class="n">cleos_set</span><span class="o">.</span><span class="n">SetContract</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">,</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">wasm_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">abi_file</span><span class="p">,</span> 
+                <span class="n">permission</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">expiration_sec</span><span class="p">,</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">skip_sign</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_unique</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">max_cpu_usage</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_net_usage</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ref_block</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delay_sec</span><span class="p">,</span>
+                <span class="n">is_verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">INFO</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        * Contract </span><span class="si">{}</span><span class="s1"> </span>
+<span class="s1">            is deployed. </span>
+<span class="s1">        &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">))</span>            
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">contract</span> <span class="o">=</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="Contract.push_action"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.Contract.push_action">[docs]</a>    <span class="k">def</span> <span class="nf">push_action</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
+            <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">expiration_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">skip_sign</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">force_unique</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_cpu_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">ref_block</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Push a transaction with a single action.</span>
+
+<span class="sd">        Call *EOSIO cleos* with the *push action* command. Store the result,</span>
+<span class="sd">        which is an object of the class :class:`.cleos.PushAction`,  as</span>
+<span class="sd">        the value of the *action* attribute.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action (str or json or filename): Definition of the action to </span>
+<span class="sd">                execute on the contract.</span>
+<span class="sd">            data (str): The arguments to the contract.</span>
+
+<span class="sd">        See definitions of the remaining parameters: </span>
+<span class="sd">        \:func:`.cleos.common_parameters`.</span>
+<span class="sd">        &#39;&#39;&#39;</span>            
+        <span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">push_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
+            <span class="n">permission</span><span class="p">,</span> <span class="n">expiration_sec</span><span class="p">,</span>
+            <span class="n">skip_sign</span><span class="p">,</span> <span class="n">dont_broadcast</span><span class="p">,</span> <span class="n">force_unique</span><span class="p">,</span>
+            <span class="n">max_cpu_usage</span><span class="p">,</span> <span class="n">max_net_usage</span><span class="p">,</span>
+            <span class="n">ref_block</span><span class="p">,</span> <span class="n">json</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Contract.show_action"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.Contract.show_action">[docs]</a>    <span class="k">def</span> <span class="nf">show_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Implements the `push action` command without broadcasting. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">show_action</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">permission</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Contract.table"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.Contract.table">[docs]</a>    <span class="k">def</span> <span class="nf">table</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">binary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+            <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Retrieve the contents of a database table</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            scope (str or .interface.Account): The scope within the account in </span>
+<span class="sd">                which the table is found.</span>
+<span class="sd">            table (str): The name of the table as specified by the contract abi.</span>
+<span class="sd">            binary (bool): Return the value as BINARY rather than using abi to </span>
+<span class="sd">                interpret as JSON. Default is *False*.</span>
+<span class="sd">            limit (int): The maximum number of rows to return. Default is 10.</span>
+<span class="sd">            lower (str): JSON representation of lower bound value of key, </span>
+<span class="sd">                defaults to first.</span>
+<span class="sd">            upper (str): JSON representation of upper bound value value of key, </span>
+<span class="sd">                defaults to last.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :class:`.cleos_set.SetTable` object</span>
+<span class="sd">        &#39;&#39;&#39;</span>            
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+            <span class="n">table_name</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span>
+            <span class="n">binary</span><span class="p">,</span> 
+            <span class="n">limit</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Contract.code"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.Contract.code">[docs]</a>    <span class="k">def</span> <span class="nf">code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wasm</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Retrieve the code and ABI</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            code (str): If set, the name of the file to save the contract </span>
+<span class="sd">                .wast/wasm to.</span>
+<span class="sd">            abi (str): If set, the name of the file to save the contract .abi to.</span>
+<span class="sd">            wasm (bool): Save contract as wasm.</span>
+<span class="sd">        &#39;&#39;&#39;</span>        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">code</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">abi</span><span class="p">,</span> <span class="n">wasm</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">console</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_console</span>
+
+<div class="viewcode-block" id="Contract.path"><a class="viewcode-back" href="../../../rst/shell.contract.html#eosfactory.shell.contract.Contract.path">[docs]</a>    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Return the path to the contract.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contract</span><span class="o">.</span><span class="n">contract_path_absolute</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contract_dir</span><span class="p">)</span></div>
+            
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract</span><span class="o">.</span><span class="n">err_msg</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contract</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">EOSFactory 3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Tokenika.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0+/d7594ac.
+    </div>
+  </body>
+</html>
