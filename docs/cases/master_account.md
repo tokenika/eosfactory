@@ -1,6 +1,6 @@
-# Master Account
+# Master Account Object
 
-This case demonstrates how the concept of master account is applied in *EOSFactory*. 
+This case demonstrates how the concept of EOSIO master account is applied in *EOSFactory*. 
 
 ## Context
 

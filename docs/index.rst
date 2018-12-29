@@ -10,27 +10,6 @@ Welcome to EOSFactory's documentation!
 With a single command-line interface you can create a private testnet and then compile, unit-test and deploy `EOS <https://eos.io/>`_ smart-contracts.
 All of this using simple yet powerful `Python3 <https://www.python.org/>`_ syntax.
 
-Use Cases
----------
-
-.. toctree::
-    :maxdepth: 1
-
-    cases/wallet
-    cases/symbolic_names
-    cases/account
-    cases/master_account
-
-
-Release Notes
--------------
-
-.. toctree::
-    :maxdepth: 1
-
-    releases/ReleaseNotesVersion2.3
-
-
 Tutorials
 ---------
 
@@ -44,6 +23,16 @@ Tutorials
     tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC
     tutorials/05.InteractingWithPublicTestnet
 
+Use Cases
+---------
+
+.. toctree::
+    :maxdepth: 1
+
+    cases/wallet
+    cases/symbolic_names
+    cases/account
+    cases/master_account
 
 Patterns
 --------
@@ -63,17 +52,7 @@ set
     patterns/set/set_account_permission
     patterns/set/set_action_permission
 
-Roadmap
--------
-
-.. toctree::
-    :maxdepth: 1
-
-    roadmap/PlanForSubsequentEOSFactoryReleases
-    roadmap/LongTermEOSFactoryRoadmap
-
-
-Python Documentation
+API Documentation
 --------------------
 .. toctree::
     :maxdepth: 1
@@ -109,17 +88,32 @@ Python Documentation
    :maxdepth: 2
    :caption: Contents:
 
+Support
+=======
 
+For issues not covered in the documentation there is a dedicated `EOS Factory Support <https://t.me/EOSFactorySupport>`_ channel on Telegram.
+
+
+Release Notes
+=============
+
+.. toctree::
+    :maxdepth: 1
+
+    ReleaseNotesVersion3.0
+
+Roadmap
+=======
+
+.. toctree::
+    :maxdepth: 1
+
+    roadmap/PlanForSubsequentEOSFactoryReleases
+    roadmap/LongTermEOSFactoryRoadmap
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
 
-
-Support
--------
-
-For issues not covered in the documentation there is a dedicated `EOS Factory Support <https://t.me/EOSFactorySupport>`_ channel on Telegram.

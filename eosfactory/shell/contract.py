@@ -81,8 +81,8 @@ class Contract(ContractBuilder):
         abi_file (str): The ABI file for the contract relative to the 
             contract-dir.
 
-    See definitions of the remaining parameters: 
-    \:func:`.cleos.common_parameters`.
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.
     '''
     def __init__(
             self, account, contract_dir,
@@ -187,8 +187,8 @@ class Contract(ContractBuilder):
                 execute on the contract.
             data (str): The arguments to the contract.
 
-        See definitions of the remaining parameters: 
-        \:func:`.cleos.common_parameters`.
+        See definitions of the remaining parameters: \
+        :func:`.cleos.common_parameters`.
         '''            
         self.account.push_action(action, data,
             permission, expiration_sec,

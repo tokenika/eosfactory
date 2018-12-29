@@ -100,7 +100,14 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = "classic"
 html_theme_options = {
-    'body_max_width': '600px'
+    'rightsidebar': 'false',
+    'stickysidebar': 'true',
+    'collapsiblesidebar': 'false',
+    'body_max_width': '600px',
+    'sidebarbgcolor': '#ffffff', # '#1c4e63''azure'
+    'sidebarbtncolor': '#3c6e83', # '#3c6e83'
+    'sidebartextcolor': 'maroon', # '#ffffff'
+    'sidebarlinkcolor':'#000000' # '#98dbcc'
 }
 
 # html_theme = "sphinxdoc"

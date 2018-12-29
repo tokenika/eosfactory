@@ -26,8 +26,8 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
             account in kibibytes (KiB)
         transfer (bool): Transfer voting power and right to unstake EOS to receiver.
 
-    See definitions of the remaining parameters: 
-        \:func:`.cleos.common_parameters`.
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.
     '''
     def __init__(
             self, creator, name, owner_key, active_key,
@@ -108,15 +108,14 @@ class BuyRam(cleos.Cleos):
     ''' Buy RAM.
 
     Args:
-
         payer (str or .interface.Account): The account paying for RAM.
         receiver (str or .interface.Account): The account receiving bought RAM.
-        amount (int): The amount of EOS to pay for RAM, or number of kbytes of RAM if 
-            --kbytes is set.
+        amount (int): The amount of EOS to pay for RAM, or number of kbytes 
+            of RAM if ``buy_ram_kbytes`` is set.
         buy_ram_kbytes (bool): If set, buy ram in number of kbytes.
 
-    See definitions of the remaining parameters: 
-        \:func:`.cleos.common_parameters`.
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.
     '''
     def __init__(
             self, payer, receiver, amount,
@@ -169,8 +168,8 @@ class DelegateBw(cleos.Cleos):
         transfer (bool): Transfer voting power and right to unstake EOS to 
             receiver.
 
-    See definitions of the remaining parameters: 
-        \:func:`.cleos.common_parameters`.           
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.           
     '''
     def __init__(
         self, payer, receiver, stake_net_quantity, stake_cpu_quantity,

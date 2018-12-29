@@ -18,8 +18,8 @@ class SetContract(cleos.Cleos):
         abi_file (str): The ABI file for the contract relative to the 
             contract-dir.
 
-    See definitions of the remaining parameters: 
-    \:func:`.cleos.common_parameters`.
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.
 
     Attributes:
         contract_path_absolute (str): The path to the contract project
@@ -130,7 +130,8 @@ class SetAccountPermission(cleos.Cleos):
                 ]
         }
 
-    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.
 
     Attributes:
         account_name (str): The EOSIO name of the contract's account.
@@ -218,7 +219,8 @@ class SetActionPermission(cleos.Cleos):
         requirement (str): The permission name require for executing the given 
             action.
 
-    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.
 
     Attributes:
         account_name (str): The EOSIO name of the contract's account.

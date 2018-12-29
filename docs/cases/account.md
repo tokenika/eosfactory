@@ -1,10 +1,11 @@
-# Account Class
+# Account Object
 
-This case demonstrates how the `Account` class works. We present how to create an account object, associate it with a contract and then execute some actions of this contract.
+This case demonstrates how the concept of EOSIO account is applied in *EOSFactory*.
+We present how to create an account object, associate it with a contract and then execute some actions of this contract.
 
 ## Context
 
-*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `eosfactory.shell.account.Account` class. The mapping between actual accounts and their *EOSFactory* representations is cached locally in a file. As a result, what we achieve is consistent testing environment across separate Python sessions.
+*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `eosfactory.shell.account.Account` class. The mapping between actual accounts and their *EOSFactory* representations is cached locally in a file. As a result, we achieve consistent testing environment across separate Python sessions.
 
 ## Use Case
 

@@ -97,7 +97,8 @@ class Account():
             abi_file (str): The ABI file for the contract, relative to the 
                 contract-dir.
 
-        See definitions of the remaining parameters: :func:`.cleos.common_parameters`.
+        See definitions of the remaining parameters: \
+        :func:`.cleos.common_parameters`.
         '''
         result = cleos_set.SetContract(
                     self, contract_dir, 
@@ -160,8 +161,8 @@ class Account():
                     ]
             }
 
-        See definitions of the remaining parameters: 
-        \:func:`.cleos.common_parameters`.
+        See definitions of the remaining parameters: \
+        :func:`.cleos.common_parameters`.
         '''
         logger.TRACE('''
             * Set action permission.
@@ -205,7 +206,8 @@ class Account():
             requirement (str): The permission name require for executing the given 
                 action.
 
-        See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.
+        See definitions of the remaining parameters: \
+        :func:`.cleos.common_parameters`.
         '''
         logger.TRACE('''
         * Set action permission.
@@ -247,8 +249,8 @@ class Account():
                 execute on the contract.
             data (str): The arguments to the contract.
 
-        See definitions of the remaining parameters: 
-        \:func:`.cleos.common_parameters`.
+        See definitions of the remaining parameters: \
+        :func:`.cleos.common_parameters`.
 
         Attributes:
             account_name (str): The EOSIO name of the contract's account.
@@ -653,7 +655,8 @@ def create_account(
         transfer (bool): Transfer voting power and right to unstake EOS to 
             receiver.
 
-    See definitions of the remaining parameters: :func:`.cleos.common_parameters`.
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.
     '''
 
     global wallet_singleton

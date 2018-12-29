@@ -518,8 +518,8 @@ class CreateAccount(interface.Account, Cleos):
         active_key (str): If set, the active public key for the new account, 
             otherwise random.
 
-    See definitions of the remaining parameters: 
-        \:func:`.cleos.common_parameters`.
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.
     '''
     def __init__(
             self, creator, name, owner_key, 
@@ -649,7 +649,8 @@ class PushAction(Cleos):
             the contract.
         data (str): The arguments to the contract.
 
-    See definitions of the remaining parameters: \:func:`.cleos.common_parameters`.
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.
 
     Attributes:
         account_name (str): The EOSIO name of the contract's account.
