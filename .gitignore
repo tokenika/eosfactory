@@ -41,7 +41,8 @@ localnode/blocks
 /*.egg-info
 
 tests/js
-docs/_build/doctrees
+docs/_build
+docs/_build#
 docs/tutorials/*.py
 docs/cases/*.py
 docs/patterns/*.py

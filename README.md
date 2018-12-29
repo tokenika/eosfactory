@@ -52,11 +52,10 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 * [Account Class](docs/cases/account.md)
 * [Master Account](docs/cases/master_account.md)
 
-## Developer documentation
+## Complete documentation
 
-[index](file:///C:/Workspaces/EOS/eosfactory/docs/_build/html/rst/core.teos.html)
+Please refer to the [table of contents](http://eosfactory.io/build/html/index.html).
 
-Please refer to [this index of Python modules](http://eosfactory.io/build/html/py-modindex.html) which constitute the front-end of *EOSFactory*.
 
 ## Release notes
 
