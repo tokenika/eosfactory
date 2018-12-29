@@ -42,7 +42,6 @@ localnode/blocks
 
 tests/js
 docs/_build
-docs/_build#
 docs/tutorials/*.py
 docs/cases/*.py
 docs/patterns/*.py
