@@ -13,6 +13,8 @@ class Testnet:
             considered local and the name is ``eosio``.
         owner_key (str): If set, the public owner key of the ``account``.
         active_key (str): If set, the public active key of the ``account``.
+        name (str): The name of the testnet. If  not set, the name is 
+            synthesized from the argument ``urf``.
         reset (bool): If set and if local node, reset the node.
 
     Attributes:
@@ -20,10 +22,12 @@ class Testnet:
         account_name (str): The name of the account.
         owner_key (str): The public owner key of the ``account``.
         active_key (str): The public active key of the ``account``.
+        name (str): The name of the testnet
     '''
     def __init__(
             self, url=None, 
-            account_name=None, owner_key=None, active_key=None, 
+            account_name=None, owner_key=None, active_key=None,
+            name=None,
             reset=False):
 
         if not url:
@@ -46,6 +50,7 @@ class Testnet:
         self.account_name = account_name
         self.owner_key = owner_key
         self.active_key = active_key
+        self.name = name
 
     def configure(self, prefix=None):
         '''Set the testnet to be the listener to EOSFactory.
@@ -77,38 +82,39 @@ class Testnet:
         return manager.is_local_testnet()
 
 
-def get_testnet(alias=None, testnet=None, reset=False):
+def get_testnet(name=None, testnet=None, reset=False):
     '''Return a testnet.
 
     Args:
-        alias (str): If set, the testnet alias, otherwise the local testnet
+        name (str): If set, the testnet name, otherwise the local testnet
             is returned.
         testnet (tuple): The tuple (<url> <name> <owner key> <active key>)
             representing a :class:`.Testnet` object, returned if the 
-            ``alias`` argument is not set.
-        reset (bool): If both the ``alias`` and ``testnet`` arguments are not 
+            ``name`` argument is not set.
+        reset (bool): If both the ``name`` and ``testnet`` arguments are not 
             set, determine whether the local node is to be reset.
 
     Returns:
         :class:`.Testnet`: a testnet
     '''
-    if not alias and not testnet:
+    if not name and not testnet:
         return Testnet(reset=reset)
 
-    if alias:
+    if name:
         mapping = manager.read_map(TESTNET_FILE)
-        if alias in mapping:
+        if name in mapping:
             return Testnet(
-                mapping[alias]["url"], mapping[alias]["account_name"],
-                mapping[alias]["owner_key"], mapping[alias]["active_key"])
-        elif alias == "JUNGLE":
+                mapping[name]["url"], mapping[name]["account_name"],
+                mapping[name]["owner_key"], mapping[name]["active_key"],
+                mapping[name]["name"])
+        elif name == "JUNGLE":
             return JUNGLE
-        elif alias == "KYLIN":
+        elif name == "KYLIN":
             return KYLIN
         else:
             logger.ERROR('''
             Testnet ``{}`` is not defined in the testnet mapping.
-            '''.format(alias))
+            '''.format(name))
     elif testnet:
         return Testnet(testnet[0], testnet[1], testnet[2], testnet[3])
 
@@ -120,7 +126,7 @@ def get_testnet(alias=None, testnet=None, reset=False):
 TESTNET_FILE = "testnet.json"
 
 
-def add_testnet_to_mapping(testnet):
+def add_testnet_to_mapping(testnet, name=None):
     '''Save the given :class:`.Testnet` object.
 
     Args:
@@ -128,10 +134,10 @@ def add_testnet_to_mapping(testnet):
     '''
     add_to_mapping(
         testnet.url, testnet.account_name, 
-        testnet.owner_key, testnet.active_key, None)
+        testnet.owner_key, testnet.active_key, name)
     
 
-def add_to_mapping(url, account_name, owner_key, active_key, alias=None):
+def add_to_mapping(url, account_name, owner_key, active_key, name=None):
     '''Save a :class:`.Testnet` object.
 
     Args:
@@ -141,7 +147,7 @@ def add_to_mapping(url, account_name, owner_key, active_key, alias=None):
             considered local and the name is ``eosio``.
         owner_key (str): If set, the public owner key of the ``account``.
         active_key (str): If set, the public active key of the ``account``.
-        alias (str): If set, the name of the testnet.        
+        name (str): If set, the name of the testnet.        
     '''
     mapping = manager.read_map(TESTNET_FILE)
     testnet = {}
@@ -149,21 +155,26 @@ def add_to_mapping(url, account_name, owner_key, active_key, alias=None):
     testnet["account_name"] = account_name
     testnet["owner_key"] = owner_key
     testnet["active_key"] = active_key
-    if not alias:
-        alias = setup.url_prefix(url)
-    mapping[alias] = testnet
+    if not name:
+        name = setup.url_prefix(url)
+    testnet["name"] = name
+    mapping[name] = testnet
     manager.save_map(mapping, TESTNET_FILE)
 
 
-def remove_from_mapping(testnet):
-    '''Remove the given :class:`.Testnet` object from the record.
+def remove_from_mapping(name):
+    '''Remove from the record a testnet of the given name.
+
+    The name of a testnet is set with the argument ``name`` argument of the 
+    function :func:`.add_to_mapping`. If the argument is not set, the name is 
+    synthesized from the argument ``urf``.
 
     Args:
-        testnet (.Testnet): The object to be saved.
+        name (str): The name of the testnet to be removed.
     '''    
     mapping = manager.read_map(TESTNET_FILE)
-    if testnet in mapping:
-        del mapping[testnet]
+    if name in mapping:
+        del mapping[name]
         manager.save_map(mapping, TESTNET_FILE)
 
 
@@ -177,8 +188,8 @@ def testnets():
         Testnet mapping is empty.
         ''')
         return
-    for alias, testnet in mapping.items():       
-        print("%25s: %13s @ %s" % (alias, testnet["account_name"], testnet["url"]))
+    for name, testnet in mapping.items():       
+        print("%25s: %13s @ %s" % (name, testnet["account_name"], testnet["url"]))
 
 
 #: Testnet http;//145.239.133.201;8888
@@ -186,7 +197,8 @@ JUNGLE = Testnet(
     "http://145.239.133.201:8888",
     "dgxo1uyhoytn",
     "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
-    "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
+    "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA",
+    "JUNGLE"
 )
 
 
@@ -195,6 +207,7 @@ KYLIN = Testnet(
     "http://145.239.133.201:9999",
     "xlg3pao3idlq",
     "5JBbCwe3t6j63yerYmguRVWg7ZVDY3nKXzGYMwkR9y5w4appKhk",
-    "5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK"
+    "5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK",
+    "KYLIN"
 )
 

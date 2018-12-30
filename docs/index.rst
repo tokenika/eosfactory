@@ -52,7 +52,7 @@ set
     patterns/set/set_account_permission
     patterns/set/set_action_permission
 
-API Documentation
+EOSFactory API
 --------------------
 .. toctree::
     :maxdepth: 1

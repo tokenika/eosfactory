@@ -232,8 +232,8 @@ class Contract(ContractBuilder):
 
         Args:
             code (str): If set, the name of the file to save the contract 
-                .wast/wasm to.
-            abi (str): If set, the name of the file to save the contract .abi to.
+                WAST/WASM to.
+            abi (str): If set, the name of the file to save the contract ABI to.
             wasm (bool): Save contract as wasm.
         '''        
         return self.account.code(code, abi, wasm)

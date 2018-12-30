@@ -53,8 +53,8 @@ class Account():
 
         Args:
             code (str): If set, the name of the file to save the contract 
-                .wast/wasm to.
-            abi (str): If set, the name of the file to save the contract .abi to.
+                WAST/WASM to.
+            abi (str): If set, the name of the file to save the contract ABI to.
             wasm (bool): Save contract as wasm.
         '''
         result = cleos_get.GetCode(self, is_verbose=False)
@@ -64,7 +64,7 @@ class Account():
         logger.OUT(str(result))
 
     def is_code(self):
-        '''Determine whether contract is set to the account.
+        '''Determine whether any contract is set to the account.
 
         Return:
             True if the retrieved hash code of the contract code is not null.    

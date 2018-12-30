@@ -187,5 +187,5 @@ epub_exclude_files = ['search.html']
 
 import recommonmark.parser
 def setup(app):
-    # app.add_source_parser(recommonmark.parser.CommonMarkParser)
+    app.add_source_parser(recommonmark.parser.CommonMarkParser)
     app.add_css_file('css/custom.css')  # may also be an URL
