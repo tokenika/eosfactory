@@ -68,8 +68,8 @@ class Testnet:
     def clear_cache(self):
         '''Remove all the saved interaction with the testnet.
 
-        Remove wallets ascribed to the testnet, as wall as its account map and
-        its password map.
+        Remove wallets ascribed to the testnet, its account map and password 
+        map.
         '''
         manager.clear_testnet_cache()
 
