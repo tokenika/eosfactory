@@ -4,24 +4,24 @@ import eosfactory.core.logger as logger
 
 
 class Testnet:
-    '''Testing ``nodeos`` node.
+    '''Testing *nodeos* node.
 
     Args:
-        url (str): If set, the URL of a remote ``nodeos``, otherwise 
+        url (str): If set, the URL of a remote *nodeos*, otherwise 
             a localhost URL.
-        account_name (str): If set, the account name, otherwise the node is
-            considered local and the name is ``eosio``.
-        owner_key (str): If set, the public owner key of the ``account``.
-        active_key (str): If set, the public active key of the ``account``.
+        account_name (str): If set, the name of the *account*, otherwise the 
+            node is considered local, and its name is *eosio*.
+        owner_key (str): If set, the public owner key of the *account*.
+        active_key (str): If set, the public active key of the *account*.
         name (str): The name of the testnet. If  not set, the name is 
-            synthesized from the argument ``urf``.
+            synthesized from the argument *url*.
         reset (bool): If set and if local node, reset the node.
 
     Attributes:
-        url (str): The URL of the ``nodeos``.
-        account_name (str): The name of the account.
-        owner_key (str): The public owner key of the ``account``.
-        active_key (str): The public active key of the ``account``.
+        url (str): The URL of the *nodeos*.
+        account_name (str): The name of the *account*.
+        owner_key (str): The public owner key of the *account*.
+        active_key (str): The public active key of the *account*.
         name (str): The name of the testnet
     '''
     def __init__(
@@ -44,7 +44,7 @@ class Testnet:
 
         if not account_name or not owner_key or not active_key:
             logger.ERROR('''
-        If the ``url`` is set, the ``account_name`` and keys have to be set, as well.
+        If the *url* is set, the *account_name* and keys have to be set, as well.
             ''')
         self.url = url
         self.account_name = account_name
@@ -90,8 +90,8 @@ def get_testnet(name=None, testnet=None, reset=False):
             is returned.
         testnet (tuple): The tuple (<url> <name> <owner key> <active key>)
             representing a :class:`.Testnet` object, returned if the 
-            ``name`` argument is not set.
-        reset (bool): If both the ``name`` and ``testnet`` arguments are not 
+            *name* argument is not set.
+        reset (bool): If both the *name* and *testnet* arguments are not 
             set, determine whether the local node is to be reset.
 
     Returns:
@@ -113,7 +113,7 @@ def get_testnet(name=None, testnet=None, reset=False):
             return KYLIN
         else:
             logger.ERROR('''
-            Testnet ``{}`` is not defined in the testnet mapping.
+            Testnet *{}* is not defined in the testnet mapping.
             '''.format(name))
     elif testnet:
         return Testnet(testnet[0], testnet[1], testnet[2], testnet[3])
@@ -141,12 +141,12 @@ def add_to_mapping(url, account_name, owner_key, active_key, name=None):
     '''Save a :class:`.Testnet` object.
 
     Args:
-        url (str): If set, the URL of a remote ``nodeos``, otherwise 
+        url (str): If set, the URL of a remote *nodeos*, otherwise 
             a localhost URL.
         account_name (str): If set, the account name, otherwise the node is
-            considered local and the name is ``eosio``.
-        owner_key (str): If set, the public owner key of the ``account``.
-        active_key (str): If set, the public active key of the ``account``.
+            considered local and the name is *eosio*.
+        owner_key (str): If set, the public owner key of the *account*.
+        active_key (str): If set, the public active key of the *account*.
         name (str): If set, the name of the testnet.        
     '''
     mapping = manager.read_map(TESTNET_FILE)
@@ -165,9 +165,9 @@ def add_to_mapping(url, account_name, owner_key, active_key, name=None):
 def remove_from_mapping(name):
     '''Remove from the record a testnet of the given name.
 
-    The name of a testnet is set with the argument ``name`` argument of the 
+    The name of a testnet is set with the argument *name* argument of the 
     function :func:`.add_to_mapping`. If the argument is not set, the name is 
-    synthesized from the argument ``urf``.
+    synthesized from the argument *url*.
 
     Args:
         name (str): The name of the testnet to be removed.
