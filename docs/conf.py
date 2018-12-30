@@ -185,9 +185,7 @@ epub_exclude_files = ['search.html']
 
 # -- Extension configuration -------------------------------------------------
 
-source_parsers = {
-   '.md': 'recommonmark.parser.CommonMarkParser',
-}
-
+import recommonmark.parser
 def setup(app):
-    app.add_stylesheet('css/custom.css')  # may also be an URL
+    # app.add_source_parser(recommonmark.parser.CommonMarkParser)
+    app.add_css_file('css/custom.css')  # may also be an URL
