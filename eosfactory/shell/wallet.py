@@ -305,7 +305,7 @@ class Wallet(cleos.WalletCreate):
 
     def delete_globals(self):
         '''Delete from the global namespace all the account objects restored
-        with the function :func:`.restore_accounts`.
+        with the function :func:`restore_accounts`.
 
         '''
         account_map = manager.account_map()
@@ -453,8 +453,8 @@ def create_wallet(
         globals=None):
     '''Create a singleton :class:`.Wallet` object.
 
-    It is not usual to use this function. Instead, it is called automatically
-    upon the first use of either :func:`.shell.account.create_master_account`
+    It is not usual to use this function. Instead, it is called automatically 
+    on the first use of either :func:`.shell.account.create_master_account`
     or :func:`.shell.account.create_account` functions.
     '''
     if globals:

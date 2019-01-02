@@ -778,6 +778,8 @@ def create_account(
 
 
 def reboot():
+    '''Reset the :mod:`.shell.account` module.
+    '''
     global wallet_singleton
     if wallet_singleton:
         wallet_singleton.delete_globals()

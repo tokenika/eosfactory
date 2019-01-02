@@ -69,18 +69,17 @@ EOSFactory API
 .. toctree::
     :maxdepth: 1
 
+    rst/core.interface
+    rst/core.config
+    rst/core.errors
+    rst/core.setup
+    rst/core.logger    
+    rst/core.teos
     rst/core.cleos
     rst/core.cleos_get    
     rst/core.cleos_set
     rst/core.cleos_sys
-    rst/core.interface
-
-    rst/core.config
-    rst/core.errors
-    rst/core.logger
     rst/core.manager
-    rst/core.setup
-    rst/core.teos
     rst/core.testnet
     rst/core.utils
 
