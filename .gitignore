@@ -45,3 +45,4 @@ docs/_build
 docs/tutorials/*.py
 docs/cases/*.py
 docs/patterns/*.py
+docs/patterns/set/*.py

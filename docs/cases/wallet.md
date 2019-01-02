@@ -178,7 +178,7 @@ You should get output similar to this:
 Finally, exit Python CLI:
 
 ```python
-exit()
+stop()
 ```
 
 ## Test Run

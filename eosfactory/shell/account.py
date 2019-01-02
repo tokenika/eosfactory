@@ -167,7 +167,7 @@ class Account():
         logger.TRACE('''
             * Set action permission.
             ''')
-        result = SetAccountPermission(
+        result = cleos_set.SetAccountPermission(
                 self, permission_name, authority, parent_permission_name,
                 permission,
                 expiration_sec, 

@@ -147,7 +147,7 @@ def add_to_mapping(url, account_name, owner_key, active_key, name=None):
             considered local, and the name is *eosio*.
         owner_key (str): If set, the public owner key of the *account*.
         active_key (str): If set, the public active key of the *account*.
-        name (str): If set, the name of the testnet.        
+        name (str): If set, the name of the testnet.
     '''
     mapping = manager.read_map(TESTNET_FILE)
     testnet = {}

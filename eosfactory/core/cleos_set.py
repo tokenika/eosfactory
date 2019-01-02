@@ -195,7 +195,8 @@ class SetAccountPermission(cleos.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
                         
-        cleos.Cleos.__init__(args, "set", "account permission", is_verbose)
+        cleos.Cleos.__init__(
+            self, args, "set", "account permission", is_verbose)
         self.account_name = account_name
         self.console = None
         self.data = None
