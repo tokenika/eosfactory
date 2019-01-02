@@ -104,10 +104,10 @@ html_theme_options = {
     'stickysidebar': 'true',
     'collapsiblesidebar': 'false',
     'body_max_width': '600px',
-    'sidebarbgcolor': '#ffffff', # '#1c4e63''azure'
+    'sidebarbgcolor': 'azure', # '#1c4e63''azure'
     'sidebarbtncolor': '#3c6e83', # '#3c6e83'
     'sidebartextcolor': 'maroon', # '#ffffff'
-    'sidebarlinkcolor':'#000000' # '#98dbcc'
+    'sidebarlinkcolor':'#000000', # '#98dbcc'
 }
 
 # html_theme = "sphinxdoc"
@@ -188,4 +188,4 @@ epub_exclude_files = ['search.html']
 import recommonmark.parser
 def setup(app):
     app.add_source_parser(recommonmark.parser.CommonMarkParser)
-    app.add_css_file('css/custom.css')  # may also be an URL
+    app.add_css_file('custom.css')  # may also be an URL
