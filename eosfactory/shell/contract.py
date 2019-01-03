@@ -60,6 +60,11 @@ class ContractBuilder():
         return cleos.contract_is_built(
             self.contract_dir, self.wasm_file, self.abi_file)
 
+    def path(self):
+        ''' Return the path to the contract.
+        '''
+        return str(self.contract_dir)
+
     def delete(self):
         '''Delete the project.
         '''
