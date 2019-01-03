@@ -137,7 +137,7 @@ def ABI(
     '''.format(target_path), verbosity)
 
 
-def WAST(
+def WASM(
         contract_dir_hint, c_cpp_properties_path=None,
         compile_only=False, verbosity=None):
     '''Produce WASM code.

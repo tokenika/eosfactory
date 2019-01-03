@@ -40,7 +40,7 @@ class ContractBuilder():
     def build_wast(self):
         '''Make the WAST file.
         '''
-        teos.WAST(self.contract_dir)
+        teos.WASM(self.contract_dir)
 
     def build_abi(self):
         '''Make the ABI file.
