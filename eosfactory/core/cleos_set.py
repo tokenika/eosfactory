@@ -110,11 +110,11 @@ class SetAccountPermission(cleos.Cleos):
         # bob, carol are account objects created with 
         # shell.account.create_account factory function
 
-        "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
+        str_value = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
 
-        bob.active()
+        permission_value = bob.active()
 
-        {
+        dict_value = {
             "threshold" : 100, 
             "keys" : [], 
             "accounts" : 

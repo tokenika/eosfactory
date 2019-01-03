@@ -1,6 +1,8 @@
 body {
-  background-color: White;
-  margin-left: 0px;
+  background-color: azure;
+  margin-left: 100px;
+  /* margin-left: 7rem; */
+  font-size: 100%;
   }
 
 h1 {
@@ -15,3 +17,4 @@ code {
 }
 
 @media (min-width:600px){.container{width:600px}}
+/* @media (min-width:38rem){.container{width:38rem}} */

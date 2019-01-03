@@ -92,27 +92,18 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # a list of builtin themes.
 #
 
-# html_theme = 'alabaster'
-# html_theme_options = {
-#     'page_width': '900px',
-#     'sidebar_width': '250px'
-# }
-
 html_theme = "classic"
 html_theme_options = {
     'rightsidebar': 'false',
     'stickysidebar': 'true',
     'collapsiblesidebar': 'false',
     'body_max_width': '600px',
+    # 'body_max_width': '38rem',
     'sidebarbgcolor': 'azure', # '#1c4e63''azure'
     'sidebarbtncolor': '#3c6e83', # '#3c6e83'
     'sidebartextcolor': 'maroon', # '#ffffff'
     'sidebarlinkcolor':'#000000', # '#98dbcc'
 }
-
-# html_theme = "sphinxdoc"
-# html_theme = "haiku"
-# html_theme = "bizstyle"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
