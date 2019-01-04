@@ -1,11 +1,16 @@
-# EOSFactory Release Notes - v2.2
+# EOSFactory Release Notes - v2.4
 
 ## Compatibility
 
-EOSFactory [v2.2](https://github.com/tokenika/eosfactory/releases/tag/v2.2) is compatible with EOS [v1.3.x](https://github.com/EOSIO/eos/releases/tag/v1.3.0) and [v1.4.x](https://github.com/EOSIO/eos/releases/tag/v1.4.0)
+EOSFactory [v2.4](https://github.com/tokenika/eosfactory/releases/tag/v2.4) is compatible with EOS [v1.5.x](https://github.com/EOSIO/eos/releases/tag/v1.5.0).
+
+## New features in v2.4
+* General code overhaul & clean-up.
+* Documentation improved & revised.
+* Introduction of code patterns.
+* Several bug fixes.
 
 ## Features available in previous releases
-
 * Launch a single-node private testnet and fully control it: stop it and then continue running it or completely reset it.
 * Initialize a testnet with the `bios` contract and several test accounts (available as `sess.alice`, `sess.bob ` and `sess.carol`).
 * Create additional test accounts (their keys are automatically imported into the wallet).
@@ -33,8 +38,10 @@ EOSFactory [v2.2](https://github.com/tokenika/eosfactory/releases/tag/v2.2) is c
 * Local testnet running in a headless mode (this allows you to run EOSFactory in a GUI-less environment, e.g. Ubuntu Server, or via SSH).
 * All functionality ported to Python, no need to compile any C++ code.
 * Precise error catching in unit tests, utilizing Python's `assertRaises(Error)` feature.
-
-## New features available in v2.2
 * Completely removed dependence on system variables: entries in the `~/.profile` or `~/.bash_profile` files are no longer needed.
 * Radically improved (and simplified) installation process: the Python modules are now installed with `setuptools`.
 * While using EOSFactory with *Visual Studio Code* is highly recommended, EOSFactory has become independent from any particular IDE and does not impose any particular folder structure inside your smart-contract project. The only requirement is having a folder called `build` on the same level or one level up from your C++ source files.
+* Support for binary version of *EOSIO* (while support for a source code build is maintained).
+* Smart-contract are built using *EOSIO Contract Development Toolkit* (CDT).
+* Support for setting account and action permissions.
+* Optional `nodeos` output to file.
