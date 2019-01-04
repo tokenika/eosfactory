@@ -1,6 +1,6 @@
 # Set Action Permission
 
-The `set_account_permission` command sets authorization for a contract's specific action.
+The `set_account_permission` command sets authorization for a contract's specific action. You might want to see the plain `cleos` approach [here](https://developers.eos.io/eosio-cleos/v1.2.0/reference#cleos-set-action-permission).
 
 **NOTE**: The Python code listed below is executable, as explained [here](../README.html).
 

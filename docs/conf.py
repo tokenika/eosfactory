@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
+
 # Configuration file for the Sphinx documentation builder.
 #
 # This file does only contain a selection of the most common options. For a
@@ -12,51 +12,63 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-import sys
-import sphinx_readable_theme
-import sphinx_bootstrap_theme
-
-sys.path.insert(0, os.path.abspath('../../../'))
+# import os
+# import sys
+# sys.path.insert(0, os.path.abspath('.'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = u'EOSFactory'
-copyright = u'2018, Tokenika'
-author = u'Tokenika'
+project = 'EOSFactory'
+copyright = '2018, Tokenika'
+author = 'Tokenika'
 
 # The short X.Y version
-version = u'v2.3'
+version = ''
 # The full version, including alpha/beta/rc tags
-release = u'0.0'
+release = '2.4'
 
 
 # -- General configuration ---------------------------------------------------
 
-# If your documentation needs a minimal Sphinx version, state it here.
-#
-# needs_sphinx = '1.0'
-
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-
 extensions = [
     'sphinx.ext.autodoc',
-#    'sphinx.ext.intersphinx',
-#    'sphinx.ext.viewcode',
-#    'sphinx.ext.githubpages'
+    'sphinx.ext.viewcode',
+    'sphinx.ext.githubpages',
+# http://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html#module-sphinx.ext.napoleon
+    'sphinx.ext.napoleon',
 ]
 
+# Napoleon settings
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+napoleon_include_init_with_doc = False
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = True
+napoleon_use_param = True
+napoleon_use_rtype = False
+napoleon_use_keyword = True
+napoleon_custom_sections = [('Args', 'Parameters')]
+
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['.templates']
+templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = ['.rst', '.md']
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'restructuredtext',
+    '.md': 'markdown',
+}
 
 # The master toctree document.
 master_doc = 'index'
@@ -70,11 +82,8 @@ language = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = []
-
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+# This pattern also affects html_static_path and html_extra_path.
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -82,33 +91,19 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-# haiku classic sphinxdoc bizstyle sphinx_rtd_theme
 
-# html_theme = "bizstyle"
-# html_theme_options = {
-#     'body_max_width': '650px' 
-# }
-
-# html_theme = "alabaster"
-# html_theme_options = {
-#     'page_width': '1000px',
-#     'sidebar_width': '220px'
-# }
-
-# html_theme = "classic"
-# html_theme_options = {
-#     'body_max_width': '730px'
-# }
-
-# html_theme = "readable"
-# html_theme_path = sphinx_readable_theme.get_html_theme_path()
-
-# html_theme = "sphinx-theme-graphite"
-# html_theme_path = [.]
-
-html_theme = "bootstrap"
-html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
-
+html_theme = "classic"
+html_theme_options = {
+    'rightsidebar': 'false',
+    'stickysidebar': 'true',
+    'collapsiblesidebar': 'false',
+    'body_max_width': '600px',
+    # 'body_max_width': '38rem',
+    'sidebarbgcolor': 'white', # '#1c4e63''azure'
+    'sidebarbtncolor': '#3c6e83', # '#3c6e83'
+    'sidebartextcolor': 'maroon', # '#ffffff'
+    'sidebarlinkcolor':'#000000', # '#98dbcc'
+}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -130,12 +125,6 @@ html_static_path = ['_static']
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
-
-
-# -- Options for HTMLHelp output ---------------------------------------------
-
-# Output file base name for HTML help builder.
-htmlhelp_basename = 'EOSFactorydoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -162,38 +151,32 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'EOSFactory.tex', u'EOSFactory Documentation',
-     u'Tokenika', 'manual'),
+    (master_doc, 'EOSFactory.tex', 'EOSFactory Documentation',
+     'Tokenika', 'manual'),
 ]
 
 
-# -- Options for manual page output ------------------------------------------
+# -- Options for Epub output -------------------------------------------------
 
-# One entry per manual page. List of tuples
-# (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'eosfactory', u'EOSFactory Documentation',
-     [author], 1)
-]
+# Bibliographic Dublin Core info.
+epub_title = project
 
+# The unique identifier of the text. This can be a ISBN number
+# or the project homepage.
+#
+# epub_identifier = ''
 
-# -- Options for Texinfo output ----------------------------------------------
+# A unique identification for the text.
+#
+# epub_uid = ''
 
-# Grouping the document tree into Texinfo files. List of tuples
-# (source start file, target name, title, author,
-#  dir menu entry, description, category)
-texinfo_documents = [
-    (master_doc, 'EOSFactory', u'EOSFactory Documentation',
-     author, 'EOSFactory', 'One line description of project.',
-     'Miscellaneous'),
-]
+# A list of files that should not be packed into the epub file.
+epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
 
-source_parsers = {
-   '.md': 'recommonmark.parser.CommonMarkParser',
-}
-
+import recommonmark.parser
 def setup(app):
-    app.add_stylesheet('css/custom.css')  # may also be an URL
+    app.add_source_parser(recommonmark.parser.CommonMarkParser)
+    app.add_css_file('custom.css')  # may also be an URL

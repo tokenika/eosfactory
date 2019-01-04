@@ -1,4 +1,4 @@
-# Welcome to EOSFactory v2.3
+# Welcome to EOSFactory v2.4
 
 [EOSFactory](http://eosfactory.io/) is a Python-based [EOS](https://eos.io) smart-contract development & testing framework, created by [Tokenika](https://tokenika.io).
 
@@ -22,7 +22,7 @@ When you use tools like `cleos` all you have at your disposal is issuing separat
 
 #### 2. Simple syntax
 
-The front-end of *EOSFactory* is simply a Python3 *Command Line Interface*. This way you can interact with EOS smart-contract, and prove it works as expected, without having to deal with the complexity of a low-level language like C++. In most cases Python’s syntax is clear for everyone.
+The front-end of *EOSFactory* is simply a Python3 *Command Line Interface*. This way you can interact with EOS smart-contract, and prove it works as expected, instead having to deal with the raw primitives of the EOSIO `cleos`. In most cases Python syntax is immediately clear for everyone.
 
 #### 3. Support for both local and remote testnet
 
@@ -39,33 +39,34 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 ## User documentation
 
 * [Introduction to EOSFactory](http://eosfactory.io/build/html/tutorials/00.IntroductionToEOSFactory.html)
-* [Installing EOSFactory](http://eosfactory.io/build/html/tutorials/01.InstallingEOSFactory.html)
-* [Interacting with EOS Contracts in EOSFactory](http://eosfactory.io/build/html/tutorials/02.InteractingWithEOSContractsInEOSFactory.html)
-* [Building and deploying EOS Contracts in EOSFactory](http://eosfactory.io/build/html/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.html)
-* [Working with EOS Contracts using EOSFactory in VSC](http://eosfactory.io/build/html/tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.html)
-* [Interacting with Public Testnet](http://eosfactory.io/build/html/tutorials/05.InteractingWithPublicTestnet.html)
+* [Installing EOSFactory](docs/tutorials/01.InstallingEOSFactory.md)
+* [Interacting with EOS Contracts in EOSFactory](docs/tutorials/02.InteractingWithEOSContractsInEOSFactory.md)
+* [Building and deploying EOS Contracts in EOSFactory](docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md)
+* [Working with EOS Contracts using EOSFactory in VSC](docs/tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.md)
+* [Interacting with Public Testnet](docs/tutorials/05.InteractingWithPublicTestnet.md)
 
 ## Use cases
 
-* [Wallet Class](http://eosfactory.io/build/html/cases/02_wallet/case.html)
-* [Symbolic Names](http://eosfactory.io/build/html/cases/03_symbolic_names/case.html)
-* [Account Class](http://eosfactory.io/build/html/cases/04_account/case.html)
-* [Master Account](http://eosfactory.io/build/html/cases/05_master_account/case.html)
+* [Wallet Class](docs/cases/wallet.md)
+* [Symbolic Names](docs/cases/symbolic_names.md)
+* [Account Class](docs/cases/account.md)
+* [Master Account](docs/cases/master_account.md)
 
-## Developer documentation
+## Complete documentation
 
-Please refer to [this index of Python modules](http://eosfactory.io/build/html/py-modindex.html) which constitute the front-end of *EOSFactory*.
+Please refer to the [table of contents](http://eosfactory.io/build/html/index.html).
+
 
 ## Release notes
 
-Please refer to [this document](http://eosfactory.io/build/html/releases/ReleaseNotesVersion2.3.html).
+Please refer to [this document](docs/releases/ReleaseNotesVersion2.4.md).
 
 ## Roadmap
 
 Our long-term goal is to turn *EOSFactory* into a comprehensive IDE (Integrated Development Environment) for EOS smart-contracts, smilar to Ethereum's [Truffle Framework](https://truffleframework.com/).
 
-- [Plan for Subsequent EOSFactory Releases](http://eosfactory.io/build/html/roadmap/PlanForSubsequentEOSFactoryReleases.html)
-- [Long-term EOSFactory Roadmap](http://eosfactory.io/build/html/roadmap/LongTermEOSFactoryRoadmap.html)
+- [Plan for Subsequent EOSFactory Releases](docs/roadmap/PlanForSubsequentEOSFactoryReleases.md)
+- [Long-term EOSFactory Roadmap](docs/roadmap/LongTermEOSFactoryRoadmap.md)
 
 ## Support
 

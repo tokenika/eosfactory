@@ -1,3 +1,4 @@
+
 def wslMapLinuxWindows(path):
     if not path or path.find("/mnt/") == -1:
         return path

@@ -1,9 +1,9 @@
 # Long-term EOSFactory Roadmap
 
-#### Support for other IDEs
+Ultimately, we are aiming for building a base of tutorials and pattern articles that could help any interested reader to learn EOS Smart Contract techniques and experiment with them.
 
-Right now we are aiming for integration with [Visual Studio Code](https://code.visualstudio.com) (VSC), but we also consider supporting other IDEs, e.g. [Eclipse](https://www.eclipse.org/ide/) or [CLion](https://www.jetbrains.com/clion/).
+All the articles are going to be expressed in terms of the EOSFactory API, and they are going to be mutually compatible.
 
-#### Ricardian Contracts
+Exemplary origin of this knowledge base is in [`docs/cases`](http://eosfactory.io/build/html/index.html#use-cases) and [`docs/patterns`](http://eosfactory.io/build/html/index.html#patterns) directories of EOSFactory repository.
 
-We are thinking about integrating *Ricardian Contracts* into our unit-testing. This is a very interesting (and probably not widely known at this  stage) aspect of EOS smart-contracts. For more information please refer to [EOSIO documentation](https://developers.eos.io/eosio-cpp/docs/hello-world).
+We will gratefully accept suggestions and contribution from the community about the contents of the database.

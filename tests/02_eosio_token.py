@@ -117,8 +117,6 @@ class Test(unittest.TestCase):
         self.assertEqual(
             table_carol.json["rows"][0]["balance"], '12.0000 EOS',
             '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
-
-        contract.delete()
         
 
     def tearDown(self):
