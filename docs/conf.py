@@ -99,7 +99,7 @@ html_theme_options = {
     'collapsiblesidebar': 'false',
     'body_max_width': '600px',
     # 'body_max_width': '38rem',
-    'sidebarbgcolor': 'azure', # '#1c4e63''azure'
+    'sidebarbgcolor': 'white', # '#1c4e63''azure'
     'sidebarbtncolor': '#3c6e83', # '#3c6e83'
     'sidebartextcolor': 'maroon', # '#ffffff'
     'sidebarlinkcolor':'#000000', # '#98dbcc'

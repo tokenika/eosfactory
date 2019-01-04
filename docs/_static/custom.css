@@ -1,5 +1,5 @@
 body {
-  background-color: azure;
+  background-color: white;
   margin-left: 100px;
   /* margin-left: 7rem; */
   font-size: 100%;
@@ -12,7 +12,7 @@ pre {
   background-color: azure;
 }
 code {
-  background-color: white;
+  background-color: azure;
   color: black
 }
 
