@@ -16,11 +16,13 @@ class Permission(enum.Enum):
 class Key(Omittable):
     '''Having the *key_public* and *key_private* attributes.
 
-    :param str key_public: The public key of a key pair.
-    :param str key_private: The private key of a key pair.
+    Args:
+        key_public (str): The public key of a key pair.
+        key_private (str): The private key of a key pair.
 
-    :var str key_public: The public key of a key pair.
-    :var str key_private: The private key of a key pair.
+    Attributes:
+        key_public (str): The public key of a key pair.
+        key_private (str): The private key of a key pair.
     '''    
     def __init__(self, key_public, key_private):
         self.key_public = key_public
@@ -31,17 +33,15 @@ class Key(Omittable):
 class Account(Omittable):
     '''Having the *name* and *key_public* and *key_private* attributes.
 
-    :param str name: EOSIO contract name
-    :param owner_key: The owner key of the account.
-    :type owner_key: str or .Key
-    :param active_key: The account key of the account.
-    :type active_key: str or .Key
+    Args:
+        name (str): EOSIO contract name
+        owner_key (str or .Key): The owner key of the account.
+        active_key (str or .Key): The account key of the account.
     
-    :var str name: EOSIO contract name
-    :var owner_key: The owner key of the account.
-    :vartype owner_key: str or .Key
-    :var active_key: The account key of the account.
-    :vartype active_key: str or .Key
+    Attributes:
+        name (str): EOSIO contract name
+        owner_key (str or .Key): The owner key of the account.
+        active_key (str or .Key): The account key of the account.
     '''    
     def __init__(self, name, owner_key=None, active_key=None):
         self.name = name
@@ -52,8 +52,8 @@ class Account(Omittable):
     def owner(self):
         '''Get the public owner key
 
-        :return: public owner key
-        :rtype: str
+        Returns:
+            str: public owner key
         '''
         if isinstance(self.owner_key, Key):
             return self.owner_key.key_public
@@ -63,8 +63,8 @@ class Account(Omittable):
     def active(self):
         '''Get the public active key
 
-        :return: public active key
-        :rtype: str
+        Returns:
+            str: public active key
         '''        
         if isinstance(self.active_key, Key):
             return self.active_key.key_public
@@ -75,11 +75,13 @@ class Account(Omittable):
 class Wallet(Omittable):
     '''Having the *name* and *password* attributes.
 
-    :param str name: The wallet name.
-    :param str password: The password to the wallet.
+    Args:
+        name (str): The wallet name.
+        password (str): The password to the wallet.
 
-    :var str name: The wallet name.
-    :var str password: The password to the wallet.    
+    Attributes:
+        name (str): The wallet name.
+        password (str): The password to the wallet.    
     '''    
     def __init__(self, name, password=None):
         self.name = name
@@ -90,10 +92,11 @@ class Wallet(Omittable):
 def wallet_arg(wallet):
     '''Accepts any *wallet* argument.
 
-    :param wallet: *wallet* argument.
-    :type wallet: str or interface.Wallet
-    :return: name of the *wallet* argument.
-    :rtype: str
+    Args:
+        wallet (str or interface.Wallet): *wallet* argument.
+
+    Returns:
+        str: name of the *wallet* argument.
     '''
     if isinstance(wallet, Wallet):
         return wallet.name
@@ -104,14 +107,15 @@ def wallet_arg(wallet):
 def key_arg(key, is_owner_key=True, is_private_key=True):
     '''Accepts any key argument.
 
-    :param key: The *key* argument.
-    :type key: str or .Key or .interface.Account
-    :param bool is_owner_key: Solves ambivalence of the *key* parameter if
+    Args:
+        key (str or .Key or .interface.Account): The *key* argument. 
+        is_owner_key (bool): Solves ambivalence of the *key* parameter if
             the key argument is an .interface.Account object.
-    :param bool is_private_key: Solves ambivalence of the *key* parameter if
+        is_private_key (bool): Solves ambivalence of the *key* parameter if
             the the key argument is a .Key or .interface.Account object
-    :return: The value of the *key* argument.
-    :rtype: str
+
+    Returns:
+        str: The value of the *key* argument.
     '''
     if isinstance(key, Account):
         if is_owner_key:
@@ -142,10 +146,11 @@ def key_arg(key, is_owner_key=True, is_private_key=True):
 def account_arg(account):
     '''Accepts any account argument.
 
-    :param account: *account* argument.
-    :type account: str or .interface.Account
-    :return: The EOSIO name of the *account* argument.
-    :rtype: str 
+    Args:
+        account (str or .interface.Account): *account* argument.
+
+    Returns:
+        str: The EOSIO name of the *account* argument.
     '''
     if isinstance(account, str):
         return account
@@ -156,24 +161,24 @@ def account_arg(account):
 def permission_arg(permission):
     '''Accepts any permission argument.
 
-    :param permission: The *permission* argument.
-    :type permission: .interface.Account or str or (str, str) or \
-        (.interface.Account, str) or any list of the previous items.
+    Args:
+    :param permission (.interface.Account or str or (str, str) or \
+        (.interface.Account, str) or any list of the previous items): The *permission* argument.
         
     Exemplary values of the argument *permission*::
 
         eosio # eosio is an interface.Account object
 
-        "eosio@owner"
+        perm_str = "eosio@owner"
 
-        ("eosio", "owner")
+        perm_tuple = ("eosio", "owner")
 
-        (eosio, interface.Permission.ACTIVE)
+        perm_tuple = (eosio, interface.Permission.ACTIVE)
         
-        ["eosio@owner", (eosio, .Permission.ACTIVE)]
+        perm_list = ["eosio@owner", (eosio, .Permission.ACTIVE)]
 
-    :return: A list of tuples.
-    :rtype: [(str, str)]
+    Returns:
+        [(str, str)]: A list of tuples (<account name>, <permission name>).
     '''
     if isinstance(permission, str):
         return [permission]

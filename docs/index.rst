@@ -29,10 +29,10 @@ Use Cases
 .. toctree::
     :maxdepth: 1
 
-    cases/wallet
     cases/symbolic_names
     cases/account
     cases/master_account
+    cases/wallet
 
 Patterns
 --------

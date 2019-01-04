@@ -263,7 +263,8 @@ class Wallet(cleos.WalletCreate):
         Args:
             keys ([str]): List of public keys to be verified.
 
-        Returns: Whether all listed keys are in the wallet.
+        Returns: 
+            bool: Whether all listed keys are in the wallet.
         '''
         self.open_unlock()
         result = cleos.WalletKeys(is_verbose=False)
@@ -359,7 +360,7 @@ class Wallet(cleos.WalletCreate):
                 new account object.
 
         Returns:
-            Whether the given name is available is a name of an account
+            bool: Whether the given name is available is a name of an account
                 object.
         '''
         while True:
