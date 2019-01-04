@@ -34,6 +34,9 @@ Use Cases
     cases/master_account
     cases/wallet
 
+Release Notes
+-------------
+
 Patterns
 --------
 
@@ -99,7 +102,7 @@ Release Notes
 .. toctree::
     :maxdepth: 1
 
-    ReleaseNotesVersion3.0
+    ReleaseNotes
 
 Roadmap
 =======
