@@ -2,54 +2,55 @@
 
 ## Scenario
 
-There are two persons, `Alice` and `Carol`, both having their accounts in a `Bank`. The `Bank` provides the service of `LC` (Letter of Credit). Hence, parties can enter a deal that involves a temporal deposition of resources in the `Bank`, released when the deal is concluded in an agreed way.
+There are two parities, `Alice` and `Carol`, both having their accounts with an `Arbitrator`. The `Arbitrator` provides the service of `Escrow`. Hence, the parties can enter a deal that involves a temporary deposit of payment with the `Arbitrator`, which will be released when the deal is concluded and no party objects to it or if the `Arbitrator` issues a ruling.
 
-## Setup EOSFactory
+## Set up a local testnet
 
-### Definitions
+We start by some housekeeping definitions aimed at initializing a local testnet and getting reference to the master account called `eosio`:
 
 ```python
-import time
-import os
-import sys
+import time, os, sys
 import eosfactory.core.config as config
 from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
-reset() # clean local node started
+reset() # reset the local testnet
 create_master_account("eosio")
 ```
 
-### Arrange the Bank
+## Set up the contracts
 
-The `Bank` is made of two smart contracts. One belongs to the set of the eosio system contracts: it is `eosio.token`. It implements transfers of resources.
+There are two contracts involved.
 
-The other contract is the issue of the current project: it implements the idea of the Letter of Credit.
-
-Both contracts are, in fact, eosio accounts, `Bank` and `LC`, accordingly. Each of them is equipped with relevant actions. The `LC` account is to be related to the `Bank` account with a system permission named `eosio.code`.
+The `Arbitrator` account holds a contract facilitating transfers of payments:
 
 ```python
 # eosio.token name is hard-codded in the source of the contract:
-create_account("Bank", eosio, "eosio.token")
-contract_bank = Contract(
-    Bank, os.path.join(config.eosf_dir(), "contracts/02_eosio_token"))
-contract_bank.build(force=False)
-contract_bank.deploy()
-
-create_account("LC", eosio)
-contract_lc = Contract(LC, CONTRACT_WORKSPACE)
-contract_lc.build(force=False)
-contract_lc.deploy()
+create_account("Arbitrator", eosio, "eosio.token")
+contract_arbitrator = Contract(
+    Arbitrator, os.path.join(config.eosf_dir(), "contracts/02_eosio_token"))
+contract_arbitrator.build(force=False)
+contract_arbitrator.deploy()
 ```
 
-The `LC` Letter of Credit eosio smart contract requires the `eosio.code` permission to be able to execute actions of the `eosio.token` contract:
+While the `Escrow` account holds a contract implementing the actual arbitration:
+```python
+create_account("Escrow", eosio)
+contract_escrow = Contract(Escrow, CONTRACT_WORKSPACE)
+contract_escrow.build(force=False)
+contract_escrow.deploy()
+```
+
+## Set up the permissions
+
+The `Escrow` account needs to be related to the `Arbitrator` account with a system permission named `eosio.code`. This allows it to execute actions of the `eosio.token` contract:
 
 ```python
 COMMENT('''
-LC.set_account_permission
+Escrow.set_account_permission()
 ''')
-LC.set_account_permission(Permission.ACTIVE,
+Escrow.set_account_permission(Permission.ACTIVE,
     {
         "threshold": 1,
         "accounts": 
@@ -57,7 +58,7 @@ LC.set_account_permission(Permission.ACTIVE,
                 {
                     "permission": 
                         {
-                            "actor": LC,
+                            "actor": Escrow,
                             "permission": "eosio.code"
                         },
                     "weight":1
@@ -68,29 +69,30 @@ LC.set_account_permission(Permission.ACTIVE,
 )
 ```
 
-In the real world, the Bank is funded with its founder's money, here, in a local 
-testnet, it is funded at the expense of `eosio`:
+In the real world, the `Arbitrator` is funded with its creator's money. But in this simplified example , on a local it is funded at the expense of the `eosio` account:
 
 ```python
-Bank.push_action(
+Arbitrator.push_action(
     "create", 
     {
         "issuer": eosio, 
         "maximum_supply": "1000000000.0000 SYS"
-    }, [eosio, Bank])
+    }, [eosio, Arbitrator])
 ```
 
-### Create actors: `Alice` and `Carol`
+## Create actors
+
+We create two actors`Alice` and `Carol`:
 
 ```python
 create_account("Alice", eosio)
 create_account("Carol", eosio)
 ```
 
-Again, what is impossible in the real world, but here is practical, for simplicity purposes: the `Bank` issues money to `Alice`:
+Again, what is impossible in the real world, but here is practical, for simplicity purposes the `Arbitrator` issues money to `Alice`:
 
 ```python
-Bank.push_action(
+Arbitrator.push_action(
     "issue", 
     {
         "to": Alice, 
@@ -99,59 +101,62 @@ Bank.push_action(
     }, eosio)
 ```
 
-We can inspect the Bank accounts. `Alice` has money, and `Carol` has not.
+We can inspect the `Arbitrator` accounts.
+
+`Alice` has some `SYS` tokens, while`Carol` has none:
 
 ```python
-Bank.table("accounts", Alice)
-Bank.table("accounts", Carol)
+Arbitrator.table("accounts", Alice)
+Arbitrator.table("accounts", Carol)
 ```
 
-## Let `Alice` instruct the `Bank` to issue a Letter of Credit on behalf of `Carol`
+## Initiate the escrow process
 
-`Alice` accepts an offer from Carol who sells foos, but she is not sure of the quality of the goods. The parties agreed that `Alice` pays if, and only if, she is satisfied.
+`Alice` has agreed to pay `Carol` for the purchased merchandise, but she is not sure of its quality. Thus, `Alice` instructs the `Arbitrator` to initiate an escrow process by opening a deposit:
 
-`Alice` opens a deposit in the Bank:
 ```python
 COMMENT('''
-LC.push_action("opendeposit"
+Escrow.push_action("opendeposit")
 ''')
-LC.push_action(
+Escrow.push_action(
     "opendeposit", {"buyer": Alice, "seller": Carol}, Alice)
 ```
 
-`Alice` transfers the deposit to a credit account of the `Bank`. Technically, the `LC` smart contract taps to the transfer action of the `Bank` contract (with `LC`'s `transfer` action), and makes bookkeeping.
+## Apply the escrow
+
+`Alice` transfers the payment amount to an account of the `Arbitrator`. Technically, the `Escrow` smart contract taps to the transfer action of the `Arbitrator` contract (with `Escrow`'s `transfer` action), and performs bookkeeping.
 
 ```python
 COMMENT('''
-Bank.push_action("transfer"
+Arbitrator.push_action("transfer")
 ''')
-Bank.push_action(
+Arbitrator.push_action(
     "transfer", 
     {
         "from": Alice, 
-        "to": LC, 
+        "to": Escrow, 
         "quantity": "10.0000 SYS", 
         "memo": str(Carol)
     }, Alice)
 ```
 
-Let us inspect the bank accounts: `Carol`'s account is still empty:
+Let us inspect the accounts. `Carol`'s account is still empty:
 
 ```python
 COMMENT('''
 After transfer:
 ''')
-Bank.table("accounts", Alice)
-Bank.table("accounts", Carol)
+Arbitrator.table("accounts", Alice)
+Arbitrator.table("accounts", Carol)
 ```
 
 `Carol` fulfils the deal and claims the payment:
 
 ```python
 COMMENT('''
-LC.push_action("claim"
+Escrow.push_action("claim")
 ''')
-LC.push_action(
+Escrow.push_action(
     "claim", 
     {"buyer": Alice, "seller": Carol}, 
     Carol)
@@ -163,39 +168,41 @@ LC.push_action(
 COMMENT('''
 After Carol's claim:
 ''')
-Bank.table("accounts", Alice)
-Bank.table("accounts", Carol)
+Arbitrator.table("accounts", Alice)
+Arbitrator.table("accounts", Carol)
 ```
 
-The `LC` contract takes time to verify the deal:
+The `Escrow` contract takes time to verify the deal:
 
 ```python
 COMMENT('''
-The ``LC`` contract need a time delay to arrange verify the deal:
+The ``Escrow`` contract need a time delay to arrange verify the deal:
 ''')
 time.sleep(5)
 ```
 
-`Carol` signs the `refund` order. But how the bank knows that `Alice` is satisfied?
+## Finalize the escrow
+
+`Carol` signs the `refund` order. If there is no objection raised by `Alice`, the `Arbitrator` assumes she is satisfied and allows the refund to go through:
 
 ```python
 COMMENT('''
-LC.push_action("refund"
+Escrow.push_action("refund")
 ''')
-LC.push_action(
+Escrow.push_action(
     "refund", {"buyer": Alice, "seller": Carol}, Carol)
 ```
 
-Now, after the `refund` action, `Carol` has her money:
+Now, after the `refund` action is complete, `Carol` has received the payment:
 ```python
 COMMENT('''
 After refund:
 ''')
-Bank.table("accounts", Alice)
-Bank.table("accounts", Carol)
+Arbitrator.table("accounts", Alice)
+Arbitrator.table("accounts", Carol)
 ```
 
-## Clean-up
+## Clean-up the local testnet
 
 ```python
 stop()
