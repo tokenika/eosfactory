@@ -8,62 +8,22 @@ import eosfactory.core.errors as errors
 import eosfactory.core.setup as setup
 import eosfactory.core.interface as interface
 import eosfactory.core.teos as teos
-if setup.node_api == "cleos":
-    import eosfactory.core.cleos as cleos
-elif setup.node_api == "eosjs":
-    import eosfactory.core.eosjs as cleos
-
+import eosfactory.core.cleos as cleos
 import eosfactory.core.manager as manager
-
-
-def wallet_json_read():
-    try:
-        with open(config.keosd_wallet_dir() + setup.password_map, "r") \
-                as input:    
-            return json.load(input)
-    except:
-        return {}
-
-def wallet_json_write(wallet_json):
-    with open(config.keosd_wallet_dir() + setup.password_map, "w+")  as out:
-        json.dump(wallet_json, out)
-
-def create_wallet(
-        name=None, password=None, verbosity=None, file=False,
-        globals=None):
-    if globals:
-        Wallet.globals = globals
-    else:
-        Wallet.globals = inspect.stack()[1][0].f_globals
-    Wallet.wallet = Wallet(name, password, verbosity, file)
-    Wallet.wallet.restore_accounts()
-
-def get_wallet():
-    return Wallet.wallet
 
 
 class Wallet(cleos.WalletCreate):
     ''' Create a new wallet locally and operate it.
 
-    - **parameters**::
+    Args:
 
-        name: The name of the new wallet, defaults to `default`.
-        is_verbose: If `0`, do not print unless on error, 
-            default is `1`.
-
-    - **attributes**::
-
-        name: The name of the wallet.
-        password: The password returned by wallet create.
-        error: Whether any error ocurred.
-        json: The json representation of the object.
-        is_verbose: Verbosity at the constraction time.  
+        name (str): The name of the new wallet, defaults to `default`.
+        password (str): The password to the wallet, if the wallet exists. 
     '''
-    wallet_keys = None
-    wallet = None
+    wallet_single = None
     globals = None
-    setup.node_api
-    def __init__(self, name=None, password="", verbosity=None, file=False):
+
+    def __init__(self, name=None, password="", file=False):
 
         cleos.set_local_nodeos_address_if_none()
         if name is None:
@@ -71,12 +31,13 @@ class Wallet(cleos.WalletCreate):
         else:
             name = setup.file_prefix() + name
 
-        if not self.wallet is None:
-            raise errors.Error('''
-            It can be only one ``Wallet`` object in the script; there is one
-            named ``{}``.
-            '''.format(wallet.name))
-            return
+        if not Wallet.wallet_single is None \
+                                    and not Wallet.wallet_single.name == name:
+                raise errors.Error('''
+                It can be only one ``Wallet`` object in the script; there is one
+                named ``{}``.
+                '''.format(Wallet.wallet_single.name))
+                return
 
         self.wallet_dir = config.keosd_wallet_dir()
 
@@ -93,28 +54,26 @@ class Wallet(cleos.WalletCreate):
                     The password is restored from the file:
                     {}
                     '''.format(
-                        os.path.join(self.wallet_dir, setup.password_map)),
-                        verbosity)
+                        os.path.join(self.wallet_dir, setup.password_map)))
 
         cleos.WalletCreate.__init__(self, name, password, is_verbose=False)
 
         if self.is_created: # new password
             logger.INFO('''
                 * Created wallet ``{}``.
-                '''.format(self.name),
-                verbosity
+                '''.format(self.name)
             )
-###############################################################################
-# TO DO: detect live node!!!!!!!!!!
+                ###############################################################
+                # TO DO: detect live node!!!!!!!!!!
             if manager.is_local_testnet() or file or True:           
-###############################################################################                        
+                ###############################################################                       
                 password_map = wallet_json_read()
                 password_map[name] = self.password
                 wallet_json_write(password_map)
                 logger.INFO('''
-                    * Password is saved to the file ``{}`` in the wallet directory.
-                    '''.format(setup.password_map), 
-                    verbosity
+                    * Password is saved to the file ``{}`` 
+                    in the wallet directory.
+                    '''.format(setup.password_map)
                 )
             else:
                 logger.OUT(self.out_msg)
@@ -164,14 +123,19 @@ class Wallet(cleos.WalletCreate):
         '''.format(self.name))
 
     def open_unlock(self):
-        ''' Open&Unlock automatics.
+        ''' Open & Unlock.
         '''
         cleos.WalletOpen(self.name, is_verbose=False)
-        cleos.WalletUnlock(
-            self.name, self.password, is_verbose=False)
+        cleos.WalletUnlock(self.name, self.password, is_verbose=False)
 
     def remove_key(self, account_or_key):
-        '''
+        '''Remove key from wallet.
+
+        Args:
+            account_or_key (str or .interface.Key or .interface.Account):
+                A public key to remove. If *account_or_key* is an 
+                .interface.Account object, both owner and active keys are 
+                removed.
         '''
         self.open_unlock()
 
@@ -204,8 +168,7 @@ class Wallet(cleos.WalletCreate):
                 logger.TRACE('''
                     Removing key '{}' 
                     from the wallet '{}'
-                    '''.format(removed_keys[0], self.name), 
-                    verbosity
+                    '''.format(removed_keys[0], self.name)
                             )
         else:            
             logger.TRACE('''
@@ -226,10 +189,16 @@ class Wallet(cleos.WalletCreate):
         ''')
         return True
 
-
     def import_key(self, account_or_key):
-        ''' Imports private keys of an account into wallet.
-        Returns list of `cleos.WalletImport` objects
+        ''' Imports private keys into wallet.
+
+        Return list of `cleos.WalletImport` objects
+
+        Args:
+            account_or_key (str or .interface.Key or .interface.Account):
+                A private key to import. If *account_or_key* is an 
+                .interface.Account object, both owner and active keys are 
+                imported.
         '''
         self.open_unlock()
 
@@ -251,7 +220,8 @@ class Wallet(cleos.WalletCreate):
             imported_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
             logger.TRACE('''
-                * Importing keys of the account ``{}`` into the wallet ``{}``
+                * Importing keys of the account ``{}`` 
+                    into the wallet ``{}``
                 '''.format(account_name, self.name)
                 )
         else:           
@@ -288,6 +258,14 @@ class Wallet(cleos.WalletCreate):
         return True
 
     def keys_in_wallets(self, keys):
+        '''Check whether all listed keys are in the wallet.
+
+        Args:
+            keys ([str]): List of public keys to be verified.
+
+        Returns: 
+            bool: Whether all listed keys are in the wallet.
+        '''
         self.open_unlock()
         result = cleos.WalletKeys(is_verbose=False)
         for key in keys:
@@ -296,7 +274,8 @@ class Wallet(cleos.WalletCreate):
         return True
 
     def restore_accounts(self):
-        '''
+        '''Restore into the global namespace all the account objects 
+        represented in the wallet. 
         '''
         self.open_unlock()
         account_map = manager.account_map()
@@ -315,8 +294,7 @@ class Wallet(cleos.WalletCreate):
                         new_map[name] = object_name
 
                     from eosfactory.shell.account import create_account
-                    create_account(
-                        object_name, name, restore=True, verbosity=None)                        
+                    create_account(object_name, name, restore=True)                        
                 except errors.AccountDoesNotExistError:
                     pass
 
@@ -327,11 +305,17 @@ class Wallet(cleos.WalletCreate):
             ''')
 
     def delete_globals(self):
+        '''Delete from the global namespace all the account objects restored
+        with the function :func:`restore_accounts`.
+
+        '''
         account_map = manager.account_map()
         for name, object_name in account_map.items():
             del Wallet.globals[object_name]
 
     def stop(self):
+        '''Stop keosd, the EOSIO wallet manager.
+        '''
         cleos.WalletStop()
         
     def keys(self):
@@ -340,11 +324,11 @@ class Wallet(cleos.WalletCreate):
         '''
         self.open_unlock()
 
-        self.wallet_keys = cleos.WalletKeys(is_verbose=False)
+        wallet_keys = cleos.WalletKeys(is_verbose=False)
         logger.TRACE('''
             Keys in all open walets:
             {}
-            '''.format(self.wallet_keys.out_msg))
+            '''.format(wallet_keys.out_msg))
 
     def private_keys(self):
         ''' Lists public keys from all unlocked wallets.
@@ -363,6 +347,22 @@ class Wallet(cleos.WalletCreate):
         manager.edit_account_map(text_editor)
 
     def is_name_taken(self, account_object_name, account_name):
+        '''Check whether the given name is available is a name of an account
+        object.
+
+        If the name points to an existing account, propese an action that may
+        resolve the conflict.
+
+        Args:
+            account_object_name (str): The proposed name of a new account 
+                object.
+            account_name (str): The EOSIO name of the account mapped with the
+                new account object.
+
+        Returns:
+            bool: Whether the given name is available is a name of an account
+                object.
+        '''
         while True:
             account_map_json = manager.account_map(self)
             if account_map_json is None:
@@ -407,10 +407,13 @@ class Wallet(cleos.WalletCreate):
             else:
                 break
             
+    def map_account(self, account_object):
+        '''Save a new account object.
 
-    def map_account(self, account_object_name, account_object):
+        Args:
+            account_object (.shell.account.Account): The account to be saved.
         '''
-        '''
+        account_object_name = account_object.account_object_name
         if not self.is_name_taken(account_object_name, account_object.name):
             account_map_json = manager.account_map(self)
             if account_map_json is None:
@@ -432,3 +435,36 @@ class Wallet(cleos.WalletCreate):
                     self.wallet_dir + setup.account_map))
 
 
+def wallet_json_read():
+    try:
+        with open(config.keosd_wallet_dir() + setup.password_map, "r") \
+                as input:    
+            return json.load(input)
+    except:
+        return {}
+
+
+def wallet_json_write(wallet_json):
+    with open(config.keosd_wallet_dir() + setup.password_map, "w+")  as out:
+        json.dump(wallet_json, out)
+
+
+def create_wallet(
+        name=None, password=None, file=False,
+        globals=None):
+    '''Create a singleton :class:`.Wallet` object.
+
+    It is not usual to use this function. Instead, it is called automatically 
+    on the first use of either :func:`.shell.account.create_master_account`
+    or :func:`.shell.account.create_account` functions.
+    '''
+    if globals:
+        Wallet.globals = globals
+    else:
+        Wallet.globals = inspect.stack()[1][0].f_globals
+    Wallet.wallet_single = Wallet(name, password, file)
+    Wallet.wallet_single.restore_accounts()
+
+
+def get_wallet():
+    return Wallet.wallet_single

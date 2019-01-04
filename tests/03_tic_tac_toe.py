@@ -264,7 +264,6 @@ if __name__ == '__main__':
         "--cpu", default=0, help="extra CPU stake in EOS")
 
     args = parser.parse_args()
-
     testnet = get_testnet(args.alias, args.testnet, reset=args.reset)
     testnet.configure()
 

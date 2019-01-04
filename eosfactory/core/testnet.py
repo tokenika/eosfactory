@@ -4,9 +4,30 @@ import eosfactory.core.logger as logger
 
 
 class Testnet:
+    '''Testing *nodeos* node.
+
+    Args:
+        url (str): If set, the URL of a remote *nodeos*, otherwise 
+            a localhost URL.
+        account_name (str): If set, the name of the *account*, otherwise the 
+            node is considered local, and its name is *eosio*.
+        owner_key (str): If set, the public owner key of the *account*.
+        active_key (str): If set, the public active key of the *account*.
+        name (str): The name of the testnet. If  not set, the name is 
+            synthesized from the argument *url*.
+        reset (bool): If set and if local node, reset the node.
+
+    Attributes:
+        url (str): The URL of the *nodeos*.
+        account_name (str): The name of the *account*.
+        owner_key (str): The public owner key of the *account*.
+        active_key (str): The public active key of the *account*.
+        name (str): The name of the testnet
+    '''
     def __init__(
             self, url=None, 
-            account_name=None, owner_key=None, active_key=None, 
+            account_name=None, owner_key=None, active_key=None,
+            name=None,
             reset=False):
 
         if not url:
@@ -14,7 +35,7 @@ class Testnet:
                 manager.reset(verbosity=[logger.Verbosity.ERROR])
             else:
                 manager.resume(verbosity=[logger.Verbosity.ERROR])
-            import eosfactory.shell.account as account
+            import eosfactory.core.account as account
             eosio = account.Eosio("account_master")
             setup.is_local_address = True
             account_name = eosio.name
@@ -23,44 +44,77 @@ class Testnet:
 
         if not account_name or not owner_key or not active_key:
             logger.ERROR('''
-        If the ``url`` is set, the ``account_name`` and keys have to be set, as well.
+        If the *url* is set, the *account_name* and keys have to be set, as well.
             ''')
         self.url = url
         self.account_name = account_name
         self.owner_key = owner_key
         self.active_key = active_key
+        self.name = name
 
     def configure(self, prefix=None):
+        '''Set the testnet to be the listener to EOSFactory.
+        '''
         setup.set_nodeos_address(self.url, prefix)
 
     def verify_production(self):
+        '''Check whether the node is active.
+
+        Returns:
+            bool: Whether the node is active.
+        '''
         return manager.verify_testnet_production()
 
     def clear_cache(self):
+        '''Remove all the saved interaction with the testnet.
+
+        Remove wallets ascribed to the testnet, its account map and password 
+        map.
+        '''
         manager.clear_testnet_cache()
 
     def is_local(self):
+        '''Check whether EOSFactory is connected to the local testnet.
+
+        Returns: 
+            bool: Whether EOSFactory is connected to the local testnet.
+        '''        
         return manager.is_local_testnet()
 
 
-def get_testnet(alias, testnet=None, reset=False):
-    if not alias and not testnet:
+def get_testnet(name=None, testnet=None, reset=False):
+    '''Return a testnet.
+
+    Args:
+        name (str): If set, the testnet name, otherwise the local testnet
+            is returned.
+        testnet (tuple): The tuple (<url> <name> <owner key> <active key>)
+            representing a :class:`.Testnet` object, returned if the 
+            *name* argument is not set.
+        reset (bool): If both the *name* and *testnet* arguments are not 
+            set, determine whether the local node is to be reset.
+
+    Returns:
+        :class:`.Testnet`: a testnet
+    '''
+    if not name and not testnet:
         return Testnet(reset=reset)
 
-    if alias:
-        mapping = get_mapping()
-        if alias in mapping:
+    if name:
+        mapping = manager.read_map(TESTNET_FILE)
+        if name in mapping:
             return Testnet(
-                mapping[alias]["url"], mapping[alias]["account_name"],
-                mapping[alias]["owner_key"], mapping[alias]["active_key"])
-        elif alias == "JUNGLE":
+                mapping[name]["url"], mapping[name]["account_name"],
+                mapping[name]["owner_key"], mapping[name]["active_key"],
+                mapping[name]["name"])
+        elif name == "JUNGLE":
             return JUNGLE
-        elif alias == "KYLIN":
+        elif name == "KYLIN":
             return KYLIN
         else:
             logger.ERROR('''
-            Testnet ``{}`` is not defined in the testnet mapping.
-            '''.format(alias))
+            Testnet *{}* is not defined in the testnet mapping.
+            '''.format(name))
     elif testnet:
         return Testnet(testnet[0], testnet[1], testnet[2], testnet[3])
 
@@ -71,57 +125,89 @@ def get_testnet(alias, testnet=None, reset=False):
 
 TESTNET_FILE = "testnet.json"
 
-def get_mapping():
-    return manager.read_map(TESTNET_FILE)
 
-def save_mapping(mapping):
-    manager.save_map(mapping, TESTNET_FILE)
+def add_testnet_to_mapping(testnet, name=None):
+    '''Save the given :class:`.Testnet` object.
 
-def edit_mapping():
-    manager.edit_map(TESTNET_FILE)
+    Args:
+        testnet (.Testnet): The object to be saved.
+    '''
+    add_to_mapping(
+        testnet.url, testnet.account_name, 
+        testnet.owner_key, testnet.active_key, name)
+    
 
-def add_to_mapping(url, account_name, owner_key, active_key, alias=None):
-    mapping = get_mapping()
+def add_to_mapping(url, account_name, owner_key, active_key, name=None):
+    '''Save a :class:`.Testnet` object.
+
+    Args:
+        url (str): If set, the URL of a remote *nodeos*, otherwise 
+            a localhost URL.
+        account_name (str): If set, the account name, otherwise the node is
+            considered local, and the name is *eosio*.
+        owner_key (str): If set, the public owner key of the *account*.
+        active_key (str): If set, the public active key of the *account*.
+        name (str): If set, the name of the testnet.
+    '''
+    mapping = manager.read_map(TESTNET_FILE)
     testnet = {}
     testnet["url"] = url
     testnet["account_name"] = account_name
     testnet["owner_key"] = owner_key
     testnet["active_key"] = active_key
-    if not alias:
-        alias = setup.url_prefix(url)
-    mapping[alias] = testnet
-    save_mapping(mapping)
+    if not name:
+        name = setup.url_prefix(url)
+    testnet["name"] = name
+    mapping[name] = testnet
+    manager.save_map(mapping, TESTNET_FILE)
 
-def remove_from_mapping(testnet):
-    mapping = get_mapping()
-    if testnet in mapping:
-        del mapping[testnet]
-        save_mapping(mapping)
+
+def remove_from_mapping(name):
+    '''Remove from the record a testnet of the given name.
+
+    The name of a testnet is set with the argument *name* argument of the 
+    function :func:`.add_to_mapping`. If the argument is not set, the name is 
+    synthesized from the argument *url*.
+
+    Args:
+        name (str): The name of the testnet to be removed.
+    '''    
+    mapping = manager.read_map(TESTNET_FILE)
+    if name in mapping:
+        del mapping[name]
+        manager.save_map(mapping, TESTNET_FILE)
+
 
 def testnets():
-    mapping = get_mapping()
+    '''Print recorded :class:`.Testnet` objects.
+    '''
+    mapping = manager.read_map(TESTNET_FILE)
+
     if not mapping:
         logger.INFO('''
         Testnet mapping is empty.
         ''')
         return
-    for alias, testnet in mapping.items():
-        print("%25s: %13s @ %s" % (alias, testnet["account_name"], testnet["url"]))
+    for name, testnet in mapping.items():       
+        print("%25s: %13s @ %s" % (name, testnet["account_name"], testnet["url"]))
 
 
+#: Testnet http;//145.239.133.201;8888
 JUNGLE = Testnet(
     "http://145.239.133.201:8888",
     "dgxo1uyhoytn",
     "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
-    "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA"
+    "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA",
+    "JUNGLE"
 )
 
+
+#: Testnet http;//145.239.133.201;9999
 KYLIN = Testnet(
     "http://145.239.133.201:9999",
     "xlg3pao3idlq",
     "5JBbCwe3t6j63yerYmguRVWg7ZVDY3nKXzGYMwkR9y5w4appKhk",
-    "5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK"
+    "5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK",
+    "KYLIN"
 )
 
-# /mnt/d/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://145.239.133.201:8888 get info
-# /mnt/d/Workspaces/EOS/eos/build/programs/cleos/cleos --url http://145.239.133.201:9999 get info

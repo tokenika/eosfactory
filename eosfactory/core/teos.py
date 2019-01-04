@@ -9,6 +9,7 @@ import pathlib
 import shutil
 import pprint
 import json
+import shutil
 
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
@@ -24,6 +25,10 @@ TEMPLATE_HOME = "${HOME}"
 TEMPLATE_ROOT = "${ROOT}"
 C_CPP_PROP = "${c_cpp_prop}"
 TASK_JSON = "${tasks}"
+CONFIGURATIONS = "configurations"
+INCLUDE_PATH = "includePath"
+BROWSE = "browse"
+WORKSPACE_FOLDER = "${workspaceFolder}"
 
 
 def replace_templates(string): 
@@ -83,9 +88,9 @@ def ABI(
         return
 
     code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
+    target_dir = get_target_dir(contract_source_files[0])
     target_path = os.path.normpath(
-                        os.path.join(get_target_dir(
-                            contract_source_files[0]), code_name  + ".abi"))
+                        os.path.join(target_dir, code_name  + ".abi"))
 
     for file in contract_source_files[1]:
         if os.path.splitext(file)[1].lower() == ".abi":
@@ -99,34 +104,40 @@ def ABI(
             return
 
     command_line = [
-        config.eosio_abigen(),
+        config.eosio_cpp(),
         "-contract=" + code_name,
         "-R=" + get_resources_dir(contract_source_files[0]),
-        "-output=" + target_path]
+        "-abigen",
+        "-abigen_output=" + target_path]
 
     c_cpp_properties = get_c_cpp_properties(
                                     contract_dir, c_cpp_properties_path)
 
-    for entry in c_cpp_properties["configurations"][0]["includePath"]:
-        if entry == "${workspaceFolder}":
-            command_line.append("-extra-arg=-I=" + contract_dir)
+    for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
+        if WORKSPACE_FOLDER in entry:
+            entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
+            command_line.append(
+                "-I" + utils.wslMapWindowsLinux(entry))
         else:
-            command_line.append("-extra-arg=-I=" + strip_wsl_root(entry))
+            command_line.append(
+                "-I" + utils.wslMapWindowsLinux(
+                    strip_wsl_root(entry)))
 
     for file in source_files:
         command_line.append(file)
 
     try:
-        process(command_line)
+        process(command_line, target_dir)
     except Exception as e:
         raise errors.Error(str(e))
 
     logger.TRACE('''
-    ABI file writen to file: {}
+    ABI file writen to file: 
+        {}
     '''.format(target_path), verbosity)
 
 
-def WAST(
+def WASM(
         contract_dir_hint, c_cpp_properties_path=None,
         compile_only=False, verbosity=None):
     '''Produce WASM code.
@@ -134,7 +145,7 @@ def WAST(
     contract_dir = config.contract_dir(contract_dir_hint)
     # source_files[0] is directory, source_files[1] is contents:
     contract_source_files = config.contract_source_files(contract_dir)
-    
+
     source_files = []
     source_ext = [".c", ".cpp",".cxx", ".c++"]
     for file in contract_source_files[1]:
@@ -144,30 +155,33 @@ def WAST(
     if not source_files:
         raise errors.Error('''
         "The source is empty. The assumed contract dir is   
-        {}
+            {}
         '''.format(contract_dir))
         return
 
     code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
+    target_dir = get_target_dir(contract_source_files[0])
     target_path = os.path.normpath(
-                        os.path.join(get_target_dir(
-                            contract_source_files[0]), code_name  + ".wasm"))
+                        os.path.join(target_dir, code_name  + ".wasm"))
 
     c_cpp_properties = get_c_cpp_properties(
                                         contract_dir, c_cpp_properties_path)
 
     command_line = [config.eosio_cpp()]
 
-    for entry in c_cpp_properties["configurations"][0]["includePath"]:
-        if entry == "${workspaceFolder}":
-            command_line.append("-I=" + contract_dir)
+    for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
+        if WORKSPACE_FOLDER in entry:
+            entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
+            command_line.append("-I=" + utils.wslMapWindowsLinux(entry))
         else:
-            command_line.append("-I=" + strip_wsl_root(entry))
+            command_line.append(
+                "-I=" + utils.wslMapWindowsLinux(strip_wsl_root(entry)))
 
-    for entry in c_cpp_properties["configurations"][0]["libs"]:
-        command_line.append("-l=" + strip_wsl_root(entry))
+    for entry in c_cpp_properties[CONFIGURATIONS][0]["libs"]:
+        command_line.append(
+            "-l=" + utils.wslMapWindowsLinux(strip_wsl_root(entry)))
 
-    for entry in c_cpp_properties["configurations"][0]["compilerOptions"]:
+    for entry in c_cpp_properties[CONFIGURATIONS][0]["compilerOptions"]:
         command_line.append(entry)
     
     for file in source_files:
@@ -176,23 +190,29 @@ def WAST(
     if setup.is_print_command_line:
         print("######## \n{}:".format(" ".join(command_line)))
 
-    if not compile_only:
-        command_line.append("-o=" + target_path)
+
+    if compile_only:
+        command_line.append("-c=")
+
+    command_line.append("-o=" + target_path)
 
     try:
-        process(command_line)
+        process(command_line, target_dir)
     except Exception as e:                       
         raise errors.Error(str(e))
 
     if not compile_only:
         logger.TRACE('''
-            WASM file writen to file: {}
+            WASM file writen to file: 
+                {}
             '''.format(os.path.normpath(target_path)), verbosity)
 
 
 def project_from_template(
         project_name, template=None, workspace_dir=None,
-        c_cpp_prop_path=None, 
+        c_cpp_prop_path=None,
+        include=None,
+        libs=None, 
         remove_existing=False, 
         open_vscode=False, throw_exists=False, 
         verbosity=None):
@@ -211,6 +231,7 @@ def project_from_template(
     '''
     project_name = utils.wslMapWindowsLinux(project_name.strip())
     template = template.strip()
+
     template_dir = utils.wslMapWindowsLinux(template)
     if not os.path.isdir(template_dir):
         template_dir = os.path.join(
@@ -219,32 +240,47 @@ def project_from_template(
         raise errors.Error('''
         TemplateCreate '{}' does not exist.
         '''.format(template_dir)) 
-       
-    if not workspace_dir \
-                            or not os.path.isabs(workspace_dir) \
-                            or not os.path.exists(workspace_dir):
-        workspace_dir = config.contract_workspace()
-    workspace_dir = workspace_dir.strip()
 
     if c_cpp_prop_path:
         c_cpp_prop_path = utils.wslMapWindowsLinux(c_cpp_prop_path)
         if os.path.exists(c_cpp_prop_path):
             try:
                 with open(c_cpp_prop_path, "r") as input:
-                    c_cpp_properties = json.loads(input.read())
+                    c_cpp_properties = input.read()
             except Exception:
                 c_cpp_properties = vscode.c_cpp_properties
     else:
         c_cpp_properties = vscode.c_cpp_properties
 
-    c_cpp_properties = replace_templates(vscode.c_cpp_properties)
+    c_cpp_properties = replace_templates(c_cpp_properties)
+
+    if include:
+        c_cpp_properties_json = json.loads(c_cpp_properties)
+        c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].extend(
+                                                        include.split(", "))
+        c_cpp_properties_json[CONFIGURATIONS][0][BROWSE]["path"].extend(
+                                                        include.split(", "))
+        c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
+
+    if libs:
+        c_cpp_properties_json = json.loads(c_cpp_properties)
+        c_cpp_properties_json[CONFIGURATIONS][0]["libs"].extend(
+                                                        libs.split(", "))
+        c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
+
 
     split = os.path.split(project_name)
     if os.path.isdir(split[0]):
         project_dir = project_name
         project_name = split[1]
     else:
+        if not workspace_dir \
+                                or not os.path.isabs(workspace_dir) \
+                                or not os.path.exists(workspace_dir):
+            workspace_dir = config.contract_workspace()
+        workspace_dir = workspace_dir.strip()        
         project_dir = os.path.join(workspace_dir, project_name)
+
     if os.path.isdir(project_dir):
         if os.listdir(project_dir):
             if remove_existing:
@@ -309,7 +345,8 @@ def project_from_template(
     copy_dir_contents(project_dir, template_dir, "", project_name)
 
     logger.TRACE('''
-    * Contract project '{}' created from template '{}'
+    * Contract project '{}' created from template 
+        '{}'
     '''.format(project_name, template_dir), verbosity)    
 
     if open_vscode:
@@ -325,7 +362,9 @@ def project_from_template(
         os.system(command_line)
 
     logger.INFO('''
-    ######### Created contract project ``{}``, originated from template ``{}``.
+    ######### Created contract project ``{}``, 
+        originated from template 
+        ``{}``.
     '''.format(project_name, template_dir), verbosity)
 
     return project_dir
@@ -350,7 +389,7 @@ def get_pid(name=None):
     []
     """    
     if not name:
-        name = config.node_exe_name()
+        name = os.path.splitext(os.path.basename(config.node_exe()))[0]
 
     child = subprocess.Popen(
         ['pgrep', '-f', name], stdout=subprocess.PIPE, shell=False)
@@ -373,33 +412,41 @@ def is_windows_ubuntu():
     return resp.find("Microsoft") != -1
 
 
-def process(command_line, throw_error=True):
+def process(command_line, target_dir):
+
+    cwd = os.path.join(target_dir, "cwd")
+    os.mkdir(cwd)
+
     process = subprocess.run(
         command_line,
+        cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE) 
     
-    out_msg = process.stdout.decode("utf-8")
-    out_err = process.stderr.decode("utf-8")
+    out_msg = process.stdout.decode("ISO-8859-1")
+    out_err = process.stderr.decode("ISO-8859-1")
     returncode = process.returncode
-    if returncode and throw_error:
+    if returncode:
         raise errors.Error(out_err)
 
+    shutil.rmtree(cwd)
     return returncode
 
 
 def get_target_dir(source_dir):
     
-    dir = os.path.join(source_dir, "..", "build")
+    dir = os.path.join(source_dir, "build")
     if os.path.exists(dir):
         return dir
 
-    dir = os.path.join(source_dir, "build")
-    if not os.path.exists(dir):
-        try:
-            os.mkdir(dir)
-        except Exception as e:
-            raise errors.Error(str(e))
+    dir = os.path.join(source_dir, "..", "build")
+    if os.path.exists(dir):
+        return dir
+        
+    try:
+        os.mkdir(dir)
+    except Exception as e:
+        raise errors.Error(str(e))
 
     return dir
 
@@ -519,7 +566,7 @@ Error message is
 
 
 def node_probe(verbosity=None):
-    count = 15
+    count = 10
     num = 5
     block_num = None
     
@@ -527,13 +574,8 @@ def node_probe(verbosity=None):
         time.sleep(1)
         
         try:
-            if setup.node_api == "cleos":
-                import eosfactory.core.cleos as cleos
-            elif setup.node_api == "eosjs":
-                import eosfactory.core.eosjs as cleos
-
-            get_info = cleos.GetInfo(is_verbose=0)
-            head_block_num = int(get_info.json["head_block_num"])
+            import eosfactory.core.cleos_get as cleos_get
+            head_block_num = cleos_get.GetInfo(is_verbose=0).head_block
         except:
             head_block_num = 0
         finally:
@@ -563,7 +605,7 @@ def is_local_node_process_running(name=None):
     response = subprocess.run(
         'ps aux |  grep -v grep | grep ' + name, shell=True, 
         stdout=subprocess.PIPE)
-    out = response.stdout.decode("utf-8")
+    out = response.stdout.decode("ISO-8859-1")
     return name in out
         
 

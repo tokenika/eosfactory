@@ -1,8 +1,4 @@
 #!/usr/bin/python3
-
-'''
-'''
-
 import sys
 import os
 import json
@@ -14,10 +10,8 @@ import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
-if setup.node_api == "cleos":
-    import eosfactory.core.cleos as cleos
-elif setup.node_api == "eosjs":
-    import eosfactory.core.eosjs as cleos
+import eosfactory.core.cleos as cleos
+import eosfactory.core.cleos_get as cleos_get
 
 
 def reboot():
@@ -172,30 +166,27 @@ def status():
     '''
     Display EOS node status.
     '''
-    get_info = cleos.GetInfo(is_verbose=0)
 
     logger.INFO('''
     ######### Node ``{}``, head block number ``{}``.
     '''.format(
         setup.nodeos_address(),
-        get_info.json["head_block_num"]))
+        cleos_get.GetInfo(is_verbose=0).head_block))
 
 
 def info():
     '''
     Display EOS node info.
     '''
-    get_info = cleos.GetInfo(is_verbose=False)
-    logger.INFO(str(get_info))
+    logger.INFO(str(cleos_get.GetInfo(is_verbose=False)))
 
 
 def is_head_block_num():
     '''
     Check if testnet is running.
     '''
-    get_info = cleos.GetInfo(is_verbose=False)
     try: # if running, json is produced
-        head_block_num = int(get_info.json["head_block_num"])
+        head_block_num = cleos_get.GetInfo(is_verbose=False).head_block
     except:
         head_block_num = -1
     return head_block_num > 0

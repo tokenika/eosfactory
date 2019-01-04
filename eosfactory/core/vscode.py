@@ -1,3 +1,11 @@
+'''
+.. module:: eosfactory.core.vscode
+    :platform: Unix, Darwin
+    :synopsis: Default configuration items of a contract project.
+
+.. moduleauthor:: Tokenika
+'''
+
 import json
 
 INCLUDES = [
@@ -16,7 +24,7 @@ TASKS = '''
     "version": "2.0.0",   
     "tasks": [
         {
-            "taskName": "Compile",
+            "label": "Compile",
             "type": "shell",
             "windows": {
                 "options": {
@@ -27,13 +35,13 @@ TASKS = '''
                         ]
                     }
                 },
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}' --compile"
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}' --compile"
             },
             "osx": {
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}' --compile"
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}' --compile"
             },
             "linux": {
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}' --compile"
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}' --compile"
             },
             "presentation": {
                 "reveal": "always",
@@ -43,7 +51,7 @@ TASKS = '''
             ]
         },
         {
-            "taskName": "Build",
+            "label": "Build",
             "type": "shell",
             "windows": {
                 "options": {
@@ -54,13 +62,13 @@ TASKS = '''
                         ]
                     }
                 },
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}'"        
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}'"        
             },
             "osx": {
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}'"
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}'"
             },
             "linux": {
-                "command": "mkdir -p build; python3 -m eosfactory.core.build '${workspaceFolder}'"
+                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}'"
             },
             "problemMatcher": [],
             "presentation": {
@@ -75,7 +83,7 @@ TASKS = '''
             ]
         },
         {
-            "taskName": "Test",
+            "label": "Test",
             "type": "shell",
             "windows": {
                 "options": {
@@ -102,7 +110,7 @@ TASKS = '''
             ]
         },
         {
-            "taskName": "Unittest",
+            "label": "Unittest",
             "type": "shell",
             "windows": {
                 "options": {
@@ -129,7 +137,7 @@ TASKS = '''
             ]
         },
         {
-            "taskName": "EOSIO API",
+            "label": "EOSIO API",
             "type": "shell",
             "windows": {
                 "options": {
