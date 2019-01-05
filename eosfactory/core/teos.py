@@ -537,7 +537,7 @@ def on_nodeos_error(clear=False):
             logger.OUT(
             '''
             Just another instability incident of the ``nodeos`` executable. 
-            Restart the script.
+            Rerun the script.
             '''
             )
         else:
