@@ -3,7 +3,7 @@ from eosfactory.core.teos import project_from_template
 
 def create_project():
     '''
-    usage: python3 eosfactory.utils.create_project [-h] [--vsc]
+    usage: python3 -m eosfactory.utils.create_project [-h] [--vsc]
                             [--throw] [--ovr] [--silent]
                             name [template]
 
