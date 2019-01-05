@@ -10,6 +10,7 @@ import shutil
 import pprint
 import json
 import shutil
+import sys
 
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
@@ -505,7 +506,51 @@ def keosd_start():
                 break
 
 
-def node_start(clear=False, nodeos_stdout=None, verbosity=None):
+def on_nodeos_error(clear=False):
+
+    node_stop()
+    args_ = args(clear)
+    args_.insert(0, config.node_exe())
+    command_line = " ".join(args_)
+
+    logger.ERROR('''
+    The local ``nodeos`` failed to start twice in sequence. Perhaps, something is
+    wrong with configuration of the system. See the command line issued:
+
+    ''')
+    print("\n{}\n".format(command_line))
+    logger.INFO('''
+    Now, see the result of execution of the command line.
+    ''')
+    
+    def runInThread():
+        process = subprocess.run(
+            command_line, 
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True)
+
+        err_msg = process.stderr.decode("ISO-8859-1")
+        if "error" in err_msg and not "exit shutdown" in err_msg:
+            logger.ERROR(err_msg)
+        elif not err_msg or "exit shutdown" in err_msg:
+            logger.OUT(
+            '''
+            Just another instability incident of the ``nodeos`` executable. 
+            Restart the script.
+            '''
+            )
+        else:
+            print(err_msg)
+        
+    thread = threading.Thread(target=runInThread)
+    thread.start()
+    time.sleep(10)
+    node_stop()
+    exit()
+
+
+def node_start(clear=False, nodeos_stdout=None):
     args_ = args(clear)
 
     if setup.is_print_command_line:
@@ -565,7 +610,7 @@ Error message is
         thread.start()
 
 
-def node_probe(verbosity=None):
+def node_probe():
     count = 10
     num = 5
     block_num = None
@@ -588,7 +633,7 @@ def node_probe(verbosity=None):
             print()
             logger.INFO('''
             Local node is running. Block number is {}
-            '''.format(head_block_num), verbosity)
+            '''.format(head_block_num))
             break
 
         count = count - 1        
@@ -609,7 +654,7 @@ def is_local_node_process_running(name=None):
     return name in out
         
 
-def node_stop(verbosity=None):
+def node_stop():
     # You can see if the process is a zombie by using top or 
     # the following command:
     # ps aux | awk '$8=="Z" {print $2}'
@@ -633,10 +678,13 @@ Failed to kill {}. Pid is {}.
     else:         
         logger.INFO('''
         Local node is stopped {}.
-        '''.format(str(pids)), verbosity)        
+        '''.format(str(pids)))        
 
     
 def node_is_running():
     return not get_pid()
 
     return dir
+
+
+

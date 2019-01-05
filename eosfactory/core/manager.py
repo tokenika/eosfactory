@@ -23,7 +23,7 @@ def reboot():
     account.reboot()
 
 
-def clear_testnet_cache(verbosity=None):
+def clear_testnet_cache():
     ''' Remove wallet files associated with the current testnet.
     '''
 
@@ -118,48 +118,50 @@ def is_local_testnet():
     return setup.is_local_address
 
 
-def node_start(clear=False, nodeos_stdout=None, verbosity=None):
+def node_start(clear=False, nodeos_stdout=None):
     try:
-        teos.node_start(clear, nodeos_stdout, verbosity)
-        teos.node_probe(verbosity)
+        teos.node_start(clear, nodeos_stdout)
+        teos.node_probe()
     except:
-        teos.node_start(clear, nodeos_stdout, verbosity)
-        teos.node_probe(verbosity)
-    
+        try:
+            teos.node_start(clear, nodeos_stdout)
+            teos.node_probe()
+        except:
+            teos.on_nodeos_error(clear)
 
-def reset(nodeos_stdout=None, verbosity=None):
+
+def reset(nodeos_stdout=None):
     ''' Start clean the EOSIO local node.
     '''
     if not cleos.set_local_nodeos_address_if_none():
         logger.INFO('''
         No local nodeos is set: {}
-        '''.format(setup.nodeos_address()), verbosity)
+        '''.format(setup.nodeos_address()))
 
     import eosfactory.shell.account as account
     teos.keosd_start()
     account.reboot()
     clear_testnet_cache()
-    node_start(
-        clear=True, nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    node_start(clear=True, nodeos_stdout=nodeos_stdout)
     
 
 
-def resume(nodeos_stdout=None, verbosity=None):
+def resume(nodeos_stdout=None):
     ''' Resume the EOSIO local node.
     ''' 
     if not cleos.set_local_nodeos_address_if_none():   
         logger.INFO('''
             Not local nodeos is set: {}
-        '''.format(setup.nodeos_address()), verbosity)
+        '''.format(setup.nodeos_address()))
 
-    node_start(nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    node_start(nodeos_stdout=nodeos_stdout)
     
 
 
-def stop(verbosity=None):
+def stop():
     ''' Stops all running EOSIO nodes.
     '''
-    teos.node_stop(verbosity)
+    teos.node_stop()
 
 
 def status():
