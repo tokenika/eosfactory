@@ -779,7 +779,32 @@ def current_config(contract_dir=None):
 
     return map        
 
-if __name__ == '__main__':
+
+def config():
+    '''
+    usage: config.py [-h] [--json]
+
+    Show the configuration of EOSFactory.
+
+    Args:
+        --json: Print bare JSON only.
+        -h: Show help message and exit.
+    '''
+
+    parser = argparse.ArgumentParser(description='''
+    Show the configuration of EOSFactory.
+    ''')
+
+    parser.add_argument(
+        "--json", help="Bare JSON only.", action="store_true")
+
+    args = parser.parse_args()
+
+    if(args.json):
+        print(json.dumps(
+            current_config(), sort_keys=True, indent=4))
+        return
+
     print('''
 The current configuration of EOSFactory:
 {}
@@ -792,12 +817,12 @@ file located here:
             current_config(), sort_keys=True, indent=4), config_file())
     )
 
-    not_defined = not_defined()
-    if not_defined:
+    not_defined_ = not_defined()
+    if not_defined_:
         print('''
 There are undefined setting:
 {}
-    '''.format(json.dumps(not_defined, sort_keys=True, indent=4)))
+    '''.format(json.dumps(not_defined_, sort_keys=True, indent=4)))
 
     print('''
 The current contents of the configuration file is:
@@ -805,3 +830,12 @@ The current contents of the configuration file is:
 '''.format(
         json.dumps(config_map(), sort_keys=True, indent=4))
     )
+
+
+if __name__ == '__main__':
+    config()
+
+
+
+
+

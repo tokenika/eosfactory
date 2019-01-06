@@ -520,7 +520,7 @@ def on_nodeos_error(clear=False):
     ''')
     print("\n{}\n".format(command_line))
     logger.INFO('''
-    Now, see the result of execution of the command line.
+    Now, see the result of an execution of the command line:
     ''')
     
     def runInThread():
@@ -551,6 +551,16 @@ def on_nodeos_error(clear=False):
 
 
 def node_start(clear=False, nodeos_stdout=None):
+    '''Start the local EOSIO node.
+
+    Args:
+        clear (bool): If set, the blockchain is deleted and then re-created.
+        nodeos_stdout (str): If set, a file where *stdout* stream of
+            the local *nodeos* is send. Note that the file can be included to 
+            the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
+            If the file is set with the configuration, and in the same time 
+            it is set with this argument, the argument setting prevails. 
+    '''
     args_ = args(clear)
 
     if setup.is_print_command_line:

@@ -131,7 +131,50 @@ def node_start(clear=False, nodeos_stdout=None):
 
 
 def reset(nodeos_stdout=None):
-    ''' Start clean the EOSIO local node.
+    ''' Start clean the local EOSIO node.
+
+    The procedure addresses problems with instabilities of EOSIO *nodeos* 
+    executable: it happens that it blocks itself on clean restart. 
+
+    The issue is patched with one subsequent restart if the first attempt 
+    fails. However, it happens that both launches fail, rarely due to 
+    instability of *nodeos*, sometimes because of misconfiguration.
+
+    When both launch attempts fail, an exception routine passes. At first,
+    the command line is printed, for *example*::
+
+        ERROR:
+        The local ``nodeos`` failed to start twice in sequence. Perhaps, something is
+        wrong with configuration of the system. See the command line issued:
+
+        /usr/bin/nodeosx 
+        --http-server-address 127.0.0.1:8888 
+        --data-dir /mnt/c/Workspaces/EOS/eosfactory/localnode/ 
+        --config-dir /mnt/c/Workspaces/EOS/eosfactory/localnode/ 
+        --chain-state-db-size-mb 200 --contracts-console --verbose-http-errors --enable-stale-production --producer-name eosio 
+        --signature-provider EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=KEY:5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3 
+        --plugin eosio::producer_plugin 
+        --plugin eosio::chain_api_plugin 
+        --plugin eosio::http_plugin 
+        --plugin eosio::history_api_plugin 
+        --genesis-json /mnt/c/Workspaces/EOS/eosfactory/localnode/genesis.json
+        --delete-all-blocks
+
+    Next, the command line is executed, for *example*::
+
+        Now, see the result of an execution of the command line.
+        /bin/sh: 1: /usr/bin/nodeosx: not found
+
+    The exemplary case is easy, it explains itself. Generally, the command 
+    line given can be executed in a *bash* terminal separately, in order to 
+    understand a problem.
+
+    Args:
+        nodeos_stdout (str): If set, a file where *stdout* stream of
+            the local *nodeos* is send. Note that the file can be included to 
+            the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
+            If the file is set with the configuration, and in the same time 
+            it is set with this argument, the argument setting prevails. 
     '''
     if not cleos.set_local_nodeos_address_if_none():
         logger.INFO('''
@@ -147,7 +190,14 @@ def reset(nodeos_stdout=None):
 
 
 def resume(nodeos_stdout=None):
-    ''' Resume the EOSIO local node.
+    ''' Resume the local EOSIO node.
+
+    Args:
+        nodeos_stdout (str): If set, a file where *stdout* stream of
+            the local *nodeos* is send. Note that the file can be included to 
+            the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
+            If the file is set with the configuration, and in the same time 
+            it is set with this argument, the argument setting prevails. 
     ''' 
     if not cleos.set_local_nodeos_address_if_none():   
         logger.INFO('''
