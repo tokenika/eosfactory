@@ -13,11 +13,14 @@ def create_project():
     Args:
         name: Project name or directory.
         template: Template name or directory.
-        -h: Show help message and exit
+        --c_cpp_prop: c_cpp_properties.json file path.
+        --include: Comma-separated list of include folders.
+        --libs: Comma-separated list of libraries.
         --vsc: Open Visual Studio Code.
         --throw: Throw error if the project exists.
         --ovr: Overwrite any existing project.
         --silent: Do not print info.
+        -h: Show help message and exit        
     '''
     parser = argparse.ArgumentParser(description='''
     Given a workspace name and (optional) a template name,
@@ -28,6 +31,12 @@ def create_project():
     parser.add_argument(
         "template", nargs="?", help="Template name or directory.", 
         default="01_hello_world")
+    parser.add_argument(
+        "--c_cpp_prop", help="c_cpp_properties.json file path.", default="")
+    parser.add_argument(
+        "--include", help="Comma-separated list of include folders", default="")
+    parser.add_argument(
+        "--libs", help="Comma-separated list of libraries.", default="")    
     parser.add_argument(
         "--vsc", help="Open Visual Studio Code.", action="store_true")
     parser.add_argument(
@@ -40,7 +49,11 @@ def create_project():
     args = parser.parse_args()
 
     project_from_template(
-        args.name, template=args.template, 
+        project_name=args.name, 
+        template=args.template,
+        c_cpp_prop_path=args.c_cpp_prop,
+        include=args.include,
+        libs=args.libs,
         open_vscode=args.vsc,
         throw_exists=args.throw, remove_existing=args.ovr,
         verbosity=[] if args.silent else None

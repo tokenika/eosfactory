@@ -226,6 +226,8 @@ def project_from_template(
         template: The name of the template used.
         workspace_dir: If set, the folder for the work-space. Defaults to the 
             value returned by the config.contract_workspace() function.
+        include: If set, comma-separated list of include folders.
+        libs: If set, comma-separated list of libraries.
         remove_existing: If set, overwrite any existing project.
         visual_studio_code: If set, open the ``VSCode``, if available.
         verbosity: The logging configuration.
