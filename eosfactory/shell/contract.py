@@ -1,4 +1,5 @@
 import shutil
+import os
 
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
@@ -14,16 +15,20 @@ class ContractBuilder():
     '''Build or delete a contract project.
 
     Args:
-        contract_dir (str): A hint to the root directory of a contract project.
+        contract_dir (str): If set, a hint to the root directory of a contract 
+            project, otherwise the current working directory. 
         abi_file (str): If set, the path to the ABI file, absolute, 
             or relative to *contract_dir*.
         wasm_file (str): If set, the path to the WASM file, absolute, 
             or relative to *contract_dir*.    
     '''
     def __init__(
-            self, contract_dir,
+            self, contract_dir=None,
             abi_file=None,
             wasm_file=None):
+
+        if not contract_dir:
+            contract_dir = os.getcwd()
 
         self.contract_dir = config.contract_dir(contract_dir)
         
