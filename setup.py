@@ -9,7 +9,6 @@ setup(name='eosfactory',
       description='Python-based EOS smart-contract development & testing framework',
       long_description=readme(),
       classifiers=[
-        'Development Status :: 2.4',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Testing',
