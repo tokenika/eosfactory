@@ -321,7 +321,7 @@ def project_from_template(
                 os.mkdir(contract_path)
                 copy_dir_contents(
                             project_dir, template_dir, path, project_name)
-            elif os.path.isfile(template_path):
+            elif os.path.isfile(template_path) and os.path.splitext(template_path)[1] != '.pyc':
 
                 copy(template_path, contract_path, project_name)
 
