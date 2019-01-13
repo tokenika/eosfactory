@@ -94,18 +94,20 @@ RUN mkdir ~/eosio-wallet/
 
 RUN python -m pip install wheel twine
 
-# replace version X.Y.Z in setup.py for X.Y.Z_test_<epoch_time>
-RUN sed -i "s/version='\(.*\)'/version='\1.`date +%s%3N`'/g" setup.py
-RUN sed -n "s/\s*version='\(.*\)',/\1/p" setup.py > ./EOS_FACTORY_TEST_VERSION
+ARG travis_build_number
+ARG test_pypi_password
 
+# replace version X.Y in setup.py for X.Y.$TRAVIS_BUILD_NUMBER
+RUN sed -i "s/version='\(.*\)'/version='$travis_build_number'/g" setup.py
 RUN python setup.py sdist bdist_wheel
 
-ARG test_pypi_password
 RUN twine upload -u tokenika -p $test_pypi_password --repository-url https://test.pypi.org/legacy/ dist/*
 
 # https://superuser.com/a/1253889/59009
 RUN sed -i 's/mesg n || true/tty -s \&\& mesg n || true/g' /root/.profile
-RUN chmod +x ./tests/unittest.sh
+
+WORKDIR /opt/eosfactory/tests/
+RUN chmod +x ./unittest.sh
 
 # bash loads .profile by default
 ENTRYPOINT ["/bin/bash", "-l", "-c"]
