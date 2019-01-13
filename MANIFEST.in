@@ -1,6 +1,38 @@
 include README.md
 include eosfactory/localnode/genesis.json
 
+include eosfactory/contracts/01_hello_world/.vscode/*
+include eosfactory/contracts/01_hello_world/build/*
+include eosfactory/contracts/01_hello_world/resources/*
+include eosfactory/contracts/01_hello_world/src/*
+include eosfactory/contracts/01_hello_world/tests/*
+include eosfactory/contracts/01_hello_world/CMakeLists.txt
+
+include eosfactory/contracts/02_eosio_token/.vscode/*
+include eosfactory/contracts/02_eosio_token/build/*
+include eosfactory/contracts/02_eosio_token/resources/*
+include eosfactory/contracts/02_eosio_token/src/*
+include eosfactory/contracts/02_eosio_token/tests/*
+include eosfactory/contracts/02_eosio_token/CMakeLists.txt
+
+include eosfactory/contracts/03_tic_tac_toe/.vscode/*
+include eosfactory/contracts/03_tic_tac_toe/build/*
+include eosfactory/contracts/03_tic_tac_toe/resources/*
+include eosfactory/contracts/03_tic_tac_toe/src/*
+include eosfactory/contracts/03_tic_tac_toe/tests/*
+include eosfactory/contracts/03_tic_tac_toe/CMakeLists.txt
+
+include eosfactory/contracts/arbitration/.vscode/*
+include eosfactory/contracts/arbitration/include/eoside/*
+include eosfactory/contracts/arbitration/resources/*
+include eosfactory/contracts/arbitration/src/*
+include eosfactory/contracts/arbitration/tests/*
+include eosfactory/contracts/arbitration/utils/*
+include eosfactory/contracts/arbitration/CMakeLists.txt
+
+include eosfactory/contracts/multi_index_example/src/*
+include eosfactory/contracts/multi_index_example/README.md
+
 include eosfactory/templates/contracts/01_hello_world/.vscode/*
 include eosfactory/templates/contracts/01_hello_world/resources/*
 include eosfactory/templates/contracts/01_hello_world/src/*
