@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='eosfactory',
-      version='2.4',
+      version='0.1',
       description='Python-based EOS smart-contract development & testing framework',
       long_description=readme(),
       classifiers=[
