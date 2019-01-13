@@ -1,11 +1,11 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 def readme():
     with open('README.md') as f:
         return f.read()
 
 setup(name='eosfactory',
-      version='2.4',
+      version='0.0.19',
       description='Python-based EOS smart-contract development & testing framework',
       long_description=readme(),
       classifiers=[
@@ -22,7 +22,7 @@ setup(name='eosfactory',
       author='Tokenika',
       author_email='contact@tokenika.io',
       license='MIT',
-      packages=['eosfactory'],
+      packages=find_packages(),
       install_requires=[
           'termcolor',
       ],
