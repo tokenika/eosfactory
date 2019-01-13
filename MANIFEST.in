@@ -1,2 +1,20 @@
 include README.md
 include eosfactory/localnode/genesis.json
+
+include eosfactory/templates/contracts/01_hello_world/.vscode/*
+include eosfactory/templates/contracts/01_hello_world/resources/*
+include eosfactory/templates/contracts/01_hello_world/src/*
+include eosfactory/templates/contracts/01_hello_world/tests/*
+include eosfactory/templates/contracts/01_hello_world/CMakeLists.txt
+
+include eosfactory/templates/contracts/02_eosio_token/.vscode/*
+include eosfactory/templates/contracts/02_eosio_token/resources/*
+include eosfactory/templates/contracts/02_eosio_token/src/*
+include eosfactory/templates/contracts/02_eosio_token/tests/*
+include eosfactory/templates/contracts/02_eosio_token/CMakeLists.txt
+
+include eosfactory/templates/contracts/03_tic_tac_toe/.vscode/*
+include eosfactory/templates/contracts/03_tic_tac_toe/resources/*
+include eosfactory/templates/contracts/03_tic_tac_toe/src/*
+include eosfactory/templates/contracts/03_tic_tac_toe/tests/*
+include eosfactory/templates/contracts/03_tic_tac_toe/CMakeLists.txt
