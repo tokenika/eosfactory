@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='eosfactory',
-      version='0.0.19',
+      version='0.0.24',
       description='Python-based EOS smart-contract development & testing framework',
       long_description=readme(),
       classifiers=[
@@ -23,6 +23,7 @@ setup(name='eosfactory',
       author_email='contact@tokenika.io',
       license='MIT',
       packages=find_packages(),
+      include_package_data=True,
       install_requires=[
           'termcolor',
       ],

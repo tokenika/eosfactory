@@ -1,1 +1,2 @@
 include README.md
+include eosfactory/localnode/genesis.json
