@@ -34,9 +34,6 @@ Use Cases
     cases/master_account
     cases/wallet
 
-Release Notes
--------------
-
 Patterns
 --------
 
@@ -45,18 +42,12 @@ Patterns
 
     patterns/README
     patterns/BIOS_Boot_Sequence
-
-set
-```
-
-.. toctree::
-    :maxdepth: 1
-
     patterns/set/set_account_permission
     patterns/set/set_action_permission
 
 EOSFactory API
---------------------
+--------------
+
 .. toctree::
     :maxdepth: 1
 
@@ -91,13 +82,13 @@ EOSFactory API
    :caption: Contents:
 
 Support
-=======
+-------
 
 For issues not covered in the documentation there is a dedicated `EOS Factory Support <https://t.me/EOSFactorySupport>`_ channel on Telegram.
 
 
 Release Notes
-=============
+-------------
 
 .. toctree::
     :maxdepth: 1
@@ -105,7 +96,7 @@ Release Notes
     ReleaseNotes
 
 Roadmap
-=======
+-------
 
 .. toctree::
     :maxdepth: 1
@@ -114,7 +105,7 @@ Roadmap
     roadmap/LongTermEOSFactoryRoadmap
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
