@@ -1,3 +1,4 @@
+import eosfactory.core.config as config
 import eosfactory.core.setup as setup
 import eosfactory.core.manager as manager
 import eosfactory.core.logger as logger
@@ -7,49 +8,41 @@ class Testnet:
     '''Testing *nodeos* node.
 
     Args:
-        url (str): If set, the URL of a remote *nodeos*, otherwise 
-            a localhost URL.
         account_name (str): If set, the name of the *account*, otherwise the 
             node is considered local, and its name is *eosio*.
         owner_key (str): If set, the public owner key of the *account*.
         active_key (str): If set, the public active key of the *account*.
+        url (str): If set, the URL of a remote *nodeos*, otherwise 
+            a localhost URL.
         name (str): The name of the testnet. If  not set, the name is 
             synthesized from the argument *url*.
         reset (bool): If set and if local node, reset the node.
 
     Attributes:
-        url (str): The URL of the *nodeos*.
         account_name (str): The name of the *account*.
         owner_key (str): The public owner key of the *account*.
         active_key (str): The public active key of the *account*.
+        url (str): The URL of the *nodeos*.        
         name (str): The name of the testnet
     '''
     def __init__(
-            self, url=None, 
-            account_name=None, owner_key=None, active_key=None,
+            self,  
+            account_name, owner_key, active_key,
+            url=None,
             name=None,
             reset=False):
 
         if not url:
             if reset:
-                manager.reset(verbosity=[logger.Verbosity.ERROR])
+                manager.reset()
             else:
-                manager.resume(verbosity=[logger.Verbosity.ERROR])
-            import eosfactory.core.account as account
-            eosio = account.Eosio("account_master")
+                manager.resume()
             setup.is_local_address = True
-            account_name = eosio.name
-            owner_key = eosio.owner_key.key_private
-            active_key = eosio.active_key.key_private
 
-        if not account_name or not owner_key or not active_key:
-            logger.ERROR('''
-        If the *url* is set, the *account_name* and keys have to be set, as well.
-            ''')
-        self.url = url
         self.account_name = account_name
         self.owner_key = owner_key
         self.active_key = active_key
+        self.url = url
         self.name = name
 
     def configure(self, prefix=None):
@@ -98,14 +91,15 @@ def get_testnet(name=None, testnet=None, reset=False):
         :class:`.Testnet`: a testnet
     '''
     if not name and not testnet:
-        return Testnet(reset=reset)
+        return Testnet(None, None, None, reset=reset)
 
     if name:
         mapping = manager.read_map(TESTNET_FILE)
         if name in mapping:
             return Testnet(
-                mapping[name]["url"], mapping[name]["account_name"],
+                mapping[name]["account_name"],
                 mapping[name]["owner_key"], mapping[name]["active_key"],
+                mapping[name]["url"],
                 mapping[name]["name"])
         elif name == "JUNGLE":
             return JUNGLE
@@ -133,28 +127,28 @@ def add_testnet_to_mapping(testnet, name=None):
         testnet (.Testnet): The object to be saved.
     '''
     add_to_mapping(
-        testnet.url, testnet.account_name, 
-        testnet.owner_key, testnet.active_key, name)
+        testnet.account_name, 
+        testnet.owner_key, testnet.active_key, testnet.url, name)
     
 
-def add_to_mapping(url, account_name, owner_key, active_key, name=None):
+def add_to_mapping(account_name, owner_key, active_key, url, name=None):
     '''Save a :class:`.Testnet` object.
 
     Args:
-        url (str): If set, the URL of a remote *nodeos*, otherwise 
-            a localhost URL.
         account_name (str): If set, the account name, otherwise the node is
             considered local, and the name is *eosio*.
         owner_key (str): If set, the public owner key of the *account*.
         active_key (str): If set, the public active key of the *account*.
+        url (str): If set, the URL of a remote *nodeos*, otherwise 
+            a localhost URL.
         name (str): If set, the name of the testnet.
     '''
     mapping = manager.read_map(TESTNET_FILE)
     testnet = {}
-    testnet["url"] = url
     testnet["account_name"] = account_name
     testnet["owner_key"] = owner_key
     testnet["active_key"] = active_key
+    testnet["url"] = url
     if not name:
         name = setup.url_prefix(url)
     testnet["name"] = name
@@ -192,22 +186,31 @@ def testnets():
         print("%25s: %13s @ %s" % (name, testnet["account_name"], testnet["url"]))
 
 
+def LOCAL():
+    return Testnet(
+    "eosio",
+    config.eosio_key_private(),
+    config.eosio_key_public(),
+    None,
+    "LOCAL")
+
+
 #: Testnet http;//145.239.133.201;8888
 JUNGLE = Testnet(
-    "http://145.239.133.201:8888",
     "dgxo1uyhoytn",
     "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
     "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA",
+    "http://145.239.133.201:8888",
     "JUNGLE"
 )
 
 
 #: Testnet http;//145.239.133.201;9999
 KYLIN = Testnet(
-    "http://145.239.133.201:9999",
     "xlg3pao3idlq",
     "5JBbCwe3t6j63yerYmguRVWg7ZVDY3nKXzGYMwkR9y5w4appKhk",
     "5JYZU9xPS54NhnJrmgQWzVXxZCWpzsVUPS3SBZVZnsPUBFtV5YK",
+    "http://145.239.133.201:9999",
     "KYLIN"
 )
 

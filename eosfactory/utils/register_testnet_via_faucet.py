@@ -2,6 +2,8 @@ from urllib.request import Request, urlopen
 import json
 import argparse
 import time
+
+import eosfactory.core.logger as logger
 from eosfactory.eosf import *
 
 CREATE_ACCOUNT_URL = "create_account"
@@ -43,7 +45,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
             response = None
             attempt = attempt + 1
             if attempt == MAX_ATTEMPTS:
-                raise errors.Error('''
+                logger.ERROR('''
                     Request failed: {}
                     Error message is
                     {}
@@ -56,7 +58,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
 
 
     if response["account"] != account_name:
-        raise errors.Error('''
+        logger.ERROR('''
         Account names do not match: ``{}`` vs ``{}``
         '''.format(response["account"], account_name))
 
@@ -87,7 +89,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
             attempt = attempt + 1
             if attempt == MAX_ATTEMPTS:
                 if success == 0:
-                    raise errors.Error('''
+                    logger.ERROR('''
                         Request failed: {}
                         Error message is
                         {}

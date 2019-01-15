@@ -170,6 +170,7 @@ def error(msg, translate=True):
 
 def ERROR(msg, translate=True):
     print(error(msg, translate), file=sys.stderr)
+    sys.exit()
 
 
 def condition(message, translate=True):

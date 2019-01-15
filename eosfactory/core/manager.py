@@ -6,7 +6,6 @@ import re
 
 import eosfactory.core. config as config
 import eosfactory.core.logger as logger
-import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
@@ -41,7 +40,7 @@ def clear_testnet_cache():
             if file.startswith(setup.file_prefix()):
                 os.remove(os.path.join(dir, file))
     except Exception as e:
-        raise errors.Error('''
+        logger.ERROR('''
         Cannot remove testnet cache. The error message is:
         {}
         '''.format(str(e)))
@@ -233,28 +232,24 @@ def info():
     logger.INFO(str(cleos_get.GetInfo(is_verbose=False)))
 
 
-def is_head_block_num():
-    '''
-    Check if testnet is running.
-    '''
+def verify_testnet_production():
+    head_block_num = 0
     try: # if running, json is produced
         head_block_num = cleos_get.GetInfo(is_verbose=False).head_block
     except:
-        head_block_num = -1
-    return head_block_num > 0
+        pass
 
-def verify_testnet_production():
-    result = is_head_block_num()
     domain = "LOCAL" if is_local_testnet() else "REMOTE"
-    if not result:
-        raise errors.Error('''
+    if not head_block_num:
+        logger.ERROR('''
         {} testnet is not running or is not responding @ {}.
         '''.format(domain, setup.nodeos_address()))
     else:
         logger.INFO('''
         {} testnet is active @ {}.
         '''.format(domain, setup.nodeos_address()))
-    return result
+
+    return head_block_num
 
 
 def account_map(logger=None):
@@ -293,7 +288,7 @@ editor. Return ``None`` if the the offer is rejected.
                     edit_account_map()
                     continue
                 else:
-                    raise errors.Error('''
+                    logger.ERROR('''
         Use the function 'efman.edit_account_map(text_editor="nano")'
         or the corresponding method of any object of the 'eosfactory.wallet.Wallet` 
         class to edit the file.
@@ -343,7 +338,7 @@ editor. Return ``None`` if the the offer is rejected.
             if isinstance(e, FileNotFoundError):
                 return {}
             else:
-                raise errors.Error('''
+                logger.ERROR('''
             The json file 
             {}
             is misformed. The error message is:
@@ -358,7 +353,7 @@ editor. Return ``None`` if the the offer is rejected.
                     subprocess.run([text_editor, path])
                     continue
                 else:
-                    raise errors.Error('''
+                    logger.ERROR('''
                     Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
                     ''', translate=False)                    
                     return None

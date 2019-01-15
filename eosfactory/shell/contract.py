@@ -2,7 +2,6 @@ import shutil
 import os
 
 import eosfactory.core.logger as logger
-import eosfactory.core.errors as errors
 import eosfactory.core.config as config
 import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
@@ -33,7 +32,7 @@ class ContractBuilder():
         self.contract_dir = config.contract_dir(contract_dir)
         
         if not self.contract_dir:
-            raise errors.Error("""
+            logger.ERROR("""
                 Cannot determine the contract directory. The path is 
                 ``{}``.
                 """.format(contract_dir))
@@ -95,7 +94,7 @@ class Contract(ContractBuilder):
     :func:`.cleos.common_parameters`.
     '''
     def __init__(
-            self, account, contract_dir,
+            self, account, contract_dir=None,
             abi_file=None, wasm_file=None,
             permission=None,
             expiration_sec=None,
@@ -105,7 +104,7 @@ class Contract(ContractBuilder):
             delay_sec=0):
         
         if not isinstance(account, eosfactory.shell.account.Account):
-            raise errors.Error("""
+            logger.ERROR("""
             The account object has to be of the type 
             ``eosfactory.shell.account.Account``.
             """)
@@ -130,7 +129,7 @@ class Contract(ContractBuilder):
         '''Deploy the contract.
         '''
         if not self.is_built():
-            raise errors.Error('''
+            logger.ERROR('''
             Contract needs to be built before deployment.
             ''')
             return

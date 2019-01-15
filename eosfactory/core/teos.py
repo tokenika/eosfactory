@@ -44,7 +44,9 @@ def replace_templates(string):
     return string                                                      
 
 
-def get_c_cpp_properties(contract_dir, c_cpp_properties_path):
+def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
+    if not contract_dir:
+        contract_dir = os.getcwd()
     if not c_cpp_properties_path:
         c_cpp_properties_path = os.path.join(
                                 contract_dir, ".vscode/c_cpp_properties.json")
