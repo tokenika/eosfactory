@@ -30,7 +30,7 @@ CONFIGURATIONS = "configurations"
 INCLUDE_PATH = "includePath"
 BROWSE = "browse"
 WORKSPACE_FOLDER = "${workspaceFolder}"
-
+EOSIO_CPP_INCLUDE = "/usr/opt/eosio.cdt"
 
 def replace_templates(string): 
     home = os.environ["HOME"]
@@ -65,7 +65,7 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
         except Exception as e:
             raise errors.Error(str(e))
     else:
-        return json.loads(replace_templates(vscode.c_cpp_properties))
+        return json.loads(replace_templates(vscode.c_cpp_properties()))
 
 
 def ABI(
@@ -122,9 +122,10 @@ def ABI(
             command_line.append(
                 "-I" + utils.wslMapWindowsLinux(entry))
         else:
-            command_line.append(
-                "-I" + utils.wslMapWindowsLinux(
-                    strip_wsl_root(entry)))
+            if not EOSIO_CPP_INCLUDE in entry:
+                command_line.append(
+                    "-I" + utils.wslMapWindowsLinux(
+                        strip_wsl_root(entry)))
 
     for file in source_files:
         command_line.append(file)
@@ -177,8 +178,9 @@ def WASM(
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
             command_line.append("-I=" + utils.wslMapWindowsLinux(entry))
         else:
-            command_line.append(
-                "-I=" + utils.wslMapWindowsLinux(strip_wsl_root(entry)))
+            if not EOSIO_CPP_INCLUDE in entry:
+                command_line.append(
+                    "-I=" + utils.wslMapWindowsLinux(strip_wsl_root(entry)))
 
     for entry in c_cpp_properties[CONFIGURATIONS][0]["libs"]:
         command_line.append(
@@ -253,9 +255,9 @@ def project_from_template(
                 with open(c_cpp_prop_path, "r") as input:
                     c_cpp_properties = input.read()
             except Exception:
-                c_cpp_properties = vscode.c_cpp_properties
+                c_cpp_properties = vscode.c_cpp_properties()
     else:
-        c_cpp_properties = vscode.c_cpp_properties
+        c_cpp_properties = vscode.c_cpp_properties()
 
     c_cpp_properties = replace_templates(c_cpp_properties)
 
