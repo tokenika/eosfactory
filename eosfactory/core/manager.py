@@ -17,7 +17,7 @@ def reboot():
     logger.INFO('''
     ######### Reboot EOSFactory session.
     ''')
-    stop([])
+    stop()
     import eosfactory.shell.account as account
     account.reboot()
 
