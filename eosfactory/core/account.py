@@ -1,4 +1,5 @@
 import eosfactory.core.config as config
+import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
 import eosfactory.core.cleos_sys as cleos_sys
@@ -41,7 +42,7 @@ class GetAccount(cleos.GetAccount):
             self.name = name
             
         if active_key is None:
-            active_key = owner_key
+            active_key = owner_keyn
 
         self.exists = False
         self.in_wallet_on_stack = False
