@@ -6,7 +6,6 @@ import re
 
 import eosfactory.core. config as config
 import eosfactory.core.logger as logger
-import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
@@ -18,12 +17,12 @@ def reboot():
     logger.INFO('''
     ######### Reboot EOSFactory session.
     ''')
-    stop([])
+    stop()
     import eosfactory.shell.account as account
     account.reboot()
 
 
-def clear_testnet_cache(verbosity=None):
+def clear_testnet_cache():
     ''' Remove wallet files associated with the current testnet.
     '''
 
@@ -41,7 +40,7 @@ def clear_testnet_cache(verbosity=None):
             if file.startswith(setup.file_prefix()):
                 os.remove(os.path.join(dir, file))
     except Exception as e:
-        raise errors.Error('''
+        logger.ERROR('''
         Cannot remove testnet cache. The error message is:
         {}
         '''.format(str(e)))
@@ -118,48 +117,100 @@ def is_local_testnet():
     return setup.is_local_address
 
 
-def node_start(clear=False, nodeos_stdout=None, verbosity=None):
+def node_start(clear=False, nodeos_stdout=None):
     try:
-        teos.node_start(clear, nodeos_stdout, verbosity)
-        teos.node_probe(verbosity)
+        teos.node_start(clear, nodeos_stdout)
+        teos.node_probe()
     except:
-        teos.node_start(clear, nodeos_stdout, verbosity)
-        teos.node_probe(verbosity)
-    
+        try:
+            teos.node_start(clear, nodeos_stdout)
+            teos.node_probe()
+        except:
+            teos.on_nodeos_error(clear)
 
-def reset(nodeos_stdout=None, verbosity=None):
-    ''' Start clean the EOSIO local node.
+
+def reset(nodeos_stdout=None):
+    ''' Start clean the local EOSIO node.
+
+    The procedure addresses problems with instabilities of EOSIO *nodeos* 
+    executable: it happens that it blocks itself on clean restart. 
+
+    The issue is patched with one subsequent restart if the first attempt 
+    fails. However, it happens that both launches fail, rarely due to 
+    instability of *nodeos*, sometimes because of misconfiguration.
+
+    When both launch attempts fail, an exception routine passes. At first,
+    the command line is printed, for *example*::
+
+        ERROR:
+        The local ``nodeos`` failed to start twice in sequence. Perhaps, something is
+        wrong with configuration of the system. See the command line issued:
+
+        /usr/bin/nodeosx 
+        --http-server-address 127.0.0.1:8888 
+        --data-dir /mnt/c/Workspaces/EOS/eosfactory/localnode/ 
+        --config-dir /mnt/c/Workspaces/EOS/eosfactory/localnode/ 
+        --chain-state-db-size-mb 200 --contracts-console --verbose-http-errors --enable-stale-production --producer-name eosio 
+        --signature-provider EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=KEY:5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3 
+        --plugin eosio::producer_plugin 
+        --plugin eosio::chain_api_plugin 
+        --plugin eosio::http_plugin 
+        --plugin eosio::history_api_plugin 
+        --genesis-json /mnt/c/Workspaces/EOS/eosfactory/localnode/genesis.json
+        --delete-all-blocks
+
+    Next, the command line is executed, for *example*::
+
+        Now, see the result of an execution of the command line.
+        /bin/sh: 1: /usr/bin/nodeosx: not found
+
+    The exemplary case is easy, it explains itself. Generally, the command 
+    line given can be executed in a *bash* terminal separately, in order to 
+    understand a problem.
+
+    Args:
+        nodeos_stdout (str): If set, a file where *stdout* stream of
+            the local *nodeos* is send. Note that the file can be included to 
+            the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
+            If the file is set with the configuration, and in the same time 
+            it is set with this argument, the argument setting prevails. 
     '''
     if not cleos.set_local_nodeos_address_if_none():
         logger.INFO('''
         No local nodeos is set: {}
-        '''.format(setup.nodeos_address()), verbosity)
+        '''.format(setup.nodeos_address()))
 
     import eosfactory.shell.account as account
     teos.keosd_start()
     account.reboot()
     clear_testnet_cache()
-    node_start(
-        clear=True, nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    node_start(clear=True, nodeos_stdout=nodeos_stdout)
     
 
 
-def resume(nodeos_stdout=None, verbosity=None):
-    ''' Resume the EOSIO local node.
+def resume(nodeos_stdout=None):
+    ''' Resume the local EOSIO node.
+
+    Args:
+        nodeos_stdout (str): If set, a file where *stdout* stream of
+            the local *nodeos* is send. Note that the file can be included to 
+            the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
+            If the file is set with the configuration, and in the same time 
+            it is set with this argument, the argument setting prevails. 
     ''' 
     if not cleos.set_local_nodeos_address_if_none():   
         logger.INFO('''
             Not local nodeos is set: {}
-        '''.format(setup.nodeos_address()), verbosity)
+        '''.format(setup.nodeos_address()))
 
-    node_start(nodeos_stdout=nodeos_stdout, verbosity=verbosity)
+    node_start(nodeos_stdout=nodeos_stdout)
     
 
 
-def stop(verbosity=None):
+def stop():
     ''' Stops all running EOSIO nodes.
     '''
-    teos.node_stop(verbosity)
+    teos.node_stop()
 
 
 def status():
@@ -181,28 +232,24 @@ def info():
     logger.INFO(str(cleos_get.GetInfo(is_verbose=False)))
 
 
-def is_head_block_num():
-    '''
-    Check if testnet is running.
-    '''
+def verify_testnet_production():
+    head_block_num = 0
     try: # if running, json is produced
         head_block_num = cleos_get.GetInfo(is_verbose=False).head_block
     except:
-        head_block_num = -1
-    return head_block_num > 0
+        pass
 
-def verify_testnet_production():
-    result = is_head_block_num()
     domain = "LOCAL" if is_local_testnet() else "REMOTE"
-    if not result:
-        raise errors.Error('''
+    if not head_block_num:
+        logger.ERROR('''
         {} testnet is not running or is not responding @ {}.
         '''.format(domain, setup.nodeos_address()))
     else:
         logger.INFO('''
         {} testnet is active @ {}.
         '''.format(domain, setup.nodeos_address()))
-    return result
+
+    return head_block_num
 
 
 def account_map(logger=None):
@@ -241,7 +288,7 @@ editor. Return ``None`` if the the offer is rejected.
                     edit_account_map()
                     continue
                 else:
-                    raise errors.Error('''
+                    logger.ERROR('''
         Use the function 'efman.edit_account_map(text_editor="nano")'
         or the corresponding method of any object of the 'eosfactory.wallet.Wallet` 
         class to edit the file.
@@ -291,7 +338,7 @@ editor. Return ``None`` if the the offer is rejected.
             if isinstance(e, FileNotFoundError):
                 return {}
             else:
-                raise errors.Error('''
+                logger.ERROR('''
             The json file 
             {}
             is misformed. The error message is:
@@ -306,7 +353,7 @@ editor. Return ``None`` if the the offer is rejected.
                     subprocess.run([text_editor, path])
                     continue
                 else:
-                    raise errors.Error('''
+                    logger.ERROR('''
                     Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
                     ''', translate=False)                    
                     return None

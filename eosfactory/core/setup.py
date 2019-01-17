@@ -7,6 +7,7 @@ import eosfactory.core.config as config
 
 
 is_print_command_line = False
+is_print_traceback = False
 is_print_request = False
 is_print_response = False
 is_translating = True

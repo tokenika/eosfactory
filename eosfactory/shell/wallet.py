@@ -2,9 +2,9 @@ import os
 import json
 import inspect
 
+import eosfactory.core.errors as errors
 import eosfactory.core.config as config
 import eosfactory.core.logger as logger
-import eosfactory.core.errors as errors
 import eosfactory.core.setup as setup
 import eosfactory.core.interface as interface
 import eosfactory.core.teos as teos
@@ -33,7 +33,7 @@ class Wallet(cleos.WalletCreate):
 
         if not Wallet.wallet_single is None \
                                     and not Wallet.wallet_single.name == name:
-                raise errors.Error('''
+                logger.ERROR('''
                 It can be only one ``Wallet`` object in the script; there is one
                 named ``{}``.
                 '''.format(Wallet.wallet_single.name))
@@ -180,7 +180,7 @@ class Wallet(cleos.WalletCreate):
 
         for key in removed_keys:
             if key in wallet_keys.json:
-                raise errors.Error('''
+                logger.ERROR('''
                 Failed to remove key '{}' from the wallet '{}'
                 '''.format(key, self.name))
 
@@ -238,7 +238,7 @@ class Wallet(cleos.WalletCreate):
         wallet_keys = cleos.WalletKeys(is_verbose=False)
 
         if len(imported_keys) == 0:
-            raise errors.Error('''
+            logger.ERROR('''
                 The list of imported keys is empty.
                 ''')
 
@@ -246,7 +246,7 @@ class Wallet(cleos.WalletCreate):
         for key in imported_keys:
             if not key in wallet_keys.json:
                 ok = False
-                raise errors.Error('''
+                logger.ERROR('''
                 Failed to import keys of the account '{}' into the wallet '{}'
                 '''.format(
                     account_name if account_name else "n/a", self.name))
@@ -401,7 +401,7 @@ class Wallet(cleos.WalletCreate):
                 else:
                     if temp:
                         Wallet.globals[account_object_name] = temp
-                    raise errors.Error('''
+                    logger.ERROR('''
                     Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
                     ''')
             else:

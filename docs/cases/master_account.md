@@ -80,7 +80,9 @@ from eosfactory.eosf import *
 First, we need to define a remote testnet and pass to *EOSFactory* the data of the account we control there:
 
 ```python
-testnet = Testnet("http://88.99.97.30:38888", "dgxo1uyhoytn", "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY", "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA")
+testnet = Testnet(
+    "dgxo1uyhoytn", "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY", "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA",
+    "http://88.99.97.30:38888")
 ```
 
 We supply four parameters:

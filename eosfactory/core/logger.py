@@ -169,7 +169,12 @@ def error(msg, translate=True):
 
 
 def ERROR(msg, translate=True):
-    print(error(msg, translate), file=sys.stderr)
+    import eosfactory.core.setup as setup    
+    if setup.is_print_traceback:
+        raise Exception(error(msg, translate))
+    else:
+        print(error(msg, translate), file=sys.stderr)
+        sys.exit()
 
 
 def condition(message, translate=True):

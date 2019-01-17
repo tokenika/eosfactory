@@ -46,3 +46,5 @@ docs/tutorials/*.py
 docs/cases/*.py
 docs/patterns/*.py
 docs/patterns/set/*.py
+hyper.md
+test.py

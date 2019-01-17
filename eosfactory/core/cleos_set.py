@@ -38,7 +38,7 @@ class SetContract(cleos.Cleos):
 
         files = cleos.contract_is_built(contract_dir, wasm_file, abi_file)
         if not files:
-            raise errors.Error("""
+            logger.ERROR("""
             Cannot determine the contract directory. The clue is 
             {}.
             """.format(contract_dir))
