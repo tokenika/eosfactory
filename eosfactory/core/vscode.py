@@ -16,22 +16,31 @@ import eosfactory.core.logger as logger
 def get_eosio_cpp_version():
     """Get the version code of *eosio-cpp*.
     """
+    command_line = [config.eosio_cpp(), "-version"]
     process = subprocess.run(
-        [config.eosio_cpp(), "-version"],
+        command_line,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE) 
 
-    out = process.stdout.decode("ISO-8859-1").strip()
-    err = process.stderr.decode("ISO-8859-1").strip()        
+    stdout = process.stdout.decode("ISO-8859-1").strip()
+    stderr = process.stderr.decode("ISO-8859-1").strip()        
 
-    if err:
+    if stderr:
         logger.ERROR('''
-        Cannot determine the version of 'eosio-cpp'.
-        The error message is 
-        {}
-        '''.format(err))
+Cannot determine the version of 'eosio-cpp'.
 
-    return out.replace("eosio-cpp version ", "")
+command line:
+=============
+
+{}
+
+error message:
+==============
+
+{}
+        '''.format(" ".join(command_line), stderr))
+
+    return stdout.replace("eosio-cpp version ", "")
 
 
 EOSIO_CPP_VERSION = "${eosio-cpp version}"

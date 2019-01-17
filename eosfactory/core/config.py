@@ -44,7 +44,6 @@ key_public_ = (
     ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"])
 contract_workspace_ = (
     "EOSIO_CONTRACT_WORKSPACE", [CONTRACTS_DIR])
-is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
 
 
 def eosf_dir():
@@ -148,18 +147,6 @@ def wsl_root():
     else:
         path = path.strip()
     return path.replace("\\", "/")
-
-
-def is_nodeos_in_window():
-    '''If set, the local node runs in a GUI window.
-
-    Affects *Windows* and *Ubuntu* systems.
-
-    The setting may be changed with 
-    *NODE_IN_WINDOW* entry in the *config.json* file, 
-    see :func:`.current_config`.    
-    '''
-    return config_value_checked(is_nodeos_in_window_)
 
 
 def nodeos_stdout():
@@ -713,10 +700,6 @@ def current_config(contract_dir=None):
         map[chain_state_db_size_mb_[0]] = chain_state_db_size_mb()
     except:
         map[chain_state_db_size_mb_[0]] = None
-    try:
-        map[is_nodeos_in_window_[0]] = is_nodeos_in_window()
-    except:
-        map[is_nodeos_in_window_[0]] = None
     try:
         map[contract_workspace_[0]] = config_value_checked(contract_workspace_)
     except:
