@@ -130,7 +130,7 @@ def ABI(
         command_line.append(file)
 
     try:
-        eosio_cpp_process(command_line, target_dir)
+        eosio_cpp(command_line, target_dir)
     except Exception as e:
         logger.ERROR(str(e))
 
@@ -201,7 +201,7 @@ def WASM(
     command_line.append("-o=" + target_path)
 
     try:
-        eosio_cpp_process(command_line, target_dir)
+        eosio_cpp(command_line, target_dir)
     except Exception as e:                       
         logger.ERROR(str(e))
 
@@ -297,7 +297,6 @@ def project_from_template(
 Cannot remove the directory {}.
 error message:
 ==============
-
 {}
                     '''.format(project_dir, str(e)))
             else:
@@ -404,7 +403,7 @@ def get_pid(name=None):
         name = os.path.splitext(os.path.basename(config.node_exe()))[0]
 
     command_line = ['pgrep', '-f', name]
-    stdout = simple_subprocess(
+    stdout = utils.process(
         command_line, "Cannot determine PID of any nodeos process.")
 
     return [int(pid) for pid in stdout.split()]
@@ -415,67 +414,38 @@ def uname(options=None):
     if options:
         command_line.append(options)
 
-    return simple_subprocess(command_line)
+    return utils.process(command_line)
 
 
 def is_windows_ubuntu():
     resp = uname("-v")
     return resp.find("Microsoft") != -1
 
-def simple_subprocess(command_line, error_message=''):
 
-    process = subprocess.run(
-        command_line,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE) 
-
-    stdout = process.stdout.decode("ISO-8859-1").strip()
-    stderr = process.stderr.decode("ISO-8859-1").strip()        
-
-    if stderr:
-        logger.ERROR('''
-{}
-
-command line:
-=============
-
-{}
-
-error message:
-==============
-
-{}
-        '''.format(error_message, " ".join(command_line), stderr))
-
-    return stdout
-
-
-def eosio_cpp_process(command_line, target_dir):
+def eosio_cpp(command_line, target_dir):
 
     cwd = os.path.join(target_dir, "cwd")
     os.mkdir(cwd)
 
-    process = subprocess.run(
+    p = subprocess.run(
         command_line,
         cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE) 
     
-    stdout = process.stdout.decode("ISO-8859-1")
-    stderr = process.stderr.decode("ISO-8859-1")
-    returncode = process.returncode
+    stdout = p.stdout.decode("ISO-8859-1")
+    stderr = p.stderr.decode("ISO-8859-1")
+    returncode = p.returncode
     shutil.rmtree(cwd)
 
     if returncode:
         logger.ERROR('''
 command line:
 =============
-
 {}
 
 error message:
 ==============
-
 {}
         '''.format(" ".join(command_line), stderr))
 
@@ -544,7 +514,7 @@ def args(clear=False):
 
 def keosd_start():
     if not config.keosd_wallet_dir(raise_error=False):
-        simple_subprocess([config.keosd_exe()])
+        utils.process([config.keosd_exe()])
 
         while True:
             time.sleep(1)
@@ -570,13 +540,13 @@ def on_nodeos_error(clear=False):
     ''')
     
     def runInThread():
-        process = subprocess.run(
+        p = subprocess.run(
             command_line, 
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             shell=True)
 
-        err_msg = process.stderr.decode("ISO-8859-1")
+        err_msg = p.stderr.decode("ISO-8859-1")
         if "error" in err_msg and not "exit shutdown" in err_msg:
             logger.ERROR(err_msg)
         elif not err_msg or "exit shutdown" in err_msg:
@@ -681,17 +651,14 @@ def node_probe():
             logger.INFO('''
             The local node does not respond.
             ''')
+            break
 
 
 def is_local_node_process_running(name=None):
     if not name:
         name = config.node_exe()
-
-    response = subprocess.run(
-        'ps aux |  grep -v grep | grep ' + name, shell=True, 
-        stdout=subprocess.PIPE)
-    stdout = response.stdout.decode("ISO-8859-1")
-    return name in stdout
+    return name in utils.process(
+        'ps aux |  grep -v grep | grep ' + name, shell=True)
         
 
 def node_stop():

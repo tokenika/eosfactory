@@ -4,7 +4,8 @@ import os
 import json
 import re
 
-import eosfactory.core. config as config
+import eosfactory.core.utils as utils
+import eosfactory.core.config as config
 import eosfactory.core.logger as logger
 import eosfactory.core.interface as interface
 import eosfactory.core.setup as setup
@@ -311,8 +312,7 @@ def save_map(map, file_name):
 
 
 def edit_map(file_name, text_editor="nano"):
-    import subprocess
-    subprocess.run([text_editor, os.path.join(
+    utils.process([text_editor, os.path.join(
                                     config.keosd_wallet_dir(), file_name)])
     read_map(file_name, text_editor)
 
@@ -349,8 +349,7 @@ editor. Return ``None`` if the the offer is rejected.
                     
                 answer = input("y/n <<< ")
                 if answer == "y":
-                    import subprocess
-                    subprocess.run([text_editor, path])
+                    utils.process([text_editor, path])
                     continue
                 else:
                     logger.ERROR('''

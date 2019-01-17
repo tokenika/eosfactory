@@ -19,7 +19,7 @@ def build():
 
     The contract is determined with its project directory. The directory may be
     absolute or relative to the *contract workspace* directory as defined with
-    :func:`.core.config.contract_workspace(). If the *dir* argument is not set,
+    :func:`.core.config.contract_workspace()`. If the *dir* argument is not set,
     it is substituted with the current working directory.
 
     The dependencies of the contract are determined with the json file given with the argument *c_cpp_prop* -- if it is set -- or with the file
