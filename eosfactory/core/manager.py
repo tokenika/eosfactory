@@ -6,6 +6,7 @@ import re
 
 import eosfactory.core.utils as utils
 import eosfactory.core.config as config
+import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.interface as interface
 import eosfactory.core.setup as setup
@@ -41,7 +42,7 @@ def clear_testnet_cache():
             if file.startswith(setup.file_prefix()):
                 os.remove(os.path.join(dir, file))
     except Exception as e:
-        logger.ERROR('''
+        raise errors.Error('''
         Cannot remove testnet cache. The error message is:
         {}
         '''.format(str(e)))
@@ -176,6 +177,7 @@ def reset(nodeos_stdout=None):
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     '''
+    
     if not cleos.set_local_nodeos_address_if_none():
         logger.INFO('''
         No local nodeos is set: {}
@@ -242,7 +244,7 @@ def verify_testnet_production():
 
     domain = "LOCAL" if is_local_testnet() else "REMOTE"
     if not head_block_num:
-        logger.ERROR('''
+        raise errors.Error('''
         {} testnet is not running or is not responding @ {}.
         '''.format(domain, setup.nodeos_address()))
     else:
@@ -289,7 +291,7 @@ editor. Return ``None`` if the the offer is rejected.
                     edit_account_map()
                     continue
                 else:
-                    logger.ERROR('''
+                    raise errors.Error('''
         Use the function 'efman.edit_account_map(text_editor="nano")'
         or the corresponding method of any object of the 'eosfactory.wallet.Wallet` 
         class to edit the file.
@@ -338,7 +340,7 @@ editor. Return ``None`` if the the offer is rejected.
             if isinstance(e, FileNotFoundError):
                 return {}
             else:
-                logger.ERROR('''
+                raise errors.Error('''
             The json file 
             {}
             is misformed. The error message is:
@@ -352,7 +354,7 @@ editor. Return ``None`` if the the offer is rejected.
                     utils.process([text_editor, path])
                     continue
                 else:
-                    logger.ERROR('''
+                    raise errors.Error('''
                     Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
                     ''', translate=False)                    
                     return None

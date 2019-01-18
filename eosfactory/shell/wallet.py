@@ -33,7 +33,7 @@ class Wallet(cleos.WalletCreate):
 
         if not Wallet.wallet_single is None \
                                     and not Wallet.wallet_single.name == name:
-                logger.ERROR('''
+                raise errors.Error('''
                 It can be only one ``Wallet`` object in the script; there is one
                 named ``{}``.
                 '''.format(Wallet.wallet_single.name))
@@ -180,7 +180,7 @@ class Wallet(cleos.WalletCreate):
 
         for key in removed_keys:
             if key in wallet_keys.json:
-                logger.ERROR('''
+                raise errors.Error('''
                 Failed to remove key '{}' from the wallet '{}'
                 '''.format(key, self.name))
 
@@ -238,7 +238,7 @@ class Wallet(cleos.WalletCreate):
         wallet_keys = cleos.WalletKeys(is_verbose=False)
 
         if len(imported_keys) == 0:
-            logger.ERROR('''
+            raise errors.Error('''
                 The list of imported keys is empty.
                 ''')
 
@@ -246,7 +246,7 @@ class Wallet(cleos.WalletCreate):
         for key in imported_keys:
             if not key in wallet_keys.json:
                 ok = False
-                logger.ERROR('''
+                raise errors.Error('''
                 Failed to import keys of the account '{}' into the wallet '{}'
                 '''.format(
                     account_name if account_name else "n/a", self.name))
@@ -401,7 +401,7 @@ class Wallet(cleos.WalletCreate):
                 else:
                     if temp:
                         Wallet.globals[account_object_name] = temp
-                    logger.ERROR('''
+                    raise errors.Error('''
                     Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
                     ''')
             else:

@@ -1,6 +1,7 @@
 import shutil
 import os
 
+import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.config as config
 import eosfactory.core.setup as setup
@@ -32,7 +33,7 @@ class ContractBuilder():
         self.contract_dir = config.contract_dir(contract_dir)
         
         if not self.contract_dir:
-            logger.ERROR("""
+            raise errors.Error("""
                 Cannot determine the contract directory. The path is 
                 ``{}``.
                 """.format(contract_dir))
@@ -104,7 +105,7 @@ class Contract(ContractBuilder):
             delay_sec=0):
         
         if not isinstance(account, eosfactory.shell.account.Account):
-            logger.ERROR("""
+            raise errors.Error("""
             The account object has to be of the type 
             ``eosfactory.shell.account.Account``.
             """)
@@ -129,7 +130,7 @@ class Contract(ContractBuilder):
         '''Deploy the contract.
         '''
         if not self.is_built():
-            logger.ERROR('''
+            raise errors.Error('''
             Contract needs to be built before deployment.
             ''')
             return

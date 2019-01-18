@@ -1,3 +1,4 @@
+import eosfactory.core.errors as errors
 
 def wslMapLinuxWindows(path):
     if not path or path.find("/mnt/") == -1:
@@ -34,7 +35,7 @@ def process(command_line, error_message='', shell=False):
     stderr = p.stderr.decode("ISO-8859-1").strip()        
 
     if stderr:
-        logger.ERROR('''
+        raise errors.Error('''
 {}
 
 command line:
