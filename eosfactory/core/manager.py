@@ -177,7 +177,9 @@ def reset(nodeos_stdout=None):
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     '''
-    
+
+    raise errors.Error("HHHHHHHHHHHHHHHHHHHHHHHHHH")
+
     if not cleos.set_local_nodeos_address_if_none():
         logger.INFO('''
         No local nodeos is set: {}

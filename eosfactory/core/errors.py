@@ -49,13 +49,7 @@ class Error(Exception):
     '''Base class for exceptions in EOSFactory.
     '''
     def __init__(self, message, translate=True):
-        
         self.message = logger.error(message, translate)
-        import eosfactory.core.setup as setup
-        if setup.is_print_traceback:
-            sys.tracebacklimit = 10
-        else:
-            sys.tracebacklimit = 0
         Exception.__init__(self, self.message)
 
 
