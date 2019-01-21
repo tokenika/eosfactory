@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 
+import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.testnet
 import eosfactory.core.teos as teos
@@ -23,12 +24,12 @@ def deploy_(
         c_cpp_properties = teos.get_c_cpp_properties(
                                         contract_dir, c_cpp_properties_path)
         if not c_cpp_properties:
-            logger.ERROR('''
+            raise errors.Error('''
                 The testnet account is not set and it can not be found any 
                 c_cpp_properties json file.
                 ''')
         if not "contractAccount" in c_cpp_properties:
-            logger.ERROR('''
+            raise errors.Error('''
                 The testnet account is not set and it can not be found in a 
                 c_cpp_properties json file.
                 ''')
@@ -37,7 +38,7 @@ def deploy_(
     
     testnet_account = eosfactory.core.testnet.get_testnet(testnet_account_name)
     if not testnet_account:
-        logger.ERROR('''
+        raise errors.Error('''
         There is not any testnet account named '{}' in the list. 
         Use the bash command 
         `python3 -m eosfactory.utils.register_testnet -h`

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import sys
 import re
 import os
 import json
@@ -7,7 +8,6 @@ import eosfactory.core.config as config
 
 
 is_print_command_line = False
-is_print_traceback = False
 is_print_request = False
 is_print_response = False
 is_translating = True
@@ -18,6 +18,16 @@ is_local_address = False
 
 __nodeos_address = None
 __file_prefix = None
+
+
+def donot_print_traceback(donot=True):
+    if donot:
+        sys.tracebacklimit = 0
+    else:
+        sys.tracebacklimit = 10
+
+
+donot_print_traceback()
 
 
 def nodeos_address():
