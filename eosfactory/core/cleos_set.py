@@ -1,6 +1,7 @@
 import re
 import types
 
+import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.manager as manager
 import eosfactory.core.interface as interface
@@ -38,7 +39,7 @@ class SetContract(cleos.Cleos):
 
         files = cleos.contract_is_built(contract_dir, wasm_file, abi_file)
         if not files:
-            logger.ERROR("""
+            raise errors.Error("""
             Cannot determine the contract directory. The clue is 
             {}.
             """.format(contract_dir))

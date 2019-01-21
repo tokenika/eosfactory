@@ -516,13 +516,13 @@ def create_master_account(
 
     if manager.is_local_testnet():
         if teos.is_local_node_process_running():
-            logger.ERROR('''
+            raise errors.Error('''
     There is an local testnode process running, but its 'eosio` account is not like 
     expected.
             ''')
             sys.exit()
 
-            logger.ERROR('''
+            raise errors.Error('''
     If the local testnet is not running, an outer testnet has to be defined with 
     `setup.set_nodeos_address(<url>)`: use 'setup.set_nodeos_address(<URL>)'
         ''')
@@ -540,7 +540,7 @@ def create_master_account(
 
         if first_while and account_name and owner_key and active_key \
                         and not account_object.exists:
-            logger.ERROR('''
+            raise errors.Error('''
             There is no account named ``{}`` in the blockchain.
             '''.format(account_name))
 
@@ -842,7 +842,7 @@ def is_wallet_defined(logger, globals=None):
         wallet_singleton = wallet.Wallet.wallet_single
 
         if wallet_singleton is None:
-            logger.ERROR('''
+            raise errors.Error('''
                 Cannot find any `Wallet` object.
                 ''')
 
@@ -915,7 +915,7 @@ def print_stats(
 def is_in_globals(account_object_name, globals):
     if account_object_name in globals:
         if not isinstance(globals[account_object_name], interface.Account):
-            logger.ERROR('''
+            raise errors.Error('''
     The name of the account name is to be '{}', but there is already a global 
     variable of this name. Its type is '{}'. 
     Change the first argument in the function 'create_account'.

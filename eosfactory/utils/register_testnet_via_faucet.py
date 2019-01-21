@@ -3,6 +3,7 @@ import json
 import argparse
 import time
 
+import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 from eosfactory.eosf import *
 
@@ -45,7 +46,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
             response = None
             attempt = attempt + 1
             if attempt == MAX_ATTEMPTS:
-                logger.ERROR('''
+                raise errors.Error('''
                     Request failed: {}
                     Error message is
                     {}
@@ -58,7 +59,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
 
 
     if response["account"] != account_name:
-        logger.ERROR('''
+        raise errors.Error('''
         Account names do not match: ``{}`` vs ``{}``
         '''.format(response["account"], account_name))
 
@@ -89,7 +90,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
             attempt = attempt + 1
             if attempt == MAX_ATTEMPTS:
                 if success == 0:
-                    logger.ERROR('''
+                    raise errors.Error('''
                         Request failed: {}
                         Error message is
                         {}

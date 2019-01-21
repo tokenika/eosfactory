@@ -2,6 +2,7 @@ import os
 import argparse
 import json
 
+import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
@@ -53,7 +54,7 @@ def eosf_dir():
     if os.path.exists(path):
         return path
 
-    logger.ERROR('''
+    raise errors.Error('''
         Cannot determine the root directory of EOSFactory.
         It is attempted to be derived from the path of the configuration file
             '{}'.
@@ -274,9 +275,9 @@ def config_map():
                 else:
                     return json.loads(text)
         except Exception as e:
-            logger.ERROR(str(e))
+            raise errors.Error(str(e))
 
-    logger.ERROR('''
+    raise errors.Error('''
 Cannot find the config file.       
     ''')
 
@@ -296,7 +297,7 @@ def write_config_map(map):
             output.write(json.dumps(map, indent=4))
         return
 
-    logger.ERROR('''
+    raise errors.Error('''
 Cannot find the config file.       
     ''')
     
@@ -350,7 +351,7 @@ def config_value_checked(config_list):
     if not retval is None:
         return retval
 
-    logger.ERROR('''
+    raise errors.Error('''
 The value of {} is not defined.
 Define it in the config file
 {}       
@@ -409,7 +410,7 @@ def first_valid_path(config_list, find_file=None, raise_error=True):
                     return full_path        
 
     if raise_error:
-        logger.ERROR('''
+        raise errors.Error('''
         Cannot find any path for '{}'.
         '''.format(config_list[0]))
 
@@ -455,7 +456,7 @@ def contract_dir(contract_dir_hint):
     if os.path.isdir(contract_dir_):
         return os.path.abspath(contract_dir_)
     
-    logger.ERROR('''
+    raise errors.Error('''
         Cannot determine the contract directory.
         Tried path list:
         {}
@@ -500,7 +501,7 @@ def contract_source_files(contract_dir_hint):
     if srcs:
         return (source_dir, srcs)            
 
-    logger.ERROR('''
+    raise errors.Error('''
         Cannot find any contract source directory.
         Tried path list:
         {}
@@ -565,7 +566,7 @@ def contract_file(contract_dir_hint, contract_file_hint):
         if os.path.splitext(file)[1] == contract_file_hint:
             return os.path.join(build_dir, file)
 
-    logger.ERROR('''
+    raise errors.Error('''
         Cannot determine the contract file basing on hints:
         contract dir hint: {}
         contract file hint: {}
@@ -596,7 +597,7 @@ def contract_workspace():
     if os.path.exists(workspacePath):
         return workspacePath
 
-    logger.ERROR('''
+    raise errors.Error('''
         Cannot determine the contract workspace.
         Tried path list:
         {}

@@ -168,15 +168,6 @@ def error(msg, translate=True):
         color[0], color[1], attrs=color[2])
 
 
-def ERROR(msg, translate=True):
-    import eosfactory.core.setup as setup    
-    if setup.is_print_traceback:
-        raise Exception(error(msg, translate))
-    else:
-        print(error(msg, translate), file=sys.stderr)
-        sys.exit()
-
-
 def condition(message, translate=True):
     import eosfactory.core.manager as manager
     ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')

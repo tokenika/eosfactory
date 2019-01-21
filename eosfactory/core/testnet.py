@@ -1,6 +1,7 @@
 import eosfactory.core.config as config
 import eosfactory.core.setup as setup
 import eosfactory.core.manager as manager
+import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 
 
@@ -106,13 +107,13 @@ def get_testnet(name=None, testnet=None, reset=False):
         elif name == "KYLIN":
             return KYLIN
         else:
-            logger.ERROR('''
+            raise errors.Error('''
             Testnet *{}* is not defined in the testnet mapping.
             '''.format(name))
     elif testnet:
         return Testnet(testnet[0], testnet[1], testnet[2], testnet[3])
 
-    logger.ERROR('''
+    raise errors.Error('''
         Cannot determine testnet.
         ''')
 

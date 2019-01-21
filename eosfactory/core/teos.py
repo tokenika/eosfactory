@@ -12,6 +12,7 @@ import json
 import shutil
 import sys
 
+import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 import eosfactory.core.setup as setup
@@ -52,7 +53,7 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
     else:
         c_cpp_properties_path = utils.wslMapWindowsLinux(c_cpp_properties_path)
         if not os.path.exists(c_cpp_properties_path):
-            logger.ERROR('''
+            raise errors.Error('''
                 The given path does not exist:
                 ${}       
             '''.format(c_cpp_properties_path))
@@ -62,7 +63,7 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
             with open(c_cpp_properties_path, "r") as input:
                 return json.loads(input.read())
         except Exception as e:
-            logger.ERROR(str(e))
+            raise errors.Error(str(e))
     else:
         return json.loads(replace_templates(vscode.c_cpp_properties()))
 
@@ -83,7 +84,7 @@ def ABI(
             source_files.append(file)
 
     if not source_files:
-        logger.ERROR('''
+        raise errors.Error('''
         "The source is empty. The assumed contract dir is   
         {}
         '''.format(contract_dir))
@@ -130,9 +131,9 @@ def ABI(
         command_line.append(file)
 
     try:
-        eosio_cpp_process(command_line, target_dir)
+        eosio_cpp(command_line, target_dir)
     except Exception as e:
-        logger.ERROR(str(e))
+        raise errors.Error(str(e))
 
     logger.TRACE('''
     ABI file writen to file: 
@@ -156,7 +157,7 @@ def WASM(
             source_files.append(file)
 
     if not source_files:
-        logger.ERROR('''
+        raise errors.Error('''
         "The source is empty. The assumed contract dir is   
             {}
         '''.format(contract_dir))
@@ -201,9 +202,9 @@ def WASM(
     command_line.append("-o=" + target_path)
 
     try:
-        eosio_cpp_process(command_line, target_dir)
+        eosio_cpp(command_line, target_dir)
     except Exception as e:                       
-        logger.ERROR(str(e))
+        raise errors.Error(str(e))
 
     if not compile_only:
         logger.TRACE('''
@@ -243,7 +244,7 @@ def project_from_template(
         template_dir = os.path.join(
             config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template) 
     if not os.path.isdir(template_dir):
-        logger.ERROR('''
+        raise errors.Error('''
         TemplateCreate '{}' does not exist.
         '''.format(template_dir)) 
 
@@ -293,11 +294,10 @@ def project_from_template(
                 try:
                     shutil.rmtree(project_dir)
                 except Exception as e:
-                    logger.ERROR('''
+                    raise errors.Error('''
 Cannot remove the directory {}.
 error message:
 ==============
-
 {}
                     '''.format(project_dir, str(e)))
             else:
@@ -308,15 +308,15 @@ error message:
                 already exists. Cannot overwrite it.
                 '''.format(project_dir)
                 if throw_exists:
-                    logger.ERROR(msg)
+                    raise errors.Error(msg)
                 else:
-                    logger.ERROR(msg)
+                    raise errors.Error(msg)
                     return
 
     try:    # make contract directory and its build directory:
         os.makedirs(os.path.join(project_dir, "build"))
     except Exception as e:
-            logger.ERROR(str(e))
+            raise errors.Error(str(e))
 
     def copy_dir_contents(
             project_dir, template_dir, directory, project_name):
@@ -404,7 +404,7 @@ def get_pid(name=None):
         name = os.path.splitext(os.path.basename(config.node_exe()))[0]
 
     command_line = ['pgrep', '-f', name]
-    stdout = simple_subprocess(
+    stdout = utils.process(
         command_line, "Cannot determine PID of any nodeos process.")
 
     return [int(pid) for pid in stdout.split()]
@@ -415,67 +415,38 @@ def uname(options=None):
     if options:
         command_line.append(options)
 
-    return simple_subprocess(command_line)
+    return utils.process(command_line)
 
 
 def is_windows_ubuntu():
     resp = uname("-v")
     return resp.find("Microsoft") != -1
 
-def simple_subprocess(command_line, error_message=''):
 
-    process = subprocess.run(
-        command_line,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE) 
-
-    stdout = process.stdout.decode("ISO-8859-1").strip()
-    stderr = process.stderr.decode("ISO-8859-1").strip()        
-
-    if stderr:
-        logger.ERROR('''
-{}
-
-command line:
-=============
-
-{}
-
-error message:
-==============
-
-{}
-        '''.format(error_message, " ".join(command_line), stderr))
-
-    return stdout
-
-
-def eosio_cpp_process(command_line, target_dir):
+def eosio_cpp(command_line, target_dir):
 
     cwd = os.path.join(target_dir, "cwd")
     os.mkdir(cwd)
 
-    process = subprocess.run(
+    p = subprocess.run(
         command_line,
         cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE) 
     
-    stdout = process.stdout.decode("ISO-8859-1")
-    stderr = process.stderr.decode("ISO-8859-1")
-    returncode = process.returncode
+    stdout = p.stdout.decode("ISO-8859-1")
+    stderr = p.stderr.decode("ISO-8859-1")
+    returncode = p.returncode
     shutil.rmtree(cwd)
 
     if returncode:
-        logger.ERROR('''
+        raise errors.Error('''
 command line:
 =============
-
 {}
 
 error message:
 ==============
-
 {}
         '''.format(" ".join(command_line), stderr))
 
@@ -495,7 +466,7 @@ def get_target_dir(source_dir):
     try:
         os.mkdir(dir)
     except Exception as e:
-        logger.ERROR(str(e))
+        raise errors.Error(str(e))
 
     return dir
 
@@ -511,7 +482,7 @@ def get_resources_dir(source_dir):
         try:
             os.mkdir(dir)
         except Exception as e:
-            logger.ERROR(str(e))
+            raise errors.Error(str(e))
 
     return dir
 
@@ -544,7 +515,7 @@ def args(clear=False):
 
 def keosd_start():
     if not config.keosd_wallet_dir(raise_error=False):
-        simple_subprocess([config.keosd_exe()])
+        utils.process([config.keosd_exe()])
 
         while True:
             time.sleep(1)
@@ -559,7 +530,7 @@ def on_nodeos_error(clear=False):
     args_.insert(0, config.node_exe())
     command_line = " ".join(args_)
 
-    logger.ERROR('''
+    raise errors.Error('''
     The local ``nodeos`` failed to start twice in sequence. Perhaps, something is
     wrong with configuration of the system. See the command line issued:
 
@@ -570,15 +541,15 @@ def on_nodeos_error(clear=False):
     ''')
     
     def runInThread():
-        process = subprocess.run(
+        p = subprocess.run(
             command_line, 
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             shell=True)
 
-        err_msg = process.stderr.decode("ISO-8859-1")
+        err_msg = p.stderr.decode("ISO-8859-1")
         if "error" in err_msg and not "exit shutdown" in err_msg:
-            logger.ERROR(err_msg)
+            raise errors.Error(err_msg)
         elif not err_msg or "exit shutdown" in err_msg:
             logger.OUT(
             '''
@@ -621,7 +592,7 @@ def node_start(clear=False, nodeos_stdout=None):
         try:
             std_out_handle = open(nodeos_stdout, 'w')
         except Exception as e:
-            logger.ERROR('''
+            raise errors.Error('''
 Error when preparing to start the local EOS node, opening the given stdout
 log file that is 
 {}
@@ -678,7 +649,7 @@ def node_probe():
 
         count = count - 1        
         if count <= 0:
-            logger.INFO('''
+            raise errors.Error('''
             The local node does not respond.
             ''')
 
@@ -686,12 +657,8 @@ def node_probe():
 def is_local_node_process_running(name=None):
     if not name:
         name = config.node_exe()
-
-    response = subprocess.run(
-        'ps aux |  grep -v grep | grep ' + name, shell=True, 
-        stdout=subprocess.PIPE)
-    stdout = response.stdout.decode("ISO-8859-1")
-    return name in stdout
+    return name in utils.process(
+        'ps aux |  grep -v grep | grep ' + name, shell=True)
         
 
 def node_stop():
@@ -711,7 +678,7 @@ def node_stop():
             count = count -1
 
     if count <= 0:
-        logger.ERROR('''
+        raise errors.Error('''
 Failed to kill {}. Pid is {}.
     '''.format(config.node_exe_name(), str(pids))
     )
