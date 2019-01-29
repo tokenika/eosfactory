@@ -7,14 +7,32 @@
 '''
 
 import json
+import subprocess
 
+import eosfactory.core.utils as utils
+import eosfactory.core.config as config
+import eosfactory.core.logger as logger
+
+
+def get_eosio_cpp_version():
+    """Get the version code of *eosio-cpp*.
+    """
+    return utils.process(
+                            [config.eosio_cpp(), "-version"],
+                            "Cannot determine the version of 'eosio-cpp'."
+        ).replace("eosio-cpp version ", "")
+
+
+EOSIO_CPP_VERSION = "${eosio-cpp version}"
 INCLUDES = [
-        "${ROOT}/usr/local/eosio.cdt/include/eosiolib",
-        "${ROOT}/usr/local/eosio.cdt/include",
-        "${ROOT}/usr/local/eosio.cdt/include/libc",
-        "${ROOT}/usr/local/eosio.cdt/include/libcxx",
+        "${ROOT}/usr/opt/eosio.cdt/${eosio-cpp version}/include/eosiolib",
+        "${ROOT}/usr/opt/eosio.cdt/${eosio-cpp version}/include",
+        "${ROOT}/usr/opt/eosio.cdt/${eosio-cpp version}/include/libc",
+        "${ROOT}/usr/opt/eosio.cdt/${eosio-cpp version}/include/libcxx",
         "${workspaceFolder}"
     ]
+
+
 LIBS = [
 ]
 COMPILER_OPTIONS = [
@@ -170,7 +188,9 @@ TASKS = '''
 }
 '''
 
-c_cpp_properties = """
+def c_cpp_properties():
+    eosio_cpp_version = get_eosio_cpp_version()
+    retval = """
 {
     "configurations": [
         {
@@ -194,3 +214,6 @@ c_cpp_properties = """
     json.dumps(COMPILER_OPTIONS, indent=4),
     json.dumps(INCLUDES, indent=4))
 
+    return retval.replace(EOSIO_CPP_VERSION, eosio_cpp_version)
+
+    

@@ -1,11 +1,8 @@
-ARG eos_branch=v1.3.1
-ARG eos_symbol=SYS
-
-FROM tokenika/eosio:${eos_branch}
+FROM tokenika/eosio:v1.5.0
 
 ##############   PYTHON    #############################################################################################
 ## Based mostly on https://github.com/docker-library/python/blob/005dda958/3.5/jessie/Dockerfile
-ARG python_version=3.5.6
+ARG PYTHON_VERSION=3.5.6
 
 ENV PATH /usr/local/bin:$PATH
 
@@ -16,8 +13,8 @@ ENV TERM xterm
 
 RUN set -ex \
 	\
-	&& wget -O python.tar.xz "https://www.python.org/ftp/python/${python_version%%[a-z]*}/Python-$python_version.tar.xz" \
-	&& wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${python_version%%[a-z]*}/Python-$python_version.tar.xz.asc" \
+	&& wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-${PYTHON_VERSION}.tar.xz" \
+	&& wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-${PYTHON_VERSION}.tar.xz.asc" \
 	&& mkdir -p /usr/src/python \
 	&& tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
 	&& rm python.tar.xz \
@@ -83,8 +80,10 @@ RUN wget https://github.com/eosio/eosio.cdt/releases/download/v1.4.1/eosio.cdt-1
 
 ############## EOS FACTORY #############################################################################################
 
-ARG eosfactory_branch=master
-RUN git clone -b "$eosfactory_branch" https://github.com/tokenika/eosfactory.git /opt/eosfactory/
+ARG EOSFACTORY_BRANCH=master
+ARG EOSFACTORY_SLUG=tokenika/eosfactory
+RUN echo git clone -b "$EOSFACTORY_BRANCH" https://github.com/${EOSFACTORY_SLUG}.git /opt/eosfactory/
+RUN git clone -b "$EOSFACTORY_BRANCH" https://github.com/${EOSFACTORY_SLUG}.git /opt/eosfactory/
 WORKDIR /opt/eosfactory/
 RUN git branch
 RUN git log -10 --oneline

@@ -1,6 +1,7 @@
 import re
 import types
 
+import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.manager as manager
 import eosfactory.core.interface as interface

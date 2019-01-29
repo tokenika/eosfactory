@@ -1,6 +1,5 @@
 import os
 import argparse
-
 import json
 
 import eosfactory.core.errors as errors
@@ -46,7 +45,6 @@ key_public_ = (
     ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"])
 contract_workspace_ = (
     "EOSIO_CONTRACT_WORKSPACE", [CONTRACTS_DIR])
-is_nodeos_in_window_ = ("NODE_IN_WINDOW", [0])
 
 
 def eosf_dir():
@@ -150,18 +148,6 @@ def wsl_root():
     else:
         path = path.strip()
     return path.replace("\\", "/")
-
-
-def is_nodeos_in_window():
-    '''If set, the local node runs in a GUI window.
-
-    Affects *Windows* and *Ubuntu* systems.
-
-    The setting may be changed with 
-    *NODE_IN_WINDOW* entry in the *config.json* file, 
-    see :func:`.current_config`.    
-    '''
-    return config_value_checked(is_nodeos_in_window_)
 
 
 def nodeos_stdout():
@@ -716,10 +702,6 @@ def current_config(contract_dir=None):
     except:
         map[chain_state_db_size_mb_[0]] = None
     try:
-        map[is_nodeos_in_window_[0]] = is_nodeos_in_window()
-    except:
-        map[is_nodeos_in_window_[0]] = None
-    try:
         map[contract_workspace_[0]] = config_value_checked(contract_workspace_)
     except:
          map[contract_workspace_[0]] = None
@@ -779,7 +761,32 @@ def current_config(contract_dir=None):
 
     return map        
 
-if __name__ == '__main__':
+
+def config():
+    '''
+    usage: config.py [-h] [--json]
+
+    Show the configuration of EOSFactory.
+
+    Args:
+        --json: Print bare JSON only.
+        -h: Show help message and exit.
+    '''
+
+    parser = argparse.ArgumentParser(description='''
+    Show the configuration of EOSFactory.
+    ''')
+
+    parser.add_argument(
+        "--json", help="Bare JSON only.", action="store_true")
+
+    args = parser.parse_args()
+
+    if(args.json):
+        print(json.dumps(
+            current_config(), sort_keys=True, indent=4))
+        return
+
     print('''
 The current configuration of EOSFactory:
 {}
@@ -792,12 +799,12 @@ file located here:
             current_config(), sort_keys=True, indent=4), config_file())
     )
 
-    not_defined = not_defined()
-    if not_defined:
+    not_defined_ = not_defined()
+    if not_defined_:
         print('''
 There are undefined setting:
 {}
-    '''.format(json.dumps(not_defined, sort_keys=True, indent=4)))
+    '''.format(json.dumps(not_defined_, sort_keys=True, indent=4)))
 
     print('''
 The current contents of the configuration file is:
@@ -805,3 +812,12 @@ The current contents of the configuration file is:
 '''.format(
         json.dumps(config_map(), sort_keys=True, indent=4))
     )
+
+
+if __name__ == '__main__':
+    config()
+
+
+
+
+

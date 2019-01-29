@@ -1,4 +1,5 @@
 import eosfactory.core.config as config
+import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
 import eosfactory.core.cleos_sys as cleos_sys

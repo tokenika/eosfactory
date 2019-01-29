@@ -2,6 +2,9 @@ from urllib.request import Request, urlopen
 import json
 import argparse
 import time
+
+import eosfactory.core.errors as errors
+import eosfactory.core.logger as logger
 from eosfactory.eosf import *
 
 CREATE_ACCOUNT_URL = "create_account"

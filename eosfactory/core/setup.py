@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import sys
 import re
 import os
 import json
@@ -17,6 +18,16 @@ is_local_address = False
 
 __nodeos_address = None
 __file_prefix = None
+
+
+def donot_print_traceback(donot=True):
+    if donot:
+        sys.tracebacklimit = 0
+    else:
+        sys.tracebacklimit = 10
+
+
+donot_print_traceback()
 
 
 def nodeos_address():
