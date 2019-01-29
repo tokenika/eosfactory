@@ -109,9 +109,9 @@ def register_testnet_via_faucet_(faucet, url, alias):
     testnet.testnets()
 
 
-def register_testnet_via_faucet():
+def main():
     '''
-    usage: python3 -m eosfactory.utils.register_testnet_via_faucet [-h] \
+    usage: python3 -m eosfactory.register_testnet_via_faucet [-h] \
     faucet url [alias]
 
     Args:
@@ -138,8 +138,8 @@ def register_testnet_via_faucet():
 
     register_testnet_via_faucet_(args.faucet, args.url, args.alias)
 
-    # python3 -m eosfactory.utils.register_testnet_via_faucet http://faucet.cryptokylin.io https://api.kylin.alohaeos.com kylin
+    # python3 -m eosfactory.register_testnet_via_faucet http://faucet.cryptokylin.io https://api.kylin.alohaeos.com kylin
 
 
 if __name__ == '__main__':
-    register_testnet_via_faucet()
+    main()

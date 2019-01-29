@@ -1,10 +1,16 @@
 import os
 import argparse
 import json
+import re
 
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
+
+VERSION = "1.4.0"
+EOSIO_VERSION = "1.5.0"
+EOSIO_CDT_VERSION = "1.4.1"
+PYTHON_VERSION = "3.5 or higher"
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
 contractsDir = "contracts"
@@ -13,6 +19,7 @@ FROM_HERE_TO_EOSF_DIR = "../../../"
 CONFIG_JSON = "config.json"
 CONTRACTS_DIR = "contracts/"
 LOCALNODE = "localnode/"
+EOSIO_CPP_DIR = "/usr/opt/eosio.cdt/0.0.0/"
 
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 wallet_address_ = ("WALLET_MANAGER_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
@@ -26,17 +33,15 @@ wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 
 
-cli_exe_ = (
-    "EOSIO_CLI_EXECUTABLE", 
-    ["/usr/bin/cleos", "/usr/local/bin/cleos", "/usr/local/eosio/bin/cleos"])
-keosd_exe_ = ("KEOSD_EXECUTABLE", 
-    ["/usr/bin/keosd", "/usr/local/bin/keosd"])
-node_exe_ = (
-    "LOCAL_NODE_EXECUTABLE", 
-    ["/usr/bin/nodeos", "/usr/local/bin/nodeos", "/usr/local/eosio/bin/nodeos"])
-eosio_cpp_ = ("EOSIO_CPP", 
-    ["/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp", 
-        "/usr/local/eosio.cdt/bin/eosio-cpp"])
+cli_exe_ = ("EOSIO_CLI_EXECUTABLE", ["/usr/bin/cleos"])
+keosd_exe_ = ("KEOSD_EXECUTABLE", ["/usr/bin/keosd"])
+node_exe_ = ("LOCAL_NODE_EXECUTABLE", ["/usr/bin/nodeos"])
+eosio_cpp_ = ("EOSIO_CPP", ["/usr/bin/eosio-cpp"])
+eosio_cpp_dir_ = ("EOSIO_CPP_DIR", [EOSIO_CPP_DIR])
+eosio_cpp_includes_ = (
+    "EOSIO_CPP_INCLUDES", 
+    [["include", "include/eosiolib", "include/libc", "include/libcxx"]])
+
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
     ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"])
@@ -225,6 +230,48 @@ def eosio_cpp():
     see :func:`.current_config`.
     '''
     return first_valid_path(eosio_cpp_)
+
+
+def eosio_cpp_dir():
+    '''The path to the *eosio-cpp* installation directory.
+    
+    The setting may be changed with 
+    *EOSIO_CPP* entry in the *config.json* file, 
+    see :func:`.current_config`.
+    '''
+    eosio_cpp_version = utils.process(
+            [eosio_cpp(), "-version"],
+            "Cannot determine the version of the expected 'eosio.cpp' package."
+        ).replace("eosio-cpp version ", "")
+    version_pattern = re.compile(".+/eosio\.cdt/(\d\.\d\.\d)/$")
+    dir = eosio_cpp_dir_[1][0]    
+    if not version_pattern.match(dir):
+        raise errors.Error(
+            '''
+The assumed pattern
+{}
+does not match the directory template 'core.config.EOSIO_CPP_DIR'
+{}
+            '''.format(version_pattern, EOSIO_CPP_DIR)
+        )
+    dir = dir.replace(
+        re.findall(version_pattern, dir)[0], eosio_cpp_version) 
+
+    return dir   
+
+
+def eosio_cpp_includes():
+    '''The list of eosio cpp_ includes.
+    
+    The setting may be changed with 
+    *EOSIO_CPP* entry in the *config.json* file, 
+    see :func:`.current_config`.
+    '''
+    list = []
+    dir = eosio_cpp_dir()
+    for include in eosio_cpp_includes_[1][0]:
+        list.append(dir + include)
+    return list
 
 
 def keosd_wallet_dir(raise_error=True):
@@ -646,6 +693,23 @@ def wasm_file(contract_dir_hint):
         contract_file(contract_dir_hint, ".wasm"), contract_dir_hint)
 
 
+def update_eosio_cpp_includes(c_cpp_properties_path, root=""):
+    c_cpp_properties_path = utils.wslMapWindowsLinux(c_cpp_properties_path)
+    with open(c_cpp_properties_path) as f:
+        c_cpp_properties = f.read()
+
+    dir_pattern = re.compile(
+        '^.*{}(/.+/eosio\.cdt/\d\.\d\.\d/).+'.format(root), re.M)
+
+    dir = eosio_cpp_dir()
+    if re.findall(dir_pattern, c_cpp_properties):
+        new = c_cpp_properties.replace(re.findall(
+                                        dir_pattern, c_cpp_properties)[0], dir)
+        if not new == c_cpp_properties:
+            with open(c_cpp_properties_path,'w') as f:
+                f.write(new)
+
+
 def not_defined():
     map = current_config()
     retval = {}
@@ -653,6 +717,45 @@ def not_defined():
         if value == None or value is None:
             retval[key] = value
     return retval
+
+
+def installation_dependencies():
+    '''Verify whether 'eosio' and 'eosio.cpp' packages are properly installed.
+    '''
+    eosio_version = utils.process(
+                            [node_exe(), "--version"],
+                            raise_exception=False)
+    if not eosio_version[1]:
+        eosio_version = eosio_version[0].replace("v", "")
+        if not eosio_version == EOSIO_VERSION:
+            print('''NOTE!
+The version of the installed 'eosio' package is {} while the expected
+version is {}
+            '''.format(eosio_version, EOSIO_VERSION))
+    else:
+        print('''ERROR!
+Cannot determine the version of the expected 'eosio' package.
+The error message:
+{}
+        '''.format(eosio_version[1]))
+
+    eosio_cpp_version = utils.process(
+                            [eosio_cpp(), "-version"],
+                            raise_exception=False)
+    if not eosio_cpp_version[1]:
+        eosio_cpp_version = eosio_cpp_version[0].replace(
+                                                    "eosio-cpp version ", "")
+        if not eosio_cpp_version == EOSIO_CDT_VERSION:
+            print('''NOTE!
+The version of the installed 'eosio.cpp' package is {} while the expected
+version is {}
+            '''.format(eosio_cpp_version, EOSIO_CDT_VERSION))
+    else:
+        print('''ERROR!
+Cannot determine the version of the expected 'eosio.cpp' package.
+The error message:
+{}
+        '''.format(eosio_cpp_version[1]))    
 
 
 def current_config(contract_dir=None):
@@ -732,7 +835,16 @@ def current_config(contract_dir=None):
     try: 
         map[eosio_cpp_[0]] = eosio_cpp()
     except:
-        map[eosio_cpp_[0]] = None                       
+        map[eosio_cpp_[0]] = None
+    try: 
+        map[eosio_cpp_dir_[0]] = eosio_cpp_dir()
+    except:
+        map[eosio_cpp_dir_[0]] = None
+    try: 
+        map[eosio_cpp_includes_[0]] = eosio_cpp_includes()
+    except:
+        map[eosio_cpp_includes_[0]] = None        
+                                      
     try:   
         map[genesis_json_[0]] = genesis_json()
     except:
@@ -763,29 +875,16 @@ def current_config(contract_dir=None):
 
 
 def config():
-    '''
-    usage: config.py [-h] [--json]
+    print('''
+EOSFactory version {}.
+Dependencies:
+https://github.com/EOSIO/eos version {}
+https://github.com/EOSIO/eosio.cdt version {}
+Python version {}
+    '''.format(VERSION, EOSIO_VERSION, EOSIO_CDT_VERSION, PYTHON_VERSION)
+    )
 
-    Show the configuration of EOSFactory.
-
-    Args:
-        --json: Print bare JSON only.
-        -h: Show help message and exit.
-    '''
-
-    parser = argparse.ArgumentParser(description='''
-    Show the configuration of EOSFactory.
-    ''')
-
-    parser.add_argument(
-        "--json", help="Bare JSON only.", action="store_true")
-
-    args = parser.parse_args()
-
-    if(args.json):
-        print(json.dumps(
-            current_config(), sort_keys=True, indent=4))
-        return
+    installation_dependencies()
 
     print('''
 The current configuration of EOSFactory:
@@ -814,8 +913,34 @@ The current contents of the configuration file is:
     )
 
 
+def main():
+    '''
+    usage: config.py [-h] [--json]
+
+    Show the configuration of EOSFactory.
+
+    Args:
+        --json: Print bare JSON only.
+        -h: Show help message and exit.
+    '''
+
+    parser = argparse.ArgumentParser(description='''
+    Show the configuration of EOSFactory.
+    ''')
+    parser.add_argument("--dependencies", action="store_true")
+    parser.add_argument("--json", help="Bare JSON only.", action="store_true")
+    args = parser.parse_args()
+    if args.dependencies:
+        installation_dependencies()
+    elif args.json:
+        print(json.dumps(
+            current_config(), sort_keys=True, indent=4))
+    else:
+        config()    
+
 if __name__ == '__main__':
-    config()
+    main()
+
 
 
 

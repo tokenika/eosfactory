@@ -147,6 +147,12 @@ def DEBUG(msg=None, verbosity=None, translate=True):
         cprint(msg, color[0], color[1], attrs=color[2])
 
 
+def ERROR(msg, translate=True):
+    msg = error(msg, translate)
+    color = Verbosity.ERROR.value
+    cprint(msg, color[0], color[1], attrs=color[2])
+
+
 __is_testing_errors = False
 def set_is_testing_errors(status=True):
     '''Changes the color of the ``ERROR`` logger printout.

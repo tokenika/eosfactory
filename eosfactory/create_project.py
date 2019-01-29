@@ -1,9 +1,9 @@
 import argparse
 from eosfactory.core.teos import project_from_template 
 
-def create_project():
+def main():
     '''
-    usage: python3 -m eosfactory.utils.create_project [-h] [--vsc]
+    usage: python3 -m eosfactory.create_project [-h] [--vsc]
                             [--throw] [--ovr] [--silent]
                             name [template]
 
@@ -60,4 +60,4 @@ def create_project():
         )
 
 if __name__ == '__main__':
-    create_project()
+    main()

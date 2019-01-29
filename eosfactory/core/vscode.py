@@ -8,29 +8,22 @@
 
 import json
 import subprocess
+import argparse
 
 import eosfactory.core.utils as utils
 import eosfactory.core.config as config
 import eosfactory.core.logger as logger
 
 
-def get_eosio_cpp_version():
-    """Get the version code of *eosio-cpp*.
-    """
-    return utils.process(
-                            [config.eosio_cpp(), "-version"],
-                            "Cannot determine the version of 'eosio-cpp'."
-        ).replace("eosio-cpp version ", "")
+def get_includes():
+    includes = config.eosio_cpp_includes()
+    retval = []
+    for include in includes:
+        retval.append("${ROOT}" + include)
 
+    retval.append("${workspaceFolder}")
 
-EOSIO_CPP_VERSION = "${eosio-cpp version}"
-INCLUDES = [
-        "${ROOT}/usr/opt/eosio.cdt/${eosio-cpp version}/include/eosiolib",
-        "${ROOT}/usr/opt/eosio.cdt/${eosio-cpp version}/include",
-        "${ROOT}/usr/opt/eosio.cdt/${eosio-cpp version}/include/libc",
-        "${ROOT}/usr/opt/eosio.cdt/${eosio-cpp version}/include/libcxx",
-        "${workspaceFolder}"
-    ]
+    return retval
 
 
 LIBS = [
@@ -53,13 +46,13 @@ TASKS = '''
                         ]
                     }
                 },
-                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}' --compile"
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}' --compile"
             },
             "osx": {
-                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}' --compile"
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}' --compile"
             },
             "linux": {
-                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}' --compile"
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}' --compile"
             },
             "presentation": {
                 "reveal": "always",
@@ -80,13 +73,13 @@ TASKS = '''
                         ]
                     }
                 },
-                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}'"        
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}'"        
             },
             "osx": {
-                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}'"
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}'"
             },
             "linux": {
-                "command": "mkdir -p build; python3 -m eosfactory.utils.build '${workspaceFolder}'"
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}'"
             },
             "problemMatcher": [],
             "presentation": {
@@ -189,7 +182,7 @@ TASKS = '''
 '''
 
 def c_cpp_properties():
-    eosio_cpp_version = get_eosio_cpp_version()
+    includes = get_includes()
     retval = """
 {
     "configurations": [
@@ -209,11 +202,24 @@ def c_cpp_properties():
     "version": 4
 }
 """ % (
-    json.dumps(INCLUDES, indent=4),
+    json.dumps(includes, indent=4),
     json.dumps(LIBS, indent=4),
     json.dumps(COMPILER_OPTIONS, indent=4),
-    json.dumps(INCLUDES, indent=4))
+    json.dumps(includes, indent=4))
 
-    return retval.replace(EOSIO_CPP_VERSION, eosio_cpp_version)
+    return retval
 
-    
+
+def main(c_cpp_properties_path=None, root=None):
+    if c_cpp_properties_path:
+        config.update_eosio_cpp_includes(c_cpp_properties_path, root)
+    else:
+        print(c_cpp_properties())
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--c_cpp_prop_path", default="")
+    parser.add_argument("--root", default="")
+    args = parser.parse_args()
+    main(args.c_cpp_prop_path, args.root)

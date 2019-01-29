@@ -30,12 +30,13 @@ CONFIGURATIONS = "configurations"
 INCLUDE_PATH = "includePath"
 BROWSE = "browse"
 WORKSPACE_FOLDER = "${workspaceFolder}"
-EOSIO_CPP_INCLUDE = "/usr/opt/eosio.cdt"
+EOSIO_CPP_INCLUDE = "eosio.cdt"
+EOSIO_DISPATCH = "EOSIO_DISPATCH"
 
 def replace_templates(string): 
     home = os.environ["HOME"]
     root = ""
-    if is_windows_ubuntu():
+    if utils.is_windows_ubuntu():
         home = config.wsl_root() + home
         root = config.wsl_root()
 
@@ -115,25 +116,32 @@ def ABI(
 
     c_cpp_properties = get_c_cpp_properties(
                                     contract_dir, c_cpp_properties_path)
-
     for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
             command_line.append(
-                "-I" + utils.wslMapWindowsLinux(entry))
+                "-I=" + utils.wslMapWindowsLinux(entry))
         else:
             if not EOSIO_CPP_INCLUDE in entry:
                 command_line.append(
-                    "-I" + utils.wslMapWindowsLinux(
+                    "-I=" + utils.wslMapWindowsLinux(
                         strip_wsl_root(entry)))
 
+    input_file = None
     for file in source_files:
-        command_line.append(file)
+        with open(file, 'r') as f:
+            if EOSIO_DISPATCH in f.read():
+                input_file = file
+                break
+    if not input_file:
+        raise errors.Error('''
+Cannot determine the ``input file``, using the {} macro.
+Source files considered:
+{}
+        '''.format(EOSIO_DISPATCH, source_files))
 
-    try:
-        eosio_cpp(command_line, target_dir)
-    except Exception as e:
-        raise errors.Error(str(e))
+    command_line.append(input_file)
+    eosio_cpp(command_line, target_dir)
 
     logger.TRACE('''
     ABI file writen to file: 
@@ -189,8 +197,20 @@ def WASM(
     for entry in c_cpp_properties[CONFIGURATIONS][0]["compilerOptions"]:
         command_line.append(entry)
     
+    input_file = None
     for file in source_files:
-        command_line.append(file)
+        with open(file, 'r') as f:
+            if EOSIO_DISPATCH in f.read():
+                input_file = file
+                break
+    if not input_file:
+        raise errors.Error('''
+Cannot determine the ``input file``, using the {} macro.
+Source files considered:
+{}
+        '''.format(EOSIO_DISPATCH, source_files))
+
+    command_line.append(input_file)
 
     if setup.is_print_command_line:
         print("######## \n{}:".format(" ".join(command_line)))
@@ -201,10 +221,7 @@ def WASM(
 
     command_line.append("-o=" + target_path)
 
-    try:
-        eosio_cpp(command_line, target_dir)
-    except Exception as e:                       
-        raise errors.Error(str(e))
+    eosio_cpp(command_line, target_dir)
 
     if not compile_only:
         logger.TRACE('''
@@ -344,7 +361,7 @@ error message:
         if TEMPLATE_HOME in template or TEMPLATE_ROOT in template:
             home = os.environ["HOME"]
             root = ""
-            if is_windows_ubuntu():
+            if utils.is_windows_ubuntu():
                 replace_templates(template)
 
         template = template.replace("${" + TEMPLATE_NAME + "}", project_name)
@@ -362,10 +379,10 @@ error message:
     '''.format(project_name, template_dir), verbosity)    
 
     if open_vscode:
-        if is_windows_ubuntu():
+        if utils.is_windows_ubuntu():
             command_line = "cmd.exe /C code {}".format(
                 utils.wslMapLinuxWindows(project_dir))
-        elif uname() == "Darwin":
+        elif utils.uname() == "Darwin":
             command_line = "open -n -b com.microsoft.VSCode --args {}".format(
                 project_dir)
         else:
@@ -408,19 +425,6 @@ def get_pid(name=None):
         command_line, "Cannot determine PID of any nodeos process.")
 
     return [int(pid) for pid in stdout.split()]
-
-
-def uname(options=None):
-    command_line = ['uname']
-    if options:
-        command_line.append(options)
-
-    return utils.process(command_line)
-
-
-def is_windows_ubuntu():
-    resp = uname("-v")
-    return resp.find("Microsoft") != -1
 
 
 def eosio_cpp(command_line, target_dir):
@@ -530,14 +534,14 @@ def on_nodeos_error(clear=False):
     args_.insert(0, config.node_exe())
     command_line = " ".join(args_)
 
-    raise errors.Error('''
+    logger.ERROR('''
     The local ``nodeos`` failed to start twice in sequence. Perhaps, something is
     wrong with configuration of the system. See the command line issued:
 
     ''')
     print("\n{}\n".format(command_line))
     logger.INFO('''
-    Now, see the result of an execution of the command line:
+    Now, see the result of execution of the command line:
     ''')
     
     def runInThread():

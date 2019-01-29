@@ -1,7 +1,7 @@
 import argparse
 import eosfactory.core.teos as teos
 
-def build_(
+def build(
         contract_dir_hint,
         c_cpp_properties_path="", 
         compile_only=False, silent=False):
@@ -11,9 +11,9 @@ def build_(
         teos.ABI(contract_dir_hint, c_cpp_properties_path, verbosity)
     teos.WASM(contract_dir_hint, c_cpp_properties_path, compile_only, verbosity)
 
-def build():
+def main():
     '''
-    usage: python3 -m eosfactory.utils.build [-h] [--compile] [--silent] dir
+    usage: python3 -m eosfactory.build [-h] [--compile] [--silent] dir
 
     Build a contract.
 
@@ -54,7 +54,7 @@ def build():
 
 
     args = parser.parse_args()
-    build_(args.dir, args.c_cpp_prop, args.compile, args.silent)    
+    build(args.dir, args.c_cpp_prop, args.compile, args.silent)    
 
 if __name__ == '__main__':
-    build()
+    main()

@@ -2,3 +2,6 @@
 
 .. moduleauthor:: Tokenika
 '''
+import eosfactory.core.config
+
+__version__ = eosfactory.core.config.VERSION

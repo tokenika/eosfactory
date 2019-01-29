@@ -10,7 +10,7 @@ import eosfactory.core.testnet
 import eosfactory.shell.account as account
 import eosfactory.shell.contract as contract
 
-def deploy_(
+def deploy(
         contract_dir="",
         testnet_account_name="",
         c_cpp_properties_path="", 
@@ -41,7 +41,7 @@ def deploy_(
         raise errors.Error('''
         There is not any testnet account named '{}' in the list. 
         Use the bash command 
-        `python3 -m eosfactory.utils.register_testnet -h`
+        `python3 -m eosfactory.register_testnet -h`
         to get instructions how to register a testnet account.
         '''.format(testnet_account_name))
     
@@ -49,11 +49,11 @@ def deploy_(
     testnet_account.verify_production()
     contract_account = account.restore_account(
         testnet_account_name, testnet_account)
-    contract.Contract(contract_account).deploy()
+    contract.Contract(contract_account).main()
 
-def deploy():
+def main():
     '''
-    usage: python3 -m eosfactory.utils.deploy.py [-h] [--dir DIR] 
+    usage: python3 -m eosfactory.deploy.py [-h] [--dir DIR] 
                                                 [--c_cpp_prop C_CPP_PROP]
                                                 [--testnet TESTNET] [--silent]
 
@@ -104,7 +104,7 @@ def deploy():
 
 
     args = parser.parse_args()
-    deploy_(args.dir, args.testnet, args.c_cpp_prop, args.silent)    
+    deploy(args.dir, args.testnet, args.c_cpp_prop, args.silent)    
 
 if __name__ == '__main__':
-    deploy()
+    main()

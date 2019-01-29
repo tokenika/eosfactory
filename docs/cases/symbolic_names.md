@@ -17,7 +17,7 @@ What's more, *EOSFactory* translates *EOSIO* logger messages, so that the random
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/utils/pythonmd.sh docs/cases/symbolic_names.md
+eosfactory/pythonmd.sh docs/cases/symbolic_names.md
 ```
 
 Create a new Python session and import *EOSFactory* API:
@@ -110,5 +110,5 @@ stop()
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/utils/pythonmd.sh docs/cases/symbolic_names.md
+eosfactory/pythonmd.sh docs/cases/symbolic_names.md
 ```
