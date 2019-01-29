@@ -16,7 +16,7 @@ The implementation of a master account is dependent on the context:
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/utils/pythonmd.sh docs/cases/master_account.md
+eosfactory/pythonmd.sh docs/cases/master_account.md
 ```
 
 Let's consider two scenarios: first a local (private) testnet, and then a more complex situation of a remote (public) testnet.
@@ -127,5 +127,5 @@ Here is the expected outcome:
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/utils/pythonmd.sh docs/cases/master_account.md
+eosfactory/pythonmd.sh docs/cases/master_account.md
 ```

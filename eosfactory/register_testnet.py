@@ -26,9 +26,9 @@ def register_testnet_(
         testnet.testnets()
 
 
-def register_testnet():
+def main():
     '''
-    usage: python3 -m eosfactory.utils.register_testnet [-h] \
+    usage: python3 -m eosfactory.register_testnet [-h] \
     [-a ACCOUNT ACCOUNT ACCOUNT] url [alias]
 
     Given an url and an testnet alias (not obligatory), get registration data.
@@ -36,13 +36,13 @@ def register_testnet():
     
     Example: 
     
-    python3 -m eosfactory.utils.register_testnet http://88.99.97.30:38888 jungle 
+    python3 -m eosfactory.register_testnet http://88.99.97.30:38888 jungle 
     
     If additional arguments are given, denoted as ``--account``, then the given
     account is checked for existence, and then added as a testnet master 
     account, for example:
 
-    python3 -m eosfactory.utils.register_testnet http://88.99.97.30:38888 jungle -a
+    python3 -m eosfactory.register_testnet http://88.99.97.30:38888 jungle -a
     dgxo1uyhoytn 5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67
     5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
 
@@ -59,12 +59,12 @@ def register_testnet():
     Enter 'go' when ready.
 
     Example:
-        python3 utils/register_testnet.py http://88.99.97.30:38888 jungle
+        python3 -m eosfactory.register_testnet.py http://88.99.97.30:38888 jungle
 
     If additional arguments are given, denoted as ``--account``, then the given 
     account is checked for existence, and then added as a testnet master account.
 
-        python3 utils/register_testnet.py http://88.99.97.30:38888 jungle \
+        python3 -m eosfactory.register_testnet.py http://88.99.97.30:38888 jungle \
         -a dgxo1uyhoytn \
         5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
         5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
@@ -89,8 +89,8 @@ def register_testnet():
 
     register_testnet_(args.url, args.alias, account_name, owner_key, active_key)
 
-    # python3 utils/register_testnet.py http://88.99.97.30:38888 jungle -a dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
+    # python3 eosfactory.register_testnet http://88.99.97.30:38888 jungle -a dgxo1uyhoytn 5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY 5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA
 
 
 if __name__ == '__main__':
-    register_testnet()
+    main()

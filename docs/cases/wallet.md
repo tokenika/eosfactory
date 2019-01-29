@@ -19,7 +19,7 @@ The wallet files are marked with prefixes which are encoding the URL of the acti
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/utils/pythonmd.sh docs/cases/wallet.md
+eosfactory/pythonmd.sh docs/cases/wallet.md
 ```
 
 #### Create a new wallet
@@ -186,5 +186,5 @@ stop()
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/utils/pythonmd.sh docs/cases/wallet.md
+eosfactory/pythonmd.sh docs/cases/wallet.md
 ```

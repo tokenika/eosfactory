@@ -46,6 +46,9 @@ class Testnet:
         self.url = url
         self.name = name
 
+    def __str__(self):
+        return "{} {} {}".format(self.name, self.account_name, self.url)
+
     def configure(self, prefix=None):
         '''Set the testnet to be the listener to EOSFactory.
         '''
@@ -76,7 +79,7 @@ class Testnet:
         return manager.is_local_testnet()
 
 
-def get_testnet(name=None, testnet=None, reset=False):
+def get_testnet(name=None, testnet=None, reset=False, raise_exception=True):
     '''Return a testnet.
 
     Args:
@@ -107,15 +110,19 @@ def get_testnet(name=None, testnet=None, reset=False):
         elif name == "KYLIN":
             return KYLIN
         else:
-            raise errors.Error('''
-            Testnet *{}* is not defined in the testnet mapping.
-            '''.format(name))
+            if raise_exception:
+                raise errors.Error('''
+                Testnet *{}* is not defined in the testnet mapping.
+                '''.format(name))
+            else:
+                return
     elif testnet:
         return Testnet(testnet[0], testnet[1], testnet[2], testnet[3])
 
-    raise errors.Error('''
-        Cannot determine testnet.
-        ''')
+    if raise_exception:
+        raise errors.Error('''
+            Cannot determine testnet.
+            ''')
 
 
 TESTNET_FILE = "testnet.json"

@@ -237,7 +237,6 @@ extra_stake_net = None
 extra_stake_cpu = None
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser(description='''
     This is a unit test for the ``tic-tac-toe`` smart contract.
     It works both on a local testnet and remote testnet.

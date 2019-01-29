@@ -12,7 +12,7 @@ We present how to create an account object, associate it with a contract and the
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/utils/pythonmd.sh docs/cases/account.md
+eosfactory/pythonmd.sh docs/cases/account.md
 ```
 
 ### Create a new account
@@ -132,5 +132,5 @@ stop()
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/utils/pythonmd.sh docs/cases/account.md
+eosfactory/pythonmd.sh docs/cases/account.md
 ```

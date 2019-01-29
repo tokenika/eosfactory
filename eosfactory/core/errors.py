@@ -24,8 +24,7 @@ def validate(omittable):
     elif "Wallet already exists" in err_msg:
         raise WalletAlreadyExistsError(omittable)
     elif "Error 3120002: Nonexistent wallet" in err_msg:
-        raise WalletDoesNotExistError(
-            WalletDoesNotExistError.msg_template.format(self.name))
+        raise WalletDoesNotExistError(omittable)
     elif "Invalid wallet password" in err_msg:
         raise InvalidPasswordError(omittable)
     elif "Contract is already running this version of code" in err_msg:
