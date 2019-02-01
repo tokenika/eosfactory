@@ -13,3 +13,4 @@ eosfactory/pythonmd.sh docs/tutorials/02.InteractingWithEOSContractsInEOSFactory
 
 eosfactory/pythonmd.sh docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md &&\
 eosfactory/pythonmd.sh docs/tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.md
+
