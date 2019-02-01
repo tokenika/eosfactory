@@ -17,10 +17,10 @@ def register_testnet_(
 
     if account:
         testnet.add_to_mapping(
-            url, 
             account_name if account_name else account.name,
             owner_key if owner_key else account.owner_key.key_private, 
             active_key if active_key else account.active_key.key_private,
+            url,
             alias)
 
         testnet.testnets()
