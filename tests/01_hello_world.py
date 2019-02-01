@@ -16,7 +16,6 @@ class Test(unittest.TestCase):
         SCENARIO('''
         Create a contract from template, then build and deploy it.
         ''')
-        import pdb; pdb.set_trace()
         reset()
         create_master_account("master")
 

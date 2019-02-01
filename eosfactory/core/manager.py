@@ -27,7 +27,6 @@ def reboot():
 def clear_testnet_cache():
     ''' Remove wallet files associated with the current testnet.
     '''
-
     if not setup.file_prefix():
         return
     logger.TRACE('''
@@ -178,17 +177,17 @@ def reset(nodeos_stdout=None):
             it is set with this argument, the argument setting prevails. 
     '''
 
+    import eosfactory.shell.account as account
+    teos.keosd_start()
+    account.reboot()
+
     if not cleos.set_local_nodeos_address_if_none():
         logger.INFO('''
         No local nodeos is set: {}
         '''.format(setup.nodeos_address()))
 
-    import eosfactory.shell.account as account
-    teos.keosd_start()
-    account.reboot()
     clear_testnet_cache()
     node_start(clear=True, nodeos_stdout=nodeos_stdout)
-    
 
 
 def resume(nodeos_stdout=None):
