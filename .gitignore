@@ -28,8 +28,6 @@ tests/test.py
 tests/js.js
 tests/eosjs.py
 tests/eosjsecc.js
-localnode/state
-localnode/blocks
 
 # Compiled python modules.
 *.pyc
@@ -48,3 +46,4 @@ docs/patterns/*.py
 docs/patterns/set/*.py
 hyper.md
 test.py
+nodeos.log

@@ -8,7 +8,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 VERSION = "1.4.0"
-EOSIO_VERSION = "1.5.0"
+EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.4.1"
 PYTHON_VERSION = "3.5 or higher"
 
@@ -18,14 +18,16 @@ DEFAULT_TEMPLATE = "01_hello_world"
 FROM_HERE_TO_EOSF_DIR = "../../../"
 CONFIG_JSON = "config.json"
 CONTRACTS_DIR = "contracts/"
-LOCALNODE = "localnode/"
 EOSIO_CPP_DIR = "/usr/opt/eosio.cdt/0.0.0/"
 
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 wallet_address_ = ("WALLET_MANAGER_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
-genesis_json_ = ("EOSIO_GENESIS_JSON", [LOCALNODE + "genesis.json"])
-data_dir_ = ("LOCAL_NODE_DATA_DIR", [LOCALNODE])
-config_dir_ = ("LOCAL_NODE_CONFIG_DIR", [LOCALNODE])
+genesis_json_ = ("EOSIO_GENESIS_JSON", 
+                ["/home/cartman/.local/share/eosio/nodeos/config/genesis.json"])
+data_dir_ = ("LOCAL_NODE_DATA_DIR", 
+                            ["/home/cartman/.local/share/eosio/nodeos/data/"])
+config_dir_ = ("LOCAL_NODE_CONFIG_DIR", 
+                            ["/home/cartman/.local/share/eosio/nodeos/config/"])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
 
