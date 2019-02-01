@@ -55,8 +55,9 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
         c_cpp_properties_path = utils.wslMapWindowsLinux(c_cpp_properties_path)
         if not os.path.exists(c_cpp_properties_path):
             raise errors.Error('''
-                The given path does not exist:
-                ${}       
+                The given path to the file 'c_cpp_properties.json'
+                does not exist:
+                {}       
             '''.format(c_cpp_properties_path))
     
     if os.path.exists(c_cpp_properties_path):
@@ -86,7 +87,8 @@ def ABI(
 
     if not source_files:
         raise errors.Error('''
-        "The source is empty. The assumed contract dir is   
+        The source of the contract project is empty. 
+        The assumed contract dir is   
         {}
         '''.format(contract_dir))
         return
@@ -135,9 +137,9 @@ def ABI(
                 break
     if not input_file:
         raise errors.Error('''
-Cannot determine the ``input file``, using the {} macro.
-Source files considered:
-{}
+        Cannot determine the 'input file', defined as using the {} macro.
+        Source files considered:
+        {}
         '''.format(EOSIO_DISPATCH, source_files))
 
     command_line.append(input_file)
@@ -166,8 +168,9 @@ def WASM(
 
     if not source_files:
         raise errors.Error('''
-        "The source is empty. The assumed contract dir is   
-            {}
+        The source of the contract project is empty. 
+        The assumed contract dir is   
+        {}
         '''.format(contract_dir))
         return
 
@@ -205,9 +208,9 @@ def WASM(
                 break
     if not input_file:
         raise errors.Error('''
-Cannot determine the ``input file``, using the {} macro.
-Source files considered:
-{}
+        Cannot determine the 'input file', defined as using the {} macro.
+        Source files considered:
+        {}
         '''.format(EOSIO_DISPATCH, source_files))
 
     command_line.append(input_file)
@@ -262,7 +265,7 @@ def project_from_template(
             config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template) 
     if not os.path.isdir(template_dir):
         raise errors.Error('''
-        TemplateCreate '{}' does not exist.
+        The contract project template '{}' does not exist.
         '''.format(template_dir)) 
 
     if c_cpp_prop_path:
@@ -420,7 +423,7 @@ def get_pid(name=None):
     if not name:
         name = os.path.splitext(os.path.basename(config.node_exe()))[0]
 
-    command_line = ['pgrep', '-f', name]
+    command_line = ['pgrep', name]
     stdout = utils.process(
         command_line, "Cannot determine PID of any nodeos process.")
 
@@ -544,29 +547,25 @@ def on_nodeos_error(clear=False):
     Now, see the result of execution of the command line:
     ''')
     
-    def runInThread():
-        p = subprocess.run(
-            command_line, 
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            shell=True)
+    p = subprocess.run(
+        command_line, 
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        shell=True)
+    
+    err_msg = p.stderr.decode("ISO-8859-1")
+    if "error" in err_msg and not "exit shutdown" in err_msg:
+        logger.ERROR(err_msg)
+    elif not err_msg or "exit shutdown" in err_msg:
+        logger.OUT(
+        '''
+        Just another instability incident of the ``nodeos`` executable. 
+        Rerun the script.
+        '''
+        )
+    else:
+        print(err_msg)
 
-        err_msg = p.stderr.decode("ISO-8859-1")
-        if "error" in err_msg and not "exit shutdown" in err_msg:
-            raise errors.Error(err_msg)
-        elif not err_msg or "exit shutdown" in err_msg:
-            logger.OUT(
-            '''
-            Just another instability incident of the ``nodeos`` executable. 
-            Rerun the script.
-            '''
-            )
-        else:
-            print(err_msg)
-        
-    thread = threading.Thread(target=runInThread)
-    thread.start()
-    time.sleep(10)
     node_stop()
     exit()
 
@@ -597,11 +596,11 @@ def node_start(clear=False, nodeos_stdout=None):
             std_out_handle = open(nodeos_stdout, 'w')
         except Exception as e:
             raise errors.Error('''
-Error when preparing to start the local EOS node, opening the given stdout
-log file that is 
-{}
-Error message is
-{}
+            Error when preparing to start the local EOS node, 
+            opening the given stdout log file that is 
+            {}
+            Error message is
+            {}
             '''.format(nodeos_stdout, str(e)))
 
     def onExit():
@@ -669,7 +668,7 @@ def node_stop():
     # You can see if the process is a zombie by using top or 
     # the following command:
     # ps aux | awk '$8=="Z" {print $2}'
-
+   
     pids = get_pid()
     count = 10
     if pids:

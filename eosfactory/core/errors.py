@@ -42,14 +42,27 @@ def validate(omittable):
         pass                
     else:
         raise Error(err_msg)
-        
+
+
+def excepthook(type, value, traceback):
+    print(value)        
+
 
 class Error(Exception):
     '''Base class for exceptions in EOSFactory.
     '''
     def __init__(self, message, translate=True):
-        self.message = logger.error(message, translate)
-        Exception.__init__(self, self.message)
+        import eosfactory.core.setup as setup
+        if setup.is_raise_error:
+            self.message = logger.error(message, translate)
+            Exception.__init__(self, self.message)
+        else:
+            sys.excepthook = excepthook
+            from inspect import currentframe, getframeinfo, stack
+            frameinfo = getframeinfo(stack()[1][0])
+            details = " {} {}".format(frameinfo.filename, frameinfo.lineno) 
+            self.message = logger.error(message, translate, details=details)
+            Exception.__init__(self, self.message)
 
 
 class AccountDoesNotExistError(Error):
