@@ -11,7 +11,7 @@ printf "%s\n" "
 IS_WSL="" # Windows Subsystem Linux
 function is_wsl {
     uname_a=$( uname -a )
-    if [[ "$uname_a" == *"Microsoft"* ]]; then 
+    if [[ "$uname_a" == *"Microsoft"* ]]; then
         IS_WSL="IS_WSL"
     fi
 }
@@ -32,8 +32,8 @@ if [ ! -z "$IS_WSL" ]; then
         if [ ! -z ${bashrcDir} ]; then
             bashrcDir=${bashrcDir::-1}
         fi
-        if [ "$bashrcDir" == "$bashrc" ]; then 
-            WSL_ROOT=${path}        
+        if [ "$bashrcDir" == "$bashrc" ]; then
+            WSL_ROOT=${path}
             printf "WSL ROOT is %s\n" "$WSL_ROOT"
             WSL_ROOT_IS_SET=true
         fi
@@ -48,7 +48,7 @@ if [ ! -z "$IS_WSL" ]; then
         verifyWslRoot "$(echo $bpKey | \
             grep -o -P '(?<=REG_SZ)[ A-Za-z0-9:\\\._]*')\\rootfs"
     fi
-    
+
     while [ -z "$WSL_ROOT_IS_SET" ]; do
             printf "\n%s" "
 Cannot find the root of the WSL file system which was tried to be
@@ -67,14 +67,15 @@ not care about having the Visual Studio Code intelisense efficient.
 fi
 
 printf "%s" "
-Installing the 'eosfactory' package locally with the Python pip system...
+Installing 'eosfactory' package locally with the Python pip system...
 "
 
 ###############################################################################
-# It is essentioal that the package is installed as a symlink, with 
+# It is essential that the package is installed as a symlink, with
 # the flag '-e'
 ###############################################################################
-sudo  -H python3 -m pip install -e .
+# sudo  -H python3 -m pip install -e .
+sudo python3 setup_develop.py develop
 
 printf "%s\n" "
 Configuring the eosfactory installation...
@@ -89,17 +90,16 @@ txtrst=$(tput sgr0)
 printf "${bldred}%s${txtrst}" "
          ______ ____   _____  ______      _____ _______ ____  _______     __
         |  ____/ __ \ / ____||  ____/\   / ____|__   __/ __ \|  __ \ \   / /
-        | |__ | |  | | (___  | |__ /  \ | |       | | | |  | | |__) \ \_/ / 
-        |  __|| |  | |\___ \ |  __/ /\ \| |       | | | |  | |  _  / \   /  
-        | |___| |__| |____) || | / ____ \ |____   | | | |__| | | \ \  | |   
-        |______\____/|_____/ |_|/_/    \_\_____|  |_|  \____/|_|  \_\ |_|   
-                                                      
+        | |__ | |  | | (___  | |__ /  \ | |       | | | |  | | |__) \ \_/ /
+        |  __|| |  | |\___ \ |  __/ /\ \| |       | | | |  | |  _  / \   /
+        | |___| |__| |____) || | / ____ \ |____   | | | |__| | | \ \  | |
+        |______\____/|_____/ |_|/_/    \_\_____|  |_|  \____/|_|  \_\ |_|
 "
 printf "%s\n" "
-To verify EOSFactory installation navigate to the 'eosfactory' folder and run 
+To verify EOSFactory installation navigate to the 'eosfactory' folder and run
 these tests:
 "
-printf "%s\n" "    
+printf "%s\n" "
     $ python3 tests/01_hello_world.py
     $ python3 tests/02_eosio_token.py
     $ python3 tests/03_tic_tac_toe.py

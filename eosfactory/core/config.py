@@ -7,16 +7,18 @@ import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
-VERSION = "1.4.0"
+VERSION = "2.1.0"
 EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.4.1"
 PYTHON_VERSION = "3.5 or higher"
+APP_DATA_DIR = "/usr/local/eosfactory/"
+SETUPTOOLS_NAME = "eosfactory_tokenika"
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
 contractsDir = "contracts"
 DEFAULT_TEMPLATE = "01_hello_world"
 FROM_HERE_TO_EOSF_DIR = "../../../"
-CONFIG_JSON = "config.json"
+CONFIG_JSON = "config/config.json"
 CONTRACTS_DIR = "contracts/"
 EOSIO_CPP_DIR = "/usr/opt/eosio.cdt/0.0.0/"
 
