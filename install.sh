@@ -67,14 +67,15 @@ not care about having the Visual Studio Code intelisense efficient.
 fi
 
 printf "%s" "
-Installing the 'eosfactory' package locally with the Python pip system...
+Installing 'eosfactory' package locally with the Python pip system...
 "
 
 ###############################################################################
 # It is essential that the package is installed as a symlink, with
 # the flag '-e'
 ###############################################################################
-python3 -m pip install --user -e .
+# sudo  -H python3 -m pip install -e .
+sudo python3 setup_develop.py develop
 
 printf "%s\n" "
 Configuring the eosfactory installation...
