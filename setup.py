@@ -16,13 +16,12 @@ def data_files_(directory):
             paths.append(tuple)
     return paths
 
-data_files = [
-    (config.APP_DATA_DIR, 
+data_files = [(config.APP_DATA_DIR, ["wsl_root.sh"]),
+    (os.path.join(config.APP_DATA_DIR, "config"),
         ["config/config_distributed.json", "config/config.ini", 
                                                     "config/genesis.json"])] 
 data_files.extend(data_files_('templates'))  
 
-import pdb; pdb.set_trace()
 setuptools.setup(
     name='eosfactory-tokenika',
     version='2.1.0',

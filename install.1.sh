@@ -2,11 +2,23 @@
 
 printf "%s\n" "
 ###############################################################################
-#   This script installs EOSFactory. It needs to be executed from within
+#   This script installs EOSFactory. It needs to be executed from within 
 #   the 'eosfactory' folder.
 #   This file was downloaded from https://github.com/tokenika/eosfactory
 ###############################################################################
 "
+
+# IS_WSL="" # Windows Subsystem Linux
+# function is_wsl {
+#     uname_a=$( uname -a )
+#     if [[ "$uname_a" == *"Microsoft"* ]]; then
+#         IS_WSL="IS_WSL"
+#     fi
+# }
+# is_wsl
+
+WSL_ROOT=$(./wsl_root.sh)
+printf "WSL ROOT is %s\n" "$WSL_ROOT"
 
 printf "%s" "
 Installing 'eosfactory' package locally with the Python pip system...
@@ -36,7 +48,6 @@ printf "${bldred}%s${txtrst}" "
         |  __|| |  | |\___ \ |  __/ /\ \| |       | | | |  | |  _  / \   /
         | |___| |__| |____) || | / ____ \ |____   | | | |__| | | \ \  | |
         |______\____/|_____/ |_|/_/    \_\_____|  |_|  \____/|_|  \_\ |_|
-
 "
 printf "%s\n" "
 To verify EOSFactory installation navigate to the 'eosfactory' folder and run

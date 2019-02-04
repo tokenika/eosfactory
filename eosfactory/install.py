@@ -12,10 +12,12 @@ def tilde(tilde_path):
 
 
 def install(wsl_root=None):
+    wsl_root = config.wsl_root()
     if wsl_root:
-        map = config.config_map()
-        map[config.wsl_root_[0]] = wsl_root
-        config.write_config_map(map)
+        print('''
+The root is the Windows Subsystem Linux is
+'{}'
+        '''.format(wsl_root))
     
     current_path_color = "green"
     error_path_color = "red"
@@ -59,6 +61,4 @@ def install(wsl_root=None):
 parser = argparse.ArgumentParser(description='''
 ''')
 
-parser.add_argument("root", default=None, help="WSL root path")
-args = parser.parse_args()
-install(args.root)
+install()

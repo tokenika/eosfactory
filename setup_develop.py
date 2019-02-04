@@ -6,6 +6,11 @@ from shutil import rmtree
 setuptools_name = config.SETUPTOOLS_NAME
 
 try:
+    rmtree("build")
+except:
+    pass
+
+try:
     rmtree("dist")
 except:
     pass
