@@ -23,7 +23,7 @@ def heredoc(message):
     return message
 
 
-def spawn(command_line, error_message='', shell=False, raise_exception=True):
+def process(command_line, error_message='', shell=False, raise_exception=True):
     import subprocess
     stdout = None
     stderr = None
@@ -63,7 +63,7 @@ def uname(options=None):
     if options:
         command_line.append(options)
 
-    return spawn(command_line)
+    return process(command_line)
 
 
 def is_windows_ubuntu():
