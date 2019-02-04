@@ -313,7 +313,7 @@ def save_map(map, file_name):
 
 
 def edit_map(file_name, text_editor="nano"):
-    utils.spawn([text_editor, os.path.join(
+    utils.process([text_editor, os.path.join(
                                     config.keosd_wallet_dir(), file_name)])
     read_map(file_name, text_editor)
 
@@ -350,7 +350,7 @@ editor. Return ``None`` if the the offer is rejected.
                     
                 answer = input("y/n <<< ")
                 if answer == "y":
-                    utils.spawn([text_editor, path])
+                    utils.process([text_editor, path])
                     continue
                 else:
                     raise errors.Error('''

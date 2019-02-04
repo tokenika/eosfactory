@@ -7,7 +7,6 @@ import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
-
 VERSION = "2.1.0"
 EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.4.1"
@@ -16,10 +15,10 @@ APP_DATA_DIR = "/usr/local/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
+contractsDir = "contracts"
 DEFAULT_TEMPLATE = "01_hello_world"
 FROM_HERE_TO_EOSF_DIR = "../../../"
-CONFIG_DIR = "config"
-CONFIG_JSON = "config.json"
+CONFIG_JSON = "config/config.json"
 CONTRACTS_DIR = "contracts/"
 EOSIO_CPP_DIR = "/usr/opt/eosio.cdt/0.0.0/"
 
@@ -70,7 +69,7 @@ def eosf_dir():
             '{}'.
         Therefore, this file has to remain in its original position.
         Currently, its path is '{}'.
-    '''.format(__file__, path), translate=False)
+    '''.format(__file__, path))
 
 
 def eosio_key_private():
@@ -152,36 +151,12 @@ def wsl_root():
     *WSL_ROOT* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
-
-    if wsl_root_[1][0] is None:
-        path = ""
-        path, error = utils.spawn(
-            ["./wsl_root.sh", path], raise_exception=False)
-        if error:
-            while True:
-                path = input(logger.error('''
-Error message is
-{}
-
-Cannot find the root of the WSL file system which was tried to be
-'{}'
-Please, find the path in your computer and enter it. Enter nothing, if you do
-not care about having efficient the intelisense of Visual Studio Code.
-                '''.format(error, path), translate=False) + "\n<<< ")
-                if not path:
-                    break
-
-                path, error = utils.spawn(
-                    ["./wsl_root.sh", path], raise_exception=False)
-                if not error:
-                    break
-        
-        wsl_root_[1][0] = path.replace("\\", "/")
-        # map = config_map()
-        # map[config.wsl_root_[0]] = wsl_root_[1][0]
-        # write_config_map(map)
-
-    return wsl_root_[1][0]
+    path = config_value(wsl_root_)
+    if path is None:
+        return None
+    else:
+        path = path.strip()
+    return path.replace("\\", "/")
 
 
 def nodeos_stdout():
@@ -268,7 +243,7 @@ def eosio_cpp_dir():
     *EOSIO_CPP* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
-    eosio_cpp_version = utils.spawn(
+    eosio_cpp_version = utils.process(
             [eosio_cpp(), "-version"],
             "Cannot determine the version of the expected 'eosio.cpp' package."
         ).replace("eosio-cpp version ", "")
@@ -281,7 +256,7 @@ The assumed pattern
 {}
 does not match the directory template 'core.config.EOSIO_CPP_DIR'
 {}
-            '''.format(version_pattern, EOSIO_CPP_DIR), translate=False
+            '''.format(version_pattern, EOSIO_CPP_DIR)
         )
     dir = dir.replace(
         re.findall(version_pattern, dir)[0], eosio_cpp_version) 
@@ -320,31 +295,17 @@ def keosd_wallet_dir(raise_error=True):
 def config_file():
     '''The path to the *config.json* file.
     '''
-    dir = os.path.join(eosf_dir(), CONFIG_DIR)    
-    if not os.path.exists(dir):
-        local_dir = dir
-        dir = os.path.join(APP_DATA_DIR, CONFIG_DIR)
-    if not os.path.exists(dir):
-        raise errors.Error('''
-Cannot determine the configuration directory. Tried paths are following:
-{}
-{}
-        '''.format(local_dir, dir), translate=False)
-    
-    file = os.path.join(dir, CONFIG_JSON)
-
+    file = os.path.join(eosf_dir(), CONFIG_JSON)
+        
     if not os.path.exists(file):
-        try:
-            with open(file, "w+") as f:
-                f.write("{}")
-        except Exception as e:
-            raise errors.Error(str(e), translate=False)            
+        with open(file, "w") as output:
+            output.write("{}")
 
-        #     logger.INFO('''
-        # Cannot find the config file. It is expected to be 
-        #     '{}'.
-        # Creating an empty config file there.
-        #     '''.format(file))
+            logger.INFO('''
+        Cannot find the config file. It is expected to be 
+            '{}'.
+        Creating an empty config file there.
+            '''.format(file))
 
     return file
 
@@ -365,11 +326,11 @@ def config_map():
                 else:
                     return json.loads(text)
         except Exception as e:
-            raise errors.Error(str(e), translate=False)
+            raise errors.Error(str(e))
 
     raise errors.Error('''
 Cannot find the config file.       
-    ''', translate=False)
+    ''')
 
 
 def write_config_map(map):
@@ -389,7 +350,7 @@ def write_config_map(map):
 
     raise errors.Error('''
 Cannot find the config file.       
-    ''', translate=False)
+    ''')
     
 
 def config_values(config_list):
@@ -445,7 +406,7 @@ def config_value_checked(config_list):
 The value of {} is not defined.
 Define it in the config file
 {}       
-    '''.format(config_list[0], config_file()), translate=False)
+    '''.format(config_list[0], config_file()))
 
 
 def first_valid_path(config_list, find_file=None, raise_error=True):
@@ -502,7 +463,7 @@ def first_valid_path(config_list, find_file=None, raise_error=True):
     if raise_error:
         raise errors.Error('''
         Cannot find any path for '{}'.
-        '''.format(config_list[0]), translate=False)
+        '''.format(config_list[0]))
 
 
 def contract_dir(contract_dir_hint):
@@ -532,7 +493,7 @@ def contract_dir(contract_dir_hint):
     # ? the relative path to a contract directory, relative to the directory 
     # set with the 'contract_workspace()' function
     contract_dir_ = os.path.join(
-        contract_workspace(), contract_dir_hint)
+        config_value(contract_workspace_), contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
         return os.path.abspath(contract_dir_)
@@ -550,7 +511,7 @@ def contract_dir(contract_dir_hint):
         Cannot determine the contract directory.
         Tried path list:
         {}
-    '''.format(trace), translate=False)
+    '''.format(trace))
 
 
 def source_files(source_dir):
@@ -595,7 +556,7 @@ def contract_source_files(contract_dir_hint):
         Cannot find any contract source directory.
         Tried path list:
         {}
-    '''.format(trace), translate=False)
+    '''.format(trace))
 
 
 def contract_file(contract_dir_hint, contract_file_hint):
@@ -662,7 +623,7 @@ def contract_file(contract_dir_hint, contract_file_hint):
         contract file hint: {}
         Tried path list:
         {}
-    '''.format(contract_dir_hint, contract_file_hint, trace), translate=False)  
+    '''.format(contract_dir_hint, contract_file_hint, trace))  
 
 
 def contract_workspace():
@@ -691,7 +652,7 @@ def contract_workspace():
         Cannot determine the contract workspace.
         Tried path list:
         {}
-    '''.format(trace), translate=False)
+    '''.format(trace))
 
 
 def abi_file(contract_dir_hint):
@@ -765,7 +726,7 @@ def not_defined():
 def installation_dependencies():
     '''Verify whether 'eosio' and 'eosio.cpp' packages are properly installed.
     '''
-    eosio_version = utils.spawn(
+    eosio_version = utils.process(
                             [node_exe(), "--version"],
                             raise_exception=False)
     if not eosio_version[1]:
@@ -782,7 +743,7 @@ The error message:
 {}
         '''.format(eosio_version[1]))
 
-    eosio_cpp_version = utils.spawn(
+    eosio_cpp_version = utils.process(
                             [eosio_cpp(), "-version"],
                             raise_exception=False)
     if not eosio_cpp_version[1]:
@@ -848,7 +809,7 @@ def current_config(contract_dir=None):
     except:
         map[chain_state_db_size_mb_[0]] = None
     try:
-        map[contract_workspace_[0]] = contract_workspace()
+        map[contract_workspace_[0]] = config_value_checked(contract_workspace_)
     except:
          map[contract_workspace_[0]] = None
     try:
@@ -970,14 +931,7 @@ def main():
     parser = argparse.ArgumentParser(description='''
     Show the configuration of EOSFactory.
     ''')
-    parser.add_argument(
-        "--wsl_root", 
-        help="Set the root of the WSL.", 
-        action="store_true")
-    parser.add_argument(
-        "--dependencies",
-        help="List dependencies of EOSFactory.",
-        action="store_true")
+    parser.add_argument("--dependencies", action="store_true")
     parser.add_argument("--json", help="Bare JSON only.", action="store_true")
     args = parser.parse_args()
     if args.dependencies:
@@ -985,8 +939,6 @@ def main():
     elif args.json:
         print(json.dumps(
             current_config(), sort_keys=True, indent=4))
-    elif args.wsl_root:
-        wsl_root()
     else:
         config()    
 
