@@ -424,7 +424,7 @@ def get_pid(name=None):
         name = os.path.splitext(os.path.basename(config.node_exe()))[0]
 
     command_line = ['pgrep', name]
-    stdout = utils.process(
+    stdout = utils.spawn(
         command_line, "Cannot determine PID of any nodeos process.")
 
     return [int(pid) for pid in stdout.split()]
@@ -522,7 +522,7 @@ def args(clear=False):
 
 def keosd_start():
     if not config.keosd_wallet_dir(raise_error=False):
-        utils.process([config.keosd_exe()])
+        utils.spawn([config.keosd_exe()])
 
         while True:
             time.sleep(1)
@@ -660,7 +660,7 @@ def node_probe():
 def is_local_node_process_running(name=None):
     if not name:
         name = config.node_exe()
-    return name in utils.process(
+    return name in utils.spawn(
         'ps aux |  grep -v grep | grep ' + name, shell=True)
         
 

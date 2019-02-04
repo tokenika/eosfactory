@@ -8,6 +8,18 @@ printf "%s\n" "
 ###############################################################################
 "
 
+# IS_WSL="" # Windows Subsystem Linux
+# function is_wsl {
+#     uname_a=$( uname -a )
+#     if [[ "$uname_a" == *"Microsoft"* ]]; then
+#         IS_WSL="IS_WSL"
+#     fi
+# }
+# is_wsl
+
+WSL_ROOT=$(./wsl_root.sh)
+printf "WSL ROOT is %s\n" "$WSL_ROOT"
+
 printf "%s" "
 Installing 'eosfactory' package locally with the Python pip system...
 "
