@@ -9,12 +9,10 @@ try:
     rmtree("build")
 except:
     pass
-
 try:
     rmtree("dist")
 except:
     pass
-
 try:
     rmtree(setuptools_name + ".egg-info")
 except:
@@ -36,7 +34,6 @@ setuptools.setup(
         'Topic :: Software Development :: Testing',
     ],
     keywords='EOSIO, smart contract unit testing',
-    url='https://github.com/tokenika/eosfactory',
     author='Tokenika',
     author_email='contact@tokenika.io',
     license='MIT',
