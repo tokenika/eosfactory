@@ -19,8 +19,6 @@ import eosfactory.core.setup as setup
 import eosfactory.core.config as config
 import eosfactory.core.vscode as vscode
 
-
-TEMPLATE_CONTRACTS_DIR = "templates/contracts"
 TEMPLATE_NAME = "CONTRACT_NAME"
 TEMPLATE_HOME = "${HOME}"
 TEMPLATE_ROOT = "${ROOT}"
@@ -249,7 +247,7 @@ def project_from_template(
             a directory.
         template: The name of the template used.
         workspace_dir: If set, the folder for the work-space. Defaults to the 
-            value returned by the config.contract_workspace() function.
+            value returned by the config.contract_workspace_dir() function.
         include: If set, comma-separated list of include folders.
         libs: If set, comma-separated list of libraries.
         remove_existing: If set, overwrite any existing project.
@@ -261,8 +259,7 @@ def project_from_template(
 
     template_dir = utils.wslMapWindowsLinux(template)
     if not os.path.isdir(template_dir):
-        template_dir = os.path.join(
-            config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template) 
+        template_dir = os.path.join(config.template_dir(), template) 
     if not os.path.isdir(template_dir):
         raise errors.Error('''
         The contract project template '{}' does not exist.
@@ -304,7 +301,7 @@ def project_from_template(
         if not workspace_dir \
                                 or not os.path.isabs(workspace_dir) \
                                 or not os.path.exists(workspace_dir):
-            workspace_dir = config.contract_workspace()
+            workspace_dir = config.contract_workspace_dir()
         workspace_dir = workspace_dir.strip()        
         project_dir = os.path.join(workspace_dir, project_name)
 
@@ -349,12 +346,12 @@ error message:
                 project_dir, path.replace(
                                         TEMPLATE_NAME, project_name))
                           
-            if os.path.isdir(template_path):
+            if os.path.isdir(template_path) \
+                                        and not "__pycache__" in template_path:
                 os.mkdir(contract_path)
                 copy_dir_contents(
                             project_dir, template_dir, path, project_name)
             elif os.path.isfile(template_path):
-
                 copy(template_path, contract_path, project_name)
 
     def copy(template_path, contract_path, project_name):
@@ -498,7 +495,7 @@ def args(clear=False):
     args_ = [
         "--http-server-address", config.http_server_address(),
         "--data-dir", config.data_dir(),
-        "--config-dir", config.config_dir(),
+        "--config-dir", config.nodeos_config_dir(),
         "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
         "--contracts-console",
         "--verbose-http-errors",
@@ -668,7 +665,7 @@ def node_stop():
     # You can see if the process is a zombie by using top or 
     # the following command:
     # ps aux | awk '$8=="Z" {print $2}'
-   
+    
     pids = get_pid()
     count = 10
     if pids:

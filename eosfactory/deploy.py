@@ -61,7 +61,7 @@ def main():
     
     The contract is determined with its project directory. The directory may be
     absolute or relative to the *contract workspace* directory as defined with
-    :func:`.core.config.contract_workspace(). If the *dir* argument is not set,
+    :func:`.core.config.contract_workspace_dir(). If the *dir* argument is not set,
     it is substituted with the current working directory.
 
     The contract account is determined with the name of *Testnet* object in the
@@ -83,7 +83,7 @@ def main():
     
     The contract is determined with its project directory. The directory may be
     absolute or relative to the *contract workspace* directory as defined with
-    :func:`.core.config.contract_workspace(). If the *dir* argument is not set,
+    :func:`.core.config.contract_workspace_dir(). If the *dir* argument is not set,
     it is substituted with the current working directory.
 
     The contract account is determined with the name of *Testnet* object in the

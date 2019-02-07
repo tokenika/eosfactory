@@ -16,8 +16,8 @@ Installing 'eosfactory' package locally with the Python pip system...
 # It is essential that the package is installed as a symlink, with
 # the flag '-e'
 ###############################################################################
-# sudo  -H python3 -m pip install -e .
-sudo python3 setup_develop.py develop
+sudo  -H python3 -m pip install -e .
+# sudo python3 setup_develop.py develop
 
 printf "%s\n" "
 Configuring the eosfactory installation...

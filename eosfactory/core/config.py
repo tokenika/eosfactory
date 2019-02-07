@@ -12,7 +12,10 @@ VERSION = "2.1.0"
 EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.4.1"
 PYTHON_VERSION = "3.5 or higher"
-APP_DATA_DIR = "/usr/local/eosfactory/"
+EOSFACTORY_DIR = "eosfactory/"
+# "/usr/local/" cannot be varied: it is where 'setuptools' puts `data_files'
+APP_DATA_DIR = "/usr/local/" + EOSFACTORY_DIR
+APP_CWD_DIR = "/tmp/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
@@ -21,6 +24,7 @@ FROM_HERE_TO_EOSF_DIR = "../../../"
 CONFIG_DIR = "config"
 CONFIG_JSON = "config.json"
 CONTRACTS_DIR = "contracts/"
+TEMPLATE_DIR = "templates/contracts"
 EOSIO_CPP_DIR = "/usr/opt/eosio.cdt/0.0.0/"
 
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
@@ -53,8 +57,160 @@ key_private_ = (
 key_public_ = (
     "EOSIO_KEY_PUBLIC",
     ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"])
-contract_workspace_ = (
+contract_workspace_dir_ = (
     "EOSIO_CONTRACT_WORKSPACE", [CONTRACTS_DIR])
+
+def is_linked_package():
+    is_linked = os.path.exists(os.path.join(eosf_dir(), CONFIG_DIR))
+    is_copied = os.path.exists(os.path.join(APP_DATA_DIR, CONFIG_DIR))
+
+    if (not is_linked) and (not is_copied):
+        raise errors.Error('''
+        Cannot determine the configuration directory.
+        ''', translate=False)
+
+    if is_linked and is_copied:
+        is_linked = True
+
+    return is_linked
+
+
+def set_contract_workspace_dir(contract_workspace_dir=None):
+
+    def tilde(tilde_path):
+        return tilde_path.replace("~", str(pathlib.Path.home()))
+
+    def set(contract_workspace_dir):
+        if contract_workspace_dir and os.path.exists(
+                contract_workspace_dir) and os.path.isdir(
+                    contract_workspace_dir):
+            map = config_map()
+            map[contract_workspace_dir_[0]] = contract_workspace_dir
+            write_config_map(map)
+            return True
+
+        return False
+
+    if set(contract_workspace_dir):
+        return
+
+    current_path_color = "green"
+    error_path_color = "red"
+
+    while True:
+        map = config_map()
+        contract_workspace_dir = None
+
+        if contract_workspace_dir_[0] in map:
+            contract_workspace_dir = map[contract_workspace_dir_[0]]
+            _contract_workspace_dir = tilde(input(utils.heredoc('''
+                Where do you prefer to keep your smart-contract projects?
+                The current location is:
+                {}
+                Input another existing directory path, or nothing to keep the current one:
+                ''').format(colored(contract_workspace_dir, current_path_color)) + "\n"))
+        else:
+            _contract_workspace_dir = tilde(input(utils.heredoc('''
+                Where do you prefer to keep your smart-contract projects?
+                Input an existing directory path:
+                ''') + "\n"))
+
+        if not _contract_workspace_dir:
+            _contract_workspace_dir = contract_workspace_dir
+        
+        if set(contract_workspace_dir):
+            print()
+            break
+        
+        print("\n" + utils.heredoc('''
+        The path you entered:
+        {}
+        doesn't seem to exist!
+        ''').format(colored(_contract_workspace_dir, error_path_color)) + "\n")
+
+
+def config_dir():
+    dir = os.path.join(eosf_dir(), CONFIG_DIR) if is_linked_package() \
+                                    else os.path.join(APP_DATA_DIR, CONFIG_DIR)
+    if not os.path.exists(dir):
+        raise errors.Error('''
+Cannot find the configuration directory
+{}
+        '''.format(dir), translate=False)
+    return dir
+
+
+def template_dir():
+    dir = os.path.join(eosf_dir(), TEMPLATE_DIR) if is_linked_package() \
+                                else os.path.join(APP_DATA_DIR, TEMPLATE_DIR)
+    if not os.path.exists(dir):
+        raise errors.Error('''
+Cannot find the template directory
+{}
+        '''.format(dir), translate=False)
+    return dir
+
+
+def contract_workspace_dir():
+    '''The absolute path to the contract workspace.
+
+    The contract workspace is a directory where automatically created projects
+    are placed by default. It is set while EOSFactory is installed. 
+
+    If not set, the projects are stored in the `.config.CONTRACTS_DIR` 
+    subdirectory (typically *contracts/*) of the EOSFActory installation, if 
+    EOSFactory is installed from its GitHub repository, otherwise, they go to 
+    a directory specified as 
+    `join(.config.APP_CWD_DIR, .config.CONTRACTS_DIR)`. 
+
+    The setting may be changed with 
+    *EOSIO_CONTRACT_WORKSPACE* entry in the *config.json* file, 
+    see :func:`.current_config`.
+    '''
+    path = config_value(contract_workspace_dir_)
+
+    if os.path.isabs(path):
+        if os.path.exists(path):
+            return path
+        else:
+            raise errors.Error('''
+            The path
+            '{}'
+            set as the contract workspace directory does not exist. The error message is
+            {}
+            '''.format(path), translate=False)
+    else:
+        if is_linked_package():
+            path = os.path.join(eosf_dir(), path)
+        else:
+            path = os.path.join(APP_CWD_DIR, path)
+            if not os.path.exists(path):
+                os.makedirs(path)
+
+        if os.path.exists(path):
+            return path
+        else:
+            raise errors.Error('''
+            The path
+            '{}'
+            resolved as the contract workspace directory directory does not exist.
+            '''.format(path, translate=False)
+            )
+    return path
+
+
+def abi_file(contract_dir_hint):
+    '''Given a contract directory hint, return the ABI file path.
+    See :func:`contract_file`.
+
+    Args:
+        contract_dir_hint: A directory path, may be not absolute.
+
+    Raises:
+        .core.errors.Error: If the result is not defined.
+    '''
+    return os.path.relpath(
+        contract_file(contract_dir_hint, ".abi"), contract_dir_hint)
 
 
 def eosf_dir():
@@ -109,7 +265,7 @@ def data_dir():
     return first_valid_path(data_dir_)
     
 
-def config_dir():
+def nodeos_config_dir():
     '''Directory containing configuration files such as config.ini.
 
     It may be changed with 
@@ -152,13 +308,27 @@ def wsl_root():
     *WSL_ROOT* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
+    wsl_root_sh = "wsl_root.sh"
+    if is_linked_package():
+        wsl_root_sh = os.path.join(eosf_dir(), wsl_root_sh)
+    else:
+        wsl_root_sh = os.path.join(APP_DATA_DIR, wsl_root_sh)
 
     if wsl_root_[1][0] is None:
         path = ""
         path, error = utils.spawn(
-            ["./wsl_root.sh", path], raise_exception=False)
+            [wsl_root_sh, path], raise_exception=False)
         if error:
             while True:
+                if not os.path.exists(wsl_root_sh):
+                    path = ""
+                    logger.ERROR('''
+Cannot find the bash command:
+'{}'
+The intelisense feature of Visual Studio Code will be disabled. 
+                    '''.format(wsl_root_sh), translate=False)
+                    break                   
+
                 path = input(logger.error('''
 Error message is
 {}
@@ -172,7 +342,7 @@ not care about having efficient the intelisense of Visual Studio Code.
                     break
 
                 path, error = utils.spawn(
-                    ["./wsl_root.sh", path], raise_exception=False)
+                    [wsl_root_sh, path], raise_exception=False)
                 if not error:
                     break
         
@@ -320,32 +490,14 @@ def keosd_wallet_dir(raise_error=True):
 def config_file():
     '''The path to the *config.json* file.
     '''
-    dir = os.path.join(eosf_dir(), CONFIG_DIR)    
-    if not os.path.exists(dir):
-        local_dir = dir
-        dir = os.path.join(APP_DATA_DIR, CONFIG_DIR)
-    if not os.path.exists(dir):
-        raise errors.Error('''
-Cannot determine the configuration directory. Tried paths are following:
-{}
-{}
-        '''.format(local_dir, dir), translate=False)
-    
-    file = os.path.join(dir, CONFIG_JSON)
+    file = os.path.join(config_dir(), CONFIG_JSON)
 
     if not os.path.exists(file):
         try:
             with open(file, "w+") as f:
                 f.write("{}")
         except Exception as e:
-            raise errors.Error(str(e), translate=False)            
-
-        #     logger.INFO('''
-        # Cannot find the config file. It is expected to be 
-        #     '{}'.
-        # Creating an empty config file there.
-        #     '''.format(file))
-
+            raise errors.Error(str(e), translate=False)
     return file
 
 
@@ -490,14 +642,6 @@ def first_valid_path(config_list, find_file=None, raise_error=True):
             else:
                 if os.path.exists(path):
                     return path
-        else:
-            full_path = os.path.join(eosf_dir(), path)
-            if find_file:
-                if os.path.exists(os.path.join(full_path, find_file)):
-                    return full_path
-            else:
-                if os.path.exists(full_path):
-                    return full_path        
 
     if raise_error:
         raise errors.Error('''
@@ -530,18 +674,20 @@ def contract_dir(contract_dir_hint):
         return contract_dir_hint
 
     # ? the relative path to a contract directory, relative to the directory 
-    # set with the 'contract_workspace()' function
+    # set with the 'contract_workspace_dir()' function
     contract_dir_ = os.path.join(
-        contract_workspace(), contract_dir_hint)
+        contract_workspace_dir(), contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
         return os.path.abspath(contract_dir_)
 
-    # ? the relative path to a contract directory, relative to the 
-    # set with the 'eosf_dir() / contracts' function
-    contract_dir_ = os.path.join(
-            eosf_dir(), 
-            CONTRACTS_DIR, contract_dir_hint)
+    # ? the relative path to a contract directory, relative to 
+    # 'eosf_dir() / contracts' or '/usr/tmp/eosfactory/'
+    contract_dir_ =  os.path.join(
+                eosf_dir(), CONTRACTS_DIR, contract_dir_hint) \
+            if is_linked_package() else os.path.join(
+                APP_CWD_DIR, CONTRACTS_DIR, contract_dir_hint)
+
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
         return os.path.abspath(contract_dir_)
@@ -665,49 +811,6 @@ def contract_file(contract_dir_hint, contract_file_hint):
     '''.format(contract_dir_hint, contract_file_hint, trace), translate=False)  
 
 
-def contract_workspace():
-    '''The absolute path to the contract workspace of the user.
-
-    The contract workspace is a directory where automatically created projects
-    are placed by default. It is set while the EOSFactory is installed. 
-
-    If not set, the projects are stored in the *contracts* directory of the 
-    EOSFActory installation.
-
-    The setting may be changed with 
-    *EOSIO_CONTRACT_WORKSPACE* entry in the *config.json* file, 
-    see :func:`.current_config`.
-    '''
-    workspacePath = config_value(contract_workspace_)
-    trace = workspacePath + "\n"
-    
-    if not os.path.isabs(workspacePath):
-        workspacePath = os.path.join(eosf_dir(), workspacePath)
-        trace = trace + workspacePath + "\n"
-    if os.path.exists(workspacePath):
-        return workspacePath
-
-    raise errors.Error('''
-        Cannot determine the contract workspace.
-        Tried path list:
-        {}
-    '''.format(trace), translate=False)
-
-
-def abi_file(contract_dir_hint):
-    '''Given a contract directory hint, return the ABI file path.
-    See :func:`contract_file`.
-
-    Args:
-        contract_dir_hint: A directory path, may be not absolute.
-
-    Raises:
-        .core.errors.Error: If the result is not defined.
-    '''
-    return os.path.relpath(
-        contract_file(contract_dir_hint, ".abi"), contract_dir_hint)
-
-
 def wast_file(contract_dir_hint):
     '''Given the contract directory, return the WAST file path.
     See :func:`contract_file`.
@@ -818,10 +921,11 @@ def current_config(contract_dir=None):
     map = {}
     
     map["CONFIG_FILE"] = config_file()
-    try:
-        map["EOS_FACTORY_DIR"] = eosf_dir()
-    except:
-        map["EOS_FACTORY_DIR"] = None
+    if is_linked_package():
+        try:
+            map["EOS_FACTORY_DIR"] = eosf_dir()
+        except:
+            map["EOS_FACTORY_DIR"] = None
     try:
         map[node_address_[0]] = http_server_address()
     except:
@@ -848,9 +952,9 @@ def current_config(contract_dir=None):
     except:
         map[chain_state_db_size_mb_[0]] = None
     try:
-        map[contract_workspace_[0]] = contract_workspace()
+        map[contract_workspace_dir_[0]] = contract_workspace_dir()
     except:
-         map[contract_workspace_[0]] = None
+         map[contract_workspace_dir_[0]] = None
     try:
         map[keosd_wallet_dir_[0]] = keosd_wallet_dir()   
     except:
@@ -860,7 +964,7 @@ def current_config(contract_dir=None):
     except:
         map[data_dir_[0]] = None 
     try:    
-        map[config_dir_[0]] = config_dir()
+        map[config_dir_[0]] = nodeos_config_dir()
     except:
         map[config_dir_[0]] = None   
     try: 
@@ -925,6 +1029,17 @@ https://github.com/EOSIO/eos version {}
 https://github.com/EOSIO/eosio.cdt version {}
 Python version {}
     '''.format(VERSION, EOSIO_VERSION, EOSIO_CDT_VERSION, PYTHON_VERSION)
+    )
+
+    print(
+        '''
+        EOSFactory package is installed as a link to the directory:
+        '{}'
+        '''.format(os.path.join(eosf_dir(), EOSFACTORY_DIR))
+    if is_linked_package() else
+        '''
+        EOSFactory is installed as a regular Python package.
+        '''
     )
 
     installation_dependencies()
