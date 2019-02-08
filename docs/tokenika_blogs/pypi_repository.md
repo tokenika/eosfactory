@@ -3,20 +3,17 @@ qQWZZwPMAn3Z8pGCNPJJk
 
 ### Uninstalling eosfactory Python package link
 
-If the `easy-install` thing is in the system, local packages are included to the 'easy-install.pth` if the package is linked to the list of installed packages.
+>If the `easy-install` thing is in the system, installed, with the `develop` flag, packages are included to the `easy-install.pth`. They remain there after un-installation.
 
-This happens as results of both installation methods:
-* sudo  -H python3 -m pip install -e .
-* sudo python3 setup_develop.py develop
+>The `easy-install.pth` list is automatically pre-pended to the `system.path` python list, and, therefore, EOSFactory there obscures one installed as a regular package. See `nano /usr/local/lib/python3.7/site-packages/easy-install.pth`
 
-The local EOSFactory entry is not removed on un-installation.
-I follow an [article](http://matthew-brett.github.io/pydagogue/un_easy_install.html), advising killing the easy-install.
+>I follow an [article](http://matthew-brett.github.io/pydagogue/un_easy_install.html), advising killing the easy-install.
 
+Un-installation command...
 ```bash
-sudo python3 setup_develop.py develop --uninstall
+python3 setup_develop.py develop --uninstall
 ```
-nano /usr/local/lib/python3.7/site-packages/easy-install.pth
-
+...results:
 ```bash
 running develop
 Removing /usr/local/lib/python3.5/dist-packages/eosfactory-tokenika.egg-link (link to .)
@@ -24,11 +21,13 @@ Removing /usr/local/lib/python3.5/dist-packages/eosfactory-tokenika.egg-link (li
 
 ### Uninstalling eosfactory Python package
 
+Un-installation command...
 ```bash
-sudo -H pip3 uninstall eosfactory-tokenika==2.1.0
+pip3 uninstall eosfactory-tokenika==2.1.1
 ```
+...results:
 ```bash
-Uninstalling eosfactory-tokenika-2.1.0:
+Uninstalling eosfactory-tokenika-2.1.1:
   Would remove:
     /usr/local/eosfactory/config.ini
     /usr/local/eosfactory/config.json
@@ -46,55 +45,69 @@ Uninstalling eosfactory-tokenika-2.1.0:
     ....................................
     ....................................
     /usr/local/lib/python3.5/dist-packages/eosfactory/*
-    /usr/local/lib/python3.5/dist-packages/eosfactory_tokenika-2.1.0-py3.5.egg-info
+    /usr/local/lib/python3.5/dist-packages/eosfactory_tokenika-2.1.1-py3.5.egg-info
 Proceed (y/n) y
-Successfully uninstalled eosfactory-tokenika-2.1.0
+Successfully uninstalled eosfactory-tokenika-2.1.1
 ```
 
 ### Making distribution
 
 ```bash
-python3 setup.py sdist bdist_wheel
-```
-
-```bash
-python3 setup.py sdist --format zip
+python3 setup.py sdist
 ```
 
 ### Installing Python package with a whl file
 
 Pip version has to be precisely defined, otherwise uses the highest available one.
 ```bash
-sudo -H pip3 install /mnt/c/Workspaces/EOS/eosfactory/dist/eosfactory_tokenika-2.1.0-py3-none-any.whl
+pip3 install --user /mnt/c/Workspaces/EOS/eosfactory/dist/eosfactory_tokenika-2.1.1.tar.gz
 ```
+The result is:
 ```bash
-sudo -H pip3 install /mnt/c/Workspaces/EOS/eosfactory/dist/eosfactory_tokenika-2.1.0.zip
-```
-```bash
-Processing /mnt/c/Workspaces/EOS/eosfactory/dist/eosfactory-tokenika-2.1.0.zip
-Requirement already satisfied: termcolor in /usr/local/lib/python3.5/dist-packages (from eosfactory-tokenika==2.1.0) (1.1.0)
+Processing ./dist/eosfactory_tokenika-2.1.1.tar.gz
+Requirement already satisfied: termcolor in /usr/local/lib/python3.7/site-packages (from eosfactory-tokenika==2.1.1) (1.1.0)
+Building wheels for collected packages: eosfactory-tokenika
+  Building wheel for eosfactory-tokenika (setup.py) ... done
+  Stored in directory: /root/.cache/pip/wheels/ef/92/33/b7e1e9f6a6ab63affc942f451f8474f7f864ad2c16e632d28d
+Successfully built eosfactory-tokenika
 Installing collected packages: eosfactory-tokenika
-  Found existing installation: eosfactory-tokenika 2.0
-    Uninstalling eosfactory-tokenika-2.0:
-      Successfully uninstalled eosfactory-tokenika-2.0
-  Running setup.py install for eosfactory-tokenika ... done
-Successfully installed eosfactory-tokenika-2.1.0
+  Found existing installation: eosfactory-tokenika 2.1.1
+    Uninstalling eosfactory-tokenika-2.1.1:
+      Successfully uninstalled eosfactory-tokenika-2.1.1
+Successfully installed eosfactory-tokenika-2.1.1
+```
+## Uploading
+
+Bash command:
+```bash
+twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+```
+Command result:
+```bash
+Enter your username: tokenika
+Enter your password:
+Uploading distributions to https://test.pypi.org/legacy/
+Uploading eosfactory_tokenika-2.1.1-py3-none-any.whl
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 106k/106k [00:02<00:00, 45.1kB/s]Uploading eosfactory_tokenika-2.1.1.tar.gz
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 75.4k/75.4k [00:01<00:00, 43.9kB/s]
 ```
 
-However when I run "python setup.py install" none of my data files are written - only the "whyteboard" source package, and the whyteboard.py is placed in /usr/local/lib/python2.6/dist-packages/.
+## Viewing repository
 
-python3 setup.py sdist bdist_wheel
-python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*.whl
 Once uploaded your package should be viewable on TestPyPI, for example,
 https://test.pypi.org/project/eosfactory-tokenika
-You can use pip to install your package and verify that it works. Create a new virtualenv (see Installing Packages for detailed instructions) and install your package from TestPyPI:
-sudo -H python3 -m pip install --index-url https://test.pypi.org/simple/ eosfactory-tokenika
-to remove egg-link:
-sudo python3.5 setup.py develop --uninstall
+
+## Importing package
+
+```bash
+pip3 install -i https://test.pypi.org/simple/ eosfactory-tokenika
+```
+
+
 ## uninstall
 Check, how is your installed package named from pip point of view:
 ```bash
-# sudo python3 setup_develop.py develop
+# python3 setup_develop.py develop
 # pip freeze -- output installed packages in requirements format.
 # 
 pip freeze
@@ -109,7 +122,7 @@ idna==2.6
 This shall list names of all packages, you have installed (and which were detected by pip). The name can be sometime long, then use just the name of the package being shown at the and after #egg=. You can also in most cases ignore the version part (whatever follows == or -).
 Then uninstall the package:
 ```
-$ sudo -H pip3 uninstall eosfactory-tokenika==2.0
+$ pip3 uninstall eosfactory-tokenika==2.0
 ```
 If it asks for confirmation about removing the package, then you are lucky guy and it will be removed.
 ## 

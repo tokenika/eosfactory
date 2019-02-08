@@ -1,14 +1,5 @@
-import os
-from termcolor import cprint, colored
 import argparse
-import pathlib
-
-import eosfactory.core.utils as utils
 import eosfactory.core.config as config
-
-
-def tilde(tilde_path):
-    return tilde_path.replace("~", str(pathlib.Path.home()))
 
 
 def install(wsl_root=None):
