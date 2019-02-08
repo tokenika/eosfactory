@@ -8,7 +8,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "2.1.0"
+VERSION = "2.1.1"
 EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.4.1"
 PYTHON_VERSION = "3.5 or higher"
@@ -76,6 +76,8 @@ def is_linked_package():
 
 
 def set_contract_workspace_dir(contract_workspace_dir=None):
+    from termcolor import cprint, colored
+    import pathlib
 
     def tilde(tilde_path):
         return tilde_path.replace("~", str(pathlib.Path.home()))
@@ -103,30 +105,30 @@ def set_contract_workspace_dir(contract_workspace_dir=None):
 
         if contract_workspace_dir_[0] in map:
             contract_workspace_dir = map[contract_workspace_dir_[0]]
-            _contract_workspace_dir = tilde(input(utils.heredoc('''
+            new_dir = tilde(input(utils.heredoc('''
                 Where do you prefer to keep your smart-contract projects?
                 The current location is:
                 {}
                 Input another existing directory path, or nothing to keep the current one:
                 ''').format(colored(contract_workspace_dir, current_path_color)) + "\n"))
         else:
-            _contract_workspace_dir = tilde(input(utils.heredoc('''
+            new_dir = tilde(input(utils.heredoc('''
                 Where do you prefer to keep your smart-contract projects?
                 Input an existing directory path:
                 ''') + "\n"))
 
-        if not _contract_workspace_dir:
-            _contract_workspace_dir = contract_workspace_dir
+        if not new_dir:
+            new_dir = contract_workspace_dir
         
-        if set(contract_workspace_dir):
+        if set(new_dir):
             print()
             break
-        
-        print("\n" + utils.heredoc('''
-        The path you entered:
-        {}
-        doesn't seem to exist!
-        ''').format(colored(_contract_workspace_dir, error_path_color)) + "\n")
+        else:        
+            print("\n" + utils.heredoc('''
+            The path you entered:
+            {}
+            doesn't seem to exist!
+            ''').format(colored(new_dir, error_path_color)) + "\n")
 
 
 def config_dir():
@@ -167,6 +169,9 @@ def contract_workspace_dir():
     *EOSIO_CONTRACT_WORKSPACE* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
+    if not contract_workspace_dir_[0] in config_map():
+        set_contract_workspace_dir()
+
     path = config_value(contract_workspace_dir_)
 
     if os.path.isabs(path):
@@ -1073,28 +1078,38 @@ The current contents of the configuration file is:
 
 def main():
     '''
-    usage: config.py [-h] [--json]
+    usage: config.py [-h] [--wsl_root] [--dependencies] [--json]
+                    [--workspace WORKSPACE]
 
-    Show the configuration of EOSFactory.
+    Show the configuration of EOSFactory or set contract workspace.
 
     Args:
-        --json: Print bare JSON only.
-        -h: Show help message and exit.
+        -h, --help            show this help message and exit
+        --wsl_root            show set the root of the WSL and exit.
+        --dependencies        list dependencies of EOSFactory and exit.
+        --json                bare config JSON and exit.
+        --workspace WORKSPACE
+                                set contract workspace and exit.
     '''
 
     parser = argparse.ArgumentParser(description='''
-    Show the configuration of EOSFactory.
+    Show the configuration of EOSFactory or set contract workspace.
     ''')
     parser.add_argument(
-        "--wsl_root", 
-        help="Set the root of the WSL.", 
+        "--wsl_root",  help="show set the root of the WSL and exit.", 
         action="store_true")
     parser.add_argument(
-        "--dependencies",
-        help="List dependencies of EOSFactory.",
+        "--dependencies", help="list dependencies of EOSFactory and exit.",
         action="store_true")
-    parser.add_argument("--json", help="Bare JSON only.", action="store_true")
+    parser.add_argument(
+        "--json", help="bare config JSON and exit.", 
+        action="store_true")
+    parser.add_argument(
+        "--workspace", help="set contract workspace and exit.",
+        action="store_true")
+
     args = parser.parse_args()
+
     if args.dependencies:
         installation_dependencies()
     elif args.json:
@@ -1102,8 +1117,10 @@ def main():
             current_config(), sort_keys=True, indent=4))
     elif args.wsl_root:
         wsl_root()
+    elif args.workspace:
+        set_contract_workspace_dir()
     else:
-        config()    
+        config()
 
 if __name__ == '__main__':
     main()
