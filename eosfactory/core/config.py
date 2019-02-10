@@ -8,13 +8,12 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "2.1.1"
+VERSION = "2.1.3"
 EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.4.1"
 PYTHON_VERSION = "3.5 or higher"
 EOSFACTORY_DIR = "eosfactory/"
-# "/usr/local/" cannot be varied: it is where 'setuptools' puts `data_files'
-APP_DATA_DIR = "/usr/local/" + EOSFACTORY_DIR
+APP_DATA_DIR = os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR)
 APP_CWD_DIR = "/tmp/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
 
@@ -33,8 +32,9 @@ genesis_json_ = ("EOSIO_GENESIS_JSON",
                 ["/home/cartman/.local/share/eosio/nodeos/config/genesis.json"])
 data_dir_ = ("LOCAL_NODE_DATA_DIR", 
                             ["/home/cartman/.local/share/eosio/nodeos/data/"])
-config_dir_ = ("LOCAL_NODE_CONFIG_DIR", 
-                            ["/home/cartman/.local/share/eosio/nodeos/config/"])
+config_dir_ = ("LOCAL_NODE_CONFIG_DIR", [None])
+# config_dir_ = ("LOCAL_NODE_CONFIG_DIR", 
+#                         ["/home/cartman/.local/share/eosio/nodeos/config/"])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
 
@@ -67,7 +67,12 @@ def is_linked_package():
     if (not is_linked) and (not is_copied):
         raise errors.Error('''
         Cannot determine the configuration directory.
-        ''', translate=False)
+        {}
+        {}
+        '''.format(
+            os.path.join(eosf_dir(), CONFIG_DIR),
+            os.path.join(APP_DATA_DIR, CONFIG_DIR)
+            ), translate=False)
 
     if is_linked and is_copied:
         is_linked = True
@@ -98,6 +103,7 @@ def set_contract_workspace_dir(contract_workspace_dir=None):
 
     current_path_color = "green"
     error_path_color = "red"
+    ignore = "-"
 
     while True:
         map = config_map()
@@ -106,17 +112,24 @@ def set_contract_workspace_dir(contract_workspace_dir=None):
         if contract_workspace_dir_[0] in map:
             contract_workspace_dir = map[contract_workspace_dir_[0]]
             new_dir = tilde(input(utils.heredoc('''
+                Input '{}' if you do not care about the setup.
+
                 Where do you prefer to keep your smart-contract projects?
                 The current location is:
                 {}
                 Input another existing directory path, or nothing to keep the current one:
-                ''').format(colored(contract_workspace_dir, current_path_color)) + "\n"))
+                ''').format(ignore, colored(contract_workspace_dir, current_path_color)) + "\n"))
         else:
             new_dir = tilde(input(utils.heredoc('''
+                Input '{}' if you do not care about the setup.
+
                 Where do you prefer to keep your smart-contract projects?
                 Input an existing directory path:
-                ''') + "\n"))
+                ''') + "\n").format(ignore))
 
+        if new_dir == ignore:
+            new_dir = os.path.join(APP_CWD_DIR, CONTRACTS_DIR)
+        
         if not new_dir:
             new_dir = contract_workspace_dir
         
@@ -277,7 +290,11 @@ def nodeos_config_dir():
     *LOCAL_NODE_CONFIG_DIR* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
-    return first_valid_path(config_dir_)
+    dir = first_valid_path(config_dir_, raise_error=False)
+    if dir:
+        return dir
+
+    return config_dir()
 
 
 def genesis_json():
@@ -445,8 +462,9 @@ def eosio_cpp_dir():
     '''
     eosio_cpp_version = utils.spawn(
             [eosio_cpp(), "-version"],
-            "Cannot determine the version of the expected 'eosio.cpp' package."
+    "Cannot determine the version of the installed 'eosio.cpp' pckage."
         ).replace("eosio-cpp version ", "")
+
     version_pattern = re.compile(".+/eosio\.cdt/(\d\.\d\.\d)/$")
     dir = eosio_cpp_dir_[1][0]    
     if not version_pattern.match(dir):
@@ -624,34 +642,37 @@ def first_valid_path(config_list, find_file=None, raise_error=True):
             result is not defined.            
     '''
     values = config_values(config_list)
-    for path in values:
+    if values[0]:
+        for path in values:
 
-        if "${HOME}" in path: 
-            home = None
-            if "HOME" in os.environ:
-                home = os.environ["HOME"]
-                
-            if home:
-                path = path.replace("${HOME}", home)
-                if find_file: 
+            if "${HOME}" in path: 
+                home = None
+                if "HOME" in os.environ:
+                    home = os.environ["HOME"]
+                    
+                if home:
+                    path = path.replace("${HOME}", home)
+                    if find_file: 
+                        if os.path.exists(os.path.join(path, find_file)):
+                            return path
+                    else:
+                        if os.path.exists(path):
+                            return path
+
+            if os.path.isabs(path):
+                if find_file:
                     if os.path.exists(os.path.join(path, find_file)):
                         return path
                 else:
                     if os.path.exists(path):
                         return path
 
-        if os.path.isabs(path):
-            if find_file:
-                if os.path.exists(os.path.join(path, find_file)):
-                    return path
-            else:
-                if os.path.exists(path):
-                    return path
-
     if raise_error:
         raise errors.Error('''
         Cannot find any path for '{}'.
         '''.format(config_list[0]), translate=False)
+    else:
+        return None
 
 
 def contract_dir(contract_dir_hint):
@@ -873,40 +894,41 @@ def not_defined():
 def installation_dependencies():
     '''Verify whether 'eosio' and 'eosio.cpp' packages are properly installed.
     '''
-    eosio_version = utils.spawn(
-                            [node_exe(), "--version"],
-                            raise_exception=False)
-    if not eosio_version[1]:
-        eosio_version = eosio_version[0].replace("v", "")
+    import subprocess
+
+    try:
+        eosio_version = subprocess.check_output(
+            [node_exe(), "--version"], timeout=10).decode("ISO-8859-1").strip()
+
+        eosio_version = eosio_version.replace("v", "")
         if not eosio_version == EOSIO_VERSION:
             print('''NOTE!
 The version of the installed 'eosio' package is {} while the expected
 version is {}
-            '''.format(eosio_version, EOSIO_VERSION))
-    else:
+            '''.format(eosio_version, EOSIO_VERSION))        
+    except Exception as e:
         print('''ERROR!
-Cannot determine the version of the expected 'eosio' package.
+Cannot determine the version of the installed 'eosio' package.
 The error message:
 {}
-        '''.format(eosio_version[1]))
+        '''.format(str(e)))
 
-    eosio_cpp_version = utils.spawn(
-                            [eosio_cpp(), "-version"],
-                            raise_exception=False)
-    if not eosio_cpp_version[1]:
-        eosio_cpp_version = eosio_cpp_version[0].replace(
-                                                    "eosio-cpp version ", "")
+    try:
+        eosio_cpp_version = subprocess.check_output(
+            [eosio_cpp(), "-version"], timeout=5).decode("ISO-8859-1").strip()
+
+        eosio_cpp_version = eosio_cpp_version.replace("eosio-cpp version ", "")
         if not eosio_cpp_version == EOSIO_CDT_VERSION:
             print('''NOTE!
 The version of the installed 'eosio.cpp' package is {} while the expected
 version is {}
-            '''.format(eosio_cpp_version, EOSIO_CDT_VERSION))
-    else:
+            '''.format(eosio_cpp_version, EOSIO_CDT_VERSION))     
+    except Exception as e:
         print('''ERROR!
-Cannot determine the version of the expected 'eosio.cpp' package.
+Cannot determine the version of the installed 'eosio.cpp' package.
 The error message:
 {}
-        '''.format(eosio_cpp_version[1]))    
+        '''.format(str(e)))   
 
 
 def current_config(contract_dir=None):
@@ -1042,8 +1064,7 @@ Python version {}
         '{}'
         '''.format(os.path.join(eosf_dir(), EOSFACTORY_DIR))
     if is_linked_package() else
-        '''
-        EOSFactory is installed as a regular Python package.
+        '''EOSFactory is installed as a Python package.
         '''
     )
 
