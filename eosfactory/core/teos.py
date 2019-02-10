@@ -680,7 +680,8 @@ def node_stop():
     if count <= 0:
         raise errors.Error('''
 Failed to kill {}. Pid is {}.
-    '''.format(config.node_exe_name(), str(pids))
+    '''.format(
+        os.path.splitext(os.path.basename(config.node_exe()))[0], str(pids))
     )
     else:         
         logger.INFO('''

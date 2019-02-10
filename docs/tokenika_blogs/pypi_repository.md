@@ -7,7 +7,7 @@ qQWZZwPMAn3Z8pGCNPJJk
 
 >The `easy-install.pth` list is automatically pre-pended to the `system.path` python list, and, therefore, EOSFactory there obscures one installed as a regular package. See `nano /usr/local/lib/python3.7/site-packages/easy-install.pth`
 
->I follow an [article](http://matthew-brett.github.io/pydagogue/un_easy_install.html), advising killing the easy-install.
+>I follow [1](http://matthew-brett.github.io/pydagogue/un_easy_install.html), advising killing the easy-install [and 2](https://stackoverflow.com/questions/5399056/uninstall-easy-install) showing how to do it.
 
 Un-installation command...
 ```bash
@@ -23,7 +23,7 @@ Removing /usr/local/lib/python3.5/dist-packages/eosfactory-tokenika.egg-link (li
 
 Un-installation command...
 ```bash
-pip3 uninstall eosfactory-tokenika==2.1.1
+pip3 uninstall eosfactory-tokenika
 ```
 ...results:
 ```bash
@@ -53,14 +53,14 @@ Successfully uninstalled eosfactory-tokenika-2.1.1
 ### Making distribution
 
 ```bash
-python3 setup.py sdist
+python3 setup.py sdist bdist_wheel
 ```
 
-### Installing Python package with a whl file
+### Installing Python package
 
 Pip version has to be precisely defined, otherwise uses the highest available one.
 ```bash
-pip3 install --user /mnt/c/Workspaces/EOS/eosfactory/dist/eosfactory_tokenika-2.1.1.tar.gz
+pip3 install --user /mnt/c/Workspaces/EOS/eosfactory/dist/eosfactory_tokenika*.tar.gz
 ```
 The result is:
 ```bash
@@ -104,8 +104,7 @@ pip3 install -i https://test.pypi.org/simple/ eosfactory-tokenika
 ```
 
 
-## uninstall
-Check, how is your installed package named from pip point of view:
+## thrash
 ```bash
 # python3 setup_develop.py develop
 # pip freeze -- output installed packages in requirements format.
@@ -127,14 +126,14 @@ $ pip3 uninstall eosfactory-tokenika==2.0
 If it asks for confirmation about removing the package, then you are lucky guy and it will be removed.
 ## 
 You could install the package and make it available for any of your Python apps with:
-```
-python setup.py install
+```bash
+python3 setup.py install --user
 ```
 If you publish the above structure on a public repository, e.g. on Gibhub, anyone could easily install it with:
-```
+```bash
 git clone https://www.github.com/yourname/yourpackage
 cd yourpackage
-python setup.py install
+python setup.py install --user
 ```
 ### Where eosfactory data
 The /usr/local hierarchy is for use by the system administrator when installing software locally. It needs to be safe from being overwritten when the system software is updated. It may be used for programs and data that are shareable amongst a group of hosts, but not found in /usr 

@@ -23,7 +23,8 @@ def heredoc(message):
     return message
 
 
-def spawn(command_line, error_message='', shell=False, raise_exception=True):
+def spawn(
+        command_line, error_message='', shell=False, raise_exception=True):
     import subprocess
     stdout = None
     stderr = None
