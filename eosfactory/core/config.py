@@ -10,7 +10,7 @@ import eosfactory.core.utils as utils
 
 VERSION = "2.1.3"
 EOSIO_VERSION = "1.6.0"
-EOSIO_CDT_VERSION = "1.4.1"
+EOSIO_CDT_VERSION = "1.5.0"
 PYTHON_VERSION = "3.5 or higher"
 EOSFACTORY_DIR = "eosfactory/"
 APP_DATA_DIR = os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR)
@@ -193,9 +193,8 @@ def contract_workspace_dir():
         else:
             raise errors.Error('''
             The path
-            '{}'
-            set as the contract workspace directory does not exist. The error message is
-            {}
+            '{}',
+            set as the contract workspace directory, does not exist.
             '''.format(path), translate=False)
     else:
         if is_linked_package():

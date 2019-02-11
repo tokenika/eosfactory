@@ -45,7 +45,7 @@ def validate(omittable):
 
 
 def excepthook(type, value, traceback):
-    print(value)        
+    print(value)
 
 
 class Error(Exception):

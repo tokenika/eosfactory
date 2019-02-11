@@ -60,7 +60,7 @@ python3 setup.py sdist bdist_wheel
 
 Pip version has to be precisely defined, otherwise uses the highest available one.
 ```bash
-pip3 install --user /mnt/c/Workspaces/EOS/eosfactory/dist/eosfactory_tokenika*.tar.gz
+pip3 install --user dist/eosfactory_tokenika*.tar.gz
 ```
 The result is:
 ```bash
