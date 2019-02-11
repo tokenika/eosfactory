@@ -492,10 +492,23 @@ def get_resources_dir(source_dir):
 
 
 def args(clear=False):
+    try:
+        data_dir = config.data_dir()
+    except:
+        data_dir = None
+
+    try:
+        config_dir = config.nodeos_config_dir()
+    except:
+        config_dir = None
+
+    try:
+        genesis_json = config.genesis_json()
+    except:
+        genesis_json = None
+
     args_ = [
         "--http-server-address", config.http_server_address(),
-        "--data-dir", config.data_dir(),
-        "--config-dir", config.nodeos_config_dir(),
         "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
         "--contracts-console",
         "--verbose-http-errors",
@@ -508,12 +521,16 @@ def args(clear=False):
         "--plugin eosio::http_plugin",
         "--plugin eosio::history_api_plugin"
     ]
+    if config_dir:
+        args_.extend(["--config-dir", config_dir])
+    if data_dir:
+        args_.extend(["--data-dir", data_dir])
+
     if clear:
         node_stop()
-        args_.extend([
-            "--genesis-json", config.genesis_json(),
-            "--delete-all-blocks"
-        ])
+        args_.extend(["--delete-all-blocks"])
+        if genesis_json:
+            args_.extend(["--genesis-json", genesis_json])            
     return args_
 
 

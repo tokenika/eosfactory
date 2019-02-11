@@ -47,3 +47,5 @@ docs/patterns/set/*.py
 hyper.md
 test.py
 nodeos.log
+contracts_linux
+contracts_windows
