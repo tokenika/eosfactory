@@ -39,11 +39,8 @@ class Test(unittest.TestCase):
         contract = Contract(host, project_from_template(
             CONTRACT_WORKSPACE, template="01_hello_world", 
             remove_existing=True))
-        import eosfactory.core.setup as setUp
-        setup.is_print_command_line = True
         contract.build()
         contract.deploy()
-        setup.is_print_command_line = False
 
         COMMENT('''
         Test an action for Alice, including the debug buffer:
