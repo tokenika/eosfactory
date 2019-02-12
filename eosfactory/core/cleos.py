@@ -91,7 +91,8 @@ class Cleos():
 
         errors.validate(self)
         
-        if setup.is_print_request or setup.is_print_response:
+        if not self.err_msg \
+                    and (setup.is_print_request or setup.is_print_response):
             print("######## cleos request and response:")
             print(self.out_msg_details)
             
