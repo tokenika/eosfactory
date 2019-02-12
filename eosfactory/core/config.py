@@ -118,14 +118,16 @@ def set_contract_workspace_dir(contract_workspace_dir=None):
                 The current location is:
                 {}
                 Input another existing directory path, or nothing to keep the current one:
-                ''').format(ignore, colored(contract_workspace_dir, current_path_color)) + "\n"))
+                '''.format(
+                    ignore, colored(contract_workspace_dir, current_path_color))
+                ) + "\n"))
         else:
             new_dir = tilde(input(utils.heredoc('''
                 Input '{}' if you do not care about the setup.
 
                 Where do you prefer to keep your smart-contract projects?
                 Input an existing directory path:
-                ''') + "\n").format(ignore))
+                '''.format(ignore)) + "\n"))
 
         if new_dir == ignore:
             new_dir = os.path.join(APP_CWD_DIR, CONTRACTS_DIR)
