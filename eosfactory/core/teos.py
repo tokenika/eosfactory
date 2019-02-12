@@ -214,7 +214,7 @@ def WASM(
     command_line.append(input_file)
 
     if setup.is_print_command_line:
-        print("######## \n{}:".format(" ".join(command_line)))
+        print("######## command line sent to eosio-cpp: \n{}:".format(" ".join(command_line)))
 
 
     if compile_only:
@@ -391,7 +391,7 @@ error message:
         os.system(command_line)
 
     logger.INFO('''
-    ######### Created contract project ``{}``, 
+    ######## Created contract project ``{}``, 
         originated from template 
         ``{}``.
     '''.format(project_name, template_dir), verbosity)
@@ -598,7 +598,7 @@ def node_start(clear=False, nodeos_stdout=None):
     args_ = args(clear)
 
     if setup.is_print_command_line:
-        print("nodeos command line:")
+        print("######## nodeos command line:")
         print(config.node_exe() + " " + " ".join(args_))
 
     if not nodeos_stdout:

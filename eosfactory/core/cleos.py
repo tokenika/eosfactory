@@ -64,7 +64,7 @@ class Cleos():
         cl.extend(args)
 
         if setup.is_print_command_line:
-            print("command line sent to cleos:")
+            print("######## command line sent to cleos:")
             print(" ".join(cl))
             print("")
 
@@ -90,6 +90,9 @@ class Cleos():
                 break
 
         errors.validate(self)
+        if setup.is_print_request or setup.is_print_response:
+            print("######## cleos request and response:")
+            print(self.out_msg_details)
             
         try:
             self.json = json.loads(self.out_msg)
