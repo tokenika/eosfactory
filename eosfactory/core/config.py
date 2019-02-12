@@ -303,7 +303,15 @@ def genesis_json():
     *EOSIO_GENESIS_JSON* entry in the *config.json* file, 
     see :func:`.current_config`.    
     '''
-    return first_valid_path(genesis_json_)
+    path = first_valid_path(genesis_json_, raise_error=False)
+    if not path:
+        path = os.path.join(config_dir(), "genesis.json")
+    if not os.path.exists(path):
+        raise errors.Error('''
+        Cannot find any path for '{}'.
+        '''.format(genesis_json_[0]), translate=False)
+
+    return path
 
 
 def chain_state_db_size_mb():
