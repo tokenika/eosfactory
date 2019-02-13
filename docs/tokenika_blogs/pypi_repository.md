@@ -1,24 +1,6 @@
 tokenika
 qQWZZwPMAn3Z8pGCNPJJk
 
-### Uninstalling eosfactory Python package link
-
->If the `easy-install` thing is in the system, installed, with the `develop` flag, packages are included to the `easy-install.pth`. They remain there after un-installation.
-
->The `easy-install.pth` list is automatically pre-pended to the `system.path` python list, and, therefore, EOSFactory there obscures one installed as a regular package. See `nano /usr/local/lib/python3.7/site-packages/easy-install.pth`
-
->I follow [1](http://matthew-brett.github.io/pydagogue/un_easy_install.html), advising killing the easy-install [and 2](https://stackoverflow.com/questions/5399056/uninstall-easy-install) showing how to do it.
-
-Un-installation command...
-```bash
-python3 setup_develop.py develop --uninstall
-```
-...results:
-```bash
-running develop
-Removing /usr/local/lib/python3.5/dist-packages/eosfactory-tokenika.egg-link (link to .)
-```
-
 ### Uninstalling eosfactory Python package
 
 Un-installation command...
@@ -49,6 +31,82 @@ Uninstalling eosfactory-tokenika-2.1.1:
 Proceed (y/n) y
 Successfully uninstalled eosfactory-tokenika-2.1.1
 ```
+
+### EOSFactory Python package link
+
+>The `easy-install.pth` list is automatically pre-pended to the `system.path` python list, and, therefore, EOSFactory there obscures one installed as a regular package. See `sudo nano /usr/local/lib/python3.7/site-packages/easy-install.pth`
+
+#### Install
+
+```bash
+python3 setup_develop.py sdist
+sudo  -H python3 -m pip install -e .
+```
+The result is:
+```bash
+Obtaining file:///mnt/c/Workspaces/EOS/eosfactory
+Requirement already satisfied: termcolor in /usr/local/lib/python3.7/site-packages (from eosfactory-tokenika==2.0.0) (1.1.0)
+Installing collected packages: eosfactory-tokenika
+  Found existing installation: eosfactory-tokenika 2.0.0
+    Can't uninstall 'eosfactory-tokenika'. No files were found to uninstall.
+  Running setup.py develop for eosfactory-tokenika
+Successfully installed eosfactory-tokenika
+```
+The relevant entry is in the file `easy-install.pth`
+
+#### Uninstall
+
+```bash
+sudo -H pip3 uninstall eosfactory-tokenika
+```
+The result is:
+```bash
+Uninstalling eosfactory-tokenika-2.0.0:
+  Would remove:
+    /usr/local/lib/python3.7/site-packages/eosfactory-tokenika.egg-link
+Proceed (y/n)? y
+  Successfully uninstalled eosfactory-tokenika-2.0.0
+```
+The entry in the file `easy-install.pth` removed.
+
+### Alternative install
+
+```bash
+sudo python3 setup_develop.py develop
+```
+The result is:
+```bash
+running develop
+running egg_info
+creating eosfactory_tokenika.egg-info
+writing eosfactory_tokenika.egg-info/PKG-INFO
+writing dependency_links to eosfactory_tokenika.egg-info/dependency_links.txt
+writing requirements to eosfactory_tokenika.egg-info/requires.txt
+writing top-level names to eosfactory_tokenika.egg-info/top_level.txt
+writing manifest file 'eosfactory_tokenika.egg-info/SOURCES.txt'
+reading manifest file 'eosfactory_tokenika.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'eosfactory_tokenika.egg-info/SOURCES.txt'
+running build_ext
+Creating /usr/local/lib/python3.7/site-packages/eosfactory-tokenika.egg-link (link to .)
+Adding eosfactory-tokenika 2.1.0 to easy-install.pth file
+
+Installed /mnt/c/Workspaces/EOS/eosfactory
+Processing dependencies for eosfactory-tokenika==2.1.0
+Searching for termcolor==1.1.0
+Best match: termcolor 1.1.0
+Adding termcolor 1.1.0 to easy-install.pth file
+
+Using /usr/local/lib/python3.7/site-packages
+Finished processing dependencies for eosfactory-tokenika==2.1.0
+```
+The relevant entry is in the file `easy-install.pth`
+
+Uninstall:
+```bash
+sudo -H pip3 uninstall eosfactory-tokenika
+```
+The entry in the file easy-install.pth removed.
 
 ### Making distribution
 
