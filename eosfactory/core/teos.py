@@ -141,6 +141,11 @@ def ABI(
         '''.format(EOSIO_DISPATCH, source_files))
 
     command_line.append(input_file)
+
+    if setup.is_print_command_line:
+        print("######## command line sent to eosio-cpp:")
+        print(" ".join(command_line))
+
     eosio_cpp(command_line, target_dir)
 
     logger.TRACE('''
@@ -213,14 +218,14 @@ def WASM(
 
     command_line.append(input_file)
 
-    if setup.is_print_command_line:
-        print("######## command line sent to eosio-cpp: \n{}:".format(" ".join(command_line)))
-
-
     if compile_only:
         command_line.append("-c=")
 
     command_line.append("-o=" + target_path)
+
+    if setup.is_print_command_line:
+        print("######## command line sent to eosio-cpp:")
+        print(" ".join(command_line))
 
     eosio_cpp(command_line, target_dir)
 
@@ -624,6 +629,10 @@ def node_start(clear=False, nodeos_stdout=None):
             except:
                 pass
 
+    if setup.is_print_command_line:
+        print("######## nodeos command line:")
+        print(config.node_exe() + " " + " ".join(args_))
+                
     args_.insert(0, config.node_exe())
     def runInThread():
         proc = subprocess.Popen(
@@ -710,6 +719,3 @@ def node_is_running():
     return not get_pid()
 
     return dir
-
-
-
