@@ -17,7 +17,7 @@ namespace eosio {
 
    using std::string;
 
-   class [[eosio::contract("02_eosio_token")]] token : public contract {
+   class [[eosio::contract("eosio_token")]] token : public contract {
       public:
          using contract::contract;
 

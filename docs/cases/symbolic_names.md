@@ -39,7 +39,7 @@ create_account("host", master)
 create_account("alice", master)
 create_account("carol", master)
 
-contract = Contract(host, "02_eosio_token")
+contract = Contract(host, "eosio_token")
 contract.build(force=False)
 contract.deploy()
 

@@ -1,9 +1,0 @@
-{
-   "files.associations": {
-      "functional": "cpp",
-      "__config": "cpp",
-      "*.ipp": "cpp",
-      "typeinfo": "cpp"
-   },
-"C_Cpp.intelliSenseEngineFallback": "Enabled"
-}

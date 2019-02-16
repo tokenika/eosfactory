@@ -61,7 +61,7 @@ namespace eosio {
    Note: the argument of the eosio::contract definition has to be the same
    as the name of the abi and wasm files. If not, abi generation fails. 
    */
-   class [[eosio::contract("03_tic_tac_toe")]] tic_tac_toe : public contract {
+   class [[eosio::contract("tic_tac_toe")]] tic_tac_toe : public contract {
       public:
          using contract::contract;
 

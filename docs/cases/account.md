@@ -79,7 +79,7 @@ An instance of the `Account` class has the following methods:
 Create an instance of the `Contract` class and associate it with the `host` account:
 
 ```python
-contract = Contract(host, "01_hello_world")
+contract = Contract(host, "hello_world")
 ```
 
 The second argument of the creator of the `Contract` class identifies the location of the contract's source code (you can supply the entire path, but in case of standard locations, e.g. *EOSFactory* demo contracts or your predefined workspace, you can just specify the folder name).
@@ -115,7 +115,7 @@ You can also try the `show_action` method:
 host.show_action("hi", {"user":alice}, alice)
 ```
 
-**NOTE:** As the `01_hello_world` does not define any tables, in this case the `table` method will not work.
+**NOTE:** As the `hello_world` does not define any tables, in this case the `table` method will not work.
 
 Here is the expected outcome:
 

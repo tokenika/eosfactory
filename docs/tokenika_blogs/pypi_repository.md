@@ -14,16 +14,16 @@ Uninstalling eosfactory-tokenika-2.1.1:
     /usr/local/eosfactory/config.ini
     /usr/local/eosfactory/config.json
     /usr/local/eosfactory/genesis.json
-    /usr/local/eosfactory/templates/contracts/01_hello_world/.vscode/c_cpp_properties.json
-    /usr/local/eosfactory/templates/contracts/01_hello_world/.vscode/settings.json
-    /usr/local/eosfactory/templates/contracts/01_hello_world/.vscode/tasks.json
-    /usr/local/eosfactory/templates/contracts/01_hello_world/CMakeLists.txt
-    /usr/local/eosfactory/templates/contracts/01_hello_world/resources/CONTRACT_NAME.clauses.md
-    /usr/local/eosfactory/templates/contracts/01_hello_world/resources/CONTRACT_NAME.contracts.md
-    /usr/local/eosfactory/templates/contracts/01_hello_world/src/CONTRACT_NAME.cpp
-    /usr/local/eosfactory/templates/contracts/01_hello_world/src/logger.hpp
-    /usr/local/eosfactory/templates/contracts/01_hello_world/tests/test1.py
-    /usr/local/eosfactory/templates/contracts/01_hello_world/tests/unittest1.py
+    /usr/local/eosfactory/templates/contracts/hello_world/.vscode/c_cpp_properties.json
+    /usr/local/eosfactory/templates/contracts/hello_world/.vscode/settings.json
+    /usr/local/eosfactory/templates/contracts/hello_world/.vscode/tasks.json
+    /usr/local/eosfactory/templates/contracts/hello_world/CMakeLists.txt
+    /usr/local/eosfactory/templates/contracts/hello_world/resources/CONTRACT_NAME.clauses.md
+    /usr/local/eosfactory/templates/contracts/hello_world/resources/CONTRACT_NAME.contracts.md
+    /usr/local/eosfactory/templates/contracts/hello_world/src/CONTRACT_NAME.cpp
+    /usr/local/eosfactory/templates/contracts/hello_world/src/logger.hpp
+    /usr/local/eosfactory/templates/contracts/hello_world/tests/test1.py
+    /usr/local/eosfactory/templates/contracts/hello_world/tests/unittest1.py
     ....................................
     ....................................
     /usr/local/lib/python3.5/dist-packages/eosfactory/*
@@ -39,7 +39,7 @@ Successfully uninstalled eosfactory-tokenika-2.1.1
 #### Install
 
 ```bash
-python3 setup_develop.py sdist
+python3 setup.py sdist bdist_wheel
 sudo  -H python3 -m pip install -e .
 ```
 The result is:

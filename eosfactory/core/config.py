@@ -18,7 +18,7 @@ APP_CWD_DIR = "/tmp/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
-DEFAULT_TEMPLATE = "01_hello_world"
+DEFAULT_TEMPLATE = "hello_world"
 FROM_HERE_TO_EOSF_DIR = "../../../"
 CONFIG_DIR = "config"
 CONFIG_JSON = "config.json"
@@ -112,22 +112,27 @@ def set_contract_workspace_dir(contract_workspace_dir=None):
         if contract_workspace_dir_[0] in map:
             contract_workspace_dir = map[contract_workspace_dir_[0]]
             new_dir = tilde(input(utils.heredoc('''
-                Input '{}' if you do not care about the setup.
+                Input '{}' to set the default value which is
+                '{}'.
 
                 Where do you prefer to keep your smart-contract projects?
                 The current location is:
                 {}
                 Input another existing directory path, or nothing to keep the current one:
                 '''.format(
-                    ignore, colored(contract_workspace_dir, current_path_color))
+                    ignore, os.path.join(APP_CWD_DIR, CONTRACTS_DIR),
+                    colored(contract_workspace_dir, current_path_color))
                 ) + "\n"))
         else:
             new_dir = tilde(input(utils.heredoc('''
-                Input '{}' if you do not care about the setup.
+                Input '{}' to set the default value which is
+                '{}'.
 
                 Where do you prefer to keep your smart-contract projects?
                 Input an existing directory path:
-                '''.format(ignore)) + "\n"))
+                '''.format(
+                    ignore, 
+                    os.path.join(APP_CWD_DIR, CONTRACTS_DIR))) + "\n"))
 
         if new_dir == ignore:
             new_dir = os.path.join(APP_CWD_DIR, CONTRACTS_DIR)
@@ -717,11 +722,11 @@ def contract_dir(contract_dir_hint):
         return os.path.abspath(contract_dir_)
 
     # ? the relative path to a contract directory, relative to 
-    # 'eosf_dir() / contracts' or '/usr/tmp/eosfactory/'
+    # 'eosf_dir()/contracts' or 'APP_DATA_DIR/contracts'
     contract_dir_ =  os.path.join(
                 eosf_dir(), CONTRACTS_DIR, contract_dir_hint) \
             if is_linked_package() else os.path.join(
-                APP_CWD_DIR, CONTRACTS_DIR, contract_dir_hint)
+                APP_DATA_DIR, CONTRACTS_DIR, contract_dir_hint)
 
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):

@@ -75,3 +75,14 @@ For issues not covered in the documentation there is a dedicated [EOS Factory Su
 ## Licence
 
 This code is provided as is, under [MIT Licence](LICENCE).
+
+
+Your question is not clear to me.
+If you refer to the statement from the tutorial *InstallingEOSFactory*:
+
+*EOSIO* deployed in Docker is NOT supported.*.
+
+Here we communicate that *EOSIO* executable has to be installed in the system directly, and not as a Docker image.
+
+We do not like Docker because WSL (Windows System Linux) does not support it. However, we can consider meeting demand from Linux System users, if we see such.
+
