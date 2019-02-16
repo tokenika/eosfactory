@@ -3,7 +3,7 @@ from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
 
-CONTRACT_WORKSPACE = "03_tic_tac_toe"
+CONTRACT_WORKSPACE = "tic_tac_toe"
 
 INITIAL_RAM_KBYTES = 8
 INITIAL_STAKE_NET = 3

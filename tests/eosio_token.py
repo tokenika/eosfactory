@@ -38,7 +38,7 @@ class Test(unittest.TestCase):
         ''')
         create_account("host", master)
         contract = Contract(host, project_from_template(
-            CONTRACT_WORKSPACE, template="02_eosio_token", remove_existing=True))
+            CONTRACT_WORKSPACE, template="eosio_token", remove_existing=True))
         contract.build()
         contract.deploy()
 

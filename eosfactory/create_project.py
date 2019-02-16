@@ -30,7 +30,7 @@ def main():
     parser.add_argument("name", help="Project name or directory.")
     parser.add_argument(
         "template", nargs="?", help="Template name or directory.", 
-        default="01_hello_world")
+        default="hello_world")
     parser.add_argument(
         "--c_cpp_prop", help="c_cpp_properties.json file path.", default="")
     parser.add_argument(

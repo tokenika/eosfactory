@@ -3,7 +3,7 @@ from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 
-CONTRACT_DIR = "/mnt/c/Workspaces/EOS/contracts/hello"
+CONTRACT_WORKSPACE = "_wslqwjvacdyugodewiyd"
 
 class Test(unittest.TestCase):
 
@@ -14,9 +14,8 @@ class Test(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         SCENARIO('''
-        Build and deploy a contract in the given folder
-        {}.
-        '''.format(CONTRACT_DIR))
+        Create a contract from template, then build and deploy it.
+        ''')
         reset()
         create_master_account("master")
 
@@ -26,7 +25,7 @@ class Test(unittest.TestCase):
         create_account("alice", master)
         create_account("carol", master)
         create_account("bob", master)
-
+q
 
     def setUp(self):
         pass
@@ -37,7 +36,9 @@ class Test(unittest.TestCase):
         Create, build and deploy the contract:
         ''')
         create_account("host", master)
-        contract = Contract(host, CONTRACT_DIR)
+        contract = Contract(host, project_from_template(
+            CONTRACT_WORKSPACE, template="hello_world", 
+            remove_existing=True))
         contract.build()
         contract.deploy()
 

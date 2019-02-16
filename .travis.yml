@@ -7,6 +7,7 @@ env:
 
 script:
   - docker build -t e2e --build-arg EOSFACTORY_BRANCH=${TRAVIS_PULL_REQUEST_BRANCH} --build-arg EOSFACTORY_SLUG=${TRAVIS_PULL_REQUEST_SLUG} --build-arg PYTHON_VERSION=${PYTHON_VERSION} ./tests/integration/
-  - docker run -ti e2e "python /opt/eosfactory/tests/01_hello_world.py"
-  - docker run -ti e2e "python /opt/eosfactory/tests/02_eosio_token.py"
-  - docker run -ti e2e "python /opt/eosfactory/tests/03_tic_tac_toe.py"
+  - docker build -t e2e --build-arg eos_branch=${EOS_BRANCH} --build-arg eosfactory_branch=${TRAVIS_PULL_REQUEST_BRANCH} --build-arg python_version=${PYTHON_VERSION} ./tests/integration/
+  - docker run -ti e2e "python /opt/eosfactory/tests/hello_world.py"
+  - docker run -ti e2e "python /opt/eosfactory/tests/eosio_token.py"
+  - docker run -ti e2e "python /opt/eosfactory/tests/tic_tac_toe.py"

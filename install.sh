@@ -43,7 +43,7 @@ To verify EOSFactory installation navigate to the 'eosfactory' folder and run
 these tests:
 "
 printf "%s\n" "
-    $ python3 tests/01_hello_world.py
-    $ python3 tests/02_eosio_token.py
-    $ python3 tests/03_tic_tac_toe.py
+    $ python3 tests/hello_world.py
+    $ python3 tests/eosio_token.py
+    $ python3 tests/tic_tac_toe.py
 "

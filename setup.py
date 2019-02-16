@@ -27,6 +27,8 @@ def data_files_(directory):
     for (path, directories, filenames) in os.walk(directory):
         for filename in filenames:
             dir = os.path.join(config.EOSFACTORY_DIR, path)
+            if "build" in dir:
+                continue
             file_list = [os.path.join(path, filename)]
             tuple = (dir, file_list)
             paths.append(tuple)
@@ -37,7 +39,9 @@ data_files = [
     (os.path.join(config.EOSFACTORY_DIR, "config"),
         ["config/distributed/config.json", "config/config.ini", 
                                                     "config/genesis.json"])] 
-data_files.extend(data_files_('templates'))  
+data_files.extend(data_files_('templates'))
+data_files.extend(data_files_('contracts'))
+
 setuptools.setup(
     name=setuptools_name,
     version=config.VERSION,

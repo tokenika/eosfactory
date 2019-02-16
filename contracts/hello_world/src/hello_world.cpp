@@ -6,7 +6,7 @@
 
 using namespace eosio;
 
-class [[eosio::contract("01_hello_world")]] hello : public contract {
+class [[eosio::contract("hello_world")]] hello : public contract {
   public:
       using contract::contract;
 
