@@ -9,9 +9,15 @@ INITIAL_RAM_KBYTES = 8
 INITIAL_STAKE_NET = 3
 INITIAL_STAKE_CPU = 3
 
+# Actors of the test:
+MASTER = None
+HOST = None
+alice = None
+carol = None
+
 def stats():
     print_stats(
-        [master, host, alice, carol],
+        [MASTER, HOST, alice, carol],
         [
             "core_liquid_balance",
             "ram_usage",
@@ -33,7 +39,7 @@ def stats():
 
 def test():
     SCENARIO('''
-    There is the ``master`` account that sponsors the ``host``
+    There is the ``MASTER`` account that sponsors the ``HOST``
     account equipped with an instance of the ``tic_tac_toe`` smart contract. There
     are two players ``alice`` and ``carol``. We are testing that the moves of
     the game are correctly stored in the blockchain database.
@@ -41,22 +47,22 @@ def test():
 
     testnet.verify_production()
     
-    create_master_account("master", testnet)
-    create_account("host", master,
+    create_master_account("MASTER", testnet)
+    create_account("HOST", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-    create_account("alice", master,
+    create_account("alice", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-    create_account("carol", master,
+    create_account("carol", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
     if not testnet.is_local():
         stats()
 
-    contract = Contract(host, CONTRACT_WORKSPACE)
+    contract = Contract(HOST, CONTRACT_WORKSPACE)
     contract.build(force=False)
 
     try:
-        contract.deploy(payer=master)
+        contract.deploy(payer=MASTER)
     except errors.ContractRunningError:
         pass
 
@@ -65,7 +71,7 @@ def test():
     This might fail if the previous game has not been closes properly:
     ''')
     try:
-        host.push_action(
+        HOST.push_action(
             "create",
             {
                 "challenger": alice,
@@ -77,7 +83,7 @@ def test():
             COMMENT('''
             We need to close the previous game before creating a new one:
             ''')
-            host.push_action(
+            HOST.push_action(
                 "close",
                 {
                     "challenger": alice,
@@ -90,7 +96,7 @@ def test():
             COMMENT('''
             Second attempt to create a new game:
             ''')
-            host.push_action(
+            HOST.push_action(
                 "create",
                 {
                     "challenger": alice, 
@@ -103,21 +109,21 @@ def test():
             ''')
             raise Error(str(e))
 
-    t = host.table("games", carol)
-    assert(t.json["rows"][0]["board"][0] == 0)
-    assert(t.json["rows"][0]["board"][1] == 0)
-    assert(t.json["rows"][0]["board"][2] == 0)
-    assert(t.json["rows"][0]["board"][3] == 0)
-    assert(t.json["rows"][0]["board"][4] == 0)
-    assert(t.json["rows"][0]["board"][5] == 0)
-    assert(t.json["rows"][0]["board"][6] == 0)
-    assert(t.json["rows"][0]["board"][7] == 0)
-    assert(t.json["rows"][0]["board"][8] == 0)
+    table = HOST.table("games", carol)
+    assert(table.json["rows"][0]["board"][0] == 0)
+    assert(table.json["rows"][0]["board"][1] == 0)
+    assert(table.json["rows"][0]["board"][2] == 0)
+    assert(table.json["rows"][0]["board"][3] == 0)
+    assert(table.json["rows"][0]["board"][4] == 0)
+    assert(table.json["rows"][0]["board"][5] == 0)
+    assert(table.json["rows"][0]["board"][6] == 0)
+    assert(table.json["rows"][0]["board"][7] == 0)
+    assert(table.json["rows"][0]["board"][8] == 0)
 
     COMMENT('''
     First move is by carol:
     ''')
-    host.push_action(
+    HOST.push_action(
         "move",
         {
             "challenger": alice,
@@ -130,7 +136,7 @@ def test():
     COMMENT('''
     Second move is by alice:
     ''')
-    host.push_action(
+    HOST.push_action(
         "move",
         {
             "challenger": alice,
@@ -140,21 +146,21 @@ def test():
         },
         permission=(alice, Permission.ACTIVE))
 
-    t = host.table("games", carol)
-    assert(t.json["rows"][0]["board"][0] == 1)
-    assert(t.json["rows"][0]["board"][1] == 0)
-    assert(t.json["rows"][0]["board"][2] == 0)
-    assert(t.json["rows"][0]["board"][3] == 0)
-    assert(t.json["rows"][0]["board"][4] == 2)
-    assert(t.json["rows"][0]["board"][5] == 0)
-    assert(t.json["rows"][0]["board"][6] == 0)
-    assert(t.json["rows"][0]["board"][7] == 0)
-    assert(t.json["rows"][0]["board"][8] == 0)
+    table = HOST.table("games", carol)
+    assert(table.json["rows"][0]["board"][0] == 1)
+    assert(table.json["rows"][0]["board"][1] == 0)
+    assert(table.json["rows"][0]["board"][2] == 0)
+    assert(table.json["rows"][0]["board"][3] == 0)
+    assert(table.json["rows"][0]["board"][4] == 2)
+    assert(table.json["rows"][0]["board"][5] == 0)
+    assert(table.json["rows"][0]["board"][6] == 0)
+    assert(table.json["rows"][0]["board"][7] == 0)
+    assert(table.json["rows"][0]["board"][8] == 0)
 
     COMMENT('''
     Restarting the game:
     ''')
-    host.push_action(
+    HOST.push_action(
         "restart",
         {
             "challenger": alice,
@@ -163,21 +169,21 @@ def test():
         }, 
         permission=(carol, Permission.ACTIVE))
 
-    t = host.table("games", carol)
-    assert(t.json["rows"][0]["board"][0] == 0)
-    assert(t.json["rows"][0]["board"][1] == 0)
-    assert(t.json["rows"][0]["board"][2] == 0)
-    assert(t.json["rows"][0]["board"][3] == 0)
-    assert(t.json["rows"][0]["board"][4] == 0)
-    assert(t.json["rows"][0]["board"][5] == 0)
-    assert(t.json["rows"][0]["board"][6] == 0)
-    assert(t.json["rows"][0]["board"][7] == 0)
-    assert(t.json["rows"][0]["board"][8] == 0)
+    table = HOST.table("games", carol)
+    assert(table.json["rows"][0]["board"][0] == 0)
+    assert(table.json["rows"][0]["board"][1] == 0)
+    assert(table.json["rows"][0]["board"][2] == 0)
+    assert(table.json["rows"][0]["board"][3] == 0)
+    assert(table.json["rows"][0]["board"][4] == 0)
+    assert(table.json["rows"][0]["board"][5] == 0)
+    assert(table.json["rows"][0]["board"][6] == 0)
+    assert(table.json["rows"][0]["board"][7] == 0)
+    assert(table.json["rows"][0]["board"][8] == 0)
 
     COMMENT('''
     Closing the game:
     ''')
-    host.push_action(
+    HOST.push_action(
         "close",
         {
             "challenger": alice,
@@ -190,8 +196,6 @@ def test():
     else:
         stats()
 
-
-testnet = None
 
 if __name__ == '__main__':
 
@@ -206,7 +210,7 @@ if __name__ == '__main__':
         help="Testnet alias")
 
     parser.add_argument(
-        "-t", "--testnet", nargs=4,
+        "-table", "--testnet", nargs=4,
         help="<url> <name> <owner key> <active key>")
 
     parser.add_argument(
