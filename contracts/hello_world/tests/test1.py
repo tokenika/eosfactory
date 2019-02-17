@@ -5,40 +5,46 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
+# Actors of the test:
+MASTER = None
+HOST = None
+ALICE = None
+CAROL = None
+
 def test():
     SCENARIO('''
     Execute simple actions.
     ''')
     reset()
-    create_master_account("master")
+    create_master_account("MASTER")
 
     COMMENT('''
     Build and deploy the contract:
     ''')
-    create_account("host", master)
-    contract = Contract(host, CONTRACT_WORKSPACE)
+    create_account("HOST", MASTER)
+    contract = Contract(HOST, CONTRACT_WORKSPACE)
     contract.build(force=False)
     contract.deploy()
 
     COMMENT('''
     Create test accounts:
     ''')
-    create_account("alice", master)
-    create_account("carol", master)
+    create_account("ALICE", MASTER)
+    create_account("CAROL", MASTER)
 
     COMMENT('''
     Test an action for Alice:
     ''')
-    host.push_action(
-        "hi", {"user":alice}, permission=(alice, Permission.ACTIVE))
-    assert("alice" in DEBUG())
+    HOST.push_action(
+        "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))
+    assert("ALICE" in DEBUG())
 
     COMMENT('''
     Test an action for Carol:
     ''')
-    host.push_action(
-        "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
-    assert("carol" in DEBUG())
+    HOST.push_action(
+        "hi", {"user":CAROL}, permission=(CAROL, Permission.ACTIVE))
+    assert("CAROL" in DEBUG())
 
     stop()
 

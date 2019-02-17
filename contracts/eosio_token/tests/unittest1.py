@@ -5,6 +5,13 @@ verbosity([Verbosity.INFO, Verbosity.OUT])
 
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
+# Actors of the test:
+MASTER = None
+HOST = None
+ALICE = None
+BOB = None
+CAROL = None
+
 class Test(unittest.TestCase):
 
     def run(self, result=None):
@@ -17,22 +24,22 @@ class Test(unittest.TestCase):
         Initialize the token and run a couple of transfers between different accounts.
         ''')
         reset()
-        create_master_account("master")
+        create_master_account("MASTER")
 
         COMMENT('''
         Build & deploy the contract:
         ''')
-        create_account("host", master)
-        contract = Contract(host, CONTRACT_WORKSPACE)
+        create_account("HOST", MASTER)
+        contract = Contract(HOST, CONTRACT_WORKSPACE)
         contract.build(force=False)
         contract.deploy()
 
         COMMENT('''
         Create test accounts:
         ''')
-        create_account("alice", master)
-        create_account("bob", master)
-        create_account("carol", master)
+        create_account("ALICE", MASTER)
+        create_account("BOB", MASTER)
+        create_account("CAROL", MASTER)
 
 
     def setUp(self):
@@ -45,67 +52,67 @@ class Test(unittest.TestCase):
         Initialize the token and send some tokens to one of the accounts:
         ''')
 
-        host.push_action(
+        HOST.push_action(
             "create",
             {
-                "issuer": master,
+                "issuer": MASTER,
                 "maximum_supply": "1000000000.0000 EOS",
                 "can_freeze": "0",
                 "can_recall": "0",
                 "can_whitelist": "0"
             },
-            permission=[(master, Permission.OWNER), (host, Permission.ACTIVE)])
+            permission=[(MASTER, Permission.OWNER), (HOST, Permission.ACTIVE)])
 
-        host.push_action(
+        HOST.push_action(
             "issue",
             {
-                "to": alice, "quantity": "100.0000 EOS", "memo": ""
+                "to": ALICE, "quantity": "100.0000 EOS", "memo": ""
             },
-            permission=(master, Permission.ACTIVE))
+            permission=(MASTER, Permission.ACTIVE))
 
         COMMENT('''
         Execute a series of transfers between the accounts:
         ''')
 
-        host.push_action(
+        HOST.push_action(
             "transfer",
             {
-                "from": alice, "to": carol,
+                "from": ALICE, "to": CAROL,
                 "quantity": "25.0000 EOS", "memo":""
             },
-            permission=(alice, Permission.ACTIVE))
+            permission=(ALICE, Permission.ACTIVE))
 
-        host.push_action(
+        HOST.push_action(
             "transfer",
             {
-                "from": carol, "to": bob, 
+                "from": CAROL, "to": BOB, 
                 "quantity": "11.0000 EOS", "memo": ""
             },
-            permission=(carol, Permission.ACTIVE))
+            permission=(CAROL, Permission.ACTIVE))
 
-        host.push_action(
+        HOST.push_action(
             "transfer",
             {
-                "from": carol, "to": bob, 
+                "from": CAROL, "to": BOB, 
                 "quantity": "2.0000 EOS", "memo": ""
             },
-            permission=(carol, Permission.ACTIVE))
+            permission=(CAROL, Permission.ACTIVE))
 
-        host.push_action(
+        HOST.push_action(
             "transfer",
             {
-                "from": bob, "to": alice,
+                "from": BOB, "to": ALICE,
                 "quantity": "2.0000 EOS", "memo":""
             },
-            permission=(bob, Permission.ACTIVE))
+            permission=(BOB, Permission.ACTIVE))
 
         COMMENT('''
         Verify the outcome:
         ''')
 
-        table_alice = host.table("accounts", alice)
-        table_bob = host.table("accounts", bob)
-        table_carol = host.table("accounts", carol)
+        table_alice = HOST.table("accounts", ALICE)
+        table_bob = HOST.table("accounts", BOB)
+        table_carol = HOST.table("accounts", CAROL)
 
         self.assertEqual(
             table_alice.json["rows"][0]["balance"], '77.0000 EOS',
