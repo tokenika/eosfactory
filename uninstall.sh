@@ -11,4 +11,5 @@ printf "%s" "
 Uninstalling Python 'eosfactory' package...
 "
 
-sudo -H pip3 uninstall eosfactory-tokenika
+# sudo -H pip3 uninstall eosfactory-tokenika
+pip3 uninstall eosfactory-tokenika # must be without sudo -H 

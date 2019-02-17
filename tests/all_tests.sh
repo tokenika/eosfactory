@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 python3 tests/hello_world.py &&\
+python3 tests/new_hello_world.py &&\
 python3 tests/eosio_token.py &&\
 python3 tests/tic_tac_toe.py &&\
 

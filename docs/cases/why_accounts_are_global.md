@@ -20,6 +20,12 @@ For example, if in the first test of a series an account is locally named `buyer
 
 Well, the programmer can be careful not to alter the names. But computer-writing is difficult enough bother about name-bookkeeping.
 
+## The truth is that Python developers do not generally use global variables.
+
+However, there is plenty globals in any Python program. Please, think about one, and tell me why it is global, and not local, or namespace (other than global) variable.
+
+I bet that the same story can be applied to globals.
+
 ## Readability of the scripts
 
 People also ask why *Python*, and not *javascript*. We have chosen Python because its inherent drive to readability by a layman: it is possible to write Python code closely resembling natural english. 
@@ -71,10 +77,16 @@ This mean codding is possible now, as the account factory functions, `create_acc
 
 ## But, finally, what is really wrong with the global accounts?
 
+* A global account variable, can overwrite another, unrelated global variable, for example, imported module name. With EOSFactory, this is impossible.
 * In computer programing, wrong is possibility of misunderstanding the code. Can you point such a case? We show the opposite.
 * Wrong is if EOSFactory is unable to express any practical test scenario. Can show such a scenario?
 * Wrong is if you can write a better expressed test script if account variables are local. Can you show such an example?
 * Wrong is automatic disgust at globals. This can be cured by reasoning.
 * What else is wrong? We will try to correct it.
+* Python linter (`plinter`, for example) complains about undefined variables. You can disable linter argues. If you do care, with `plinter` you can chose a special pattern for account variables.<br>
+If you use VSCode, in `Settings` click `{}` in the upper right corner and add this entry:
+`"python.linting.pylintArgs": [
+    "--dummy-variables-rgx='(_+[a-zA-Z0-9]*?$)|dummy|qdict'"
+]`
 
 

@@ -45,7 +45,6 @@ class Account():
         * Cross-checked: account object ``{}`` mapped to an existing 
             account ``{}``.
         '''.format(account_object_name, account.name), translate=False)
-
         return put_account_to_wallet_and_on_stack(account_object_name, account)
 
     def code(self, code=None, abi=None, wasm=False):
@@ -418,6 +417,15 @@ class Account():
 
     def __str__(self):
         return self.name
+
+
+def new_master_account(
+            account_name=None, owner_key=None, active_key=None):
+
+    return create_master_account(
+            get_new_account_name(inspect.getframeinfo(
+                                            inspect.currentframe()).function), 
+            account_name, owner_key, active_key)
         
 
 def create_master_account(
@@ -665,6 +673,39 @@ def restore_account(
     return globals[account_object_name]
 
 
+def new_account(
+        creator, 
+        account_name="",
+        owner_key="", active_key="",
+        stake_net=3, stake_cpu=3,
+        permission=None,
+        expiration_sec=None,
+        skip_sign=0, dont_broadcast=0, force_unique=0,
+        max_cpu_usage=0, max_net_usage=0,
+        ref_block=None,
+        delay_sec=0,        
+        buy_ram_kbytes=8, buy_ram="",
+        transfer=False,
+        restore=False):
+
+    return create_account(
+        get_new_account_name(inspect.getframeinfo(
+            inspect.currentframe()).function), 
+        creator, 
+        account_name,
+        owner_key, active_key,
+        stake_net, stake_cpu,
+        permission,
+        expiration_sec,
+        skip_sign, dont_broadcast, force_unique,
+        max_cpu_usage, max_net_usage,
+        ref_block,
+        delay_sec,        
+        buy_ram_kbytes, buy_ram,
+        transfer,
+        restore)
+
+
 def create_account(
         account_object_name,
         creator, 
@@ -702,9 +743,7 @@ def create_account(
     See definitions of the remaining parameters: \
     :func:`.cleos.common_parameters`.
     '''
-
     globals = inspect.stack()[1][0].f_globals
-
     '''
     Check the conditions:
     * a *Wallet* object is defined;
@@ -913,7 +952,7 @@ def print_stats(
     
 
 def is_in_globals(account_object_name, globals):
-    if account_object_name in globals:
+    if account_object_name in globals and globals[account_object_name]:
         if not isinstance(globals[account_object_name], interface.Account):
             raise errors.Error('''
     The name of the account name is to be '{}', but there is already a global 
@@ -923,4 +962,35 @@ def is_in_globals(account_object_name, globals):
 
         return True
     return False
+
+
+def get_new_account_name(function_name):
+    frame = inspect.stack()[2][0]
+    frameinfo = inspect.getframeinfo(frame)
+    lines = inspect.getsourcelines(inspect.getmodule(frame))
+
+    count = 1
+    while True:
+        code = lines[0][frameinfo.lineno - count].strip()
+        if function_name in code:
+            break
+        count = count + 1
+
+    account_object_name = re.sub(r'\s*=\s*' + function_name + r'\(.*', "", code)
+    account_object_name = re.sub(r'.*\.', "", account_object_name)
+    if not function_name in code or not account_object_name.isidentifier():
+        raise errors.Error('''
+    Cannot determine the object name of a new account to be created.
+
+    EOSFactory expects that {} factory function is used as in this example:
+        foo = {}([creator], ...)
+    where 
+        'foo' variable assigned determines the name of the account object,
+        'creator' variable refers to an account object that creates the new one.
+
+    However, the relevant code line reads:
+        {}
+        '''.format(function_name, function_name, code), translate=False)
+
+    return account_object_name
 
