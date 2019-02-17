@@ -229,9 +229,6 @@ class Test(unittest.TestCase):
             },
             permission=(CAROL, Permission.ACTIVE))
 
-    def tearDown(self):
-        pass
-
     @classmethod
     def tearDownClass(cls):
         if testnet.is_local():
@@ -239,11 +236,6 @@ class Test(unittest.TestCase):
         else:
             cls.stats()
 
-
-testnet = None
-extra_ram = None
-extra_stake_net = None
-extra_stake_cpu = None
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='''
