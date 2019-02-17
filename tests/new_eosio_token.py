@@ -21,20 +21,26 @@ class Test(unittest.TestCase):
         Also, initialize the token and run a couple of transfers between different accounts.
         ''')
         reset()
-        create_master_account("MASTER")
+
+    def test_01(self):
+        global MASTER
+        MASTER = new_master_account()
 
         COMMENT('''
         Create test accounts:
         ''')
-        create_account("ALICE", MASTER)
-        create_account("BOB", MASTER)
-        create_account("CAROL", MASTER)
-
-    def test_01(self):
+        global ALICE
+        ALICE = new_account(MASTER)
+        global BOB
+        BOB = new_account(MASTER)
+        global CAROL
+        CAROL = new_account(MASTER)        
+        
         COMMENT('''
         Create, build and deploy the contract:
         ''')
-        create_account("HOST", MASTER)
+        global HOST
+        HOST = new_account(MASTER)
         contract = Contract(HOST, project_from_template(
             CONTRACT_WORKSPACE, template="eosio_token", remove_existing=True))
         contract.build()
@@ -43,6 +49,7 @@ class Test(unittest.TestCase):
         COMMENT('''
         Initialize the token and send some tokens to one of the accounts:
         ''')
+
         HOST.push_action(
             "create",
             {
@@ -100,21 +107,20 @@ class Test(unittest.TestCase):
         COMMENT('''
         Verify the outcome:
         ''')
-        xxx = __package__
 
-        table_ALICE = HOST.table("accounts", ALICE)
-        table_BOB = HOST.table("accounts", BOB)
-        table_CAROL = HOST.table("accounts", CAROL)
+        table_alice = HOST.table("accounts", ALICE)
+        table_bob = HOST.table("accounts", BOB)
+        table_carol = HOST.table("accounts", CAROL)
 
         self.assertEqual(
-            table_ALICE.json["rows"][0]["balance"], '77.0000 EOS',
-            '''assertEqual(table_ALICE.json["rows"][0]["balance"], '77.0000 EOS')''')
+            table_alice.json["rows"][0]["balance"], '77.0000 EOS',
+            '''assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')''')
         self.assertEqual(
-            table_BOB.json["rows"][0]["balance"], '11.0000 EOS',
-            '''assertEqual(table_BOB.json["rows"][0]["balance"], '11.0000 EOS')''')
+            table_bob.json["rows"][0]["balance"], '11.0000 EOS',
+            '''assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')''')
         self.assertEqual(
-            table_CAROL.json["rows"][0]["balance"], '12.0000 EOS',
-            '''assertEqual(table_CAROL.json["rows"][0]["balance"], '12.0000 EOS')''')
+            table_carol.json["rows"][0]["balance"], '12.0000 EOS',
+            '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
 
     @classmethod
     def tearDownClass(cls):

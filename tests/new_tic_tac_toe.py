@@ -17,7 +17,7 @@ CAROL = None
 
 class Test(unittest.TestCase):
 
-    @classmethod
+    @classmethod    
     def stats(cls):
         print_stats(
             [MASTER, HOST, ALICE, CAROL],
@@ -39,7 +39,6 @@ class Test(unittest.TestCase):
             ]
         )
 
-
     @classmethod
     def setUpClass(cls):
         SCENARIO('''
@@ -50,15 +49,19 @@ class Test(unittest.TestCase):
         ''')
 
         testnet.verify_production()
-        create_master_account("MASTER", testnet)
-        create_account(
-            "HOST", MASTER, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+        global MASTER
+        MASTER = new_master_account(testnet)
+        global HOST
+        HOST = new_account(
+            MASTER, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
             stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-        create_account(
-            "ALICE", MASTER, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+        global ALICE
+        ALICE = new_account(
+            MASTER, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
             stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-        create_account(
-            "CAROL", MASTER, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+        global CAROL
+        CAROL = new_account(
+            MASTER, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
             stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
         if not testnet.is_local():

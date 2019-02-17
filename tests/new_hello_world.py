@@ -7,15 +7,12 @@ CONTRACT_WORKSPACE = "_wslqwjvacdyugodewiyd"
 
 # Actors of the test:
 MASTER = None
+HOST = None
 ALICE = None
-CAROL = None
 BOB = None
+CAROL = None
 
 class Test(unittest.TestCase):
-
-    def run(self, result=None):
-        super().run(result)
-
 
     @classmethod
     def setUpClass(cls):
@@ -23,42 +20,41 @@ class Test(unittest.TestCase):
         Create a contract from template, then build and deploy it.
         ''')
         reset()
-        create_master_account("MASTER")
 
+    def test_01(self):
+        global MASTER
+        MASTER = new_master_account()
         COMMENT('''
         Create test accounts:
         ''')
-        create_account("ALICE", MASTER)
-        create_account("CAROL", MASTER)
-        create_account("BOB", MASTER)
+        global ALICE
+        ALICE = new_account(MASTER)
+        global CAROL
+        CAROL = new_account(MASTER)
+        global BOB
+        BOB = new_account(MASTER)
 
-
-    def setUp(self):
-        pass
-
-
-    def test_01(self):
         COMMENT('''
         Create, build and deploy the contract:
         ''')
-        create_account("host", MASTER)
-        contract = Contract(host, project_from_template(
+        HOST = new_account(MASTER)
+        contract = Contract(HOST, project_from_template(
             CONTRACT_WORKSPACE, template="hello_world", 
             remove_existing=True))
         contract.build()
         contract.deploy()
 
         COMMENT('''
-        Test an action for ALICE, including the debug buffer:
+        Test an action for Alice, including the debug buffer:
         ''')
-        host.push_action(
+        HOST.push_action(
             "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))
         self.assertTrue("ALICE" in DEBUG())
 
         COMMENT('''
-        Test an action for CAROL, including the debug buffer:
+        Test an action for Carol, including the debug buffer:
         ''')
-        host.push_action(
+        HOST.push_action(
             "hi", {"user":CAROL}, permission=(CAROL, Permission.ACTIVE))
         self.assertTrue("CAROL" in DEBUG())
 
@@ -66,14 +62,9 @@ class Test(unittest.TestCase):
         WARNING: This action should fail due to authority mismatch!
         ''')
         with self.assertRaises(MissingRequiredAuthorityError):
-            host.push_action(
+            HOST.push_action(
                 "hi", {"user":CAROL}, permission=(BOB, Permission.ACTIVE))
  
-
-    def tearDown(self):
-        pass
-
-
     @classmethod
     def tearDownClass(cls):
         stop()
