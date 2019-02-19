@@ -1,3 +1,32 @@
+'''Example of a functional test with non-global refference to account objects. 
+
+We believe that EOSFactory tests are clearer if their account objects exist in 
+the global namespace of the test module, if they can be referred to without 
+namespace qualificators. 
+
+There are practitioners of Python who preffer to restrain from using global 
+variables. EOSFactory has tools that can satisfy them. This example presents 
+these tools.
+
+The account object in EOSFactory is responsible for linking the name of the 
+variable, originally pointing to it, with the physical name of an EOSIO 
+account. The link enables all the substitutions of randomly looking physical 
+names with mnemonics. Hence, the accounts have to keep their object names that 
+are passed on creation. 
+
+With the standard EOSFactory, account objects are created with `create` factory 
+functions, for example
+    `create_account("foo", owner_account)`
+where `"foo"` is the given name of the account object to be created, and `owner_account` represent the account owner. This factory function create account objects, and place them in the global namespace of the module.
+
+Now, another way is available: account objects can be assigned from `new` 
+factory functions, for example
+    `foo = new_account(owner_account)`
+where `foo` is to be the new account object variable (global or local), and `owner_account` is the accout owner. This factory function creates an account object with its object name set to the name of the left side of the assignment ("foo").
+
+The current script can be compared with `tests/tic_tac_toe.py` which is 
+functionally identical, yet written with the standard EOSFactory style.
+'''
 import unittest, argparse, sys, time
 from eosfactory.eosf import *
 
@@ -5,22 +34,20 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
 
 CONTRACT_WORKSPACE = "tic_tac_toe"
 
+# Costs of the test:
 INITIAL_RAM_KBYTES = 8
 INITIAL_STAKE_NET = 3
 INITIAL_STAKE_CPU = 3
 
-# Actors of the test:
-MASTER = None
-HOST = None
-ALICE = None
-CAROL = None
-
 class Test(unittest.TestCase):
-
-    @classmethod    
+    '''Unittest class definition.
+    '''
+    @classmethod
     def stats(cls):
+        '''Prints statistics of the accounts involved in the test.
+        '''
         print_stats(
-            [MASTER, HOST, ALICE, CAROL],
+            [cls.master, cls.host, cls.alice, cls.carol],
             [
                 "core_liquid_balance",
                 "ram_usage",
@@ -42,192 +69,186 @@ class Test(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         SCENARIO('''
-        There is the ``MASTER`` account that sponsors the ``HOST``
-        account equipped with an instance of the ``tic_tac_toe`` smart contract. There
-        are two players ``ALICE`` and ``CAROL``. We are testing that the moves of
-        the game are correctly stored in the blockchain database.
+        There is the ``master`` account that sponsors the ``host`` account equipped with an instance of the ``tic_tac_toe`` smart contract. There 
+        are two players ``alice`` and ``carol``. We are testing that the moves of the game are correctly stored in the blockchain database.
         ''')
 
         testnet.verify_production()
-        global MASTER
-        MASTER = new_master_account(testnet)
-        global HOST
-        HOST = new_account(
-            MASTER, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+        cls.master = new_master_account(testnet)
+        cls.host = new_account(
+            cls.master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
             stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-        global ALICE
-        ALICE = new_account(
-            MASTER, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+        cls.alice = new_account(
+            cls.master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
             stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-        global CAROL
-        CAROL = new_account(
-            MASTER, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
+        cls.carol = new_account(
+            cls.master, buy_ram_kbytes=INITIAL_RAM_KBYTES, 
             stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
         if not testnet.is_local():
             cls.stats()
             if (extra_ram > 0):
-                MASTER.buy_ram(extra_ram, HOST)
-                MASTER.buy_ram(extra_ram, ALICE)
-                MASTER.buy_ram(extra_ram, CAROL)
+                cls.master.buy_ram(extra_ram, cls.host)
+                cls.master.buy_ram(extra_ram, cls.alice)
+                cls.master.buy_ram(extra_ram, cls.carol)
             if (extra_stake_net > 0 or extra_stake_cpu > 0):
-                MASTER.delegate_bw(extra_stake_net, extra_stake_cpu, HOST)
-                MASTER.delegate_bw(extra_stake_net, extra_stake_cpu, ALICE)
-                MASTER.delegate_bw(extra_stake_net, extra_stake_cpu, CAROL)
+                cls.master.delegate_bw(
+                    extra_stake_net, extra_stake_cpu, cls.host)
+                cls.master.delegate_bw(
+                    extra_stake_net, extra_stake_cpu, cls.alice)
+                cls.master.delegate_bw(
+                    extra_stake_net, extra_stake_cpu, cls.carol)
             if (extra_ram > 0 or extra_stake_net > 0 or extra_stake_cpu > 0):
                 cls.stats()
 
-        contract = Contract(HOST, CONTRACT_WORKSPACE)
+        contract = Contract(cls.host, CONTRACT_WORKSPACE)
         contract.build(force=False)
 
         try:
-            contract.deploy(payer=MASTER)
+            contract.deploy(payer=cls.master)
         except errors.ContractRunningError:
             pass
 
-
-    def setUp(self):
-        pass
-
-
-    def test_01(self):
+    def test_functionality(self):
+        '''Testing script.
+        '''
         COMMENT('''
         Attempting to create a new game.
         This might fail if the previous game has not been closes properly:
         ''')
         try:
-            HOST.push_action(
+            Test.host.push_action(
                 "create",
                 {
-                    "challenger": ALICE,
-                    "host": CAROL
+                    "challenger": Test.alice,
+                    "host": Test.carol
                 },
-                permission=(CAROL, Permission.ACTIVE))
+                permission=(Test.carol, Permission.ACTIVE))
         except Error as e:
             if "game already exists" in e.message:
                 COMMENT('''
                 We need to close the previous game before creating a new one:
                 ''')
-                HOST.push_action(
+                Test.host.push_action(
                     "close",
                     {
-                        "challenger": ALICE,
-                        "host": CAROL
+                        "challenger": Test.alice,
+                        "host": Test.carol
                     },
-                    permission=(CAROL, Permission.ACTIVE))
+                    permission=(Test.carol, Permission.ACTIVE))
 
                 time.sleep(3)
 
                 COMMENT('''
                 Second attempt to create a new game:
                 ''')
-                HOST.push_action(
+                Test.host.push_action(
                     "create",
                     {
-                        "challenger": ALICE, 
-                        "host": CAROL
+                        "challenger": Test.alice, 
+                        "host": Test.carol
                     },
-                    permission=(CAROL, Permission.ACTIVE))
+                    permission=(Test.carol, Permission.ACTIVE))
             else:
                 COMMENT('''
                 The error is different than expected.
                 ''')
                 raise Error(str(e))
 
-        t = HOST.table("games", CAROL)
-        self.assertEqual(t.json["rows"][0]["board"][0], 0)
-        self.assertEqual(t.json["rows"][0]["board"][1], 0)
-        self.assertEqual(t.json["rows"][0]["board"][2], 0)
-        self.assertEqual(t.json["rows"][0]["board"][3], 0)
-        self.assertEqual(t.json["rows"][0]["board"][4], 0)
-        self.assertEqual(t.json["rows"][0]["board"][5], 0)
-        self.assertEqual(t.json["rows"][0]["board"][6], 0)
-        self.assertEqual(t.json["rows"][0]["board"][7], 0)
-        self.assertEqual(t.json["rows"][0]["board"][8], 0)
+        table = Test.host.table("games", Test.carol)
+        self.assertEqual(table.json["rows"][0]["board"][0], 0)
+        self.assertEqual(table.json["rows"][0]["board"][1], 0)
+        self.assertEqual(table.json["rows"][0]["board"][2], 0)
+        self.assertEqual(table.json["rows"][0]["board"][3], 0)
+        self.assertEqual(table.json["rows"][0]["board"][4], 0)
+        self.assertEqual(table.json["rows"][0]["board"][5], 0)
+        self.assertEqual(table.json["rows"][0]["board"][6], 0)
+        self.assertEqual(table.json["rows"][0]["board"][7], 0)
+        self.assertEqual(table.json["rows"][0]["board"][8], 0)
 
         COMMENT('''
-        First move is by CAROL:
+        First move is by carol:
         ''')
-        HOST.push_action(
+        Test.host.push_action(
             "move",
             {
-                "challenger": ALICE,
-                "host": CAROL,
-                "by": CAROL,
+                "challenger": Test.alice,
+                "host": Test.carol,
+                "by": Test.carol,
                 "row":0, "column":0
             },
-            permission=(CAROL, Permission.ACTIVE))
+            permission=(Test.carol, Permission.ACTIVE))
 
         COMMENT('''
-        Second move is by ALICE:
+        Second move is by alice:
         ''')
-        HOST.push_action(
+        Test.host.push_action(
             "move",
             {
-                "challenger": ALICE,
-                "host": CAROL,
-                "by": ALICE,
+                "challenger": Test.alice,
+                "host": Test.carol,
+                "by": Test.alice,
                 "row":1, "column":1
             },
-            permission=(ALICE, Permission.ACTIVE))
+            permission=(Test.alice, Permission.ACTIVE))
 
-        t = HOST.table("games", CAROL)
-        self.assertEqual(t.json["rows"][0]["board"][0], 1)
-        self.assertEqual(t.json["rows"][0]["board"][1], 0)
-        self.assertEqual(t.json["rows"][0]["board"][2], 0)
-        self.assertEqual(t.json["rows"][0]["board"][3], 0)
-        self.assertEqual(t.json["rows"][0]["board"][4], 2)
-        self.assertEqual(t.json["rows"][0]["board"][5], 0)
-        self.assertEqual(t.json["rows"][0]["board"][6], 0)
-        self.assertEqual(t.json["rows"][0]["board"][7], 0)
-        self.assertEqual(t.json["rows"][0]["board"][8], 0)
+        table = Test.host.table("games", Test.carol)
+        self.assertEqual(table.json["rows"][0]["board"][0], 1)
+        self.assertEqual(table.json["rows"][0]["board"][1], 0)
+        self.assertEqual(table.json["rows"][0]["board"][2], 0)
+        self.assertEqual(table.json["rows"][0]["board"][3], 0)
+        self.assertEqual(table.json["rows"][0]["board"][4], 2)
+        self.assertEqual(table.json["rows"][0]["board"][5], 0)
+        self.assertEqual(table.json["rows"][0]["board"][6], 0)
+        self.assertEqual(table.json["rows"][0]["board"][7], 0)
+        self.assertEqual(table.json["rows"][0]["board"][8], 0)
 
         COMMENT('''
         Restarting the game:
         ''')
-        HOST.push_action(
+        Test.host.push_action(
             "restart",
             {
-                "challenger": ALICE,
-                "host": CAROL,
-                "by": CAROL
+                "challenger": Test.alice,
+                "host": Test.carol,
+                "by": Test.carol
             }, 
-            permission=(CAROL, Permission.ACTIVE))
+            permission=(Test.carol, Permission.ACTIVE))
 
-        t = HOST.table("games", CAROL)
-        self.assertEqual(t.json["rows"][0]["board"][0], 0)
-        self.assertEqual(t.json["rows"][0]["board"][1], 0)
-        self.assertEqual(t.json["rows"][0]["board"][2], 0)
-        self.assertEqual(t.json["rows"][0]["board"][3], 0)
-        self.assertEqual(t.json["rows"][0]["board"][4], 0)
-        self.assertEqual(t.json["rows"][0]["board"][5], 0)
-        self.assertEqual(t.json["rows"][0]["board"][6], 0)
-        self.assertEqual(t.json["rows"][0]["board"][7], 0)
-        self.assertEqual(t.json["rows"][0]["board"][8], 0)
+        table = Test.host.table("games", Test.carol)
+        self.assertEqual(table.json["rows"][0]["board"][0], 0)
+        self.assertEqual(table.json["rows"][0]["board"][1], 0)
+        self.assertEqual(table.json["rows"][0]["board"][2], 0)
+        self.assertEqual(table.json["rows"][0]["board"][3], 0)
+        self.assertEqual(table.json["rows"][0]["board"][4], 0)
+        self.assertEqual(table.json["rows"][0]["board"][5], 0)
+        self.assertEqual(table.json["rows"][0]["board"][6], 0)
+        self.assertEqual(table.json["rows"][0]["board"][7], 0)
+        self.assertEqual(table.json["rows"][0]["board"][8], 0)
 
         COMMENT('''
         Closing the game:
         WARNING: This action should fail due to authority mismatch!
         ''')
         with self.assertRaises(MissingRequiredAuthorityError):
-            HOST.push_action(
+            Test.host.push_action(
                 "close",
                 {
-                    "challenger": ALICE,
-                    "host": CAROL
+                    "challenger": Test.alice,
+                    "host": Test.carol
                 },
-                permission=(ALICE, Permission.ACTIVE))
+                permission=(Test.alice, Permission.ACTIVE))
 
         COMMENT('''
         Closing the game:
         ''')
-        HOST.push_action(
+        Test.host.push_action(
             "close",
             {
-                "challenger": ALICE,
-                "host": CAROL
+                "challenger": Test.alice,
+                "host": Test.carol
             },
-            permission=(CAROL, Permission.ACTIVE))
+            permission=(Test.carol, Permission.ACTIVE))
 
     @classmethod
     def tearDownClass(cls):
@@ -249,7 +270,7 @@ if __name__ == '__main__':
         help="Testnet alias")
 
     parser.add_argument(
-        "-t", "--testnet", nargs=4,
+        "-table", "--testnet", nargs=4,
         help="<url> <name> <owner key> <active key>")
 
     parser.add_argument(

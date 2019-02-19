@@ -1,3 +1,20 @@
+'''Example of a functional test.
+
+This example shows a case of the simplest test, featuring a single test 
+function. Its code demonstrates how the contract objects can be created by 
+assignments `foo = new_account(foo_owner)`, for example. Compare this sythax 
+with the standard EOSFactory one in the test `tests/eosio_token.py`.
+
+See the test example `tests/new_tic_tac_toe.py` for a more complex case.
+
+AS all the action happens in the single function `test_functionality`, the 
+contract objects `master, host, alice, ...` can be local. 
+
+However, in the same time, the account objects are referenced in the global 
+namespace of the module, what is a provision to avoid having to account objects 
+of the same creation name, pointing to different physical eosio accounts. 
+'''
+
 import unittest
 from eosfactory.eosf import *
 
@@ -5,15 +22,9 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 
 CONTRACT_WORKSPACE = "_iqhgcqllgnpkirjwwkms"
 
-# Actors of the test:
-MASTER = None
-HOST = None
-ALICE = None
-BOB = None
-CAROL = None
-
 class Test(unittest.TestCase):
-
+    '''Unittest class definition.
+    '''
     @classmethod
     def setUpClass(cls):
         SCENARIO('''
@@ -22,26 +33,25 @@ class Test(unittest.TestCase):
         ''')
         reset()
 
-    def test_01(self):
-        global MASTER
-        MASTER = new_master_account()
+    def test_functionality(self):
+        '''The only test function.
+
+        The account objects `master, host, alice, ...` which are of the global namespace, do not have to be explicitly declared (and still keep the linter silent).
+        '''
+        master = new_master_account()
 
         COMMENT('''
         Create test accounts:
         ''')
-        global ALICE
-        ALICE = new_account(MASTER)
-        global BOB
-        BOB = new_account(MASTER)
-        global CAROL
-        CAROL = new_account(MASTER)        
+        alice = new_account(master)
+        bob = new_account(master)
+        carol = new_account(master)        
         
         COMMENT('''
         Create, build and deploy the contract:
         ''')
-        global HOST
-        HOST = new_account(MASTER)
-        contract = Contract(HOST, project_from_template(
+        host = new_account(master)
+        contract = Contract(host, project_from_template(
             CONTRACT_WORKSPACE, template="eosio_token", remove_existing=True))
         contract.build()
         contract.deploy()
@@ -50,67 +60,67 @@ class Test(unittest.TestCase):
         Initialize the token and send some tokens to one of the accounts:
         ''')
 
-        HOST.push_action(
+        host.push_action(
             "create",
             {
-                "issuer": MASTER,
+                "issuer": master,
                 "maximum_supply": "1000000000.0000 EOS",
                 "can_freeze": "0",
                 "can_recall": "0",
                 "can_whitelist": "0"
             },
-            permission=[(MASTER, Permission.ACTIVE), (HOST, Permission.ACTIVE)])
+            permission=[(master, Permission.ACTIVE), (host, Permission.ACTIVE)])
 
-        HOST.push_action(
+        host.push_action(
             "issue",
             {
-                "to": ALICE, "quantity": "100.0000 EOS", "memo": ""
+                "to": alice, "quantity": "100.0000 EOS", "memo": ""
             },
-            permission=(MASTER, Permission.ACTIVE))
+            permission=(master, Permission.ACTIVE))
 
         COMMENT('''
         Execute a series of transfers between the accounts:
         ''')
 
-        HOST.push_action(
+        host.push_action(
             "transfer",
             {
-                "from": ALICE, "to": CAROL,
+                "from": alice, "to": carol,
                 "quantity": "25.0000 EOS", "memo":""
             },
-            permission=(ALICE, Permission.ACTIVE))
+            permission=(alice, Permission.ACTIVE))
 
-        HOST.push_action(
+        host.push_action(
             "transfer",
             {
-                "from": CAROL, "to": BOB, 
+                "from": carol, "to": bob, 
                 "quantity": "11.0000 EOS", "memo": ""
             },
-            permission=(CAROL, Permission.ACTIVE))
+            permission=(carol, Permission.ACTIVE))
 
-        HOST.push_action(
+        host.push_action(
             "transfer",
             {
-                "from": CAROL, "to": BOB, 
+                "from": carol, "to": bob, 
                 "quantity": "2.0000 EOS", "memo": ""
             },
-            permission=(CAROL, Permission.ACTIVE))
+            permission=(carol, Permission.ACTIVE))
 
-        HOST.push_action(
+        host.push_action(
             "transfer",
             {
-                "from": BOB, "to": ALICE, \
+                "from": bob, "to": alice, \
                 "quantity": "2.0000 EOS", "memo":""
             },
-            permission=(BOB, Permission.ACTIVE))
+            permission=(bob, Permission.ACTIVE))
 
         COMMENT('''
         Verify the outcome:
         ''')
 
-        table_alice = HOST.table("accounts", ALICE)
-        table_bob = HOST.table("accounts", BOB)
-        table_carol = HOST.table("accounts", CAROL)
+        table_alice = host.table("accounts", alice)
+        table_bob = host.table("accounts", bob)
+        table_carol = host.table("accounts", carol)
 
         self.assertEqual(
             table_alice.json["rows"][0]["balance"], '77.0000 EOS',

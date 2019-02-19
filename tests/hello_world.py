@@ -1,3 +1,16 @@
+'''An example of functional test.
+
+Note that the declarations
+    `
+    MASTER = None
+    HOST = None
+    ALICE = None
+    BOB = None
+    CAROL = None
+    `
+are abundant: they are in place to satisfy the linter, whu complains about 
+dynamically created objects.
+'''
 import unittest
 from eosfactory.eosf import *
 
@@ -7,6 +20,7 @@ CONTRACT_WORKSPACE = "_wslqwjvacdyugodewiyd"
 
 # Actors of the test:
 MASTER = None
+HOST = None
 ALICE = None
 CAROL = None
 BOB = None
@@ -15,7 +29,6 @@ class Test(unittest.TestCase):
 
     def run(self, result=None):
         super().run(result)
-
 
     @classmethod
     def setUpClass(cls):
@@ -32,17 +45,12 @@ class Test(unittest.TestCase):
         create_account("CAROL", MASTER)
         create_account("BOB", MASTER)
 
-
-    def setUp(self):
-        pass
-
-
-    def test_01(self):
+    def test_functional(self):
         COMMENT('''
         Create, build and deploy the contract:
         ''')
-        create_account("host", MASTER)
-        contract = Contract(host, project_from_template(
+        create_account("HOST", MASTER)
+        contract = Contract(HOST, project_from_template(
             CONTRACT_WORKSPACE, template="hello_world", 
             remove_existing=True))
         contract.build()
@@ -51,14 +59,14 @@ class Test(unittest.TestCase):
         COMMENT('''
         Test an action for ALICE, including the debug buffer:
         ''')
-        host.push_action(
+        HOST.push_action(
             "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))
         self.assertTrue("ALICE" in DEBUG())
 
         COMMENT('''
         Test an action for CAROL, including the debug buffer:
         ''')
-        host.push_action(
+        HOST.push_action(
             "hi", {"user":CAROL}, permission=(CAROL, Permission.ACTIVE))
         self.assertTrue("CAROL" in DEBUG())
 
@@ -66,14 +74,9 @@ class Test(unittest.TestCase):
         WARNING: This action should fail due to authority mismatch!
         ''')
         with self.assertRaises(MissingRequiredAuthorityError):
-            host.push_action(
+            HOST.push_action(
                 "hi", {"user":CAROL}, permission=(BOB, Permission.ACTIVE))
  
-
-    def tearDown(self):
-        pass
-
-
     @classmethod
     def tearDownClass(cls):
         stop()

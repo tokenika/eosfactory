@@ -1,16 +1,26 @@
+'''An example of functional test.
+
+This example shows a case of the simplest test, featuring a single test 
+function. Its code demonstrates how the contract objects can be created by 
+assignments `foo = new_account(foo_owner)`, for example. Compare this sythax 
+with the standard EOSFactory one in the test `tests/hello_world.py`.
+
+See the test example `tests/new_tic_tac_toe.py` for a more complex case.
+
+AS all the action happens in the single function `test_functionality`, the 
+contract objects `master, host, alice, ...` can be local. 
+
+However, in the same time, the account objects are referenced in the global 
+namespace of the module, what is a provision to avoid having to account objects 
+of the same creation name, pointing to different physical eosio accounts. 
+'''
+
 import unittest
 from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 
 CONTRACT_WORKSPACE = "_wslqwjvacdyugodewiyd"
-
-# Actors of the test:
-MASTER = None
-HOST = None
-ALICE = None
-BOB = None
-CAROL = None
 
 class Test(unittest.TestCase):
 
@@ -21,24 +31,20 @@ class Test(unittest.TestCase):
         ''')
         reset()
 
-    def test_01(self):
-        global MASTER
-        MASTER = new_master_account()
+    def test_functional(self):
+        master = new_master_account()
         COMMENT('''
         Create test accounts:
         ''')
-        global ALICE
-        ALICE = new_account(MASTER)
-        global CAROL
-        CAROL = new_account(MASTER)
-        global BOB
-        BOB = new_account(MASTER)
+        alice = new_account(master)
+        carol = new_account(master)
+        bob = new_account(master)
 
         COMMENT('''
         Create, build and deploy the contract:
         ''')
-        HOST = new_account(MASTER)
-        contract = Contract(HOST, project_from_template(
+        host = new_account(master)
+        contract = Contract(host, project_from_template(
             CONTRACT_WORKSPACE, template="hello_world", 
             remove_existing=True))
         contract.build()
@@ -47,23 +53,23 @@ class Test(unittest.TestCase):
         COMMENT('''
         Test an action for Alice, including the debug buffer:
         ''')
-        HOST.push_action(
-            "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))
-        self.assertTrue("ALICE" in DEBUG())
+        host.push_action(
+            "hi", {"user":alice}, permission=(alice, Permission.ACTIVE))
+        self.assertTrue("alice" in DEBUG())
 
         COMMENT('''
         Test an action for Carol, including the debug buffer:
         ''')
-        HOST.push_action(
-            "hi", {"user":CAROL}, permission=(CAROL, Permission.ACTIVE))
-        self.assertTrue("CAROL" in DEBUG())
+        host.push_action(
+            "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
+        self.assertTrue("carol" in DEBUG())
 
         COMMENT('''
         WARNING: This action should fail due to authority mismatch!
         ''')
         with self.assertRaises(MissingRequiredAuthorityError):
-            HOST.push_action(
-                "hi", {"user":CAROL}, permission=(BOB, Permission.ACTIVE))
+            host.push_action(
+                "hi", {"user":carol}, permission=(bob, Permission.ACTIVE))
  
     @classmethod
     def tearDownClass(cls):
