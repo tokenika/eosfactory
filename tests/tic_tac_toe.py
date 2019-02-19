@@ -1,3 +1,22 @@
+'''Example of a functional test with global refference to account object.
+
+The account objects in EOSFactory have to be unique in the test module. If they 
+were not, two different account objects could use (modify) the same physical 
+EOSIO account, or two different local objects, having the same object name 
+(representing the same actor), could reffer to different physical accounts.
+
+There are methods to achieve the uniqueness, we chose keeping all account 
+objects in the same namespace of the test module globals. Therefore, standard 
+EOSFactory account object are considered to be globals.
+
+This *global* approach is criticized. Therefore we offer another approach, 
+shown in `tests\new_tic_tac_toe.py`
+
+Our preferred way results in clearer and more compact scripts (account 
+variables not obscured with namespace qualificators). We believe that clearness 
+is the first paradigm of the Python. Also, this is the reason that we have 
+chosen Python.
+'''
 import unittest, argparse, sys, time
 from eosfactory.eosf import *
 
@@ -5,6 +24,7 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
 
 CONTRACT_WORKSPACE = "tic_tac_toe"
 
+# Costs of the test:
 INITIAL_RAM_KBYTES = 8
 INITIAL_STAKE_NET = 3
 INITIAL_STAKE_CPU = 3
@@ -43,9 +63,10 @@ class Test(unittest.TestCase):
     def setUpClass(cls):
         SCENARIO('''
         There is the ``MASTER`` account that sponsors the ``HOST``
-        account equipped with an instance of the ``tic_tac_toe`` smart contract. There
-        are two players ``ALICE`` and ``CAROL``. We are testing that the moves of
-        the game are correctly stored in the blockchain database.
+        account equipped with an instance of the ``tic_tac_toe`` smart contract. There are two players ``ALICE`` and ``CAROL``. 
+        
+        We are testing that the moves of the game are correctly stored in the 
+        blockchain database.
         ''')
 
         testnet.verify_production()

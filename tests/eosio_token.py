@@ -1,3 +1,16 @@
+'''An example of functional test.
+
+Note that the declarations
+    `
+    MASTER = None
+    HOST = None
+    ALICE = None
+    BOB = None
+    CAROL = None
+    `
+are abundant: they are in place to satisfy the linter, whu complains about 
+dynamically created objects. 
+'''
 import unittest
 from eosfactory.eosf import *
 
@@ -13,7 +26,8 @@ BOB = None
 CAROL = None
 
 class Test(unittest.TestCase):
-
+    '''Unittest class definition.
+    '''
     @classmethod
     def setUpClass(cls):
         SCENARIO('''
@@ -30,7 +44,7 @@ class Test(unittest.TestCase):
         create_account("BOB", MASTER)
         create_account("CAROL", MASTER)
 
-    def test_01(self):
+    def functionality_test(self):
         COMMENT('''
         Create, build and deploy the contract:
         ''')
