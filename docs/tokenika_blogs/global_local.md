@@ -9,7 +9,6 @@ I could improve the *artificial test*, making it even more careless, still worki
 
 ```python
 if __name__ == '__main__':
-    import pdb; pdb.set_trace()
     eosf = Master() # this is a singleton instance
     master_ = eosf # just for test purposes
     unittest.main()

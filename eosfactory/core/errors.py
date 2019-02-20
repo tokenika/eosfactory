@@ -54,10 +54,12 @@ class Error(Exception):
     def __init__(self, message, translate=True):
         import eosfactory.core.setup as setup
         if setup.is_raise_error:
+            sys.tracebacklimit = 10
             self.message = logger.error(message, translate)
             Exception.__init__(self, self.message)
         else:
             sys.excepthook = excepthook
+            sys.tracebacklimit = 0
             from inspect import currentframe, getframeinfo, stack
             frameinfo = getframeinfo(stack()[1][0])
             details = " {} {}".format(frameinfo.filename, frameinfo.lineno) 

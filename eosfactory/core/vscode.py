@@ -168,7 +168,7 @@ TASKS = '''
                 "command": "sensible-browser"
             },
             "args": [
-                "https://developers.eos.io/eosio-cpp/reference"
+                "https://developers.eos.io/"
             ],
             "presentation": {
                 "reveal": "always",
