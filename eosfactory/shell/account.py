@@ -418,6 +418,9 @@ class Account():
     def __str__(self):
         return self.name
 
+    def __repr__(self):
+        return ""
+
 
 def new_master_account(
             account_name=None, owner_key=None, active_key=None):
@@ -612,10 +615,10 @@ def create_master_account(
                 else: 
                     if is_ready == "go":
                         break
+                        
             account_name = account_object.name
             owner_key = owner_key_new
             active_key = active_key_new
-            return account_object
 
 
 def restore_account(
@@ -966,6 +969,11 @@ def is_in_globals(account_object_name, globals):
 
 def get_new_account_name(function_name):
     frame = inspect.stack()[2][0]
+    if not inspect.getmodule(frame):
+        raise errors.Error('''
+    'new_` account factory functions cannot be used interactively.
+    Use 'create_' factory functions instead.
+        ''')
     frameinfo = inspect.getframeinfo(frame)
     lines = inspect.getsourcelines(inspect.getmodule(frame))
 

@@ -3,7 +3,9 @@
 python3 tests/hello_world.py &&\
 python3 tests/new_hello_world.py &&\
 python3 tests/eosio_token.py &&\
+python3 tests/new_eosio_token.py &&\
 python3 tests/tic_tac_toe.py &&\
+python3 tests/new_tic_tac_toe.py &&\
 
 eosfactory/pythonmd.sh docs/cases/account.md &&\
 eosfactory/pythonmd.sh docs/cases/master_account.md &&\

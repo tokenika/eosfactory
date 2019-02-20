@@ -2,9 +2,7 @@ import argparse
 from eosfactory.eosf import *
 
 
-def register_testnet_(
-    url, alias, account_name, owner_key, active_key):
-
+def register_testnet_(url, alias, account_name, owner_key, active_key):
     setup.set_nodeos_address(url)
     manager.verify_testnet_production()
 

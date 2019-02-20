@@ -376,12 +376,7 @@ error message:
         with open(contract_path, "w") as output:
             output.write(template)
 
-    copy_dir_contents(project_dir, template_dir, "", project_name)
-
-    logger.TRACE('''
-    * Contract project '{}' created from template 
-        '{}'
-    '''.format(project_name, template_dir), verbosity)    
+    copy_dir_contents(project_dir, template_dir, "", project_name)  
 
     if open_vscode:
         if utils.is_windows_ubuntu():
@@ -396,10 +391,10 @@ error message:
         os.system(command_line)
 
     logger.INFO('''
-    ######## Created contract project ``{}``, 
+    ######## Created contract project '{}', 
         originated from template 
-        ``{}``.
-    '''.format(project_name, template_dir), verbosity)
+        '{}'.
+    '''.format(project_dir, template_dir), verbosity)
 
     return project_dir
 

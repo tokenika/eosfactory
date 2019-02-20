@@ -883,7 +883,6 @@ def update_eosio_cpp_includes(c_cpp_properties_path, root=""):
     c_cpp_properties_path = utils.wslMapWindowsLinux(c_cpp_properties_path)
     with open(c_cpp_properties_path) as f:
         c_cpp_properties = f.read()
-
     dir_pattern = re.compile(
         '^.*{}(/.+/eosio\.cdt/\d\.\d\.\d/).+'.format(root), re.M)
 

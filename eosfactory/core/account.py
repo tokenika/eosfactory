@@ -28,6 +28,9 @@ class Eosio(interface.Account):
     def __str__(self):
         return self.name
 
+    def __repr__(self):
+        return ""
+
 
 class GetAccount(cleos.GetAccount):  
     def __init__(
@@ -42,7 +45,7 @@ class GetAccount(cleos.GetAccount):
             self.name = name
             
         if active_key is None:
-            active_key = owner_keyn
+            active_key = owner_key
 
         self.exists = False
         self.in_wallet_on_stack = False
