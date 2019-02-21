@@ -1,21 +1,7 @@
-'''Example of a functional test with global refference to account object.
+'''Example of a functional test with global refference to account objects.
 
-The account objects in EOSFactory have to be unique in the test module. If they 
-were not, two different account objects could use (modify) the same physical 
-EOSIO account, or two different local objects, having the same object name 
-(representing the same actor), could reffer to different physical accounts.
-
-There are methods to achieve the uniqueness, we chose keeping all account 
-objects in the same namespace of the test module globals. Therefore, standard 
-EOSFactory account object are considered to be globals.
-
-This *global* approach is criticized. Therefore we offer another approach, 
-shown in `tests\new_tic_tac_toe.py`
-
-Our preferred way results in clearer and more compact scripts (account 
-variables not obscured with namespace qualificators). We believe that clearness 
-is the first paradigm of the Python. Also, this is the reason that we have 
-chosen Python.
+For explanation see http://eosfactory.io/build/html/comments/account.html,
+there the section 'Account objects reside in the global namespace'.
 '''
 import unittest, argparse, sys, time
 from eosfactory.eosf import *

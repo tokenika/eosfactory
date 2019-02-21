@@ -23,16 +23,16 @@ Tutorials
     tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC
     tutorials/05.InteractingWithPublicTestnet
 
-Use Cases
----------
+Comments
+--------
 
 .. toctree::
     :maxdepth: 1
 
-    cases/symbolic_names
-    cases/account
-    cases/master_account
-    cases/wallet
+    comments/symbolic_names
+    comments/account
+    comments/master_account
+    comments/wallet
 
 Release Notes
 -------------

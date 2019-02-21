@@ -6,13 +6,10 @@ namespace qualificators.
 
 There are practitioners of Python who preffer to restrain from using global 
 variables. EOSFactory has tools that can satisfy them. This example presents 
-these tools.
+these tools. 
 
-The account object in EOSFactory is responsible for linking the name of the 
-variable, originally pointing to it, with the physical name of an EOSIO 
-account. The link enables all the substitutions of randomly looking physical 
-names with mnemonics. Hence, the accounts have to keep their object names that 
-are passed on creation. 
+For explanation see http://eosfactory.io/build/html/comments/account.html,
+there the section 'Account objects reside in the global namespace'.
 
 With the standard EOSFactory, account objects are created with `create` factory 
 functions, for example
