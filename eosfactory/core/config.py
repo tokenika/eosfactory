@@ -704,14 +704,13 @@ def contract_dir(contract_dir_hint):
     Raises:
         .core.errors.Error: If the result is not defined.
     '''
-    contract_dir_hint = os.path.realpath(
-                                utils.wslMapWindowsLinux(contract_dir_hint))
+    contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
     # ? the absolute path to a contract directory
     trace = contract_dir_hint + "\n"
     if os.path.isfile(contract_dir_hint):
         contract_dir_hint = os.path.dirname(contract_dir_hint)
     if os.path.isabs(contract_dir_hint):
-        return contract_dir_hint
+        return os.path.realpath(contract_dir_hint)
 
     # ? the relative path to a contract directory, relative to the directory 
     # set with the 'contract_workspace_dir()' function
@@ -719,7 +718,7 @@ def contract_dir(contract_dir_hint):
         contract_workspace_dir(), contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
-        return os.path.abspath(contract_dir_)
+        return os.path.realpath(contract_dir_)
 
     # ? the relative path to a contract directory, relative to 
     # 'eosf_dir()/contracts' or 'APP_DATA_DIR/contracts'
@@ -730,7 +729,7 @@ def contract_dir(contract_dir_hint):
 
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
-        return os.path.abspath(contract_dir_)
+        return os.path.realpath(contract_dir_)
     
     raise errors.Error('''
         Cannot determine the contract directory.

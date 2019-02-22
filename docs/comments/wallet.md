@@ -1,28 +1,16 @@
 # Wallet Class
 
-
-This document demonstrates how the `Wallet` class works. We present how account objects can be preserved across separate Python sessions. Also, we discuss the `Wallet` class methods.
-
-## Context
-
 The `Wallet` class wraps an *EOSIO* wallet. An instance of the class, i.e. a `Wallet` object keeps track of `Account` objects.
 
-The `Wallet` class is a singleton, so there needs to be exactly one `Wallet` object in the namespace. After the `Wallet` is created with the `create_wallet()` command, it remains transparent to the script, yet usually there is no need to access it directly.
+The `Wallet` class is a singleton, exactly one `Wallet` object resides in the namespace. After the `Wallet` is created with the `create_wallet()` command, it remains transparent to the script, yet usually there is no need to access it directly.
+
+In fact, there is no need to use the `create_wallet()` command explicitly: it is automatically called by any of `create_` or `new_` account object factory functions.
 
 Although *EOSFactory* manages only one `Wallet` object at a time, it produces numerous wallet files in `~/eosio-wallet`, i.e. in the location where the `keosd` wallet manager stores its wallets.
 
 The wallet files are marked with prefixes which are encoding the URL of the active testnet (i.e. the one which is active when the `create_wallet()` command is executed), for example: `_127_0_0_1_8888_default.wallet` or `_88_99_97_30_38888_default.wallet`.
 
-
-## Use Case
-
-The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
-
-```bash
-eosfactory/pythonmd.sh docs/cases/wallet.md
-```
-
-#### Create a new wallet
+## Create a new wallet
 
 Create a new Python session and import *EOSFactory* API:
 
@@ -68,7 +56,7 @@ stop()
 
 Note that the command `create_wallet()` is not necessary: it is issued internally with the first call to the `create_master_account` and `create_account` account factory functions.
 
-#### Resume the testnet
+### Resume the testnet
 
 Create a new Python session and import *EOSFactory* API:
 
@@ -103,7 +91,7 @@ Finally, stop the local testnet and exit Python CLI:
 stop()
 ```
 
-#### Reset the testnet
+### Reset the testnet
 
 Create a new Python session and import *EOSFactory* API:
 
@@ -137,7 +125,7 @@ Finally, stop the local testnet and exit Python CLI:
 stop()
 ```
 
-#### Methods of the Wallet class
+## Methods of the Wallet class
 
 As we mentioned before, when working with unit tests you should never need to access the `Wallet` object directedly. 
 

@@ -44,7 +44,7 @@ class Test(unittest.TestCase):
         create_account("BOB", MASTER)
         create_account("CAROL", MASTER)
 
-    def functionality_test(self):
+    def test_functionality(self):
         COMMENT('''
         Create, build and deploy the contract:
         ''')

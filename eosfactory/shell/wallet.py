@@ -21,7 +21,7 @@ class Wallet(cleos.WalletCreate):
         password (str): The password to the wallet, if the wallet exists. 
     '''
     wallet_single = None
-    globals = None
+    globals = {}
 
     def __init__(self, name=None, password="", file=False):
 
@@ -37,7 +37,6 @@ class Wallet(cleos.WalletCreate):
                 It can be only one ``Wallet`` object in the script; there is one
                 named ``{}``.
                 '''.format(Wallet.wallet_single.name))
-                return
 
         self.wallet_dir = config.keosd_wallet_dir()
 
@@ -93,7 +92,7 @@ class Wallet(cleos.WalletCreate):
         ''' Opens the wallet.
         Returns `WalletOpen` object
         '''
-        result = cleos.WalletOpen(self.name, is_verbose=False)
+        cleos.WalletOpen(self.name, is_verbose=False)
         logger.TRACE('''
         * Wallet ``{}`` opened.
         '''.format(self.name))
@@ -102,21 +101,21 @@ class Wallet(cleos.WalletCreate):
         ''' Lock the wallet.
         Returns `cleos.WalletLock` object.
         '''
-        result = cleos.WalletLock(self.name, is_verbose=False)
+        cleos.WalletLock(self.name, is_verbose=False)
         logger.TRACE("Wallet `{}` locked.".format(self.name))
 
     def lock_all(self):
         ''' Lock the wallet.
         Returns `cleos.WalletLock` object.
         '''
-        result = cleos.WalletLockAll(is_verbose=False)
+        cleos.WalletLockAll(is_verbose=False)
         logger.TRACE("All wallets locked.")
 
     def unlock(self):
         ''' Unlock the wallet.
         Returns `WalletUnlock` object.
         '''
-        result = cleos.WalletUnlock(
+        cleos.WalletUnlock(
             self.name, self.password, is_verbose=False)
         logger.TRACE('''
         * Wallet ``{}`` unlocked.
@@ -205,7 +204,7 @@ class Wallet(cleos.WalletCreate):
         account_name = None
         if isinstance(account_or_key, interface.Account):
             account_name = account_or_key.name
-            wallet_import = cleos.WalletImport(
+            cleos.WalletImport(
                 interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=True), 
                 self.name, is_verbose=False)
@@ -309,7 +308,7 @@ class Wallet(cleos.WalletCreate):
 
         '''
         account_map = manager.account_map()
-        for name, object_name in account_map.items():
+        for object_name in account_map.items():
             del Wallet.globals[object_name]
 
     def stop(self):
@@ -450,15 +449,15 @@ def wallet_json_write(wallet_json):
 
 def create_wallet(
         name=None, password=None, file=False,
-        globals=None):
+        wallet_globals=None):
     '''Create a singleton :class:`.Wallet` object.
 
     It is not usual to use this function. Instead, it is called automatically 
     on the first use of either :func:`.shell.account.create_master_account`
     or :func:`.shell.account.create_account` functions.
     '''
-    if globals:
-        Wallet.globals = globals
+    if wallet_globals:
+        Wallet.globals = wallet_globals
     else:
         Wallet.globals = inspect.stack()[1][0].f_globals
     Wallet.wallet_single = Wallet(name, password, file)
