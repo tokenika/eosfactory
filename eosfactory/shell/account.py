@@ -424,6 +424,28 @@ class Account():
 
 def new_master_account(
             account_name=None, owner_key=None, active_key=None):
+    '''Create master account object in caller's global namespace.
+
+    Wraps the account factory function :func:`create_master_account` so that 
+    the following statements are equivalent::
+
+        MASTER = create_master_account("MASTER")
+        MASTER = new_master_account()
+
+    NOTE::
+
+        With the `create_` syntax it is enough to state 
+        `create_master_account("MASTER")` in order to create the account object 
+        `MASTER`.        
+
+    Args:
+        account_name (str or .core.testnet.Testnet): The name of an valid EOSIO
+            account. Must be set if the testnode is not local.
+        owner_key (str or .core.interface.Key): The owner public key. Must 
+            be set if the testnode is not local.
+        active_key (str or .core.interface.Key): The active public key. Must 
+            be set if the testnode is not local.
+    '''
 
     return create_master_account(
             get_new_account_name(inspect.getframeinfo(
@@ -690,6 +712,38 @@ def new_account(
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
         restore=False):
+    '''Create account object in caller's global namespace.
+
+    Wraps the account factory function :func:`create_account` so that the 
+    following statements are equivalent::
+
+        foo = create_account("foo", MASTER)
+        foo = new_account(MASTER)
+
+    NOTE::
+
+        With the `create_` syntax it is enough to state 
+        `create_account("foo", MASTER)` in order to create the account object `foo`.
+
+    Args:
+        creator (str or .core.interface.Account): The account creating the new 
+            account
+        account_name (str): The name of an valid EOSIO account. If not set, it 
+            is random.
+        owner_key (.core.interface.Key): The *owner* key pair. If not set, it
+            is random.
+        active_key (.core.interface.Key): The *active* key pair. If not set, 
+            and the *owner_key* is set, it is substituted with the *owner_key*.
+            Otherwise, it is random.
+        stake_net (int): The amount of EOS delegated for net bandwidth.
+        stake_cpu (int): The amount of EOS delegated for CPU bandwidth.
+        buy_ram_kbytes (int): The amount of RAM bytes to purchase.
+        transfer (bool): Transfer voting power and right to unstake EOS to 
+            receiver.
+
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.   
+    '''
 
     return create_account(
         get_new_account_name(inspect.getframeinfo(
@@ -724,7 +778,7 @@ def create_account(
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
         restore=False):
-    '''Create master account object in caller's global namespace.
+    '''Create account object in caller's global namespace.
     
     Args:
         account_object_name (str): The name of the account object returned.

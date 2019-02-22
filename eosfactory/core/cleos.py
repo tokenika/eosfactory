@@ -711,6 +711,3 @@ class PushAction(Cleos):
 
         self.printself()
 
-
-    def get_transaction(self):
-        return GetTransaction(self.transaction)

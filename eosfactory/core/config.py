@@ -497,11 +497,10 @@ does not match the directory template 'core.config.EOSIO_CPP_DIR'
 
 
 def eosio_cpp_includes():
-    '''The list of eosio cpp_ includes.
+    '''The list of eosio-cpp includes.
     
-    The setting may be changed with 
-    *EOSIO_CPP* entry in the *config.json* file, 
-    see :func:`.current_config`.
+    The setting may be changed with *EOSIO_CPP* entry in the *config.json* 
+    file, see :func:`.current_config`.
     '''
     list = []
     dir = eosio_cpp_dir()
