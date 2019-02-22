@@ -346,7 +346,7 @@ editor. Return ``None`` if the the offer is rejected.
             {}
             
             Do you want to edit the file?
-            '''.format(str(path), str(e)), is_fatal=False, translate=False)
+            '''.format(str(path), str(e)), translate=False)
                     
                 answer = input("y/n <<< ")
                 if answer == "y":
@@ -365,7 +365,8 @@ def data_json(data):
             if isinstance(o, interface.Account):
                 return str(o)
             else:
-                json.JSONEncoder.default(self, o) 
+                return json.JSONEncoder.default(self, o)
+
     if not data:
         return data
 
