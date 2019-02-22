@@ -25,7 +25,6 @@ def main():
     if args.name:
         print(testnet.get_testnet(args.name, raise_exception=False))
         if args.remove:
-            import pdb; pdb.set_trace()
             testnet.remove_from_mapping(args.name)
             testnet.testnets()
     else:

@@ -145,21 +145,21 @@ class Wallet(cleos.WalletCreate):
             cleos.WalletRemove_key(
                 interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=True), 
-                self.name, is_verbose=False)
+                self.name, self.password, is_verbose=False)
             removed_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=False))
 
             cleos.WalletRemove_key(
                 interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=True), 
-                self.name, is_verbose=False)
+                self.name, self.password, is_verbose=False)
             removed_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
         else:
             cleos.WalletRemove_key(
                 interface.key_arg(
                     account_or_key, is_private_key=True), 
-                self.name, is_verbose=False)
+                self.name, self.password, is_verbose=False)
             removed_keys.append(interface.key_arg(
                     account_or_key, is_private_key=False))
 
@@ -201,7 +201,6 @@ class Wallet(cleos.WalletCreate):
                 imported.
         '''
         self.open_unlock()
-
         imported_keys = []
         account_name = None
         if isinstance(account_or_key, interface.Account):
@@ -323,28 +322,28 @@ class Wallet(cleos.WalletCreate):
         Returns `cleos.WalletKeys` object.
         '''
         self.open_unlock()
-
         wallet_keys = cleos.WalletKeys(is_verbose=False)
         logger.TRACE('''
             Keys in all open walets:
             {}
             '''.format(wallet_keys.out_msg))
+        return wallet_keys
 
-    def private_keys(self):
-        ''' Lists public keys from all unlocked wallets.
-        Returns `cleos.WalletKeys` object.
-        '''
-        self.open_unlock()
+    # def private_keys(self):
+    #     ''' Lists public keys from all unlocked wallets.
+    #     Returns `cleos.WalletKeys` object.
+    #     '''
+    #     self.open_unlock()
 
-        self.wallet_private_keys = cleos.WalletPrivateKeys(is_verbose=False)
-        logger.TRACE('''
-            Keys in all open walets:
-            {}
-            '''.format(json.dumps(
-                self.wallet_private_keys.json, indent=4)))    
+    #     self.wallet_private_keys = cleos.WalletPrivateKeys(is_verbose=False)
+    #     logger.TRACE('''
+    #         Keys in all open walets:
+    #         {}
+    #         '''.format(json.dumps(
+    #             self.wallet_private_keys.json, indent=4)))    
 
     def edit_account_map(self, text_editor="nano"):
-        manager.edit_account_map(text_editor)
+        manager.edit_account_map()
 
     def is_name_taken(self, account_object_name, account_name):
         '''Check whether the given name is available is a name of an account

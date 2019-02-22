@@ -29,6 +29,12 @@ class Key(Omittable):
         self.key_private = key_private
         Omittable.__init__(self)
 
+    def __str__(self):
+        if not self.key_private:
+            return "public:  {}".format(self.key_public)
+        return "public: {}\nprivate: {}".format(
+                                            self.key_public, self.key_private)
+
 
 class Account(Omittable):
     '''Having the *name* and *key_public* and *key_private* attributes.

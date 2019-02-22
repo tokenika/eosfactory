@@ -75,7 +75,6 @@ def ABI(
     '''
     contract_dir = config.contract_dir(contract_dir_hint)
     # source_files[0] is directory, source_files[1] is contents:
-    import pdb; pdb.set_trace()
     contract_source_files = config.contract_source_files(contract_dir)
 
     source_files = []
