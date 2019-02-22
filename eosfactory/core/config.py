@@ -704,8 +704,8 @@ def contract_dir(contract_dir_hint):
     Raises:
         .core.errors.Error: If the result is not defined.
     '''
-    contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
-
+    contract_dir_hint = os.path.realpath(
+                                utils.wslMapWindowsLinux(contract_dir_hint))
     # ? the absolute path to a contract directory
     trace = contract_dir_hint + "\n"
     if os.path.isfile(contract_dir_hint):
@@ -749,7 +749,7 @@ def source_files(source_dir):
         path = os.path.join(source_dir, file)
         if os.path.splitext(file)[1] in extensions:
             if os.path.isfile(path):
-                srcs.append(path)
+                srcs.append(os.path.realpath(path))
     return srcs
     
 
