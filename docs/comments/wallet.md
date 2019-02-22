@@ -186,5 +186,5 @@ stop()
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 
 ```bash
-eosfactory/pythonmd.sh docs/cases/wallet.md
+eosfactory/pythonmd.sh docs/comments/wallet.md
 ```
