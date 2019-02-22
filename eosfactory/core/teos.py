@@ -29,7 +29,7 @@ INCLUDE_PATH = "includePath"
 BROWSE = "browse"
 WORKSPACE_FOLDER = "${workspaceFolder}"
 EOSIO_CPP_INCLUDE = "eosio.cdt"
-EOSIO_DISPATCH = "EOSIO_DISPATCH"
+EOSIO_DISPATCH = r"void\s*apply\s*\(|EOSIO_DISPATCH"
 
 def replace_templates(string): 
     home = os.environ["HOME"]
@@ -75,6 +75,7 @@ def ABI(
     '''
     contract_dir = config.contract_dir(contract_dir_hint)
     # source_files[0] is directory, source_files[1] is contents:
+    import pdb; pdb.set_trace()
     contract_source_files = config.contract_source_files(contract_dir)
 
     source_files = []
@@ -89,7 +90,6 @@ def ABI(
         The assumed contract dir is   
         {}
         '''.format(contract_dir))
-        return
 
     code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
     target_dir = get_target_dir(contract_source_files[0])
@@ -130,7 +130,7 @@ def ABI(
     input_file = None
     for file in source_files:
         with open(file, 'r') as f:
-            if EOSIO_DISPATCH in f.read():
+            if re.search(EOSIO_DISPATCH, f.read()):
                 input_file = file
                 break
     if not input_file:
@@ -206,7 +206,7 @@ def WASM(
     input_file = None
     for file in source_files:
         with open(file, 'r') as f:
-            if EOSIO_DISPATCH in f.read():
+            if re.search(EOSIO_DISPATCH, f.read()):
                 input_file = file
                 break
     if not input_file:
