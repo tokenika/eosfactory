@@ -3,7 +3,7 @@
 This article demonstrates how the concept of EOSIO account is applied in *EOSFactory*.
 We present how to create an account object, associate it with a contract and then execute some actions of this contract.
 
-### Create a new account
+## Create a new account
 
 Create a new Python session and import *EOSFactory* API:
 
@@ -65,7 +65,7 @@ The `create_account` command performs several tasks:
 
 All the above actions are logged to the terminal, which can be visible, provided the verbosity is set to its default value.
 
-#### Account objects reside in the global namespace
+### Account objects reside in the global namespace
 
 Account objects reside in the global namespace (of the script module). This fact raises instinct reaction of python practitioners as they know that globals are evil. 
 
@@ -86,7 +86,7 @@ We can propose EOSFactory good practice: if you do not want global constants in 
 
 Finally, we admit that there are methods for having our constant account objects immutable, thus closing the controversy at the expense of decorating these objects with qualifiers, while our method results in clear and compact scripts (account variables not obscured with namespace qualificators). We believe that clearness is the first paradigm of the Python, and this is the reason that we have chosen Python. However, if the community insists, we will implement their way in the next editions.
 
-#### Account objects have to be unique in the test module
+### Account objects have to be unique in the test module
 
 The account objects in EOSFactory have to be unique in the test module. If they 
 were not, two different account objects could use (modify) the same physical 
@@ -107,7 +107,7 @@ create_account("HOST", MASTER, str(HOST))
 ######## Account object ``HOST`` restored from the blockchain.
 ```
 
-### Methods of the Account class
+## Methods of the Account class
 
 An instance of the `Account` class has the following methods:
 
@@ -171,7 +171,7 @@ Finally, stop the local testnet and exit Python CLI:
 stop()
 ```
 
-### Test run
+## Test run
 
 The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
 

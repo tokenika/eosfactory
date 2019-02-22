@@ -880,14 +880,13 @@ def is_wallet_defined(logger, globals=None):
     wallet_singleton = wallet.Wallet.wallet_single
 
     if wallet_singleton is None:
-        wallet.create_wallet(globals=globals)
+        wallet.create_wallet(wallet_globals=globals)
         wallet_singleton = wallet.Wallet.wallet_single
 
         if wallet_singleton is None:
             raise errors.Error('''
                 Cannot find any `Wallet` object.
                 ''')
-
     wallet_globals = wallet.Wallet.globals
     return True
 

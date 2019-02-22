@@ -4,7 +4,7 @@
 
 EOSFactory [v2.4](https://github.com/tokenika/eosfactory/releases/tag/v2.4) is compatible with EOS [v1.5.x](https://github.com/EOSIO/eos/releases/tag/v1.5.0).
 
-## New features in v2.4
+## New features in v2.0
 * General code overhaul & clean-up.
 * Documentation improved & revised.
 * Introduction of code patterns.
