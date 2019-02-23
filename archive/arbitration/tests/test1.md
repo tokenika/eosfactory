@@ -5,11 +5,15 @@
 There are two parities, `ALICE` and `CAROL`, both having their accounts with an `ARBITRATOR`. The `ARBITRATOR` provides the service of `ESCROW`. Hence, the parties can enter a deal that involves a temporary deposit of payment with the `ARBITRATOR`, which will be released when the deal is concluded and no party objects to it or if the `ARBITRATOR` issues a ruling.
 
 ```python
+import time, os, sys
+import eosfactory.core.config as config
+from eosfactory.eosf import *
+
 EOSIO = None
 ESCROW = None
 ARBITRATOR = None
-ALICE = None
-CAROL = None
+ALICE = Account()
+CAROL = Account()
 ```
 
 ## Set up a local testnet
@@ -17,10 +21,6 @@ CAROL = None
 We start by some housekeeping definitions aimed at initializing a local testnet and getting reference to the master account called `EOSIO`:
 
 ```python
-import time, os, sys
-import eosfactory.core.config as config
-from eosfactory.eosf import *
-
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 reset() # reset the local testnet

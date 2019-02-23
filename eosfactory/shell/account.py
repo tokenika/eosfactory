@@ -25,9 +25,15 @@ wallet_globals = None
 wallet_singleton = None
 
 
+class MasterAccount(account.Eosio):
+    '''Dummy class for declaring master account objects.
+    '''
+    def __init__(self, account_object_name=None):
+        pass
+
+
 class Account():
-    '''Methods to be ascribed to account objects, produced with 
-    :func:`.create_master_account` factories and :func:`.create_account`.
+    '''Methods to be ascribed to account objects.
     '''
     @classmethod
     def add_methods_and_finalize(cls, account_object_name, account):
@@ -56,6 +62,7 @@ class Account():
             abi (str): If set, the name of the file to save the contract ABI to.
             wasm (bool): Save contract as wasm.
         '''
+        stop_if_account_is_not_set(self)
         result = cleos_get.GetCode(self, is_verbose=False)
         logger.INFO('''
         * code()
@@ -68,6 +75,7 @@ class Account():
         Return:
             True if the retrieved hash code of the contract code is not null.    
         '''
+        stop_if_account_is_not_set(self)
         get_code = cleos_get.GetCode(self.name, is_verbose=False)
         if get_code.code_hash == \
         "0000000000000000000000000000000000000000000000000000000000000000":
@@ -99,6 +107,7 @@ class Account():
         See definitions of the remaining parameters: \
         :func:`.cleos.common_parameters`.
         '''
+        stop_if_account_is_not_set(self)
         result = cleos_set.SetContract(
                     self, contract_dir, 
                     wasm_file, abi_file, 
@@ -163,6 +172,7 @@ class Account():
         See definitions of the remaining parameters: \
         :func:`.cleos.common_parameters`.
         '''
+        stop_if_account_is_not_set(self)
         logger.TRACE('''
             * Set action permission.
             ''')
@@ -208,6 +218,7 @@ class Account():
         See definitions of the remaining parameters: \
         :func:`.cleos.common_parameters`.
         '''
+        stop_if_account_is_not_set(self)
         logger.TRACE('''
         * Set action permission.
         ''')
@@ -258,6 +269,7 @@ class Account():
             data (str): *["processed"]["action_traces"][0]["act"]["data"]* \
                 component of EOSIO cleos responce.
         '''
+        stop_if_account_is_not_set(self)
         data = manager.data_json(data)
 
         result = cleos.PushAction(
@@ -294,6 +306,7 @@ class Account():
             ):
         ''' Implement the `push action` command without broadcasting. 
         '''
+        stop_if_account_is_not_set(self)
         self.push_action(
             action, data,
             permission, expiration_sec, 
@@ -321,7 +334,8 @@ class Account():
 
         Returns:
             :class:`.cleos_set.SetTable` object
-        '''            
+        '''
+        stop_if_account_is_not_set(self)            
         logger.INFO('''
         * Table ``{}`` for ``{}``
         '''.format(table_name, scope))
@@ -349,6 +363,7 @@ class Account():
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
 
+        stop_if_account_is_not_set(self)
         if manager.is_local_testnet():
             return
 
@@ -372,16 +387,17 @@ class Account():
             '''.format(result.payer, result.receiver, result.amount))
 
     def delegate_bw(
-        self, stake_net_quantity, stake_cpu_quantity,
-        receiver=None,
-        permission=None,
-        transfer=False,
-        expiration_sec=None, 
-        skip_sign=0, dont_broadcast=0, force_unique=0,
-        max_cpu_usage=0, max_net_usage=0,
-        ref_block=None,
-        is_verbose=1):
+            self, stake_net_quantity, stake_cpu_quantity,
+            receiver=None,
+            permission=None,
+            transfer=False,
+            expiration_sec=None, 
+            skip_sign=0, dont_broadcast=0, force_unique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            is_verbose=1):
 
+        stop_if_account_is_not_set(self)
         if manager.is_local_testnet():
             return
 
@@ -407,6 +423,7 @@ class Account():
             result.stake_net_quantity, result.stake_cpu_quantity))
 
     def info(self):
+        stop_if_account_is_not_set(self)
         msg = manager.accout_names_2_object_names(
             "Account object name: {}\n{}".format(
             self.account_object_name,
@@ -416,9 +433,11 @@ class Account():
         print(msg)
 
     def __str__(self):
+        stop_if_account_is_not_set(self)
         return self.name
 
     def __repr__(self):
+        stop_if_account_is_not_set(self)
         return ""
 
 
@@ -1054,4 +1073,12 @@ def get_new_account_name(function_name):
         '''.format(function_name, function_name, code), translate=False)
 
     return account_object_name
+
+
+def stop_if_account_is_not_set(account):
+    if not hasattr(account, "name"):
+        raise errors.Error('''
+        The account object calling the method of 'Account' class is not set.
+        Use 'create_account' factory function to set it.
+        ''', print_stack=True)
 

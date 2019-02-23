@@ -2,11 +2,11 @@
 
 Note that the declarations
     `
-    MASTER = None
-    HOST = None
-    ALICE = None
-    BOB = None
-    CAROL = None
+    MASTER = MasterAccount()
+    HOST = Account()
+    ALICE = Account()
+    BOB = Account()
+    CAROL = Account()
     `
 are abundant: they are in place to satisfy the linter, whu complains about 
 dynamically created objects. 
@@ -19,11 +19,11 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 CONTRACT_WORKSPACE = "_iqhgcqllgnpkirjwwkms"
 
 # Actors of the test:
-MASTER = None
-HOST = None
-ALICE = None
-BOB = None
-CAROL = None
+MASTER = MasterAccount()
+HOST = Account()
+ALICE = Account()
+BOB = Account()
+CAROL = Account()
 
 class Test(unittest.TestCase):
     '''Unittest class definition.

@@ -1,6 +1,6 @@
 # MASTER Account Object
 
-*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. A MASTER account is also an instance of the `Account` class, but it plays a special role in *EOSFactory*: it spawns other accounts into existence.
+*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. A MASTER account is also, most often, an instance of the `Account` class, but it plays a special role in *EOSFactory*: it spawns other accounts into existence.
 
 The implementation of a MASTER account is dependent on the context:
 
@@ -104,10 +104,3 @@ Here is the expected outcome:
 ![](../images/master_account_remote_master.png)
 ![](../images/master_account_remote_carol.png)
 
-## Test run
-
-The python blocks in the current Markdown document can be executed with a provided bash tool. While the working directory is the root of the `EOSFactory` installation, do:
-
-```bash
-eosfactory/pythonmd.sh docs/comments/master_account.md
-```

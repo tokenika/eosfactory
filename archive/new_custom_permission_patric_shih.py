@@ -59,7 +59,6 @@ Create test accounts:
 ALICE = new_account(MASTER)
 print(ALICE.active_key); 
 print(get_wallet().keys())
-# import pdb; pdb.set_trace()
 CAROL = new_account(MASTER)
 COMMENT('''
 Evidently, EOSIO does not like giving permissins to itself. Change `str(alice)` 
@@ -79,7 +78,7 @@ ALICE.set_account_permission(
                     "permission": "active"
                 },
                 "weight": 1
-            }, 
+            },
             {
                 "permission": 
                 {

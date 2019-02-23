@@ -6,10 +6,10 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
 # Actors of the test:
-MASTER = None
-HOST = None
-ALICE = None
-CAROL = None
+MASTER = MasterAccount()
+HOST = Account()
+ALICE = Account()
+CAROL = Account()
 
 def test():
     SCENARIO('''

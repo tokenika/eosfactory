@@ -2,38 +2,39 @@
 from eosfactory.eosf import *
 
 reset()
-create_master_account("master")
-create_account("host", master)
-create_account("alice", master)
-create_account("carol", master)
 
-contract = Contract(host, "eosio_token")
+create_master_account("MASTER")
+create_account("HOST", MASTER)
+create_account("ALICE", MASTER)
+create_account("CAROL", MASTER)
+
+contract = Contract(HOST, "eosio_token")
 contract.build(force=False)
 contract.deploy()
 
-host.push_action(
+HOST.push_action(
     "create", 
     {
-        "issuer": master,
+        "issuer": MASTER,
         "maximum_supply": "1000000000.0000 EOS"
-    }, [master, host])
+    }, [MASTER, HOST])
 
 setup.is_translating = False
 
-host.push_action(
+HOST.push_action(
     "issue",
     {
-        "to": alice, "quantity": "100.0000 EOS", "memo": ""
+        "to": ALICE, "quantity": "100.0000 EOS", "memo": ""
     },
-    master)
+    MASTER)
 
 setup.is_translating = True
 
-host.push_action(
+HOST.push_action(
     "issue",
     {
-        "to": carol, "quantity": "100.0000 EOS", "memo": ""
+        "to": CAROL, "quantity": "100.0000 EOS", "memo": ""
     },
-    master)
+    MASTER)
 
 stop()

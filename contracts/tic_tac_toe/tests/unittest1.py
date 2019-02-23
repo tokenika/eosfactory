@@ -10,10 +10,10 @@ INITIAL_STAKE_NET = 3
 INITIAL_STAKE_CPU = 3
 
 # Actors of the test:
-MASTER = None
-HOST = None
-ALICE = None
-CAROL = None
+MASTER = MasterAccount()
+HOST = Account()
+ALICE = Account()
+CAROL = Account()
 
 class Test(unittest.TestCase):
 

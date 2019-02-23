@@ -6,11 +6,11 @@ verbosity([Verbosity.INFO, Verbosity.OUT])
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
 # Actors of the test:
-MASTER = None
-HOST = None
-ALICE = None
-BOB = None
-CAROL = None
+MASTER = MasterAccount()
+HOST = Account()
+ALICE = Account()
+BOB = Account()
+CAROL = Account()
 
 class Test(unittest.TestCase):
 
