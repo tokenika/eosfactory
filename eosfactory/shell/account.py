@@ -431,9 +431,7 @@ class Account():
             True
         )
         # restore the physical account name
-        msg = re.sub(
-            r"^\s*name:\s*(\w+)", "name: {}".format(self.name), msg, 
-                flags=re.M)
+        msg = re.sub(r"(?<=^name:\s)\w+", self.name, msg, flags=re.M)
         print(msg)
 
     def __str__(self):
