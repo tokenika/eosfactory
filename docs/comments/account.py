@@ -2,23 +2,27 @@
 from eosfactory.eosf import *
 
 reset()
-create_master_account("master")
+create_master_account("MASTER")
 
-create_account("host", master)
+create_account("HOST", MASTER)
 
-host.info()
+HOST.info()
 
-contract = Contract(host, "hello_world")
+create_account("HOST", MASTER)
+
+create_account("HOST", MASTER, str(HOST))
+
+contract = Contract(HOST, "hello_world")
 
 contract.build()
 contract.deploy()
 
-create_account("alice", master)
-create_account("carol", master)
+create_account("alice", MASTER)
+create_account("carol", MASTER)
 
-host.push_action("hi", {"user":alice}, alice)
-host.push_action("hi", {"user":carol}, carol)
+HOST.push_action("hi", {"user":alice}, alice)
+HOST.push_action("hi", {"user":carol}, carol)
 
-host.show_action("hi", {"user":alice}, alice)
+HOST.show_action("hi", {"user":alice}, alice)
 
 stop()

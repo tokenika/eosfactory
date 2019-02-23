@@ -3,7 +3,7 @@ from eosfactory.eosf import *
 
 reset()
 
-create_master_account("MASTER")
+create_MASTER_account("MASTER")
 create_account("HOST", MASTER)
 create_account("ALICE", MASTER)
 create_account("CAROL", MASTER)
