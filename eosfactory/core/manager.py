@@ -370,11 +370,11 @@ def data_json(data):
     if not data:
         return data
 
-    data_json = data
+    data_json_ = data
     if isinstance(data, dict) or isinstance(data, list):
-        data_json = json.dumps(data, cls=Encoder)
+        data_json_ = json.dumps(data, cls=Encoder)
     else:
         if isinstance(data, str):
-            data_json = re.sub("\s+|\n+|\t+", " ", data)
-            data_json = object_names_2_accout_names(data_json)
-    return data_json
+            data_json_ = re.sub("\s+|\n+|\t+", " ", data)
+            data_json_ = object_names_2_accout_names(data_json_)
+    return data_json_

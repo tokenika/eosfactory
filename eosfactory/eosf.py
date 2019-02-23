@@ -33,6 +33,8 @@ Permission = interface.Permission
 create_wallet = wallet.create_wallet
 get_wallet = wallet.get_wallet
 
+Account = account.Account
+MasterAccount = account.MasterAccount
 create_account = account.create_account
 new_account = account.new_account
 create_master_account = account.create_master_account

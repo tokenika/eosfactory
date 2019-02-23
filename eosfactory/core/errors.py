@@ -51,9 +51,11 @@ def excepthook(type, value, traceback):
 class Error(Exception):
     '''Base class for exceptions in EOSFactory.
     '''
-    def __init__(self, message, translate=True):
+    def __init__(
+            self, message, translate=True, 
+            print_stack=False, stack_frame=1):
         import eosfactory.core.setup as setup
-        if setup.is_raise_error:
+        if setup.is_raise_error or print_stack:
             sys.tracebacklimit = 10
             self.message = logger.error(message, translate)
             Exception.__init__(self, self.message)
@@ -61,7 +63,7 @@ class Error(Exception):
             sys.excepthook = excepthook
             sys.tracebacklimit = 0
             from inspect import currentframe, getframeinfo, stack
-            frameinfo = getframeinfo(stack()[1][0])
+            frameinfo = getframeinfo(stack()[stack_frame][0])
             details = " {} {}".format(frameinfo.filename, frameinfo.lineno) 
             self.message = logger.error(message, translate, details=details)
             Exception.__init__(self, self.message)
