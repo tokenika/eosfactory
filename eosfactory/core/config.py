@@ -344,6 +344,9 @@ def wsl_root():
     *WSL_ROOT* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
+    if not utils.is_windows_ubuntu():
+        return ""
+    
     wsl_root_sh = "wsl_root.sh"
     if is_linked_package():
         wsl_root_sh = os.path.join(eosf_dir(), wsl_root_sh)
