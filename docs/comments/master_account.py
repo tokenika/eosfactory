@@ -1,13 +1,13 @@
 
-# from eosfactory.eosf import *
+from eosfactory.eosf import *
 
-# reset()
+reset()
 
-# create_master_account("MASTER")
-# MASTER.info()
+create_master_account("MASTER")
+MASTER.info()
 
-# create_account("ALICE", MASTER)
-# ALICE.info()
+create_account("ALICE", MASTER)
+ALICE.info()
 
 from eosfactory.eosf import *
 

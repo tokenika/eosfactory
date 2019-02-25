@@ -36,7 +36,7 @@ config_dir_ = ("LOCAL_NODE_CONFIG_DIR", [None])
 # config_dir_ = ("LOCAL_NODE_CONFIG_DIR", 
 #                         ["/home/cartman/.local/share/eosio/nodeos/config/"])
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
-chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["200"])
+chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["300"])
 
 wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
