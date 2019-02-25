@@ -112,24 +112,24 @@ def set_contract_workspace_dir(contract_workspace_dir=None):
         if contract_workspace_dir_[0] in map:
             contract_workspace_dir = map[contract_workspace_dir_[0]]
             new_dir = tilde(input(utils.heredoc('''
+                Where do you prefer to keep your smart-contract projects?
+                The current location of the is:
+                '{}'
                 Input '{}' to set the default value which is
                 '{}'.
-
-                Where do you prefer to keep your smart-contract projects?
-                The current location is:
-                {}
-                Input another existing directory path, or nothing to keep the current one:
+                Otherwise, input another existing directory path, or nothing to 
+                keep the current one:
                 '''.format(
-                    ignore, os.path.join(APP_CWD_DIR, CONTRACTS_DIR),
-                    colored(contract_workspace_dir, current_path_color))
+                    colored(contract_workspace_dir, current_path_color),
+                    ignore, os.path.join(APP_CWD_DIR, CONTRACTS_DIR)
+                    )
                 ) + "\n"))
         else:
             new_dir = tilde(input(utils.heredoc('''
+                Where do you prefer to keep your smart-contract projects?
                 Input '{}' to set the default value which is
                 '{}'.
-
-                Where do you prefer to keep your smart-contract projects?
-                Input an existing directory path:
+                Otherwise, input an existing directory path:
                 '''.format(
                     ignore, 
                     os.path.join(APP_CWD_DIR, CONTRACTS_DIR))) + "\n"))
