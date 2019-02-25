@@ -645,7 +645,8 @@ def node_probe():
     count = 10
     num = 5
     block_num = None
-    
+    time.sleep(4)
+
     while True:
         time.sleep(1)
         
@@ -691,6 +692,7 @@ def node_stop():
     if pids:
         for pid in pids:
             os.system("kill " + str(pid))
+    
         while count > 0:
             time.sleep(1)
             if not is_local_node_process_running():
