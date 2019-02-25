@@ -1029,7 +1029,8 @@ def print_stats(
     
 
 def is_in_globals(account_object_name, globals):
-    if account_object_name in globals and globals[account_object_name]:
+    if account_object_name in globals and globals[account_object_name] and\
+            hasattr(globals[account_object_name], "name"):
         if not isinstance(globals[account_object_name], interface.Account):
             raise errors.Error('''
     The name of the account name is to be '{}', but there is already a global 
