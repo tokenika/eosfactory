@@ -934,7 +934,7 @@ The error message:
         eosio_cpp_version = eosio_cpp_version.replace("eosio-cpp version ", "")
         if not eosio_cpp_version == EOSIO_CDT_VERSION:
             print('''NOTE!
-The version of the installed 'eosio.cpp' package is {} while the expected
+The version of the installed 'eosio.cdt' package is {} while the expected
 version is {}
             '''.format(eosio_cpp_version, EOSIO_CDT_VERSION))     
     except Exception as e:
