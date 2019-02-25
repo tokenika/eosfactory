@@ -9,9 +9,9 @@ import time, os, sys
 import eosfactory.core.config as config
 from eosfactory.eosf import *
 
-EOSIO = None
-ESCROW = None
-ARBITRATOR = None
+EOSIO = MasterAccount()
+ESCROW = Account()
+ARBITRATOR = Account()
 ALICE = Account()
 CAROL = Account()
 ```
