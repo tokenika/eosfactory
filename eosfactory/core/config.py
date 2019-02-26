@@ -42,10 +42,14 @@ wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 
 
-cli_exe_ = ("EOSIO_CLI_EXECUTABLE", ["/usr/bin/cleos", "/usr/local/bin/cleos"])
-keosd_exe_ = ("KEOSD_EXECUTABLE", ["/usr/bin/keosd", "/usr/local/bin/keosd"])
-node_exe_ = ("LOCAL_NODE_EXECUTABLE", ["/usr/bin/nodeos", "/usr/local/bin/nodeos"])
-eosio_cpp_ = ("EOSIO_CPP", ["/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp"])
+cli_exe_ = ("EOSIO_CLI_EXECUTABLE", 
+                        ["cleos", "/usr/bin/cleos", "/usr/local/bin/cleos"])
+keosd_exe_ = ("KEOSD_EXECUTABLE", 
+                        ["keosd","/usr/bin/keosd", "/usr/local/bin/keosd"])
+node_exe_ = ("LOCAL_NODE_EXECUTABLE", 
+                        ["nodeos","/usr/bin/nodeos", "/usr/local/bin/nodeos"])
+eosio_cpp_ = ("EOSIO_CPP", 
+            ["eosio-cpp", "/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp"])
 eosio_cpp_dir_ = ("EOSIO_CPP_DIR", [EOSIO_CPP_DIR])
 eosio_cpp_includes_ = (
     "EOSIO_CPP_INCLUDES", 
@@ -103,7 +107,6 @@ def set_contract_workspace_dir(contract_workspace_dir=None):
 
     current_path_color = "green"
     error_path_color = "red"
-    ignore = "-"
 
     while True:
         map = config_map()
@@ -111,37 +114,25 @@ def set_contract_workspace_dir(contract_workspace_dir=None):
 
         if contract_workspace_dir_[0] in map:
             contract_workspace_dir = map[contract_workspace_dir_[0]]
-            new_dir = tilde(input(utils.heredoc('''
-                Where do you prefer to keep your smart-contract projects?
-                The current location of the is:
-                '{}'
-                Input '{}' to set the default value which is
-                '{}'.
-                Otherwise, input another existing directory path, or nothing to 
-                keep the current one:
-                '''.format(
-                    colored(contract_workspace_dir, current_path_color),
-                    ignore, os.path.join(APP_CWD_DIR, CONTRACTS_DIR)
-                    )
-                ) + "\n"))
         else:
-            new_dir = tilde(input(utils.heredoc('''
-                Where do you prefer to keep your smart-contract projects?
-                Input '{}' to set the default value which is
-                '{}'.
-                Otherwise, input an existing directory path:
-                '''.format(
-                    ignore, 
-                    os.path.join(APP_CWD_DIR, CONTRACTS_DIR))) + "\n"))
-
-        if new_dir == ignore:
-            new_dir = os.path.join(APP_CWD_DIR, CONTRACTS_DIR)
+            contract_workspace_dir = os.path.join(APP_CWD_DIR, CONTRACTS_DIR)
+            
+        new_dir = tilde(input(utils.heredoc('''
+            Where do you prefer to keep your smart-contract projects?
+            The current location of the is:
+            '{}'
+            Otherwise, input another existing directory path, or nothing to 
+            keep the current one:
+            '''.format(
+                colored(contract_workspace_dir, current_path_color)
+                )
+            ) + "\n"))
         
         if not new_dir:
             new_dir = contract_workspace_dir
         
         if set(new_dir):
-            print()
+            print("OK")
             break
         else:        
             print("\n" + utils.heredoc('''
@@ -437,7 +428,7 @@ def node_exe():
     *LOCAL_NODE_EXECUTABLE* entry in the *config.json* file, 
     see :func:`.current_config`.    
     '''
-    return first_valid_path(node_exe_) 
+    return first_valid_which(node_exe_) 
 
 
 def cli_exe():
@@ -447,7 +438,7 @@ def cli_exe():
     *EOSIO_CLI_EXECUTABLE* entry in the *config.json* file, 
     see :func:`.current_config`.    
     '''
-    return first_valid_path(cli_exe_)
+    return first_valid_which(cli_exe_)
 
 
 def keosd_exe():
@@ -457,7 +448,7 @@ def keosd_exe():
     *KEOSD_EXECUTABLE* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
-    return first_valid_path(keosd_exe_)
+    return first_valid_which(keosd_exe_)
 
 
 def eosio_cpp():
@@ -467,7 +458,7 @@ def eosio_cpp():
     *EOSIO_CPP* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
-    return first_valid_path(eosio_cpp_)
+    return first_valid_which(eosio_cpp_)
 
 
 def eosio_cpp_dir():
@@ -637,6 +628,43 @@ The value of {} is not defined.
 Define it in the config file
 {}       
     '''.format(config_list[0], config_file()), translate=False)
+
+
+def first_valid_which(config_list, find_file=None, raise_error=True):
+    '''Given a key to the config list, get a valid file system path.
+
+    Applicable if the *config_list* argument refers to a file path.
+    The path may be absolute or relative to the root of the EOSFactory 
+    installation.
+    
+    Also, the path may be relative to the *HOME* environment variable.
+
+    Args:
+        config_list (tuple): A configure list tuple.
+        find_file (str): If set, the given file has to exist.
+        raise_error (bool): If set, raise an error on failure.
+        
+    Raises:
+        .core.errors.Error: If the *raise_error* argument is set and the \
+            result is not defined.            
+    '''
+    values = config_values(config_list)
+    if values[0]:
+        for path in values:
+            if os.path.isabs(path):
+                if find_file:
+                    if os.path.exists(os.path.join(path, find_file)):
+                        return path
+            else:
+                if utils.which(path):
+                    return path
+
+    if raise_error:
+        raise errors.Error('''
+        Cannot find any path for '{}'.
+        '''.format(config_list[0]), translate=False)
+    else:
+        return None
 
 
 def first_valid_path(config_list, find_file=None, raise_error=True):
