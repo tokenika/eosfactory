@@ -1,14 +1,14 @@
-# EOSFactory Release Notes - v2.4
+# EOSFactory Release Notes - v3.0.0
 
 ## Compatibility
 
-EOSFactory [v2.4](https://github.com/tokenika/eosfactory/releases/tag/v2.4) is compatible with EOS [v1.5.x](https://github.com/EOSIO/eos/releases/tag/v1.5.0).
+EOSFactory [v3.0.0](https://github.com/tokenika/eosfactory/releases/tag/v3.0.0) is compatible with EOS [v1.6.0](https://github.com/EOSIO/eos/releases/tag/v1.6.0) and eosio.cdt [v1.5.0](https://github.com/EOSIO/eosio.cdt/releases/tag/v1.5.0).
 
-## New features in v2.4
-* General code overhaul & clean-up.
-* Documentation improved & revised.
-* Introduction of code patterns.
-* Several bug fixes.
+## New features in v3.0.0
+* New, alternative syntax introduced: `foo = new_account(master_account)`.
+* EOSFactory package can be installed from PyPi repository.
+* Compatibility with python linter: it does not complain dynamically created account objects now.
+* Cleaner code, better documented.
 
 ## Features available in previous releases
 * Launch a single-node private testnet and fully control it: stop it and then continue running it or completely reset it.
