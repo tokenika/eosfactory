@@ -17,6 +17,7 @@ Installing 'eosfactory' package locally with the Python pip system...
 # the flag '-e'
 ###############################################################################
 pip3 install --user -e .
+chmod a+x eosfactory/pythonmd.sh
 
 printf "%s\n" "
 Configuring the eosfactory installation...

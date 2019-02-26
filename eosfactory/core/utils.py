@@ -70,3 +70,7 @@ def uname(options=None):
 def is_windows_ubuntu():
     resp = uname("-v")
     return resp.find("Microsoft") != -1
+
+
+def which(file_path):
+    return spawn("which {}".format(file_path), shell=True)
