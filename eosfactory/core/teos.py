@@ -642,10 +642,10 @@ def node_start(clear=False, nodeos_stdout=None):
 
 
 def node_probe():
-    count = 10
+    count = 25
     num = 5
     block_num = None
-    time.sleep(4)
+    time.sleep(5)
 
     while True:
         time.sleep(1)

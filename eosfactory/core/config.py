@@ -42,10 +42,10 @@ wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 
 
-cli_exe_ = ("EOSIO_CLI_EXECUTABLE", ["/usr/bin/cleos"])
-keosd_exe_ = ("KEOSD_EXECUTABLE", ["/usr/bin/keosd"])
-node_exe_ = ("LOCAL_NODE_EXECUTABLE", ["/usr/bin/nodeos"])
-eosio_cpp_ = ("EOSIO_CPP", ["/usr/bin/eosio-cpp"])
+cli_exe_ = ("EOSIO_CLI_EXECUTABLE", ["/usr/bin/cleos", "/usr/local/bin/cleos"])
+keosd_exe_ = ("KEOSD_EXECUTABLE", ["/usr/bin/keosd", "/usr/local/bin/keosd"])
+node_exe_ = ("LOCAL_NODE_EXECUTABLE", ["/usr/bin/nodeos", "/usr/local/bin/nodeos"])
+eosio_cpp_ = ("EOSIO_CPP", ["/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp"])
 eosio_cpp_dir_ = ("EOSIO_CPP_DIR", [EOSIO_CPP_DIR])
 eosio_cpp_includes_ = (
     "EOSIO_CPP_INCLUDES", 
