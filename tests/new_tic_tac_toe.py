@@ -152,7 +152,7 @@ class Test(unittest.TestCase):
                 ''')
                 raise Error(str(e))
 
-        table = Test.host.table("games", Test.carol)
+        table = Test.host.table("games", Test.carol, show_payer=True)
         self.assertEqual(table.json["rows"][0]["board"][0], 0)
         self.assertEqual(table.json["rows"][0]["board"][1], 0)
         self.assertEqual(table.json["rows"][0]["board"][2], 0)
@@ -189,7 +189,7 @@ class Test(unittest.TestCase):
             },
             permission=(Test.alice, Permission.ACTIVE))
 
-        table = Test.host.table("games", Test.carol)
+        table = Test.host.table("games", Test.carol, show_payer=True)
         self.assertEqual(table.json["rows"][0]["board"][0], 1)
         self.assertEqual(table.json["rows"][0]["board"][1], 0)
         self.assertEqual(table.json["rows"][0]["board"][2], 0)
