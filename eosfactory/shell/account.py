@@ -341,7 +341,7 @@ class Account():
                 (i64), all others support (i64, i128, i256, float64, float128, 
                 ripemd160, sha256).
                 Special type 'name' indicates an account name.
-            enncode_type (str): The encoding type of key_type 
+            encode_type (str): The encoding type of key_type 
                 (i64 , i128 , float64, float128) only support decimal 
                 encoding e.g. 'dec'i256 - supports both 'dec' and 'hex', 
                 ripemd160 and sha256 is 'hex' only.

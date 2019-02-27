@@ -170,16 +170,16 @@ class Test(unittest.TestCase):
             },
             permission=(ALICE, Permission.ACTIVE))
 
-        t = HOST.table("games", CAROL)
-        self.assertEqual(t.json["rows"][0]["board"][0], 1)
-        self.assertEqual(t.json["rows"][0]["board"][1], 0)
-        self.assertEqual(t.json["rows"][0]["board"][2], 0)
-        self.assertEqual(t.json["rows"][0]["board"][3], 0)
-        self.assertEqual(t.json["rows"][0]["board"][4], 2)
-        self.assertEqual(t.json["rows"][0]["board"][5], 0)
-        self.assertEqual(t.json["rows"][0]["board"][6], 0)
-        self.assertEqual(t.json["rows"][0]["board"][7], 0)
-        self.assertEqual(t.json["rows"][0]["board"][8], 0)
+        table = HOST.table("games", CAROL, show_payer=True)
+        self.assertEqual(table.json["rows"][0]["board"][0], 1)
+        self.assertEqual(table.json["rows"][0]["board"][1], 0)
+        self.assertEqual(table.json["rows"][0]["board"][2], 0)
+        self.assertEqual(table.json["rows"][0]["board"][3], 0)
+        self.assertEqual(table.json["rows"][0]["board"][4], 2)
+        self.assertEqual(table.json["rows"][0]["board"][5], 0)
+        self.assertEqual(table.json["rows"][0]["board"][6], 0)
+        self.assertEqual(table.json["rows"][0]["board"][7], 0)
+        self.assertEqual(table.json["rows"][0]["board"][8], 0)
 
         COMMENT('''
         Restarting the game:
@@ -193,16 +193,16 @@ class Test(unittest.TestCase):
             }, 
             permission=(CAROL, Permission.ACTIVE))
 
-        t = HOST.table("games", CAROL)
-        self.assertEqual(t.json["rows"][0]["board"][0], 0)
-        self.assertEqual(t.json["rows"][0]["board"][1], 0)
-        self.assertEqual(t.json["rows"][0]["board"][2], 0)
-        self.assertEqual(t.json["rows"][0]["board"][3], 0)
-        self.assertEqual(t.json["rows"][0]["board"][4], 0)
-        self.assertEqual(t.json["rows"][0]["board"][5], 0)
-        self.assertEqual(t.json["rows"][0]["board"][6], 0)
-        self.assertEqual(t.json["rows"][0]["board"][7], 0)
-        self.assertEqual(t.json["rows"][0]["board"][8], 0)
+        table = HOST.table("games", CAROL, show_payer=True)
+        self.assertEqual(table.json["rows"][0]["board"][0], 0)
+        self.assertEqual(table.json["rows"][0]["board"][1], 0)
+        self.assertEqual(table.json["rows"][0]["board"][2], 0)
+        self.assertEqual(table.json["rows"][0]["board"][3], 0)
+        self.assertEqual(table.json["rows"][0]["board"][4], 0)
+        self.assertEqual(table.json["rows"][0]["board"][5], 0)
+        self.assertEqual(table.json["rows"][0]["board"][6], 0)
+        self.assertEqual(table.json["rows"][0]["board"][7], 0)
+        self.assertEqual(table.json["rows"][0]["board"][8], 0)
 
         COMMENT('''
         Closing the game:
