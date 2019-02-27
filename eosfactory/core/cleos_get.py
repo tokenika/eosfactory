@@ -127,10 +127,9 @@ class GetTable(cleos.Cleos):
     '''Retrieve the contents of a database table
 
     Args:
-        account (str or .interface.Account): The account that owns the table. 
+        table (str): The name of the table as specified by the contract abi.        
         scope (str or .interface.Account): The scope within the account in 
             which the table is found.
-        table (str): The name of the table as specified by the contract abi.
         binary (bool): Return the value as BINARY rather than using abi to 
             interpret as JSON. Default is *False*.
         limit (int): The maximum number of rows to return. Default is 10.
@@ -138,12 +137,26 @@ class GetTable(cleos.Cleos):
             defaults to first.
         upper (str): JSON representation of upper bound value value of key, 
             defaults to last.
+        index (int or str): Index number, 1 - primary (first), 2 - secondary 
+            index (in order defined by multi_index), 3 - third index, etc.
+            Number or name of index can be specified, 
+            e.g. 'secondary' or '2'.
+        key_type (str): The key type of --index, primary only supports 
+            (i64), all others support (i64, i128, i256, float64, float128, 
+            ripemd160, sha256).
+            Special type 'name' indicates an account name.
+        enncode_type (str): The encoding type of key_type 
+            (i64 , i128 , float64, float128) only support decimal 
+            encoding e.g. 'dec'i256 - supports both 'dec' and 'hex', 
+            ripemd160 and sha256 is 'hex' only.
+        reverse (bool): Iterate in reverse order.
         is_verbose (bool): If *False* do not print. Default is *True*.
     '''
     def __init__(
             self, account, table, scope,
             binary=False, 
-            limit=10, key="", lower="", upper="",
+            limit=10, lower="", upper="", index="",
+            key_type="", encode_type="", reverse=False, show_payer=False,
             is_verbose=True
             ):
         args = [interface.account_arg(account)]
@@ -167,6 +180,16 @@ class GetTable(cleos.Cleos):
             args.extend(["--lower", lower])
         if upper:
             args.extend(["--upper", upper])
+        if index:
+            args.extend(["--index", str(index)])
+        if key_type:
+            args.extend(["--key-type", key_type])
+        if encode_type:
+            args.extend(["--encode-type", encode_type])
+        if reverse:
+            args.append("--reverse")
+        if show_payer:
+            args.append("--show-payer")
 
         cleos.Cleos.__init__(self, args, "get", "table", is_verbose)
 
