@@ -1,6 +1,3 @@
-tokenika
-qQWZZwPMAn3Z8pGCNPJJk
-
 ### Uninstalling eosfactory Python package
 
 Un-installation command...
