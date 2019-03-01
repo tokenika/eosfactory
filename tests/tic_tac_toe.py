@@ -16,7 +16,7 @@ INITIAL_STAKE_NET = 3
 INITIAL_STAKE_CPU = 3
 
 # Actors of the test:
-MASTER = MasterAccount()
+MASTER = Account()
 HOST = Account()
 ALICE = Account()
 CAROL = Account()
@@ -54,7 +54,6 @@ class Test(unittest.TestCase):
         We are testing that the moves of the game are correctly stored in the 
         blockchain database.
         ''')
-
         testnet.verify_production()
         create_master_account("MASTER", testnet)
         create_account(
@@ -133,16 +132,16 @@ class Test(unittest.TestCase):
                 ''')
                 raise Error(str(e))
 
-        t = HOST.table("games", CAROL)
-        self.assertEqual(t.json["rows"][0]["board"][0], 0)
-        self.assertEqual(t.json["rows"][0]["board"][1], 0)
-        self.assertEqual(t.json["rows"][0]["board"][2], 0)
-        self.assertEqual(t.json["rows"][0]["board"][3], 0)
-        self.assertEqual(t.json["rows"][0]["board"][4], 0)
-        self.assertEqual(t.json["rows"][0]["board"][5], 0)
-        self.assertEqual(t.json["rows"][0]["board"][6], 0)
-        self.assertEqual(t.json["rows"][0]["board"][7], 0)
-        self.assertEqual(t.json["rows"][0]["board"][8], 0)
+        table = HOST.table("games", CAROL)
+        self.assertEqual(table.json["rows"][0]["board"][0], 0)
+        self.assertEqual(table.json["rows"][0]["board"][1], 0)
+        self.assertEqual(table.json["rows"][0]["board"][2], 0)
+        self.assertEqual(table.json["rows"][0]["board"][3], 0)
+        self.assertEqual(table.json["rows"][0]["board"][4], 0)
+        self.assertEqual(table.json["rows"][0]["board"][5], 0)
+        self.assertEqual(table.json["rows"][0]["board"][6], 0)
+        self.assertEqual(table.json["rows"][0]["board"][7], 0)
+        self.assertEqual(table.json["rows"][0]["board"][8], 0)
 
         COMMENT('''
         First move is by CAROL:
@@ -171,15 +170,15 @@ class Test(unittest.TestCase):
             permission=(ALICE, Permission.ACTIVE))
 
         table = HOST.table("games", CAROL, show_payer=True)
-        self.assertEqual(table.json["rows"][0]["board"][0], 1)
-        self.assertEqual(table.json["rows"][0]["board"][1], 0)
-        self.assertEqual(table.json["rows"][0]["board"][2], 0)
-        self.assertEqual(table.json["rows"][0]["board"][3], 0)
-        self.assertEqual(table.json["rows"][0]["board"][4], 2)
-        self.assertEqual(table.json["rows"][0]["board"][5], 0)
-        self.assertEqual(table.json["rows"][0]["board"][6], 0)
-        self.assertEqual(table.json["rows"][0]["board"][7], 0)
-        self.assertEqual(table.json["rows"][0]["board"][8], 0)
+        self.assertEqual(table.json["rows"][0]["data"]["board"][0], 1)
+        self.assertEqual(table.json["rows"][0]["data"]["board"][1], 0)
+        self.assertEqual(table.json["rows"][0]["data"]["board"][2], 0)
+        self.assertEqual(table.json["rows"][0]["data"]["board"][3], 0)
+        self.assertEqual(table.json["rows"][0]["data"]["board"][4], 2)
+        self.assertEqual(table.json["rows"][0]["data"]["board"][5], 0)
+        self.assertEqual(table.json["rows"][0]["data"]["board"][6], 0)
+        self.assertEqual(table.json["rows"][0]["data"]["board"][7], 0)
+        self.assertEqual(table.json["rows"][0]["data"]["board"][8], 0)
 
         COMMENT('''
         Restarting the game:
@@ -193,7 +192,7 @@ class Test(unittest.TestCase):
             }, 
             permission=(CAROL, Permission.ACTIVE))
 
-        table = HOST.table("games", CAROL, show_payer=True)
+        table = HOST.table("games", CAROL)
         self.assertEqual(table.json["rows"][0]["board"][0], 0)
         self.assertEqual(table.json["rows"][0]["board"][1], 0)
         self.assertEqual(table.json["rows"][0]["board"][2], 0)
