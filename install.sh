@@ -2,7 +2,7 @@
 
 printf "%s\n" "
 ###############################################################################
-#   This script installs EOSFactory. It needs to be executed from within 
+#   This script installs EOSFactory. It needs to be executed from within
 #   the 'eosfactory' folder.
 #   This file was downloaded from https://github.com/tokenika/eosfactory
 ###############################################################################
