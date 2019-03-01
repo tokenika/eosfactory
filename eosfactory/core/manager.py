@@ -176,7 +176,6 @@ def reset(nodeos_stdout=None):
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     '''
-
     import eosfactory.shell.account as account
     teos.keosd_start()
     account.reboot()

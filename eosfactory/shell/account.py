@@ -558,7 +558,7 @@ def create_master_account(
         ''' 
         if not is_wallet_defined(logger, globals):
             return None
-
+            
         if is_in_globals(account_object_name, globals):
             logger.INFO('''
                 ######## Account object ``{}`` restored from the blockchain.
@@ -989,7 +989,6 @@ def put_account_to_wallet_and_on_stack(
         logger = account_object
 
     global wallet_singleton
-    global wallet_globals
 
     if account_object.owner_key:
         if wallet_singleton.keys_in_wallets(

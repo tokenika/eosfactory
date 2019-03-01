@@ -308,7 +308,7 @@ class Wallet(cleos.WalletCreate):
 
         '''
         account_map = manager.account_map()
-        for object_name in account_map.items():
+        for account_object, object_name in account_map.items():
             del Wallet.globals[object_name]
 
     def stop(self):
