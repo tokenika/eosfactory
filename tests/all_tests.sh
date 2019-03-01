@@ -12,5 +12,4 @@ eosfactory/pythonmd.sh docs/comments/symbolic_names.md &&\
 eosfactory/pythonmd.sh docs/comments/wallet.md &&\
 eosfactory/pythonmd.sh docs/patterns/set/set_account_permission.md &&\
 eosfactory/pythonmd.sh docs/tutorials/02.InteractingWithEOSContractsInEOSFactory.md &&\
-
 eosfactory/pythonmd.sh docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md 
