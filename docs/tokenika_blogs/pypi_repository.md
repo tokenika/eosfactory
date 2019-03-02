@@ -45,7 +45,7 @@ Obtaining file:///mnt/c/Workspaces/EOS/eosfactory
 Requirement already satisfied: termcolor in /usr/local/lib/python3.7/site-packages (from eosfactory-tokenika==2.0.0) (1.1.0)
 Installing collected packages: eosfactory-tokenika
   Found existing installation: eosfactory-tokenika 2.0.0
-    Can't uninstall 'eosfactory-tokenika'. No files were found to uninstall.
+    Can not uninstall 'eosfactory-tokenika'. No files were found to uninstall.
   Running setup.py develop for eosfactory-tokenika
 Successfully installed eosfactory-tokenika
 ```
