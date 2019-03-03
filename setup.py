@@ -1,5 +1,8 @@
-import setuptools
+'''setuptools setup
+
+'''
 import os
+import setuptools
 import eosfactory.core.config as config
 from shutil import rmtree
 
@@ -24,23 +27,22 @@ def readme():
 
 def data_files_(directory):
     paths = []
-    for (path, directories, filenames) in os.walk(directory):
+    for (path, _directories, filenames) in os.walk(directory):
         for filename in filenames:
-            dir = os.path.join(config.EOSFACTORY_DIR, path)
-            if "build" in dir:
+            d = os.path.join(config.EOSFACTORY_DIR, path)
+            if "build" in d:
                 continue
             file_list = [os.path.join(path, filename)]
-            tuple = (dir, file_list)
-            paths.append(tuple)
+            paths.append((d, file_list))
     return paths
 
-data_files = [
+DATA_FILES = [
     (config.EOSFACTORY_DIR, ["wsl_root.sh"]),
     (os.path.join(config.EOSFACTORY_DIR, "config"),
         ["config/distributed/config.json", "config/config.ini", 
                                                     "config/genesis.json"])] 
-data_files.extend(data_files_('templates'))
-data_files.extend(data_files_('contracts'))
+DATA_FILES.extend(data_files_('templates'))
+DATA_FILES.extend(data_files_('contracts'))
 
 setuptools.setup(
     name=setuptools_name,
@@ -61,6 +63,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),    
     install_requires=['termcolor',],
     include_package_data = True,
-    data_files=data_files,
+    data_files=DATA_FILES,
     zip_safe=False)
 
