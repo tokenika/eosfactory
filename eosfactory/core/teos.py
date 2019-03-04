@@ -643,20 +643,25 @@ def node_start(clear=False, nodeos_stdout=None):
 
 def node_probe():
     count = 25
+    count1 = count - 7
     num = 5
     block_num = None
     time.sleep(5)
 
     while True:
         time.sleep(1)
-        
+        count = count - 1
+        if count > count1:
+            print(".", end="", flush=True)
+            continue
+
         try:
             import eosfactory.core.cleos_get as cleos_get
             head_block_num = cleos_get.GetInfo(is_verbose=0).head_block
         except:
             head_block_num = 0
         finally:
-            print(".", end="", flush=True)
+            print("*", end="", flush=True)
 
         if block_num is None:
             block_num = head_block_num
@@ -668,7 +673,6 @@ def node_probe():
             '''.format(head_block_num))
             break
 
-        count = count - 1        
         if count <= 0:
             raise errors.Error('''
             The local node does not respond.

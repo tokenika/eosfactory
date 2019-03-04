@@ -939,8 +939,7 @@ def installation_dependencies():
     import subprocess
 
     try:
-        eosio_version = subprocess.check_output(
-            [node_exe(), "--version"], timeout=10).decode("ISO-8859-1").strip()
+        eosio_version = subprocess.check_output("echo $({} --version)".format(node_exe()), shell=True, timeout=10).decode("ISO-8859-1").strip()
 
         eosio_version = eosio_version.replace("v", "")
         if not eosio_version == EOSIO_VERSION:
