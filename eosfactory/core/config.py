@@ -73,6 +73,7 @@ def is_linked_package():
         Cannot determine the configuration directory.
         {}
         {}
+        If EOSFactory is installed globally, local user rights may be of relevance.
         '''.format(
             os.path.join(eosf_dir(), CONFIG_DIR),
             os.path.join(APP_DATA_DIR, CONFIG_DIR)
