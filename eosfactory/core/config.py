@@ -75,7 +75,7 @@ def get_app_data_dir():
     else:
         app_data_dir = None
     
-    if os.path.exists(app_data_dir):
+    if app_data_dir and os.path.exists(app_data_dir):
         return app_data_dir
 
 
