@@ -66,13 +66,18 @@ key_public_ = (
 contract_workspace_dir_ = (
     "EOSIO_CONTRACT_WORKSPACE", [CONTRACTS_DIR])
 
+
 def get_app_data_dir():
-    app_data_dir = APP_DATA_DIR_USER
-    if not os.path.exists(app_data_dir):
+    if "/usr/local/" in __file__:
         app_data_dir = APP_DATA_DIR_GLOBAL
-    if not os.path.exists(app_data_dir):
-        return None
-    return app_data_dir
+    elif  os.path.expandvars("${HOME}") in __file__:
+        app_data_dir = APP_DATA_DIR_USER
+    else:
+        app_data_dir = None
+    
+    if os.path.exists(app_data_dir):
+        return app_data_dir
+
 
 def is_linked_package():
     is_linked = os.path.exists(os.path.join(eosf_dir(), CONFIG_DIR))
