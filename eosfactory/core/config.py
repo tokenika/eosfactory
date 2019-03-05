@@ -13,9 +13,11 @@ EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.5.0"
 PYTHON_VERSION = "3.5 or higher"
 EOSFACTORY_DIR = "eosfactory/"
-APP_DATA_DIR_USER = os.path.expandvars(
-    "${HOME}/.local/" + EOSFACTORY_DIR)
-APP_DATA_DIR_GLOBAL = "/usr/local/" + EOSFACTORY_DIR
+APP_DATA_DIR_USER = (
+    os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR),
+    os.path.expandvars("${HOME}")
+)
+APP_DATA_DIR_SUDO = ("/usr/local/" + EOSFACTORY_DIR, "/usr/local/")
 APP_CWD_DIR = "/tmp/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
 
@@ -68,12 +70,12 @@ contract_workspace_dir_ = (
 
 
 def get_app_data_dir():
-    if "/usr/local/" in __file__:
-        app_data_dir = APP_DATA_DIR_GLOBAL
-    elif  os.path.expandvars("${HOME}") in __file__:
-        app_data_dir = APP_DATA_DIR_USER
+    if APP_DATA_DIR_SUDO[1] in __file__:
+        app_data_dir = APP_DATA_DIR_SUDO[0]
+    elif  os.path.expandvars(APP_DATA_DIR_USER[1]) in __file__:
+        app_data_dir = APP_DATA_DIR_USER[0]
     else:
-        app_data_dir = None
+        app_data_dir = eosf_dir()
     
     if app_data_dir and os.path.exists(app_data_dir):
         return app_data_dir
@@ -81,7 +83,7 @@ def get_app_data_dir():
 
 def is_linked_package():
     is_linked = os.path.exists(os.path.join(eosf_dir(), CONFIG_DIR))
-    is_copied = get_app_data_dir() is not None
+    is_copied = not is_linked and get_app_data_dir()
     if (not is_linked) and (not is_copied):
         raise errors.Error('''
         Cannot determine the configuration directory.
@@ -90,8 +92,8 @@ def is_linked_package():
         {}
         '''.format(
             os.path.join(eosf_dir(), CONFIG_DIR),
-            os.path.join(APP_DATA_DIR_USER, CONFIG_DIR),
-            os.path.join(APP_DATA_DIR_GLOBAL, CONFIG_DIR)
+            os.path.join(APP_DATA_DIR_USER[0], CONFIG_DIR),
+            os.path.join(APP_DATA_DIR_SUDO[0], CONFIG_DIR)
             ), translate=False)
 
     if is_linked and is_copied:
@@ -159,8 +161,7 @@ def set_contract_workspace_dir(contract_workspace_dir=None):
 
 
 def config_dir():
-    dir = os.path.join(eosf_dir(), CONFIG_DIR) if is_linked_package() \
-                                    else os.path.join(get_app_data_dir(), CONFIG_DIR)
+    dir = os.path.join(get_app_data_dir(), CONFIG_DIR)
     if not os.path.exists(dir):
         raise errors.Error('''
 Cannot find the configuration directory
@@ -170,8 +171,7 @@ Cannot find the configuration directory
 
 
 def template_dir():
-    dir = os.path.join(eosf_dir(), TEMPLATE_DIR) if is_linked_package() \
-                                else os.path.join(get_app_data_dir(), TEMPLATE_DIR)
+    dir = os.path.join(get_app_data_dir(), TEMPLATE_DIR)
     if not os.path.exists(dir):
         raise errors.Error('''
 Cannot find the template directory
@@ -355,10 +355,7 @@ def wsl_root():
         return ""
     
     wsl_root_sh = "wsl_root.sh"
-    if is_linked_package():
-        wsl_root_sh = os.path.join(eosf_dir(), wsl_root_sh)
-    else:
-        wsl_root_sh = os.path.join(get_app_data_dir(), wsl_root_sh)
+    wsl_root_sh = os.path.join(get_app_data_dir(), wsl_root_sh)
 
     if wsl_root_[1][0] is None:
         path = ""
@@ -767,10 +764,8 @@ def contract_dir(contract_dir_hint):
         return os.path.realpath(contract_dir_)
 
     # ? the relative path to a contract directory, relative to 
-    # 'eosf_dir()/contracts' or 'get_app_data_dir()/contracts'
+    # 'get_app_data_dir()/contracts'
     contract_dir_ =  os.path.join(
-                eosf_dir(), CONTRACTS_DIR, contract_dir_hint) \
-            if is_linked_package() else os.path.join(
                 get_app_data_dir(), CONTRACTS_DIR, contract_dir_hint)
 
     trace = trace + contract_dir_ + "\n"
@@ -1117,15 +1112,23 @@ Python version {}
     '''.format(VERSION, EOSIO_VERSION, EOSIO_CDT_VERSION, PYTHON_VERSION)
     )
 
-    print(
-        '''
-        EOSFactory package is installed as a link to the directory:
-        '{}'
-        '''.format(os.path.join(eosf_dir(), EOSFACTORY_DIR))
-    if is_linked_package() else
-        '''EOSFactory is installed as a Python package.
-        '''
-    )
+    if is_linked_package():
+        print(
+            '''
+            EOSFactory package is installed as a link to the directory:
+            '{}'
+            '''.format(os.path.join(eosf_dir(), EOSFACTORY_DIR))
+        )
+    elif APP_DATA_DIR_USER[0] == get_app_data_dir():
+        print(
+        '''EOSFactory is installed as a Python package locally.
+        '''            
+        )
+    elif APP_DATA_DIR_SUDO[0] == get_app_data_dir():
+        print(
+        '''EOSFactory is installed as a Python package globally.
+        '''            
+        )
 
     installation_dependencies()
 
