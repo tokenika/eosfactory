@@ -46,6 +46,9 @@ class Testnet:
         self.url = url
         self.name = name
 
+    def __str__(self):
+        return "{} {} {}".format(self.name, self.account_name, self.url)
+
     def configure(self, prefix=None):
         '''Set the testnet to be the listener to EOSFactory.
         '''
@@ -76,7 +79,7 @@ class Testnet:
         return manager.is_local_testnet()
 
 
-def get_testnet(name=None, testnet=None, reset=False):
+def get_testnet(name=None, testnet=None, reset=False, raise_exception=True):
     '''Return a testnet.
 
     Args:
@@ -107,15 +110,19 @@ def get_testnet(name=None, testnet=None, reset=False):
         elif name == "KYLIN":
             return KYLIN
         else:
-            raise errors.Error('''
-            Testnet *{}* is not defined in the testnet mapping.
-            '''.format(name))
+            if raise_exception:
+                raise errors.Error('''
+                Testnet *{}* is not defined in the testnet mapping.
+                '''.format(name))
+            else:
+                return
     elif testnet:
         return Testnet(testnet[0], testnet[1], testnet[2], testnet[3])
 
-    raise errors.Error('''
-        Cannot determine testnet.
-        ''')
+    if raise_exception:
+        raise errors.Error('''
+            Cannot determine testnet.
+            ''')
 
 
 TESTNET_FILE = "testnet.json"
@@ -198,9 +205,9 @@ def LOCAL():
 
 #: Testnet http;//145.239.133.201;8888
 JUNGLE = Testnet(
-    "dgxo1uyhoytn",
-    "5JE9XSurh4Bmdw8Ynz72Eh6ZCKrxf63SmQWKrYJSXf1dEnoiKFY",
-    "5JgLo7jZhmY4huDNXwExmaWQJqyS1hGZrnSjECcpWwGU25Ym8tA",
+    "nukjygmgkn3x",
+    "5KXxczFPdcsLrCYpRRREfd4e2xVDTZZqBpZWmvxLZYxUbPzqrWL",
+    "5KJLMupynNYFiM9gZWtDnDX55hbaF18EsWpFr8UvyJeADqbwN7A",
     "http://145.239.133.201:8888",
     "JUNGLE"
 )

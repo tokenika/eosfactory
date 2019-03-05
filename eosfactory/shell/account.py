@@ -25,9 +25,15 @@ wallet_globals = None
 wallet_singleton = None
 
 
+class MasterAccount(account.Eosio):
+    '''Dummy class for declaring master account objects.
+    '''
+    def __init__(self, account_object_name=None):
+        pass
+
+
 class Account():
-    '''Methods to be ascribed to account objects, produced with 
-    :func:`.create_master_account` factories and :func:`.create_account`.
+    '''Methods to be ascribed to account objects.
     '''
     @classmethod
     def add_methods_and_finalize(cls, account_object_name, account):
@@ -45,7 +51,6 @@ class Account():
         * Cross-checked: account object ``{}`` mapped to an existing 
             account ``{}``.
         '''.format(account_object_name, account.name), translate=False)
-
         return put_account_to_wallet_and_on_stack(account_object_name, account)
 
     def code(self, code=None, abi=None, wasm=False):
@@ -57,6 +62,7 @@ class Account():
             abi (str): If set, the name of the file to save the contract ABI to.
             wasm (bool): Save contract as wasm.
         '''
+        stop_if_account_is_not_set(self)
         result = cleos_get.GetCode(self, is_verbose=False)
         logger.INFO('''
         * code()
@@ -69,6 +75,7 @@ class Account():
         Return:
             True if the retrieved hash code of the contract code is not null.    
         '''
+        stop_if_account_is_not_set(self)
         get_code = cleos_get.GetCode(self.name, is_verbose=False)
         if get_code.code_hash == \
         "0000000000000000000000000000000000000000000000000000000000000000":
@@ -100,6 +107,7 @@ class Account():
         See definitions of the remaining parameters: \
         :func:`.cleos.common_parameters`.
         '''
+        stop_if_account_is_not_set(self)
         result = cleos_set.SetContract(
                     self, contract_dir, 
                     wasm_file, abi_file, 
@@ -164,6 +172,7 @@ class Account():
         See definitions of the remaining parameters: \
         :func:`.cleos.common_parameters`.
         '''
+        stop_if_account_is_not_set(self)
         logger.TRACE('''
             * Set action permission.
             ''')
@@ -209,6 +218,7 @@ class Account():
         See definitions of the remaining parameters: \
         :func:`.cleos.common_parameters`.
         '''
+        stop_if_account_is_not_set(self)
         logger.TRACE('''
         * Set action permission.
         ''')
@@ -259,6 +269,7 @@ class Account():
             data (str): *["processed"]["action_traces"][0]["act"]["data"]* \
                 component of EOSIO cleos responce.
         '''
+        stop_if_account_is_not_set(self)
         data = manager.data_json(data)
 
         result = cleos.PushAction(
@@ -295,6 +306,7 @@ class Account():
             ):
         ''' Implement the `push action` command without broadcasting. 
         '''
+        stop_if_account_is_not_set(self)
         self.push_action(
             action, data,
             permission, expiration_sec, 
@@ -305,13 +317,15 @@ class Account():
     def table(
             self, table_name, scope="", 
             binary=False, 
-            limit=10, key="", lower="", upper=""):
+            limit=10, lower="", upper="", index="",
+            key_type="", encode_type="", reverse=False, show_payer=False
+            ):
         '''Retrieve the contents of a database table
 
         Args:
+            table (str): The name of the table as specified by the contract abi.        
             scope (str or .interface.Account): The scope within the account in 
                 which the table is found.
-            table (str): The name of the table as specified by the contract abi.
             binary (bool): Return the value as BINARY rather than using abi to 
                 interpret as JSON. Default is *False*.
             limit (int): The maximum number of rows to return. Default is 10.
@@ -319,10 +333,25 @@ class Account():
                 defaults to first.
             upper (str): JSON representation of upper bound value value of key, 
                 defaults to last.
+            index (int or str): Index number, 1 - primary (first), 2 - secondary 
+                index (in order defined by multi_index), 3 - third index, etc.
+                Number or name of index can be specified, 
+                e.g. 'secondary' or '2'.
+            key_type (str): The key type of --index, primary only supports 
+                (i64), all others support (i64, i128, i256, float64, float128, 
+                ripemd160, sha256).
+                Special type 'name' indicates an account name.
+            encode_type (str): The encoding type of key_type 
+                (i64 , i128 , float64, float128) only support decimal 
+                encoding e.g. 'dec'i256 - supports both 'dec' and 'hex', 
+                ripemd160 and sha256 is 'hex' only.
+            reverse (bool): Iterate in reverse order.
+            show_payer (bool): Show RAM payer.
 
         Returns:
             :class:`.cleos_set.SetTable` object
-        '''            
+        '''
+        stop_if_account_is_not_set(self)            
         logger.INFO('''
         * Table ``{}`` for ``{}``
         '''.format(table_name, scope))
@@ -330,7 +359,8 @@ class Account():
         result = cleos_get.GetTable(
                     self, table_name, scope,
                     binary, 
-                    limit, key, lower, upper,
+                    limit, lower, upper, index, 
+                    key_type, encode_type, reverse, show_payer,
                     is_verbose=False)
 
         try:
@@ -350,6 +380,7 @@ class Account():
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
 
+        stop_if_account_is_not_set(self)
         if manager.is_local_testnet():
             return
 
@@ -373,16 +404,17 @@ class Account():
             '''.format(result.payer, result.receiver, result.amount))
 
     def delegate_bw(
-        self, stake_net_quantity, stake_cpu_quantity,
-        receiver=None,
-        permission=None,
-        transfer=False,
-        expiration_sec=None, 
-        skip_sign=0, dont_broadcast=0, force_unique=0,
-        max_cpu_usage=0, max_net_usage=0,
-        ref_block=None,
-        is_verbose=1):
+            self, stake_net_quantity, stake_cpu_quantity,
+            receiver=None,
+            permission=None,
+            transfer=False,
+            expiration_sec=None, 
+            skip_sign=0, dont_broadcast=0, force_unique=0,
+            max_cpu_usage=0, max_net_usage=0,
+            ref_block=None,
+            is_verbose=1):
 
+        stop_if_account_is_not_set(self)
         if manager.is_local_testnet():
             return
 
@@ -408,16 +440,55 @@ class Account():
             result.stake_net_quantity, result.stake_cpu_quantity))
 
     def info(self):
+        stop_if_account_is_not_set(self)
         msg = manager.accout_names_2_object_names(
             "Account object name: {}\n{}".format(
             self.account_object_name,
             str(cleos.GetAccount(self.name, is_verbose=0))),
             True
         )
+        # restore the physical account name
+        msg = re.sub(r"(?<=^name: )\w+", self.name, msg, flags=re.M)
         print(msg)
 
     def __str__(self):
+        stop_if_account_is_not_set(self)
         return self.name
+
+    def __repr__(self):
+        stop_if_account_is_not_set(self)
+        return ""
+
+
+def new_master_account(
+            account_name=None, owner_key=None, active_key=None):
+    '''Create master account object in caller's global namespace.
+
+    Wraps the account factory function :func:`create_master_account` so that 
+    the following statements are equivalent::
+
+        MASTER = create_master_account("MASTER")
+        MASTER = new_master_account()
+
+    NOTE::
+
+        With the `create_` syntax it is enough to state 
+        `create_master_account("MASTER")` in order to create the account object 
+        `MASTER`.        
+
+    Args:
+        account_name (str or .core.testnet.Testnet): The name of an valid EOSIO
+            account. Must be set if the testnode is not local.
+        owner_key (str or .core.interface.Key): The owner public key. Must 
+            be set if the testnode is not local.
+        active_key (str or .core.interface.Key): The active public key. Must 
+            be set if the testnode is not local.
+    '''
+
+    return create_master_account(
+            get_new_account_name(inspect.getframeinfo(
+                                            inspect.currentframe()).function), 
+            account_name, owner_key, active_key)
         
 
 def create_master_account(
@@ -487,7 +558,7 @@ def create_master_account(
         ''' 
         if not is_wallet_defined(logger, globals):
             return None
-
+            
         if is_in_globals(account_object_name, globals):
             logger.INFO('''
                 ######## Account object ``{}`` restored from the blockchain.
@@ -604,10 +675,10 @@ def create_master_account(
                 else: 
                     if is_ready == "go":
                         break
+                        
             account_name = account_object.name
             owner_key = owner_key_new
             active_key = active_key_new
-            return account_object
 
 
 def restore_account(
@@ -665,6 +736,71 @@ def restore_account(
     return globals[account_object_name]
 
 
+def new_account(
+        creator, 
+        account_name="",
+        owner_key="", active_key="",
+        stake_net=3, stake_cpu=3,
+        permission=None,
+        expiration_sec=None,
+        skip_sign=0, dont_broadcast=0, force_unique=0,
+        max_cpu_usage=0, max_net_usage=0,
+        ref_block=None,
+        delay_sec=0,        
+        buy_ram_kbytes=8, buy_ram="",
+        transfer=False,
+        restore=False):
+    '''Create account object in caller's global namespace.
+
+    Wraps the account factory function :func:`create_account` so that the 
+    following statements are equivalent::
+
+        foo = create_account("foo", MASTER)
+        foo = new_account(MASTER)
+
+    NOTE::
+
+        With the `create_` syntax it is enough to state 
+        `create_account("foo", MASTER)` in order to create the account object `foo`.
+
+    Args:
+        creator (str or .core.interface.Account): The account creating the new 
+            account
+        account_name (str): The name of an valid EOSIO account. If not set, it 
+            is random.
+        owner_key (.core.interface.Key): The *owner* key pair. If not set, it
+            is random.
+        active_key (.core.interface.Key): The *active* key pair. If not set, 
+            and the *owner_key* is set, it is substituted with the *owner_key*.
+            Otherwise, it is random.
+        stake_net (int): The amount of EOS delegated for net bandwidth.
+        stake_cpu (int): The amount of EOS delegated for CPU bandwidth.
+        buy_ram_kbytes (int): The amount of RAM bytes to purchase.
+        transfer (bool): Transfer voting power and right to unstake EOS to 
+            receiver.
+
+    See definitions of the remaining parameters: \
+    :func:`.cleos.common_parameters`.   
+    '''
+
+    return create_account(
+        get_new_account_name(inspect.getframeinfo(
+            inspect.currentframe()).function), 
+        creator, 
+        account_name,
+        owner_key, active_key,
+        stake_net, stake_cpu,
+        permission,
+        expiration_sec,
+        skip_sign, dont_broadcast, force_unique,
+        max_cpu_usage, max_net_usage,
+        ref_block,
+        delay_sec,        
+        buy_ram_kbytes, buy_ram,
+        transfer,
+        restore)
+
+
 def create_account(
         account_object_name,
         creator, 
@@ -680,7 +816,7 @@ def create_account(
         buy_ram_kbytes=8, buy_ram="",
         transfer=False,
         restore=False):
-    '''Create master account object in caller's global namespace.
+    '''Create account object in caller's global namespace.
     
     Args:
         account_object_name (str): The name of the account object returned.
@@ -702,9 +838,7 @@ def create_account(
     See definitions of the remaining parameters: \
     :func:`.cleos.common_parameters`.
     '''
-
     globals = inspect.stack()[1][0].f_globals
-
     '''
     Check the conditions:
     * a *Wallet* object is defined;
@@ -838,14 +972,13 @@ def is_wallet_defined(logger, globals=None):
     wallet_singleton = wallet.Wallet.wallet_single
 
     if wallet_singleton is None:
-        wallet.create_wallet(globals=globals)
+        wallet.create_wallet(wallet_globals=globals)
         wallet_singleton = wallet.Wallet.wallet_single
 
         if wallet_singleton is None:
             raise errors.Error('''
                 Cannot find any `Wallet` object.
                 ''')
-
     wallet_globals = wallet.Wallet.globals
     return True
 
@@ -856,7 +989,6 @@ def put_account_to_wallet_and_on_stack(
         logger = account_object
 
     global wallet_singleton
-    global wallet_globals
 
     if account_object.owner_key:
         if wallet_singleton.keys_in_wallets(
@@ -913,7 +1045,8 @@ def print_stats(
     
 
 def is_in_globals(account_object_name, globals):
-    if account_object_name in globals:
+    if account_object_name in globals and globals[account_object_name] and\
+            hasattr(globals[account_object_name], "name"):
         if not isinstance(globals[account_object_name], interface.Account):
             raise errors.Error('''
     The name of the account name is to be '{}', but there is already a global 
@@ -923,4 +1056,48 @@ def is_in_globals(account_object_name, globals):
 
         return True
     return False
+
+
+def get_new_account_name(function_name):
+    frame = inspect.stack()[2][0]
+    if not inspect.getmodule(frame):
+        raise errors.Error('''
+    'new_` account factory functions cannot be used interactively.
+    Use 'create_' factory functions instead.
+        ''')
+    frameinfo = inspect.getframeinfo(frame)
+    lines = inspect.getsourcelines(inspect.getmodule(frame))
+
+    count = 1
+    while True:
+        code = lines[0][frameinfo.lineno - count].strip()
+        if function_name in code:
+            break
+        count = count + 1
+
+    account_object_name = re.sub(r'\s*=\s*' + function_name + r'\(.*', "", code)
+    account_object_name = re.sub(r'.*\.', "", account_object_name)
+    if not function_name in code or not account_object_name.isidentifier():
+        raise errors.Error('''
+    Cannot determine the object name of a new account to be created.
+
+    EOSFactory expects that {} factory function is used as in this example:
+        foo = {}([creator], ...)
+    where 
+        'foo' variable assigned determines the name of the account object,
+        'creator' variable refers to an account object that creates the new one.
+
+    However, the relevant code line reads:
+        {}
+        '''.format(function_name, function_name, code), translate=False)
+
+    return account_object_name
+
+
+def stop_if_account_is_not_set(account):
+    if not hasattr(account, "name"):
+        raise errors.Error('''
+        The account object calling the method of 'Account' class is not set.
+        Use 'create_account' factory function to set it.
+        ''', print_stack=True)
 

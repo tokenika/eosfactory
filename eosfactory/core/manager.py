@@ -27,7 +27,6 @@ def reboot():
 def clear_testnet_cache():
     ''' Remove wallet files associated with the current testnet.
     '''
-
     if not setup.file_prefix():
         return
     logger.TRACE('''
@@ -177,18 +176,17 @@ def reset(nodeos_stdout=None):
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     '''
+    import eosfactory.shell.account as account
+    teos.keosd_start()
+    account.reboot()
 
     if not cleos.set_local_nodeos_address_if_none():
         logger.INFO('''
         No local nodeos is set: {}
         '''.format(setup.nodeos_address()))
 
-    import eosfactory.shell.account as account
-    teos.keosd_start()
-    account.reboot()
     clear_testnet_cache()
     node_start(clear=True, nodeos_stdout=nodeos_stdout)
-    
 
 
 def resume(nodeos_stdout=None):
@@ -314,7 +312,7 @@ def save_map(map, file_name):
 
 
 def edit_map(file_name, text_editor="nano"):
-    utils.process([text_editor, os.path.join(
+    utils.spawn([text_editor, os.path.join(
                                     config.keosd_wallet_dir(), file_name)])
     read_map(file_name, text_editor)
 
@@ -347,11 +345,11 @@ editor. Return ``None`` if the the offer is rejected.
             {}
             
             Do you want to edit the file?
-            '''.format(str(path), str(e)), is_fatal=False, translate=False)
+            '''.format(str(path), str(e)), translate=False)
                     
                 answer = input("y/n <<< ")
                 if answer == "y":
-                    utils.process([text_editor, path])
+                    utils.spawn([text_editor, path])
                     continue
                 else:
                     raise errors.Error('''
@@ -366,15 +364,16 @@ def data_json(data):
             if isinstance(o, interface.Account):
                 return str(o)
             else:
-                json.JSONEncoder.default(self, o) 
+                return json.JSONEncoder.default(self, o)
+
     if not data:
         return data
 
-    data_json = data
+    data_json_ = data
     if isinstance(data, dict) or isinstance(data, list):
-        data_json = json.dumps(data, cls=Encoder)
+        data_json_ = json.dumps(data, cls=Encoder)
     else:
         if isinstance(data, str):
-            data_json = re.sub("\s+|\n+|\t+", " ", data)
-            data_json = object_names_2_accout_names(data_json)
-    return data_json
+            data_json_ = re.sub("\s+|\n+|\t+", " ", data)
+            data_json_ = object_names_2_accout_names(data_json_)
+    return data_json_

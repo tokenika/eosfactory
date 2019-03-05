@@ -86,14 +86,6 @@ class SetContract(cleos.Cleos):
         self.account_name = interface.account_arg(account)
         self.printself()
 
-    def get_transaction(self): #: Get the transaction returned by EOSIO cleos.
-        '''Get the transaction returned from EOSIO cleos.
-
-        Return: 
-            A JSON transaction object.
-        '''
-        return GetTransaction(self.transaction)
-
 class SetAccountPermission(cleos.Cleos):
     '''Set parameters dealing with account permissions.
 

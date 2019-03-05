@@ -24,8 +24,7 @@ def validate(omittable):
     elif "Wallet already exists" in err_msg:
         raise WalletAlreadyExistsError(omittable)
     elif "Error 3120002: Nonexistent wallet" in err_msg:
-        raise WalletDoesNotExistError(
-            WalletDoesNotExistError.msg_template.format(self.name))
+        raise WalletDoesNotExistError(omittable)
     elif "Invalid wallet password" in err_msg:
         raise InvalidPasswordError(omittable)
     elif "Contract is already running this version of code" in err_msg:
@@ -43,14 +42,31 @@ def validate(omittable):
         pass                
     else:
         raise Error(err_msg)
-        
+
+
+def excepthook(type, value, traceback):
+    print(value)
+
 
 class Error(Exception):
     '''Base class for exceptions in EOSFactory.
     '''
-    def __init__(self, message, translate=True):
-        self.message = logger.error(message, translate)
-        Exception.__init__(self, self.message)
+    def __init__(
+            self, message, translate=True, 
+            print_stack=False, stack_frame=1):
+        import eosfactory.core.setup as setup
+        if setup.is_raise_error or print_stack:
+            sys.tracebacklimit = 10
+            self.message = logger.error(message, translate)
+            Exception.__init__(self, self.message)
+        else:
+            sys.excepthook = excepthook
+            sys.tracebacklimit = 0
+            from inspect import currentframe, getframeinfo, stack
+            frameinfo = getframeinfo(stack()[stack_frame][0])
+            details = " {} {}".format(frameinfo.filename, frameinfo.lineno) 
+            self.message = logger.error(message, translate, details=details)
+            Exception.__init__(self, self.message)
 
 
 class AccountDoesNotExistError(Error):

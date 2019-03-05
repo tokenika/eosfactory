@@ -28,6 +28,9 @@ class Eosio(interface.Account):
     def __str__(self):
         return self.name
 
+    def __repr__(self):
+        return ""
+
 
 class GetAccount(cleos.GetAccount):  
     def __init__(

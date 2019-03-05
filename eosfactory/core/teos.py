@@ -19,8 +19,6 @@ import eosfactory.core.setup as setup
 import eosfactory.core.config as config
 import eosfactory.core.vscode as vscode
 
-
-TEMPLATE_CONTRACTS_DIR = "templates/contracts"
 TEMPLATE_NAME = "CONTRACT_NAME"
 TEMPLATE_HOME = "${HOME}"
 TEMPLATE_ROOT = "${ROOT}"
@@ -30,12 +28,13 @@ CONFIGURATIONS = "configurations"
 INCLUDE_PATH = "includePath"
 BROWSE = "browse"
 WORKSPACE_FOLDER = "${workspaceFolder}"
-EOSIO_CPP_INCLUDE = "/usr/opt/eosio.cdt"
+EOSIO_CPP_INCLUDE = "eosio.cdt"
+EOSIO_DISPATCH = r"void\s*apply\s*\(|EOSIO_DISPATCH"
 
 def replace_templates(string): 
     home = os.environ["HOME"]
     root = ""
-    if is_windows_ubuntu():
+    if utils.is_windows_ubuntu():
         home = config.wsl_root() + home
         root = config.wsl_root()
 
@@ -54,8 +53,9 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
         c_cpp_properties_path = utils.wslMapWindowsLinux(c_cpp_properties_path)
         if not os.path.exists(c_cpp_properties_path):
             raise errors.Error('''
-                The given path does not exist:
-                ${}       
+                The given path to the file 'c_cpp_properties.json'
+                does not exist:
+                {}       
             '''.format(c_cpp_properties_path))
     
     if os.path.exists(c_cpp_properties_path):
@@ -85,10 +85,10 @@ def ABI(
 
     if not source_files:
         raise errors.Error('''
-        "The source is empty. The assumed contract dir is   
+        The source of the contract project is empty. 
+        The assumed contract dir is   
         {}
         '''.format(contract_dir))
-        return
 
     code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
     target_dir = get_target_dir(contract_source_files[0])
@@ -115,25 +115,37 @@ def ABI(
 
     c_cpp_properties = get_c_cpp_properties(
                                     contract_dir, c_cpp_properties_path)
-
     for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
             command_line.append(
-                "-I" + utils.wslMapWindowsLinux(entry))
+                "-I=" + utils.wslMapWindowsLinux(entry))
         else:
             if not EOSIO_CPP_INCLUDE in entry:
                 command_line.append(
-                    "-I" + utils.wslMapWindowsLinux(
+                    "-I=" + utils.wslMapWindowsLinux(
                         strip_wsl_root(entry)))
 
+    input_file = None
     for file in source_files:
-        command_line.append(file)
+        with open(file, 'r') as f:
+            if re.search(EOSIO_DISPATCH, f.read()):
+                input_file = file
+                break
+    if not input_file:
+        raise errors.Error('''
+        Cannot determine the 'input file', defined as using the {} macro.
+        Source files considered:
+        {}
+        '''.format(EOSIO_DISPATCH, source_files))
 
-    try:
-        eosio_cpp(command_line, target_dir)
-    except Exception as e:
-        raise errors.Error(str(e))
+    command_line.append(input_file)
+
+    if setup.is_print_command_line:
+        print("######## command line sent to eosio-cpp:")
+        print(" ".join(command_line))
+
+    eosio_cpp(command_line, target_dir)
 
     logger.TRACE('''
     ABI file writen to file: 
@@ -158,8 +170,9 @@ def WASM(
 
     if not source_files:
         raise errors.Error('''
-        "The source is empty. The assumed contract dir is   
-            {}
+        The source of the contract project is empty. 
+        The assumed contract dir is   
+        {}
         '''.format(contract_dir))
         return
 
@@ -189,22 +202,31 @@ def WASM(
     for entry in c_cpp_properties[CONFIGURATIONS][0]["compilerOptions"]:
         command_line.append(entry)
     
+    input_file = None
     for file in source_files:
-        command_line.append(file)
+        with open(file, 'r') as f:
+            if re.search(EOSIO_DISPATCH, f.read()):
+                input_file = file
+                break
+    if not input_file:
+        raise errors.Error('''
+        Cannot determine the 'input file', defined as using the {} macro.
+        Source files considered:
+        {}
+        '''.format(EOSIO_DISPATCH, source_files))
 
-    if setup.is_print_command_line:
-        print("######## \n{}:".format(" ".join(command_line)))
-
+    command_line.append(input_file)
 
     if compile_only:
         command_line.append("-c=")
 
     command_line.append("-o=" + target_path)
 
-    try:
-        eosio_cpp(command_line, target_dir)
-    except Exception as e:                       
-        raise errors.Error(str(e))
+    if setup.is_print_command_line:
+        print("######## command line sent to eosio-cpp:")
+        print(" ".join(command_line))
+
+    eosio_cpp(command_line, target_dir)
 
     if not compile_only:
         logger.TRACE('''
@@ -229,7 +251,7 @@ def project_from_template(
             a directory.
         template: The name of the template used.
         workspace_dir: If set, the folder for the work-space. Defaults to the 
-            value returned by the config.contract_workspace() function.
+            value returned by the config.contract_workspace_dir() function.
         include: If set, comma-separated list of include folders.
         libs: If set, comma-separated list of libraries.
         remove_existing: If set, overwrite any existing project.
@@ -241,11 +263,10 @@ def project_from_template(
 
     template_dir = utils.wslMapWindowsLinux(template)
     if not os.path.isdir(template_dir):
-        template_dir = os.path.join(
-            config.eosf_dir(), TEMPLATE_CONTRACTS_DIR, template) 
+        template_dir = os.path.join(config.template_dir(), template) 
     if not os.path.isdir(template_dir):
         raise errors.Error('''
-        TemplateCreate '{}' does not exist.
+        The contract project template '{}' does not exist.
         '''.format(template_dir)) 
 
     if c_cpp_prop_path:
@@ -284,7 +305,7 @@ def project_from_template(
         if not workspace_dir \
                                 or not os.path.isabs(workspace_dir) \
                                 or not os.path.exists(workspace_dir):
-            workspace_dir = config.contract_workspace()
+            workspace_dir = config.contract_workspace_dir()
         workspace_dir = workspace_dir.strip()        
         project_dir = os.path.join(workspace_dir, project_name)
 
@@ -329,12 +350,12 @@ error message:
                 project_dir, path.replace(
                                         TEMPLATE_NAME, project_name))
                           
-            if os.path.isdir(template_path):
+            if os.path.isdir(template_path) \
+                                        and not "__pycache__" in template_path:
                 os.mkdir(contract_path)
                 copy_dir_contents(
                             project_dir, template_dir, path, project_name)
             elif os.path.isfile(template_path):
-
                 copy(template_path, contract_path, project_name)
 
     def copy(template_path, contract_path, project_name):
@@ -344,7 +365,7 @@ error message:
         if TEMPLATE_HOME in template or TEMPLATE_ROOT in template:
             home = os.environ["HOME"]
             root = ""
-            if is_windows_ubuntu():
+            if utils.is_windows_ubuntu():
                 replace_templates(template)
 
         template = template.replace("${" + TEMPLATE_NAME + "}", project_name)
@@ -354,18 +375,13 @@ error message:
         with open(contract_path, "w") as output:
             output.write(template)
 
-    copy_dir_contents(project_dir, template_dir, "", project_name)
-
-    logger.TRACE('''
-    * Contract project '{}' created from template 
-        '{}'
-    '''.format(project_name, template_dir), verbosity)    
+    copy_dir_contents(project_dir, template_dir, "", project_name)  
 
     if open_vscode:
-        if is_windows_ubuntu():
+        if utils.is_windows_ubuntu():
             command_line = "cmd.exe /C code {}".format(
                 utils.wslMapLinuxWindows(project_dir))
-        elif uname() == "Darwin":
+        elif utils.uname() == "Darwin":
             command_line = "open -n -b com.microsoft.VSCode --args {}".format(
                 project_dir)
         else:
@@ -374,10 +390,10 @@ error message:
         os.system(command_line)
 
     logger.INFO('''
-    ######### Created contract project ``{}``, 
+    ######## Created contract project '{}', 
         originated from template 
-        ``{}``.
-    '''.format(project_name, template_dir), verbosity)
+        '{}'.
+    '''.format(project_dir, template_dir), verbosity)
 
     return project_dir
 
@@ -403,24 +419,11 @@ def get_pid(name=None):
     if not name:
         name = os.path.splitext(os.path.basename(config.node_exe()))[0]
 
-    command_line = ['pgrep', '-f', name]
-    stdout = utils.process(
+    command_line = ['pgrep', name]
+    stdout = utils.spawn(
         command_line, "Cannot determine PID of any nodeos process.")
 
     return [int(pid) for pid in stdout.split()]
-
-
-def uname(options=None):
-    command_line = ['uname']
-    if options:
-        command_line.append(options)
-
-    return utils.process(command_line)
-
-
-def is_windows_ubuntu():
-    resp = uname("-v")
-    return resp.find("Microsoft") != -1
 
 
 def eosio_cpp(command_line, target_dir):
@@ -488,10 +491,23 @@ def get_resources_dir(source_dir):
 
 
 def args(clear=False):
+    try:
+        data_dir = config.data_dir()
+    except:
+        data_dir = None
+
+    try:
+        config_dir = config.nodeos_config_dir()
+    except:
+        config_dir = None
+
+    try:
+        genesis_json = config.genesis_json()
+    except:
+        genesis_json = None
+
     args_ = [
         "--http-server-address", config.http_server_address(),
-        "--data-dir", config.data_dir(),
-        "--config-dir", config.config_dir(),
         "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
         "--contracts-console",
         "--verbose-http-errors",
@@ -504,18 +520,22 @@ def args(clear=False):
         "--plugin eosio::http_plugin",
         "--plugin eosio::history_api_plugin"
     ]
+    if config_dir:
+        args_.extend(["--config-dir", config_dir])
+    if data_dir:
+        args_.extend(["--data-dir", data_dir])
+
     if clear:
         node_stop()
-        args_.extend([
-            "--genesis-json", config.genesis_json(),
-            "--delete-all-blocks"
-        ])
+        args_.extend(["--delete-all-blocks"])
+        if genesis_json:
+            args_.extend(["--genesis-json", genesis_json])            
     return args_
 
 
 def keosd_start():
     if not config.keosd_wallet_dir(raise_error=False):
-        utils.process([config.keosd_exe()])
+        utils.spawn([config.keosd_exe()])
 
         while True:
             time.sleep(1)
@@ -530,39 +550,35 @@ def on_nodeos_error(clear=False):
     args_.insert(0, config.node_exe())
     command_line = " ".join(args_)
 
-    raise errors.Error('''
+    logger.ERROR('''
     The local ``nodeos`` failed to start twice in sequence. Perhaps, something is
     wrong with configuration of the system. See the command line issued:
 
     ''')
     print("\n{}\n".format(command_line))
     logger.INFO('''
-    Now, see the result of an execution of the command line:
+    Now, see the result of execution of the command line:
     ''')
     
-    def runInThread():
-        p = subprocess.run(
-            command_line, 
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            shell=True)
+    p = subprocess.run(
+        command_line, 
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        shell=True)
+    
+    err_msg = p.stderr.decode("ISO-8859-1")
+    if "error" in err_msg and not "exit shutdown" in err_msg:
+        logger.ERROR(err_msg)
+    elif not err_msg or "exit shutdown" in err_msg:
+        logger.OUT(
+        '''
+        Just another instability incident of the ``nodeos`` executable. 
+        Rerun the script.
+        '''
+        )
+    else:
+        print(err_msg)
 
-        err_msg = p.stderr.decode("ISO-8859-1")
-        if "error" in err_msg and not "exit shutdown" in err_msg:
-            raise errors.Error(err_msg)
-        elif not err_msg or "exit shutdown" in err_msg:
-            logger.OUT(
-            '''
-            Just another instability incident of the ``nodeos`` executable. 
-            Rerun the script.
-            '''
-            )
-        else:
-            print(err_msg)
-        
-    thread = threading.Thread(target=runInThread)
-    thread.start()
-    time.sleep(10)
     node_stop()
     exit()
 
@@ -581,7 +597,7 @@ def node_start(clear=False, nodeos_stdout=None):
     args_ = args(clear)
 
     if setup.is_print_command_line:
-        print("nodeos command line:")
+        print("######## nodeos command line:")
         print(config.node_exe() + " " + " ".join(args_))
 
     if not nodeos_stdout:
@@ -593,11 +609,11 @@ def node_start(clear=False, nodeos_stdout=None):
             std_out_handle = open(nodeos_stdout, 'w')
         except Exception as e:
             raise errors.Error('''
-Error when preparing to start the local EOS node, opening the given stdout
-log file that is 
-{}
-Error message is
-{}
+            Error when preparing to start the local EOS node, 
+            opening the given stdout log file that is 
+            {}
+            Error message is
+            {}
             '''.format(nodeos_stdout, str(e)))
 
     def onExit():
@@ -607,6 +623,10 @@ Error message is
             except:
                 pass
 
+    if setup.is_print_command_line:
+        print("######## nodeos command line:")
+        print(config.node_exe() + " " + " ".join(args_))
+                
     args_.insert(0, config.node_exe())
     def runInThread():
         proc = subprocess.Popen(
@@ -622,20 +642,26 @@ Error message is
 
 
 def node_probe():
-    count = 10
+    count = 25
+    count1 = count - 7
     num = 5
     block_num = None
-    
+    time.sleep(5)
+
     while True:
         time.sleep(1)
-        
+        count = count - 1
+        if count > count1:
+            print(".", end="", flush=True)
+            continue
+
         try:
             import eosfactory.core.cleos_get as cleos_get
             head_block_num = cleos_get.GetInfo(is_verbose=0).head_block
         except:
             head_block_num = 0
         finally:
-            print(".", end="", flush=True)
+            print("*", end="", flush=True)
 
         if block_num is None:
             block_num = head_block_num
@@ -647,7 +673,6 @@ def node_probe():
             '''.format(head_block_num))
             break
 
-        count = count - 1        
         if count <= 0:
             raise errors.Error('''
             The local node does not respond.
@@ -657,7 +682,7 @@ def node_probe():
 def is_local_node_process_running(name=None):
     if not name:
         name = config.node_exe()
-    return name in utils.process(
+    return name in utils.spawn(
         'ps aux |  grep -v grep | grep ' + name, shell=True)
         
 
@@ -665,12 +690,13 @@ def node_stop():
     # You can see if the process is a zombie by using top or 
     # the following command:
     # ps aux | awk '$8=="Z" {print $2}'
-
+    
     pids = get_pid()
     count = 10
     if pids:
         for pid in pids:
             os.system("kill " + str(pid))
+    
         while count > 0:
             time.sleep(1)
             if not is_local_node_process_running():
@@ -680,7 +706,8 @@ def node_stop():
     if count <= 0:
         raise errors.Error('''
 Failed to kill {}. Pid is {}.
-    '''.format(config.node_exe_name(), str(pids))
+    '''.format(
+        os.path.splitext(os.path.basename(config.node_exe()))[0], str(pids))
     )
     else:         
         logger.INFO('''
@@ -692,6 +719,3 @@ def node_is_running():
     return not get_pid()
 
     return dir
-
-
-

@@ -109,7 +109,6 @@ class Contract(ContractBuilder):
             The account object has to be of the type 
             ``eosfactory.shell.account.Account``.
             """)
-            return
 
         super().__init__(
             contract_dir, abi_file=abi_file, wasm_file=wasm_file)
