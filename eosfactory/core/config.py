@@ -8,7 +8,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.0.1"
+VERSION = "3.0.2"
 EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.5.0"
 PYTHON_VERSION = "3.5 or higher"
@@ -1121,12 +1121,12 @@ Python version {}
         )
     elif APP_DATA_DIR_USER[0] == get_app_data_dir():
         print(
-        '''EOSFactory is installed as a Python package locally.
+        '''EOSFactory is installed as a PyPi package locally.
         '''            
         )
     elif APP_DATA_DIR_SUDO[0] == get_app_data_dir():
         print(
-        '''EOSFactory is installed as a Python package globally.
+        '''EOSFactory is installed as a PyPi package globally.
         '''            
         )
 
