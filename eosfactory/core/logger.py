@@ -6,6 +6,8 @@ import sys
 from textwrap import dedent
 from termcolor import cprint, colored
 
+import eosfactory.core.setup as setup
+
 class Verbosity(enum.Enum):
     COMMENT = ['green', None, []]
     INFO = ['blue', None, []]
@@ -147,6 +149,10 @@ def DEBUG(msg=None, verbosity=None, translate=True):
         cprint(msg, color[0], color[1], attrs=color[2])
 
 
+def ERROR(msg, translate=True, raise_exception=False):      
+    print(error(msg, translate))
+
+
 __is_testing_errors = False
 def set_is_testing_errors(status=True):
     '''Changes the color of the ``ERROR`` logger printout.
@@ -160,11 +166,11 @@ def set_is_testing_errors(status=True):
         __is_testing_errors = False
 
 
-def error(msg, translate=True):
+def error(msg, translate=True, details=""):
     color = Verbosity.ERROR_TESTING.value \
         if __is_testing_errors else Verbosity.ERROR.value
     return colored(
-        "ERROR:\n{}".format(condition(msg, translate)),  
+        "ERROR{}:\n{}".format(details, condition(msg, translate)),  
         color[0], color[1], attrs=color[2])
 
 

@@ -1,4 +1,4 @@
-# Welcome to EOSFactory v2.4
+# Welcome to EOSFactory v3.0.2
 
 [EOSFactory](http://eosfactory.io/) is a Python-based [EOS](https://eos.io) smart-contract development & testing framework, created by [Tokenika](https://tokenika.io).
 
@@ -38,7 +38,7 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 
 ## User documentation
 
-* [Introduction to EOSFactory](http://eosfactory.io/build/html/tutorials/00.IntroductionToEOSFactory.html)
+* [Introduction to EOSFactory](docs/tutorials/00.IntroductionToEOSFactory.html)
 * [Installing EOSFactory](docs/tutorials/01.InstallingEOSFactory.md)
 * [Interacting with EOS Contracts in EOSFactory](docs/tutorials/02.InteractingWithEOSContractsInEOSFactory.md)
 * [Building and deploying EOS Contracts in EOSFactory](docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md)
@@ -59,11 +59,11 @@ Please refer to the [table of contents](http://eosfactory.io/build/html/index.ht
 
 ## Release notes
 
-Please refer to [this document](docs/releases/ReleaseNotesVersion2.4.md).
+Please refer to [this document](docs/releases/ReleaseNotes.md).
 
 ## Roadmap
 
-Our long-term goal is to turn *EOSFactory* into a comprehensive IDE (Integrated Development Environment) for EOS smart-contracts, smilar to Ethereum's [Truffle Framework](https://truffleframework.com/).
+Our long-term goal is to turn *EOSFactory* into a comprehensive IDE (Integrated Development Environment) for EOS smart-contracts.
 
 - [Plan for Subsequent EOSFactory Releases](docs/roadmap/PlanForSubsequentEOSFactoryReleases.md)
 - [Long-term EOSFactory Roadmap](docs/roadmap/LongTermEOSFactoryRoadmap.md)
@@ -75,3 +75,14 @@ For issues not covered in the documentation there is a dedicated [EOS Factory Su
 ## Licence
 
 This code is provided as is, under [MIT Licence](LICENCE).
+
+
+Your question is not clear to me.
+If you refer to the statement from the tutorial *InstallingEOSFactory*:
+
+*EOSIO* deployed in Docker is NOT supported.*.
+
+Here we communicate that *EOSIO* executable has to be installed in the system directly, and not as a Docker image.
+
+We do not like Docker because WSL (Windows System Linux) does not support it. However, we can consider meeting demand from Linux System users, if we see such.
+

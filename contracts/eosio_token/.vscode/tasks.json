@@ -1,0 +1,148 @@
+
+{
+    "version": "2.0.0",   
+    "tasks": [
+        {
+            "label": "Compile",
+            "type": "shell",
+            "windows": {
+                "options": {
+                    "shell": {
+                        "executable": "bash.exe",
+                        "args": [
+                            "-c"
+                        ]
+                    }
+                },
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}' --compile"
+            },
+            "osx": {
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}' --compile"
+            },
+            "linux": {
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}' --compile"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "windows": {
+                "options": {
+                    "shell": {
+                        "executable": "bash.exe",
+                        "args": [
+                            "-c"
+                        ]
+                    }
+                },
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}'"        
+            },
+            "osx": {
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}'"
+            },
+            "linux": {
+                "command": "mkdir -p build; python3 -m eosfactory.build '${workspaceFolder}'"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "Test",
+            "type": "shell",
+            "windows": {
+                "options": {
+                    "shell": {
+                        "executable": "bash.exe",
+                        "args": [
+                            "-c"
+                        ]
+                    }
+                },            
+                "command": "python3 ./tests/test1.py"
+            },
+            "osx": {
+                "command": "python3 ./tests/test1.py"
+            },
+            "linux": {
+                "command": "python3 ./tests/test1.py"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "Unittest",
+            "type": "shell",
+            "windows": {
+                "options": {
+                    "shell": {
+                        "executable": "bash.exe",
+                        "args": [
+                            "-c"
+                        ]
+                    }
+                },            
+                "command": "python3 ./tests/unittest1.py"
+            },
+            "osx": {
+                "command": "python3 ./tests/unittest1.py"
+            },
+            "linux": {
+                "command": "python3 ./tests/unittest1.py"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "EOSIO API",
+            "type": "shell",
+            "windows": {
+                "options": {
+                    "shell": {
+                        "executable": "bash.exe",
+                        "args": [
+                            "-c"
+                        ]
+                    }
+                },            
+                "command": "explorer.exe"
+            },
+            "osx": {
+                "command": "open"
+            },
+            "linux": {
+                "command": "sensible-browser"
+            },
+            "args": [
+                "https://developers.eos.io/"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": [
+            ]
+        }
+    ]
+}

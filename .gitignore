@@ -1,9 +1,9 @@
 build
 examples
 
-!/contracts/01_hello_world/build
-!/contracts/02_eosio_token/build
-!/contracts/03_tic_tac_toe/build
+!/contracts/hello_world/build
+!/contracts/eosio_token/build
+!/contracts/tic_tac_toe/build
 
 Makefile
 CMakeFiles
@@ -13,7 +13,7 @@ CMakeCache.txt
 **/.vs
 *.pyc
 
-config.json
+config/config.json
 
 .vscode/c_cpp_properties.json
 .vscode/launch.json
@@ -25,11 +25,6 @@ node_modules
 package-lock.json
 
 tests/test.py
-tests/js.js
-tests/eosjs.py
-tests/eosjsecc.js
-localnode/state
-localnode/blocks
 
 # Compiled python modules.
 *.pyc
@@ -48,3 +43,9 @@ docs/patterns/*.py
 docs/patterns/set/*.py
 hyper.md
 test.py
+nodeos.log
+contracts_linux
+contracts_windows
+temp.md
+sikuli
+narration.md
