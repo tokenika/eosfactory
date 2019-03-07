@@ -259,11 +259,11 @@ def project_from_template(
         verbosity: The logging configuration.
     '''
     project_name = utils.wslMapWindowsLinux(project_name.strip())
-    template = template.strip()
+    template = utils.wslMapWindowsLinux(template.strip())
 
-    template_dir = utils.wslMapWindowsLinux(template)
-    if not os.path.isdir(template_dir):
-        template_dir = os.path.join(config.template_dir(), template) 
+    template_dir = template if os.path.isdir(template) else \
+                                os.path.join(config.template_dir(), template)
+        
     if not os.path.isdir(template_dir):
         raise errors.Error('''
         The contract project template '{}' does not exist.
