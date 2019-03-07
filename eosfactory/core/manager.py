@@ -367,7 +367,7 @@ def data_json(data):
                 return json.JSONEncoder.default(self, o)
 
     if not data:
-        return data
+        return "{}"
 
     data_json_ = data
     if isinstance(data, dict) or isinstance(data, list):

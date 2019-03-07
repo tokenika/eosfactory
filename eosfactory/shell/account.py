@@ -243,7 +243,7 @@ class Account():
 
 
     def push_action(
-            self, action, data,
+            self, action, data="{}",
             permission=None, expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
@@ -257,7 +257,8 @@ class Account():
         Args:
             action (str or json or filename): Definition of the action to 
                 execute on the contract.
-            data (str): The arguments to the contract.
+            data (str): The arguments to the contract, defaults to empty json.
+            permission: defaults to self.
 
         See definitions of the remaining parameters: \
         :func:`.cleos.common_parameters`.
@@ -271,6 +272,8 @@ class Account():
         '''
         stop_if_account_is_not_set(self)
         data = manager.data_json(data)
+        if not permission:
+            permission = self
 
         result = cleos.PushAction(
             self, action, data,
