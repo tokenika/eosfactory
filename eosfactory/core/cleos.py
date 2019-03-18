@@ -230,17 +230,21 @@ class GetTransaction(Cleos):
 
     Args:
         transaction_id (str): ID of the transaction to retrieve.
+        block_hint (int): If set, the block number this transaction may be in.
         is_verbose (bool): If *False* do not print. Default is *True*.
 
     Attributes:
         transaction_id: The ID of the transaction retrieved.
         json: The transaction retrieved.
     '''
-    def __init__(self, transaction_id, is_verbose=True):
+    def __init__(self, transaction_id, block_hint=None, is_verbose=True):
         
         self.transaction_id = transaction_id
+        args = [transaction_id]
+        if block_hint:
+            args.extend(["--block-hint", str(block_hint)])
         Cleos.__init__(
-            self, [transaction_id], "get", "transaction", is_verbose)
+            self, args, "get", "transaction", is_verbose)
 
         self.printself()
 
