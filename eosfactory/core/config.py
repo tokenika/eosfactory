@@ -323,7 +323,9 @@ def genesis_json():
     if not os.path.exists(path):
         raise errors.Error('''
         Cannot find any path for '{}'.
-        '''.format(genesis_json_[0]), translate=False)
+        Tried:
+        {}
+        '''.format(genesis_json_[0], genesis_json_[1]), translate=False)
 
     return path
 
@@ -638,9 +640,11 @@ def config_value_checked(config_list):
 
     raise errors.Error('''
 The value of {} is not defined.
+Tried:
+{}
 Define it in the config file
 {}       
-    '''.format(config_list[0], config_file()), translate=False)
+    '''.format(config_list[0], config_list[1], config_file()), translate=False)
 
 
 def first_valid_which(config_list, find_file=None, raise_error=True):
@@ -673,9 +677,12 @@ def first_valid_which(config_list, find_file=None, raise_error=True):
                     return path
 
     if raise_error:
+        config_values(config_list)
         raise errors.Error('''
         Cannot find any path for '{}'.
-        '''.format(config_list[0]), translate=False)
+        Tried:
+        {}
+        '''.format(config_list[0], config_list[1]), translate=False)
     else:
         return None
 
@@ -727,7 +734,9 @@ def first_valid_path(config_list, find_file=None, raise_error=True):
     if raise_error:
         raise errors.Error('''
         Cannot find any path for '{}'.
-        '''.format(config_list[0]), translate=False)
+        Tried:
+        {}
+        '''.format(config_list[0], config_list[1]), translate=False)
     else:
         return None
 
@@ -774,7 +783,7 @@ def contract_dir(contract_dir_hint):
     
     raise errors.Error('''
         Cannot determine the contract directory.
-        Tried path list:
+        Tried:
         {}
     '''.format(trace), translate=False)
 
@@ -819,7 +828,7 @@ def contract_source_files(contract_dir_hint):
 
     raise errors.Error('''
         Cannot find any contract source directory.
-        Tried path list:
+        Tried:
         {}
     '''.format(trace), translate=False)
 
@@ -886,7 +895,7 @@ def contract_file(contract_dir_hint, contract_file_hint):
         Cannot determine the contract file basing on hints:
         contract dir hint: {}
         contract file hint: {}
-        Tried path list:
+        Tried:
         {}
     '''.format(contract_dir_hint, contract_file_hint, trace), translate=False)  
 
