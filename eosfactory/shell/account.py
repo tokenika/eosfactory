@@ -108,7 +108,8 @@ class Account():
 
     def set_contract(
             self, contract_dir, 
-            wasm_file="", abi_file="", 
+            wasm_file="", abi_file="",
+            clear=False, 
             permission=None, expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
@@ -126,6 +127,7 @@ class Account():
             wasm_file (str): The WASM file relative to the contract_dir.
             abi_file (str): The ABI file for the contract, relative to the 
                 contract-dir.
+            clear (bool): Remove contract on an account. Default is False.
 
         See definitions of the remaining parameters: \
         :func:`.cleos.common_parameters`.
@@ -133,7 +135,8 @@ class Account():
         stop_if_account_is_not_set(self)
         result = cleos_set.SetContract(
                     self, contract_dir, 
-                    wasm_file, abi_file, 
+                    wasm_file, abi_file,
+                    clear, 
                     permission, expiration_sec, 
                     skip_sign, dont_broadcast, force_unique,
                     max_cpu_usage, max_net_usage,
@@ -476,6 +479,31 @@ class Account():
         # restore the physical account name
         msg = re.sub(r"(?<=^name: )\w+", self.name, msg, flags=re.M)
         print(msg)
+
+    def stats(self, params, last_col="%s", col="%15s", to_string=False):
+        def find(element, json):
+            try:
+                keys = element.split('.')
+                rv = json
+                for key in keys:
+                    rv = rv[key]
+            except:
+                rv = "n/a"
+            return rv
+
+        json = cleos.GetAccount(self, is_info=False, is_verbose=0).json
+        json["account_object_name"] = self.account_object_name
+
+        output = ""
+        for param in params:
+            output = output + col % find(param, json)
+            output = output + "  " + last_col % (param) + "\n"
+         
+        if to_string:
+            return output
+        else:
+            logger.OUT(output, translate=False)
+
 
     def __str__(self):
         stop_if_account_is_not_set(self)
