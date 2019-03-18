@@ -338,6 +338,10 @@ error message:
         os.makedirs(os.path.join(project_dir, "build"))
     except Exception as e:
             raise errors.Error(str(e))
+    try:    # make contract directory and its tests directory:
+        os.makedirs(os.path.join(project_dir, "tests"))
+    except Exception as e:
+            raise errors.Error(str(e))
 
     def copy_dir_contents(
             project_dir, template_dir, directory, project_name):
@@ -352,7 +356,8 @@ error message:
                           
             if os.path.isdir(template_path) \
                                         and not "__pycache__" in template_path:
-                os.mkdir(contract_path)
+                if not os.path.exists(contract_path):
+                    os.mkdir(contract_path)
                 copy_dir_contents(
                             project_dir, template_dir, path, project_name)
             elif os.path.isfile(template_path):
