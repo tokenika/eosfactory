@@ -22,7 +22,7 @@ def validate(omittable):
     elif "transaction executed locally, but may not be" in err_msg:
         pass
     elif "Wallet already exists" in err_msg:
-        raise WalletAlreadyExistsError(omittable)
+        pass # raise WalletAlreadyExistsError(omittable)
     elif "Error 3120002: Nonexistent wallet" in err_msg:
         raise WalletDoesNotExistError(omittable)
     elif "Invalid wallet password" in err_msg:
