@@ -37,7 +37,8 @@ class Testnet:
             if reset:
                 manager.reset()
             else:
-                manager.resume()
+                if not self.verify_production():
+                    manager.resume()
             setup.is_local_address = True
 
         self.account_name = account_name
