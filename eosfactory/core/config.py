@@ -80,6 +80,15 @@ def get_app_data_dir():
     if app_data_dir and os.path.exists(app_data_dir):
         return app_data_dir
 
+    raise errors.Error('''
+    Cannot determine the directory of application data. Tried:
+    {}
+    {}
+    {}
+    '''.format(
+            APP_DATA_DIR_SUDO[0], APP_DATA_DIR_USER[0], eosf_dir()),
+            translate=False)
+
 
 def is_linked_package():
     is_linked = os.path.exists(os.path.join(eosf_dir(), CONFIG_DIR))
