@@ -37,7 +37,7 @@ class Testnet:
             if reset:
                 manager.reset()
             else:
-                if not self.verify_production():
+                if not self.verify_production(throw_error=False):
                     manager.resume()
             setup.is_local_address = True
 
@@ -55,13 +55,13 @@ class Testnet:
         '''
         setup.set_nodeos_address(self.url, prefix)
 
-    def verify_production(self):
+    def verify_production(self, throw_error=True):
         '''Check whether the node is active.
 
         Returns:
             bool: Whether the node is active.
         '''
-        return manager.verify_testnet_production()
+        return manager.verify_testnet_production(throw_error)
 
     def clear_cache(self):
         '''Remove all the saved interaction with the testnet.

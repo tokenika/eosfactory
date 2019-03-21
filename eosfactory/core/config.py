@@ -256,7 +256,7 @@ def abi_file(contract_dir_hint):
 def eosf_dir():
     '''The absolute directory of the EOSFactory installation.
     '''
-    path = os.path.realpath(os.path.join(__file__, FROM_HERE_TO_EOSF_DIR))
+    path = os.path.realpath(os.path.join(os.path.realpath(__file__), FROM_HERE_TO_EOSF_DIR))
     if os.path.exists(path):
         return path
 

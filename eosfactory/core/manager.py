@@ -232,7 +232,7 @@ def info():
     logger.INFO(str(cleos_get.GetInfo(is_verbose=False)))
 
 
-def verify_testnet_production():
+def verify_testnet_production(throw_error=True):
     head_block_num = 0
     try: # if running, json is produced
         head_block_num = cleos_get.GetInfo(is_verbose=False).head_block
@@ -241,6 +241,8 @@ def verify_testnet_production():
 
     domain = "LOCAL" if is_local_testnet() else "REMOTE"
     if not head_block_num:
+        if not throw_error:
+            return 0
         raise errors.Error('''
         {} testnet is not running or is not responding @ {}.
         '''.format(domain, setup.nodeos_address()))
