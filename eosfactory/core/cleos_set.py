@@ -18,6 +18,7 @@ class SetContract(cleos.Cleos):
         wasm_file (str): The WASM file relative to the contract_dir.
         abi_file (str): The ABI file for the contract relative to the 
             contract-dir.
+        clear (bool): Remove contract on an account. Default is False.
 
     See definitions of the remaining parameters: \
     :func:`.cleos.common_parameters`.
@@ -29,6 +30,7 @@ class SetContract(cleos.Cleos):
     def __init__(
             self, account, contract_dir, 
             wasm_file=None, abi_file=None, 
+            clear=False,
             permission=None, expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
@@ -48,11 +50,12 @@ class SetContract(cleos.Cleos):
         contract_path_absolute = files[0]
         wasm_file = files[1]
         abi_file = files[2]            
-
         account_name = interface.account_arg(account)
 
         args = [account_name, contract_path_absolute]
 
+        if clear:
+            args.append("--clear")
         if json:
             args.append("--json")
         if not permission is None:

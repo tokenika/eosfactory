@@ -8,7 +8,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.0.2"
+VERSION = "3.0.3"
 EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.5.0"
 PYTHON_VERSION = "3.5 or higher"
@@ -79,6 +79,15 @@ def get_app_data_dir():
     
     if app_data_dir and os.path.exists(app_data_dir):
         return app_data_dir
+
+    raise errors.Error('''
+    Cannot determine the directory of application data. Tried:
+    {}
+    {}
+    {}
+    '''.format(
+            APP_DATA_DIR_SUDO[0], APP_DATA_DIR_USER[0], eosf_dir()),
+            translate=False)
 
 
 def is_linked_package():
@@ -247,7 +256,7 @@ def abi_file(contract_dir_hint):
 def eosf_dir():
     '''The absolute directory of the EOSFactory installation.
     '''
-    path = os.path.realpath(os.path.join(__file__, FROM_HERE_TO_EOSF_DIR))
+    path = os.path.realpath(os.path.join(os.path.realpath(__file__), FROM_HERE_TO_EOSF_DIR))
     if os.path.exists(path):
         return path
 
@@ -323,7 +332,9 @@ def genesis_json():
     if not os.path.exists(path):
         raise errors.Error('''
         Cannot find any path for '{}'.
-        '''.format(genesis_json_[0]), translate=False)
+        Tried:
+        {}
+        '''.format(genesis_json_[0], genesis_json_[1]), translate=False)
 
     return path
 
@@ -638,9 +649,11 @@ def config_value_checked(config_list):
 
     raise errors.Error('''
 The value of {} is not defined.
+Tried:
+{}
 Define it in the config file
 {}       
-    '''.format(config_list[0], config_file()), translate=False)
+    '''.format(config_list[0], config_list[1], config_file()), translate=False)
 
 
 def first_valid_which(config_list, find_file=None, raise_error=True):
@@ -673,9 +686,12 @@ def first_valid_which(config_list, find_file=None, raise_error=True):
                     return path
 
     if raise_error:
+        config_values(config_list)
         raise errors.Error('''
         Cannot find any path for '{}'.
-        '''.format(config_list[0]), translate=False)
+        Tried:
+        {}
+        '''.format(config_list[0], config_list[1]), translate=False)
     else:
         return None
 
@@ -727,7 +743,9 @@ def first_valid_path(config_list, find_file=None, raise_error=True):
     if raise_error:
         raise errors.Error('''
         Cannot find any path for '{}'.
-        '''.format(config_list[0]), translate=False)
+        Tried:
+        {}
+        '''.format(config_list[0], config_list[1]), translate=False)
     else:
         return None
 
@@ -774,7 +792,7 @@ def contract_dir(contract_dir_hint):
     
     raise errors.Error('''
         Cannot determine the contract directory.
-        Tried path list:
+        Tried:
         {}
     '''.format(trace), translate=False)
 
@@ -819,7 +837,7 @@ def contract_source_files(contract_dir_hint):
 
     raise errors.Error('''
         Cannot find any contract source directory.
-        Tried path list:
+        Tried:
         {}
     '''.format(trace), translate=False)
 
@@ -886,7 +904,7 @@ def contract_file(contract_dir_hint, contract_file_hint):
         Cannot determine the contract file basing on hints:
         contract dir hint: {}
         contract file hint: {}
-        Tried path list:
+        Tried:
         {}
     '''.format(contract_dir_hint, contract_file_hint, trace), translate=False)  
 
