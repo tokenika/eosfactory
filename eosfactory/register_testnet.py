@@ -26,28 +26,27 @@ def register_testnet_(url, alias, account_name, owner_key, active_key):
 
 def main():
     '''
-    Thank you for your contribution. We include it to the next edition of EOSFactory.
     usage: python3 -m eosfactory.register_testnet [-h] \
     [-a ACCOUNT ACCOUNT ACCOUNT] url [alias]
 
     Given an url and an testnet alias (not obligatory), get registration data.
     Apply the data to the registration form of the testnet. Enter 'go' when ready.
     
-    Example: 
+    Example using the jungle testnet https://monitor.jungletestnet.io/: 
     
-    python3 -m eosfactory.register_testnet http://88.99.97.30:38888 jungle 
+    python3 -m eosfactory.register_testnet http://jungle2.cryptolions.io:80 jungle 
     
     If additional arguments are given, denoted as ``--account``, then the given
     account is checked for existence, and then added as a testnet master 
     account, for example:
 
-    python3 -m eosfactory.register_testnet http://88.99.97.30:38888 jungle -a
+    python3 -m eosfactory.register_testnet http://jungle2.cryptolions.io:80 jungle -a
     dgxo1uyhoytn 5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67
     5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
 
     Args:
         url: An URL of a public node offering access to the
-                                testnet, e.g. http://88.99.97.30:38888
+                                testnet, e.g. http://jungle2.cryptolions.io:80
         alias: Testnet alias
         -h: show this help message and exit
         -a (ACCOUNT ACCOUNT ACCOUNT): <name> <owner key> <active key>
@@ -58,12 +57,12 @@ def main():
     Enter 'go' when ready.
 
     Example:
-        python3 -m eosfactory.register_testnet.py http://88.99.97.30:38888 jungle
+        python3 -m eosfactory.register_testnet.py http://jungle2.cryptolions.io:80 jungle
 
     If additional arguments are given, denoted as ``--account``, then the given 
     account is checked for existence, and then added as a testnet master account.
 
-        python3 -m eosfactory.register_testnet.py http://88.99.97.30:38888 jungle \
+        python3 -m eosfactory.register_testnet.py http://jungle2.cryptolions.io:80 jungle \
         -a dgxo1uyhoytn \
         5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
         5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX

@@ -124,6 +124,17 @@ class Contract(ContractBuilder):
         self.contract = None
         self._console = None
 
+    def clear(self):
+        '''Remove contract on an account
+        '''
+        result = cleos_set.SetContract(
+            self.account, self.contract_dir, 
+            self.wasm_file, self.abi_file,
+            True,
+            json=False)
+            
+        self.contract = result
+
     def deploy(
         self, permission=None, dont_broadcast=None, payer=None):
         '''Deploy the contract.
@@ -138,7 +149,8 @@ class Contract(ContractBuilder):
         try:
             result = cleos_set.SetContract(
                 self.account, self.contract_dir, 
-                self.wasm_file, self.abi_file, 
+                self.wasm_file, self.abi_file,
+                False, 
                 permission, self.expiration_sec, 
                 self.skip_sign, dont_broadcast, self.force_unique,
                 self.max_cpu_usage, self.max_net_usage,
@@ -163,7 +175,8 @@ class Contract(ContractBuilder):
         
             result = cleos_set.SetContract(
                 self.account, self.contract_dir, 
-                self.wasm_file, self.abi_file, 
+                self.wasm_file, self.abi_file,
+                False, 
                 permission, self.expiration_sec, 
                 self.skip_sign, dont_broadcast, self.force_unique,
                 self.max_cpu_usage, self.max_net_usage,
