@@ -14,7 +14,7 @@ def main():
         name: Project name or directory.
         template: Template name or directory.
         --c_cpp_prop: c_cpp_properties.json file path.
-        --include: Comma-separated list of include folders.
+        --includes: Comma-separated list of include folders.
         --libs: Comma-separated list of libraries.
         --vsc: Open Visual Studio Code.
         --throw: Throw error if the project exists.
@@ -34,7 +34,7 @@ def main():
     parser.add_argument(
         "--c_cpp_prop", help="c_cpp_properties.json file path.", default="")
     parser.add_argument(
-        "--include", help="Comma-separated list of include folders", default="")
+        "--includes", help="Comma-separated list of includes folders", default="")
     parser.add_argument(
         "--libs", help="Comma-separated list of libraries.", default="")    
     parser.add_argument(
@@ -52,7 +52,7 @@ def main():
         project_name=args.name, 
         template=args.template,
         c_cpp_prop_path=args.c_cpp_prop,
-        include=args.include,
+        includes=args.includes,
         libs=args.libs,
         open_vscode=args.vsc,
         throw_exists=args.throw, remove_existing=args.ovr,

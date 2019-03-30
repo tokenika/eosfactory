@@ -18,8 +18,9 @@ import eosfactory.core.logger as logger
 def get_includes():
     includes = config.eosio_cpp_includes()
     retval = []
+    root = config.wsl_root()
     for include in includes:
-        retval.append("${ROOT}" + include)
+        retval.append(root + include)
 
     retval.append("${workspaceFolder}")
 

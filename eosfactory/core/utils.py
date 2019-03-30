@@ -1,10 +1,11 @@
 import eosfactory.core.errors as errors
 
-def wslMapLinuxWindows(path):
-    if not path or path.find("/mnt/") == -1:
+def wslMapLinuxWindows(path, back_slash=True):
+    if not path or path.find("/mnt/") != 0:
         return path
     path = path[5].upper() + ":" + path[6:]
-    path = path.replace("/", r"\\")
+    if back_slash:
+        path = path.replace("/", r"\\")
     return path
 
 

@@ -44,6 +44,8 @@ chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["300"])
 
 wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
+includes_ = ("INCLUDE", "includes")
+libs_ = ("LIBS", "libs")
 
 
 cli_exe_ = ("EOSIO_CLI_EXECUTABLE", 
@@ -187,6 +189,44 @@ Cannot find the template directory
 {}
         '''.format(dir), translate=False)
     return dir
+
+
+def eoside_includes_dir():
+    '''The directory for contract definition includes.
+
+    It may be set with 
+    *INCLUDE* entry in the *config.json* file, 
+    see :func:`.current_config`.
+    '''
+    dir = includes_[1]
+    if not os.path.isabs(dir):
+        dir = os.path.join(get_app_data_dir(), includes_[1])
+    if not os.path.exists(dir):
+        raise errors.Error('''
+Cannot find the include directory
+{}.
+It may be set with {} entry in the config.json file.
+        '''.format(dir, includes_[0]), translate=False)
+    return dir    
+
+
+def eoside_libs_dir():
+    '''The directory for contract links.
+
+    It may be set with 
+    *LIBS* entry in the *config.json* file, 
+    see :func:`.current_config`.
+    '''
+    dir = libs_[1]
+    if not os.path.isabs(dir):
+        dir = os.path.join(get_app_data_dir(), libs_[1])
+    if not os.path.exists(dir):
+        raise errors.Error('''
+Cannot find the libs directory
+{}.
+It may be set with {} entry in the config.json file.
+        '''.format(dir, libs_[0]), translate=False)
+    return dir    
 
 
 def contract_workspace_dir():
@@ -1090,11 +1130,18 @@ def current_config(contract_dir=None):
         map[eosio_cpp_includes_[0]] = eosio_cpp_includes()
     except:
         map[eosio_cpp_includes_[0]] = None        
-                                      
     try:   
         map[genesis_json_[0]] = genesis_json()
     except:
         map[genesis_json_[0]] = None
+    try:   
+        map[includes_[0]] = eoside_includes_dir()
+    except:
+        map[libs_[0]] = None
+    try:   
+        map[libs_[0]] = eoside_libs_dir()
+    except:
+        map[libs_[0]] = None    
 
     map[nodeos_stdout_[0]] = nodeos_stdout()
     

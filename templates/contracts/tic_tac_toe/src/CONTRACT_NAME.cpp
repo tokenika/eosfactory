@@ -4,7 +4,7 @@
  */
 
 #define DEBUG
-#include "logger.hpp"
+#include <eoside/logger.hpp>
 #include "${CONTRACT_NAME}.hpp"
 
 namespace eosio {

@@ -4,7 +4,7 @@
  */
 
 #define DEBUG
-#include "logger.hpp"
+#include <eoside/logger.hpp>
 #include "tic_tac_toe.hpp"
 
 namespace eosio {
