@@ -16,7 +16,9 @@ class ContractBuilder():
 
     Args:
         contract_dir (str): If set, a hint to the root directory of a contract 
-            project, otherwise the current working directory. 
+            project, otherwise the current working directory.
+        c_cpp_properties_path (str): If set, the directory of a C/CPP VSCode 
+            extension configuration file.
         abi_file (str): If set, the path to the ABI file, absolute, 
             or relative to *contract_dir*.
         wasm_file (str): If set, the path to the WASM file, absolute, 
@@ -24,13 +26,21 @@ class ContractBuilder():
     '''
     def __init__(
             self, contract_dir=None,
+            c_cpp_properties_path=None,
             abi_file=None,
             wasm_file=None):
 
         if not contract_dir:
             contract_dir = os.getcwd()
+            
+        if not c_cpp_properties_path:
+            c_cpp_properties_path = os.path.join(
+                            contract_dir, ".vscode", "c_cpp_properties.json")
+            if not os.path.exists(c_cpp_properties_path):
+                c_cpp_properties_path = None
 
         self.contract_dir = config.contract_dir(contract_dir)
+        self.c_cpp_properties_path = c_cpp_properties_path
         
         if not self.contract_dir:
             raise errors.Error("""
@@ -45,12 +55,12 @@ class ContractBuilder():
     def build_wast(self):
         '''Make the WAST file.
         '''
-        teos.WASM(self.contract_dir)
+        teos.WASM(self.contract_dir, self.c_cpp_properties_path)
 
     def build_abi(self):
         '''Make the ABI file.
         '''
-        teos.ABI(self.contract_dir)
+        teos.ABI(self.contract_dir, self.c_cpp_properties_path)
 
     def build(self, force=True):
         '''Make both, ABI and WASM files.
