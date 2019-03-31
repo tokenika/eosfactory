@@ -2,7 +2,7 @@
 #include <eosiolib/print.hpp>
 
 #define DEBUG
-#include <eoside/logger.hpp>
+#include "logger.hpp"
 
 using namespace eosio;
 
