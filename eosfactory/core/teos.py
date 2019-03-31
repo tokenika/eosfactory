@@ -45,6 +45,10 @@ def naturalize_path(path):
     return utils.wslMapLinuxWindows(path, back_slash=False)
 
 
+def linuxize_path(path):
+    return utils.wslMapWindowsLinux(path.replace(ROOT, ""))
+
+
 def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
     if not contract_dir:
         contract_dir = os.getcwd()
@@ -52,7 +56,7 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
         c_cpp_properties_path = os.path.join(
                                 contract_dir, ".vscode/c_cpp_properties.json")
     else:
-        c_cpp_properties_path = utils.wslMapWindowsLinux(c_cpp_properties_path)
+        c_cpp_properties_path = linuxize_path(c_cpp_properties_path)
         if not os.path.exists(c_cpp_properties_path):
             raise errors.Error('''
                 The given path to the file 'c_cpp_properties.json'
@@ -75,7 +79,6 @@ def ABI(
         verbosity=None):
     '''Given a hint to a contract directory, produce ABI file.
     '''
-    import pdb; pdb.set_trace()
     contract_dir = config.contract_dir(contract_dir_hint)
     # source_files[0] is directory, source_files[1] is contents:
     contract_source_files = config.contract_source_files(contract_dir)
@@ -122,12 +125,11 @@ def ABI(
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
             command_line.append(
-                "-I=" + utils.wslMapWindowsLinux(entry))
+                "-I=" + linuxize_path(entry))
         else:
             if not EOSIO_CPP_INCLUDE in entry:
                 command_line.append(
-                    "-I=" + utils.wslMapWindowsLinux(
-                        strip_wsl_root(entry)))
+                    "-I=" + linuxize_path(entry))
 
     input_file = None
     for file in source_files:
@@ -177,7 +179,6 @@ def WASM(
         The assumed contract dir is   
         {}
         '''.format(contract_dir))
-        return
 
     code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
     target_dir = get_target_dir(contract_source_files[0])
@@ -192,15 +193,15 @@ def WASM(
     for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
-            command_line.append("-I=" + utils.wslMapWindowsLinux(entry))
+            command_line.append("-I=" + linuxize_path(entry))
         else:
             if not EOSIO_CPP_INCLUDE in entry:
                 command_line.append(
-                    "-I=" + utils.wslMapWindowsLinux(strip_wsl_root(entry)))
+                    "-I=" + linuxize_path(entry))
 
     for entry in c_cpp_properties[CONFIGURATIONS][0]["libs"]:
         command_line.append(
-            "-l=" + utils.wslMapWindowsLinux(strip_wsl_root(entry)))
+            "-l=" + linuxize_path(entry))
 
     for entry in c_cpp_properties[CONFIGURATIONS][0]["compilerOptions"]:
         command_line.append(entry)
@@ -261,8 +262,8 @@ def project_from_template(
         visual_studio_code: If set, open the ``VSCode``, if available.
         verbosity: The logging configuration.
     '''
-    project_name = utils.wslMapWindowsLinux(project_name.strip())
-    template = utils.wslMapWindowsLinux(template.strip())
+    project_name = linuxize_path(project_name.strip())
+    template = linuxize_path(template.strip())
 
     template_dir = template if os.path.isdir(template) else \
                                 os.path.join(config.template_dir(), template)
@@ -273,7 +274,7 @@ def project_from_template(
         '''.format(template_dir)) 
 
     if c_cpp_prop_path:
-        c_cpp_prop_path = utils.wslMapWindowsLinux(c_cpp_prop_path)
+        c_cpp_prop_path = linuxize_path(c_cpp_prop_path)
         if os.path.exists(c_cpp_prop_path):
             try:
                 with open(c_cpp_prop_path, "r") as input:
@@ -414,14 +415,6 @@ error message:
     '''.format(project_dir, template_dir), verbosity)
 
     return project_dir
-
-
-def strip_wsl_root(path):
-    wsl_root = config.wsl_root()
-    if wsl_root:
-        return path.replace(config.wsl_root(), "")
-    else:
-        return path
 
 
 def get_pid(name=None):
