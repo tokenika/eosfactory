@@ -267,7 +267,7 @@ def project_from_template(
 
     template_dir = template if os.path.isdir(template) else \
                                 os.path.join(config.template_dir(), template)
-        
+    
     if not os.path.isdir(template_dir):
         raise errors.Error('''
         The contract project template '{}' does not exist.
@@ -290,26 +290,33 @@ def project_from_template(
         temp = includes.split(", ")
         temp_ = []
         for entry in temp:
-            temp_.append(naturalize_path(entry))
+            path = naturalize_path(entry)
+            if not path in c_cpp_properties_json[CONFIGURATIONS][0]\
+                                                                [INCLUDE_PATH]:
+                temp_.append(path)
 
         c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].extend(temp_)
         c_cpp_properties_json[CONFIGURATIONS][0][BROWSE]["path"].extend(temp_)
 
-    c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].append(
-                                naturalize_path(config.eoside_includes_dir()))
+    path = naturalize_path(config.eoside_includes_dir())
+    if not path in c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH]:
+        c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].append(path)
     
     if libs:
         temp = libs.split(", ")
         temp_ = []
         for entry in libs:
-            temp_.append(naturalize_path(entry))
+            path = naturalize_path(entry)
+            if not path in c_cpp_properties_json[CONFIGURATIONS][0]["libs"]:
+                temp_.append(path)
             
         c_cpp_properties_json[CONFIGURATIONS][0]["libs"].extend(temp_)
 
     eoside_libs = os.listdir(config.eoside_libs_dir())
     for lib in eoside_libs:
-        c_cpp_properties_json[CONFIGURATIONS][0]["libs"].append(
-                                                        naturalize_path(lib))
+        path = naturalize_path(lib)
+        if not path in c_cpp_properties_json[CONFIGURATIONS][0]["libs"]:
+            c_cpp_properties_json[CONFIGURATIONS][0]["libs"].append(path)
 
     c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
     c_cpp_properties = resolve_home(c_cpp_properties)
