@@ -9,7 +9,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.0.3"
+VERSION = "3.0.4"
 EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.5.0"
 PYTHON_VERSION = "3.5 or higher"
@@ -84,14 +84,16 @@ def get_app_data_dir():
         return app_data_dir
 
     raise errors.Error('''
-    Cannot determine the directory of application data. __file_ is:
-    {}
-    Tried:
-    {}
-    {}
-    {}
+    Cannot determine the directory of application data. Tried:
+        '{}',
+        '{}',
+        '{}'.
+    The chosen path is
+        '{}',
+    but it does not exist, seemingly.
     '''.format(
-            __file__, APP_DATA_DIR_SUDO[0], APP_DATA_DIR_USER[0], eosf_dir()),
+            APP_DATA_DIR_SUDO[0], APP_DATA_DIR_USER[0], eosf_dir(),
+            app_data_dir),
             translate=False)
 
 
