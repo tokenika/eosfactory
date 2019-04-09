@@ -1,4 +1,5 @@
 import os
+import stat
 import argparse
 import json
 import re
@@ -8,7 +9,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.0.3"
+VERSION = "3.0.4"
 EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.5.0"
 PYTHON_VERSION = "3.5 or higher"
@@ -44,6 +45,8 @@ chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["300"])
 
 wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
+includes_ = ("INCLUDE", "includes")
+libs_ = ("LIBS", "libs")
 
 
 cli_exe_ = ("EOSIO_CLI_EXECUTABLE", 
@@ -82,11 +85,15 @@ def get_app_data_dir():
 
     raise errors.Error('''
     Cannot determine the directory of application data. Tried:
-    {}
-    {}
-    {}
+        '{}',
+        '{}',
+        '{}'.
+    The chosen path is
+        '{}',
+    but it does not exist, seemingly.
     '''.format(
-            APP_DATA_DIR_SUDO[0], APP_DATA_DIR_USER[0], eosf_dir()),
+            APP_DATA_DIR_SUDO[0], APP_DATA_DIR_USER[0], eosf_dir(),
+            app_data_dir),
             translate=False)
 
 
@@ -111,7 +118,7 @@ def is_linked_package():
     return is_linked
 
 
-def set_contract_workspace_dir(contract_workspace_dir=None):
+def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
     from termcolor import cprint, colored
     import pathlib
 
@@ -189,7 +196,45 @@ Cannot find the template directory
     return dir
 
 
-def contract_workspace_dir():
+def eoside_includes_dir():
+    '''The directory for contract definition includes.
+
+    It may be set with 
+    *INCLUDE* entry in the *config.json* file, 
+    see :func:`.current_config`.
+    '''
+    dir = includes_[1]
+    if not os.path.isabs(dir):
+        dir = os.path.join(get_app_data_dir(), includes_[1])
+    if not os.path.exists(dir):
+        raise errors.Error('''
+Cannot find the include directory
+{}.
+It may be set with {} entry in the config.json file.
+        '''.format(dir, includes_[0]), translate=False)
+    return dir    
+
+
+def eoside_libs_dir():
+    '''The directory for contract links.
+
+    It may be set with 
+    *LIBS* entry in the *config.json* file, 
+    see :func:`.current_config`.
+    '''
+    dir = libs_[1]
+    if not os.path.isabs(dir):
+        dir = os.path.join(get_app_data_dir(), libs_[1])
+    if not os.path.exists(dir):
+        raise errors.Error('''
+Cannot find the libs directory
+{}.
+It may be set with {} entry in the config.json file.
+        '''.format(dir, libs_[0]), translate=False)
+    return dir    
+
+
+def contract_workspace_dir(dont_set_workspace=False):
     '''The absolute path to the contract workspace.
 
     The contract workspace is a directory where automatically created projects
@@ -204,7 +249,14 @@ def contract_workspace_dir():
     The setting may be changed with 
     *EOSIO_CONTRACT_WORKSPACE* entry in the *config.json* file, 
     see :func:`.current_config`.
+
+    Args:
+        dont_set_workspace (bool): If set., do not query for empty workspace 
+            directory.
     '''
+    if dont_set_workspace:
+        return config_map()[contract_workspace_dir_[0]]
+
     if not contract_workspace_dir_[0] in config_map():
         set_contract_workspace_dir()
 
@@ -256,16 +308,18 @@ def abi_file(contract_dir_hint):
 def eosf_dir():
     '''The absolute directory of the EOSFactory installation.
     '''
-    path = os.path.realpath(os.path.join(os.path.realpath(__file__), FROM_HERE_TO_EOSF_DIR))
+    path = os.path.realpath(os.path.join(
+                            os.path.realpath(__file__), FROM_HERE_TO_EOSF_DIR))
     if os.path.exists(path):
         return path
 
     raise errors.Error('''
         Cannot determine the root directory of EOSFactory.
-        It is attempted to be derived from the path of the configuration file
+        The path to the file 'config.py' is
             '{}'.
-        Therefore, this file has to remain in its original position.
-        Currently, its path is '{}'.
+        The expected path to the installation, which is 
+            '{}',
+        is reported as non-existent.
     '''.format(__file__, path), translate=False)
 
 
@@ -1003,7 +1057,7 @@ The error message:
         '''.format(str(e)))   
 
 
-def current_config(contract_dir=None):
+def current_config(contract_dir=None, dont_set_workspace=False):
     '''Present the current configuration.
 
     The current configuration result from both the *config.json* file setting
@@ -1051,7 +1105,8 @@ def current_config(contract_dir=None):
     except:
         map[chain_state_db_size_mb_[0]] = None
     try:
-        map[contract_workspace_dir_[0]] = contract_workspace_dir()
+        map[contract_workspace_dir_[0]] = contract_workspace_dir(
+                                                            dont_set_workspace)
     except:
          map[contract_workspace_dir_[0]] = None
     try:
@@ -1090,11 +1145,22 @@ def current_config(contract_dir=None):
         map[eosio_cpp_includes_[0]] = eosio_cpp_includes()
     except:
         map[eosio_cpp_includes_[0]] = None        
-                                      
     try:   
         map[genesis_json_[0]] = genesis_json()
     except:
         map[genesis_json_[0]] = None
+    try:   
+        map[includes_[0]] = eoside_includes_dir()
+    except:
+        map[libs_[0]] = None
+    try:   
+        map[libs_[0]] = eoside_libs_dir()
+    except:
+        map[libs_[0]] = None
+    try:   
+        map["TEMPLATE_DIR"] = template_dir()
+    except:
+        map["TEMPLATE_DIR"] = None    
 
     map[nodeos_stdout_[0]] = nodeos_stdout()
     
@@ -1185,37 +1251,40 @@ def main():
     Show the configuration of EOSFactory or set contract workspace.
 
     Args:
-        -h, --help            show this help message and exit
-        --wsl_root            show set the root of the WSL and exit.
-        --dependencies        list dependencies of EOSFactory and exit.
-        --json                bare config JSON and exit.
-        --workspace WORKSPACE
-                                set contract workspace and exit.
+        -h, --help              Show this help message and exit
+        --wsl_root              Show set the root of the WSL and exit.
+        --dependencies          List dependencies of EOSFactory and exit.
+        --dont_set_workspace    Ignore empty workspace directory.
+        --json                  Bare config JSON and exit.
+        --workspace WORKSPACE   Set contract workspace and exit.
     '''
 
     parser = argparse.ArgumentParser(description='''
     Show the configuration of EOSFactory or set contract workspace.
     ''')
     parser.add_argument(
-        "--wsl_root",  help="show set the root of the WSL and exit.", 
+        "--wsl_root",  help="Show set the root of the WSL and exit.", 
         action="store_true")
     parser.add_argument(
-        "--dependencies", help="list dependencies of EOSFactory and exit.",
+        "--dependencies", help="List dependencies of EOSFactory and exit.",
         action="store_true")
     parser.add_argument(
-        "--json", help="bare config JSON and exit.", 
+        "--dont_set_workspace", help="Ignore empty workspace directory.", 
+        action="store_true")    
+    parser.add_argument(
+        "--json", help="Bare config JSON and exit.", 
         action="store_true")
     parser.add_argument(
-        "--workspace", help="set contract workspace and exit.",
+        "--workspace", help="Set contract workspace and exit.",
         action="store_true")
 
     args = parser.parse_args()
-
     if args.dependencies:
         installation_dependencies()
     elif args.json:
         print(json.dumps(
-            current_config(), sort_keys=True, indent=4))
+            current_config(dont_set_workspace=args.dont_set_workspace), 
+            sort_keys=True, indent=4))
     elif args.wsl_root:
         wsl_root()
     elif args.workspace:

@@ -26,7 +26,7 @@ author = 'Tokenika'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '3.0.3'
+release = '3.0.4'
 
 
 # -- General configuration ---------------------------------------------------
@@ -96,9 +96,8 @@ html_theme = "classic"
 html_theme_options = {
     'rightsidebar': 'false',
     'stickysidebar': 'true',
-    'collapsiblesidebar': 'false',
+    'collapsiblesidebar': 'true',
     'body_max_width': '600px',
-    # 'body_max_width': '38rem',
     'sidebarbgcolor': 'white', # '#1c4e63''azure'
     'sidebarbtncolor': '#3c6e83', # '#3c6e83'
     'sidebartextcolor': 'maroon', # '#ffffff'

@@ -1,0 +1,1 @@
+#include <eosiolib/eosio.hpp>

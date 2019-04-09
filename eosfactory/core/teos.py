@@ -21,7 +21,6 @@ import eosfactory.core.vscode as vscode
 
 TEMPLATE_NAME = "CONTRACT_NAME"
 TEMPLATE_HOME = "${HOME}"
-TEMPLATE_ROOT = "${ROOT}"
 C_CPP_PROP = "${c_cpp_prop}"
 TASK_JSON = "${tasks}"
 CONFIGURATIONS = "configurations"
@@ -30,17 +29,24 @@ BROWSE = "browse"
 WORKSPACE_FOLDER = "${workspaceFolder}"
 EOSIO_CPP_INCLUDE = "eosio.cdt"
 EOSIO_DISPATCH = r"void\s*apply\s*\(|EOSIO_DISPATCH"
+ROOT = config.wsl_root()
+HOME = ROOT + os.environ["HOME"]
 
-def replace_templates(string): 
-    home = os.environ["HOME"]
-    root = ""
-    if utils.is_windows_ubuntu():
-        home = config.wsl_root() + home
-        root = config.wsl_root()
 
-    string = string.replace(TEMPLATE_HOME, home)
-    string = string.replace(TEMPLATE_ROOT, root)
-    return string                                                      
+def resolve_home(string): 
+    string = string.replace(TEMPLATE_HOME, HOME)
+    return string
+
+
+def naturalize_path(path):
+    path = path.replace(TEMPLATE_HOME, HOME)
+    if path.find("/mnt/") != 0:
+        path = ROOT + path
+    return utils.wslMapLinuxWindows(path, back_slash=False)
+
+
+def linuxize_path(path):
+    return utils.wslMapWindowsLinux(path.replace(ROOT, ""))
 
 
 def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
@@ -50,7 +56,7 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
         c_cpp_properties_path = os.path.join(
                                 contract_dir, ".vscode/c_cpp_properties.json")
     else:
-        c_cpp_properties_path = utils.wslMapWindowsLinux(c_cpp_properties_path)
+        c_cpp_properties_path = linuxize_path(c_cpp_properties_path)
         if not os.path.exists(c_cpp_properties_path):
             raise errors.Error('''
                 The given path to the file 'c_cpp_properties.json'
@@ -65,7 +71,7 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
         except Exception as e:
             raise errors.Error(str(e))
     else:
-        return json.loads(replace_templates(vscode.c_cpp_properties()))
+        return json.loads(resolve_home(vscode.c_cpp_properties()))
 
 
 def ABI(
@@ -119,12 +125,11 @@ def ABI(
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
             command_line.append(
-                "-I=" + utils.wslMapWindowsLinux(entry))
+                "-I=" + linuxize_path(entry))
         else:
             if not EOSIO_CPP_INCLUDE in entry:
                 command_line.append(
-                    "-I=" + utils.wslMapWindowsLinux(
-                        strip_wsl_root(entry)))
+                    "-I=" + linuxize_path(entry))
 
     input_file = None
     for file in source_files:
@@ -174,7 +179,6 @@ def WASM(
         The assumed contract dir is   
         {}
         '''.format(contract_dir))
-        return
 
     code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
     target_dir = get_target_dir(contract_source_files[0])
@@ -189,15 +193,15 @@ def WASM(
     for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
-            command_line.append("-I=" + utils.wslMapWindowsLinux(entry))
+            command_line.append("-I=" + linuxize_path(entry))
         else:
             if not EOSIO_CPP_INCLUDE in entry:
                 command_line.append(
-                    "-I=" + utils.wslMapWindowsLinux(strip_wsl_root(entry)))
+                    "-I=" + linuxize_path(entry))
 
     for entry in c_cpp_properties[CONFIGURATIONS][0]["libs"]:
         command_line.append(
-            "-l=" + utils.wslMapWindowsLinux(strip_wsl_root(entry)))
+            "-l=" + linuxize_path(entry))
 
     for entry in c_cpp_properties[CONFIGURATIONS][0]["compilerOptions"]:
         command_line.append(entry)
@@ -238,7 +242,7 @@ def WASM(
 def project_from_template(
         project_name, template=None, workspace_dir=None,
         c_cpp_prop_path=None,
-        include=None,
+        includes=None,
         libs=None, 
         remove_existing=False, 
         open_vscode=False, throw_exists=False, 
@@ -252,25 +256,25 @@ def project_from_template(
         template: The name of the template used.
         workspace_dir: If set, the folder for the work-space. Defaults to the 
             value returned by the config.contract_workspace_dir() function.
-        include: If set, comma-separated list of include folders.
+        includes: If set, comma-separated list of include folders.
         libs: If set, comma-separated list of libraries.
         remove_existing: If set, overwrite any existing project.
         visual_studio_code: If set, open the ``VSCode``, if available.
         verbosity: The logging configuration.
     '''
-    project_name = utils.wslMapWindowsLinux(project_name.strip())
-    template = utils.wslMapWindowsLinux(template.strip())
+    project_name = linuxize_path(project_name.strip())
+    template = linuxize_path(template.strip())
 
     template_dir = template if os.path.isdir(template) else \
                                 os.path.join(config.template_dir(), template)
-        
+    
     if not os.path.isdir(template_dir):
         raise errors.Error('''
         The contract project template '{}' does not exist.
         '''.format(template_dir)) 
 
     if c_cpp_prop_path:
-        c_cpp_prop_path = utils.wslMapWindowsLinux(c_cpp_prop_path)
+        c_cpp_prop_path = linuxize_path(c_cpp_prop_path)
         if os.path.exists(c_cpp_prop_path):
             try:
                 with open(c_cpp_prop_path, "r") as input:
@@ -279,24 +283,44 @@ def project_from_template(
                 c_cpp_properties = vscode.c_cpp_properties()
     else:
         c_cpp_properties = vscode.c_cpp_properties()
+    
+    c_cpp_properties_json = json.loads(c_cpp_properties)
 
-    c_cpp_properties = replace_templates(c_cpp_properties)
+    if includes:
+        temp = includes.split(", ")
+        temp_ = []
+        for entry in temp:
+            path = naturalize_path(entry)
+            if not path in c_cpp_properties_json[CONFIGURATIONS][0]\
+                                                                [INCLUDE_PATH]:
+                temp_.append(path)
 
-    if include:
-        c_cpp_properties_json = json.loads(c_cpp_properties)
-        c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].extend(
-                                                        include.split(", "))
-        c_cpp_properties_json[CONFIGURATIONS][0][BROWSE]["path"].extend(
-                                                        include.split(", "))
-        c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
+        c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].extend(temp_)
+        c_cpp_properties_json[CONFIGURATIONS][0][BROWSE]["path"].extend(temp_)
 
+    path = naturalize_path(config.eoside_includes_dir())
+    if not path in c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH]:
+        c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].append(path)
+    
     if libs:
-        c_cpp_properties_json = json.loads(c_cpp_properties)
-        c_cpp_properties_json[CONFIGURATIONS][0]["libs"].extend(
-                                                        libs.split(", "))
-        c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
+        temp = libs.split(", ")
+        temp_ = []
+        for entry in libs:
+            path = naturalize_path(entry)
+            if not path in c_cpp_properties_json[CONFIGURATIONS][0]["libs"]:
+                temp_.append(path)
+            
+        c_cpp_properties_json[CONFIGURATIONS][0]["libs"].extend(temp_)
 
+    eoside_libs = os.listdir(config.eoside_libs_dir())
+    for lib in eoside_libs:
+        path = naturalize_path(lib)
+        if not path in c_cpp_properties_json[CONFIGURATIONS][0]["libs"]:
+            c_cpp_properties_json[CONFIGURATIONS][0]["libs"].append(path)
 
+    c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
+    c_cpp_properties = resolve_home(c_cpp_properties)
+    
     split = os.path.split(project_name)
     if os.path.isdir(split[0]):
         project_dir = project_name
@@ -367,11 +391,8 @@ error message:
         with open(template_path, "r") as input:
             template = input.read()
 
-        if TEMPLATE_HOME in template or TEMPLATE_ROOT in template:
-            home = os.environ["HOME"]
-            root = ""
-            if utils.is_windows_ubuntu():
-                replace_templates(template)
+        if TEMPLATE_HOME in template:
+            resolve_home(template)
 
         template = template.replace("${" + TEMPLATE_NAME + "}", project_name)
         template = template.replace(C_CPP_PROP, c_cpp_properties)
@@ -401,14 +422,6 @@ error message:
     '''.format(project_dir, template_dir), verbosity)
 
     return project_dir
-
-
-def strip_wsl_root(path):
-    wsl_root = config.wsl_root()
-    if wsl_root:
-        return path.replace(config.wsl_root(), "")
-    else:
-        return path
 
 
 def get_pid(name=None):

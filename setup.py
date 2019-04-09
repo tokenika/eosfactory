@@ -43,6 +43,9 @@ DATA_FILES = [
                                                     "config/genesis.json"])] 
 DATA_FILES.extend(data_files_('templates'))
 DATA_FILES.extend(data_files_('contracts'))
+DATA_FILES.extend(data_files_('includes'))
+DATA_FILES.extend(data_files_('libs'))
+
 
 setuptools.setup(
     name=setuptools_name,
