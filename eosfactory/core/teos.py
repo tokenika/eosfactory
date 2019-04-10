@@ -298,9 +298,11 @@ def project_from_template(
         c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].extend(temp_)
         c_cpp_properties_json[CONFIGURATIONS][0][BROWSE]["path"].extend(temp_)
 
-    path = naturalize_path(config.eoside_includes_dir())
-    if not path in c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH]:
-        c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].append(path)
+    path = config.eoside_includes_dir()
+    if path:
+        path = naturalize_path(path)
+        if not path in c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH]:
+            c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].append(path)
     
     if libs:
         temp = libs.split(", ")
@@ -312,11 +314,13 @@ def project_from_template(
             
         c_cpp_properties_json[CONFIGURATIONS][0]["libs"].extend(temp_)
 
-    eoside_libs = os.listdir(config.eoside_libs_dir())
-    for lib in eoside_libs:
-        path = naturalize_path(lib)
-        if not path in c_cpp_properties_json[CONFIGURATIONS][0]["libs"]:
-            c_cpp_properties_json[CONFIGURATIONS][0]["libs"].append(path)
+    eoside_libs = config.eoside_libs_dir()
+    if(eoside_libs):
+        eoside_libs = os.listdir(config.eoside_libs_dir())
+        for lib in eoside_libs:
+            path = naturalize_path(lib)
+            if not path in c_cpp_properties_json[CONFIGURATIONS][0]["libs"]:
+                c_cpp_properties_json[CONFIGURATIONS][0]["libs"].append(path)
 
     c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
     c_cpp_properties = resolve_home(c_cpp_properties)

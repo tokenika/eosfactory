@@ -226,11 +226,12 @@ def eoside_libs_dir():
     if not os.path.isabs(dir):
         dir = os.path.join(get_app_data_dir(), libs_[1])
     if not os.path.exists(dir):
-        raise errors.Error('''
-Cannot find the libs directory
-{}.
-It may be set with {} entry in the config.json file.
-        '''.format(dir, libs_[0]), translate=False)
+        dir = None
+#         raise errors.Error('''
+# Cannot find the libs directory
+# {}.
+# It may be set with {} entry in the config.json file.
+#         '''.format(dir, libs_[0]), translate=False)
     return dir    
 
 
