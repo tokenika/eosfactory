@@ -15,7 +15,7 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-
+import recommonmark.parser
 
 # -- Project information -----------------------------------------------------
 
@@ -175,7 +175,6 @@ epub_exclude_files = ['search.html']
 
 # -- Extension configuration -------------------------------------------------
 
-import recommonmark.parser
 def setup(app):
     app.add_source_parser(recommonmark.parser.CommonMarkParser)
     app.add_css_file('custom.css')  # may also be an URL

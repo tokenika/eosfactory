@@ -9,7 +9,6 @@ import pathlib
 import shutil
 import pprint
 import json
-import shutil
 import sys
 
 import eosfactory.core.errors as errors
@@ -451,6 +450,16 @@ def get_pid(name=None):
 def eosio_cpp(command_line, target_dir):
 
     cwd = os.path.join(target_dir, "cwd")
+    if os.path.exists(cwd):
+        try:
+            shutil.rmtree(cwd)
+        except Exception as e:
+            raise errors.Error('''
+Cannot remove the directory {}.
+error message:
+==============
+{}
+                    '''.format(cwd, str(e)))
     os.mkdir(cwd)
 
     p = subprocess.run(

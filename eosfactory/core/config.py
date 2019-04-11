@@ -3,6 +3,7 @@ import stat
 import argparse
 import json
 import re
+import subprocess
 
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
@@ -28,7 +29,7 @@ FROM_HERE_TO_EOSF_DIR = "../../../"
 CONFIG_DIR = "config"
 CONFIG_JSON = "config.json"
 CONTRACTS_DIR = "contracts/"
-TEMPLATE_DIR = "templates/contracts"
+TEMPLATE_DIR = ("TEMPLATE_DIR", "templates/contracts")
 EOSIO_CPP_DIR = "/usr/opt/eosio.cdt/0.0.0/"
 
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
@@ -187,7 +188,7 @@ Cannot find the configuration directory
 
 
 def template_dir():
-    dir = os.path.join(get_app_data_dir(), TEMPLATE_DIR)
+    dir = os.path.join(get_app_data_dir(), TEMPLATE_DIR[1])
     if not os.path.exists(dir):
         raise errors.Error('''
 Cannot find the template directory
@@ -540,6 +541,35 @@ def eosio_cpp():
     return first_valid_which(eosio_cpp_)
 
 
+def eosio_version():
+    try:
+        version = subprocess.check_output(
+            "echo $({} --version)".format(node_exe()), shell=True, 
+                    timeout=10).decode("ISO-8859-1").strip().replace("v", "")
+        return version      
+    except Exception as e:
+        print('''ERROR!
+Cannot determine the version of the installed 'eosio' package.
+The error message:
+{}
+        '''.format(str(e)))
+        return None
+
+
+def eosio_cpp_version():
+    try:
+        version = subprocess.check_output(
+            [eosio_cpp(), "-version"], timeout=5).decode("ISO-8859-1").strip().replace("eosio-cpp version ", "")
+        return version
+    except Exception as e:
+        print('''ERROR!
+Cannot determine the version of the installed 'eosio.cpp' package.
+The error message:
+{}
+        '''.format(str(e)))
+        return None
+
+
 def eosio_cpp_dir():
     '''The path to the *eosio-cpp* installation directory.
     
@@ -547,10 +577,9 @@ def eosio_cpp_dir():
     *EOSIO_CPP* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
-    eosio_cpp_version = utils.spawn(
-            [eosio_cpp(), "-version"],
-    "Cannot determine the version of the installed 'eosio.cpp' pckage."
-        ).replace("eosio-cpp version ", "")
+    eosio_cpp_version_ = eosio_cpp_version()
+    if not eosio_cpp_version_:
+        eosio_cpp_version_ = "Not known"
 
     version_pattern = re.compile(".+/eosio\.cdt/(\d\.\d\.\d)/$")
     dir = eosio_cpp_dir_[1][0]    
@@ -564,7 +593,7 @@ does not match the directory template 'core.config.EOSIO_CPP_DIR'
             '''.format(version_pattern, EOSIO_CPP_DIR), translate=False
         )
     dir = dir.replace(
-        re.findall(version_pattern, dir)[0], eosio_cpp_version) 
+        re.findall(version_pattern, dir)[0], eosio_cpp_version_) 
 
     return dir   
 
@@ -593,7 +622,21 @@ def keosd_wallet_dir(raise_error=True):
     Raises:
         .core.errors.Error: If the directory does not exist.
     '''
-    return first_valid_path(keosd_wallet_dir_, raise_error=raise_error)
+    path = first_valid_path(keosd_wallet_dir_, raise_error=False)
+    if not path:
+        from eosfactory.core.cleos import WalletList
+        WalletList()
+        path = first_valid_path(keosd_wallet_dir_, raise_error=False)
+        if not path:
+            if raise_error:
+                raise errors.Error('''
+                Cannot find any path for '{}'.
+                Tried:
+                {}
+                '''.format(keosd_wallet_dir_[0], keosd_wallet_dir_[1]), 
+                                                            translate=False)
+
+    return path
 
 
 def config_file():
@@ -1008,54 +1051,36 @@ def update_eosio_cpp_includes(c_cpp_properties_path, root=""):
                 f.write(new)
 
 
-def not_defined():
-    map = current_config()
+def not_defined(config_map):
     retval = {}
-    for key, value in map.items():
+    for key, value in config_map.items():
         if value == None or value is None:
             retval[key] = value
     return retval
 
 
-def installation_dependencies():
+def installation_dependencies(config_map):
     '''Verify whether 'eosio' and 'eosio.cpp' packages are properly installed.
     '''
-    import subprocess
-
-    try:
-        eosio_version = subprocess.check_output(
-            "echo $({} --version)".format(node_exe()), shell=True, 
-                                    timeout=10).decode("ISO-8859-1").strip()
-
-        eosio_version = eosio_version.replace("v", "")
-        if not eosio_version == EOSIO_VERSION:
+    eosio_version_ = config_map["EOSIO_VERSION"]
+    if eosio_version_:
+        if not eosio_version_.split(".")[:2] \
+                                                == EOSIO_VERSION.split(".")[:2]:
             print('''NOTE!
 The version of the installed 'eosio' package is {} while the expected
 version is {}
-            '''.format(eosio_version, EOSIO_VERSION))        
-    except Exception as e:
-        print('''ERROR!
-Cannot determine the version of the installed 'eosio' package.
-The error message:
-{}
-        '''.format(str(e)))
+            '''.format(eosio_version_, EOSIO_VERSION))        
 
-    try:
-        eosio_cpp_version = subprocess.check_output(
-            [eosio_cpp(), "-version"], timeout=5).decode("ISO-8859-1").strip()
+    eosio_cpp_version_ = config_map["EOSIO_CDT_VERSION"]
+    if eosio_cpp_version_:
 
-        eosio_cpp_version = eosio_cpp_version.replace("eosio-cpp version ", "")
-        if not eosio_cpp_version == EOSIO_CDT_VERSION:
+        if not eosio_cpp_version_.split(".")[:2] \
+                                            == EOSIO_CDT_VERSION.split(".")[:2]:
             print('''NOTE!
 The version of the installed 'eosio.cdt' package is {} while the expected
 version is {}
-            '''.format(eosio_cpp_version, EOSIO_CDT_VERSION))     
-    except Exception as e:
-        print('''ERROR!
-Cannot determine the version of the installed 'eosio.cpp' package.
-The error message:
-{}
-        '''.format(str(e)))   
+            '''.format(eosio_cpp_version_, EOSIO_CDT_VERSION))     
+
 
 
 def current_config(contract_dir=None, dont_set_workspace=False):
@@ -1159,9 +1184,12 @@ def current_config(contract_dir=None, dont_set_workspace=False):
     except:
         map[libs_[0]] = None
     try:   
-        map["TEMPLATE_DIR"] = template_dir()
+        map[TEMPLATE_DIR[0]] = template_dir()
     except:
-        map["TEMPLATE_DIR"] = None    
+        map[TEMPLATE_DIR[0]] = None
+
+    map["EOSIO_VERSION"] = eosio_version()
+    map["EOSIO_CDT_VERSION"] = eosio_cpp_version()
 
     map[nodeos_stdout_[0]] = nodeos_stdout()
     
@@ -1199,50 +1227,43 @@ Python version {}
 
     if is_linked_package():
         print(
-            '''
-            EOSFactory package is installed as a link to the directory:
-            '{}'
-            '''.format(os.path.join(eosf_dir(), EOSFACTORY_DIR))
+    '''
+    EOSFactory package is installed as a link to the directory:
+    '{}'
+    '''.format(os.path.join(eosf_dir(), EOSFACTORY_DIR))
         )
     elif APP_DATA_DIR_USER[0] == get_app_data_dir():
         print(
-        '''EOSFactory is installed as a PyPi package locally.
-        '''            
+    '''EOSFactory is installed as a PyPi package locally.
+    '''            
         )
     elif APP_DATA_DIR_SUDO[0] == get_app_data_dir():
         print(
-        '''EOSFactory is installed as a PyPi package globally.
-        '''            
+    '''EOSFactory is installed as a PyPi package globally.
+    '''            
         )
 
-    installation_dependencies()
+    config_map = current_config()
+    installation_dependencies(config_map)
 
     print('''
 The current configuration of EOSFactory:
 {}
 
-You are free to overwrite the above settings with entries in the configuration 
+You can overwrite the above settings with entries in the configuration 
 file located here:
 {}
 '''.format(
         json.dumps(
-            current_config(), sort_keys=True, indent=4), config_file())
+            config_map, sort_keys=True, indent=4), config_file())
     )
 
-    not_defined_ = not_defined()
+    not_defined_ = not_defined(config_map)
     if not_defined_:
         print('''
 There are undefined setting:
 {}
     '''.format(json.dumps(not_defined_, sort_keys=True, indent=4)))
-
-    print('''
-The current contents of the configuration file is:
-{}
-'''.format(
-        json.dumps(config_map(), sort_keys=True, indent=4))
-    )
-
 
 def main():
     '''
@@ -1281,7 +1302,7 @@ def main():
 
     args = parser.parse_args()
     if args.dependencies:
-        installation_dependencies()
+        installation_dependencies(current_config())
     elif args.json:
         print(json.dumps(
             current_config(dont_set_workspace=args.dont_set_workspace), 
