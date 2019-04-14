@@ -102,3 +102,8 @@ sudo apt install ./eosio.cdt_1.5.0-1_amd64.deb
 
 [Good remark:](https://github.com/EOSIO/eosio.cdt/issues/123)
 Has to be more cpu cores working. 
+
+
+### Shared folders not available on Linux guests 
+
+sudo vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other

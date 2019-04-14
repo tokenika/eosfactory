@@ -302,6 +302,8 @@ def project_from_template(
         path = naturalize_path(path)
         if not path in c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH]:
             c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].append(path)
+            c_cpp_properties_json[CONFIGURATIONS][0][BROWSE]["path"]\
+                                                                .append(path)
     
     if libs:
         temp = libs.split(", ")

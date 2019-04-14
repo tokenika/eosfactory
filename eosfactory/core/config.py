@@ -10,7 +10,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.0.5"
+VERSION = "3.0.6"
 EOSIO_VERSION = "1.6.0"
 EOSIO_CDT_VERSION = "1.5.0"
 PYTHON_VERSION = "3.5 or higher"
@@ -228,11 +228,6 @@ def eoside_libs_dir():
         dir = os.path.join(get_app_data_dir(), libs_[1])
     if not os.path.exists(dir):
         dir = None
-#         raise errors.Error('''
-# Cannot find the libs directory
-# {}.
-# It may be set with {} entry in the config.json file.
-#         '''.format(dir, libs_[0]), translate=False)
     return dir    
 
 
@@ -420,7 +415,7 @@ def wsl_root():
     '''
     if not utils.is_windows_ubuntu():
         return ""
-    
+
     wsl_root_sh = "wsl_root.sh"
     wsl_root_sh = os.path.join(get_app_data_dir(), wsl_root_sh)
 
@@ -457,9 +452,6 @@ not care about having efficient the intelisense of Visual Studio Code.
                     break
         
         wsl_root_[1][0] = path.replace("\\", "/")
-        # map = config_map()
-        # map[config.wsl_root_[0]] = wsl_root_[1][0]
-        # write_config_map(map)
 
     return wsl_root_[1][0]
 
@@ -546,28 +538,26 @@ def eosio_version():
         version = subprocess.check_output(
             "echo $({} --version)".format(node_exe()), shell=True, 
                     timeout=10).decode("ISO-8859-1").strip().replace("v", "")
-        return version      
+        retval = [version]
+        if not version.split(".")[:2] == EOSIO_VERSION.split(".")[:2]:
+            retval.append(EOSIO_VERSION)
+        return retval
+
     except Exception as e:
-        print('''ERROR!
-Cannot determine the version of the installed 'eosio' package.
-The error message:
-{}
-        '''.format(str(e)))
-        return None
+        return []
 
 
 def eosio_cpp_version():
     try:
         version = subprocess.check_output(
             [eosio_cpp(), "-version"], timeout=5).decode("ISO-8859-1").strip().replace("eosio-cpp version ", "")
-        return version
+        retval = [version]
+        if not version.split(".")[:2] == EOSIO_CDT_VERSION.split(".")[:2]:
+            retval.append(EOSIO_CDT_VERSION)
+        return retval
+
     except Exception as e:
-        print('''ERROR!
-Cannot determine the version of the installed 'eosio.cpp' package.
-The error message:
-{}
-        '''.format(str(e)))
-        return None
+        return []
 
 
 def eosio_cpp_dir():
@@ -579,7 +569,10 @@ def eosio_cpp_dir():
     '''
     eosio_cpp_version_ = eosio_cpp_version()
     if not eosio_cpp_version_:
-        eosio_cpp_version_ = "Not known"
+        raise errors.Error(
+            '''
+            'eosio-cpp' does not response.
+            ''')        
 
     version_pattern = re.compile(".+/eosio\.cdt/(\d\.\d\.\d)/$")
     dir = eosio_cpp_dir_[1][0]    
@@ -593,7 +586,7 @@ does not match the directory template 'core.config.EOSIO_CPP_DIR'
             '''.format(version_pattern, EOSIO_CPP_DIR), translate=False
         )
     dir = dir.replace(
-        re.findall(version_pattern, dir)[0], eosio_cpp_version_) 
+        re.findall(version_pattern, dir)[0], eosio_cpp_version_[0]) 
 
     return dir   
 
@@ -1040,12 +1033,11 @@ def update_eosio_cpp_includes(c_cpp_properties_path, root=""):
     with open(c_cpp_properties_path) as f:
         c_cpp_properties = f.read()
     dir_pattern = re.compile(
-        '^.*{}(/.+/eosio\.cdt/\d\.\d\.\d/).+'.format(root), re.M)
+        '^.+\"{}(/.+/eosio\.cdt/\d\.\d\.\d/).+'.format(root), re.M)
 
-    dir = eosio_cpp_dir()
     if re.findall(dir_pattern, c_cpp_properties):
         new = c_cpp_properties.replace(re.findall(
-                                        dir_pattern, c_cpp_properties)[0], dir)
+                            dir_pattern, c_cpp_properties)[0], eosio_cpp_dir())
         if not new == c_cpp_properties:
             with open(c_cpp_properties_path,'w') as f:
                 f.write(new)
@@ -1064,23 +1056,26 @@ def installation_dependencies(config_map):
     '''
     eosio_version_ = config_map["EOSIO_VERSION"]
     if eosio_version_:
-        if not eosio_version_.split(".")[:2] \
-                                                == EOSIO_VERSION.split(".")[:2]:
+        if len(eosio_version_) > 1:
             print('''NOTE!
-The version of the installed 'eosio' package is {} while the expected
-version is {}
-            '''.format(eosio_version_, EOSIO_VERSION))        
+The version of the installed 'eosio' package is {} while EOSFactory was tested
+with version {}
+            '''.format(eosio_version_[0], eosio_version_[1]))
+    else:
+        print('''
+        Cannot determine the version of the installed 'eosio' package as 'nodeos' does not response.
+        ''')
 
     eosio_cpp_version_ = config_map["EOSIO_CDT_VERSION"]
     if eosio_cpp_version_:
-
-        if not eosio_cpp_version_.split(".")[:2] \
-                                            == EOSIO_CDT_VERSION.split(".")[:2]:
+        if len(eosio_cpp_version_) > 1:
             print('''NOTE!
-The version of the installed 'eosio.cdt' package is {} while the expected
-version is {}
-            '''.format(eosio_cpp_version_, EOSIO_CDT_VERSION))     
-
+The version of the installed 'eosio.cdt' package is {} while EOSFactory was tested with version {}
+            '''.format(eosio_cpp_version_[0], eosio_cpp_version_[1]))
+    else:
+        print('''
+        Cannot determine the version of the installed 'eosio.cdt' package as 'eosio-cpp' does not response.
+        ''')        
 
 
 def current_config(contract_dir=None, dont_set_workspace=False):
