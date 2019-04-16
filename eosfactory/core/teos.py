@@ -27,7 +27,6 @@ INCLUDE_PATH = "includePath"
 BROWSE = "browse"
 WORKSPACE_FOLDER = "${workspaceFolder}"
 EOSIO_CPP_INCLUDE = "eosio.cdt"
-EOSIO_DISPATCH = r"void\s*apply\s*\(|EOSIO_DISPATCH"
 ROOT = config.wsl_root()
 HOME = ROOT + os.environ["HOME"]
 
@@ -73,91 +72,7 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
         return json.loads(resolve_home(vscode.c_cpp_properties()))
 
 
-def ABI(
-        contract_dir_hint=None, c_cpp_properties_path=None,
-        verbosity=None):
-    '''Given a hint to a contract directory, produce ABI file.
-    '''
-    contract_dir = config.contract_dir(contract_dir_hint)
-    # source_files[0] is directory, source_files[1] is contents:
-    contract_source_files = config.contract_source_files(contract_dir)
-
-    source_files = []
-    source_ext = [".c", ".cpp",".cxx", ".c++"]
-    for file in contract_source_files[1]:
-        if os.path.splitext(file)[1].lower() in source_ext:
-            source_files.append(file)
-
-    if not source_files:
-        raise errors.Error('''
-        The source of the contract project is empty. 
-        The assumed contract dir is   
-        {}
-        '''.format(contract_dir))
-
-    code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
-    target_dir = get_target_dir(contract_source_files[0])
-    target_path = os.path.normpath(
-                        os.path.join(target_dir, code_name  + ".abi"))
-
-    for file in contract_source_files[1]:
-        if os.path.splitext(file)[1].lower() == ".abi":
-            logger.INFO('''
-            NOTE:
-            An ABI exists in the source directory. Cannot overwrite it:
-            {}
-            Just copying it to the target directory.
-            '''.format(file), verbosity)
-            shutil.move(file, target_path)
-            return
-
-    command_line = [
-        config.eosio_cpp(),
-        "-contract=" + code_name,
-        "-R=" + get_resources_dir(contract_source_files[0]),
-        "-abigen",
-        "-abigen_output=" + target_path]
-
-    c_cpp_properties = get_c_cpp_properties(
-                                    contract_dir, c_cpp_properties_path)
-    for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
-        if WORKSPACE_FOLDER in entry:
-            entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
-            command_line.append(
-                "-I=" + linuxize_path(entry))
-        else:
-            if not EOSIO_CPP_INCLUDE in entry:
-                command_line.append(
-                    "-I=" + linuxize_path(entry))
-
-    input_file = None
-    for file in source_files:
-        with open(file, 'r') as f:
-            if re.search(EOSIO_DISPATCH, f.read()):
-                input_file = file
-                break
-    if not input_file:
-        raise errors.Error('''
-        Cannot determine the 'input file', defined as using the {} macro.
-        Source files considered:
-        {}
-        '''.format(EOSIO_DISPATCH, source_files))
-
-    command_line.append(input_file)
-
-    if setup.is_print_command_line:
-        print("######## command line sent to eosio-cpp:")
-        print(" ".join(command_line))
-
-    eosio_cpp(command_line, target_dir)
-
-    logger.TRACE('''
-    ABI file writen to file: 
-        {}
-    '''.format(target_path), verbosity)
-
-
-def WASM(
+def build(
         contract_dir_hint, c_cpp_properties_path=None,
         compile_only=False, verbosity=None):
     '''Produce WASM code.
@@ -187,7 +102,13 @@ def WASM(
     c_cpp_properties = get_c_cpp_properties(
                                         contract_dir, c_cpp_properties_path)
 
-    command_line = [config.eosio_cpp()]
+    command_line = [
+        config.eosio_cpp(),
+        "-contract="+ code_name,
+        "-R=" + get_resources_dir(contract_source_files[0]),
+        "-abigen",
+        "-o", target_path]
+
 
     for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
         if WORKSPACE_FOLDER in entry:
@@ -207,23 +128,20 @@ def WASM(
     
     input_file = None
     for file in source_files:
-        with open(file, 'r') as f:
-            if re.search(EOSIO_DISPATCH, f.read()):
-                input_file = file
-                break
+        if os.path.splitext(os.path.basename(file))[0] == code_name:
+            input_file = file
+            break
     if not input_file:
         raise errors.Error('''
-        Cannot determine the 'input file', defined as using the {} macro.
+        Cannot determine the 'input file' named {}.
         Source files considered:
         {}
-        '''.format(EOSIO_DISPATCH, source_files))
+        '''.format(code_name, source_files))
 
     command_line.append(input_file)
 
     if compile_only:
         command_line.append("-c=")
-
-    command_line.append("-o=" + target_path)
 
     if setup.is_print_command_line:
         print("######## command line sent to eosio-cpp:")
@@ -231,7 +149,13 @@ def WASM(
 
     eosio_cpp(command_line, target_dir)
 
+     
     if not compile_only:
+        logger.TRACE('''
+        ABI file writen to file: 
+            {}
+        '''.format(os.path.normpath(
+                        os.path.join(target_dir, code_name  + ".abi"))), verbosity)        
         logger.TRACE('''
             WASM file writen to file: 
                 {}

@@ -50,24 +50,14 @@ class ContractBuilder():
             return
 
         self.abi_file = abi_file
-        self.wasm_file = wasm_file
+        self.wasm_file = wasm_file        
 
-    def build_wast(self):
-        '''Make the WAST file.
-        '''
-        teos.WASM(self.contract_dir, self.c_cpp_properties_path)
-
-    def build_abi(self):
-        '''Make the ABI file.
-        '''
-        teos.ABI(self.contract_dir, self.c_cpp_properties_path)
 
     def build(self, force=True):
         '''Make both, ABI and WASM files.
         '''
         if force or not self.is_built():
-            self.build_abi()
-            self.build_wast()
+            teos.build(self.contract_dir, self.c_cpp_properties_path)
 
     def is_built(self):
         '''Check whether both the ABI and WASM files exist.

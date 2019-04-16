@@ -1,10 +1,7 @@
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/asset.hpp>
-#include <eosiolib/print.hpp>
-#include <eosiolib/time.hpp>
-
-#define DEBUG
-#include <eoside/logger.hpp>
+#include <eosio/eosio.hpp>
+#include <eosio/asset.hpp>
+#include <eosio/print.hpp>
+#include <eosio/time.hpp>
 
 using namespace eosio;
 using namespace std;
@@ -86,19 +83,16 @@ class [[eosio::contract("arbitration")]] dep : public contract {
 };
 
 void dep::transfer(name from, name to, asset quantity, string memo) {
-    logger_info();    
     if (from == _self || to != _self) {
         return;
     }
-    eosio_assert(quantity.symbol == symbol("SYS", 4), 
+    check(quantity.symbol == symbol("SYS", 4), 
                                 "I think you're looking for another contract");
-    eosio_assert(quantity.is_valid(), "Are you trying to corrupt me?");
-    eosio_assert(quantity.amount > 0, "When pigs fly");
+    check(quantity.is_valid(), "Are you trying to corrupt me?");
+    check(quantity.amount > 0, "When pigs fly");
     deposits db(_self, from.value);
     auto to_acnt = db.find(name(memo).value);
-    logger_info("name(memo) ", name(memo));
-    logger_info("name(memo).value ", name(memo).value);
-    eosio_assert(to_acnt != db.end(), 
+    check(to_acnt != db.end(), 
                         "Don't send us your money before opening account" );
     add_balance(from, name(memo), quantity);
 }
@@ -107,7 +101,7 @@ void dep::opendeposit(name buyer, name seller) {
     require_auth(buyer);
     deposits db(_self, buyer.value );
     auto it = db.find(seller.value);
-    eosio_assert(it == db.end(), "Deposit already exists");
+    check(it == db.end(), "Deposit already exists");
     add_balance(buyer, seller, zero);
 }
 
@@ -124,8 +118,8 @@ void dep::claim(name buyer, name seller) {
 void dep::create_claim(name buyer, name seller, bool is_withdrawal) {
     deposits dep_db(_self, buyer.value);
     auto deposit = dep_db.find(seller.value);
-    eosio_assert(deposit != dep_db.end(), "Deposit not found");
-    eosio_assert(seller == deposit->seller, "seller missmatch");
+    check(deposit != dep_db.end(), "Deposit not found");
+    check(seller == deposit->seller, "seller missmatch");
     asset amount = deposit->amount;
     dep_db.erase(deposit);
 
@@ -150,8 +144,8 @@ void dep::create_claim(name buyer, name seller, bool is_withdrawal) {
 void dep::hold(name buyer, name seller) {
     claims db(_self, buyer.value);
     auto request = db.find(seller.value);
-    eosio_assert(request != db.end(), "No such claim");
-    eosio_assert(buyer == request->buyer && seller == request->seller, "seller/buyer missmatch");
+    check(request != db.end(), "No such claim");
+    check(buyer == request->buyer && seller == request->seller, "seller/buyer missmatch");
     name user = request->is_withdrawal?request->seller:request->buyer;
     require_auth(user);
     if (request->on_hold) return;
@@ -163,12 +157,12 @@ void dep::hold(name buyer, name seller) {
 void dep::refund(name buyer, name seller) {
     claims db(_self, buyer.value);
     auto request = db.find(seller.value);
-    eosio_assert(request != db.end(), "No claim request found");
+    check(request != db.end(), "No claim request found");
     name account = request->is_withdrawal?buyer:seller;
     require_auth(account);
-    eosio_assert(buyer == request->buyer && seller == request->seller, "seller/buyer missmatch");
-    eosio_assert(!request->on_hold, "Request is hold");
-    eosio_assert(request->request_time + seconds(refund_delay_sec) <= current_time_point(),
+    check(buyer == request->buyer && seller == request->seller, "seller/buyer missmatch");
+    check(!request->on_hold, "Request is hold");
+    check(request->request_time + seconds(refund_delay_sec) <= current_time_point(),
             "Refund is not available yet" );
     action transfer = action(
         permission_level{get_self() ,"active"_n},
@@ -184,11 +178,11 @@ void dep::resolve(name buyer, name seller, name user) {
     require_auth(_self);
     claims db(_self, buyer.value);
     auto request = db.find(seller.value);
-    eosio_assert(request != db.end(), "No claim request found");
-    eosio_assert(buyer == request->buyer && seller == request->seller, "seller/buyer missmatch");
-    eosio_assert(request->request_time + seconds(refund_delay_sec) <= current_time_point(),
+    check(request != db.end(), "No claim request found");
+    check(buyer == request->buyer && seller == request->seller, "seller/buyer missmatch");
+    check(request->request_time + seconds(refund_delay_sec) <= current_time_point(),
             "Refund is not available yet" );
-    eosio_assert(request->on_hold, "Request is not hold");
+    check(request->on_hold, "Request is not hold");
     action transfer = action(
         permission_level{get_self() ,"active"_n},
         "eosio.token"_n,
@@ -236,7 +230,7 @@ extern "C" {
                                     && action == name("transfer").value) {
               execute_action(name(receiver), name(code), &dep::transfer); 
         } else{
-            eosio_assert(false, (string("Ooops - action not configured: ")
+            check(false, (string("Ooops - action not configured: ")
                 + name(action).to_string()).c_str());
         }
     }

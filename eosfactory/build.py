@@ -7,9 +7,7 @@ def build(
         compile_only=False, silent=False):
 
     verbosity=[] if silent else None
-    if not compile_only:
-        teos.ABI(contract_dir_hint, c_cpp_properties_path, verbosity)
-    teos.WASM(contract_dir_hint, c_cpp_properties_path, compile_only, verbosity)
+    teos.build(contract_dir_hint, c_cpp_properties_path, compile_only, verbosity)
 
 def main():
     '''

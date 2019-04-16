@@ -1,4 +1,4 @@
-#include <eosiolib/eosio.hpp>
+#include <eosio/eosio.hpp>
 
 using namespace eosio;
 
@@ -36,7 +36,7 @@ CONTRACT multi_index_example : public contract {
 */
       ACTION print(name user) {
          auto itr = testtab.find(user.value);
-         eosio_assert(itr != testtab.end(), "test table not set");
+         check(itr != testtab.end(), "test table not set");
          eosio::print_f(
             "Test Table : {%, %, %}\n", itr->test_primary, itr->secondary, 
             itr->datum);
@@ -59,7 +59,7 @@ CONTRACT multi_index_example : public contract {
 */
       ACTION mod( name user, uint32_t n ) {
          auto itr = testtab.find(user.value);
-         eosio_assert( itr != testtab.end(), "test table not set" );
+         check( itr != testtab.end(), "test table not set" );
          testtab.modify( itr, _self, [&]( auto& row ) {
             row.secondary = user;
             row.datum = n;
@@ -92,5 +92,3 @@ CONTRACT multi_index_example : public contract {
   private:
       test_tables testtab;
 };
-
-EOSIO_DISPATCH( multi_index_example, (set)(print)(mod)(bysec) )

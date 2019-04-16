@@ -55,11 +55,13 @@ pip3 install wheel
 ### Installing eosio system
 
 ```bash
-wget https://github.com/eosio/eos/releases/download/v1.6.1/eosio_1.6.1-1-ubuntu-18.04_amd64.deb
-sudo apt install ./eosio_1.6.1-1-ubuntu-18.04_amd64.deb
+sudo apt remove eosio
+wget https://github.com/eosio/eos/releases/download/v1.7.1/eosio_1.7.1-1-ubuntu-18.04_amd64.deb
+sudo apt install ./eosio_1.7.1-1-ubuntu-18.04_amd64.deb
 
-wget https://github.com/EOSIO/eosio.cdt/releases/download/v1.5.0/eosio.cdt_1.5.0-1_amd64.deb
-sudo apt install ./eosio.cdt_1.5.0-1_amd64.deb
+sudo apt remove eosio.cdt
+wget wget https://github.com/eosio/eosio.cdt/releases/download/v1.6.1/eosio.cdt_1.6.1-1_amd64.deb
+sudo apt install ./eosio.cdt_1.6.1-1_amd64.deb
 ```
 
 ### Installing EOSFactory
@@ -83,20 +85,6 @@ pending console output:
 If `~/Workspaces` not `/mnt/hgfs/Workspaces`, the mutable globals error is replaced (masked) with hanging of `eosio_cpp`. If cpu cores increased from 1 to 4, everything is OK.
 
 If the workspace directory is moved from `/mnt/hgfs/Workspaces/EOS/contracts` to `/tmp/eosfactory/contracts`, the mutable globals error vanishes. Then, the problem is in coding of Ubuntu files written to a Windows file system.
-
-### eosio.cdt README error
-
-This is wrong `eosio.cdt-1.5.0-1_amd64.deb`:
-
-```bash
-wget https://github.com/eosio/eosio.cdt/releases/download/v1.5.0/eosio.cdt-1.5.0-1_amd64.deb
-```
-
-This is OK: `eosio.cdt_1.5.0-1_amd64.deb`
-```bash
-wget https://github.com/EOSIO/eosio.cdt/releases/download/v1.5.0/eosio.cdt_1.5.0-1_amd64.deb
-sudo apt install ./eosio.cdt_1.5.0-1_amd64.deb
-```
 
 ### eosio_cpp hangs
 

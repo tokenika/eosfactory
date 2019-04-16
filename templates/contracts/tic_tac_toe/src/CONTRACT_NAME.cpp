@@ -3,8 +3,6 @@
  *  @copyright defined in eos/LICENSE.txt
  */
 
-#define DEBUG
-#include <eoside/logger.hpp>
 #include "${CONTRACT_NAME}.hpp"
 
 namespace eosio {
@@ -100,13 +98,13 @@ namespace eosio {
     */
    void tic_tac_toe::create(const name& challenger, const name& host) {
       require_auth(host);
-      eosio_assert(
+      check(
          challenger != host, "challenger shouldn't be the same as host");
 
       // Check if game already exists
       games existing_host_games(_self, host.value);
       auto itr = existing_host_games.find( challenger.value);
-      eosio_assert(itr == existing_host_games.end(), "game already exists");
+      check(itr == existing_host_games.end(), "game already exists");
 
       existing_host_games.emplace(host, [&]( auto& g ) {
          g.challenger = challenger;
@@ -125,10 +123,10 @@ namespace eosio {
       // Check if game exists
       games existing_host_games(_self, host.value);
       auto itr = existing_host_games.find( challenger.value );
-      eosio_assert(itr != existing_host_games.end(), "game doesn't exists");
+      check(itr != existing_host_games.end(), "game doesn't exists");
 
       // Check if this game belongs to the action sender
-      eosio_assert(
+      check(
          by == itr->host || by == itr->challenger, "this is not your game!");
 
       // Reset game
@@ -146,7 +144,7 @@ namespace eosio {
       // Check if game exists
       games existing_host_games(_self, host.value);
       auto itr = existing_host_games.find( challenger.value );
-      eosio_assert(itr != existing_host_games.end(), "game doesn't exists");
+      check(itr != existing_host_games.end(), "game doesn't exists");
 
       // Remove game
       existing_host_games.erase(itr);
@@ -163,19 +161,19 @@ namespace eosio {
       // Check if game exists
       games existing_host_games(_self, host.value);
       auto itr = existing_host_games.find( challenger.value );
-      eosio_assert(itr != existing_host_games.end(), "game doesn't exists");
+      check(itr != existing_host_games.end(), "game doesn't exists");
 
       // Check if this game hasn't ended yet
-      eosio_assert(itr->winner == name("none"), "the game has ended!");
+      check(itr->winner == name("none"), "the game has ended!");
       // Check if this game belongs to the action sender
-      eosio_assert(
+      check(
          by == itr->host || by == itr->challenger, "this is not your game!");
       // Check if this is the  action sender's turn
-      eosio_assert(by == itr->turn, "it's not your turn yet!");
+      check(by == itr->turn, "it's not your turn yet!");
 
 
       // Check if user makes a valid movement
-      eosio_assert(
+      check(
          is_valid_movement(row, column, itr->board), "not a valid movement!");
 
       // Fill the cell, 1 for host, 2 for challenger
@@ -188,6 +186,4 @@ namespace eosio {
       });
    }
 
-} /// namespace eosio
-
-EOSIO_DISPATCH( eosio::tic_tac_toe, (create)(restart)(move)(close) )
+}

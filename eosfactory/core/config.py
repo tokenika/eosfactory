@@ -11,8 +11,8 @@ import eosfactory.core.utils as utils
 
 
 VERSION = "3.0.6"
-EOSIO_VERSION = "1.6.0"
-EOSIO_CDT_VERSION = "1.5.0"
+EOSIO_VERSION = "1.7.1"
+EOSIO_CDT_VERSION = "1.6.1"
 PYTHON_VERSION = "3.5 or higher"
 EOSFACTORY_DIR = "eosfactory/"
 APP_DATA_DIR_USER = (
@@ -61,7 +61,8 @@ eosio_cpp_ = ("EOSIO_CPP",
 eosio_cpp_dir_ = ("EOSIO_CPP_DIR", [EOSIO_CPP_DIR])
 eosio_cpp_includes_ = (
     "EOSIO_CPP_INCLUDES", 
-    [["include", "include/eosiolib", "include/libc", "include/libcxx"]])
+    [["include", "include/libcxx", "include/eosiolib/core", \
+                                                "include/eosiolib/contracts"]])
 
 key_private_ = (
     "EOSIO_KEY_PRIVATE", 
@@ -208,11 +209,7 @@ def eoside_includes_dir():
     if not os.path.isabs(dir):
         dir = os.path.join(get_app_data_dir(), includes_[1])
     if not os.path.exists(dir):
-        raise errors.Error('''
-Cannot find the include directory
-{}.
-It may be set with {} entry in the config.json file.
-        '''.format(dir, includes_[0]), translate=False)
+        dir = None
     return dir    
 
 
