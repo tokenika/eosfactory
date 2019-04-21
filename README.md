@@ -52,7 +52,7 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 
 ## Complete documentation
 
-Please refer to the [table of contents](http://eosfactory.io/build/html/index.html).
+Please refer to the [table of contents](https://eosfactory.io/build/html/index.html).
 
 
 ## Release notes

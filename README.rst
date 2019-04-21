@@ -64,7 +64,7 @@ Use cases
 Complete documentation
 ----------------------
 
-Please refer to the `table of contents <http://eosfactory.io/build/html/index.html>`_.
+Please refer to the `table of contents <https://eosfactory.io/build/html/index.html>`_.
 
 
 Roadmap
