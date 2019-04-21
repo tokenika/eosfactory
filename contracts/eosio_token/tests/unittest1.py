@@ -30,9 +30,9 @@ class Test(unittest.TestCase):
         Build & deploy the contract:
         ''')
         create_account("HOST", MASTER)
-        contract = Contract(HOST, CONTRACT_WORKSPACE)
-        contract.build(force=False)
-        contract.deploy()
+        smart = Contract(HOST, CONTRACT_WORKSPACE)
+        smart.build(force=False)
+        smart.deploy()
 
         COMMENT('''
         Create test accounts:

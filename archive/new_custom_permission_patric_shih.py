@@ -87,9 +87,9 @@ ALICE.set_account_permission(
     }, Permission.OWNER, (ALICE, Permission.OWNER)) 
 
 HOST = new_account(MASTER)
-smart_contract = Contract(HOST, CONTRACT_WORKSPACE)
-smart_contract.build(force=False)
-smart_contract.deploy()
+smart = Contract(HOST, CONTRACT_WORKSPACE)
+smart.build(force=False)
+smart.deploy()
 
 # HOST.push_action(
 #     "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))

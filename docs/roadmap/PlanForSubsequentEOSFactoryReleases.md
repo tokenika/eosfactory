@@ -1,5 +1,5 @@
 # Plan for Subsequent EOSFactory Releases
 
-## Better integration with Visual Studio Code
+## Better integration with [EOSIDE](https://eosfactory.io/eoside/html/index.html)
 
-We will publish an extension to Visual Studio Code that integrates VSCode and EOSFactory. 
+We hope for a response from users, most probably, signaling bugs and deficiencies. Then we will work on minor improvements.

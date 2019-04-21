@@ -12,10 +12,10 @@ create_account("HOST", MASTER)
 
 create_account("HOST", MASTER, str(HOST))
 
-contract = Contract(HOST, "hello_world")
+smart = Contract(HOST, "hello_world")
 
-contract.build()
-contract.deploy()
+smart.build()
+smart.deploy()
 
 create_account("alice", MASTER)
 create_account("carol", MASTER)

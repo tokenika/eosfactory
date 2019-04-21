@@ -61,11 +61,11 @@ class Test(unittest.TestCase):
         if not testnet.is_local():
             cls.stats()
 
-        contract = Contract(HOST, CONTRACT_WORKSPACE)
-        contract.build(force=False)
+        smart = Contract(HOST, CONTRACT_WORKSPACE)
+        smart.build(force=False)
 
         try:
-            contract.deploy(payer=MASTER)
+            smart.deploy(payer=MASTER)
         except errors.ContractRunningError:
             pass
 

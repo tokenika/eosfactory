@@ -123,7 +123,7 @@ An instance of the `Account` class has the following methods:
 Create an instance of the `Contract` class and associate it with the `HOST` account:
 
 ```python
-contract = Contract(HOST, "hello_world")
+smart = Contract(HOST, "hello_world")
 ```
 
 The second argument of the creator of the `Contract` class identifies the location of the contract's source code (you can supply the entire path, but in case of standard locations, e.g. *EOSFactory* demo contracts or your predefined workspace, you can just specify the folder name).
@@ -131,8 +131,8 @@ The second argument of the creator of the `Contract` class identifies the locati
 Next, let's build and deploy the contract:
 
 ```python
-contract.build()
-contract.deploy()
+smart.build()
+smart.deploy()
 ```
 
 ### Execute the contract

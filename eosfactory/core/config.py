@@ -10,7 +10,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.0.6"
+VERSION = "3.1.0"
 EOSIO_VERSION = "1.7.1"
 EOSIO_CDT_VERSION = "1.6.1"
 PYTHON_VERSION = "3.5 or higher"
@@ -541,7 +541,7 @@ def eosio_version():
         return retval
 
     except Exception as e:
-        return []
+        return ["", EOSIO_VERSION]
 
 
 def eosio_cpp_version():
@@ -554,7 +554,7 @@ def eosio_cpp_version():
         return retval
 
     except Exception as e:
-        return []
+        return ["", EOSIO_CDT_VERSION]
 
 
 def eosio_cpp_dir():
@@ -1059,8 +1059,7 @@ The version of the installed 'eosio' package is {} while EOSFactory was tested
 with version {}
             '''.format(eosio_version_[0], eosio_version_[1]))
     else:
-        print('''
-        Cannot determine the version of the installed 'eosio' package as 'nodeos' does not response.
+        print('''Cannot determine the version of the installed 'eosio' package as 'nodeos' does not response.
         ''')
 
     eosio_cpp_version_ = config_map["EOSIO_CDT_VERSION"]
@@ -1070,8 +1069,7 @@ with version {}
 The version of the installed 'eosio.cdt' package is {} while EOSFactory was tested with version {}
             '''.format(eosio_cpp_version_[0], eosio_cpp_version_[1]))
     else:
-        print('''
-        Cannot determine the version of the installed 'eosio.cdt' package as 'eosio-cpp' does not response.
+        print('''Cannot determine the version of the installed 'eosio.cdt' package as 'eosio-cpp' does not response.
         ''')        
 
 

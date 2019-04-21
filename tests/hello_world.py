@@ -50,11 +50,11 @@ class Test(unittest.TestCase):
         Create, build and deploy the contract:
         ''')
         create_account("HOST", MASTER)
-        contract = Contract(HOST, project_from_template(
+        smart = Contract(HOST, project_from_template(
             CONTRACT_WORKSPACE, template="hello_world", 
             remove_existing=True))
-        contract.build()
-        contract.deploy()
+        smart.build()
+        smart.deploy()
 
         COMMENT('''
         Test an action for ALICE, including the debug buffer:
