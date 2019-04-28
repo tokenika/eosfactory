@@ -128,13 +128,13 @@ def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
         return tilde_path.replace("~", str(pathlib.Path.home()))
 
     def set(contract_workspace_dir):
-        if contract_workspace_dir and os.path.exists(
-                contract_workspace_dir) and os.path.isdir(
-                    contract_workspace_dir):
-            map = config_map()
-            map[contract_workspace_dir_[0]] = contract_workspace_dir
-            write_config_map(map)
-            return True
+        if contract_workspace_dir:
+            path = utils.wslMapWindowsLinux(contract_workspace_dir)
+            if os.path.exists(path) and os.path.isdir(path):
+                map = config_map()
+                map[contract_workspace_dir_[0]] = path
+                write_config_map(map)
+                return True
 
         return False
 
@@ -163,7 +163,7 @@ def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
                 colored(contract_workspace_dir, current_path_color)
                 )
             ) + "\n"))
-        
+
         if not new_dir:
             new_dir = contract_workspace_dir
         
@@ -253,8 +253,9 @@ def contract_workspace_dir(dont_set_workspace=False):
 
     if not contract_workspace_dir_[0] in config_map():
         set_contract_workspace_dir()
-
-    path = config_value(contract_workspace_dir_)
+    
+    workspace_dir = config_value(contract_workspace_dir_)
+    path = utils.wslMapWindowsLinux(workspace_dir)
 
     if os.path.isabs(path):
         if os.path.exists(path):
@@ -280,7 +281,7 @@ def contract_workspace_dir(dont_set_workspace=False):
         The path
         '{}'
         resolved as the contract workspace directory directory does not exist.
-            '''.format(path, translate=False)
+            '''.format(workspace_dir, translate=False)
             )
     return path
 

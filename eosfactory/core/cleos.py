@@ -623,7 +623,6 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
     contract_path_absolute = config.contract_dir(contract_dir)
     if not contract_path_absolute:
         return []
-
     if not wasm_file:
         try:
             wasm_file = config.wasm_file(contract_dir)

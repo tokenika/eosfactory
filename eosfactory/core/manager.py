@@ -3,6 +3,7 @@ import sys
 import os
 import json
 import re
+import time
 
 import eosfactory.core.utils as utils
 import eosfactory.core.config as config
@@ -124,6 +125,7 @@ def node_start(clear=False, nodeos_stdout=None):
         teos.node_probe()
     except:
         try:
+            time.sleep(2)
             teos.node_start(clear, nodeos_stdout)
             teos.node_probe()
         except:

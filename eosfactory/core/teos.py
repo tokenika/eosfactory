@@ -75,41 +75,177 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
 def build(
         contract_dir_hint, c_cpp_properties_path=None,
         compile_only=False, verbosity=None):
-    '''Produce WASM code.
+    '''Produce ABI and WASM files.
+
+    Compiler options come with the argument 'c_cpp_properties_path', as 
+    components of 'compilerOptions' list. Option can be any of the 'eosio-cpp'
+    options, plus the following ones:
+
+    * --no-src - if set, the contract source file is not automatically detected
+        as the only source file in the 'src' directory
+    * --src - list of the source files, absolute or relative to 'src' or
+        project directories, for example:
+        --src hello.cpp tests/hello_test.cpp
+    * -o - the same as the corresponding eosio-cpp option, but may be relative
+        to 'build' directory
+
+    Without any option set, the only source file is determined as a result of the function :func:`.core.config.contract_source_files`, if the result is a 
+    single file. If it is not, an error is thrown, stating that the source file has to be specified with the '--src' option.
+
+    The ABI and WASM targets are named after the contract source file. 
+
+    Args:
+        contract_dir_hint (str): Path, may be partial, to the project directory.
+        c_cpp_properties_path (str): If set, the path to a c_cpp_properties json 
+            file in '.vscode' folder in the project directory.
+        compile_only (bool): If set, do not link.
+        verbosity (([.core.logger.Verbosity])): Verbosity parameter, used in 
+            loggers.
     '''
     contract_dir = config.contract_dir(contract_dir_hint)
-    # source_files[0] is directory, source_files[1] is contents:
+    # contract_source_files[0] is directory, contract_source_files[1] is contents:
     contract_source_files = config.contract_source_files(contract_dir)
-
-    source_files = []
-    source_ext = [".c", ".cpp",".cxx", ".c++"]
-    for file in contract_source_files[1]:
-        if os.path.splitext(file)[1].lower() in source_ext:
-            source_files.append(file)
-
-    if not source_files:
-        raise errors.Error('''
-        The source of the contract project is empty. 
-        The assumed contract dir is   
-        {}
-        '''.format(contract_dir))
-
-    code_name = os.path.splitext(os.path.basename(source_files[0]))[0]
-    target_dir = get_target_dir(contract_source_files[0])
-    target_path = os.path.normpath(
-                        os.path.join(target_dir, code_name  + ".wasm"))
-
     c_cpp_properties = get_c_cpp_properties(
                                         contract_dir, c_cpp_properties_path)
 
-    command_line = [
-        config.eosio_cpp(),
-        "-contract="+ code_name,
-        "-R=" + get_resources_dir(contract_source_files[0]),
-        "-abigen",
-        "-o", target_path]
+    build_dir = get_target_dir(contract_source_files[0])
+    target_path = None
+    compile_options = []
+    source_files = []
+    
+    ############################################################################
+    # begin compiler option logics
+    ############################################################################
+    recardian_dir = "-R=" + get_recardian_dir(contract_source_files[0])
+    compile_options_ = c_cpp_properties[CONFIGURATIONS][0]["compilerOptions"]
+    
+    if not "-abigen" in compile_options_:
+        compile_options.append("-abigen")
+
+    if "--no-src" in compile_options_:
+        compile_options_.remove("--no-src")
+    else:
+        source_ext = [".c", ".cpp",".cxx", ".c++"]
+        contract_src_name = None
+        for file in contract_source_files[1]:
+            if os.path.splitext(file)[1].lower() in source_ext:
+                if not contract_src_name:
+                    contract_src_name = os.path.splitext(
+                                                    os.path.basename(file))[0]
+                    source_files.append(os.path.normpath(file))
+                else:
+                    raise errors.Error('''
+Cannot determine the source file of the contract. There is many files in 
+the 'src' directory. Specify the file with the compiler option '--src', for
+example:
+--src src_dir/hello.cpp
+The file path is to be absolute or relative to the project directory.
+                ''')
+    
+    for i in range(0, len(compile_options_)):
+        entry = compile_options_[i]
+        if "-R=" in entry:
+            recardian_dir = entry
+        elif "-o" in entry:
+            target_path = utils.wslMapWindowsLinux(
+                                            entry.replace("-o", "").strip())
+            if not target_path:
+                if i + 1 < len(compile_options_):
+                    target_path = compile_options_[i + 1]
+                else:
+                    raise errors.Error('''
+The option '-o' does not has its vaslue set:
+{}
+                    '''.format(compile_options_))
+
+            if not os.path.isabs(target_path):
+                target_path = os.path.join(build_dir, target_path)
+                target_dir = os.path.dirname(target_path)
+                if not os.path.exists(target_dir):
+                    try:
+                        os.makedirs(target_dir)
+                    except Exception as e:
+                        raise errors.Error('''
+Cannot make directory set with the option '-o'.
+{}
+                        '''.str(e))
+        
+        elif "-abigen_output" in entry:
+            abigen_path = utils.wslMapWindowsLinux(
+                                    entry.replace("-abigen_output=", "").strip())
+
+            if not os.path.isabs(abigen_path):
+                abigen_path = os.path.join(build_dir, abigen_path)
+                abigen_dir = os.path.dirname(abigen_path)
+                if not os.path.exists(abigen_dir):
+                    try:
+                        os.makedirs(abigen_dir)
+                    except Exception as e:
+                        raise errors.Error('''
+Cannot make directory set with the option '-abigen_output'.
+{}
+                        '''.str(e))
+
+            compile_options.append("-abigen_output={}".format(abigen_path))
+        elif "--src" in entry:
+            input_files_ = utils.wslMapWindowsLinux(
+                                            entry.replace("--src", "").strip())
+            if not input_files_:
+                next_index = i + 1
+                while True:
+                    if next_index >= len(compile_options_):
+                        break
+
+                    next_item = compile_options_[next_index]
+                    if "-" in next_item:
+                        break
+                    
+                    input_files_ = input_files_ + " " + next_item
+                    
+            if not input_files_:
+                raise errors.Error('''
+The option '--src' does not has its value set:
+{}
+                '''.format(compile_options_))
+
+            for input_file in input_files_.split(" "):
+                temp = input_file
+                if not os.path.isabs(temp):
+                    temp = os.path.join(contract_source_files[0], input_file)
+                    if not os.path.exists(temp):
+                        temp = os.path.join(contract_dir, input_file)
+
+                if not os.path.exists(temp):
+                    raise errors.Error('''
+The source file
+{} 
+cannot be found. It is neither absolute nor relative to the contract directory
+or relative to the 'src' directory.
+                    '''.format(input_file))
+
+                temp = os.path.normpath(temp)
+                if not temp in source_files:
+                    source_files.append(temp)
+
+        else:
+            compile_options.append(entry)
+
+    compile_options.append(recardian_dir)
+        
+    ############################################################################
+    # end compiler option logics
+    ############################################################################
 
 
+    if not target_path:
+        target_path = os.path.normpath(
+                        os.path.join(build_dir, contract_src_name  + ".wasm"))
+        abigen_path = os.path.normpath(
+                        os.path.join(build_dir, contract_src_name  + ".abi"))
+
+    command_line = [config.eosio_cpp()]
+    command_line.extend(["-o", target_path])
+ 
     for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
@@ -123,22 +259,11 @@ def build(
         command_line.append(
             "-l=" + linuxize_path(entry))
 
-    for entry in c_cpp_properties[CONFIGURATIONS][0]["compilerOptions"]:
+    for entry in compile_options:
         command_line.append(entry)
-    
-    input_file = None
-    for file in source_files:
-        if os.path.splitext(os.path.basename(file))[0] == code_name:
-            input_file = file
-            break
-    if not input_file:
-        raise errors.Error('''
-        Cannot determine the 'input file' named {}.
-        Source files considered:
-        {}
-        '''.format(code_name, source_files))
 
-    command_line.append(input_file)
+    for input_file in source_files:
+        command_line.append(input_file)
 
     if compile_only:
         command_line.append("-c=")
@@ -147,19 +272,23 @@ def build(
         print("######## command line sent to eosio-cpp:")
         print(" ".join(command_line))
 
-    eosio_cpp(command_line, target_dir)
+    eosio_cpp(command_line, build_dir)
 
-     
     if not compile_only:
-        logger.TRACE('''
-        ABI file writen to file: 
-            {}
-        '''.format(os.path.normpath(
-                        os.path.join(target_dir, code_name  + ".abi"))), verbosity)        
-        logger.TRACE('''
-            WASM file writen to file: 
-                {}
-            '''.format(os.path.normpath(target_path)), verbosity)
+        if "wasm" in target_path:
+            logger.TRACE('''
+                ABI file writen to file: 
+                    {}
+                '''.format(os.path.normpath(abigen_path)), verbosity)        
+            logger.TRACE('''
+                WASM file writen to file: 
+                    {}
+                '''.format(os.path.normpath(target_path)), verbosity)
+        else:
+            logger.TRACE('''
+                terget writen to file: 
+                    {}
+                '''.format(os.path.normpath(target_path)), verbosity)            
 
 
 def project_from_template(
@@ -193,7 +322,7 @@ def project_from_template(
     
     if not os.path.isdir(template_dir):
         raise errors.Error('''
-        The contract project template '{}' does not exist.
+The contract project template '{}' does not exist.
         '''.format(template_dir)) 
 
     if c_cpp_prop_path:
@@ -276,10 +405,10 @@ error message:
                     '''.format(project_dir, str(e)))
             else:
                 msg = '''
-                NOTE:
-                Contract workspace
-                '{}'
-                already exists. Cannot overwrite it.
+NOTE:
+Contract workspace
+'{}'
+already exists. Cannot overwrite it.
                 '''.format(project_dir)
                 if throw_exists:
                     raise errors.Error(msg)
@@ -295,7 +424,11 @@ error message:
         os.makedirs(os.path.join(project_dir, "tests"))
     except Exception as e:
             raise errors.Error(str(e))
-
+    try:    # make contract directory and its include directory:
+        os.makedirs(os.path.join(project_dir, "include"))
+    except Exception as e:
+            raise errors.Error(str(e))
+            
     def copy_dir_contents(
             project_dir, template_dir, directory, project_name):
         contents = os.listdir(os.path.join(template_dir, directory))
@@ -323,9 +456,9 @@ error message:
         if TEMPLATE_HOME in template:
             resolve_home(template)
 
-        template = template.replace("${" + TEMPLATE_NAME + "}", project_name)
         template = template.replace(C_CPP_PROP, c_cpp_properties)
         template = template.replace(TASK_JSON, vscode.TASKS)
+        template = template.replace("${" + TEMPLATE_NAME + "}", project_name)
 
         with open(contract_path, "w") as output:
             output.write(template)
@@ -345,9 +478,9 @@ error message:
         os.system(command_line)
 
     logger.INFO('''
-    ######## Created contract project '{}', 
-        originated from template 
-        '{}'.
+######## Created contract project '{}', 
+    originated from template 
+    '{}'.
     '''.format(project_dir, template_dir), verbosity)
 
     return project_dir
@@ -373,9 +506,17 @@ def get_pid(name=None):
     return [int(pid) for pid in stdout.split()]
 
 
-def eosio_cpp(command_line, target_dir):
+def eosio_cpp(command_line, build_dir):
+    stop = False
+    PERIOD = 2
+    def thread_function(name):
+        while True:
+            print(".", end="", flush=True)
+            time.sleep(PERIOD)
+            if stop:
+                break
 
-    cwd = os.path.join(target_dir, "cwd")
+    cwd = os.path.join(build_dir, "cwd")
     if os.path.exists(cwd):
         try:
             shutil.rmtree(cwd)
@@ -385,18 +526,23 @@ Cannot remove the directory {}.
 error message:
 ==============
 {}
-                    '''.format(cwd, str(e)))
+            '''.format(cwd, str(e)))
     os.mkdir(cwd)
 
+    threading.Thread(target=thread_function, args=(1,)).start()
     p = subprocess.run(
         command_line,
         cwd=cwd,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE) 
-    
+        stderr=subprocess.PIPE)
+
+    stop = True
+    time.sleep(PERIOD)
+    print()
     stdout = p.stdout.decode("ISO-8859-1")
     stderr = p.stderr.decode("ISO-8859-1")
     returncode = p.returncode
+    print(stdout)
     shutil.rmtree(cwd)
 
     if returncode:
@@ -431,13 +577,29 @@ def get_target_dir(source_dir):
     return dir
 
 
-def get_resources_dir(source_dir):
+def get_recardian_dir(source_dir):
     
-    dir = os.path.join(source_dir, "..", "resources")
+    dir = os.path.join(source_dir, "..", "ricardian")
     if os.path.exists(dir):
         return dir
 
-    dir = os.path.join(source_dir, "resources")
+    dir = os.path.join(source_dir, "ricardian")
+    if not os.path.exists(dir):
+        try:
+            os.mkdir(dir)
+        except Exception as e:
+            raise errors.Error(str(e))
+
+    return dir
+
+
+def get_include_dir(source_dir):
+    
+    dir = os.path.join(source_dir, "..", "include")
+    if os.path.exists(dir):
+        return dir
+
+    dir = os.path.join(source_dir, "include")
     if not os.path.exists(dir):
         try:
             os.mkdir(dir)
@@ -566,11 +728,11 @@ def node_start(clear=False, nodeos_stdout=None):
             std_out_handle = open(nodeos_stdout, 'w')
         except Exception as e:
             raise errors.Error('''
-            Error when preparing to start the local EOS node, 
-            opening the given stdout log file that is 
-            {}
-            Error message is
-            {}
+Error when preparing to start the local EOS node, 
+opening the given stdout log file that is 
+{}
+Error message is
+{}
             '''.format(nodeos_stdout, str(e)))
 
     def onExit():
@@ -632,7 +794,7 @@ def node_probe():
 
         if count <= 0:
             raise errors.Error('''
-            The local node does not respond.
+The local node does not respond.
             ''')
 
 
@@ -668,11 +830,10 @@ Failed to kill {}. Pid is {}.
     )
     else:         
         logger.INFO('''
-        Local node is stopped {}.
+Local node is stopped {}.
         '''.format(str(pids)))        
 
     
 def node_is_running():
     return not get_pid()
 
-    return dir

@@ -3,7 +3,7 @@
  *  @copyright defined in eos/LICENSE.txt
  */
 
-#include "${CONTRACT_NAME}.hpp"
+#include <${CONTRACT_NAME}.hpp>
 
 namespace eosio {
 

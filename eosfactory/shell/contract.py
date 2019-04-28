@@ -143,7 +143,7 @@ class Contract(ContractBuilder):
             raise errors.Error('''
             Contract needs to be built before deployment.
             ''')
-            return
+
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
         try:

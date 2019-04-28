@@ -15,8 +15,8 @@ Uninstalling eosfactory-tokenika-2.1.1:
     /usr/local/eosfactory/templates/contracts/hello_world/.vscode/settings.json
     /usr/local/eosfactory/templates/contracts/hello_world/.vscode/tasks.json
     /usr/local/eosfactory/templates/contracts/hello_world/CMakeLists.txt
-    /usr/local/eosfactory/templates/contracts/hello_world/resources/CONTRACT_NAME.clauses.md
-    /usr/local/eosfactory/templates/contracts/hello_world/resources/CONTRACT_NAME.contracts.md
+    /usr/local/eosfactory/templates/contracts/hello_world/ricardian/CONTRACT_NAME.clauses.md
+    /usr/local/eosfactory/templates/contracts/hello_world/ricardian/CONTRACT_NAME.contracts.md
     /usr/local/eosfactory/templates/contracts/hello_world/src/CONTRACT_NAME.cpp
     /usr/local/eosfactory/templates/contracts/hello_world/src/logger.hpp
     /usr/local/eosfactory/templates/contracts/hello_world/tests/test1.py

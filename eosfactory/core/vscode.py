@@ -23,6 +23,7 @@ def get_includes():
         retval.append(root + include)
 
     retval.append("${workspaceFolder}")
+    retval.append("${workspaceFolder}/include")
 
     return retval
 
@@ -30,6 +31,8 @@ def get_includes():
 LIBS = [
 ]
 COMPILER_OPTIONS = [
+    "-contract=${CONTRACT_NAME}",
+    "-abigen"
 ]
 TASKS = '''
 {
