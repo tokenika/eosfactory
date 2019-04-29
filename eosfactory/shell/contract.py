@@ -4,7 +4,6 @@ import os
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.config as config
-import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
 import eosfactory.core.cleos as cleos
 import eosfactory.core.cleos_set as cleos_set
@@ -47,7 +46,6 @@ class ContractBuilder():
                 Cannot determine the contract directory. The path is 
                 ``{}``.
                 """.format(contract_dir))
-            return
 
         self.abi_file = abi_file
         self.wasm_file = wasm_file        
@@ -113,6 +111,7 @@ class Contract(ContractBuilder):
         super().__init__(
             contract_dir, abi_file=abi_file, wasm_file=wasm_file)
         self.account = account
+        self.permission = permission
         self.expiration_sec = expiration_sec
         self.skip_sign = skip_sign
         self.dont_broadcast = dont_broadcast
@@ -144,6 +143,8 @@ class Contract(ContractBuilder):
             Contract needs to be built before deployment.
             ''')
 
+        if permission is None:
+            permission = self.permission
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
         try:

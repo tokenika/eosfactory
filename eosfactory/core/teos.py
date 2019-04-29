@@ -56,16 +56,13 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
     else:
         c_cpp_properties_path = linuxize_path(c_cpp_properties_path)
         if not os.path.exists(c_cpp_properties_path):
-            raise errors.Error('''
-                The given path to the file 'c_cpp_properties.json'
-                does not exist:
-                {}       
-            '''.format(c_cpp_properties_path))
-    
+            c_cpp_properties_path = os.path.join(
+                                contract_dir, ".vscode/c_cpp_properties.json")
+
     if os.path.exists(c_cpp_properties_path):
         try:
-            with open(c_cpp_properties_path, "r") as input:
-                return json.loads(input.read())
+            with open(c_cpp_properties_path, "r") as f:
+                return json.loads(f.read())
         except Exception as e:
             raise errors.Error(str(e))
     else:
@@ -168,7 +165,7 @@ The option '-o' does not has its vaslue set:
                         raise errors.Error('''
 Cannot make directory set with the option '-o'.
 {}
-                        '''.str(e))
+                        '''.format(str(e)))
         
         elif "-abigen_output" in entry:
             abigen_path = utils.wslMapWindowsLinux(
@@ -184,7 +181,7 @@ Cannot make directory set with the option '-o'.
                         raise errors.Error('''
 Cannot make directory set with the option '-abigen_output'.
 {}
-                        '''.str(e))
+                        '''.format(str(e)))
 
             compile_options.append("-abigen_output={}".format(abigen_path))
         elif "--src" in entry:
@@ -329,8 +326,8 @@ The contract project template '{}' does not exist.
         c_cpp_prop_path = linuxize_path(c_cpp_prop_path)
         if os.path.exists(c_cpp_prop_path):
             try:
-                with open(c_cpp_prop_path, "r") as input:
-                    c_cpp_properties = input.read()
+                with open(c_cpp_prop_path, "r") as f:
+                    c_cpp_properties = f.read()
             except Exception:
                 c_cpp_properties = vscode.c_cpp_properties()
     else:
@@ -414,20 +411,19 @@ already exists. Cannot overwrite it.
                     raise errors.Error(msg)
                 else:
                     raise errors.Error(msg)
-                    return
 
     try:    # make contract directory and its build directory:
         os.makedirs(os.path.join(project_dir, "build"))
     except Exception as e:
-            raise errors.Error(str(e))
+        raise errors.Error(str(e))
     try:    # make contract directory and its tests directory:
         os.makedirs(os.path.join(project_dir, "tests"))
     except Exception as e:
-            raise errors.Error(str(e))
+        raise errors.Error(str(e))
     try:    # make contract directory and its include directory:
         os.makedirs(os.path.join(project_dir, "include"))
     except Exception as e:
-            raise errors.Error(str(e))
+        raise errors.Error(str(e))
             
     def copy_dir_contents(
             project_dir, template_dir, directory, project_name):
@@ -450,8 +446,8 @@ already exists. Cannot overwrite it.
                 copy(template_path, contract_path, project_name)
 
     def copy(template_path, contract_path, project_name):
-        with open(template_path, "r") as input:
-            template = input.read()
+        with open(template_path, "r") as f:
+            template = f.read()
 
         if TEMPLATE_HOME in template:
             resolve_home(template)
@@ -761,7 +757,7 @@ Error message is
 
 
 def node_probe():
-    count = 25
+    count = 20
     count1 = count - 7
     num = 5
     block_num = None

@@ -3,7 +3,7 @@
  *  @copyright defined in eos/LICENSE.txt
  */
 
-#include <tic_tac_toe.hpp>
+#include "include/tic_tac_toe.hpp"
 
 namespace eosio {
 

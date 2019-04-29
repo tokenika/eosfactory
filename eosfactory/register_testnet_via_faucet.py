@@ -3,8 +3,8 @@ import json
 import argparse
 import time
 
+import eosfactory.core.setup as setup
 import eosfactory.core.errors as errors
-import eosfactory.core.logger as logger
 from eosfactory.eosf import *
 
 CREATE_ACCOUNT_URL = "create_account"
@@ -51,7 +51,6 @@ def register_testnet_via_faucet_(faucet, url, alias):
                     Error message is
                     {}
                     '''.format(path, str(e)))
-                break
             else:
                 account_name = cleos.account_name()
                 path = faucet + "/" + CREATE_ACCOUNT_URL + "?" + account_name

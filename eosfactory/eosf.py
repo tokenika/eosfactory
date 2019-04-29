@@ -1,7 +1,6 @@
 
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
-import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
 import eosfactory.core.cleos as cleos
 import eosfactory.core.manager as manager

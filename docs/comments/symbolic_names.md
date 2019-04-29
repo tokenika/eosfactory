@@ -15,6 +15,7 @@ $ python3
 ```
 
 ```python
+import eosfactory.core.setup as setup
 from eosfactory.eosf import *
 ```
 

@@ -1,5 +1,4 @@
 import eosfactory.core.cleos as cleos
-import eosfactory.core.setup as setup
 import eosfactory.core.interface as interface
 
 def reload():
@@ -47,7 +46,7 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
         stake_cpu = "{} EOS".format(stake_cpu)
         
         if name is None: 
-            name = account_name()
+            name = cleos.account_name()
         interface.Account.__init__(self, name)
 
         self.owner_key = None # private keys
@@ -76,6 +75,8 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
             p = interface.permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
         if skip_sign:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -136,6 +137,8 @@ class BuyRam(cleos.Cleos):
 
         if buy_ram_kbytes:
             args.extend(["--kbytes"])
+        if expiration_sec:
+            args.extend(["--expiration", str(expiration_sec)])
         if skip_sign:
             args.append("--skip-sign")
         if dont_broadcast:

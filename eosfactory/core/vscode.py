@@ -7,12 +7,8 @@
 '''
 
 import json
-import subprocess
 import argparse
-
-import eosfactory.core.utils as utils
 import eosfactory.core.config as config
-import eosfactory.core.logger as logger
 
 
 def get_includes():
@@ -31,8 +27,6 @@ def get_includes():
 LIBS = [
 ]
 COMPILER_OPTIONS = [
-    "-contract=${CONTRACT_NAME}",
-    "-abigen"
 ]
 TASKS = '''
 {

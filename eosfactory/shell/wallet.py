@@ -7,7 +7,6 @@ import eosfactory.core.config as config
 import eosfactory.core.logger as logger
 import eosfactory.core.setup as setup
 import eosfactory.core.interface as interface
-import eosfactory.core.teos as teos
 import eosfactory.core.cleos as cleos
 import eosfactory.core.manager as manager
 
@@ -33,10 +32,10 @@ class Wallet(cleos.WalletCreate):
 
         if not Wallet.wallet_single is None \
                                     and not Wallet.wallet_single.name == name:
-                raise errors.Error('''
-                It can be only one ``Wallet`` object in the script; there is one
-                named ``{}``.
-                '''.format(Wallet.wallet_single.name))
+            raise errors.Error('''
+            It can be only one ``Wallet`` object in the script; there is one
+            named ``{}``.
+            '''.format(Wallet.wallet_single.name))
 
         self.wallet_dir = config.keosd_wallet_dir()
 
@@ -211,7 +210,7 @@ class Wallet(cleos.WalletCreate):
             imported_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=False))
 
-            wallet_import = cleos.WalletImport(
+            cleos.WalletImport(
                 interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=True), 
                 self.name, is_verbose=False)
@@ -223,7 +222,7 @@ class Wallet(cleos.WalletCreate):
                 '''.format(account_name, self.name)
                 )
         else:           
-            wallet_import = cleos.WalletImport(
+            cleos.WalletImport(
                 interface.key_arg(account_or_key, is_private_key=True), 
                 self.name, is_verbose=False)
 
@@ -341,7 +340,7 @@ class Wallet(cleos.WalletCreate):
     #         '''.format(json.dumps(
     #             self.wallet_private_keys.json, indent=4)))    
 
-    def edit_account_map(self, text_editor="nano"):
+    def edit_account_map(self):
         manager.edit_account_map()
 
     def is_name_taken(self, account_object_name, account_name):
@@ -362,7 +361,7 @@ class Wallet(cleos.WalletCreate):
                 object.
         '''
         while True:
-            account_map_json = manager.account_map(self)
+            account_map_json = manager.account_map()
             if account_map_json is None:
                 return False
 
@@ -400,7 +399,7 @@ class Wallet(cleos.WalletCreate):
                     if temp:
                         Wallet.globals[account_object_name] = temp
                     raise errors.Error('''
-                    Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
+                    Use the function 'manager.edit_account_map()' to edit the file.
                     ''')
             else:
                 break
@@ -413,7 +412,7 @@ class Wallet(cleos.WalletCreate):
         '''
         account_object_name = account_object.account_object_name
         if not self.is_name_taken(account_object_name, account_object.name):
-            account_map_json = manager.account_map(self)
+            account_map_json = manager.account_map()
             if account_map_json is None:
                 return
 
@@ -436,8 +435,8 @@ class Wallet(cleos.WalletCreate):
 def wallet_json_read():
     try:
         with open(config.keosd_wallet_dir() + setup.password_map, "r") \
-                as input:    
-            return json.load(input)
+                as f:    
+            return json.load(f)
     except:
         return {}
 

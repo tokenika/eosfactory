@@ -1,4 +1,5 @@
 
+import eosfactory.core.setup as setup
 from eosfactory.eosf import *
 
 reset()
