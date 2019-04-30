@@ -86,35 +86,39 @@ def get_app_data_dir():
         return app_data_dir
 
     raise errors.Error('''
-    Cannot determine the directory of application data. Tried:
-        '{}',
-        '{}',
-        '{}'.
-    The chosen path is
-        '{}',
-    but it does not exist, seemingly.
+Cannot determine the directory of application data. Tried:
+    {}
+    {}
+    {}
+The path '__file__' is
+    {}
+The chosen path is
+    {}
+but it does not exist, seemingly.
     '''.format(
             APP_DATA_DIR_SUDO[0], APP_DATA_DIR_USER[0], eosf_dir(),
+            __file__,
             app_data_dir),
             translate=False)
 
 
 def is_linked_package():
     is_linked = os.path.exists(os.path.join(eosf_dir(), CONFIG_DIR))
-    is_copied = not is_linked and get_app_data_dir()
-    if (not is_linked) and (not is_copied):
+    is_installed_package = not is_linked and get_app_data_dir()
+
+    if (not is_linked) and (not is_installed_package):
         raise errors.Error('''
-        Cannot determine the configuration directory.
-        {}
-        {}
-        {}
+Cannot determine the configuration directory.
+    {}
+    {}
+    {}
         '''.format(
             os.path.join(eosf_dir(), CONFIG_DIR),
             os.path.join(APP_DATA_DIR_USER[0], CONFIG_DIR),
             os.path.join(APP_DATA_DIR_SUDO[0], CONFIG_DIR)
             ), translate=False)
 
-    if is_linked and is_copied:
+    if is_linked and is_installed_package:
         is_linked = True
 
     return is_linked
@@ -154,11 +158,11 @@ def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
             contract_workspace_dir = os.path.join(APP_CWD_DIR, CONTRACTS_DIR)
             
         new_dir = tilde(input(utils.heredoc('''
-            Where do you prefer to keep your smart-contract projects?
-            The current location of the is:
-            '{}'
-            Otherwise, input another existing directory path, or nothing to 
-            keep the current one:
+Where do you prefer to keep your smart-contract projects?
+The current location of the is:
+    {}
+Otherwise, input another existing directory path, or nothing to 
+keep the current one:
             '''.format(
                 colored(contract_workspace_dir, current_path_color)
                 )
@@ -172,9 +176,9 @@ def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
             break
         else:        
             print("\n" + utils.heredoc('''
-            The path you entered:
-            {}
-            doesn't seem to exist!
+The path you entered:
+    {}
+doesn't seem to exist!
             ''').format(colored(new_dir, error_path_color)) + "\n")
 
 
@@ -262,9 +266,9 @@ def contract_workspace_dir(dont_set_workspace=False):
             return path
         else:
             raise errors.Error('''
-            The path
-            '{}',
-            set as the contract workspace directory, does not exist.
+The path
+'{}',
+set as the contract workspace directory, does not exist.
             '''.format(path), translate=False)
     else:
         if is_linked_package():
@@ -278,9 +282,9 @@ def contract_workspace_dir(dont_set_workspace=False):
             return path
         else:
             raise errors.Error('''
-        The path
-        '{}'
-        resolved as the contract workspace directory directory does not exist.
+The path
+'{}'
+resolved as the contract workspace directory directory does not exist.
             '''.format(workspace_dir, translate=False)
             )
     return path
@@ -303,18 +307,25 @@ def abi_file(contract_dir_hint):
 def eosf_dir():
     '''The absolute directory of the EOSFactory installation.
     '''
-    path = os.path.realpath(os.path.join(
+    try:
+        path = os.path.realpath(os.path.join(
                             os.path.realpath(__file__), FROM_HERE_TO_EOSF_DIR))
+    except Exception as e:
+        raise errors.Error('''
+Impossible error: __file__ path cannot be determined. The message is
+    {}
+        '''.format(str(e)))
+    
     if os.path.exists(path):
         return path
 
     raise errors.Error('''
-        Cannot determine the root directory of EOSFactory.
-        The path to the file 'config.py' is
-            '{}'.
-        The expected path to the installation, which is 
-            '{}',
-        is reported as non-existent.
+Cannot determine the root directory of EOSFactory.
+The path to the file 'config.py' is
+    '{}'.
+The expected installation path, which is 
+    '{}',
+is reported as non-existent.
     '''.format(__file__, path), translate=False)
 
 
@@ -380,9 +391,9 @@ def genesis_json():
         path = os.path.join(config_dir(), "genesis.json")
     if not os.path.exists(path):
         raise errors.Error('''
-        Cannot find any path for '{}'.
-        Tried:
-        {}
+Cannot find any path for '{}'.
+Tried:
+{}
         '''.format(genesis_json_[0], genesis_json_[1]), translate=False)
 
     return path
@@ -621,9 +632,9 @@ def keosd_wallet_dir(raise_error=True):
         if not path:
             if raise_error:
                 raise errors.Error('''
-                Cannot find any path for '{}'.
-                Tried:
-                {}
+Cannot find any path for '{}'.
+Tried:
+{}
                 '''.format(keosd_wallet_dir_[0], keosd_wallet_dir_[1]), 
                                                             translate=False)
 
@@ -777,9 +788,9 @@ def first_valid_which(config_list, find_file=None, raise_error=True):
     if raise_error:
         config_values(config_list)
         raise errors.Error('''
-        Cannot find any path for '{}'.
-        Tried:
-        {}
+Cannot find any path for '{}'.
+Tried:
+{}
         '''.format(config_list[0], config_list[1]), translate=False)
     else:
         return None
@@ -831,9 +842,9 @@ def first_valid_path(config_list, find_file=None, raise_error=True):
 
     if raise_error:
         raise errors.Error('''
-        Cannot find any path for '{}'.
-        Tried:
-        {}
+Cannot find any path for '{}'.
+Tried:
+{}
         '''.format(config_list[0], config_list[1]), translate=False)
     else:
         return None
@@ -880,9 +891,9 @@ def contract_dir(contract_dir_hint):
         return os.path.realpath(contract_dir_)
     
     raise errors.Error('''
-        Cannot determine the contract directory.
-        Tried:
-        {}
+Cannot determine the contract directory.
+Tried:
+{}
     '''.format(trace), translate=False)
 
 
@@ -925,9 +936,9 @@ def contract_source_files(contract_dir_hint):
         return (source_dir, srcs)            
 
     raise errors.Error('''
-        Cannot find any contract source directory.
-        Tried:
-        {}
+Cannot find any contract source directory.
+Tried:
+{}
     '''.format(trace), translate=False)
 
 
@@ -990,11 +1001,11 @@ def contract_file(contract_dir_hint, contract_file_hint):
             return os.path.join(build_dir, file)
 
     raise errors.Error('''
-        Cannot determine the contract file basing on hints:
-        contract dir hint: {}
-        contract file hint: {}
-        Tried:
-        {}
+Cannot determine the contract file basing on hints:
+contract dir hint: {}
+contract file hint: {}
+Tried:
+{}
     '''.format(contract_dir_hint, contract_file_hint, trace), translate=False)  
 
 
@@ -1215,7 +1226,7 @@ https://github.com/EOSIO/eosio.cdt version {}
 Python version {}
     '''.format(VERSION, EOSIO_VERSION, EOSIO_CDT_VERSION, PYTHON_VERSION)
     )
-
+    import pdb; pdb.set_trace()
     if is_linked_package():
         print(
     '''
