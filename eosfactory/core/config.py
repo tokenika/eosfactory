@@ -5,6 +5,7 @@ import json
 import re
 import subprocess
 
+import eosfactory
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
@@ -15,12 +16,7 @@ EOSIO_VERSION = "1.7.1"
 EOSIO_CDT_VERSION = "1.6.1"
 PYTHON_VERSION = "3.5 or higher"
 EOSFACTORY_DIR = "eosfactory/"
-APP_DATA_DIR_USER = (
-    os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR),
-    os.path.expandvars("${HOME}")
-)
-APP_DATA_DIR_SUDO = ("/usr/local/" + EOSFACTORY_DIR, "/usr/local/")
-APP_CWD_DIR = "/tmp/eosfactory/"
+TMP = "/tmp/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
@@ -32,6 +28,10 @@ CONTRACTS_DIR = "contracts/"
 TEMPLATE_DIR = ("TEMPLATE_DIR", "templates/contracts")
 EOSIO_CPP_DIR = "/usr/opt/eosio.cdt/0.0.0/"
 
+eosfactory_data_ = ("EOSFACTORY_DATA_DIR", 
+            [os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR),\
+                "/usr/local/" + EOSFACTORY_DIR,],
+            [])
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 wallet_address_ = ("WALLET_MANAGER_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 genesis_json_ = ("EOSIO_GENESIS_JSON", 
@@ -74,54 +74,78 @@ contract_workspace_dir_ = (
     "EOSIO_CONTRACT_WORKSPACE", [CONTRACTS_DIR])
 
 
-def get_app_data_dir():
-    if APP_DATA_DIR_SUDO[1] in __file__:
-        app_data_dir = APP_DATA_DIR_SUDO[0]
-    elif  os.path.expandvars(APP_DATA_DIR_USER[1]) in __file__:
-        app_data_dir = APP_DATA_DIR_USER[0]
-    else:
-        app_data_dir = eosf_dir()
-    
-    if app_data_dir and os.path.exists(app_data_dir):
-        return app_data_dir
+def eosfactory_data():
+    '''Data directory.
 
-    raise errors.Error('''
-Cannot determine the directory of application data. Tried:
+    For developer's installation, data is in the root of the installation.
+    .: wsl_root.sh
+    config: config.ini, config.json, genesis.json, ...
+    contracts: eosio_token, hello_world, tic_tac_toe, ...
+    templates: contracts, ...
+    includes: eoside, ...
+    libs: ...
+    '''
+    tested = []
+    is_not_linked = is_site_package()
+
+    if not is_not_linked:
+        path = eosf_dir()
+        tested.append(path)
+        if os.path.exists(os.path.join(path, "config", "config.ini")):
+            return path
+    elif is_not_linked == 1:
+        for path in eosfactory_data_[1]:
+            tested.append(path)
+            if os.path.exists(os.path.join(path, "config", "config.ini")):
+                return path
+    elif is_not_linked == 2:
+        for path in eosfactory_data_[2]:
+            tested.append(path)
+            if os.path.exists(os.path.join(path, "config", "config.ini")):
+                return path
+
+    msg = "Cannot determine the directory of application data. Tried:"
+    for path in tested:
+        msg = '''{}
     {}
-    {}
-    {}
-The path '__file__' is
-    {}
-The chosen path is
-    {}
-but it does not exist, seemingly.
-    '''.format(
-            APP_DATA_DIR_SUDO[0], APP_DATA_DIR_USER[0], eosf_dir(),
-            __file__,
-            app_data_dir),
-            translate=False)
+        '''.format(msg, path)
+
+    raise errors.Error(msg, translate=False)
 
 
-def is_linked_package():
-    is_linked = os.path.exists(os.path.join(eosf_dir(), CONFIG_DIR))
-    is_installed_package = not is_linked and get_app_data_dir()
+def is_site_package():
+    is_local_or_system = -1
+    eosfactory_path = eosfactory.__path__
+    for item in eosfactory_path:
+        if "site-packages" in item:
+            if "local" in item:
+                is_local_or_system = 1
+            else:
+                is_local_or_system = 2
 
-    if (not is_linked) and (not is_installed_package):
+            break
+        
+        if "eosfactory/eosfactory" in item:
+            is_local_or_system = 0
+
+# No EOSFactory:
+# import eosfactory
+# Traceback (most recent call last):
+#   File "<stdin>", line 1, in <module>
+# ModuleNotFoundError: No module named 'eosfactory'
+
+# developer's installation:
+# >>> import eosfactory
+# >>> print(eosfactory.__path__)
+# ['/mnt/c/Workspaces/EOS/eosfactory/eosfactory']
+
+    if is_local_or_system == -1:
         raise errors.Error('''
-Cannot determine the configuration directory.
+Cannot determine the configuration directory. 'eosfactory.__path__' is
     {}
-    {}
-    {}
-        '''.format(
-            os.path.join(eosf_dir(), CONFIG_DIR),
-            os.path.join(APP_DATA_DIR_USER[0], CONFIG_DIR),
-            os.path.join(APP_DATA_DIR_SUDO[0], CONFIG_DIR)
-            ), translate=False)
+        '''.format(eosfactory_path), translate=False)
 
-    if is_linked and is_installed_package:
-        is_linked = True
-
-    return is_linked
+    return is_local_or_system
 
 
 def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
@@ -155,7 +179,7 @@ def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
         if contract_workspace_dir_[0] in map:
             contract_workspace_dir = map[contract_workspace_dir_[0]]
         else:
-            contract_workspace_dir = os.path.join(APP_CWD_DIR, CONTRACTS_DIR)
+            contract_workspace_dir = os.path.join(TMP, CONTRACTS_DIR)
             
         new_dir = tilde(input(utils.heredoc('''
 Where do you prefer to keep your smart-contract projects?
@@ -183,7 +207,7 @@ doesn't seem to exist!
 
 
 def config_dir():
-    dir = os.path.join(get_app_data_dir(), CONFIG_DIR)
+    dir = os.path.join(eosfactory_data(), CONFIG_DIR)
     if not os.path.exists(dir):
         raise errors.Error('''
 Cannot find the configuration directory
@@ -193,7 +217,7 @@ Cannot find the configuration directory
 
 
 def template_dir():
-    dir = os.path.join(get_app_data_dir(), TEMPLATE_DIR[1])
+    dir = os.path.join(eosfactory_data(), TEMPLATE_DIR[1])
     if not os.path.exists(dir):
         raise errors.Error('''
 Cannot find the template directory
@@ -211,7 +235,7 @@ def eoside_includes_dir():
     '''
     dir = includes_[1]
     if not os.path.isabs(dir):
-        dir = os.path.join(get_app_data_dir(), includes_[1])
+        dir = os.path.join(eosfactory_data(), includes_[1])
     if not os.path.exists(dir):
         dir = None
     return dir    
@@ -226,7 +250,7 @@ def eoside_libs_dir():
     '''
     dir = libs_[1]
     if not os.path.isabs(dir):
-        dir = os.path.join(get_app_data_dir(), libs_[1])
+        dir = os.path.join(eosfactory_data(), libs_[1])
     if not os.path.exists(dir):
         dir = None
     return dir    
@@ -242,7 +266,7 @@ def contract_workspace_dir(dont_set_workspace=False):
     subdirectory (typically *contracts/*) of the EOSFActory installation, if 
     EOSFactory is installed from its GitHub repository, otherwise, they go to 
     a directory specified as 
-    `join(.config.APP_CWD_DIR, .config.CONTRACTS_DIR)`. 
+    `join(.config.TMP, .config.CONTRACTS_DIR)`. 
 
     The setting may be changed with 
     *EOSIO_CONTRACT_WORKSPACE* entry in the *config.json* file, 
@@ -271,10 +295,10 @@ The path
 set as the contract workspace directory, does not exist.
             '''.format(path), translate=False)
     else:
-        if is_linked_package():
+        if not is_site_package():
             path = os.path.join(eosf_dir(), path)
         else:
-            path = os.path.join(APP_CWD_DIR, path)
+            path = os.path.join(TMP, path)
             if not os.path.exists(path):
                 os.makedirs(path)
 
@@ -307,20 +331,14 @@ def abi_file(contract_dir_hint):
 def eosf_dir():
     '''The absolute directory of the EOSFactory installation.
     '''
-    try:
-        path = os.path.realpath(os.path.join(
+    path = os.path.realpath(os.path.join(
                             os.path.realpath(__file__), FROM_HERE_TO_EOSF_DIR))
-    except Exception as e:
-        raise errors.Error('''
-Impossible error: __file__ path cannot be determined. The message is
-    {}
-        '''.format(str(e)))
     
     if os.path.exists(path):
         return path
 
     raise errors.Error('''
-Cannot determine the root directory of EOSFactory.
+Cannot determine the root directory of the EOSFactory installation.
 The path to the file 'config.py' is
     '{}'.
 The expected installation path, which is 
@@ -426,7 +444,7 @@ def wsl_root():
         return ""
 
     wsl_root_sh = "wsl_root.sh"
-    wsl_root_sh = os.path.join(get_app_data_dir(), wsl_root_sh)
+    wsl_root_sh = os.path.join(eosfactory_data(), wsl_root_sh)
 
     if wsl_root_[1][0] is None:
         path = ""
@@ -882,9 +900,9 @@ def contract_dir(contract_dir_hint):
         return os.path.realpath(contract_dir_)
 
     # ? the relative path to a contract directory, relative to 
-    # 'get_app_data_dir()/contracts'
+    # 'eosfactory_data()/contracts'
     contract_dir_ =  os.path.join(
-                get_app_data_dir(), CONTRACTS_DIR, contract_dir_hint)
+                eosfactory_data(), CONTRACTS_DIR, contract_dir_hint)
 
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
@@ -1102,11 +1120,11 @@ def current_config(contract_dir=None, dont_set_workspace=False):
     map = {}
     
     map["CONFIG_FILE"] = config_file()
-    if is_linked_package():
+    if not is_site_package():
         try:
-            map["EOS_FACTORY_DIR"] = eosf_dir()
+            map["EOSFACTORY_DIR"] = eosf_dir()
         except:
-            map["EOS_FACTORY_DIR"] = None
+            map["EOSFACTORY_DIR"] = None
     try:
         map[node_address_[0]] = http_server_address()
     except:
@@ -1186,9 +1204,14 @@ def current_config(contract_dir=None, dont_set_workspace=False):
     except:
         map[libs_[0]] = None
     try:   
+        map[eosfactory_data_[0]] = eosfactory_data()
+    except:
+        map[eosfactory_data_[0]] = None
+    try:   
         map[TEMPLATE_DIR[0]] = template_dir()
     except:
         map[TEMPLATE_DIR[0]] = None
+        
 
     map["EOSIO_VERSION"] = eosio_version()
     map["EOSIO_CDT_VERSION"] = eosio_cpp_version()
@@ -1226,22 +1249,21 @@ https://github.com/EOSIO/eosio.cdt version {}
 Python version {}
     '''.format(VERSION, EOSIO_VERSION, EOSIO_CDT_VERSION, PYTHON_VERSION)
     )
-    import pdb; pdb.set_trace()
-    if is_linked_package():
+    is_not_linked = is_site_package()
+    if not is_not_linked:
         print(
-    '''
-    EOSFactory package is installed as a link to the directory:
+    '''EOSFactory package is installed as a link to the directory:
     '{}'
     '''.format(os.path.join(eosf_dir(), EOSFACTORY_DIR))
         )
-    elif APP_DATA_DIR_USER[0] == get_app_data_dir():
+    elif is_not_linked == 1:
         print(
-    '''EOSFactory is installed as a PyPi package locally.
+    '''EOSFactory is installed as a site package locally.
     '''            
         )
-    elif APP_DATA_DIR_SUDO[0] == get_app_data_dir():
+    elif is_not_linked == 2:
         print(
-    '''EOSFactory is installed as a PyPi package globally.
+    '''EOSFactory is installed as a site package globally.
     '''            
         )
 

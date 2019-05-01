@@ -25,7 +25,9 @@ def readme():
     with open('README.rst') as f:
         return f.read()
 
-def data_files_(directory):
+def data_files_item(directory):
+    '''Given a directory, return tuple the directory, its files.
+    '''
     paths = []
     for (path, _directories, filenames) in os.walk(directory):
         for filename in filenames:
@@ -41,10 +43,10 @@ DATA_FILES = [
     (os.path.join(config.EOSFACTORY_DIR, "config"),
         ["config/distributed/config.json", "config/config.ini", 
                                                     "config/genesis.json"])] 
-DATA_FILES.extend(data_files_('templates'))
-DATA_FILES.extend(data_files_('contracts'))
-DATA_FILES.extend(data_files_('includes'))
-DATA_FILES.extend(data_files_('libs'))
+DATA_FILES.extend(data_files_item('templates'))
+DATA_FILES.extend(data_files_item('contracts'))
+DATA_FILES.extend(data_files_item('includes'))
+DATA_FILES.extend(data_files_item('libs'))
 
 
 setuptools.setup(
