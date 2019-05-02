@@ -269,8 +269,8 @@ or relative to the 'src' directory.
         print("######## command line sent to eosio-cpp:")
         print(" ".join(command_line))
 
-    eosio_cpp(command_line, build_dir)
-
+    utils.long_process(command_line, build_dir, is_verbose=True, 
+                                                            prompt="eosio-cpp")
     if not compile_only:
         if "wasm" in target_path:
             logger.TRACE('''
@@ -502,107 +502,54 @@ def get_pid(name=None):
     return [int(pid) for pid in stdout.split()]
 
 
-def eosio_cpp(command_line, build_dir):
-    stop = False
-    PERIOD = 2
-    def thread_function(name):
-        while True:
-            print(".", end="", flush=True)
-            time.sleep(PERIOD)
-            if stop:
-                break
-
-    cwd = os.path.join(build_dir, "cwd")
-    if os.path.exists(cwd):
-        try:
-            shutil.rmtree(cwd)
-        except Exception as e:
-            raise errors.Error('''
-Cannot remove the directory {}.
-error message:
-==============
-{}
-            '''.format(cwd, str(e)))
-    os.mkdir(cwd)
-
-    threading.Thread(target=thread_function, args=(1,)).start()
-    p = subprocess.run(
-        command_line,
-        cwd=cwd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE)
-
-    stop = True
-    time.sleep(PERIOD)
-    print()
-    stdout = p.stdout.decode("ISO-8859-1")
-    stderr = p.stderr.decode("ISO-8859-1")
-    returncode = p.returncode
-    print(stdout)
-    shutil.rmtree(cwd)
-
-    if returncode:
-        raise errors.Error('''
-command line:
-=============
-{}
-
-error message:
-==============
-{}
-        '''.format(" ".join(command_line), stderr))
-
-    return returncode
-
-
 def get_target_dir(source_dir):
     
-    dir = os.path.join(source_dir, "build")
-    if os.path.exists(dir):
-        return dir
+    path = os.path.join(source_dir, "build")
+    if os.path.exists(path):
+        return path
 
-    dir = os.path.join(source_dir, "..", "build")
-    if os.path.exists(dir):
-        return dir
+    path = os.path.join(source_dir, "..", "build")
+    if os.path.exists(path):
+        return path
         
     try:
-        os.mkdir(dir)
+        os.mkdir(path)
     except Exception as e:
         raise errors.Error(str(e))
 
-    return dir
+    return path
 
 
 def get_recardian_dir(source_dir):
     
-    dir = os.path.join(source_dir, "..", "ricardian")
-    if os.path.exists(dir):
-        return dir
+    path = os.path.join(source_dir, "..", "ricardian")
+    if os.path.exists(path):
+        return path
 
-    dir = os.path.join(source_dir, "ricardian")
-    if not os.path.exists(dir):
+    path = os.path.join(source_dir, "ricardian")
+    if not os.path.exists(path):
         try:
-            os.mkdir(dir)
+            os.mkdir(path)
         except Exception as e:
             raise errors.Error(str(e))
 
-    return dir
+    return path
 
 
 def get_include_dir(source_dir):
     
-    dir = os.path.join(source_dir, "..", "include")
-    if os.path.exists(dir):
-        return dir
+    path = os.path.join(source_dir, "..", "include")
+    if os.path.exists(path):
+        return path
 
-    dir = os.path.join(source_dir, "include")
-    if not os.path.exists(dir):
+    path = os.path.join(source_dir, "include")
+    if not os.path.exists(path):
         try:
-            os.mkdir(dir)
+            os.mkdir(path)
         except Exception as e:
             raise errors.Error(str(e))
 
-    return dir
+    return path
 
 
 def args(clear=False):

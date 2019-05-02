@@ -26,7 +26,6 @@ CONFIG_DIR = "config"
 CONFIG_JSON = "config.json"
 CONTRACTS_DIR = "contracts/"
 TEMPLATE_DIR = ("TEMPLATE_DIR", "templates/contracts")
-EOSIO_CPP_DIR = "/usr/opt/eosio.cdt/0.0.0/"
 
 eosfactory_data_ = ("EOSFACTORY_DATA_DIR", 
             [os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR),\
@@ -58,7 +57,8 @@ node_exe_ = ("LOCAL_NODE_EXECUTABLE",
                         ["nodeos","/usr/bin/nodeos", "/usr/local/bin/nodeos"])
 eosio_cpp_ = ("EOSIO_CPP", 
             ["eosio-cpp", "/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp"])
-eosio_cpp_dir_ = ("EOSIO_CPP_DIR", [EOSIO_CPP_DIR])
+eosio_cdt_root_ = ("EOSIO_CDT_ROOT", 
+    ["/usr/opt/eosio.cdt/0.0.0/", "/usr/local/Cellar/eosio.cdt/0.0.0"])
 eosio_cpp_includes_ = (
     "EOSIO_CPP_INCLUDES", 
     [["include", "include/libcxx", "include/eosiolib/core", \
@@ -207,23 +207,23 @@ doesn't seem to exist!
 
 
 def config_dir():
-    dir = os.path.join(eosfactory_data(), CONFIG_DIR)
-    if not os.path.exists(dir):
+    path = os.path.join(eosfactory_data(), CONFIG_DIR)
+    if not os.path.exists(path):
         raise errors.Error('''
 Cannot find the configuration directory
 {}
-        '''.format(dir), translate=False)
-    return dir
+        '''.format(path), translate=False)
+    return path
 
 
 def template_dir():
-    dir = os.path.join(eosfactory_data(), TEMPLATE_DIR[1])
-    if not os.path.exists(dir):
+    path = os.path.join(eosfactory_data(), TEMPLATE_DIR[1])
+    if not os.path.exists(path):
         raise errors.Error('''
 Cannot find the template directory
 {}
-        '''.format(dir), translate=False)
-    return dir
+        '''.format(path), translate=False)
+    return path
 
 
 def eoside_includes_dir():
@@ -233,12 +233,12 @@ def eoside_includes_dir():
     *INCLUDE* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
-    dir = includes_[1]
-    if not os.path.isabs(dir):
-        dir = os.path.join(eosfactory_data(), includes_[1])
-    if not os.path.exists(dir):
-        dir = None
-    return dir    
+    path = includes_[1]
+    if not os.path.isabs(path):
+        path = os.path.join(eosfactory_data(), includes_[1])
+    if not os.path.exists(path):
+        path = None
+    return path    
 
 
 def eoside_libs_dir():
@@ -248,12 +248,12 @@ def eoside_libs_dir():
     *LIBS* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
-    dir = libs_[1]
-    if not os.path.isabs(dir):
-        dir = os.path.join(eosfactory_data(), libs_[1])
-    if not os.path.exists(dir):
-        dir = None
-    return dir    
+    path = libs_[1]
+    if not os.path.isabs(path):
+        path = os.path.join(eosfactory_data(), libs_[1])
+    if not os.path.exists(path):
+        path = None
+    return path    
 
 
 def contract_workspace_dir(dont_set_workspace=False):
@@ -390,9 +390,9 @@ def nodeos_config_dir():
     *LOCAL_NODE_CONFIG_DIR* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
-    dir = first_valid_path(config_dir_, raise_error=False)
-    if dir:
-        return dir
+    path = first_valid_path(config_dir_, raise_error=False)
+    if path:
+        return path
 
     return config_dir()
 
@@ -587,13 +587,18 @@ def eosio_cpp_version():
         return ["", EOSIO_CDT_VERSION]
 
 
-def eosio_cpp_dir():
+def eosio_cdt_root():
     '''The path to the *eosio-cpp* installation directory.
     
     The setting may be changed with 
     *EOSIO_CPP* entry in the *config.json* file, 
     see :func:`.current_config`.
     '''
+    # find /usr -wholename "*/eosio.cdt/1.6.1"
+    config_json = config_map()
+    if eosio_cdt_root_[0] in config_json and config_json[eosio_cdt_root_[0]]:
+        return config_json[eosio_cdt_root_[0]]
+
     eosio_cpp_version_ = eosio_cpp_version()
     if not eosio_cpp_version_:
         raise errors.Error(
@@ -602,20 +607,25 @@ def eosio_cpp_dir():
             ''')        
 
     version_pattern = re.compile(".+/eosio\.cdt/(\d\.\d\.\d)/$")
-    dir = eosio_cpp_dir_[1][0]    
-    if not version_pattern.match(dir):
-        raise errors.Error(
-            '''
-The assumed pattern
-{}
-does not match the directory template 'core.config.EOSIO_CPP_DIR'
-{}
-            '''.format(version_pattern, EOSIO_CPP_DIR), translate=False
-        )
-    dir = dir.replace(
-        re.findall(version_pattern, dir)[0], eosio_cpp_version_[0]) 
+    tested = []
+    for path in eosio_cdt_root_[1]:
+        tested.append(path)
+        if version_pattern.match(path):
+            path = path.replace(
+                re.findall(version_pattern, path)[0], eosio_cpp_version_[0])
+            if(os.path.exists(path)):
+                return path
 
-    return dir   
+    msg = "Cannot determine the installation directory of 'eosio-cdt. Tried:"
+    for path in tested:
+        msg = '''{}
+    {}
+        '''.format(msg, path)
+    msg = '''{}
+Define it in the config file
+{} 
+    '''.format(msg, config_file())
+    raise errors.Error(msg, translate=False) 
 
 
 def eosio_cpp_includes():
@@ -625,9 +635,9 @@ def eosio_cpp_includes():
     file, see :func:`.current_config`.
     '''
     list = []
-    dir = eosio_cpp_dir()
+    path = eosio_cdt_root()
     for include in eosio_cpp_includes_[1][0]:
-        list.append(dir + include)
+        list.append(path + include)
     return list
 
 
@@ -1064,7 +1074,7 @@ def update_eosio_cpp_includes(c_cpp_properties_path, root=""):
 
     if re.findall(dir_pattern, c_cpp_properties):
         new = c_cpp_properties.replace(re.findall(
-                            dir_pattern, c_cpp_properties)[0], eosio_cpp_dir())
+                            dir_pattern, c_cpp_properties)[0], eosio_cdt_root())
         if not new == c_cpp_properties:
             with open(c_cpp_properties_path,'w') as f:
                 f.write(new)
@@ -1082,12 +1092,13 @@ def installation_dependencies(config_map):
     '''Verify whether 'eosio' and 'eosio.cpp' packages are properly installed.
     '''
     eosio_version_ = config_map["EOSIO_VERSION"]
-    if eosio_version_:
+    if eosio_version_ and eosio_version_[0]:
         if len(eosio_version_) > 1:
             print('''NOTE!
 The version of the installed 'eosio' package is {} while EOSFactory was tested
 with version {}
-            '''.format(eosio_version_[0], eosio_version_[1]))
+            '''.format(
+                eosio_version_[0], eosio_version_[1]))
     else:
         print('''Cannot determine the version of the installed 'eosio' package as 'nodeos' does not response.
         ''')
@@ -1184,9 +1195,9 @@ def current_config(contract_dir=None, dont_set_workspace=False):
     except:
         map[eosio_cpp_[0]] = None
     try: 
-        map[eosio_cpp_dir_[0]] = eosio_cpp_dir()
+        map[eosio_cdt_root_[0]] = eosio_cdt_root()
     except:
-        map[eosio_cpp_dir_[0]] = None
+        map[eosio_cdt_root_[0]] = None
     try: 
         map[eosio_cpp_includes_[0]] = eosio_cpp_includes()
     except:
