@@ -710,7 +710,9 @@ class PushAction(Cleos):
         Cleos.__init__(self, args, "push", "action", is_verbose)
 
         if not dont_broadcast:
-            self.console = self.json["processed"]["action_traces"][0]["console"]
+            self.console = ""
+            for trace in self.json["processed"]["action_traces"]:
+                self.console += trace["console"]
             self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
 
         self.printself()
