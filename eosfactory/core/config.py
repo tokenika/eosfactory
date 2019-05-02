@@ -18,6 +18,7 @@ PYTHON_VERSION = "3.5 or higher"
 EOSFACTORY_DIR = "eosfactory/"
 TMP = "/tmp/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
+VERSION_PATTERN = r".+/eosio\.cdt/(\d\.\d\.\d)/.*$"
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
 DEFAULT_TEMPLATE = "hello_world"
@@ -58,7 +59,7 @@ node_exe_ = ("LOCAL_NODE_EXECUTABLE",
 eosio_cpp_ = ("EOSIO_CPP", 
             ["eosio-cpp", "/usr/bin/eosio-cpp", "/usr/local/bin/eosio-cpp"])
 eosio_cdt_root_ = ("EOSIO_CDT_ROOT", 
-    ["/usr/opt/eosio.cdt/0.0.0/", "/usr/local/Cellar/eosio.cdt/0.0.0"])
+    ["/usr/opt/eosio.cdt/0.0.0/", "/usr/local/Cellar/eosio.cdt/0.0.0/opt/eosio.cdt/"])
 eosio_cpp_includes_ = (
     "EOSIO_CPP_INCLUDES", 
     [["include", "include/libcxx", "include/eosiolib/core", \
@@ -606,7 +607,7 @@ def eosio_cdt_root():
             'eosio-cpp' does not response.
             ''')        
 
-    version_pattern = re.compile(".+/eosio\.cdt/(\d\.\d\.\d)/$")
+    version_pattern = re.compile(VERSION_PATTERN)
     tested = []
     for path in eosio_cdt_root_[1]:
         tested.append(path)
@@ -1065,16 +1066,17 @@ def wasm_file(contract_dir_hint):
         contract_file(contract_dir_hint, ".wasm"), contract_dir_hint)
 
 
-def update_eosio_cpp_includes(c_cpp_properties_path, root=""):
+def update_eosio_cpp_includes(c_cpp_properties_path):
     c_cpp_properties_path = utils.wslMapWindowsLinux(c_cpp_properties_path)
     with open(c_cpp_properties_path) as f:
         c_cpp_properties = f.read()
-    dir_pattern = re.compile(
-        '^.+\"{}(/.+/eosio\.cdt/\d\.\d\.\d/).+'.format(root), re.M)
+        
+    version_pattern = re.compile(VERSION_PATTERN)
 
-    if re.findall(dir_pattern, c_cpp_properties):
-        new = c_cpp_properties.replace(re.findall(
-                            dir_pattern, c_cpp_properties)[0], eosio_cdt_root())
+    if re.findall(version_pattern, c_cpp_properties):
+        new = c_cpp_properties.replace(
+                re.findall(version_pattern, c_cpp_properties)[0], eosio_cpp_version()[0])
+
         if not new == c_cpp_properties:
             with open(c_cpp_properties_path,'w') as f:
                 f.write(new)
