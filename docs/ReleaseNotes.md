@@ -8,6 +8,4 @@ EOSFactory [v3.1.0](https://github.com/tokenika/eosfactory/releases/tag/v3.1.0) 
 * Compatibility with eosio.cdt version 1.6.1 that introduces substantial changes in the Smart-Contract API.
 * Removed methods *build_wast* and *build_abi* from the class *Contract* and from derived classes.
 * Removed *logger.hpp* logging facility.
-* Compatibility with [EOSIO](https://eosfactory.io/eoside/html/index.html)
-
-
+* Compatibility with [EOSIDE](https://eosfactory.io/eoside/html/index.html).
