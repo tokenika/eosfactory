@@ -57,7 +57,7 @@ Please refer to the [table of contents](https://eosfactory.io/build/html/index.h
 
 ## Release notes
 
-Please refer to [this document](docs/releases/ReleaseNotes.md).
+Please refer to [this document](docs/ReleaseNotes.md).
 
 ## Roadmap
 
