@@ -1,8 +1,6 @@
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/print.hpp>
+#include <eosio/eosio.hpp>
+#include <eosio/print.hpp>
 
-#define DEBUG
-#include <eoside/logger.hpp>
 
 using namespace eosio;
 
@@ -12,10 +10,7 @@ class [[eosio::contract("${CONTRACT_NAME}")]] hello : public contract {
 
       [[eosio::action]]
       void hi( name user ) {
-         logger_info( "debug user name: ", name{user} );
          require_auth( user );
          print( "Hello, ", user);
       }
 };
-
-EOSIO_DISPATCH( hello, (hi))

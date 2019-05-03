@@ -1,10 +1,6 @@
 #!/usr/bin/python3
 
-import sys
 import re
-import os
-import json
-
 
 is_print_command_line = False
 is_raise_error = False
@@ -26,7 +22,7 @@ def nodeos_address():
 
 
 def url_prefix(address):
-    p = re.sub("\.|\:|-|https|http|\/", "_", address)
+    p = re.sub(r"\.|\:|-|https|http|\/", "_", address)
     return re.sub("_+", "_", p) + "_"
 
 

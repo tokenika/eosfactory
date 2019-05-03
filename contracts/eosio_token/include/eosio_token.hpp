@@ -4,8 +4,8 @@
  */
 #pragma once
 
-#include <eosiolib/asset.hpp>
-#include <eosiolib/eosio.hpp>
+#include <eosio/asset.hpp>
+#include <eosio/eosio.hpp>
 
 #include <string>
 
@@ -17,7 +17,7 @@ namespace eosio {
 
    using std::string;
 
-   class [[eosio::contract("${CONTRACT_NAME}")]] token : public contract {
+   class [[eosio::contract("eosio_token")]] token : public contract {
       public:
          using contract::contract;
 

@@ -51,10 +51,10 @@ class Test(unittest.TestCase):
         Create, build and deploy the contract:
         ''')
         host = new_account(master)
-        contract = Contract(host, project_from_template(
+        smart = Contract(host, project_from_template(
             CONTRACT_WORKSPACE, template="eosio_token", remove_existing=True))
-        contract.build()
-        contract.deploy()
+        smart.build()
+        smart.deploy()
 
         COMMENT('''
         Initialize the token and send some tokens to one of the accounts:

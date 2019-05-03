@@ -7,12 +7,8 @@
 '''
 
 import json
-import subprocess
 import argparse
-
-import eosfactory.core.utils as utils
 import eosfactory.core.config as config
-import eosfactory.core.logger as logger
 
 
 def get_includes():
@@ -23,6 +19,7 @@ def get_includes():
         retval.append(root + include)
 
     retval.append("${workspaceFolder}")
+    retval.append("${workspaceFolder}/include")
 
     return retval
 
@@ -211,9 +208,9 @@ def c_cpp_properties():
     return retval
 
 
-def main(c_cpp_properties_path=None, root=None):
+def main(c_cpp_properties_path=None):
     if c_cpp_properties_path:
-        config.update_eosio_cpp_includes(c_cpp_properties_path, root)
+        config.update_eosio_cpp_includes(c_cpp_properties_path)
     else:
         print(c_cpp_properties())
 
@@ -221,6 +218,5 @@ def main(c_cpp_properties_path=None, root=None):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--c_cpp_prop_path", default="")
-    parser.add_argument("--root", default="")
     args = parser.parse_args()
-    main(args.c_cpp_prop_path, args.root)
+    main(args.c_cpp_prop_path)

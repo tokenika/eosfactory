@@ -98,11 +98,11 @@ class Test(unittest.TestCase):
             if (extra_ram > 0 or extra_stake_net > 0 or extra_stake_cpu > 0):
                 cls.stats()
 
-        contract = Contract(cls.host, CONTRACT_WORKSPACE)
-        contract.build(force=False)
+        smart = Contract(cls.host, CONTRACT_WORKSPACE)
+        smart.build(force=False)
 
         try:
-            contract.deploy(payer=cls.master)
+            smart.deploy(payer=cls.master)
         except errors.ContractRunningError:
             pass
 

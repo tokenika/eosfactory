@@ -1,4 +1,5 @@
 import argparse
+import eosfactory.core.setup as setup
 from eosfactory.eosf import *
 
 

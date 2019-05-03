@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-import sys
 import os
 import json
 import re
+import time
 
 import eosfactory.core.utils as utils
 import eosfactory.core.config as config
@@ -34,12 +34,12 @@ def clear_testnet_cache():
     '''.format(setup.file_prefix()))
 
     kill_keosd() # otherwise the manager may protects the wallet files
-    dir = config.keosd_wallet_dir()
-    files = os.listdir(dir)
+    wallet_dir = config.keosd_wallet_dir()
+    files = os.listdir(wallet_dir)
     try:
         for file in files:
             if file.startswith(setup.file_prefix()):
-                os.remove(os.path.join(dir, file))
+                os.remove(os.path.join(wallet_dir, file))
     except Exception as e:
         raise errors.Error('''
         Cannot remove testnet cache. The error message is:
@@ -55,9 +55,9 @@ def accout_names_2_object_names(sentence, keys=False):
         return sentence
         
     exceptions = ["eosio"]
-    map = account_map()
-    for name in map:
-        account_object_name = map[name]
+    map_ = account_map()
+    for name in map_:
+        account_object_name = map_[name]
         if name in exceptions:
             continue
         sentence = sentence.replace(name, account_object_name)
@@ -79,9 +79,9 @@ def accout_names_2_object_names(sentence, keys=False):
 
 
 def object_names_2_accout_names(sentence):
-    map = account_map()
-    for name in map:
-        account_object_name = map[name]
+    map_ = account_map()
+    for name in map_:
+        account_object_name = map_[name]
         sentence = sentence.replace(account_object_name, name)
 
     return sentence
@@ -124,6 +124,7 @@ def node_start(clear=False, nodeos_stdout=None):
         teos.node_probe()
     except:
         try:
+            time.sleep(2)
             teos.node_start(clear, nodeos_stdout)
             teos.node_probe()
         except:
@@ -254,7 +255,7 @@ def verify_testnet_production(throw_error=True):
     return head_block_num
 
 
-def account_map(logger=None):
+def account_map():
     '''Return json account map
 
 Attempt to open the account map file named ``setup.account_map``, located 
@@ -291,25 +292,24 @@ editor. Return ``None`` if the the offer is rejected.
                     continue
                 else:
                     raise errors.Error('''
-        Use the function 'efman.edit_account_map(text_editor="nano")'
+        Use the function 'manager.edit_account_map()'
         or the corresponding method of any object of the 'eosfactory.wallet.Wallet` 
         class to edit the file.
                     ''')                    
-                    return None
 
 
-def save_account_map(map):
-    save_map(map, setup.account_map)
+def save_account_map(map_):
+    save_map(map_, setup.account_map)
 
 
 def edit_account_map():
     edit_map(setup.account_map)
 
 
-def save_map(map, file_name):
-    map = json.dumps(map, indent=3, sort_keys=True)
+def save_map(map_, file_name):
+    map_ = json.dumps(map_, indent=3, sort_keys=True)
     with open(os.path.join(config.keosd_wallet_dir(), file_name), "w") as out:
-        out.write(map)            
+        out.write(map_)            
 
 
 def edit_map(file_name, text_editor="nano"):
@@ -339,7 +339,7 @@ editor. Return ``None`` if the the offer is rejected.
             if isinstance(e, FileNotFoundError):
                 return {}
             else:
-                raise errors.Error('''
+                logger.ERROR('''
             The json file 
             {}
             is misformed. The error message is:
@@ -354,13 +354,14 @@ editor. Return ``None`` if the the offer is rejected.
                     continue
                 else:
                     raise errors.Error('''
-                    Use the function 'manager.edit_account_map(text_editor="nano")' to edit the file.
+                    Use the function 'manager.edit_account_map()' to edit the file.
                     ''', translate=False)                    
-                    return None
 
 
 def data_json(data):
     class Encoder(json.JSONEncoder):
+        '''Redefine the method 'default'.
+        '''
         def default(self, o):
             if isinstance(o, interface.Account):
                 return str(o)
@@ -375,6 +376,6 @@ def data_json(data):
         data_json_ = json.dumps(data, cls=Encoder)
     else:
         if isinstance(data, str):
-            data_json_ = re.sub("\s+|\n+|\t+", " ", data)
+            data_json_ = re.sub(r"\s+|\n+|\t+", " ", data)
             data_json_ = object_names_2_accout_names(data_json_)
     return data_json_

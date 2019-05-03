@@ -1,12 +1,9 @@
 import os
-import sys
 import argparse
 
 import eosfactory.core.errors as errors
-import eosfactory.core.logger as logger
 import eosfactory.core.testnet
 import eosfactory.core.teos as teos
-import eosfactory.core.testnet
 import eosfactory.shell.account as account
 import eosfactory.shell.contract as contract
 
@@ -48,8 +45,8 @@ def deploy(
     testnet_account.configure()
     testnet_account.verify_production()
     contract_account = account.restore_account(
-        testnet_account_name, testnet_account)
-    contract.Contract(contract_account).main()
+                                        testnet_account_name, testnet_account)
+    contract.Contract(contract_account).deploy()
 
 def main():
     '''

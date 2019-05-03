@@ -4,7 +4,6 @@ import os
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.config as config
-import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
 import eosfactory.core.cleos as cleos
 import eosfactory.core.cleos_set as cleos_set
@@ -47,27 +46,16 @@ class ContractBuilder():
                 Cannot determine the contract directory. The path is 
                 ``{}``.
                 """.format(contract_dir))
-            return
 
         self.abi_file = abi_file
-        self.wasm_file = wasm_file
+        self.wasm_file = wasm_file        
 
-    def build_wast(self):
-        '''Make the WAST file.
-        '''
-        teos.WASM(self.contract_dir, self.c_cpp_properties_path)
-
-    def build_abi(self):
-        '''Make the ABI file.
-        '''
-        teos.ABI(self.contract_dir, self.c_cpp_properties_path)
 
     def build(self, force=True):
         '''Make both, ABI and WASM files.
         '''
         if force or not self.is_built():
-            self.build_abi()
-            self.build_wast()
+            teos.build(self.contract_dir, self.c_cpp_properties_path)
 
     def is_built(self):
         '''Check whether both the ABI and WASM files exist.
@@ -123,6 +111,7 @@ class Contract(ContractBuilder):
         super().__init__(
             contract_dir, abi_file=abi_file, wasm_file=wasm_file)
         self.account = account
+        self.permission = permission
         self.expiration_sec = expiration_sec
         self.skip_sign = skip_sign
         self.dont_broadcast = dont_broadcast
@@ -153,7 +142,9 @@ class Contract(ContractBuilder):
             raise errors.Error('''
             Contract needs to be built before deployment.
             ''')
-            return
+
+        if permission is None:
+            permission = self.permission
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
         try:

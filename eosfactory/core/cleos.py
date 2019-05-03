@@ -211,8 +211,8 @@ class GetAccount(interface.Account, Cleos):
                         if permission["perm_name"] == "active":
                             self.active_key = key                   
             else:
-                owner = re.search('owner\s+1\:\s+1\s(.*)\n', self.out_msg)
-                active = re.search('active\s+1\:\s+1\s(.*)\n', self.out_msg)
+                owner = re.search(r'owner\s+1\:\s+1\s(.*)\n', self.out_msg)
+                active = re.search(r'active\s+1\:\s+1\s(.*)\n', self.out_msg)
                 if owner and active:
                     self.owner_key = owner.group(1)
                     self.active_key = active.group(1)
@@ -623,7 +623,6 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
     contract_path_absolute = config.contract_dir(contract_dir)
     if not contract_path_absolute:
         return []
-
     if not wasm_file:
         try:
             wasm_file = config.wasm_file(contract_dir)

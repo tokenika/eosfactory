@@ -1,3 +1,5 @@
+'''
+'''
 import enum
 
 class Omittable:
@@ -48,11 +50,11 @@ class Account(Omittable):
         name (str): EOSIO contract name
         owner_key (str or .Key): The owner key of the account.
         active_key (str or .Key): The account key of the account.
-    '''    
+    '''
     def __init__(self, name, owner_key=None, active_key=None):
         self.name = name
         self.owner_key = owner_key
-        self.active_key = active_key
+        self.active_key = active_key if active_key else owner_key
         Omittable.__init__(self)
     
     def owner(self):

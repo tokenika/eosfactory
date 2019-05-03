@@ -1,28 +1,24 @@
 import enum
 import re
 import inspect
-import sys
 
 from textwrap import dedent
 from termcolor import cprint, colored
-
-import eosfactory.core.setup as setup
 
 class Verbosity(enum.Enum):
     COMMENT = ['green', None, []]
     INFO = ['blue', None, []]
     TRACE = ['cyan', None, []]
-    ERROR = ['red', None, ['reverse']]
-    ERROR_TESTING = ['green', None, ['reverse']]
+    ERROR = ['white', 'on_blue', []]    
     OUT = [None, None, []]
     DEBUG = ['yellow', None, []]
     NONE = None
 
 
 __verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
-def verbosity(verbosity):
+def verbosity(set_verbosity):
     global __verbosity
-    __verbosity = verbosity
+    __verbosity = set_verbosity
 
 
 def COMMENT(msg):
@@ -55,6 +51,7 @@ def TRACE(msg=None, verbosity=None, translate=True):
             assumed.
     '''
     if not msg:
+        global __trace_buffer
         return __trace_buffer
 
     if msg and Verbosity.TRACE in \
@@ -149,26 +146,12 @@ def DEBUG(msg=None, verbosity=None, translate=True):
         cprint(msg, color[0], color[1], attrs=color[2])
 
 
-def ERROR(msg, translate=True, raise_exception=False):      
+def ERROR(msg, translate=True):      
     print(error(msg, translate))
 
 
-__is_testing_errors = False
-def set_is_testing_errors(status=True):
-    '''Changes the color of the ``ERROR`` logger printout.
-
-    Makes it less alarming.
-    '''
-    global _is_testing_errors
-    if status:
-        __is_testing_errors = True
-    else:
-        __is_testing_errors = False
-
-
 def error(msg, translate=True, details=""):
-    color = Verbosity.ERROR_TESTING.value \
-        if __is_testing_errors else Verbosity.ERROR.value
+    color = Verbosity.ERROR.value
     return colored(
         "ERROR{}:\n{}".format(details, condition(msg, translate)),  
         color[0], color[1], attrs=color[2])
@@ -181,6 +164,6 @@ def condition(message, translate=True):
     message = dedent(message).strip()
     message.replace("<br>", "\n")
     if translate:
-       message = manager.accout_names_2_object_names(message)
+        message = manager.accout_names_2_object_names(message)
 
     return message

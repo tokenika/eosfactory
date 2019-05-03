@@ -6,15 +6,15 @@ import eosfactory.core.cleos_sys as cleos_sys
 import eosfactory.core.manager as manager
 import eosfactory.core.logger as logger
 
+
 class Eosio(interface.Account):
-    def __init__(self, account_object_name):    
-        self.name = "eosio"
-        self.account_object_name = account_object_name        
-        self.owner_key = cleos.CreateKey(
+    def __init__(self, account_object_name):
+        interface.Account.__init__(self, "eosio",
+        cleos.CreateKey(
             config.eosio_key_public(),
             config.eosio_key_private()
-            )
-        self.active_key = self.owner_key
+            ))
+        self.account_object_name = account_object_name
 
     def info(self):
         msg = manager.accout_names_2_object_names(
@@ -36,7 +36,7 @@ class GetAccount(cleos.GetAccount):
     def __init__(
             self,
             account_object_name, name=None, 
-            owner_key=None, active_key=None, verbosity=None):
+            owner_key=None, active_key=None):
 
         self.account_object_name = account_object_name
         if name is None: 
@@ -91,7 +91,7 @@ class GetAccount(cleos.GetAccount):
 
 
 class RestoreAccount(cleos.RestoreAccount):
-    def __init__(self, name, verbosity=None):
+    def __init__(self, name):
         cleos.RestoreAccount.__init__(self, name, is_verbose=False)
 
 
@@ -107,8 +107,7 @@ class CreateAccount(cleos.CreateAccount):
             max_cpu_usage=0,
             max_net_usage=0,
             ref_block=None,
-            delay_sec=0,
-            verbosity=None):
+            delay_sec=0):
         cleos.CreateAccount.__init__(
             self, creator, name, owner_key, active_key, permission,
             expiration_sec, skip_sign, dont_broadcast, force_unique,
@@ -127,8 +126,7 @@ class SystemNewaccount(cleos_sys.SystemNewaccount):
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            verbosity=None):
+            ref_block=None):
             
         cleos_sys.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,

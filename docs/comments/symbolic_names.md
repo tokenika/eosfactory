@@ -15,6 +15,7 @@ $ python3
 ```
 
 ```python
+import eosfactory.core.setup as setup
 from eosfactory.eosf import *
 ```
 
@@ -28,9 +29,9 @@ create_account("HOST", MASTER)
 create_account("ALICE", MASTER)
 create_account("CAROL", MASTER)
 
-contract = Contract(HOST, "eosio_token")
-contract.build(force=False)
-contract.deploy()
+smart = Contract(HOST, "eosio_token")
+smart.build(force=False)
+smart.deploy()
 
 HOST.push_action(
     "create", 

@@ -1,6 +1,5 @@
 import re
 import sys
-import inspect
 
 import eosfactory.core.logger as logger
 import eosfactory.core.interface as interface
@@ -16,8 +15,8 @@ def validate(omittable):
     if "unknown key" in err_msg:
         raise AccountDoesNotExistError(omittable)
     elif "Error 3080001: Account using more than allotted RAM" in err_msg:
-        needs = int(re.search('needs\s(.*)\sbytes\shas', err_msg).group(1))
-        has = int(re.search('bytes\shas\s(.*)\sbytes', err_msg).group(1))
+        needs = int(re.search(r'needs\s(.*)\sbytes\shas', err_msg).group(1))
+        has = int(re.search(r'bytes\shas\s(.*)\sbytes', err_msg).group(1))
         raise LowRamError(needs, needs - has)
     elif "transaction executed locally, but may not be" in err_msg:
         pass
@@ -44,7 +43,7 @@ def validate(omittable):
         raise Error(err_msg)
 
 
-def excepthook(type, value, traceback):
+def excepthook(exc_type, value, traceback):
     print(value)
 
 
@@ -62,7 +61,7 @@ class Error(Exception):
         else:
             sys.excepthook = excepthook
             sys.tracebacklimit = 0
-            from inspect import currentframe, getframeinfo, stack
+            from inspect import getframeinfo, stack
             frameinfo = getframeinfo(stack()[stack_frame][0])
             details = " {} {}".format(frameinfo.filename, frameinfo.lineno) 
             self.message = logger.error(message, translate, details=details)

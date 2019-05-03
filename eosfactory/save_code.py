@@ -1,6 +1,5 @@
 import os
 import re
-import sys
 import argparse
 
 def save_code(path):
@@ -9,8 +8,8 @@ def save_code(path):
     md_file = os.path.abspath(path)
     python_file = os.path.splitext(md_file)[0] + ".py"
 
-    with open(md_file, "r") as input:
-        data = input.read()
+    with open(md_file, "r") as f:
+        data = f.read()
 
     regex = re.compile(r'```python(.+?)```', flags=re.DOTALL)
     chunks = re.findall(regex, data)

@@ -1,8 +1,6 @@
 import re
-import types
 
 import eosfactory.core.errors as errors
-import eosfactory.core.logger as logger
 import eosfactory.core.manager as manager
 import eosfactory.core.interface as interface
 import eosfactory.core.cleos as cleos
@@ -45,7 +43,6 @@ class SetContract(cleos.Cleos):
             Cannot determine the contract directory. The clue is 
             {}.
             """.format(contract_dir))
-            return
 
         contract_path_absolute = files[0]
         wasm_file = files[1]
@@ -182,6 +179,8 @@ class SetAccountPermission(cleos.Cleos):
             args.append("--dont-broadcast")
         if force_unique:
             args.append("--force-unique")
+        if return_packed:
+            args.append("--return-packed")
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
         if  max_net_usage:
@@ -212,7 +211,7 @@ class SetActionPermission(cleos.Cleos):
             permission authority for.
         code (str or .interface.Account): The account that owns the code for \
             the action.
-        type (str): The type of the action.
+        action_type (str): The type of the action.
         requirement (str): The permission name require for executing the given 
             action.
 
@@ -227,7 +226,7 @@ class SetActionPermission(cleos.Cleos):
             component of EOSIO cleos responce.
     '''
     def __init__(
-            self, account, code, type, requirement,
+            self, account, code, action_type, requirement,
             permission=None,
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, return_packed=0, force_unique=0,
@@ -242,7 +241,7 @@ class SetActionPermission(cleos.Cleos):
         code_name = interface.account_arg(code)
         args.append(code_name)
 
-        args.append(type)
+        args.append(action_type)
 
         if requirement:
             requirement_name = interface.account_arg(requirement)
@@ -265,6 +264,8 @@ class SetActionPermission(cleos.Cleos):
             args.append("--dont-broadcast")
         if force_unique:
             args.append("--force-unique")
+        if return_packed:
+            args.append("--return-packed")
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
         if  max_net_usage:
@@ -274,7 +275,7 @@ class SetActionPermission(cleos.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
 
-        self = cleos.Cleos(args, "set", "action permission", is_verbose)
+        cleos.Cleos.__init__(self, args, "set", "action permission", is_verbose)
         self.console = None
         self.data = None
 
