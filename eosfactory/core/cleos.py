@@ -663,7 +663,7 @@ class PushAction(Cleos):
     Attributes:
         account_name (str): The EOSIO name of the contract's account.
         console (str): Sum of all *["processed"]["action_traces"][]["console"]* \
-            component of EOSIO cleos responce.
+            components of EOSIO cleos responce.
         act (str): Summary of all actions, like \
             *eosio.null::nonce <= 5d0a572c49880500*.
     '''
