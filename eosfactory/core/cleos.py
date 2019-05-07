@@ -719,8 +719,9 @@ class PushAction(Cleos):
                 if trace["act"]["data"]:
                     if self.act:
                         self.act += "\n"
-                    self.act += "{}::{} <= {}".format( 
+                    self.act += "{} <= {}::{} {}".format( 
                                                         trace["act"]["account"], 
+                                                        trace["act"]["account"],
                                                         trace["act"]["name"],
                                                         trace["act"]["data"])
         self.printself()
