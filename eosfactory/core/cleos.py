@@ -662,10 +662,10 @@ class PushAction(Cleos):
 
     Attributes:
         account_name (str): The EOSIO name of the contract's account.
-        console (str): *["processed"]["action_traces"][0]["console"]* \
+        console (str): Sum of all *["processed"]["action_traces"][]["console"]* \
             component of EOSIO cleos responce.
-        data (str): *["processed"]["action_traces"][0]["act"]["data"]* \
-            component of EOSIO cleos responce.
+        act (str): Summary of all actions, like \
+            *eosio.null::nonce <= 5d0a572c49880500*.
     '''
     def __init__(
             self, account, action, data,
@@ -704,13 +704,24 @@ class PushAction(Cleos):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
                         
-        self.console = None
-        self.data = None
         Cleos.__init__(self, args, "push", "action", is_verbose)
 
+        self.console = ""
+        self.act = ""
         if not dont_broadcast:
-            self.console = self.json["processed"]["action_traces"][0]["console"]
-            self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
+            for trace in self.json["processed"]["action_traces"]:
+                if trace["console"]:
+                    if self.console:
+                        self.console += "\n"
+                    self.console += trace["console"]
 
+            for trace in self.json["processed"]["action_traces"]:
+                if trace["act"]["data"]:
+                    if self.act:
+                        self.act += "\n"
+                    self.act += "{}::{} <= {}".format( 
+                                                        trace["act"]["account"], 
+                                                        trace["act"]["name"],
+                                                        trace["act"]["data"])
         self.printself()
 
