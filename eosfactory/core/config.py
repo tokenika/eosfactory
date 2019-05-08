@@ -926,17 +926,19 @@ Tried:
     '''.format(trace), translate=False)
 
 
-def source_files(source_dir):
+def source_files(search_dir):
     '''List files CPP/C and ABI files from the given directory
     '''
     srcs = []
     extensions = [".cpp", ".cxx", ".c", ".abi"]
-    files = os.listdir(source_dir)
+    files = os.listdir(search_dir)
     for file in files:
-        path = os.path.join(source_dir, file)
-        if os.path.splitext(file)[1] in extensions:
-            if os.path.isfile(path):
+        path = os.path.join(search_dir, file)
+        if os.path.isfile(path):
+            if os.path.splitext(file)[1] in extensions:
                 srcs.append(os.path.realpath(path))
+        else:
+            srcs.extend(source_files(path))
     return srcs
     
 
@@ -953,16 +955,16 @@ def contract_source_files(contract_dir_hint):
     contract_dir_ = contract_dir(utils.wslMapWindowsLinux(contract_dir_hint))
     trace = contract_dir_ + "\n"
 
-    source_dir = contract_dir_
-    srcs = source_files(source_dir)
+    search_dir = contract_dir_
+    srcs = source_files(search_dir)
     if srcs:
-        return (source_dir, srcs)            
+        return (search_dir, srcs)            
 
-    source_dir = os.path.join(contract_dir_, "src")
-    trace = trace + source_dir + "\n"
-    srcs = source_files(source_dir)
+    search_dir = os.path.join(contract_dir_, "src")
+    trace = trace + search_dir + "\n"
+    srcs = source_files(search_dir)
     if srcs:
-        return (source_dir, srcs)            
+        return (search_dir, srcs)            
 
     raise errors.Error('''
 Cannot find any contract source directory.

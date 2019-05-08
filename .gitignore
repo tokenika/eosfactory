@@ -49,5 +49,6 @@ contracts_windows
 temp.md
 sikuli
 narration.md
-.vscode/ipch
+**/.vscode/ipch
 podatkowosc.md
+

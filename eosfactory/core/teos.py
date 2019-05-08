@@ -105,7 +105,7 @@ def build(
     c_cpp_properties = get_c_cpp_properties(
                                         contract_dir, c_cpp_properties_path)
 
-    build_dir = get_target_dir(contract_source_files[0])
+    build_dir = get_target_dir(contract_dir)
     target_path = None
     compile_options = []
     source_files = []
@@ -502,13 +502,9 @@ def get_pid(name=None):
     return [int(pid) for pid in stdout.split()]
 
 
-def get_target_dir(source_dir):
-    
-    path = os.path.join(source_dir, "build")
-    if os.path.exists(path):
-        return path
+def get_target_dir(contract_dir):
 
-    path = os.path.join(source_dir, "..", "build")
+    path = os.path.join(contract_dir, "build")
     if os.path.exists(path):
         return path
         

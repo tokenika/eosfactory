@@ -308,7 +308,7 @@ class Account():
             max_cpu_usage, max_net_usage,
             ref_block,
             is_verbose=False, json=True)
-
+        
         logger.INFO('''
             * push action ``{}``:
             '''.format(action))

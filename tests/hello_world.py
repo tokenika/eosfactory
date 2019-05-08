@@ -60,7 +60,9 @@ class Test(unittest.TestCase):
         Test an action for ALICE, including the debug buffer:
         ''')
         HOST.push_action(
-            "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))
+            "hi", {"user":ALICE}, 
+            permission=(ALICE, Permission.ACTIVE),
+            force_unique=True)
         self.assertTrue("ALICE" in DEBUG())
 
         COMMENT('''
