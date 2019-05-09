@@ -49,13 +49,16 @@ def test():
     master = new_master_account()
     host = new_account(master)
     
-    contract = Contract(host, PROJECT_DIR)
-    contract.build()
-    contract.deploy()
+    c = Contract(host, PROJECT_DIR)
+    c.build()
+    c.deploy()
 
     alice = new_account(master)
-    host.push_action("hi", {"user":alice})
-    self.assertTrue("alice" in DEBUG())
+    host.push_action(
+        "hi", {"user":alice}, 
+        permission=(alice, Permission.ACTIVE))
+
+    assert("alice" in DEBUG())
 
     stop()
 
@@ -86,11 +89,11 @@ Inside the Python CLI initialize a local testnet, create reference to it, then b
 ```
 from eosfactory.eosf import *
 reset()
-master = new_master_account()
-host = new_account(master)
-contract = Contract(host, "/path/to/the/foo_project/folder/")
-contract.build()
-contract.deploy()
+create_master_account("master")
+create_account("host", master)
+c = Contract(host, "/path/to/the/foo_project/folder/")
+c.build()
+c.deploy()
 ```
 
 At this stage you are ready to interact with your smart-contract, referring to it either by its hosting account, e.g.
@@ -102,7 +105,7 @@ host.push_action("foo", {...})
 ...or directly by its variable, e.g.
 
 ```
-contract.push_action("foo", {...})
+c.push_action("foo", {...})
 ```
 
 To stop the local testnet run:
