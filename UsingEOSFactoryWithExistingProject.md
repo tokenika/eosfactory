@@ -67,7 +67,7 @@ For less trivial examples of test scenarios, please refer to examples listed in 
 
 ## Run the test script
 
-Tu run your test script, you simply run the `foo_test.py` file with your `python3` executable:
+To run your test script, you simply run the `foo_test.py` file with your `python3` executable:
 
 ```
 cd /path/to/the/folder/containing/your/foo_test.py/file
@@ -100,7 +100,7 @@ At this stage you are ready to interact with your smart-contract, referring to i
 host.push_action("foo", {...})
 ```
 
-...or directly by its variable:
+...or directly by its variable, e.g.
 
 ```
 contract.push_action("foo", {...})
