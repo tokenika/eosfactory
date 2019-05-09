@@ -14,7 +14,9 @@ The purpose of this tutorial is to demonstrate how to apply EOSFactory to an exi
 
 **NOTE:** We assume there is only one C++ source code file (i.e. an  `*.cpp` file) within the `foo_project` folder. If your project for some reasons requires more than one `*.cpp` file, EOSFactory can handle this situation but it requires a more complex setup, which is beyond the scope of this guide.
 
-## Usage
+## Create a test script
+
+A test scenario contained in the `foo_test.py` file needs to be expressed as a  Python script.
 
 Firstly, make sure the `foo_test.py` file contains the EOSFactory import clause:
 
@@ -28,42 +30,32 @@ Secondly, make sure the `foo_test.py` file defines the  `PROJECT_DIR` constant a
 PROJECT_DIR = "/path/to/the/foo_project/folder/"
 ```
 
-And here is an example of a valid `foo_test.py` file:
+The the `PROJECT_DIR` constant is then used to define the reference to the contract, e.g.
 
 ```
-import sys
-from eosfactory.eosf import *
+contract = Contract(host, PROJECT_DIR)
+```
 
-verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.DEBUG])
+And here is a trivial example of a valid `foo_test.py` file:
+
+```
+from eosfactory.eosf import *
 
 PROJECT_DIR = "/mnt/c/Workspaces/EOS/foo_project/"
 
-# Actors of the test:
-MASTER = MasterAccount()
-HOST = Account()
-ALICE = Account()
-CAROL = Account()
-
 def test():
-    SCENARIO('''
-    Execute simple actions.
-    ''')
     reset()
-    create_master_account("MASTER")
+    
+    master = new_master_account()
+    host = new_account(master)
+    
+    contract = Contract(host, PROJECT_DIR)
+    contract.build()
+    contract.deploy()
 
-    COMMENT('''
-    Build and deploy the contract:
-    ''')
-    create_account("HOST", MASTER)
-    smart = Contract(HOST, PROJECT_DIR)
-    smart.build(force=False)
-    smart.deploy()
-
-    COMMENT('''
-    Create test accounts:
-    ''')
-    create_account("ALICE", MASTER)
-    create_account("CAROL", MASTER)
+    alice = new_account(master)
+    host.push_action("hi", {"user":alice})
+    self.assertTrue("alice" in DEBUG())
 
     stop()
 
@@ -71,3 +63,59 @@ if __name__ == "__main__":
     test()
 ```
 
+For less trivial examples of test scenarios, please refer to examples listed in [this folder](https://github.com/tokenika/eosfactory/tree/master/contracts).
+
+## Run the test script
+
+Tu run your test script, you simply run the `foo_test.py` file with your `python3` executable:
+
+```
+cd /path/to/the/folder/containing/your/foo_test.py/file
+python3 foo_test.py
+```
+
+## Interact with your contract
+
+If you want to manually interact with your smart-contract via EOSFactory, first run the Python CLI:
+
+```
+python3
+```
+
+Inside the Python CLI initialize a local testnet, create reference to it, then build your smart-contract (if needed), and finally deploy it:
+
+```
+from eosfactory.eosf import *
+reset()
+master = new_master_account()
+host = new_account(master)
+contract = Contract(host, "/path/to/the/foo_project/folder/")
+contract.build()
+contract.deploy()
+```
+
+At this stage you are ready to interact with your smart-contract, referring to it either by its hosting account, e.g.
+
+```
+host.push_action("foo", {...})
+```
+
+...or directly by its variable:
+
+```
+contract.push_action("foo", {...})
+```
+
+To stop the local testnet run:
+
+```python
+stop()
+```
+
+And to exit the Python CLI:
+
+```bash
+exit()
+```
+
+Alternatively, use the `ctrl-D` shortcut.
