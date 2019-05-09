@@ -30,13 +30,13 @@ Secondly, make sure the `foo_test.py` file defines the  `PROJECT_DIR` constant a
 PROJECT_DIR = "/path/to/the/foo_project/folder/"
 ```
 
-The the `PROJECT_DIR` constant is then used to define the reference to the contract, e.g.
+Note that the `PROJECT_DIR` constant is needed because it is then used to define the variable that holds reference to the contract:
 
 ```
 contract = Contract(host, PROJECT_DIR)
 ```
 
-And here is a trivial example of a valid `foo_test.py` file:
+And here is a complete (yet trivial) example of a valid `foo_test.py` file:
 
 ```
 from eosfactory.eosf import *
