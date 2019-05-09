@@ -70,8 +70,7 @@ For less trivial examples of test scenarios, please refer to examples listed in 
 To run your test script, you simply run the `foo_test.py` file with your `python3` executable:
 
 ```
-cd /path/to/the/folder/containing/your/foo_test.py/file
-python3 foo_test.py
+python3 /path/to/your/test/scripts/foo_test.py
 ```
 
 ## Interact with your contract
