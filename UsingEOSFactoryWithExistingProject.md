@@ -1,6 +1,6 @@
 # Using EOSFactory With an Existing EOS Smart-Contract Project
 
-The purpose of this tutorial is to demonstrate how to apply EOSFactory to an existing EOS smart-contract project with arbitrary folder structure.
+The purpose of this tutorial is to demonstrate how to apply EOSFactory to an existing EOS smart-contract project with an arbitrary folder structure.
 
 ## Assumptions
 
