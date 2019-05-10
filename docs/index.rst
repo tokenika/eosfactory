@@ -22,6 +22,7 @@ Tutorials
     tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory
     tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC
     tutorials/05.InteractingWithPublicTestnet
+    tutorials/06.UsingEOSFactoryWithExistingProject
 
 Comments
 --------
