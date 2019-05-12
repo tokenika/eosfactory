@@ -249,7 +249,7 @@ class Account():
         * Set action permission.
         ''')
 
-        result = SetActionPermission(
+        result = cleos_set.SetActionPermission(
                 self, code, type, requirement,
                 permission,
                 expiration_sec, 
