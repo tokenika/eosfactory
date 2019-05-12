@@ -181,17 +181,23 @@ def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
             contract_workspace_dir = map[contract_workspace_dir_[0]]
         else:
             contract_workspace_dir = os.path.join(TMP, CONTRACTS_DIR)
-            
-        new_dir = tilde(input(utils.heredoc('''
+
+        input_msg = utils.heredoc('''
 Where do you prefer to keep your smart-contract projects?
-The current location of the is:
+The current location is:
     {}
 Otherwise, input another existing directory path, or nothing to 
 keep the current one:
-            '''.format(
-                colored(contract_workspace_dir, current_path_color)
-                )
-            ) + "\n"))
+            '''.format(colored(contract_workspace_dir, current_path_color))
+            ) if os.path.exists(contract_workspace_dir) else utils.heredoc('''
+Where do you prefer to keep your smart-contract projects?
+The set location is:
+    {}
+but it does not exist. Input an existing directory path:
+            '''.format(colored(contract_workspace_dir, current_path_color))
+            )
+            
+        new_dir = tilde(input(input_msg + "\n"))
 
         if not new_dir:
             new_dir = contract_workspace_dir

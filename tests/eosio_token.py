@@ -68,6 +68,7 @@ class Test(unittest.TestCase):
             },
             force_unique=True,
             permission=[(MASTER, Permission.ACTIVE), (HOST, Permission.ACTIVE)])
+        print("'trace[\"console\"]' sum is '{}'".format(HOST.action.console))
         logger.DEBUG(HOST.action.act)
 
         HOST.push_action(
@@ -77,6 +78,7 @@ class Test(unittest.TestCase):
             },
             force_unique=True,
             permission=(MASTER, Permission.ACTIVE))
+        print("'trace[\"console\"]' sum is '{}'".format(HOST.action.console))
         logger.DEBUG(HOST.action.act)
 
         COMMENT('''

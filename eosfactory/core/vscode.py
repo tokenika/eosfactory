@@ -10,6 +10,10 @@ import json
 import argparse
 import eosfactory.core.config as config
 
+INCLUDE_PATH = "includePath"
+LIBS = "libs"
+CODE_OPTIONS = "codeOptions"
+TEST_OPTIONS = "testOptions"
 
 def get_includes():
     includes = config.eosio_cpp_includes()
@@ -24,9 +28,9 @@ def get_includes():
     return retval
 
 
-LIBS = [
+LIB_LIST = [
 ]
-COMPILER_OPTIONS = [
+OPTIONS = [
 ]
 TASKS = '''
 {
@@ -185,9 +189,10 @@ def c_cpp_properties():
 {
     "configurations": [
         {
-            "includePath": %s,
-            "libs": %s,
-            "compilerOptions": %s,
+            "%s": %s,
+            "%s": %s,
+            "%s": %s,
+            "%s": %s,
             "defines": [],
             "intelliSenseMode": "clang-x64",
             "browse": {
@@ -200,9 +205,14 @@ def c_cpp_properties():
     "version": 4
 }
 """ % (
+    INCLUDE_PATH,
     json.dumps(includes, indent=4),
-    json.dumps(LIBS, indent=4),
-    json.dumps(COMPILER_OPTIONS, indent=4),
+    LIBS,
+    json.dumps(LIB_LIST, indent=4),
+    CODE_OPTIONS,
+    json.dumps(OPTIONS, indent=4),
+    TEST_OPTIONS,
+    json.dumps(OPTIONS, indent=4),
     json.dumps(includes, indent=4))
 
     return retval
