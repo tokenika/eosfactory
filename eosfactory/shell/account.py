@@ -200,7 +200,7 @@ class Account():
         '''
         stop_if_account_is_not_set(self)
         logger.TRACE('''
-            * Set action permission.
+            * Set account permission.
             ''')
         result = cleos_set.SetAccountPermission(
                 self, permission_name, authority, parent_permission_name,
@@ -249,7 +249,7 @@ class Account():
         * Set action permission.
         ''')
 
-        result = SetActionPermission(
+        result = cleos_set.SetActionPermission(
                 self, code, type, requirement,
                 permission,
                 expiration_sec, 
