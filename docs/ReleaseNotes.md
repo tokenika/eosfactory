@@ -6,5 +6,5 @@ EOSFactory [v3.1.2](https://github.com/tokenika/eosfactory/releases/tag/v3.1.2) 
 
 ## New features in v3.1.2
 * Record `cleos` and `nodeos` command lines in a file.
-* Support for compilation of native unitests.
+* Support for compilation of native unit-tests.
 * Support for distribution of EOSIO smart-contract projects.
