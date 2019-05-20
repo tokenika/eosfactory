@@ -110,7 +110,7 @@ def build(
     # begin compiler option logics
     ############################################################################
     recardian_dir = "-R=" + get_recardian_dir(contract_source_files[0])
-    
+
     if is_test_mode \
                 and vscode.TEST_OPTIONS in c_cpp_properties[CONFIGURATIONS][0]:
         compile_options_ = c_cpp_properties[CONFIGURATIONS][0]\
@@ -257,7 +257,6 @@ The file path is to be absolute or relative to the project directory.
                         os.path.join(build_dir, contract_src_name  + ".wasm"))
         abigen_path = os.path.normpath(
                         os.path.join(build_dir, contract_src_name  + ".abi"))
-
     if is_execute:
         logger.TRACE('''
             Executing target
@@ -272,7 +271,6 @@ The file path is to be absolute or relative to the project directory.
                 ######## command line:
                 {}
                 '''.format(" ".join(command_line)), [logger.Verbosity.DEBUG])
-            
         utils.long_process(command_line, build_dir, is_verbose=True, 
                                                             prompt=target_path)
         return

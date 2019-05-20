@@ -994,7 +994,7 @@ def abi_file(contract_dir_hint):
 There is too many ABI files in the contract build folder
     {}
 There are files:
-    {}
+{}
         '''.format(search_dir, "\n".join(files)))
 
     return files[0]
@@ -1029,7 +1029,7 @@ def wasm_file(contract_dir_hint):
 There is too many WASM files in the contract build folder
     {}
 There are files:
-    {}
+{}
         '''.format(search_dir, "\n".join(files)))        
 
     return files[0]

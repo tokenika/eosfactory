@@ -111,12 +111,16 @@ error message:
         os.mkdir(cwd)
 
     threading.Thread(target=thread_function).start()
-    p = subprocess.run(
-        command_line,
-        cwd=cwd,
-        shell=shell,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE)
+    try:
+        p = subprocess.run(
+            command_line,
+            cwd=cwd,
+            shell=shell,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
+    except Exception as e:
+        print(str(e))
+        exit()
 
     stop = True
     time.sleep(PERIOD)
