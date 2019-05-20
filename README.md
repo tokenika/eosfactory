@@ -39,9 +39,10 @@ We make sure everything we do is fully compatible with Windows - our toolset ena
 * [Introduction to EOSFactory](docs/tutorials/00.IntroductionToEOSFactory.html)
 * [Installing EOSFactory](docs/tutorials/01.InstallingEOSFactory.md)
 * [Interacting with EOS Contracts in EOSFactory](docs/tutorials/02.InteractingWithEOSContractsInEOSFactory.md)
-* [Building and deploying EOS Contracts in EOSFactory](docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md)
-* [Working with EOS Contracts using EOSFactory in VSC](docs/tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.md)
-* [Interacting with Public Testnet](docs/tutorials/05.InteractingWithPublicTestnet.md)
+* [Building and Deploying EOS Smart-Contracts in EOSFactory](docs/tutorials/03.BuildingAndDeployingEOSContractsInEOSFactory.md)
+* [Working with EOS Smart-Contracts Using EOSFactory in VSC](docs/tutorials/04.WorkingWithEOSContractsUsingEOSFactoryInVSC.md)
+* [Interacting with Public Testnets](docs/tutorials/05.InteractingWithPublicTestnet.md)
+* [Using EOSFactory with an Existing EOS Smart-Contract Project](docs/tutorials/06.UsingEOSFactoryWithExistingProject.md)
 
 ## Use cases
 
