@@ -15,7 +15,8 @@ class Verbosity(enum.Enum):
     NONE = None
 
 
-__verbosity = [Verbosity.TRACE, Verbosity.OUT, Verbosity.DEBUG]
+__verbosity = [Verbosity.TRACE, Verbosity.OUT, 
+                                        Verbosity.DEBUG, Verbosity.ERROR]
 def verbosity(set_verbosity):
     global __verbosity
     __verbosity = set_verbosity

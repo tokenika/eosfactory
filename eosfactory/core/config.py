@@ -11,7 +11,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.1.1"
+VERSION = "3.1.2"
 EOSIO_VERSION = "1.7.1"
 EOSIO_CDT_VERSION = "1.6.1"
 PYTHON_VERSION = "3.5 or higher"
@@ -19,6 +19,10 @@ EOSFACTORY_DIR = "eosfactory/"
 TMP = "/tmp/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
 VERSION_PATTERN = r".+/eosio\.cdt/(\d\.\d\.\d)/.*$"
+BUILD = "build"
+IGNORE_FILE = ".eosideignore"
+IGNORE_LIST = [".vscode/ipch/*", ".vscode/settings.json", ".vscode/tasks.json",\
+                "build/*","command_lines.txt"]
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
 DEFAULT_TEMPLATE = "hello_world"
@@ -181,17 +185,23 @@ def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
             contract_workspace_dir = map[contract_workspace_dir_[0]]
         else:
             contract_workspace_dir = os.path.join(TMP, CONTRACTS_DIR)
-            
-        new_dir = tilde(input(utils.heredoc('''
+
+        input_msg = utils.heredoc('''
 Where do you prefer to keep your smart-contract projects?
-The current location of the is:
+The current location is:
     {}
 Otherwise, input another existing directory path, or nothing to 
 keep the current one:
-            '''.format(
-                colored(contract_workspace_dir, current_path_color)
-                )
-            ) + "\n"))
+            '''.format(colored(contract_workspace_dir, current_path_color))
+            ) if os.path.exists(contract_workspace_dir) else utils.heredoc('''
+Where do you prefer to keep your smart-contract projects?
+The set location is:
+    {}
+but it does not exist. Input an existing directory path:
+            '''.format(colored(contract_workspace_dir, current_path_color))
+            )
+            
+        new_dir = tilde(input(input_msg + "\n"))
 
         if not new_dir:
             new_dir = contract_workspace_dir
@@ -274,7 +284,7 @@ def contract_workspace_dir(dont_set_workspace=False):
     see :func:`.current_config`.
 
     Args:
-        dont_set_workspace (bool): If set., do not query for empty workspace 
+        dont_set_workspace (bool): If set, do not query for empty workspace 
             directory.
     '''
     if dont_set_workspace:
@@ -313,20 +323,6 @@ resolved as the contract workspace directory directory does not exist.
             '''.format(workspace_dir, translate=False)
             )
     return path
-
-
-def abi_file(contract_dir_hint):
-    '''Given a contract directory hint, return the ABI file path.
-    See :func:`contract_file`.
-
-    Args:
-        contract_dir_hint: A directory path, may be not absolute.
-
-    Raises:
-        .core.errors.Error: If the result is not defined.
-    '''
-    return os.path.relpath(
-        contract_file(contract_dir_hint, ".abi"), contract_dir_hint)
 
 
 def eosf_dir():
@@ -900,7 +896,8 @@ def contract_dir(contract_dir_hint):
     if os.path.isfile(contract_dir_hint):
         contract_dir_hint = os.path.dirname(contract_dir_hint)
     if os.path.isabs(contract_dir_hint):
-        return os.path.realpath(contract_dir_hint)
+        if os.path.exists(contract_dir_hint):
+            return os.path.realpath(contract_dir_hint)
 
     # ? the relative path to a contract directory, relative to the directory 
     # set with the 'contract_workspace_dir()' function
@@ -908,7 +905,8 @@ def contract_dir(contract_dir_hint):
         contract_workspace_dir(), contract_dir_hint)
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
-        return os.path.realpath(contract_dir_)
+        if os.path.exists(contract_dir_):
+            return os.path.realpath(contract_dir_)
 
     # ? the relative path to a contract directory, relative to 
     # 'eosfactory_data()/contracts'
@@ -917,33 +915,33 @@ def contract_dir(contract_dir_hint):
 
     trace = trace + contract_dir_ + "\n"
     if os.path.isdir(contract_dir_):
-        return os.path.realpath(contract_dir_)
+        if os.path.exists(contract_dir_):
+            return os.path.realpath(contract_dir_)
     
     raise errors.Error('''
 Cannot determine the contract directory.
 Tried:
-{}
+    {}
     '''.format(trace), translate=False)
 
 
-def source_files(search_dir):
+def source_files(search_dir, extensions, recursively=False):
     '''List files CPP/C and ABI files from the given directory
     '''
     srcs = []
-    extensions = [".cpp", ".cxx", ".c", ".abi"]
-    files = os.listdir(search_dir)
-    for file in files:
+    paths = os.listdir(search_dir)
+    for file in paths:
         path = os.path.join(search_dir, file)
         if os.path.isfile(path):
             if os.path.splitext(file)[1] in extensions:
                 srcs.append(os.path.realpath(path))
-        else:
-            srcs.extend(source_files(path))
+        elif recursively:
+            srcs.extend(source_files(path, extensions, recursively))
     return srcs
     
 
 def contract_source_files(contract_dir_hint):
-    '''List files CPP/C and ABI files from directory given with a hint.
+    '''List files CPP/C and ABI files from directory given a hint.
 
     Args:
         contract_dir_hint (str): An argument to the function 
@@ -952,19 +950,13 @@ def contract_source_files(contract_dir_hint):
     Raises:
         .core.errors.Error: If the list is empty.
     '''
-    contract_dir_ = contract_dir(utils.wslMapWindowsLinux(contract_dir_hint))
+    contract_dir_ = contract_dir(contract_dir_hint)
     trace = contract_dir_ + "\n"
 
     search_dir = contract_dir_
-    srcs = source_files(search_dir)
+    srcs = source_files(search_dir,  [".c", ".cpp",".cxx", ".c++"], recursively=True)
     if srcs:
-        return (search_dir, srcs)            
-
-    search_dir = os.path.join(contract_dir_, "src")
-    trace = trace + search_dir + "\n"
-    srcs = source_files(search_dir)
-    if srcs:
-        return (search_dir, srcs)            
+        return (search_dir, srcs)
 
     raise errors.Error('''
 Cannot find any contract source directory.
@@ -973,85 +965,39 @@ Tried:
     '''.format(trace), translate=False)
 
 
-def contract_file(contract_dir_hint, contract_file_hint):
-    ''' Given contract directory and contract file hints, determine a contract 
-    file.
-
-    The contract directory is determined with the function 
-    :func:`.contract_dir`, basing on the *contract_dir_hint* argument.
-
-    Contract files are ABI or WASM ones. Contract file hint is an absolute path
-    to a contract file, or it is relative to the contract dir, ir it is 
-    a file extension.
-
-    Any contract directory considered to be structured according to one of the 
-    following patterns:
-
-        - all the files in the contract directory,
-        - contract files in the *build* subdirectory.  
-
-    Args:
-        contract_dir_hint (path): A directory path, may be not absolute.
-        contract_file_hint (str or path): A file extension, or file path, 
-            may be not absolute.
-
-    Raises:
-        .core.errors.Error: If the result is not defined.
-    '''
-    contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
-    contract_file_hint = utils.wslMapWindowsLinux(contract_file_hint)
-
-    # Contract file hint is an absolute path to a contract file:
-    trace = contract_file_hint + "\n" 
-    if os.path.isabs(contract_file_hint) \
-                                    and os.path.isfile(contract_file_hint):
-        return contract_file_hint
-
-    contract_dir_ = contract_dir(contract_dir_hint)
-
-    # All the files in the contract directory:
-    contract_file = os.path.join(contract_dir_, contract_file_hint)
-    trace = trace + contract_file + "\n"
-    if os.path.isfile(contract_file):
-        return contract_file
-
-    # Contract files in the *build* subdirectory,
-    # and *contract_file_hint* is a relative file
-    contract_file = os.path.join(contract_dir_, "build", contract_file_hint)
-    trace = trace + contract_file + "\n"
-    if os.path.isfile(contract_file):
-        return contract_file
-
-    # Contract files in the *build* subdirectory,
-    # and *contract_file_hint* is a file extension merely
-    build_dir = os.path.join(contract_dir_, "build")
-    trace = trace + build_dir + "\n"
-    files = os.listdir(build_dir)
-    for file in files:
-        if os.path.splitext(file)[1] == contract_file_hint:
-            return os.path.join(build_dir, file)
-
-    raise errors.Error('''
-Cannot determine the contract file basing on hints:
-contract dir hint: {}
-contract file hint: {}
-Tried:
-{}
-    '''.format(contract_dir_hint, contract_file_hint, trace), translate=False)  
-
-
-def wast_file(contract_dir_hint):
-    '''Given the contract directory, return the WAST file path.
+def abi_file(contract_dir_hint):
+    '''Given the contract directory, return the ABI file path.
     See :func:`contract_file`.
-
+    
     Args:
         contract_dir_hint: A directory path, may be not absolute.
 
     Raises:
         .core.errors.Error: If the result is not defined.    
     '''
-    return os.path.relpath(
-        contract_file(contract_dir_hint, ".wast"), contract_dir_hint)
+    search_dir = os.path.join(contract_dir(contract_dir_hint), BUILD)
+    if not os.path.exists(search_dir):
+        return
+
+    files_ = source_files(search_dir, [".abi"])
+    if not files_:
+        return
+
+    files = []
+    for file_ in files_:
+        if os.path.basename(os.path.dirname(file_)) == BUILD\
+                                    or os.path.dirname(file_) == search_dir:
+            files.append(file_)
+
+    if len(files) > 1:
+        raise errors.Error('''
+There is too many ABI files in the contract build folder
+    {}
+There are files:
+{}
+        '''.format(search_dir, "\n".join(files)))
+
+    return files[0]
 
 
 def wasm_file(contract_dir_hint):
@@ -1063,9 +1009,30 @@ def wasm_file(contract_dir_hint):
 
     Raises:
         .core.errors.Error: If the result is not defined.    
-    '''
-    return os.path.relpath(
-        contract_file(contract_dir_hint, ".wasm"), contract_dir_hint)
+    '''    
+    search_dir = os.path.join(contract_dir(contract_dir_hint), BUILD)
+    if not os.path.exists(search_dir):
+        return
+        
+    files_ = source_files(search_dir, [".wasm"])
+    if not files_:
+        return
+    
+    files = []
+    for file_ in files_:
+        if os.path.basename(os.path.dirname(file_)) == BUILD\
+                                    or os.path.dirname(file_) == search_dir:
+            files.append(file_)
+
+    if len(files) > 1:
+        raise errors.Error('''
+There is too many WASM files in the contract build folder
+    {}
+There are files:
+{}
+        '''.format(search_dir, "\n".join(files)))        
+
+    return files[0]
 
 
 def update_eosio_cpp_includes(c_cpp_properties_path):

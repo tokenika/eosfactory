@@ -75,3 +75,8 @@
 * EOSFactory package can be installed from PyPi repository.
 * Compatibility with python linter: now linter doesn't raise warnings about dynamically created account objects.
 * Cleaner code, better documented.
+
+## Release 3.1.1 on 8 May 2019
+
+* Gather console output from all actions (PR #155).
+* Support for arbitrary folder structure.

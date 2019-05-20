@@ -22,7 +22,8 @@
                 "${workspaceFolder}",
                 "${workspaceFolder}/include"
             ],
-            "compilerOptions": [],
+            "codeOptions": [],
+            "testOptions": [],
             "defines": [],
             "libs": [],
             "intelliSenseMode": "clang-x64"

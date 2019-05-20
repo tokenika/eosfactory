@@ -4,16 +4,17 @@ import eosfactory.core.teos as teos
 def build(
         contract_dir_hint,
         c_cpp_properties_path="", 
-        compile_only=False, silent=False):
+        compile_only=False, is_test_mode=False, is_execute=False, silent=False):
 
     verbosity=[] if silent else None
-    teos.build(contract_dir_hint, c_cpp_properties_path, compile_only, verbosity)
+    teos.build(
+                        contract_dir_hint, c_cpp_properties_path, compile_only, 
+                        is_test_mode, is_execute, verbosity)
 
 def main():
-    '''
-    usage: python3 -m eosfactory.build [-h] [--compile] [--silent] dir
+    '''Build a contract.
 
-    Build a contract.
+    usage: python3 -m eosfactory.build [-h] [--compile] [--silent] dir
 
     The contract is determined with its project directory. The directory may be
     absolute or relative to the *contract workspace* directory as defined with
@@ -27,6 +28,8 @@ def main():
         dir: Contract name or directory.
         --c_cpp_prop: c_cpp_properties.json file path.        
         --compile: Do not build, compile only.
+        --test_mode: Use test options, not code ones.
+        --execute: Execute the target.
         --silent: Do not print info.
         -h: Show help message and exit
     '''
@@ -48,11 +51,18 @@ def main():
     parser.add_argument(
         "--compile", help="Do not build, compile only.", action="store_true")
     parser.add_argument(
+                        "--test_mode", help="Use test options, not code ones", 
+                        action="store_true")
+    parser.add_argument(
+                        "--execute", help="Execute the target", 
+                        action="store_true")
+    parser.add_argument(
         "--silent", help="Do not print info.", action="store_true")
 
 
     args = parser.parse_args()
-    build(args.dir, args.c_cpp_prop, args.compile, args.silent)    
+    build(args.dir, args.c_cpp_prop, args.compile, args.test_mode, args.execute,
+    args.silent)    
 
 if __name__ == '__main__':
     main()

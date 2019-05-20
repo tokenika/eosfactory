@@ -23,10 +23,8 @@ TEMPLATE_HOME = "${HOME}"
 C_CPP_PROP = "${c_cpp_prop}"
 TASK_JSON = "${tasks}"
 CONFIGURATIONS = "configurations"
-INCLUDE_PATH = "includePath"
 BROWSE = "browse"
 WORKSPACE_FOLDER = "${workspaceFolder}"
-EOSIO_CPP_INCLUDE = "eosio.cdt"
 ROOT = config.wsl_root()
 HOME = ROOT + os.environ["HOME"]
 
@@ -71,15 +69,14 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
 
 def build(
         contract_dir_hint, c_cpp_properties_path=None,
-        compile_only=False, verbosity=None):
+        compile_only=False, is_test_mode=False, is_execute=False, 
+        verbosity=None):
     '''Produce ABI and WASM files.
 
     Compiler options come with the argument 'c_cpp_properties_path', as 
     components of 'compilerOptions' list. Option can be any of the 'eosio-cpp'
     options, plus the following ones:
 
-    * --no-src - if set, the contract source file is not automatically detected
-        as the only source file in the 'src' directory
     * --src - list of the source files, absolute or relative to 'src' or
         project directories, for example:
         --src hello.cpp tests/hello_test.cpp
@@ -104,7 +101,6 @@ def build(
     contract_source_files = config.contract_source_files(contract_dir)
     c_cpp_properties = get_c_cpp_properties(
                                         contract_dir, c_cpp_properties_path)
-
     build_dir = get_target_dir(contract_dir)
     target_path = None
     compile_options = []
@@ -114,35 +110,33 @@ def build(
     # begin compiler option logics
     ############################################################################
     recardian_dir = "-R=" + get_recardian_dir(contract_source_files[0])
-    compile_options_ = c_cpp_properties[CONFIGURATIONS][0]["compilerOptions"]
-    
+
+    if is_test_mode \
+                and vscode.TEST_OPTIONS in c_cpp_properties[CONFIGURATIONS][0]:
+        compile_options_ = c_cpp_properties[CONFIGURATIONS][0]\
+                                                        [vscode.TEST_OPTIONS]
+    elif not is_test_mode \
+                and vscode.CODE_OPTIONS in c_cpp_properties[CONFIGURATIONS][0]:
+        compile_options_ = c_cpp_properties[CONFIGURATIONS][0]\
+                                                        [vscode.CODE_OPTIONS]
+    else:
+        compile_options_ = []
+
+    contract_src_name = None
+    is_verbose = False
+
     if not "-abigen" in compile_options_:
         compile_options.append("-abigen")
-
-    if "--no-src" in compile_options_:
-        compile_options_.remove("--no-src")
-    else:
-        source_ext = [".c", ".cpp",".cxx", ".c++"]
-        contract_src_name = None
-        for file in contract_source_files[1]:
-            if os.path.splitext(file)[1].lower() in source_ext:
-                if not contract_src_name:
-                    contract_src_name = os.path.splitext(
-                                                    os.path.basename(file))[0]
-                    source_files.append(os.path.normpath(file))
-                else:
-                    raise errors.Error('''
-Cannot determine the source file of the contract. There is many files in 
-the 'src' directory. Specify the file with the compiler option '--src', for
-example:
---src src_dir/hello.cpp
-The file path is to be absolute or relative to the project directory.
-                ''')
     
     for i in range(0, len(compile_options_)):
         entry = compile_options_[i]
         if "-R=" in entry:
             recardian_dir = entry
+        elif "-contract=" in entry:
+            contract_src_name = entry.replace("-contract=", "").strip()
+            compile_options.append(entry)
+        elif "--verbose" in entry:
+            is_verbose = True
         elif "-o" in entry:
             target_path = utils.wslMapWindowsLinux(
                                             entry.replace("-o", "").strip())
@@ -151,7 +145,7 @@ The file path is to be absolute or relative to the project directory.
                     target_path = compile_options_[i + 1]
                 else:
                     raise errors.Error('''
-The option '-o' does not has its vaslue set:
+The option '-o' does not has its value set:
 {}
                     '''.format(compile_options_))
 
@@ -209,6 +203,9 @@ The option '--src' does not has its value set:
                 temp = input_file
                 if not os.path.isabs(temp):
                     temp = os.path.join(contract_source_files[0], input_file)
+                    if not contract_src_name:
+                        contract_src_name = os.path.splitext(
+                                                    os.path.basename(temp))[0]
                     if not os.path.exists(temp):
                         temp = os.path.join(contract_dir, input_file)
 
@@ -228,31 +225,74 @@ or relative to the 'src' directory.
             compile_options.append(entry)
 
     compile_options.append(recardian_dir)
+
+    if not source_files:
+        source_files = contract_source_files[1]
+    
+    if not source_files:
+        raise errors.Error('''
+Cannot find any source file (".c", ".cpp",".cxx", ".c++") in the contract folder.
+        ''')
+    else:
+        if not contract_src_name and len(source_files) == 1:
+            contract_src_name = os.path.splitext(
+                                        os.path.basename(source_files[0]))[0]
+        elif not is_test_mode:
+            raise errors.Error('''
+Cannot determine the source file of the contract. There is many files in 
+the 'src' directory, namely:
+{}
+Specify the file with the compiler option '--src', for
+example:
+--src src_dir/hello.cpp
+The file path is to be absolute or relative to the project directory.
+            '''.format("\n".join(source_files)))
         
     ############################################################################
     # end compiler option logics
     ############################################################################
-
 
     if not target_path:
         target_path = os.path.normpath(
                         os.path.join(build_dir, contract_src_name  + ".wasm"))
         abigen_path = os.path.normpath(
                         os.path.join(build_dir, contract_src_name  + ".abi"))
+    if is_execute:
+        logger.TRACE('''
+            Executing target
+                {}
+        '''.format(target_path))
+        command_line = [target_path]
+
+        if setup.is_print_command_lines and setup.is_save_command_lines:
+            setup.add_to__command_line_file(" ".join(command_line))
+        if setup.is_print_command_lines or is_verbose:
+            logger.DEBUG('''
+                ######## command line:
+                {}
+                '''.format(" ".join(command_line)), [logger.Verbosity.DEBUG])
+        utils.long_process(command_line, build_dir, is_verbose=True, 
+                                                            prompt=target_path)
+        return
 
     command_line = [config.eosio_cpp()]
-    command_line.extend(["-o", target_path])
- 
-    for entry in c_cpp_properties[CONFIGURATIONS][0][INCLUDE_PATH]:
+
+    if compile_only:
+        command_line.append("-c")
+    else:
+        command_line.extend(["-o", target_path])
+
+    for entry in c_cpp_properties[CONFIGURATIONS][0][vscode.INCLUDE_PATH]:
         if WORKSPACE_FOLDER in entry:
             entry = entry.replace(WORKSPACE_FOLDER, contract_dir)
             command_line.append("-I=" + linuxize_path(entry))
         else:
-            if not EOSIO_CPP_INCLUDE in entry:
+            path = linuxize_path(entry)
+            if not path in config.eosio_cpp_includes():
                 command_line.append(
-                    "-I=" + linuxize_path(entry))
+                    "-I=" + path)
 
-    for entry in c_cpp_properties[CONFIGURATIONS][0]["libs"]:
+    for entry in c_cpp_properties[CONFIGURATIONS][0][vscode.LIBS]:
         command_line.append(
             "-l=" + linuxize_path(entry))
 
@@ -262,13 +302,14 @@ or relative to the 'src' directory.
     for input_file in source_files:
         command_line.append(input_file)
 
-    if compile_only:
-        command_line.append("-c=")
-
-    if setup.is_print_command_line:
-        print("######## command line sent to eosio-cpp:")
-        print(" ".join(command_line))
-
+    if setup.is_print_command_lines and setup.is_save_command_lines:
+        setup.add_to__command_line_file(" ".join(command_line))
+    if setup.is_print_command_lines or is_verbose:
+        logger.DEBUG('''
+            ######## command line:
+            {}
+            '''.format(" ".join(command_line)), [logger.Verbosity.DEBUG])
+        
     utils.long_process(command_line, build_dir, is_verbose=True, 
                                                             prompt="eosio-cpp")
     if not compile_only:
@@ -341,17 +382,20 @@ The contract project template '{}' does not exist.
         for entry in temp:
             path = naturalize_path(entry)
             if not path in c_cpp_properties_json[CONFIGURATIONS][0]\
-                                                                [INCLUDE_PATH]:
+                                                        [vscode.INCLUDE_PATH]:
                 temp_.append(path)
 
-        c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].extend(temp_)
+        c_cpp_properties_json[CONFIGURATIONS][0][vscode.INCLUDE_PATH]\
+                                                                .extend(temp_)
         c_cpp_properties_json[CONFIGURATIONS][0][BROWSE]["path"].extend(temp_)
 
     path = config.eoside_includes_dir()
     if path:
         path = naturalize_path(path)
-        if not path in c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH]:
-            c_cpp_properties_json[CONFIGURATIONS][0][INCLUDE_PATH].append(path)
+        if not path in c_cpp_properties_json[CONFIGURATIONS][0]\
+                                                        [vscode.INCLUDE_PATH]:
+            c_cpp_properties_json[CONFIGURATIONS][0]\
+                                            [vscode.INCLUDE_PATH].append(path)
             c_cpp_properties_json[CONFIGURATIONS][0][BROWSE]["path"]\
                                                                 .append(path)
     
@@ -360,18 +404,21 @@ The contract project template '{}' does not exist.
         temp_ = []
         for entry in libs:
             path = naturalize_path(entry)
-            if not path in c_cpp_properties_json[CONFIGURATIONS][0]["libs"]:
+            if not path in c_cpp_properties_json[CONFIGURATIONS][0]\
+                                                                [vscode.LIBS]:
                 temp_.append(path)
             
-        c_cpp_properties_json[CONFIGURATIONS][0]["libs"].extend(temp_)
+        c_cpp_properties_json[CONFIGURATIONS][0][vscode.LIBS].extend(temp_)
 
     eoside_libs = config.eoside_libs_dir()
     if(eoside_libs):
         eoside_libs = os.listdir(config.eoside_libs_dir())
         for lib in eoside_libs:
             path = naturalize_path(lib)
-            if not path in c_cpp_properties_json[CONFIGURATIONS][0]["libs"]:
-                c_cpp_properties_json[CONFIGURATIONS][0]["libs"].append(path)
+            if not path in c_cpp_properties_json[CONFIGURATIONS][0]\
+                                                                [vscode.LIBS]:
+                c_cpp_properties_json[CONFIGURATIONS][0]\
+                                                    [vscode.LIBS].append(path)
 
     c_cpp_properties = json.dumps(c_cpp_properties_json, indent=4)
     c_cpp_properties = resolve_home(c_cpp_properties)
@@ -652,12 +699,9 @@ def node_start(clear=False, nodeos_stdout=None):
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     '''
+    
     args_ = args(clear)
-
-    if setup.is_print_command_line:
-        print("######## nodeos command line:")
-        print(config.node_exe() + " " + " ".join(args_))
-
+        
     if not nodeos_stdout:
         nodeos_stdout = config.nodeos_stdout()
 
@@ -681,10 +725,13 @@ Error message is
             except:
                 pass
 
-    if setup.is_print_command_line:
+    if setup.is_save_command_lines:
+        setup.add_to__command_line_file(
+                                    config.node_exe() + " " + " ".join(args_))
+    if setup.is_print_command_lines:
         print("######## nodeos command line:")
         print(config.node_exe() + " " + " ".join(args_))
-                
+         
     args_.insert(0, config.node_exe())
     def runInThread():
         proc = subprocess.Popen(
