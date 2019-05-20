@@ -63,11 +63,13 @@ class Cleos():
         cl.extend(re.sub(re.compile(r'\s+'), ' ', command.strip()).split(" "))
         cl.extend(args)
 
-        if setup.is_print_command_line:
+        if setup.is_save_command_lines:
+            setup.add_to__command_line_file(" ".join(cl))        
+        if setup.is_print_command_lines:
             print("######## command line sent to cleos:")
             print(" ".join(cl))
             print("")
-
+            
         while True:
             process = subprocess.run(
                 cl,
@@ -623,25 +625,21 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
     contract_path_absolute = config.contract_dir(contract_dir)
     if not contract_path_absolute:
         return []
-    if not wasm_file:
-        try:
-            wasm_file = config.wasm_file(contract_dir)
-        except:
-            pass
+
+    if wasm_file:
+        if not os.path.isfile(os.path.join(contract_path_absolute, wasm_file)):
+            return []
+    else:
+        wasm_file = config.wasm_file(contract_dir)
         if not wasm_file:
             return []
-    else:
-        if not os.path.isfile(
-                os.path.join(contract_path_absolute, wasm_file)):
-            return []
 
-    if not abi_file:
+    if abi_file:        
+        if not os.path.isfile(os.path.join(contract_path_absolute, abi_file)):
+            return []
+    else:
         abi_file = config.abi_file(contract_dir)
         if not abi_file:
-            return []
-    else:
-        if not os.path.isfile(
-                os.path.join(contract_path_absolute, abi_file)):
             return []
 
     return [contract_path_absolute, wasm_file, abi_file]

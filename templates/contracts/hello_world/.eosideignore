@@ -1,0 +1,5 @@
+.vscode/ipch/*
+.vscode/settings.json
+.vscode/tasks.json
+build/*
+command_lines.txt

@@ -2,7 +2,9 @@
 
 import re
 
-is_print_command_line = False
+is_print_command_lines = False
+is_save_command_lines = False
+command_line_file = "command_lines.txt"
 is_raise_error = False
 is_print_request = False
 is_print_response = False
@@ -14,6 +16,19 @@ is_local_address = False
 
 __nodeos_address = None
 __file_prefix = None
+
+
+def save_command_lines():
+    global is_save_command_lines
+    is_save_command_lines = True
+    with open(command_line_file, "w+") as f:
+        f.write("")
+
+
+def add_to__command_line_file(command_line):
+    if is_save_command_lines:
+        with open(command_line_file, "a+") as f:
+            f.write("{}\n\n".format(command_line))
 
 
 def nodeos_address():

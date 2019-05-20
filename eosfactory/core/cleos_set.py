@@ -1,4 +1,5 @@
 import re
+import os
 
 import eosfactory.core.errors as errors
 import eosfactory.core.manager as manager
@@ -50,7 +51,11 @@ class SetContract(cleos.Cleos):
         account_name = interface.account_arg(account)
 
         args = [account_name, contract_path_absolute]
-
+        if os.path.isabs(wasm_file):
+            wasm_file = os.path.relpath(wasm_file, contract_path_absolute)
+        if os.path.isabs(abi_file):
+            abi_file = os.path.relpath(abi_file, contract_path_absolute)
+        
         if clear:
             args.append("--clear")
         if json:
