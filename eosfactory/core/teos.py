@@ -110,9 +110,18 @@ def build(
     # begin compiler option logics
     ############################################################################
     recardian_dir = "-R=" + get_recardian_dir(contract_source_files[0])
-    compile_options_ =  c_cpp_properties[CONFIGURATIONS][0][vscode.TEST_OPTIONS] \
-            if is_test_mode \
-            else c_cpp_properties[CONFIGURATIONS][0][vscode.CODE_OPTIONS]
+    
+    if is_test_mode \
+                and vscode.TEST_OPTIONS in c_cpp_properties[CONFIGURATIONS][0]:
+        compile_options_ = c_cpp_properties[CONFIGURATIONS][0]\
+                                                        [vscode.TEST_OPTIONS]
+    elif not is_test_mode \
+                and vscode.CODE_OPTIONS in c_cpp_properties[CONFIGURATIONS][0]:
+        compile_options_ = c_cpp_properties[CONFIGURATIONS][0]\
+                                                        [vscode.CODE_OPTIONS]
+    else:
+        compile_options_ = []
+
     contract_src_name = None
     is_verbose = False
 
@@ -218,26 +227,30 @@ or relative to the 'src' directory.
     compile_options.append(recardian_dir)
 
     if not source_files:
-        source_ext = [".c", ".cpp",".cxx", ".c++"]
-        for file in contract_source_files[1]:
-            if os.path.splitext(file)[1].lower() in source_ext:
-                source_files.append(os.path.normpath(file))
-                if not contract_src_name:
-                    contract_src_name = os.path.splitext(
-                                                    os.path.basename(file))[0]
+        source_files = contract_source_files[1]
+    
     if not source_files:
         raise errors.Error('''
+Cannot find any source file (".c", ".cpp",".cxx", ".c++") in the contract folder.
+        ''')
+    else:
+        if not contract_src_name and len(source_files) == 1:
+            contract_src_name = os.path.splitext(
+                                        os.path.basename(source_files[0]))[0]
+        elif not is_test_mode:
+            raise errors.Error('''
 Cannot determine the source file of the contract. There is many files in 
-the 'src' directory. Specify the file with the compiler option '--src', for
+the 'src' directory, namely:
+{}
+Specify the file with the compiler option '--src', for
 example:
 --src src_dir/hello.cpp
 The file path is to be absolute or relative to the project directory.
-                ''')
+            '''.format("\n".join(source_files)))
         
     ############################################################################
     # end compiler option logics
     ############################################################################
-
 
     if not target_path:
         target_path = os.path.normpath(
@@ -251,12 +264,15 @@ The file path is to be absolute or relative to the project directory.
                 {}
         '''.format(target_path))
         command_line = [target_path]
-        if setup.is_print_command_line or is_verbose:
+
+        if setup.is_print_command_lines and setup.is_save_command_lines:
+            setup.add_to__command_line_file(" ".join(command_line))
+        if setup.is_print_command_lines or is_verbose:
             logger.DEBUG('''
                 ######## command line:
                 {}
                 '''.format(" ".join(command_line)), [logger.Verbosity.DEBUG])
-        
+            
         utils.long_process(command_line, build_dir, is_verbose=True, 
                                                             prompt=target_path)
         return
@@ -288,13 +304,14 @@ The file path is to be absolute or relative to the project directory.
     for input_file in source_files:
         command_line.append(input_file)
 
-
-    if setup.is_print_command_line or is_verbose:
+    if setup.is_print_command_lines and setup.is_save_command_lines:
+        setup.add_to__command_line_file(" ".join(command_line))
+    if setup.is_print_command_lines or is_verbose:
         logger.DEBUG('''
             ######## command line:
             {}
             '''.format(" ".join(command_line)), [logger.Verbosity.DEBUG])
-
+        
     utils.long_process(command_line, build_dir, is_verbose=True, 
                                                             prompt="eosio-cpp")
     if not compile_only:
@@ -684,12 +701,9 @@ def node_start(clear=False, nodeos_stdout=None):
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     '''
+    
     args_ = args(clear)
-
-    if setup.is_print_command_line:
-        print("######## nodeos command line:")
-        print(config.node_exe() + " " + " ".join(args_))
-
+        
     if not nodeos_stdout:
         nodeos_stdout = config.nodeos_stdout()
 
@@ -713,10 +727,13 @@ Error message is
             except:
                 pass
 
-    if setup.is_print_command_line:
+    if setup.is_save_command_lines:
+        setup.add_to__command_line_file(
+                                    config.node_exe() + " " + " ".join(args_))
+    if setup.is_print_command_lines:
         print("######## nodeos command line:")
         print(config.node_exe() + " " + " ".join(args_))
-                
+         
     args_.insert(0, config.node_exe())
     def runInThread():
         proc = subprocess.Popen(

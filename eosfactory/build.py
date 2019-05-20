@@ -12,10 +12,9 @@ def build(
                         is_test_mode, is_execute, verbosity)
 
 def main():
-    '''
-    usage: python3 -m eosfactory.build [-h] [--compile] [--silent] dir
+    '''Build a contract.
 
-    Build a contract.
+    usage: python3 -m eosfactory.build [-h] [--compile] [--silent] dir
 
     The contract is determined with its project directory. The directory may be
     absolute or relative to the *contract workspace* directory as defined with
