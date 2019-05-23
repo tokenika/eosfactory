@@ -11,7 +11,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.1.2"
+VERSION = "3.1.3"
 EOSIO_VERSION = "1.7.1"
 EOSIO_CDT_VERSION = "1.6.1"
 PYTHON_VERSION = "3.5 or higher"
@@ -1107,6 +1107,7 @@ def current_config(contract_dir=None, dont_set_workspace=False):
             map["EOSFACTORY_DIR"] = eosf_dir()
         except:
             map["EOSFACTORY_DIR"] = None
+    map["VERSION"] = VERSION
     try:
         map[node_address_[0]] = http_server_address()
     except:

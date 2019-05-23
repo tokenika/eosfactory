@@ -80,3 +80,9 @@
 
 * Gather console output from all actions (PR #155).
 * Support for arbitrary folder structure.
+
+## Release 3.1.2 on 20 May 2019
+
+* Record `cleos` and `nodeos` command lines in a file.
+* Support for compilation of native unit-tests.
+* Support for distribution of EOSIO smart-contract projects.
