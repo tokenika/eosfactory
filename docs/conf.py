@@ -26,7 +26,7 @@ author = 'Tokenika'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '3.1.2'
+release = '3.1.3'
 
 # -- General configuration ---------------------------------------------------
 

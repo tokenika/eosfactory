@@ -149,8 +149,12 @@ class Account():
         self.set_contract = result
 
     def set_account_permission(
-                self, permission_name, authority, parent_permission_name,
+                self, permission_name, 
+                authority=None, 
+                parent_permission_name=None,
                 permission=None,
+                add_code=False,
+                remove_code=False,
                 expiration_sec=None, 
                 skip_sign=0, dont_broadcast=0, return_packed=0, force_unique=0,
                 max_cpu_usage=0, max_net_usage=0,
@@ -169,6 +173,10 @@ class Account():
             parent_permission_name (str or .Permission): The permission name of 
                 this parents permission (defaults to: "active").
             authority (str or dict or filename):  None to delete.
+            add_code (bool): If set, add 'eosio.code' permission to specified 
+                permission authority. Default is false.
+            remove_code (bool): If set, remove 'eosio.code' permission from 
+                specified permission authority. Default is false.
 
         Exemplary values of the argument *authority*::
 
@@ -205,6 +213,8 @@ class Account():
         result = cleos_set.SetAccountPermission(
                 self, permission_name, authority, parent_permission_name,
                 permission,
+                add_code,
+                remove_code,
                 expiration_sec, 
                 skip_sign, dont_broadcast, return_packed, force_unique,
                 max_cpu_usage, max_net_usage,

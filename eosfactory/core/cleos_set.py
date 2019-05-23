@@ -95,14 +95,18 @@ class SetAccountPermission(cleos.Cleos):
     '''Set parameters dealing with account permissions.
 
     Args:
-        account (str or .interface.Account): The account to set/delete a permission 
-            authority for.
+        account (str or .interface.Account): The account to set/delete a 
+            permission authority for.
         permission_name (str or .Permission): The permission to set/delete an 
             authority for.
         parent_permission_name (str or .Permission): The permission name of 
             this parents permission (defaults to: "active").
         authority (str or dict or filename):  None to delete.
-
+        add_code (bool): If set, add 'eosio.code' permission to specified 
+            permission authority. Default is false.
+        remove_code (bool): If set, remove 'eosio.code' permission from 
+            specified permission authority. Default is false.
+        
     Exemplary values of the argument *authority*::
 
         # bob, carol are account objects created with 
@@ -139,8 +143,12 @@ class SetAccountPermission(cleos.Cleos):
             component of EOSIO cleos responce.
     '''
     def __init__(
-            self, account, permission_name, authority, parent_permission_name,
+            self, account, permission_name, 
+            authority=None, 
+            parent_permission_name=None,
             permission=None,
+            add_code=False,
+            remove_code=False,
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, return_packed=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
@@ -162,20 +170,27 @@ class SetAccountPermission(cleos.Cleos):
             else:
                 authority =  re.sub(re.compile(r'\s+'), '', authority)
                 args.append(authority)
-        else:
-            args.append("NULL")
 
         if isinstance(parent_permission_name, interface.Permission):
             parent_permission_name = parent_permission_name.value
-        args.append(parent_permission_name)        
+                
+        if parent_permission_name:
+            parent_permission_name = interface.permission_arg(
+                parent_permission_name)[0]
+            args.append(parent_permission_name)
 
         if json:
             args.append("--json")
-        if not permission is None:
+        
+        if permission:
             p = interface.permission_arg(permission)
             for perm in p:
                 args.extend(["--permission", perm])
-
+        
+        if add_code:
+            args.append("--add-code")
+        if remove_code:
+            args.append("--remove-code")
         if expiration_sec:
             args.extend(["--expiration", str(expiration_sec)])
         if skip_sign:

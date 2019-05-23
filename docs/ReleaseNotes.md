@@ -1,10 +1,10 @@
-# EOSFactory Release Notes - v3.1.2
+# EOSFactory Release Notes - v3.1.3
 
 ## Compatibility
 
-EOSFactory [v3.1.2](https://github.com/tokenika/eosfactory/releases/tag/v3.1.2) is compatible with EOS [v1.7.1](https://github.com/EOSIO/eos/releases/tag/v1.7.1) and EOSIO.CDT [v1.6.1](https://github.com/EOSIO/eosio.cdt/releases/tag/v1.6.1).
+EOSFactory [v3.1.3](https://github.com/tokenika/eosfactory/releases/tag/v3.1.3) is compatible with EOS [v1.7.1](https://github.com/EOSIO/eos/releases/tag/v1.7.1) and EOSIO.CDT [v1.6.1](https://github.com/EOSIO/eosio.cdt/releases/tag/v1.6.1).
 
-## New features in v3.1.2
-* Record `cleos` and `nodeos` command lines in a file.
-* Support for compilation of native unit-tests.
-* Support for distribution of EOSIO smart-contract projects.
+## New features in v3.1.3
+
+* Corrected the account method `set_account_permission` so that it supports adding and removing `eosio.code` permission.
+

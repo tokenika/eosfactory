@@ -96,6 +96,7 @@ Release Notes
     :maxdepth: 1
 
     ReleaseNotes
+    ReleaseNotesHistory
 
 Roadmap
 -------
