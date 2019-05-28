@@ -1,6 +1,7 @@
 import os
 import re
 import fnmatch
+import shutil
 import zipfile
 import argparse
 
@@ -8,6 +9,7 @@ import eosfactory.core.utils as utils
 import eosfactory.core.config as config
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
+import eosfactory.core.vscode as vscode
 
 # https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/EOSIO/eosio.cdt/tree/master/examples/hello
 
@@ -29,6 +31,28 @@ def create_ignore_list_file(contract_dir, is_log_creation=False):
             f.write("\n".join(config.IGNORE_LIST))
                 
     return ignore_file
+
+
+def create_utils(contract_dir):
+    UTILS_PATH = "utils"
+    path_dest = os.path.join(contract_dir, UTILS_PATH)
+    path_src = os.path.join(config.template_dir(), config.PROJECT_0, UTILS_PATH)
+    try:
+        if not os.path.exists(path_dest):
+            shutil.copytree(path_src, path_dest)
+    except:
+        pass
+
+
+def create_task_json(contract_dir):
+    vscode_task_path = os.path.join(".vscode", "tasks.json")
+    path_dest = os.path.join(contract_dir, vscode_task_path)
+    if not os.path.exists(path_dest):
+        try:
+            with open(path_dest, "w+") as f:
+                f.write(vscode.TASKS)
+        except:
+            pass
 
 
 def is_valid(file, ignore_list):
@@ -126,6 +150,8 @@ def unpack(contract_dir=None, zip_file=None):
             ))
 
     create_ignore_list_file(contract_dir)
+    create_utils(contract_dir)
+    create_task_json(contract_dir)
 
 
 def pack(contract_dir=None, zip_file=None):

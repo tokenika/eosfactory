@@ -1,4 +1,4 @@
-# EOSFactory Release Notes - v3.1.3
+# Release Notes - v3.1.3
 
 ## Compatibility
 

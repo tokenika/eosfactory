@@ -25,13 +25,14 @@ TASK_JSON = "${tasks}"
 CONFIGURATIONS = "configurations"
 BROWSE = "browse"
 WORKSPACE_FOLDER = "${workspaceFolder}"
-ROOT = config.wsl_root()
-HOME = ROOT + os.environ["HOME"]
+# The root directory of the Windows WSL, or empty string if not Windows:
+ROOT = config.wsl_root() 
+HOME = ROOT + os.environ["HOME"] # Linux ~home<user name>
+PROJECT_0_DIR = os.path.join(config.template_dir(), config.PROJECT_0)
 
 
 def resolve_home(string): 
-    string = string.replace(TEMPLATE_HOME, HOME)
-    return string
+    return string.replace(TEMPLATE_HOME, HOME)
 
 
 def naturalize_path(path):
@@ -353,11 +354,11 @@ def project_from_template(
         verbosity: The logging configuration.
     '''
     project_name = linuxize_path(project_name.strip())
+
     template = linuxize_path(template.strip())
 
     template_dir = template if os.path.isdir(template) else \
                                 os.path.join(config.template_dir(), template)
-    
     if not os.path.isdir(template_dir):
         raise errors.Error('''
 The contract project template '{}' does not exist.
@@ -506,6 +507,8 @@ already exists. Cannot overwrite it.
         with open(contract_path, "w") as output:
             output.write(template)
 
+    if not template_dir == PROJECT_0_DIR:
+        copy_dir_contents(project_dir, PROJECT_0_DIR, "", project_name) 
     copy_dir_contents(project_dir, template_dir, "", project_name)  
 
     if open_vscode:

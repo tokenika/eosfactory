@@ -31,6 +31,7 @@ CONFIG_DIR = "config"
 CONFIG_JSON = "config.json"
 CONTRACTS_DIR = "contracts/"
 TEMPLATE_DIR = ("TEMPLATE_DIR", "templates/contracts")
+PROJECT_0 = "empty_project"
 
 eosfactory_data_ = ("EOSFACTORY_DATA_DIR", 
             [os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR),\
@@ -428,7 +429,7 @@ def chain_state_db_size_mb():
 
 
 def wsl_root():
-    '''The root directory of the Windows WSL.
+    '''The root directory of the Windows WSL, or empty string if not Windows.
     
     The root directory of the Ubuntu file system, owned by the installation,
     if any, of the Windows Subsystem Linux (WSL).
