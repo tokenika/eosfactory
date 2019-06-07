@@ -731,4 +731,4 @@ def gather_console_output(act, padding=""):
 
     for inline in act["inline_traces"]:
         console += gather_console_output(inline, padding + PADDING)
-    return (console + "\n").strip()
+    return (console + "\n").rstrip()
