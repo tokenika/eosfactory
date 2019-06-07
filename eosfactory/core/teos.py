@@ -751,10 +751,10 @@ def node_probe():
     count1 = count - 7
     num = 5
     block_num = None
-    time.sleep(5)
+    time.sleep(0.5)
 
     while True:
-        time.sleep(1)
+        time.sleep(0.2)
         count = count - 1
         if count > count1:
             print(".", end="", flush=True)
