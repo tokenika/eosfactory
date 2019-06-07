@@ -707,11 +707,9 @@ class PushAction(Cleos):
         self.console = ""
         self.act = ""
         if not dont_broadcast:
-            for trace in self.json["processed"]["action_traces"]:
-                if trace["console"]:
-                    if self.console:
-                        self.console += "\n"
-                    self.console += trace["console"]
+            
+            for act in self.json["processed"]["action_traces"]:
+                self.console += gather_console_output(act)
 
             for trace in self.json["processed"]["action_traces"]:
                 if trace["act"]["data"]:
@@ -724,3 +722,13 @@ class PushAction(Cleos):
                                                         trace["act"]["data"])
         self.printself()
 
+def gather_console_output(act, padding=""):
+    PADDING = "  "
+    console = ""
+    if len(act["console"]) > 0:
+        console += padding + act["act"]["account"] + "@" + act["act"]["name"] + ":\n"
+        console += padding + act["console"].replace("\n", "\n" + padding) + "\n"
+
+    for inline in act["inline_traces"]:
+        console += gather_console_output(inline, padding + PADDING)
+    return (console + "\n").strip()
