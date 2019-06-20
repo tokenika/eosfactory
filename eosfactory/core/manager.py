@@ -211,6 +211,8 @@ def resume(nodeos_stdout=None):
 def stop():
     ''' Stops all running EOSIO nodes.
     '''
+    stop_keosd()
+    kill_keosd()
     teos.node_stop()
 
 

@@ -128,6 +128,8 @@ def build(
 
     if not "-abigen" in compile_options_:
         compile_options.append("-abigen")
+    if is_test_mode and not "-fnative" in compile_options_:
+        compile_options.append("-fnative")
     
     for i in range(0, len(compile_options_)):
         entry = compile_options_[i]
@@ -221,7 +223,6 @@ or relative to the 'src' directory.
                 temp = os.path.normpath(temp)
                 if not temp in source_files:
                     source_files.append(temp)
-
         else:
             compile_options.append(entry)
 
@@ -234,11 +235,8 @@ or relative to the 'src' directory.
         raise errors.Error('''
 Cannot find any source file (".c", ".cpp",".cxx", ".c++") in the contract folder.
         ''')
-    else:
-        if not contract_src_name and len(source_files) == 1:
-            contract_src_name = os.path.splitext(
-                                        os.path.basename(source_files[0]))[0]
-        elif not is_test_mode:
+
+    if not is_test_mode and len(source_files) > 1: 
             raise errors.Error('''
 Cannot determine the source file of the contract. There is many files in 
 the 'src' directory, namely:
@@ -248,6 +246,14 @@ example:
 --src src_dir/hello.cpp
 The file path is to be absolute or relative to the project directory.
             '''.format("\n".join(source_files)))
+
+    if not contract_src_name:
+        contract_src_name = os.path.splitext(
+                                        os.path.basename(source_files[0]))[0]
+
+    if not contract_src_name and len(source_files) == 1:
+            contract_src_name = os.path.splitext(
+                                        os.path.basename(source_files[0]))[0]
         
     ############################################################################
     # end compiler option logics
@@ -327,7 +333,8 @@ The file path is to be absolute or relative to the project directory.
             logger.TRACE('''
                 terget writen to file: 
                     {}
-                '''.format(os.path.normpath(target_path)), verbosity)            
+                '''.format(os.path.normpath(target_path)), verbosity)
+    print("eosio-cpp: OK")            
 
 
 def project_from_template(
@@ -354,9 +361,7 @@ def project_from_template(
         verbosity: The logging configuration.
     '''
     project_name = linuxize_path(project_name.strip())
-
     template = linuxize_path(template.strip())
-
     template_dir = template if os.path.isdir(template) else \
                                 os.path.join(config.template_dir(), template)
     if not os.path.isdir(template_dir):
@@ -460,15 +465,9 @@ already exists. Cannot overwrite it.
                 else:
                     raise errors.Error(msg)
 
-    try:    # make contract directory and its build directory:
+    try:
         os.makedirs(os.path.join(project_dir, "build"))
-    except Exception as e:
-        raise errors.Error(str(e))
-    try:    # make contract directory and its tests directory:
         os.makedirs(os.path.join(project_dir, "tests"))
-    except Exception as e:
-        raise errors.Error(str(e))
-    try:    # make contract directory and its include directory:
         os.makedirs(os.path.join(project_dir, "include"))
     except Exception as e:
         raise errors.Error(str(e))
@@ -507,9 +506,9 @@ already exists. Cannot overwrite it.
         with open(contract_path, "w") as output:
             output.write(template)
 
-    if not template_dir == PROJECT_0_DIR:
-        copy_dir_contents(project_dir, PROJECT_0_DIR, "", project_name) 
-    copy_dir_contents(project_dir, template_dir, "", project_name)  
+    copy_dir_contents(project_dir, PROJECT_0_DIR, "", project_name)
+    if not template_dir == PROJECT_0_DIR: 
+        copy_dir_contents(project_dir, template_dir, "", project_name)  
 
     if open_vscode:
         if utils.is_windows_ubuntu():
@@ -549,7 +548,7 @@ def get_pid(name=None):
     stdout = utils.spawn(
         command_line, "Cannot determine PID of any nodeos process.")
 
-    return [int(pid) for pid in stdout.split()]
+    return stdout.split()
 
 
 def get_target_dir(contract_dir):
@@ -787,12 +786,9 @@ The local node does not respond.
             ''')
 
 
-def is_local_node_process_running(name=None):
-    if not name:
-        name = config.node_exe()
-    return name in utils.spawn(
-        'ps aux |  grep -v grep | grep ' + name, shell=True)
-        
+def is_local_node_process_running():
+    return len(get_pid()) > 0
+
 
 def node_stop():
     # You can see if the process is a zombie by using top or 
@@ -801,14 +797,14 @@ def node_stop():
     
     pids = get_pid()
     count = 10
-    if pids:
-        for pid in pids:
-            os.system("kill " + str(pid))
+    for pid in pids:
+        os.system("kill " + pid)
     
         while count > 0:
             time.sleep(1)
-            if not is_local_node_process_running():
+            if not pid in utils.spawn("ps -p " + pid, shell=True):
                 break
+            
             count = count -1
 
     if count <= 0:

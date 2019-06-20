@@ -476,7 +476,10 @@ not care about having efficient the intelisense of Visual Studio Code.
                 if not error:
                     break
         
-        wsl_root_[1][0] = path.replace("\\", "/")
+        path = path.replace("\\", "/")
+        path = path.replace(path[0:2], path[0:2].lower())
+
+        wsl_root_[1][0] = path
 
     return wsl_root_[1][0]
 
@@ -575,7 +578,8 @@ def eosio_version():
 def eosio_cpp_version():
     try:
         version = subprocess.check_output(
-            [eosio_cpp(), "-version"], timeout=5).decode("ISO-8859-1").strip().replace("eosio-cpp version ", "")
+            [eosio_cpp(), "-version"], timeout=5).decode("ISO-8859-1").strip()\
+                                            .replace("eosio-cpp version ", "")
         retval = [version]
         if not version.split(".")[:2] == EOSIO_CDT_VERSION.split(".")[:2]:
             retval.append(EOSIO_CDT_VERSION)

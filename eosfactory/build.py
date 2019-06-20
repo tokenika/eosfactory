@@ -4,12 +4,12 @@ import eosfactory.core.teos as teos
 def build(
         contract_dir_hint,
         c_cpp_properties_path="", 
-        compile_only=False, is_test_mode=False, is_execute=False, silent=False):
+        compile_only=False, is_test_options=False, is_execute=False, silent=False):
 
     verbosity=[] if silent else None
     teos.build(
                         contract_dir_hint, c_cpp_properties_path, compile_only, 
-                        is_test_mode, is_execute, verbosity)
+                        is_test_options, is_execute, verbosity)
 
 def main():
     '''Build a contract.
@@ -28,7 +28,7 @@ def main():
         dir: Contract name or directory.
         --c_cpp_prop: c_cpp_properties.json file path.        
         --compile: Do not build, compile only.
-        --test_mode: Use test options, not code ones.
+        --test_options: Use test options, not code ones.
         --execute: Execute the target.
         --silent: Do not print info.
         -h: Show help message and exit
@@ -51,7 +51,7 @@ def main():
     parser.add_argument(
         "--compile", help="Do not build, compile only.", action="store_true")
     parser.add_argument(
-                        "--test_mode", help="Use test options, not code ones", 
+                        "--test_options", help="Use test options, not code ones", 
                         action="store_true")
     parser.add_argument(
                         "--execute", help="Execute the target", 
@@ -61,7 +61,7 @@ def main():
 
 
     args = parser.parse_args()
-    build(args.dir, args.c_cpp_prop, args.compile, args.test_mode, args.execute,
+    build(args.dir, args.c_cpp_prop, args.compile, args.test_options, args.execute,
     args.silent)    
 
 if __name__ == '__main__':
