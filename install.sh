@@ -24,7 +24,12 @@ Configuring the eosfactory installation...
 "
 
 python3 eosfactory/install.py "${WSL_ROOT}"
+
 python3 -m eosfactory.config --dependencies
+ret=$?
+if [ $ret -ne 0 ]; then
+    exit $ret
+fi
 
 txtbld=$(tput bold)
 bldred=${txtbld}$(tput setaf 1)

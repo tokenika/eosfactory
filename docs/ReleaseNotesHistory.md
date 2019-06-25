@@ -88,3 +88,6 @@
     * Record `cleos` and `nodeos` command lines in a file.
     * Support for compilation of native unit-tests.
     * Support for distribution of EOSIO smart-contract projects.
+
+* Release 3.1.3 on 23 May 2019
+    * Corrected the account method `set_account_permission` so that it supports adding and removing `eosio.code` permission.

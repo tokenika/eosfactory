@@ -1,5 +1,5 @@
 ============================
-Welcome to EOSFactory v3.1.3
+Welcome to EOSFactory v3.2.0
 ============================
 
 `EOSFactory <http://eosfactory.io/>`_ is a Python-based `EOS <https://eos.io>`_ smart-contract development & testing framework, created by `Tokenika <https://tokenika.io>`_.

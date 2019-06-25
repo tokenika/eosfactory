@@ -10,6 +10,8 @@ import shutil
 import pprint
 import json
 import sys
+import math
+import psutil
 
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
@@ -29,6 +31,7 @@ WORKSPACE_FOLDER = "${workspaceFolder}"
 ROOT = config.wsl_root() 
 HOME = ROOT + os.environ["HOME"] # Linux ~home<user name>
 PROJECT_0_DIR = os.path.join(config.template_dir(), config.PROJECT_0)
+ERR_MSG_IS_STUCK = "The process of 'nodeos' is stuck."
 
 
 def resolve_home(string): 
@@ -532,23 +535,18 @@ already exists. Cannot overwrite it.
 
 
 def get_pid(name=None):
-    """Return process ids found by (partial) name or regex.
-
-    >>> get_process_id('kthreadd')
-    [2]
-    >>> get_process_id('watchdog')
-    [10, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61]  # ymmv
-    >>> get_process_id('non-existent process')
-    []
+    """Return process ids found by name.
     """    
     if not name:
         name = os.path.splitext(os.path.basename(config.node_exe()))[0]
 
-    command_line = ['pgrep', name]
-    stdout = utils.spawn(
-        command_line, "Cannot determine PID of any nodeos process.")
+    pids = []
+    processes = [p.info for p in psutil.process_iter(attrs=["pid", "name"]) \
+                                        if name in p.info["name"]]
+    for process in processes:
+        pids.append(process["pid"])
 
-    return stdout.split()
+    return pids
 
 
 def get_target_dir(contract_dir):
@@ -651,6 +649,11 @@ def keosd_start():
 
 
 def on_nodeos_error(clear=False):
+    ERROR_WAIT_TIME = 5
+    NOT_ERROR = [
+        "exit shutdown",
+        "configuration items in the config.ini file are redundantly",
+        ]
 
     node_stop()
     args_ = args(clear)
@@ -658,38 +661,62 @@ def on_nodeos_error(clear=False):
     command_line = " ".join(args_)
 
     logger.ERROR('''
-    The local ``nodeos`` failed to start twice in sequence. Perhaps, something is
+    The local 'nodeos' failed to start few times in sequence. Perhaps, something is
     wrong with configuration of the system. See the command line issued:
 
     ''')
     print("\n{}\n".format(command_line))
-    logger.INFO('''
-    Now, see the result of execution of the command line:
+    print('''
+Now, see the result of execution of the command line:
     ''')
-    
-    p = subprocess.run(
-        command_line, 
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        shell=True)
-    
-    err_msg = p.stderr.decode("ISO-8859-1")
-    if "error" in err_msg and not "exit shutdown" in err_msg:
-        logger.ERROR(err_msg)
-    elif not err_msg or "exit shutdown" in err_msg:
-        logger.OUT(
-        '''
-        Just another instability incident of the ``nodeos`` executable. 
-        Rerun the script.
-        '''
-        )
-    else:
-        print(err_msg)
 
+    def runInThread():
+        proc = subprocess.Popen(
+            " ".join(args_), 
+            stdin=subprocess.DEVNULL, stdout=std_out_handle, 
+            stderr=subprocess.PIPE, shell=True)
+        out, err = proc.communicate()  
+
+        err_msg = err.decode("ISO-8859-1")
+        not_error = False
+        if err_msg:
+            for item in NOT_ERROR:
+                if item in err_msg:
+                    not_error = True
+                    break
+
+        if not_error:
+            print(
+            '''
+Just another hang incident of the 'nodeos' executable.''')
+            if clear:
+                print(
+                '''
+Rerun the script.
+                ''')
+            else:
+                print(
+                '''
+Rerun the script with 'nodeos' restarted.
+                ''')                
+        else:
+            print(err_msg)
+
+    thread = threading.Thread(target=runInThread)
+    thread.start()
+
+    # Wait for the nodeos process to crash
+    for i in (0, int(ERROR_WAIT_TIME)):
+        print(".", end="", flush=True)
+        time.sleep(ERROR_WAIT_TIME)
+    print()
+
+    # Kill the process: it is stuck, or it is running well.
     node_stop()
     exit()
 
 
+std_out_handle = None
 def node_start(clear=False, nodeos_stdout=None):
     '''Start the local EOSIO node.
 
@@ -707,6 +734,7 @@ def node_start(clear=False, nodeos_stdout=None):
     if not nodeos_stdout:
         nodeos_stdout = config.nodeos_stdout()
 
+    global std_out_handle
     std_out_handle = subprocess.DEVNULL
     if nodeos_stdout:
         try:
@@ -721,6 +749,7 @@ Error message is
             '''.format(nodeos_stdout, str(e)))
 
     def onExit():
+        global std_out_handle
         if not std_out_handle == subprocess.DEVNULL:
             try:
                 std_out_handle.close()
@@ -749,31 +778,69 @@ Error message is
 
 
 def node_probe():
-    count = 20
-    count1 = count - 7
-    num = 5
+    DELAY_TIME = 4
+    WAIT_TIME = 1
+
+    NUMBER_BLOCKS_ADDED = 3
+    NUMBER_GET_INFO_CALLS = 7
+    CHECK_COUNT = 2
+    RATIO_THRESHOLD = 2.5
+    NODEOS = "nodeos"
+
+    count = NUMBER_GET_INFO_CALLS
     block_num = None
-    time.sleep(5)
+
+    pid = None
+    for i in range(0, 5):
+        pids = [p.info for p in psutil.process_iter(attrs=["pid", "name"]) \
+                                        if NODEOS in p.info["name"]]
+        if pids and pids[0]["name"] == NODEOS:
+            pid = pids[0]["pid"]
+            break
+        time.sleep(0.5)
+    if not pid:
+        raise errors.Error('''
+Local node has failed to start.
+            ''')
+    proc = psutil.Process(pid)
+    cpu_percent_start = proc.cpu_percent(interval=WAIT_TIME)
+
+    print("Starting nodeos, cpu percent: ", end="", flush=True)
+    for i in range(0, int(DELAY_TIME / WAIT_TIME)):
+        cpu_percent = proc.cpu_percent(interval=WAIT_TIME)
+        print("{:.0f}, ".format(cpu_percent), end="", flush=True)
 
     while True:
-        time.sleep(1)
-        count = count - 1
-        if count > count1:
-            print(".", end="", flush=True)
-            continue
 
+        if not proc.is_running():
+            raise errors.Error('''
+Local node has stopped.
+''')
+        count = count - 1
+
+        cpu_percent = proc.cpu_percent(interval=WAIT_TIME)
+        
         try:
             import eosfactory.core.cleos_get as cleos_get
             head_block_num = cleos_get.GetInfo(is_verbose=0).head_block
+            if block_num is None:
+                block_num = head_block_num
+                count = int(NUMBER_BLOCKS_ADDED * 0.5/WAIT_TIME) + 1
         except:
             head_block_num = 0
-        finally:
-            print("*", end="", flush=True)
+            pass
+        
+        if block_num:
+            print("{:.0f}* ".format(cpu_percent), end="", flush=True)
+        else:
+            print("{:.0f}; ".format(cpu_percent), end="", flush=True)
 
-        if block_num is None:
-            block_num = head_block_num
+        if count == CHECK_COUNT and not block_num and \
+                            cpu_percent_start / cpu_percent < RATIO_THRESHOLD:
+            print(" stuck.")
+            raise errors.Error(ERR_MSG_IS_STUCK)        
 
-        if head_block_num - block_num >= num:
+        if block_num and head_block_num - block_num >= NUMBER_BLOCKS_ADDED:
             print()
             logger.INFO('''
             Local node is running. Block number is {}
@@ -781,6 +848,7 @@ def node_probe():
             break
 
         if count <= 0:
+            print()
             raise errors.Error('''
 The local node does not respond.
             ''')
@@ -790,21 +858,17 @@ def is_local_node_process_running():
     return len(get_pid()) > 0
 
 
-def node_stop():
-    # You can see if the process is a zombie by using top or 
-    # the following command:
-    # ps aux | awk '$8=="Z" {print $2}'
-    
-    pids = get_pid()
+def kill(name):
+    pids = get_pid(name)
     count = 10
     for pid in pids:
-        os.system("kill " + pid)
+        p = psutil.Process(pid)
+        p.terminate()
     
         while count > 0:
             time.sleep(1)
-            if not pid in utils.spawn("ps -p " + pid, shell=True):
-                break
-            
+            if not psutil.pid_exists(pid):
+                break            
             count = count -1
 
     if count <= 0:
@@ -813,7 +877,23 @@ Failed to kill {}. Pid is {}.
     '''.format(
         os.path.splitext(os.path.basename(config.node_exe()))[0], str(pids))
     )
-    else:         
+
+    return pids
+
+
+def kill_keosd():
+    kill(os.path.splitext(os.path.basename(config.keosd_exe()))[0])
+
+
+def node_stop(verbose=True):
+    # You can see if the process is a zombie by using top or 
+    # the following command:
+    # ps aux | awk '$8=="Z" {print $2}'
+
+    kill_keosd()
+    pids = kill(os.path.splitext(os.path.basename(config.node_exe()))[0])
+    
+    if verbose:
         logger.INFO('''
 Local node is stopped {}.
         '''.format(str(pids)))        
