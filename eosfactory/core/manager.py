@@ -33,7 +33,7 @@ def clear_testnet_cache():
     Removing testnet cache for prefix `{}`
     '''.format(setup.file_prefix()))
 
-    kill_keosd() # otherwise the manager may protects the wallet files
+    teos.kill_keosd() # otherwise the manager may protects the wallet files
     wallet_dir = config.keosd_wallet_dir()
     files = os.listdir(wallet_dir)
     try:
@@ -91,10 +91,6 @@ def stop_keosd():
     cleos.WalletStop(is_verbose=False)
 
 
-def kill_keosd():
-    os.system("pkill keosd")
-
-
 class Transaction():
     def __init__(self, msg):
         self.transaction_id = ""
@@ -119,16 +115,24 @@ def is_local_testnet():
 
 
 def node_start(clear=False, nodeos_stdout=None):
-    try:
-        teos.node_start(clear, nodeos_stdout)
-        teos.node_probe()
-    except:
+    WAIT_TIME = 0.6
+    try_count = 3
+
+    while(True):
         try:
-            time.sleep(2)
             teos.node_start(clear, nodeos_stdout)
             teos.node_probe()
-        except:
-            teos.on_nodeos_error(clear)
+            return
+        except Exception as e:
+            if not (clear and teos.ERR_MSG_IS_STUCK in str(e)):
+                try_count = try_count - 1
+                if try_count <= 0:
+                    break
+            teos.node_stop(verbose=False)
+
+            time.sleep(WAIT_TIME)
+                    
+    teos.on_nodeos_error(clear)
 
 
 def reset(nodeos_stdout=None):
@@ -145,7 +149,7 @@ def reset(nodeos_stdout=None):
     the command line is printed, for *example*::
 
         ERROR:
-        The local ``nodeos`` failed to start twice in sequence. Perhaps, something is
+        The local 'nodeos' failed to start twice in sequence. Perhaps, something is
         wrong with configuration of the system. See the command line issued:
 
         /usr/bin/nodeosx 
@@ -209,8 +213,13 @@ def resume(nodeos_stdout=None):
 
 
 def stop():
-    ''' Stops all running EOSIO nodes.
+    ''' Stops keosd and all running EOSIO nodes.
     '''
+    try:
+        stop_keosd()
+    except:
+        pass
+    
     teos.node_stop()
 
 

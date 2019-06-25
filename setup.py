@@ -66,7 +66,7 @@ setuptools.setup(
     author_email='contact@tokenika.io',
     license='MIT',
     packages=setuptools.find_packages(),    
-    install_requires=['termcolor',],
+    install_requires=['termcolor', 'psutil'],
     include_package_data = True,
     data_files=DATA_FILES,
     zip_safe=False)

@@ -149,7 +149,8 @@ class Account():
         self.set_contract = result
 
     def set_account_permission(
-                self, permission_name, 
+                self, 
+                permission_name=None, 
                 authority=None, 
                 parent_permission_name=None,
                 permission=None,
@@ -169,7 +170,7 @@ class Account():
 
         Args:
             permission_name (str or .Permission): The permission to set/delete an 
-                authority for.
+                authority for (defaults to: "active").
             parent_permission_name (str or .Permission): The permission name of 
                 this parents permission (defaults to: "active").
             authority (str or dict or filename):  None to delete.

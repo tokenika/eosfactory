@@ -11,7 +11,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.1.3"
+VERSION = "3.2.0"
 EOSIO_VERSION = "1.7.1"
 EOSIO_CDT_VERSION = "1.6.1"
 PYTHON_VERSION = "3.5 or higher"
@@ -31,6 +31,7 @@ CONFIG_DIR = "config"
 CONFIG_JSON = "config.json"
 CONTRACTS_DIR = "contracts/"
 TEMPLATE_DIR = ("TEMPLATE_DIR", "templates/contracts")
+PROJECT_0 = "empty_project"
 
 eosfactory_data_ = ("EOSFACTORY_DATA_DIR", 
             [os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR),\
@@ -428,7 +429,7 @@ def chain_state_db_size_mb():
 
 
 def wsl_root():
-    '''The root directory of the Windows WSL.
+    '''The root directory of the Windows WSL, or empty string if not Windows.
     
     The root directory of the Ubuntu file system, owned by the installation,
     if any, of the Windows Subsystem Linux (WSL).
@@ -475,7 +476,10 @@ not care about having efficient the intelisense of Visual Studio Code.
                 if not error:
                     break
         
-        wsl_root_[1][0] = path.replace("\\", "/")
+        path = path.replace("\\", "/")
+        path = path.replace(path[0:2], path[0:2].lower())
+
+        wsl_root_[1][0] = path
 
     return wsl_root_[1][0]
 
@@ -574,7 +578,8 @@ def eosio_version():
 def eosio_cpp_version():
     try:
         version = subprocess.check_output(
-            [eosio_cpp(), "-version"], timeout=5).decode("ISO-8859-1").strip().replace("eosio-cpp version ", "")
+            [eosio_cpp(), "-version"], timeout=5).decode("ISO-8859-1").strip()\
+                                            .replace("eosio-cpp version ", "")
         retval = [version]
         if not version.split(".")[:2] == EOSIO_CDT_VERSION.split(".")[:2]:
             retval.append(EOSIO_CDT_VERSION)

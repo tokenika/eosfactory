@@ -98,7 +98,7 @@ class SetAccountPermission(cleos.Cleos):
         account (str or .interface.Account): The account to set/delete a 
             permission authority for.
         permission_name (str or .Permission): The permission to set/delete an 
-            authority for.
+            authority for (defaults to: "active").
         parent_permission_name (str or .Permission): The permission name of 
             this parents permission (defaults to: "active").
         authority (str or dict or filename):  None to delete.
@@ -159,6 +159,8 @@ class SetAccountPermission(cleos.Cleos):
         account_name = interface.account_arg(account)
         args = [account_name]
 
+        if not permission_name:
+            permission_name = "active"
         if isinstance(permission_name, interface.Permission):
             permission_name = permission_name.value
         args.append(permission_name)

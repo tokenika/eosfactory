@@ -119,6 +119,8 @@ error message:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
     except Exception as e:
+        stop = True
+        time.sleep(PERIOD)
         print(str(e))
         exit()
 

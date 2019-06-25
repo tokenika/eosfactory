@@ -48,6 +48,7 @@ sudo apt install code
 
 sudo apt install python3-pip
 pip3 install termcolor
+pip3 install psutil
 pip3 install setuptools
 pip3 install wheel
 ```
