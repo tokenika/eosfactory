@@ -22,7 +22,7 @@ def validate(omittable):
         pass
     elif "Wallet already exists" in err_msg:
         pass # raise WalletAlreadyExistsError(omittable)
-    elif "Error 3.2.102: Nonexistent wallet" in err_msg:
+    elif "Error 3120002: Nonexistent wallet" in err_msg:
         raise WalletDoesNotExistError(omittable)
     elif "Invalid wallet password" in err_msg:
         raise InvalidPasswordError(omittable)
@@ -37,7 +37,7 @@ def validate(omittable):
     # NOT ERRORS
     #######################################################################
     
-    elif "Error 3.2.108: Key already exists" in err_msg:
+    elif "Error 3120008: Key already exists" in err_msg:
         pass                
     else:
         raise Error(err_msg)
