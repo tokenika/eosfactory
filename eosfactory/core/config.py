@@ -11,7 +11,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.2.0"
+VERSION = "3.2.1"
 EOSIO_VERSION = "1.7.1"
 EOSIO_CDT_VERSION = "1.6.1"
 PYTHON_VERSION = "3.5 or higher"
