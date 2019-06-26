@@ -9,7 +9,7 @@ try:
 except ImportError:
     print('''
 Module 'psutil' is not installed. Please, install it:
-pip3 install --user termcolor
+pip3 install --user psutil
 
 Exiting ...
     ''')
