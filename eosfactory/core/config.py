@@ -371,50 +371,6 @@ def eosio_key_public():
     return config_value_checked(key_public_)
 
 
-def data_dir():
-    '''Directory containing runtime data of *nodeos*.
-
-    It may be changed with 
-    *LOCAL_NODE_DATA_DIR* entry in the *config.json* file, 
-    see :func:`.current_config`.
-    '''
-    return first_valid_path(data_dir_)
-    
-
-def nodeos_config_dir():
-    '''Directory containing configuration files such as config.ini.
-
-    It may be changed with 
-    *LOCAL_NODE_CONFIG_DIR* entry in the *config.json* file, 
-    see :func:`.current_config`.
-    '''
-    path = first_valid_path(config_dir_, raise_error=False)
-    if path:
-        return path
-
-    return config_dir()
-
-
-def genesis_json():
-    '''File to read Genesis State from.
-
-    It may be changed with 
-    *EOSIO_GENESIS_JSON* entry in the *config.json* file, 
-    see :func:`.current_config`.    
-    '''
-    path = first_valid_path(genesis_json_, raise_error=False)
-    if not path:
-        path = os.path.join(config_dir(), "genesis.json")
-    if not os.path.exists(path):
-        raise errors.Error('''
-Cannot find any path for '{}'.
-Tried:
-{}
-        '''.format(genesis_json_[0], genesis_json_[1]), translate=False)
-
-    return path
-
-
 def chain_state_db_size_mb():
     '''The size of the buffer of the local node. 
 
@@ -1148,14 +1104,6 @@ def current_config(contract_dir=None, dont_set_workspace=False):
     except:
         map[keosd_wallet_dir_[0]] = None
     try: 
-        map[data_dir_[0]] = data_dir()
-    except:
-        map[data_dir_[0]] = None 
-    try:    
-        map[config_dir_[0]] = nodeos_config_dir()
-    except:
-        map[config_dir_[0]] = None   
-    try: 
         map[cli_exe_[0]] = cli_exe()
     except:
         map[cli_exe_[0]] = None 
@@ -1179,10 +1127,6 @@ def current_config(contract_dir=None, dont_set_workspace=False):
         map[eosio_cpp_includes_[0]] = eosio_cpp_includes()
     except:
         map[eosio_cpp_includes_[0]] = None        
-    try:   
-        map[genesis_json_[0]] = genesis_json()
-    except:
-        map[genesis_json_[0]] = None
     try:   
         map[includes_[0]] = eoside_includes_dir()
     except:
