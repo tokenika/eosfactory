@@ -18,7 +18,8 @@ PYTHON_VERSION = "3.5 or higher"
 EOSFACTORY_DIR = "eosfactory/"
 TMP = "/tmp/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
-VERSION_PATTERN = r".+/eosio\.cdt/(\d\.\d\.\d)/.*$"
+EOSIO_CDT_PATTERN = r".+/eosio\.cdt/(\d\.\d\.\d)/.*"
+UBUNTU_PATTERN = r"\s*\"(.*CanonicalGroupLimited.Ubuntu.*/LocalState/rootfs)/.*"
 BUILD = "build"
 IGNORE_FILE = ".eosideignore"
 IGNORE_LIST = [".vscode/ipch/*", ".vscode/settings.json", ".vscode/tasks.json",\
@@ -39,13 +40,13 @@ eosfactory_data_ = ("EOSFACTORY_DATA_DIR",
             [])
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 wallet_address_ = ("WALLET_MANAGER_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
+
 genesis_json_ = ("EOSIO_GENESIS_JSON", 
                 ["/home/cartman/.local/share/eosio/nodeos/config/genesis.json"])
-data_dir_ = ("LOCAL_NODE_DATA_DIR", 
-                            ["/home/cartman/.local/share/eosio/nodeos/data/"])
-config_dir_ = ("LOCAL_NODE_CONFIG_DIR", [None])
-# config_dir_ = ("LOCAL_NODE_CONFIG_DIR", 
-#                         ["/home/cartman/.local/share/eosio/nodeos/config/"])
+nodeos_config_dir_ = ("NODEOS_CONFIG_DIR", [None])
+nodeos_data_dir_ = ("NODEOS_DATA_DIR", [None])
+nodeos_options_ = ("NODEOS_OPTIONS", [])
+
 keosd_wallet_dir_ = ("KEOSD_WALLET_DIR", ["${HOME}/eosio-wallet/"])
 chain_state_db_size_mb_ = ("EOSIO_SHARED_MEMORY_SIZE_MB", ["300"])
 
@@ -564,7 +565,7 @@ def eosio_cdt_root():
             'eosio-cpp' does not response.
             ''')        
 
-    version_pattern = re.compile(VERSION_PATTERN)
+    version_pattern = re.compile(EOSIO_CDT_PATTERN)
     tested = []
     for path in eosio_cdt_root_[1]:
         tested.append(path)
@@ -835,6 +836,47 @@ Tried:
     else:
         return None
 
+def nodeos_data_dir():
+    '''Directory containing runtime data of *nodeos*.
+
+    It may be changed with 
+    *NODEOS_DATA_DIR* entry in the *config.json* file, 
+    see :func:`.current_config`.
+    '''
+    return nodeos_data_dir_[1][0]
+    
+
+def nodeos_config_dir():
+    '''Directory containing configuration files such as config.ini.
+
+    It may be changed with 
+    *NODEOS_CONFIG_DIR* entry in the *config.json* file, 
+    see :func:`.current_config`.
+    '''
+    return nodeos_config_dir_[1][0]
+
+
+def nodeos_options():
+    '''
+    '''
+    return nodeos_options_[1]
+
+
+def genesis_json():
+    '''File to read Genesis State from.
+
+    It may be changed with 
+    *EOSIO_GENESIS_JSON* entry in the *config.json* file, 
+    see :func:`.current_config`.    
+    '''
+    path = first_valid_path(genesis_json_, raise_error=False)
+    if not path:
+        path = os.path.join(config_dir(), "genesis.json")
+    if not os.path.exists(path):
+        return None
+
+    return path
+
 
 def contract_dir(contract_dir_hint):
     '''Given a hint, determine the contract root directory.
@@ -996,16 +1038,27 @@ There are files:
     return files[0]
 
 
-def update_eosio_cpp_includes(c_cpp_properties_path):
+def update_vscode(c_cpp_properties_path):
     c_cpp_properties_path = utils.wslMapWindowsLinux(c_cpp_properties_path)
     with open(c_cpp_properties_path) as f:
         c_cpp_properties = f.read()
         
-    version_pattern = re.compile(VERSION_PATTERN)
+    pattern = re.compile(EOSIO_CDT_PATTERN)
 
-    if re.findall(version_pattern, c_cpp_properties):
-        new = c_cpp_properties.replace(
-                re.findall(version_pattern, c_cpp_properties)[0], eosio_cpp_version()[0])
+    if re.findall(pattern, c_cpp_properties):
+        new = c_cpp_properties.replace(re.findall(
+                pattern, c_cpp_properties)[0], eosio_cpp_version()[0])
+
+        if not new == c_cpp_properties:
+            with open(c_cpp_properties_path,'w') as f:
+                f.write(new)
+
+    pattern = re.compile(UBUNTU_PATTERN)
+    root = wsl_root()
+    if root:
+        if re.findall(pattern, c_cpp_properties):
+            new = c_cpp_properties.replace(
+                                re.findall(pattern, c_cpp_properties)[0], root)
 
         if not new == c_cpp_properties:
             with open(c_cpp_properties_path,'w') as f:
@@ -1143,7 +1196,11 @@ def current_config(contract_dir=None, dont_set_workspace=False):
         map[TEMPLATE_DIR[0]] = template_dir()
     except:
         map[TEMPLATE_DIR[0]] = None
-        
+  
+    map[genesis_json_[0]] = genesis_json()
+    map[nodeos_config_dir_[0]] = nodeos_config_dir()
+    map[nodeos_data_dir_[0]] = nodeos_data_dir()
+    map[nodeos_options_[0]] = nodeos_options()
 
     map["EOSIO_VERSION"] = eosio_version()
     map["EOSIO_CDT_VERSION"] = eosio_cpp_version()

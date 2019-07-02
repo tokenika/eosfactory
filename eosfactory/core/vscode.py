@@ -220,7 +220,7 @@ def c_cpp_properties():
 
 def main(c_cpp_properties_path=None):
     if c_cpp_properties_path:
-        config.update_eosio_cpp_includes(c_cpp_properties_path)
+        config.update_vscode(c_cpp_properties_path)
     else:
         print(c_cpp_properties())
 
