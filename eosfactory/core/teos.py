@@ -596,21 +596,6 @@ def get_include_dir(source_dir):
 
 
 def args(clear=False):
-    try:
-        data_dir = config.data_dir()
-    except:
-        data_dir = None
-
-    try:
-        config_dir = config.nodeos_config_dir()
-    except:
-        config_dir = None
-
-    try:
-        genesis_json = config.genesis_json()
-    except:
-        genesis_json = None
-
     args_ = [
         "--http-server-address", config.http_server_address(),
         "--chain-state-db-size-mb", config.chain_state_db_size_mb(),
@@ -623,18 +608,19 @@ def args(clear=False):
         "--plugin eosio::producer_plugin",
         "--plugin eosio::chain_api_plugin",
         "--plugin eosio::http_plugin",
-        "--plugin eosio::history_api_plugin"
     ]
-    if config_dir:
-        args_.extend(["--config-dir", config_dir])
-    if data_dir:
-        args_.extend(["--data-dir", data_dir])
+    if config.nodeos_config_dir():
+        args_.extend(["--config-dir", config.nodeos_config_dir()])
+    if config.nodeos_data_dir():
+        args_.extend(["--data-dir", config.nodeos_data_dir()])
+    if config.nodeos_options():
+        args_.extend(nodeos_options())
 
     if clear:
         node_stop()
         args_.extend(["--delete-all-blocks"])
-        if genesis_json:
-            args_.extend(["--genesis-json", genesis_json])            
+        if config.genesis_json():
+            args_.extend(["--genesis-json", config.genesis_json()])     
     return args_
 
 

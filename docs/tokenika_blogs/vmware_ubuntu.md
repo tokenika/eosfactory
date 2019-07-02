@@ -57,8 +57,8 @@ pip3 install wheel
 
 ```bash
 sudo apt remove eosio
-wget https://github.com/eosio/eos/releases/download/v1.7.1/eosio_1.7.1-1-ubuntu-18.04_amd64.deb
-sudo apt install ./eosio_1.7.1-1-ubuntu-18.04_amd64.deb
+wget https://github.com/eosio/eos/releases/download/v1.8.0/eosio_1.8.0-1-ubuntu-18.04_amd64.deb
+sudo apt install ./eosio_1.8.0-1-ubuntu-18.04_amd64.deb
 
 sudo apt remove eosio.cdt
 wget wget https://github.com/eosio/eosio.cdt/releases/download/v1.6.1/eosio.cdt_1.6.1-1_amd64.deb

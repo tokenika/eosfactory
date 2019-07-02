@@ -91,3 +91,7 @@
 
 * Release 3.1.3 on 23 May 2019
     * Corrected the account method `set_account_permission` so that it supports adding and removing `eosio.code` permission.
+
+* Release 3.2.0 on 24 June 2019
+    * Native compilation and debugging of EOSIO smart contracts.
+    * Improved startup of the `nodeos` process: better control on stuck conditions that frequently occur.
