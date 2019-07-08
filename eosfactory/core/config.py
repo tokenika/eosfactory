@@ -15,6 +15,8 @@ VERSION = "3.3.0"
 EOSIO_VERSION = "1.8.0"
 EOSIO_CDT_VERSION = "1.6.1"
 PYTHON_VERSION = "3.5 or higher"
+UBUNTU_VERSION_MIN = 18
+
 EOSFACTORY_DIR = "eosfactory/"
 TMP = "/tmp/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
@@ -41,8 +43,7 @@ eosfactory_data_ = ("EOSFACTORY_DATA_DIR",
 node_address_ = ("LOCAL_NODE_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 wallet_address_ = ("WALLET_MANAGER_ADDRESS", [LOCALHOST_HTTP_ADDRESS])
 
-genesis_json_ = ("EOSIO_GENESIS_JSON", 
-                ["/home/cartman/.local/share/eosio/nodeos/config/genesis.json"])
+genesis_json_ = ("EOSIO_GENESIS_JSON", [None])
 nodeos_config_dir_ = ("NODEOS_CONFIG_DIR", [None])
 nodeos_data_dir_ = ("NODEOS_DATA_DIR", [None])
 nodeos_options_ = ("NODEOS_OPTIONS", [])
@@ -532,7 +533,7 @@ def eosio_version():
         return ["", EOSIO_VERSION]
 
 
-def eosio_cpp_version():
+def eosio_cdt_version():
     try:
         version = subprocess.check_output(
             [eosio_cpp(), "-version"], timeout=5).decode("ISO-8859-1").strip()\
@@ -558,7 +559,7 @@ def eosio_cdt_root():
     if eosio_cdt_root_[0] in config_json and config_json[eosio_cdt_root_[0]]:
         return config_json[eosio_cdt_root_[0]]
 
-    eosio_cpp_version_ = eosio_cpp_version()
+    eosio_cpp_version_ = eosio_cdt_version()
     if not eosio_cpp_version_:
         raise errors.Error(
             '''
@@ -1047,7 +1048,7 @@ def update_vscode(c_cpp_properties_path):
 
     if re.findall(pattern, c_cpp_properties):
         new = c_cpp_properties.replace(re.findall(
-                pattern, c_cpp_properties)[0], eosio_cpp_version()[0])
+                pattern, c_cpp_properties)[0], eosio_cdt_version()[0])
 
         if not new == c_cpp_properties:
             with open(c_cpp_properties_path,'w') as f:
@@ -1071,32 +1072,6 @@ def not_defined(config_map):
         if value == None or value is None:
             retval[key] = value
     return retval
-
-
-def installation_dependencies(config_map):
-    '''Verify whether 'eosio' and 'eosio.cpp' packages are properly installed.
-    '''
-    eosio_version_ = config_map["EOSIO_VERSION"]
-    if eosio_version_ and eosio_version_[0]:
-        if len(eosio_version_) > 1:
-            print('''NOTE!
-The version of the installed 'eosio' package is {} while EOSFactory was tested
-with version {}
-            '''.format(
-                eosio_version_[0], eosio_version_[1]))
-    else:
-        print('''Cannot determine the version of the installed 'eosio' package as 'nodeos' does not response.
-        ''')
-
-    eosio_cpp_version_ = config_map["EOSIO_CDT_VERSION"]
-    if eosio_cpp_version_:
-        if len(eosio_cpp_version_) > 1:
-            print('''NOTE!
-The version of the installed 'eosio.cdt' package is {} while EOSFactory was tested with version {}
-            '''.format(eosio_cpp_version_[0], eosio_cpp_version_[1]))
-    else:
-        print('''Cannot determine the version of the installed 'eosio.cdt' package as 'eosio-cpp' does not response.
-        ''')        
 
 
 def current_config(contract_dir=None, dont_set_workspace=False):
@@ -1203,7 +1178,7 @@ def current_config(contract_dir=None, dont_set_workspace=False):
     map[nodeos_options_[0]] = nodeos_options()
 
     map["EOSIO_VERSION"] = eosio_version()
-    map["EOSIO_CDT_VERSION"] = eosio_cpp_version()
+    map["EOSIO_CDT_VERSION"] = eosio_cdt_version()
 
     map[nodeos_stdout_[0]] = nodeos_stdout()
     
@@ -1230,14 +1205,6 @@ def current_config(contract_dir=None, dont_set_workspace=False):
 
 
 def config():
-    print('''
-EOSFactory version {}.
-Dependencies:
-https://github.com/EOSIO/eos version {}
-https://github.com/EOSIO/eosio.cdt version {}
-Python version {}
-    '''.format(VERSION, EOSIO_VERSION, EOSIO_CDT_VERSION, PYTHON_VERSION)
-    )
     is_not_linked = is_site_package()
     if not is_not_linked:
         print(
@@ -1257,7 +1224,6 @@ Python version {}
         )
 
     config_map = current_config()
-    installation_dependencies(config_map)
 
     print('''
 The current configuration of EOSFactory:
@@ -1288,7 +1254,6 @@ def main():
     Args:
         -h, --help              Show this help message and exit
         --wsl_root              Show set the root of the WSL and exit.
-        --dependencies          List dependencies of EOSFactory and exit.
         --dont_set_workspace    Ignore empty workspace directory.
         --json                  Bare config JSON and exit.
         --workspace WORKSPACE   Set contract workspace and exit.
@@ -1301,9 +1266,6 @@ def main():
         "--wsl_root",  help="Show set the root of the WSL and exit.", 
         action="store_true")
     parser.add_argument(
-        "--dependencies", help="List dependencies of EOSFactory and exit.",
-        action="store_true")
-    parser.add_argument(
         "--dont_set_workspace", help="Ignore empty workspace directory.", 
         action="store_true")    
     parser.add_argument(
@@ -1314,9 +1276,7 @@ def main():
         action="store_true")
 
     args = parser.parse_args()
-    if args.dependencies:
-        installation_dependencies(current_config())
-    elif args.json:
+    if args.json:
         print(json.dumps(
             current_config(dont_set_workspace=args.dont_set_workspace), 
             sort_keys=True, indent=4))

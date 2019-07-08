@@ -57,24 +57,28 @@ def spawn(command_line, error_message='', shell=False, raise_exception=True):
     error message:
     ==============
     {}
-            '''.format(error_message, " ".join(command_line), stderr))
+            '''.format(error_message, " ".join(command_line), stderr),
+            translate=False)
 
         return stdout
     else:
         return (stdout, stderr)
 
+UBUNTU = "Ubuntu"
+DARWIN = "Darwin"
+OTHER_OS = None
 
-def uname(options=None):
-    command_line = ['uname']
-    if options:
-        command_line.append(options)
-
-    return spawn(command_line)
+def os_version():
+    version = spawn(["uname", "-v"])
+    if "Microsoft" in version or "ubuntu" in version:
+        return UBUNTU
+    if "Darwin" in version:
+        return DARWIN
+    return OTHER_OS
 
 
 def is_windows_ubuntu():
-    resp = uname("-v")
-    return resp.find("Microsoft") != -1
+    return "Microsoft" in spawn(["uname", "-v"])
 
 
 def which(file_path):

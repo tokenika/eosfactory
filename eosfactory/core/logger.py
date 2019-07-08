@@ -159,12 +159,15 @@ def error(msg, translate=True, details=""):
 
 
 def condition(message, translate=True):
-    import eosfactory.core.manager as manager
     ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
     message = ansi_escape.sub('', message)
     message = dedent(message).strip()
     message.replace("<br>", "\n")
     if translate:
-        message = manager.accout_names_2_object_names(message)
+        try:
+            import eosfactory.core.manager as manager
+            message = manager.accout_names_2_object_names(message)
+        except:
+            pass
 
     return message
