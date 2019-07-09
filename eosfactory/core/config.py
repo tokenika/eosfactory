@@ -11,7 +11,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 
 
-VERSION = "3.3.0"
+VERSION = "3.4.0"
 EOSIO_VERSION = "1.8.0"
 EOSIO_CDT_VERSION = "1.6.1"
 PYTHON_VERSION = "3.5 or higher"
@@ -157,7 +157,6 @@ Cannot determine the configuration directory. 'eosfactory.__path__' is
 
 
 def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
-    from termcolor import cprint, colored
     import pathlib
 
     def tilde(tilde_path):
@@ -195,13 +194,13 @@ The current location is:
     {}
 Otherwise, input another existing directory path, or nothing to 
 keep the current one:
-            '''.format(colored(contract_workspace_dir, current_path_color))
+            '''.format(logger.colored(contract_workspace_dir, current_path_color))
             ) if os.path.exists(contract_workspace_dir) else utils.heredoc('''
 Where do you prefer to keep your smart-contract projects?
 The set location is:
     {}
 but it does not exist. Input an existing directory path:
-            '''.format(colored(contract_workspace_dir, current_path_color))
+            '''.format(logger.colored(contract_workspace_dir, current_path_color))
             )
             
         new_dir = tilde(input(input_msg + "\n"))
@@ -217,7 +216,8 @@ but it does not exist. Input an existing directory path:
 The path you entered:
     {}
 doesn't seem to exist!
-            ''').format(colored(new_dir, error_path_color)) + "\n")
+            ''').format(
+                    logger.colored(new_dir, error_path_color)) + "\n")
 
 
 def config_dir():

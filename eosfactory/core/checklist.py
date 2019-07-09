@@ -9,64 +9,14 @@ import eosfactory.core.config as config
 
 class Checklist():
 
-    def __init__(self, html=False, error_codes=""):
-        self.html = html
-        self.is_error = False 
-        self.is_worning = False
+    def __init__(self, is_html=False, error_codes=""):
+        self.is_html = is_html
+        self.html_text = ""
+        self.is_not_ideal = False 
         self.IS_WINDOWS = utils.is_windows_ubuntu()
         self.os_version = utils.os_version()
-        self.just_msg('''
 
-<!-- ########################################################################-->
-
-''')
-        if self.IS_WINDOWS:
-
-
-################################################################################
-# Ubuntu version
-################################################################################
-            lsb_release, error = utils.spawn(
-                            ["lsb_release", "-r", "-s"], raise_exception=False)
-            if error:
-                self.error_msg(error)
-            else:
-                if "ubuntuversion" in error_codes:
-                    lsb_release = "16.4.1"
-
-                ubuntu_version = int(lsb_release.split(".")[0])    
-                if ubuntu_version < config.UBUNTU_VERSION_MIN:
-                    msg = \
-'''
-WSL Ubuntu version is {}.
-EOSIO nodeos can fail with Windows WSL Ubuntu below version 16.
-                        '''.format(lsb_release)              
-                        
-                    self.status_msg(self.warning(msg))
-                    self.print_warning(msg)
-
-
-################################################################################
-# WSL root
-################################################################################
-            root = config.wsl_root()
-            if root and not "wslroot" in error_codes:
-                self.status_msg("WSL root directory detected.")
-            else:
-                self.error_msg(
-'''Cannot determine the root of the WSL. Set it: 
-<button 
-    class="btn ${FIND_WSL}"; 
-    id=""; 
-    title="Click the button to open file dialog. Navigate to a directory containing the Ubuntu file system."
->
-    Indicate WSL root
-</button>
-''')
-                self.print_error(
-'''Cannot determine the root of the WSL. To indicate it, use the command:''')
-                self.print_code("`python3 -m eosfactory.config --wsl_root`\n")
-
+        self.print_msg("EOSFactory version {}".format(config.VERSION))
 
 ################################################################################
 # psutil
@@ -131,28 +81,49 @@ Install it: ''')
             self.print_code("`{}`\n".format(command))
 
 
-################################################################################
-# Default workspace
-################################################################################
-        contract_workspace_dir = config.contract_workspace_dir()
-        if contract_workspace_dir:
-            button = '''
-<button 
-    class="btn ${CHANGE_WORKSPACE}";
-    id="${CHANGE_WORKSPACE}"; 
-    title="Set workspace"
->
-    Set workspace.
-</button>            
-'''
-            self.status_msg(
-'''Default workspace is {}.{}
-'''.format(contract_workspace_dir, button))
+        if self.IS_WINDOWS:
 
-        else:
-            self.error_msg('''
-Default workspace is not set.{}
-'''.format(button))
+################################################################################
+# Ubuntu version
+################################################################################
+            lsb_release, error = utils.spawn(
+                            ["lsb_release", "-r", "-s"], raise_exception=False)
+            if error:
+                self.error_msg(error)
+            else:
+                if "ubuntuversion" in error_codes:
+                    lsb_release = "16.4.1"
+
+                ubuntu_version = int(lsb_release.split(".")[0])    
+                if ubuntu_version < config.UBUNTU_VERSION_MIN:
+                    msg = \
+'''
+WSL Ubuntu version is {}.
+EOSIO nodeos can fail with Windows WSL Ubuntu below version 16.
+                        '''.format(lsb_release)              
+                        
+                    self.status_msg(self.warning(msg))
+                    self.print_warning(msg)
+
+
+################################################################################
+# WSL root
+################################################################################
+            root = config.wsl_root()
+            if not root or "wslroot" in error_codes:
+                self.error_msg(
+'''Cannot determine the root of the WSL. Set it: 
+<button 
+    class="btn ${FIND_WSL}"; 
+    id=""; 
+    title="Click the button to open file dialog. Navigate to a directory containing the Ubuntu file system."
+>
+    Indicate WSL root
+</button>
+''')
+                self.print_error(
+'''Cannot determine the root of the WSL. To indicate it, use the command:''')
+                self.print_code("`python3 -m eosfactory.config --wsl_root`\n")
 
 
 ################################################################################
@@ -161,14 +132,23 @@ Default workspace is not set.{}
         eosio_version = config.eosio_version()
         if  "eosio" in error_codes:
             eosio_version = ["", "1.8.0"]
+        # eosio_version = ["1.3.3", "1.8.0"]    
 
-        if not eosio_version[0] or len(eosio_version) > 1:
+        if eosio_version[0]:
+            self.status_msg(
+                        "Found eosio version {}".format(eosio_version[0]))
+            self.print_status(
+                        "Found eosio version {}".format(eosio_version[0]))
+
+        if not eosio_version[0] or len(eosio_version) > 1\
+                and not self.equal(eosio_version[0], eosio_version[1]):
             command = ""
             
             if self.os_version == utils.UBUNTU:
                 ubuntu_version = utils.spawn(
                                         ["lsb_release", "-r", "-s"], 
                                         raise_exception=False)[0].split(".")[0]
+
                 if ubuntu_version and ubuntu_version == 16:
                     command = \
 '''sudo apt remove eosio &&\\
@@ -202,31 +182,34 @@ brew install eosio
 
             instructions = '<a href="https://github.com/EOSIO/eos">EOSIO installation instructions</a>'
 
-            if eosio_version[0] and len(eosio_version) > 1:
+            if eosio_version[0] and len(eosio_version) > 1 :
                 self.warning_msg(
 '''
 NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eosio v{0}:<br>
-{}
+{2}
 '''.format(
                 eosio_version[1], eosio_version[0], 
                 button if command else instructions))
 
                 self.print_warning(
-'''
-NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eosio v{0}:
-{}
+'''NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eosio v{0}:
 '''.format(
-                eosio_version[1], eosio_version[0], 
-                command if command else instructions)
-                )
+            eosio_version[1], eosio_version[0])
+            )
+                self.print_code(
+'''```
+{}
+```
+'''.format(command if command else instructions))                    
 
             else:
                 self.warning_msg('''
 Cannot determine that eosio is installed as nodeos does not response.<br>
 It hangs up sometimes.<br>
 EOSFactory expects eosio version {}. Install eosio, if not installed:<br>
-{}
+{}<br>
 '''.format(eosio_version[1], button if command else instructions))
+
                 self.print_warning(
 '''Cannot determine that eosio is installed as nodeos does not response.
 It hangs up sometimes.
@@ -241,21 +224,23 @@ EOSFactory expects eosio version {}. Install eosio, if not installed:
 
 
 ################################################################################
-# eosio_cpp
+# eosio_cdt
 ################################################################################
         eosio_cdt_version = config.eosio_cdt_version()
         if "eosio_cdt" in error_codes:
             eosio_cdt_version = ["", "1.6.0"]
-            
+        # eosio_cdt_version = ["1.6.1", "1.6.0"]    
+        
         if eosio_cdt_version[0]:
             self.status_msg(
-                "eosio.cdt version {} detected.".format(eosio_cdt_version[0]))
-            if len(eosio_cdt_version) > 1:
-                self.warning_msg(
-                    "NOTE: EOSFactory was tested with version {}".format(
-                                                        eosio_cdt_version[1]))
-        else:
+                "Found eosio.cdt version {}.".format(eosio_cdt_version[0]))
+            self.print_status(
+                "Found eosio.cdt version {}.".format(eosio_cdt_version[0]))
+        
+        if not eosio_cdt_version[0] or len(eosio_cdt_version) > 1\
+                and not self.equal(eosio_cdt_version[0], eosio_cdt_version[1]):
             command = ""
+
             if self.os_version == utils.UBUNTU:
                 command = \
 '''sudo apt remove eosio.cdt &&\\
@@ -278,33 +263,72 @@ brew install eosio.cdt
 >
     {1}
 </button>
-'''.format(eosio_version[1], command)
+'''.format(eosio_cdt_version[1], command)
 
             instructions = '<a href="https://github.com/EOSIO/eosio.cdt">EOSIO.cdt installation instructions</a>'
 
-            self.error_msg('''
+            if eosio_cdt_version[0] and len(eosio_cdt_version) > 1 \
+                    and not eosio_cdt_version[0] == eosio_cdt_version[1]:
+                self.warning_msg(
+'''
+NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eosio.cdt v{0}:<br>
+{2}
+'''.format(
+                eosio_cdt_version[1], eosio_cdt_version[0], 
+                button if command else instructions))
+
+                self.print_warning(
+'''NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eosio v{0}:
+'''.format(
+                eosio_cdt_version[1], eosio_cdt_version[0]))
+
+                self.print_code(
+'''```
+{}
+```
+'''.format(command if command else instructions))
+
+            else:
+                self.error_msg('''
     Cannot determine that eosio.cdt is installed as eosio-cpp does not response.<br>
     EOSFactory expects eosio.cdt version {}. Install it, if not installed.
-    {}
-'''.format(eosio_cdt_version[1], "<br>" + button if command else instructions))
+    {}<br>
+'''.format(eosio_cdt_version[1], button if command else instructions))
 
-            self.print_error(
+                self.print_error(
 '''Cannot determine that eosio.cdt is installed as eosio-cpp does not response.
 EOSFactory expects eosio.cdt version {}. Install it, if not installed.
 '''.format(eosio_cdt_version[1]))
 
-            self.print_code(
+                self.print_code(
 '''```
 {}
 ```
 '''.format(command if command else instructions))
 
 
-        self.just_msg('''
+################################################################################
+# Default workspace
+################################################################################
+        contract_workspace_dir = config.contract_workspace_dir()
+        if contract_workspace_dir:
+            button = '''
+<button 
+    class="btn ${CHANGE_WORKSPACE}";
+    id="${CHANGE_WORKSPACE}"; 
+    title="Set workspace"
+>
+    Set workspace.
+</button>            
+'''
+            self.status_msg(
+'''Default workspace is {}.{}
+'''.format(contract_workspace_dir, button))
 
-<!-- ########################################################################-->
-
-''')
+        else:
+            self.error_msg('''
+Default workspace is not set.{}
+'''.format(button))
 
 
 ################################################################################
@@ -312,44 +336,44 @@ EOSFactory expects eosio.cdt version {}. Install it, if not installed.
 ################################################################################
     
     def just_msg(self, msg):
-        if self.html:
+        if self.is_html:
             msg = msg.replace("&&\\", "&&\\<br>")
             print("{}\n".format(msg))
 
 
     def print_msg(self, msg):
-        if not self.html:
+        if not self.is_html:
             print(msg)    
 
     
     def status_msg(self, msg):
-        if self.html:
+        if self.is_html:
             msg = msg.replace("&&\\", "&&\\<br>")
             print("<li>{}</li>\n".format(msg))
 
 
     def print_status(self, msg):
-        if not self.html:
+        if not self.is_html:
             msg = msg.replace("<br>", "")
             print(msg)            
 
 
     def warning(self, msg):
-        self.is_worning = True
-        if self.html:
+        self.is_not_ideal = True
+        if self.is_html:
             msg = msg.replace("&&\\", "&&\\<br>")
             return '<em style="color: ${{WARNING_COLOR}}"> {} </em>'.format(msg)
 
 
     def warning_msg(self, msg):
-        self.is_worning = True
-        if self.html:
+        self.is_not_ideal = True
+        if self.is_html:
             msg = msg.replace("&&\\", "&&\\<br>")
             print('<em style="color: ${{WARNING_COLOR}}"> {} </em>'.format(msg))
 
 
     def print_warning(self, msg):
-        if not self.html:
+        if not self.is_html:
             msg = msg.replace("<br>", "")
             msg = "WARNING:\n" + msg
             try:
@@ -362,16 +386,16 @@ EOSFactory expects eosio.cdt version {}. Install it, if not installed.
 
 
     def error_msg(self, msg):
-        if self.html:
-            self.is_error = True
+        if self.is_html:
+            self.is_not_ideal = True
             msg = msg.replace("&&\\", "&&\\<br>")
             print(
                 '<p style="color: ${{ERROR_COLOR}}">ERROR: {}</p>'.format(msg))
 
 
     def print_error(self, msg):
-        if not self.html:
-            self.is_error = True
+        if not self.is_html:
+            self.is_not_ideal = True
             msg = msg.replace("<br>", "")
             msg = "ERROR:\n" + msg
             try:
@@ -384,7 +408,7 @@ EOSFactory expects eosio.cdt version {}. Install it, if not installed.
 
 
     def print_code(self, msg):
-        if not self.html:
+        if not self.is_html:
             msg = msg.replace("<br>", "")
             try:
                 import termcolor
@@ -394,6 +418,9 @@ EOSFactory expects eosio.cdt version {}. Install it, if not installed.
 
             print(msg)        
 
+    def equal(self, version1, version2):
+        return version1.split(".")[0] == version2.split(".")[0] \
+            and version1.split(".")[1] == version2.split(".")[1]
 
 def main():
     parser = argparse.ArgumentParser(description='''
@@ -427,12 +454,12 @@ def main():
     elif args.workspace:
         config.set_contract_workspace_dir()
     elif args.html:
-        if Checklist(args.html, args.error).is_error:
+        if Checklist(args.html, args.error).is_not_ideal:
             sys.exit(-1)
     else:
         print("Checking dependencies of EOSFactory...")
 
-        if not Checklist(False, args.error).is_error:
+        if not Checklist(False, args.error).is_not_ideal:
 
             print("... all the dependencies are in place.\n\n")
         else:

@@ -1,9 +1,24 @@
 import enum
 import re
 import inspect
-
 from textwrap import dedent
-from termcolor import cprint, colored
+
+
+def cprint(msg, color, attrs=None):
+    try:
+        import termcolor
+        termcolor.cprint(msg, color, attrs)
+    except ImportError:
+        print(msg)
+
+
+def colored(msg, color, attrs=None):
+    try:
+        import termcolor
+        return termcolor.colored(msg, color, attrs)
+    except ImportError:
+        return msg
+
 
 class Verbosity(enum.Enum):
     COMMENT = ['green', None, []]
