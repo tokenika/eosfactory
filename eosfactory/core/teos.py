@@ -542,7 +542,7 @@ def get_pid(name=None):
 
     pids = []
     processes = [p.info for p in psutil.process_iter(attrs=["pid", "name"]) \
-                                        if name in p.info["name"]]
+                                        if p.info["name"] and name in p.info["name"]]
     for process in processes:
         pids.append(process["pid"])
 
