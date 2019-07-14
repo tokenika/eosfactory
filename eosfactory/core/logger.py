@@ -4,18 +4,18 @@ import inspect
 from textwrap import dedent
 
 
-def cprint(msg, color, attrs=None):
+def cprint(msg, color, color_bgd, attrs=None):
     try:
         import termcolor
-        termcolor.cprint(msg, color, attrs)
+        termcolor.cprint(msg, color, color_bgd, attrs)
     except ImportError:
         print(msg)
 
 
-def colored(msg, color, attrs=None):
+def colored(msg, color, color_bgd, attrs=None):
     try:
         import termcolor
-        return termcolor.colored(msg, color, attrs)
+        return termcolor.colored(msg, color, color_bgd, attrs)
     except ImportError:
         return msg
 

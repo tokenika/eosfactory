@@ -523,7 +523,7 @@ def eosio_version():
     try:
         version = subprocess.check_output(
             "echo $({} --version)".format(node_exe()), shell=True, 
-                    timeout=10).decode("ISO-8859-1").strip().replace("v", "")
+                    timeout=5).decode("ISO-8859-1").strip().replace("v", "")
         retval = [version]
         if not version.split(".")[:2] == EOSIO_VERSION.split(".")[:2]:
             retval.append(EOSIO_VERSION)

@@ -6,13 +6,16 @@ import argparse
 import eosfactory.core.utils as utils
 import eosfactory.core.config as config
 
+IS_ERROR = 2
+IS_WARNING = 1
 
 class Checklist():
 
     def __init__(self, is_html=False, error_codes=""):
         self.is_html = is_html
         self.html_text = ""
-        self.is_not_ideal = False 
+        self.is_error = False
+        self.is_warning = False
         self.IS_WINDOWS = utils.is_windows_ubuntu()
         self.os_version = utils.os_version()
 
@@ -203,20 +206,21 @@ NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eos
 '''.format(command if command else instructions))                    
 
             else:
-                self.warning_msg('''
+                if not "ignoreeoside" in error_codes:
+                    self.warning_msg('''
 Cannot determine that eosio is installed as nodeos does not response.<br>
 It hangs up sometimes.<br>
 EOSFactory expects eosio version {}. Install eosio, if not installed:<br>
 {}<br>
 '''.format(eosio_version[1], button if command else instructions))
 
-                self.print_warning(
+                    self.print_warning(
 '''Cannot determine that eosio is installed as nodeos does not response.
 It hangs up sometimes.
 EOSFactory expects eosio version {}. Install eosio, if not installed:
 '''.format(eosio_version[1]))
 
-                self.print_code(
+                    self.print_code(
 '''```
 {}
 ```
@@ -311,8 +315,7 @@ EOSFactory expects eosio.cdt version {}. Install it, if not installed.
 # Default workspace
 ################################################################################
         contract_workspace_dir = config.contract_workspace_dir()
-        if contract_workspace_dir:
-            button = '''
+        button = '''
 <button 
     class="btn ${CHANGE_WORKSPACE}";
     id="${CHANGE_WORKSPACE}"; 
@@ -321,14 +324,15 @@ EOSFactory expects eosio.cdt version {}. Install it, if not installed.
     Set workspace.
 </button>            
 '''
-            self.status_msg(
-'''Default workspace is {}.{}
-'''.format(contract_workspace_dir, button))
-
-        else:
+        if not contract_workspace_dir or "workspace" in error_codes:
             self.error_msg('''
 Default workspace is not set.{}
 '''.format(button))
+
+        else:
+            self.status_msg(
+'''Default workspace is {}.{}
+'''.format(contract_workspace_dir, button))
 
 
 ################################################################################
@@ -359,14 +363,14 @@ Default workspace is not set.{}
 
 
     def warning(self, msg):
-        self.is_not_ideal = True
+        self.is_warning = True
         if self.is_html:
             msg = msg.replace("&&\\", "&&\\<br>")
             return '<em style="color: ${{WARNING_COLOR}}"> {} </em>'.format(msg)
 
 
     def warning_msg(self, msg):
-        self.is_not_ideal = True
+        self.is_warning = True
         if self.is_html:
             msg = msg.replace("&&\\", "&&\\<br>")
             print('<em style="color: ${{WARNING_COLOR}}"> {} </em>'.format(msg))
@@ -387,7 +391,7 @@ Default workspace is not set.{}
 
     def error_msg(self, msg):
         if self.is_html:
-            self.is_not_ideal = True
+            self.is_error = True
             msg = msg.replace("&&\\", "&&\\<br>")
             print(
                 '<p style="color: ${{ERROR_COLOR}}">ERROR: {}</p>'.format(msg))
@@ -395,7 +399,7 @@ Default workspace is not set.{}
 
     def print_error(self, msg):
         if not self.is_html:
-            self.is_not_ideal = True
+            self.is_error = True
             msg = msg.replace("<br>", "")
             msg = "ERROR:\n" + msg
             try:
@@ -454,17 +458,19 @@ def main():
     elif args.workspace:
         config.set_contract_workspace_dir()
     elif args.html:
-        if Checklist(args.html, args.error).is_not_ideal:
-            sys.exit(-1)
+        checklist = Checklist(args.html, args.error)
+        if checklist.is_error:
+            sys.exit(IS_ERROR)
+        elif checklist.is_warning:
+            sys.exit(IS_WARNING)
     else:
         print("Checking dependencies of EOSFactory...")
-
-        if not Checklist(False, args.error).is_not_ideal:
-
+        checklist = Checklist(False, args.error)
+        if not checklist.is_error and not checklist.is_warning:
             print("... all the dependencies are in place.\n\n")
         else:
             print(
-'''Some functionalities of EOSFactory will fail if the indicated errors are not 
+'''Some functionalities of EOSFactory may fail if the indicated errors are not 
 corrected.
 ''')
         config.config()
