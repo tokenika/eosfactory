@@ -314,7 +314,11 @@ EOSFactory expects eosio.cdt version {}. Install it, if not installed.
 ################################################################################
 # Default workspace
 ################################################################################
-        contract_workspace_dir = config.contract_workspace_dir()
+        try:
+            contract_workspace_dir = config.contract_workspace_dir()
+        except:
+            contract_workspace_dir = None
+
         button = '''
 <button 
     class="btn ${CHANGE_WORKSPACE}";
@@ -326,7 +330,7 @@ EOSFactory expects eosio.cdt version {}. Install it, if not installed.
 '''
         if not contract_workspace_dir or "workspace" in error_codes:
             self.error_msg('''
-Default workspace is not set.{}
+Default workspace is not set, or it does not exist.{}
 '''.format(button))
 
         else:
