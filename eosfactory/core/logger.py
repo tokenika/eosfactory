@@ -12,7 +12,7 @@ def cprint(msg, color, color_bgd, attrs=None):
         print(msg)
 
 
-def colored(msg, color, color_bgd, attrs=None):
+def colored(msg, color, color_bgd=None, attrs=None):
     try:
         import termcolor
         return termcolor.colored(msg, color, color_bgd, attrs)

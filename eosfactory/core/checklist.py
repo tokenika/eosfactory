@@ -446,6 +446,9 @@ def main():
     parser.add_argument(
         "--workspace", help="Set contract workspace and exit.",
         action="store_true")
+    parser.add_argument(
+        "--dependencies", help="Set dependencies and exit.",
+        action="store_true")
     
     args = parser.parse_args()
 
@@ -463,6 +466,9 @@ def main():
             sys.exit(IS_ERROR)
         elif checklist.is_warning:
             sys.exit(IS_WARNING)
+    elif args.dependencies:
+        checklist = Checklist(False, args.error)
+
     else:
         print("Checking dependencies of EOSFactory...")
         checklist = Checklist(False, args.error)
