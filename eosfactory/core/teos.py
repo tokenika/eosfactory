@@ -12,6 +12,7 @@ import json
 import sys
 import math
 import psutil
+import importlib
 
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
@@ -807,8 +808,8 @@ Local node has stopped.
         cpu_percent = proc.cpu_percent(interval=WAIT_TIME)
         
         try:
-            import eosfactory.core.cleos_get as cleos_get
-            head_block_num = cleos_get.GetInfo(is_verbose=0).head_block
+            get_commands = importlib.import_module(".get", setup.light_full)
+            head_block_num = get_commands.GetInfo(is_verbose=0).head_block
             if block_num is None:
                 block_num = head_block_num
                 count = int(NUMBER_BLOCKS_ADDED * 0.5/WAIT_TIME) + 1

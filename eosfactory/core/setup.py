@@ -13,9 +13,20 @@ account_map = "accounts.json"
 password_map = "passwords.json"
 wallet_default_name = "default"
 is_local_address = False
+cleos_package = "eosfactory.core.cleos"
+eosiojs_package = "eosfactory.core.eosiojs"
+light_full = cleos_package
 
 __nodeos_address = None
 __file_prefix = None
+
+
+def set_is_lt(is_lt=True):
+    global light_full
+    if is_lt:
+        light_full = eosiojs_package
+    else:
+        light_full = cleos_package
 
 
 def save_command_lines():

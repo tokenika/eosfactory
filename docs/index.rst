@@ -71,10 +71,10 @@ EOSFactory API
     rst/core.setup
     rst/core.logger    
     rst/core.teos
-    rst/core.cleos
-    rst/core.cleos_get    
-    rst/core.cleos_set
-    rst/core.cleos_sys
+    rst/core.cleos.base
+    rst/core.cleos.get    
+    rst/core.cleos.set
+    rst/core.cleos.sys
     rst/core.manager
     rst/core.testnet
     rst/core.utils

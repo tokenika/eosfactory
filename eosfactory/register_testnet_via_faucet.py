@@ -27,7 +27,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
     setup.set_nodeos_address(url)
     manager.verify_testnet_production()
 
-    account_name = cleos.account_name()
+    account_name = base_commands.account_name()
     path = faucet + "/" + CREATE_ACCOUNT_URL + "?" + account_name
     attempt = 0
     response = None
@@ -52,7 +52,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
                     {}
                     '''.format(path, str(e)))
             else:
-                account_name = cleos.account_name()
+                account_name = base_commands.account_name()
                 path = faucet + "/" + CREATE_ACCOUNT_URL + "?" + account_name
                 time.sleep(DELAY_IN_SECONDDS)
 

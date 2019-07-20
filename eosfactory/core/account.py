@@ -1,8 +1,11 @@
+import importlib
+
+import eosfactory.core.setup as setup
 import eosfactory.core.config as config
 import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
-import eosfactory.core.cleos as cleos
-import eosfactory.core.cleos_sys as cleos_sys
+base_commands = importlib.import_module(".base", setup.light_full)
+import eosfactory.core.cleos.sys as sys_commands
 import eosfactory.core.manager as manager
 import eosfactory.core.logger as logger
 
@@ -10,7 +13,7 @@ import eosfactory.core.logger as logger
 class Eosio(interface.Account):
     def __init__(self, account_object_name):
         interface.Account.__init__(self, "eosio",
-        cleos.CreateKey(
+        base_commands.CreateKey(
             config.eosio_key_public(),
             config.eosio_key_private()
             ))
@@ -21,7 +24,7 @@ class Eosio(interface.Account):
             "account object name: {}\nname: {}\n{}".format(
                 self.account_object_name, 
                 self.name,
-                cleos.GetAccount(self.name, is_verbose=False).out_msg),
+                base_commands.GetAccount(self.name, is_verbose=False).out_msg),
                 True)
         print(msg)
 
@@ -32,7 +35,7 @@ class Eosio(interface.Account):
         return ""
 
 
-class GetAccount(cleos.GetAccount):  
+class GetAccount(base_commands.GetAccount):  
     def __init__(
             self,
             account_object_name, name=None, 
@@ -40,7 +43,7 @@ class GetAccount(cleos.GetAccount):
 
         self.account_object_name = account_object_name
         if name is None: 
-            self.name = cleos.account_name()
+            self.name = base_commands.account_name()
         else:
             self.name = name
             
@@ -52,31 +55,31 @@ class GetAccount(cleos.GetAccount):
         self.has_keys = not owner_key is None
         
         try:
-            cleos.GetAccount.__init__(
+            base_commands.GetAccount.__init__(
                 self, self.name, is_info=False, is_verbose=False)
         except errors.AccountDoesNotExistError:
             return
 
         self.exists = True
         if owner_key is None:
-            self.owner_key = cleos.CreateKey(
+            self.owner_key = base_commands.CreateKey(
                 self.json["permissions"][1]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
         else: # an orphan account, private key is restored from cache
-            self.owner_key = cleos.CreateKey(
+            self.owner_key = base_commands.CreateKey(
                 self.json["permissions"][1]["required_auth"]["keys"] \
                 [0]["key"], interface.key_arg(
                     owner_key, is_owner_key=True, is_private_key=True),
                 is_verbose=0) 
 
         if active_key is None:
-            self.owner_key = cleos.CreateKey(
+            self.owner_key = base_commands.CreateKey(
                 self.json["permissions"][0]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
         else: # an orphan account, private key is restored from cache
-            self.active_key = cleos.CreateKey(
+            self.active_key = base_commands.CreateKey(
                 self.json["permissions"][0]["required_auth"]["keys"] \
                 [0]["key"], interface.key_arg(
                     active_key, is_owner_key=False, is_private_key=True),
@@ -90,12 +93,12 @@ class GetAccount(cleos.GetAccount):
         return self.name
 
 
-class RestoreAccount(cleos.RestoreAccount):
+class RestoreAccount(base_commands.RestoreAccount):
     def __init__(self, name):
-        cleos.RestoreAccount.__init__(self, name, is_verbose=False)
+        base_commands.RestoreAccount.__init__(self, name, is_verbose=False)
 
 
-class CreateAccount(cleos.CreateAccount):
+class CreateAccount(base_commands.CreateAccount):
     def __init__(
             self, creator, name, owner_key, 
             active_key="",
@@ -108,7 +111,7 @@ class CreateAccount(cleos.CreateAccount):
             max_net_usage=0,
             ref_block=None,
             delay_sec=0):
-        cleos.CreateAccount.__init__(
+        base_commands.CreateAccount.__init__(
             self, creator, name, owner_key, active_key, permission,
             expiration_sec, skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,
@@ -116,7 +119,7 @@ class CreateAccount(cleos.CreateAccount):
             )
 
 
-class SystemNewaccount(cleos_sys.SystemNewaccount):
+class SystemNewaccount(sys_commands.SystemNewaccount):
     def __init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
@@ -128,7 +131,7 @@ class SystemNewaccount(cleos_sys.SystemNewaccount):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
             
-        cleos_sys.SystemNewaccount.__init__(
+        sys_commands.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
             transfer, expiration_sec, skip_sign, dont_broadcast, force_unique,

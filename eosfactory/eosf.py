@@ -1,8 +1,11 @@
 
+import importlib
+
+import eosfactory.core.setup as setup
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
 import eosfactory.core.teos as teos
-import eosfactory.core.cleos as cleos
+base_commands = importlib.import_module(".base", setup.light_full)
 import eosfactory.core.manager as manager
 import eosfactory.core.testnet as testnet
 import eosfactory.core.interface as interface
@@ -26,7 +29,7 @@ LowRamError = errors.LowRamError
 MissingRequiredAuthorityError = errors.MissingRequiredAuthorityError
 DuplicateTransactionError = errors.DuplicateTransactionError
 
-CreateKey = cleos.CreateKey
+CreateKey = base_commands.CreateKey
 Permission = interface.Permission
 
 create_wallet = wallet.create_wallet

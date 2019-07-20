@@ -3,6 +3,7 @@ import os
 import json
 import re
 import time
+import importlib
 
 import eosfactory.core.utils as utils
 import eosfactory.core.config as config
@@ -11,8 +12,8 @@ import eosfactory.core.logger as logger
 import eosfactory.core.interface as interface
 import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
-import eosfactory.core.cleos as cleos
-import eosfactory.core.cleos_get as cleos_get
+base_commands = importlib.import_module(".base", setup.light_full)
+get_commands = importlib.import_module(".get", setup.light_full)
 
 
 def reboot():
@@ -63,7 +64,7 @@ def accout_names_2_object_names(sentence, keys=False):
         sentence = sentence.replace(name, account_object_name)
         
         if keys:
-            account = cleos.GetAccount(
+            account = base_commands.GetAccount(
                         name, is_info=False, is_verbose=False)
             owner_key = account.owner()
             if owner_key:
@@ -88,7 +89,7 @@ def object_names_2_accout_names(sentence):
 
 
 def stop_keosd():
-    cleos.WalletStop(is_verbose=False)
+    base_commands.WalletStop(is_verbose=False)
 
 
 class Transaction():
@@ -110,7 +111,7 @@ class Transaction():
 
 
 def is_local_testnet():
-    cleos.set_local_nodeos_address_if_none()
+    base_commands.set_local_nodeos_address_if_none()
     return setup.is_local_address
 
 
@@ -184,7 +185,7 @@ def reset(nodeos_stdout=None):
     import eosfactory.shell.account as account
     account.reboot()
 
-    if not cleos.set_local_nodeos_address_if_none():
+    if not base_commands.set_local_nodeos_address_if_none():
         logger.INFO('''
         No local nodeos is set: {}
         '''.format(setup.nodeos_address()))
@@ -203,7 +204,7 @@ def resume(nodeos_stdout=None):
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     ''' 
-    if not cleos.set_local_nodeos_address_if_none():   
+    if not base_commands.set_local_nodeos_address_if_none():   
         logger.INFO('''
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()))
@@ -232,20 +233,20 @@ def status():
     ######### Node ``{}``, head block number ``{}``.
     '''.format(
         setup.nodeos_address(),
-        cleos_get.GetInfo(is_verbose=0).head_block))
+        get_commands.GetInfo(is_verbose=0).head_block))
 
 
 def info():
     '''
     Display EOS node info.
     '''
-    logger.INFO(str(cleos_get.GetInfo(is_verbose=False)))
+    logger.INFO(str(get_commands.GetInfo(is_verbose=False)))
 
 
 def verify_testnet_production(throw_error=True):
     head_block_num = 0
     try: # if running, json is produced
-        head_block_num = cleos_get.GetInfo(is_verbose=False).head_block
+        head_block_num = get_commands.GetInfo(is_verbose=False).head_block
     except:
         pass
 

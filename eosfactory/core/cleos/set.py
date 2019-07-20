@@ -4,10 +4,10 @@ import os
 import eosfactory.core.errors as errors
 import eosfactory.core.manager as manager
 import eosfactory.core.interface as interface
-import eosfactory.core.cleos as cleos
+import eosfactory.core.cleos.base as base_commands
 
 
-class SetContract(cleos.Cleos):
+class SetContract(base_commands.Cleos):
     '''Create or update the contract on an account.
 
     Args:
@@ -20,7 +20,7 @@ class SetContract(cleos.Cleos):
         clear (bool): Remove contract on an account. Default is False.
 
     See definitions of the remaining parameters: \
-    :func:`.cleos.common_parameters`.
+    :func:`.cleos.base.common_parameters`.
 
     Attributes:
         contract_path_absolute (str): The path to the contract project
@@ -38,7 +38,7 @@ class SetContract(cleos.Cleos):
             is_verbose=True,
             json=False):
 
-        files = cleos.contract_is_built(contract_dir, wasm_file, abi_file)
+        files = base_commands.contract_is_built(contract_dir, wasm_file, abi_file)
         if not files:
             raise errors.Error("""
             Cannot determine the contract directory. The clue is 
@@ -86,12 +86,12 @@ class SetContract(cleos.Cleos):
         if abi_file:
             args.append(abi_file)
 
-        cleos.Cleos.__init__(self, args, "set", "contract", is_verbose)
+        base_commands.Cleos.__init__(self, args, "set", "contract", is_verbose)
         self.contract_path_absolute = files[0]
         self.account_name = interface.account_arg(account)
         self.printself()
 
-class SetAccountPermission(cleos.Cleos):
+class SetAccountPermission(base_commands.Cleos):
     '''Set parameters dealing with account permissions.
 
     Args:
@@ -133,7 +133,7 @@ class SetAccountPermission(cleos.Cleos):
         }
 
     See definitions of the remaining parameters: \
-    :func:`.cleos.common_parameters`.
+    :func:`.cleos.base.common_parameters`.
 
     Attributes:
         account_name (str): The EOSIO name of the contract's account.
@@ -212,7 +212,7 @@ class SetAccountPermission(cleos.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
                         
-        cleos.Cleos.__init__(
+        base_commands.Cleos.__init__(
             self, args, "set", "account permission", is_verbose)
         self.account_name = account_name
         self.console = None
@@ -225,7 +225,7 @@ class SetAccountPermission(cleos.Cleos):
         self.printself()    
 
 
-class SetActionPermission(cleos.Cleos):
+class SetActionPermission(base_commands.Cleos):
     '''Set parameters dealing with account permissions.
 
     Args:
@@ -238,7 +238,7 @@ class SetActionPermission(cleos.Cleos):
             action.
 
     See definitions of the remaining parameters: \
-    :func:`.cleos.common_parameters`.
+    :func:`.cleos.base.common_parameters`.
 
     Attributes:
         account_name (str): The EOSIO name of the contract's account.
@@ -297,7 +297,7 @@ class SetActionPermission(cleos.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
 
-        cleos.Cleos.__init__(self, args, "set", "action permission", is_verbose)
+        base_commands.Cleos.__init__(self, args, "set", "action permission", is_verbose)
         self.console = None
         self.data = None
 

@@ -614,7 +614,7 @@ def keosd_wallet_dir(raise_error=True):
     '''
     path = first_valid_path(keosd_wallet_dir_, raise_error=False)
     if not path:
-        from eosfactory.core.cleos import WalletList
+        from eosfactory.core.cleos.base import WalletList
         WalletList()
         path = first_valid_path(keosd_wallet_dir_, raise_error=False)
         if not path:

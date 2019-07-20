@@ -1,6 +1,6 @@
 '''Example of a functional test with global refference to account objects.
 
-For explanation see http://eosfactory.io/build/html/comments/account.html,
+For explanation see http://eosfactory.io/eosfactory_dev/html/comments/account.html,
 there the section 'Account objects reside in the global namespace'.
 '''
 import unittest, argparse, sys, time

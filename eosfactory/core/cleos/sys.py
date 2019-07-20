@@ -1,12 +1,12 @@
-import eosfactory.core.cleos as cleos
+import eosfactory.core.cleos.base as base_commands
 import eosfactory.core.interface as interface
 
 def reload():
     import importlib
-    importlib.reload(cleos)
+    importlib.reload(base_commands)
 
 
-class SystemNewaccount(interface.Account, cleos.Cleos):
+class SystemNewaccount(interface.Account, base_commands.Cleos):
     ''' Create an account, buy ram, stake for bandwidth for the account.
 
     Args:
@@ -26,7 +26,7 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
         transfer (bool): Transfer voting power and right to unstake EOS to receiver.
 
     See definitions of the remaining parameters: \
-    :func:`.cleos.common_parameters`.
+    :func:`.cleos.base.common_parameters`.
     '''
     def __init__(
             self, creator, name, owner_key, active_key,
@@ -46,7 +46,7 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
         stake_cpu = "{} EOS".format(stake_cpu)
         
         if name is None: 
-            name = cleos.account_name()
+            name = base_commands.account_name()
         interface.Account.__init__(self, name)
 
         self.owner_key = None # private keys
@@ -92,10 +92,10 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])
 
-        cleos.Cleos.__init__(
+        base_commands.Cleos.__init__(
             self, args, "system", "newaccount", is_verbose)
             
-        self.json = cleos.GetAccount(
+        self.json = base_commands.GetAccount(
             self.name, is_verbose=0, is_info=False).json
 
         if self.is_verbose:
@@ -105,7 +105,7 @@ class SystemNewaccount(interface.Account, cleos.Cleos):
         return self.name
 
 
-class BuyRam(cleos.Cleos):
+class BuyRam(base_commands.Cleos):
     ''' Buy RAM.
 
     Args:
@@ -116,7 +116,7 @@ class BuyRam(cleos.Cleos):
         buy_ram_kbytes (bool): If set, buy ram in number of kbytes.
 
     See definitions of the remaining parameters: \
-    :func:`.cleos.common_parameters`.
+    :func:`.cleos.base.common_parameters`.
     '''
     def __init__(
             self, payer, receiver, amount,
@@ -154,11 +154,11 @@ class BuyRam(cleos.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])
 
-        cleos.Cleos.__init__(
+        base_commands.Cleos.__init__(
             self, args, "system", "buyram", is_verbose)
 
     
-class DelegateBw(cleos.Cleos):
+class DelegateBw(base_commands.Cleos):
     '''Delegate bandwidth.
 
     Args:
@@ -172,7 +172,7 @@ class DelegateBw(cleos.Cleos):
             receiver.
 
     See definitions of the remaining parameters: \
-    :func:`.cleos.common_parameters`.           
+    :func:`.cleos.base.common_parameters`.           
     '''
     def __init__(
         self, payer, receiver, stake_net_quantity, stake_cpu_quantity,
@@ -218,7 +218,7 @@ class DelegateBw(cleos.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])            
 
-        cleos.Cleos.__init__(
+        base_commands.Cleos.__init__(
             self, args, "system", "delegatebw", is_verbose)
 
 

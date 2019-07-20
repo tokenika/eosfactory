@@ -1,12 +1,14 @@
 import shutil
 import os
+import importlib
 
+import eosfactory.core.setup as setup
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.config as config
 import eosfactory.core.teos as teos
-import eosfactory.core.cleos as cleos
-import eosfactory.core.cleos_set as cleos_set
+base_commands = importlib.import_module(".base", setup.light_full)
+set_commands = importlib.import_module(".set", setup.light_full)
 import eosfactory.shell.account
 
 
@@ -60,7 +62,7 @@ class ContractBuilder():
     def is_built(self):
         '''Check whether both the ABI and WASM files exist.
         '''
-        return cleos.contract_is_built(
+        return base_commands.contract_is_built(
             self.contract_dir, self.wasm_file, self.abi_file)
 
     def path(self):
@@ -90,7 +92,7 @@ class Contract(ContractBuilder):
             contract-dir.
 
     See definitions of the remaining parameters: \
-    :func:`.cleos.common_parameters`.
+    :func:`.cleos.base.common_parameters`.
     '''
     def __init__(
             self, account, contract_dir=None,
@@ -126,7 +128,7 @@ class Contract(ContractBuilder):
     def clear(self):
         '''Remove contract on an account
         '''
-        result = cleos_set.SetContract(
+        result = set_commands.SetContract(
             self.account, self.contract_dir, 
             self.wasm_file, self.abi_file,
             True,
@@ -148,7 +150,7 @@ class Contract(ContractBuilder):
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
         try:
-            result = cleos_set.SetContract(
+            result = set_commands.SetContract(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file,
                 False, 
@@ -174,7 +176,7 @@ class Contract(ContractBuilder):
 
             payer.buy_ram(buy_ram_kbytes, self.account)
         
-            result = cleos_set.SetContract(
+            result = set_commands.SetContract(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file,
                 False, 
@@ -202,7 +204,7 @@ class Contract(ContractBuilder):
         '''Push a transaction with a single action.
 
         Call *EOSIO cleos* with the *push action* command. Store the result,
-        which is an object of the class :class:`.cleos.PushAction`,  as
+        which is an object of the class :class:`.cleos.base.PushAction`,  as
         the value of the *action* attribute.
 
         Args:
@@ -211,7 +213,7 @@ class Contract(ContractBuilder):
             data (str): The arguments to the contract.
 
         See definitions of the remaining parameters: \
-        :func:`.cleos.common_parameters`.
+        :func:`.cleos.base.common_parameters`.
         '''            
         self.account.push_action(action, data,
             permission, expiration_sec,
@@ -243,7 +245,7 @@ class Contract(ContractBuilder):
                 defaults to last.
 
         Returns:
-            :class:`.cleos_set.SetTable` object
+            :class:`.cleos.set.SetTable` object
         '''            
         return self.account.table(
             table_name, scope,

@@ -8,7 +8,7 @@ There are practitioners of Python who preffer to restrain from using global
 variables. EOSFactory has tools that can satisfy them. This example presents 
 these tools. 
 
-For explanation see http://eosfactory.io/build/html/comments/account.html,
+For explanation see http://eosfactory.io/eosfactory_dev/html/comments/account.html,
 there the section 'Account objects reside in the global namespace'.
 
 With the standard EOSFactory, account objects are created with `create` factory 

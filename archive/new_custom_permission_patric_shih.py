@@ -1,6 +1,6 @@
 '''Issue set by Patric-Shih
 
-I follow https://eosfactory.io/build/html/patterns/set/set_account_permission.html#weights-and-threshold and try to add eosio.code permission to account as follow
+I follow https://eosfactory.io/eosfactory_dev/html/patterns/set/set_account_permission.html#weights-and-threshold and try to add eosio.code permission to account as follow
 
 ```
 ALICE.set_account_permission(
