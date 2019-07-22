@@ -32,6 +32,9 @@ def validate(omittable):
         raise MissingRequiredAuthorityError(err_msg)
     elif "Duplicate transaction" in err_msg:
         raise DuplicateTransactionError(err_msg)
+    elif "is nodeos running?" in err_msg \
+            or "reason: connect ECONNREFUSED" in err_msg:
+        raise IsNodeRunning()
     
     #######################################################################
     # NOT ERRORS
@@ -51,8 +54,9 @@ class Error(Exception):
     '''Base class for exceptions in EOSFactory.
     '''
     def __init__(
-            self, message, translate=True, 
-            print_stack=False, stack_frame=1):
+            self, message, translate=True, print_stack=False, stack_frame=1):
+        if not message:
+            message = "no message"
         import eosfactory.core.setup as setup
         if setup.is_raise_error or print_stack:
             sys.tracebacklimit = 10
@@ -67,6 +71,10 @@ class Error(Exception):
             self.message = logger.error(message, translate, details=details)
             Exception.__init__(self, self.message)
 
+
+class IsNodeRunning(Error):
+    def __init__(self):
+        Error.__init__(self, "Node does not response.", False)
 
 class AccountDoesNotExistError(Error):
     '''Account does not exist.

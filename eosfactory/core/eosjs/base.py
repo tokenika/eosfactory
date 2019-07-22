@@ -13,38 +13,29 @@ import eosfactory.core.errors as errors
 import eosfactory.core.config as config
 import eosfactory.core.setup as setup
 import eosfactory.core.logger as logger
-import eosfactory.core.walletmanager as wm
-from eosfactory.core.interface import *
-
-
-# TO DO resolve this code reuse issue.
-def set_local_nodeos_address_if_none():
-    if not setup.nodeos_address():
-        setup.set_nodeos_address("http://" + config.http_server_address())
-        setup.is_local_address = True
-
-    return setup.is_local_address
+import eosfactory.core.eosjs.walletmanager as wm
+import eosfactory.core.interface as interface
 
 
 def config_rpc():
     code = utils.heredoc('''
-const eosjs = require('eosjs');
+const { Api, JsonRpc, RpcError } = require('eosjs');
 const fetch = require('node-fetch');
-const rpc = new eosjs.Rpc.JsonRpc('%(endpoint)s', { fetch });
+const rpc = new JsonRpc('%(endpoint)s', { fetch });
     ''')
-
+    setup.set_local_nodeos_address_if_none()
     return code % {'endpoint': setup.nodeos_address()}
 
 
 def config_api():
     code = utils.heredoc('''
-const eosjs = require('eosjs')
-const fetch = require('node-fetch')
-const rpc = new eosjs.Rpc.JsonRpc('%(endpoint)s', { fetch })
-
-const { TextDecoder, TextEncoder } = require('text-encoding');
-const signatureProvider = new eosjs.SignatureProvider(%(keys)s);
-const api = new eosjs.Api({ rpc, signatureProvider, 
+const { Api, JsonRpc, RpcError } = require('eosjs');
+const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig');
+const fetch = require('node-fetch');
+const rpc = new JsonRpc('%(endpoint)s', { fetch });
+const { TextEncoder, TextDecoder } = require('util');
+const signatureProvider = new JsSignatureProvider(%(keys)s);
+const api = new Api({ rpc, signatureProvider, 
     textDecoder: new TextDecoder, textEncoder: new TextEncoder });
     ''')
 
@@ -54,18 +45,7 @@ const api = new eosjs.Api({ rpc, signatureProvider,
         }
 
 
-
-###############################################################################
-# TO DO ?
-# authorization
-# :[{actor: "gy4dkmjzhege", permission: "active"}]
-
-#     scope: [
-#      "exchange"
-#    ]
-###############################################################################
-
-class _Eosjs():
+class Command():
     '''A prototype for ``cleos`` command classes.
     '''
     def __init__(self, header, js, is_verbose=1):
@@ -78,29 +58,49 @@ class _Eosjs():
 
         cl.append(js)
 
-        set_local_nodeos_address_if_none()
-        # cl.extend(["--url", setup.nodeos_address()])
-
-        if setup.is_print_command_line:
-            print("javascript:")
-            print("___________")
+        if setup.is_print_command_lines:
             print("")
             print(js)
             print("")
 
-        process = subprocess.run(
-                                    cl,
-                                    stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE) 
+        while True:
+            process = subprocess.run(
+                                        cl,
+                                        stdout=subprocess.PIPE,
+                                        stderr=subprocess.PIPE) 
+            self.out_msg = process.stdout.decode("utf-8")
+            self.out_msg_details = process.stderr.decode("ISO-8859-1")
+            self.err_msg = None
+            error_key_words = \
+                            ["ERROR", "Error", "error", "Failed", "FetchError"]
+            for word in error_key_words:
+                if word in self.out_msg_details:
+                    self.err_msg = self.out_msg_details
+                    error_msg = self.err_msg.split("\n")[0]
+                    pattern = re.compile(r".+FetchError:")
+                    if re.findall(pattern, error_msg):
+                        self.err_msg = error_msg.replace(
+                                        re.findall(pattern, error_msg)[0], "")
+                    
+                    self.out_msg_details = None
+                    break
 
-        self.err_msg = process.stderr.decode("utf-8")
-        if self.err_msg:
-            raise errors.Error(self.err_msg)
+            if not self.err_msg:
+                break
+            if self.err_msg and not "Transaction took too long" in self.err_msg:
+                break
 
-        self.out_msg = process.stdout.decode("utf-8")
-        self.json = json.loads(self.out_msg)
+        errors.validate(self)
 
-        self.printself()
+        try:
+            self.json = json.loads(self.out_msg)
+        except:
+            pass
+
+        try:
+            self.json = json.loads(self.out_msg_details)
+        except:
+            pass
                   
     def printself(self):
         if self.is_verbose:
@@ -111,36 +111,6 @@ class _Eosjs():
 
     def __repr__(self):
         return ""
-
-
-class GetInfo(_Eosjs):
-    '''Get current blockchain information.
-
-    - **parameters**::
-
-        is_verbose: If `0`, do not print unless on error; if `-1`, 
-            do not print. Default is `1`.
-
-    - **attributes**::
-
-        json: The json representation of the object.
-        is_verbose: If set, print output.
-    '''
-    def __init__(self, is_verbose=1):
-
-        _Eosjs.__init__(self, config_rpc(), 
-            '''
-    (async () => {
-        result = await rpc.get_info()
-        console.log(JSON.stringify(result))    
-    })()
-            ''', 
-            is_verbose)
-
-        self.head_block = self.json["head_block_num"]
-        self.head_block_time = self.json["head_block_time"]
-        self.last_irreversible_block_num \
-            = self.json["last_irreversible_block_num"]
 
 
 def get_last_block():
@@ -166,7 +136,7 @@ def get_block_trx_count(block_num):
     return len(trxs)
 
 
-class GetBlock(_Eosjs):
+class GetBlock(Command):
     '''Retrieve a full block from the blockchain.
 
     - **parameters**::
@@ -182,7 +152,7 @@ class GetBlock(_Eosjs):
     '''
     def __init__(self, block_number, block_id=None, is_verbose=1):
         if block_id:
-            _Eosjs.__init__(self, config_rpc(),
+            Command.__init__(self, config_rpc(),
                 '''
         (async (block_num_or_id) => {
             result = await rpc.get_block(block_num_or_id)
@@ -191,7 +161,7 @@ class GetBlock(_Eosjs):
         })("%s")
                 ''' % (block_id), is_verbose)
         else:
-            _Eosjs.__init__(self, config_rpc(),
+            Command.__init__(self, config_rpc(),
                 '''
         (async (block_num_or_id) => {
             result = await rpc.get_block(block_num_or_id)
@@ -205,7 +175,7 @@ class GetBlock(_Eosjs):
         self.timestamp = self.json["timestamp"]
 
 
-class GetAccount(Account, _Eosjs):
+class GetAccount(interface.Account, Command):
     '''Retrieve an account from the blockchain.
 
     - **parameters**::
@@ -219,8 +189,8 @@ class GetAccount(Account, _Eosjs):
         json: The json representation of the object.
     '''
     def __init__(self, account, is_info=True, is_verbose=True):
-        Account.__init__(self, account_arg(account))
-        _Eosjs.__init__(self, config_rpc(),
+        interface.Account.__init__(self, interface.account_arg(account))
+        Command.__init__(self, config_rpc(),
             '''
         (async (account_name) => {
             result = await rpc.get_account(account_name)
@@ -234,7 +204,7 @@ class GetAccount(Account, _Eosjs):
             ['keys'][0]['key']                 
 
 
-class GetAccounts(_Eosjs):
+class GetAccounts(Command):
     '''Retrieve accounts associated with a public key.
 
     - **parameters**::
@@ -246,18 +216,18 @@ class GetAccounts(_Eosjs):
         json: The json representation of the object.
     '''
     def __init__(self, key, is_verbose=True):
-        _Eosjs.__init__(self, config_rpc(),
+        Command.__init__(self, config_rpc(),
             '''
         (async (public_key) => {
             result = await rpc.history_get_key_accounts(public_key)
             console.log(JSON.stringify(result))
 
         })("%s")    
-            ''' % (key_arg(key, is_owner_key=True, is_private_key=False)),
+            ''' % (interface.key_arg(key, is_owner_key=True, is_private_key=False)),
             is_verbose=is_verbose)
 
 
-class GetTransaction(_Eosjs):
+class GetTransaction(Command):
     '''Retrieve a transaction from the blockchain.
 
     - **parameters**::
@@ -273,7 +243,7 @@ class GetTransaction(_Eosjs):
         json: The json representation of the object.
     '''
     def __init__(self, transaction_id, block_num_hint=0, is_verbose=True):
-        _Eosjs.__init__(self, 
+        Command.__init__(self, 
             '''
         (async (is, block_num_hint) => {
             result = await rpc.history_get_transaction(is, block_num_hint)
@@ -283,23 +253,25 @@ class GetTransaction(_Eosjs):
             '''.format(transaction_id, block_num_hint), is_verbose)
 
 
-class WalletCreate(wm.Create):
+class WalletCreate(wm.Wallet):
     '''Create a new wallet locally.
 
-    - **parameters**::
+    If the *password* argument is set, try to open a wallet. Otherwise, create
+    a new wallet.
 
-        name: The name of the new wallet, defaults to ``default``.
-        password: The password to the wallet, if the wallet exists. Default is None.
-        is_verbose: If ``False`` do not print. Default is ``True``.
+    Args:
+        name (str): The name of the wallet. If not set, defaults to the value `.setup.wallet_default_name`
+        password (str): The password to the wallet, if the wallet exists. 
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-    - **attributes**::
-
-        name: The name of the wallet.
-        password: The password returned by wallet create.
-        json: The json representation of the object.
+    Attributes:
+        name (str): The name of the wallet.
+        password (str): The password returned by the *wallet create* 
+            EOSIO cleos command.
+        is_created (bool): True, if the wallet created.
     '''
-    def __init__(self, name="default", password="", is_verbose=True):
-        wm.Create.__init__(self, name, password, is_verbose)
+    def __init__(self, name=None, password="", is_verbose=True):
+        wm.Wallet.__init__(self, name, password, is_verbose)
 
 
 class WalletStop:
@@ -451,7 +423,7 @@ class WalletUnlock():
         wm.unlock(wallet, password, is_verbose)
 
 
-class GetCode(_Eosjs):
+class GetCode(Command):
     '''Retrieve the code and ABI for an account.
 
     - **parameters**::
@@ -466,7 +438,7 @@ class GetCode(_Eosjs):
     '''
     def __init__(self, account, is_verbose=True):
 
-        _Eosjs.__init__(self, config_rpc(),
+        Command.__init__(self, config_rpc(),
             '''
         async function get_code(account_name) {
             result = await rpc.get_code(account_name)
@@ -474,7 +446,7 @@ class GetCode(_Eosjs):
         }
 
         get_code("%s")
-            ''' % (account_arg(account)), is_verbose)
+            ''' % (interface.account_arg(account)), is_verbose)
 
         self.code_hash = self.json["code_hash"]
         self.printself()
@@ -483,7 +455,7 @@ class GetCode(_Eosjs):
         return "code hash: {}".format(self.code_hash)
 
 
-class GetTable(_Eosjs):
+class GetTable(Command):
     '''Retrieve the contents of a database table
 
     - **parameters**::
@@ -514,7 +486,7 @@ class GetTable(_Eosjs):
             limit=10, key="", lower="", upper="",
             is_verbose=True
             ):
-        self.name = account_arg(account)
+        self.name = interface.account_arg(account)
 
         if not scope:
             scope=self.name
@@ -523,7 +495,7 @@ class GetTable(_Eosjs):
         except:
             scope_name = scope
 
-        _Eosjs.__init__(self, config_rpc(), 
+        Command.__init__(self, config_rpc(), 
         '''
         async function get_table(
                 code, scope, table, json=true, limit=10, table_key="", 
@@ -552,13 +524,13 @@ class GetTable(_Eosjs):
                 "table": "table",
                 "json": "false" if binary else "true",
                 "limit": limit,
-                "key": key_arg(key, is_owner_key=False, is_private_key=False),
+                "key": interface.key_arg(key, is_owner_key=False, is_private_key=False),
                 "lower": lower,
                 "upper": upper
             }, is_verbose)
 
 
-class CreateKey(Key, _Eosjs):
+class CreateKey(interface.Key, Command):
     '''Create a new keypair and print the public and private keys.
 
     - **parameters**::
@@ -570,9 +542,9 @@ class CreateKey(Key, _Eosjs):
         json: The json representation of the object.
     '''
     def __init__(
-            self, key_name=None, key_public=None, key_private=None, 
+            self, key_public=None, key_private=None, 
             r1=False, is_verbose=True):
-        Key.__init__(self, key_name, key_public, key_private)
+        interface.Key.__init__(self, key_public, key_private)
 
         if self.key_public or self.key_private:
             self.json = {}
@@ -585,7 +557,7 @@ class CreateKey(Key, _Eosjs):
             if r1:
                 args.append("--r1")
 
-            _Eosjs.__init__(self, "",
+            Command.__init__(self, "",
                 '''
         const ecc = require('eosjs-ecc');
 
@@ -600,9 +572,6 @@ class CreateKey(Key, _Eosjs):
         })()
                 ''',
                 is_verbose)
-        self.json["name"] = key_name
-        self.name = key_name
-
         self.key_private = self.json["key_private"]
         self.key_public = self.json["key_public"]
 
@@ -623,59 +592,39 @@ class RestoreAccount(GetAccount):
         return self.name
 
 
-class CreateAccount(Account, _Eosjs):
+class CreateAccount(interface.Account, Command):
     '''Create an account, buy ram, stake for bandwidth for the account.
 
-    - **parameters**::
+    Args:
+        creator (str or .interface.Account): The account creating 
+            the new account.
+        name: (str) The name of the new account.
+        owner_key (str): If set, the owner public key for the new account, 
+            otherwise random.
+        active_key (str): If set, the active public key for the new account, 
+            otherwise random.
 
-        creator: The name, of the account creating the new account. May be an 
-            object having the attribute `name`, like `CreateAccount`, 
-            or a string.
-        name: The name of the new account.
-        owner_key: The owner public key for the new account.
-        active_key: The active public key for the new account.
-
-        permission: An account and permission level to authorize, as in 
-            'account@permission'. May be a `CreateAccount` or `Account` object
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        forceUnique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
-
-    - **attributes**::
-
-        owner_key: Owner private key.
-        active_key: Active private key.
-        json: The json representation of the object.  
+    See definitions of the remaining parameters: \
+    :func:`.cleos.base.common_parameters`.
     '''
     def __init__(
             self, creator, name, owner_key, 
             active_key=None,
             permission=None,
             expiration_sec=None, 
-            skip_signature=0, 
+            skip_sign=0, 
             dont_broadcast=0,
-            forceUnique=0,
+            force_unique=0,
             max_cpu_usage=0,
             max_net_usage=0,
             ref_block=None,
+            delay_sec=0,
             is_verbose=True
             ):
 
         if not name: 
             name = account_name()
-        Account.__init__(self, name)
+        interface.Account.__init__(self, name)
 
         self.owner_key = None # private keys
         self.active_key = None
@@ -683,13 +632,13 @@ class CreateAccount(Account, _Eosjs):
         if not active_key:
             active_key = owner_key        
 
-        owner_key_public = key_arg(
+        owner_key_public = interface.key_arg(
             owner_key, is_owner_key=True, is_private_key=False)
-        active_key_public = key_arg(
+        active_key_public = interface.key_arg(
             active_key, is_owner_key=False, is_private_key=False)
 
         # args = []
-        # if forceUnique:
+        # if force_unique:
         #     args.append("--force-unique")
         # if max_cpu_usage:
         #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
@@ -701,8 +650,8 @@ class CreateAccount(Account, _Eosjs):
         authorization = []
         if permission:
             authorization = permission_arg(permission)
-            
-        _Eosjs.__init__(self, config_api(),
+
+        Command.__init__(self, config_api(),
                 '''
         (async () => {
             const result = await api.transact(
@@ -794,7 +743,7 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
 
     return [contract_path_absolute, wasm_file, abi_file]
 
-class SetContract(_Eosjs):
+class SetContract(Command):
     '''Create or update the contract on an account.
 
     - **parameters**:: 
@@ -814,7 +763,7 @@ class SetContract(_Eosjs):
         skip_sign: Specify if unlocked wallet keys should be used to sign 
             transaction.
         dont_broadcast: Don't broadcast transaction to the network (just print).
-        forceUnique: Force the transaction to be unique. this will consume extra 
+        force_unique: Force the transaction to be unique. this will consume extra 
             bandwidth and remove any protections against accidentally issuing the 
             same transaction multiple times.
         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
@@ -833,7 +782,7 @@ class SetContract(_Eosjs):
             self, account, contract_dir, 
             wasm_file=None, abi_file=None, 
             permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             is_verbose=True,
@@ -852,9 +801,9 @@ class SetContract(_Eosjs):
         wasm_file = os.path.join(files[0], files[1])
         abi_file =  os.path.join(files[0], files[2])
 
-        self.account_name = account_arg(account)
+        self.account_name = interface.account_arg(account)
 
-        # if forceUnique:
+        # if force_unique:
         #     args.append("--force-unique")
         # if max_cpu_usage:
         #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
@@ -867,7 +816,7 @@ class SetContract(_Eosjs):
         if permission:
             authorization.extend(permission_arg(permissions))
 
-        _Eosjs.__init__(self, config_rpc(),
+        Command.__init__(self, config_rpc(),
             '''
     const fs = require("fs");
     const abi = JSON.parse(fs.readFileSync("%s"));
@@ -879,7 +828,7 @@ class SetContract(_Eosjs):
                 self.account_name
                 ), is_verbose) 
 
-        _Eosjs.__init__(self, config_rpc(),
+        Command.__init__(self, config_rpc(),
             '''
     const fs = require("fs")
     const wasm = fs.readFileSync("%s")
@@ -898,7 +847,7 @@ class SetContract(_Eosjs):
         return GetTransaction(self.transaction)
 
 
-class PushAction(_Eosjs):
+class PushAction(Command):
     '''Push a transaction with a single action
 
     - **parameters**::
@@ -917,7 +866,7 @@ class PushAction(_Eosjs):
         skip_sign: Specify if unlocked wallet keys should be used to sign 
             transaction.
         dont_broadcast: Don't broadcast transaction to the network (just print).
-        forceUnique: Force the transaction to be unique. this will consume extra 
+        force_unique: Force the transaction to be unique. this will consume extra 
             bandwidth and remove any protections against accidentally issuing the 
             same transaction multiple times.
         max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
@@ -935,13 +884,13 @@ class PushAction(_Eosjs):
     def __init__(
             self, account, action, data,
             permission=None, expiration_sec=None, 
-            skip_signature=0, dont_broadcast=0, forceUnique=0,
+            skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             is_verbose=True,
             json=False
         ):
-        self.account_name = account_arg(account)
+        self.account_name = interface.account_arg(account)
 
         args = [self.account_name, action, data]
         if json:
@@ -952,11 +901,11 @@ class PushAction(_Eosjs):
                 args.extend(["--permission", perm])
 
         args.extend(["--expiration", str(expiration_sec)])
-        if skip_signature:
+        if skip_sign:
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
-        if forceUnique:
+        if force_unique:
             args.append("--force-unique")
         if max_cpu_usage:
             args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
@@ -967,7 +916,7 @@ class PushAction(_Eosjs):
                         
         self.console = None
         self.data = None
-        _Eosjs.__init__(self, args, "push", "action", is_verbose)
+        Command.__init__(self, args, "push", "action", is_verbose)
 
         self.console = self.json["processed"]["action_traces"][0]["console"]
         self.data = self.json["processed"]["action_traces"][0]["act"]["data"]

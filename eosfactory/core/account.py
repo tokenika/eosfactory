@@ -5,7 +5,7 @@ import eosfactory.core.config as config
 import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 base_commands = importlib.import_module(".base", setup.light_full)
-import eosfactory.core.cleos.sys as sys_commands
+sys_commands = importlib.import_module(".sys", setup.light_full)
 import eosfactory.core.manager as manager
 import eosfactory.core.logger as logger
 

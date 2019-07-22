@@ -806,17 +806,17 @@ Local node has stopped.
         count = count - 1
 
         cpu_percent = proc.cpu_percent(interval=WAIT_TIME)
-        
         try:
             get_commands = importlib.import_module(".get", setup.light_full)
             head_block_num = get_commands.GetInfo(is_verbose=0).head_block
             if block_num is None:
                 block_num = head_block_num
                 count = int(NUMBER_BLOCKS_ADDED * 0.5/WAIT_TIME) + 1
-        except:
+        except errors.IsNodeRunning:
             head_block_num = 0
-            pass
-        
+        except Exception as e:
+            raise errors.Error(str(e))
+
         if block_num:
             print("{:.0f}* ".format(cpu_percent), end="", flush=True)
         else:

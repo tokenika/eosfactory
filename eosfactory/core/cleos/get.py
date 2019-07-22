@@ -6,12 +6,12 @@ import eosfactory.core.interface as interface
 import eosfactory.core.cleos.base as base_commands
 
 
-class GetInfo(base_commands.Cleos):
+class GetInfo(base_commands.Command):
     '''Get current blockchain information.
 
     :param bool is_verbose: If ``False``, print a message. Default is ``True``.
 
-    :return: A :class:`eosfactory.core.cleos.base.Cleos` object, extended with the 
+    :return: A :class:`eosfactory.core.cleos.base.Command` object, extended with the 
         following items:
 
     :var str head_block_time: The time of the most recent block.
@@ -20,7 +20,7 @@ class GetInfo(base_commands.Cleos):
         block.
     '''
     def __init__(self, is_verbose=True):
-        base_commands.Cleos.__init__(self, [], "get", "info", is_verbose)
+        base_commands.Command.__init__(self, [], "get", "info", is_verbose)
         self.head_block = int(self.json["head_block_num"])
         self.head_block_time = self.json["head_block_time"]
         self.last_irreversible_block_num \
@@ -31,7 +31,7 @@ class GetInfo(base_commands.Cleos):
         return json.dumps(self.json, sort_keys=True, indent=4)
 
 
-class GetActions(base_commands.Cleos):
+class GetActions(base_commands.Command):
     '''Retrieve all actions with specific account name referenced in authorization or receiver.
 
     Note that available actions are filtered. By default, all actions are
@@ -64,22 +64,22 @@ class GetActions(base_commands.Cleos):
             args.append("--pretty")
         if console:
             args.append("--console")
-        base_commands.Cleos.__init__(self, args, "get", "actions", is_verbose)
+        base_commands.Command.__init__(self, args, "get", "actions", is_verbose)
 
         self.printself()
 
 
-class GetBlock(base_commands.Cleos):
+class GetBlock(base_commands.Command):
     '''Retrieve a full block from the blockchain.
 
     :param int block_number: The number of the block to retrieve.
     :param str block_id: The ID of the block to retrieve, if set, defaults to "".   
     :param bool is_verbose: If ``False``, print a message. Default is ``True``.
         
-    :return: A :class:`eosfactory.core.cleos.base.Cleos` object.
+    :return: A :class:`eosfactory.core.cleos.base.Command` object.
     '''
     def __init__(self, block_number, block_id=None, is_verbose=True):
-        base_commands.Cleos.__init__(
+        base_commands.Command.__init__(
                         self, [block_id] if block_id else [str(block_number)], 
                         "get", "block", is_verbose)
         self.printself()
@@ -106,7 +106,7 @@ def get_block_trx_count(block_num):
     return len(trxs)
 
 
-class GetAccounts(base_commands.Cleos):
+class GetAccounts(base_commands.Command):
     '''Retrieve accounts associated with a public key.
 
     Args:
@@ -118,14 +118,14 @@ class GetAccounts(base_commands.Cleos):
     '''
     def __init__(self, key, is_verbose=True):
         public_key = interface.key_arg(key, is_owner_key=True, is_private_key=False)
-        base_commands.Cleos.__init__(
+        base_commands.Command.__init__(
             self, [public_key], "get", "accounts", is_verbose)
 
         self.names = self.json['account_names']
         self.printself()
 
 
-class GetCode(base_commands.Cleos):
+class GetCode(base_commands.Command):
     '''Retrieve the code and ABI for an account.
 
     Args:
@@ -153,7 +153,7 @@ class GetCode(base_commands.Cleos):
         if wasm:
             args.extend(["--wasm"])
 
-        base_commands.Cleos.__init__(self, args, "get", "code", is_verbose)
+        base_commands.Command.__init__(self, args, "get", "code", is_verbose)
 
         msg = str(self.out_msg)
         self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
@@ -161,7 +161,7 @@ class GetCode(base_commands.Cleos):
         self.printself()
 
 
-class GetTable(base_commands.Cleos):
+class GetTable(base_commands.Command):
     '''Retrieve the contents of a database table
 
     Args:
@@ -229,6 +229,6 @@ class GetTable(base_commands.Cleos):
         if show_payer:
             args.append("--show-payer")
 
-        base_commands.Cleos.__init__(self, args, "get", "table", is_verbose)
+        base_commands.Command.__init__(self, args, "get", "table", is_verbose)
 
         self.printself()

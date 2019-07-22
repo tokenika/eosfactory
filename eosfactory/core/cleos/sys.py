@@ -1,12 +1,8 @@
 import eosfactory.core.cleos.base as base_commands
 import eosfactory.core.interface as interface
 
-def reload():
-    import importlib
-    importlib.reload(base_commands)
 
-
-class SystemNewaccount(interface.Account, base_commands.Cleos):
+class SystemNewaccount(interface.Account, base_commands.Command):
     ''' Create an account, buy ram, stake for bandwidth for the account.
 
     Args:
@@ -92,7 +88,7 @@ class SystemNewaccount(interface.Account, base_commands.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])
 
-        base_commands.Cleos.__init__(
+        base_commands.Command.__init__(
             self, args, "system", "newaccount", is_verbose)
             
         self.json = base_commands.GetAccount(
@@ -105,7 +101,7 @@ class SystemNewaccount(interface.Account, base_commands.Cleos):
         return self.name
 
 
-class BuyRam(base_commands.Cleos):
+class BuyRam(base_commands.Command):
     ''' Buy RAM.
 
     Args:
@@ -154,11 +150,11 @@ class BuyRam(base_commands.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])
 
-        base_commands.Cleos.__init__(
+        base_commands.Command.__init__(
             self, args, "system", "buyram", is_verbose)
 
     
-class DelegateBw(base_commands.Cleos):
+class DelegateBw(base_commands.Command):
     '''Delegate bandwidth.
 
     Args:
@@ -218,7 +214,7 @@ class DelegateBw(base_commands.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])            
 
-        base_commands.Cleos.__init__(
+        base_commands.Command.__init__(
             self, args, "system", "delegatebw", is_verbose)
 
 

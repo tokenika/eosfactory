@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "eosjs": "^20.0.0",
+    "node-fetch": "^2.6.0"
+  }
+}

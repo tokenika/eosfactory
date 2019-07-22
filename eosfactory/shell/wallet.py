@@ -25,7 +25,7 @@ class Wallet(base_commands.WalletCreate):
 
     def __init__(self, name=None, password="", file=False):
 
-        base_commands.set_local_nodeos_address_if_none()
+        setup.set_local_nodeos_address_if_none()
         if name is None:
             name = setup.wallet_default_name
         else:

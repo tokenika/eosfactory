@@ -1017,12 +1017,10 @@ def reboot():
     global wallet_singleton
     if wallet_singleton:
         wallet_singleton.delete_globals()
-    wallet.Wallet.wallet_single = None
-    try:
         del wallet_singleton
-    except:
-        pass
-    wallet_singleton = None
+        wallet_singleton = None
+
+    wallet.Wallet.wallet_single = None    
 
     global wallet_globals
     wallet_globals = None

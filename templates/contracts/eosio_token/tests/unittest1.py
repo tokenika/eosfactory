@@ -14,10 +14,6 @@ CAROL = Account()
 
 class Test(unittest.TestCase):
 
-    def run(self, result=None):
-        super().run(result)
-
-
     @classmethod
     def setUpClass(cls):
         SCENARIO('''

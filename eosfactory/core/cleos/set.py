@@ -7,7 +7,7 @@ import eosfactory.core.interface as interface
 import eosfactory.core.cleos.base as base_commands
 
 
-class SetContract(base_commands.Cleos):
+class SetContract(base_commands.Command):
     '''Create or update the contract on an account.
 
     Args:
@@ -86,12 +86,12 @@ class SetContract(base_commands.Cleos):
         if abi_file:
             args.append(abi_file)
 
-        base_commands.Cleos.__init__(self, args, "set", "contract", is_verbose)
+        base_commands.Command.__init__(self, args, "set", "contract", is_verbose)
         self.contract_path_absolute = files[0]
         self.account_name = interface.account_arg(account)
         self.printself()
 
-class SetAccountPermission(base_commands.Cleos):
+class SetAccountPermission(base_commands.Command):
     '''Set parameters dealing with account permissions.
 
     Args:
@@ -212,7 +212,7 @@ class SetAccountPermission(base_commands.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
                         
-        base_commands.Cleos.__init__(
+        base_commands.Command.__init__(
             self, args, "set", "account permission", is_verbose)
         self.account_name = account_name
         self.console = None
@@ -225,7 +225,7 @@ class SetAccountPermission(base_commands.Cleos):
         self.printself()    
 
 
-class SetActionPermission(base_commands.Cleos):
+class SetActionPermission(base_commands.Command):
     '''Set parameters dealing with account permissions.
 
     Args:
@@ -297,7 +297,7 @@ class SetActionPermission(base_commands.Cleos):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
 
-        base_commands.Cleos.__init__(self, args, "set", "action permission", is_verbose)
+        base_commands.Command.__init__(self, args, "set", "action permission", is_verbose)
         self.console = None
         self.data = None
 

@@ -2,6 +2,10 @@
 
 import re
 
+import eosfactory.core.config as config 
+
+wallet_default_name = "default"
+
 is_print_command_lines = False
 is_save_command_lines = False
 command_line_file = "command_lines.txt"
@@ -9,16 +13,24 @@ is_raise_error = False
 is_print_request = False
 is_print_response = False
 is_translating = True
-account_map = "accounts.json"
+ACCOUNT_MAP = "accounts.json"
 password_map = "passwords.json"
-wallet_default_name = "default"
 is_local_address = False
 cleos_package = "eosfactory.core.cleos"
-eosiojs_package = "eosfactory.core.eosiojs"
+eosiojs_package = "eosfactory.core.eosjs"
 light_full = cleos_package
 
 __nodeos_address = None
 __file_prefix = None
+
+
+def set_local_nodeos_address_if_none():
+    if not nodeos_address():
+        set_nodeos_address("http://" + config.http_server_address())
+        global is_local_address
+        is_local_address = True
+
+    return is_local_address
 
 
 def set_is_lt(is_lt=True):

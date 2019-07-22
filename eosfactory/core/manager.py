@@ -111,7 +111,7 @@ class Transaction():
 
 
 def is_local_testnet():
-    base_commands.set_local_nodeos_address_if_none()
+    setup.set_local_nodeos_address_if_none()
     return setup.is_local_address
 
 
@@ -185,7 +185,7 @@ def reset(nodeos_stdout=None):
     import eosfactory.shell.account as account
     account.reboot()
 
-    if not base_commands.set_local_nodeos_address_if_none():
+    if not setup.set_local_nodeos_address_if_none():
         logger.INFO('''
         No local nodeos is set: {}
         '''.format(setup.nodeos_address()))
@@ -204,7 +204,7 @@ def resume(nodeos_stdout=None):
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
     ''' 
-    if not base_commands.set_local_nodeos_address_if_none():   
+    if not setup.set_local_nodeos_address_if_none():   
         logger.INFO('''
             Not local nodeos is set: {}
         '''.format(setup.nodeos_address()))
