@@ -24,6 +24,8 @@ def test():
     reset()
     create_master_account("MASTER")
     create_account("ALICE", MASTER)
+    ALICE.info()
+
     # create_account("CAROL", MASTER)
     # create_account("BOB", MASTER)
 

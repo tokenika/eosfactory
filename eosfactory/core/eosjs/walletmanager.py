@@ -275,8 +275,8 @@ def import_key(wallet, key, is_verbose=True):
 def remove_key(key, is_verbose=True):
     trash = []
 
-    for name, open_wallet in _OPEN_WALLETS.items():
-        if not open_wallet.cipher_suite:
+    for name, _open_wallet in _OPEN_WALLETS.items():
+        if not _open_wallet.cipher_suite:
             continue
 
         owner_key_public = interface.key_arg(
@@ -287,7 +287,7 @@ def remove_key(key, is_verbose=True):
     
         private_keys_ = private_keys(name, False)
 
-        keys = Node('''
+        _keys = Node('''
         const ecc = require('eosjs-ecc');
 
         ((keys) => {
@@ -303,7 +303,7 @@ def remove_key(key, is_verbose=True):
         })(%s)
         ''' % private_keys_).json
 
-        for pair in keys:
+        for pair in _keys:
             if pair[1] == owner_key_public or pair[1] == active_key_public:
                 trash.append(pair[0])
 
@@ -318,13 +318,10 @@ def remove_key(key, is_verbose=True):
     
     if is_verbose:
         if trash:
-            logger.OUT("Removed keys from wallet '{}':\n".format(
-                name
-            ) + "\n".join(trash))
+            logger.OUT("Removed keys:\n{}".format("\n".join(trash)))
     
 
-def keys(wallet=None, is_verbose=True, is_lock_checked=True):
-    name = interface.wallet_arg(wallet)
+def keys(wallet=None, is_verbose=True):
     private_keys_ = private_keys(wallet, False)
     public_keys = Node('''
     const ecc = require('eosjs-ecc');
@@ -340,33 +337,39 @@ def keys(wallet=None, is_verbose=True, is_lock_checked=True):
     ''' % (private_keys_)).json
 
     if is_verbose:
-        logger.OUT("keys in all unlocked wallets: \n".format(
-            name
-        ) + "\n".join(public_keys))
+        if wallet:
+            logger.OUT("Keys in the wallet '{}': \n{}".format(
+                        interface.wallet_arg(wallet), "\n".join(public_keys)))
+        else:
+            logger.OUT("Keys in all unlocked wallets: \n{}".format(
+                                                        "\n".join(public_keys)))
 
     return public_keys
 
 
 def private_keys(wallet=None, is_verbose=True):
-    keys = []    
-    for name, open_wallet in _OPEN_WALLETS.items():
+    _keys = []    
+    for name, _ in _OPEN_WALLETS.items():
         if wallet:
             if name != interface.wallet_arg(wallet):
                 continue
         is_open_and_unlocked(name)
         
-        with open(wallet_file(name), "r")  as input:
-            keys_ciphered = [key.rstrip('\n') for key in input]
+        with open(wallet_file(name), "r")  as f:
+            keys_ciphered = [key.rstrip('\n') for key in f]
 
         for key in keys_ciphered:
-            keys.append(decrypt(key, _OPEN_WALLETS[name].cipher_suite))
+            _keys.append(decrypt(key, _OPEN_WALLETS[name].cipher_suite))
 
     if is_verbose:
-        logger.OUT("Private keys in all unlocked wallets: \n".format(
-            name
-        ) + "\n".join(keys))
+        if wallet:
+            logger.OUT("Private keys in the wallet '{}': \n{}".format(
+                                interface.wallet_arg(wallet), "\n".join(_keys)))
+        else:
+            logger.OUT("Private keys in all unlocked wallets: \n{}".format(
+                                                            "\n".join(_keys)))
 
-    return keys
+    return _keys
     
 
 def stop(is_verbose=True):
