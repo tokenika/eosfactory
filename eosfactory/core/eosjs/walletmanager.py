@@ -11,9 +11,10 @@ import eosfactory.core.logger as logger
 import eosfactory.core.utils as utils
 import eosfactory.core.setup as setup
 
+# The first key in any eosf wallet: identification of the system.
+WALLET_MANAGER_ID = "5JfjYNzKTDoU35RSn6BpXei8Uqs1B6EGNwkEFHaN8SPHwhjUzcX"
 
 _WALLET_FILE_EXT = ".eosfwallet"
-_MANAGER_ID = "5JfjYNzKTDoU35RSn6BpXei8Uqs1B6EGNwkEFHaN8SPHwhjUzcX"
 _TIMEOUT = 3000
 _TIMER = None
 _OPEN_WALLETS = {}
@@ -35,6 +36,11 @@ class Wallet(interface.Wallet):
         password (str): The password to the wallet, if the wallet exists. 
         is_verbose (bool): If *False* do not print. Default is *True*.
 
+    Attributes:
+        name (str): The name of the wallet.
+        password (str): The password returned by the *wallet create* 
+            EOSIO cleos command.
+        is_created (bool): True, if the wallet created.
     '''
 
     def __init__(self, name=None, password=None, is_verbose=True):
@@ -83,7 +89,7 @@ class Wallet(interface.Wallet):
 
             try:
                 with open(_file, "w+")  as out:
-                    out.write(encrypt(_MANAGER_ID, cipher_suite) + "\n")
+                    out.write(encrypt(WALLET_MANAGER_ID, cipher_suite) + "\n")
             except Exception as e:
                 raise errors.Error(str(e))
             
@@ -204,15 +210,13 @@ def unlock(wallet, password=None, is_verbose=True):
             The wallet '{}' is not open.
             '''.format(name))
 
-    global _MANAGER_ID
-    _MANAGER_ID = None
     if not is_unlocked(name):
         try:
             _OPEN_WALLETS[name].cipher_suite = Fernet(str.encode(password))
             with open(wallet_file(name), "r")  as input:
                 keys_ciphered = [key.rstrip('\n') for key in input]
 
-            _MANAGER_ID = decrypt(
+            wallet_manager_id = decrypt(
                     keys_ciphered[0], _OPEN_WALLETS[name].cipher_suite)
         except Exception as e:
             raise errors.Error('''
@@ -227,7 +231,7 @@ def unlock(wallet, password=None, is_verbose=True):
         _TIMER.cancel()
     _TIMER = Timer(_TIMEOUT, lock_all)
     _TIMER.start()
-    return _MANAGER_ID
+    return wallet_manager_id
 
 
 def list(is_verbose=True):
