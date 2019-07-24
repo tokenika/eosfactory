@@ -542,7 +542,7 @@ def get_pid(name=None):
 
     pids = []
     processes = [p.info for p in psutil.process_iter(attrs=["pid", "name"]) \
-                                        if name in p.info["name"]]
+                                        if p.info["name"] and name in p.info["name"]]
     for process in processes:
         pids.append(process["pid"])
 
@@ -779,7 +779,7 @@ def node_probe():
     pid = None
     for i in range(0, 5):
         pids = [p.info for p in psutil.process_iter(attrs=["pid", "name"]) \
-                                        if NODEOS in p.info["name"]]
+                                        if p.info["name"] and NODEOS in p.info["name"]]
         if pids and pids[0]["name"] == NODEOS:
             pid = pids[0]["pid"]
             break
