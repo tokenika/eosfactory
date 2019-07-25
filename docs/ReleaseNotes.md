@@ -6,4 +6,4 @@ EOSFactory [v3.4.0](https://github.com/tokenika/eosfactory/releases/tag/v3.4.0) 
 
 ## New features in v3.4.0
 
-* Better control of installation dependencies = for compatibility with EOSIO.
+* Better control of installation dependencies for compatibility with EOSIO.

@@ -7,8 +7,6 @@ import re
 import random
 import pprint
 import os
-import socket
-import socketserver
 
 import eosfactory.core.utils as utils
 import eosfactory.core.errors as errors
@@ -17,62 +15,6 @@ import eosfactory.core.setup as setup
 import eosfactory.core.logger as logger
 import eosfactory.core.eosjs.walletmanager as wm
 import eosfactory.core.interface as interface
-
-RELY_URL = "http://127.0.0.1:8881"
-
-def relay(command_url, node_url, print_request, print_response):
-    '''Relays, to the node url, requests sent to the given command_url, tapping 
-    them.
-
-    A socket server listens to the ``command_url``. Prints a request and 
-    passes it to the ``node_url``. Prints the response from the ``node_url`` and
-    passes it back to the ``command_url``.
-    '''
-
-    if not print_request and not print_response:
-        return node_url
-    
-    port_pattern = re.compile(r'(.+):(\d+)')
-    is_listening = False
-
-    class Relay(socketserver.BaseRequestHandler):
-        def handle(self):
-            while 1:
-                import pdb; pdb.set_trace()
-                dataReceived = self.request.recv(1024)
-                if print_request:
-                    print(dataReceived.decode("ISO-8859-1"))
-                sock = socket.socket(socket.AF_IRDAF_INET, socket.SOCK_STREAM)
-                pair = re.findall(port_pattern, node_url)[0]
-                sock.connect((pair[0], int(pair[1])))
-                sock.send(dataReceived + "\r\n")
-                response_data = sock.recv(1024)
-                if print_response:
-                    print(response_data.decode("ISO-8859-1"))
-                sock.close()            
-                if not dataReceived: break
-                self.request.send(dataReceived)
-
-    def run_in_thread():
-        try:
-            pair = re.findall(port_pattern, command_url)[0]
-            relay = socketserver.TCPServer((pair[0], int(pair[1])), Relay)
-            relay.serve_forever()
-            is_listening = True
-        except OSError as e:
-            if not "Address already in use" in str(e):
-                raise errors.Error(str(e))
-            is_listening = True
-        except Exception as e:
-            raise errors.Error(str(e))
-
-    if print_request or print_response: 
-        thread = threading.Thread(target=runInThread)
-        thread.start()
-
-    if is_listening:
-        return command_url
-    return node_url
 
 
 def config_rpc():
@@ -111,13 +53,13 @@ class Command():
         self.err_msg = None
         self.json = None
         self.is_verbose = is_verbose
-        import pdb; pdb.set_trace()
-        setup.set_local_nodeos_address_if_none()
-        header = header % {'endpoint': relay(
-                                RELY_URL, setup.nodeos_address(), 
-                                setup.is_print_request, setup.is_print_response)
-        }
 
+        setup.set_local_nodeos_address_if_none()
+        header = header % {'endpoint': utils.relay(
+                            "http://" + config.RELY_URL, setup.nodeos_address(), 
+                            setup.is_print_request, setup.is_print_response)
+        }
+        # import pdb; pdb.set_trace()
         cl = ["node", "-e"]
         js = header + "\n" + utils.heredoc(js)
 

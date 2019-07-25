@@ -3,6 +3,9 @@ import os
 import shutil
 import threading
 import subprocess
+import socket
+import socketserver
+import re
 
 import eosfactory.core.errors as errors
 
@@ -173,6 +176,82 @@ def project_zip():
         print('adding README.txt')
         zf.write('/mnt/c/Workspaces/EOS/contracts/examples/fund/build/fund.abi')
 
+
+def relay(command_url, node_url, print_request, print_response):
+    '''Relays, to the node url, requests sent to the given command_url, tapping 
+    them.
+
+    A socket server listens to the ``command_url``. Prints a request and 
+    passes it to the ``node_url``. Prints the response from the ``node_url`` and
+    passes it back to the ``command_url``.
+    '''
+    if not print_request and not print_response:
+        return node_url
+    
+    port_pattern = re.compile(r'(.+):(\d+)')
+
+    class Relay(socketserver.BaseRequestHandler):
+        def recvall(self, sock):
+            BUFF_SIZE = 4096 # 4 KiB
+            data = b''
+            while True:
+                part = sock.recv(BUFF_SIZE)
+                data += part
+                if len(part) < BUFF_SIZE:
+                    # either 0 or end of data
+                    break
+            return data
+        
+        def handle(self):
+            while True:
+                dataReceived = self.recvall(self.request).decode("ISO-8859-1")
+                if not dataReceived:
+                    break
+                
+                dataReceived = dataReceived.replace(
+                                            command_url.replace("http://", ""), 
+                                            node_url.replace("http://", ""))
+                if print_request:
+                    print("\n######################### DATA SENT to the node:\n")
+                    print(dataReceived, flush=True)
+                    print()
+
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                pair = re.findall(port_pattern, node_url)[0]
+                sock.connect((pair[0].replace("http://", ""), int(pair[1])))
+                sock.sendall(str.encode(dataReceived))
+                response_data = self.recvall(sock).decode("ISO-8859-1")
+                response_data = response_data.replace(
+                                                node_url.replace("http://", ""),
+                                            command_url.replace("http://", ""))                
+                if print_response:
+                    print("\nDATA RECEIVED from the node:\n")
+                    print(response_data, flush=True)
+                    print()
+
+                sock.close()
+
+                self.request.send(str.encode(response_data))
+
+    def run_in_thread():
+        try:
+            # import pdb; pdb.set_trace()
+            pair = re.findall(port_pattern, command_url)[0]
+            relay = socketserver.TCPServer(
+                        (pair[0].replace("http://", ""), int(pair[1])), Relay)
+            relay.serve_forever()
+        except OSError as e:
+            # print(str(e))
+            if not "Address already in use" in str(e):
+                raise errors.Error(str(e))
+        except Exception as e:
+            raise errors.Error(str(e))
+
+    if print_request or print_response: 
+        thread = threading.Thread(target=run_in_thread)
+        thread.start()
+
+    return command_url
 
 
 

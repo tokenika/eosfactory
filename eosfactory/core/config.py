@@ -28,6 +28,7 @@ IGNORE_LIST = [".vscode/ipch/*", ".vscode/settings.json", ".vscode/tasks.json",\
                 "build/*","command_lines.txt"]
 
 LOCALHOST_HTTP_ADDRESS = "127.0.0.1:8888"
+RELY_URL = "127.0.0.1:8881"
 DEFAULT_TEMPLATE = "hello_world"
 FROM_HERE_TO_EOSF_DIR = "../../../"
 CONFIG_DIR = "config"

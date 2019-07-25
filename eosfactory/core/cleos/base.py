@@ -5,6 +5,7 @@ import random
 import os
 import re
 
+import eosfactory.core.utils as utils
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.config as config
@@ -43,12 +44,9 @@ class Command():
 
         cl = [config.cli_exe()]
         setup.set_local_nodeos_address_if_none()
-        cl.extend(["--url", setup.nodeos_address()])
-
-        if setup.is_print_request:
-            cl.append("--print-request")
-        if setup.is_print_response:
-            cl.append("--print-response")
+        cl.extend(["--url", utils.relay(
+                            "http://" + config.RELY_URL, setup.nodeos_address(), 
+                            setup.is_print_request, setup.is_print_response)])
 
         cl.append(command_group)
         cl.extend(re.sub(re.compile(r'\s+'), ' ', command.strip()).split(" "))
@@ -84,10 +82,6 @@ class Command():
                 break
 
         errors.validate(self)
-        
-        if setup.is_print_request or setup.is_print_response:
-            print("######## cleos request and response:")
-            print(self.out_msg_details)
             
         try:
             self.json = json.loads(self.out_msg)
