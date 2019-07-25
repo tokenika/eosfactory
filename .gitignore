@@ -59,3 +59,4 @@ docs/comments/EOSFactoryLT.pdf
 docs/comments/EOSFactoryLT.md
 tenp.md
 report.xml
+unit_tests/lt.py
