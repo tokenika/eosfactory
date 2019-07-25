@@ -1,4 +1,4 @@
-import eosfactory.core.config
+import eosfactory.core.checklist
 
 if __name__ == '__main__':
-    eosfactory.core.config.main()
+    eosfactory.core.checklist.main()

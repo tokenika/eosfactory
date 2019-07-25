@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$( uname -a )" != *"Microsoft"* ]]; then
+if [[ "$( uname -v )" != *"Microsoft"* ]]; then
     printf "%s" ""
     exit 0
 fi

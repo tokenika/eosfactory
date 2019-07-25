@@ -517,7 +517,7 @@ already exists. Cannot overwrite it.
         if utils.is_windows_ubuntu():
             command_line = "cmd.exe /C code {}".format(
                 utils.wslMapLinuxWindows(project_dir))
-        elif utils.uname() == "Darwin":
+        elif utils.os_version() == utils.DARWIN:
             command_line = "open -n -b com.microsoft.VSCode --args {}".format(
                 project_dir)
         else:

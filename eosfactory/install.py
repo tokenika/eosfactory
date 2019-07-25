@@ -2,7 +2,7 @@ import argparse
 import eosfactory.core.config as config
 
 
-def install(wsl_root=None):
+def install():
     wsl_root = config.wsl_root()
     if wsl_root:
         print('''

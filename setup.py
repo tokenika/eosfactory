@@ -41,8 +41,7 @@ def data_files_item(directory):
 DATA_FILES = [
     (config.EOSFACTORY_DIR, ["wsl_root.sh"]),
     (os.path.join(config.EOSFACTORY_DIR, "config"),
-        ["config/distributed/config.json", "config/config.ini", 
-                                                    "config/genesis.json"])] 
+        ["config/distributed/config.json", "config/config.ini"])] 
 DATA_FILES.extend(data_files_item('templates'))
 DATA_FILES.extend(data_files_item('contracts'))
 DATA_FILES.extend(data_files_item('includes'))
