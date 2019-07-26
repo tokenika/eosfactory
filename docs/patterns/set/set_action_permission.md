@@ -31,7 +31,7 @@ producer.set_account_permission("claimer",
         "keys" : 
             [
                 {
-                    "key": producer.active(),
+                    "key": producer.active_public(),
                     "weight": 1
                 }
             ]

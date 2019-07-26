@@ -114,7 +114,7 @@ class SetAccountPermission(base_commands.Command):
 
         str_value = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
 
-        permission_value = bob.active()
+        permission_value = bob.active_public()
 
         dict_value = {
             "threshold" : 100, 
@@ -124,7 +124,7 @@ class SetAccountPermission(base_commands.Command):
                     {
                         "permission":
                             {
-                                "actor": bob.active(),
+                                "actor": bob.active_public(),
                                 "permission":"active"
                             },
                         "weight":100
@@ -168,7 +168,7 @@ class SetAccountPermission(base_commands.Command):
         if authority:
             authority = manager.data_json(authority)
             if isinstance(authority, interface.Account):
-                args.append(authority.active())
+                args.append(authority.active_public())
             else:
                 authority =  re.sub(re.compile(r'\s+'), '', authority)
                 args.append(authority)

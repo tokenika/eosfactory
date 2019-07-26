@@ -187,7 +187,7 @@ class Account():
 
             str_value = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
 
-            permission_value = bob.active()
+            permission_value = bob.active_public()
 
             dict_value = {
                 "threshold" : 100, 
@@ -197,7 +197,7 @@ class Account():
                         {
                             "permission":
                                 {
-                                    "actor": bob.active(),
+                                    "actor": bob.active_public(),
                                     "permission":"active"
                                 },
                             "weight":100

@@ -48,8 +48,6 @@ class Account(Omittable):
     
     Attributes:
         name (str): EOSIO contract name
-        owner_key (str or .Key): The owner key of the account.
-        active_key (str or .Key): The account key of the account.
     '''
     def __init__(self, name, owner_key=None, active_key=None):
         self.name = name
@@ -57,7 +55,7 @@ class Account(Omittable):
         self.active_key = active_key if active_key else owner_key
         Omittable.__init__(self)
     
-    def owner(self):
+    def owner_public(self):
         '''Get the public owner key
 
         Returns:
@@ -68,7 +66,7 @@ class Account(Omittable):
         else:
             return self.owner_key
 
-    def active(self):
+    def active_public(self):
         '''Get the public active key
 
         Returns:

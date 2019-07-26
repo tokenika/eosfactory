@@ -2,6 +2,7 @@
 import json
 
 import eosfactory.core.logger as logger
+import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 import eosfactory.core.eosjs.base as base_commands
 
@@ -122,15 +123,21 @@ class GetAccounts(base_commands.Command):
         names (list): The retrieved list of accounts.
     '''
     def __init__(self, key, is_verbose=True):
-        base_commands.Command.__init__(self, base_commands.config_rpc(),
-            '''
-        (async (public_key) => {
-            result = await rpc.history_get_key_accounts(public_key)
-            console.log(JSON.stringify(result))
+        
+        try:
+            base_commands.Command.__init__(self, base_commands.config_rpc(),
+                '''
+            (async (public_key) => {
+                result = await rpc.history_get_key_accounts(public_key)
+                console.log(JSON.stringify(result))
 
-        })("%s")    
-            ''' % (interface.key_arg(key, is_owner_key=True, is_private_key=False)),
-            is_verbose=is_verbose)
+            })("%s")    
+                ''' % (interface.key_arg(key, is_owner_key=True, is_private_key=False)),
+                is_verbose=is_verbose)
+        except Exception as e:
+            raise errors.Error(
+                "Is History API Plugin enabled on the blockchain node?\n\n" \
+                                                                    + str(e))
 
         self.names = self.json['account_names']
         self.printself()

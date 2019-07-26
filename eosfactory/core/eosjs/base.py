@@ -46,7 +46,7 @@ const api = new Api({ rpc, signatureProvider,
 
 
 class Command():
-    '''A prototype for ``cleos`` command classes.
+    '''A prototype for ``eosjs`` command classes.
     '''
     def __init__(self, header, js, is_verbose=1):
         self.out_msg = None
@@ -59,7 +59,6 @@ class Command():
                             "http://" + config.RELY_URL, setup.nodeos_address(), 
                             setup.is_print_request, setup.is_print_response)
         }
-        # import pdb; pdb.set_trace()
         cl = ["node", "-e"]
         js = header + "\n" + utils.heredoc(js)
 

@@ -609,6 +609,7 @@ def args(clear=False):
         "--plugin eosio::producer_plugin",
         "--plugin eosio::chain_api_plugin",
         "--plugin eosio::http_plugin",
+        # "--plugin eosio::history_api_plugin",
     ]
     if config.nodeos_config_dir():
         args_.extend(["--config-dir", config.nodeos_config_dir()])

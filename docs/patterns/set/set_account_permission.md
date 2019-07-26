@@ -113,7 +113,7 @@ permissions:
 Note that keys have to be sorted in the ``authority`` JSON.
 ```python
 COMMENT("Set two weighted keys:")
-keys = [bob.owner(), carol.owner()]
+keys = [bob.owner_public(), carol.owner_public()]
 keys.sort()
 alice.set_account_permission(Permission.ACTIVE,
     {

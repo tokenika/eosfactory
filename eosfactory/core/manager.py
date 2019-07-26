@@ -66,12 +66,12 @@ def accout_names_2_object_names(sentence, keys=False):
         if keys:
             account = base_commands.GetAccount(
                         name, is_info=False, is_verbose=False)
-            owner_key = account.owner()
+            owner_key = account.owner_public()
             if owner_key:
                 sentence = sentence.replace(
                     owner_key, account_object_name + "@owner")
 
-            active_key = account.active()
+            active_key = account.active_public()
             if active_key:
                 sentence = sentence.replace(
                     active_key, account_object_name + "@active")        
