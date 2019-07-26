@@ -120,68 +120,6 @@ class Command():
         return ""
 
 
-def get_last_block():
-    info = GetInfo(is_verbose=0)
-    return GetBlock(info.head_block)
-
-
-def get_block_trx_data(block_num):
-    block = GetBlock(block_num, is_verbose=0)
-    trxs = block.json["transactions"]
-    if not len(trxs):
-        logger.OUT("No transactions in block {}.".format(block_num))
-    else:
-        for trx in trxs:
-            logger.OUT(trx["trx"]["transaction"]["actions"][0]["data"])
-
-
-def get_block_trx_count(block_num):
-    block = GetBlock(block_num, is_verbose=0)
-    trxs = block.json["transactions"]
-    if not len(trxs):
-        logger.OUT("No transactions in block {}.".format(block_num))    
-    return len(trxs)
-
-
-class GetBlock(Command):
-    '''Retrieve a full block from the blockchain.
-
-    - **parameters**::
-    
-        block_number: The number of the block to retrieve.
-        block_id: The ID of the block to retrieve, if set, defaults to "".
-        is_verbose: If `0`, do not print unless on error; if `-1`, 
-            do not print. Default is `1`.
-            
-    - **attributes**::
-
-        json: The json representation of the object.
-    '''
-    def __init__(self, block_number, block_id=None, is_verbose=1):
-        if block_id:
-            Command.__init__(self, config_rpc(),
-                '''
-        (async (block_num_or_id) => {
-            result = await rpc.get_block(block_num_or_id)
-            console.log(JSON.stringify(result))
-
-        })("%s")
-                ''' % (block_id), is_verbose)
-        else:
-            Command.__init__(self, config_rpc(),
-                '''
-        (async (block_num_or_id) => {
-            result = await rpc.get_block(block_num_or_id)
-            console.log(JSON.stringify(result))
-
-        })(%d)
-                ''' % (block_number), is_verbose)                        
-
-        self.block_num = self.json["block_num"]
-        self.ref_block_prefix = self.json["ref_block_prefix"]
-        self.timestamp = self.json["timestamp"]
-
-
 class GetAccount(interface.Account, Command):
     '''Retrieve an account from the blockchain.
 
@@ -209,29 +147,6 @@ class GetAccount(interface.Account, Command):
             ['keys'][0]['key']
         self.active_key = self.json['permissions'][1]['required_auth'] \
             ['keys'][0]['key']                 
-
-
-class GetAccounts(Command):
-    '''Retrieve accounts associated with a public key.
-
-    - **parameters**::
-
-        key: A key object or a key string 
-
-    - **attributes**::
-
-        json: The json representation of the object.
-    '''
-    def __init__(self, key, is_verbose=True):
-        Command.__init__(self, config_rpc(),
-            '''
-        (async (public_key) => {
-            result = await rpc.history_get_key_accounts(public_key)
-            console.log(JSON.stringify(result))
-
-        })("%s")    
-            ''' % (interface.key_arg(key, is_owner_key=True, is_private_key=False)),
-            is_verbose=is_verbose)
 
 
 class GetTransaction(Command):

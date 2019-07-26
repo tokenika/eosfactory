@@ -67,7 +67,7 @@ class GetActions(base_commands.Command):
             args.append("--pretty")
         if console:
             args.append("--console")
-        base_commands.Command.__init__(self, args, "get", "actions", is_verbose)
+        # base_commands.Command.__init__(self, args, "get", "actions", is_verbose)
 
         self.printself()
 
@@ -75,38 +75,40 @@ class GetActions(base_commands.Command):
 class GetBlock(base_commands.Command):
     '''Retrieve a full block from the blockchain.
 
-    :param int block_number: The number of the block to retrieve.
-    :param str block_id: The ID of the block to retrieve, if set, defaults to "".   
-    :param bool is_verbose: If ``False``, print a message. Default is ``True``.
+    Args:
+        block_number (int): The number of the block to retrieve.
+        lock_id (str): The ID of the block to retrieve, if set, defaults to "".   
+        is_verbose (bool): If ``False``, print a message. Default is ``True``.
         
-    :return: A :class:`eosfactory.core.cleos.base.Command` object.
+    Attributes:
+        json (json): The json representation of the block.
+        block_num (int): The block number.
+        timestamp (str): The block timestamp.
     '''
-    def __init__(self, block_number, block_id=None, is_verbose=True):
-        base_commands.Command.__init__(
-                        self, [block_id] if block_id else [str(block_number)], 
-                        "get", "block", is_verbose)
+    def __init__(self, block_number, block_id=None, is_verbose=1):
+        if block_id:
+            base_commands.Command.__init__(self, base_commands.config_rpc(),
+                '''
+        (async (block_num_or_id) => {
+            result = await rpc.get_block(block_num_or_id)
+            console.log(JSON.stringify(result))
+
+        })("%s")
+                ''' % (block_id), is_verbose)
+        else:
+            base_commands.Command.__init__(self, base_commands.config_rpc(),
+                '''
+        (async (block_num_or_id) => {
+            result = await rpc.get_block(block_num_or_id)
+            console.log(JSON.stringify(result))
+
+        })(%d)
+                ''' % (block_number), is_verbose)                        
+
+        self.block_num = self.json["block_num"]
+        self.timestamp = self.json["timestamp"]
+
         self.printself()
-
-    def __str__(self):
-        return json.dumps(self.json, sort_keys=True, indent=4)
-
-
-def get_block_trx_data(block_num):
-    block = GetBlock(block_num, is_verbose=False)
-    trxs = block.json["transactions"]
-    if not len(trxs):
-        logger.OUT("No transactions in block {}.".format(block_num))
-    else:
-        for trx in trxs:
-            logger.OUT(trx["trx"]["transaction"]["actions"][0]["data"])
-
-
-def get_block_trx_count(block_num):
-    block = GetBlock(block_num, is_verbose=False)
-    trxs = block.json["transactions"]
-    if not len(trxs):
-        logger.OUT("No transactions in block {}.".format(block_num))    
-    return len(trxs)
 
 
 class GetAccounts(base_commands.Command):
@@ -120,9 +122,15 @@ class GetAccounts(base_commands.Command):
         names (list): The retrieved list of accounts.
     '''
     def __init__(self, key, is_verbose=True):
-        public_key = interface.key_arg(key, is_owner_key=True, is_private_key=False)
-        base_commands.Command.__init__(
-            self, [public_key], "get", "accounts", is_verbose)
+        base_commands.Command.__init__(self, base_commands.config_rpc(),
+            '''
+        (async (public_key) => {
+            result = await rpc.history_get_key_accounts(public_key)
+            console.log(JSON.stringify(result))
+
+        })("%s")    
+            ''' % (interface.key_arg(key, is_owner_key=True, is_private_key=False)),
+            is_verbose=is_verbose)
 
         self.names = self.json['account_names']
         self.printself()
@@ -156,7 +164,7 @@ class GetCode(base_commands.Command):
         if wasm:
             args.extend(["--wasm"])
 
-        base_commands.Command.__init__(self, args, "get", "code", is_verbose)
+        # base_commands.Command.__init__(self, args, "get", "code", is_verbose)
 
         msg = str(self.out_msg)
         self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
@@ -232,6 +240,6 @@ class GetTable(base_commands.Command):
         if show_payer:
             args.append("--show-payer")
 
-        base_commands.Command.__init__(self, args, "get", "table", is_verbose)
+        # base_commands.Command.__init__(self, args, "get", "table", is_verbose)
 
         self.printself()

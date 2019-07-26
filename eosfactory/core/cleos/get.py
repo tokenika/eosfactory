@@ -72,38 +72,28 @@ class GetActions(base_commands.Command):
 class GetBlock(base_commands.Command):
     '''Retrieve a full block from the blockchain.
 
-    :param int block_number: The number of the block to retrieve.
-    :param str block_id: The ID of the block to retrieve, if set, defaults to "".   
-    :param bool is_verbose: If ``False``, print a message. Default is ``True``.
+    Args:
+        block_number (int): The number of the block to retrieve.
+        lock_id (str): The ID of the block to retrieve, if set, defaults to "".   
+        is_verbose (bool): If ``False``, print a message. Default is ``True``.
         
-    :return: A :class:`eosfactory.core.cleos.base.Command` object.
+    Attributes:
+        json (json): The json representation of the block.
+        block_num (int): The block number.
+        timestamp (str): The block timestamp.
     '''
     def __init__(self, block_number, block_id=None, is_verbose=True):
         base_commands.Command.__init__(
                         self, [block_id] if block_id else [str(block_number)], 
                         "get", "block", is_verbose)
+
+        self.block_num = self.json["block_num"]
+        self.timestamp = self.json["timestamp"]
+
         self.printself()
 
     def __str__(self):
         return json.dumps(self.json, sort_keys=True, indent=4)
-
-
-def get_block_trx_data(block_num):
-    block = GetBlock(block_num, is_verbose=False)
-    trxs = block.json["transactions"]
-    if not len(trxs):
-        logger.OUT("No transactions in block {}.".format(block_num))
-    else:
-        for trx in trxs:
-            logger.OUT(trx["trx"]["transaction"]["actions"][0]["data"])
-
-
-def get_block_trx_count(block_num):
-    block = GetBlock(block_num, is_verbose=False)
-    trxs = block.json["transactions"]
-    if not len(trxs):
-        logger.OUT("No transactions in block {}.".format(block_num))    
-    return len(trxs)
 
 
 class GetAccounts(base_commands.Command):
