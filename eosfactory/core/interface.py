@@ -49,7 +49,7 @@ class Account(Omittable):
     Attributes:
         name (str): EOSIO contract name
     '''
-    def __init__(self, name, owner_key=None, active_key=None):
+    def __init__(self, name=None, owner_key=None, active_key=None):
         self.name = name
         self.owner_key = owner_key
         self.active_key = active_key if active_key else owner_key

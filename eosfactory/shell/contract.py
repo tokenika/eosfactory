@@ -7,7 +7,7 @@ import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.config as config
 import eosfactory.core.teos as teos
-base_commands = importlib.import_module(".base", setup.light_full)
+import eosfactory.core.common as common
 set_commands = importlib.import_module(".set", setup.light_full)
 import eosfactory.shell.account
 
@@ -62,7 +62,7 @@ class ContractBuilder():
     def is_built(self):
         '''Check whether both the ABI and WASM files exist.
         '''
-        return base_commands.contract_is_built(
+        return common.contract_is_built(
             self.contract_dir, self.wasm_file, self.abi_file)
 
     def path(self):

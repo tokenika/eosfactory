@@ -5,6 +5,7 @@ import eosfactory.core.errors as errors
 import eosfactory.core.manager as manager
 import eosfactory.core.interface as interface
 import eosfactory.core.eosjs.base as base_commands
+import eosfactory.core.common as common
 
 
 class SetContract(base_commands.Command):
@@ -30,7 +31,7 @@ class SetContract(base_commands.Command):
             self, account, contract_dir, 
             wasm_file=None, abi_file=None, 
             clear=False,
-            permission=None, expiration_sec=None, 
+            permission=None, expiration_sec=30, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
@@ -38,58 +39,122 @@ class SetContract(base_commands.Command):
             is_verbose=True,
             json=False):
 
-        files = base_commands.contract_is_built(contract_dir, wasm_file, abi_file)
+        files = common.contract_is_built(contract_dir, wasm_file, abi_file)
         if not files:
             raise errors.Error("""
             Cannot determine the contract directory. The clue is 
             {}.
             """.format(contract_dir))
 
-        contract_path_absolute = files[0]
+        self.contract_path_absolute = files[0]
         wasm_file = files[1]
         abi_file = files[2]            
-        account_name = interface.account_arg(account)
+        self.account_name = interface.account_arg(account)
 
-        args = [account_name, contract_path_absolute]
-        if os.path.isabs(wasm_file):
-            wasm_file = os.path.relpath(wasm_file, contract_path_absolute)
-        if os.path.isabs(abi_file):
-            abi_file = os.path.relpath(abi_file, contract_path_absolute)
-        
-        if clear:
-            args.append("--clear")
-        if json:
-            args.append("--json")
         if not permission is None:
             p = interface.permission_arg(permission)
             for perm in p:
-                args.extend(["--permission", perm])
+                pass
+                # args.extend(["--permission", perm])
 
-        if expiration_sec:
-            args.extend(["--expiration", str(expiration_sec)])
-        if skip_sign:
-            args.append("--skip-sign")
-        if dont_broadcast:
-            args.append("--dont-broadcast")
-        if force_unique:
-            args.append("--force-unique")
-        if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        if  max_net_usage:
-            args.extend(["--max-net-usage", str(max_net_usage)])
-        if  not ref_block is None:
-            args.extend(["--ref-block", ref_block]) 
-        if delay_sec:
-            args.extend(["--delay-sec", str(delay_sec)])
-        if wasm_file:
-            args.append(wasm_file)
-        if abi_file:
-            args.append(abi_file)
+        # if clear:
+        #     args.append("--clear")
+        # if force_unique:
+        #     args.append("--force-unique")
+        # if max_cpu_usage:
+        #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        # if  max_net_usage:
+        #     args.extend(["--max-net-usage", str(max_net_usage)])
+        # if  ref_block:
+        #     args.extend(["--ref-block", ref_block])
 
-        base_commands.Command.__init__(self, args, "set", "contract", is_verbose)
-        self.contract_path_absolute = files[0]
-        self.account_name = interface.account_arg(account)
+        base_commands.Command.__init__(
+            self, base_commands.config_rpc(),
+            '''
+    const fs = require(`fs`)
+    const path = require(`path`)
+    const { Serialize } = require(`eosjs`)
+
+    const account_name = '%(account_name)s'
+    const wasm_file = '%(wasm_file)s'
+    const abi_file = '%(abi_file)s'
+    const expiration_sec = %(expiration_sec)d
+
+    const wasm = fs.readFileSync(wasm_file).toString(`hex`)
+
+    const buffer = new Serialize.SerialBuffer({
+        textEncoder: api.textEncoder,
+        textDecoder: api.textDecoder,
+    })
+
+    let abi = JSON.parse(fs.readFileSync(abi_file, `utf8`))
+    const abiDefinition = api.abiTypes.get(`abi_def`)
+
+    // need to make sure abi has every field in abiDefinition.fields
+    // otherwise serialize throws
+    abi = abiDefinition.fields.reduce(
+        (acc, { name: fieldName }) =>
+        Object.assign(acc, { [fieldName]: acc[fieldName] || [] }),
+        abi
+    )
+
+    abiDefinition.serialize(buffer, abi)
+
+    //Send transaction with both setcode and setabi actions
+    (async () => {
+        const result = await api.transact(
+            {
+                actions: [
+                    {
+                        account: 'eosio',
+                        name: 'setcode',
+                        authorization: [
+                            {
+                            actor: account_name,
+                            permission: 'active',
+                            },
+                        ],
+                        data: {
+                            account: account_name,
+                            vmtype: 0,
+                            vmversion: 0,
+                            code: wasm,
+                        },
+                    },
+                    {
+                        account: 'eosio',
+                        name: 'setabi',
+                        authorization: [
+                            {
+                            actor: account_name,
+                            permission: 'active',
+                            },
+                        ],
+                        data: {
+                            account: account_name,
+                            abi: Buffer.from(buffer.asUint8Array()).toString(`hex`),
+                        },
+                    },
+                ],
+            },
+            {
+                blocksBehind: 3,
+                expireSeconds: expiration_sec,
+            }
+        )
+        console.log(JSON.stringify(result))
+    })()
+
+            ''' % {
+                "wasm_file": wasm_file,
+                "abi_file": abi_file,
+                "account_name": self.account_name,
+                "expiration_sec": expiration_sec,
+            }, is_verbose)
+        
         self.printself()
+
+
 
 class SetAccountPermission(base_commands.Command):
     '''Set parameters dealing with account permissions.

@@ -35,7 +35,8 @@ const fetch = require('node-fetch');
 const rpc = new JsonRpc('%(endpoint)s', { fetch });
 const { TextEncoder, TextDecoder } = require('util');
 const signatureProvider = new JsSignatureProvider(%(keys)s);
-const api = new Api({ rpc, signatureProvider, 
+const api = new Api({ 
+    rpc, signatureProvider, 
     textDecoder: new TextDecoder, textEncoder: new TextEncoder });
     ''')
 
@@ -619,10 +620,11 @@ class CreateAccount(interface.Account, Command):
                 {
                     blocksBehind: 3,
                     expireSeconds: 30,
-                });
+                }
+            );
 
-        console.log(JSON.stringify(result))
-        })()
+            console.log(JSON.stringify(result))
+        })();
             ''' % (
                 creator, name, owner_key_public, active_key_public
                 ), is_verbose)
@@ -638,134 +640,6 @@ def account_name():
         name += letters[random.randint(0, 30)]
 
     return name
-
-def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
-    contract_path_absolute = config.contract_dir(contract_dir)
-    if not contract_path_absolute:
-        return []
-
-    if not wasm_file:
-        wasm_file = config.wasm_file(contract_dir)
-        if not wasm_file:
-            return []
-    else:
-        if not os.path.isfile(
-                os.path.join(contract_path_absolute, wasm_file)):
-            return []
-
-    if not abi_file:
-        abi_file = config.abi_file(contract_dir)
-        if not abi_file:
-            return []
-    else:
-        if not os.path.isfile(
-                os.path.join(contract_path_absolute, abi_file)):
-            return []
-
-    return [contract_path_absolute, wasm_file, abi_file]
-
-class SetContract(Command):
-    '''Create or update the contract on an account.
-
-    - **parameters**:: 
-
-        account: The account to publish a contract for. May be an object 
-            having the  May be an object having the attribute `name`, like 
-            `CreateAccount`, or a string.
-        contract_dir: The path containing the .wast and .abi. 
-        wasm_file: The file containing the contract WASM relative 
-            to contract_dir.
-        abi_file: The ABI for the contract relative to contract-dir.
-
-        permission: An account and permission level to authorize, as in 
-            'account@permission'. May be a `CreateAccount` or `Account` object
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        force_unique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
-
-    - **attributes**::
-
-        json: The json representation of the object.
-    '''
-    def __init__(
-            self, account, contract_dir, 
-            wasm_file=None, abi_file=None, 
-            permission=None, expiration_sec=None, 
-            skip_sign=0, dont_broadcast=0, force_unique=0,
-            max_cpu_usage=0, max_net_usage=0,
-            ref_block=None,
-            is_verbose=True,
-            json=False
-            ):
-
-        files = contract_is_built(contract_dir, wasm_file, abi_file)
-        if not files:
-            raise errors.Error("""
-            Cannot determine the contract directory. The clue is 
-            {}.
-            """.format(contract_dir))
-            return
-
-        self.contract_path_absolute = files[0]
-        wasm_file = os.path.join(files[0], files[1])
-        abi_file =  os.path.join(files[0], files[2])
-
-        self.account_name = interface.account_arg(account)
-
-        # if force_unique:
-        #     args.append("--force-unique")
-        # if max_cpu_usage:
-        #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        # if  max_net_usage:
-        #     args.extend(["--max-net-usage", str(max_net_usage)])
-        # if  ref_block:
-        #     args.extend(["--ref-block", ref_block])
-
-        authorization = [self.account_name + "@active"]
-        if permission:
-            authorization.extend(permission_arg(permissions))
-
-        Command.__init__(self, config_rpc(),
-            '''
-    const fs = require("fs");
-    const abi = JSON.parse(fs.readFileSync("%s"));
-
-    function api() {
-        eos.setabi("%s", abi, options).then(print_result)
-    }            ''' % (
-                abi_file,               
-                self.account_name
-                ), is_verbose) 
-
-        Command.__init__(self, config_rpc(),
-            '''
-    const fs = require("fs")
-    const wasm = fs.readFileSync("%s")
-
-    function api() {
-        eos.setcode("%s", 0, 0, wasm).then(print_result)
-    }
-            ''' % (
-                wasm_file,               
-                self.account_name
-                ), is_verbose)
-
-        self.printself()
-
-    def get_transaction(self):
-        return GetTransaction(self.transaction)
 
 
 class PushAction(Command):

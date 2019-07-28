@@ -4,6 +4,7 @@ import os
 import eosfactory.core.errors as errors
 import eosfactory.core.manager as manager
 import eosfactory.core.interface as interface
+import eosfactory.core.common as common
 import eosfactory.core.cleos.base as base_commands
 
 
@@ -38,7 +39,7 @@ class SetContract(base_commands.Command):
             is_verbose=True,
             json=False):
 
-        files = base_commands.contract_is_built(contract_dir, wasm_file, abi_file)
+        files = common.contract_is_built(contract_dir, wasm_file, abi_file)
         if not files:
             raise errors.Error("""
             Cannot determine the contract directory. The clue is 
@@ -87,9 +88,11 @@ class SetContract(base_commands.Command):
             args.append(abi_file)
 
         base_commands.Command.__init__(self, args, "set", "contract", is_verbose)
+        
         self.contract_path_absolute = files[0]
         self.account_name = interface.account_arg(account)
         self.printself()
+
 
 class SetAccountPermission(base_commands.Command):
     '''Set parameters dealing with account permissions.

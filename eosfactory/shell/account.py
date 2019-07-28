@@ -33,7 +33,7 @@ class MasterAccount(account.Eosio):
         pass
 
 
-class Account():
+class Account(interface.Account):
     '''Methods to be ascribed to account objects.
     '''
     @classmethod
@@ -913,7 +913,8 @@ def create_account(
     if not is_wallet_defined(logger):
         return None
 
-    if is_in_globals(account_object_name, globals):
+    if is_in_globals(account_object_name, globals) \
+                                        and globals[account_object_name].name:
         logger.INFO('''
             ######## Account object ``{}`` restored from the blockchain.
             '''.format(account_object_name)) 
