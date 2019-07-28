@@ -51,12 +51,6 @@ class SetContract(base_commands.Command):
         abi_file = files[2]            
         self.account_name = interface.account_arg(account)
 
-        if not permission is None:
-            p = interface.permission_arg(permission)
-            for perm in p:
-                pass
-                # args.extend(["--permission", perm])
-
         # if clear:
         #     args.append("--clear")
         # if force_unique:
@@ -79,6 +73,7 @@ class SetContract(base_commands.Command):
     const wasm_file = '%(wasm_file)s'
     const abi_file = '%(abi_file)s'
     const expiration_sec = %(expiration_sec)d
+    const permissions = JSON.parse(%(permissions)s)
 
     const wasm = fs.readFileSync(wasm_file).toString(`hex`)
 
@@ -108,12 +103,7 @@ class SetContract(base_commands.Command):
                     {
                         account: 'eosio',
                         name: 'setcode',
-                        authorization: [
-                            {
-                            actor: account_name,
-                            permission: 'active',
-                            },
-                        ],
+                        authorization: permissions,
                         data: {
                             account: account_name,
                             vmtype: 0,
@@ -124,12 +114,7 @@ class SetContract(base_commands.Command):
                     {
                         account: 'eosio',
                         name: 'setabi',
-                        authorization: [
-                            {
-                            actor: account_name,
-                            permission: 'active',
-                            },
-                        ],
+                        authorization: permissions,
                         data: {
                             account: account_name,
                             abi: Buffer.from(buffer.asUint8Array()).toString(`hex`),
@@ -150,6 +135,8 @@ class SetContract(base_commands.Command):
                 "abi_file": abi_file,
                 "account_name": self.account_name,
                 "expiration_sec": expiration_sec,
+                "permissions": base_commands.permission_str(
+                                                permission, self.account_name)
             }, is_verbose)
         
         self.printself()

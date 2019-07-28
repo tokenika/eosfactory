@@ -46,6 +46,26 @@ const api = new Api({
         }
 
 
+def permission_str(permission, account, default=None):
+    permissions = []
+    if permission is None and default is None:
+        permissions.append(
+                            {"actor": account, 
+                            "permission": interface.Permission.ACTIVE})
+    else:
+        p = interface.permission_arg(permission)
+        for perm in p:
+            perm = perm.split("@")
+            if len(perm) == 1:
+                perm.append(interface.Permission.ACTIVE)
+                permissions.append(
+                                {"actor": perm[0], "permission": perm[1]})
+    if not default is None:
+        permissions.append(default)
+
+    return str(permissions)
+
+
 class Command():
     '''A prototype for ``eosjs`` command classes.
     '''
@@ -569,10 +589,6 @@ class CreateAccount(interface.Account, Command):
         # if  ref_block:
         #     args.extend(["--ref-block", ref_block])
 
-        authorization = []
-        if permission:
-            authorization = permission_arg(permission)
-
         Command.__init__(self, config_api(),
                 '''
         (async () => {
@@ -589,13 +605,13 @@ class CreateAccount(interface.Account, Command):
                                 }
                             ],
                             data: {
-                                creator: '%s',
-                                name: '%s',
+                                creator: '%(creator)s',
+                                name: '%(name)s',
                                 owner: {
                                     threshold: 1,
                                     keys: [
                                         {
-                                            key: '%s',
+                                            key: '%(owner_key_public)s',
                                             weight: 1
                                         }
                                     ],
@@ -606,7 +622,7 @@ class CreateAccount(interface.Account, Command):
                                     threshold: 1,
                                     keys: [
                                         {
-                                            key: '%s',
+                                            key: '%(active_key_public)s',
                                             weight: 1
                                         }
                                     ],
@@ -625,9 +641,12 @@ class CreateAccount(interface.Account, Command):
 
             console.log(JSON.stringify(result))
         })();
-            ''' % (
-                creator, name, owner_key_public, active_key_public
-                ), is_verbose)
+            ''' % {
+                "creator": creator, 
+                "name": name, 
+                "owner_key_public": owner_key_public, 
+                "active_key_public": active_key_public,
+            }, is_verbose)
 
     def __str__(self):
         return self.name
