@@ -12,7 +12,6 @@ import eosfactory.core.utils as utils
 import eosfactory.core.setup as setup
 
 # The first key in any eosf wallet: identification of the system.
-WALLET_MANAGER_ID = "5JfjYNzKTDoU35RSn6BpXei8Uqs1B6EGNwkEFHaN8SPHwhjUzcX"
 
 _WALLET_FILE_EXT = ".eosfwallet"
 _TIMEOUT = 3000
@@ -86,12 +85,6 @@ class Wallet(interface.Wallet):
             key = Fernet.generate_key()
             cipher_suite = Fernet(key)
             self.password = key.decode("utf-8")
-
-            try:
-                with open(_file, "w+")  as out:
-                    out.write(encrypt(WALLET_MANAGER_ID, cipher_suite) + "\n")
-            except Exception as e:
-                raise errors.Error(str(e))
             
             self.is_created = True
 

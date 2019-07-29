@@ -26,6 +26,7 @@ const rpc = new JsonRpc('%(endpoint)s', { fetch });
     setup.set_local_nodeos_address_if_none()
     return code
 
+SIG_PROVIDER = "const signatureProvider = new JsSignatureProvider([/*private keys*/]);"
 
 def config_api():
     code = utils.heredoc('''
@@ -34,17 +35,16 @@ const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig');
 const fetch = require('node-fetch');
 const rpc = new JsonRpc('%(endpoint)s', { fetch });
 const { TextEncoder, TextDecoder } = require('util');
-const signatureProvider = new JsSignatureProvider(%(keys)s);
+%(signatureProvider)s
 const api = new Api({ 
     rpc, signatureProvider, 
     textDecoder: new TextDecoder, textEncoder: new TextEncoder });
     ''')
 
     return code % {
-        "keys": json.dumps(wm.private_keys(is_verbose=False), indent=4),
+        "signatureProvider": SIG_PROVIDER,
         "endpoint": "%(endpoint)s"
         }
-
 
 def permission_str(permission, account, default=None):
     permissions = []
@@ -75,6 +75,7 @@ class Command():
         self.json = None
         self.is_verbose = is_verbose
 
+
         setup.set_local_nodeos_address_if_none()
         header = header % {'endpoint': utils.relay(
                             "http://" + config.RELY_URL, setup.nodeos_address(), 
@@ -83,12 +84,17 @@ class Command():
         cl = ["node", "-e"]
         js = header + "\n" + utils.heredoc(js)
 
-        cl.append(js)
-
         if setup.is_save_command_lines:
             setup.add_to__command_line_file("\n" + js + "\n") 
         if setup.is_print_command_lines:
             print("\n" + js + "\n")
+        
+        js = js.replace(
+            SIG_PROVIDER, 
+            "const signatureProvider = new JsSignatureProvider([\n{}\n]);".format(
+                json.dumps(wm.private_keys(is_verbose=False), indent=4)))
+
+        cl.append(js)
 
         while True:
             process = subprocess.run(
@@ -475,13 +481,16 @@ class GetTable(Command):
 class CreateKey(interface.Key, Command):
     '''Create a new keypair and print the public and private keys.
 
-    - **parameters**::
+    Args:
+        key_private (str): If set, a private key to set, otherwise random.
+        key_public (str): If set, a public key to set, otherwise random.
+        r1: Generate a key using the R1 curve (iPhone), instead of the 
+            K1 curve (Bitcoin)
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-        key_name: Key name.
-
-    - **attributes**::
-
-        json: The json representation of the object.
+    Attributes:
+        key_private (str): The private key set.
+        key_public (str): The public key set.
     '''
     def __init__(
             self, key_public=None, key_private=None, 
@@ -495,9 +504,9 @@ class CreateKey(interface.Key, Command):
             self.out_msg = "Private key: {0}\nPublic key: {1}\n" \
                 .format(self.key_private, self.key_public)
         else:
-            args = ["--to-console"]
             if r1:
-                args.append("--r1")
+                raise errors.Error(
+                            "``eosjs`` does not support using the R1 curve?")
 
             Command.__init__(self, "",
                 '''
@@ -516,6 +525,8 @@ class CreateKey(interface.Key, Command):
                 is_verbose)
         self.key_private = self.json["key_private"]
         self.key_public = self.json["key_public"]
+
+        self.printself()
 
 
 class RestoreAccount(GetAccount):
