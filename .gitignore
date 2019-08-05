@@ -60,3 +60,5 @@ docs/comments/EOSFactoryLT.md
 tenp.md
 report.xml
 unit_tests/lt.py
+*.lock
+get_scatter.js
