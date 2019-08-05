@@ -65,7 +65,7 @@ def accout_names_2_object_names(sentence, keys=False):
         
         if keys:
             account = base_commands.GetAccount(
-                        name, is_info=False, is_verbose=False)
+                        name, json=True, is_verbose=False)
             owner_key = account.owner_public()
             if owner_key:
                 sentence = sentence.replace(
@@ -119,20 +119,21 @@ def node_start(clear=False, nodeos_stdout=None):
     WAIT_TIME = 0.6
     try_count = 3
 
-    while(True):
+    while True:
         try:
             teos.node_start(clear, nodeos_stdout)
             teos.node_probe()
-            return
         except Exception as e:
             if not (clear and teos.ERR_MSG_IS_STUCK in str(e)):
                 try_count = try_count - 1
                 if try_count <= 0:
                     break
-            teos.node_stop(verbose=False)
+            else:
+                teos.node_stop(verbose=False)
+                time.sleep(WAIT_TIME)
+        else:
+            return
 
-            time.sleep(WAIT_TIME)
-                    
     teos.on_nodeos_error(clear)
 
 
@@ -184,7 +185,7 @@ def reset(nodeos_stdout=None):
     '''
     import eosfactory.shell.account as account
     account.reboot()
-
+    
     if not setup.set_local_nodeos_address_if_none():
         logger.INFO('''
         No local nodeos is set: {}

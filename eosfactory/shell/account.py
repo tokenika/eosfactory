@@ -24,12 +24,22 @@ import eosfactory.shell.wallet as wallet
 
 wallet_globals = None
 wallet_singleton = None
+IS_MASTER_ACCOUNT = "is_master_account"
+IS_ACCOUNT = "is_account"
 
 
-class MasterAccount(account.Eosio):
+def set_is_master_account(account_object):
+    setattr(account_object, IS_MASTER_ACCOUNT, True)
+
+
+def set_is_account(account_object):
+    setattr(account_object, IS_ACCOUNT, True)
+
+
+class MasterAccount():
     '''Dummy class for declaring master account objects.
     '''
-    def __init__(self, account_object_name=None):
+    def __init__(self):
         pass
 
 
@@ -46,13 +56,21 @@ class Account(interface.Account):
         if not isinstance(account, cls): 
             account.__class__.__bases__ += (cls,)
 
-        get_account = base_commands.GetAccount(account, is_info=False, is_verbose=0)
+        get_account = base_commands.GetAccount(account, json=True, is_verbose=0)
 
         logger.TRACE('''
         * Cross-checked: account object ``{}`` mapped to an existing 
             account ``{}``.
         '''.format(account_object_name, account.name), translate=False)
         return put_account_to_wallet_and_on_stack(account_object_name, account)
+
+
+    def stop_if_account_is_not_created(self):
+        if not hasattr(self, IS_ACCOUNT):
+            raise errors.Error('''
+            The Account-class object is not set.
+            Use 'create_account' factory function to set it.
+            ''')
 
     def actions(self, pos=-1, offset=1, 
         json=True, full=False, pretty=False, console=False):
@@ -86,7 +104,7 @@ class Account(interface.Account):
             abi (str): If set, the name of the file to save the contract ABI to.
             wasm (bool): Save contract as wasm.
         '''
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         result = get_commands.GetCode(self, is_verbose=False)
         logger.INFO('''
         * code()
@@ -99,7 +117,7 @@ class Account(interface.Account):
         Return:
             True if the retrieved hash code of the contract code is not null.    
         '''
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         get_code = get_commands.GetCode(self.name, is_verbose=False)
         if get_code.code_hash == \
         "0000000000000000000000000000000000000000000000000000000000000000":
@@ -133,7 +151,7 @@ class Account(interface.Account):
         See definitions of the remaining parameters: \
         :func:`.cleos.base.common_parameters`.
         '''
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         result = set_commands.SetContract(
                     self, contract_dir, 
                     wasm_file, abi_file,
@@ -208,7 +226,7 @@ class Account(interface.Account):
         See definitions of the remaining parameters: \
         :func:`.cleos.base.common_parameters`.
         '''
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         logger.TRACE('''
             * Set account permission.
             ''')
@@ -256,7 +274,7 @@ class Account(interface.Account):
         See definitions of the remaining parameters: \
         :func:`.cleos.base.common_parameters`.
         '''
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         logger.TRACE('''
         * Set action permission.
         ''')
@@ -308,7 +326,7 @@ class Account(interface.Account):
             data (str): *["processed"]["action_traces"][0]["act"]["data"]* \
                 component of EOSIO cleos responce.
         '''
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         data = manager.data_json(data)
         if not permission:
             permission = self
@@ -347,7 +365,7 @@ class Account(interface.Account):
             ):
         ''' Implement the `push action` command without broadcasting. 
         '''
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         self.push_action(
             action, data,
             permission, expiration_sec, 
@@ -392,7 +410,7 @@ class Account(interface.Account):
         Returns:
             :class:`.cleos.set.SetTable` object
         '''
-        stop_if_account_is_not_set(self)            
+        self.stop_if_account_is_not_created()            
         logger.INFO('''
         * Table ``{}`` for ``{}``
         '''.format(table_name, scope))
@@ -421,7 +439,7 @@ class Account(interface.Account):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None):
 
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         if manager.is_local_testnet():
             return
 
@@ -455,7 +473,7 @@ class Account(interface.Account):
             ref_block=None,
             is_verbose=1):
 
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         if manager.is_local_testnet():
             return
 
@@ -481,7 +499,7 @@ class Account(interface.Account):
             result.stake_net_quantity, result.stake_cpu_quantity))
 
     def info(self):
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         msg = manager.accout_names_2_object_names(
             "Account object name: {}\n{}".format(
             self.account_object_name,
@@ -503,7 +521,7 @@ class Account(interface.Account):
                 rv = "n/a"
             return rv
 
-        json = base_commands.GetAccount(self, is_info=False, is_verbose=0).json
+        json = base_commands.GetAccount(self, json=True, is_verbose=0).json
         json["account_object_name"] = self.account_object_name
 
         output = ""
@@ -518,11 +536,11 @@ class Account(interface.Account):
 
 
     def __str__(self):
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         return self.name
 
     def __repr__(self):
-        stop_if_account_is_not_set(self)
+        self.stop_if_account_is_not_created()
         return ""
 
 
@@ -601,7 +619,7 @@ def create_master_account(
 
     Args:
         account_object_name (str): The name of the account object returned.
-        account_name (str or .core.testnet.Testnet): The name of an valid EOSIO
+        account_name (str or .core.testnet.Testnet): A valid EOSIO
             account. Must be set if the testnode is not local.
         owner_key (str or .core.interface.Key): The owner public key. Must 
             be set if the testnode is not local.
@@ -644,6 +662,8 @@ def create_master_account(
         account_object = account.Eosio(account_object_name)
         put_account_to_wallet_and_on_stack(
             account_object_name, account_object, logger)
+
+        set_is_master_account(account_object)
         return account_object
 
     '''
@@ -692,6 +712,9 @@ def create_master_account(
                 logger.TRACE('''
                     * The account object is created.
                     ''')
+
+                set_is_master_account(account_object)
+                set_is_account(account_object)
 
                 if account_object_name:
                     if Account.add_methods_and_finalize(
@@ -747,8 +770,7 @@ def create_master_account(
             active_key = active_key_new
 
 
-def restore_account(
-            account_object_name, testnet_account):
+def restore_account(account_object_name, testnet_account):
     '''Create a restored account object in caller's global namespace.
 
     Start a singleton :class:`.shell.wallet.Wallet` object if there is no one 
@@ -799,6 +821,7 @@ def restore_account(
         is restored.
         '''.format(account_name, testnet_account.url))
     Account.add_methods_and_finalize(account_object_name, account_object)
+    set_is_account(globals[account_object_name])
     return globals[account_object_name]
 
 
@@ -910,6 +933,7 @@ def create_account(
     * a *Wallet* object is defined;
     * the account object name is not in use, already.
     '''
+
     if not is_wallet_defined(logger):
         return None
 
@@ -917,16 +941,13 @@ def create_account(
                                         and globals[account_object_name].name:
         logger.INFO('''
             ######## Account object ``{}`` restored from the blockchain.
-            '''.format(account_object_name)) 
+            '''.format(account_object_name))
         return globals[account_object_name]       
 
     logger.INFO('''
         ######### Create an account object ``{}``.
         '''.format(account_object_name))
 
-    '''
-    Create an account object.
-    '''
     account_object = None
 
     if restore:
@@ -940,6 +961,14 @@ def create_account(
         account_object = account.RestoreAccount(account_name)
         account_object.account_object_name = account_object_name
     else:
+        if not creator \
+            or not (hasattr(creator, IS_ACCOUNT) \
+                                        or hasattr(creator, IS_MASTER_ACCOUNT)):
+                raise errors.Error('''
+                The account creator is not set.
+                Use 'create_master_account' factory function to set it.
+                ''')
+
         if not account_name:
             account_name = base_commands.account_name()
         if owner_key:
@@ -1010,6 +1039,7 @@ def create_account(
         * The account object is created.
         ''')
     Account.add_methods_and_finalize(account_object_name, account_object)
+    set_is_account(account_object)
     return account_object
 
 def reboot():
@@ -1092,7 +1122,7 @@ def print_stats(
 
     jsons = []
     for account in accounts:
-        json = base_commands.GetAccount(account, is_info=False, is_verbose=0).json
+        json = base_commands.GetAccount(account, json=True, is_verbose=0).json
         json["account_object_name"] = account.account_object_name
         jsons.append(json)
 
@@ -1110,15 +1140,9 @@ def print_stats(
     
 
 def is_in_globals(account_object_name, globals):
-    if account_object_name in globals and globals[account_object_name] and\
-            hasattr(globals[account_object_name], "name"):
-        if not isinstance(globals[account_object_name], interface.Account):
-            raise errors.Error('''
-    The name of the account name is to be '{}', but there is already a global 
-    variable of this name. Its type is '{}'. 
-    Change the first argument in the function 'create_account'.
-    '''.format(account_object_name, type(globals[account_object_name])))
-
+    if account_object_name in globals \
+        and (hasattr(globals[account_object_name], IS_ACCOUNT) \
+                or hasattr(globals[account_object_name], IS_MASTER_ACCOUNT)):
         return True
     return False
 
@@ -1158,11 +1182,4 @@ def get_new_account_name(function_name):
 
     return account_object_name
 
-
-def stop_if_account_is_not_set(account):
-    if not hasattr(account, "name"):
-        raise errors.Error('''
-        The account object calling the method of 'Account' class is not set.
-        Use 'create_account' factory function to set it.
-        ''', print_stack=True)
 

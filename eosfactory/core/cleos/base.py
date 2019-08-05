@@ -1,5 +1,5 @@
 import subprocess
-import json
+import json as json_module
 import pathlib
 import random
 import os
@@ -11,6 +11,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.config as config
 import eosfactory.core.setup as setup
 import eosfactory.core.interface as interface
+import eosfactory.core.common as common
 
 
 # http://www.sphinx-doc.org/domains.html#info-field-lists
@@ -84,12 +85,12 @@ class Command():
         errors.validate(self)
             
         try:
-            self.json = json.loads(self.out_msg)
+            self.json = json_module.loads(self.out_msg)
         except:
             pass
 
         try:
-            self.json = json.loads(self.out_msg_details)
+            self.json = json_module.loads(self.out_msg_details)
         except:
             pass        
 
@@ -171,24 +172,26 @@ class GetAccount(interface.Account, Command):
 
     Args:
         account (str or .interface.Account): The account to retrieve.
+        json: If set, prints the json representation of the object.
         is_verbose (bool): If *False* do not print. Default is *True*.
 
     Attributes:
         name (str): The EOSIO name of the account.
         owner_key (str) The *owner* public key.
         active_key (str) The *active* public key.
+        json: The json representation of the object.
     '''
-    def __init__(self, account, is_info=True, is_verbose=True):
+    def __init__(self, account, json=False, is_verbose=True):
         interface.Account.__init__(self, interface.account_arg(account))
         Command.__init__(
             self, 
-            [self.name] if is_info else [self.name, "--json"], 
+            [self.name, "--json"] if json else [self.name], 
             "get", "account", is_verbose)
 
         self.owner_key = None
         self.active_key = None
         try:
-            if not is_info:
+            if json:
                 permissions = self.json["permissions"]
                 for permission in permissions:
                     if permission["required_auth"]["keys"]:
@@ -307,7 +310,7 @@ class WalletList(Command):
         Command.__init__(
             self, [], "wallet", "list", is_verbose)
 
-        self.json = json.loads("{" + self.out_msg.replace("Wallets", \
+        self.json = json_module.loads("{" + self.out_msg.replace("Wallets", \
             '"Wallets"', 1) + "}")
         self.printself()
 
@@ -460,8 +463,8 @@ class CreateKey(interface.Key, Command):
         key_public (str): The public key set.
     '''
     def __init__(
-            self, key_public=None, key_private=None, r1=False, 
-            is_verbose=True):
+                    self, key_public=None, key_private=None, r1=False, 
+                    is_verbose=True):
         interface.Key.__init__(self, key_public, key_private)
 
         if self.key_public or self.key_private:
@@ -475,8 +478,7 @@ class CreateKey(interface.Key, Command):
             if r1:
                 args.append("--r1")
 
-            Command.__init__(
-                self, args, "create", "key", is_verbose)
+            Command.__init__(self, args, "create", "key", is_verbose)
             
             msg = str(self.out_msg)
             first_collon = msg.find(":")
@@ -484,15 +486,16 @@ class CreateKey(interface.Key, Command):
             second_collon = msg.find(":", first_collon + 1)
             self.json["privateKey"] = msg[first_collon + 2 : first_end]
             self.json["publicKey"] = msg[second_collon + 2 : len(msg) - 1]
-            self.printself()
             self.key_private = self.json["privateKey"]
             self.key_public = self.json["publicKey"]
+
+        self.printself(is_verbose)
 
 
 class RestoreAccount(GetAccount):
 
     def __init__(self, account, is_verbose=True):
-        GetAccount.__init__(self, account, is_verbose=False, is_info=False)
+        GetAccount.__init__(self, account, is_verbose=False, json=True)
 
         self.name = self.json["account_name"]
         self.owner_key = ""
@@ -578,7 +581,7 @@ class CreateAccount(interface.Account, Command):
         Command.__init__(
             self, args, "create", "account", is_verbose)
             
-        self.json = GetAccount(self.name, is_verbose=False, is_info=False).json
+        self.json = GetAccount(self.name, is_verbose=False, json=True).json
         self.printself()
             
     def __str__(self):
@@ -660,7 +663,7 @@ class PushAction(Command):
         if not dont_broadcast:
             
             for act in self.json["processed"]["action_traces"]:
-                self.console += gather_console_output(act)
+                self.console += common.gather_console_output(act)
 
             for trace in self.json["processed"]["action_traces"]:
                 if trace["act"]["data"]:
@@ -673,13 +676,4 @@ class PushAction(Command):
                                                         trace["act"]["data"])
         self.printself()
 
-def gather_console_output(act, padding=""):
-    PADDING = "  "
-    console = ""
-    if len(act["console"]) > 0:
-        console += padding + act["act"]["account"] + "@" + act["act"]["name"] + ":\n"
-        console += padding + act["console"].replace("\n", "\n" + padding) + "\n"
 
-    for inline in act["inline_traces"]:
-        console += gather_console_output(inline, padding + PADDING)
-    return (console + "\n").rstrip()

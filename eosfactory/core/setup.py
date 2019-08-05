@@ -1,15 +1,12 @@
-#!/usr/bin/python3
-
 import re
 
 import eosfactory.core.config as config 
 
 wallet_default_name = "default"
-
 is_print_command_lines = False
 is_save_command_lines = False
+is_show_private_keys = False
 command_line_file = "command_lines.txt"
-is_raise_error = False
 is_print_request = False
 is_print_response = False
 is_translating = True

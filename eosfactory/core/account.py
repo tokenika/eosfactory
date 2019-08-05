@@ -15,8 +15,8 @@ class Eosio(interface.Account):
         interface.Account.__init__(self, "eosio",
         base_commands.CreateKey(
             config.eosio_key_public(),
-            config.eosio_key_private()
-            ))
+            config.eosio_key_private(),
+            is_verbose=False))
         self.account_object_name = account_object_name
 
     def info(self):
@@ -56,7 +56,7 @@ class GetAccount(base_commands.GetAccount):
         
         try:
             base_commands.GetAccount.__init__(
-                self, self.name, is_info=False, is_verbose=False)
+                self, self.name, json=True, is_verbose=False)
         except errors.AccountDoesNotExistError:
             return
 
@@ -129,11 +129,13 @@ class SystemNewaccount(sys_commands.SystemNewaccount):
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block=None):
+            ref_block=None,
+            delay_sec=0):
             
         sys_commands.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
             transfer, expiration_sec, skip_sign, dont_broadcast, force_unique,
-            max_cpu_usage, max_net_usage, ref_block, is_verbose=False)
+            max_cpu_usage, max_net_usage, ref_block, delay_sec, 
+            is_verbose=False)
         

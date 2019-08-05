@@ -752,6 +752,7 @@ Error message is
         print(config.node_exe() + " " + " ".join(args_))
          
     args_.insert(0, config.node_exe())
+
     def runInThread():
         proc = subprocess.Popen(
             " ".join(args_), 
@@ -778,35 +779,38 @@ def node_probe():
     count = NUMBER_GET_INFO_CALLS
     block_num = None
 
+    # Wait for nodeos to appear in the process list:
     pid = None
-    for i in range(0, 5):
+    for i in range(0, int(DELAY_TIME / WAIT_TIME)):
         pids = [p.info for p in psutil.process_iter(attrs=["pid", "name"]) \
                                         if NODEOS in p.info["name"]]
         if pids and pids[0]["name"] == NODEOS:
             pid = pids[0]["pid"]
             break
-        time.sleep(0.5)
+        time.sleep(WAIT_TIME)
     if not pid:
         raise errors.Error('''
 Local node has failed to start.
             ''')
+
     proc = psutil.Process(pid)
     cpu_percent_start = proc.cpu_percent(interval=WAIT_TIME)
 
+    # Give nodeos a time to restart:
     print("Starting nodeos, cpu percent: ", end="", flush=True)
     for i in range(0, int(DELAY_TIME / WAIT_TIME)):
         cpu_percent = proc.cpu_percent(interval=WAIT_TIME)
         print("{:.0f}, ".format(cpu_percent), end="", flush=True)
 
+    # Probe the process:
     while True:
-
         if not proc.is_running():
             raise errors.Error('''
 Local node has stopped.
 ''')
         count = count - 1
-
         cpu_percent = proc.cpu_percent(interval=WAIT_TIME)
+
         try:
             get_commands = importlib.import_module(".get", setup.light_full)
             head_block_num = get_commands.GetInfo(is_verbose=0).head_block

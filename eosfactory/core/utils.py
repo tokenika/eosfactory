@@ -235,7 +235,6 @@ def relay(command_url, node_url, print_request, print_response):
 
     def run_in_thread():
         try:
-            # import pdb; pdb.set_trace()
             pair = re.findall(port_pattern, command_url)[0]
             relay = socketserver.TCPServer(
                         (pair[0].replace("http://", ""), int(pair[1])), Relay)

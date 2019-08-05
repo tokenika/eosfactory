@@ -1,12 +1,12 @@
-
 import importlib
 
 import eosfactory.core.setup as setup
+import eosfactory.core.config as config
 import eosfactory.core.logger as logger
-get_commands = importlib.import_module(".get", setup.light_full)
 
 
 def get_block_trx_data(block_num):
+    get_commands = importlib.import_module(".get", setup.light_full)
     block = get_commands.GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]
     if not len(trxs):
@@ -17,6 +17,7 @@ def get_block_trx_data(block_num):
 
 
 def get_block_trx_count(block_num):
+    get_commands = importlib.import_module(".get", setup.light_full)
     block = get_commands.GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]
     if not len(trxs):
@@ -56,3 +57,15 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
             return []
 
     return [contract_path_absolute, wasm_file, abi_file]
+
+
+def gather_console_output(act, padding=""):
+    PADDING = "  "
+    console = ""
+    if len(act["console"]) > 0:
+        console += padding + act["act"]["account"] + "@" + act["act"]["name"] + ":\n"
+        console += padding + act["console"].replace("\n", "\n" + padding) + "\n"
+
+    for inline in act["inline_traces"]:
+        console += gather_console_output(inline, padding + PADDING)
+    return (console + "\n").rstrip()

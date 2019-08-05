@@ -12,3 +12,4 @@ To use the installed packages, the install location has to be added to the PATH 
 
 Error: Cannot find module 'node-fetch'
 `npm install node-fetch --save`
+

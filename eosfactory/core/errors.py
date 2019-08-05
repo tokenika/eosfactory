@@ -57,19 +57,8 @@ class Error(Exception):
             self, message, translate=True, print_stack=False, stack_frame=1):
         if not message:
             message = "no message"
-        import eosfactory.core.setup as setup
-        if setup.is_raise_error or print_stack:
-            sys.tracebacklimit = 10
-            self.message = logger.error(message, translate)
-            Exception.__init__(self, self.message)
-        else:
-            sys.excepthook = excepthook
-            sys.tracebacklimit = 0
-            from inspect import getframeinfo, stack
-            frameinfo = getframeinfo(stack()[stack_frame][0])
-            details = " {} {}".format(frameinfo.filename, frameinfo.lineno) 
-            self.message = logger.error(message, translate, details=details)
-            Exception.__init__(self, self.message)
+        self.message = logger.error(message, translate)
+        Exception.__init__(self, self.message)
 
 
 class IsNodeRunning(Error):

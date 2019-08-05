@@ -286,7 +286,7 @@ class Wallet(base_commands.WalletCreate):
             for name, object_name in account_map.items():
                 try:
                     account_ = base_commands.GetAccount(
-                        name, is_info=False, is_verbose=False)
+                        name, json=True, is_verbose=False)
                     if account_.owner_key in wallet_keys.json and \
                             account_.active_key in wallet_keys.json:
                         new_map[name] = object_name

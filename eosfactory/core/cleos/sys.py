@@ -92,7 +92,7 @@ class SystemNewaccount(interface.Account, base_commands.Command):
             self, args, "system", "newaccount", is_verbose)
             
         self.json = base_commands.GetAccount(
-            self.name, is_verbose=0, is_info=False).json
+            self.name, is_verbose=0, json=True).json
 
         if self.is_verbose:
             print(self.__str__())

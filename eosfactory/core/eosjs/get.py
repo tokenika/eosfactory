@@ -23,7 +23,7 @@ class GetInfo(base_commands.Command):
     def __init__(self, is_verbose=1):
         base_commands.Command.__init__(self, base_commands.config_rpc(), 
             '''
-    (async () => {
+    ;(async () => {
         result = await rpc.get_info()
         console.log(JSON.stringify(result))    
     })()
@@ -33,6 +33,11 @@ class GetInfo(base_commands.Command):
         self.head_block_time = self.json["head_block_time"]
         self.last_irreversible_block_num \
             = self.json["last_irreversible_block_num"]
+
+        self.printself()
+
+    def __str__(self):
+        return json.dumps(self.json, sort_keys=True, indent=4)
 
 
 class GetActions(base_commands.Command):
@@ -56,7 +61,7 @@ class GetActions(base_commands.Command):
     '''
     def __init__(
         self, account, pos=-1, offset=1, 
-        json=False, full=False, pretty=False, console=False, is_verbose=True):
+        json=True, full=False, pretty=False, console=False, is_verbose=True):
 
         args = [interface.account_arg(account), str(pos), str(offset)]
         

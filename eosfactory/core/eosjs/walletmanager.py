@@ -17,6 +17,7 @@ _WALLET_FILE_EXT = ".eosfwallet"
 _TIMEOUT = 3000
 _TIMER = None
 _OPEN_WALLETS = {}
+_KEYS_CIPHERED = []
 
 
 class OpenWallet:
@@ -60,18 +61,22 @@ class Wallet(interface.Wallet):
                         {}
                 '''.format(_file))
             cipher_suite = Fernet(str.encode(password))
-            keys_ciphered = None
+            global _KEYS_CIPHERED
+            _KEYS_CIPHERED = []
             try:
                 with open(wallet_file(name), "r")  as input:
-                    keys_ciphered = [key.rstrip('\n') for key in input]
+                    _KEYS_CIPHERED = [key.rstrip('\n') for key in input]
             except Exception as e:
                 raise errors.Error(str(e))
-            try:
-                decrypt(keys_ciphered[0], cipher_suite)
-            except:
-                raise errors.Error('''
-                Wrong password.
-                ''')
+            
+            if _KEYS_CIPHERED:
+                try:
+                    decrypt(_KEYS_CIPHERED[0], cipher_suite)
+                except:
+                    raise errors.Error('''
+                    Wrong password.
+                    ''')
+            
             if is_verbose:
                 logger.OUT('''
                 Opened existing wallet: {}
@@ -85,6 +90,12 @@ class Wallet(interface.Wallet):
             key = Fernet.generate_key()
             cipher_suite = Fernet(key)
             self.password = key.decode("utf-8")
+
+            try:
+                with open(_file, "w+")  as out:
+                    out.write("")
+            except Exception as e:
+                raise errors.Error(str(e))
             
             self.is_created = True
 
@@ -206,14 +217,12 @@ def unlock(wallet, password=None, is_verbose=True):
     if not is_unlocked(name):
         try:
             _OPEN_WALLETS[name].cipher_suite = Fernet(str.encode(password))
+            global _KEYS_CIPHERED
             with open(wallet_file(name), "r")  as input:
-                keys_ciphered = [key.rstrip('\n') for key in input]
-
-            wallet_manager_id = decrypt(
-                    keys_ciphered[0], _OPEN_WALLETS[name].cipher_suite)
+                _KEYS_CIPHERED = [key.rstrip('\n') for key in input]
         except Exception as e:
             raise errors.Error('''
-                Wrong password.
+                Wrong password.n
                 ''')
         
     if is_verbose:
@@ -224,7 +233,6 @@ def unlock(wallet, password=None, is_verbose=True):
         _TIMER.cancel()
     _TIMER = Timer(_TIMEOUT, lock_all)
     _TIMER.start()
-    return wallet_manager_id
 
 
 def list(is_verbose=True):
@@ -351,11 +359,12 @@ def private_keys(wallet=None, is_verbose=True):
             if name != interface.wallet_arg(wallet):
                 continue
         is_open_and_unlocked(name)
-        
-        with open(wallet_file(name), "r")  as f:
-            keys_ciphered = [key.rstrip('\n') for key in f]
 
-        for key in keys_ciphered:
+        global _KEYS_CIPHERED
+        with open(wallet_file(name), "r")  as f:
+            _KEYS_CIPHERED = [key.rstrip('\n') for key in f]
+
+        for key in _KEYS_CIPHERED:
             _keys.append(decrypt(key, _OPEN_WALLETS[name].cipher_suite))
 
     if is_verbose:

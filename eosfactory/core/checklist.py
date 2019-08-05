@@ -6,7 +6,7 @@ import argparse
 import eosfactory.core.utils as utils
 import eosfactory.core.config as config
 
-IS_ERROR = 2
+IS_ERROR = -2
 IS_WARNING = 1
 
 class Checklist():

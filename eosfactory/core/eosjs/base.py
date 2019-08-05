@@ -1,7 +1,7 @@
 # Latest commit b6e5b55  on Dec 14, 2018
 
 import subprocess
-import json
+import json as json_module
 import pathlib
 import re
 import random
@@ -15,6 +15,7 @@ import eosfactory.core.setup as setup
 import eosfactory.core.logger as logger
 import eosfactory.core.eosjs.walletmanager as wm
 import eosfactory.core.interface as interface
+import eosfactory.core.common as common
 
 
 def config_rpc():
@@ -28,6 +29,7 @@ const rpc = new JsonRpc('%(endpoint)s', { fetch });
 
 SIG_PROVIDER = "const signatureProvider = new JsSignatureProvider([/*private keys*/]);"
 
+
 def config_api():
     code = utils.heredoc('''
 const { Api, JsonRpc, RpcError } = require('eosjs');
@@ -37,8 +39,11 @@ const rpc = new JsonRpc('%(endpoint)s', { fetch });
 const { TextEncoder, TextDecoder } = require('util');
 %(signatureProvider)s
 const api = new Api({ 
-    rpc, signatureProvider, 
-    textDecoder: new TextDecoder, textEncoder: new TextEncoder });
+    rpc, 
+    signatureProvider, 
+    textDecoder: new TextDecoder, 
+    textEncoder: new TextEncoder 
+});
     ''')
 
     return code % {
@@ -46,30 +51,40 @@ const api = new Api({
         "endpoint": "%(endpoint)s"
         }
 
+
 def permission_str(permission, account, default=None):
-    permissions = []
-    if permission is None and default is None:
-        permissions.append(
+    permission_json = []
+    if not permission and not default:
+        permission_json.append(
                             {"actor": account, 
-                            "permission": interface.Permission.ACTIVE})
+                            "permission": interface.Permission.ACTIVE.value})
     else:
-        p = interface.permission_arg(permission)
-        for perm in p:
+        if not isinstance(permission, list):
+            permission = interface.permission_arg(permission)
+
+        for perm in permission:
             perm = perm.split("@")
             if len(perm) == 1:
-                perm.append(interface.Permission.ACTIVE)
-                permissions.append(
-                                {"actor": perm[0], "permission": perm[1]})
-    if not default is None:
-        permissions.append(default)
+                perm.append(interface.Permission.ACTIVE.value)
+            permission_json.append({"actor": perm[0], "permission": perm[1]})
+    if default:
+        permission_json.append(default)
 
-    return str(permissions)
+    return json_module.dumps(permission_json)
+
+
+def not_json_false(json):
+    if not json:
+            raise errors.Error('''
+The option ``json`` cannot be false with ``eosjs`` based communication with 
+the blockchain.
+            ''')
 
 
 class Command():
     '''A prototype for ``eosjs`` command classes.
     '''
-    def __init__(self, header, js, is_verbose=1):
+    def __init__(self, header, js, is_verbose=True):
         self.out_msg = None
         self.err_msg = None
         self.json = None
@@ -84,15 +99,21 @@ class Command():
         cl = ["node", "-e"]
         js = header + "\n" + utils.heredoc(js)
 
+        if setup.is_show_private_keys:
+            js = js.replace(
+                SIG_PROVIDER, 
+                "const signatureProvider = new JsSignatureProvider(\n{}\n);".format(
+                    json_module.dumps(wm.private_keys(is_verbose=False), indent=4))) 
+
         if setup.is_save_command_lines:
             setup.add_to__command_line_file("\n" + js + "\n") 
         if setup.is_print_command_lines:
             print("\n" + js + "\n")
-        
+
         js = js.replace(
             SIG_PROVIDER, 
-            "const signatureProvider = new JsSignatureProvider([\n{}\n]);".format(
-                json.dumps(wm.private_keys(is_verbose=False), indent=4)))
+            "const signatureProvider = new JsSignatureProvider(\n{}\n);".format(
+                json_module.dumps(wm.private_keys(is_verbose=False), indent=4)))        
 
         cl.append(js)
 
@@ -126,21 +147,29 @@ class Command():
         errors.validate(self)
 
         try:
-            self.json = json.loads(self.out_msg)
+            self.json = json_module.loads(self.out_msg)
         except:
             pass
 
         try:
-            self.json = json.loads(self.out_msg_details)
+            self.json = json_module.loads(self.out_msg_details)
         except:
             pass
                   
-    def printself(self):
+    def printself(self, is_verbose=False):
+        '''Print a message.
+
+        Args:
+            is_verbose (bool): If set, a message is printed.
+        '''
+        if not hasattr(self, "is_verbose"):
+            self.is_verbose = is_verbose
+
         if self.is_verbose:
             logger.OUT(self.__str__())
 
     def __str__(self):
-        return json.dumps(self.json, sort_keys=True, indent=4)
+        return json_module.dumps(self.json, sort_keys=True, indent=4)
 
     def __repr__(self):
         return ""
@@ -149,17 +178,21 @@ class Command():
 class GetAccount(interface.Account, Command):
     '''Retrieve an account from the blockchain.
 
-    - **parameters**::
+    Args:
+        account (str or .interface.Account): The account to retrieve.
+        json: If set, prints the json representation of the object.
+        is_verbose (bool): If *False* do not print. Default is *True*.
 
-        account: The account object or the name of the account to retrieve.
-        is_verbose: If ``False`` do not print. Default is ``True``.
-
-    - **attributes**::
-
-        name: The name of the account.
+    Attributes:
+        name (str): The EOSIO name of the account.
+        owner_key (str) The *owner* public key.
+        active_key (str) The *active* public key.
+        json: The json representation of the object.
         json: The json representation of the object.
     '''
-    def __init__(self, account, is_info=True, is_verbose=True):
+    def __init__(self, account, json=True, is_verbose=True):
+        not_json_false(json)
+
         interface.Account.__init__(self, interface.account_arg(account))
         Command.__init__(self, config_rpc(),
             '''
@@ -172,7 +205,9 @@ class GetAccount(interface.Account, Command):
         self.owner_key = self.json['permissions'][0]['required_auth'] \
             ['keys'][0]['key']
         self.active_key = self.json['permissions'][1]['required_auth'] \
-            ['keys'][0]['key']                 
+            ['keys'][0]['key']
+
+        self.printself()
 
 
 class GetTransaction(Command):
@@ -493,8 +528,8 @@ class CreateKey(interface.Key, Command):
         key_public (str): The public key set.
     '''
     def __init__(
-            self, key_public=None, key_private=None, 
-            r1=False, is_verbose=True):
+                    self, key_public=None, key_private=None, r1=False, 
+                    is_verbose=True):
         interface.Key.__init__(self, key_public, key_private)
 
         if self.key_public or self.key_private:
@@ -510,9 +545,9 @@ class CreateKey(interface.Key, Command):
 
             Command.__init__(self, "",
                 '''
-        const ecc = require('eosjs-ecc');
+        const ecc = require('eosjs-ecc')
 
-        (async () => {
+        ;(async () => {
             private_key = await ecc.randomKey()
             public_key = ecc.privateToPublic(private_key)
             const result = {
@@ -526,13 +561,13 @@ class CreateKey(interface.Key, Command):
         self.key_private = self.json["key_private"]
         self.key_public = self.json["key_public"]
 
-        self.printself()
+        self.printself(is_verbose)
 
 
 class RestoreAccount(GetAccount):
 
     def __init__(self, account, is_verbose=True):
-        GetAccount.__init__(self, account, is_verbose=False, is_info=False)
+        GetAccount.__init__(self, account, is_verbose=False, json=True)
 
         self.name = self.json["account_name"]
         self.owner_key = ""
@@ -590,6 +625,9 @@ class CreateAccount(interface.Account, Command):
         active_key_public = interface.key_arg(
             active_key, is_owner_key=False, is_private_key=False)
 
+        if not expiration_sec:
+            expiration_sec = 30
+
         # args = []
         # if force_unique:
         #     args.append("--force-unique")
@@ -602,7 +640,7 @@ class CreateAccount(interface.Account, Command):
 
         Command.__init__(self, config_api(),
                 '''
-        (async () => {
+        ;(async () => {
             const result = await api.transact(
                 {
                     actions: [
@@ -646,10 +684,11 @@ class CreateAccount(interface.Account, Command):
                 },
                 {
                     blocksBehind: 3,
-                    expireSeconds: 30,
+                    expireSeconds: %(expiration_sec)d,
+                    broadcast: %(broadcast)s,
+                    sign: %(sign)s, 
                 }
             );
-
             console.log(JSON.stringify(result))
         })();
             ''' % {
@@ -657,6 +696,9 @@ class CreateAccount(interface.Account, Command):
                 "name": name, 
                 "owner_key_public": owner_key_public, 
                 "active_key_public": active_key_public,
+                "expiration_sec": expiration_sec,
+                "broadcast": "false" if dont_broadcast else "true",
+                "sign": "false" if skip_sign else "true",
             }, is_verbose)
 
     def __str__(self):
@@ -675,36 +717,22 @@ def account_name():
 class PushAction(Command):
     '''Push a transaction with a single action
 
-    - **parameters**::
-
-        account: The account to publish a contract for.  May be an object 
-            having the  May be an object having the attribute `name`, like 
-            `CreateAccount`, or a string.
-        action: A JSON string or filename defining the action to execute on 
+    Args:
+        account (str or .interface.Account): The account to publish a contract 
+            for.
+        action (str or json or filename): Definition of the action to execute on 
             the contract.
-        data: The arguments to the contract.
+        data (str): The arguments to the contract.
 
-        permission: An account and permission level to authorize, as in 
-            'account@permission'. May be a `CreateAccount` or `Account` object
-        expiration: The time in seconds before a transaction expires, 
-            defaults to 30s
-        skip_sign: Specify if unlocked wallet keys should be used to sign 
-            transaction.
-        dont_broadcast: Don't broadcast transaction to the network (just print).
-        force_unique: Force the transaction to be unique. this will consume extra 
-            bandwidth and remove any protections against accidentally issuing the 
-            same transaction multiple times.
-        max_cpu_usage: Upper limit on the milliseconds of cpu usage budget, for 
-            the execution of the transaction 
-            (defaults to 0 which means no limit).
-        max_net_usage: Upper limit on the net usage budget, in bytes, for the 
-            transaction (defaults to 0 which means no limit).
-        ref_block: The reference block num or block id used for TAPOS 
-            (Transaction as Proof-of-Stake).
+    See definitions of the remaining parameters: \
+    :func:`.cleos.base.common_parameters`.
 
-    - **attributes**::
-
-        json: The json representation of the object.
+    Attributes:
+        account_name (str): The EOSIO name of the contract's account.
+        console (str): Sum of all *["processed"]["action_traces"][]["console"]* \
+            components of EOSIO cleos responce.
+        act (str): Summary of all actions, like \
+            *eosio.null::nonce <= 5d0a572c49880500*.
     '''
     def __init__(
             self, account, action, data,
@@ -713,38 +741,76 @@ class PushAction(Command):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             is_verbose=True,
-            json=False
+            json=True
         ):
         self.account_name = interface.account_arg(account)
-
-        args = [self.account_name, action, data]
-        if json:
-            args.append("--json")
         if not permission is None:
-            p = permission_arg(permission)
-            for perm in p:
-                args.extend(["--permission", perm])
+            permission = interface.permission_arg(permission)
+        if not expiration_sec:
+            expiration_sec = 30
+        not_json_false(json)
 
-        args.extend(["--expiration", str(expiration_sec)])
-        if skip_sign:
-            args.append("--skip-sign")
-        if dont_broadcast:
-            args.append("--dont-broadcast")
-        if force_unique:
-            args.append("--force-unique")
-        if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        if  max_net_usage:
-            args.extend(["--max-net-usage", str(max_net_usage)])
-        if  not ref_block is None:
-            args.extend(["--ref-block", ref_block])
-                        
-        self.console = None
-        self.data = None
-        Command.__init__(self, args, "push", "action", is_verbose)
+        # if force_unique:
+        #     args.append("--force-unique")
+        # if max_cpu_usage:
+        #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
+        # if  max_net_usage:
+        #     args.extend(["--max-net-usage", str(max_net_usage)])
+        # if  not ref_block is None:
+        #     args.extend(["--ref-block", ref_block])
 
-        self.console = self.json["processed"]["action_traces"][0]["console"]
-        self.data = self.json["processed"]["action_traces"][0]["act"]["data"]
+        Command.__init__(
+            self,
+            config_api(),
+            '''
+    ;(async () => {
+        const permissions = JSON.parse('%(permissions)s')
+        const data = JSON.parse('%(data)s')
+
+        const result = await api.transact({
+            actions: [
+                {
+                    account: '%(account_name)s',
+                    name: '%(action)s',
+                    authorization: permissions,
+                    data: data,
+                }
+            ]
+        }, 
+        {
+            blocksBehind: 3,
+            expireSeconds: %(expiration_sec)d,
+            broadcast: %(broadcast)s,
+            sign: %(sign)s,
+        });
+        console.log(JSON.stringify(result))
+    })()
+            ''' % {
+                "account_name": self.account_name,
+                "action": action,
+                "data": data,
+                "permissions": permission_str(permission, self.account_name),
+                "expiration_sec": expiration_sec,
+                "broadcast": "false" if dont_broadcast else "true",
+                "sign": "false" if skip_sign else "true",
+            }, is_verbose)
+
+        self.console = ""
+        self.act = ""
+        if not dont_broadcast:
+            
+            for act in self.json["processed"]["action_traces"]:
+                self.console += common.gather_console_output(act)
+
+            for trace in self.json["processed"]["action_traces"]:
+                if trace["act"]["data"]:
+                    if self.act:
+                        self.act += "\n"
+                    self.act += "{} <= {}::{} {}".format( 
+                                                        trace["act"]["account"], 
+                                                        trace["act"]["account"],
+                                                        trace["act"]["name"],
+                                                        trace["act"]["data"])
 
         self.printself()
 

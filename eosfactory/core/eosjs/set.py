@@ -31,13 +31,13 @@ class SetContract(base_commands.Command):
             self, account, contract_dir, 
             wasm_file=None, abi_file=None, 
             clear=False,
-            permission=None, expiration_sec=30, 
+            permission=None, expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
             is_verbose=True,
-            json=False):
+            json=True):
 
         files = common.contract_is_built(contract_dir, wasm_file, abi_file)
         if not files:
@@ -48,8 +48,14 @@ class SetContract(base_commands.Command):
 
         self.contract_path_absolute = files[0]
         wasm_file = files[1]
-        abi_file = files[2]            
+        abi_file = files[2]
+
         self.account_name = interface.account_arg(account)
+        if not permission is None:
+            permission = interface.permission_arg(permission)
+        if not expiration_sec:
+            expiration_sec = 30
+        base_commands.not_json_false(json)           
 
         # if clear:
         #     args.append("--clear")
@@ -63,40 +69,36 @@ class SetContract(base_commands.Command):
         #     args.extend(["--ref-block", ref_block])
 
         base_commands.Command.__init__(
-            self, base_commands.config_rpc(),
+            self,
             '''
     const fs = require(`fs`)
     const path = require(`path`)
     const { Serialize } = require(`eosjs`)
 
-    const account_name = '%(account_name)s'
-    const wasm_file = '%(wasm_file)s'
-    const abi_file = '%(abi_file)s'
-    const expiration_sec = %(expiration_sec)d
-    const permissions = JSON.parse(%(permissions)s)
+            ''' + base_commands.config_api()
+            ,
+            '''
+    ;(async () => {
+        const permissions = JSON.parse('%(permissions)s')
+        const wasm = fs.readFileSync('%(wasm_file)s').toString(`hex`)
+        const buffer = new Serialize.SerialBuffer({
+            textEncoder: api.textEncoder,
+            textDecoder: api.textDecoder,
+        })
 
-    const wasm = fs.readFileSync(wasm_file).toString(`hex`)
+        let abi = JSON.parse(fs.readFileSync('%(abi_file)s', `utf8`))
+        const abiDefinition = api.abiTypes.get(`abi_def`)
+        // need to make sure abi has every field in abiDefinition.fields
+        // otherwise serialize throws
+        abi = abiDefinition.fields.reduce(
+            (acc, { name: fieldName }) =>
+            Object.assign(acc, { [fieldName]: acc[fieldName] || [] }),
+            abi
+        )
+        abiDefinition.serialize(buffer, abi)
+        let abi_ = Buffer.from(buffer.asUint8Array()).toString(`hex`)
 
-    const buffer = new Serialize.SerialBuffer({
-        textEncoder: api.textEncoder,
-        textDecoder: api.textDecoder,
-    })
-
-    let abi = JSON.parse(fs.readFileSync(abi_file, `utf8`))
-    const abiDefinition = api.abiTypes.get(`abi_def`)
-
-    // need to make sure abi has every field in abiDefinition.fields
-    // otherwise serialize throws
-    abi = abiDefinition.fields.reduce(
-        (acc, { name: fieldName }) =>
-        Object.assign(acc, { [fieldName]: acc[fieldName] || [] }),
-        abi
-    )
-
-    abiDefinition.serialize(buffer, abi)
-
-    //Send transaction with both setcode and setabi actions
-    (async () => {
+        //Send transaction with both setcode and setabi actions
         const result = await api.transact(
             {
                 actions: [
@@ -105,7 +107,7 @@ class SetContract(base_commands.Command):
                         name: 'setcode',
                         authorization: permissions,
                         data: {
-                            account: account_name,
+                            account: '%(account_name)s',
                             vmtype: 0,
                             vmversion: 0,
                             code: wasm,
@@ -116,7 +118,7 @@ class SetContract(base_commands.Command):
                         name: 'setabi',
                         authorization: permissions,
                         data: {
-                            account: account_name,
+                            account: '%(account_name)s',
                             abi: Buffer.from(buffer.asUint8Array()).toString(`hex`),
                         },
                     },
@@ -124,7 +126,9 @@ class SetContract(base_commands.Command):
             },
             {
                 blocksBehind: 3,
-                expireSeconds: expiration_sec,
+                expireSeconds: %(expiration_sec)d,
+                broadcast: %(broadcast)s,
+                sign: %(sign)s,                 
             }
         )
         console.log(JSON.stringify(result))
@@ -134,9 +138,10 @@ class SetContract(base_commands.Command):
                 "wasm_file": wasm_file,
                 "abi_file": abi_file,
                 "account_name": self.account_name,
+                "permissions": base_commands.permission_str(permission, self.account_name),
                 "expiration_sec": expiration_sec,
-                "permissions": base_commands.permission_str(
-                                                permission, self.account_name)
+                "broadcast": "false" if dont_broadcast else "true",
+                "sign": "false" if skip_sign else "true",
             }, is_verbose)
         
         self.printself()
@@ -206,7 +211,7 @@ class SetAccountPermission(base_commands.Command):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
-            is_verbose=True, json=False
+            is_verbose=True, json=True
         ):
         account_name = interface.account_arg(account)
         args = [account_name]
@@ -264,8 +269,8 @@ class SetAccountPermission(base_commands.Command):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
                         
-        base_commands.Command.__init__(
-            self, args, "set", "account permission", is_verbose)
+        # base_commands.Command.__init__(
+        #     self, args, "set", "account permission", is_verbose)
         self.account_name = account_name
         self.console = None
         self.data = None
@@ -307,7 +312,7 @@ class SetActionPermission(base_commands.Command):
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
-            is_verbose=True, json=False
+            is_verbose=True, json=True
         ):
         account_name = interface.account_arg(account)
         args = [account_name]

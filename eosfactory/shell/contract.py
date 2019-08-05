@@ -110,6 +110,8 @@ class Contract(ContractBuilder):
             ``eosfactory.shell.account.Account``.
             """)
 
+        account.stop_if_account_is_not_created()
+
         super().__init__(
             contract_dir, abi_file=abi_file, wasm_file=wasm_file)
         self.account = account
@@ -132,7 +134,7 @@ class Contract(ContractBuilder):
             self.account, self.contract_dir, 
             self.wasm_file, self.abi_file,
             True,
-            json=False)
+            json=True)
             
         self.contract = result
 
@@ -160,7 +162,7 @@ class Contract(ContractBuilder):
                 self.ref_block,
                 self.delay_sec,
                 is_verbose=False,
-                json=False)
+                json=True)
 
         except errors.LowRamError as e:
             logger.TRACE('''
@@ -186,7 +188,7 @@ class Contract(ContractBuilder):
                 self.ref_block,
                 self.delay_sec,
                 is_verbose=False,
-                json=False)
+                json=True)
 
         logger.INFO('''
         * Contract {} 
@@ -200,7 +202,7 @@ class Contract(ContractBuilder):
             permission=None, expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
-            ref_block=None, json=False):
+            ref_block=None, json=True):
         '''Push a transaction with a single action.
 
         Call *EOSIO cleos* with the *push action* command. Store the result,
