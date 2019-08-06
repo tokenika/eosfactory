@@ -498,13 +498,13 @@ class Account(interface.Account):
             result.payer, result.receiver,
             result.stake_net_quantity, result.stake_cpu_quantity))
 
-    def info(self):
+    def info(self, json=False):
         self.stop_if_account_is_not_created()
         msg = manager.accout_names_2_object_names(
             "Account object name: {}\n{}".format(
             self.account_object_name,
-            str(base_commands.GetAccount(self.name, is_verbose=0))),
-            True
+            str(base_commands.GetAccount(
+                                self.name, json=json, is_verbose=0))), True
         )
         # restore the physical account name
         msg = re.sub(r"(?<=^name: )\w+", self.name, msg, flags=re.M)

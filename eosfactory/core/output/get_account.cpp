@@ -19,6 +19,39 @@ cpu bandwidth:
      limit:              unlimited
 */
 
+/*
+Account object name: MASTER
+name: nukjygmgkn3x
+created: 2019-02-20T16:11:09.500
+permissions:
+     owner     1:    1 MASTER@owner
+        active     1:    1 MASTER@active
+memory:
+     quota:     5.341 KiB    used:     5.209 KiB
+
+net bandwidth:
+     staked:          1.0000 EOS           (total stake delegated from account to self)
+     delegated:       0.0000 EOS           (total staked delegated to account from others)
+     used:               337 bytes
+     available:        131.4 KiB
+     limit:            131.8 KiB
+
+cpu bandwidth:
+     staked:          1.0000 EOS           (total stake delegated from account to self)
+     delegated:       0.0000 EOS           (total staked delegated to account from others)
+     used:             1.233 ms
+     available:        46.24 ms
+     limit:            47.48 ms
+
+EOS balances:
+     liquid:          123.4027 EOS
+     staked:            2.0000 EOS
+     unstaking:         0.0000 EOS
+     total:           125.4027 EOS
+
+producers:     <not voted>
+ */
+
 void get_account(const string &accountName, const string &coresym, bool json_format)
 {
     fc::variant json;

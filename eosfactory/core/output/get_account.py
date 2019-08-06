@@ -1,24 +1,27 @@
 import json
 example =\
 {
-   "account_object_name": "ALICE",
-   "account_name": "kkshhsggs",
-   "cpu_limit": {
-      "available": -1,
-      "max": -1,
-      "used": -1
-   },
-   "cpu_weight": -1,
-   "created": "2019-08-02T07:30:48.500",
-   "head_block_num": 48,
-   "head_block_time": "2019-08-02T07:31:00.000",
+   "account_name": "MASTER",
+   "head_block_num": 42763415,
+   "head_block_time": "2019-08-05T11:21:25.500",
+   "privileged": False,
    "last_code_update": "1970-01-01T00:00:00.000",
+   "created": "2019-02-20T16:11:09.500",
+   "core_liquid_balance": "123.4027 EOS",
+   "ram_quota": 5469,
+   "net_weight": 10000,
+   "cpu_weight": 10000,
    "net_limit": {
-      "available": -1,
-      "max": -1,
-      "used": -1
+      "used": 337,
+      "available": 134578,
+      "max": 134915
    },
-   "net_weight": -1,
+   "cpu_limit": {
+      "used": 1233,
+      "available": 46243,
+      "max": 47476
+   },
+   "ram_usage": 5334,
    "permissions": [
          {
             "parent": "owner",
@@ -153,19 +156,51 @@ example =\
             }
          }
     ],
-    "privileged": False,
-    "ram_quota": -1,
-    "ram_usage": 2724,
-    "refund_request": None,
-    "self_delegated_bandwidth": None,
-    "total_resources": None,
-    "voter_info": None
+   #  "privileged": False,
+   #  "ram_quota": -1,
+   #  "ram_usage": 2724,
+   #  "refund_request": None,
+   #  "self_delegated_bandwidth": None,
+   #  "total_resources": None,
+   #  "voter_info": None
+
+   # "total_resources": None,
+   # "self_delegated_bandwidth": None,
+   # "refund_request": None,
+   # "voter_info": None
+
+   "total_resources": {
+      "owner": "MASTER",
+      "net_weight": "1.0000 EOS",
+      "cpu_weight": "1.0000 EOS",
+      "ram_bytes": 4069
+   },
+   "self_delegated_bandwidth": {
+      "from": "MASTER",
+      "to": "MASTER",
+      "net_weight": "1.0000 EOS",
+      "cpu_weight": "1.0000 EOS"
+   },
+   "refund_request": None,
+   "voter_info": {
+      "owner": "MASTER",
+      "proxy": "",
+      "producers": [],
+      "staked": 680000,
+      "last_vote_weight": "0.00000000000000000",
+      "proxied_vote_weight": "0.00000000000000000",
+      "is_proxy": 0,
+      "flags1": 0,
+      "reserved2": 0,
+      "reserved3": "0 "
+   }
 }
 
 
 class GetAccount():
    ARROW = "|--> "
    INDENT = "    "
+   TITLE_WIDTH = "%20s: "
 
    def __init__(self, account_json):
       self.account_json = account_json
@@ -215,7 +250,7 @@ class GetAccount():
 
       def print_required_auth(node, depth, args):
          if depth == 0:
-            self.addln("permissions:")
+            self.addln("### permissions:")
             indent = GetAccount.INDENT
          else:
             indent = GetAccount.INDENT \
@@ -246,73 +281,32 @@ class GetAccount():
 
       process_a_node(permission_root, 0, print_required_auth)
 
+   def format_bytes(self, value):
+      if value == -1:
+         return "unlimited"
+      
+      if value >= 1024 * 1024 * 1024 * 1024:
+         return "%0.1f %s" % (value / (1024 * 1024 * 1024 * 1024), "TiB")
+      elif value >= 1024 * 1024 * 1024:
+         return "%0.1f %s" % (value / (1024 * 1024 * 1024), "GiB")
+      elif value >= 1024 * 1024:
+         return "%0.1f %s" % (value / (1024 * 1024), "MiB")
+      elif value >= 1024:
+         return "%0.1f %s" % (value / 1024, "KiB")
+      else:
+         return "%0.0f %s" % (value, "bytes")
+
 
    def memory(self):
-      self.addln("memory:")
+      self.addln("### memory:")
+      self.addln(GetAccount.INDENT + (GetAccount.TITLE_WIDTH + "%s, used: %s") % (
+                              "quota",
+                           self.format_bytes(self.account_json["ram_quota"]), 
+                           self.format_bytes(self.account_json["ram_usage"])))
 
    def net_bandwidth(self):
-      self.addln("net bandwidth:")
+      self.addln("### net bandwidth:")
 
-   def cpu_bandwidth(self):
-      self.addln("cpu bandwidth:")
-
-   def __str__(self):
-      return self.info
-
-   def add(self, msg=""):
-      self.info = self.info + msg
-
-   def addln(self, msg=""):
-      self.info = self.info + msg + "\n"
-
-
-
-         
-
-
-
-
-      # auto to_pretty_net = []( int64_t nbytes, uint8_t width_for_units = 5 ) {
-      #    if(nbytes == -1) {
-      #        // special case. Treat it as unlimited
-      #        return std::string("unlimited");
-      #    }
-
-      #    string unit = "bytes";
-      #    double bytes = static_cast<double> (nbytes);
-      #    if (bytes >= 1024 * 1024 * 1024 * 1024ll) {
-      #        unit = "TiB";
-      #        bytes /= 1024 * 1024 * 1024 * 1024ll;
-      #    } else if (bytes >= 1024 * 1024 * 1024) {
-      #        unit = "GiB";
-      #        bytes /= 1024 * 1024 * 1024;
-      #    } else if (bytes >= 1024 * 1024) {
-      #        unit = "MiB";
-      #        bytes /= 1024 * 1024;
-      #    } else if (bytes >= 1024) {
-      #        unit = "KiB";
-      #        bytes /= 1024;
-      #    }
-      #    std::stringstream ss;
-      #    ss << setprecision(4);
-      #    ss << bytes << " ";
-      #    if( width_for_units > 0 )
-      #       ss << std::left << setw( width_for_units );
-      #    ss << unit;
-      #    return ss.str();
-      # };
-
-
-
-   # if( json.core_liquid_balance.valid() ) {
-   #    unstaking = asset( 0, json.core_liquid_balance->get_symbol() ); 
-   #    staked = asset( 0, json.core_liquid_balance->get_symbol() ); 
-   # }
-
-   #    std::cout << "memory: " << std::endl
-   #              << indent << "quota: " << std::setw(15) << to_pretty_net(json.ram_quota) << "  used: " << std::setw(15) << to_pretty_net(json.ram_usage) << std::endl << std::endl;
-
-   #    std::cout << "net bandwidth: " << std::endl;
    #    if ( json.total_jsonources.is_object() ) {
    #       auto net_total = to_asset(json.total_jsonources.get_object()["net_weight"].as_string());
 
@@ -340,46 +334,63 @@ class GetAccount():
    #       }
    #    }
 
-
-      # auto to_pretty_time = []( int64_t nmicro, uint8_t width_for_units = 5 ) {
-      #    if(nmicro == -1) {
-      #        // special case. Treat it as unlimited
-      #        return std::string("unlimited");
-      #    }
-      #    string unit = "us";
-      #    double micro = static_cast<double>(nmicro);
-
-      #    if( micro > 1000000*60*60ll ) {
-      #       micro /= 1000000*60*60ll;
-      #       unit = "hr";
-      #    }
-      #    else if( micro > 1000000*60 ) {
-      #       micro /= 1000000*60;
-      #       unit = "min";
-      #    }
-      #    else if( micro > 1000000 ) {
-      #       micro /= 1000000;
-      #       unit = "sec";
-      #    }
-      #    else if( micro > 1000 ) {
-      #       micro /= 1000;
-      #       unit = "ms";
-      #    }
-      #    std::stringstream ss;
-      #    ss << setprecision(4);
-      #    ss << micro << " ";
-      #    if( width_for_units > 0 )
-      #       ss << std::left << setw( width_for_units );
-      #    ss << unit;
-      #    return ss.str();
-      # };
+      self.addln(GetAccount.INDENT + (GetAccount.TITLE_WIDTH + "%s") % (
+                  "used",
+                  self.format_bytes(self.account_json["net_limit"]["used"])))
+      self.addln(GetAccount.INDENT + (GetAccount.TITLE_WIDTH + "%s") % (
+                  "available",
+                  self.format_bytes(self.account_json["net_limit"]["available"])))
+      self.addln(GetAccount.INDENT + (GetAccount.TITLE_WIDTH + "%s") % (
+                  "limit",
+                  self.format_bytes(self.account_json["net_limit"]["max"])))
 
 
-      # std::cout << std::fixed << setprecision(3);
-      # std::cout << indent << std::left << std::setw(11) << "used:"      << std::right << std::setw(18) << to_pretty_net( json.net_limit.used ) << "\n";
-      # std::cout << indent << std::left << std::setw(11) << "available:" << std::right << std::setw(18) << to_pretty_net( json.net_limit.available ) << "\n";
-      # std::cout << indent << std::left << std::setw(11) << "limit:"     << std::right << std::setw(18) << to_pretty_net( json.net_limit.max ) << "\n";
-      # std::cout << std::endl;
+   def cpu_bandwidth(self):
+      def format_time(micro):
+         if micro == -1:
+            return string("unlimited")
+
+         if micro > 1000000*60*60:
+            return "%0.1f %s" % (micro / (1000000*60*60), "hr")
+         elif micro > 1000000*60:
+            return "%0.1f %s" % (micro / (1000000*60), "min")
+         elif micro > 1000000:
+            return "%0.1f %s" % (micro / 1000000, "sec")
+         elif micro > 1000:
+            return "%0.1f %s" % (micro / 1000, "ms")
+
+      self.addln("### cpu bandwidth:")
+      self.addln(GetAccount.INDENT + (GetAccount.TITLE_WIDTH + "%s") % (
+                  "used",
+                  format_time(self.account_json["cpu_limit"]["used"])))      
+      self.addln(GetAccount.INDENT + (GetAccount.TITLE_WIDTH + "%s") % (
+               "available",
+               format_time(self.account_json["cpu_limit"]["available"])))      
+      self.addln(GetAccount.INDENT + (GetAccount.TITLE_WIDTH + "%s") % (
+                  "max",
+                  format_time(self.account_json["cpu_limit"]["max"])))      
+
+
+   def __str__(self):
+      return self.info
+
+   def add(self, msg=""):
+      self.info = self.info + msg
+
+   def addln(self, msg=""):
+      self.info = self.info + msg + "\n"
+
+
+
+         
+
+
+
+   # if( json.core_liquid_balance.valid() ) {
+   #    unstaking = asset( 0, json.core_liquid_balance->get_symbol() ); 
+   #    staked = asset( 0, json.core_liquid_balance->get_symbol() ); 
+   # }
+
 
       # std::cout << "cpu bandwidth:" << std::endl;
 
@@ -402,13 +413,6 @@ class GetAccount():
       #                 << std::string(11, ' ') << "(total staked delegated to account from others)" << std::endl;
       #    }
       # }
-
-
-      # std::cout << std::fixed << setprecision(3);
-      # std::cout << indent << std::left << std::setw(11) << "used:"      << std::right << std::setw(18) << to_pretty_time( json.cpu_limit.used ) << "\n";
-      # std::cout << indent << std::left << std::setw(11) << "available:" << std::right << std::setw(18) << to_pretty_time( json.cpu_limit.available ) << "\n";
-      # std::cout << indent << std::left << std::setw(11) << "limit:"     << std::right << std::setw(18) << to_pretty_time( json.cpu_limit.max ) << "\n";
-      # std::cout << std::endl;
 
       # if( json.refund_request.is_object() ) {
       #    auto obj = json.refund_request.get_object();
