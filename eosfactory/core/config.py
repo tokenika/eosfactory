@@ -598,7 +598,15 @@ def eosio_cpp_includes():
     list = []
     path = eosio_cdt_root()
     for include in eosio_cpp_includes_[1][0]:
-        list.append(path + include)
+        include = os.path.join(path, include)
+        if not os.path.exists(include):
+            raise error.Error('''
+The directory 
+{}
+in the contract compiler include list does not exist.
+Is ``eosio.cpp`` properly installed in the system?
+        ''')
+        list.append(include)
     return list
 
 

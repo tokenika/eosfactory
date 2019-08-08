@@ -28,7 +28,8 @@ const rpc = new JsonRpc('%(endpoint)s', { fetch });
     setup.set_local_nodeos_address_if_none()
     return code
 
-SIG_PROVIDER = "const signatureProvider = new JsSignatureProvider([/*private keys*/]);"
+SIG_PROVIDER = \
+    "const signatureProvider = new JsSignatureProvider([/*private keys*/]);"
 
 
 def config_api():

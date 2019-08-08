@@ -761,7 +761,7 @@ Error message is
         proc.wait()
         onExit()
         return
-    
+    keosd_start()
     thread = threading.Thread(target=runInThread)
     thread.start()
 
