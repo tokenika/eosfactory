@@ -56,7 +56,8 @@ class Account(interface.Account):
         if not isinstance(account, cls): 
             account.__class__.__bases__ += (cls,)
 
-        get_account = base_commands.GetAccount(account, json=True, is_verbose=0)
+        get_account = base_commands.GetAccount(
+                                            account, json=False, is_verbose=0)
 
         logger.TRACE('''
         * Cross-checked: account object ``{}`` mapped to an existing 
@@ -508,6 +509,7 @@ class Account(interface.Account):
         )
         # restore the physical account name
         msg = re.sub(r"(?<=^name: )\w+", self.name, msg, flags=re.M)
+        msg = re.sub(r"(?<=^account_name: )\w+", self.name, msg, flags=re.M)
         print(msg)
 
     def stats(self, params, last_col="%s", col="%15s", to_string=False):

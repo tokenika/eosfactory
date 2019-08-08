@@ -55,7 +55,6 @@ class SetContract(base_commands.Command):
             permission = interface.permission_arg(permission)
         if not expiration_sec:
             expiration_sec = 30
-        base_commands.not_json_false(json)           
 
         # if clear:
         #     args.append("--clear")

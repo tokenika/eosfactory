@@ -16,6 +16,7 @@ import eosfactory.core.logger as logger
 import eosfactory.core.eosjs.walletmanager as wm
 import eosfactory.core.interface as interface
 import eosfactory.core.common as common
+import eosfactory.core.to_string.get_account_str as get_account_str
 
 
 def config_rpc():
@@ -71,14 +72,6 @@ def permission_str(permission, account, default=None):
         permission_json.append(default)
 
     return json_module.dumps(permission_json)
-
-
-def not_json_false(json):
-    if not json:
-            raise errors.Error('''
-The option ``json`` cannot be false with ``eosjs`` based communication with 
-the blockchain.
-            ''')
 
 
 class Command():
@@ -191,8 +184,6 @@ class GetAccount(interface.Account, Command):
         json: The json representation of the object.
     '''
     def __init__(self, account, json=True, is_verbose=True):
-        not_json_false(json)
-
         interface.Account.__init__(self, interface.account_arg(account))
         Command.__init__(self, config_rpc(),
             '''
@@ -208,6 +199,9 @@ class GetAccount(interface.Account, Command):
             ['keys'][0]['key']
 
         self.printself()
+
+    def __str__(self):
+        return str(get_account_str.GetAccount(self.json))
 
 
 class GetTransaction(Command):
@@ -748,7 +742,6 @@ class PushAction(Command):
             permission = interface.permission_arg(permission)
         if not expiration_sec:
             expiration_sec = 30
-        not_json_false(json)
 
         # if force_unique:
         #     args.append("--force-unique")

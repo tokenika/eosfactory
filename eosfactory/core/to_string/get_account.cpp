@@ -84,7 +84,10 @@ void get_account(const string &accountName, const string &coresym, bool json_for
         constexpr size_t indent_size = 5;
         const string indent(indent_size, ' ');
 
+////////////////////////////////////////////////////////////////////////////////
         std::cout << "permissions: " << std::endl;
+////////////////////////////////////////////////////////////////////////////////
+
         unordered_map<name, vector<name> /*children*/> tree;
         vector<name> roots; //we don't have multiple roots, but we can easily handle them here, so let's do it just in case
         unordered_map<name, eosio::chain_apis::permission> cache;
@@ -173,11 +176,15 @@ void get_account(const string &accountName, const string &coresym, bool json_for
             return ss.str();
         };
 
+////////////////////////////////////////////////////////////////////////////////
         std::cout << "memory: " << std::endl
+////////////////////////////////////////////////////////////////////////////////
                   << indent << "quota: " << std::setw(15) << to_pretty_net(res.ram_quota) << "  used: " << std::setw(15) << to_pretty_net(res.ram_usage) << std::endl
                   << std::endl;
 
+////////////////////////////////////////////////////////////////////////////////
         std::cout << "net bandwidth: " << std::endl;
+////////////////////////////////////////////////////////////////////////////////
         if (res.total_resources.is_object())
         {
             auto net_total = to_asset(res.total_resources.get_object()["net_weight"].as_string());
@@ -253,7 +260,9 @@ void get_account(const string &accountName, const string &coresym, bool json_for
         std::cout << indent << std::left << std::setw(11) << "limit:" << std::right << std::setw(18) << to_pretty_net(res.net_limit.max) << "\n";
         std::cout << std::endl;
 
+////////////////////////////////////////////////////////////////////////////////
         std::cout << "cpu bandwidth:" << std::endl;
+////////////////////////////////////////////////////////////////////////////////
 
         if (res.total_resources.is_object())
         {
@@ -317,7 +326,9 @@ void get_account(const string &accountName, const string &coresym, bool json_for
 
         if (res.core_liquid_balance.valid())
         {
+////////////////////////////////////////////////////////////////////////////////
             std::cout << res.core_liquid_balance->get_symbol().name() << " balances: " << std::endl;
+////////////////////////////////////////////////////////////////////////////////
             std::cout << indent << std::left << std::setw(11)
                       << "liquid:" << std::right << std::setw(18) << *res.core_liquid_balance << std::endl;
             std::cout << indent << std::left << std::setw(11)
@@ -335,7 +346,10 @@ void get_account(const string &accountName, const string &coresym, bool json_for
             if (proxy.empty())
             {
                 auto &prods = obj["producers"].get_array();
+////////////////////////////////////////////////////////////////////////////////
                 std::cout << "producers:";
+////////////////////////////////////////////////////////////////////////////////
+
                 if (!prods.empty())
                 {
                     for (size_t i = 0; i < prods.size(); ++i)
