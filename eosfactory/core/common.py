@@ -1,3 +1,4 @@
+import os
 import importlib
 
 import eosfactory.core.setup as setup
@@ -6,8 +7,8 @@ import eosfactory.core.logger as logger
 
 
 def get_block_trx_data(block_num):
-    get_commands = importlib.import_module(".get", setup.light_full)
-    block = get_commands.GetBlock(block_num, is_verbose=False)
+    GET_COMMANDS = importlib.import_module(".get", setup.light_full)
+    block = GET_COMMANDS.GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]
     if not len(trxs):
         logger.OUT("No transactions in block {}.".format(block_num))
@@ -17,8 +18,8 @@ def get_block_trx_data(block_num):
 
 
 def get_block_trx_count(block_num):
-    get_commands = importlib.import_module(".get", setup.light_full)
-    block = get_commands.GetBlock(block_num, is_verbose=False)
+    GET_COMMANDS = importlib.import_module(".get", setup.light_full)
+    block = GET_COMMANDS.GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]
     if not len(trxs):
         logger.OUT("No transactions in block {}.".format(block_num))    
@@ -26,7 +27,7 @@ def get_block_trx_count(block_num):
 
 
 def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
-    '''Check whether the given contract project has its ABI and WASM files.
+    """Check whether the given contract project has its ABI and WASM files.
 
     Args:
         contract_dir (str): A hint to the project root directory.
@@ -35,7 +36,7 @@ def contract_is_built(contract_dir, wasm_file=None, abi_file=None):
 
     Returns:
         [<absolute contract dir>, <wasm file>, <abi file>]
-    '''
+    """
     contract_path_absolute = config.contract_dir(contract_dir)
     if not contract_path_absolute:
         return []

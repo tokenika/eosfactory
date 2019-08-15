@@ -12,16 +12,16 @@ def build(
                         is_test_options, is_execute, verbosity)
 
 def main():
-    '''Build a contract.
+    """Build a contract.
 
     usage: python3 -m eosfactory.build [-h] [--compile] [--silent] dir
 
     The contract is determined with its project directory. The directory may be
-    absolute or relative to the *contract workspace* directory as defined with
-    :func:`.core.config.contract_workspace_dir()`. If the *dir* argument is not set,
+    absolute or relative to the ``contract workspace`` directory as defined with
+    :func:`.core.config.contract_workspace_dir()`. If the ``dir`` argument is not set,
     it is substituted with the current working directory.
 
-    The dependencies of the contract are determined with the json file given with the argument *c_cpp_prop* -- if it is set -- or with the file
+    The dependencies of the contract are determined with the json file given with the argument ``c_cpp_prop*`` -- if it is set -- or with the file
     *.vscode/c_opp_properties.json* in the project's directory, otherwise.
 
     Args:
@@ -32,18 +32,18 @@ def main():
         --execute: Execute the target.
         --silent: Do not print info.
         -h: Show help message and exit
-    '''
-    parser = argparse.ArgumentParser(description='''
+    """
+    parser = argparse.ArgumentParser(description="""
     Build a contract.
 
     The contract is determined with its project directory. The directory may be
-    absolute or relative to the *contract workspace* directory as defined with
-    :func:`.core.config.contract_workspace_dir(). If the *dir* argument is not set,
+    absolute or relative to the ``contract workspace`` directory as defined with
+    :func:`.core.config.contract_workspace_dir(). If the ``dir`` argument is not set,
     it is substituted with the current working directory.
 
-    The dependencies of the contract are determined with the json file given with the argument *c_cpp_prop* -- if it is set -- or with the file
+    The dependencies of the contract are determined with the json file given with the argument ``c_cpp_prop`` -- if it is set -- or with the file
     *.vscode/c_opp_properties.json* in the project's directory, otherwise.
-    ''')
+    """)
 
     parser.add_argument("dir", help="Contract name or directory.")
     parser.add_argument(

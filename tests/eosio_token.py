@@ -1,4 +1,4 @@
-'''An example of functional test.
+"""An example of functional test.
 
 Note that the declarations
     `
@@ -10,7 +10,7 @@ Note that the declarations
     `
 are abundant: they are in place to satisfy the linter, whu complains about 
 dynamically created objects. 
-'''
+"""
 import unittest
 from eosfactory.eosf import *
 
@@ -26,37 +26,37 @@ BOB = Account()
 CAROL = Account()
 
 class Test(unittest.TestCase):
-    '''Unittest class definition.
-    '''
+    """Unittest class definition.
+    """
     @classmethod
     def setUpClass(cls):
-        SCENARIO('''
+        SCENARIO("""
         Create a contract from template, then build and deploy it.
         Also, initialize the token and run a couple of transfers between different accounts.
-        ''')
+        """)
         reset()
         create_master_account("MASTER")
 
-        COMMENT('''
+        COMMENT("""
         Create test accounts:
-        ''')
+        """)
         create_account("ALICE", MASTER)
         create_account("BOB", MASTER)
         create_account("CAROL", MASTER)
 
     def test_functionality(self):
-        COMMENT('''
+        COMMENT("""
         Create, build and deploy the contract:
-        ''')
+        """)
         create_account("HOST", MASTER)
         smart = Contract(HOST, project_from_template(
             CONTRACT_WORKSPACE, template="eosio_token", remove_existing=True))
         smart.build()
         smart.deploy()
 
-        COMMENT('''
+        COMMENT("""
         Initialize the token and send some tokens to one of the accounts:
-        ''')
+        """)
         HOST.push_action(
             "create",
             {
@@ -81,9 +81,9 @@ class Test(unittest.TestCase):
         print("'trace[\"console\"]' sum is '{}'".format(HOST.action.console))
         logger.DEBUG(HOST.action.act)
 
-        COMMENT('''
+        COMMENT("""
         Execute a series of transfers between the accounts:
-        ''')
+        """)
 
         HOST.push_action(
             "transfer",
@@ -124,9 +124,9 @@ class Test(unittest.TestCase):
             permission=(BOB, Permission.ACTIVE))
         logger.DEBUG(HOST.action.act)
 
-        COMMENT('''
+        COMMENT("""
         Verify the outcome:
-        ''')
+        """)
 
         table_ALICE = HOST.table("accounts", ALICE)
         table_BOB = HOST.table("accounts", BOB)
@@ -134,13 +134,13 @@ class Test(unittest.TestCase):
 
         self.assertEqual(
             table_ALICE.json["rows"][0]["balance"], '77.0000 EOS',
-            '''assertEqual(table_ALICE.json["rows"][0]["balance"], '77.0000 EOS')''')
+            """assertEqual(table_ALICE.json["rows"][0]["balance"], '77.0000 EOS')""")
         self.assertEqual(
             table_BOB.json["rows"][0]["balance"], '11.0000 EOS',
-            '''assertEqual(table_BOB.json["rows"][0]["balance"], '11.0000 EOS')''')
+            """assertEqual(table_BOB.json["rows"][0]["balance"], '11.0000 EOS')""")
         self.assertEqual(
             table_CAROL.json["rows"][0]["balance"], '12.0000 EOS',
-            '''assertEqual(table_CAROL.json["rows"][0]["balance"], '12.0000 EOS')''')
+            """assertEqual(table_CAROL.json["rows"][0]["balance"], '12.0000 EOS')""")
 
     @classmethod
     def tearDownClass(cls):

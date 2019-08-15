@@ -50,7 +50,7 @@ def spawn(command_line, error_message='', shell=False, raise_exception=True):
 
     if raise_exception:
         if stderr:
-            raise errors.Error('''
+            raise errors.Error("""
     {}
 
     command line:
@@ -60,7 +60,7 @@ def spawn(command_line, error_message='', shell=False, raise_exception=True):
     error message:
     ==============
     {}
-            '''.format(error_message, " ".join(command_line), stderr),
+            """.format(error_message, " ".join(command_line), stderr),
             translate=False)
 
         return stdout
@@ -109,12 +109,12 @@ def long_process(command_line, build_dir=None, is_verbose=True, prompt=None,
             try:
                 shutil.rmtree(cwd)
             except Exception as e:
-                raise errors.Error('''
+                raise errors.Error("""
 Cannot remove the directory {}.
 error message:
 ==============
 {}
-                '''.format(cwd, str(e)))
+                """.format(cwd, str(e)))
         os.mkdir(cwd)
 
     threading.Thread(target=thread_function).start()
@@ -143,7 +143,7 @@ error message:
         shutil.rmtree(cwd)
 
     if returncode:
-        raise errors.Error('''
+        raise errors.Error("""
 command line:
 =============
 {}
@@ -151,7 +151,7 @@ command line:
 error message:
 ==============
 {}
-        '''.format(" ".join(command_line), stderr))
+        """.format(" ".join(command_line), stderr))
 
     return p
 
@@ -178,13 +178,13 @@ def project_zip():
 
 
 def relay(command_url, node_url, print_request, print_response):
-    '''Relays, to the node url, requests sent to the given command_url, tapping 
+    """Relays, to the node url, requests sent to the given command_url, tapping 
     them.
 
     A socket server listens to the ``command_url``. Prints a request and 
     passes it to the ``node_url``. Prints the response from the ``node_url`` and
     passes it back to the ``command_url``.
-    '''
+    """
     if not print_request and not print_response:
         return node_url
     
@@ -265,11 +265,6 @@ def relay(command_url, node_url, print_request, print_response):
     #     zf.close()
 
     # print(print_info(zip_file))
-
-
-
-
-
 
     # zip_file = "/mnt/c/Workspaces/EOS/contracts/examples/project_zip.zip"
     # zip_object = zipfile.ZipFile(zip_file, 'w')

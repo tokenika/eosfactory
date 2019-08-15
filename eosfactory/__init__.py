@@ -1,7 +1,7 @@
-'''Library for development and tests of the EOSIO smart contracts.
+"""Library for development and tests of the EOSIO smart contracts.
 
 .. moduleauthor:: Tokenika
-'''
+"""
 
 import eosfactory.core.config
 

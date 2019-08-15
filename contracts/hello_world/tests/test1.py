@@ -12,36 +12,36 @@ ALICE = Account()
 CAROL = Account()
 
 def test():
-    SCENARIO('''
+    SCENARIO("""
     Execute simple actions.
-    ''')
+    """)
     reset()
     create_master_account("MASTER")
 
-    COMMENT('''
+    COMMENT("""
     Build and deploy the contract:
-    ''')
+    """)
     create_account("HOST", MASTER)
     smart = Contract(HOST, CONTRACT_WORKSPACE)
     smart.build(force=False)
     smart.deploy()
 
-    COMMENT('''
+    COMMENT("""
     Create test accounts:
-    ''')
+    """)
     create_account("ALICE", MASTER)
     create_account("CAROL", MASTER)
 
-    COMMENT('''
+    COMMENT("""
     Test an action for Alice:
-    ''')
+    """)
     HOST.push_action(
         "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))
     assert("ALICE" in DEBUG())
 
-    COMMENT('''
+    COMMENT("""
     Test an action for Carol:
-    ''')
+    """)
     HOST.push_action(
         "hi", {"user":CAROL}, permission=(CAROL, Permission.ACTIVE))
     assert("CAROL" in DEBUG())

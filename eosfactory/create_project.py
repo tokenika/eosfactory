@@ -2,7 +2,7 @@ import argparse
 from eosfactory.core.teos import project_from_template 
 
 def main():
-    '''
+    """
     usage: python3 -m eosfactory.create_project [-h] [--vsc]
                             [--throw] [--ovr] [--silent]
                             name [template]
@@ -21,11 +21,11 @@ def main():
         --ovr: Overwrite any existing project.
         --silent: Do not print info.
         -h: Show help message and exit        
-    '''
-    parser = argparse.ArgumentParser(description='''
+    """
+    parser = argparse.ArgumentParser(description="""
     Given a workspace name and (optional) a template name,
     create a new workspace, compatible with Visual Studio Code.
-    ''')
+    """)
 
     parser.add_argument("name", help="Project name or directory.")
     parser.add_argument(

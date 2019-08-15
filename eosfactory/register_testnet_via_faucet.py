@@ -7,6 +7,7 @@ import eosfactory.core.setup as setup
 import eosfactory.core.errors as errors
 from eosfactory.eosf import *
 
+
 CREATE_ACCOUNT_URL = "create_account"
 GET_TOKEN_URL = "get_token"
 HEADERS = {
@@ -27,14 +28,14 @@ def register_testnet_via_faucet_(faucet, url, alias):
     setup.set_nodeos_address(url)
     manager.verify_testnet_production()
 
-    account_name = base_commands.account_name()
+    account_name = BASE_COMMANDS.account_name()
     path = faucet + "/" + CREATE_ACCOUNT_URL + "?" + account_name
     attempt = 0
     response = None
     while True:
-        TRACE('''
+        TRACE("""
         Registering account: {}
-        '''.format(path))
+        """.format(path))
         try:
             request = Request(path, headers=HEADERS)
             response = urlopen(request).read()
@@ -46,36 +47,36 @@ def register_testnet_via_faucet_(faucet, url, alias):
             response = None
             attempt = attempt + 1
             if attempt == MAX_ATTEMPTS:
-                raise errors.Error('''
+                raise errors.Error("""
                     Request failed: {}
                     Error message is
                     {}
-                    '''.format(path, str(e)))
+                    """.format(path, str(e)))
             else:
-                account_name = base_commands.account_name()
+                account_name = BASE_COMMANDS.account_name()
                 path = faucet + "/" + CREATE_ACCOUNT_URL + "?" + account_name
                 time.sleep(DELAY_IN_SECONDDS)
 
 
     if response["account"] != account_name:
-        raise errors.Error('''
+        raise errors.Error("""
         Account names do not match: ``{}`` vs ``{}``
-        '''.format(response["account"], account_name))
+        """.format(response["account"], account_name))
 
     owner_key = response["keys"]["owner_key"]["private"]
     active_key = response["keys"]["active_key"]["private"]
 
-    INFO('''
+    INFO("""
         Account ``{}`` successfully registered.
-        '''.format(account_name))
+        """.format(account_name))
 
     path = faucet + "/" + GET_TOKEN_URL + "?" + account_name
     attempt = 0
     success = 0
     while True:
-        TRACE('''
+        TRACE("""
         Funding account: {}
-        '''.format(path))
+        """.format(path))
         try:
             request = Request(path, headers=HEADERS)
             response = urlopen(request).read()
@@ -89,27 +90,27 @@ def register_testnet_via_faucet_(faucet, url, alias):
             attempt = attempt + 1
             if attempt == MAX_ATTEMPTS:
                 if success == 0:
-                    raise errors.Error('''
+                    raise errors.Error("""
                         Request failed: {}
                         Error message is
                         {}
-                        '''.format(path, str(e)))
+                        """.format(path, str(e)))
                 break
             time.sleep(DELAY_IN_SECONDDS)
 
 
-    INFO('''
+    INFO("""
         Account ``{}`` successfully funded.
-        '''.format(account_name))
+        """.format(account_name))
 
-    testnet.add_to_mapping(
+    testnet_module.add_to_mapping(
         url, account_name, owner_key, active_key, alias)
 
-    testnet.testnets()
+    testnet_module.testnets()
 
 
 def main():
-    '''
+    """
     usage: python3 -m eosfactory.register_testnet_via_faucet [-h] \
     faucet url [alias]
 
@@ -120,7 +121,7 @@ def main():
             https://api.kylin.alohaeos.com
         alias: Testnet alias.
         -h: Show help message and exit.
-    '''
+    """
     parser = argparse.ArgumentParser()
 
     parser.add_argument(

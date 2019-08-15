@@ -84,7 +84,7 @@ contract_workspace_dir_ = (
 
 
 def eosfactory_data():
-    '''Data directory.
+    """Data directory.
 
     For developer's installation, data is in the root of the installation.
     .: wsl_root.sh
@@ -93,7 +93,7 @@ def eosfactory_data():
     templates: contracts, ...
     includes: eoside, ...
     libs: ...
-    '''
+    """
     tested = []
     is_not_linked = is_site_package()
 
@@ -115,9 +115,9 @@ def eosfactory_data():
 
     msg = "Cannot determine the directory of application data. Tried:"
     for path in tested:
-        msg = '''{}
+        msg = """{}
     {}
-        '''.format(msg, path)
+        """.format(msg, path)
 
     raise errors.Error(msg, translate=False)
 
@@ -149,10 +149,10 @@ def is_site_package():
 # ['/mnt/c/Workspaces/EOS/eosfactory/eosfactory']
 
     if is_local_or_system == -1:
-        raise errors.Error('''
+        raise errors.Error("""
 Cannot determine the configuration directory. 'eosfactory.__path__' is
     {}
-        '''.format(eosfactory_path), translate=False)
+        """.format(eosfactory_path), translate=False)
 
     return is_local_or_system
 
@@ -189,19 +189,19 @@ def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
         else:
             contract_workspace_dir = os.path.join(TMP, CONTRACTS_DIR)
 
-        input_msg = utils.heredoc('''
+        input_msg = utils.heredoc("""
 Where do you prefer to keep your smart-contract projects?
 The current location is:
     {}
 Otherwise, input another existing directory path, or nothing to 
 keep the current one:
-            '''.format(logger.colored(contract_workspace_dir, current_path_color))
-            ) if os.path.exists(contract_workspace_dir) else utils.heredoc('''
+            """.format(logger.colored(contract_workspace_dir, current_path_color))
+            ) if os.path.exists(contract_workspace_dir) else utils.heredoc("""
 Where do you prefer to keep your smart-contract projects?
 The set location is:
     {}
 but it does not exist. Input an existing directory path:
-            '''.format(logger.colored(contract_workspace_dir, current_path_color))
+            """.format(logger.colored(contract_workspace_dir, current_path_color))
             )
             
         new_dir = tilde(input(input_msg + "\n"))
@@ -213,41 +213,40 @@ but it does not exist. Input an existing directory path:
             print("OK")
             break
         else:        
-            print("\n" + utils.heredoc('''
+            print("\n" + utils.heredoc("""
 The path you entered:
     {}
 doesn't seem to exist!
-            ''').format(
+            """).format(
                     logger.colored(new_dir, error_path_color)) + "\n")
 
 
 def config_dir():
     path = os.path.join(eosfactory_data(), CONFIG_DIR)
     if not os.path.exists(path):
-        raise errors.Error('''
+        raise errors.Error("""
 Cannot find the configuration directory
 {}
-        '''.format(path), translate=False)
+        """.format(path), translate=False)
     return path
 
 
 def template_dir():
     path = os.path.join(eosfactory_data(), TEMPLATE_DIR[1])
     if not os.path.exists(path):
-        raise errors.Error('''
+        raise errors.Error("""
 Cannot find the template directory
 {}
-        '''.format(path), translate=False)
+        """.format(path), translate=False)
     return path
 
 
 def eoside_includes_dir():
-    '''The directory for contract definition includes.
+    """The directory for contract definition includes.
 
-    It may be set with 
-    *INCLUDE* entry in the *config.json* file, 
+    It may be set with ``INCLUDE`` entry in the ``config.json`` file, 
     see :func:`.current_config`.
-    '''
+    """
     path = includes_[1]
     if not os.path.isabs(path):
         path = os.path.join(eosfactory_data(), includes_[1])
@@ -257,12 +256,11 @@ def eoside_includes_dir():
 
 
 def eoside_libs_dir():
-    '''The directory for contract links.
+    """The directory for contract links.
 
-    It may be set with 
-    *LIBS* entry in the *config.json* file, 
+    It may be set with ``LIBS`` entry in the ``config.json`` file, 
     see :func:`.current_config`.
-    '''
+    """
     path = libs_[1]
     if not os.path.isabs(path):
         path = os.path.join(eosfactory_data(), libs_[1])
@@ -272,25 +270,25 @@ def eoside_libs_dir():
 
 
 def contract_workspace_dir(dont_set_workspace=False):
-    '''The absolute path to the contract workspace.
+    """The absolute path to the contract workspace.
 
     The contract workspace is a directory where automatically created projects
     are placed by default. It is set while EOSFactory is installed. 
 
     If not set, the projects are stored in the `.config.CONTRACTS_DIR` 
-    subdirectory (typically *contracts/*) of the EOSFActory installation, if 
+    subdirectory (typically ``contracts/``) of the EOSFActory installation, if 
     EOSFactory is installed from its GitHub repository, otherwise, they go to 
     a directory specified as 
     `join(.config.TMP, .config.CONTRACTS_DIR)`. 
 
     The setting may be changed with 
-    *EOSIO_CONTRACT_WORKSPACE* entry in the *config.json* file, 
+    ``EOSIO_CONTRACT_WORKSPACE`` entry in the ``config.json`` file, 
     see :func:`.current_config`.
 
     Args:
         dont_set_workspace (bool): If set, do not query for empty workspace 
             directory.
-    '''
+    """
     if dont_set_workspace:
         return config_map()[contract_workspace_dir_[0]]
 
@@ -304,11 +302,11 @@ def contract_workspace_dir(dont_set_workspace=False):
         if os.path.exists(path):
             return path
         else:
-            raise errors.Error('''
+            raise errors.Error("""
 The path
 '{}',
 set as the contract workspace directory, does not exist.
-            '''.format(path), translate=False)
+            """.format(path), translate=False)
     else:
         if not is_site_package():
             path = os.path.join(eosf_dir(), path)
@@ -320,83 +318,80 @@ set as the contract workspace directory, does not exist.
         if os.path.exists(path):
             return path
         else:
-            raise errors.Error('''
+            raise errors.Error("""
 The path
 '{}'
 resolved as the contract workspace directory directory does not exist.
-            '''.format(workspace_dir, translate=False)
+            """.format(workspace_dir, translate=False)
             )
     return path
 
 
 def eosf_dir():
-    '''The absolute directory of the EOSFactory installation.
-    '''
+    """The absolute directory of the EOSFactory installation.
+    """
     path = os.path.realpath(os.path.join(
                             os.path.realpath(__file__), FROM_HERE_TO_EOSF_DIR))
     
     if os.path.exists(path):
         return path
 
-    raise errors.Error('''
+    raise errors.Error("""
 Cannot determine the root directory of the EOSFactory installation.
 The path to the file 'config.py' is
     '{}'.
 The expected installation path, which is 
     '{}',
 is reported as non-existent.
-    '''.format(__file__, path), translate=False)
+    """.format(__file__, path), translate=False)
 
 
 def eosio_key_private():
-    '''*eosio* account private key.
+    """``eosio`` account private key.
     
-    A private key used as the value of the option *signature-provider* in
-    the command line for the *nodeos* executable. 
+    A private key used as the value of the option ``signature-provider`` in
+    the command line for the ``nodeos`` executable. 
     
-    It may be changed with 
-    *EOSIO_KEY_PRIVATE* entry in the *config.json* file, 
+    It may be changed with ``EOSIO_KEY_PRIVATE`` entry in the ``config.json`` file, 
     see :func:`.current_config`.
-    '''
+    """
     return config_value_checked(key_private_)
 
 
 def eosio_key_public():
-    '''*eosio* account public key.
+    """``eosio`` account public key.
     
-    A public key used as the value of the option *signature-provider* in
-    the command line for the *nodeos* executable.
+    A public key used as the value of the option ``signature-provider`` in
+    the command line for the ``nodeos`` executable.
 
-    It may be changed with 
-    *EOSIO_KEY_PUBLIC* entry in the *config.json* file, 
+    It may be changed with ``EOSIO_KEY_PUBLIC`` entry in the ``config.json`` file, 
     see :func:`.current_config`.    
-    '''
+    """
     return config_value_checked(key_public_)
 
 
 def chain_state_db_size_mb():
-    '''The size of the buffer of the local node. 
+    """The size of the buffer of the local node. 
 
-    The value of the option *chain-state-db-size-mb* in the command line for 
-    the *nodeos* executable.
+    The value of the option ``chain-state-db-size-mb`` in the command line for 
+    the ``nodeos`` executable.
 
     It may be changed with 
-    *EOSIO_SHARED_MEMORY_SIZE_MB* entry in the *config.json* file, 
+    ``EOSIO_SHARED_MEMORY_SIZE_MB`` entry in the ``config.json`` file, 
     see :func:`.current_config`.  
-    '''
+    """
     return config_value_checked(chain_state_db_size_mb_)
 
 
 def wsl_root():
-    '''The root directory of the Windows WSL, or empty string if not Windows.
+    """The root directory of the Windows WSL, or empty string if not Windows.
     
     The root directory of the Ubuntu file system, owned by the installation,
     if any, of the Windows Subsystem Linux (WSL).
 
-    It may be changed with 
-    *WSL_ROOT* entry in the *config.json* file, 
+    It may be changed with ``WSL_ROOT`` entry in the ``config.json`` file, 
     see :func:`.current_config`.
-    '''
+    """
     if not utils.is_windows_ubuntu():
         return ""
 
@@ -411,14 +406,14 @@ def wsl_root():
             while True:
                 if not os.path.exists(wsl_root_sh):
                     path = ""
-                    logger.ERROR('''
+                    logger.ERROR("""
 Cannot find the bash command:
 '{}'
 The intelisense feature of Visual Studio Code will be disabled. 
-                    '''.format(wsl_root_sh), translate=False)
+                    """.format(wsl_root_sh), translate=False)
                     break                   
 
-                path = input(logger.error('''
+                path = input(logger.error("""
 Error message is
 {}
 
@@ -426,7 +421,7 @@ Cannot find the root of the WSL file system which was tried to be
 '{}'
 Please, find the path in your computer and enter it. Enter nothing, if you do
 not care about having efficient the intelisense of Visual Studio Code.
-                '''.format(error, path), translate=False) + "\n<<< ")
+                """.format(error, path), translate=False) + "\n<<< ")
                 if not path:
                     break
 
@@ -444,36 +439,36 @@ not care about having efficient the intelisense of Visual Studio Code.
 
 
 def nodeos_stdout():
-    '''Set *stdout* file for the *stdout* stream of the local node.
+    """Set ``stdout`` file for the ``stdout`` stream of the local node.
 
-    If the value of *NODEOS_STDOUT* entry in the *config.json* file is set,
+    If the value of ``NODEOS_STDOUT`` entry in the ``config.json`` file is set,
     the local node logs to the specified file its output, 
     see :func:`.current_config`.
 
     Note:
-        The same may be achieved with the *nodeos_stdout* argument in the
+        The same may be achieved with the ``nodeos_stdout`` argument in the
         function :func:`.core.manager.resume`.
-    '''
+    """
     return config_value(nodeos_stdout_)
 
 
 def http_server_address():
-    '''The http/https URL where local *nodeos* is running.
+    """The http/https URL where local ``nodeos`` is running.
 
     The setting may be changed with 
-    *LOCAL_NODE_ADDRESS* entry in the *config.json* file, 
+    ``LOCAL_NODE_ADDRESS`` entry in the ``config.json`` file, 
     see :func:`.current_config`.
-    '''
+    """
     return config_value_checked(node_address_)
 
 
 def http_wallet_address():
-    '''The http/https URL where keosd is running.
+    """The http/https URL where keosd is running.
 
     The setting may be changed with 
-    *WALLET_MANAGER_ADDRESS* entry in the *config.json* file, 
+    ``WALLET_MANAGER_ADDRESS`` entry in the ``config.json`` file, 
     see :func:`.current_config`.    
-    '''
+    """
     retval = config_value(wallet_address_)
     if not retval:
         retval = http_server_address()
@@ -481,42 +476,42 @@ def http_wallet_address():
 
 
 def node_exe():
-    '''The path to the *nodeos* executable.
+    """The path to the ``nodeos`` executable.
 
     The setting may be changed with 
-    *LOCAL_NODE_EXECUTABLE* entry in the *config.json* file, 
+    ``LOCAL_NODE_EXECUTABLE`` entry in the ``config.json`` file, 
     see :func:`.current_config`.    
-    '''
+    """
     return first_valid_which(node_exe_) 
 
 
 def cli_exe():
-    '''The path to the *cleos* executable.
+    """The path to the ``cleos`` executable.
     
     The setting may be changed with 
-    *EOSIO_CLI_EXECUTABLE* entry in the *config.json* file, 
+    ``EOSIO_CLI_EXECUTABLE`` entry in the *config.json* file, 
     see :func:`.current_config`.    
-    '''
+    """
     return first_valid_which(cli_exe_)
 
 
 def keosd_exe():
-    '''The path to the *keosd* executable.
+    """The path to the *keosd* executable.
     
     The setting may be changed with 
     *KEOSD_EXECUTABLE* entry in the *config.json* file, 
     see :func:`.current_config`.
-    '''
+    """
     return first_valid_which(keosd_exe_)
 
 
 def eosio_cpp():
-    '''The path to the *eosio-cpp* executable.
+    """The path to the *eosio-cpp* executable.
     
     The setting may be changed with 
     *EOSIO_CPP* entry in the *config.json* file, 
     see :func:`.current_config`.
-    '''
+    """
     return first_valid_which(eosio_cpp_)
 
 
@@ -549,12 +544,12 @@ def eosio_cdt_version():
 
 
 def eosio_cdt_root():
-    '''The path to the *eosio-cpp* installation directory.
+    """The path to the *eosio-cpp* installation directory.
     
     The setting may be changed with 
     *EOSIO_CPP* entry in the *config.json* file, 
     see :func:`.current_config`.
-    '''
+    """
     # find /usr -wholename "*/eosio.cdt/1.6.1"
     config_json = config_map()
     if eosio_cdt_root_[0] in config_json and config_json[eosio_cdt_root_[0]]:
@@ -563,9 +558,9 @@ def eosio_cdt_root():
     eosio_cpp_version_ = eosio_cdt_version()
     if not eosio_cpp_version_:
         raise errors.Error(
-            '''
+            """
             'eosio-cpp' does not response.
-            ''')        
+            """)        
 
     version_pattern = re.compile(EOSIO_CDT_PATTERN)
     tested = []
@@ -579,39 +574,39 @@ def eosio_cdt_root():
 
     msg = "Cannot determine the installation directory of 'eosio-cdt. Tried:"
     for path in tested:
-        msg = '''{}
+        msg = """{}
     {}
-        '''.format(msg, path)
-    msg = '''{}
+        """.format(msg, path)
+    msg = """{}
 Define it in the config file
 {} 
-    '''.format(msg, config_file())
+    """.format(msg, config_file())
     raise errors.Error(msg, translate=False) 
 
 
 def eosio_cpp_includes():
-    '''The list of eosio-cpp includes.
+    """The list of eosio-cpp includes.
     
     The setting may be changed with *EOSIO_CPP* entry in the *config.json* 
     file, see :func:`.current_config`.
-    '''
+    """
     list = []
     path = eosio_cdt_root()
     for include in eosio_cpp_includes_[1][0]:
         include = os.path.join(path, include)
         if not os.path.exists(include):
-            raise error.Error('''
+            raise error.Error("""
 The directory 
 {}
 in the contract compiler include list does not exist.
 Is ``eosio.cpp`` properly installed in the system?
-        ''')
+        """)
         list.append(include)
     return list
 
 
 def keosd_wallet_dir(raise_error=True):
-    '''The path to the local wallet directory.
+    """The path to the local wallet directory.
 
     The path is hard-coded in the *keosd* wallet manager.
 
@@ -620,7 +615,7 @@ def keosd_wallet_dir(raise_error=True):
 
     Raises:
         .core.errors.Error: If the directory does not exist.
-    '''
+    """
     path = first_valid_path(keosd_wallet_dir_, raise_error=False)
     if not path:
         from eosfactory.core.cleos.base import WalletList
@@ -628,19 +623,19 @@ def keosd_wallet_dir(raise_error=True):
         path = first_valid_path(keosd_wallet_dir_, raise_error=False)
         if not path:
             if raise_error:
-                raise errors.Error('''
+                raise errors.Error("""
 Cannot find any path for '{}'.
 Tried:
 {}
-                '''.format(keosd_wallet_dir_[0], keosd_wallet_dir_[1]), 
+                """.format(keosd_wallet_dir_[0], keosd_wallet_dir_[1]), 
                                                             translate=False)
 
     return path
 
 
 def config_file():
-    '''The path to the *config.json* file.
-    '''
+    """The path to the *config.json* file.
+    """
     file = os.path.join(config_dir(), CONFIG_JSON)
 
     if not os.path.exists(file):
@@ -653,11 +648,11 @@ def config_file():
 
 
 def config_map():
-    '''Return a JSON object read from the *config.json* file.
+    """Return a JSON object read from the *config.json* file.
 
     Raises:
         .core.errors.Error: If the JSON object cannot be returned.
-    '''
+    """
     path = config_file()
     if os.path.exists(path):
         try:
@@ -670,40 +665,40 @@ def config_map():
         except Exception as e:
             raise errors.Error(str(e), translate=False)
 
-    raise errors.Error('''
+    raise errors.Error("""
 Cannot find the config file.       
-    ''', translate=False)
+    """, translate=False)
 
 
 def write_config_map(map):
-    '''Write the given json object to *config.json*.
+    """Write the given json object to *config.json*.
 
     Args:
         map (json): The json object to be saved.
 
     Raises:
         .core.errors.Error: If the JSON object cannot be saved.        
-    '''
+    """
     path = config_file()
     if os.path.exists(path):
         with open(path, "w+") as output:
             output.write(json.dumps(map, indent=4))
         return
 
-    raise errors.Error('''
+    raise errors.Error("""
 Cannot find the config file.       
-    ''', translate=False)
+    """, translate=False)
     
 
 def config_values(config_list):
-    '''List values ascribed to the key of a hard-codded configuration list.
+    """List values ascribed to the key of a hard-codded configuration list.
 
     First, consider the *config.json*, next the values of the hard-codded 
     configuration list.
 
     Args:
         config_list (tuple): A configure list tuple.
-    '''
+    """
     config_key = config_list[0]
 
     retval = []
@@ -722,39 +717,39 @@ def config_values(config_list):
 
 
 def config_value(config_list):
-    '''Get the first item from :func:`.config_values`.
+    """Get the first item from :func:`.config_values`.
 
     Args:
         config_list (()): A configure list tuple.    
-    '''
+    """
     retval = config_values(config_list) 
     return retval[0] if retval else None
 
 
 def config_value_checked(config_list):
-    '''Get the first item from :func:`.config_values`. Raise an error if fails.
+    """Get the first item from :func:`.config_values`. Raise an error if fails.
 
     Args:
         config_list (tuple): A configure list tuple.  
 
     Raises:
         .core.errors.Error: If the result is not defined.
-    '''
+    """
     retval = config_value(config_list)
     if not retval is None:
         return retval
 
-    raise errors.Error('''
+    raise errors.Error("""
 The value of {} is not defined.
 Tried:
 {}
 Define it in the config file
 {}       
-    '''.format(config_list[0], config_list[1], config_file()), translate=False)
+    """.format(config_list[0], config_list[1], config_file()), translate=False)
 
 
 def first_valid_which(config_list, find_file=None, raise_error=True):
-    '''Given a key to the config list, get a valid file system path.
+    """Given a key to the config list, get a valid file system path.
 
     Applicable if the *config_list* argument refers to a file path.
     The path may be absolute or relative to the root of the EOSFactory 
@@ -770,7 +765,7 @@ def first_valid_which(config_list, find_file=None, raise_error=True):
     Raises:
         .core.errors.Error: If the *raise_error* argument is set and the \
             result is not defined.            
-    '''
+    """
     values = config_values(config_list)
     if values[0]:
         for path in values:
@@ -784,17 +779,17 @@ def first_valid_which(config_list, find_file=None, raise_error=True):
 
     if raise_error:
         config_values(config_list)
-        raise errors.Error('''
+        raise errors.Error("""
 Cannot find any path for '{}'.
 Tried:
 {}
-        '''.format(config_list[0], config_list[1]), translate=False)
+        """.format(config_list[0], config_list[1]), translate=False)
     else:
         return None
 
 
 def first_valid_path(config_list, find_file=None, raise_error=True):
-    '''Given a key to the config list, get a valid file system path.
+    """Given a key to the config list, get a valid file system path.
 
     Applicable if the *config_list* argument refers to a file path.
     The path may be absolute or relative to the root of the EOSFactory 
@@ -810,7 +805,7 @@ def first_valid_path(config_list, find_file=None, raise_error=True):
     Raises:
         .core.errors.Error: If the *raise_error* argument is set and the \
             result is not defined.            
-    '''
+    """
     values = config_values(config_list)
     if values[0]:
         for path in values:
@@ -838,47 +833,47 @@ def first_valid_path(config_list, find_file=None, raise_error=True):
                         return path
 
     if raise_error:
-        raise errors.Error('''
+        raise errors.Error("""
 Cannot find any path for '{}'.
 Tried:
 {}
-        '''.format(config_list[0], config_list[1]), translate=False)
+        """.format(config_list[0], config_list[1]), translate=False)
     else:
         return None
 
 def nodeos_data_dir():
-    '''Directory containing runtime data of *nodeos*.
+    """Directory containing runtime data of *nodeos*.
 
     It may be changed with 
     *NODEOS_DATA_DIR* entry in the *config.json* file, 
     see :func:`.current_config`.
-    '''
+    """
     return nodeos_data_dir_[1][0]
     
 
 def nodeos_config_dir():
-    '''Directory containing configuration files such as config.ini.
+    """Directory containing configuration files such as config.ini.
 
     It may be changed with 
     *NODEOS_CONFIG_DIR* entry in the *config.json* file, 
     see :func:`.current_config`.
-    '''
+    """
     return nodeos_config_dir_[1][0]
 
 
 def nodeos_options():
-    '''
-    '''
+    """
+    """
     return nodeos_options_[1]
 
 
 def genesis_json():
-    '''File to read Genesis State from.
+    """File to read Genesis State from.
 
     It may be changed with 
     *EOSIO_GENESIS_JSON* entry in the *config.json* file, 
     see :func:`.current_config`.    
-    '''
+    """
     path = first_valid_path(genesis_json_, raise_error=False)
     if not path:
         path = os.path.join(config_dir(), "genesis.json")
@@ -889,9 +884,9 @@ def genesis_json():
 
 
 def contract_dir(contract_dir_hint):
-    '''Given a hint, determine the contract root directory.
+    """Given a hint, determine the contract root directory.
 
-    The ``contract_dir_hint`` is tested to be either
+    The *contract_dir_hint* is tested to be either
         - an absolute path, or
         - a path relative to either
             - the directory given with :func:`contract_workspace`, or
@@ -902,7 +897,7 @@ def contract_dir(contract_dir_hint):
         
     Raises:
         .core.errors.Error: If the result is not defined.
-    '''
+    """
     contract_dir_hint = utils.wslMapWindowsLinux(contract_dir_hint)
     # ? the absolute path to a contract directory
     trace = contract_dir_hint + "\n"
@@ -931,16 +926,16 @@ def contract_dir(contract_dir_hint):
         if os.path.exists(contract_dir_):
             return os.path.realpath(contract_dir_)
     
-    raise errors.Error('''
+    raise errors.Error("""
 Cannot determine the contract directory.
 Tried:
     {}
-    '''.format(trace), translate=False)
+    """.format(trace), translate=False)
 
 
 def source_files(search_dir, extensions, recursively=False):
-    '''List files CPP/C and ABI files from the given directory
-    '''
+    """List files CPP/C and ABI files from the given directory
+    """
     srcs = []
     paths = os.listdir(search_dir)
     for file in paths:
@@ -954,7 +949,7 @@ def source_files(search_dir, extensions, recursively=False):
     
 
 def contract_source_files(contract_dir_hint):
-    '''List files CPP/C and ABI files from directory given a hint.
+    """List files CPP/C and ABI files from directory given a hint.
 
     Args:
         contract_dir_hint (str): An argument to the function 
@@ -962,7 +957,7 @@ def contract_source_files(contract_dir_hint):
 
     Raises:
         .core.errors.Error: If the list is empty.
-    '''
+    """
     contract_dir_ = contract_dir(contract_dir_hint)
     trace = contract_dir_ + "\n"
 
@@ -971,15 +966,15 @@ def contract_source_files(contract_dir_hint):
     if srcs:
         return (search_dir, srcs)
 
-    raise errors.Error('''
+    raise errors.Error("""
 Cannot find any contract source directory.
 Tried:
 {}
-    '''.format(trace), translate=False)
+    """.format(trace), translate=False)
 
 
 def abi_file(contract_dir_hint):
-    '''Given the contract directory, return the ABI file path.
+    """Given the contract directory, return the ABI file path.
     See :func:`contract_file`.
     
     Args:
@@ -987,7 +982,7 @@ def abi_file(contract_dir_hint):
 
     Raises:
         .core.errors.Error: If the result is not defined.    
-    '''
+    """
     search_dir = os.path.join(contract_dir(contract_dir_hint), BUILD)
     if not os.path.exists(search_dir):
         return
@@ -1003,18 +998,18 @@ def abi_file(contract_dir_hint):
             files.append(file_)
 
     if len(files) > 1:
-        raise errors.Error('''
+        raise errors.Error("""
 There is too many ABI files in the contract build folder
     {}
 There are files:
 {}
-        '''.format(search_dir, "\n".join(files)))
+        """.format(search_dir, "\n".join(files)))
 
     return files[0]
 
 
 def wasm_file(contract_dir_hint):
-    '''Given the contract directory, return the WASM file path.
+    """Given the contract directory, return the WASM file path.
     See :func:`contract_file`.
     
     Args:
@@ -1022,7 +1017,7 @@ def wasm_file(contract_dir_hint):
 
     Raises:
         .core.errors.Error: If the result is not defined.    
-    '''    
+    """    
     search_dir = os.path.join(contract_dir(contract_dir_hint), BUILD)
     if not os.path.exists(search_dir):
         return
@@ -1038,12 +1033,12 @@ def wasm_file(contract_dir_hint):
             files.append(file_)
 
     if len(files) > 1:
-        raise errors.Error('''
+        raise errors.Error("""
 There is too many WASM files in the contract build folder
     {}
 There are files:
 {}
-        '''.format(search_dir, "\n".join(files)))        
+        """.format(search_dir, "\n".join(files)))        
 
     return files[0]
 
@@ -1084,7 +1079,7 @@ def not_defined(config_map):
 
 
 def current_config(contract_dir=None, dont_set_workspace=False):
-    '''Present the current configuration.
+    """Present the current configuration.
 
     The current configuration result from both the *config.json* file setting
     and default hard-codded setup. The *config.json* prevails.
@@ -1096,7 +1091,7 @@ def current_config(contract_dir=None, dont_set_workspace=False):
         The current configuration can be seen with the bash command:
 
         *python3 -m eosfactory.core.config*
-    '''
+    """
     map = {}
     
     map["CONFIG_FILE"] = config_file()
@@ -1217,44 +1212,44 @@ def config():
     is_not_linked = is_site_package()
     if not is_not_linked:
         print(
-    '''EOSFactory package is installed as a link to the directory:
+    """EOSFactory package is installed as a link to the directory:
     '{}'
-    '''.format(os.path.join(eosf_dir(), EOSFACTORY_DIR))
+    """.format(os.path.join(eosf_dir(), EOSFACTORY_DIR))
         )
     elif is_not_linked == 1:
         print(
-    '''EOSFactory is installed as a site package locally.
-    '''            
+    """EOSFactory is installed as a site package locally.
+    """            
         )
     elif is_not_linked == 2:
         print(
-    '''EOSFactory is installed as a site package globally.
-    '''            
+    """EOSFactory is installed as a site package globally.
+    """            
         )
 
     config_map = current_config()
 
-    print('''
+    print("""
 The current configuration of EOSFactory:
 {}
 
 You can overwrite the above settings with entries in the configuration 
 file located here:
 {}
-'''.format(
+""".format(
         json.dumps(
             config_map, sort_keys=True, indent=4), config_file())
     )
 
     not_defined_ = not_defined(config_map)
     if not_defined_:
-        print('''
+        print("""
 There are undefined setting:
 {}
-    '''.format(json.dumps(not_defined_, sort_keys=True, indent=4)))
+    """.format(json.dumps(not_defined_, sort_keys=True, indent=4)))
 
 def main():
-    '''
+    """
     usage: config.py [-h] [--wsl_root] [--dependencies] [--json]
                     [--workspace WORKSPACE]
 
@@ -1266,11 +1261,11 @@ def main():
         --dont_set_workspace    Ignore empty workspace directory.
         --json                  Bare config JSON and exit.
         --workspace WORKSPACE   Set contract workspace and exit.
-    '''
+    """
 
-    parser = argparse.ArgumentParser(description='''
+    parser = argparse.ArgumentParser(description="""
     Show the configuration of EOSFactory or set contract workspace.
-    ''')
+    """)
     parser.add_argument(
         "--wsl_root",  help="Show set the root of the WSL and exit.", 
         action="store_true")

@@ -13,30 +13,30 @@ BOB = Account()
 CAROL = Account()
 
 def test():
-    SCENARIO('''
+    SCENARIO("""
     Initialize the token and run a couple of transfers between different accounts.
-    ''')
+    """)
     reset()
     create_master_account("MASTER")
 
-    COMMENT('''
+    COMMENT("""
     Build & deploy the contract:
-    ''')
+    """)
     create_account("HOST", MASTER)
     smart = Contract(HOST, CONTRACT_WORKSPACE)
     smart.build(force=False)
     smart.deploy()
 
-    COMMENT('''
+    COMMENT("""
     Create test accounts:
-    ''')
+    """)
     create_account("ALICE", MASTER)
     create_account("BOB", MASTER)
     create_account("CAROL", MASTER)
 
-    COMMENT('''
+    COMMENT("""
     Initialize the token and send some tokens to one of the accounts:
-    ''')
+    """)
 
     HOST.push_action(
         "create",
@@ -56,9 +56,9 @@ def test():
         },
         permission=(MASTER, Permission.ACTIVE))
 
-    COMMENT('''
+    COMMENT("""
     Execute a series of transfers between the accounts:
-    ''')
+    """)
 
     HOST.push_action(
         "transfer",
@@ -92,9 +92,9 @@ def test():
         },
         permission=(BOB, Permission.ACTIVE))
 
-    COMMENT('''
+    COMMENT("""
     Verify the outcome:
-    ''')
+    """)
 
     table_alice = HOST.table("accounts", ALICE)
     table_bob = HOST.table("accounts", BOB)

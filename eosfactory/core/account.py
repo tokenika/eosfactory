@@ -4,7 +4,7 @@ import eosfactory.core.setup as setup
 import eosfactory.core.config as config
 import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
-base_commands = importlib.import_module(".base", setup.light_full)
+BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
 sys_commands = importlib.import_module(".sys", setup.light_full)
 import eosfactory.core.manager as manager
 import eosfactory.core.logger as logger
@@ -13,7 +13,7 @@ import eosfactory.core.logger as logger
 class Eosio(interface.Account):
     def __init__(self, account_object_name):
         interface.Account.__init__(self, "eosio",
-        base_commands.CreateKey(
+        BASE_COMMANDS.CreateKey(
             config.eosio_key_public(),
             config.eosio_key_private(),
             is_verbose=False))
@@ -24,7 +24,7 @@ class Eosio(interface.Account):
             "account object name: {}\nname: {}\n{}".format(
                 self.account_object_name, 
                 self.name,
-                base_commands.GetAccount(self.name, is_verbose=False).out_msg),
+                BASE_COMMANDS.GetAccount(self.name, is_verbose=False).out_msg),
                 True)
         print(msg)
 
@@ -35,7 +35,7 @@ class Eosio(interface.Account):
         return ""
 
 
-class GetAccount(base_commands.GetAccount):  
+class GetAccount(BASE_COMMANDS.GetAccount):  
     def __init__(
             self,
             account_object_name, name=None, 
@@ -43,7 +43,7 @@ class GetAccount(base_commands.GetAccount):
 
         self.account_object_name = account_object_name
         if name is None: 
-            self.name = base_commands.account_name()
+            self.name = BASE_COMMANDS.account_name()
         else:
             self.name = name
             
@@ -55,50 +55,50 @@ class GetAccount(base_commands.GetAccount):
         self.has_keys = not owner_key is None
         
         try:
-            base_commands.GetAccount.__init__(
+            BASE_COMMANDS.GetAccount.__init__(
                 self, self.name, json=True, is_verbose=False)
         except errors.AccountDoesNotExistError:
             return
 
         self.exists = True
         if owner_key is None:
-            self.owner_key = base_commands.CreateKey(
+            self.owner_key = BASE_COMMANDS.CreateKey(
                 self.json["permissions"][1]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
         else: # an orphan account, private key is restored from cache
-            self.owner_key = base_commands.CreateKey(
+            self.owner_key = BASE_COMMANDS.CreateKey(
                 self.json["permissions"][1]["required_auth"]["keys"] \
                 [0]["key"], interface.key_arg(
                     owner_key, is_owner_key=True, is_private_key=True),
                 is_verbose=0) 
 
         if active_key is None:
-            self.owner_key = base_commands.CreateKey(
+            self.owner_key = BASE_COMMANDS.CreateKey(
                 self.json["permissions"][0]["required_auth"]["keys"] \
                 [0]["key"], 
                 is_verbose=0)
         else: # an orphan account, private key is restored from cache
-            self.active_key = base_commands.CreateKey(
+            self.active_key = BASE_COMMANDS.CreateKey(
                 self.json["permissions"][0]["required_auth"]["keys"] \
                 [0]["key"], interface.key_arg(
                     active_key, is_owner_key=False, is_private_key=True),
                 is_verbose=0)
 
-        logger.TRACE('''
+        logger.TRACE("""
             * Account *{}* exists in the blockchain.
-            '''.format(self.name))
+            """.format(self.name))
 
     def __str__(self):
         return self.name
 
 
-class RestoreAccount(base_commands.RestoreAccount):
+class RestoreAccount(BASE_COMMANDS.RestoreAccount):
     def __init__(self, name):
-        base_commands.RestoreAccount.__init__(self, name, is_verbose=False)
+        BASE_COMMANDS.RestoreAccount.__init__(self, name, is_verbose=False)
 
 
-class CreateAccount(base_commands.CreateAccount):
+class CreateAccount(BASE_COMMANDS.CreateAccount):
     def __init__(
             self, creator, name, owner_key, 
             active_key="",
@@ -111,7 +111,7 @@ class CreateAccount(base_commands.CreateAccount):
             max_net_usage=0,
             ref_block=None,
             delay_sec=0):
-        base_commands.CreateAccount.__init__(
+        BASE_COMMANDS.CreateAccount.__init__(
             self, creator, name, owner_key, active_key, permission,
             expiration_sec, skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage,

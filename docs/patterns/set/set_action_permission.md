@@ -24,7 +24,7 @@ permissions:
 ```
 
 ```python
-COMMENT('''producer.set_account_permission("claimer"''')
+COMMENT("""producer.set_account_permission("claimer"""")
 producer.set_account_permission("claimer",
     {
         "threshold" : 1, 
@@ -52,7 +52,7 @@ permissions:
 ```
 
 ```python
-COMMENT('''producer.set_action_permission("eosio"''')
+COMMENT("""producer.set_action_permission("eosio"""")
 producer.set_action_permission(
     "eosio", "claimrewards", "claimer", permission=(producer, "active"))
 ```

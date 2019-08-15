@@ -1,4 +1,4 @@
-'''Issue set by Patric-Shih
+"""Issue set by Patric-Shih
 
 I follow https://eosfactory.io/eosfactory_dev/html/patterns/set/set_account_permission.html#weights-and-threshold and try to add eosio.code permission to account as follow
 
@@ -37,7 +37,7 @@ Ensure that you have the related private keys inside your wallet and your wallet
 Error Details:
 transaction declares authority '{"actor":"ALICE","permission":"active"}', but does not have signatures for it.
 ```
-'''
+"""
 import sys, os
 import eosfactory.core.config as config
 from eosfactory.eosf import *
@@ -50,13 +50,13 @@ CONTRACT_WORKSPACE = os.path.join(config.eosf_dir(), "contracts/eosio_token")
 reset()
 MASTER = new_master_account()
 
-COMMENT('''
+COMMENT("""
 Build and deploy the contract:
-''')
+""")
 
-COMMENT('''
+COMMENT("""
 Create test accounts:
-''')
+""")
 ALICE = new_account(MASTER)
 print(ALICE.active_key); 
 print(get_wallet().keys())

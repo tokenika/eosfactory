@@ -16,15 +16,15 @@ import eosfactory.core.logger as logger
 import eosfactory.core.eosjs.walletmanager as wm
 import eosfactory.core.interface as interface
 import eosfactory.core.common as common
-import eosfactory.core.to_string.get_account_str as get_account_str
+import eosfactory.core.to_string.get_account as get_account_str
 
 
 def config_rpc():
-    code = utils.heredoc('''
+    code = utils.heredoc("""
 const { Api, JsonRpc, RpcError } = require('eosjs');
 const fetch = require('node-fetch');
 const rpc = new JsonRpc('%(endpoint)s', { fetch });
-    ''')
+    """)
     setup.set_local_nodeos_address_if_none()
     return code
 
@@ -33,7 +33,7 @@ SIG_PROVIDER = \
 
 
 def config_api():
-    code = utils.heredoc('''
+    code = utils.heredoc("""
 const { Api, JsonRpc, RpcError } = require('eosjs');
 const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig');
 const fetch = require('node-fetch');
@@ -46,7 +46,7 @@ const api = new Api({
     textDecoder: new TextDecoder, 
     textEncoder: new TextEncoder 
 });
-    ''')
+    """)
 
     return code % {
         "signatureProvider": SIG_PROVIDER,
@@ -76,8 +76,8 @@ def permission_str(permission, account, default=None):
 
 
 class Command():
-    '''A prototype for ``eosjs`` command classes.
-    '''
+    """A prototype for ``eosjs`` command classes.
+    """
     def __init__(self, header, js, is_verbose=True):
         self.out_msg = None
         self.err_msg = None
@@ -151,11 +151,11 @@ class Command():
             pass
                   
     def printself(self, is_verbose=False):
-        '''Print a message.
+        """Print a message.
 
         Args:
             is_verbose (bool): If set, a message is printed.
-        '''
+        """
         if not hasattr(self, "is_verbose"):
             self.is_verbose = is_verbose
 
@@ -170,29 +170,29 @@ class Command():
 
 
 class GetAccount(interface.Account, Command):
-    '''Retrieve an account from the blockchain.
+    """Retrieve an account from the blockchain.
 
     Args:
         account (str or .interface.Account): The account to retrieve.
         json: If set, prints the json representation of the object.
-        is_verbose (bool): If *False* do not print. Default is *True*.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         name (str): The EOSIO name of the account.
-        owner_key (str) The *owner* public key.
-        active_key (str) The *active* public key.
+        owner_key (str) The ``owner`` public key.
+        active_key (str) The ``active`` public key.
         json: The json representation of the object.
         json: The json representation of the object.
-    '''
+    """
     def __init__(self, account, json=True, is_verbose=True):
         interface.Account.__init__(self, interface.account_arg(account))
         Command.__init__(self, config_rpc(),
-            '''
+            """
         (async (account_name) => {
             result = await rpc.get_account(account_name)
             console.log(JSON.stringify(result))
         })("%s")
-            ''' % (self.name), is_verbose)
+            """ % (self.name), is_verbose)
 
         self.owner_key = self.json['permissions'][0]['required_auth'] \
             ['keys'][0]['key']
@@ -206,7 +206,7 @@ class GetAccount(interface.Account, Command):
 
 
 class GetTransaction(Command):
-    '''Retrieve a transaction from the blockchain.
+    """Retrieve a transaction from the blockchain.
 
     - **parameters**::
 
@@ -219,59 +219,59 @@ class GetTransaction(Command):
 
         transaction_id: ID of the transaction retrieved.
         json: The json representation of the object.
-    '''
+    """
     def __init__(self, transaction_id, block_num_hint=0, is_verbose=True):
         Command.__init__(self, 
-            '''
+            """
         (async (is, block_num_hint) => {
             result = await rpc.history_get_transaction(is, block_num_hint)
             console.log(JSON.stringify(result))
 
         })("%s", %d)
-            '''.format(transaction_id, block_num_hint), is_verbose)
+            """.format(transaction_id, block_num_hint), is_verbose)
 
 
 class WalletCreate(wm.Wallet):
-    '''Create a new wallet locally.
+    """Create a new wallet locally.
 
-    If the *password* argument is set, try to open a wallet. Otherwise, create
+    If the ``password`` argument is set, try to open a wallet. Otherwise, create
     a new wallet.
 
     Args:
         name (str): The name of the wallet. If not set, defaults to the value `.setup.wallet_default_name`
         password (str): The password to the wallet, if the wallet exists. 
-        is_verbose (bool): If *False* do not print. Default is *True*.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         name (str): The name of the wallet.
-        password (str): The password returned by the *wallet create* 
+        password (str): The password returned by the ``wallet create`` 
             EOSIO cleos command.
         is_created (bool): True, if the wallet created.
-    '''
+    """
     def __init__(self, name=None, password="", is_verbose=True):
         wm.Wallet.__init__(self, name, password, is_verbose)
 
 
 class WalletStop:
-    '''Close all open wallets.
-    '''
+    """Close all open wallets.
+    """
     def __init__(self, is_verbose=True):
         wm.stop()
 
 
 class WalletList:
-    '''List opened wallets, * marks unlocked.
+    """List opened wallets, * marks unlocked.
 
     - **parameters**::
 
         is_verbose: If ``False`` do not print. Default is ``True``.
-    '''
+    """
     def __init__(self, is_verbose=True):
         wm.list()
 
 
 class WalletImport:
-    '''Import a private key into wallet.
+    """Import a private key into wallet.
 
     - **parameters**::
 
@@ -282,25 +282,25 @@ class WalletImport:
     - **attributes**::
 
         json: The json representation of the object.
-    '''
+    """
     def __init__(self, key, wallet="default", is_verbose=True):
         wm.import_key(wallet, key, is_verbose)
 
 
 class WalletRemove_key:
-    '''Remove key from wallet
+    """Remove key from wallet
     - **parameters**::
 
         password: The password returned by wallet create.
         key: A key object or a public key in WIF format to remove.
         is_verbose: If ``False`` do not print. Default is ``True``.
-    '''
+    """
     def __init__(self, key, password, is_verbose=True):
         wm.remove_key(wallet, key, is_verbose)
 
 
 class WalletKeys:
-    '''List of public keys from all unlocked wallets.
+    """List of public keys from all unlocked wallets.
 
     - **parameters**::
 
@@ -314,7 +314,7 @@ class WalletKeys:
     - **attributes**::
 
         json: The json representation of the object.
-    '''
+    """
     def __init__(self, is_verbose=True):
         self.json = wm.keys(None, is_verbose)
 
@@ -325,7 +325,7 @@ class WalletKeys:
 
 
 class WalletPrivateKeys:
-    '''List of private keys from all unlocked wallets.
+    """List of private keys from all unlocked wallets.
 
     - **parameters**::
 
@@ -339,7 +339,7 @@ class WalletPrivateKeys:
     - **attributes**::
 
         json: The json representation of the object.
-    '''
+    """
     def __init__(self, is_verbose=True):
         self.json = wm.private_keys(None, is_verbose)
 
@@ -350,7 +350,7 @@ class WalletPrivateKeys:
 
 
 class WalletOpen:
-    '''Open an existing wallet.
+    """Open an existing wallet.
 
     - **parameters**::
 
@@ -358,20 +358,20 @@ class WalletOpen:
             having the  May be an object having the attribute `name`, like 
             `CreateAccount`, or a string. 
         is_verbose: If ``False`` do not print. Default is ``True``.
-    '''
+    """
     def __init__(self, wallet="default", is_verbose=True):
         wm.open_wallet(wallet, is_verbose)
 
 
 class WalletLockAll:
-    '''Lock all unlocked wallets.
-    '''
+    """Lock all unlocked wallets.
+    """
     def __init__(self, is_verbose=True):
         wm.lock_all(is_verbose)
 
 
 class WalletLock:
-    '''Lock wallet.
+    """Lock wallet.
 
     - **parameters**::
 
@@ -379,13 +379,13 @@ class WalletLock:
             having the  May be an object having the attribute `name`, like 
             `CreateAccount`, or a string. 
         is_verbose: If ``False`` do not print. Default is ``True``.
-    '''
+    """
     def __init__(self, wallet="default", is_verbose=True):
         wm.lock(wallet, is_verbose)
 
 
 class WalletUnlock():
-    '''Unlock wallet.
+    """Unlock wallet.
 
     - **parameters**::
 
@@ -395,14 +395,14 @@ class WalletUnlock():
         password: If the wallet argument is not a wallet object, the password 
             returned by wallet create, else anything, defaults to "".
         is_verbose: If ``False`` do not print. Default is ``True``.
-    '''
+    """
     def __init__(
             self, wallet="default", password="", is_verbose=True):
         wm.unlock(wallet, password, is_verbose)
 
 
 class GetCode(Command):
-    '''Retrieve the code and ABI for an account.
+    """Retrieve the code and ABI for an account.
 
     - **parameters**::
 
@@ -413,18 +413,18 @@ class GetCode(Command):
     - **attributes**::
 
         json: The json representation of the object.
-    '''
+    """
     def __init__(self, account, is_verbose=True):
 
         Command.__init__(self, config_rpc(),
-            '''
+            """
         async function get_code(account_name) {
             result = await rpc.get_code(account_name)
             console.log(JSON.stringify(result))
         }
 
         get_code("%s")
-            ''' % (interface.account_arg(account)), is_verbose)
+            """ % (interface.account_arg(account)), is_verbose)
 
         self.code_hash = self.json["code_hash"]
         self.printself()
@@ -434,7 +434,7 @@ class GetCode(Command):
 
 
 class GetTable(Command):
-    '''Retrieve the contents of a database table
+    """Retrieve the contents of a database table
 
     - **parameters**::
 
@@ -457,7 +457,7 @@ class GetTable(Command):
     - **attributes**::
 
         json: The json representation of the object.
-    '''
+    """
     def __init__(
             self, account, table, scope,
             binary=False, 
@@ -474,7 +474,7 @@ class GetTable(Command):
             scope_name = scope
 
         Command.__init__(self, config_rpc(), 
-        '''
+        """
         async function get_table(
                 code, scope, table, json=true, limit=10, table_key="", 
                 lower_bound="", upper_bound="") {
@@ -496,7 +496,7 @@ class GetTable(Command):
             "%(code)s", "%(scope)s", "%(table)s", %s(json)s,
             %(limit)d, "%(key)s", "%(lower)s", "%(upper)s"
 
-        ''' % {
+        """ % {
                 "code": self.name,
                 "scope": scope_name,
                 "table": "table",
@@ -509,19 +509,19 @@ class GetTable(Command):
 
 
 class CreateKey(interface.Key, Command):
-    '''Create a new keypair and print the public and private keys.
+    """Create a new keypair and print the public and private keys.
 
     Args:
         key_private (str): If set, a private key to set, otherwise random.
         key_public (str): If set, a public key to set, otherwise random.
         r1: Generate a key using the R1 curve (iPhone), instead of the 
             K1 curve (Bitcoin)
-        is_verbose (bool): If *False* do not print. Default is *True*.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         key_private (str): The private key set.
         key_public (str): The public key set.
-    '''
+    """
     def __init__(
                     self, key_public=None, key_private=None, r1=False, 
                     is_verbose=True):
@@ -539,7 +539,7 @@ class CreateKey(interface.Key, Command):
                             "``eosjs`` does not support using the R1 curve?")
 
             Command.__init__(self, "",
-                '''
+                """
         const ecc = require('eosjs-ecc')
 
         ;(async () => {
@@ -551,7 +551,7 @@ class CreateKey(interface.Key, Command):
             }
             console.log(JSON.stringify(result))
         })()
-                ''',
+                """,
                 is_verbose)
         self.key_private = self.json["key_private"]
         self.key_public = self.json["key_public"]
@@ -576,7 +576,7 @@ class RestoreAccount(GetAccount):
 
 
 class CreateAccount(interface.Account, Command):
-    '''Create an account, buy ram, stake for bandwidth for the account.
+    """Create an account, buy ram, stake for bandwidth for the account.
 
     Args:
         creator (str or .interface.Account): The account creating 
@@ -589,7 +589,7 @@ class CreateAccount(interface.Account, Command):
 
     See definitions of the remaining parameters: \
     :func:`.cleos.base.common_parameters`.
-    '''
+    """
     def __init__(
             self, creator, name, owner_key, 
             active_key=None,
@@ -634,7 +634,7 @@ class CreateAccount(interface.Account, Command):
         #     args.extend(["--ref-block", ref_block])
 
         Command.__init__(self, config_api(),
-                '''
+                """
         ;(async () => {
             const result = await api.transact(
                 {
@@ -686,7 +686,7 @@ class CreateAccount(interface.Account, Command):
             );
             console.log(JSON.stringify(result))
         })();
-            ''' % {
+            """ % {
                 "creator": creator, 
                 "name": name, 
                 "owner_key_public": owner_key_public, 
@@ -710,7 +710,7 @@ def account_name():
 
 
 class PushAction(Command):
-    '''Push a transaction with a single action
+    """Push a transaction with a single action
 
     Args:
         account (str or .interface.Account): The account to publish a contract 
@@ -728,7 +728,7 @@ class PushAction(Command):
             components of EOSIO cleos responce.
         act (str): Summary of all actions, like \
             *eosio.null::nonce <= 5d0a572c49880500*.
-    '''
+    """
     def __init__(
             self, account, action, data,
             permission=None, expiration_sec=None, 
@@ -756,7 +756,7 @@ class PushAction(Command):
         Command.__init__(
             self,
             config_api(),
-            '''
+            """
     ;(async () => {
         const permissions = JSON.parse('%(permissions)s')
         const data = JSON.parse('%(data)s')
@@ -779,7 +779,7 @@ class PushAction(Command):
         });
         console.log(JSON.stringify(result))
     })()
-            ''' % {
+            """ % {
                 "account_name": self.account_name,
                 "action": action,
                 "data": data,

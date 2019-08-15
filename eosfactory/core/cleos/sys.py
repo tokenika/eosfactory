@@ -1,9 +1,9 @@
-import eosfactory.core.cleos.base as base_commands
+import eosfactory.core.cleos.base as BASE_COMMANDS
 import eosfactory.core.interface as interface
 
 
-class SystemNewaccount(interface.Account, base_commands.Command):
-    ''' Create an account, buy ram, stake for bandwidth for the account.
+class SystemNewaccount(interface.Account, BASE_COMMANDS.Command):
+    """ Create an account, buy ram, stake for bandwidth for the account.
 
     Args:
         creator (str or .interface.Account): The account creating 
@@ -23,7 +23,7 @@ class SystemNewaccount(interface.Account, base_commands.Command):
 
     See definitions of the remaining parameters: \
     :func:`.cleos.base.common_parameters`.
-    '''
+    """
     def __init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
@@ -37,12 +37,11 @@ class SystemNewaccount(interface.Account, base_commands.Command):
             delay_sec=0,
             is_verbose = 1
             ):
-
         stake_net = "{} EOS".format(stake_net)
         stake_cpu = "{} EOS".format(stake_cpu)
         
         if name is None: 
-            name = base_commands.account_name()
+            name = BASE_COMMANDS.account_name()
         interface.Account.__init__(self, name)
 
         self.owner_key = None # private keys
@@ -88,10 +87,10 @@ class SystemNewaccount(interface.Account, base_commands.Command):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])
 
-        base_commands.Command.__init__(
+        BASE_COMMANDS.Command.__init__(
             self, args, "system", "newaccount", is_verbose)
             
-        self.json = base_commands.GetAccount(
+        self.json = BASE_COMMANDS.GetAccount(
             self.name, is_verbose=0, json=True).json
 
         if self.is_verbose:
@@ -101,8 +100,8 @@ class SystemNewaccount(interface.Account, base_commands.Command):
         return self.name
 
 
-class BuyRam(base_commands.Command):
-    ''' Buy RAM.
+class BuyRam(BASE_COMMANDS.Command):
+    """ Buy RAM.
 
     Args:
         payer (str or .interface.Account): The account paying for RAM.
@@ -113,7 +112,7 @@ class BuyRam(base_commands.Command):
 
     See definitions of the remaining parameters: \
     :func:`.cleos.base.common_parameters`.
-    '''
+    """
     def __init__(
             self, payer, receiver, amount,
             buy_ram_kbytes=0, 
@@ -150,12 +149,12 @@ class BuyRam(base_commands.Command):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])
 
-        base_commands.Command.__init__(
+        BASE_COMMANDS.Command.__init__(
             self, args, "system", "buyram", is_verbose)
 
     
-class DelegateBw(base_commands.Command):
-    '''Delegate bandwidth.
+class DelegateBw(BASE_COMMANDS.Command):
+    """Delegate bandwidth.
 
     Args:
         payer (str or .interface.Account): The account to delegate bandwidth 
@@ -169,7 +168,7 @@ class DelegateBw(base_commands.Command):
 
     See definitions of the remaining parameters: \
     :func:`.cleos.base.common_parameters`.           
-    '''
+    """
     def __init__(
         self, payer, receiver, stake_net_quantity, stake_cpu_quantity,
         permission=None,
@@ -214,7 +213,7 @@ class DelegateBw(base_commands.Command):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])            
 
-        base_commands.Command.__init__(
+        BASE_COMMANDS.Command.__init__(
             self, args, "system", "delegatebw", is_verbose)
 
 

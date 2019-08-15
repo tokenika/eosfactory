@@ -1,7 +1,9 @@
+"""A wallet manager, alternative to the ``keosd``."""
+
 import os
 import subprocess
 import json
-from cryptography.fernet import Fernet
+import cryptography.fernet as fernet
 from threading import Timer
 
 import eosfactory.core.interface as interface
@@ -27,21 +29,21 @@ class OpenWallet:
 
 
 class Wallet(interface.Wallet):
-    '''
-    If the *password* argument is set, try to open a wallet. Otherwise, create
+    """
+    If the ``password`` argument is set, try to open a wallet. Otherwise, create
     a new wallet.
 
     Args:
-        name (str): The name of the wallet, defaults to *default*.
+        name (str): The name of the wallet, defaults to ``default``.
         password (str): The password to the wallet, if the wallet exists. 
-        is_verbose (bool): If *False* do not print. Default is *True*.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         name (str): The name of the wallet.
-        password (str): The password returned by the *wallet create* 
+        password (str): The password returned by the ``wallet create`` 
             EOSIO cleos command.
         is_created (bool): True, if the wallet created.
-    '''
+    """
 
     def __init__(self, name=None, password=None, is_verbose=True):
 
@@ -56,11 +58,11 @@ class Wallet(interface.Wallet):
 
         if self.password:
             if not os.path.exists(_file):
-                raise errors.Error('''
+                raise errors.Error("""
                     Password is set, but the wallet file does not exist:
                         {}
-                '''.format(_file))
-            cipher_suite = Fernet(str.encode(password))
+                """.format(_file))
+            cipher_suite = fernet.Fernet(str.encode(password))
             global _KEYS_CIPHERED
             _KEYS_CIPHERED = []
             try:
@@ -73,22 +75,22 @@ class Wallet(interface.Wallet):
                 try:
                     decrypt(_KEYS_CIPHERED[0], cipher_suite)
                 except:
-                    raise errors.Error('''
+                    raise errors.Error("""
                     Wrong password.
-                    ''')
+                    """)
             
             if is_verbose:
-                logger.OUT('''
+                logger.OUT("""
                 Opened existing wallet: {}
-                '''.format(name))
+                """.format(name))
         else:
             if os.path.exists(_file):
-                raise errors.Error('''
+                raise errors.Error("""
                     Cannot overwrite existing wallet file:
                         {}
-                '''.format(_file))
-            key = Fernet.generate_key()
-            cipher_suite = Fernet(key)
+                """.format(_file))
+            key = fernet.Fernet.generate_key()
+            cipher_suite = fernet.Fernet(key)
             self.password = key.decode("utf-8")
 
             try:
@@ -100,12 +102,12 @@ class Wallet(interface.Wallet):
             self.is_created = True
 
             if is_verbose:
-                logger.OUT('''
+                logger.OUT("""
                 Created wallet: {}
                 Save password to use in the future to unlock this wallet.
                 Without password imported keys will not be retrievable.
                 "{}"
-                '''.format(name, self.password))
+                """.format(name, self.password))
 
         _OPEN_WALLETS[name] = OpenWallet(name, cipher_suite)
         global _TIMER
@@ -127,14 +129,14 @@ def encrypt(key, cipher_suite):
 
 
 def public_key(private_key):
-    return Node('''
+    return Node("""
     const ecc = require('eosjs-ecc');
     
     ((private_key) => {
         public_key = {key_public: ecc.privateToPublic(private_key)}
         console.log(JSON.stringify(public_key))   
     })('%s')
-        ''' % (private_key)).json["key_public"]
+        """ % (private_key)).json["key_public"]
 
 
 def decrypt(ciphered_key, cipher_suite):
@@ -155,10 +157,10 @@ def delete(wallet, is_verbose=True):
         return True
 
     if is_verbose:
-        logger.OUT('''
+        logger.OUT("""
             There is not any wallet file named
                 '{}'
-            '''.format(name))
+            """.format(name))
     return False
 
 
@@ -168,10 +170,10 @@ def open_wallet(wallet, is_verbose=True):
     if name + _WALLET_FILE_EXT in wallets_:
         _OPEN_WALLETS[name] = OpenWallet(name)
     else:
-        raise errors.Error('''
+        raise errors.Error("""
         There is not any wallet file named
             {}
-        '''.format((wallet_file(name))))
+        """.format((wallet_file(name))))
 
     if is_verbose:
         logger.OUT("Opened: {}".format(name))
@@ -182,9 +184,9 @@ def lock(wallet, is_verbose=True):
     if _OPEN_WALLETS[name]:
         _OPEN_WALLETS[name].cipher_suite = None
     else:
-        raise errors.Error('''
+        raise errors.Error("""
         The wallet '{}' is not open.
-        '''.format(name))
+        """.format(name))
 
     if is_verbose:
         logger.OUT("Locked: {}".format(name))
@@ -210,20 +212,20 @@ def unlock(wallet, password=None, is_verbose=True):
         password = wallet.password
 
     if not is_open(name):
-        raise errors.Error('''
+        raise errors.Error("""
             The wallet '{}' is not open.
-            '''.format(name))
+            """.format(name))
 
     if not is_unlocked(name):
         try:
-            _OPEN_WALLETS[name].cipher_suite = Fernet(str.encode(password))
+            _OPEN_WALLETS[name].cipher_suite = fernet.Fernet(str.encode(password))
             global _KEYS_CIPHERED
             with open(wallet_file(name), "r")  as input:
                 _KEYS_CIPHERED = [key.rstrip('\n') for key in input]
         except Exception as e:
-            raise errors.Error('''
+            raise errors.Error("""
                 Wrong password.n
-                ''')
+                """)
         
     if is_verbose:
         logger.OUT("Unlocked: {}".format(name))    
@@ -245,8 +247,8 @@ def list(is_verbose=True):
 
     if is_verbose:
         if wallets:
-            logger.OUT('''
-        Open wallets. Starlet, if any, means 'unlocked':\n''' 
+            logger.OUT("""
+        Open wallets. Starlet, if any, means 'unlocked':\n""" 
             + "\n".join(wallets))
         else:
             logger.OUT("There is not any wallet open.")            
@@ -261,14 +263,14 @@ def import_key(wallet, key, is_verbose=True):
     with open(wallet_file(name), "a")  as out:
         out.write(encrypt(key_private, _OPEN_WALLETS[name].cipher_suite) + "\n")
 
-    key_public = Node('''
+    key_public = Node("""
     const ecc = require('eosjs-ecc');
 
     ((private_key) => {
         public_key = {key_public: ecc.privateToPublic(private_key)}
         console.log(JSON.stringify(public_key))   
     })('%s')
-        ''' % (key_private)).json["key_public"]
+        """ % (key_private)).json["key_public"]
 
     if is_verbose:
         logger.OUT("Imported key to wallet '{}':\n{}".format(
@@ -292,7 +294,7 @@ def remove_key(key, is_verbose=True):
     
         private_keys_ = private_keys(name, False)
 
-        _keys = Node('''
+        _keys = Node("""
         const ecc = require('eosjs-ecc');
 
         ((keys) => {
@@ -306,7 +308,7 @@ def remove_key(key, is_verbose=True):
 
             console.log(JSON.stringify(public_keys))   
         })(%s)
-        ''' % private_keys_).json
+        """ % private_keys_).json
 
         for pair in _keys:
             if pair[1] == owner_key_public or pair[1] == active_key_public:
@@ -328,7 +330,7 @@ def remove_key(key, is_verbose=True):
 
 def keys(wallet=None, is_verbose=True):
     private_keys_ = private_keys(wallet, False)
-    public_keys = Node('''
+    public_keys = Node("""
     const ecc = require('eosjs-ecc');
 
     ((keys) => {
@@ -339,7 +341,7 @@ def keys(wallet=None, is_verbose=True):
 
         console.log(JSON.stringify(public_keys))   
     })(%s)
-    ''' % (private_keys_)).json
+    """ % (private_keys_)).json
 
     if is_verbose:
         if wallet:
@@ -386,8 +388,8 @@ def stop(is_verbose=True):
         _TIMER.cancel()
 
     if is_verbose:
-        logger.OUT('''
-    All the wallet objects locked and removed from the list of open wallets.''')
+        logger.OUT("""
+    All the wallet objects locked and removed from the list of open wallets.""")
 
 
 class Node():
@@ -428,14 +430,14 @@ def is_unlocked(wallet):
 def is_open_and_unlocked(wallet):
     name = interface.wallet_arg(wallet)
     if not is_open(wallet):
-        raise errors.Error('''
+        raise errors.Error("""
         Wallet '{}' is not open.
-        '''.format(name))
+        """.format(name))
 
     if not is_unlocked(wallet):
-        raise errors.Error('''
+        raise errors.Error("""
         Wallet '{}' is locked.
-        '''.format(name))
+        """.format(name))
 
 
 def wallets():

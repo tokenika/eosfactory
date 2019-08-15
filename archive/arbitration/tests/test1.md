@@ -55,9 +55,9 @@ contract_escrow.deploy()
 The `ESCROW` account needs to be related to the `ARBITRATOR` account with a system permission named `eosio.code`. This allows it to execute actions of the `EOSIO.token` contract:
 
 ```python
-COMMENT('''
+COMMENT("""
 ESCROW.set_account_permission()
-''')
+""")
 ESCROW.set_account_permission(Permission.ACTIVE,
     {
         "threshold": 1,
@@ -123,9 +123,9 @@ ARBITRATOR.table("accounts", CAROL)
 `ALICE` has agreed to pay `CAROL` for the purchased merchandise, but she is not sure of its quality. Thus, `ALICE` instructs the `ARBITRATOR` to initiate an escrow process by opening a deposit:
 
 ```python
-COMMENT('''
+COMMENT("""
 ESCROW.push_action("opendeposit")
-''')
+""")
 ESCROW.push_action(
     "opendeposit", {"buyer": ALICE, "seller": CAROL}, ALICE)
 ```
@@ -135,9 +135,9 @@ ESCROW.push_action(
 `ALICE` transfers the payment amount to an account of the `ARBITRATOR`. Technically, the `ESCROW` smart contract taps to the transfer action of the `ARBITRATOR` contract (with `ESCROW`'s `transfer` action), and performs bookkeeping.
 
 ```python
-COMMENT('''
+COMMENT("""
 ARBITRATOR.push_action("transfer")
-''')
+""")
 ARBITRATOR.push_action(
     "transfer", 
     {
@@ -151,9 +151,9 @@ ARBITRATOR.push_action(
 Let us inspect the accounts. `CAROL`'s account is still empty:
 
 ```python
-COMMENT('''
+COMMENT("""
 After transfer:
-''')
+""")
 ARBITRATOR.table("accounts", ALICE)
 ARBITRATOR.table("accounts", CAROL)
 ```
@@ -161,9 +161,9 @@ ARBITRATOR.table("accounts", CAROL)
 `CAROL` fulfils the deal and claims the payment:
 
 ```python
-COMMENT('''
+COMMENT("""
 ESCROW.push_action("claim")
-''')
+""")
 ESCROW.push_action(
     "claim", 
     {"buyer": ALICE, "seller": CAROL}, 
@@ -173,9 +173,9 @@ ESCROW.push_action(
 `CAROL` waits for her money.
 
 ```python
-COMMENT('''
+COMMENT("""
 After CAROL's claim:
-''')
+""")
 ARBITRATOR.table("accounts", ALICE)
 ARBITRATOR.table("accounts", CAROL)
 ```
@@ -183,9 +183,9 @@ ARBITRATOR.table("accounts", CAROL)
 The `ESCROW` contract takes time to verify the deal:
 
 ```python
-COMMENT('''
+COMMENT("""
 The ``ESCROW`` contract need a time delay to arrange verify the deal:
-''')
+""")
 time.sleep(5)
 ```
 
@@ -194,18 +194,18 @@ time.sleep(5)
 `CAROL` signs the `refund` order. If there is no objection raised by `ALICE`, the `ARBITRATOR` assumes she is satisfied and allows the refund to go through:
 
 ```python
-COMMENT('''
+COMMENT("""
 ESCROW.push_action("refund")
-''')
+""")
 ESCROW.push_action(
     "refund", {"buyer": ALICE, "seller": CAROL}, CAROL)
 ```
 
 Now, after the `refund` action is complete, `CAROL` has received the payment:
 ```python
-COMMENT('''
+COMMENT("""
 After refund:
-''')
+""")
 ARBITRATOR.table("accounts", ALICE)
 ARBITRATOR.table("accounts", CAROL)
 ```

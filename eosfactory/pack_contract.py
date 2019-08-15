@@ -21,11 +21,11 @@ def create_ignore_list_file(contract_dir, is_log_creation=False):
     ignore_file = os.path.join(contract_dir, config.IGNORE_FILE)
     if not os.path.exists(ignore_file):
         if is_log_creation:
-            logger.ERROR('''
+            logger.ERROR("""
                 There is not any '{}' file in the project directory
                     {}
                 Creating a default one.
-            '''.format(config.IGNORE_FILE, contract_dir))
+            """.format(config.IGNORE_FILE, contract_dir))
 
         with open(ignore_file, "w+") as f:
             f.write("\n".join(config.IGNORE_LIST))
@@ -63,7 +63,7 @@ def is_valid(file, ignore_list):
 
 
 def unpack(contract_dir=None, zip_file=None):
-    '''Unack a contract project folder.
+    """Unack a contract project folder.
 
     Make a new contract project folder from a zip file produced with the 
     function :func:`pack`.
@@ -75,33 +75,33 @@ def unpack(contract_dir=None, zip_file=None):
     Args:
         contract_dir (str): The contract project directory to be created.
         zip_file (str): The zip file to be extracted.
-    '''
+    """
 
     if not contract_dir:
-        raise errors.Error('''
+        raise errors.Error("""
             The directory of the new contract has to be specified.
-        ''')
+        """)
     contract_dir = utils.wslMapWindowsLinux(contract_dir)
 
     if os.path.exists(contract_dir) and os.listdir(contract_dir):
-        raise errors.Error('''
+        raise errors.Error("""
             The directory
                 {}
             is not empty. Cannot overwrite it.
-        '''.format(os.path.realpath(contract_dir)))
+        """.format(os.path.realpath(contract_dir)))
 
     if not zip_file: 
-        raise errors.Error('''
+        raise errors.Error("""
             The zip file, defining the new directory, has to be specified.
-        ''')
+        """)
 
     zip_file = utils.wslMapWindowsLinux(zip_file)
     if not os.path.exists(zip_file):
-        raise errors.Error('''
+        raise errors.Error("""
             The zip file
                 {}
             does not exists
-        '''.format(os.path.realpath(zip_file)))
+        """.format(os.path.realpath(zip_file)))
 
 
     def convert_c_cpp_properties(member, zipfile_object):
@@ -137,14 +137,14 @@ def unpack(contract_dir=None, zip_file=None):
                         zf.extract(member, contract_dir)
 
     except Exception as e:
-        raise errors.Error('''
+        raise errors.Error("""
             Cannot extract the zip file
                 {}
             to the directory
                 {}
             The error message is
             {}
-        '''.format(
+        """.format(
             os.path.realpath(zip_file), os.path.realpath(contract_dir),
             str(e)
             ))
@@ -155,7 +155,7 @@ def unpack(contract_dir=None, zip_file=None):
 
 
 def pack(contract_dir=None, zip_file=None):
-    '''Pack a contract project folder.
+    """Pack a contract project folder.
 
     If an EOSIO contract project which is a VSCode folder is to be passed by 
     e-mail, it has to be compressed. However, this should not be done in 
@@ -175,7 +175,7 @@ def pack(contract_dir=None, zip_file=None):
         contract_dir (str): If set, the contract project directory, otherwise cwd.
         zip_file (str): If set, the name of the zip file, 
                 otherwise <project directory>/<project directory name>.zip 
-    '''
+    """
 
     if not contract_dir:
         contract_dir = os.getcwd()
@@ -183,18 +183,18 @@ def pack(contract_dir=None, zip_file=None):
         contract_dir = utils.wslMapWindowsLinux(contract_dir)
 
     if not os.path.exists(contract_dir):
-        raise errors.Error('''
+        raise errors.Error("""
             The given contract directory
                 {}
             does not exist.
-                    ''')
+                    """)
 
     if not os.path.isdir(contract_dir):
-        raise errors.Error('''
+        raise errors.Error("""
             The given contract path
                 {}
             is not a directory.
-        ''')        
+        """)        
     
     if not zip_file:
         zip_file = os.path.realpath(os.path.join(
@@ -206,12 +206,12 @@ def pack(contract_dir=None, zip_file=None):
         try:
             os.remove(zip_file)
         except Exception as e:
-            raise errors.Error('''
+            raise errors.Error("""
                 Cannot remove the project zip file
                     {}
                 The error message is
                     {}
-            '''.format(zip_file, str(e)))
+            """.format(zip_file, str(e)))
 
     ignore_file = create_ignore_list_file(contract_dir, True)
 
@@ -264,14 +264,14 @@ def pack(contract_dir=None, zip_file=None):
         with zipfile.ZipFile(zip_file, mode='w') as zf:
             project_files(contract_dir, zf)
     except:
-        raise errors.Error('''
+        raise errors.Error("""
             Cannot zip the directory
                 {}
             to the zip file
                 {}
             The error message is
             {}
-        '''.format(
+        """.format(
             os.path.realpath(contract_dir), os.path.realpath(zip_file), 
             str(e)
             ))
@@ -279,7 +279,7 @@ def pack(contract_dir=None, zip_file=None):
 
 
 def main():
-    '''Pack or unpack a contract project folder.
+    """Pack or unpack a contract project folder.
 
     usage: pack_contract.py [-h] [--unpack] [--dir DIR] [--zip ZIP] 
 
@@ -302,9 +302,9 @@ def main():
         --dir: If set, the contract project directory, otherwise cwd.
         --zip: If set, the name of the zip file, otherwise 
                 <project directory>/<project directory name>.zip    
-    '''
+    """
 
-    parser = argparse.ArgumentParser(description='''
+    parser = argparse.ArgumentParser(description="""
     Pack or unpack a contract project folder.
 
     If an EOSIO contract project which is a VSCode folder is to be passed by 
@@ -320,7 +320,7 @@ def main():
     This is a tool that makes the compression -- and decompression -- 
     automatically solving the issues. 
     It produces a zip file, in the project folder. The file is named after the folder name.
-    ''')
+    """)
 
     parser.add_argument(
                         "--unpack", help="Unpack the project.", 

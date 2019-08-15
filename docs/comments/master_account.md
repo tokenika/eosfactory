@@ -1,6 +1,6 @@
 # MASTER Account Object
 
-*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. A MASTER account is also, most often, an instance of the `Account` class, but it plays a special role in *EOSFactory*: it spawns other accounts into existence.
+*EOSFactory* wraps *EOSIO* accounts using Python objects, i.e. instances of the `Account` class. A MASTER account is also an instance of the `Account` class, but it plays a special role in *EOSFactory*: it spawns other accounts into existence.
 
 The implementation of a MASTER account is dependent on the context:
 
@@ -52,36 +52,37 @@ Create a new Python session and import *EOSFactory* API:
 python3
 ```
 
+Alternatively, reboot the current session:
 ```python
-from eosfactory.eosf import *
+reboot()
 ```
+The command `reboot()` stops the local testnet and resets all the run-time settings of EOSFactory.
 
-First, we need to define a remote testnet and pass to *EOSFactory* the data of the account we control there:
+First, we need to define a remote testnet and pass to *EOSFactory* the data of the account we control there. Here, we use hard-codded parameters of an account on a remote testnet. This setting may fail to work for you but you can find another one, as it is described in a [tutorial](../tutorials/05.InteractingWithPublicTestnet.md).
 
 ```python
 testnet = Testnet(
-    "nukjygmgkn3x",
-    "5KXxczFPdcsLrCYpRRREfd4e2xVDTZZqBpZWmvxLZYxUbPzqrWL",
-    "5KJLMupynNYFiM9gZWtDnDX55hbaF18EsWpFr8UvyJeADqbwN7A",
-    "http://145.239.133.201:8888"
-    )
+    "yvngxrjzbf3w",
+    "5KCmAh23R9wZxm5m1BqRFePvAvw8fzYaDduACUg6DUAj9nmcZfQ",
+    "5JkC4oFPaPjWzj866x2rMygsnVZaZzDkqynzX6dBw92LqR63tcD",
+    "http://145.239.133.201:8888")
+
+testnet = reset(testnet)
+# resume(testnet)
 ```
 
 We supply four parameters:
 
-- an URL of a public node offering access to the testnet, e.g. `http://145.239.133.201:8888`,
-- the name of an existing account on this testnet, e.g. `nukjygmgkn3x`,
+- an URL of a public node offering access to the testnet, e.g. `http://145.239.133.201:8888` that is *Jungle Testnet*,
+- the name of an existing account on this testnet, here `yvngxrjzbf3w`,
 - the account's owner & active private keys.
 
-Next, we let *EOSFactory* configure and verify the testnet:
 
-```python
-testnet.configure()
-testnet.verify_production()
-testnet.clear_cache()
-```
+EOSFactory features persistence: if outlives account objects used in the previous session. The command `reset` destroys the memory, it deletes the wallet associated with the testnet and mapping between account objects and physical accounts. Therefore, the command has to be used with care. Here, we have it here to be able to change the testnet settings.
 
-Then, we proceed to create a global variable named `MASTER` referencing the remote testnet account:
+On the other hand, the command `resume` resumes the previous session.
+
+We proceed to create a global variable named `MASTER` referencing the remote testnet account:
 
 ```python
 create_master_account("MASTER", testnet)

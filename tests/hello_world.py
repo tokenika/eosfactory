@@ -1,4 +1,4 @@
-'''An example of functional test.
+"""An example of functional test.
 
 Note that the declarations
     `
@@ -10,7 +10,7 @@ Note that the declarations
     `
 are abundant: they are in place to satisfy the linter, whu complains about 
 dynamically created objects.
-'''
+"""
 import unittest
 from eosfactory.eosf import *
 
@@ -29,23 +29,23 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        SCENARIO('''
+        SCENARIO("""
         Create a contract from template, then build and deploy it.
-        ''')
+        """)
         reset()
         create_master_account("MASTER")
 
-        COMMENT('''
+        COMMENT("""
         Create test accounts:
-        ''')
+        """)
         create_account("ALICE", MASTER)
         create_account("CAROL", MASTER)
         create_account("BOB", MASTER)
 
     def test_functional(self):
-        COMMENT('''
+        COMMENT("""
         Create, build and deploy the contract:
-        ''')
+        """)
         create_account("HOST", MASTER)
         smart = Contract(HOST, project_from_template(
             CONTRACT_WORKSPACE, template="hello_world", 
@@ -53,25 +53,25 @@ class Test(unittest.TestCase):
         smart.build()
         smart.deploy()
 
-        COMMENT('''
+        COMMENT("""
         Test an action for ALICE, including the debug buffer:
-        ''')
+        """)
         HOST.push_action(
             "hi", {"user":ALICE}, 
             permission=(ALICE, Permission.ACTIVE),
             force_unique=True)
         self.assertTrue("ALICE" in DEBUG())
 
-        COMMENT('''
+        COMMENT("""
         Test an action for CAROL, including the debug buffer:
-        ''')
+        """)
         HOST.push_action(
             "hi", {"user":CAROL}, permission=(CAROL, Permission.ACTIVE))
         self.assertTrue("CAROL" in DEBUG())
 
-        COMMENT('''
+        COMMENT("""
         WARNING: This action should fail due to authority mismatch!
-        ''')
+        """)
         with self.assertRaises(MissingRequiredAuthorityError):
             HOST.push_action(
                 "hi", {"user":CAROL}, permission=(BOB, Permission.ACTIVE))

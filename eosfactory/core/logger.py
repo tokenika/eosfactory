@@ -52,20 +52,20 @@ def SCENARIO(msg):
 
 __trace_buffer = ""
 def TRACE(msg=None, verbosity=None, translate=True):
-    '''TRACE message logger.
+    """TRACE message logger.
 
-    Print the message, translated is the *translate* flag is set. Store the
+    Print the message, translated is the ``translate`` flag is set. Store the
     processed message in a buffer. The stored message is returned if the 
     function is called empty.
 
     Args:
         msg (str): The message to be printed. If not set, return the buffer.
         verbosity ([.core.logger.Verbosity]): The message is printed and 
-            buffered if, and only if, its name is in the *verbosity* list.
+            buffered if, and only if, its name is in the ``verbosity` list.
             If not set, the value set with the function 
             :func:`.core.logger.verbosity` is assumed, or a default value is 
             assumed.
-    '''
+    """
     if not msg:
         global __trace_buffer
         return __trace_buffer
@@ -80,20 +80,20 @@ def TRACE(msg=None, verbosity=None, translate=True):
 
 __info_buffer = ""
 def INFO(msg=None, verbosity=None, translate=True):
-    '''INFO message logger.
+    """INFO message logger.
 
-    Print the message, translated is the *translate* flag is set. Store the
+    Print the message, translated is the ``translate`` flag is set. Store the
     processed message in a buffer. The stored message is returned if the 
     function is called empty.
 
     Args:
         msg (str): The message to be printed. If not set, return the buffer.
         verbosity ([.core.logger.Verbosity]): The message is printed and 
-            buffered if, and only if, its name is in the *verbosity* list.
+            buffered if, and only if, its name is in the ``verbosity`` list.
             If not set, the value set with the function 
             :func:`.core.logger.verbosity` is assumed, or a default value is 
             assumed.
-    '''
+    """
     global __info_buffer
     if not msg:
         return __info_buffer
@@ -108,20 +108,20 @@ def INFO(msg=None, verbosity=None, translate=True):
 
 __out_buffer = ""
 def OUT(msg=None, verbosity=None, translate=True):
-    '''OUT message logger.
+    """OUT message logger.
 
-    Print the message, translated is the *translate* flag is set. Store the
+    Print the message, translated is the ``translate`` flag is set. Store the
     processed message in a buffer. The stored message is returned if the 
     function is called empty.
 
     Args:
         msg (str): The message to be printed. If not set, return the buffer.
         verbosity ([.core.logger.Verbosity]): The message is printed and 
-            buffered if, and only if, its name is in the *verbosity* list.
+            buffered if, and only if, its name is in the ``verbosity`` list.
             If not set, the value set with the function 
             :func:`.core.logger.verbosity` is assumed, or a default value is 
             assumed.
-    '''
+    """
     global __out_buffer
     if not msg:
         return __out_buffer
@@ -136,20 +136,20 @@ def OUT(msg=None, verbosity=None, translate=True):
 
 __debug_buffer = ""
 def DEBUG(msg=None, verbosity=None, translate=True):
-    '''DEBUG message logger.
+    """DEBUG message logger.
 
-    Print the message, translated is the *translate* flag is set. Store the
+    Print the message, translated is the ``translate`` flag is set. Store the
     processed message in a buffer. The stored message is returned if the 
     function is called empty.
 
     Args:
         msg (str): The message to be printed. If not set, return the buffer.
         verbosity ([.core.logger.Verbosity]): The message is printed and 
-            buffered if, and only if, its name is in the *verbosity* list.
+            buffered if, and only if, its name is in the ``verbosity`` list.
             If not set, the value set with the function 
             :func:`.core.logger.verbosity` is assumed, or a default value is 
             assumed.
-    '''
+    """
     global __debug_buffer    
     if not msg:
         return __debug_buffer

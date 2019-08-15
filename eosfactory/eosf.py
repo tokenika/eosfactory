@@ -5,9 +5,9 @@ import eosfactory.core.setup as setup
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
 import eosfactory.core.teos as teos
-base_commands = importlib.import_module(".base", setup.light_full)
+BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
 import eosfactory.core.manager as manager
-import eosfactory.core.testnet as testnet
+import eosfactory.core.testnet as testnet_module
 import eosfactory.core.interface as interface
 import eosfactory.shell.wallet as wallet
 import eosfactory.shell.account as account
@@ -29,7 +29,7 @@ LowRamError = errors.LowRamError
 MissingRequiredAuthorityError = errors.MissingRequiredAuthorityError
 DuplicateTransactionError = errors.DuplicateTransactionError
 
-CreateKey = base_commands.CreateKey
+CreateKey = BASE_COMMANDS.CreateKey
 Permission = interface.Permission
 
 create_wallet = wallet.create_wallet
@@ -56,6 +56,6 @@ stop = manager.stop
 info = manager.info
 status = manager.status
 
-Testnet =  testnet.Testnet
-get_testnet =  testnet.get_testnet
-testnets =  testnet.testnets
+Testnet =  testnet_module.Testnet
+get_testnet =  testnet_module.get_testnet
+testnets =  testnet_module.testnets

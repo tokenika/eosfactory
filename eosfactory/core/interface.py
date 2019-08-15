@@ -1,22 +1,22 @@
-'''
-'''
+"""
+"""
 import enum
 
 class Omittable:
-    '''Having the *err_msg* attribute.
-    '''
+    """Having the *err_msg* attribute.
+    """
     def __init__(self):
         self.err_msg = None
 
 class Permission(enum.Enum):
-    '''Enumeration {OWNER, ACTIVE}
-    '''
+    """Enumeration {OWNER, ACTIVE}
+    """
     OWNER = 'owner'
     ACTIVE = 'active'
 
 
 class Key(Omittable):
-    '''Having the *key_public* and *key_private* attributes.
+    """Having the ``key_public`` and ``key_private`` attributes.
 
     Args:
         key_public (str): The public key of a key pair.
@@ -25,7 +25,7 @@ class Key(Omittable):
     Attributes:
         key_public (str): The public key of a key pair.
         key_private (str): The private key of a key pair.
-    '''    
+    """    
     def __init__(self, key_public, key_private):
         self.key_public = key_public
         self.key_private = key_private
@@ -39,7 +39,7 @@ class Key(Omittable):
 
 
 class Account(Omittable):
-    '''Having the *name* and *key_public* and *key_private* attributes.
+    """Having the *name* and *key_public* and *key_private* attributes.
 
     Args:
         name (str): EOSIO contract name
@@ -48,7 +48,7 @@ class Account(Omittable):
     
     Attributes:
         name (str): EOSIO contract name
-    '''
+    """
     def __init__(self, name=None, owner_key=None, active_key=None):
         self.name = name
         self.owner_key = owner_key
@@ -56,22 +56,22 @@ class Account(Omittable):
         Omittable.__init__(self)
     
     def owner_public(self):
-        '''Get the public owner key
+        """Get the public owner key
 
         Returns:
             str: public owner key
-        '''
+        """
         if isinstance(self.owner_key, Key):
             return self.owner_key.key_public
         else:
             return self.owner_key
 
     def active_public(self):
-        '''Get the public active key
+        """Get the public active key
 
         Returns:
             str: public active key
-        '''        
+        """        
         if isinstance(self.active_key, Key):
             return self.active_key.key_public
         else:
@@ -79,7 +79,7 @@ class Account(Omittable):
 
 
 class Wallet(Omittable):
-    '''Having the *name* and *password* attributes.
+    """Having the *name* and *password* attributes.
 
     Args:
         name (str): The wallet name.
@@ -88,7 +88,7 @@ class Wallet(Omittable):
     Attributes:
         name (str): The wallet name.
         password (str): The password to the wallet.    
-    '''    
+    """    
     def __init__(self, name, password=None):
         self.name = name
         self.password = password
@@ -96,14 +96,14 @@ class Wallet(Omittable):
 
 
 def wallet_arg(wallet):
-    '''Accepts any *wallet* argument.
+    """Accepts any *wallet* argument.
 
     Args:
         wallet (str or interface.Wallet): *wallet* argument.
 
     Returns:
         str: name of the *wallet* argument.
-    '''
+    """
     if isinstance(wallet, Wallet):
         return wallet.name
     if isinstance(wallet, str):
@@ -111,7 +111,7 @@ def wallet_arg(wallet):
 
 
 def key_arg(key, is_owner_key=True, is_private_key=True):
-    '''Accepts any key argument.
+    """Accepts any key argument.
 
     Args:
         key (str or .Key or .interface.Account): The *key* argument. 
@@ -122,7 +122,7 @@ def key_arg(key, is_owner_key=True, is_private_key=True):
 
     Returns:
         str: The value of the *key* argument.
-    '''
+    """
     if isinstance(key, Account):
         if is_owner_key:
             key = key.owner_key
@@ -150,14 +150,14 @@ def key_arg(key, is_owner_key=True, is_private_key=True):
 
 
 def account_arg(account):
-    '''Accepts any account argument.
+    """Accepts any account argument.
 
     Args:
         account (str or .interface.Account): *account* argument.
 
     Returns:
         str: The EOSIO name of the *account* argument.
-    '''
+    """
     if isinstance(account, str):
         return account
     if isinstance(account, Account):
@@ -165,7 +165,7 @@ def account_arg(account):
 
 
 def permission_arg(permission):
-    '''Accepts any permission argument.
+    """Accepts any permission argument.
 
     Args:
     :param permission (.interface.Account or str or (str, str) or \
@@ -185,7 +185,7 @@ def permission_arg(permission):
 
     Returns:
         [(str, str)]: A list of tuples (<account name>, <permission name>).
-    '''
+    """
     if isinstance(permission, str):
         return [permission]
     if isinstance(permission, Account):

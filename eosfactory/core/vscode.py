@@ -1,10 +1,10 @@
-'''
+"""
 .. module:: eosfactory.core.vscode
     :platform: Unix, Darwin
     :synopsis: Default configuration items of a contract project.
 
 .. moduleauthor:: Tokenika
-'''
+"""
 
 import json
 import argparse
@@ -32,7 +32,7 @@ LIB_LIST = [
 ]
 OPTIONS = [
 ]
-TASKS = '''
+TASKS = """
 {
     "version": "2.0.0",   
     "tasks": [
@@ -181,7 +181,7 @@ TASKS = '''
         }
     ]
 }
-'''
+"""
 
 def c_cpp_properties():
     includes = get_includes()

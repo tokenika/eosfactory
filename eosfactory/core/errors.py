@@ -6,8 +6,8 @@ import eosfactory.core.interface as interface
 
 
 def validate(omittable):
-    '''Throw exception if validation fails.
-    '''
+    """Throw exception if validation fails.
+    """
     err_msg = omittable.err_msg
     if not err_msg:
         return
@@ -51,8 +51,8 @@ def excepthook(exc_type, value, traceback):
 
 
 class Error(Exception):
-    '''Base class for exceptions in EOSFactory.
-    '''
+    """Base class for exceptions in EOSFactory.
+    """
     def __init__(
             self, message, translate=True, print_stack=False, stack_frame=1):
         if not message:
@@ -66,11 +66,11 @@ class IsNodeRunning(Error):
         Error.__init__(self, "Node does not response.", False)
 
 class AccountDoesNotExistError(Error):
-    '''Account does not exist.
+    """Account does not exist.
 
     Attributes:
         account: account argument: an ``Account`` object or account name.
-    '''
+    """
     def __init__(self, account):
         self.account = account
         Error.__init__(

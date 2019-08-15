@@ -1,8 +1,9 @@
 import argparse
 import eosfactory.core.testnet as testnet
+import eosfactory.core.manager as manager
 
 def main():
-    '''
+    """
     usage: testnets.py [-h] [--name NAME] [--remove]
 
     List saved testnets.
@@ -11,10 +12,10 @@ def main():
         --name: print a testent of the given name
         --remove: remove a testent of the given name
         -h: show help message and exit
-    '''
-    parser = argparse.ArgumentParser(description='''
+    """
+    parser = argparse.ArgumentParser(description="""
     List saved testnets.
-    ''')
+    """)
 
     parser.add_argument(
         "--name", help="The name of the testnet chosen.", default="")

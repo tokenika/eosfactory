@@ -16,11 +16,11 @@ import eosfactory.core.common as common
 
 # http://www.sphinx-doc.org/domains.html#info-field-lists
 class Command():
-    '''A prototype for *EOSIO cleos* commands.
-    Calls *EOSIO cleos*, and processes the responce.
+    """A prototype for ``EOSIO cleos`` commands.
+    Calls ``EOSIO cleos``, and processes the responce.
 
     Args:
-        args (list): List of *EOSIO cleos* positionals and options.
+        args (list): List of ``EOSIO cleos`` positionals and options.
         command_group (str): Command group name.
         command (str): Command name.
 
@@ -30,11 +30,11 @@ class Command():
         err_msg (str): Error message received via the stderr stream.
         json (json): Responce received as JSON, if any.
         is_verbose (bool): If set, a message is printed.
-        args (list): Value of the *args* argument.
+        args (list): Value of the ``args`` argument.
 
     Raises:
         .core.errors.Error: If err_msg.
-    '''    
+    """    
     def __init__(self, args, command_group, command, is_verbose=True):
         self.out_msg = None
         self.out_msg_details = None
@@ -95,11 +95,11 @@ class Command():
             pass        
 
     def printself(self, is_verbose=False):
-        '''Print a message.
+        """Print a message.
 
         Args:
             is_verbose (bool): If set, a message is printed.
-        '''
+        """
         if not hasattr(self, "is_verbose"):
             self.is_verbose = is_verbose
 
@@ -127,14 +127,14 @@ def common_parameters(
         ref_block=None,
         delay_sec=0
     ):
-    '''Common parameters.
+    """Common parameters.
 
     Args:
         permission (.interface.Account or str or (str, str) or \
             (.interface.Account, str) or any list of the previous items.): 
             An account and permission level to authorize.
         
-    Exemplary values of the argument *permission*::
+    Exemplary values of the argument ``permission``::
 
         eosio # eosio is interface.Account object
 
@@ -163,24 +163,24 @@ def common_parameters(
         ref_block (int): The reference block num or block id used for TAPOS 
             (Transaction as Proof-of-Stake).
         delay_sec: The delay in seconds, defaults to 0s.
-    '''
+    """
     pass
 
 
 class GetAccount(interface.Account, Command):
-    '''Retrieve an account from the blockchain.
+    """Retrieve an account from the blockchain.
 
     Args:
         account (str or .interface.Account): The account to retrieve.
         json: If set, prints the json representation of the object.
-        is_verbose (bool): If *False* do not print. Default is *True*.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         name (str): The EOSIO name of the account.
-        owner_key (str) The *owner* public key.
-        active_key (str) The *active* public key.
+        owner_key (str) The ``owner`` public key.
+        active_key (str) The ``active`` public key.
         json: The json representation of the object.
-    '''
+    """
     def __init__(self, account, json=False, is_verbose=True):
         interface.Account.__init__(self, interface.account_arg(account))
         Command.__init__(
@@ -216,17 +216,17 @@ class GetAccount(interface.Account, Command):
 
 
 class GetTransaction(Command):
-    '''Retrieve a transaction from the blockchain.
+    """Retrieve a transaction from the blockchain.
 
     Args:
         transaction_id (str): ID of the transaction to retrieve.
         block_hint (int): If set, the block number this transaction may be in.
-        is_verbose (bool): If *False* do not print. Default is *True*.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         transaction_id: The ID of the transaction retrieved.
         json: The transaction retrieved.
-    '''
+    """
     def __init__(self, transaction_id, block_hint=None, is_verbose=True):
         
         self.transaction_id = transaction_id
@@ -240,22 +240,22 @@ class GetTransaction(Command):
 
 
 class WalletCreate(interface.Wallet, Command):
-    '''Create a new wallet locally.
+    """Create a new wallet locally.
 
-    If the *password* argument is set, try to open a wallet. Otherwise, create
+    If the ``password`` argument is set, try to open a wallet. Otherwise, create
     a new wallet.
 
     Args:
-        name (str): The name of the wallet, defaults to *default*.
+        name (str): The name of the wallet, defaults to ``default``.
         password (str): The password to the wallet, if the wallet exists. 
-        is_verbose (bool): If *False* do not print. Default is *True*.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         name (str): The name of the wallet.
-        password (str): The password returned by the *wallet create* 
+        password (str): The password returned by the ``wallet create`` 
             EOSIO cleos command.
         is_created (bool): True, if the wallet created.
-    '''
+    """
     def __init__(self, name="default", password="", is_verbose=True):
         interface.Wallet.__init__(self, name)
         self.password = None
@@ -286,11 +286,11 @@ class WalletCreate(interface.Wallet, Command):
 
 
 class WalletStop(Command):
-    '''Stop keosd, the EOSIO wallet manager.
+    """Stop keosd, the EOSIO wallet manager.
 
     Args:
-        is_verbose (bool): If *False* do not print. Default is *True*.    
-    '''
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.    
+    """
     def __init__(self, is_verbose=True):
         Command.__init__(self, [], "wallet", "stop", is_verbose)
 
@@ -298,14 +298,14 @@ class WalletStop(Command):
 
 
 class WalletList(Command):
-    '''List opened wallets, * marks unlocked.
+    """List opened wallets, * marks unlocked.
 
     Args:
-        is_verbose (bool): If *False* do not print. Default is *True*.    
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.    
             
     Attributes:
         json: The list of the open wallets.
-    '''
+    """
     def __init__(self, is_verbose=True):
         Command.__init__(
             self, [], "wallet", "list", is_verbose)
@@ -316,16 +316,16 @@ class WalletList(Command):
 
 
 class WalletImport(Command):
-    '''Import a private key into wallet.
+    """Import a private key into wallet.
 
     Args:
         wallet (str or .interface.Wallet): A wallet to import key into.
         key (str or .interface.Key): A key to import.
-        is_verbose (bool): If *False* do not print. Default is *True*.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         key_private (str) The key imported.
-    '''
+    """
     def __init__(self, key, wallet="default", is_verbose=True):
         key_private = interface.key_arg(
             key, is_owner_key=True, is_private_key=True)
@@ -340,17 +340,17 @@ class WalletImport(Command):
         self.printself()
 
 class WalletRemove_key(Command):
-    '''Remove key from wallet
+    """Remove key from wallet
 
     Args:
         wallet (str or .interface.Wallet): The wallet to remove key from.
         password (str): The password returned by wallet create.
         key (str or .interface.Key): A public key to remove.
-        is_verbose (bool): If *False* do not print. Default is *True*.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         key_public (str): The public key removed.
-    '''
+    """
     def __init__(self, key, wallet, password, is_verbose=True):
         key_public = interface.key_arg(
             key, is_owner_key=True, is_private_key=False)
@@ -367,11 +367,11 @@ class WalletRemove_key(Command):
 
 
 class WalletKeys(Command):
-    '''List of public keys from all unlocked wallets.
+    """List of public keys from all unlocked wallets.
 
     Args:
-        is_verbose (bool): If *False* do not print. Default is *True*.
-    '''
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
+    """
     def __init__(self, is_verbose=True):
         Command.__init__(
             self, [], "wallet", "keys", is_verbose)                
@@ -384,12 +384,12 @@ class WalletKeys(Command):
 
 
 class WalletOpen(Command):
-    '''Open an existing wallet.
+    """Open an existing wallet.
 
     Args:
         wallet (str or .interface.Wallet): The wallet to open.
-        is_verbose (bool): If *False* do not print. Default is *True*.
-    '''
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
+    """
     def __init__(self, wallet="default", is_verbose=True):
         Command.__init__(
             self, ["--name", interface.wallet_arg(wallet)], 
@@ -399,11 +399,11 @@ class WalletOpen(Command):
 
 
 class WalletLockAll(Command):
-    '''Lock all unlocked wallets.
+    """Lock all unlocked wallets.
 
     Args:
-        is_verbose (bool): If *False* do not print. Default is *True*.    
-    '''
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.    
+    """
     def __init__(self, is_verbose=True):
         Command.__init__(
             self, [], "wallet", "lock_all", is_verbose)
@@ -412,12 +412,12 @@ class WalletLockAll(Command):
 
 
 class WalletLock(Command):
-    '''Lock wallet.
+    """Lock wallet.
 
     Args:
         wallet (str or .interface.Wallet): The wallet to open.
-        is_verbose (bool): If *False* do not print. Default is *True*.
-    '''
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
+    """
     def __init__(self, wallet="default", is_verbose=True):
         Command.__init__(
             self, ["--name", interface.wallet_arg(wallet)], 
@@ -427,13 +427,13 @@ class WalletLock(Command):
 
 
 class WalletUnlock(Command):
-    '''Unlock wallet.
+    """Unlock wallet.
 
     Args:
         wallet (str or .interface.Wallet): The wallet to remove key from.
         password (str): The password returned by wallet create.
-        is_verbose (bool): If *False* do not print. Default is *True*.
-    '''
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
+    """
     def __init__(
             self, wallet="default", password="", timeout=0, is_verbose=True):
  
@@ -449,19 +449,19 @@ class WalletUnlock(Command):
 
 
 class CreateKey(interface.Key, Command):
-    '''Create a new keypair and print the public and private keys.
+    """Create a new keypair and print the public and private keys.
 
     Args:
         key_private (str): If set, a private key to set, otherwise random.
         key_public (str): If set, a public key to set, otherwise random.
         r1: Generate a key using the R1 curve (iPhone), instead of the 
             K1 curve (Bitcoin)
-        is_verbose (bool): If *False* do not print. Default is *True*.
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
     Attributes:
         key_private (str): The private key set.
         key_public (str): The public key set.
-    '''
+    """
     def __init__(
                     self, key_public=None, key_private=None, r1=False, 
                     is_verbose=True):
@@ -506,7 +506,7 @@ class RestoreAccount(GetAccount):
 
 
 class CreateAccount(interface.Account, Command):
-    '''Create an account, buy ram, stake for bandwidth for the account.
+    """Create an account, buy ram, stake for bandwidth for the account.
 
     Args:
         creator (str or .interface.Account): The account creating 
@@ -519,7 +519,7 @@ class CreateAccount(interface.Account, Command):
 
     See definitions of the remaining parameters: \
     :func:`.cleos.base.common_parameters`.
-    '''
+    """
     def __init__(
             self, creator, name, owner_key, 
             active_key=None,
@@ -589,8 +589,8 @@ class CreateAccount(interface.Account, Command):
 
 
 def account_name():
-    '''Get a random EOSIO account name.
-    '''
+    """Get a random EOSIO account name.
+    """
     letters = "abcdefghijklmnopqrstuvwxyz12345"
     name = ""
     for i in range(0, 12):
@@ -600,7 +600,7 @@ def account_name():
 
 
 class PushAction(Command):
-    '''Push a transaction with a single action.
+    """Push a transaction with a single action.
 
     Args:
         account (str or .interface.Account): The account to publish a contract 
@@ -617,8 +617,8 @@ class PushAction(Command):
         console (str): Sum of all *["processed"]["action_traces"][]["console"]* \
             components of EOSIO cleos responce.
         act (str): Summary of all actions, like \
-            *eosio.null::nonce <= 5d0a572c49880500*.
-    '''
+            ``eosio.null::nonce <= 5d0a572c49880500``.
+    """
     def __init__(
             self, account, action, data,
             permission=None, expiration_sec=None, 

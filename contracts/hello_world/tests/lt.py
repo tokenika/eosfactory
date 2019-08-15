@@ -5,8 +5,8 @@ setup.set_is_lt()
 from eosfactory.eosf import *
 
 import importlib
-base_commands = importlib.import_module(".base", setup.light_full)
-get_commands = importlib.import_module(".get", setup.light_full)
+BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
+GET_COMMANDS = importlib.import_module(".get", setup.light_full)
 set_commands = importlib.import_module(".set", setup.light_full)
 sys_commands = importlib.import_module(".sys", setup.light_full)
 
@@ -25,9 +25,9 @@ CAROL = Account()
 
 def test():
     
-    SCENARIO('''
+    SCENARIO("""
     Execute simple actions.
-    ''')
+    """)
    
 
     reset()
@@ -46,16 +46,16 @@ def test():
     COMMENT("ALICE.info()")
     ALICE.info()
     COMMENT("get.GetBlock(6)")
-    get_commands.GetBlock(6)
+    GET_COMMANDS.GetBlock(6)
     COMMENT("get.GetBlock(6)")
-    get_commands.GetAccounts(ALICE.active_public())
+    GET_COMMANDS.GetAccounts(ALICE.active_public())
     smart = Contract(HOST, CONTRACT_WORKSPACE)
     smart.deploy()
     create_account("CAROL", MASTER)
 
-    COMMENT('''
+    COMMENT("""
     Test an action for Alice:
-    ''')
+    """)
     setup.is_print_command_lines = True
     HOST.push_action(
         "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))

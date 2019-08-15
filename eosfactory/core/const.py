@@ -1,4 +1,4 @@
-'''Non-rebinding properties
+"""Non-rebinding properties
 
 Helps define a constant in Python
 From Section 6.3: Defining Constants
@@ -9,13 +9,13 @@ import const
 const.magic = 23 # First binding is fine
 const.magic = 88 # Second binding raises const.ConstError
 del const.magic # deleting is not fine
-'''
+"""
 
 import sys
 class _const:
     class ConstError(TypeError):
-        '''Error thrown on any change of property of the class `_const`.
-        '''
+        """Error thrown on any change of property of the class `_const`.
+        """
     def __setattr__(self, name, value):
         if name in self.__dict__:
             raise self.ConstError("Can't rebind const(%s)" %name)

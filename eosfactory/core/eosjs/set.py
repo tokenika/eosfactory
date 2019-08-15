@@ -4,12 +4,12 @@ import os
 import eosfactory.core.errors as errors
 import eosfactory.core.manager as manager
 import eosfactory.core.interface as interface
-import eosfactory.core.eosjs.base as base_commands
+import eosfactory.core.eosjs.base as BASE_COMMANDS
 import eosfactory.core.common as common
 
 
-class SetContract(base_commands.Command):
-    '''Create or update the contract on an account.
+class SetContract(BASE_COMMANDS.Command):
+    """Create or update the contract on an account.
 
     Args:
         account (str or .interface.Account): The account to publish a contract 
@@ -26,7 +26,7 @@ class SetContract(base_commands.Command):
     Attributes:
         contract_path_absolute (str): The path to the contract project
         account_name (str): The EOSIO name of the contract's account.
-    '''
+    """
     def __init__(
             self, account, contract_dir, 
             wasm_file=None, abi_file=None, 
@@ -67,16 +67,16 @@ class SetContract(base_commands.Command):
         # if  ref_block:
         #     args.extend(["--ref-block", ref_block])
 
-        base_commands.Command.__init__(
+        BASE_COMMANDS.Command.__init__(
             self,
-            '''
+            """
     const fs = require(`fs`)
     const path = require(`path`)
     const { Serialize } = require(`eosjs`)
 
-            ''' + base_commands.config_api()
+            """ + BASE_COMMANDS.config_api()
             ,
-            '''
+            """
     ;(async () => {
         const permissions = JSON.parse('%(permissions)s')
         const wasm = fs.readFileSync('%(wasm_file)s').toString(`hex`)
@@ -133,11 +133,11 @@ class SetContract(base_commands.Command):
         console.log(JSON.stringify(result))
     })()
 
-            ''' % {
+            """ % {
                 "wasm_file": wasm_file,
                 "abi_file": abi_file,
                 "account_name": self.account_name,
-                "permissions": base_commands.permission_str(permission, self.account_name),
+                "permissions": BASE_COMMANDS.permission_str(permission, self.account_name),
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
@@ -147,8 +147,8 @@ class SetContract(base_commands.Command):
 
 
 
-class SetAccountPermission(base_commands.Command):
-    '''Set parameters dealing with account permissions.
+class SetAccountPermission(BASE_COMMANDS.Command):
+    """Set parameters dealing with account permissions.
 
     Args:
         account (str or .interface.Account): The account to set/delete a 
@@ -163,7 +163,7 @@ class SetAccountPermission(base_commands.Command):
         remove_code (bool): If set, remove 'eosio.code' permission from 
             specified permission authority. Default is false.
         
-    Exemplary values of the argument *authority*::
+    Exemplary values of the argument ``authority``::
 
         # bob, carol are account objects created with 
         # shell.account.create_account factory function
@@ -197,7 +197,7 @@ class SetAccountPermission(base_commands.Command):
             component of EOSIO cleos responce.
         data (str): *["processed"]["action_traces"][0]["act"]["data"]*
             component of EOSIO cleos responce.
-    '''
+    """
     def __init__(
             self, account, permission_name, 
             authority=None, 
@@ -268,7 +268,7 @@ class SetAccountPermission(base_commands.Command):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
                         
-        # base_commands.Command.__init__(
+        # BASE_COMMANDS.Command.__init__(
         #     self, args, "set", "account permission", is_verbose)
         self.account_name = account_name
         self.console = None
@@ -281,8 +281,8 @@ class SetAccountPermission(base_commands.Command):
         self.printself()    
 
 
-class SetActionPermission(base_commands.Command):
-    '''Set parameters dealing with account permissions.
+class SetActionPermission(BASE_COMMANDS.Command):
+    """Set parameters dealing with account permissions.
 
     Args:
         account (str or .interface.Account): The account to set/delete a 
@@ -302,7 +302,7 @@ class SetActionPermission(base_commands.Command):
             component of EOSIO cleos responce.
         data (str): *["processed"]["action_traces"][0]["act"]["data"]* \
             component of EOSIO cleos responce.
-    '''
+    """
     def __init__(
             self, account, code, action_type, requirement,
             permission=None,
@@ -353,7 +353,7 @@ class SetActionPermission(base_commands.Command):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
 
-        base_commands.Command.__init__(self, args, "set", "action permission", is_verbose)
+        # BASE_COMMANDS.Command.__init__(self, args, "set", "action permission", is_verbose)
         self.console = None
         self.data = None
 

@@ -13,7 +13,7 @@ import eosfactory.shell.account
 
 
 class ContractBuilder():
-    '''Build or delete a contract project.
+    """Build or delete a contract project.
 
     Args:
         contract_dir (str): If set, a hint to the root directory of a contract 
@@ -21,10 +21,10 @@ class ContractBuilder():
         c_cpp_properties_path (str): If set, the directory of a C/CPP VSCode 
             extension configuration file.
         abi_file (str): If set, the path to the ABI file, absolute, 
-            or relative to *contract_dir*.
+            or relative to ``contract_dir``.
         wasm_file (str): If set, the path to the WASM file, absolute, 
-            or relative to *contract_dir*.    
-    '''
+            or relative to ``contract_dir``.    
+    """
     def __init__(
             self, contract_dir=None,
             c_cpp_properties_path=None,
@@ -54,25 +54,25 @@ class ContractBuilder():
 
 
     def build(self, force=True):
-        '''Make both, ABI and WASM files.
-        '''
+        """Make both, ABI and WASM files.
+        """
         if force or not self.is_built():
             teos.build(self.contract_dir, self.c_cpp_properties_path)
 
     def is_built(self):
-        '''Check whether both the ABI and WASM files exist.
-        '''
+        """Check whether both the ABI and WASM files exist.
+        """
         return common.contract_is_built(
             self.contract_dir, self.wasm_file, self.abi_file)
 
     def path(self):
-        ''' Return the path to the contract.
-        '''
+        """ Return the path to the contract.
+        """
         return str(self.contract_dir)
 
     def delete(self):
-        '''Delete the project.
-        '''
+        """Delete the project.
+        """
         try:
             shutil.rmtree(str(self.contract_dir))
             return True
@@ -81,10 +81,10 @@ class ContractBuilder():
 
 
 class Contract(ContractBuilder):
-    '''Add a contract to the given account.
+    """Add a contract to the given account.
 
     Args:
-        account (.shell.Account): The *Account* object to be fitted with a 
+        account (.shell.Account): The ``Account`` object to be fitted with a 
             contract.
         contract_dir (str): The path to a directory.
         wasm_file (str): The WASM file relative to the contract_dir.
@@ -93,7 +93,7 @@ class Contract(ContractBuilder):
 
     See definitions of the remaining parameters: \
     :func:`.cleos.base.common_parameters`.
-    '''
+    """
     def __init__(
             self, account, contract_dir=None,
             abi_file=None, wasm_file=None,
@@ -128,8 +128,8 @@ class Contract(ContractBuilder):
         self._console = None
 
     def clear(self):
-        '''Remove contract on an account
-        '''
+        """Remove contract on an account
+        """
         result = set_commands.SetContract(
             self.account, self.contract_dir, 
             self.wasm_file, self.abi_file,
@@ -140,12 +140,12 @@ class Contract(ContractBuilder):
 
     def deploy(
         self, permission=None, dont_broadcast=None, payer=None):
-        '''Deploy the contract.
-        '''
+        """Deploy the contract.
+        """
         if not self.is_built():
-            raise errors.Error('''
+            raise errors.Error("""
             Contract needs to be built before deployment.
-            ''')
+            """)
 
         if permission is None:
             permission = self.permission
@@ -165,9 +165,9 @@ class Contract(ContractBuilder):
                 json=True)
 
         except errors.LowRamError as e:
-            logger.TRACE('''
+            logger.TRACE("""
             * RAM needed is {}.kByte, buying RAM {}.kByte.
-            '''.format(
+            """.format(
                 e.needs_kbyte,
                 e.deficiency_kbyte))
 
@@ -190,10 +190,10 @@ class Contract(ContractBuilder):
                 is_verbose=False,
                 json=True)
 
-        logger.INFO('''
+        logger.INFO("""
         * Contract {} 
             is deployed. 
-        '''.format(self.contract_dir))            
+        """.format(self.contract_dir))            
         
         self.contract = result
 
@@ -203,11 +203,11 @@ class Contract(ContractBuilder):
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None, json=True):
-        '''Push a transaction with a single action.
+        """Push a transaction with a single action.
 
-        Call *EOSIO cleos* with the *push action* command. Store the result,
+        Call ``EOSIO cleos`` with the ``push action`` command. Store the result,
         which is an object of the class :class:`.cleos.base.PushAction`,  as
-        the value of the *action* attribute.
+        the value of the ``action`` attribute.
 
         Args:
             action (str or json or filename): Definition of the action to 
@@ -216,7 +216,7 @@ class Contract(ContractBuilder):
 
         See definitions of the remaining parameters: \
         :func:`.cleos.base.common_parameters`.
-        '''            
+        """            
         self.account.push_action(action, data,
             permission, expiration_sec,
             skip_sign, dont_broadcast, force_unique,
@@ -224,22 +224,22 @@ class Contract(ContractBuilder):
             ref_block, json)
 
     def show_action(self, action, data, permission=None):
-        ''' Implements the `push action` command without broadcasting. 
-        '''
+        """ Implements the `push action` command without broadcasting. 
+        """
         self.account.show_action(action, data, permission)
 
     def table(
             self, table_name, scope="",
             binary=False, 
             limit=10, key="", lower="", upper=""):
-        '''Retrieve the contents of a database table
+        """Retrieve the contents of a database table
 
         Args:
             scope (str or .interface.Account): The scope within the account in 
                 which the table is found.
             table (str): The name of the table as specified by the contract abi.
             binary (bool): Return the value as BINARY rather than using abi to 
-                interpret as JSON. Default is *False*.
+                interpret as JSON. Default is ``False``.
             limit (int): The maximum number of rows to return. Default is 10.
             lower (str): JSON representation of lower bound value of key, 
                 defaults to first.
@@ -248,29 +248,29 @@ class Contract(ContractBuilder):
 
         Returns:
             :class:`.cleos.set.SetTable` object
-        '''            
+        """            
         return self.account.table(
             table_name, scope,
             binary, 
             limit, key, lower, upper)
 
     def code(self, code=None, abi=None, wasm=False):
-        '''Retrieve the code and ABI
+        """Retrieve the code and ABI
 
         Args:
             code (str): If set, the name of the file to save the contract 
                 WAST/WASM to.
             abi (str): If set, the name of the file to save the contract ABI to.
             wasm (bool): Save contract as wasm.
-        '''        
+        """        
         return self.account.code(code, abi, wasm)
 
     def console(self):
         return self._console
 
     def path(self):
-        ''' Return the path to the contract.
-        '''
+        """ Return the path to the contract.
+        """
         if self.contract:
             return str(self.contract.contract_path_absolute)
         else:

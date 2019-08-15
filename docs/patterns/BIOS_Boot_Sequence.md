@@ -47,10 +47,10 @@ while True:
         if ok():
             break
 
-    eosio_contracts_dir = input(colored(utils.heredoc('''
+    eosio_contracts_dir = input(colored(utils.heredoc("""
         Where is 'eosio.contracts` repository located on your machine?
         Input an existing directory path:
-        ''') + "\n", prompt_color))
+        """) + "\n", prompt_color))
 
     eosio_contracts_dir.replace("~", str(pathlib.Path.home()))
 
@@ -60,14 +60,14 @@ while True:
         print()
         break
 
-    print("\n" + utils.heredoc('''
+    print("\n" + utils.heredoc("""
     The path you entered:
     {}
     doesn't seem to be correct!
     directory --
     {} 
     -- does not exist.
-    ''').format(
+    """).format(
         colored(eosio_contracts_dir, error_path_color),
         colored(os.path.join(eosio_contracts_dir, eosio_bios), error_path_color)
         ) + "\n")
@@ -86,7 +86,7 @@ create_master_account("eosio")
 There are several system accounts that are needed. They are created with a third argument of the `create_account` factory function, in order to force the names of the new accounts.
 
 ```python
-COMMENT('''Create important system accounts''')
+COMMENT("""Create important system accounts""")
 
 create_account("eosio_bpay", eosio, "eosio.bpay")
 create_account("eosio_msig", eosio, "eosio.msig")
@@ -104,7 +104,7 @@ create_account("eosio_vpay", eosio, "eosio.vpay")
 `eosio.token` contract enables you to create, issue, transfer, and get information about tokens.
 
 ```python
-COMMENT('''Install the eosio.token contract''')
+COMMENT("""Install the eosio.token contract""")
 contract = "eosio.token"
 Contract(
     contract, 
@@ -119,7 +119,7 @@ Contract(
 `eosio.msig` contract enables and simplifies defining and managing permission levels and performing multi-signature actions.
 
 ```python
-COMMENT('''Set the eosio.msig contract''')
+COMMENT("""Set the eosio.msig contract""")
 
 contract = "eosio.msig"
 Contract(
@@ -133,7 +133,7 @@ Contract(
 ## Step 6: Create and allocate the SYS currency
 
 ```python
-COMMENT('''Create and allocate the SYS currency''')
+COMMENT("""Create and allocate the SYS currency""")
 
 eosio_token.push_action(
     "create",
@@ -160,7 +160,7 @@ Therefore, with the `eosio.system` contract, all the simple tests in the EOSFact
 
 
 ```python
-COMMENT('''Set the eosio.system contract''')
+COMMENT("""Set the eosio.system contract""")
 
 contract = "eosio.system"
 Contract(

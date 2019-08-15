@@ -1,4 +1,4 @@
-'''An example of functional test.
+"""An example of functional test.
 
 This example shows a case of the simplest test, featuring a single test 
 function. Its code demonstrates how the contract objects can be created by 
@@ -13,7 +13,7 @@ contract objects `master, host, alice, ...` can be local.
 However, in the same time, the account objects are referenced in the global 
 namespace of the module, what is a provision to avoid having to account objects 
 of the same creation name, pointing to different physical eosio accounts. 
-'''
+"""
 
 import unittest
 from eosfactory.eosf import *
@@ -26,23 +26,23 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        SCENARIO('''
+        SCENARIO("""
         Create a contract from template, then build and deploy it.
-        ''')
+        """)
         reset()
 
     def test_functional(self):
         master = new_master_account()
-        COMMENT('''
+        COMMENT("""
         Create test accounts:
-        ''')
+        """)
         alice = new_account(master)
         carol = new_account(master)
         bob = new_account(master)
 
-        COMMENT('''
+        COMMENT("""
         Create, build and deploy the contract:
-        ''')
+        """)
         host = new_account(master)
         smart = Contract(host, project_from_template(
             CONTRACT_WORKSPACE, template="hello_world", 
@@ -50,23 +50,23 @@ class Test(unittest.TestCase):
         smart.build()
         smart.deploy()
 
-        COMMENT('''
+        COMMENT("""
         Test an action for Alice, including the debug buffer:
-        ''')
+        """)
         host.push_action(
             "hi", {"user":alice}, permission=(alice, Permission.ACTIVE))
         self.assertTrue("alice" in DEBUG())
 
-        COMMENT('''
+        COMMENT("""
         Test an action for Carol, including the debug buffer:
-        ''')
+        """)
         host.push_action(
             "hi", {"user":carol}, permission=(carol, Permission.ACTIVE))
         self.assertTrue("carol" in DEBUG())
 
-        COMMENT('''
+        COMMENT("""
         WARNING: This action should fail due to authority mismatch!
-        ''')
+        """)
         with self.assertRaises(MissingRequiredAuthorityError):
             host.push_action(
                 "hi", {"user":carol}, permission=(bob, Permission.ACTIVE))

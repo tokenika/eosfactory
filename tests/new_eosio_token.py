@@ -1,4 +1,4 @@
-'''Example of a functional test.
+"""Example of a functional test.
 
 This example shows a case of the simplest test, featuring a single test 
 function. Its code demonstrates how the contract objects can be created by 
@@ -13,7 +13,7 @@ contract objects `master, host, alice, ...` can be local.
 However, in the same time, the account objects are referenced in the global 
 namespace of the module, what is a provision to avoid having to account objects 
 of the same creation name, pointing to different physical eosio accounts. 
-'''
+"""
 
 import unittest
 from eosfactory.eosf import *
@@ -23,42 +23,42 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 CONTRACT_WORKSPACE = "_iqhgcqllgnpkirjwwkms"
 
 class Test(unittest.TestCase):
-    '''Unittest class definition.
-    '''
+    """Unittest class definition.
+    """
     @classmethod
     def setUpClass(cls):
-        SCENARIO('''
+        SCENARIO("""
         Create a contract from template, then build and deploy it.
         Also, initialize the token and run a couple of transfers between different accounts.
-        ''')
+        """)
         reset()
 
     def test_functionality(self):
-        '''The only test function.
+        """The only test function.
 
         The account objects `master, host, alice, ...` which are of the global namespace, do not have to be explicitly declared (and still keep the linter silent).
-        '''
+        """
         master = new_master_account()
 
-        COMMENT('''
+        COMMENT("""
         Create test accounts:
-        ''')
+        """)
         alice = new_account(master)
         bob = new_account(master)
         carol = new_account(master)        
         
-        COMMENT('''
+        COMMENT("""
         Create, build and deploy the contract:
-        ''')
+        """)
         host = new_account(master)
         smart = Contract(host, project_from_template(
             CONTRACT_WORKSPACE, template="eosio_token", remove_existing=True))
         smart.build()
         smart.deploy()
 
-        COMMENT('''
+        COMMENT("""
         Initialize the token and send some tokens to one of the accounts:
-        ''')
+        """)
 
         host.push_action(
             "create",
@@ -78,9 +78,9 @@ class Test(unittest.TestCase):
             },
             permission=(master, Permission.ACTIVE))
 
-        COMMENT('''
+        COMMENT("""
         Execute a series of transfers between the accounts:
-        ''')
+        """)
 
         host.push_action(
             "transfer",
@@ -114,9 +114,9 @@ class Test(unittest.TestCase):
             },
             permission=(bob, Permission.ACTIVE))
 
-        COMMENT('''
+        COMMENT("""
         Verify the outcome:
-        ''')
+        """)
 
         table_alice = host.table("accounts", alice)
         table_bob = host.table("accounts", bob)
@@ -124,13 +124,13 @@ class Test(unittest.TestCase):
 
         self.assertEqual(
             table_alice.json["rows"][0]["balance"], '77.0000 EOS',
-            '''assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')''')
+            """assertEqual(table_alice.json["rows"][0]["balance"], '77.0000 EOS')""")
         self.assertEqual(
             table_bob.json["rows"][0]["balance"], '11.0000 EOS',
-            '''assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')''')
+            """assertEqual(table_bob.json["rows"][0]["balance"], '11.0000 EOS')""")
         self.assertEqual(
             table_carol.json["rows"][0]["balance"], '12.0000 EOS',
-            '''assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')''')
+            """assertEqual(table_carol.json["rows"][0]["balance"], '12.0000 EOS')""")
 
     @classmethod
     def tearDownClass(cls):

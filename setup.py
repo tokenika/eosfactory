@@ -1,6 +1,6 @@
-'''setuptools setup
+"""setuptools setup
 
-'''
+"""
 import os
 import setuptools
 import eosfactory.core.config as config
@@ -26,8 +26,8 @@ def readme():
         return f.read()
 
 def data_files_item(directory):
-    '''Given a directory, return tuple the directory, its files.
-    '''
+    """Given a directory, return tuple the directory, its files.
+    """
     paths = []
     for (path, _directories, filenames) in os.walk(directory):
         for filename in filenames:

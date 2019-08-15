@@ -1,5 +1,5 @@
 utils
-====================
+=====
 
 .. automodule:: eosfactory.create_project
     :members:

@@ -9,18 +9,15 @@ MASTER.info()
 create_account("ALICE", MASTER)
 ALICE.info()
 
-from eosfactory.eosf import *
+reboot()
 
-testnet = Testnet(
-    "nukjygmgkn3x",
-    "5KXxczFPdcsLrCYpRRREfd4e2xVDTZZqBpZWmvxLZYxUbPzqrWL",
-    "5KJLMupynNYFiM9gZWtDnDX55hbaF18EsWpFr8UvyJeADqbwN7A",
-    "http://145.239.133.201:8888"
-    )
+testnet = manager.reset(
+    "yvngxrjzbf3w",
+    "5KCmAh23R9wZxm5m1BqRFePvAvw8fzYaDduACUg6DUAj9nmcZfQ",
+    "5JkC4oFPaPjWzj866x2rMygsnVZaZzDkqynzX6dBw92LqR63tcD",
+    "http://145.239.133.201:8888")
 
-testnet.configure()
-testnet.verify_production()
-testnet.clear_cache()
+# resume("http://145.239.133.201:8888")
 
 create_master_account("MASTER", testnet)
 MASTER.info()

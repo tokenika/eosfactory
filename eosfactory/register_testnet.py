@@ -15,18 +15,18 @@ def register_testnet_(url, alias, account_name, owner_key, active_key):
         active_key=active_key)
 
     if account:
-        testnet.add_to_mapping(
+        testnet_module.add_to_mapping(
             account_name if account_name else account.name,
             owner_key if owner_key else account.owner_key.key_private, 
             active_key if active_key else account.active_key.key_private,
             url, 
             alias)
 
-        testnet.testnets()
+        testnet_module.testnets()
 
 
 def main():
-    '''
+    """
     usage: python3 -m eosfactory.register_testnet [-h] \
     [-a ACCOUNT ACCOUNT ACCOUNT] url [alias]
 
@@ -51,8 +51,8 @@ def main():
         alias: Testnet alias
         -h: show this help message and exit
         -a (ACCOUNT ACCOUNT ACCOUNT): <name> <owner key> <active key>
-    '''
-    parser = argparse.ArgumentParser(description='''
+    """
+    parser = argparse.ArgumentParser(description="""
     Given an url and an testnet alias (not obligatory), get registration data.
     Apply the data to the registration form of the testnet.
     Enter 'go' when ready.
@@ -67,7 +67,7 @@ def main():
         -a dgxo1uyhoytn \
         5K4rezbmuoDUyBUntM3PqxwutPU3rYKrNzgF4f3djQDjfXF3Q67 \
         5JCvLMJVR24WWvC6qD6VbLpdUMsjhiXmcrk4i7bdPfjDfNMNAeX
-    ''')
+    """)
 
     parser.add_argument(
         "url", 

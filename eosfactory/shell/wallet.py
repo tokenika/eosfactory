@@ -8,18 +8,18 @@ import eosfactory.core.config as config
 import eosfactory.core.logger as logger
 import eosfactory.core.setup as setup
 import eosfactory.core.interface as interface
-base_commands = importlib.import_module(".base", setup.light_full)
+BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
 import eosfactory.core.manager as manager
 
 
-class Wallet(base_commands.WalletCreate):
-    ''' Create a new wallet locally and operate it.
+class Wallet(BASE_COMMANDS.WalletCreate):
+    """ Create a new wallet locally and operate it.
 
     Args:
 
         name (str): The name of the new wallet, defaults to `default`.
         password (str): The password to the wallet, if the wallet exists. 
-    '''
+    """
     wallet_single = None
     globals = {}
 
@@ -33,34 +33,34 @@ class Wallet(base_commands.WalletCreate):
 
         if not Wallet.wallet_single is None \
                                     and not Wallet.wallet_single.name == name:
-            raise errors.Error('''
+            raise errors.Error("""
             It can be only one ``Wallet`` object in the script; there is one
             named ``{}``.
-            '''.format(Wallet.wallet_single.name))
+            """.format(Wallet.wallet_single.name))
 
         self.wallet_dir = config.keosd_wallet_dir()
 
-        logger.INFO('''
+        logger.INFO("""
                 * Wallet name is ``{}``, wallet directory is
                     {}.
-                '''.format(name, self.wallet_dir))
+                """.format(name, self.wallet_dir))
 
         if not password: # look for password:
             passwords = wallet_json_read()
             if name in passwords:
                 password = passwords[name]
-                logger.INFO('''
+                logger.INFO("""
                     The password is restored from the file:
                     {}
-                    '''.format(
+                    """.format(
                         os.path.join(self.wallet_dir, setup.password_map)))
 
-        base_commands.WalletCreate.__init__(self, name, password, is_verbose=False)
+        BASE_COMMANDS.WalletCreate.__init__(self, name, password, is_verbose=False)
 
         if self.is_created: # new password
-            logger.INFO('''
+            logger.INFO("""
                 * Created wallet ``{}``.
-                '''.format(self.name)
+                """.format(self.name)
             )
                 ###############################################################
                 # TO DO: detect live node!!!!!!!!!!
@@ -69,93 +69,93 @@ class Wallet(base_commands.WalletCreate):
                 password_map = wallet_json_read()
                 password_map[name] = self.password
                 wallet_json_write(password_map)
-                logger.INFO('''
+                logger.INFO("""
                     * Password is saved to the file ``{}`` 
                     in the wallet directory.
-                    '''.format(setup.password_map)
+                    """.format(setup.password_map)
                 )
             else:
                 logger.OUT(self.out_msg)
         else:
-            logger.TRACE('''
+            logger.TRACE("""
                     Opened wallet ``{}``
-                    '''.format(self.name))            
+                    """.format(self.name))            
 
     def index(self):
-        ''' Lists opened wallets, * marks unlocked.
-        Returns `base_commands.WalletList` object
-        ''' 
-        result = base_commands.WalletList(is_verbose=0)
+        """ Lists opened wallets, * marks unlocked.
+        Returns `BASE_COMMANDS.WalletList` object
+        """ 
+        result = BASE_COMMANDS.WalletList(is_verbose=0)
         logger.OUT(result.out_msg)
     
     def open(self):
-        ''' Opens the wallet.
+        """ Opens the wallet.
         Returns `WalletOpen` object
-        '''
-        base_commands.WalletOpen(self.name, is_verbose=False)
-        logger.TRACE('''
+        """
+        BASE_COMMANDS.WalletOpen(self.name, is_verbose=False)
+        logger.TRACE("""
         * Wallet ``{}`` opened.
-        '''.format(self.name))
+        """.format(self.name))
 
     def lock(self):
-        ''' Lock the wallet.
-        Returns `base_commands.WalletLock` object.
-        '''
-        base_commands.WalletLock(self.name, is_verbose=False)
+        """ Lock the wallet.
+        Returns `BASE_COMMANDS.WalletLock` object.
+        """
+        BASE_COMMANDS.WalletLock(self.name, is_verbose=False)
         logger.TRACE("Wallet `{}` locked.".format(self.name))
 
     def lock_all(self):
-        ''' Lock the wallet.
-        Returns `base_commands.WalletLock` object.
-        '''
-        base_commands.WalletLockAll(is_verbose=False)
+        """ Lock the wallet.
+        Returns `BASE_COMMANDS.WalletLock` object.
+        """
+        BASE_COMMANDS.WalletLockAll(is_verbose=False)
         logger.TRACE("All wallets locked.")
 
     def unlock(self):
-        ''' Unlock the wallet.
+        """ Unlock the wallet.
         Returns `WalletUnlock` object.
-        '''
-        base_commands.WalletUnlock(
+        """
+        BASE_COMMANDS.WalletUnlock(
             self.name, self.password, is_verbose=False)
-        logger.TRACE('''
+        logger.TRACE("""
         * Wallet ``{}`` unlocked.
-        '''.format(self.name))
+        """.format(self.name))
 
     def open_unlock(self):
-        ''' Open & Unlock.
-        '''
-        base_commands.WalletOpen(self.name, is_verbose=False)
-        base_commands.WalletUnlock(self.name, self.password, is_verbose=False)
+        """ Open & Unlock.
+        """
+        BASE_COMMANDS.WalletOpen(self.name, is_verbose=False)
+        BASE_COMMANDS.WalletUnlock(self.name, self.password, is_verbose=False)
 
     def remove_key(self, account_or_key):
-        '''Remove key from wallet.
+        """Remove key from wallet.
 
         Args:
             account_or_key (str or .interface.Key or .interface.Account):
-                A public key to remove. If *account_or_key* is an 
+                A public key to remove. If ``account_or_key`` is an 
                 .interface.Account object, both owner and active keys are 
                 removed.
-        '''
+        """
         self.open_unlock()
 
         removed_keys = []
         account_name = None
         if isinstance(account_or_key, interface.Account):
-            base_commands.WalletRemove_key(
+            BASE_COMMANDS.WalletRemove_key(
                 interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=True), 
                 self.name, self.password, is_verbose=False)
             removed_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=False))
 
-            base_commands.WalletRemove_key(
+            BASE_COMMANDS.WalletRemove_key(
                 interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=True), 
                 self.name, self.password, is_verbose=False)
             removed_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
         else:
-            base_commands.WalletRemove_key(
+            BASE_COMMANDS.WalletRemove_key(
                 interface.key_arg(
                     account_or_key, is_private_key=True), 
                 self.name, self.password, is_verbose=False)
@@ -164,128 +164,128 @@ class Wallet(base_commands.WalletCreate):
 
         if account_name is None:
             if len(removed_keys) > 0:
-                logger.TRACE('''
+                logger.TRACE("""
                     Removing key '{}' 
                     from the wallet '{}'
-                    '''.format(removed_keys[0], self.name)
+                    """.format(removed_keys[0], self.name)
                             )
         else:            
-            logger.TRACE('''
+            logger.TRACE("""
                 Removing keys of the account '{}' from the wallet '{}'
-                '''.format(account_name, self.name)
+                """.format(account_name, self.name)
                         )        
 
-        wallet_keys = base_commands.WalletKeys(is_verbose=False)
+        wallet_keys = BASE_COMMANDS.WalletKeys(is_verbose=False)
 
         for key in removed_keys:
             if key in wallet_keys.json:
-                raise errors.Error('''
+                raise errors.Error("""
                 Failed to remove key '{}' from the wallet '{}'
-                '''.format(key, self.name))
+                """.format(key, self.name))
 
-        logger.TRACE('''
+        logger.TRACE("""
         * Cross-checked: all listed keys removed from the wallet.
-        ''')
+        """)
         return True
 
     def import_key(self, account_or_key):
-        ''' Imports private keys into wallet.
+        """ Imports private keys into wallet.
 
-        Return list of `base_commands.WalletImport` objects
+        Return list of `BASE_COMMANDS.WalletImport` objects
 
         Args:
             account_or_key (str or .interface.Key or .interface.Account):
-                A private key to import. If *account_or_key* is an 
+                A private key to import. If ``account_or_key`` is an 
                 .interface.Account object, both owner and active keys are 
                 imported.
-        '''
+        """
         self.open_unlock()
         imported_keys = []
         account_name = None
         if isinstance(account_or_key, interface.Account):
             account_name = account_or_key.name
-            base_commands.WalletImport(
+            BASE_COMMANDS.WalletImport(
                 interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=True), 
                 self.name, is_verbose=False)
             imported_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=True, is_private_key=False))
 
-            base_commands.WalletImport(
+            BASE_COMMANDS.WalletImport(
                 interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=True), 
                 self.name, is_verbose=False)
             imported_keys.append(interface.key_arg(
                     account_or_key, is_owner_key=False, is_private_key=False))
-            logger.TRACE('''
+            logger.TRACE("""
                 * Importing keys of the account ``{}`` 
                     into the wallet ``{}``
-                '''.format(account_name, self.name)
+                """.format(account_name, self.name)
                 )
         else:           
-            base_commands.WalletImport(
+            BASE_COMMANDS.WalletImport(
                 interface.key_arg(account_or_key, is_private_key=True), 
                 self.name, is_verbose=False)
 
-            logger.TRACE('''
+            logger.TRACE("""
                 * Importing keys into the wallet ``{}``
-                '''.format(self.name)
+                """.format(self.name)
                         )
             return True
         
-        wallet_keys = base_commands.WalletKeys(is_verbose=False)
+        wallet_keys = BASE_COMMANDS.WalletKeys(is_verbose=False)
 
         if len(imported_keys) == 0:
-            raise errors.Error('''
+            raise errors.Error("""
                 The list of imported keys is empty.
-                ''')
+                """)
 
         ok = True
         for key in imported_keys:
             if not key in wallet_keys.json:
                 ok = False
-                raise errors.Error('''
+                raise errors.Error("""
                 Failed to import keys of the account '{}' into the wallet '{}'
-                '''.format(
+                """.format(
                     account_name if account_name else "n/a", self.name))
 
         if ok:
-            logger.TRACE('''
+            logger.TRACE("""
             * Cross-checked: all account keys are in the wallet.
-            ''')
+            """)
         return True
 
     def keys_in_wallets(self, keys):
-        '''Check whether all listed keys are in the wallet.
+        """Check whether all listed keys are in the wallet.
 
         Args:
             keys ([str]): List of public keys to be verified.
 
         Returns: 
             bool: Whether all listed keys are in the wallet.
-        '''
+        """
         self.open_unlock()
-        result = base_commands.WalletKeys(is_verbose=False)
+        result = BASE_COMMANDS.WalletKeys(is_verbose=False)
         for key in keys:
             if not key in result.json:
                 return False
         return True
 
     def restore_accounts(self):
-        '''Restore into the global namespace all the account objects 
+        """Restore into the global namespace all the account objects 
         represented in the wallet. 
-        '''
+        """
         self.open_unlock()
         account_map = manager.account_map()
         new_map = {}
-        wallet_keys = base_commands.WalletKeys(is_verbose=0)
+        wallet_keys = BASE_COMMANDS.WalletKeys(is_verbose=0)
         if len(account_map) > 0:
-            logger.INFO('''
+            logger.INFO("""
                     ######### Restore cached account objects:
-                    ''') 
+                    """) 
             for name, object_name in account_map.items():
                 try:
-                    account_ = base_commands.GetAccount(
+                    account_ = BASE_COMMANDS.GetAccount(
                         name, json=True, is_verbose=False)
                     if account_.owner_key in wallet_keys.json and \
                             account_.active_key in wallet_keys.json:
@@ -296,56 +296,56 @@ class Wallet(base_commands.WalletCreate):
                 except errors.AccountDoesNotExistError:
                     pass
 
-            manager.save_account_map(new_map)
+            setup.save_account_map(new_map)
         else:
-            logger.INFO('''
+            logger.INFO("""
                  * The wallet is empty.
-            ''')
+            """)
 
     def delete_globals(self):
-        '''Delete from the global namespace all the account objects restored
+        """Delete from the global namespace all the account objects restored
         with the function :func:`restore_accounts`.
 
-        '''
+        """
         account_map = manager.account_map()
-        for account_object, object_name in account_map.items():
+        for _, object_name in account_map.items():
             del Wallet.globals[object_name]
 
     def stop(self):
-        '''Stop keosd, the EOSIO wallet manager.
-        '''
-        base_commands.WalletStop()
+        """Stop keosd, the EOSIO wallet manager.
+        """
+        BASE_COMMANDS.WalletStop()
         
     def keys(self):
-        ''' Lists public keys from all unlocked wallets.
-        Returns `base_commands.WalletKeys` object.
-        '''
+        """ Lists public keys from all unlocked wallets.
+        Returns `BASE_COMMANDS.WalletKeys` object.
+        """
         self.open_unlock()
-        wallet_keys = base_commands.WalletKeys(is_verbose=False)
-        logger.TRACE('''
+        wallet_keys = BASE_COMMANDS.WalletKeys(is_verbose=False)
+        logger.TRACE("""
             Keys in all open walets:
             {}
-            '''.format(wallet_keys.out_msg))
+            """.format(wallet_keys.out_msg))
         return wallet_keys
 
     # def private_keys(self):
-    #     ''' Lists public keys from all unlocked wallets.
-    #     Returns `base_commands.WalletKeys` object.
-    #     '''
+    #     """ Lists public keys from all unlocked wallets.
+    #     Returns `BASE_COMMANDS.WalletKeys` object.
+    #     """
     #     self.open_unlock()
 
-    #     self.wallet_private_keys = base_commands.WalletPrivateKeys(is_verbose=False)
-    #     logger.TRACE('''
+    #     self.wallet_private_keys = BASE_COMMANDS.WalletPrivateKeys(is_verbose=False)
+    #     logger.TRACE("""
     #         Keys in all open walets:
     #         {}
-    #         '''.format(json.dumps(
+    #         """.format(json.dumps(
     #             self.wallet_private_keys.json, indent=4)))    
 
     def edit_account_map(self):
-        manager.edit_account_map()
+        setup.edit_account_map()
 
     def is_name_taken(self, account_object_name, account_name):
-        '''Check whether the given name is available is a name of an account
+        """Check whether the given name is available is a name of an account
         object.
 
         If the name points to an existing account, propese an action that may
@@ -360,7 +360,7 @@ class Wallet(base_commands.WalletCreate):
         Returns:
             bool: Whether the given name is available is a name of an account
                 object.
-        '''
+        """
         while True:
             account_map_json = manager.account_map()
             if account_map_json is None:
@@ -370,7 +370,7 @@ class Wallet(base_commands.WalletCreate):
             for name, object_name in account_map_json.items():
                 if object_name == account_object_name:
                     if not name == account_name:
-                        logger.OUT('''
+                        logger.OUT("""
                 The given account object name
                 ``{}``
                 points to an existing account, of the name {},
@@ -380,7 +380,7 @@ class Wallet(base_commands.WalletCreate):
 
                 However, you can free the name by changing the mapping. 
                 Do you want to edit the file?
-                '''.format(
+                """.format(
                     account_object_name, name, self.wallet_dir))
                         is_taken = True
                         break
@@ -394,23 +394,23 @@ class Wallet(base_commands.WalletCreate):
                 answer = input("y/n <<< ")
                 
                 if answer == "y":
-                    manager.edit_account_map()
+                    setup.edit_account_map()
                     continue
                 else:
                     if temp:
                         Wallet.globals[account_object_name] = temp
-                    raise errors.Error('''
-                    Use the function 'manager.edit_account_map()' to edit the file.
-                    ''')
+                    raise errors.Error("""
+                    Use the function 'setup.edit_account_map()' to edit the file.
+                    """)
             else:
                 break
             
     def map_account(self, account_object):
-        '''Save a new account object.
+        """Save a new account object.
 
         Args:
             account_object (.shell.account.Account): The account to be saved.
-        '''
+        """
         account_object_name = account_object.account_object_name
         if not self.is_name_taken(account_object_name, account_object.name):
             account_map_json = manager.account_map()
@@ -423,11 +423,11 @@ class Wallet(base_commands.WalletCreate):
                 out.write(json.dumps(
                     account_map_json, indent=3, sort_keys=True))
 
-            logger.TRACE('''
+            logger.TRACE("""
                 * Account object ``{}`` stored in the file 
                     ``{}`` in the wallet directory:
                     {}
-                '''.format(
+                """.format(
                     account_object_name,
                     setup.account_map,
                     self.wallet_dir + setup.account_map))
@@ -450,12 +450,12 @@ def wallet_json_write(wallet_json):
 def create_wallet(
         name=None, password=None, file=False,
         wallet_globals=None):
-    '''Create a singleton :class:`.Wallet` object.
+    """Create a singleton :class:`.Wallet` object.
 
     It is not usual to use this function. Instead, it is called automatically 
     on the first use of either :func:`.shell.account.create_master_account`
     or :func:`.shell.account.create_account` functions.
-    '''
+    """
     if wallet_globals:
         Wallet.globals = wallet_globals
     else:

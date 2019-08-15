@@ -37,15 +37,18 @@ def stats():
     )
 
 
-def test():
-    SCENARIO('''
+def test(testnet, reset):
+    SCENARIO("""
     There is the ``MASTER`` account that sponsors the ``HOST``
     account equipped with an instance of the ``tic_tac_toe`` smart contract. There
     are two players ``alice`` and ``carol``. We are testing that the moves of
     the game are correctly stored in the blockchain database.
-    ''')
+    """)
 
-    testnet.verify_production()
+    if reset:
+        reset(testnet)
+    else:
+        resume(testnet)
     
     create_master_account("MASTER", testnet)
     create_account("HOST", MASTER,
@@ -55,7 +58,7 @@ def test():
     create_account("carol", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
-    if not testnet.is_local():
+    if not manager.is_local_testnet()():
         stats()
 
     smart = Contract(HOST, CONTRACT_WORKSPACE)
@@ -66,10 +69,10 @@ def test():
     except errors.ContractRunningError:
         pass
 
-    COMMENT('''
+    COMMENT("""
     Attempting to create a new game.
     This might fail if the previous game has not been closes properly:
-    ''')
+    """)
     try:
         HOST.push_action(
             "create",
@@ -80,9 +83,9 @@ def test():
             permission=(carol, Permission.ACTIVE))
     except Error as e:
         if "game already exists" in e.message:
-            COMMENT('''
+            COMMENT("""
             We need to close the previous game before creating a new one:
-            ''')
+            """)
             HOST.push_action(
                 "close",
                 {
@@ -93,9 +96,9 @@ def test():
 
             time.sleep(3)
 
-            COMMENT('''
+            COMMENT("""
             Second attempt to create a new game:
-            ''')
+            """)
             HOST.push_action(
                 "create",
                 {
@@ -104,9 +107,9 @@ def test():
                 },
                 permission=(carol, Permission.ACTIVE))
         else:
-            COMMENT('''
+            COMMENT("""
             The error is different than expected.
-            ''')
+            """)
             raise Error(str(e))
 
     table = HOST.table("games", carol)
@@ -120,9 +123,9 @@ def test():
     assert(table.json["rows"][0]["board"][7] == 0)
     assert(table.json["rows"][0]["board"][8] == 0)
 
-    COMMENT('''
+    COMMENT("""
     First move is by carol:
-    ''')
+    """)
     HOST.push_action(
         "move",
         {
@@ -133,9 +136,9 @@ def test():
         },
         permission=(carol, Permission.ACTIVE))
 
-    COMMENT('''
+    COMMENT("""
     Second move is by alice:
-    ''')
+    """)
     HOST.push_action(
         "move",
         {
@@ -157,9 +160,9 @@ def test():
     assert(table.json["rows"][0]["board"][7] == 0)
     assert(table.json["rows"][0]["board"][8] == 0)
 
-    COMMENT('''
+    COMMENT("""
     Restarting the game:
-    ''')
+    """)
     HOST.push_action(
         "restart",
         {
@@ -180,9 +183,9 @@ def test():
     assert(table.json["rows"][0]["board"][7] == 0)
     assert(table.json["rows"][0]["board"][8] == 0)
 
-    COMMENT('''
+    COMMENT("""
     Closing the game:
-    ''')
+    """)
     HOST.push_action(
         "close",
         {
@@ -191,19 +194,17 @@ def test():
         },
         permission=(carol, Permission.ACTIVE))
 
-    if testnet.is_local():
-        stop()
-    else:
-        stats()
+    stop()
+    stats()
 
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description='''
+    parser = argparse.ArgumentParser(description="""
     This is a unit test for the ``tic-tac-toe`` smart contract.
     It works both on a local testnet and remote testnet.
     The default option is local testnet.
-    ''')
+    """)
 
     parser.add_argument(
         "alias", nargs="?",
@@ -218,11 +219,4 @@ if __name__ == '__main__':
         help="Reset testnet cache")
 
     args = parser.parse_args()
-
-    testnet = get_testnet(args.alias, args.testnet, reset=args.reset)
-    testnet.configure()
-
-    if args.reset and not testnet.is_local():
-        testnet.clear_cache()
-
-    test()
+    test(get_testnet(args.alias, args.testnet), reset=args.reset)
