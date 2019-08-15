@@ -5,7 +5,7 @@ from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
 
-CONTRACT_WORKSPACE = sys.path[0] + "/../"
+CONTRACT_WORKSPACE = sys.path[0] + "/../contracts/tic_tac_toe"
 
 INITIAL_RAM_KBYTES = 8
 INITIAL_STAKE_NET = 3

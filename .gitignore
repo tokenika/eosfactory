@@ -63,3 +63,4 @@ unit_tests/lt.py
 *.lock
 get_scatter.js
 telegram.md
+docs/comments/*.py
