@@ -4,8 +4,8 @@
 
 The implementation of a MASTER account is dependent on the context:
 
-* On a local (private) testnet the MASTER account refers to the `eosio` super account. As such, it has limited capabilities, e.g. it cannot be associated with a smart-contract.
-* On a remote (public) testnet the MASTER account refers to the initial account created by the user manually. It behaves like a normal account, apart from the fact that it is used to sponsor the creation of other accounts.
+* On a local (private) testnet the MASTER account refers to the `eosio` privileged account. As such, it has limited capabilities, e.g. it cannot be associated with a smart-contract.
+* On a remote (public) testnet the MASTER account refers to the initial account created by the user manually. On the creation, their private keys are placed in a wallet associated with the testnet. The account behaves like a normal account and can be used to sponsor the creation of other accounts.
 
 Let's consider two scenarios: first a local (private) testnet, and then a more complex situation of a remote (public) testnet.
 
@@ -68,7 +68,7 @@ testnet = Testnet(
     "http://145.239.133.201:8888")
 
 testnet = reset(testnet)
-# resume(testnet)
+# resume(testnet.url)
 ```
 
 We supply four parameters:
@@ -77,6 +77,7 @@ We supply four parameters:
 - the name of an existing account on this testnet, here `yvngxrjzbf3w`,
 - the account's owner & active private keys.
 
+The command `reset(testnet)` starts a new wallet, named according to the testnet, and populates it with the private keys of the account. Note that the creation of the account could be made secretly, on side. Then, the account can be restored to the current session with the command `resume(testnet.url)` without revealing the secret keys.
 
 EOSFactory features persistence: if outlives account objects used in the previous session. The command `reset` destroys the memory, it deletes the wallet associated with the testnet and mapping between account objects and physical accounts. Therefore, the command has to be used with care. Here, we have it here to be able to change the testnet settings.
 

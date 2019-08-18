@@ -1,8 +1,8 @@
-import eosfactory.core.cleos.base as BASE_COMMANDS
+import eosfactory.core.cleos.base as base_commands
 import eosfactory.core.interface as interface
 
 
-class SystemNewaccount(interface.Account, BASE_COMMANDS.Command):
+class SystemNewaccount(interface.Account, base_commands.Command):
     """ Create an account, buy ram, stake for bandwidth for the account.
 
     Args:
@@ -16,7 +16,9 @@ class SystemNewaccount(interface.Account, BASE_COMMANDS.Command):
         stake_net (int): The amount of EOS delegated for net bandwidth.
         stake_cpu (int): The amount of EOS delegated for CPU bandwidth.
         buy_ram (str): The amount of RAM bytes to purchase for the new 
-            account in EOS.
+            account in tokens.
+        buy_ram_bytes (int): The amount of RAM bytes to purchase for the new
+            account in bytes.            
         buy_ram_kbytes (int): The amount of RAM bytes to purchase for the new 
             account in kibibytes (KiB)
         transfer (bool): Transfer voting power and right to unstake EOS to receiver.
@@ -28,7 +30,7 @@ class SystemNewaccount(interface.Account, BASE_COMMANDS.Command):
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
             permission=None,
-            buy_ram_kbytes=0, buy_ram="",
+            buy_ram_bytes=0, buy_ram_kbytes=0, buy_ram="",
             transfer=False,
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
@@ -41,14 +43,8 @@ class SystemNewaccount(interface.Account, BASE_COMMANDS.Command):
         stake_cpu = "{} EOS".format(stake_cpu)
         
         if name is None: 
-            name = BASE_COMMANDS.account_name()
-        interface.Account.__init__(self, name)
-
-        self.owner_key = None # private keys
-        self.active_key = None
-        
-        if active_key is None:
-            active_key = owner_key
+            name = base_commands.account_name()
+        interface.Account.__init__(self, name, owner_key, active_key)
 
         args = [
             interface.account_arg(creator), self.name, 
@@ -60,6 +56,8 @@ class SystemNewaccount(interface.Account, BASE_COMMANDS.Command):
         args.extend([
             "--stake-net", stake_net, 
             "--stake-cpu", stake_cpu])
+        if buy_ram_bytes:
+            args.extend(["--buy-ram-bytes", str(buy_ram_bytes)])
         if buy_ram_kbytes:
             args.extend(["--buy-ram-kbytes", str(buy_ram_kbytes)])
         if buy_ram:
@@ -87,12 +85,12 @@ class SystemNewaccount(interface.Account, BASE_COMMANDS.Command):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])
 
-        BASE_COMMANDS.Command.__init__(
+        base_commands.Command.__init__(
             self, args, "system", "newaccount", is_verbose)
             
-        self.json = BASE_COMMANDS.GetAccount(
+        self.json = base_commands.GetAccount(
             self.name, is_verbose=0, json=True).json
-
+        import pdb; pdb.set_trace()
         if self.is_verbose:
             print(self.__str__())
             
@@ -100,7 +98,7 @@ class SystemNewaccount(interface.Account, BASE_COMMANDS.Command):
         return self.name
 
 
-class BuyRam(BASE_COMMANDS.Command):
+class BuyRam(base_commands.Command):
     """ Buy RAM.
 
     Args:
@@ -149,11 +147,11 @@ class BuyRam(BASE_COMMANDS.Command):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])
 
-        BASE_COMMANDS.Command.__init__(
+        base_commands.Command.__init__(
             self, args, "system", "buyram", is_verbose)
 
     
-class DelegateBw(BASE_COMMANDS.Command):
+class DelegateBw(base_commands.Command):
     """Delegate bandwidth.
 
     Args:
@@ -213,7 +211,7 @@ class DelegateBw(BASE_COMMANDS.Command):
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])            
 
-        BASE_COMMANDS.Command.__init__(
+        base_commands.Command.__init__(
             self, args, "system", "delegatebw", is_verbose)
 
 

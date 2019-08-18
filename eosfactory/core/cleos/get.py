@@ -3,10 +3,10 @@ import json
 
 import eosfactory.core.logger as logger
 import eosfactory.core.interface as interface
-import eosfactory.core.cleos.base as BASE_COMMANDS
+import eosfactory.core.cleos.base as base_commands
 
 
-class GetInfo(BASE_COMMANDS.Command):
+class GetInfo(base_commands.Command):
     """Get current blockchain information.
 
     :param bool is_verbose: If ``False``, print a message. Default is ``True``.
@@ -20,7 +20,7 @@ class GetInfo(BASE_COMMANDS.Command):
         block.
     """
     def __init__(self, is_verbose=True):
-        BASE_COMMANDS.Command.__init__(self, [], "get", "info", is_verbose)
+        base_commands.Command.__init__(self, [], "get", "info", is_verbose)
         self.head_block = int(self.json["head_block_num"])
         self.head_block_time = self.json["head_block_time"]
         self.last_irreversible_block_num \
@@ -31,7 +31,7 @@ class GetInfo(BASE_COMMANDS.Command):
         return json.dumps(self.json, sort_keys=True, indent=4)
 
 
-class GetActions(BASE_COMMANDS.Command):
+class GetActions(base_commands.Command):
     """Retrieve all actions with specific account name referenced in authorization or receiver.
 
     Note that available actions are filtered. By default, all actions are
@@ -64,12 +64,12 @@ class GetActions(BASE_COMMANDS.Command):
             args.append("--pretty")
         if console:
             args.append("--console")
-        BASE_COMMANDS.Command.__init__(self, args, "get", "actions", is_verbose)
+        base_commands.Command.__init__(self, args, "get", "actions", is_verbose)
 
         self.printself()
 
 
-class GetBlock(BASE_COMMANDS.Command):
+class GetBlock(base_commands.Command):
     """Retrieve a full block from the blockchain.
 
     Args:
@@ -83,7 +83,7 @@ class GetBlock(BASE_COMMANDS.Command):
         timestamp (str): The block timestamp.
     """
     def __init__(self, block_number, block_id=None, is_verbose=True):
-        BASE_COMMANDS.Command.__init__(
+        base_commands.Command.__init__(
                         self, [block_id] if block_id else [str(block_number)], 
                         "get", "block", is_verbose)
 
@@ -96,7 +96,7 @@ class GetBlock(BASE_COMMANDS.Command):
         return json.dumps(self.json, sort_keys=True, indent=4)
 
 
-class GetAccounts(BASE_COMMANDS.Command):
+class GetAccounts(base_commands.Command):
     """Retrieve accounts associated with a public key.
 
     Args:
@@ -108,14 +108,14 @@ class GetAccounts(BASE_COMMANDS.Command):
     """
     def __init__(self, key, is_verbose=True):
         public_key = interface.key_arg(key, is_owner_key=True, is_private_key=False)
-        BASE_COMMANDS.Command.__init__(
+        base_commands.Command.__init__(
             self, [public_key], "get", "accounts", is_verbose)
 
         self.names = self.json['account_names']
         self.printself()
 
 
-class GetCode(BASE_COMMANDS.Command):
+class GetCode(base_commands.Command):
     """Retrieve the code and ABI for an account.
 
     Args:
@@ -143,7 +143,7 @@ class GetCode(BASE_COMMANDS.Command):
         if wasm:
             args.extend(["--wasm"])
 
-        BASE_COMMANDS.Command.__init__(self, args, "get", "code", is_verbose)
+        base_commands.Command.__init__(self, args, "get", "code", is_verbose)
 
         msg = str(self.out_msg)
         self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
@@ -151,7 +151,7 @@ class GetCode(BASE_COMMANDS.Command):
         self.printself()
 
 
-class GetTable(BASE_COMMANDS.Command):
+class GetTable(base_commands.Command):
     """Retrieve the contents of a database table
 
     Args:
@@ -219,6 +219,6 @@ class GetTable(BASE_COMMANDS.Command):
         if show_payer:
             args.append("--show-payer")
 
-        BASE_COMMANDS.Command.__init__(self, args, "get", "table", is_verbose)
+        base_commands.Command.__init__(self, args, "get", "table", is_verbose)
 
         self.printself()

@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Use public faucet for the testnet, e.g. http://faucet.cryptokylin.io"""
+
 from urllib.request import Request, urlopen
 import json
 import argparse
@@ -26,7 +29,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
 
 
     setup.set_nodeos_address(url)
-    manager.verify_testnet_production()
+    manager.is_testnet_active()
 
     account_name = BASE_COMMANDS.account_name()
     path = faucet + "/" + CREATE_ACCOUNT_URL + "?" + account_name

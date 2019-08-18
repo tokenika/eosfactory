@@ -53,9 +53,6 @@ reset = manager.reset
 resume = manager.resume
 stop = manager.stop
 
-info = manager.info
-status = manager.status
-
 Testnet =  testnet_module.Testnet
 get_testnet =  testnet_module.get_testnet
 testnets =  testnet_module.testnets

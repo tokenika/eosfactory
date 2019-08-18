@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""List saved testnets."""
+
 import argparse
 import eosfactory.core.testnet as testnet
 import eosfactory.core.manager as manager

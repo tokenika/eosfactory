@@ -703,8 +703,6 @@ def create_master_account(
             There is no account named ``{}`` in the blockchain.
             """.format(account_name))
 
-        first_while = False
-
         if account_object.exists:
             if account_object.has_keys: # it is your account
                 logger.TRACE("""
@@ -740,6 +738,15 @@ def create_master_account(
                 else:
                     return None
         else:
+            if not first_while:
+                logger.OUT("""
+################################################################################
+                """)
+                logger.OUT("""
+                The account '{}' does not exist in the testnet. Has it been created on the testnet?
+                Try again.
+                """.format(account_name))
+            
             owner_key_new = BASE_COMMANDS.CreateKey(is_verbose=False)
             active_key_new = BASE_COMMANDS.CreateKey(is_verbose=False)
 
@@ -770,6 +777,8 @@ def create_master_account(
             account_name = account_object.name
             owner_key = owner_key_new
             active_key = active_key_new
+
+        first_while = False
 
 
 def restore_account(account_object_name, testnet_account):
@@ -904,7 +913,7 @@ def create_account(
         max_cpu_usage=0, max_net_usage=0,
         ref_block=None,
         delay_sec=0,        
-        buy_ram_kbytes=8, buy_ram="",
+        buy_ram_bytes=0, buy_ram_kbytes=0, buy_ram="",
         transfer=False,
         restore=False):
     """Create account object in caller's global namespace.
@@ -922,7 +931,8 @@ def create_account(
             Otherwise, it is random.
         stake_net (int): The amount of EOS delegated for net bandwidth.
         stake_cpu (int): The amount of EOS delegated for CPU bandwidth.
-        buy_ram_kbytes (int): The amount of RAM bytes to purchase.
+        buy_ram_bytes (int): The amount of RAM bytes to purchase.
+        buy_ram_kbytes (int): The amount of RAM kbytes to purchase.
         transfer (bool): Transfer voting power and right to unstake EOS to 
             receiver.
 
@@ -990,7 +1000,7 @@ def create_account(
                         creator, account_name, owner_key, active_key,
                         stake_net, stake_cpu,
                         permission,
-                        buy_ram_kbytes, buy_ram,
+                        buy_ram_bytes, buy_ram_kbytes, buy_ram,
                         transfer,
                         expiration_sec, 
                         skip_sign, dont_broadcast, force_unique,
@@ -1011,7 +1021,7 @@ def create_account(
                         creator, account_name, owner_key, active_key,
                         stake_net, stake_cpu,
                         permission,
-                        buy_ram_kbytes, buy_ram,
+                        buy_ram_bytes, buy_ram_kbytes, buy_ram,
                         transfer,
                         expiration_sec, 
                         skip_sign, dont_broadcast, force_unique,

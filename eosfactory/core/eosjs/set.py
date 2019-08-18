@@ -4,11 +4,11 @@ import os
 import eosfactory.core.errors as errors
 import eosfactory.core.manager as manager
 import eosfactory.core.interface as interface
-import eosfactory.core.eosjs.base as BASE_COMMANDS
+import eosfactory.core.eosjs.base as base_commands
 import eosfactory.core.common as common
 
 
-class SetContract(BASE_COMMANDS.Command):
+class SetContract(base_commands.Command):
     """Create or update the contract on an account.
 
     Args:
@@ -67,14 +67,14 @@ class SetContract(BASE_COMMANDS.Command):
         # if  ref_block:
         #     args.extend(["--ref-block", ref_block])
 
-        BASE_COMMANDS.Command.__init__(
+        base_commands.Command.__init__(
             self,
             """
     const fs = require(`fs`)
     const path = require(`path`)
     const { Serialize } = require(`eosjs`)
 
-            """ + BASE_COMMANDS.config_api()
+            """ + base_commands.config_api()
             ,
             """
     ;(async () => {
@@ -124,7 +124,7 @@ class SetContract(BASE_COMMANDS.Command):
                 ],
             },
             {
-                blocksBehind: 3,
+                blocksBehind: %(blocksBehind)d,
                 expireSeconds: %(expiration_sec)d,
                 broadcast: %(broadcast)s,
                 sign: %(sign)s,                 
@@ -137,17 +137,18 @@ class SetContract(BASE_COMMANDS.Command):
                 "wasm_file": wasm_file,
                 "abi_file": abi_file,
                 "account_name": self.account_name,
-                "permissions": BASE_COMMANDS.permission_str(permission, self.account_name),
+                "permissions": base_commands.permission_str(permission, self.account_name),
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
+                "blocksBehind": delay_sec * 2,
             }, is_verbose)
         
         self.printself()
 
 
 
-class SetAccountPermission(BASE_COMMANDS.Command):
+class SetAccountPermission(base_commands.Command):
     """Set parameters dealing with account permissions.
 
     Args:
@@ -268,7 +269,7 @@ class SetAccountPermission(BASE_COMMANDS.Command):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
                         
-        # BASE_COMMANDS.Command.__init__(
+        # base_commands.Command.__init__(
         #     self, args, "set", "account permission", is_verbose)
         self.account_name = account_name
         self.console = None
@@ -281,7 +282,7 @@ class SetAccountPermission(BASE_COMMANDS.Command):
         self.printself()    
 
 
-class SetActionPermission(BASE_COMMANDS.Command):
+class SetActionPermission(base_commands.Command):
     """Set parameters dealing with account permissions.
 
     Args:
@@ -353,7 +354,7 @@ class SetActionPermission(BASE_COMMANDS.Command):
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
 
-        # BASE_COMMANDS.Command.__init__(self, args, "set", "action permission", is_verbose)
+        # base_commands.Command.__init__(self, args, "set", "action permission", is_verbose)
         self.console = None
         self.data = None
 

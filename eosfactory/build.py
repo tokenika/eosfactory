@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Build a contract"""
+
 import argparse
 import eosfactory.core.teos as teos
 

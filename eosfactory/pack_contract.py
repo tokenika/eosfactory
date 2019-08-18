@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+"""Make a new contract project folder from a zip file produced with the 
+    function :func:`pack`.
+"""
+
 import os
 import re
 import fnmatch

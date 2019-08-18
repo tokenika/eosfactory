@@ -1,6 +1,8 @@
 """Test example."""
 
 import argparse, sys, time
+import eosfactory.core.setup as setup
+# setup.set_is_lt()
 from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
@@ -14,12 +16,12 @@ INITIAL_STAKE_CPU = 3
 # Actors of the test:
 MASTER = MasterAccount()
 HOST = Account()
-alice = None
-carol = None
+ALICE = None
+CAROL = None
 
 def stats():
     print_stats(
-        [MASTER, HOST, alice, carol],
+        [MASTER, HOST, ALICE, CAROL],
         [
             "core_liquid_balance",
             "ram_usage",
@@ -43,21 +45,21 @@ def test(testnet, reset):
     SCENARIO("""
     There is the ``MASTER`` account that sponsors the ``HOST``
     account equipped with an instance of the ``tic_tac_toe`` smart contract. There
-    are two players ``alice`` and ``carol``. We are testing that the moves of
+    are two players ``ALICE`` and ``CAROL``. We are testing that the moves of
     the game are correctly stored in the blockchain database.
     """)
 
-    if args.reset:
-        reset(testnet)
+    if reset:
+        manager.reset(testnet)
     else:
-        resume(testnet)
+        manager.resume(testnet)
     
     create_master_account("MASTER", testnet)
     create_account("HOST", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-    create_account("alice", MASTER,
+    create_account("ALICE", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-    create_account("carol", MASTER,
+    create_account("CAROL", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
     stats()
@@ -78,10 +80,10 @@ def test(testnet, reset):
         HOST.push_action(
             "create",
             {
-                "challenger": alice,
-                "host": carol
+                "challenger": ALICE,
+                "host": CAROL
             },
-            permission=(carol, Permission.ACTIVE))
+            permission=(CAROL, Permission.ACTIVE))
     except Error as e:
         if "game already exists" in e.message:
             COMMENT("""
@@ -90,10 +92,10 @@ def test(testnet, reset):
             HOST.push_action(
                 "close",
                 {
-                    "challenger": alice,
-                    "host": carol
+                    "challenger": ALICE,
+                    "host": CAROL
                 },
-                permission=(carol, Permission.ACTIVE))
+                permission=(CAROL, Permission.ACTIVE))
 
             time.sleep(3)
 
@@ -103,17 +105,17 @@ def test(testnet, reset):
             HOST.push_action(
                 "create",
                 {
-                    "challenger": alice, 
-                    "host": carol
+                    "challenger": ALICE, 
+                    "host": CAROL
                 },
-                permission=(carol, Permission.ACTIVE))
+                permission=(CAROL, Permission.ACTIVE))
         else:
             COMMENT("""
             The error is different than expected.
             """)
             raise Error(str(e))
 
-    table = HOST.table("games", carol)
+    table = HOST.table("games", CAROL)
     assert(table.json["rows"][0]["board"][0] == 0)
     assert(table.json["rows"][0]["board"][1] == 0)
     assert(table.json["rows"][0]["board"][2] == 0)
@@ -125,32 +127,32 @@ def test(testnet, reset):
     assert(table.json["rows"][0]["board"][8] == 0)
 
     COMMENT("""
-    First move is by carol:
+    First move is by CAROL:
     """)
     HOST.push_action(
         "move",
         {
-            "challenger": alice,
-            "host": carol,
-            "by": carol,
+            "challenger": ALICE,
+            "host": CAROL,
+            "by": CAROL,
             "row":0, "column":0
         },
-        permission=(carol, Permission.ACTIVE))
+        permission=(CAROL, Permission.ACTIVE))
 
     COMMENT("""
-    Second move is by alice:
+    Second move is by ALICE:
     """)
     HOST.push_action(
         "move",
         {
-            "challenger": alice,
-            "host": carol,
-            "by": alice,
+            "challenger": ALICE,
+            "host": CAROL,
+            "by": ALICE,
             "row":1, "column":1
         },
-        permission=(alice, Permission.ACTIVE))
+        permission=(ALICE, Permission.ACTIVE))
 
-    table = HOST.table("games", carol)
+    table = HOST.table("games", CAROL)
     assert(table.json["rows"][0]["board"][0] == 1)
     assert(table.json["rows"][0]["board"][1] == 0)
     assert(table.json["rows"][0]["board"][2] == 0)
@@ -167,13 +169,13 @@ def test(testnet, reset):
     HOST.push_action(
         "restart",
         {
-            "challenger": alice,
-            "host": carol,
-            "by": carol
+            "challenger": ALICE,
+            "host": CAROL,
+            "by": CAROL
         }, 
-        permission=(carol, Permission.ACTIVE))
+        permission=(CAROL, Permission.ACTIVE))
 
-    table = HOST.table("games", carol)
+    table = HOST.table("games", CAROL)
     assert(table.json["rows"][0]["board"][0] == 0)
     assert(table.json["rows"][0]["board"][1] == 0)
     assert(table.json["rows"][0]["board"][2] == 0)
@@ -190,10 +192,10 @@ def test(testnet, reset):
     HOST.push_action(
         "close",
         {
-            "challenger": alice,
-            "host": carol
+            "challenger": ALICE,
+            "host": CAROL
         },
-        permission=(carol, Permission.ACTIVE))
+        permission=(CAROL, Permission.ACTIVE))
 
     stop()
     stats()

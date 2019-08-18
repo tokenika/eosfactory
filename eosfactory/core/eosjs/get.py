@@ -4,10 +4,10 @@ import json
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
-import eosfactory.core.eosjs.base as BASE_COMMANDS
+import eosfactory.core.eosjs.base as base_commands
 
 
-class GetInfo(BASE_COMMANDS.Command):
+class GetInfo(base_commands.Command):
     """Get current blockchain information.
 
     - **parameters**::
@@ -21,7 +21,7 @@ class GetInfo(BASE_COMMANDS.Command):
         is_verbose: If set, print output.
     """
     def __init__(self, is_verbose=1):
-        BASE_COMMANDS.Command.__init__(self, BASE_COMMANDS.config_rpc(), 
+        base_commands.Command.__init__(self, base_commands.config_rpc(), 
             """
     ;(async () => {
         result = await rpc.get_info()
@@ -40,7 +40,7 @@ class GetInfo(BASE_COMMANDS.Command):
         return json.dumps(self.json, sort_keys=True, indent=4)
 
 
-class GetActions(BASE_COMMANDS.Command):
+class GetActions(base_commands.Command):
     """Retrieve all actions with specific account name referenced in authorization or receiver.
 
     Note that available actions are filtered. By default, all actions are
@@ -73,12 +73,12 @@ class GetActions(BASE_COMMANDS.Command):
             args.append("--pretty")
         if console:
             args.append("--console")
-        # BASE_COMMANDS.Command.__init__(self, args, "get", "actions", is_verbose)
+        # base_commands.Command.__init__(self, args, "get", "actions", is_verbose)
 
         self.printself()
 
 
-class GetBlock(BASE_COMMANDS.Command):
+class GetBlock(base_commands.Command):
     """Retrieve a full block from the blockchain.
 
     Args:
@@ -93,7 +93,7 @@ class GetBlock(BASE_COMMANDS.Command):
     """
     def __init__(self, block_number, block_id=None, is_verbose=1):
         if block_id:
-            BASE_COMMANDS.Command.__init__(self, BASE_COMMANDS.config_rpc(),
+            base_commands.Command.__init__(self, base_commands.config_rpc(),
                 """
         (async (block_num_or_id) => {
             result = await rpc.get_block(block_num_or_id)
@@ -102,7 +102,7 @@ class GetBlock(BASE_COMMANDS.Command):
         })("%s")
                 """ % (block_id), is_verbose)
         else:
-            BASE_COMMANDS.Command.__init__(self, BASE_COMMANDS.config_rpc(),
+            base_commands.Command.__init__(self, base_commands.config_rpc(),
                 """
         (async (block_num_or_id) => {
             result = await rpc.get_block(block_num_or_id)
@@ -117,7 +117,7 @@ class GetBlock(BASE_COMMANDS.Command):
         self.printself()
 
 
-class GetAccounts(BASE_COMMANDS.Command):
+class GetAccounts(base_commands.Command):
     """Retrieve accounts associated with a public key.
 
     Args:
@@ -130,7 +130,7 @@ class GetAccounts(BASE_COMMANDS.Command):
     def __init__(self, key, is_verbose=True):
         
         try:
-            BASE_COMMANDS.Command.__init__(self, BASE_COMMANDS.config_rpc(),
+            base_commands.Command.__init__(self, base_commands.config_rpc(),
                 """
             (async (public_key) => {
                 result = await rpc.history_get_key_accounts(public_key)
@@ -148,7 +148,7 @@ class GetAccounts(BASE_COMMANDS.Command):
         self.printself()
 
 
-class GetCode(BASE_COMMANDS.Command):
+class GetCode(base_commands.Command):
     """Retrieve the code and ABI for an account.
 
     Args:
@@ -176,7 +176,7 @@ class GetCode(BASE_COMMANDS.Command):
         if wasm:
             args.extend(["--wasm"])
 
-        # BASE_COMMANDS.Command.__init__(self, args, "get", "code", is_verbose)
+        # base_commands.Command.__init__(self, args, "get", "code", is_verbose)
 
         msg = str(self.out_msg)
         self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
@@ -184,7 +184,7 @@ class GetCode(BASE_COMMANDS.Command):
         self.printself()
 
 
-class GetTable(BASE_COMMANDS.Command):
+class GetTable(base_commands.Command):
     """Retrieve the contents of a database table
 
     Args:
@@ -252,6 +252,6 @@ class GetTable(BASE_COMMANDS.Command):
         if show_payer:
             args.append("--show-payer")
 
-        # BASE_COMMANDS.Command.__init__(self, args, "get", "table", is_verbose)
+        # base_commands.Command.__init__(self, args, "get", "table", is_verbose)
 
         self.printself()

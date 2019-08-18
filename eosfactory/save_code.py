@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Save to a file python chunks extracted from a given markdown file."""
+
 import os
 import re
 import argparse

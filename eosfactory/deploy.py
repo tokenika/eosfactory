@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Deploy a given contract to a given account."""
+
 import os
 import argparse
 

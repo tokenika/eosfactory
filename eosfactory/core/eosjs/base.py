@@ -607,23 +607,15 @@ class CreateAccount(interface.Account, Command):
 
         if not name: 
             name = account_name()
-        interface.Account.__init__(self, name)
-
-        self.owner_key = None # private keys
-        self.active_key = None
-        
-        if not active_key:
-            active_key = owner_key        
-
-        owner_key_public = interface.key_arg(
-            owner_key, is_owner_key=True, is_private_key=False)
-        active_key_public = interface.key_arg(
-            active_key, is_owner_key=False, is_private_key=False)
+        interface.Account.__init__(self, name, owner_key, active_key)
 
         if not expiration_sec:
             expiration_sec = 30
 
-        # args = []
+        # if not permission is None:
+        #     p = interface.permission_arg(permission)
+        #     for perm in p:
+        #         args.extend(["--permission", perm])             
         # if force_unique:
         #     args.append("--force-unique")
         # if max_cpu_usage:
@@ -633,8 +625,9 @@ class CreateAccount(interface.Account, Command):
         # if  ref_block:
         #     args.extend(["--ref-block", ref_block])
 
-        Command.__init__(self, config_api(),
-                """
+        Command.__init__(
+                            self, config_api(),
+                            """
         ;(async () => {
             const result = await api.transact(
                 {
@@ -678,7 +671,7 @@ class CreateAccount(interface.Account, Command):
                     ]
                 },
                 {
-                    blocksBehind: 3,
+                    blocksBehind: %(blocksBehind)d,
                     expireSeconds: %(expiration_sec)d,
                     broadcast: %(broadcast)s,
                     sign: %(sign)s, 
@@ -689,11 +682,14 @@ class CreateAccount(interface.Account, Command):
             """ % {
                 "creator": creator, 
                 "name": name, 
-                "owner_key_public": owner_key_public, 
-                "active_key_public": active_key_public,
+                "owner_key_public": interface.key_arg(
+                            owner_key, is_owner_key=True, is_private_key=False),
+                "active_key_public": interface.key_arg(
+                        active_key, is_owner_key=False, is_private_key=False),
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
+                "blocksBehind": delay_sec * 2,
             }, is_verbose)
 
     def __str__(self):
@@ -772,7 +768,7 @@ class PushAction(Command):
             ]
         }, 
         {
-            blocksBehind: 3,
+            blocksBehind: %(blocksBehind)d,
             expireSeconds: %(expiration_sec)d,
             broadcast: %(broadcast)s,
             sign: %(sign)s,
@@ -787,6 +783,7 @@ class PushAction(Command):
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
+                "blocksBehind": delay_sec * 2,
             }, is_verbose)
 
         self.console = ""

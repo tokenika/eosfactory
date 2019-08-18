@@ -874,8 +874,6 @@ def node_stop(verbose=True):
     # You can see if the process is a zombie by using top or 
     # the following command:
     # ps aux | awk '$8=="Z" {print $2}'
-
-    keosd_kill()
     pids = kill(os.path.splitext(os.path.basename(config.node_exe()))[0])
     
     if verbose:

@@ -20,8 +20,8 @@ GET_COMMANDS = importlib.import_module(".get", setup.light_full)
 
 
 def reboot():
-    """Reset EOSFactory to its startup conditions.
-    """
+    """Reset EOSFactory to its startup conditions."""
+
     logger.INFO("""
     ######### Reboot EOSFactory session.
     """)
@@ -31,7 +31,8 @@ def reboot():
 
 
 def clear_testnet_cache():
-    """ Remove persistence files (wallet, account-mapping, passwords) associated with the current testnet.
+    """ Remove persistence files (wallet, account-mapping, passwords) 
+    associated with the current testnet.
     """
     if not setup.file_prefix():
         return
@@ -68,11 +69,11 @@ def accout_names_2_object_names(sentence, keys=False):
     if not setup.is_translating:
         return sentence
         
-    EXCEPTIONS = ["eosio"]
+    exceptions = ["eosio"]
     map_ = account_map()
     for name in map_:
         account_object_name = map_[name]
-        if name in EXCEPTIONS:
+        if name in exceptions:
             continue
         sentence = sentence.replace(name, account_object_name)
         
@@ -93,7 +94,11 @@ def accout_names_2_object_names(sentence, keys=False):
 
 
 def object_names_2_accout_names(sentence):
-    """Translate account object names to corresponding blockchain account names.
+    """Translate account object names to corresponding blockchain account 
+    names.
+
+    Args:
+        sentence (str): The message to be translated.
     """
     map_ = account_map()
     for name in map_:
@@ -123,21 +128,21 @@ def node_start(clear=False, nodeos_stdout=None):
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails.
     """
-    WAIT_TIME = 0.6
+    wait_time = 0.6
     try_count = 3
 
     while True:
         try:
             teos.node_start(clear, nodeos_stdout)
             teos.node_probe()
-        except Exception as e:
+        except Exception as e: # pylint: disable=broad-except
             if not (clear and teos.ERR_MSG_IS_STUCK in str(e)):
                 try_count = try_count - 1
                 if try_count <= 0:
                     break
             else:
                 teos.node_stop(verbose=False)
-                time.sleep(WAIT_TIME)
+                time.sleep(wait_time)
         else:
             return
 
@@ -151,8 +156,10 @@ def reset(
     prefix=None):
     """ Start clean an EOSIO node.
 
-    The procedure addresses problems with instabilities of EOSIO ``nodeos`` 
-    executable: it happens that it blocks itself on clean restart. 
+
+    With the local testnet, the procedure addresses problems with 
+    instabilities of the EOSIO ``nodeos`` executable: it happens that it stucks 
+    on clean restart (perhaps with the WSL system only). 
 
     The issue is patched with one subsequent restart if the first attempt 
     fails. However, it happens that both launches fail, rarely due to 
@@ -178,7 +185,7 @@ def reset(
         --genesis-json /mnt/c/Workspaces/EOS/eosfactory/localnode/genesis.json
         --delete-all-blocks
 
-    Next, the command line is executed, for example:
+    Next, the command line is executed, for example::
 
         Now, see the result of an execution of the command line.
         /bin/sh: 1: /usr/bin/nodeosx: not found
@@ -188,6 +195,8 @@ def reset(
     understand a problem.
 
     Args:
+        testnet (:class:`.Testnet`): If set, resume the testnet listening at the ``url`` attribute of the argument.
+        url (str): If set, resume the testnet listening at ``url``.
         nodeos_stdout (str): If set, a file where ``stdout`` stream of
             the local ``nodeos`` is send. Note that the file can be included to 
             the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
@@ -199,7 +208,7 @@ def reset(
 
     def verified_testnet(url):
         setup.set_nodeos_address(url, prefix)
-        verify_testnet_production()        
+        is_testnet_active()        
         clear_testnet_cache()
         keosd_start()
 
@@ -222,7 +231,8 @@ def resume(testnet=None, url=None, nodeos_stdout=None, prefix=None):
     """ Resume an EOSIO node.
 
     Args:
-        testnet (:class:`.Testnet`:):
+        testnet (:class:`.Testnet`): If set, resume the testnet listening at the   ``url`` attribute of the argument.
+        url (str): If set, resume the testnet listening at ``url``.
         nodeos_stdout (str): If set, a file where ``stdout`` stream of
             the local ``nodeos`` is send. Note that the file can be included to 
             the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
@@ -231,7 +241,7 @@ def resume(testnet=None, url=None, nodeos_stdout=None, prefix=None):
     """
     def verified_testnet(url):
         setup.set_nodeos_address(url, prefix)
-        verify_testnet_production()        
+        is_testnet_active()        
         keosd_start()
 
     if url:
@@ -248,81 +258,61 @@ def resume(testnet=None, url=None, nodeos_stdout=None, prefix=None):
     
 
 def stop():
-    """ Stops keosd and all running EOSIO nodes.
-    """
+    """ Stops keosd and all running EOSIO nodes."""
     teos.node_stop()
+    teos.keosd_kill()
 
 
-def status():
+def is_testnet_active(throw_error=True):
+    """If the testnet responses return the head block number, otherwise return 0.
     """
-    Display EOS node status.
-    """
-
-    logger.INFO("""
-    ######### Node ``{}``, head block number ``{}``.
-    """.format(
-        setup.nodeos_address(),
-        GET_COMMANDS.GetInfo(is_verbose=0).head_block))
-
-
-def info():
-    """
-    Display EOS node info.
-    """
-    logger.INFO(str(GET_COMMANDS.GetInfo(is_verbose=False)))
-
-
-def verify_testnet_production(throw_error=True):
-    head_block_num = 0
-    try: # if running, json is produced
-        head_block_num = GET_COMMANDS.GetInfo(is_verbose=False).head_block
-    except:
-        pass
-
     domain = "LOCAL" if is_local_testnet() else "REMOTE"
 
-    if not head_block_num:
+    head_block = 0
+    try:
+        head_block = GET_COMMANDS.GetInfo(is_verbose=False).head_block
+    except:
         if not throw_error:
             return 0
         raise errors.Error("""
         {} testnet is not running or is not responding @ {}.
         """.format(domain, setup.nodeos_address()))
-    else:
-        logger.INFO("""
-        {} testnet is active @ {}.
-        """.format(domain, setup.nodeos_address()))
+    
+    logger.INFO("""
+    {} testnet is active @ {}.
+    """.format(domain, setup.nodeos_address()))
 
-    return head_block_num
+    return head_block
 
 
 def keosd_start():
-    def keosd_start():
-        count = 5
-        cl = config.keosd_exe()
-        while count > 0:
-            if teos.get_pid(config.keosd_exe()):
-                return
-            count = count -1
-            subprocess.Popen(
-                [cl], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
-                stderr=subprocess.DEVNULL)
-    
-        if not count:
-            raise errors.Error("""
-    Cannot start the eos wallet manager ``keosd``.
-    Bash command {} does not result in a process. 
-        """.format(cl))
+    """Start eos wallet manager ``keosd``."""
+    count = 5
+    cl = config.keosd_exe()
+    while count > 0:
+        if teos.get_pid(config.keosd_exe()):
+            return
+        count = count -1
+        subprocess.Popen(
+            [cl], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, 
+            stderr=subprocess.DEVNULL)
+
+    if not count:
+        raise errors.Error("""
+Cannot start the eos wallet manager ``keosd``.
+Bash command {} does not result in a process. 
+    """.format(cl))
 
 
 def account_map():
-    """Return json account map
+    """Return json account map.
 
-Attempt to open the account map file named ``setup.account_map``, located 
-in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
-contents. If the file does not exist, return an empty json.
+    Attempt to open the account map file named ``setup.account_map``, located 
+    in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
+    contents. If the file does not exist, return the empty json.
 
-If the file is corrupted, offer editing the file with the ``nano`` linux 
-editor. Return ``None`` if the the offer is rejected.
+    If the file is corrupted, offer editing the file with the ``nano`` linux 
+    editor. Return ``None`` if the the offer is rejected.
     """
     wallet_dir_ = config.keosd_wallet_dir(raise_error=False)
     if not wallet_dir_:
@@ -334,34 +324,34 @@ editor. Return ``None`` if the the offer is rejected.
             with open(path, "r") as input_file:
                 return json.load(input_file)
 
-        except Exception as e:
-            if isinstance(e, FileNotFoundError):
+        except Exception as ex: # pylint: disable=broad-except
+            if isinstance(ex, FileNotFoundError):
                 return {}
-            else:
-                logger.OUT("""
+
+            logger.OUT("""
             The account mapping file is misformed. The error message is:
             {}
             
             Do you want to edit the file?
-            """.format(str(e)))
+            """.format(str(ex)))
                     
-                answer = input("y/n <<< ")
-                if answer == "y":
-                    setup.edit_account_map()
-                    continue
-                else:
-                    raise errors.Error("""
-        Use the function 'manager.edit_account_map()'
-        or the corresponding method of any object of the 'eosfactory.wallet.Wallet` 
-        class to edit the file.
-                    """)                              
+            answer = input("y/n <<< ")
+            if answer == "y":
+                setup.edit_account_map()
+                continue
+            else:
+                raise errors.Error("""
+Use the function 'manager.edit_account_map()'
+or the corresponding method of any object of the 'eosfactory.wallet.Wallet` 
+class to edit the file.
+                """)                              
 
 
-def data_json(data):
+def data_json(data): # pylint: disable=missing-docstring
     class Encoder(json.JSONEncoder):
         """Redefine the method 'default'.
         """
-        def default(self, o): # pylint: disable=E0202
+        def default(self, o): # pylint: disable=method-hidden
             if isinstance(o, interface.Account):
                 return str(o)
             else:

@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Create a new project from a template."""
+
 import argparse
 from eosfactory.core.teos import project_from_template 
 

@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Install EOSFactory"""
+
 import argparse
 import eosfactory.core.config as config
 
@@ -15,4 +18,5 @@ The root is the Windows Subsystem Linux is
 parser = argparse.ArgumentParser(description="""
 """)
 
-install()
+if __name__ == '__main__':
+        install()

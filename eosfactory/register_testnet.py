@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Create an account on a rempte testnet."""
+
 import argparse
 import eosfactory.core.setup as setup
 from eosfactory.eosf import *
@@ -5,20 +8,19 @@ from eosfactory.eosf import *
 
 def register_testnet_(url, alias, account_name, owner_key, active_key):
     setup.set_nodeos_address(url)
-    manager.verify_testnet_production()
+    manager.is_testnet_active()
 
-    #testnet.testnets()
-    account = create_master_account(
+    master_account = create_master_account(
         None,
         account_name=account_name,
         owner_key=owner_key,
         active_key=active_key)
 
-    if account:
+    if master_account:
         testnet_module.add_to_mapping(
-            account_name if account_name else account.name,
-            owner_key if owner_key else account.owner_key.key_private, 
-            active_key if active_key else account.active_key.key_private,
+            account_name if account_name else master_account.name,
+            owner_key if owner_key else master_account.owner_key.key_private, 
+            active_key if active_key else master_account.active_key.key_private,
             url, 
             alias)
 

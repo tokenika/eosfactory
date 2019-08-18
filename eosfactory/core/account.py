@@ -124,7 +124,7 @@ class SystemNewaccount(sys_commands.SystemNewaccount):
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
             permission=None,
-            buy_ram_kbytes=0, buy_ram="",
+            buy_ram_bytes=0, buy_ram_kbytes=0, buy_ram="",
             transfer=False,
             expiration_sec=None, 
             skip_sign=0, dont_broadcast=0, force_unique=0,
@@ -134,7 +134,7 @@ class SystemNewaccount(sys_commands.SystemNewaccount):
             
         sys_commands.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,
-            stake_net, stake_cpu, permission, buy_ram_kbytes, buy_ram,
+            stake_net, stake_cpu, permission, buy_ram_bytes, buy_ram_kbytes, buy_ram,
             transfer, expiration_sec, skip_sign, dont_broadcast, force_unique,
             max_cpu_usage, max_net_usage, ref_block, delay_sec, 
             is_verbose=False)
