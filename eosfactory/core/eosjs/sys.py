@@ -118,7 +118,21 @@ class SystemNewaccount(interface.Account, base_commands.Command):
                             data: {
                                 payer: '%(creator)s',
                                 receiver: '%(name)s',
-                                bytes: %(bytes)d,
+                                bytes: %(bytes)d
+                            }
+                        },
+                        {
+                            account: 'eosio',
+                            name: 'buyram',
+                            authorization: [
+                                {
+                                    actor: '%(creator)s',
+                                    permission: 'active',
+                                }
+                            ],
+                            data: {
+                                payer: '%(creator)s',
+                                receiver: '%(name)s',
                                 quant: '%(quant)s'
                             }
                         },
