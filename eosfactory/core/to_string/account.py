@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 #         eosio <= eosio::newaccount            {"creator":"yvngxrjzbf3w","name":"mnmsvtabluzl","owner":{"threshold":1,"keys":[{"key":"EOS663NVVFETZ...
 #         eosio <= eosio::buyrambytes           {"payer":"yvngxrjzbf3w","receiver":"mnmsvtabluzl","bytes":8192}
@@ -16,14 +17,14 @@
 #   eosio.stake <= eosio.token::transfer        {"from":"yvngxrjzbf3w","to":"eosio.stake","quantity":"6.0000 EOS","memo":"stake bandwidth"}
 
 
-EXAMPLE =\
+example =\
 {
   "transaction_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
   "processed": {
     "id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
     "block_num": 44861211,
     "block_time": "2019-08-17T17:37:40.500",
-    "producer_block_id": null,
+    "producer_block_id": None,
     "receipt": {
       "status": "executed",
       "cpu_usage_us": 882,
@@ -31,7 +32,7 @@ EXAMPLE =\
     },
     "elapsed": 882,
     "net_usage": 336,
-    "scheduled": false,
+    "scheduled": False,
     "action_traces": [{
         "action_ordinal": 1,
         "creator_action_ordinal": 0,
@@ -84,20 +85,20 @@ EXAMPLE =\
           },
           "hex_data": "c0c73affddcee6f6e022b74abc673d95010000000100027b2145770cbe0be6068e0db31e88092b0095754b7f3ffd4228a9f962837003640100000001000000010003612fdb55afa82a4a5bb820b8895cc786255da4aa64ec403c6415ef125948f73001000000"
         },
-        "context_free": false,
+        "context_free": False,
         "elapsed": 233,
         "console": "",
         "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
         "block_num": 44861211,
         "block_time": "2019-08-17T17:37:40.500",
-        "producer_block_id": null,
+        "producer_block_id": None,
         "account_ram_deltas": [{
             "account": "moyqjj2eqwli",
             "delta": 2996
           }
         ],
-        "except": null,
-        "error_code": null,
+        "except": None,
+        "error_code": None,
         "inline_traces": []
       },{
         "action_ordinal": 2,
@@ -132,16 +133,16 @@ EXAMPLE =\
           },
           "hex_data": "c0c73affddcee6f6e022b74abc673d9500200000"
         },
-        "context_free": false,
+        "context_free": False,
         "elapsed": 195,
         "console": "",
         "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
         "block_num": 44861211,
         "block_time": "2019-08-17T17:37:40.500",
-        "producer_block_id": null,
+        "producer_block_id": None,
         "account_ram_deltas": [],
-        "except": null,
-        "error_code": null,
+        "except": None,
+        "error_code": None,
         "inline_traces": [{
             "action_ordinal": 4,
             "creator_action_ordinal": 2,
@@ -182,16 +183,16 @@ EXAMPLE =\
               },
               "hex_data": "c0c73affddcee6f6000090e602ea30553dc100000000000004454f5300000000076275792072616d"
             },
-            "context_free": false,
+            "context_free": False,
             "elapsed": 57,
             "console": "",
             "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
             "block_num": 44861211,
             "block_time": "2019-08-17T17:37:40.500",
-            "producer_block_id": null,
+            "producer_block_id": None,
             "account_ram_deltas": [],
-            "except": null,
-            "error_code": null,
+            "except": None,
+            "error_code": None,
             "inline_traces": [{
                 "action_ordinal": 7,
                 "creator_action_ordinal": 4,
@@ -232,16 +233,16 @@ EXAMPLE =\
                   },
                   "hex_data": "c0c73affddcee6f6000090e602ea30553dc100000000000004454f5300000000076275792072616d"
                 },
-                "context_free": false,
+                "context_free": False,
                 "elapsed": 3,
                 "console": "",
                 "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
                 "block_num": 44861211,
                 "block_time": "2019-08-17T17:37:40.500",
-                "producer_block_id": null,
+                "producer_block_id": None,
                 "account_ram_deltas": [],
-                "except": null,
-                "error_code": null,
+                "except": None,
+                "error_code": None,
                 "inline_traces": []
               },{
                 "action_ordinal": 8,
@@ -283,16 +284,16 @@ EXAMPLE =\
                   },
                   "hex_data": "c0c73affddcee6f6000090e602ea30553dc100000000000004454f5300000000076275792072616d"
                 },
-                "context_free": false,
+                "context_free": False,
                 "elapsed": 2,
                 "console": "",
                 "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
                 "block_num": 44861211,
                 "block_time": "2019-08-17T17:37:40.500",
-                "producer_block_id": null,
+                "producer_block_id": None,
                 "account_ram_deltas": [],
-                "except": null,
-                "error_code": null,
+                "except": None,
+                "error_code": None,
                 "inline_traces": []
               }
             ]
@@ -330,16 +331,16 @@ EXAMPLE =\
               },
               "hex_data": "c0c73affddcee6f6a0d492e602ea3055f90000000000000004454f53000000000772616d20666565"
             },
-            "context_free": false,
+            "context_free": False,
             "elapsed": 38,
             "console": "",
             "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
             "block_num": 44861211,
             "block_time": "2019-08-17T17:37:40.500",
-            "producer_block_id": null,
+            "producer_block_id": None,
             "account_ram_deltas": [],
-            "except": null,
-            "error_code": null,
+            "except": None,
+            "error_code": None,
             "inline_traces": [{
                 "action_ordinal": 9,
                 "creator_action_ordinal": 5,
@@ -374,16 +375,16 @@ EXAMPLE =\
                   },
                   "hex_data": "c0c73affddcee6f6a0d492e602ea3055f90000000000000004454f53000000000772616d20666565"
                 },
-                "context_free": false,
+                "context_free": False,
                 "elapsed": 3,
                 "console": "",
                 "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
                 "block_num": 44861211,
                 "block_time": "2019-08-17T17:37:40.500",
-                "producer_block_id": null,
+                "producer_block_id": None,
                 "account_ram_deltas": [],
-                "except": null,
-                "error_code": null,
+                "except": None,
+                "error_code": None,
                 "inline_traces": []
               },{
                 "action_ordinal": 10,
@@ -419,16 +420,16 @@ EXAMPLE =\
                   },
                   "hex_data": "c0c73affddcee6f6a0d492e602ea3055f90000000000000004454f53000000000772616d20666565"
                 },
-                "context_free": false,
+                "context_free": False,
                 "elapsed": 2,
                 "console": "",
                 "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
                 "block_num": 44861211,
                 "block_time": "2019-08-17T17:37:40.500",
-                "producer_block_id": null,
+                "producer_block_id": None,
                 "account_ram_deltas": [],
-                "except": null,
-                "error_code": null,
+                "except": None,
+                "error_code": None,
                 "inline_traces": []
               }
             ]
@@ -466,16 +467,16 @@ EXAMPLE =\
               },
               "hex_data": "a0d492e602ea30550000e8ea02ea3055f90000000000000004454f5300000000277472616e736665722066726f6d20656f73696f2e72616d66656520746f20656f73696f2e726578"
             },
-            "context_free": false,
+            "context_free": False,
             "elapsed": 44,
             "console": "",
             "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
             "block_num": 44861211,
             "block_time": "2019-08-17T17:37:40.500",
-            "producer_block_id": null,
+            "producer_block_id": None,
             "account_ram_deltas": [],
-            "except": null,
-            "error_code": null,
+            "except": None,
+            "error_code": None,
             "inline_traces": [{
                 "action_ordinal": 11,
                 "creator_action_ordinal": 6,
@@ -510,16 +511,16 @@ EXAMPLE =\
                   },
                   "hex_data": "a0d492e602ea30550000e8ea02ea3055f90000000000000004454f5300000000277472616e736665722066726f6d20656f73696f2e72616d66656520746f20656f73696f2e726578"
                 },
-                "context_free": false,
+                "context_free": False,
                 "elapsed": 1,
                 "console": "",
                 "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
                 "block_num": 44861211,
                 "block_time": "2019-08-17T17:37:40.500",
-                "producer_block_id": null,
+                "producer_block_id": None,
                 "account_ram_deltas": [],
-                "except": null,
-                "error_code": null,
+                "except": None,
+                "error_code": None,
                 "inline_traces": []
               },{
                 "action_ordinal": 12,
@@ -555,16 +556,16 @@ EXAMPLE =\
                   },
                   "hex_data": "a0d492e602ea30550000e8ea02ea3055f90000000000000004454f5300000000277472616e736665722066726f6d20656f73696f2e72616d66656520746f20656f73696f2e726578"
                 },
-                "context_free": false,
+                "context_free": False,
                 "elapsed": 3,
                 "console": "",
                 "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
                 "block_num": 44861211,
                 "block_time": "2019-08-17T17:37:40.500",
-                "producer_block_id": null,
+                "producer_block_id": None,
                 "account_ram_deltas": [],
-                "except": null,
-                "error_code": null,
+                "except": None,
+                "error_code": None,
                 "inline_traces": []
               }
             ]
@@ -605,20 +606,20 @@ EXAMPLE =\
           },
           "hex_data": "c0c73affddcee6f6e022b74abc673d95307500000000000004454f5300000000307500000000000004454f530000000000"
         },
-        "context_free": false,
+        "context_free": False,
         "elapsed": 142,
         "console": "",
         "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
         "block_num": 44861211,
         "block_time": "2019-08-17T17:37:40.500",
-        "producer_block_id": null,
+        "producer_block_id": None,
         "account_ram_deltas": [{
             "account": "yvngxrjzbf3w",
             "delta": 160
           }
         ],
-        "except": null,
-        "error_code": null,
+        "except": None,
+        "error_code": None,
         "inline_traces": [{
             "action_ordinal": 13,
             "creator_action_ordinal": 3,
@@ -653,16 +654,16 @@ EXAMPLE =\
               },
               "hex_data": "c0c73affddcee6f60014341903ea305560ea00000000000004454f53000000000f7374616b652062616e647769647468"
             },
-            "context_free": false,
+            "context_free": False,
             "elapsed": 42,
             "console": "",
             "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
             "block_num": 44861211,
             "block_time": "2019-08-17T17:37:40.500",
-            "producer_block_id": null,
+            "producer_block_id": None,
             "account_ram_deltas": [],
-            "except": null,
-            "error_code": null,
+            "except": None,
+            "error_code": None,
             "inline_traces": [{
                 "action_ordinal": 14,
                 "creator_action_ordinal": 13,
@@ -697,16 +698,16 @@ EXAMPLE =\
                   },
                   "hex_data": "c0c73affddcee6f60014341903ea305560ea00000000000004454f53000000000f7374616b652062616e647769647468"
                 },
-                "context_free": false,
+                "context_free": False,
                 "elapsed": 2,
                 "console": "",
                 "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
                 "block_num": 44861211,
                 "block_time": "2019-08-17T17:37:40.500",
-                "producer_block_id": null,
+                "producer_block_id": None,
                 "account_ram_deltas": [],
-                "except": null,
-                "error_code": null,
+                "except": None,
+                "error_code": None,
                 "inline_traces": []
               },{
                 "action_ordinal": 15,
@@ -742,16 +743,16 @@ EXAMPLE =\
                   },
                   "hex_data": "c0c73affddcee6f60014341903ea305560ea00000000000004454f53000000000f7374616b652062616e647769647468"
                 },
-                "context_free": false,
+                "context_free": False,
                 "elapsed": 2,
                 "console": "",
                 "trx_id": "4e6e12e84991582eaea834e174a1ee86046e8a0ce027129b50b6f8d5ed7a4b34",
                 "block_num": 44861211,
                 "block_time": "2019-08-17T17:37:40.500",
-                "producer_block_id": null,
+                "producer_block_id": None,
                 "account_ram_deltas": [],
-                "except": null,
-                "error_code": null,
+                "except": None,
+                "error_code": None,
                 "inline_traces": []
               }
             ]
@@ -759,8 +760,49 @@ EXAMPLE =\
         ]
       }
     ],
-    "account_ram_delta": null,
-    "except": null,
-    "error_code": null
+    "account_ram_delta": None,
+    "except": None,
+    "error_code": None
   }
 }
+
+class Account():
+    DATA_LIMIT = 90
+
+    def __init__(self, newaccount_json):
+
+        self.info = ""
+
+        def find(dictionary):
+            key = "act"
+            for k, v in dictionary.items():
+                if k == key:
+                    yield v
+                elif isinstance(v, dict):
+                    for result in find(v):
+                        yield result
+                elif isinstance(v, list):
+                    for d in v:
+                        if isinstance(d, dict):
+                            for result in find(d):
+                                yield result
+
+        def limit_data(data):
+            data = str(data)
+            if len(data) > Account.DATA_LIMIT:
+                return data[0: Account.DATA_LIMIT] + "..."
+            else:
+                return data
+
+        actions = find(newaccount_json)
+        for act in actions:
+            self.info = self.info \
+                + "# >>>>>>>>>> %20s <= %-25s\n# %s\n" % (act["account"], "%s::%s" % (
+                    act["account"], act["name"] + ":"), limit_data(act["data"]))
+
+    def __str__(self):
+        return self.info
+
+  
+if __name__ == '__main__':
+   print(Account(example))

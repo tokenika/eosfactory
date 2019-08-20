@@ -692,6 +692,10 @@ class CreateAccount(interface.Account, Command):
                 "blocksBehind": delay_sec * 2,
             }, is_verbose)
 
+        if self.is_verbose:
+            import eosfactory.core.to_string.account
+            print(eosfactory.core.to_string.account.Account(self.json))
+
     def __str__(self):
         return self.name
 
@@ -731,6 +735,7 @@ class PushAction(Command):
             skip_sign=0, dont_broadcast=0, force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
+            delay_sec=0,
             is_verbose=True,
             json=True
         ):

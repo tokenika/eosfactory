@@ -104,11 +104,11 @@ def LOCAL():
 
 #: Testnet http;//145.239.133.201;8888
 JUNGLE = Testnet(
-    "yvngxrjzbf3w",
-    "5KCmAh23R9wZxm5m1BqRFePvAvw8fzYaDduACUg6DUAj9nmcZfQ",
-    "5JkC4oFPaPjWzj866x2rMygsnVZaZzDkqynzX6dBw92LqR63tcD",
-# EOS8dBV5BKH5vjZdCCpNhyPvkeyZk24ujUtthvz4ooJ5JHKCKAX6v
-# EOS8cLe7vV9TUFzgZ2MY1YMiL6KBgbbbxi9hZ4cjZTP25adVdwEAE
+    "hhidd2ekxrye",
+    "5HxP3reTghfzLsUJ2o8JhiRz6qxcKLTDZtdVVHftfLDugNEEdpN",
+    "5Jf8KWpgAkS6xg3PiPVimjZsrjKiBvjgGr3FiL3BTXqQkr6776Z",
+# EOS7APzTZifdU1Ry5iS5SDm1cLVHtbMUGjRwD4XAT4VeHYBiCp4iw
+# EOS5sAgrYj6vQSN9hXRaHstGSGpeUstmUAKvhFRsp5Qn8a2m533X5
     "http://145.239.133.201:8888",
     "JUNGLE"
 )

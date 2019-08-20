@@ -580,9 +580,10 @@ class CreateAccount(interface.Account, Command):
 
         Command.__init__(
             self, args, "create", "account", is_verbose)
-            
-        self.json = GetAccount(self.name, is_verbose=False, json=True).json
-        self.printself()
+
+        if self.is_verbose:
+            import eosfactory.core.to_string.account
+            print(eosfactory.core.to_string.account.Account(self.json))
             
     def __str__(self):
         return self.name
@@ -660,8 +661,7 @@ class PushAction(Command):
 
         self.console = ""
         self.act = ""
-        if not dont_broadcast:
-            
+        if not dont_broadcast and self.json:
             for act in self.json["processed"]["action_traces"]:
                 self.console += common.gather_console_output(act)
 
@@ -674,6 +674,7 @@ class PushAction(Command):
                                                         trace["act"]["account"],
                                                         trace["act"]["name"],
                                                         trace["act"]["data"])
+        import pdb; pdb.set_trace()
         self.printself()
 
 

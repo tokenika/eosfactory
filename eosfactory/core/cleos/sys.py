@@ -87,12 +87,10 @@ class SystemNewaccount(interface.Account, base_commands.Command):
 
         base_commands.Command.__init__(
             self, args, "system", "newaccount", is_verbose)
-            
-        self.json = base_commands.GetAccount(
-            self.name, is_verbose=0, json=True).json
-        import pdb; pdb.set_trace()
+        
         if self.is_verbose:
-            print(self.__str__())
+            import eosfactory.core.to_string.account
+            print(eosfactory.core.to_string.account.Account(self.json))
             
     def __str__(self):
         return self.name

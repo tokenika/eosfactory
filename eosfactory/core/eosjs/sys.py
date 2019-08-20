@@ -105,37 +105,7 @@ class SystemNewaccount(interface.Account, base_commands.Command):
                                     waits: []
                                 }
                             }
-                        },
-                        {
-                            account: 'eosio',
-                            name: 'buyrambytes',
-                            authorization: [
-                                {
-                                    actor: '%(creator)s',
-                                    permission: 'active',
-                                }
-                            ],
-                            data: {
-                                payer: '%(creator)s',
-                                receiver: '%(name)s',
-                                bytes: %(bytes)d
-                            }
-                        },
-                        {
-                            account: 'eosio',
-                            name: 'buyram',
-                            authorization: [
-                                {
-                                    actor: '%(creator)s',
-                                    permission: 'active',
-                                }
-                            ],
-                            data: {
-                                payer: '%(creator)s',
-                                receiver: '%(name)s',
-                                quant: '%(quant)s'
-                            }
-                        },
+                        },%(buyrambytes)s%(buyram)s
                         {
                             account: 'eosio',
                             name: 'delegatebw',
@@ -165,10 +135,10 @@ class SystemNewaccount(interface.Account, base_commands.Command):
             console.log(JSON.stringify(result))
         })();
             """ % {
-                "creator": creator, 
-                "name": name, 
+                "creator": creator,
+                "name": name,
                 "owner_key_public": interface.key_arg(
-                        owner_key, is_owner_key=True, is_private_key=False), 
+                        owner_key, is_owner_key=True, is_private_key=False),
                 "active_key_public": interface.key_arg(
                         active_key, is_owner_key=True, is_private_key=False),
                 "expiration_sec": expiration_sec,
@@ -176,17 +146,53 @@ class SystemNewaccount(interface.Account, base_commands.Command):
                 "sign": "false" if skip_sign else "true",
                 "blocksBehind": delay_sec * 2,
                 "transfer": "true" if transfer else "false",
-                "bytes": buy_ram_bytes,
-                "quant": buy_ram if buy_ram else "0 EOS",
                 "stake_net_quantity": "%0.4f EOS" % (stake_net),
                 "stake_cpu_quantity": "%0.4f EOS" % (stake_cpu),
+                "buyrambytes": """
+                        {
+                            account: 'eosio',
+                            name: 'buyrambytes',
+                            authorization: [
+                                {
+                                    actor: '%(creator)s',
+                                    permission: 'active',
+                                }
+                            ],
+                            data: {
+                                payer: '%(creator)s',
+                                receiver: '%(name)s',
+                                bytes: %(bytes)d
+                            }
+                        },""" % {
+                    "creator": creator,
+                    "name": name,
+                    "bytes": buy_ram_bytes,
+                } if buy_ram_bytes else "",
+                "buyram" : """
+                        {
+                            account: 'eosio',
+                            name: 'buyram',
+                            authorization: [
+                                {
+                                    actor: '%(creator)s',
+                                    permission: 'active',
+                                }
+                            ],
+                            data: {
+                                payer: '%(creator)s',
+                                receiver: '%(name)s',
+                                quant: '%(quant)s'
+                            }
+                        },""" % {
+                    "creator": creator,
+                    "name": name,
+                    "quant": buy_ram,
+                } if buy_ram else "",
             }, is_verbose)
 
-        self.json = base_commands.GetAccount(
-            self.name, is_verbose=0, json=True).json
-
         if self.is_verbose:
-            print(self.__str__())
+            import eosfactory.core.to_string.account
+            print(eosfactory.core.to_string.account.Account(self.json))
             
     def __str__(self):
         return self.name

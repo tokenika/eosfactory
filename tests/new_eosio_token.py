@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Example of a functional test.
 
 This example shows a case of the simplest test, featuring a single test 
