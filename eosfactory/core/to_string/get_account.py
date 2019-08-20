@@ -208,7 +208,7 @@ class GetAccount():
     FORMAT_LABEL = "%20s"
 
 
-    def __init__(self, account_json):
+    def __init__(self, received_json):
 
         class Asset():
             def __init__(self, value, symbol=None):
@@ -267,25 +267,25 @@ class GetAccount():
         unstaking = None
         staked = None
 
-        if "core_liquid_balance" in account_json:
+        if "core_liquid_balance" in received_json:
             symbol = re.sub(
-                r"\d+\.*\d+\s*", "", account_json["core_liquid_balance"])
+                r"\d+\.*\d+\s*", "", received_json["core_liquid_balance"])
             unstaking = Asset(0, symbol)
             staked = Asset(0, symbol)
 
         self.info = ""
 
-        if "account_object_name" in account_json:
+        if "account_object_name" in received_json:
             addln("Account object name: {}".format(
-                                            account_json["account_object_name"]))   
-        addln("name: {}".format(account_json["account_name"]))
-        addln("created: {}".format(account_json["created"]))
+                                            received_json["account_object_name"]))   
+        addln("name: {}".format(received_json["account_name"]))
+        addln("created: {}".format(received_json["created"]))
         addln()
 
         ##########################################################################
         # permissions
         ##########################################################################
-        permissions = account_json["permissions"].copy()
+        permissions = received_json["permissions"].copy()
         permission_root = {}
 
         def process_a_node(node, depth, do, args=None):
@@ -351,24 +351,24 @@ class GetAccount():
         addln("### memory:")
         addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s, used: %s") % (
                                         "quota",
-                                        format_bytes(account_json["ram_quota"]), 
-                                        format_bytes(account_json["ram_usage"])))
+                                        format_bytes(received_json["ram_quota"]), 
+                                        format_bytes(received_json["ram_usage"])))
 
         ##########################################################################
         addln("### net bandwidth:")
 
-        if "total_resources" in account_json \
-                                and not account_json["total_resources"] is None:
+        if "total_resources" in received_json \
+                                and not received_json["total_resources"] is None:
 
-            net_total = Asset(account_json["total_resources"]["net_weight"])
+            net_total = Asset(received_json["total_resources"]["net_weight"])
             if not net_total.symbol == unstaking.symbol:
                 unstaking = Asset(0, net_total.symbol)
                 staked = Asset(0, net_total.symbol)
 
-            if "self_delegated_bandwidth" in account_json \
-                        and not account_json["self_delegated_bandwidth"] is None:
+            if "self_delegated_bandwidth" in received_json \
+                        and not received_json["self_delegated_bandwidth"] is None:
                 net_own = Asset(
-                            account_json["self_delegated_bandwidth"]["net_weight"])
+                            received_json["self_delegated_bandwidth"]["net_weight"])
                 staked = net_own
                 net_others = net_total.add(net_own, -1)
                 addln(
@@ -388,29 +388,29 @@ class GetAccount():
 
         addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
                                 "used",
-                                format_bytes(account_json["net_limit"]["used"])))
+                                format_bytes(received_json["net_limit"]["used"])))
         addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
                             "available",
-                            format_bytes(account_json["net_limit"]["available"])))
+                            format_bytes(received_json["net_limit"]["available"])))
         addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
                                 "limit",
-                                format_bytes(account_json["net_limit"]["max"])))
+                                format_bytes(received_json["net_limit"]["max"])))
 
         ##########################################################################
         # cpu bandwidth
         ##########################################################################
         addln("### cpu bandwidth:")
 
-        if "total_resources" in account_json \
-                                and not account_json["total_resources"] is None:
+        if "total_resources" in received_json \
+                                and not received_json["total_resources"] is None:
 
             cpu_total = Asset(
-                            account_json["self_delegated_bandwidth"]["cpu_weight"])
+                            received_json["self_delegated_bandwidth"]["cpu_weight"])
 
-            if "self_delegated_bandwidth" in account_json \
-                    and not account_json["self_delegated_bandwidth"] is None:
+            if "self_delegated_bandwidth" in received_json \
+                    and not received_json["self_delegated_bandwidth"] is None:
 
-                cpu_own = Asset(account_json["total_resources"]["cpu_weight"])
+                cpu_own = Asset(received_json["total_resources"]["cpu_weight"])
                 staked = staked.add(cpu_own)
                 cpu_others = cpu_total.add(cpu_own, -1)
                 addln(
@@ -429,22 +429,22 @@ class GetAccount():
                             "(total staked delegated to account from others)"))
 
         addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
-                    "used", format_time(account_json["cpu_limit"]["used"])))      
+                    "used", format_time(received_json["cpu_limit"]["used"])))      
         addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
-                "available", format_time(account_json["cpu_limit"]["available"])))      
+                "available", format_time(received_json["cpu_limit"]["available"])))      
         addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
-                    "max", format_time(account_json["cpu_limit"]["max"])))
+                    "max", format_time(received_json["cpu_limit"]["max"])))
 
         ##########################################################################
         # balances
         ##########################################################################
-        if "core_liquid_balance" in account_json:
-            liquid = Asset(account_json["core_liquid_balance"])
+        if "core_liquid_balance" in received_json:
+            liquid = Asset(received_json["core_liquid_balance"])
             addln("### {} balances:".format(liquid.symbol))
 
             addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
                         "liquid",
-                        account_json["core_liquid_balance"]))
+                        received_json["core_liquid_balance"]))
             addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
                         "staked", str(staked)))         
             addln(GetAccount.INDENT + (GetAccount.FORMAT_LABEL + ": %s") % (
@@ -459,9 +459,9 @@ class GetAccount():
         # producers
         # ########################################################################      
         add("### producers: ")
-        if "voter_info" in account_json and account_json["voter_info"]:
-            if account_json["voter_info"]["proxy"]:
-                prods = account_json["voter_info"]["producers"]
+        if "voter_info" in received_json and received_json["voter_info"]:
+            if received_json["voter_info"]["proxy"]:
+                prods = received_json["voter_info"]["producers"]
                 if prods:
                     addln()
                     for prod in prods:

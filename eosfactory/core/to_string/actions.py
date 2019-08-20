@@ -766,10 +766,10 @@ example =\
   }
 }
 
-class Account():
+class Actions():
     DATA_LIMIT = 90
 
-    def __init__(self, newaccount_json):
+    def __init__(self, received_json):
 
         self.info = ""
 
@@ -789,15 +789,19 @@ class Account():
 
         def limit_data(data):
             data = str(data)
-            if len(data) > Account.DATA_LIMIT:
-                return data[0: Account.DATA_LIMIT] + "..."
+            if len(data) > Actions.DATA_LIMIT:
+                return data[0: Actions.DATA_LIMIT] + "..."
             else:
                 return data
 
-        actions = find(newaccount_json)
+        actions = find(received_json)
+        first = True
         for act in actions:
+            if not first:
+                self.info = self.info + "\n"
+            first = False
             self.info = self.info \
-                + "# >>>>>>>>>> %20s <= %-25s\n# %s\n" % (act["account"], "%s::%s" % (
+                + "# >>>>>>>>>> %20s <= %-25s\n# %s" % (act["account"], "%s::%s" % (
                     act["account"], act["name"] + ":"), limit_data(act["data"]))
 
     def __str__(self):
@@ -805,4 +809,4 @@ class Account():
 
   
 if __name__ == '__main__':
-   print(Account(example))
+   print(Actions(example))

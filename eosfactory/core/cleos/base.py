@@ -581,12 +581,17 @@ class CreateAccount(interface.Account, Command):
         Command.__init__(
             self, args, "create", "account", is_verbose)
 
-        if self.is_verbose:
-            import eosfactory.core.to_string.account
-            print(eosfactory.core.to_string.account.Account(self.json))
+        self.printself(is_verbose)
+        
+    def __repr__(self):
+        return self.name
             
     def __str__(self):
-        return self.name
+        if self.json:
+            import eosfactory.core.to_string.actions
+            return str(eosfactory.core.to_string.actions.Actions(self.json))
+
+        return self.out_msg
 
 
 def account_name():
@@ -656,7 +661,7 @@ class PushAction(Command):
             args.extend(["--ref-block", ref_block])
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
-                        
+        import pdb; pdb.set_trace()
         Command.__init__(self, args, "push", "action", is_verbose)
 
         self.console = ""
@@ -674,7 +679,10 @@ class PushAction(Command):
                                                         trace["act"]["account"],
                                                         trace["act"]["name"],
                                                         trace["act"]["data"])
-        import pdb; pdb.set_trace()
         self.printself()
+
+    def __str__(self):
+            import eosfactory.core.to_string.push
+            return str(eosfactory.core.to_string.push.Push(self.json))
 
 

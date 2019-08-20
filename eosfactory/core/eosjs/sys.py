@@ -190,12 +190,14 @@ class SystemNewaccount(interface.Account, base_commands.Command):
                 } if buy_ram else "",
             }, is_verbose)
 
-        if self.is_verbose:
-            import eosfactory.core.to_string.account
-            print(eosfactory.core.to_string.account.Account(self.json))
-            
-    def __str__(self):
+        self.printself(is_verbose)
+        
+    def __repr__(self):
         return self.name
+
+    def __str__(self):
+        import eosfactory.core.to_string.actions
+        return str(eosfactory.core.to_string.actions.Actions(self.json))
 
 
 class BuyRam(base_commands.Command):

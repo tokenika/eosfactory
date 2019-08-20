@@ -692,12 +692,14 @@ class CreateAccount(interface.Account, Command):
                 "blocksBehind": delay_sec * 2,
             }, is_verbose)
 
-        if self.is_verbose:
-            import eosfactory.core.to_string.account
-            print(eosfactory.core.to_string.account.Account(self.json))
+        self.printself(is_verbose)
+        
+    def __repr__(self):
+        return self.name
 
     def __str__(self):
-        return self.name
+        import eosfactory.core.to_string.actions
+        str(eosfactory.core.to_string.actions.Actions(self.json))
 
 
 def account_name():
@@ -812,3 +814,7 @@ class PushAction(Command):
 
     def get_transaction(self):
         return GetTransaction(self.transaction)
+
+    def __str__(self):
+            import eosfactory.core.to_string.push
+            return str(eosfactory.core.to_string.push.Push(self.json))

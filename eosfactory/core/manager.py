@@ -353,7 +353,7 @@ def data_json(data): # pylint: disable=missing-docstring
         """
         def default(self, o): # pylint: disable=method-hidden
             if isinstance(o, interface.Account):
-                return str(o)
+                return repr(o)
             else:
                 return json.JSONEncoder.default(self, o)
 
