@@ -101,7 +101,7 @@ create_account("HOST", MASTER)
 ######## Account object ``HOST`` restored from the blockchain.
 ```
 ```python
-create_account("HOST", MASTER, str(HOST))
+create_account("HOST", MASTER, repr(HOST))
 ```
 ```bash
 ######## Account object ``HOST`` restored from the blockchain.

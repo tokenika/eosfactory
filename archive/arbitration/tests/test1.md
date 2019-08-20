@@ -144,7 +144,7 @@ ARBITRATOR.push_action(
         "from": ALICE, 
         "to": ESCROW, 
         "quantity": "10.0000 SYS", 
-        "memo": str(CAROL)
+        "memo": repr(CAROL)
     }, ALICE)
 ```
 

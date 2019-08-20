@@ -10,13 +10,13 @@ ALICE.set_account_permission(
         "keys": [],
         "accounts": [{
             "permission": {
-                "actor": str(ALICE),
+                "actor": repr(ALICE),
                 "permission": "active"
             },
             "weight": 1
         }, {
             "permission": {
-                "actor": str(ALICE),
+                "actor": repr(ALICE),
                 "permission": "eosio.code"
             },
             "weight": 1

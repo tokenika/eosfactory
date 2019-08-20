@@ -97,4 +97,7 @@
     * Improved startup of the `nodeos` process: better control on stuck conditions that frequently occur.
 
 * Release 3.3.0 on 2 July 2019
-    * Compatibility with EOS [v1.8.0](https://github.com/EOSIO/eos/releases/tag/v1.8.0).    
+    * Compatibility with EOS [v1.8.0](https://github.com/EOSIO/eos/releases/tag/v1.8.0)
+
+* Release 3.4.0 on 28 July 2019
+    * Better control of installation dependencies for compatibility with EOSIO.

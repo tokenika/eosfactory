@@ -699,7 +699,7 @@ class CreateAccount(interface.Account, Command):
 
     def __str__(self):
         import eosfactory.core.to_string.actions
-        str(eosfactory.core.to_string.actions.Actions(self.json))
+        return str(eosfactory.core.to_string.actions.Actions(self.json))
 
 
 def account_name():

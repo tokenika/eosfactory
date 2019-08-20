@@ -71,7 +71,7 @@ Note that actors have to be sorted in the ``authority`` JSON.
 ```python
 COMMENT("Weights and Threshold:")
 create_account("carol", master)
-actors = [str(bob), str(carol)]
+actors = [repr(bob), repr(carol)]
 actors.sort()
 alice.set_account_permission(Permission.ACTIVE,
     {
