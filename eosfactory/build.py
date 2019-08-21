@@ -2,7 +2,7 @@
 """Build a contract"""
 
 import argparse
-import eosfactory.core.teos as teos
+import eosfactory.core.eosiocpp as eosiocpp
 
 def build(
         contract_dir_hint,
@@ -10,7 +10,7 @@ def build(
         compile_only=False, is_test_options=False, is_execute=False, silent=False):
 
     verbosity=[] if silent else None
-    teos.build(
+    eosiocpp.build(
                         contract_dir_hint, c_cpp_properties_path, compile_only, 
                         is_test_options, is_execute, verbosity)
 

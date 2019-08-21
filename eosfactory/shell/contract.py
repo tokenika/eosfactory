@@ -6,7 +6,6 @@ import eosfactory.core.setup as setup
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.config as config
-import eosfactory.core.teos as teos
 import eosfactory.core.common as common
 set_commands = importlib.import_module(".set", setup.light_full)
 import eosfactory.shell.account
@@ -57,7 +56,8 @@ class ContractBuilder():
         """Make both, ABI and WASM files.
         """
         if force or not self.is_built():
-            teos.build(self.contract_dir, self.c_cpp_properties_path)
+            import eosfactory.core.eosiocpp as eosiocpp
+            eosiocpp.build(self.contract_dir, self.c_cpp_properties_path)
 
     def is_built(self):
         """Check whether both the ABI and WASM files exist.

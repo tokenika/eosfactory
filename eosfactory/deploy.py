@@ -19,7 +19,6 @@ def deploy(
 
     if not contract_dir:
         contract_dir = os.getcwd()
-    verbosity=[] if silent else None
 
     if not testnet_account_name:
         c_cpp_properties = teos.get_c_cpp_properties(
