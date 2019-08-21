@@ -103,7 +103,7 @@ def register_testnet_via_faucet_(faucet, url, alias):
         '''.format(account_name))
 
     testnet.add_to_mapping(
-        url, account_name, owner_key, active_key, alias)
+        account_name, owner_key, active_key, url, alias)
 
     testnet.testnets()
 
