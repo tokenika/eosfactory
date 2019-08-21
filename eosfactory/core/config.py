@@ -20,7 +20,6 @@ UBUNTU_VERSION_MIN = 18
 EOSFACTORY_DIR = "eosfactory/"
 TMP = "/tmp/eosfactory/"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
-SETUPTOOLS_NAME_LT = "eosfactory_lt_tokenika"
 
 EOSIO_CDT_PATTERN = r".+/eosio\.cdt/(\d\.\d\.\d)/.*"
 UBUNTU_PATTERN = r"\s*\"(.*CanonicalGroupLimited.Ubuntu.*/LocalState/rootfs)/.*"
