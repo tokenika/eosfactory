@@ -661,7 +661,7 @@ class PushAction(Command):
             args.extend(["--ref-block", ref_block])
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
-        import pdb; pdb.set_trace()
+
         Command.__init__(self, args, "push", "action", is_verbose)
 
         self.console = ""

@@ -12,18 +12,9 @@ import eosfactory.core.utils as utils
 
 
 VERSION = "3.4.0"
-EOSIO_VERSION = "1.8.0"
-EOSIO_CDT_VERSION = "1.6.1"
-PYTHON_VERSION = "3.5 or higher"
 UBUNTU_VERSION_MIN = 18
 
-EOSFACTORY_DIR = "eosfactory/"
-TMP = "/tmp/eosfactory/"
-SETUPTOOLS_NAME = "eosfactory_tokenika"
-
-EOSIO_CDT_PATTERN = r".+/eosio\.cdt/(\d\.\d\.\d)/.*"
 UBUNTU_PATTERN = r"\s*\"(.*CanonicalGroupLimited.Ubuntu.*/LocalState/rootfs)/.*"
-BUILD = "build"
 IGNORE_FILE = ".eosideignore"
 IGNORE_LIST = [".vscode/ipch/*", ".vscode/settings.json", ".vscode/tasks.json",\
                 "build/*","command_lines.txt"]
@@ -37,6 +28,14 @@ CONFIG_JSON = "config.json"
 CONTRACTS_DIR = "contracts/"
 TEMPLATE_DIR = ("TEMPLATE_DIR", "templates/contracts")
 PROJECT_0 = "empty_project"
+
+EOSIO_VERSION = "1.8.0"
+EOSIO_CDT_VERSION = "1.6.1"
+EOSIO_CDT_PATTERN = r".+/eosio\.cdt/(\d\.\d\.\d)/.*"
+EOSFACTORY_DIR = "eosfactory/"
+TMP = "/tmp/eosfactory/"
+BUILD = "build"
+SETUPTOOLS_NAME = "eosfactory_tokenika"
 
 eosfactory_data_ = ("EOSFACTORY_DATA_DIR", 
             [os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR),\

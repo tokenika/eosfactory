@@ -58,6 +58,8 @@ class Test(unittest.TestCase):
         COMMENT("""
         Initialize the token and send some tokens to one of the accounts:
         """)
+        import eosfactory.core.setup as setup
+        setup.is_print_command_lines = True
         HOST.push_action(
             "create",
             {
@@ -69,6 +71,7 @@ class Test(unittest.TestCase):
             },
             force_unique=True,
             permission=[(MASTER, Permission.ACTIVE), (HOST, Permission.ACTIVE)])
+        import pdb; pdb.set_trace()
         print("'trace[\"console\"]' sum is '{}'".format(HOST.action.console))
         logger.DEBUG(HOST.action.act)
 
@@ -78,7 +81,7 @@ class Test(unittest.TestCase):
                 "to": ALICE, "quantity": "100.0000 EOS", "memo": ""
             },
             force_unique=True,
-            permission=(MASTER, Permission.ACTIVE))
+            permission=[(MASTER, Permission.ACTIVE), (HOST, Permission.ACTIVE), (ALICE, Permission.ACTIVE)])
         print("'trace[\"console\"]' sum is '{}'".format(HOST.action.console))
         logger.DEBUG(HOST.action.act)
 

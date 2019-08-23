@@ -354,7 +354,7 @@ Now, see the result of execution of the command line:
         if not_error:
             print(
             """
-Just another hang incident of the 'nodeos' executable.""")
+Just another hang up incident of the ``nodeos`` executable.""")
             if clear:
                 print(
                 """
@@ -363,7 +363,7 @@ Rerun the script.
             else:
                 print(
                 """
-Rerun the script with 'nodeos' restarted.
+Rerun the script with ``nodeos`` restarted.
                 """)                
         else:
             print(err_msg)
@@ -389,7 +389,7 @@ def node_start(clear=False, nodeos_stdout=None):
     Args:
         clear (bool): If set, the blockchain is deleted and then re-created.
         nodeos_stdout (str): If set, a file where *stdout* stream of
-            the local *nodeos* is send. Note that the file can be included to 
+            the local ``nodeos`` is send. Note that the file can be included to 
             the configuration of EOSFactory, see :func:`.core.config.nodeos_stdout`.
             If the file is set with the configuration, and in the same time 
             it is set with this argument, the argument setting prevails. 
