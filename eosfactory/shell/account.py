@@ -15,7 +15,7 @@ import eosfactory.core.interface as interface
 BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
 GET_COMMANDS = importlib.import_module(".get", setup.light_full)
 set_commands = importlib.import_module(".set", setup.light_full)
-sys_commands = importlib.import_module(".sys", setup.light_full)
+SYS_COMMANDS = importlib.import_module(".sys", setup.light_full)
 import eosfactory.core.manager as manager
 import eosfactory.core.testnet as testnet
 import eosfactory.core.account as account
@@ -36,14 +36,7 @@ def set_is_account(account_object):
     setattr(account_object, IS_ACCOUNT, True)
 
 
-class MasterAccount():
-    """Dummy class for declaring master account objects.
-    """
-    def __init__(self):
-        pass
-
-
-class Account(interface.Account):
+class Account():
     """Methods to be ascribed to account objects.
     """
     @classmethod
@@ -52,12 +45,8 @@ class Account(interface.Account):
         of this ``account``.
         """
         account.account_object_name = account_object_name
-
-        if not isinstance(account, cls): 
+        if not isinstance(account, cls):
             account.__class__.__bases__ += (cls,)
-
-        get_account = BASE_COMMANDS.GetAccount(
-                                            account, json=False, is_verbose=0)
 
         logger.TRACE("""
         * Cross-checked: account object ``{}`` mapped to an existing 
@@ -72,6 +61,12 @@ class Account(interface.Account):
             The Account-class object is not set.
             Use 'create_account' factory function to set it.
             """)
+
+    def stop_if_account_is_eosio(self):
+        if self.name == "eosio":
+            raise errors.Error("""
+            Cannot do this with the ``eosio`` account.
+            """)            
 
     def actions(self, pos=-1, offset=1, 
         json=True, full=False, pretty=False, console=False):
@@ -153,6 +148,7 @@ class Account(interface.Account):
         :func:`.cleos.base.common_parameters`.
         """
         self.stop_if_account_is_not_created()
+
         result = set_commands.SetContract(
                     self, contract_dir, 
                     wasm_file, abi_file,
@@ -449,7 +445,7 @@ class Account(interface.Account):
 
         buy_ram_kbytes = 1
         
-        result = sys_commands.BuyRam(
+        result = SYS_COMMANDS.BuyRam(
             self, receiver, amount_kbytes,
             buy_ram_kbytes,
             expiration_sec,
@@ -481,7 +477,7 @@ class Account(interface.Account):
         if receiver is None:
             receiver = self
 
-        result = sys_commands.DelegateBw(
+        result = SYS_COMMANDS.DelegateBw(
             self, receiver,
             stake_net_quantity, stake_cpu_quantity,
             permission,
@@ -665,8 +661,15 @@ def create_master_account(
         put_account_to_wallet_and_on_stack(
             account_object_name, account_object, logger)
 
-        set_is_master_account(account_object)
-        return account_object
+        if Account.add_methods_and_finalize(
+            account_object_name, account_object):
+            logger.TRACE("""
+                * The account ``{}`` is in the wallet.
+                """.format(account_object.name))
+                
+            set_is_account(account_object)
+            set_is_master_account(account_object)
+            return account_object
 
     """
     Otherwise, an outer testnet has to be defined with 

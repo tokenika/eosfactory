@@ -12,7 +12,7 @@ INITIAL_STAKE_NET = 3
 INITIAL_STAKE_CPU = 3
 
 # Actors of the test:
-MASTER = MasterAccount()
+MASTER = Account()
 HOST = Account()
 alice = None
 carol = None

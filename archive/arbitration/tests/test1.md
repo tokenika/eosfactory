@@ -9,7 +9,7 @@ import time, os, sys
 import eosfactory.core.config as config
 from eosfactory.eosf import *
 
-EOSIO = MasterAccount()
+EOSIO = Account()
 ESCROW = Account()
 ARBITRATOR = Account()
 ALICE = Account()

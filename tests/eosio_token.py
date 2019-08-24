@@ -3,7 +3,7 @@
 
 Note that the declarations
     `
-    MASTER = MasterAccount()
+    MASTER = Account()
     HOST = Account()
     ALICE = Account()
     BOB = Account()
@@ -20,7 +20,7 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 CONTRACT_WORKSPACE = "_iqhgcqllgnpkirjwwkms"
 
 # Actors of the test:
-MASTER = MasterAccount()
+MASTER = Account()
 HOST = Account()
 ALICE = Account()
 BOB = Account()

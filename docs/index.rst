@@ -75,6 +75,7 @@ EOSFactory API
     rst/core.cleos.get    
     rst/core.cleos.set
     rst/core.cleos.sys
+    rst/core.account
     rst/core.manager
     rst/core.testnet
     rst/core.utils

@@ -1,28 +1,32 @@
+"""Object factories for the class :class:`.interface.Account`."""
 import importlib
+
+import eosfactory.core.manager as manager
+import eosfactory.core.logger as logger
 
 import eosfactory.core.setup as setup
 import eosfactory.core.config as config
 import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
+
 BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
-sys_commands = importlib.import_module(".sys", setup.light_full)
-import eosfactory.core.manager as manager
-import eosfactory.core.logger as logger
+SYS_COMMANDS = importlib.import_module(".sys", setup.light_full)
 
 
 class Eosio(interface.Account):
     def __init__(self, account_object_name):
-        interface.Account.__init__(self, "eosio",
-        BASE_COMMANDS.CreateKey(
-            config.eosio_key_public(),
-            config.eosio_key_private(),
-            is_verbose=False))
+        interface.Account.__init__(
+            self, "eosio",
+            BASE_COMMANDS.CreateKey(
+                config.eosio_key_public(),
+                config.eosio_key_private(),
+                is_verbose=False))
         self.account_object_name = account_object_name
 
     def info(self):
         msg = manager.accout_names_2_object_names(
             "account object name: {}\nname: {}\n{}".format(
-                self.account_object_name, 
+                self.account_object_name,
                 self.name,
                 BASE_COMMANDS.GetAccount(self.name, is_verbose=False).out_msg),
                 True)
@@ -38,7 +42,7 @@ class Eosio(interface.Account):
 class GetAccount(BASE_COMMANDS.GetAccount):
     """Given a name, get an account object.
 
-    If the name represents an existing account get an object, of the class :class:`.interface.Account`,  the account. Otherwise, get 
+    Get an object, of the class :class:`.interface.Account` (having the name and a pair of keys), implementing the account having the given name. The name may or may not represent an existing account.
     """
     def __init__(
             self,
@@ -123,7 +127,7 @@ class CreateAccount(BASE_COMMANDS.CreateAccount):
             )
 
 
-class SystemNewaccount(sys_commands.SystemNewaccount):
+class SystemNewaccount(SYS_COMMANDS.SystemNewaccount):
     def __init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu,
@@ -136,7 +140,7 @@ class SystemNewaccount(sys_commands.SystemNewaccount):
             ref_block=None,
             delay_sec=0):
             
-        sys_commands.SystemNewaccount.__init__(
+        SYS_COMMANDS.SystemNewaccount.__init__(
             self, creator, name, owner_key, active_key,
             stake_net, stake_cpu, permission, buy_ram_bytes, buy_ram_kbytes, buy_ram,
             transfer, expiration_sec, skip_sign, dont_broadcast, force_unique,

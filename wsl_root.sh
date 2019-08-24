@@ -41,10 +41,10 @@ WSL_ROOT="$(echo $bpKey | \
 
 verifyWslRoot "${WSL_ROOT}"
 if [ "$?" == 0 ]; then
-    printf "%s" "${WSL_ROOT}"
+    printf "%s\n" "${WSL_ROOT}"
     exit 0
 fi
-printf "%s" "${WSL_ROOT}"
+printf "%s\n" "${WSL_ROOT}"
 exit 1
 
 

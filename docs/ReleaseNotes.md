@@ -7,3 +7,4 @@ EOSFactory [v3.5.0](https://github.com/tokenika/eosfactory/releases/tag/v3.5.0) 
 ## New features in v3.5.0
 
 * Native name of an account is `repr(<account object name>)`. Previously it was `str(<account object name>)`. Now, the function `str` gives a formated response of the creation process of the account.
+* Class `MasterAccount` replaced with `Account`.

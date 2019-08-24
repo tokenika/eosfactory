@@ -8,7 +8,7 @@ import importlib
 BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
 GET_COMMANDS = importlib.import_module(".get", setup.light_full)
 set_commands = importlib.import_module(".set", setup.light_full)
-sys_commands = importlib.import_module(".sys", setup.light_full)
+SYS_COMMANDS = importlib.import_module(".sys", setup.light_full)
 
 
 # setup.is_print_command_lines = True
@@ -18,7 +18,7 @@ verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 CONTRACT_WORKSPACE = sys.path[0] + "/../"
 
 # Actors of the test:
-MASTER = MasterAccount()
+MASTER = Account()
 HOST = Account()
 ALICE = Account()
 CAROL = Account()

@@ -61,7 +61,7 @@ def TRACE(msg=None, verbosity=None, translate=True):
     Args:
         msg (str): The message to be printed. If not set, return the buffer.
         verbosity ([.core.logger.Verbosity]): The message is printed and 
-            buffered if, and only if, its name is in the ``verbosity` list.
+            buffered if, and only if, its name is in the ``verbosity`` list.
             If not set, the value set with the function 
             :func:`.core.logger.verbosity` is assumed, or a default value is 
             assumed.
