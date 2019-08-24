@@ -270,8 +270,9 @@ The file path is to be absolute or relative to the project directory.
                 ######## command line:
                 {}
                 """.format(" ".join(command_line)), [logger.Verbosity.DEBUG])
-        utils.long_process(command_line, build_dir, is_verbose=True, 
-                                                            prompt=target_path)
+        utils.long_process(
+                            command_line, build_dir, is_verbose=True,
+                            prompt=target_path)
         return
 
     command_line = [config.eosio_cpp()]
