@@ -32,10 +32,14 @@ class Eosio(interface.Account):
         return self.name
 
     def __repr__(self):
-        return ""
+        return self.name
 
 
-class GetAccount(BASE_COMMANDS.GetAccount):  
+class GetAccount(BASE_COMMANDS.GetAccount):
+    """Given a name, get an account object.
+
+    If the name represents an existing account get an object, of the class :class:`.interface.Account`,  the account. Otherwise, get 
+    """
     def __init__(
             self,
             account_object_name, name=None, 

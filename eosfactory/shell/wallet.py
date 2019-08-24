@@ -317,16 +317,15 @@ class Wallet(BASE_COMMANDS.WalletCreate):
         BASE_COMMANDS.WalletStop()
         
     def keys(self):
-        """ Lists public keys from all unlocked wallets.
-        Returns `BASE_COMMANDS.WalletKeys` object.
+        """ Lists public keys in the open unlocked wallet.
         """
         self.open_unlock()
         wallet_keys = BASE_COMMANDS.WalletKeys(is_verbose=False)
         logger.TRACE("""
-            Keys in all open walets:
+            Keys in the open walet '{}':
             {}
-            """.format(wallet_keys.out_msg))
-        return wallet_keys
+            """.format(self.name, wallet_keys.out_msg))
+        return wallet_keys.json
 
     # def private_keys(self):
     #     """ Lists public keys from all unlocked wallets.

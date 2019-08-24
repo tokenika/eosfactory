@@ -71,7 +71,6 @@ class Test(unittest.TestCase):
             },
             force_unique=True,
             permission=[(MASTER, Permission.ACTIVE), (HOST, Permission.ACTIVE)])
-        import pdb; pdb.set_trace()
         print("'trace[\"console\"]' sum is '{}'".format(HOST.action.console))
         logger.DEBUG(HOST.action.act)
 

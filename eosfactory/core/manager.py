@@ -208,7 +208,7 @@ def reset(
 
     def verified_testnet(url):
         setup.set_nodeos_address(url, prefix)
-        is_testnet_active()        
+        is_testnet_active()
         clear_testnet_cache()
         keosd_start()
 
@@ -241,7 +241,7 @@ def resume(testnet=None, url=None, nodeos_stdout=None, prefix=None):
     """
     def verified_testnet(url):
         setup.set_nodeos_address(url, prefix)
-        is_testnet_active()        
+        is_testnet_active()
         keosd_start()
 
     if url:
@@ -273,7 +273,7 @@ def is_testnet_active(throw_error=True):
         head_block = GET_COMMANDS.GetInfo(is_verbose=False).head_block
     except:
         if not throw_error:
-            return 0
+            return ""
         raise errors.Error("""
         {} testnet is not running or is not responding @ {}.
         """.format(domain, setup.nodeos_address()))
@@ -282,7 +282,7 @@ def is_testnet_active(throw_error=True):
     {} testnet is active @ {}.
     """.format(domain, setup.nodeos_address()))
 
-    return head_block
+    return "Head block number is {}.".format(head_block)
 
 
 def keosd_start():
