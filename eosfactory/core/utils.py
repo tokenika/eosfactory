@@ -136,14 +136,12 @@ error message:
     print()
     stdout = p.stdout.decode("ISO-8859-1")
     stderr = p.stderr.decode("ISO-8859-1")
-    import pdb; pdb.set_trace()    
     returncode = p.returncode
-    if is_verbose:
-        print(stdout)
+
     if cwd:
         shutil.rmtree(cwd)
 
-    if returncode or stderr:
+    if returncode:
         raise errors.Error("""
 command line:
 =============
@@ -153,6 +151,10 @@ error message:
 ==============
 {}
         """.format(" ".join(command_line), stderr))
+
+    if is_verbose:
+        print(stdout)
+        print(stderr)
 
     return p
 
