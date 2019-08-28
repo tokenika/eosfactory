@@ -7,7 +7,7 @@ import eosfactory.core.logger as logger
 
 
 def get_block_trx_data(block_num):
-    GET_COMMANDS = importlib.import_module(".get", setup.light_full)
+    GET_COMMANDS = importlib.import_module(".get", setup.interface_package())
     block = GET_COMMANDS.GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]
     if not len(trxs):
@@ -18,7 +18,7 @@ def get_block_trx_data(block_num):
 
 
 def get_block_trx_count(block_num):
-    GET_COMMANDS = importlib.import_module(".get", setup.light_full)
+    GET_COMMANDS = importlib.import_module(".get", setup.interface_package())
     block = GET_COMMANDS.GetBlock(block_num, is_verbose=False)
     trxs = block.json["transactions"]
     if not len(trxs):

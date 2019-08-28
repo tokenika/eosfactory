@@ -88,20 +88,20 @@ class Command():
         setup.set_local_nodeos_address_if_none()
         header = header % {'endpoint': utils.relay(
                             "http://" + config.RELY_URL, setup.nodeos_address(), 
-                            setup.is_print_request, setup.is_print_response)
+                            setup.IS_PRINT_REQUEST, setup.IS_PRINT_RESPONSE)
         }
         cl = ["node", "-e"]
         js = header + "\n" + utils.heredoc(js)
 
-        if setup.is_show_private_keys:
+        if setup.IS_SHOW_PRIVATE_KEYS:
             js = js.replace(
                 SIG_PROVIDER, 
                 "const signatureProvider = new JsSignatureProvider(\n{}\n);".format(
                     json_module.dumps(wm.private_keys(is_verbose=False), indent=4))) 
 
-        if setup.is_save_command_lines:
-            setup.add_to__command_line_file("\n" + js + "\n") 
-        if setup.is_print_command_lines:
+        if setup.IS_SAVE_COMMAND_LINES:
+            setup.add_to__COMMAND_LINE_FILE("\n" + js + "\n") 
+        if setup.IS_PRINT_COMMAND_LINES:
             print("\n" + js + "\n")
 
         js = js.replace(
@@ -238,7 +238,7 @@ class WalletCreate(wm.Wallet):
     a new wallet.
 
     Args:
-        name (str): The name of the wallet. If not set, defaults to the value `.setup.wallet_default_name`
+        name (str): The name of the wallet. If not set, defaults to the value `.setup.WALLET_DEFAULT_NAME`
         password (str): The password to the wallet, if the wallet exists. 
         is_verbose (bool): If ``False`` do not print. Default is ``True``.
 

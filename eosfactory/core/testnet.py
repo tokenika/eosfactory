@@ -31,7 +31,7 @@ class Testnet:
             name=None):
 
         if not url:
-            setup.is_local_address = True
+            setup.IS_LOCAL_ADDRESS = True
 
         self.account_name = account_name
         self.owner_key = owner_key

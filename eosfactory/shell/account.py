@@ -12,10 +12,10 @@ import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 import eosfactory.core.teos as teos
 import eosfactory.core.interface as interface
-BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
-GET_COMMANDS = importlib.import_module(".get", setup.light_full)
-set_commands = importlib.import_module(".set", setup.light_full)
-SYS_COMMANDS = importlib.import_module(".sys", setup.light_full)
+BASE_COMMANDS = importlib.import_module(".base", setup.interface_package())
+GET_COMMANDS = importlib.import_module(".get", setup.interface_package())
+SET_COMMANDS = importlib.import_module(".set", setup.interface_package())
+SYS_COMMANDS = importlib.import_module(".sys", setup.interface_package())
 import eosfactory.core.manager as manager
 import eosfactory.core.testnet as testnet
 import eosfactory.core.account as account
@@ -149,7 +149,7 @@ class Account():
         """
         self.stop_if_account_is_not_created()
 
-        result = set_commands.SetContract(
+        result = SET_COMMANDS.SetContract(
                     self, contract_dir, 
                     wasm_file, abi_file,
                     clear, 
@@ -227,7 +227,7 @@ class Account():
         logger.TRACE("""
             * Set account permission.
             """)
-        result = set_commands.SetAccountPermission(
+        result = SET_COMMANDS.SetAccountPermission(
                 self, permission_name, authority, parent_permission_name,
                 permission,
                 add_code,
@@ -276,7 +276,7 @@ class Account():
         * Set action permission.
         """)
 
-        result = set_commands.SetActionPermission(
+        result = SET_COMMANDS.SetActionPermission(
                 self, code, type, requirement,
                 permission,
                 expiration_sec, 
@@ -656,7 +656,7 @@ def create_master_account(
     ``eosio`` account. Put the account into the wallet. Put the account object into 
     the global namespace of the caller, and return.
     """
-    if setup.is_local_address:
+    if setup.IS_LOCAL_ADDRESS:
         account_object = account.Eosio(account_object_name)
         put_account_to_wallet_and_on_stack(
             account_object_name, account_object, logger)

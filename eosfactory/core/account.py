@@ -9,8 +9,8 @@ import eosfactory.core.config as config
 import eosfactory.core.errors as errors
 import eosfactory.core.interface as interface
 
-BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
-SYS_COMMANDS = importlib.import_module(".sys", setup.light_full)
+BASE_COMMANDS = importlib.import_module(".base", setup.interface_package())
+SYS_COMMANDS = importlib.import_module(".sys", setup.interface_package())
 
 
 class Eosio(interface.Account):

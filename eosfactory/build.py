@@ -2,17 +2,8 @@
 """Build a contract"""
 
 import argparse
-import eosfactory.core.eosiocpp as eosiocpp
+import eosfactory.core.teos as teos
 
-def build(
-        contract_dir_hint,
-        c_cpp_properties_path="", 
-        compile_only=False, is_test_options=False, is_execute=False, silent=False):
-
-    verbosity=[] if silent else None
-    eosiocpp.build(
-                        contract_dir_hint, c_cpp_properties_path, compile_only, 
-                        is_test_options, is_execute, verbosity)
 
 def main():
     """Build a contract.
@@ -64,8 +55,10 @@ def main():
 
 
     args = parser.parse_args()
-    build(args.dir, args.c_cpp_prop, args.compile, args.test_options, args.execute,
-    args.silent)    
+    teos.build(
+                args.dir, args.c_cpp_prop, args.compile,
+                args.compile, args.execute, [] if args.silent else None)
+
 
 if __name__ == '__main__':
     main()

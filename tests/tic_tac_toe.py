@@ -3,7 +3,7 @@
 
 import argparse, sys, time
 import eosfactory.core.setup as setup
-#setup.set_is_lt()
+#setup.set_is_eosjs()
 from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])

@@ -46,7 +46,7 @@ HOST.push_action(
 Next, turn symbolic translation OFF:
 
 ```python
-setup.is_translating = False
+setup.IS_TRANSLATING = False
 ```
 
 And push an action to the smart-contract:
@@ -70,7 +70,7 @@ Please note that when symbolic translation is disabled, the logger output refers
 Now, turn symbolic translation ON:
 
 ```python
-setup.is_translating = True
+setup.IS_TRANSLATING = True
 ```
 And push another action to the same smart-contract:
 

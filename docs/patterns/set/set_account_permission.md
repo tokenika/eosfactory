@@ -28,11 +28,11 @@ permissions:
 ```python
 COMMENT("Set new key to a permission:")
 key = CreateKey(is_verbose=False)
-setup.is_print_command_lines = True
+setup.IS_PRINT_COMMAND_LINES = True
 alice.set_account_permission(
     Permission.ACTIVE, key.key_public, Permission.OWNER, 
     (alice, Permission.OWNER))
-setup.is_print_command_lines = False
+setup.IS_PRINT_COMMAND_LINES = False
 alice.info()
 ```
 
@@ -48,11 +48,11 @@ permissions:
 ```python
 COMMENT("Set an account (instead of a key) as authority for a permission:")
 create_account("bob", master)
-setup.is_print_command_lines = True
+setup.IS_PRINT_COMMAND_LINES = True
 alice.set_account_permission(
     Permission.ACTIVE, bob, Permission.OWNER, 
     (alice, Permission.OWNER))
-setup.is_print_command_lines = False
+setup.IS_PRINT_COMMAND_LINES = False
 alice.info()
 ```
 

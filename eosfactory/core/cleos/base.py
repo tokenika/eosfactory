@@ -47,15 +47,15 @@ class Command():
         setup.set_local_nodeos_address_if_none()
         cl.extend(["--url", utils.relay(
                             "http://" + config.RELY_URL, setup.nodeos_address(), 
-                            setup.is_print_request, setup.is_print_response)])
+                            setup.IS_PRINT_REQUEST, setup.IS_PRINT_RESPONSE)])
 
         cl.append(command_group)
         cl.extend(re.sub(re.compile(r'\s+'), ' ', command.strip()).split(" "))
         cl.extend(args)
 
-        if setup.is_save_command_lines:
-            setup.add_to__command_line_file(" ".join(cl))        
-        if setup.is_print_command_lines:
+        if setup.IS_SAVE_COMMAND_LINES:
+            setup.add_to__COMMAND_LINE_FILE(" ".join(cl))        
+        if setup.IS_PRINT_COMMAND_LINES:
             print("######## command line sent to cleos:")
             print(" ".join(cl))
             print("")

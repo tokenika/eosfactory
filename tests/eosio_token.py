@@ -59,7 +59,7 @@ class Test(unittest.TestCase):
         Initialize the token and send some tokens to one of the accounts:
         """)
         import eosfactory.core.setup as setup
-        setup.is_print_command_lines = True
+        setup.IS_PRINT_COMMAND_LINES = True
         HOST.push_action(
             "create",
             {

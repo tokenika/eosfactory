@@ -5,7 +5,7 @@ import eosfactory.core.setup as setup
 import eosfactory.core.logger as logger
 import eosfactory.core.errors as errors
 import eosfactory.core.teos as teos
-BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
+BASE_COMMANDS = importlib.import_module(".base", setup.interface_package())
 import eosfactory.core.manager as manager
 import eosfactory.core.testnet as testnet_module
 import eosfactory.core.interface as interface

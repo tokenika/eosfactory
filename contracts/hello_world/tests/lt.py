@@ -1,17 +1,17 @@
 import sys
 
 import eosfactory.core.setup as setup
-setup.set_is_lt()
+setup.set_is_eosjs()
 from eosfactory.eosf import *
 
 import importlib
-BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
-GET_COMMANDS = importlib.import_module(".get", setup.light_full)
-set_commands = importlib.import_module(".set", setup.light_full)
-SYS_COMMANDS = importlib.import_module(".sys", setup.light_full)
+BASE_COMMANDS = importlib.import_module(".base", setup.interface_package())
+GET_COMMANDS = importlib.import_module(".get", setup.interface_package())
+SET_COMMANDS = importlib.import_module(".set", setup.interface_package())
+SYS_COMMANDS = importlib.import_module(".sys", setup.interface_package())
 
 
-# setup.is_print_command_lines = True
+# setup.IS_PRINT_COMMAND_LINES = True
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE, Verbosity.DEBUG])
 
@@ -32,16 +32,16 @@ def test():
 
     reset()
     create_master_account("MASTER")
-    # setup.is_print_request = True
-    # setup.is_print_response = True
-    # setup.is_print_command_lines = True
-    # setup.is_print_command_lines = True
+    # setup.IS_PRINT_REQUEST = True
+    # setup.IS_PRINT_RESPONSE = True
+    # setup.IS_PRINT_COMMAND_LINES = True
+    # setup.IS_PRINT_COMMAND_LINES = True
 
     create_account("ALICE", MASTER)
     create_account("HOST", MASTER)
 
-    setup.is_print_request = False
-    setup.is_print_response = False
+    setup.IS_PRINT_REQUEST = False
+    setup.IS_PRINT_RESPONSE = False
     
     COMMENT("ALICE.info()")
     ALICE.info()
@@ -56,7 +56,7 @@ def test():
     COMMENT("""
     Test an action for Alice:
     """)
-    setup.is_print_command_lines = True
+    setup.IS_PRINT_COMMAND_LINES = True
     HOST.push_action(
         "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))
     assert("ALICE" in DEBUG())

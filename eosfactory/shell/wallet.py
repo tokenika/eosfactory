@@ -8,7 +8,7 @@ import eosfactory.core.config as config
 import eosfactory.core.logger as logger
 import eosfactory.core.setup as setup
 import eosfactory.core.interface as interface
-BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
+BASE_COMMANDS = importlib.import_module(".base", setup.interface_package())
 import eosfactory.core.manager as manager
 
 
@@ -27,7 +27,7 @@ class Wallet(BASE_COMMANDS.WalletCreate):
 
         setup.set_local_nodeos_address_if_none()
         if name is None:
-            name = setup.wallet_default_name
+            name = setup.WALLET_DEFAULT_NAME
         else:
             name = setup.file_prefix() + name
 
@@ -53,7 +53,7 @@ class Wallet(BASE_COMMANDS.WalletCreate):
                     The password is restored from the file:
                     {}
                     """.format(
-                        os.path.join(self.wallet_dir, setup.password_map)))
+                        os.path.join(self.wallet_dir, setup.PASSWORD_MAP)))
 
         BASE_COMMANDS.WalletCreate.__init__(self, name, password, is_verbose=False)
 
@@ -66,13 +66,13 @@ class Wallet(BASE_COMMANDS.WalletCreate):
                 # TO DO: detect live node!!!!!!!!!!
             if manager.is_local_testnet() or file or True:           
                 ###############################################################                       
-                password_map = wallet_json_read()
-                password_map[name] = self.password
-                wallet_json_write(password_map)
+                PASSWORD_MAP = wallet_json_read()
+                PASSWORD_MAP[name] = self.password
+                wallet_json_write(PASSWORD_MAP)
                 logger.INFO("""
                     * Password is saved to the file ``{}`` 
                     in the wallet directory.
-                    """.format(setup.password_map)
+                    """.format(setup.PASSWORD_MAP)
                 )
             else:
                 logger.OUT(self.out_msg)
@@ -341,6 +341,8 @@ class Wallet(BASE_COMMANDS.WalletCreate):
     #             self.wallet_private_keys.json, indent=4)))    
 
     def edit_account_map(self):
+        """Edit the mapping between native account names and account object names."""
+
         setup.edit_account_map()
 
     def is_name_taken(self, account_object_name, account_name):
@@ -418,7 +420,7 @@ class Wallet(BASE_COMMANDS.WalletCreate):
 
             account_map_json[account_object.name] = account_object_name
 
-            with open(self.wallet_dir + setup.account_map, "w") as out:
+            with open(self.wallet_dir + setup.ACCOUNT_MAP, "w") as out:
                 out.write(json.dumps(
                     account_map_json, indent=3, sort_keys=True))
 
@@ -428,13 +430,13 @@ class Wallet(BASE_COMMANDS.WalletCreate):
                     {}
                 """.format(
                     account_object_name,
-                    setup.account_map,
-                    self.wallet_dir + setup.account_map))
+                    setup.ACCOUNT_MAP,
+                    self.wallet_dir + setup.ACCOUNT_MAP))
 
 
 def wallet_json_read():
     try:
-        with open(config.keosd_wallet_dir() + setup.password_map, "r") \
+        with open(config.keosd_wallet_dir() + setup.PASSWORD_MAP, "r") \
                 as f:    
             return json.load(f)
     except:
@@ -442,7 +444,7 @@ def wallet_json_read():
 
 
 def wallet_json_write(wallet_json):
-    with open(config.keosd_wallet_dir() + setup.password_map, "w+")  as out:
+    with open(config.keosd_wallet_dir() + setup.PASSWORD_MAP, "w+")  as out:
         json.dump(wallet_json, out)
 
 

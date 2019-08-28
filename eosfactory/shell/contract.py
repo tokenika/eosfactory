@@ -1,14 +1,17 @@
+"""EOS contract API."""
+
 import shutil
 import os
 import importlib
 
+import eosfactory.shell.account
 import eosfactory.core.setup as setup
 import eosfactory.core.errors as errors
 import eosfactory.core.logger as logger
 import eosfactory.core.config as config
 import eosfactory.core.common as common
-set_commands = importlib.import_module(".set", setup.light_full)
-import eosfactory.shell.account
+import eosfactory.core.teos as teos
+SET_COMMANDS = importlib.import_module(".set", setup.interface_package())
 
 
 class ContractBuilder():
@@ -56,8 +59,7 @@ class ContractBuilder():
         """Make both, ABI and WASM files.
         """
         if force or not self.is_built():
-            import eosfactory.core.eosiocpp as eosiocpp
-            eosiocpp.build(self.contract_dir, self.c_cpp_properties_path)
+            teos.build(self.contract_dir, self.c_cpp_properties_path)
 
     def is_built(self):
         """Check whether both the ABI and WASM files exist.
@@ -130,7 +132,7 @@ class Contract(ContractBuilder):
     def clear(self):
         """Remove contract on an account
         """
-        result = set_commands.SetContract(
+        result = SET_COMMANDS.SetContract(
             self.account, self.contract_dir, 
             self.wasm_file, self.abi_file,
             True,
@@ -152,7 +154,7 @@ class Contract(ContractBuilder):
         if dont_broadcast is None:
             dont_broadcast = self.dont_broadcast
         try:
-            result = set_commands.SetContract(
+            result = SET_COMMANDS.SetContract(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file,
                 False, 
@@ -178,7 +180,7 @@ class Contract(ContractBuilder):
 
             payer.buy_ram(buy_ram_kbytes, self.account)
         
-            result = set_commands.SetContract(
+            result = SET_COMMANDS.SetContract(
                 self.account, self.contract_dir, 
                 self.wasm_file, self.abi_file,
                 False, 

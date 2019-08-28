@@ -31,11 +31,14 @@ PROJECT_0 = "empty_project"
 
 EOSIO_VERSION = "1.8.0"
 EOSIO_CDT_VERSION = "1.6.1"
+NODE_JS_VERSION = "0.0.0"
 EOSIO_CDT_PATTERN = r".+/eosio\.cdt/(\d\.\d\.\d)/.*"
 EOSFACTORY_DIR = "eosfactory/"
 TMP = "/tmp/eosfactory/"
 BUILD = "build"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
+CLEOS_PACKAGE = "eosfactory.core.cleos"
+EOSJS_PACKAGE = "eosfactory.core.eosjs"
 
 eosfactory_data_ = ("EOSFACTORY_DATA_DIR", 
             [os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR),\
@@ -56,6 +59,7 @@ wsl_root_ = ("WSL_ROOT", [None])
 nodeos_stdout_ = ("NODEOS_STDOUT", [None])
 includes_ = ("INCLUDE", "includes")
 libs_ = ("LIBS", "libs")
+interface_package_ = ("INTERFACE_PACKAGE", [CLEOS_PACKAGE])
 
 
 cli_exe_ = ("EOSIO_CLI_EXECUTABLE", 
@@ -155,6 +159,14 @@ Cannot determine the configuration directory. 'eosfactory.__path__' is
         """.format(eosfactory_path), translate=False)
 
     return is_local_or_system
+
+
+def set_is_eosjs(is_lt=True):
+    """Determine whether to use ``eosjs`` interface rathert than ``cleos`` one."""
+
+    map = config_map()
+    map[interface_package_[0]] = EOSJS_PACKAGE if is_lt else CLEOS_PACKAGE
+    write_config_map(map)
 
 
 def set_contract_workspace_dir(contract_workspace_dir=None, is_set=False):
@@ -383,6 +395,19 @@ def chain_state_db_size_mb():
     return config_value_checked(chain_state_db_size_mb_)
 
 
+def interface_package():
+    """The size of the buffer of the local node. 
+
+    The value of the option ``chain-state-db-size-mb`` in the command line for 
+    the ``nodeos`` executable.
+
+    It may be changed with 
+    ``EOSIO_SHARED_MEMORY_SIZE_MB`` entry in the ``config.json`` file, 
+    see :func:`.current_config`.  
+    """
+    return config_value_checked(interface_package_)    
+
+
 def wsl_root():
     """The root directory of the Windows WSL, or empty string if not Windows.
     
@@ -541,6 +566,20 @@ def eosio_cdt_version():
 
     except Exception as e:
         return ["", EOSIO_CDT_VERSION]
+
+
+def node_js_version():
+    try:
+        version = subprocess.check_output(
+            ["node", "-v"], timeout=5).decode("ISO-8859-1").strip()\
+                                            .replace("v", "")
+        retval = [version]
+        if not version.split(".")[:2] == NODE_JS_VERSION.split(".")[:2]:
+            retval.append(NODE_JS_VERSION)
+        return retval
+
+    except Exception as e:
+        return ["", NODE_JS_VERSION]
 
 
 def eosio_cdt_root():
@@ -1126,6 +1165,10 @@ def current_config(contract_dir=None, dont_set_workspace=False):
         map[chain_state_db_size_mb_[0]] = chain_state_db_size_mb()
     except:
         map[chain_state_db_size_mb_[0]] = None
+    try:
+        map[interface_package_[0]] = interface_package_()
+    except:
+        map[interface_package_[0]] = None
     try:
         map[contract_workspace_dir_[0]] = contract_workspace_dir(
                                                             dont_set_workspace)

@@ -15,8 +15,8 @@ import eosfactory.core.logger as logger
 import eosfactory.core.interface as interface
 import eosfactory.core.setup as setup
 import eosfactory.core.teos as teos
-BASE_COMMANDS = importlib.import_module(".base", setup.light_full)
-GET_COMMANDS = importlib.import_module(".get", setup.light_full)
+BASE_COMMANDS = importlib.import_module(".base", setup.interface_package())
+GET_COMMANDS = importlib.import_module(".get", setup.interface_package())
 
 
 def reboot():
@@ -66,7 +66,7 @@ def accout_names_2_object_names(sentence, keys=False):
         sentence (str): The message to be translated.
         keys (bool): If set, translate keys, as well.
     """
-    if not setup.is_translating:
+    if not setup.IS_TRANSLATING:
         return sentence
         
     exceptions = ["eosio"]
@@ -112,7 +112,7 @@ def is_local_testnet():
     """If not set, set local testnet. Is the current testnet local?
     """
     setup.set_local_nodeos_address_if_none()
-    return setup.is_local_address
+    return setup.IS_LOCAL_ADDRESS
 
 
 def node_start(clear=False, nodeos_stdout=None):
@@ -307,7 +307,7 @@ Bash command {} does not result in a process.
 def account_map():
     """Return json account map.
 
-    Attempt to open the account map file named ``setup.account_map``, located 
+    Attempt to open the account map file named ``setup.ACCOUNT_MAP``, located 
     in the wallet directory ``config.keosd_wallet_dir()``, to return its json 
     contents. If the file does not exist, return the empty json.
 
@@ -318,7 +318,7 @@ def account_map():
     if not wallet_dir_:
         return {}
     
-    path = os.path.join(wallet_dir_, setup.account_map)
+    path = os.path.join(wallet_dir_, setup.ACCOUNT_MAP)
     while True:
         try: # whether the setup map file exists:
             with open(path, "r") as input_file:

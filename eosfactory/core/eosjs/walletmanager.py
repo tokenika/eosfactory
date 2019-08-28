@@ -49,7 +49,7 @@ class Wallet(interface.Wallet):
 
         setup.set_local_nodeos_address_if_none()
         if name is None:
-            name = setup.wallet_default_name
+            name = setup.WALLET_DEFAULT_NAME
 
         interface.Wallet.__init__(self, name, password)
         _file = wallet_file(name)
@@ -399,7 +399,7 @@ class Node():
         js = utils.heredoc(js)
         cl.append(js)
 
-        if setup.is_print_command_lines:
+        if setup.IS_PRINT_COMMAND_LINES:
             print("javascript:")
             print("___________")
             print("")

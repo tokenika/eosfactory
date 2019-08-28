@@ -2,7 +2,9 @@
 """
 import sys
 import json
+import subprocess
 import argparse
+
 import eosfactory.core.utils as utils
 import eosfactory.core.config as config
 
@@ -11,13 +13,14 @@ IS_WARNING = 1
 
 class Checklist():
 
-    def __init__(self, is_html=False, error_codes=""):
+    def __init__(self, is_html=False, error_codes="", interface_package=None):
         self.is_html = is_html
-        self.html_text = ""
         self.is_error = False
         self.is_warning = False
         self.IS_WINDOWS = utils.is_windows_ubuntu()
-        self.os_version = utils.os_version()
+        os_version = utils.os_version()
+        if not interface_package:
+            interface_package = config.interface_package()
 
         self.print_msg("EOSFactory version {}".format(config.VERSION))
 
@@ -26,9 +29,9 @@ class Checklist():
 ################################################################################
         try:
             if  "psutil" in error_codes:
-                import psutil1
+                import psutil1 # pylint: disable=unused-import
             else:
-                import psutil
+                import psutil # pylint: disable=unused-import
         except ImportError:
             command = "pip3 install --user psutil"
             button = """
@@ -44,10 +47,10 @@ class Checklist():
 """.format(command)
 
             self.error_msg("""
-Module 'psutil' is not installed. Install it: {}
+Library 'psutil' is not installed. Install it: {}
 """.format(button))
             self.print_error(
-"""Module 'psutil' is not installed.
+"""Library 'psutil' is not installed.
 Install it: """)
             self.print_code("`{}`\n".format(command))
 
@@ -132,46 +135,47 @@ EOSIO nodeos can fail with Windows WSL Ubuntu below version 16.
 ################################################################################
 # eosio
 ################################################################################
-        eosio_version = config.eosio_version()
-        if  "eosio" in error_codes:
-            eosio_version = ["", "1.8.0"]
-        # eosio_version = ["1.3.3", "1.8.0"]    
+        if interface_package == config.CLEOS_PACKAGE:
+            eosio_version = config.eosio_version()
+            if  "eosio" in error_codes:
+                eosio_version = ["", "1.8.0"]
+            # eosio_version = ["1.3.3", "1.8.0"]    
 
-        if eosio_version[0]:
-            self.status_msg(
-                        "Found eosio version {}".format(eosio_version[0]))
-            self.print_status(
-                        "Found eosio version {}".format(eosio_version[0]))
+            if eosio_version[0]:
+                self.status_msg(
+                            "Found eosio version {}".format(eosio_version[0]))
+                self.print_status(
+                            "Found eosio version {}".format(eosio_version[0]))
 
-        if not eosio_version[0] or len(eosio_version) > 1\
-                and not self.equal(eosio_version[0], eosio_version[1]):
-            command = ""
-            
-            if self.os_version == utils.UBUNTU:
-                ubuntu_version = utils.spawn(
-                                        ["lsb_release", "-r", "-s"], 
-                                        raise_exception=False)[0].split(".")[0]
+            if not eosio_version[0] or len(eosio_version) > 1\
+                    and not self.equal(eosio_version[0], eosio_version[1]):
+                command = ""
+                
+                if os_version == utils.UBUNTU:
+                    ubuntu_version = utils.spawn(
+                                            ["lsb_release", "-r", "-s"], 
+                                            raise_exception=False)[0].split(".")[0]
 
-                if ubuntu_version and ubuntu_version == 16:
-                    command = \
+                    if ubuntu_version and ubuntu_version == 16:
+                        command = \
 """sudo apt remove eosio &&\\
 wget https://github.com/eosio/eos/releases/download/v1.8.0/eosio_1.8.0-1-ubuntu-16.04_amd64.deb &&\\
-sudo apt install ./eosio_1.8.0-1-ubuntu-16.04_amd64.deb                
+sudo apt install ./eosio_1.8.0-1-ubuntu-16.04_amd64.deb
 """
-                else:
-                    command = \
+                    else:
+                        command = \
 """sudo apt remove eosio &&\\
 wget https://github.com/eosio/eos/releases/download/v1.8.0/eosio_1.8.0-1-ubuntu-18.04_amd64.deb &&\\
 apt install ./eosio_1.8.0-1-ubuntu-18.04_amd64.deb
 """
-            elif self.os_version == utils.DARWIN:
-                command = \
+                elif os_version == utils.DARWIN:
+                    command = \
 """brew remove eosio &&\\
 brew tap eosio/eosio &&\\
 brew install eosio
 """
 
-            button = """
+                button = """
 <button 
     style="text-align:left;"
     class="btn ${{BASH_COMMAND}}";
@@ -183,10 +187,10 @@ brew install eosio
 </button>            
 """.format(eosio_version[1], command)
 
-            instructions = '<a href="https://github.com/EOSIO/eos">EOSIO installation instructions</a>'
+                instructions = '<a href="https://github.com/EOSIO/eos">EOSIO installation instructions</a>'
 
-            if eosio_version[0] and len(eosio_version) > 1 :
-                self.warning_msg(
+                if eosio_version[0] and len(eosio_version) > 1 :
+                    self.warning_msg(
 """
 NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eosio v{0}:<br>
 {2}
@@ -194,33 +198,31 @@ NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eos
                 eosio_version[1], eosio_version[0], 
                 button if command else instructions))
 
-                self.print_warning(
+                    self.print_warning(
 """NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eosio v{0}:
-""".format(
-            eosio_version[1], eosio_version[0])
-            )
-                self.print_code(
-"""```
-{}
-```
-""".format(command if command else instructions))                    
+""".format(eosio_version[1], eosio_version[0]))
+                    self.print_code(
+    """```
+    {}
+    ```
+    """.format(command if command else instructions))
 
-            else:
-                if not "ignoreeoside" in error_codes:
-                    self.warning_msg("""
+                else:
+                    if not "ignoreeoside" in error_codes:
+                        self.warning_msg("""
 Cannot determine that eosio is installed as nodeos does not response.<br>
 It hangs up sometimes.<br>
 EOSFactory expects eosio version {}. Install eosio, if not installed:<br>
 {}<br>
 """.format(eosio_version[1], button if command else instructions))
 
-                    self.print_warning(
+                        self.print_warning(
 """Cannot determine that eosio is installed as nodeos does not response.
 It hangs up sometimes.
 EOSFactory expects eosio version {}. Install eosio, if not installed:
 """.format(eosio_version[1]))
 
-                    self.print_code(
+                        self.print_code(
 """```
 {}
 ```
@@ -228,36 +230,128 @@ EOSFactory expects eosio version {}. Install eosio, if not installed:
 
 
 ################################################################################
+# node.js
+################################################################################
+        if interface_package == config.EOSJS_PACKAGE:
+            node_js_version = config.node_js_version()
+            if node_js_version[0]:
+                msg = "Found node.js version {}.".format(node_js_version[0])
+                self.status_msg(msg)
+                self.print_status(msg)
+
+            if not node_js_version[0]:
+                self.error_msg(
+"""It seams that <em>Node.js</em> is not in the System. EOSFactory, configured with the EOSJS interface, cannot do without it."""
+                )
+                self.print_error(
+"""It seams that Node.js is not in the System. EOSFactory, configured with the EOSJS interface, cannot do without it."""
+                )
+
+                if self.IS_WINDOWS:
+                    msg = \
+"""Note that Node.js has to be installed in the Windows Subsystem Linux.
+"""
+                    self.status_msg(msg)
+                    self.print_status(msg)
+
+
+################################################################################
+# eosjs and other javascript modules
+################################################################################
+        def check_module(library):
+            try:
+                output = subprocess.check_output(
+                    ["node", "-e",
+                    """
+                    try{
+                        console.log(require.resolve("%s"));
+                    } catch(err){
+                        console.log(err);
+                    }
+                    """ % (library),
+                    ], 
+                    timeout=5).decode("ISO-8859-1").strip()
+
+                if not "Error" in output:
+                    self.status_msg(
+                        "Found <em>{}</em> library.".format(library))
+                    self.print_status(
+                        "Found ``{}`` library.".format(library))
+                else:
+                    command = "npm install {0} # add -g switch to install globally".format(library)
+
+                    button = """
+<button 
+    style="text-align:left;"
+    class="btn ${{BASH_COMMAND}}";
+    class="btn"; 
+    id="Install {0}"; 
+    title="Install {0}. Click the button then ENTER in a newly created bash terminal window, to go."
+>
+    {1}
+</button>
+""".format(library, command)
+
+                    self.error_msg(
+"""It seams that the <em>{0}</em> library is not in the System.
+EOSFactory, configured with EOSJS interface, cannot do without it.
+Install it, if not installed.
+{1}<br>
+""".format(library, button))
+
+                    self.print_error(
+"""It seams that the ``{0}`` library is not in the System.
+EOSFactory, configured with EOSJS interface, cannot do without it.
+Install it, if not installed.
+""".format(library))
+                    self.print_code(
+"""```
+{}
+```
+""".format(command))
+
+            except Exception as e:
+                self.error_msg(str(e))
+                self.print_error(str(e))
+
+
+        if interface_package == config.EOSJS_PACKAGE:
+            check_module("eosjs")
+            check_module("fs")
+
+
+################################################################################
 # eosio_cdt
 ################################################################################
-        eosio_cdt_version = config.eosio_cdt_version()
-        if "eosio_cdt" in error_codes:
-            eosio_cdt_version = ["", "1.6.0"]
-        # eosio_cdt_version = ["1.6.1", "1.6.0"]    
-        
-        if eosio_cdt_version[0]:
-            self.status_msg(
-                "Found eosio.cdt version {}.".format(eosio_cdt_version[0]))
-            self.print_status(
-                "Found eosio.cdt version {}.".format(eosio_cdt_version[0]))
-        
-        if not eosio_cdt_version[0] or len(eosio_cdt_version) > 1\
-                and not self.equal(eosio_cdt_version[0], eosio_cdt_version[1]):
-            command = ""
+        if interface_package == config.CLEOS_PACKAGE:
+            eosio_cdt_version = config.eosio_cdt_version()
+            if "eosio_cdt" in error_codes:
+                eosio_cdt_version = ["", "1.6.0"]
+            # eosio_cdt_version = ["", "1.6.0"]    
+            
+            if eosio_cdt_version[0]:
+                self.status_msg(
+                    "Found <em>eosio.cdt</em> version {}.".format(eosio_cdt_version[0]))
+                self.print_status(
+                    "Found eosio.cdt version {}.".format(eosio_cdt_version[0]))
+            
+            if not eosio_cdt_version[0] or len(eosio_cdt_version) > 1\
+                    and not self.equal(eosio_cdt_version[0], eosio_cdt_version[1]):
+                command = ""
 
-            if self.os_version == utils.UBUNTU:
-                command = \
+                if os_version == utils.UBUNTU:
+                    command = \
 """sudo apt remove eosio.cdt &&\\
 wget https://github.com/eosio/eosio.cdt/releases/download/v1.6.1/eosio.cdt_1.6.1-1_amd64.deb &&\\
 sudo apt install ./eosio.cdt_1.6.1-1_amd64.deb
 """
-            elif self.os_version == utils.DARWIN:
-                command = \
+                elif os_version == utils.DARWIN:
+                    command = \
 """brew remove eosio.cdt &&\\
 brew tap eosio/eosio.cdt && \\
 brew install eosio.cdt
 """
-            button = """
+                button = """
 <button 
     style="text-align:left;"
     class="btn ${{BASH_COMMAND}}";
@@ -269,11 +363,11 @@ brew install eosio.cdt
 </button>
 """.format(eosio_cdt_version[1], command)
 
-            instructions = '<a href="https://github.com/EOSIO/eosio.cdt">EOSIO.cdt installation instructions</a>'
+                instructions = '<a href="https://github.com/EOSIO/eosio.cdt">EOSIO.cdt installation instructions</a>'
 
-            if eosio_cdt_version[0] and len(eosio_cdt_version) > 1 \
-                    and not eosio_cdt_version[0] == eosio_cdt_version[1]:
-                self.warning_msg(
+                if eosio_cdt_version[0] and len(eosio_cdt_version) > 1 \
+                        and not eosio_cdt_version[0] == eosio_cdt_version[1]:
+                    self.warning_msg(
 """
 NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eosio.cdt v{0}:<br>
 {2}
@@ -281,30 +375,29 @@ NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eos
                 eosio_cdt_version[1], eosio_cdt_version[0], 
                 button if command else instructions))
 
-                self.print_warning(
+                    self.print_warning(
 """NOTE: EOSFactory was tested with version {0} while installed is {1}. Install eosio v{0}:
-""".format(
-                eosio_cdt_version[1], eosio_cdt_version[0]))
+""".format(eosio_cdt_version[1], eosio_cdt_version[0]))
 
-                self.print_code(
+                    self.print_code(
 """```
 {}
 ```
 """.format(command if command else instructions))
 
-            else:
-                self.error_msg("""
+                else:
+                    self.error_msg("""
     Cannot determine that eosio.cdt is installed as eosio-cpp does not response.<br>
     EOSFactory expects eosio.cdt version {}. Install it, if not installed.
     {}<br>
 """.format(eosio_cdt_version[1], button if command else instructions))
 
-                self.print_error(
+                    self.print_error(
 """Cannot determine that eosio.cdt is installed as eosio-cpp does not response.
 EOSFactory expects eosio.cdt version {}. Install it, if not installed.
 """.format(eosio_cdt_version[1]))
 
-                self.print_code(
+                    self.print_code(
 """```
 {}
 ```
