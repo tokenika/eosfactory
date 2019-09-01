@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Pretty print json received from a PushAction object."""
-import eosfactory.core.to_string.actions as actions
+import eosfactory.core.str.actions as actions
 
 #  HOST <= HOST::create         {"challenger":"ALICE","host":"CAROL"}
 # executed transaction: 869173095f5ac4df477166eb285713e087eacac70395c7670148df3efaf043a4  112 bytes  1029 us

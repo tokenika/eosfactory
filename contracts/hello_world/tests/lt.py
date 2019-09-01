@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+""""""
 import sys
 
 import eosfactory.core.setup as setup
@@ -56,13 +58,13 @@ def test():
     COMMENT("""
     Test an action for Alice:
     """)
-    setup.IS_PRINT_COMMAND_LINES = True
+    setup.IS_PRINT_COMMAND_LINES = False
     HOST.push_action(
         "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))
-    assert("ALICE" in DEBUG())
+
+    assert "ALICE" in DEBUG()
     
 
 if __name__ == "__main__":
     test()
     stop()
-    sys.exit(0)

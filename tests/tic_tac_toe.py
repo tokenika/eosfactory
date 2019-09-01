@@ -2,8 +2,13 @@
 """Test example."""
 
 import argparse, sys, time
+import importlib
+
 import eosfactory.core.setup as setup
-#setup.set_is_eosjs()
+# Set the interface configuration (CLEOS or EOSJS):
+setup.set_is_eosjs(False)
+# setup.set_is_eosjs()
+
 from eosfactory.eosf import *
 
 verbosity([Verbosity.INFO, Verbosity.OUT, Verbosity.TRACE])
@@ -54,13 +59,16 @@ def test(testnet, reset):
         manager.reset(testnet)
     else:
         manager.resume(testnet)
-    
+
     create_master_account("MASTER", testnet)
-    create_account("HOST", MASTER,
+    create_account(
+        "HOST", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-    create_account("ALICE", MASTER,
+    create_account(
+        "ALICE", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
-    create_account("CAROL", MASTER,
+    create_account(
+        "CAROL", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
 
     stats()
@@ -117,15 +125,15 @@ def test(testnet, reset):
             raise Error(str(e))
 
     table = HOST.table("games", CAROL)
-    assert(table.json["rows"][0]["board"][0] == 0)
-    assert(table.json["rows"][0]["board"][1] == 0)
-    assert(table.json["rows"][0]["board"][2] == 0)
-    assert(table.json["rows"][0]["board"][3] == 0)
-    assert(table.json["rows"][0]["board"][4] == 0)
-    assert(table.json["rows"][0]["board"][5] == 0)
-    assert(table.json["rows"][0]["board"][6] == 0)
-    assert(table.json["rows"][0]["board"][7] == 0)
-    assert(table.json["rows"][0]["board"][8] == 0)
+    assert table.json["rows"][0]["board"][0] == 0
+    assert table.json["rows"][0]["board"][1] == 0
+    assert table.json["rows"][0]["board"][2] == 0
+    assert table.json["rows"][0]["board"][3] == 0
+    assert table.json["rows"][0]["board"][4] == 0
+    assert table.json["rows"][0]["board"][5] == 0
+    assert table.json["rows"][0]["board"][6] == 0
+    assert table.json["rows"][0]["board"][7] == 0
+    assert table.json["rows"][0]["board"][8] == 0
 
     COMMENT("""
     First move is by CAROL:
@@ -154,15 +162,15 @@ def test(testnet, reset):
         permission=(ALICE, Permission.ACTIVE))
 
     table = HOST.table("games", CAROL)
-    assert(table.json["rows"][0]["board"][0] == 1)
-    assert(table.json["rows"][0]["board"][1] == 0)
-    assert(table.json["rows"][0]["board"][2] == 0)
-    assert(table.json["rows"][0]["board"][3] == 0)
-    assert(table.json["rows"][0]["board"][4] == 2)
-    assert(table.json["rows"][0]["board"][5] == 0)
-    assert(table.json["rows"][0]["board"][6] == 0)
-    assert(table.json["rows"][0]["board"][7] == 0)
-    assert(table.json["rows"][0]["board"][8] == 0)
+    assert table.json["rows"][0]["board"][0] == 1
+    assert table.json["rows"][0]["board"][1] == 0
+    assert table.json["rows"][0]["board"][2] == 0
+    assert table.json["rows"][0]["board"][3] == 0
+    assert table.json["rows"][0]["board"][4] == 2
+    assert table.json["rows"][0]["board"][5] == 0
+    assert table.json["rows"][0]["board"][6] == 0
+    assert table.json["rows"][0]["board"][7] == 0
+    assert table.json["rows"][0]["board"][8] == 0
 
     COMMENT("""
     Restarting the game:
@@ -177,19 +185,20 @@ def test(testnet, reset):
         permission=(CAROL, Permission.ACTIVE))
 
     table = HOST.table("games", CAROL)
-    assert(table.json["rows"][0]["board"][0] == 0)
-    assert(table.json["rows"][0]["board"][1] == 0)
-    assert(table.json["rows"][0]["board"][2] == 0)
-    assert(table.json["rows"][0]["board"][3] == 0)
-    assert(table.json["rows"][0]["board"][4] == 0)
-    assert(table.json["rows"][0]["board"][5] == 0)
-    assert(table.json["rows"][0]["board"][6] == 0)
-    assert(table.json["rows"][0]["board"][7] == 0)
-    assert(table.json["rows"][0]["board"][8] == 0)
+    assert table.json["rows"][0]["board"][0] == 0
+    assert table.json["rows"][0]["board"][1] == 0
+    assert table.json["rows"][0]["board"][2] == 0
+    assert table.json["rows"][0]["board"][3] == 0
+    assert table.json["rows"][0]["board"][4] == 0
+    assert table.json["rows"][0]["board"][5] == 0
+    assert table.json["rows"][0]["board"][6] == 0
+    assert table.json["rows"][0]["board"][7] == 0
+    assert table.json["rows"][0]["board"][8] == 0
 
     COMMENT("""
     Closing the game:
     """)
+
     HOST.push_action(
         "close",
         {
@@ -197,6 +206,35 @@ def test(testnet, reset):
             "host": CAROL
         },
         permission=(CAROL, Permission.ACTIVE))
+
+    COMMENT("""
+    Demonstrate several properties of the ``Account`` object.
+    """)
+
+    COMMENT("""
+    Show all actions with ALICE referenced in authorization or receiver:
+    """)
+    ALICE.actions()
+
+    COMMENT("""
+    Retrieve the code and ABI for the account HOST:
+    """)
+    # setup.IS_PRINT_COMMAND_LINES = True
+    # setup.IS_PRINT_RESPONSE = True
+    # setup.IS_PRINT_REQUEST = True
+    HOST.code() # abi="xxx.abi", code="xxx.wasm")
+
+    COMMENT("""
+    Show all accounts associated with the active key of ALICE:
+    """)
+
+    # importlib.import_module(".get", setup.interface_package())
+    # returns a ``eosfactory.core.cleos.get`` or ``eosfactory.core.eosjs.get``
+    # module, depending on the interface configuration (CLEOS or EOSJS) 
+    # set with ``setup.set_is_eosjs()``
+
+    importlib.import_module(".get", setup.interface_package()).\
+                                        GetAccounts(ALICE.active_key.key_public)
 
     stop()
     stats()

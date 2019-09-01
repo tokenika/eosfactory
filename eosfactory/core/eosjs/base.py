@@ -1,4 +1,6 @@
-# Latest commit b6e5b55  on Dec 14, 2018
+"""Base classes for EOSJS interface."""
+
+# https://eosio.github.io/eosjs/
 
 import subprocess
 import json as json_module
@@ -16,14 +18,14 @@ import eosfactory.core.logger as logger
 import eosfactory.core.eosjs.walletmanager as wm
 import eosfactory.core.interface as interface
 import eosfactory.core.common as common
-import eosfactory.core.to_string.get_account as get_account_str
+import eosfactory.core.str.get_account as get_account_str
 
 
 def config_rpc():
     code = utils.heredoc("""
-const { Api, JsonRpc, RpcError } = require('eosjs');
-const fetch = require('node-fetch');
-const rpc = new JsonRpc('%(endpoint)s', { fetch });
+const { Api, JsonRpc, RpcError } = require("eosjs");
+const fetch = require("node-fetch");
+const rpc = new JsonRpc("%(endpoint)s", { fetch });
     """)
     setup.set_local_nodeos_address_if_none()
     return code
@@ -34,11 +36,11 @@ SIG_PROVIDER = \
 
 def config_api():
     code = utils.heredoc("""
-const { Api, JsonRpc, RpcError } = require('eosjs');
-const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig');
-const fetch = require('node-fetch');
-const rpc = new JsonRpc('%(endpoint)s', { fetch });
-const { TextEncoder, TextDecoder } = require('util');
+const { Api, JsonRpc, RpcError } = require("eosjs");
+const { JsSignatureProvider } = require("eosjs/dist/eosjs-jssig");
+const fetch = require("node-fetch");
+const rpc = new JsonRpc("%(endpoint)s", { fetch });
+const { TextEncoder, TextDecoder } = require("util");
 %(signatureProvider)s
 const api = new Api({ 
     rpc, 
@@ -86,7 +88,7 @@ class Command():
 
 
         setup.set_local_nodeos_address_if_none()
-        header = header % {'endpoint': utils.relay(
+        header = header % {"endpoint": utils.relay(
                             "http://" + config.RELY_URL, setup.nodeos_address(), 
                             setup.IS_PRINT_REQUEST, setup.IS_PRINT_RESPONSE)
         }
@@ -169,6 +171,54 @@ class Command():
         return ""
 
 
+def common_parameters(
+        permission=None, 
+        expiration_sec=None, 
+        skip_sign=False, dont_broadcast=False, force_unique=False,
+        max_cpu_usage=0, max_net_usage=0,
+        ref_block=None,
+        delay_sec=0
+    ):
+    """Common parameters.
+
+    Args:
+        permission (.interface.Account or str or (str, str) or \
+            (.interface.Account, str) or any list of the previous items.): 
+            An account and permission level to authorize.
+        
+    Exemplary values of the argument ``permission``::
+
+        eosio # eosio is interface.Account object
+
+        "eosio@owner"
+
+        ("eosio", "owner")
+
+        (eosio, interface.Permission.ACTIVE)
+
+        ["eosio@owner", (eosio, .Permission.ACTIVE)]
+
+    Args:
+        expiration (int): The time in seconds before a transaction expires, 
+            defaults to 30s
+        skip_sign (bool): Specify if unlocked wallet keys should be used to 
+            sign transaction.
+        dont_broadcast (bool): Don't broadcast transaction to the network 
+            (just print).
+        force_unique (bool): Currently, this parameter is not supported with EOSJS interface.
+        max_cpu_usage (int): Currently, this parameter is not supported with EOSJS interface.
+        max_net_usage (int): Currently, this parameter is not supported with EOSJS interface.
+        ref_block (int): Currently, this parameter is not supported with EOSJS interface.
+        delay_sec: The delay in seconds, defaults to 0s.
+    """
+
+    if force_unique or max_cpu_usage or max_net_usage or ref_block:
+        raise errors.Error("""
+        Currently, parameters 
+        ``force_unique``, ``max_cpu_usage``,``max_net_usage`` and ``ref_block`` are not supported with EOSJS interface.
+        """)
+
+
 class GetAccount(interface.Account, Command):
     """Retrieve an account from the blockchain.
 
@@ -194,10 +244,10 @@ class GetAccount(interface.Account, Command):
         })("%s")
             """ % (self.name), is_verbose)
 
-        self.owner_key = self.json['permissions'][0]['required_auth'] \
-            ['keys'][0]['key']
-        self.active_key = self.json['permissions'][1]['required_auth'] \
-            ['keys'][0]['key']
+        self.owner_key = self.json["permissions"][0]["required_auth"] \
+            ["keys"][0]["key"]
+        self.active_key = self.json["permissions"][1]["required_auth"] \
+            ["keys"][0]["key"]
 
         self.printself()
 
@@ -408,7 +458,7 @@ class GetCode(Command):
 
         account: The name of an account whose code should be retrieved. 
             May be an object having the  May be an object having the attribute 
-            `name`, like `CreateAccount`, or a string.
+            ``name``, like ``CreateAccount``, or a string.
 
     - **attributes**::
 
@@ -416,7 +466,8 @@ class GetCode(Command):
     """
     def __init__(self, account, is_verbose=True):
 
-        Command.__init__(self, config_rpc(),
+        Command.__init__(
+            self, config_rpc(),
             """
         async function get_code(account_name) {
             result = await rpc.get_code(account_name)
@@ -540,7 +591,7 @@ class CreateKey(interface.Key, Command):
 
             Command.__init__(self, "",
                 """
-        const ecc = require('eosjs-ecc')
+        const ecc = require("eosjs-ecc")
 
         ;(async () => {
             private_key = await ecc.randomKey()
@@ -615,15 +666,14 @@ class CreateAccount(interface.Account, Command):
         # if not permission is None:
         #     p = interface.permission_arg(permission)
         #     for perm in p:
-        #         args.extend(["--permission", perm])             
-        # if force_unique:
-        #     args.append("--force-unique")
-        # if max_cpu_usage:
-        #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        # if  max_net_usage:
-        #     args.extend(["--max-net-usage", str(max_net_usage)])
-        # if  ref_block:
-        #     args.extend(["--ref-block", ref_block])
+        #         args.extend(["--permission", perm])
+
+        common_parameters(
+            force_unique=force_unique,
+            max_cpu_usage=max_cpu_usage,
+            max_net_usage=max_net_usage,
+            ref_block=ref_block
+            )
 
         Command.__init__(
                             self, config_api(),
@@ -633,22 +683,22 @@ class CreateAccount(interface.Account, Command):
                 {
                     actions: [
                         {
-                            account: 'eosio',
-                            name: 'newaccount',
+                            account: "eosio",
+                            name: "newaccount",
                             authorization: [
                                 {
-                                    actor: 'eosio',
-                                    permission: 'active',
+                                    actor: "eosio",
+                                    permission: "active",
                                 }
                             ],
                             data: {
-                                creator: '%(creator)s',
-                                name: '%(name)s',
+                                creator: "%(creator)s",
+                                name: "%(name)s",
                                 owner: {
                                     threshold: 1,
                                     keys: [
                                         {
-                                            key: '%(owner_key_public)s',
+                                            key: "%(owner_key_public)s",
                                             weight: 1
                                         }
                                     ],
@@ -659,7 +709,7 @@ class CreateAccount(interface.Account, Command):
                                     threshold: 1,
                                     keys: [
                                         {
-                                            key: '%(active_key_public)s',
+                                            key: "%(active_key_public)s",
                                             weight: 1
                                         }
                                     ],
@@ -698,8 +748,8 @@ class CreateAccount(interface.Account, Command):
         return self.name
 
     def __str__(self):
-        import eosfactory.core.to_string.actions
-        return str(eosfactory.core.to_string.actions.Actions(self.json))
+        import eosfactory.core.str.actions
+        return str(eosfactory.core.str.actions.Actions(self.json))
 
 
 def account_name():
@@ -722,7 +772,7 @@ class PushAction(Command):
         data (str): The arguments to the contract.
 
     See definitions of the remaining parameters: \
-    :func:`.cleos.base.common_parameters`.
+    :func:`.eosjs.base.common_parameters`.
 
     Attributes:
         account_name (str): The EOSIO name of the contract's account.
@@ -747,14 +797,12 @@ class PushAction(Command):
         if not expiration_sec:
             expiration_sec = 30
 
-        # if force_unique:
-        #     args.append("--force-unique")
-        # if max_cpu_usage:
-        #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        # if  max_net_usage:
-        #     args.extend(["--max-net-usage", str(max_net_usage)])
-        # if  not ref_block is None:
-        #     args.extend(["--ref-block", ref_block])
+        common_parameters(
+            force_unique=force_unique,
+            max_cpu_usage=max_cpu_usage,
+            max_net_usage=max_net_usage,
+            ref_block=ref_block
+            )
 
         Command.__init__(
             self,
@@ -764,22 +812,24 @@ class PushAction(Command):
         const permissions = JSON.parse('%(permissions)s')
         const data = JSON.parse('%(data)s')
 
-        const result = await api.transact({
-            actions: [
-                {
-                    account: '%(account_name)s',
-                    name: '%(action)s',
-                    authorization: permissions,
-                    data: data,
-                }
-            ]
-        }, 
-        {
-            blocksBehind: %(blocksBehind)d,
-            expireSeconds: %(expiration_sec)d,
-            broadcast: %(broadcast)s,
-            sign: %(sign)s,
-        });
+        const result = await api.transact(
+            {
+                actions: [
+                    {
+                        account: "%(account_name)s",
+                        name: "%(action)s",
+                        authorization: permissions,
+                        data: data,
+                    }
+                ]
+            },
+            {
+                blocksBehind: %(blocksBehind)d,
+                expireSeconds: %(expiration_sec)d,
+                broadcast: %(broadcast)s,
+                sign: %(sign)s,
+            }
+        );
         console.log(JSON.stringify(result))
     })()
             """ % {
@@ -804,11 +854,11 @@ class PushAction(Command):
                 if trace["act"]["data"]:
                     if self.act:
                         self.act += "\n"
-                    self.act += "{} <= {}::{} {}".format( 
-                                                        trace["act"]["account"], 
-                                                        trace["act"]["account"],
-                                                        trace["act"]["name"],
-                                                        trace["act"]["data"])
+                    self.act += "{} <= {}::{} {}".format(
+                        trace["act"]["account"],
+                        trace["act"]["account"],
+                        trace["act"]["name"],
+                        trace["act"]["data"])
 
         self.printself()
 
@@ -816,5 +866,5 @@ class PushAction(Command):
         return GetTransaction(self.transaction)
 
     def __str__(self):
-            import eosfactory.core.to_string.push
-            return str(eosfactory.core.to_string.push.Push(self.json))
+        import eosfactory.core.str.push
+        return str(eosfactory.core.str.push.Push(self.json))

@@ -89,8 +89,8 @@ class SystemNewaccount(interface.Account, base_commands.Command):
             self, args, "system", "newaccount", is_verbose)
         
         if self.is_verbose:
-            import eosfactory.core.to_string.actions
-            print(eosfactory.core.to_string.actions.Actions(self.json))
+            import eosfactory.core.str.actions
+            print(eosfactory.core.str.actions.Actions(self.json))
             
         self.printself(is_verbose)
         
@@ -99,8 +99,8 @@ class SystemNewaccount(interface.Account, base_commands.Command):
             
     def __str__(self):
         if self.json:
-            import eosfactory.core.to_string.actions
-            return str(eosfactory.core.to_string.actions.Actions(self.json))
+            import eosfactory.core.str.actions
+            return str(eosfactory.core.str.actions.Actions(self.json))
 
         return self.out_msg
 

@@ -9,15 +9,16 @@ import eosfactory.core.cleos.base as base_commands
 class GetInfo(base_commands.Command):
     """Get current blockchain information.
 
-    :param bool is_verbose: If ``False``, print a message. Default is ``True``.
+    Args:
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
-    :return: A :class:`eosfactory.core.cleos.base.Command` object, extended with the 
-        following items:
-
-    :var str head_block_time: The time of the most recent block.
-    :var int head_block: The most recent block number.
-    :var int last_irreversible_block_num: The number of the most recent irreversible
+    Attributes:
+        head_block_time (str): The time of the most recent block.
+        head_block (int): The most recent block number.
+        last_irreversible_block_num (int): The number of the most recent irreversible
         block.
+        json (json): The json representation of the object.
+        is_verbose: If set, print output.
     """
     def __init__(self, is_verbose=True):
         base_commands.Command.__init__(self, [], "get", "info", is_verbose)
@@ -51,13 +52,22 @@ class GetActions(base_commands.Command):
         is_verbose (bool): If ``False`` do not print. Default is ``True``.
     """
     def __init__(
-        self, account, pos=-1, offset=1, 
+        self, account, pos=None, offset=None, 
         json=False, full=False, pretty=False, console=False, is_verbose=True):
 
-        args = [interface.account_arg(account), str(pos), str(offset)]
+        args = [interface.account_arg(account)]
+        if pos:
+            args.append(str(pos))
+        if offset:
+            args.append(str(offset))
+
+        self.as_json = json
+        self.full = full
+        self.pretty = pretty
+        self.console = console
         
-        if json:
-            args.append("--json")
+        args.append("--json")
+
         if full:
             args.append("--full")
         if pretty:
@@ -67,6 +77,11 @@ class GetActions(base_commands.Command):
         base_commands.Command.__init__(self, args, "get", "actions", is_verbose)
 
         self.printself()
+
+    def __str__(self):
+        import eosfactory.core.str.get_actions
+        return str(eosfactory.core.str.get_actions.GetActions(
+            self.json, self.as_json, self.full, self.pretty, self.console))
 
 
 class GetBlock(base_commands.Command):
@@ -78,9 +93,10 @@ class GetBlock(base_commands.Command):
         is_verbose (bool): If ``False``, print a message. Default is ``True``.
         
     Attributes:
-        json (json): The json representation of the block.
         block_num (int): The block number.
         timestamp (str): The block timestamp.
+        json (json): The json representation of the block.
+        is_verbose: If set, print output.
     """
     def __init__(self, block_number, block_id=None, is_verbose=True):
         base_commands.Command.__init__(
@@ -105,14 +121,19 @@ class GetAccounts(base_commands.Command):
 
     Attributes:
         names (list): The retrieved list of accounts.
+        json (json): The json representation of the object.
+        is_verbose: If set, print output.
     """
     def __init__(self, key, is_verbose=True):
         public_key = interface.key_arg(key, is_owner_key=True, is_private_key=False)
         base_commands.Command.__init__(
             self, [public_key], "get", "accounts", is_verbose)
 
-        self.names = self.json['account_names']
+        self.names = self.json["account_names"]
         self.printself()
+
+    def __str__(self):
+        return str(self.names)
 
 
 class GetCode(base_commands.Command):
@@ -128,10 +149,12 @@ class GetCode(base_commands.Command):
 
     Attributes:
         code_hash (str): The hash of the code.
+        json (json): The json representation of the object.
+        is_verbose: If set, print output.
     """
     def __init__(
             self, account, code="", abi="", 
-            wasm=False, is_verbose=True):
+            wasm=True, is_verbose=True):
 
         account_name = interface.account_arg(account)
 
@@ -149,6 +172,10 @@ class GetCode(base_commands.Command):
         self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
         self.code_hash = self.json["code_hash"]
         self.printself()
+
+    def __str__(self):
+        import eosfactory.core.str.str
+        return eosfactory.core.str.str.get_code(self.json)
 
 
 class GetTable(base_commands.Command):
@@ -222,3 +249,7 @@ class GetTable(base_commands.Command):
         base_commands.Command.__init__(self, args, "get", "table", is_verbose)
 
         self.printself()
+
+    def __str__(self):
+        import eosfactory.core.str.str
+        return str(eosfactory.core.str.str.get_table(self.json))

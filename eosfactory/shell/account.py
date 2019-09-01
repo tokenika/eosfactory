@@ -66,10 +66,10 @@ class Account():
         if self.name == "eosio":
             raise errors.Error("""
             Cannot do this with the ``eosio`` account.
-            """)            
+            """)
 
-    def actions(self, pos=-1, offset=1, 
-        json=True, full=False, pretty=False, console=False):
+    def actions(self, pos=None, offset=None, 
+        json=False, full=False, pretty=False, console=False):
         """Retrieve all actions with specific account name referenced in authorization or receiver.
 
         Note that available actions are filtered. By default, all actions are
@@ -89,9 +89,14 @@ class Account():
         """
         result = GET_COMMANDS.GetActions(
             self, pos, offset, json, full, pretty, console, is_verbose=False)
+
+        logger.INFO("""
+        * actions()
+        """)
+        logger.OUT(str(result))
         return result
 
-    def code(self, code=None, abi=None, wasm=False):
+    def code(self, code=None, abi=None, wasm=True):
         """Retrieve the code and ABI
 
         Args:
@@ -101,7 +106,7 @@ class Account():
             wasm (bool): Save contract as wasm.
         """
         self.stop_if_account_is_not_created()
-        result = GET_COMMANDS.GetCode(self, is_verbose=False)
+        result = GET_COMMANDS.GetCode(self, code, abi, wasm, is_verbose=False)
         logger.INFO("""
         * code()
         """)
@@ -115,8 +120,7 @@ class Account():
         """
         self.stop_if_account_is_not_created()
         get_code = GET_COMMANDS.GetCode(self.name, is_verbose=False)
-        if get_code.code_hash == \
-        "0000000000000000000000000000000000000000000000000000000000000000":
+        if get_code.code_hash == "0" * 64:
             return ""
         else:
             return get_code.code_hash
@@ -419,13 +423,7 @@ class Account():
                     key_type, encode_type, reverse, show_payer,
                     is_verbose=False)
 
-        try:
-            account_map = manager.account_map()
-            scope = account_map[str(scope)]
-        except:
-            pass
-
-        logger.OUT(result.out_msg)
+        logger.OUT(str(result))
 
         return result
 

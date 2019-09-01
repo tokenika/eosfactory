@@ -54,20 +54,19 @@ class SystemNewaccount(interface.Account, base_commands.Command):
         #     p = interface.permission_arg(permission)
         #     for perm in p:
         #         args.extend(["--permission", perm])            
-        # if force_unique:
-        #     args.append("--force-unique")
-        # if max_cpu_usage:
-        #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        # if  max_net_usage:
-        #     args.extend(["--max-net-usage", str(max_net_usage)])
-        # if  not ref_block is None:
-        #     args.extend(["--ref-block", ref_block])
+
+        base_commands.common_parameters(
+            force_unique=force_unique,
+            max_cpu_usage=max_cpu_usage,
+            max_net_usage=max_net_usage,
+            ref_block=ref_block
+            )
 
         base_commands.Command.__init__(
-                                        self, base_commands.config_api(),
-                                        """
+            self, base_commands.config_api(),
+            """
         ;(async () => {
-            const result = await api.transact(
+            console.log(JSON.stringify(await api.transact(
                 {
                     actions: [
                         {
@@ -131,16 +130,15 @@ class SystemNewaccount(interface.Account, base_commands.Command):
                     broadcast: %(broadcast)s,
                     sign: %(sign)s,
                 }
-            );
-            console.log(JSON.stringify(result))
+            )));
         })();
             """ % {
                 "creator": creator,
                 "name": name,
                 "owner_key_public": interface.key_arg(
-                        owner_key, is_owner_key=True, is_private_key=False),
+                    owner_key, is_owner_key=True, is_private_key=False),
                 "active_key_public": interface.key_arg(
-                        active_key, is_owner_key=True, is_private_key=False),
+                    active_key, is_owner_key=True, is_private_key=False),
                 "expiration_sec": expiration_sec,
                 "broadcast": "false" if dont_broadcast else "true",
                 "sign": "false" if skip_sign else "true",
@@ -149,55 +147,55 @@ class SystemNewaccount(interface.Account, base_commands.Command):
                 "stake_net_quantity": "%0.4f EOS" % (stake_net),
                 "stake_cpu_quantity": "%0.4f EOS" % (stake_cpu),
                 "buyrambytes": """
-                        {
-                            account: 'eosio',
-                            name: 'buyrambytes',
-                            authorization: [
-                                {
-                                    actor: '%(creator)s',
-                                    permission: 'active',
-                                }
-                            ],
-                            data: {
-                                payer: '%(creator)s',
-                                receiver: '%(name)s',
-                                bytes: %(bytes)d
+                    {
+                        account: 'eosio',
+                        name: 'buyrambytes',
+                        authorization: [
+                            {
+                                actor: '%(creator)s',
+                                permission: 'active',
                             }
-                        },""" % {
-                    "creator": creator,
-                    "name": name,
-                    "bytes": buy_ram_bytes,
-                } if buy_ram_bytes else "",
+                        ],
+                        data: {
+                            payer: '%(creator)s',
+                            receiver: '%(name)s',
+                            bytes: %(bytes)d
+                        }
+                    },""" % {
+                        "creator": creator,
+                        "name": name,
+                        "bytes": buy_ram_bytes,
+                    } if buy_ram_bytes else "",
                 "buyram" : """
-                        {
-                            account: 'eosio',
-                            name: 'buyram',
-                            authorization: [
-                                {
-                                    actor: '%(creator)s',
-                                    permission: 'active',
-                                }
-                            ],
-                            data: {
-                                payer: '%(creator)s',
-                                receiver: '%(name)s',
-                                quant: '%(quant)s'
+                    {
+                        account: 'eosio',
+                        name: 'buyram',
+                        authorization: [
+                            {
+                                actor: '%(creator)s',
+                                permission: 'active',
                             }
-                        },""" % {
-                    "creator": creator,
-                    "name": name,
-                    "quant": buy_ram,
-                } if buy_ram else "",
+                        ],
+                        data: {
+                            payer: '%(creator)s',
+                            receiver: '%(name)s',
+                            quant: '%(quant)s'
+                        }
+                    },""" % {
+                        "creator": creator,
+                        "name": name,
+                        "quant": buy_ram,
+                    } if buy_ram else "",
             }, is_verbose)
 
         self.printself(is_verbose)
-        
+
     def __repr__(self):
         return self.name
 
     def __str__(self):
-        import eosfactory.core.to_string.actions
-        return str(eosfactory.core.to_string.actions.Actions(self.json))
+        import eosfactory.core.str.actions
+        return str(eosfactory.core.str.actions.Actions(self.json))
 
 
 class BuyRam(base_commands.Command):
@@ -238,16 +236,16 @@ class BuyRam(base_commands.Command):
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
-        if force_unique:
-            args.append("--force-unique")
-        if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        if max_net_usage:
-            args.extend(["--max-net-usage", str(max_net_usage)])
-        if not ref_block is None:
-            args.extend(["--ref-block", ref_block])
+
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])
+
+        base_commands.common_parameters(
+            force_unique=force_unique,
+            max_cpu_usage=max_cpu_usage,
+            max_net_usage=max_net_usage,
+            ref_block=ref_block
+            )
 
         # base_commands.Command.__init__(
         #     self, args, "system", "buyram", is_verbose)
@@ -302,16 +300,16 @@ class DelegateBw(base_commands.Command):
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
-        if force_unique:
-            args.append("--force-unique")
-        if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        if max_net_usage:
-            args.extend(["--max-net-usage", str(max_net_usage)])
-        if not ref_block is None:
-            args.extend(["--ref-block", ref_block])
+
         if delay_sec:
             args.extend(["--delay-sec", delay_sec])            
+
+        base_commands.common_parameters(
+            force_unique=force_unique,
+            max_cpu_usage=max_cpu_usage,
+            max_net_usage=max_net_usage,
+            ref_block=ref_block
+            )
 
         # base_commands.Command.__init__(
         #     self, args, "system", "delegatebw", is_verbose)

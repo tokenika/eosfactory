@@ -114,15 +114,15 @@ def test(testnet, reset):
             raise Error(str(e))
 
     table = HOST.table("games", carol)
-    assert(table.json["rows"][0]["board"][0] == 0)
-    assert(table.json["rows"][0]["board"][1] == 0)
-    assert(table.json["rows"][0]["board"][2] == 0)
-    assert(table.json["rows"][0]["board"][3] == 0)
-    assert(table.json["rows"][0]["board"][4] == 0)
-    assert(table.json["rows"][0]["board"][5] == 0)
-    assert(table.json["rows"][0]["board"][6] == 0)
-    assert(table.json["rows"][0]["board"][7] == 0)
-    assert(table.json["rows"][0]["board"][8] == 0)
+    assert table.json["rows"][0]["board"][0] == 0
+    assert table.json["rows"][0]["board"][1] == 0
+    assert table.json["rows"][0]["board"][2] == 0
+    assert table.json["rows"][0]["board"][3] == 0
+    assert table.json["rows"][0]["board"][4] == 0
+    assert table.json["rows"][0]["board"][5] == 0
+    assert table.json["rows"][0]["board"][6] == 0
+    assert table.json["rows"][0]["board"][7] == 0
+    assert table.json["rows"][0]["board"][8] == 0
 
     COMMENT("""
     First move is by carol:
@@ -151,15 +151,15 @@ def test(testnet, reset):
         permission=(alice, Permission.ACTIVE))
 
     table = HOST.table("games", carol)
-    assert(table.json["rows"][0]["board"][0] == 1)
-    assert(table.json["rows"][0]["board"][1] == 0)
-    assert(table.json["rows"][0]["board"][2] == 0)
-    assert(table.json["rows"][0]["board"][3] == 0)
-    assert(table.json["rows"][0]["board"][4] == 2)
-    assert(table.json["rows"][0]["board"][5] == 0)
-    assert(table.json["rows"][0]["board"][6] == 0)
-    assert(table.json["rows"][0]["board"][7] == 0)
-    assert(table.json["rows"][0]["board"][8] == 0)
+    assert table.json["rows"][0]["board"][0] == 1
+    assert table.json["rows"][0]["board"][1] == 0
+    assert table.json["rows"][0]["board"][2] == 0
+    assert table.json["rows"][0]["board"][3] == 0
+    assert table.json["rows"][0]["board"][4] == 2
+    assert table.json["rows"][0]["board"][5] == 0
+    assert table.json["rows"][0]["board"][6] == 0
+    assert table.json["rows"][0]["board"][7] == 0
+    assert table.json["rows"][0]["board"][8] == 0
 
     COMMENT("""
     Restarting the game:
@@ -174,15 +174,15 @@ def test(testnet, reset):
         permission=(carol, Permission.ACTIVE))
 
     table = HOST.table("games", carol)
-    assert(table.json["rows"][0]["board"][0] == 0)
-    assert(table.json["rows"][0]["board"][1] == 0)
-    assert(table.json["rows"][0]["board"][2] == 0)
-    assert(table.json["rows"][0]["board"][3] == 0)
-    assert(table.json["rows"][0]["board"][4] == 0)
-    assert(table.json["rows"][0]["board"][5] == 0)
-    assert(table.json["rows"][0]["board"][6] == 0)
-    assert(table.json["rows"][0]["board"][7] == 0)
-    assert(table.json["rows"][0]["board"][8] == 0)
+    assert table.json["rows"][0]["board"][0] == 0
+    assert table.json["rows"][0]["board"][1] == 0
+    assert table.json["rows"][0]["board"][2] == 0
+    assert table.json["rows"][0]["board"][3] == 0
+    assert table.json["rows"][0]["board"][4] == 0
+    assert table.json["rows"][0]["board"][5] == 0
+    assert table.json["rows"][0]["board"][6] == 0
+    assert table.json["rows"][0]["board"][7] == 0
+    assert table.json["rows"][0]["board"][8] == 0
 
     COMMENT("""
     Closing the game:

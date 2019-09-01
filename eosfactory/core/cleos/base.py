@@ -1,3 +1,5 @@
+"""Base classes for CLEOS interface."""
+
 import subprocess
 import json as json_module
 import pathlib
@@ -588,8 +590,8 @@ class CreateAccount(interface.Account, Command):
             
     def __str__(self):
         if self.json:
-            import eosfactory.core.to_string.actions
-            return str(eosfactory.core.to_string.actions.Actions(self.json))
+            import eosfactory.core.str.actions
+            return str(eosfactory.core.str.actions.Actions(self.json))
 
         return self.out_msg
 
@@ -682,7 +684,7 @@ class PushAction(Command):
         self.printself()
 
     def __str__(self):
-            import eosfactory.core.to_string.push
-            return str(eosfactory.core.to_string.push.Push(self.json))
+            import eosfactory.core.str.push
+            return str(eosfactory.core.str.push.Push(self.json))
 
 

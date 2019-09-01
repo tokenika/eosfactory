@@ -37,14 +37,14 @@ def test():
     """)
     HOST.push_action(
         "hi", {"user":ALICE}, permission=(ALICE, Permission.ACTIVE))
-    assert("ALICE" in DEBUG())
+    assert "ALICE" in DEBUG()
 
     COMMENT("""
     Test an action for Carol:
     """)
     HOST.push_action(
         "hi", {"user":CAROL}, permission=(CAROL, Permission.ACTIVE))
-    assert("CAROL" in DEBUG())
+    assert "CAROL" in DEBUG()
 
     stop()
 

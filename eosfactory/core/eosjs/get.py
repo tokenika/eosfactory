@@ -1,4 +1,5 @@
 
+import os
 import json
 
 import eosfactory.core.logger as logger
@@ -10,14 +11,15 @@ import eosfactory.core.eosjs.base as base_commands
 class GetInfo(base_commands.Command):
     """Get current blockchain information.
 
-    - **parameters**::
+    Args:
+        is_verbose (bool): If ``False`` do not print. Default is ``True``.
 
-        is_verbose: If `0`, do not print unless on error; if `-1`, 
-            do not print. Default is `1`.
-
-    - **attributes**::
-
-        json: The json representation of the object.
+    Attributes:
+        head_block_time (str): The time of the most recent block.
+        head_block (int): The most recent block number.
+        last_irreversible_block_num (int): The number of the most recent irreversible
+        block.
+        json (json): The json representation of the object.
         is_verbose: If set, print output.
     """
     def __init__(self, is_verbose=1):
@@ -60,22 +62,38 @@ class GetActions(base_commands.Command):
         is_verbose (bool): If *False* do not print. Default is ``True``.
     """
     def __init__(
-        self, account, pos=-1, offset=1, 
-        json=True, full=False, pretty=False, console=False, is_verbose=True):
+        self, account, pos=None, offset=None, 
+        json=False, full=False, pretty=False, console=False, is_verbose=True):
 
-        args = [interface.account_arg(account), str(pos), str(offset)]
-        
-        if json:
-            args.append("--json")
-        if full:
-            args.append("--full")
-        if pretty:
-            args.append("--pretty")
-        if console:
-            args.append("--console")
-        # base_commands.Command.__init__(self, args, "get", "actions", is_verbose)
+        account = interface.account_arg(account)
+        self.as_json = json
+        self.full = full
+        self.pretty = pretty
+        self.console = console
+
+        base_commands.Command.__init__(
+            self, base_commands.config_rpc(),
+            """
+        ;(async () => {
+            result = await rpc.history_get_actions(
+                account_name = "%(account)s",
+                pos = %(pos)s,
+                offset = %(offset)s,
+            )
+            console.log(JSON.stringify(result))
+        })()
+            """ % {
+                "account": account,
+                "pos": pos if pos else "null",
+                "offset": offset if offset else "null",
+            }, is_verbose)
 
         self.printself()
+
+    def __str__(self):
+        import eosfactory.core.str.get_actions
+        return str(eosfactory.core.str.get_actions.GetActions(
+            self.json, self.as_json, self.full, self.pretty, self.console))
 
 
 class GetBlock(base_commands.Command):
@@ -83,17 +101,19 @@ class GetBlock(base_commands.Command):
 
     Args:
         block_number (int): The number of the block to retrieve.
-        lock_id (str): The ID of the block to retrieve, if set, defaults to "".   
+        lock_id (str): The ID of the block to retrieve, if set, defaults to "".
         is_verbose (bool): If ``False``, print a message. Default is ``True``.
         
     Attributes:
-        json (json): The json representation of the block.
         block_num (int): The block number.
         timestamp (str): The block timestamp.
+        json (json): The json representation of the block.
+        is_verbose: If set, print output.
     """
     def __init__(self, block_number, block_id=None, is_verbose=1):
         if block_id:
-            base_commands.Command.__init__(self, base_commands.config_rpc(),
+            base_commands.Command.__init__(
+                self, base_commands.config_rpc(),
                 """
         (async (block_num_or_id) => {
             result = await rpc.get_block(block_num_or_id)
@@ -102,14 +122,15 @@ class GetBlock(base_commands.Command):
         })("%s")
                 """ % (block_id), is_verbose)
         else:
-            base_commands.Command.__init__(self, base_commands.config_rpc(),
+            base_commands.Command.__init__(
+                self, base_commands.config_rpc(),
                 """
         (async (block_num_or_id) => {
             result = await rpc.get_block(block_num_or_id)
             console.log(JSON.stringify(result))
 
         })(%d)
-                """ % (block_number), is_verbose)                        
+                """ % (block_number), is_verbose)
 
         self.block_num = self.json["block_num"]
         self.timestamp = self.json["timestamp"]
@@ -126,6 +147,8 @@ class GetAccounts(base_commands.Command):
 
     Attributes:
         names (list): The retrieved list of accounts.
+        json (json): The json representation of the object.
+        is_verbose: If set, print output.
     """
     def __init__(self, key, is_verbose=True):
         
@@ -136,7 +159,7 @@ class GetAccounts(base_commands.Command):
                 result = await rpc.history_get_key_accounts(public_key)
                 console.log(JSON.stringify(result))
 
-            })("%s")    
+            })("%s")
                 """ % (interface.key_arg(key, is_owner_key=True, is_private_key=False)),
                 is_verbose=is_verbose)
         except Exception as e:
@@ -144,8 +167,11 @@ class GetAccounts(base_commands.Command):
                 "Is History API Plugin enabled on the blockchain node?\n\n" \
                                                                     + str(e))
 
-        self.names = self.json['account_names']
+        self.names = self.json["account_names"]
         self.printself()
+
+    def __str__(self):
+        return str(self.names)
 
 
 class GetCode(base_commands.Command):
@@ -161,27 +187,63 @@ class GetCode(base_commands.Command):
 
     Attributes:
         code_hash (str): The hash of the code.
+        json (json): The json representation of the object.
+        is_verbose: If set, print output.
     """
     def __init__(
             self, account, code="", abi="", 
-            wasm=False, is_verbose=True):
+            wasm=True, is_verbose=True):
 
         account_name = interface.account_arg(account)
 
-        args = [account_name]
-        if code:
-            args.extend(["--code", code])
-        if abi:
-            args.extend(["--abi", abi])
-        if wasm:
-            args.extend(["--wasm"])
+        if not wasm:
+            raise errors.Error("""
+            Currently, the parameter ``wasm`` has to be ``True`` with EOSJS interface.
+            """)
 
-        # base_commands.Command.__init__(self, args, "get", "code", is_verbose)
+        base_commands.Command.__init__(
+            self, base_commands.config_rpc(),
+            """
+            (async () => {
+                let retval = {"abi": "", "wasm": ""}
 
-        msg = str(self.out_msg)
-        self.json["code_hash"] = msg[msg.find(":") + 2 : len(msg) - 1]
+                await rpc.get_abi("%(accountName)s")
+                                    .then(result => retval.abi = result.abi)
+                await rpc.get_raw_code_and_abi("%(accountName)s")
+                                    .then(result => retval.wasm = result.wasm
+                                )
+
+                console.log(JSON.stringify(retval))
+            })()
+            """ % {"accountName": account_name},
+            is_verbose)
+
+        self.json["code_hash"] = "0" * 64
+
+        if self.json:
+            if "wasm" in self.json and self.json["wasm"]:
+                import base64
+                import hashlib
+                wasm = base64.b64decode(str.encode(self.json["wasm"]))
+                self.json["code_hash"] = hashlib.sha256(wasm).hexdigest()
+
+            if code:
+                if "wasm" in self.json and self.json["wasm"]:
+                    with open(code, "wb+") as __f:
+                        __f.write(wasm)
+                    print("saving wasm to {}".format(os.path.realpath(code)))
+            if abi:
+                if "abi" in self.json and self.json["abi"]:
+                    with open(abi, "w+") as __f:
+                        __f.write(json.dumps(self.json["abi"], indent=4))
+                    print("saving abi to {}".format(os.path.realpath(abi)))
+
         self.code_hash = self.json["code_hash"]
         self.printself()
+
+    def __str__(self):
+        import eosfactory.core.str.str
+        return eosfactory.core.str.str.get_code(self.json)
 
 
 class GetTable(base_commands.Command):
@@ -206,7 +268,7 @@ class GetTable(base_commands.Command):
             (i64), all others support (i64, i128, i256, float64, float128, 
             ripemd160, sha256).
             Special type 'name' indicates an account name.
-        enncode_type (str): The encoding type of key_type 
+        encode_type (str): The encoding type of key_type 
             (i64 , i128 , float64, float128) only support decimal 
             encoding e.g. 'dec'i256 - supports both 'dec' and 'hex', 
             ripemd160 and sha256 is 'hex' only.
@@ -215,43 +277,68 @@ class GetTable(base_commands.Command):
     """
     def __init__(
             self, account, table, scope,
-            binary=False, 
+            binary=False,
             limit=10, lower="", upper="", index="",
             key_type="", encode_type="", reverse=False, show_payer=False,
-            is_verbose=True
+            is_verbose=True,
             ):
-        args = [interface.account_arg(account)]
+        account = interface.account_arg(account)
 
-        if not scope:
-            scope=account
+        if scope:
+            scope = interface.account_arg(scope)
         else:
-            try:
-                scope_name = scope.name
-            except:
-                scope_name = scope
+            scope = account
+        if not index:
+            index = "1"
 
-        args.append(scope_name)
-        args.append(table)
-
-        if binary:
-            args.append("--binary")
-        if limit:
-            args.extend(["--limit", str(limit)])
-        if lower:
-            args.extend(["--lower", lower])
-        if upper:
-            args.extend(["--upper", upper])
-        if index:
-            args.extend(["--index", str(index)])
-        if key_type:
-            args.extend(["--key-type", key_type])
         if encode_type:
-            args.extend(["--encode-type", encode_type])
-        if reverse:
-            args.append("--reverse")
-        if show_payer:
-            args.append("--show-payer")
+            raise errors.Error(
+                """
+            Currently, the parameter ``encode_type`` is not supported with EOSJS interface.
+                """)
 
-        # base_commands.Command.__init__(self, args, "get", "table", is_verbose)
+        base_commands.Command.__init__(
+            self, base_commands.config_rpc(),
+            """
+        ;(async () => {
+            result = await rpc.get_table_rows({
+                json: %(json)s,
+                code: "%(account)s",
+                scope: "%(scope)s",
+                table: "%(table)s",
+                table_key: "%(table_key)s",
+                lower_bound: "%(lower_bound)s",
+                upper_bound: "%(upper_bound)s",
+                index_position: %(index_position)s,
+                key_type: "%(key_type)s",
+                limit: %(limit)d,
+                reverse: %(reverse)s,
+                show_payer: %(show_payer)s,
+            })
+            if(%(json)s){
+                console.log(JSON.stringify(result))
+            } else {
+                console.log(result)
+            }
+        })()
+            """ % {
+                "json": "false" if binary else "true",
+                "account": account,
+                "scope": scope,
+                "table": table,
+                "table_key": "", # Deprecated
+                "lower_bound": lower,
+                "upper_bound": upper,
+                "index_position": index,
+                "key_type": key_type,
+                "limit": limit,
+                "reverse": "true" if reverse else "false",
+                "show_payer": "true" if show_payer else "false",
+            }, is_verbose)
 
         self.printself()
+
+
+    def __str__(self):
+        import eosfactory.core.str.str
+        return str(eosfactory.core.str.str.get_table(self.json))

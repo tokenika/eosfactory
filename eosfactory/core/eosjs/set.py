@@ -58,14 +58,13 @@ class SetContract(base_commands.Command):
 
         # if clear:
         #     args.append("--clear")
-        # if force_unique:
-        #     args.append("--force-unique")
-        # if max_cpu_usage:
-        #     args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        # if  max_net_usage:
-        #     args.extend(["--max-net-usage", str(max_net_usage)])
-        # if  ref_block:
-        #     args.extend(["--ref-block", ref_block])
+
+        base_commands.common_parameters(
+            force_unique=force_unique,
+            max_cpu_usage=max_cpu_usage,
+            max_net_usage=max_net_usage,
+            ref_block=ref_block
+            )
 
         base_commands.Command.__init__(
             self,
@@ -256,18 +255,19 @@ class SetAccountPermission(base_commands.Command):
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
-        if force_unique:
-            args.append("--force-unique")
+
         if return_packed:
             args.append("--return-packed")
-        if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        if  max_net_usage:
-            args.extend(["--max-net-usage", str(max_net_usage)])
-        if  not ref_block is None:
-            args.extend(["--ref-block", ref_block])
+
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
+
+        base_commands.common_parameters(
+            force_unique=force_unique,
+            max_cpu_usage=max_cpu_usage,
+            max_net_usage=max_net_usage,
+            ref_block=ref_block
+            )
                         
         # base_commands.Command.__init__(
         #     self, args, "set", "account permission", is_verbose)
@@ -308,7 +308,8 @@ class SetActionPermission(base_commands.Command):
             self, account, code, action_type, requirement,
             permission=None,
             expiration_sec=None, 
-            skip_sign=0, dont_broadcast=0, return_packed=0, force_unique=0,
+            skip_sign=0, dont_broadcast=0, return_packed=0, 
+            force_unique=0,
             max_cpu_usage=0, max_net_usage=0,
             ref_block=None,
             delay_sec=0,
@@ -341,18 +342,18 @@ class SetActionPermission(base_commands.Command):
             args.append("--skip-sign")
         if dont_broadcast:
             args.append("--dont-broadcast")
-        if force_unique:
-            args.append("--force-unique")
+
         if return_packed:
             args.append("--return-packed")
-        if max_cpu_usage:
-            args.extend(["--max-cpu-usage-ms", str(max_cpu_usage)])
-        if  max_net_usage:
-            args.extend(["--max-net-usage", str(max_net_usage)])
-        if  not ref_block is None:
-            args.extend(["--ref-block", ref_block])
         if delay_sec:
             args.extend(["--delay-sec", str(delay_sec)])
+
+        base_commands.common_parameters(
+            force_unique=force_unique,
+            max_cpu_usage=max_cpu_usage,
+            max_net_usage=max_net_usage,
+            ref_block=ref_block
+            )
 
         # base_commands.Command.__init__(self, args, "set", "action permission", is_verbose)
         self.console = None

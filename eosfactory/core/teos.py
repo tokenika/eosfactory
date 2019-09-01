@@ -356,7 +356,7 @@ def get_c_cpp_properties(contract_dir=None, c_cpp_properties_path=None):
         contract_dir = os.getcwd()
     if not c_cpp_properties_path:
         c_cpp_properties_path = os.path.join(
-                                contract_dir, ".vscode/c_cpp_properties.json")
+            contract_dir, ".vscode/c_cpp_properties.json")
     else:
         c_cpp_properties_path = linuxize_path(c_cpp_properties_path)
         if not os.path.exists(c_cpp_properties_path):
@@ -614,7 +614,9 @@ def args(clear=False):
         "--plugin eosio::producer_plugin",
         "--plugin eosio::chain_api_plugin",
         "--plugin eosio::http_plugin",
+        "--plugin eosio::history_plugin",
         "--plugin eosio::history_api_plugin",
+        "--filter-on", '"*"',
     ]
     if config.nodeos_config_dir():
         args_.extend(["--config-dir", config.nodeos_config_dir()])

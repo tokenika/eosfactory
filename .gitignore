@@ -64,3 +64,4 @@ unit_tests/lt.py
 get_scatter.js
 telegram.md
 docs/comments/*.py
+test.js

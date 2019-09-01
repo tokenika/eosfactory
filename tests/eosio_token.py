@@ -58,8 +58,7 @@ class Test(unittest.TestCase):
         COMMENT("""
         Initialize the token and send some tokens to one of the accounts:
         """)
-        import eosfactory.core.setup as setup
-        setup.IS_PRINT_COMMAND_LINES = True
+        
         HOST.push_action(
             "create",
             {

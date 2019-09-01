@@ -100,9 +100,9 @@ def test():
     table_bob = HOST.table("accounts", BOB)
     table_carol = HOST.table("accounts", CAROL)
 
-    assert(table_alice.json["rows"][0]["balance"] == '77.0000 EOS')
-    assert(table_bob.json["rows"][0]["balance"] == '11.0000 EOS')
-    assert(table_carol.json["rows"][0]["balance"] == '12.0000 EOS')
+    assert table_alice.json["rows"][0]["balance"] == '77.0000 EOS'
+    assert table_bob.json["rows"][0]["balance"] == '11.0000 EOS'
+    assert table_carol.json["rows"][0]["balance"] == '12.0000 EOS'
 
     stop()
 
