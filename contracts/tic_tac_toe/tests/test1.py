@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Test example."""
 
 import argparse, sys, time

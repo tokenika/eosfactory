@@ -25,10 +25,9 @@ class Eosio(interface.Account):
 
     def info(self):
         msg = manager.accout_names_2_object_names(
-            "account object name: {}\nname: {}\n{}".format(
+            "account object name: {}\n{}".format(
                 self.account_object_name,
-                self.name,
-                BASE_COMMANDS.GetAccount(self.name, is_verbose=False).out_msg),
+                (BASE_COMMANDS.GetAccount(self.name, is_verbose=False))),
                 True)
         print(msg)
 
@@ -54,7 +53,7 @@ class GetAccount(BASE_COMMANDS.GetAccount):
             self.name = BASE_COMMANDS.account_name()
         else:
             self.name = name
-            
+
         if active_key is None:
             active_key = owner_key
 
@@ -64,34 +63,19 @@ class GetAccount(BASE_COMMANDS.GetAccount):
         
         try:
             BASE_COMMANDS.GetAccount.__init__(
-                self, self.name, json=True, is_verbose=False)
+                                self, self.name, json=True, is_verbose=False)
         except errors.AccountDoesNotExistError:
             return
+        except Exception as ex:
+            raise errors.Error(str(ex))
 
         self.exists = True
-        if owner_key is None:
-            self.owner_key = BASE_COMMANDS.CreateKey(
-                self.json["permissions"][1]["required_auth"]["keys"] \
-                [0]["key"], 
-                is_verbose=0)
-        else: # an orphan account, private key is restored from cache
-            self.owner_key = BASE_COMMANDS.CreateKey(
-                self.json["permissions"][1]["required_auth"]["keys"] \
-                [0]["key"], interface.key_arg(
-                    owner_key, is_owner_key=True, is_private_key=True),
-                is_verbose=0) 
-
-        if active_key is None:
-            self.owner_key = BASE_COMMANDS.CreateKey(
-                self.json["permissions"][0]["required_auth"]["keys"] \
-                [0]["key"], 
-                is_verbose=0)
-        else: # an orphan account, private key is restored from cache
-            self.active_key = BASE_COMMANDS.CreateKey(
-                self.json["permissions"][0]["required_auth"]["keys"] \
-                [0]["key"], interface.key_arg(
-                    active_key, is_owner_key=False, is_private_key=True),
-                is_verbose=0)
+        if owner_key: # an orphan account, private key is restored from cache
+            self.owner_key.key_private = interface.key_arg(
+                            owner_key, is_owner_key=True, is_private_key=True)
+        if active_key: # an orphan account, private key is restored from cache
+            self.active_key.key_private = interface.key_arg(
+                        active_key, is_owner_key=False, is_private_key=True)
 
         logger.TRACE("""
             * Account *{}* exists in the blockchain.
@@ -99,11 +83,6 @@ class GetAccount(BASE_COMMANDS.GetAccount):
 
     def __str__(self):
         return self.name
-
-
-class RestoreAccount(BASE_COMMANDS.RestoreAccount):
-    def __init__(self, name):
-        BASE_COMMANDS.RestoreAccount.__init__(self, name, is_verbose=False)
 
 
 class CreateAccount(BASE_COMMANDS.CreateAccount):

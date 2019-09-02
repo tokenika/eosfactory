@@ -185,36 +185,35 @@ class GetAccount(interface.Account, Command):
     """
     def __init__(self, account, json=False, is_verbose=True):
         interface.Account.__init__(self, interface.account_arg(account))
+        self.as_json = json
+
         Command.__init__(
             self, 
-            [self.name, "--json"] if json else [self.name], 
+            [self.name, "--json"], 
             "get", "account", is_verbose)
 
         self.owner_key = None
         self.active_key = None
-        try:
-            if json:
-                permissions = self.json["permissions"]
-                for permission in permissions:
-                    if permission["required_auth"]["keys"]:
-                        key = permission["required_auth"]["keys"][0]["key"]
-                        if permission["perm_name"] == "owner":
-                            self.owner_key = key
-                        if permission["perm_name"] == "active":
-                            self.active_key = key                   
-            else:
-                owner = re.search(r'owner\s+1\:\s+1\s(.*)\n', self.out_msg)
-                active = re.search(r'active\s+1\:\s+1\s(.*)\n', self.out_msg)
-                if owner and active:
-                    self.owner_key = owner.group(1)
-                    self.active_key = active.group(1)
-        except:
-            pass
+        permissions = self.json["permissions"]
+        for permission in permissions:
+            if permission["required_auth"]["keys"]:
+                key = permission["required_auth"]["keys"][0]["key"]
+                if permission["perm_name"] == "owner":
+                    self.owner_key = interface.Key(key, None)
+                if permission["perm_name"] == "active":
+                    self.active_key = interface.Key(key, None)
+        # else: # if not json
+        #     owner = re.search(r'owner\s+1\:\s+1\s(.*)\n', self.out_msg)
+        #     active = re.search(r'active\s+1\:\s+1\s(.*)\n', self.out_msg)
+        #     if owner and active:
+        #         self.owner_key = interface.Key(owner.group(1), None)
+        #         self.active_key = interface.Key(active.group(1), None)
 
         self.printself()
 
     def __str__(self):
-        return "name: {}\n".format(self.name) + str(Command.__str__(self))
+        import eosfactory.core.str.get_account as get_account_str
+        return str(get_account_str.GetAccount(self.json, self.as_json))
 
 
 class GetTransaction(Command):
@@ -492,19 +491,6 @@ class CreateKey(interface.Key, Command):
             self.key_public = self.json["publicKey"]
 
         self.printself(is_verbose)
-
-
-class RestoreAccount(GetAccount):
-
-    def __init__(self, account, is_verbose=True):
-        GetAccount.__init__(self, account, is_verbose=False, json=True)
-
-        self.name = self.json["account_name"]
-        self.owner_key = ""
-        self.active_key = ""
-
-    def __str__(self):
-        return self.name
 
 
 class CreateAccount(interface.Account, Command):

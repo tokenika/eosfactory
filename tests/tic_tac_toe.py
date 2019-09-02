@@ -22,8 +22,8 @@ INITIAL_STAKE_CPU = 3
 # Actors of the test:
 MASTER = Account()
 HOST = Account()
-ALICE = None
-CAROL = None
+ALICE = Account()
+CAROL = Account()
 
 def stats():
     print_stats(
@@ -61,6 +61,8 @@ def test(testnet, reset):
         manager.resume(testnet)
 
     create_master_account("MASTER", testnet)
+    MASTER.info()
+    
     create_account(
         "HOST", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
@@ -70,6 +72,7 @@ def test(testnet, reset):
     create_account(
         "CAROL", MASTER,
         buy_ram_kbytes=INITIAL_RAM_KBYTES, stake_net=INITIAL_STAKE_NET, stake_cpu=INITIAL_STAKE_CPU)
+    CAROL.info()
 
     stats()
 

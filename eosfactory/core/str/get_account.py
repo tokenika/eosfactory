@@ -208,7 +208,9 @@ class GetAccount():
     FORMAT_LABEL = "%20s"
 
 
-    def __init__(self, received_json):
+    def __init__(self, received_json, as_json=False):
+        if as_json:
+            return json.dumps(received_json, indent=4)
 
         class Asset():
             def __init__(self, value, symbol=None):

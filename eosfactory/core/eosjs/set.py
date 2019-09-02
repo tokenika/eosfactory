@@ -58,6 +58,7 @@ class SetContract(base_commands.Command):
 
         # if clear:
         #     args.append("--clear")
+        # you should first empty any tables out before setting the wasm code to an empty array.
 
         base_commands.common_parameters(
             force_unique=force_unique,

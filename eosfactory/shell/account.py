@@ -48,11 +48,7 @@ class Account():
         if not isinstance(account, cls):
             account.__class__.__bases__ += (cls,)
 
-        logger.TRACE("""
-        * Cross-checked: account object ``{}`` mapped to an existing 
-            account ``{}``.
-        """.format(account_object_name, account.name), translate=False)
-        return put_account_to_wallet_and_on_stack(account_object_name, account)
+        return put_account_on_stack(account_object_name, account)
 
 
     def stop_if_account_is_not_created(self):
@@ -644,6 +640,7 @@ def create_master_account(
                 ######## Account object ``{}`` restored from the blockchain.
                 """.format(account_object_name)) 
             return globals[account_object_name]
+    
 
     logger.INFO("""
         ######### Create a master account object ``{}``.
@@ -656,8 +653,11 @@ def create_master_account(
     """
     if setup.IS_LOCAL_ADDRESS:
         account_object = account.Eosio(account_object_name)
-        put_account_to_wallet_and_on_stack(
-            account_object_name, account_object, logger)
+        if not put_keys_to_wallet(account_object):
+            return False
+
+        put_account_on_stack(
+            account_object_name, account_object)
 
         if Account.add_methods_and_finalize(
             account_object_name, account_object):
@@ -766,7 +766,19 @@ def create_master_account(
                 owner_key_new.key_private,
                 active_key_new.key_private
                 ))
-                
+            
+            try:
+                if not put_keys_to_wallet(
+                        account_object.name, 
+                        owner_key=owner_key_new, active_key=active_key_new):
+                    break
+            except Exception as ex:
+                logger.OUT("""
+                Something is wrong, try again. The error message is
+                {}
+                """.format(str(ex)))
+                continue
+
             while True:
                 is_ready = input("enter 'go' when ready or 'q' to quit <<< ")
                 if is_ready == "q":
@@ -964,15 +976,18 @@ def create_account(
     account_object = None
 
     if restore:
-        if creator:
-            account_name = creator
         logger.INFO("""
                     ... for an existing blockchain account ``{}`` 
                         mapped as ``{}``.
                     """.format(account_name, account_object_name), 
                     translate=False)
-        account_object = account.RestoreAccount(account_name)
-        account_object.account_object_name = account_object_name
+        account_object = account.GetAccount(account_object_name, account_name)
+        if not account_object.exists:
+            raise errors.Error(
+                """
+                The account name {} does not represent any existing account.
+                """
+            )
     else:
         if not creator \
             or not (hasattr(creator, IS_ACCOUNT) \
@@ -990,6 +1005,9 @@ def create_account(
         else:
             owner_key = BASE_COMMANDS.CreateKey(is_verbose=False)
             active_key = BASE_COMMANDS.CreateKey(is_verbose=False)
+
+        if not put_keys_to_wallet(account_name, owner_key, active_key):
+            return False
 
         if stake_net and not manager.is_local_testnet():
             logger.INFO("""
@@ -1091,31 +1109,39 @@ def is_wallet_defined(logger, globals=None):
     return True
 
 
-def put_account_to_wallet_and_on_stack(
-        account_object_name, account_object, logger=None):
-    if logger is None:
-        logger = account_object
+def put_keys_to_wallet(account_object, owner_key=None, active_key=None):
+    if account_object and not isinstance(account_object, str):
+        owner_key = account_object.owner_key
+        active_key = account_object.active_key
+
+    if not active_key:
+        active_key = owner_key
 
     global wallet_singleton
+    if not wallet_singleton.keys_in_wallets(
+                            [owner_key.key_public, active_key.key_public]):
+        
+        if not wallet_singleton.import_key(owner_key) \
+                                or not wallet_singleton.import_key(active_key):
+            logger.TRACE("""
+            Wrong or missing keys for the account ``{}`` in the wallets.
+            """.format(interface.Account(account_object)))
+            return False
 
-    if account_object.owner_key:
-        if wallet_singleton.keys_in_wallets(
-                [account_object.owner_key.key_private,
-                account_object.active_key.key_private]):
-            wallet_singleton.map_account(account_object)
-        else:
-            if wallet_singleton.import_key(account_object):
-                wallet_singleton.map_account(account_object)
-            else:
-                logger.TRACE("""
-                Wrong or missing keys for the account ``{}`` in the wallets.
-                """.format(account_object.name))
-                return False
+    return True
 
+
+def put_account_on_stack(account_object_name, account_object):
+    wallet_singleton.map_account(account_object)
     # export the account object to the globals in the wallet module:
     global wallet_globals      
     wallet_globals[account_object_name] = account_object
     account_object.in_wallet_on_stack = True
+
+    logger.TRACE("""
+        * Cross-checked: account object ``{}`` mapped to an existing 
+            account ``{}``.
+        """.format(account_object_name, account_object.name), translate=False)
     return True
 
 

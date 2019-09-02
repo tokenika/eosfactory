@@ -1,6 +1,7 @@
 """Base classes for EOSJS interface."""
 
 # https://eosio.github.io/eosjs/
+# https://github.com/EOSIO/eosjs-api
 
 import subprocess
 import json as json_module
@@ -18,8 +19,6 @@ import eosfactory.core.logger as logger
 import eosfactory.core.eosjs.walletmanager as wm
 import eosfactory.core.interface as interface
 import eosfactory.core.common as common
-import eosfactory.core.str.get_account as get_account_str
-
 
 def config_rpc():
     code = utils.heredoc("""
@@ -232,10 +231,11 @@ class GetAccount(interface.Account, Command):
         owner_key (str) The ``owner`` public key.
         active_key (str) The ``active`` public key.
         json: The json representation of the object.
-        json: The json representation of the object.
     """
-    def __init__(self, account, json=True, is_verbose=True):
+    def __init__(self, account, json=False, is_verbose=True):
         interface.Account.__init__(self, interface.account_arg(account))
+        self.as_json = json
+        
         Command.__init__(self, config_rpc(),
             """
         (async (account_name) => {
@@ -244,15 +244,20 @@ class GetAccount(interface.Account, Command):
         })("%s")
             """ % (self.name), is_verbose)
 
-        self.owner_key = self.json["permissions"][0]["required_auth"] \
-            ["keys"][0]["key"]
-        self.active_key = self.json["permissions"][1]["required_auth"] \
-            ["keys"][0]["key"]
+        permissions = self.json["permissions"]
+        for permission in permissions:
+            if permission["required_auth"]["keys"]:
+                key = permission["required_auth"]["keys"][0]["key"]
+                if permission["perm_name"] == "owner":
+                    self.owner_key = interface.Key(key, None)
+                if permission["perm_name"] == "active":
+                    self.active_key = interface.Key(key, None)
 
         self.printself()
 
     def __str__(self):
-        return str(get_account_str.GetAccount(self.json))
+        import eosfactory.core.str.get_account as get_account_str
+        return str(get_account_str.GetAccount(self.json, self.as_json))
 
 
 class GetTransaction(Command):
@@ -608,22 +613,6 @@ class CreateKey(interface.Key, Command):
         self.key_public = self.json["key_public"]
 
         self.printself(is_verbose)
-
-
-class RestoreAccount(GetAccount):
-
-    def __init__(self, account, is_verbose=True):
-        GetAccount.__init__(self, account, is_verbose=False, json=True)
-
-        self.name = self.json["account_name"]
-        self.owner_key = ""
-        self.active_key = ""
-        
-    def info(self):
-        print(str(GetAccount(self.name, is_verbose=False)))
-
-    def __str__(self):
-        return self.name
 
 
 class CreateAccount(interface.Account, Command):

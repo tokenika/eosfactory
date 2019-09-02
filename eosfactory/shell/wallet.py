@@ -273,7 +273,7 @@ class Wallet(BASE_COMMANDS.WalletCreate):
 
     def restore_accounts(self):
         """Restore into the global namespace all the account objects 
-        represented in the wallet. 
+        represented in the wallet.
         """
         self.open_unlock()
         account_map = manager.account_map()
@@ -282,7 +282,7 @@ class Wallet(BASE_COMMANDS.WalletCreate):
         if len(account_map) > 0:
             logger.INFO("""
                     ######### Restore cached account objects:
-                    """) 
+                    """)
             for name, object_name in account_map.items():
                 try:
                     account_ = BASE_COMMANDS.GetAccount(
@@ -292,7 +292,9 @@ class Wallet(BASE_COMMANDS.WalletCreate):
                         new_map[name] = object_name
 
                     from eosfactory.shell.account import create_account
-                    create_account(object_name, name, restore=True)                        
+                    create_account(
+                        object_name, None, account_name=name,
+                        restore=True)
                 except errors.AccountDoesNotExistError:
                     pass
 
@@ -315,7 +317,7 @@ class Wallet(BASE_COMMANDS.WalletCreate):
         """Stop keosd, the EOSIO wallet manager.
         """
         BASE_COMMANDS.WalletStop()
-        
+
     def keys(self):
         """ Lists public keys in the open unlocked wallet.
         """
