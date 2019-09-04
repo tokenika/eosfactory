@@ -134,7 +134,7 @@ def testnets():
         Testnet mapping is empty.
         """)
         return
-    for name, testnet in mapping.items():       
+    for name, testnet in mapping.items():
         print("%25s: %13s @ %s" % (
                                 name, testnet["account_name"], testnet["url"]))
 
