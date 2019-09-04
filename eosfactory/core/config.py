@@ -39,6 +39,18 @@ BUILD = "build"
 SETUPTOOLS_NAME = "eosfactory_tokenika"
 CLEOS_PACKAGE = "eosfactory.core.cleos"
 EOSJS_PACKAGE = "eosfactory.core.eosjs"
+EOSJS_PACKAGE_JSON = """
+{
+    "description": "eosjs with eosfactory dependencies",
+    "repository": "https://github.com/tokenika/eosfactory",
+    "license": "MIT",
+    "dependencies": {
+        "fs": "^0.0.1-security",
+        "node-fetch": "^2.6.0",
+        "eosjs": "^20.0.0"
+    }
+}
+"""
 
 eosfactory_data_ = ("EOSFACTORY_DATA_DIR", 
             [os.path.expandvars("${HOME}/.local/" + EOSFACTORY_DIR),\
@@ -434,7 +446,7 @@ def wsl_root():
                     logger.ERROR("""
 Cannot find the bash command:
 '{}'
-The intelisense feature of Visual Studio Code will be disabled. 
+The intellisense feature of Visual Studio Code will be disabled. 
                     """.format(wsl_root_sh), translate=False)
                     break                   
 
@@ -445,7 +457,7 @@ Error message is
 Cannot find the root of the WSL file system which was tried to be
 '{}'
 Please, find the path in your computer and enter it. Enter nothing, if you do
-not care about having efficient the intelisense of Visual Studio Code.
+not care about having efficient the intellisense of Visual Studio Code.
                 """.format(error, path), translate=False) + "\n<<< ")
                 if not path:
                     break

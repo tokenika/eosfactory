@@ -1,6 +1,7 @@
 """
 """
 import sys
+import os
 import json
 import subprocess
 import argparse
@@ -132,14 +133,129 @@ EOSIO nodeos can fail with Windows WSL Ubuntu below version 16.
                 self.print_code("`python3 -m eosfactory.config --wsl_root`\n")
 
 
+
+
+        if interface_package == config.EOSJS_PACKAGE:
+
+################################################################################
+# node.js
+################################################################################
+            node_js_version = config.node_js_version()
+            if node_js_version[0]:
+                self.status_msg(
+                    "Found <em>node.js</em> version {}.".format(node_js_version[0]))
+                self.print_status(
+                    "Found ``node.js`` version {}.".format(node_js_version[0]))
+            else:
+                self.error_msg(
+"""It seams that <em>Node.js</em> is not in the System. EOSFactory, configured with the EOSJS interface, cannot do without it."""
+                )
+                self.print_error(
+"""It seams that Node.js is not in the System. EOSFactory, configured with the EOSJS interface, cannot do without it."""
+                )
+
+                if self.IS_WINDOWS:
+                    msg = \
+"""Note that Node.js has to be installed in the Windows Subsystem Linux.
+"""
+                    self.status_msg(msg)
+                    self.print_status(msg)
+
+
+################################################################################
+# package.json
+################################################################################
+            if config.node_js_version()[0]:
+                if os.path.exists("package.json"):
+                    self.status_msg(
+                        "Found <em>package.json</em> file.")
+                    self.print_status(
+                        "Found ``package.json`` file.")
+                else:
+                    with open("package.json", "w") as __f:
+                        __f.write(config.EOSJS_PACKAGE_JSON)
+
+                    if not os.path.exists("node_modules"):
+                        subprocess.check_output(["npm", "install"])
+
+
+################################################################################
+# package.json dependencies
+################################################################################
+            def check_dependencies(dependency):
+                try:
+                    output = subprocess.check_output(
+                        ["node", "-e",
+                        """
+                        try{
+                            console.log(require.resolve("%s"));
+                        } catch(err){
+                            console.log(err);
+                        }
+                        """ % (dependency),
+                        ], 
+                        timeout=5).decode("ISO-8859-1").strip()
+
+                    if not "Error" in output:
+                        self.status_msg(
+                            "Found <em>{}</em> module.".format(dependency))
+                        self.print_status(
+                            "Found ``{}`` module.".format(dependency))
+                    else:
+                        command = "npm install {0} # add -g switch to install globally".format(dependency)
+
+                        button = """
+<button 
+    style="text-align:left;"
+    class="btn ${{BASH_COMMAND}}";
+    class="btn"; 
+    id="Install {0}"; 
+    title="Install {0}. Click the button then ENTER in a newly created bash terminal window, to go."
+>
+    {1}
+</button>
+""".format(dependency, command)
+
+                        self.error_msg(
+"""It seams that the <em>{0}</em> npm module is not in the System.
+EOSFactory, configured with <em>EOSJS</em> interface, cannot do without it.
+Install it, if not installed.
+{1}<br>
+""".format(dependency, button))
+
+                        self.print_error(
+"""It seams that the ``{0}`` npm module is not in the System.
+EOSFactory, configured with EOSJS interface, cannot do without it.
+Install it, if not installed.
+""".format(dependency))
+
+                        self.print_code(
+"""```
+{}
+```
+""".format(command))
+
+                except Exception as e:
+                    self.error_msg(str(e))
+                    self.print_error(str(e))
+
+
+            if os.path.exists("package.json") and config.node_js_version()[0]:
+                package_json_config_dep = json.loads(
+                                config.EOSJS_PACKAGE_JSON)["dependencies"]
+                for dep in package_json_config_dep:
+                    check_dependencies(dep)
+
+
+        if interface_package == config.CLEOS_PACKAGE:
+
 ################################################################################
 # eosio
 ################################################################################
-        if interface_package == config.CLEOS_PACKAGE:
             eosio_version = config.eosio_version()
             if  "eosio" in error_codes:
                 eosio_version = ["", "1.8.0"]
-            # eosio_version = ["1.3.3", "1.8.0"]    
+            # eosio_version = ["1.3.3", "1.8.0"]
 
             if eosio_version[0]:
                 self.status_msg(
@@ -230,100 +346,9 @@ EOSFactory expects eosio version {}. Install eosio, if not installed:
 
 
 ################################################################################
-# node.js
-################################################################################
-        if interface_package == config.EOSJS_PACKAGE:
-            node_js_version = config.node_js_version()
-            if node_js_version[0]:
-                msg = "Found node.js version {}.".format(node_js_version[0])
-                self.status_msg(msg)
-                self.print_status(msg)
-
-            if not node_js_version[0]:
-                self.error_msg(
-"""It seams that <em>Node.js</em> is not in the System. EOSFactory, configured with the EOSJS interface, cannot do without it."""
-                )
-                self.print_error(
-"""It seams that Node.js is not in the System. EOSFactory, configured with the EOSJS interface, cannot do without it."""
-                )
-
-                if self.IS_WINDOWS:
-                    msg = \
-"""Note that Node.js has to be installed in the Windows Subsystem Linux.
-"""
-                    self.status_msg(msg)
-                    self.print_status(msg)
-
-
-################################################################################
-# eosjs and other javascript modules
-################################################################################
-        def check_module(library):
-            try:
-                output = subprocess.check_output(
-                    ["node", "-e",
-                    """
-                    try{
-                        console.log(require.resolve("%s"));
-                    } catch(err){
-                        console.log(err);
-                    }
-                    """ % (library),
-                    ], 
-                    timeout=5).decode("ISO-8859-1").strip()
-
-                if not "Error" in output:
-                    self.status_msg(
-                        "Found <em>{}</em> library.".format(library))
-                    self.print_status(
-                        "Found ``{}`` library.".format(library))
-                else:
-                    command = "npm install {0} # add -g switch to install globally".format(library)
-
-                    button = """
-<button 
-    style="text-align:left;"
-    class="btn ${{BASH_COMMAND}}";
-    class="btn"; 
-    id="Install {0}"; 
-    title="Install {0}. Click the button then ENTER in a newly created bash terminal window, to go."
->
-    {1}
-</button>
-""".format(library, command)
-
-                    self.error_msg(
-"""It seams that the <em>{0}</em> library is not in the System.
-EOSFactory, configured with EOSJS interface, cannot do without it.
-Install it, if not installed.
-{1}<br>
-""".format(library, button))
-
-                    self.print_error(
-"""It seams that the ``{0}`` library is not in the System.
-EOSFactory, configured with EOSJS interface, cannot do without it.
-Install it, if not installed.
-""".format(library))
-                    self.print_code(
-"""```
-{}
-```
-""".format(command))
-
-            except Exception as e:
-                self.error_msg(str(e))
-                self.print_error(str(e))
-
-
-        if interface_package == config.EOSJS_PACKAGE:
-            check_module("eosjs")
-            check_module("fs")
-
-
-################################################################################
 # eosio_cdt
 ################################################################################
-        if interface_package == config.CLEOS_PACKAGE:
+            
             eosio_cdt_version = config.eosio_cdt_version()
             if "eosio_cdt" in error_codes:
                 eosio_cdt_version = ["", "1.6.0"]
@@ -331,12 +356,14 @@ Install it, if not installed.
             
             if eosio_cdt_version[0]:
                 self.status_msg(
-                    "Found <em>eosio.cdt</em> version {}.".format(eosio_cdt_version[0]))
+                    "Found <em>eosio.cdt</em> version {}.".format(
+                                                        eosio_cdt_version[0]))
                 self.print_status(
                     "Found eosio.cdt version {}.".format(eosio_cdt_version[0]))
             
             if not eosio_cdt_version[0] or len(eosio_cdt_version) > 1\
-                    and not self.equal(eosio_cdt_version[0], eosio_cdt_version[1]):
+                    and not self.equal(
+                                    eosio_cdt_version[0], eosio_cdt_version[1]):
                 command = ""
 
                 if os_version == utils.UBUNTU:

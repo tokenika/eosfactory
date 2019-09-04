@@ -48,8 +48,8 @@ class Command():
         cl = [config.cli_exe()]
         setup.set_local_nodeos_address_if_none()
         cl.extend(["--url", utils.relay(
-                            "http://" + config.RELY_URL, setup.nodeos_address(), 
-                            setup.IS_PRINT_REQUEST, setup.IS_PRINT_RESPONSE)])
+            "http://" + config.RELY_URL, setup.nodeos_address(), 
+            setup.IS_PRINT_REQUEST, setup.IS_PRINT_RESPONSE)])
 
         cl.append(command_group)
         cl.extend(re.sub(re.compile(r'\s+'), ' ', command.strip()).split(" "))
@@ -61,7 +61,7 @@ class Command():
             print("######## command line sent to cleos:")
             print(" ".join(cl))
             print("")
-            
+
         while True:
             process = subprocess.run(
                                 cl,
@@ -85,7 +85,7 @@ class Command():
                 break
 
         errors.validate(self)
-            
+
         try:
             self.json = json_module.loads(self.out_msg)
         except:
@@ -133,9 +133,9 @@ def common_parameters(
 
     Args:
         permission (.interface.Account or str or (str, str) or \
-            (.interface.Account, str) or any list of the previous items.): 
+            (.interface.Account, str) or any list of the previous items.):
             An account and permission level to authorize.
-        
+
     Exemplary values of the argument ``permission``::
 
         eosio # eosio is interface.Account object
@@ -149,24 +149,24 @@ def common_parameters(
         ["eosio@owner", (eosio, .Permission.ACTIVE)]
 
     Args:
-        expiration (int): The time in seconds before a transaction expires, 
+        expiration (int): The time in seconds before a transaction expires,
             defaults to 30s
-        skip_sign (bool): Specify if unlocked wallet keys should be used to 
+        skip_sign (bool): Specify if unlocked wallet keys should be used to
             sign transaction.
-        dont_broadcast (bool): Don't broadcast transaction to the network 
+        dont_broadcast (bool): Don't broadcast transaction to the network
             (just print).
-        force_unique(bool): Force the transaction to be unique. This will 
+        force_unique(bool): Force the transaction to be unique. This will
             consume extra bandwidth and remove any protections against 
             accidentally issuing the same transaction multiple times.
-        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget, 
+        max_cpu_usage (int): Upper limit on the milliseconds of cpu usage budget,
             for the execution of the transaction (defaults to 0 which means no limit).
-        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the 
+        max_net_usage (int): Upper limit on the net usage budget, in bytes, for the
             transaction (defaults to 0 which means no limit).
-        ref_block (int): The reference block num or block id used for TAPOS 
+        ref_block (int): The reference block num or block id used for TAPOS
             (Transaction as Proof-of-Stake).
         delay_sec: The delay in seconds, defaults to 0s.
     """
-    pass
+
 
 
 class GetAccount(interface.Account, Command):
@@ -662,15 +662,13 @@ class PushAction(Command):
                 if trace["act"]["data"]:
                     if self.act:
                         self.act += "\n"
-                    self.act += "{} <= {}::{} {}".format( 
-                                                        trace["act"]["account"], 
-                                                        trace["act"]["account"],
-                                                        trace["act"]["name"],
-                                                        trace["act"]["data"])
+                    self.act += "{} <= {}::{} {}".format(
+                        trace["act"]["account"],
+                        trace["act"]["account"],
+                        trace["act"]["name"],
+                        trace["act"]["data"])
         self.printself()
 
     def __str__(self):
-            import eosfactory.core.str.push
-            return str(eosfactory.core.str.push.Push(self.json))
-
-
+        import eosfactory.core.str.push
+        return str(eosfactory.core.str.push.Push(self.json))
