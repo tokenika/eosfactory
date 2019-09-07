@@ -247,8 +247,132 @@ class BuyRam(base_commands.Command):
             ref_block=ref_block
             )
 
-        # base_commands.Command.__init__(
-        #     self, args, "system", "buyram", is_verbose)
+        base_commands.Command.__init__(
+            self, base_commands.config_api(),
+            """
+        ;(async () => {
+            console.log(JSON.stringify(await api.transact(
+                {
+                    actions: [
+                        {
+                            account: 'eosio',
+                            name: 'newaccount',
+                            authorization: [
+                                {
+                                    actor: '%(creator)s',
+                                    permission: 'active',
+                                }
+                            ],
+                            data: {
+                                creator: '%(creator)s',
+                                name: '%(name)s',
+                                owner: {
+                                    threshold: 1,
+                                    keys: [
+                                        {
+                                            key: '%(owner_key_public)s',
+                                            weight: 1
+                                        }
+                                    ],
+                                    accounts: [],
+                                    waits: []
+                                },
+                                    active: {
+                                    threshold: 1,
+                                    keys: [
+                                        {
+                                            key: '%(active_key_public)s',
+                                            weight: 1
+                                        }
+                                    ],
+                                    accounts: [],
+                                    waits: []
+                                }
+                            }
+                        },%(buyrambytes)s%(buyram)s
+                        {
+                            account: 'eosio',
+                            name: 'delegatebw',
+                            authorization: [
+                                {
+                                    actor: '%(creator)s',
+                                    permission: 'active',
+                                }
+                            ],
+                            data: {
+                                from: '%(creator)s',
+                                receiver: '%(name)s',
+                                stake_net_quantity: '%(stake_net_quantity)s',
+                                stake_cpu_quantity: '%(stake_cpu_quantity)s',
+                                transfer: %(transfer)s
+                            }
+                        }
+                    ]
+                },
+                {
+                    blocksBehind: %(blocksBehind)d,
+                    expireSeconds: %(expiration_sec)d,
+                    broadcast: %(broadcast)s,
+                    sign: %(sign)s,
+                }
+            )));
+        })();
+            """ % {
+                "creator": creator,
+                "name": name,
+                "owner_key_public": interface.key_arg(
+                    owner_key, is_owner_key=True, is_private_key=False),
+                "active_key_public": interface.key_arg(
+                    active_key, is_owner_key=True, is_private_key=False),
+                "expiration_sec": expiration_sec,
+                "broadcast": "false" if dont_broadcast else "true",
+                "sign": "false" if skip_sign else "true",
+                "blocksBehind": delay_sec * 2,
+                "transfer": "true" if transfer else "false",
+                "stake_net_quantity": "%0.4f EOS" % (stake_net),
+                "stake_cpu_quantity": "%0.4f EOS" % (stake_cpu),
+                "buyrambytes": """
+                    {
+                        account: 'eosio',
+                        name: 'buyrambytes',
+                        authorization: [
+                            {
+                                actor: '%(creator)s',
+                                permission: 'active',
+                            }
+                        ],
+                        data: {
+                            payer: '%(creator)s',
+                            receiver: '%(name)s',
+                            bytes: %(bytes)d
+                        }
+                    },""" % {
+                        "creator": creator,
+                        "name": name,
+                        "bytes": buy_ram_bytes,
+                    } if buy_ram_bytes else "",
+                "buyram" : """
+                    {
+                        account: 'eosio',
+                        name: 'buyram',
+                        authorization: [
+                            {
+                                actor: '%(creator)s',
+                                permission: 'active',
+                            }
+                        ],
+                        data: {
+                            payer: '%(creator)s',
+                            receiver: '%(name)s',
+                            quant: '%(quant)s'
+                        }
+                    },""" % {
+                        "creator": creator,
+                        "name": name,
+                        "quant": buy_ram,
+                    } if buy_ram else "",
+            }, is_verbose)
+
 
     
 class DelegateBw(base_commands.Command):
